@@ -20,17 +20,17 @@ import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'section/report_item_form_controller.dart';
 
 class StudyDesignReportsFormView extends StudyDesignPageWidget {
-  const StudyDesignReportsFormView(super.studyId, {super.key});
+  const StudyDesignReportsFormView(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final state = ref.watch(studyControllerProvider(studyId));
+    final state = ref.watch(studyControllerProvider(studyCreationArgs));
 
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel = ref.read(reportsFormViewModelProvider(studyId));
+        final formViewModel = ref.read(reportsFormViewModelProvider(studyCreationArgs));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: ReactiveFormConsumer(
@@ -50,7 +50,8 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                         final routeArgs = formViewModel.buildReportItemFormRouteArgs(viewModel);
                         _showReportItemSidesheetWithArgs(routeArgs, context, ref);
                       },
-                      getActionsAt: (viewModel, _) => formViewModel.reportItemDelegate.availableActions(viewModel),
+                      getActionsAt: (viewModel, _) =>
+                          formViewModel.reportItemDelegate.availableActions(viewModel),
                       onNewItem: () {
                         final routeArgs = formViewModel.buildNewReportItemFormRouteArgs();
                         _showReportItemSidesheetWithArgs(routeArgs, context, ref);
@@ -81,7 +82,9 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                         return Row(
                           children: [
                             ReportBadge(
-                              status: (viewModel.formData!.isPrimary) ? ReportStatus.primary : ReportStatus.secondary,
+                              status: (viewModel.formData!.isPrimary)
+                                  ? ReportStatus.primary
+                                  : ReportStatus.secondary,
                               showPrefixIcon: false,
                               showTooltip: true,
                             ),
@@ -130,7 +133,8 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
     showFormSideSheet<ReportItemFormViewModel>(
       context: context,
       formViewModel: formViewModel,
-      formViewBuilder: (formViewModel) => ReportItemFormView(formViewModel: formViewModel, studyId: studyId),
+      formViewBuilder: (formViewModel) =>
+          ReportItemFormView(formViewModel: formViewModel, studyCreationArgs: studyCreationArgs),
     );
   }
 }

@@ -12,27 +12,30 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 
 class StudyBaseController<T extends StudyControllerBaseState> extends StateNotifier<T> {
   StudyBaseController(
-    T state, {
-    required this.studyId,
+    super.state, {
+    required this.studyCreationArgs,
     required this.studyRepository,
     required this.router,
     required currentUser,
-  }) : super(state) {
-    subscribeStudy(studyId);
+  }) {
+    subscribeStudy(studyCreationArgs);
   }
 
-  final StudyID studyId;
+  final StudyCreationArgs studyCreationArgs;
   final IStudyRepository studyRepository;
   final GoRouter router;
 
+  StudyID get studyId => studyCreationArgs.studyID;
+
   StreamSubscription<WrappedModel<Study>>? studySubscription;
 
-  subscribeStudy(StudyID studyId) {
+  subscribeStudy(StudyCreationArgs studyCreationArgs) {
     if (studySubscription != null) {
       studySubscription!.cancel();
     }
-    studySubscription =
-        studyRepository.watch(studyId).listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
+    studySubscription = studyRepository
+        .watch(studyCreationArgs.studyID, args: studyCreationArgs)
+        .listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
   }
 
   onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {

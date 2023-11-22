@@ -3,30 +3,30 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/data_reference_editor.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/section_type.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class AverageSectionFormView extends ConsumerWidget {
   const AverageSectionFormView({
     required this.formViewModel,
-    required this.studyId,
+    required this.studyCreationArgs,
     required this.reportSectionColumnWidth,
     super.key,
   });
 
   final ReportItemFormViewModel formViewModel;
-  final StudyID studyId;
+  final StudyCreationArgs studyCreationArgs;
   final Map<int, TableColumnWidth> reportSectionColumnWidth;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final study = ref.watch(studyControllerProvider(studyId)).study.value!;
+    final study = ref.watch(studyControllerProvider(studyCreationArgs)).study.value!;
     final availableTasks = <Task>[
       ...study.interventions.expand((intervention) => intervention.tasks),
       ...study.observations,
@@ -44,7 +44,8 @@ class AverageSectionFormView extends ConsumerWidget {
               labelHelpText: tr.form_field_report_average_temporalAggregation_tooltip,
               // TODO: extract custom dropdown component with theme + focus fix
               input: Theme(
-                data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+                data: theme.copyWith(
+                    inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<TemporalAggregationFormatted>(
                   formControl: formViewModel.temporalAggregationControl,
                   hint: const Text("Select an aggregation value"),
@@ -57,7 +58,9 @@ class AverageSectionFormView extends ConsumerWidget {
                         children: [
                           (option.value.icon != null)
                               ? Icon(option.value.icon,
-                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
+                                  size: iconTheme.size,
+                                  color: iconTheme.color,
+                                  shadows: iconTheme.shadows)
                               : const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
                           Text(option.label)

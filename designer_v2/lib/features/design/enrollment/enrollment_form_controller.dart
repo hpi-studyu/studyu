@@ -18,6 +18,7 @@ import 'package:studyu_designer_v2/features/forms/form_view_model_collection_act
 import 'package:studyu_designer_v2/features/study/study_test_app_routes.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
@@ -55,12 +56,13 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   final FormControl<Participation> enrollmentTypeControl = FormControl();
 
-  List<FormControlOption<Participation>> get enrollmentTypeControlOptions =>
-      Participation.values.map((v) => FormControlOption(v, v.string, description: v.designDescription)).toList();
+  List<FormControlOption<Participation>> get enrollmentTypeControlOptions => Participation.values
+      .map((v) => FormControlOption(v, v.string, description: v.designDescription))
+      .toList();
 
   late final FormArray consentItemArray = FormArray([]);
-  late final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData> consentItemFormViewModels =
-      FormViewModelCollection([], consentItemArray);
+  late final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData>
+      consentItemFormViewModels = FormViewModelCollection([], consentItemArray);
 
   List<ConsentItemFormViewModel> get consentItemModels => consentItemFormViewModels.formViewModels;
 
@@ -118,7 +120,8 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   @override
   List<ModelAction> availableActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availableActions(model,
+        onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
@@ -146,28 +149,28 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   ScreenerQuestionFormRouteArgs buildNewScreenerQuestionFormRouteArgs() {
     return ScreenerQuestionFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       questionId: Config.newModelId,
     );
   }
 
   ScreenerQuestionFormRouteArgs buildScreenerQuestionFormRouteArgs(QuestionFormViewModel model) {
     return ScreenerQuestionFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       questionId: model.questionId,
     );
   }
 
   ConsentItemFormRouteArgs buildNewConsentItemFormRouteArgs() {
     return ConsentItemFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       consentId: Config.newModelId,
     );
   }
 
   ConsentItemFormRouteArgs buildConsentItemFormRouteArgs(ConsentItemFormViewModel model) {
     return ConsentItemFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       consentId: model.consentId,
     );
   }
@@ -180,8 +183,10 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
     router.dispatch(RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.consent));
   }
 
-  bool get canTestScreener => !questionsArray.disabled && (questionsArray.value?.isNotEmpty ?? false);
-  bool get canTestConsent => !consentItemArray.disabled && (consentItemArray.value?.isNotEmpty ?? false);
+  bool get canTestScreener =>
+      !questionsArray.disabled && (questionsArray.value?.isNotEmpty ?? false);
+  bool get canTestConsent =>
+      !consentItemArray.disabled && (consentItemArray.value?.isNotEmpty ?? false);
 
   @override
   Map<FormMode, LocalizedStringResolver> get questionTitles => {

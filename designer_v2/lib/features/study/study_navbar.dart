@@ -1,6 +1,6 @@
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
 abstract class IStudyNavViewModel {
@@ -13,17 +13,20 @@ abstract class IStudyNavViewModel {
 }
 
 class StudyNav {
-  static tabs(StudyID studyId, bool isTemplate, IStudyNavViewModel viewModel) => isTemplate
-      ? <NavbarTab>[
-          edit(studyId, isTemplate, enabled: viewModel.isEditTabEnabled),
-        ]
-      : <NavbarTab>[
-          edit(studyId, isTemplate, enabled: viewModel.isEditTabEnabled),
-          test(studyId, enabled: viewModel.isTestTabEnabled),
-          recruit(studyId, enabled: viewModel.isRecruitTabEnabled),
-          monitor(studyId, enabled: viewModel.isMonitorTabEnabled),
-          analyze(studyId, enabled: viewModel.isAnalyzeTabEnabled)
-        ];
+  static tabs(StudyCreationArgs studyCreationArgs, IStudyNavViewModel viewModel) =>
+      studyCreationArgs.isTemplate
+          ? <NavbarTab>[
+              edit(studyCreationArgs.studyID, studyCreationArgs.isTemplate,
+                  enabled: viewModel.isEditTabEnabled),
+            ]
+          : <NavbarTab>[
+              edit(studyCreationArgs.studyID, studyCreationArgs.isTemplate,
+                  enabled: viewModel.isEditTabEnabled),
+              test(studyCreationArgs.studyID, enabled: viewModel.isTestTabEnabled),
+              recruit(studyCreationArgs.studyID, enabled: viewModel.isRecruitTabEnabled),
+              monitor(studyCreationArgs.studyID, enabled: viewModel.isMonitorTabEnabled),
+              analyze(studyCreationArgs.studyID, enabled: viewModel.isAnalyzeTabEnabled)
+            ];
 
   static edit(studyId, bool isTemplate, {enabled = true}) => NavbarTab(
         index: 0,

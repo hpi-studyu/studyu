@@ -7,11 +7,11 @@ import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 abstract class StudyDesignPageWidget extends StudyPageWidget {
-  const StudyDesignPageWidget(super.studyId, {super.key});
+  const StudyDesignPageWidget(super.studyCreationArgs, {super.key});
 
   @override
   Widget? banner(BuildContext context, WidgetRef ref) {
-    final viewModel = ref.watch(studyFormViewModelProvider(studyId));
+    final viewModel = ref.watch(studyFormViewModelProvider(studyCreationArgs));
 
     if (viewModel.isStudyReadonly) {
       return BannerBox(

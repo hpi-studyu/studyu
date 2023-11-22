@@ -28,10 +28,10 @@ class StudyTestScreen extends StudyPageWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
+    final formViewModel = ref.watch(studyTestValidatorProvider(studyCreationArgs));
     final canTest = !formViewModel.form.hasErrors;
 
-    final frameController = ref.watch(studyTestPlatformControllerProvider(studyId));
+    final frameController = ref.watch(studyTestPlatformControllerProvider(studyCreationArgs));
     frameController.generateUrl();
     frameController.activate();
     load().then((hasHelped) => !hasHelped ? showHelp(ref, context) : null);
@@ -119,7 +119,7 @@ class StudyTestScreen extends StudyPageWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: PreviewFrame(studyId, route: previewRoute),
+              child: PreviewFrame(studyCreationArgs, route: previewRoute),
             )
           ],
         ),
@@ -132,24 +132,27 @@ class StudyTestScreen extends StudyPageWidget {
 
   @override
   Widget? banner(BuildContext context, WidgetRef ref) {
-    final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
+    final formViewModel = ref.watch(studyTestValidatorProvider(studyCreationArgs));
     if (!formViewModel.form.hasErrors) {
       return null;
     }
     return BannerBox(
-      body: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-        TextParagraph(
-          text: tr.banner_study_test_unavailable,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        ReactiveForm(
-            formGroup: formViewModel.form,
-            child: ReactiveFormConsumer(builder: (context, form, child) {
-              return TextParagraph(
-                text: form.validationErrorSummary,
-              );
-            })),
-      ]),
+      body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextParagraph(
+              text: tr.banner_study_test_unavailable,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            ReactiveForm(
+                formGroup: formViewModel.form,
+                child: ReactiveFormConsumer(builder: (context, form, child) {
+                  return TextParagraph(
+                    text: form.validationErrorSummary,
+                  );
+                })),
+          ]),
       style: BannerStyle.warning,
     );
   }

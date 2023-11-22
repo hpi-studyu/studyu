@@ -7,12 +7,13 @@ import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.d
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 
 class StudyTestController extends StudyBaseController<StudyTestControllerState> {
   StudyTestController({
-    required super.studyId,
+    required super.studyCreationArgs,
     required super.studyRepository,
     required super.currentUser,
     required super.router,
@@ -31,10 +32,11 @@ class StudyTestController extends StudyBaseController<StudyTestControllerState> 
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
 final studyTestControllerProvider =
-    StateNotifierProvider.family<StudyTestController, StudyTestControllerState, StudyID>((ref, studyId) {
+    StateNotifierProvider.family<StudyTestController, StudyTestControllerState, StudyCreationArgs>(
+        (ref, studyCreationArgs) {
   final studyRepository = ref.watch(studyRepositoryProvider);
   final controller = StudyTestController(
-    studyId: studyId,
+    studyCreationArgs: studyCreationArgs,
     studyRepository: studyRepository,
     currentUser: ref.watch(authRepositoryProvider).currentUser,
     router: ref.watch(routerProvider),
@@ -48,13 +50,14 @@ final studyTestControllerProvider =
     //
     // Ideally, we would stream changes from the backend/database directly,
     // but this is a sufficient workaround for now
-    studyRepository.fetch(studyId);
+    studyRepository.fetch(studyCreationArgs.studyID);
   });
   return controller;
 });
 
-final studyTestPlatformControllerProvider = Provider.family<PlatformController, StudyID>((ref, studyId) {
-  final state = ref.watch(studyTestControllerProvider(studyId));
+final studyTestPlatformControllerProvider =
+    Provider.family<PlatformController, StudyCreationArgs>((ref, studyCreationArgs) {
+  final state = ref.watch(studyTestControllerProvider(studyCreationArgs));
 
   PlatformController platformController;
   if (!kIsWeb) {
@@ -62,7 +65,7 @@ final studyTestPlatformControllerProvider = Provider.family<PlatformController, 
     throw Exception("The StudyU designer only support the web platform".hardcoded);
   } else {
     // Desktop and Web
-    platformController = WebController(state.appUrl, studyId);
+    platformController = WebController(state.appUrl, studyCreationArgs.studyID);
   }
 
   return platformController;

@@ -19,6 +19,8 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../repositories/model_repository.dart';
+
 class InterventionFormViewModel extends ManagedFormViewModel<InterventionFormData>
     implements
         IFormViewModelDelegate<InterventionTaskFormViewModel>,
@@ -202,7 +204,7 @@ class InterventionFormViewModel extends ManagedFormViewModel<InterventionFormDat
 
   InterventionTaskFormRouteArgs buildNewFormRouteArgs() {
     return InterventionTaskFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       interventionId: interventionId,
       taskId: Config.newModelId,
     );
@@ -210,7 +212,7 @@ class InterventionFormViewModel extends ManagedFormViewModel<InterventionFormDat
 
   InterventionTaskFormRouteArgs buildFormRouteArgs(InterventionTaskFormViewModel model) {
     final args = InterventionTaskFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       interventionId: interventionId,
       taskId: model.taskId,
     );

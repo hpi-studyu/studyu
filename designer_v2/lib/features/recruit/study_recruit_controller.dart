@@ -14,7 +14,7 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 class StudyRecruitController extends StudyBaseController<StudyRecruitControllerState>
     implements IModelActionProvider<StudyInvite> {
   StudyRecruitController({
-    required super.studyId,
+    required super.studyCreationArgs,
     required super.studyRepository,
     required super.currentUser,
     required super.router,
@@ -79,12 +79,13 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
 final studyRecruitControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyRecruitController, StudyRecruitControllerState, StudyID>((ref, studyId) {
+    .family<StudyRecruitController, StudyRecruitControllerState, StudyCreationArgs>(
+        (ref, studyCreationArgs) {
   return StudyRecruitController(
-    studyId: studyId,
+    studyCreationArgs: studyCreationArgs,
     studyRepository: ref.watch(studyRepositoryProvider),
     currentUser: ref.watch(authRepositoryProvider).currentUser,
     router: ref.watch(routerProvider),
-    inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyId)),
+    inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyCreationArgs.studyID)),
   );
 });

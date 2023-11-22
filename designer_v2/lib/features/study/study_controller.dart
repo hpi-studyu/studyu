@@ -18,7 +18,7 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 
 class StudyController extends StudyBaseController<StudyControllerState> {
   StudyController({
-    required super.studyId,
+    required super.studyCreationArgs,
     required super.studyRepository,
     required super.currentUser,
     required super.router,
@@ -72,7 +72,10 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     }
     // filter out edit action since we are already editing the study
     return withIcons(
-        studyRepository.availableActions(study).where((action) => action.type != StudyActionType.edit).toList(),
+        studyRepository
+            .availableActions(study)
+            .where((action) => action.type != StudyActionType.edit)
+            .toList(),
         studyActionIcons);
   }
 
@@ -102,11 +105,12 @@ class StudyController extends StudyBaseController<StudyControllerState> {
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
-final studyControllerProvider =
-    StateNotifierProvider.autoDispose.family<StudyController, StudyControllerState, StudyID>((ref, studyId) {
+final studyControllerProvider = StateNotifierProvider.autoDispose
+    .family<StudyController, StudyControllerState, StudyCreationArgs>((ref, studyCreationArgs) {
+  final studyId = studyCreationArgs.studyID;
   print("studyControllerProvider($studyId)");
   final controller = StudyController(
-    studyId: studyId,
+    studyCreationArgs: studyCreationArgs,
     studyRepository: ref.watch(studyRepositoryProvider),
     currentUser: ref.watch(authRepositoryProvider).currentUser,
     router: ref.watch(routerProvider),

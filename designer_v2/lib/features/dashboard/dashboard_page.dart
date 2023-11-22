@@ -98,7 +98,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                           title: "Standalone study",
                                           subtitle:
                                               "Create a new fully customizable, independent study.",
-                                          onTap: controller.onClickNewStudy(false),
+                                          onTap: () => controller.onClickNewStudy(false),
                                         ),
                                         const Divider(
                                           height: 0,
@@ -109,7 +109,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                               "Create a new template for template-driven sub-studies.\nThe template can restrict the customization of the sub-studies.\nThe sub-studies are prefilled with the configuration of the template.\nThe template itself is not a study and cannot be run.",
                                           hint:
                                               "Hint: Use the three dots menu next to a template to create a sub-study.",
-                                          onTap: controller.onClickNewStudy(true),
+                                          onTap: () => controller.onClickNewStudy(true),
                                         ),
                                       ],
                                     ),

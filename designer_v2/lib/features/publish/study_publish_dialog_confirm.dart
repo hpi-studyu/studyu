@@ -13,13 +13,13 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class PublishConfirmationDialog extends StudyPageWidget {
-  const PublishConfirmationDialog(super.studyId, {Key? key}) : super(key: key);
+  const PublishConfirmationDialog(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.watch(studyControllerProvider(studyId).notifier);
-    final state = ref.watch(studyControllerProvider(studyId));
-    final formViewModel = ref.watch(studySettingsFormViewModelProvider(studyId));
+    final controller = ref.watch(studyControllerProvider(studyCreationArgs).notifier);
+    final state = ref.watch(studyControllerProvider(studyCreationArgs));
+    final formViewModel = ref.watch(studySettingsFormViewModelProvider(studyCreationArgs));
     formViewModel.setLaunchDefaults();
 
     final theme = Theme.of(context);

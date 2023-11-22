@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/domain/study_schedule.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:uuid/uuid.dart';
 
 class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
@@ -38,22 +39,25 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   };
 
   final isPreconfiguredScheduleControl = FormControl<bool>(value: false);
-  final preconfiguredScheduleTypeControl = FormControl<PhaseSequence>(value: PhaseSequence.alternating);
+  final preconfiguredScheduleTypeControl =
+      FormControl<PhaseSequence>(value: PhaseSequence.alternating);
   final interventionAControl = FormControl<String>();
   final interventionBControl = FormControl<String>();
 
-  List<FormControlOption<String>> get interventionControlOptions =>
-      study.interventions.map((intervention) => FormControlOption(intervention.id, intervention.name!)).toList();
+  List<FormControlOption<String>> get interventionControlOptions => study.interventions
+      .map((intervention) => FormControlOption(intervention.id, intervention.name!))
+      .toList();
 
   List<FormControlOption<PhaseSequence>> get preconfiguredScheduleTypeOptions =>
       [FormControlOption(PhaseSequence.alternating, PhaseSequence.alternating.string)];
 
   bool get isPreconfiguredSchedule => isPreconfiguredScheduleControl.value!;
 
-  List<String>? get preconfiguredSchedule =>
-      (isPreconfiguredSchedule && interventionAControl.value != null && interventionBControl.value != null)
-          ? [interventionAControl.value!, interventionBControl.value!]
-          : null;
+  List<String>? get preconfiguredSchedule => (isPreconfiguredSchedule &&
+          interventionAControl.value != null &&
+          interventionBControl.value != null)
+      ? [interventionAControl.value!, interventionBControl.value!]
+      : null;
 
   @override
   late final form = FormGroup({
@@ -95,7 +99,8 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   @override
   StudyInvite buildFormData() {
-    return StudyInvite(codeControl.value!, study.id, preselectedInterventionIds: preconfiguredSchedule);
+    return StudyInvite(codeControl.value!, study.id,
+        preselectedInterventionIds: preconfiguredSchedule);
   }
 
   @override
@@ -118,11 +123,14 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-final inviteCodeFormViewModelProvider = Provider.autoDispose.family<InviteCodeFormViewModel, StudyID>((ref, studyId) {
+final inviteCodeFormViewModelProvider = Provider.autoDispose
+    .family<InviteCodeFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
+  final studyId = studyCreationArgs.studyID;
   print("inviteCodeFormViewModelProvider($studyId");
   // Reactively bind to and obtain [StudyController]'s current study
-  final study = ref.watch(studyControllerProvider(studyId).select((state) => state.study));
-  final inviteCodeRepository = ref.watch(inviteCodeRepositoryProvider(studyId));
+  final study =
+      ref.watch(studyControllerProvider(studyCreationArgs).select((state) => state.study));
+  final inviteCodeRepository = ref.watch(inviteCodeRepositoryProvider(studyCreationArgs.studyID));
 
   return InviteCodeFormViewModel(
     study: study.value!,

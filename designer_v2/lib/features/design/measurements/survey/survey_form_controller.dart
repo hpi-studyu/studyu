@@ -18,6 +18,8 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../repositories/model_repository.dart';
+
 class MeasurementSurveyFormViewModel extends ManagedFormViewModel<MeasurementSurveyFormData>
     with WithQuestionnaireControls, WithScheduleControls
     implements
@@ -150,7 +152,7 @@ class MeasurementSurveyFormViewModel extends ManagedFormViewModel<MeasurementSur
 
   SurveyQuestionFormRouteArgs buildNewFormRouteArgs() {
     return SurveyQuestionFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       measurementId: measurementId,
       questionId: Config.newModelId,
     );
@@ -158,7 +160,7 @@ class MeasurementSurveyFormViewModel extends ManagedFormViewModel<MeasurementSur
 
   SurveyQuestionFormRouteArgs buildFormRouteArgs(QuestionFormViewModel model) {
     final args = SurveyQuestionFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       measurementId: measurementId,
       questionId: model.questionId,
     );

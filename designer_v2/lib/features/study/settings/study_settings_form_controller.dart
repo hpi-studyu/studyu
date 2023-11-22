@@ -4,6 +4,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
@@ -82,8 +83,8 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 final studySettingsFormViewModelProvider =
-    Provider.autoDispose.family<StudySettingsFormViewModel, StudyID>((ref, studyId) {
-  final state = ref.watch(studyControllerProvider(studyId));
+    Provider.autoDispose.family<StudySettingsFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
+  final state = ref.watch(studyControllerProvider(studyCreationArgs));
   final formViewModel = StudySettingsFormViewModel(
     studyRepository: ref.watch(studyRepositoryProvider),
     study: state.study,

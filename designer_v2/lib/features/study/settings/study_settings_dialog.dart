@@ -10,11 +10,11 @@ import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class StudySettingsDialog extends StudyPageWidget {
-  const StudySettingsDialog(studyId, {Key? key}) : super(studyId, key: key);
+  const StudySettingsDialog(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formViewModel = ref.watch(studySettingsFormViewModelProvider(studyId));
+    final formViewModel = ref.watch(studySettingsFormViewModelProvider(studyCreationArgs));
 
     return ReactiveForm(
       formGroup: formViewModel.form,

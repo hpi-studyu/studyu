@@ -3,20 +3,21 @@ import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/average_section_form_view.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/linear_regression_section_form_view.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/section_type.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ReportItemFormView extends StatelessWidget {
-  const ReportItemFormView({required this.formViewModel, required this.studyId, super.key});
+  const ReportItemFormView(
+      {required this.formViewModel, required this.studyCreationArgs, super.key});
 
   final ReportItemFormViewModel formViewModel;
-  final StudyID studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   get reportSectionColumnWidth => const {
         0: FixedColumnWidth(180.0),
@@ -26,9 +27,13 @@ class ReportItemFormView extends StatelessWidget {
   WidgetBuilder get sectionTypeBodyBuilder {
     final Map<ReportSectionType, WidgetBuilder> sectionTypeWidgets = {
       ReportSectionType.average: (_) => AverageSectionFormView(
-          formViewModel: formViewModel, studyId: studyId, reportSectionColumnWidth: reportSectionColumnWidth),
+          formViewModel: formViewModel,
+          studyCreationArgs: studyCreationArgs,
+          reportSectionColumnWidth: reportSectionColumnWidth),
       ReportSectionType.linearRegression: (_) => LinearRegressionSectionFormView(
-          formViewModel: formViewModel, studyId: studyId, reportSectionColumnWidth: reportSectionColumnWidth),
+          formViewModel: formViewModel,
+          studyCreationArgs: studyCreationArgs,
+          reportSectionColumnWidth: reportSectionColumnWidth),
     };
     final sectionType = formViewModel.sectionType;
 
@@ -106,7 +111,8 @@ class ReportItemFormView extends StatelessWidget {
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
               // TODO: extract custom dropdown component with theme + focus fix
               input: Theme(
-                data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+                data: theme.copyWith(
+                    inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<ReportSectionType>(
                   formControl: formViewModel.sectionTypeControl,
                   items: ReportItemFormViewModel.sectionTypeControlOptions.map((option) {
@@ -118,7 +124,9 @@ class ReportItemFormView extends StatelessWidget {
                         children: [
                           (option.value.icon != null)
                               ? Icon(option.value.icon,
-                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
+                                  size: iconTheme.size,
+                                  color: iconTheme.color,
+                                  shadows: iconTheme.shadows)
                               : const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
                           Text(option.label)

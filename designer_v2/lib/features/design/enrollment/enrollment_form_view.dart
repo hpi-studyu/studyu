@@ -22,17 +22,17 @@ import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
-  const StudyDesignEnrollmentFormView(super.studyId, {super.key});
+  const StudyDesignEnrollmentFormView(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final state = ref.watch(studyControllerProvider(studyId));
+    final state = ref.watch(studyControllerProvider(studyCreationArgs));
 
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel = ref.read(enrollmentFormViewModelProvider(studyId));
+        final formViewModel = ref.read(enrollmentFormViewModelProvider(studyCreationArgs));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: ReactiveFormConsumer(
@@ -56,7 +56,8 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                                     title: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(option.value.whoShort, style: theme.textTheme.bodyLarge),
+                                        Text(option.value.whoShort,
+                                            style: theme.textTheme.bodyLarge),
                                         const SizedBox(height: 2.0),
                                       ],
                                     ),
@@ -85,10 +86,12 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       control: formViewModel.questionsArray,
                       items: formViewModel.questionModels,
                       onSelectItem: (viewModel) {
-                        final routeArgs = formViewModel.buildScreenerQuestionFormRouteArgs(viewModel);
+                        final routeArgs =
+                            formViewModel.buildScreenerQuestionFormRouteArgs(viewModel);
                         _showScreenerQuestionSidesheetWithArgs(routeArgs, context, ref);
                       },
-                      getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
+                      getActionsAt: (viewModel, _) =>
+                          formViewModel.availablePopupActions(viewModel),
                       onNewItem: () {
                         final routeArgs = formViewModel.buildNewScreenerQuestionFormRouteArgs();
                         _showScreenerQuestionSidesheetWithArgs(routeArgs, context, ref);
@@ -144,7 +147,8 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                         final routeArgs = formViewModel.buildConsentItemFormRouteArgs(viewModel);
                         _showConsentItemSidesheetWithArgs(routeArgs, context, ref);
                       },
-                      getActionsAt: (viewModel, _) => formViewModel.consentItemDelegate.availableActions(viewModel),
+                      getActionsAt: (viewModel, _) =>
+                          formViewModel.consentItemDelegate.availableActions(viewModel),
                       onNewItem: () {
                         final routeArgs = formViewModel.buildNewConsentItemFormRouteArgs();
                         _showConsentItemSidesheetWithArgs(routeArgs, context, ref);
@@ -203,7 +207,8 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
         FormSideSheetTab(
           title: tr.navlink_screener_question_logic,
           index: 1,
-          formViewBuilder: (formViewModel) => ScreenerQuestionLogicFormView(formViewModel: formViewModel),
+          formViewBuilder: (formViewModel) =>
+              ScreenerQuestionLogicFormView(formViewModel: formViewModel),
         ),
       ],
     );

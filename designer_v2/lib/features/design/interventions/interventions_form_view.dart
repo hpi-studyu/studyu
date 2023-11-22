@@ -16,17 +16,17 @@ import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
-  const StudyDesignInterventionsFormView(super.studyId, {super.key});
+  const StudyDesignInterventionsFormView(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyControllerProvider(studyId));
+    final state = ref.watch(studyControllerProvider(studyCreationArgs));
     final theme = Theme.of(context);
 
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel = ref.read(interventionsFormViewModelProvider(studyId));
+        final formViewModel = ref.read(interventionsFormViewModelProvider(studyCreationArgs));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -54,7 +54,8 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                       control: formViewModel.interventionsArray,
                       items: formViewModel.interventionsCollection.formViewModels,
                       onSelectItem: formViewModel.onSelectItem,
-                      getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
+                      getActionsAt: (viewModel, _) =>
+                          formViewModel.availablePopupActions(viewModel),
                       onNewItem: formViewModel.onNewItem,
                       onNewItemLabel: tr.form_array_interventions_new,
                       rowTitle: (viewModel) => viewModel.formData?.title ?? '',

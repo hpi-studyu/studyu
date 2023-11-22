@@ -71,6 +71,8 @@ class StudyCreationArgs extends ModelInstanceCreationArgs {
   final bool isTemplate;
 
   StudyCreationArgs({required this.studyID, this.parentTemplate, required this.isTemplate});
+
+  factory StudyCreationArgs.fromStudy(Study study) => StudyCreationArgs(studyID: study.id, isTemplate: study.isTemplate, parentTemplate: study.parentTemplate);
 }
 
 class ModelRepositoryException implements Exception {}

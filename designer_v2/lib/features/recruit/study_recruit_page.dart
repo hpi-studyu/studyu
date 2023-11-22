@@ -15,12 +15,12 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 typedef InterventionProvider = Intervention? Function(String id);
 
 class StudyRecruitScreen extends StudyPageWidget {
-  const StudyRecruitScreen(studyId, {Key? key}) : super(studyId, key: key);
+  const StudyRecruitScreen(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyRecruitControllerProvider(studyId));
-    final controller = ref.watch(studyRecruitControllerProvider(studyId).notifier);
+    final state = ref.watch(studyRecruitControllerProvider(studyCreationArgs));
+    final controller = ref.watch(studyRecruitControllerProvider(studyCreationArgs).notifier);
 
     return AsyncValueWidget<List<StudyInvite>?>(
         value: state.invites,
@@ -53,7 +53,8 @@ class StudyRecruitScreen extends StudyPageWidget {
   Widget _inviteCodesSectionHeader(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        SelectableText(tr.code_list_section_title, style: Theme.of(context).textTheme.headlineSmall),
+        SelectableText(tr.code_list_section_title,
+            style: Theme.of(context).textTheme.headlineSmall),
         Container(width: 32.0),
         _newInviteCodeButton(context, ref),
         Container(width: 32.0),
@@ -66,7 +67,7 @@ class StudyRecruitScreen extends StudyPageWidget {
       icon: Icons.add,
       text: tr.action_button_code_new,
       onPressed: () {
-        final formViewModel = ref.read(inviteCodeFormViewModelProvider(studyId));
+        final formViewModel = ref.read(inviteCodeFormViewModelProvider(studyCreationArgs));
         showFormSideSheet<InviteCodeFormViewModel>(
           context: context,
           formViewModel: formViewModel,
@@ -79,7 +80,7 @@ class StudyRecruitScreen extends StudyPageWidget {
   _onSelectInvite(BuildContext context, WidgetRef ref) {
     // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
     return (StudyInvite invite) {
-      final formViewModel = ref.read(inviteCodeFormViewModelProvider(studyId));
+      final formViewModel = ref.read(inviteCodeFormViewModelProvider(studyCreationArgs));
       formViewModel.read(invite);
       showFormSideSheet<InviteCodeFormViewModel>(
         context: context,

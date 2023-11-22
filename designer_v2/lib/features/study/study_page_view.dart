@@ -1,11 +1,16 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/banner.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
+
+import '../../domain/study.dart';
 
 abstract class StudyPageWidget extends ConsumerWidget implements IWithBanner {
-  const StudyPageWidget(this.studyId, {Key? key}) : super(key: key);
+  const StudyPageWidget(this.studyCreationArgs, {super.key});
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
+
+  StudyID get studyId => studyCreationArgs.studyID;
 
   @override
   Widget? banner(BuildContext context, WidgetRef ref) {

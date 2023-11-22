@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
 class WebFrame extends StatelessWidget {
   final String previewSrc;
@@ -150,26 +151,29 @@ class DesktopFrame extends StatelessWidget {
   }
 }
 
-Widget? previewBanner(WidgetRef ref, String studyId) {
-  final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
+Widget? previewBanner(WidgetRef ref, StudyCreationArgs studyCreationArgs) {
+  final formViewModel = ref.watch(studyTestValidatorProvider(studyCreationArgs));
 
   if (!formViewModel.form.hasErrors) {
     return null;
   }
   return BannerBox(
-    body: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-      TextParagraph(
-        text: tr.banner_study_preview_unavailable,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      ReactiveForm(
-          formGroup: formViewModel.form,
-          child: ReactiveFormConsumer(builder: (context, form, child) {
-            return TextParagraph(
-              text: form.validationErrorSummary,
-            );
-          })),
-    ]),
+    body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextParagraph(
+            text: tr.banner_study_preview_unavailable,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          ReactiveForm(
+              formGroup: formViewModel.form,
+              child: ReactiveFormConsumer(builder: (context, form, child) {
+                return TextParagraph(
+                  text: form.validationErrorSummary,
+                );
+              })),
+        ]),
     style: BannerStyle.warning,
   );
 }

@@ -3,19 +3,19 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controls.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
 class PreviewFrame extends ConsumerStatefulWidget {
   const PreviewFrame(
-    this.studyId, {
+    this.studyCreationArgs, {
     this.routeArgs,
     this.route,
     super.key,
@@ -25,7 +25,7 @@ class PreviewFrame extends ConsumerStatefulWidget {
                 (routeArgs == null && route == null),
             "Must not specify both routeArgs and route");
 
-  final StudyID studyId;
+  final StudyCreationArgs studyCreationArgs;
   final StudyFormRouteArgs? routeArgs;
   final String? route;
 
@@ -49,7 +49,7 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
   }
 
   _subscribeStudyChanges() {
-    final formViewModelCurrent = ref.read(studyFormViewModelProvider(widget.studyId));
+    final formViewModelCurrent = ref.read(studyFormViewModelProvider(widget.studyCreationArgs));
 
     formViewModelCurrent.form.valueChanges.listen((event) {
       if (frameController != null) {
@@ -67,11 +67,12 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
       if (widget.routeArgs is InterventionFormRouteArgs) {
         route = 'intervention';
-        frameController!
-            .generateUrl(route: route, extra: (widget.routeArgs as InterventionFormRouteArgs).interventionId);
+        frameController!.generateUrl(
+            route: route, extra: (widget.routeArgs as InterventionFormRouteArgs).interventionId);
       } else if (widget.routeArgs is MeasurementFormRouteArgs) {
         route = 'observation';
-        frameController!.generateUrl(route: route, extra: (widget.routeArgs as MeasurementFormRouteArgs).measurementId);
+        frameController!.generateUrl(
+            route: route, extra: (widget.routeArgs as MeasurementFormRouteArgs).measurementId);
       } else {
         frameController!.generateUrl();
       }
@@ -80,11 +81,11 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(studyTestControllerProvider(widget.studyId));
-    final formViewModel = ref.watch(studyTestValidatorProvider(widget.studyId));
+    final state = ref.watch(studyTestControllerProvider(widget.studyCreationArgs));
+    final formViewModel = ref.watch(studyTestValidatorProvider(widget.studyCreationArgs));
 
     // Rebuild iframe component & url
-    frameController = ref.read(studyTestPlatformControllerProvider(widget.studyId));
+    frameController = ref.read(studyTestPlatformControllerProvider(widget.studyCreationArgs));
     _updatePreviewRoute();
     frameController!.activate();
     frameController!.listen();
