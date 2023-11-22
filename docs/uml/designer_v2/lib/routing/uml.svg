@@ -1,5 +1,73 @@
-<svg version="1.1" baseProfile="full" width="4393.0" height="893.0" viewbox="0 0 4393 893" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[&lt;abstract&gt;GoRouteParamEnum
+<svg version="1.1" baseProfile="full" width="4862.5" height="893.0" viewbox="0 0 4862.5 893" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[RoutingIntents
+	  |
+	  &lt;static&gt;+root: RoutingIntent;
+	  &lt;static&gt;+studies: RoutingIntent;
+	  &lt;static&gt;+studiesShared: RoutingIntent;
+	  &lt;static&gt;+publicRegistry: RoutingIntent;
+	  &lt;static&gt;+study: RoutingIntent Function(String);
+	  &lt;static&gt;+studyEdit: RoutingIntent Function(String, bool);
+	  &lt;static&gt;+studyEditInfo: RoutingIntent Function(String);
+	  &lt;static&gt;+studyEditEnrollment: RoutingIntent Function(String);
+	  &lt;static&gt;+studyEditInterventions: RoutingIntent Function(String);
+	  &lt;static&gt;+studyEditIntervention: RoutingIntent Function(String, String);
+	  &lt;static&gt;+studyEditMeasurements: RoutingIntent Function(String);
+	  &lt;static&gt;+studyEditReports: RoutingIntent Function(String);
+	  &lt;static&gt;+studyEditMeasurement: RoutingIntent Function(String, String);
+	  &lt;static&gt;+studyTest: RoutingIntent Function(String, {String? appRoute});
+	  &lt;static&gt;+studyRecruit: RoutingIntent Function(String);
+	  &lt;static&gt;+studyMonitor: RoutingIntent Function(String);
+	  &lt;static&gt;+studyAnalyze: RoutingIntent Function(String);
+	  &lt;static&gt;+studySettings: RoutingIntent Function(String);
+	  &lt;static&gt;+accountSettings: RoutingIntent;
+	  &lt;static&gt;+studyNew: RoutingIntent Function(bool);
+	  &lt;static&gt;+login: RoutingIntent;
+	  &lt;static&gt;+signup: RoutingIntent;
+	  &lt;static&gt;+passwordForgot: RoutingIntent;
+	  &lt;static&gt;+passwordForgot2: RoutingIntent Function(String);
+	  &lt;static&gt;+passwordRecovery: RoutingIntent;
+	  &lt;static&gt;+error: RoutingIntent Function(Exception)
+	]
+	
+	[RoutingIntents]o-[RoutingIntent]
+	[RoutingIntents]o-[RoutingIntent Function(String)]
+	[RoutingIntents]o-[RoutingIntent Function(String, bool)]
+	[RoutingIntents]o-[RoutingIntent Function(String, String)]
+	[RoutingIntents]o-[RoutingIntent Function(String, {String? appRoute})]
+	[RoutingIntents]o-[RoutingIntent Function(bool)]
+	[RoutingIntents]o-[RoutingIntent Function(Exception)]
+	
+	[RoutingIntent
+	  |
+	  +route: GoRoute;
+	  +params: Map&lt;String, String&gt;;
+	  +queryParams: Map&lt;String, String&gt;;
+	  +dispatch: RoutingIntentDispatch?;
+	  +extra: Object?;
+	  +routeName: String;
+	  +arguments: Map&lt;String, String&gt;;
+	  +props: List&lt;Object?&gt;
+	  |
+	  -dynamic _validateRoute();
+	  +bool matches()
+	]
+	
+	[RoutingIntent]o-[GoRoute]
+	[RoutingIntent]o-[RoutingIntentDispatch]
+	[&lt;abstract&gt;Equatable]&lt;:-[RoutingIntent]
+	
+	[RoutingIntentDispatch
+	  |
+	  +index: int;
+	  &lt;static&gt;+values: List&lt;RoutingIntentDispatch&gt;;
+	  &lt;static&gt;+go: RoutingIntentDispatch;
+	  &lt;static&gt;+push: RoutingIntentDispatch
+	]
+	
+	[RoutingIntentDispatch]o-[RoutingIntentDispatch]
+	[Enum]&lt;:--[RoutingIntentDispatch]
+	
+	[&lt;abstract&gt;GoRouteParamEnum
 	  |
 	  +String toRouteParam();
 	  +String toShortString()
@@ -17,6 +85,7 @@
 	  |
 	  &lt;static&gt;+studiesFilter: String;
 	  &lt;static&gt;+studyId: String;
+	  &lt;static&gt;+isTemplate: String;
 	  &lt;static&gt;+measurementId: String;
 	  &lt;static&gt;+interventionId: String;
 	  &lt;static&gt;+testAppRoute: String
@@ -36,8 +105,10 @@
 	
 	[&lt;abstract&gt;StudyFormRouteArgs
 	  |
-	  +studyId: String
+	  +studyCreationArgs: StudyCreationArgs
 	]
+	
+	[&lt;abstract&gt;StudyFormRouteArgs]o-[StudyCreationArgs]
 	
 	[&lt;abstract&gt;QuestionFormRouteArgs
 	  |
@@ -94,430 +165,111 @@
 	
 	[&lt;abstract&gt;StudyFormRouteArgs]&lt;:-[ReportItemFormRouteArgs]
 	
-	[RoutingIntents
-	  |
-	  &lt;static&gt;+root: RoutingIntent;
-	  &lt;static&gt;+studies: RoutingIntent;
-	  &lt;static&gt;+studiesShared: RoutingIntent;
-	  &lt;static&gt;+publicRegistry: RoutingIntent;
-	  &lt;static&gt;+study: RoutingIntent Function(String);
-	  &lt;static&gt;+studyEdit: RoutingIntent Function(String);
-	  &lt;static&gt;+studyEditInfo: RoutingIntent Function(String);
-	  &lt;static&gt;+studyEditEnrollment: RoutingIntent Function(String);
-	  &lt;static&gt;+studyEditInterventions: RoutingIntent Function(String);
-	  &lt;static&gt;+studyEditIntervention: RoutingIntent Function(String, String);
-	  &lt;static&gt;+studyEditMeasurements: RoutingIntent Function(String);
-	  &lt;static&gt;+studyEditReports: RoutingIntent Function(String);
-	  &lt;static&gt;+studyEditMeasurement: RoutingIntent Function(String, String);
-	  &lt;static&gt;+studyTest: RoutingIntent Function(String, {String? appRoute});
-	  &lt;static&gt;+studyRecruit: RoutingIntent Function(String);
-	  &lt;static&gt;+studyMonitor: RoutingIntent Function(String);
-	  &lt;static&gt;+studyAnalyze: RoutingIntent Function(String);
-	  &lt;static&gt;+studySettings: RoutingIntent Function(String);
-	  &lt;static&gt;+accountSettings: RoutingIntent;
-	  &lt;static&gt;+studyNew: RoutingIntent;
-	  &lt;static&gt;+login: RoutingIntent;
-	  &lt;static&gt;+signup: RoutingIntent;
-	  &lt;static&gt;+passwordForgot: RoutingIntent;
-	  &lt;static&gt;+passwordForgot2: RoutingIntent Function(String);
-	  &lt;static&gt;+passwordRecovery: RoutingIntent;
-	  &lt;static&gt;+error: RoutingIntent Function(Exception)
-	]
-	
-	[RoutingIntents]o-[RoutingIntent]
-	[RoutingIntents]o-[RoutingIntent Function(String)]
-	[RoutingIntents]o-[RoutingIntent Function(String, String)]
-	[RoutingIntents]o-[RoutingIntent Function(String, {String? appRoute})]
-	[RoutingIntents]o-[RoutingIntent Function(Exception)]
-	
-	[RoutingIntent
-	  |
-	  +route: GoRoute;
-	  +params: Map&lt;String, String&gt;;
-	  +queryParams: Map&lt;String, String&gt;;
-	  +dispatch: RoutingIntentDispatch?;
-	  +extra: Object?;
-	  +routeName: String;
-	  +arguments: Map&lt;String, String&gt;;
-	  +props: List&lt;Object?&gt;
-	  |
-	  -dynamic _validateRoute();
-	  +bool matches()
-	]
-	
-	[RoutingIntent]o-[GoRoute]
-	[RoutingIntent]o-[RoutingIntentDispatch]
-	[&lt;abstract&gt;Equatable]&lt;:-[RoutingIntent]
-	
-	[RoutingIntentDispatch
-	  |
-	  +index: int;
-	  &lt;static&gt;+values: List&lt;RoutingIntentDispatch&gt;;
-	  &lt;static&gt;+go: RoutingIntentDispatch;
-	  &lt;static&gt;+push: RoutingIntentDispatch
-	]
-	
-	[RoutingIntentDispatch]o-[RoutingIntentDispatch]
-	[Enum]&lt;:--[RoutingIntentDispatch]
-	
 	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="893.0" width="4393.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="893.0" width="4862.5" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M398.0 275.7 L398 457 L398 568 L398.0 568.0 " fill="none"></path>
+					<path d="M817.6 305.3 L286 457 L264.2608695652174 477 L264.3 477.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M403.3 266.3 L398.0 275.7 L392.7 266.3 L398.0 257.0 Z"></path>
+						<path d="M828.0 307.8 L817.6 305.3 L825.1 297.6 L835.5 300.1 Z"></path>
 					</g>
-					<path d="M1064.0 306.2 L1064 457 L1064 568 L1064.0 568.0 " fill="none"></path>
+					<path d="M818.0 328.5 L463.5 457 L463.5 568 L463.5 568.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1069.3 296.8 L1064.0 306.2 L1058.7 296.8 L1064.0 287.5 Z"></path>
+						<path d="M828.5 330.4 L818.0 328.5 L824.9 320.3 L835.5 322.2 Z"></path>
 					</g>
-					<path d="M1719.1 254.8 L1255 457 L1255 552.5 L1255.0 552.5 " fill="none"></path>
-					<path d="M1721.2 259.7 L1719.1 254.8 L1717.0 249.9 L1731.3 249.5 Z"></path>
-					<path d="M1248.0 627.7 L1235 710 L1235 768 L1235.0 768.0 " fill="none"></path>
-					<path d="M1253.3 628.5 L1248.0 627.7 L1242.7 626.8 L1250.1 614.5 Z"></path>
-					<path d="M1755.5 258.1 L1519.5 457 L1519.5 552.5 L1519.5 552.5 " fill="none"></path>
-					<path d="M1759.0 262.2 L1755.5 258.1 L1752.1 254.0 L1765.7 249.5 Z"></path>
-					<path d="M1802.5 262.8 L1802.5 457 L1802.5 552.5 L1802.5 552.5 " fill="none"></path>
-					<path d="M1807.8 262.8 L1802.5 262.8 L1797.2 262.8 L1802.5 249.5 Z"></path>
-					<path d="M1802.5 627.8 L1802.5 710 L1790.9353741496598 752.5 L1790.9 752.5 " fill="none"></path>
-					<path d="M1807.8 627.8 L1802.5 627.8 L1797.2 627.8 L1802.5 614.5 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M1329.1 620.4 L1508.75 710 L1667.0408163265306 752.5 L1667.0 752.5 " fill="none"></path>
-					</g>
-					<path d="M1331.5 615.7 L1329.1 620.4 L1326.7 625.2 L1317.2 614.5 Z"></path>
-					<path d="M1851.1 257.9 L2096.5 457 L2096.5 552.5 L2096.5 552.5 " fill="none"></path>
-					<path d="M1854.4 253.8 L1851.1 257.9 L1847.7 262.0 L1840.7 249.5 Z"></path>
-					<path d="M2096.5 627.8 L2096.5 710 L2096.5 752.5 L2096.5 752.5 " fill="none"></path>
-					<path d="M2101.8 627.8 L2096.5 627.8 L2091.2 627.8 L2096.5 614.5 Z"></path>
-					<path d="M1888.0 254.7 L2366 457 L2366 552.5 L2366.0 552.5 " fill="none"></path>
-					<path d="M1890.1 249.8 L1888.0 254.7 L1885.9 259.6 L1875.7 249.5 Z"></path>
-					<path d="M3037.2 353.5 L2805 457 L2783.2608695652175 477 L2783.3 477.0 " fill="none"></path>
+					<path d="M820.2 428.0 L778.5 457 L778.5 568 L778.5 568.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3047.9 354.6 L3037.2 353.5 L3043.6 344.9 L3054.3 345.9 Z"></path>
+						<path d="M830.9 427.1 L820.2 428.0 L824.8 418.3 L835.5 417.4 Z"></path>
 					</g>
-					<path d="M3038.7 419.5 L2982.5 457 L2982.5 568 L2982.5 568.0 " fill="none"></path>
+					<path d="M1121.5 455.7 L1121.5 457 L1121.5 568 L1121.5 568.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3049.4 418.8 L3038.7 419.5 L3043.5 409.9 L3054.3 409.2 Z"></path>
+						<path d="M1126.8 446.3 L1121.5 455.7 L1116.2 446.3 L1121.5 437.0 Z"></path>
 					</g>
-					<path d="M3303.7 455.4 L3303.5 457 L3303.5 568 L3303.5 568.0 " fill="none"></path>
+					<path d="M1423.5 398.1 L1522.5 457 L1522.5 568 L1522.5 568.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3310.4 447.0 L3303.7 455.4 L3299.9 445.4 L3306.6 437.0 Z"></path>
+						<path d="M1418.2 388.8 L1423.5 398.1 L1412.8 398.0 L1407.5 388.6 Z"></path>
 					</g>
-					<path d="M3641.9 416.0 L3704.5 457 L3704.5 568 L3704.5 568.0 " fill="none"></path>
+					<path d="M1425.3 312.9 L1889.5 457 L1889.5 568 L1889.5 568.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3637.0 406.4 L3641.9 416.0 L3631.1 415.3 L3626.3 405.8 Z"></path>
+						<path d="M1418.0 305.0 L1425.3 312.9 L1414.8 315.2 L1407.5 307.3 Z"></path>
 					</g>
-					<path d="M3644.0 314.7 L4093.5 457 L4093.5 568 L4093.5 568.0 " fill="none"></path>
+					<path d="M1425.7 286.2 L2192.5 457 L2192.5 568 L2192.5 568.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3636.8 306.8 L3644.0 314.7 L3633.5 317.0 L3626.3 309.1 Z"></path>
+						<path d="M1417.8 279.0 L1425.7 286.2 L1415.5 289.4 L1407.5 282.2 Z"></path>
 					</g>
-					<path d="M2504.0 700.9 L2491.25 710 L2491.25 768 L2491.3 768.0 " fill="none"></path>
+					<path d="M128.7 708.4 L128.5 710 L128.5 768 L128.5 768.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2514.6 699.8 L2504.0 700.9 L2508.4 691.1 L2519.1 690.0 Z"></path>
+						<path d="M135.5 700.1 L128.7 708.4 L124.9 698.4 L131.7 690.0 Z"></path>
 					</g>
-					<path d="M2794.6 702.8 L2802.25 710 L3487.25 767.7710843373494 L3487.3 767.8 " fill="none"></path>
+					<path d="M315.5 602.6 L1257 710 L2199 771.3531236154187 L2199.0 771.4 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2791.4 692.5 L2794.6 702.8 L2784.1 700.3 L2780.9 690.0 Z"></path>
+						<path d="M306.9 596.2 L315.5 602.6 L305.7 606.8 L297.0 600.4 Z"></path>
 					</g>
-					<path d="M2606.8 247.3 L2606.75 457 L2616.354743083004 477 L2616.4 477.0 " fill="none"></path>
-					<path d="M2612.1 247.3 L2606.8 247.3 L2601.4 247.3 L2606.8 234.0 Z"></path>
-					<path d="M3878.4 732.9 L3890.25 730 L3897.75 730 L3897.75 730 L3905.25 783.5 L3905.25 783.5 L3897.75 837 L3897.75 837 L3890.25 837 L3890.25 837 L3860.25 829.5866050808314 L3860.3 829.6 " fill="none"></path>
+					<path d="M128.5 247.3 L128.5 457 L131.66205533596838 477 L131.7 477.0 " fill="none"></path>
+					<path d="M133.8 247.3 L128.5 247.3 L123.2 247.3 L128.5 234.0 Z"></path>
+					<path d="M2590.6 760.8 L2868.5 730 L2942.625 730 L2942.625 730 L3016.75 783.5 L3016.75 783.5 L2942.625 837 L2942.625 837 L2868.5 837 L2868.5 837 L2572 804.157867494824 L2572.0 804.2 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3868.0 730.0 L3878.4 732.9 L3870.6 740.4 L3860.3 737.4 Z"></path>
+						<path d="M2580.7 756.5 L2590.6 760.8 L2581.9 767.1 L2572.0 762.8 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M4306.5 612.3 L4306.5 710 L3860.25 761.8362307388384 L3860.3 761.8 " fill="none"></path>
+						<path d="M2405.5 612.3 L2405.5 710 L2400.0578231292516 730 L2400.1 730.0 " fill="none"></path>
 					</g>
-					<path d="M4311.8 612.3 L4306.5 612.3 L4301.2 612.3 L4306.5 599.0 Z"></path>
-					<g data-name="GoRouteParamEnum">
-						<g fill="#eee8d5" stroke="#33322E" data-name="GoRouteParamEnum">
-							<rect x="0.0" y="180.0" height="77.0" width="202.0" data-name="GoRouteParamEnum"></rect>
-							<path d="M0.0 211.0 L202.0 211.0" fill="none" data-name="GoRouteParamEnum"></path>
-						</g>
-						<g transform="translate(0, 180)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="GoRouteParamEnum">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GoRouteParamEnum">
-								<text x="93.0" y="13.5" stroke="none" text-anchor="middle" data-name="GoRouteParamEnum">GoRouteParamEnum</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 211)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GoRouteParamEnum">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="GoRouteParamEnum">
-								<text x="0.0" y="13.5" stroke="none" data-name="GoRouteParamEnum">+String toRouteParam()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="GoRouteParamEnum">+String toShortString()</text>
-								
-							</g>
-						</g>
+					<path d="M2410.8 612.3 L2405.5 612.3 L2400.2 612.3 L2405.5 599.0 Z"></path>
+					<path d="M2521.5 275.7 L2521.5 457 L2521.5 568 L2521.5 568.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2526.8 266.3 L2521.5 275.7 L2516.2 266.3 L2521.5 257.0 Z"></path>
 					</g>
-					<g data-name="RouterKeys">
-						<g fill="#eee8d5" stroke="#33322E" data-name="RouterKeys">
-							<rect x="242.0" y="180.0" height="77.0" width="312.0" data-name="RouterKeys"></rect>
-							<path d="M242.0 211.0 L554.0 211.0" fill="none" data-name="RouterKeys"></path>
-						</g>
-						<g transform="translate(242, 180)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RouterKeys">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RouterKeys">
-								<text x="148.0" y="13.5" stroke="none" text-anchor="middle" data-name="RouterKeys">RouterKeys</text>
-								
-							</g>
-						</g>
-						<g transform="translate(242, 211)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RouterKeys">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RouterKeys">
-								<text x="0.0" y="13.5" stroke="none" data-name="RouterKeys">&lt;static&gt;+studyKey: ValueKey&lt;String&gt;</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="RouterKeys">&lt;static&gt;+authKey: ValueKey&lt;String&gt;</text>
-								
-							</g>
-						</g>
+					<path d="M3187.5 306.2 L3187.5 457 L3187.5 568 L3187.5 568.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3192.8 296.8 L3187.5 306.2 L3182.2 296.8 L3187.5 287.5 Z"></path>
 					</g>
-					<g data-name="ValueKey">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ValueKey">
-							<rect x="352.5" y="568.0" height="31.0" width="91.0" data-name="ValueKey"></rect>
-						</g>
-						<g transform="translate(352.5, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ValueKey">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ValueKey">
-								<text x="37.5" y="13.5" stroke="none" text-anchor="middle" data-name="ValueKey">ValueKey</text>
-								
-							</g>
-						</g>
+					<path d="M3888.8 256.1 L3355.5 457 L3355.5 568 L3355.5 568.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3899.4 257.8 L3888.8 256.1 L3895.6 247.8 L3906.2 249.5 Z"></path>
 					</g>
-					<g data-name="RouteParams">
-						<g fill="#eee8d5" stroke="#33322E" data-name="RouteParams">
-							<rect x="594.0" y="157.5" height="122.0" width="267.0" data-name="RouteParams"></rect>
-							<path d="M594.0 188.5 L861.0 188.5" fill="none" data-name="RouteParams"></path>
-						</g>
-						<g transform="translate(594, 157.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RouteParams">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RouteParams">
-								<text x="125.5" y="13.5" stroke="none" text-anchor="middle" data-name="RouteParams">RouteParams</text>
-								
-							</g>
-						</g>
-						<g transform="translate(594, 188.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RouteParams">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RouteParams">
-								<text x="0.0" y="13.5" stroke="none" data-name="RouteParams">&lt;static&gt;+studiesFilter: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="RouteParams">&lt;static&gt;+studyId: String</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="RouteParams">&lt;static&gt;+measurementId: String</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="RouteParams">&lt;static&gt;+interventionId: String</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="RouteParams">&lt;static&gt;+testAppRoute: String</text>
-								
-							</g>
-						</g>
+					<path d="M3924.2 256.3 L3582.5 457 L3582.5 552.5 L3582.5 552.5 " fill="none"></path>
+					<path d="M3926.9 260.9 L3924.2 256.3 L3921.5 251.7 L3935.7 249.5 Z"></path>
+					<path d="M3476.8 618.7 L3202.75 710 L3202.75 768 L3202.8 768.0 " fill="none"></path>
+					<path d="M3478.5 623.8 L3476.8 618.7 L3475.1 613.7 L3489.4 614.5 Z"></path>
+					<path d="M3963.3 261.0 L3847 457 L3847 552.5 L3847.0 552.5 " fill="none"></path>
+					<path d="M3967.9 263.7 L3963.3 261.0 L3958.7 258.2 L3970.1 249.5 Z"></path>
+					<path d="M4013.7 261.0 L4130 457 L4130 552.5 L4130.0 552.5 " fill="none"></path>
+					<path d="M4018.3 258.2 L4013.7 261.0 L4009.1 263.7 L4006.9 249.5 Z"></path>
+					<path d="M4130.0 627.8 L4130 710 L4121.9047619047615 752.5 L4121.9 752.5 " fill="none"></path>
+					<path d="M4135.3 627.8 L4130.0 627.8 L4124.7 627.8 L4130.0 614.5 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M3656.6 620.4 L3836.25 710 L3998.0102040816328 752.5 L3998.0 752.5 " fill="none"></path>
 					</g>
-					<g data-name="RouterConf">
-						<g fill="#eee8d5" stroke="#33322E" data-name="RouterConf">
-							<rect x="901.0" y="149.5" height="138.0" width="326.0" data-name="RouterConf"></rect>
-							<path d="M901.0 180.5 L1227.0 180.5" fill="none" data-name="RouterConf"></path>
-							<path d="M901.0 256.5 L1227.0 256.5" fill="none" data-name="RouterConf"></path>
-						</g>
-						<g transform="translate(901, 149.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RouterConf">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RouterConf">
-								<text x="155.0" y="13.5" stroke="none" text-anchor="middle" data-name="RouterConf">RouterConf</text>
-								
-							</g>
-						</g>
-						<g transform="translate(901, 180.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RouterConf">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RouterConf">
-								<text x="0.0" y="13.5" stroke="none" data-name="RouterConf">&lt;static&gt;+router: GoRouter</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="RouterConf">&lt;static&gt;+routes: List&lt;GoRoute&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="RouterConf">&lt;static&gt;+publicRoutes: List&lt;GoRoute&gt;</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="RouterConf">&lt;static&gt;+privateRoutes: List&lt;GoRoute&gt;</text>
-								
-							</g>
-						</g>
-						<g transform="translate(901, 256.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RouterConf">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RouterConf">
-								<text x="0.0" y="13.5" stroke="none" data-name="RouterConf">&lt;static&gt;+GoRoute route()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="GoRouter">
-						<g fill="#eee8d5" stroke="#33322E" data-name="GoRouter">
-							<rect x="1018.0" y="568.0" height="31.0" width="92.0" data-name="GoRouter"></rect>
-						</g>
-						<g transform="translate(1018, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoRouter">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GoRouter">
-								<text x="38.0" y="13.5" stroke="none" text-anchor="middle" data-name="GoRouter">GoRouter</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyFormRouteArgs">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyFormRouteArgs">
-							<rect x="1710.5" y="187.5" height="62.0" width="184.0" data-name="StudyFormRouteArgs"></rect>
-							<path d="M1710.5 218.5 L1894.5 218.5" fill="none" data-name="StudyFormRouteArgs"></path>
-						</g>
-						<g transform="translate(1710.5, 187.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyFormRouteArgs">
-								<text x="84.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyFormRouteArgs">StudyFormRouteArgs</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1710.5, 218.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyFormRouteArgs">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyFormRouteArgs">+studyId: String</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="QuestionFormRouteArgs">
-						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionFormRouteArgs">
-							<rect x="1150.0" y="552.5" height="62.0" width="210.0" data-name="QuestionFormRouteArgs"></rect>
-							<path d="M1150.0 583.5 L1360.0 583.5" fill="none" data-name="QuestionFormRouteArgs"></path>
-						</g>
-						<g transform="translate(1150, 552.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="QuestionFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionFormRouteArgs">
-								<text x="97.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionFormRouteArgs">QuestionFormRouteArgs</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1150, 583.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionFormRouteArgs">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionFormRouteArgs">+questionId: String</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ScreenerQuestionFormRouteArgs">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ScreenerQuestionFormRouteArgs">
-							<rect x="1094.0" y="768.0" height="31.0" width="282.0" data-name="ScreenerQuestionFormRouteArgs"></rect>
-						</g>
-						<g transform="translate(1094, 768)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ScreenerQuestionFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ScreenerQuestionFormRouteArgs">
-								<text x="133.0" y="13.5" stroke="none" text-anchor="middle" data-name="ScreenerQuestionFormRouteArgs">ScreenerQuestionFormRouteArgs</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ConsentItemFormRouteArgs">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ConsentItemFormRouteArgs">
-							<rect x="1400.0" y="552.5" height="62.0" width="239.0" data-name="ConsentItemFormRouteArgs"></rect>
-							<path d="M1400.0 583.5 L1639.0 583.5" fill="none" data-name="ConsentItemFormRouteArgs"></path>
-						</g>
-						<g transform="translate(1400, 552.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ConsentItemFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ConsentItemFormRouteArgs">
-								<text x="111.5" y="13.5" stroke="none" text-anchor="middle" data-name="ConsentItemFormRouteArgs">ConsentItemFormRouteArgs</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1400, 583.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ConsentItemFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ConsentItemFormRouteArgs">
-								<text x="0.0" y="13.5" stroke="none" data-name="ConsentItemFormRouteArgs">+consentId: String</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="MeasurementFormRouteArgs">
-						<g fill="#eee8d5" stroke="#33322E" data-name="MeasurementFormRouteArgs">
-							<rect x="1679.0" y="552.5" height="62.0" width="247.0" data-name="MeasurementFormRouteArgs"></rect>
-							<path d="M1679.0 583.5 L1926.0 583.5" fill="none" data-name="MeasurementFormRouteArgs"></path>
-						</g>
-						<g transform="translate(1679, 552.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MeasurementFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MeasurementFormRouteArgs">
-								<text x="115.5" y="13.5" stroke="none" text-anchor="middle" data-name="MeasurementFormRouteArgs">MeasurementFormRouteArgs</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1679, 583.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MeasurementFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MeasurementFormRouteArgs">
-								<text x="0.0" y="13.5" stroke="none" data-name="MeasurementFormRouteArgs">+measurementId: String</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="SurveyQuestionFormRouteArgs">
-						<g fill="#eee8d5" stroke="#33322E" data-name="SurveyQuestionFormRouteArgs">
-							<rect x="1650.0" y="752.5" height="62.0" width="265.0" data-name="SurveyQuestionFormRouteArgs"></rect>
-							<path d="M1650.0 783.5 L1915.0 783.5" fill="none" data-name="SurveyQuestionFormRouteArgs"></path>
-						</g>
-						<g transform="translate(1650, 752.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SurveyQuestionFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SurveyQuestionFormRouteArgs">
-								<text x="124.5" y="13.5" stroke="none" text-anchor="middle" data-name="SurveyQuestionFormRouteArgs">SurveyQuestionFormRouteArgs</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1650, 783.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SurveyQuestionFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SurveyQuestionFormRouteArgs">
-								<text x="0.0" y="13.5" stroke="none" data-name="SurveyQuestionFormRouteArgs">+questionId: String</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="InterventionFormRouteArgs">
-						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionFormRouteArgs">
-							<rect x="1980.0" y="552.5" height="62.0" width="233.0" data-name="InterventionFormRouteArgs"></rect>
-							<path d="M1980.0 583.5 L2213.0 583.5" fill="none" data-name="InterventionFormRouteArgs"></path>
-						</g>
-						<g transform="translate(1980, 552.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionFormRouteArgs">
-								<text x="108.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionFormRouteArgs">InterventionFormRouteArgs</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1980, 583.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionFormRouteArgs">
-								<text x="0.0" y="13.5" stroke="none" data-name="InterventionFormRouteArgs">+interventionId: String</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="InterventionTaskFormRouteArgs">
-						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionTaskFormRouteArgs">
-							<rect x="1961.0" y="752.5" height="62.0" width="271.0" data-name="InterventionTaskFormRouteArgs"></rect>
-							<path d="M1961.0 783.5 L2232.0 783.5" fill="none" data-name="InterventionTaskFormRouteArgs"></path>
-						</g>
-						<g transform="translate(1961, 752.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionTaskFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionTaskFormRouteArgs">
-								<text x="127.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionTaskFormRouteArgs">InterventionTaskFormRouteArgs</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1961, 783.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionTaskFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionTaskFormRouteArgs">
-								<text x="0.0" y="13.5" stroke="none" data-name="InterventionTaskFormRouteArgs">+taskId: String</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ReportItemFormRouteArgs">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReportItemFormRouteArgs">
-							<rect x="2253.0" y="552.5" height="62.0" width="226.0" data-name="ReportItemFormRouteArgs"></rect>
-							<path d="M2253.0 583.5 L2479.0 583.5" fill="none" data-name="ReportItemFormRouteArgs"></path>
-						</g>
-						<g transform="translate(2253, 552.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportItemFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportItemFormRouteArgs">
-								<text x="105.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReportItemFormRouteArgs">ReportItemFormRouteArgs</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2253, 583.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportItemFormRouteArgs">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReportItemFormRouteArgs">+sectionId: String</text>
-								
-							</g>
-						</g>
-					</g>
+					<path d="M3659.0 615.7 L3656.6 620.4 L3654.2 625.2 L3644.7 614.5 Z"></path>
+					<path d="M4056.8 255.9 L4424 457 L4424 552.5 L4424.0 552.5 " fill="none"></path>
+					<path d="M4059.4 251.2 L4056.8 255.9 L4054.2 260.6 L4045.1 249.5 Z"></path>
+					<path d="M4424.0 627.8 L4424 710 L4424 752.5 L4424.0 752.5 " fill="none"></path>
+					<path d="M4429.3 627.8 L4424.0 627.8 L4418.7 627.8 L4424.0 614.5 Z"></path>
+					<path d="M4092.8 253.8 L4693.5 457 L4693.5 552.5 L4693.5 552.5 " fill="none"></path>
+					<path d="M4094.5 248.7 L4092.8 253.8 L4091.1 258.8 L4080.1 249.5 Z"></path>
 					<g data-name="RoutingIntents">
 						<g fill="#eee8d5" stroke="#33322E" data-name="RoutingIntents">
-							<rect x="3054.3" y="0.0" height="437.0" width="572.0" data-name="RoutingIntents"></rect>
-							<path d="M3054.3 31.0 L3626.3 31.0" fill="none" data-name="RoutingIntents"></path>
+							<rect x="835.5" y="0.0" height="437.0" width="572.0" data-name="RoutingIntents"></rect>
+							<path d="M835.5 31.0 L1407.5 31.0" fill="none" data-name="RoutingIntents"></path>
 						</g>
-						<g transform="translate(3054.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntents">
+						<g transform="translate(835.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntents">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RoutingIntents">
 								<text x="278.0" y="13.5" stroke="none" text-anchor="middle" data-name="RoutingIntents">RoutingIntents</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3054.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RoutingIntents">
+						<g transform="translate(835.5, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RoutingIntents">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RoutingIntents">
 								<text x="0.0" y="13.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+root: RoutingIntent</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+studies: RoutingIntent</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+studiesShared: RoutingIntent</text>
 								<text x="0.0" y="58.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+publicRegistry: RoutingIntent</text>
 								<text x="0.0" y="73.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+study: RoutingIntent Function(String)</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+studyEdit: RoutingIntent Function(String)</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+studyEdit: RoutingIntent Function(String, bool)</text>
 								<text x="0.0" y="103.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+studyEditInfo: RoutingIntent Function(String)</text>
 								<text x="0.0" y="118.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+studyEditEnrollment: RoutingIntent Function(String)</text>
 								<text x="0.0" y="133.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+studyEditInterventions: RoutingIntent Function(String)</text>
@@ -531,7 +283,7 @@
 								<text x="0.0" y="253.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+studyAnalyze: RoutingIntent Function(String)</text>
 								<text x="0.0" y="268.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+studySettings: RoutingIntent Function(String)</text>
 								<text x="0.0" y="283.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+accountSettings: RoutingIntent</text>
-								<text x="0.0" y="298.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+studyNew: RoutingIntent</text>
+								<text x="0.0" y="298.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+studyNew: RoutingIntent Function(bool)</text>
 								<text x="0.0" y="313.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+login: RoutingIntent</text>
 								<text x="0.0" y="328.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+signup: RoutingIntent</text>
 								<text x="0.0" y="343.5" stroke="none" data-name="RoutingIntents">&lt;static&gt;+passwordForgot: RoutingIntent</text>
@@ -544,17 +296,17 @@
 					</g>
 					<g data-name="RoutingIntent">
 						<g fill="#eee8d5" stroke="#33322E" data-name="RoutingIntent">
-							<rect x="2519.0" y="477.0" height="213.0" width="297.0" data-name="RoutingIntent"></rect>
-							<path d="M2519.0 508.0 L2816.0 508.0" fill="none" data-name="RoutingIntent"></path>
-							<path d="M2519.0 644.0 L2816.0 644.0" fill="none" data-name="RoutingIntent"></path>
+							<rect x="0.0" y="477.0" height="213.0" width="297.0" data-name="RoutingIntent"></rect>
+							<path d="M0.0 508.0 L297.0 508.0" fill="none" data-name="RoutingIntent"></path>
+							<path d="M0.0 644.0 L297.0 644.0" fill="none" data-name="RoutingIntent"></path>
 						</g>
-						<g transform="translate(2519, 477)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntent">
+						<g transform="translate(0, 477)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntent">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RoutingIntent">
 								<text x="140.5" y="13.5" stroke="none" text-anchor="middle" data-name="RoutingIntent">RoutingIntent</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2519, 508)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RoutingIntent">
+						<g transform="translate(0, 508)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RoutingIntent">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RoutingIntent">
 								<text x="0.0" y="13.5" stroke="none" data-name="RoutingIntent">+route: GoRoute</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="RoutingIntent">+params: Map&lt;String, String&gt;</text>
@@ -567,7 +319,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(2519, 644)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RoutingIntent">
+						<g transform="translate(0, 644)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RoutingIntent">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RoutingIntent">
 								<text x="0.0" y="13.5" stroke="none" data-name="RoutingIntent">-dynamic _validateRoute()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="RoutingIntent">+bool matches()</text>
@@ -577,20 +329,31 @@
 					</g>
 					<g data-name="RoutingIntent Function(String)">
 						<g fill="#eee8d5" stroke="#33322E" data-name="RoutingIntent Function(String)">
-							<rect x="2856.0" y="568.0" height="31.0" width="253.0" data-name="RoutingIntent Function(String)"></rect>
+							<rect x="337.0" y="568.0" height="31.0" width="253.0" data-name="RoutingIntent Function(String)"></rect>
 						</g>
-						<g transform="translate(2856, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntent Function(String)">
+						<g transform="translate(337, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntent Function(String)">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RoutingIntent Function(String)">
 								<text x="118.5" y="13.5" stroke="none" text-anchor="middle" data-name="RoutingIntent Function(String)">RoutingIntent Function(String)</text>
 								
 							</g>
 						</g>
 					</g>
+					<g data-name="RoutingIntent Function(String, bool)">
+						<g fill="#eee8d5" stroke="#33322E" data-name="RoutingIntent Function(String, bool)">
+							<rect x="630.0" y="568.0" height="31.0" width="297.0" data-name="RoutingIntent Function(String, bool)"></rect>
+						</g>
+						<g transform="translate(630, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntent Function(String, bool)">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RoutingIntent Function(String, bool)">
+								<text x="140.5" y="13.5" stroke="none" text-anchor="middle" data-name="RoutingIntent Function(String, bool)">RoutingIntent Function(String, bool)</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="RoutingIntent Function(String, String)">
 						<g fill="#eee8d5" stroke="#33322E" data-name="RoutingIntent Function(String, String)">
-							<rect x="3149.0" y="568.0" height="31.0" width="309.0" data-name="RoutingIntent Function(String, String)"></rect>
+							<rect x="967.0" y="568.0" height="31.0" width="309.0" data-name="RoutingIntent Function(String, String)"></rect>
 						</g>
-						<g transform="translate(3149, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntent Function(String, String)">
+						<g transform="translate(967, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntent Function(String, String)">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RoutingIntent Function(String, String)">
 								<text x="146.5" y="13.5" stroke="none" text-anchor="middle" data-name="RoutingIntent Function(String, String)">RoutingIntent Function(String, String)</text>
 								
@@ -599,20 +362,31 @@
 					</g>
 					<g data-name="RoutingIntent Function(String, {String? appRoute})">
 						<g fill="#eee8d5" stroke="#33322E" data-name="RoutingIntent Function(String, {String? appRoute})">
-							<rect x="3498.0" y="568.0" height="31.0" width="413.0" data-name="RoutingIntent Function(String, {String? appRoute})"></rect>
+							<rect x="1316.0" y="568.0" height="31.0" width="413.0" data-name="RoutingIntent Function(String, {String? appRoute})"></rect>
 						</g>
-						<g transform="translate(3498, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntent Function(String, {String? appRoute})">
+						<g transform="translate(1316, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntent Function(String, {String? appRoute})">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RoutingIntent Function(String, {String? appRoute})">
 								<text x="198.5" y="13.5" stroke="none" text-anchor="middle" data-name="RoutingIntent Function(String, {String? appRoute})">RoutingIntent Function(String, {String? appRoute})</text>
 								
 							</g>
 						</g>
 					</g>
+					<g data-name="RoutingIntent Function(bool)">
+						<g fill="#eee8d5" stroke="#33322E" data-name="RoutingIntent Function(bool)">
+							<rect x="1769.0" y="568.0" height="31.0" width="241.0" data-name="RoutingIntent Function(bool)"></rect>
+						</g>
+						<g transform="translate(1769, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntent Function(bool)">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RoutingIntent Function(bool)">
+								<text x="112.5" y="13.5" stroke="none" text-anchor="middle" data-name="RoutingIntent Function(bool)">RoutingIntent Function(bool)</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="RoutingIntent Function(Exception)">
 						<g fill="#eee8d5" stroke="#33322E" data-name="RoutingIntent Function(Exception)">
-							<rect x="3951.0" y="568.0" height="31.0" width="285.0" data-name="RoutingIntent Function(Exception)"></rect>
+							<rect x="2050.0" y="568.0" height="31.0" width="285.0" data-name="RoutingIntent Function(Exception)"></rect>
 						</g>
-						<g transform="translate(3951, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntent Function(Exception)">
+						<g transform="translate(2050, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntent Function(Exception)">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RoutingIntent Function(Exception)">
 								<text x="134.5" y="13.5" stroke="none" text-anchor="middle" data-name="RoutingIntent Function(Exception)">RoutingIntent Function(Exception)</text>
 								
@@ -621,9 +395,9 @@
 					</g>
 					<g data-name="GoRoute">
 						<g fill="#eee8d5" stroke="#33322E" data-name="GoRoute">
-							<rect x="2448.3" y="768.0" height="31.0" width="86.0" data-name="GoRoute"></rect>
+							<rect x="85.5" y="768.0" height="31.0" width="86.0" data-name="GoRoute"></rect>
 						</g>
-						<g transform="translate(2448.25, 768)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoRoute">
+						<g transform="translate(85.5, 768)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoRoute">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GoRoute">
 								<text x="35.0" y="13.5" stroke="none" text-anchor="middle" data-name="GoRoute">GoRoute</text>
 								
@@ -632,16 +406,16 @@
 					</g>
 					<g data-name="RoutingIntentDispatch">
 						<g fill="#eee8d5" stroke="#33322E" data-name="RoutingIntentDispatch">
-							<rect x="3487.3" y="730.0" height="107.0" width="373.0" data-name="RoutingIntentDispatch"></rect>
-							<path d="M3487.3 761.0 L3860.3 761.0" fill="none" data-name="RoutingIntentDispatch"></path>
+							<rect x="2199.0" y="730.0" height="107.0" width="373.0" data-name="RoutingIntentDispatch"></rect>
+							<path d="M2199.0 761.0 L2572.0 761.0" fill="none" data-name="RoutingIntentDispatch"></path>
 						</g>
-						<g transform="translate(3487.25, 730)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntentDispatch">
+						<g transform="translate(2199, 730)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RoutingIntentDispatch">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RoutingIntentDispatch">
 								<text x="178.5" y="13.5" stroke="none" text-anchor="middle" data-name="RoutingIntentDispatch">RoutingIntentDispatch</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3487.25, 761)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RoutingIntentDispatch">
+						<g transform="translate(2199, 761)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RoutingIntentDispatch">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RoutingIntentDispatch">
 								<text x="0.0" y="13.5" stroke="none" data-name="RoutingIntentDispatch">+index: int</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="RoutingIntentDispatch">&lt;static&gt;+values: List&lt;RoutingIntentDispatch&gt;</text>
@@ -653,9 +427,9 @@
 					</g>
 					<g data-name="Equatable">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Equatable">
-							<rect x="2558.8" y="203.0" height="31.0" width="96.0" data-name="Equatable"></rect>
+							<rect x="80.5" y="203.0" height="31.0" width="96.0" data-name="Equatable"></rect>
 						</g>
-						<g transform="translate(2558.75, 203)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Equatable">
+						<g transform="translate(80.5, 203)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Equatable">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Equatable">
 								<text x="40.0" y="13.5" stroke="none" text-anchor="middle" data-name="Equatable">Equatable</text>
 								
@@ -664,11 +438,288 @@
 					</g>
 					<g data-name="Enum">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Enum">
-							<rect x="4276.0" y="568.0" height="31.0" width="61.0" data-name="Enum"></rect>
+							<rect x="2375.0" y="568.0" height="31.0" width="61.0" data-name="Enum"></rect>
 						</g>
-						<g transform="translate(4276, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
+						<g transform="translate(2375, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Enum">
 								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Enum">Enum</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="GoRouteParamEnum">
+						<g fill="#eee8d5" stroke="#33322E" data-name="GoRouteParamEnum">
+							<rect x="2123.5" y="180.0" height="77.0" width="202.0" data-name="GoRouteParamEnum"></rect>
+							<path d="M2123.5 211.0 L2325.5 211.0" fill="none" data-name="GoRouteParamEnum"></path>
+						</g>
+						<g transform="translate(2123.5, 180)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="GoRouteParamEnum">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GoRouteParamEnum">
+								<text x="93.0" y="13.5" stroke="none" text-anchor="middle" data-name="GoRouteParamEnum">GoRouteParamEnum</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2123.5, 211)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GoRouteParamEnum">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="GoRouteParamEnum">
+								<text x="0.0" y="13.5" stroke="none" data-name="GoRouteParamEnum">+String toRouteParam()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="GoRouteParamEnum">+String toShortString()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="RouterKeys">
+						<g fill="#eee8d5" stroke="#33322E" data-name="RouterKeys">
+							<rect x="2365.5" y="180.0" height="77.0" width="312.0" data-name="RouterKeys"></rect>
+							<path d="M2365.5 211.0 L2677.5 211.0" fill="none" data-name="RouterKeys"></path>
+						</g>
+						<g transform="translate(2365.5, 180)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RouterKeys">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RouterKeys">
+								<text x="148.0" y="13.5" stroke="none" text-anchor="middle" data-name="RouterKeys">RouterKeys</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2365.5, 211)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RouterKeys">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RouterKeys">
+								<text x="0.0" y="13.5" stroke="none" data-name="RouterKeys">&lt;static&gt;+studyKey: ValueKey&lt;String&gt;</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="RouterKeys">&lt;static&gt;+authKey: ValueKey&lt;String&gt;</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ValueKey">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ValueKey">
+							<rect x="2476.0" y="568.0" height="31.0" width="91.0" data-name="ValueKey"></rect>
+						</g>
+						<g transform="translate(2476, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ValueKey">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ValueKey">
+								<text x="37.5" y="13.5" stroke="none" text-anchor="middle" data-name="ValueKey">ValueKey</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="RouteParams">
+						<g fill="#eee8d5" stroke="#33322E" data-name="RouteParams">
+							<rect x="2717.5" y="150.0" height="137.0" width="267.0" data-name="RouteParams"></rect>
+							<path d="M2717.5 181.0 L2984.5 181.0" fill="none" data-name="RouteParams"></path>
+						</g>
+						<g transform="translate(2717.5, 150)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RouteParams">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RouteParams">
+								<text x="125.5" y="13.5" stroke="none" text-anchor="middle" data-name="RouteParams">RouteParams</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2717.5, 181)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RouteParams">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RouteParams">
+								<text x="0.0" y="13.5" stroke="none" data-name="RouteParams">&lt;static&gt;+studiesFilter: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="RouteParams">&lt;static&gt;+studyId: String</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="RouteParams">&lt;static&gt;+isTemplate: String</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="RouteParams">&lt;static&gt;+measurementId: String</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="RouteParams">&lt;static&gt;+interventionId: String</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="RouteParams">&lt;static&gt;+testAppRoute: String</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="RouterConf">
+						<g fill="#eee8d5" stroke="#33322E" data-name="RouterConf">
+							<rect x="3024.5" y="149.5" height="138.0" width="326.0" data-name="RouterConf"></rect>
+							<path d="M3024.5 180.5 L3350.5 180.5" fill="none" data-name="RouterConf"></path>
+							<path d="M3024.5 256.5 L3350.5 256.5" fill="none" data-name="RouterConf"></path>
+						</g>
+						<g transform="translate(3024.5, 149.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RouterConf">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RouterConf">
+								<text x="155.0" y="13.5" stroke="none" text-anchor="middle" data-name="RouterConf">RouterConf</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3024.5, 180.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RouterConf">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RouterConf">
+								<text x="0.0" y="13.5" stroke="none" data-name="RouterConf">&lt;static&gt;+router: GoRouter</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="RouterConf">&lt;static&gt;+routes: List&lt;GoRoute&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="RouterConf">&lt;static&gt;+publicRoutes: List&lt;GoRoute&gt;</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="RouterConf">&lt;static&gt;+privateRoutes: List&lt;GoRoute&gt;</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3024.5, 256.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RouterConf">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RouterConf">
+								<text x="0.0" y="13.5" stroke="none" data-name="RouterConf">&lt;static&gt;+GoRoute route()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="GoRouter">
+						<g fill="#eee8d5" stroke="#33322E" data-name="GoRouter">
+							<rect x="3141.5" y="568.0" height="31.0" width="92.0" data-name="GoRouter"></rect>
+						</g>
+						<g transform="translate(3141.5, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoRouter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GoRouter">
+								<text x="38.0" y="13.5" stroke="none" text-anchor="middle" data-name="GoRouter">GoRouter</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyFormRouteArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyFormRouteArgs">
+							<rect x="3823.5" y="187.5" height="62.0" width="330.0" data-name="StudyFormRouteArgs"></rect>
+							<path d="M3823.5 218.5 L4153.5 218.5" fill="none" data-name="StudyFormRouteArgs"></path>
+						</g>
+						<g transform="translate(3823.5, 187.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyFormRouteArgs">
+								<text x="157.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyFormRouteArgs">StudyFormRouteArgs</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3823.5, 218.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyFormRouteArgs">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyFormRouteArgs">+studyCreationArgs: StudyCreationArgs</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyCreationArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyCreationArgs">
+							<rect x="3273.5" y="568.0" height="31.0" width="164.0" data-name="StudyCreationArgs"></rect>
+						</g>
+						<g transform="translate(3273.5, 568)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyCreationArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyCreationArgs">
+								<text x="74.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyCreationArgs">StudyCreationArgs</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="QuestionFormRouteArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionFormRouteArgs">
+							<rect x="3477.5" y="552.5" height="62.0" width="210.0" data-name="QuestionFormRouteArgs"></rect>
+							<path d="M3477.5 583.5 L3687.5 583.5" fill="none" data-name="QuestionFormRouteArgs"></path>
+						</g>
+						<g transform="translate(3477.5, 552.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="QuestionFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionFormRouteArgs">
+								<text x="97.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionFormRouteArgs">QuestionFormRouteArgs</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3477.5, 583.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionFormRouteArgs">
+								<text x="0.0" y="13.5" stroke="none" data-name="QuestionFormRouteArgs">+questionId: String</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ScreenerQuestionFormRouteArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ScreenerQuestionFormRouteArgs">
+							<rect x="3061.8" y="768.0" height="31.0" width="282.0" data-name="ScreenerQuestionFormRouteArgs"></rect>
+						</g>
+						<g transform="translate(3061.75, 768)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ScreenerQuestionFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ScreenerQuestionFormRouteArgs">
+								<text x="133.0" y="13.5" stroke="none" text-anchor="middle" data-name="ScreenerQuestionFormRouteArgs">ScreenerQuestionFormRouteArgs</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ConsentItemFormRouteArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ConsentItemFormRouteArgs">
+							<rect x="3727.5" y="552.5" height="62.0" width="239.0" data-name="ConsentItemFormRouteArgs"></rect>
+							<path d="M3727.5 583.5 L3966.5 583.5" fill="none" data-name="ConsentItemFormRouteArgs"></path>
+						</g>
+						<g transform="translate(3727.5, 552.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ConsentItemFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ConsentItemFormRouteArgs">
+								<text x="111.5" y="13.5" stroke="none" text-anchor="middle" data-name="ConsentItemFormRouteArgs">ConsentItemFormRouteArgs</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3727.5, 583.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ConsentItemFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ConsentItemFormRouteArgs">
+								<text x="0.0" y="13.5" stroke="none" data-name="ConsentItemFormRouteArgs">+consentId: String</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="MeasurementFormRouteArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="MeasurementFormRouteArgs">
+							<rect x="4006.5" y="552.5" height="62.0" width="247.0" data-name="MeasurementFormRouteArgs"></rect>
+							<path d="M4006.5 583.5 L4253.5 583.5" fill="none" data-name="MeasurementFormRouteArgs"></path>
+						</g>
+						<g transform="translate(4006.5, 552.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MeasurementFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MeasurementFormRouteArgs">
+								<text x="115.5" y="13.5" stroke="none" text-anchor="middle" data-name="MeasurementFormRouteArgs">MeasurementFormRouteArgs</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4006.5, 583.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MeasurementFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MeasurementFormRouteArgs">
+								<text x="0.0" y="13.5" stroke="none" data-name="MeasurementFormRouteArgs">+measurementId: String</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SurveyQuestionFormRouteArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SurveyQuestionFormRouteArgs">
+							<rect x="3983.5" y="752.5" height="62.0" width="265.0" data-name="SurveyQuestionFormRouteArgs"></rect>
+							<path d="M3983.5 783.5 L4248.5 783.5" fill="none" data-name="SurveyQuestionFormRouteArgs"></path>
+						</g>
+						<g transform="translate(3983.5, 752.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SurveyQuestionFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SurveyQuestionFormRouteArgs">
+								<text x="124.5" y="13.5" stroke="none" text-anchor="middle" data-name="SurveyQuestionFormRouteArgs">SurveyQuestionFormRouteArgs</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3983.5, 783.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SurveyQuestionFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SurveyQuestionFormRouteArgs">
+								<text x="0.0" y="13.5" stroke="none" data-name="SurveyQuestionFormRouteArgs">+questionId: String</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="InterventionFormRouteArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionFormRouteArgs">
+							<rect x="4307.5" y="552.5" height="62.0" width="233.0" data-name="InterventionFormRouteArgs"></rect>
+							<path d="M4307.5 583.5 L4540.5 583.5" fill="none" data-name="InterventionFormRouteArgs"></path>
+						</g>
+						<g transform="translate(4307.5, 552.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionFormRouteArgs">
+								<text x="108.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionFormRouteArgs">InterventionFormRouteArgs</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4307.5, 583.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionFormRouteArgs">
+								<text x="0.0" y="13.5" stroke="none" data-name="InterventionFormRouteArgs">+interventionId: String</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="InterventionTaskFormRouteArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionTaskFormRouteArgs">
+							<rect x="4288.5" y="752.5" height="62.0" width="271.0" data-name="InterventionTaskFormRouteArgs"></rect>
+							<path d="M4288.5 783.5 L4559.5 783.5" fill="none" data-name="InterventionTaskFormRouteArgs"></path>
+						</g>
+						<g transform="translate(4288.5, 752.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionTaskFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionTaskFormRouteArgs">
+								<text x="127.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionTaskFormRouteArgs">InterventionTaskFormRouteArgs</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4288.5, 783.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionTaskFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionTaskFormRouteArgs">
+								<text x="0.0" y="13.5" stroke="none" data-name="InterventionTaskFormRouteArgs">+taskId: String</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ReportItemFormRouteArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReportItemFormRouteArgs">
+							<rect x="4580.5" y="552.5" height="62.0" width="226.0" data-name="ReportItemFormRouteArgs"></rect>
+							<path d="M4580.5 583.5 L4806.5 583.5" fill="none" data-name="ReportItemFormRouteArgs"></path>
+						</g>
+						<g transform="translate(4580.5, 552.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportItemFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportItemFormRouteArgs">
+								<text x="105.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReportItemFormRouteArgs">ReportItemFormRouteArgs</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4580.5, 583.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReportItemFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReportItemFormRouteArgs">
+								<text x="0.0" y="13.5" stroke="none" data-name="ReportItemFormRouteArgs">+sectionId: String</text>
 								
 							</g>
 						</g>
