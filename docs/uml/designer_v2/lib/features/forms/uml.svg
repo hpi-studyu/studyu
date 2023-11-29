@@ -1,5 +1,59 @@
-<svg version="1.1" baseProfile="full" width="5671.8" height="1284.0" viewbox="0 0 5671.75 1284" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[&lt;abstract&gt;ManagedFormViewModel
+<svg version="1.1" baseProfile="full" width="5396.0" height="1284.0" viewbox="0 0 5396 1284" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[FormArrayTable
+	  |
+	  +control: AbstractControl&lt;dynamic&gt;;
+	  +items: List&lt;T&gt;;
+	  +onSelectItem: void Function(T);
+	  +getActionsAt: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int);
+	  +onNewItem: void Function()?;
+	  +rowTitle: String Function(T);
+	  +onNewItemLabel: String;
+	  +sectionTitle: String?;
+	  +sectionDescription: String?;
+	  +emptyIcon: IconData?;
+	  +emptyTitle: String?;
+	  +emptyDescription: String?;
+	  +sectionTitleDivider: bool?;
+	  +rowPrefix: Widget Function(BuildContext, T, int)?;
+	  +rowSuffix: Widget Function(BuildContext, T, int)?;
+	  +leadingWidget: Widget?;
+	  +itemsSectionPadding: EdgeInsets?;
+	  +hideLeadingTrailingWhenEmpty: bool;
+	  &lt;static&gt;+columns: List&lt;StandardTableColumn&gt;
+	  |
+	  +Widget build();
+	  -List&lt;Widget&gt; _buildRow();
+	  -Widget _newItemButton()
+	]
+	
+	[FormArrayTable]o-[&lt;abstract&gt;AbstractControl]
+	[FormArrayTable]o-[void Function(T)]
+	[FormArrayTable]o-[List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)]
+	[FormArrayTable]o-[void Function()?]
+	[FormArrayTable]o-[String Function(T)]
+	[FormArrayTable]o-[IconData]
+	[FormArrayTable]o-[Widget Function(BuildContext, T, int)?]
+	[FormArrayTable]o-[&lt;abstract&gt;Widget]
+	[FormArrayTable]o-[EdgeInsets]
+	
+	[CustomFormControl
+	  |
+	  -_onValueChangedDebouncer: Debouncer?;
+	  -_onStatusChangedDebouncer: Debouncer?;
+	  +onValueChanged: void Function(T?)?;
+	  +onStatusChanged: void Function(ControlStatus)?;
+	  +onStatusChangedDebounceTime: int?;
+	  +onValueChangedDebounceTime: int?
+	  |
+	  +void dispose()
+	]
+	
+	[CustomFormControl]o-[Debouncer]
+	[CustomFormControl]o-[void Function(T?)?]
+	[CustomFormControl]o-[void Function(ControlStatus)?]
+	[FormControl]&lt;:-[CustomFormControl]
+	
+	[&lt;abstract&gt;ManagedFormViewModel
 	  |
 	  +ManagedFormViewModel&lt;T&gt; createDuplicate()
 	]
@@ -32,20 +86,10 @@
 	
 	[FormViewModelCollection]o-[FormArray]
 	
-	[&lt;abstract&gt;FormValidationSetEnum
-	]
-	
-	[FormControlValidation
+	[UnsavedChangesDialog
 	  |
-	  +control: AbstractControl&lt;dynamic&gt;;
-	  +validators: List&lt;Validator&lt;dynamic&gt;&gt;;
-	  +asyncValidators: List&lt;AsyncValidator&lt;dynamic&gt;&gt;?;
-	  +validationMessages: Map&lt;String, String Function(Object)&gt;
-	  |
-	  +FormControlValidation merge()
+	  +Widget build()
 	]
-	
-	[FormControlValidation]o-[&lt;abstract&gt;AbstractControl]
 	
 	[FormInvalidException
 	]
@@ -144,22 +188,20 @@
 	[FormMode]o-[FormMode]
 	[Enum]&lt;:--[FormMode]
 	
-	[CustomFormControl
-	  |
-	  -_onValueChangedDebouncer: Debouncer?;
-	  -_onStatusChangedDebouncer: Debouncer?;
-	  +onValueChanged: void Function(T?)?;
-	  +onStatusChanged: void Function(ControlStatus)?;
-	  +onStatusChangedDebounceTime: int?;
-	  +onValueChangedDebounceTime: int?
-	  |
-	  +void dispose()
+	[&lt;abstract&gt;FormValidationSetEnum
 	]
 	
-	[CustomFormControl]o-[Debouncer]
-	[CustomFormControl]o-[void Function(T?)?]
-	[CustomFormControl]o-[void Function(ControlStatus)?]
-	[FormControl]&lt;:-[CustomFormControl]
+	[FormControlValidation
+	  |
+	  +control: AbstractControl&lt;dynamic&gt;;
+	  +validators: List&lt;Validator&lt;dynamic&gt;&gt;;
+	  +asyncValidators: List&lt;AsyncValidator&lt;dynamic&gt;&gt;?;
+	  +validationMessages: Map&lt;String, String Function(Object)&gt;
+	  |
+	  +FormControlValidation merge()
+	]
+	
+	[FormControlValidation]o-[&lt;abstract&gt;AbstractControl]
 	
 	[&lt;abstract&gt;IFormData
 	  |
@@ -168,178 +210,354 @@
 	  +IFormData copy()
 	]
 	
-	[UnsavedChangesDialog
-	  |
-	  +Widget build()
-	]
-	
-	[FormArrayTable
-	  |
-	  +control: AbstractControl&lt;dynamic&gt;;
-	  +items: List&lt;T&gt;;
-	  +onSelectItem: void Function(T);
-	  +getActionsAt: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int);
-	  +onNewItem: void Function()?;
-	  +rowTitle: String Function(T);
-	  +onNewItemLabel: String;
-	  +sectionTitle: String?;
-	  +sectionDescription: String?;
-	  +emptyIcon: IconData?;
-	  +emptyTitle: String?;
-	  +emptyDescription: String?;
-	  +sectionTitleDivider: bool?;
-	  +rowPrefix: Widget Function(BuildContext, T, int)?;
-	  +rowSuffix: Widget Function(BuildContext, T, int)?;
-	  +leadingWidget: Widget?;
-	  +itemsSectionPadding: EdgeInsets?;
-	  +hideLeadingTrailingWhenEmpty: bool;
-	  &lt;static&gt;+columns: List&lt;StandardTableColumn&gt;
-	  |
-	  +Widget build();
-	  -List&lt;Widget&gt; _buildRow();
-	  -Widget _newItemButton()
-	]
-	
-	[FormArrayTable]o-[&lt;abstract&gt;AbstractControl]
-	[FormArrayTable]o-[void Function(T)]
-	[FormArrayTable]o-[List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)]
-	[FormArrayTable]o-[void Function()?]
-	[FormArrayTable]o-[String Function(T)]
-	[FormArrayTable]o-[IconData]
-	[FormArrayTable]o-[Widget Function(BuildContext, T, int)?]
-	[FormArrayTable]o-[&lt;abstract&gt;Widget]
-	[FormArrayTable]o-[EdgeInsets]
-	
 	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="1284.0" width="5671.8" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="1284.0" width="5396.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M2481.0 804.8 L198 1086 L198 1136 L198.0 1136.0 " fill="none"></path>
-					<path d="M2481.7 810.1 L2481.0 804.8 L2480.4 799.5 L2494.3 803.2 Z"></path>
+					<path d="M945.8 254.3 L222.5 413 L241.57875185735512 734 L241.6 734.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M956.0 257.5 L945.8 254.3 L953.7 247.1 L964.0 250.3 Z"></path>
+					</g>
+					<path d="M946.0 269.0 L423.5 413 L423.5 734 L423.5 734.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M956.4 271.6 L946.0 269.0 L953.6 261.4 L964.0 264.0 Z"></path>
+					</g>
+					<path d="M946.9 312.8 L721 413 L721 734 L721.0 734.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M957.6 313.9 L946.9 312.8 L953.3 304.1 L964.0 305.2 Z"></path>
+					</g>
+					<path d="M1023.8 407.0 L1018.5 413 L1018.5 734 L1018.5 734.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1033.9 403.5 L1023.8 407.0 L1025.9 396.5 L1036.1 393.0 Z"></path>
+					</g>
+					<path d="M1209.0 411.7 L1209 413 L1209 734 L1209.0 734.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1214.3 402.3 L1209.0 411.7 L1203.7 402.3 L1209.0 393.0 Z"></path>
+					</g>
+					<path d="M1367.2 407.9 L1371 413 L1371 734 L1371.0 734.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1365.9 397.3 L1367.2 407.9 L1357.4 403.7 L1356.0 393.0 Z"></path>
+					</g>
+					<path d="M1470.4 337.0 L1612 413 L1612 734 L1612.0 734.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1464.7 327.8 L1470.4 337.0 L1459.7 337.2 L1454.0 328.1 Z"></path>
+					</g>
+					<path d="M1471.7 285.9 L1845 413 L1845 734 L1845.0 734.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1464.6 277.9 L1471.7 285.9 L1461.1 288.0 L1454.0 279.9 Z"></path>
+					</g>
+					<path d="M1472.0 271.0 L1973 413 L1973 734 L1973.0 734.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1464.4 263.3 L1472.0 271.0 L1461.5 273.6 L1454.0 265.9 Z"></path>
+					</g>
+					<path d="M2377.6 846.1 L2640 1086 L2697.817901234568 1151.5 L2697.8 1151.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2374.4 835.9 L2377.6 846.1 L2367.2 843.7 L2363.9 833.5 Z"></path>
+					</g>
+					<path d="M2272.0 852.2 L2272 1086 L2272 1151.5 L2272.0 1151.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2277.3 842.8 L2272.0 852.2 L2266.7 842.8 L2272.0 833.5 Z"></path>
+					</g>
+					<path d="M2199.2 848.5 L2024.5 1086 L2024.5 1151.5 L2024.5 1151.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2209.0 844.2 L2199.2 848.5 L2200.4 837.9 L2210.2 833.5 Z"></path>
+					</g>
+					<path d="M2272.0 225.3 L2272 413 L2272 665.5 L2272.0 665.5 " fill="none"></path>
+					<path d="M2277.3 225.3 L2272.0 225.3 L2266.7 225.3 L2272.0 212.0 Z"></path>
+					<path d="M3634.6 826.7 L5142 1086 L5142 1136 L5142.0 1136.0 " fill="none"></path>
+					<path d="M3635.5 821.5 L3634.6 826.7 L3633.7 832.0 L3621.5 824.5 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M1701.3 210.2 L815.5 413 L815.5 734 L815.5 734.0 " fill="none"></path>
+						<path d="M4538.1 212.9 L3809.5 413 L3809.5 734 L3809.5 734.0 " fill="none"></path>
 					</g>
-					<path d="M1702.4 215.4 L1701.3 210.2 L1700.1 205.0 L1714.3 207.3 Z"></path>
-					<path d="M1040.0 351.3 L1052.5 413 L1052.5 734 L1052.5 734.0 " fill="none"></path>
+					<path d="M4539.6 218.1 L4538.1 212.9 L4536.7 207.8 L4551.0 209.4 Z"></path>
+					<path d="M3796.0 279.9 L4046.5 413 L4046.5 734 L4046.5 734.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1043.4 341.1 L1040.0 351.3 L1033.0 343.2 L1036.3 333.0 Z"></path>
-					</g>
-					<path d="M1449.4 283.8 L1475.5 413 L1494.5787518573552 734 L1494.6 734.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1452.8 273.6 L1449.4 283.8 L1442.3 275.7 L1445.7 265.5 Z"></path>
+						<path d="M3790.2 270.8 L3796.0 279.9 L3785.2 280.2 L3779.5 271.1 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M1761.3 225.3 L1761.25 413 L1761.25 734 L1761.3 734.0 " fill="none"></path>
+						<path d="M4560.0 218.7 L4228.5 413 L4228.5 734 L4228.5 734.0 " fill="none"></path>
 					</g>
-					<path d="M1766.6 225.3 L1761.3 225.3 L1755.9 225.3 L1761.3 212.0 Z"></path>
+					<path d="M4562.7 223.3 L4560.0 218.7 L4557.3 214.1 L4571.5 212.0 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M1787.0 221.2 L1986.75 413 L1986.75 718.5 L1986.8 718.5 " fill="none"></path>
+						<path d="M4580.3 223.1 L4454 413 L4454 718.5 L4454.0 718.5 " fill="none"></path>
 					</g>
-					<path d="M1790.7 217.4 L1787.0 221.2 L1783.3 225.1 L1777.4 212.0 Z"></path>
-					<path d="M2171.8 246.2 L2171.75 413 L2171.75 734 L2171.8 734.0 " fill="none"></path>
+					<path d="M4584.7 226.1 L4580.3 223.1 L4575.9 220.1 L4587.7 212.0 Z"></path>
+					<path d="M4276.0 235.7 L4639 413 L4639 734 L4639.0 734.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2177.1 236.8 L2171.8 246.2 L2166.4 236.8 L2171.8 227.5 Z"></path>
+						<path d="M4269.9 226.8 L4276.0 235.7 L4265.3 236.4 L4259.2 227.5 Z"></path>
 					</g>
-					<path d="M2359.3 225.3 L2359.25 413 L2359.25 696 L2359.3 696.0 " fill="none"></path>
-					<path d="M2364.6 225.3 L2359.3 225.3 L2353.9 225.3 L2359.3 212.0 Z"></path>
-					<path d="M2475.7 810.1 L407.5 1086 L449.35185185185185 1106 L449.4 1106.0 " fill="none"></path>
+					<path d="M4954.5 225.3 L4954.5 413 L4954.5 696 L4954.5 696.0 " fill="none"></path>
+					<path d="M4959.8 225.3 L4954.5 225.3 L4949.2 225.3 L4954.5 212.0 Z"></path>
+					<path d="M3638.0 985.9 L3829.75 1086 L4572 1154.0693461647325 L4572.0 1154.1 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2485.7 814.2 L2475.7 810.1 L2484.3 803.6 L2494.3 807.7 Z"></path>
+						<path d="M3632.2 976.8 L3638.0 985.9 L3627.3 986.3 L3621.5 977.2 Z"></path>
 					</g>
-					<path d="M2476.6 905.6 L1952.25 1086 L1952.25 1151.5 L1952.3 1151.5 " fill="none"></path>
+					<path d="M3636.8 1064.2 L3668 1086 L3668 1151.5 L3668.0 1151.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2487.2 907.6 L2476.6 905.6 L2483.7 897.5 L2494.3 899.5 Z"></path>
+						<path d="M3632.2 1054.5 L3636.8 1064.2 L3626.1 1063.3 L3621.5 1053.6 Z"></path>
 					</g>
-					<path d="M3054.8 1083.5 L3055.75 1086 L3055.75 1128.5 L3055.8 1128.5 " fill="none"></path>
+					<path d="M2916.0 1080.5 L2911.5 1086 L2911.5 1128.5 L2911.5 1128.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3056.5 1072.9 L3054.8 1083.5 L3046.6 1076.6 L3048.3 1066.0 Z"></path>
+						<path d="M2926.0 1076.6 L2916.0 1080.5 L2917.8 1069.9 L2927.8 1066.0 Z"></path>
 					</g>
-					<path d="M3172.2 1081.1 L3175.75 1086 L3240.4413580246915 1151.5 L3240.4 1151.5 " fill="none"></path>
+					<path d="M2800.7 1078.1 L2791.5 1086 L2726.8086419753085 1151.5 L2726.8 1151.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3171.0 1070.4 L3172.2 1081.1 L3162.4 1076.7 L3161.2 1066.0 Z"></path>
+						<path d="M2811.3 1076.1 L2800.7 1078.1 L2804.4 1068.0 L2814.9 1066.0 Z"></path>
 					</g>
-					<path d="M3381.8 1048.3 L3438.75 1086 L3438.75 1151.5 L3438.8 1151.5 " fill="none"></path>
+					<path d="M2732.9 981.3 L2528.5 1086 L2528.5 1151.5 L2528.5 1151.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3377.0 1038.7 L3381.8 1048.3 L3371.1 1047.6 L3366.3 1038.0 Z"></path>
-					</g>
-					<g stroke-dasharray="6 6">
-						<path d="M2278.1 226.8 L2930.25 413 L2930.25 433 L2930.3 433.0 " fill="none"></path>
-					</g>
-					<path d="M2279.5 221.7 L2278.1 226.8 L2276.6 232.0 L2265.3 223.2 Z"></path>
-					<path d="M736.6 1155.8 L1442.5 1106 L1623.625 1106 L1623.625 1106 L1804.75 1167 L1804.75 1167 L1623.625 1228 L1623.625 1228 L1442.5 1228 L1442.5 1228 L718 1176.9376083188909 L718.0 1176.9 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M726.9 1151.1 L736.6 1155.8 L727.7 1161.7 L718.0 1157.1 Z"></path>
+						<path d="M2743.6 981.8 L2732.9 981.3 L2738.8 972.3 L2749.5 972.8 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M597.0 778.3 L597 1086 L592.0617283950618 1106 L592.1 1106.0 " fill="none"></path>
+						<path d="M4089.2 219.3 L3185.5 413 L3185.5 433 L3185.5 433.0 " fill="none"></path>
 					</g>
-					<path d="M602.3 778.3 L597.0 778.3 L591.7 778.3 L597.0 765.0 Z"></path>
-					<path d="M3589.6 846.1 L3327.25 1086 L3269.432098765432 1151.5 L3269.4 1151.5 " fill="none"></path>
+					<path d="M4090.3 224.5 L4089.2 219.3 L4088.1 214.1 L4102.3 216.5 Z"></path>
+					<path d="M4871.6 1110.4 L4884 1106 L4891.5 1106 L4891.5 1106 L4899 1167 L4899 1167 L4891.5 1228 L4891.5 1228 L4884 1228 L4884 1228 L4854 1217.298245614035 L4854.0 1217.3 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3600.1 843.7 L3589.6 846.1 L3592.9 835.9 L3603.4 833.5 Z"></path>
+						<path d="M4861.0 1108.5 L4871.6 1110.4 L4864.6 1118.6 L4854.0 1116.7 Z"></path>
 					</g>
-					<path d="M3695.3 852.2 L3695.25 1086 L3695.25 1151.5 L3695.3 1151.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3700.6 842.8 L3695.3 852.2 L3689.9 842.8 L3695.3 833.5 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M5103.1 776.3 L4907.5 1086 L4854 1108.280205655527 L4854.0 1108.3 " fill="none"></path>
 					</g>
-					<path d="M3768.1 848.5 L3942.75 1086 L3942.75 1151.5 L3942.8 1151.5 " fill="none"></path>
+					<path d="M5107.6 779.1 L5103.1 776.3 L5098.6 773.4 L5110.2 765.0 Z"></path>
+					<path d="M270.7 283.2 L313 413 L245.74739970282317 734 L245.7 734.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3766.9 837.9 L3768.1 848.5 L3758.3 844.2 L3757.0 833.5 Z"></path>
+						<path d="M272.9 272.7 L270.7 283.2 L262.8 276.0 L265.0 265.5 Z"></path>
 					</g>
-					<path d="M3605.8 224.1 L3695.25 413 L3695.25 665.5 L3695.3 665.5 " fill="none"></path>
-					<path d="M3610.6 221.8 L3605.8 224.1 L3601.0 226.3 L3600.1 212.0 Z"></path>
-					<path d="M4535.6 214.6 L1640.25 413 L1502.1675334323922 734 L1502.2 734.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M4545.3 219.2 L4535.6 214.6 L4544.6 208.6 L4554.3 213.3 Z"></path>
+					<g data-name="FormArrayTable">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormArrayTable">
+							<rect x="964.0" y="0.0" height="393.0" width="490.0" data-name="FormArrayTable"></rect>
+							<path d="M964.0 31.0 L1454.0 31.0" fill="none" data-name="FormArrayTable"></path>
+							<path d="M964.0 332.0 L1454.0 332.0" fill="none" data-name="FormArrayTable"></path>
+						</g>
+						<g transform="translate(964, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormArrayTable">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormArrayTable">
+								<text x="237.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormArrayTable">FormArrayTable</text>
+								
+							</g>
+						</g>
+						<g transform="translate(964, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormArrayTable">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormArrayTable">
+								<text x="0.0" y="13.5" stroke="none" data-name="FormArrayTable">+control: AbstractControl&lt;dynamic&gt;</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="FormArrayTable">+items: List&lt;T&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="FormArrayTable">+onSelectItem: void Function(T)</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="FormArrayTable">+getActionsAt: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="FormArrayTable">+onNewItem: void Function()?</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="FormArrayTable">+rowTitle: String Function(T)</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="FormArrayTable">+onNewItemLabel: String</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="FormArrayTable">+sectionTitle: String?</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="FormArrayTable">+sectionDescription: String?</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="FormArrayTable">+emptyIcon: IconData?</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="FormArrayTable">+emptyTitle: String?</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="FormArrayTable">+emptyDescription: String?</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="FormArrayTable">+sectionTitleDivider: bool?</text>
+								<text x="0.0" y="208.5" stroke="none" data-name="FormArrayTable">+rowPrefix: Widget Function(BuildContext, T, int)?</text>
+								<text x="0.0" y="223.5" stroke="none" data-name="FormArrayTable">+rowSuffix: Widget Function(BuildContext, T, int)?</text>
+								<text x="0.0" y="238.5" stroke="none" data-name="FormArrayTable">+leadingWidget: Widget?</text>
+								<text x="0.0" y="253.5" stroke="none" data-name="FormArrayTable">+itemsSectionPadding: EdgeInsets?</text>
+								<text x="0.0" y="268.5" stroke="none" data-name="FormArrayTable">+hideLeadingTrailingWhenEmpty: bool</text>
+								<text x="0.0" y="283.5" stroke="none" data-name="FormArrayTable">&lt;static&gt;+columns: List&lt;StandardTableColumn&gt;</text>
+								
+							</g>
+						</g>
+						<g transform="translate(964, 332)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormArrayTable">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormArrayTable">
+								<text x="0.0" y="13.5" stroke="none" data-name="FormArrayTable">+Widget build()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="FormArrayTable">-List&lt;Widget&gt; _buildRow()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="FormArrayTable">-Widget _newItemButton()</text>
+								
+							</g>
+						</g>
 					</g>
-					<path d="M4536.3 269.0 L4013.75 413 L4013.75 734 L4013.8 734.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M4546.7 271.6 L4536.3 269.0 L4543.8 261.4 L4554.3 264.0 Z"></path>
+					<g data-name="AbstractControl">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AbstractControl">
+							<rect x="173.5" y="734.0" height="31.0" width="138.0" data-name="AbstractControl"></rect>
+						</g>
+						<g transform="translate(173.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="AbstractControl">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AbstractControl">
+								<text x="61.0" y="13.5" stroke="none" text-anchor="middle" data-name="AbstractControl">AbstractControl</text>
+								
+							</g>
+						</g>
 					</g>
-					<path d="M4537.2 312.8 L4311.25 413 L4311.25 734 L4311.3 734.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M4547.9 313.9 L4537.2 312.8 L4543.6 304.1 L4554.3 305.2 Z"></path>
+					<g data-name="void Function(T)">
+						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(T)">
+							<rect x="351.5" y="734.0" height="31.0" width="144.0" data-name="void Function(T)"></rect>
+						</g>
+						<g transform="translate(351.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(T)">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(T)">
+								<text x="64.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(T)">void Function(T)</text>
+								
+							</g>
+						</g>
 					</g>
-					<path d="M4614.0 407.0 L4608.75 413 L4608.75 734 L4608.8 734.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M4624.2 403.5 L4614.0 407.0 L4616.2 396.5 L4626.3 393.0 Z"></path>
+					<g data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)">
+						<g fill="#eee8d5" stroke="#33322E" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)">
+							<rect x="535.5" y="734.0" height="31.0" width="371.0" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)"></rect>
+						</g>
+						<g transform="translate(535.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)">
+								<text x="177.5" y="13.5" stroke="none" text-anchor="middle" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)">List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)</text>
+								
+							</g>
+						</g>
 					</g>
-					<path d="M4799.3 411.7 L4799.25 413 L4799.25 734 L4799.3 734.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M4804.6 402.3 L4799.3 411.7 L4793.9 402.3 L4799.3 393.0 Z"></path>
+					<g data-name="void Function()?">
+						<g fill="#eee8d5" stroke="#33322E" data-name="void Function()?">
+							<rect x="946.5" y="734.0" height="31.0" width="144.0" data-name="void Function()?"></rect>
+						</g>
+						<g transform="translate(946.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function()?">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function()?">
+								<text x="64.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function()?">void Function()?</text>
+								
+							</g>
+						</g>
 					</g>
-					<path d="M4957.5 407.9 L4961.25 413 L4961.25 734 L4961.3 734.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M4956.1 397.3 L4957.5 407.9 L4947.6 403.7 L4946.3 393.0 Z"></path>
+					<g data-name="String Function(T)">
+						<g fill="#eee8d5" stroke="#33322E" data-name="String Function(T)">
+							<rect x="1130.5" y="734.0" height="31.0" width="157.0" data-name="String Function(T)"></rect>
+						</g>
+						<g transform="translate(1130.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="String Function(T)">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="String Function(T)">
+								<text x="70.5" y="13.5" stroke="none" text-anchor="middle" data-name="String Function(T)">String Function(T)</text>
+								
+							</g>
+						</g>
 					</g>
-					<path d="M5060.7 337.0 L5202.25 413 L5202.25 734 L5202.3 734.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M5055.0 327.8 L5060.7 337.0 L5049.9 337.2 L5044.3 328.1 Z"></path>
+					<g data-name="IconData">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IconData">
+							<rect x="1327.5" y="734.0" height="31.0" width="87.0" data-name="IconData"></rect>
+						</g>
+						<g transform="translate(1327.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IconData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IconData">
+								<text x="35.5" y="13.5" stroke="none" text-anchor="middle" data-name="IconData">IconData</text>
+								
+							</g>
+						</g>
 					</g>
-					<path d="M5061.9 285.9 L5435.25 413 L5435.25 734 L5435.3 734.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M5054.8 277.9 L5061.9 285.9 L5051.4 288.0 L5044.3 279.9 Z"></path>
+					<g data-name="Widget Function(BuildContext, T, int)?">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Widget Function(BuildContext, T, int)?">
+							<rect x="1454.5" y="734.0" height="31.0" width="315.0" data-name="Widget Function(BuildContext, T, int)?"></rect>
+						</g>
+						<g transform="translate(1454.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Widget Function(BuildContext, T, int)?">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget Function(BuildContext, T, int)?">
+								<text x="149.5" y="13.5" stroke="none" text-anchor="middle" data-name="Widget Function(BuildContext, T, int)?">Widget Function(BuildContext, T, int)?</text>
+								
+							</g>
+						</g>
 					</g>
-					<path d="M5062.2 271.0 L5563.25 413 L5563.25 734 L5563.3 734.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M5054.7 263.3 L5062.2 271.0 L5051.8 273.6 L5044.3 265.9 Z"></path>
+					<g data-name="Widget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Widget">
+							<rect x="1809.5" y="734.0" height="31.0" width="71.0" data-name="Widget"></rect>
+						</g>
+						<g transform="translate(1809.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Widget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget">
+								<text x="27.5" y="13.5" stroke="none" text-anchor="middle" data-name="Widget">Widget</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="EdgeInsets">
+						<g fill="#eee8d5" stroke="#33322E" data-name="EdgeInsets">
+							<rect x="1920.5" y="734.0" height="31.0" width="105.0" data-name="EdgeInsets"></rect>
+						</g>
+						<g transform="translate(1920.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EdgeInsets">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EdgeInsets">
+								<text x="44.5" y="13.5" stroke="none" text-anchor="middle" data-name="EdgeInsets">EdgeInsets</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="CustomFormControl">
+						<g fill="#eee8d5" stroke="#33322E" data-name="CustomFormControl">
+							<rect x="2065.5" y="665.5" height="168.0" width="413.0" data-name="CustomFormControl"></rect>
+							<path d="M2065.5 696.5 L2478.5 696.5" fill="none" data-name="CustomFormControl"></path>
+							<path d="M2065.5 802.5 L2478.5 802.5" fill="none" data-name="CustomFormControl"></path>
+						</g>
+						<g transform="translate(2065.5, 665.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CustomFormControl">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CustomFormControl">
+								<text x="198.5" y="13.5" stroke="none" text-anchor="middle" data-name="CustomFormControl">CustomFormControl</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2065.5, 696.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CustomFormControl">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CustomFormControl">
+								<text x="0.0" y="13.5" stroke="none" data-name="CustomFormControl">-_onValueChangedDebouncer: Debouncer?</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="CustomFormControl">-_onStatusChangedDebouncer: Debouncer?</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="CustomFormControl">+onValueChanged: void Function(T?)?</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="CustomFormControl">+onStatusChanged: void Function(ControlStatus)?</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="CustomFormControl">+onStatusChangedDebounceTime: int?</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="CustomFormControl">+onValueChangedDebounceTime: int?</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2065.5, 802.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CustomFormControl">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CustomFormControl">
+								<text x="0.0" y="13.5" stroke="none" data-name="CustomFormControl">+void dispose()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Debouncer">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Debouncer">
+							<rect x="2660.0" y="1151.5" height="31.0" width="103.0" data-name="Debouncer"></rect>
+						</g>
+						<g transform="translate(2660, 1151.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Debouncer">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Debouncer">
+								<text x="43.5" y="13.5" stroke="none" text-anchor="middle" data-name="Debouncer">Debouncer</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="void Function(T?)?">
+						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(T?)?">
+							<rect x="2190.0" y="1151.5" height="31.0" width="164.0" data-name="void Function(T?)?"></rect>
+						</g>
+						<g transform="translate(2190, 1151.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(T?)?">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(T?)?">
+								<text x="74.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(T?)?">void Function(T?)?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="void Function(ControlStatus)?">
+						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(ControlStatus)?">
+							<rect x="1899.0" y="1151.5" height="31.0" width="251.0" data-name="void Function(ControlStatus)?"></rect>
+						</g>
+						<g transform="translate(1899, 1151.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(ControlStatus)?">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(ControlStatus)?">
+								<text x="117.5" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(ControlStatus)?">void Function(ControlStatus)?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FormControl">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormControl">
+							<rect x="2215.5" y="181.0" height="31.0" width="113.0" data-name="FormControl"></rect>
+						</g>
+						<g transform="translate(2215.5, 181)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControl">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormControl">
+								<text x="48.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormControl">FormControl</text>
+								
+							</g>
+						</g>
 					</g>
 					<g data-name="ManagedFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ManagedFormViewModel">
-							<rect x="0.0" y="1136.0" height="62.0" width="396.0" data-name="ManagedFormViewModel"></rect>
-							<path d="M0.0 1167.0 L396.0 1167.0" fill="none" data-name="ManagedFormViewModel"></path>
+							<rect x="4944.0" y="1136.0" height="62.0" width="396.0" data-name="ManagedFormViewModel"></rect>
+							<path d="M4944.0 1167.0 L5340.0 1167.0" fill="none" data-name="ManagedFormViewModel"></path>
 						</g>
-						<g transform="translate(0, 1136)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ManagedFormViewModel">
+						<g transform="translate(4944, 1136)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ManagedFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ManagedFormViewModel">
 								<text x="190.0" y="13.5" stroke="none" text-anchor="middle" data-name="ManagedFormViewModel">ManagedFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(0, 1167)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ManagedFormViewModel">
+						<g transform="translate(4944, 1167)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ManagedFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ManagedFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="ManagedFormViewModel">+ManagedFormViewModel&lt;T&gt; createDuplicate()</text>
 								
@@ -348,17 +566,17 @@
 					</g>
 					<g data-name="FormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormViewModel">
-							<rect x="2494.3" y="433.0" height="633.0" width="872.0" data-name="FormViewModel"></rect>
-							<path d="M2494.3 464.0 L3366.3 464.0" fill="none" data-name="FormViewModel"></path>
-							<path d="M2494.3 780.0 L3366.3 780.0" fill="none" data-name="FormViewModel"></path>
+							<rect x="2749.5" y="433.0" height="633.0" width="872.0" data-name="FormViewModel"></rect>
+							<path d="M2749.5 464.0 L3621.5 464.0" fill="none" data-name="FormViewModel"></path>
+							<path d="M2749.5 780.0 L3621.5 780.0" fill="none" data-name="FormViewModel"></path>
 						</g>
-						<g transform="translate(2494.25, 433)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormViewModel">
+						<g transform="translate(2749.5, 433)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormViewModel">
 								<text x="428.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormViewModel">FormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2494.25, 464)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormViewModel">
+						<g transform="translate(2749.5, 464)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="FormViewModel">-_formData: T?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="FormViewModel">-_formMode: FormMode</text>
@@ -383,7 +601,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(2494.25, 780)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormViewModel">
+						<g transform="translate(2749.5, 780)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="FormViewModel">-dynamic _setFormData()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="FormViewModel">-dynamic _rememberDefaultControlValidators()</text>
@@ -409,9 +627,9 @@
 					</g>
 					<g data-name="FormViewModelNotFoundException">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormViewModelNotFoundException">
-							<rect x="667.5" y="734.0" height="31.0" width="296.0" data-name="FormViewModelNotFoundException"></rect>
+							<rect x="3661.5" y="734.0" height="31.0" width="296.0" data-name="FormViewModelNotFoundException"></rect>
 						</g>
-						<g transform="translate(667.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormViewModelNotFoundException">
+						<g transform="translate(3661.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormViewModelNotFoundException">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormViewModelNotFoundException">
 								<text x="140.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormViewModelNotFoundException">FormViewModelNotFoundException</text>
 								
@@ -420,9 +638,9 @@
 					</g>
 					<g data-name="Exception">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Exception">
-							<rect x="1714.3" y="181.0" height="31.0" width="94.0" data-name="Exception"></rect>
+							<rect x="4551.0" y="181.0" height="31.0" width="94.0" data-name="Exception"></rect>
 						</g>
-						<g transform="translate(1714.25, 181)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Exception">
+						<g transform="translate(4551, 181)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Exception">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Exception">
 								<text x="39.0" y="13.5" stroke="none" text-anchor="middle" data-name="Exception">Exception</text>
 								
@@ -431,17 +649,17 @@
 					</g>
 					<g data-name="FormViewModelCollection">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormViewModelCollection">
-							<rect x="868.3" y="60.0" height="273.0" width="281.0" data-name="FormViewModelCollection"></rect>
-							<path d="M868.3 91.0 L1149.3 91.0" fill="none" data-name="FormViewModelCollection"></path>
-							<path d="M868.3 182.0 L1149.3 182.0" fill="none" data-name="FormViewModelCollection"></path>
+							<rect x="3498.5" y="60.0" height="273.0" width="281.0" data-name="FormViewModelCollection"></rect>
+							<path d="M3498.5 91.0 L3779.5 91.0" fill="none" data-name="FormViewModelCollection"></path>
+							<path d="M3498.5 182.0 L3779.5 182.0" fill="none" data-name="FormViewModelCollection"></path>
 						</g>
-						<g transform="translate(868.25, 60)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormViewModelCollection">
+						<g transform="translate(3498.5, 60)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormViewModelCollection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormViewModelCollection">
 								<text x="132.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormViewModelCollection">FormViewModelCollection</text>
 								
 							</g>
 						</g>
-						<g transform="translate(868.25, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormViewModelCollection">
+						<g transform="translate(3498.5, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormViewModelCollection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormViewModelCollection">
 								<text x="0.0" y="13.5" stroke="none" data-name="FormViewModelCollection">+formViewModels: List&lt;T&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="FormViewModelCollection">+formArray: FormArray&lt;dynamic&gt;</text>
@@ -451,7 +669,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(868.25, 182)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormViewModelCollection">
+						<g transform="translate(3498.5, 182)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormViewModelCollection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormViewModelCollection">
 								<text x="0.0" y="13.5" stroke="none" data-name="FormViewModelCollection">+void add()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="FormViewModelCollection">+T remove()</text>
@@ -468,70 +686,38 @@
 					</g>
 					<g data-name="FormArray">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormArray">
-							<rect x="1003.5" y="734.0" height="31.0" width="98.0" data-name="FormArray"></rect>
+							<rect x="3997.5" y="734.0" height="31.0" width="98.0" data-name="FormArray"></rect>
 						</g>
-						<g transform="translate(1003.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormArray">
+						<g transform="translate(3997.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormArray">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormArray">
 								<text x="41.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormArray">FormArray</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="FormValidationSetEnum">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormValidationSetEnum">
-							<rect x="1849.8" y="1151.5" height="31.0" width="205.0" data-name="FormValidationSetEnum"></rect>
+					<g data-name="UnsavedChangesDialog">
+						<g fill="#eee8d5" stroke="#33322E" data-name="UnsavedChangesDialog">
+							<rect x="3837.5" y="165.5" height="62.0" width="207.0" data-name="UnsavedChangesDialog"></rect>
+							<path d="M3837.5 196.5 L4044.5 196.5" fill="none" data-name="UnsavedChangesDialog"></path>
 						</g>
-						<g transform="translate(1849.75, 1151.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormValidationSetEnum">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormValidationSetEnum">
-								<text x="94.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormValidationSetEnum">FormValidationSetEnum</text>
+						<g transform="translate(3837.5, 165.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="UnsavedChangesDialog">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="UnsavedChangesDialog">
+								<text x="95.5" y="13.5" stroke="none" text-anchor="middle" data-name="UnsavedChangesDialog">UnsavedChangesDialog</text>
 								
 							</g>
 						</g>
-					</g>
-					<g data-name="FormControlValidation">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormControlValidation">
-							<rect x="1189.3" y="127.5" height="138.0" width="485.0" data-name="FormControlValidation"></rect>
-							<path d="M1189.3 158.5 L1674.3 158.5" fill="none" data-name="FormControlValidation"></path>
-							<path d="M1189.3 234.5 L1674.3 234.5" fill="none" data-name="FormControlValidation"></path>
-						</g>
-						<g transform="translate(1189.25, 127.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControlValidation">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormControlValidation">
-								<text x="234.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormControlValidation">FormControlValidation</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1189.25, 158.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormControlValidation">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormControlValidation">
-								<text x="0.0" y="13.5" stroke="none" data-name="FormControlValidation">+control: AbstractControl&lt;dynamic&gt;</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="FormControlValidation">+validators: List&lt;Validator&lt;dynamic&gt;&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="FormControlValidation">+asyncValidators: List&lt;AsyncValidator&lt;dynamic&gt;&gt;?</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="FormControlValidation">+validationMessages: Map&lt;String, String Function(Object)&gt;</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1189.25, 234.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormControlValidation">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormControlValidation">
-								<text x="0.0" y="13.5" stroke="none" data-name="FormControlValidation">+FormControlValidation merge()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="AbstractControl">
-						<g fill="#eee8d5" stroke="#33322E" data-name="AbstractControl">
-							<rect x="1426.5" y="734.0" height="31.0" width="138.0" data-name="AbstractControl"></rect>
-						</g>
-						<g transform="translate(1426.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="AbstractControl">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AbstractControl">
-								<text x="61.0" y="13.5" stroke="none" text-anchor="middle" data-name="AbstractControl">AbstractControl</text>
+						<g transform="translate(3837.5, 196.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnsavedChangesDialog">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="UnsavedChangesDialog">
+								<text x="0.0" y="13.5" stroke="none" data-name="UnsavedChangesDialog">+Widget build()</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="FormInvalidException">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormInvalidException">
-							<rect x="1668.3" y="734.0" height="31.0" width="186.0" data-name="FormInvalidException"></rect>
+							<rect x="4135.5" y="734.0" height="31.0" width="186.0" data-name="FormInvalidException"></rect>
 						</g>
-						<g transform="translate(1668.25, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormInvalidException">
+						<g transform="translate(4135.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormInvalidException">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormInvalidException">
 								<text x="85.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormInvalidException">FormInvalidException</text>
 								
@@ -540,16 +726,16 @@
 					</g>
 					<g data-name="FormConfigException">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormConfigException">
-							<rect x="1894.3" y="718.5" height="62.0" width="185.0" data-name="FormConfigException"></rect>
-							<path d="M1894.3 749.5 L2079.3 749.5" fill="none" data-name="FormConfigException"></path>
+							<rect x="4361.5" y="718.5" height="62.0" width="185.0" data-name="FormConfigException"></rect>
+							<path d="M4361.5 749.5 L4546.5 749.5" fill="none" data-name="FormConfigException"></path>
 						</g>
-						<g transform="translate(1894.25, 718.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormConfigException">
+						<g transform="translate(4361.5, 718.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormConfigException">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormConfigException">
 								<text x="84.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormConfigException">FormConfigException</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1894.25, 749.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormConfigException">
+						<g transform="translate(4361.5, 749.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormConfigException">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormConfigException">
 								<text x="0.0" y="13.5" stroke="none" data-name="FormConfigException">+message: String?</text>
 								
@@ -558,16 +744,16 @@
 					</g>
 					<g data-name="IFormViewModelDelegate">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IFormViewModelDelegate">
-							<rect x="2947.3" y="1128.5" height="77.0" width="217.0" data-name="IFormViewModelDelegate"></rect>
-							<path d="M2947.3 1159.5 L3164.3 1159.5" fill="none" data-name="IFormViewModelDelegate"></path>
+							<rect x="2803.0" y="1128.5" height="77.0" width="217.0" data-name="IFormViewModelDelegate"></rect>
+							<path d="M2803.0 1159.5 L3020.0 1159.5" fill="none" data-name="IFormViewModelDelegate"></path>
 						</g>
-						<g transform="translate(2947.25, 1128.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormViewModelDelegate">
+						<g transform="translate(2803, 1128.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormViewModelDelegate">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormViewModelDelegate">
 								<text x="100.5" y="13.5" stroke="none" text-anchor="middle" data-name="IFormViewModelDelegate">IFormViewModelDelegate</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2947.25, 1159.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IFormViewModelDelegate">
+						<g transform="translate(2803, 1159.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IFormViewModelDelegate">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IFormViewModelDelegate">
 								<text x="0.0" y="13.5" stroke="none" data-name="IFormViewModelDelegate">+dynamic onSave()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="IFormViewModelDelegate">+void onCancel()</text>
@@ -577,16 +763,16 @@
 					</g>
 					<g data-name="IFormGroupController">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IFormGroupController">
-							<rect x="2078.3" y="165.5" height="62.0" width="187.0" data-name="IFormGroupController"></rect>
-							<path d="M2078.3 196.5 L2265.3 196.5" fill="none" data-name="IFormGroupController"></path>
+							<rect x="4102.3" y="165.5" height="62.0" width="187.0" data-name="IFormGroupController"></rect>
+							<path d="M4102.3 196.5 L4289.3 196.5" fill="none" data-name="IFormGroupController"></path>
 						</g>
-						<g transform="translate(2078.25, 165.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormGroupController">
+						<g transform="translate(4102.25, 165.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormGroupController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormGroupController">
 								<text x="85.5" y="13.5" stroke="none" text-anchor="middle" data-name="IFormGroupController">IFormGroupController</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2078.25, 196.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IFormGroupController">
+						<g transform="translate(4102.25, 196.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IFormGroupController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IFormGroupController">
 								<text x="0.0" y="13.5" stroke="none" data-name="IFormGroupController">+form: FormGroup</text>
 								
@@ -595,9 +781,9 @@
 					</g>
 					<g data-name="FormGroup">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormGroup">
-							<rect x="2119.3" y="734.0" height="31.0" width="105.0" data-name="FormGroup"></rect>
+							<rect x="4586.5" y="734.0" height="31.0" width="105.0" data-name="FormGroup"></rect>
 						</g>
-						<g transform="translate(2119.25, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
+						<g transform="translate(4586.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormGroup">
 								<text x="44.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormGroup">FormGroup</text>
 								
@@ -606,16 +792,16 @@
 					</g>
 					<g data-name="FormControlOption">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormControlOption">
-							<rect x="2264.3" y="696.0" height="107.0" width="190.0" data-name="FormControlOption"></rect>
-							<path d="M2264.3 727.0 L2454.3 727.0" fill="none" data-name="FormControlOption"></path>
+							<rect x="4859.5" y="696.0" height="107.0" width="190.0" data-name="FormControlOption"></rect>
+							<path d="M4859.5 727.0 L5049.5 727.0" fill="none" data-name="FormControlOption"></path>
 						</g>
-						<g transform="translate(2264.25, 696)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControlOption">
+						<g transform="translate(4859.5, 696)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControlOption">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormControlOption">
 								<text x="87.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormControlOption">FormControlOption</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2264.25, 727)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormControlOption">
+						<g transform="translate(4859.5, 727)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormControlOption">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormControlOption">
 								<text x="0.0" y="13.5" stroke="none" data-name="FormControlOption">+value: T</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="FormControlOption">+label: String</text>
@@ -627,9 +813,9 @@
 					</g>
 					<g data-name="Equatable">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Equatable">
-							<rect x="2311.3" y="181.0" height="31.0" width="96.0" data-name="Equatable"></rect>
+							<rect x="4906.5" y="181.0" height="31.0" width="96.0" data-name="Equatable"></rect>
 						</g>
-						<g transform="translate(2311.25, 181)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Equatable">
+						<g transform="translate(4906.5, 181)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Equatable">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Equatable">
 								<text x="40.0" y="13.5" stroke="none" text-anchor="middle" data-name="Equatable">Equatable</text>
 								
@@ -638,16 +824,16 @@
 					</g>
 					<g data-name="FormMode">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormMode">
-							<rect x="436.0" y="1106.0" height="122.0" width="282.0" data-name="FormMode"></rect>
-							<path d="M436.0 1137.0 L718.0 1137.0" fill="none" data-name="FormMode"></path>
+							<rect x="4572.0" y="1106.0" height="122.0" width="282.0" data-name="FormMode"></rect>
+							<path d="M4572.0 1137.0 L4854.0 1137.0" fill="none" data-name="FormMode"></path>
 						</g>
-						<g transform="translate(436, 1106)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormMode">
+						<g transform="translate(4572, 1106)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormMode">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormMode">
 								<text x="133.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormMode">FormMode</text>
 								
 							</g>
 						</g>
-						<g transform="translate(436, 1137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormMode">
+						<g transform="translate(4572, 1137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormMode">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormMode">
 								<text x="0.0" y="13.5" stroke="none" data-name="FormMode">+index: int</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="FormMode">&lt;static&gt;+values: List&lt;FormMode&gt;</text>
@@ -658,22 +844,22 @@
 							</g>
 						</g>
 					</g>
-					<g data-name="Debouncer">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Debouncer">
-							<rect x="3204.3" y="1151.5" height="31.0" width="103.0" data-name="Debouncer"></rect>
+					<g data-name="FormValidationSetEnum">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormValidationSetEnum">
+							<rect x="3565.5" y="1151.5" height="31.0" width="205.0" data-name="FormValidationSetEnum"></rect>
 						</g>
-						<g transform="translate(3204.25, 1151.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Debouncer">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Debouncer">
-								<text x="43.5" y="13.5" stroke="none" text-anchor="middle" data-name="Debouncer">Debouncer</text>
+						<g transform="translate(3565.5, 1151.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormValidationSetEnum">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormValidationSetEnum">
+								<text x="94.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormValidationSetEnum">FormValidationSetEnum</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="CancelableOperation">
 						<g fill="#eee8d5" stroke="#33322E" data-name="CancelableOperation">
-							<rect x="3347.3" y="1151.5" height="31.0" width="183.0" data-name="CancelableOperation"></rect>
+							<rect x="2437.0" y="1151.5" height="31.0" width="183.0" data-name="CancelableOperation"></rect>
 						</g>
-						<g transform="translate(3347.25, 1151.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CancelableOperation">
+						<g transform="translate(2437, 1151.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CancelableOperation">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CancelableOperation">
 								<text x="83.5" y="13.5" stroke="none" text-anchor="middle" data-name="CancelableOperation">CancelableOperation</text>
 								
@@ -682,250 +868,64 @@
 					</g>
 					<g data-name="Enum">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Enum">
-							<rect x="566.5" y="734.0" height="31.0" width="61.0" data-name="Enum"></rect>
+							<rect x="5089.5" y="734.0" height="31.0" width="61.0" data-name="Enum"></rect>
 						</g>
-						<g transform="translate(566.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
+						<g transform="translate(5089.5, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Enum">
 								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Enum">Enum</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="CustomFormControl">
-						<g fill="#eee8d5" stroke="#33322E" data-name="CustomFormControl">
-							<rect x="3488.8" y="665.5" height="168.0" width="413.0" data-name="CustomFormControl"></rect>
-							<path d="M3488.8 696.5 L3901.8 696.5" fill="none" data-name="CustomFormControl"></path>
-							<path d="M3488.8 802.5 L3901.8 802.5" fill="none" data-name="CustomFormControl"></path>
+					<g data-name="FormControlValidation">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormControlValidation">
+							<rect x="0.0" y="127.5" height="138.0" width="485.0" data-name="FormControlValidation"></rect>
+							<path d="M0.0 158.5 L485.0 158.5" fill="none" data-name="FormControlValidation"></path>
+							<path d="M0.0 234.5 L485.0 234.5" fill="none" data-name="FormControlValidation"></path>
 						</g>
-						<g transform="translate(3488.75, 665.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CustomFormControl">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CustomFormControl">
-								<text x="198.5" y="13.5" stroke="none" text-anchor="middle" data-name="CustomFormControl">CustomFormControl</text>
+						<g transform="translate(0, 127.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControlValidation">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormControlValidation">
+								<text x="234.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormControlValidation">FormControlValidation</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3488.75, 696.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CustomFormControl">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CustomFormControl">
-								<text x="0.0" y="13.5" stroke="none" data-name="CustomFormControl">-_onValueChangedDebouncer: Debouncer?</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="CustomFormControl">-_onStatusChangedDebouncer: Debouncer?</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="CustomFormControl">+onValueChanged: void Function(T?)?</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="CustomFormControl">+onStatusChanged: void Function(ControlStatus)?</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="CustomFormControl">+onStatusChangedDebounceTime: int?</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="CustomFormControl">+onValueChangedDebounceTime: int?</text>
+						<g transform="translate(0, 158.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormControlValidation">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormControlValidation">
+								<text x="0.0" y="13.5" stroke="none" data-name="FormControlValidation">+control: AbstractControl&lt;dynamic&gt;</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="FormControlValidation">+validators: List&lt;Validator&lt;dynamic&gt;&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="FormControlValidation">+asyncValidators: List&lt;AsyncValidator&lt;dynamic&gt;&gt;?</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="FormControlValidation">+validationMessages: Map&lt;String, String Function(Object)&gt;</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3488.75, 802.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CustomFormControl">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CustomFormControl">
-								<text x="0.0" y="13.5" stroke="none" data-name="CustomFormControl">+void dispose()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="void Function(T?)?">
-						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(T?)?">
-							<rect x="3613.3" y="1151.5" height="31.0" width="164.0" data-name="void Function(T?)?"></rect>
-						</g>
-						<g transform="translate(3613.25, 1151.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(T?)?">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(T?)?">
-								<text x="74.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(T?)?">void Function(T?)?</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="void Function(ControlStatus)?">
-						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(ControlStatus)?">
-							<rect x="3817.3" y="1151.5" height="31.0" width="251.0" data-name="void Function(ControlStatus)?"></rect>
-						</g>
-						<g transform="translate(3817.25, 1151.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(ControlStatus)?">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(ControlStatus)?">
-								<text x="117.5" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(ControlStatus)?">void Function(ControlStatus)?</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="FormControl">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormControl">
-							<rect x="3536.3" y="181.0" height="31.0" width="113.0" data-name="FormControl"></rect>
-						</g>
-						<g transform="translate(3536.25, 181)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControl">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormControl">
-								<text x="48.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormControl">FormControl</text>
+						<g transform="translate(0, 234.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormControlValidation">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormControlValidation">
+								<text x="0.0" y="13.5" stroke="none" data-name="FormControlValidation">+FormControlValidation merge()</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="IFormData">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IFormData">
-							<rect x="3689.3" y="150.0" height="93.0" width="163.0" data-name="IFormData"></rect>
-							<path d="M3689.3 181.0 L3852.3 181.0" fill="none" data-name="IFormData"></path>
-							<path d="M3689.3 212.0 L3852.3 212.0" fill="none" data-name="IFormData"></path>
+							<rect x="5042.5" y="150.0" height="93.0" width="163.0" data-name="IFormData"></rect>
+							<path d="M5042.5 181.0 L5205.5 181.0" fill="none" data-name="IFormData"></path>
+							<path d="M5042.5 212.0 L5205.5 212.0" fill="none" data-name="IFormData"></path>
 						</g>
-						<g transform="translate(3689.25, 150)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormData">
+						<g transform="translate(5042.5, 150)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormData">
 								<text x="73.5" y="13.5" stroke="none" text-anchor="middle" data-name="IFormData">IFormData</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3689.25, 181)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IFormData">
+						<g transform="translate(5042.5, 181)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IFormData">
 								<text x="0.0" y="13.5" stroke="none" data-name="IFormData">+id: String</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3689.25, 212)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IFormData">
+						<g transform="translate(5042.5, 212)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IFormData">
 								<text x="0.0" y="13.5" stroke="none" data-name="IFormData">+IFormData copy()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="UnsavedChangesDialog">
-						<g fill="#eee8d5" stroke="#33322E" data-name="UnsavedChangesDialog">
-							<rect x="3892.3" y="165.5" height="62.0" width="207.0" data-name="UnsavedChangesDialog"></rect>
-							<path d="M3892.3 196.5 L4099.3 196.5" fill="none" data-name="UnsavedChangesDialog"></path>
-						</g>
-						<g transform="translate(3892.25, 165.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="UnsavedChangesDialog">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="UnsavedChangesDialog">
-								<text x="95.5" y="13.5" stroke="none" text-anchor="middle" data-name="UnsavedChangesDialog">UnsavedChangesDialog</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3892.25, 196.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UnsavedChangesDialog">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="UnsavedChangesDialog">
-								<text x="0.0" y="13.5" stroke="none" data-name="UnsavedChangesDialog">+Widget build()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="FormArrayTable">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormArrayTable">
-							<rect x="4554.3" y="0.0" height="393.0" width="490.0" data-name="FormArrayTable"></rect>
-							<path d="M4554.3 31.0 L5044.3 31.0" fill="none" data-name="FormArrayTable"></path>
-							<path d="M4554.3 332.0 L5044.3 332.0" fill="none" data-name="FormArrayTable"></path>
-						</g>
-						<g transform="translate(4554.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormArrayTable">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormArrayTable">
-								<text x="237.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormArrayTable">FormArrayTable</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4554.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormArrayTable">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormArrayTable">
-								<text x="0.0" y="13.5" stroke="none" data-name="FormArrayTable">+control: AbstractControl&lt;dynamic&gt;</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="FormArrayTable">+items: List&lt;T&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="FormArrayTable">+onSelectItem: void Function(T)</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="FormArrayTable">+getActionsAt: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="FormArrayTable">+onNewItem: void Function()?</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="FormArrayTable">+rowTitle: String Function(T)</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="FormArrayTable">+onNewItemLabel: String</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="FormArrayTable">+sectionTitle: String?</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="FormArrayTable">+sectionDescription: String?</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="FormArrayTable">+emptyIcon: IconData?</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="FormArrayTable">+emptyTitle: String?</text>
-								<text x="0.0" y="178.5" stroke="none" data-name="FormArrayTable">+emptyDescription: String?</text>
-								<text x="0.0" y="193.5" stroke="none" data-name="FormArrayTable">+sectionTitleDivider: bool?</text>
-								<text x="0.0" y="208.5" stroke="none" data-name="FormArrayTable">+rowPrefix: Widget Function(BuildContext, T, int)?</text>
-								<text x="0.0" y="223.5" stroke="none" data-name="FormArrayTable">+rowSuffix: Widget Function(BuildContext, T, int)?</text>
-								<text x="0.0" y="238.5" stroke="none" data-name="FormArrayTable">+leadingWidget: Widget?</text>
-								<text x="0.0" y="253.5" stroke="none" data-name="FormArrayTable">+itemsSectionPadding: EdgeInsets?</text>
-								<text x="0.0" y="268.5" stroke="none" data-name="FormArrayTable">+hideLeadingTrailingWhenEmpty: bool</text>
-								<text x="0.0" y="283.5" stroke="none" data-name="FormArrayTable">&lt;static&gt;+columns: List&lt;StandardTableColumn&gt;</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4554.25, 332)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormArrayTable">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormArrayTable">
-								<text x="0.0" y="13.5" stroke="none" data-name="FormArrayTable">+Widget build()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="FormArrayTable">-List&lt;Widget&gt; _buildRow()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="FormArrayTable">-Widget _newItemButton()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="void Function(T)">
-						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(T)">
-							<rect x="3941.8" y="734.0" height="31.0" width="144.0" data-name="void Function(T)"></rect>
-						</g>
-						<g transform="translate(3941.75, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(T)">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(T)">
-								<text x="64.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(T)">void Function(T)</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)">
-						<g fill="#eee8d5" stroke="#33322E" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)">
-							<rect x="4125.8" y="734.0" height="31.0" width="371.0" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)"></rect>
-						</g>
-						<g transform="translate(4125.75, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)">
-								<text x="177.5" y="13.5" stroke="none" text-anchor="middle" data-name="List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)">List&lt;ModelAction&lt;dynamic&gt;&gt; Function(T, int)</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="void Function()?">
-						<g fill="#eee8d5" stroke="#33322E" data-name="void Function()?">
-							<rect x="4536.8" y="734.0" height="31.0" width="144.0" data-name="void Function()?"></rect>
-						</g>
-						<g transform="translate(4536.75, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function()?">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function()?">
-								<text x="64.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function()?">void Function()?</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="String Function(T)">
-						<g fill="#eee8d5" stroke="#33322E" data-name="String Function(T)">
-							<rect x="4720.8" y="734.0" height="31.0" width="157.0" data-name="String Function(T)"></rect>
-						</g>
-						<g transform="translate(4720.75, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="String Function(T)">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="String Function(T)">
-								<text x="70.5" y="13.5" stroke="none" text-anchor="middle" data-name="String Function(T)">String Function(T)</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="IconData">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IconData">
-							<rect x="4917.8" y="734.0" height="31.0" width="87.0" data-name="IconData"></rect>
-						</g>
-						<g transform="translate(4917.75, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IconData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IconData">
-								<text x="35.5" y="13.5" stroke="none" text-anchor="middle" data-name="IconData">IconData</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Widget Function(BuildContext, T, int)?">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Widget Function(BuildContext, T, int)?">
-							<rect x="5044.8" y="734.0" height="31.0" width="315.0" data-name="Widget Function(BuildContext, T, int)?"></rect>
-						</g>
-						<g transform="translate(5044.75, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Widget Function(BuildContext, T, int)?">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget Function(BuildContext, T, int)?">
-								<text x="149.5" y="13.5" stroke="none" text-anchor="middle" data-name="Widget Function(BuildContext, T, int)?">Widget Function(BuildContext, T, int)?</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Widget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Widget">
-							<rect x="5399.8" y="734.0" height="31.0" width="71.0" data-name="Widget"></rect>
-						</g>
-						<g transform="translate(5399.75, 734)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Widget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget">
-								<text x="27.5" y="13.5" stroke="none" text-anchor="middle" data-name="Widget">Widget</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="EdgeInsets">
-						<g fill="#eee8d5" stroke="#33322E" data-name="EdgeInsets">
-							<rect x="5510.8" y="734.0" height="31.0" width="105.0" data-name="EdgeInsets"></rect>
-						</g>
-						<g transform="translate(5510.75, 734)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EdgeInsets">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EdgeInsets">
-								<text x="44.5" y="13.5" stroke="none" text-anchor="middle" data-name="EdgeInsets">EdgeInsets</text>
 								
 							</g>
 						</g>
