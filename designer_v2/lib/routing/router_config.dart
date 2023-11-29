@@ -101,16 +101,6 @@ class RouterConf {
               ),
             )),
     GoRoute(
-        path: "/password_recovery",
-        name: recoverPasswordRouteName,
-        pageBuilder: (context, state) => const MaterialPage(
-              key: RouterKeys.authKey,
-              child: AuthScaffold(
-                formKey: AuthFormKey.passwordRecovery,
-                body: PasswordRecoveryForm(),
-              ),
-            )),
-    GoRoute(
       path: "/error",
       name: errorRouteName,
       builder: (context, state) => ErrorPage(error: state.extra as Exception),
@@ -359,6 +349,16 @@ class RouterConf {
             const AccountSettingsDialog(),
           );
         }),
+    GoRoute(
+        path: "/password_recovery",
+        name: recoverPasswordRouteName,
+        pageBuilder: (context, state) => const MaterialPage(
+          key: RouterKeys.authKey,
+          child: AuthScaffold(
+            formKey: AuthFormKey.passwordRecovery,
+            body: PasswordRecoveryForm(),
+          ),
+        )),
   ];
 
   static GoRoute route(String name) {
