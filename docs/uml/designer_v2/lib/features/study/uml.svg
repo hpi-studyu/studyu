@@ -245,7 +245,8 @@
 	[&lt;abstract&gt;StudyPageWidget
 	  |
 	  +studyCreationArgs: StudyCreationArgs;
-	  +studyId: String
+	  +studyId: String;
+	  +isTemplate: bool
 	  |
 	  +Widget? banner()
 	]
@@ -404,8 +405,8 @@
 					<g fill="#eee8d5">
 						<path d="M2223.6 536.7 L2215.1 543.2 L2213.8 532.5 L2222.3 526.0 Z"></path>
 					</g>
-					<path d="M4341.6 487.7 L4493.75 576 L5278.75 694.8587570621469 L5278.8 694.9 " fill="none"></path>
-					<path d="M4344.3 483.1 L4341.6 487.7 L4338.9 492.3 L4330.1 481.0 Z"></path>
+					<path d="M4354.5 495.2 L4493.75 576 L5278.75 694.8587570621469 L5278.8 694.9 " fill="none"></path>
+					<path d="M4357.2 490.6 L4354.5 495.2 L4351.8 499.8 L4343.0 488.5 Z"></path>
 					<path d="M5680.7 482.8 L6111 576 L6111 694.5 L6111.0 694.5 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M5672.8 475.6 L5680.7 482.8 L5670.5 486.1 L5662.5 478.9 Z"></path>
@@ -424,8 +425,8 @@
 					</g>
 					<path d="M5423.0 157.8 L5423 278 L5423 298 L5423.0 298.0 " fill="none"></path>
 					<path d="M5428.3 157.8 L5423.0 157.8 L5417.7 157.8 L5423.0 144.5 Z"></path>
-					<path d="M4303.9 490.2 L4394.75 576 L4191.824626865671 679 L4191.8 679.0 " fill="none"></path>
-					<path d="M4307.5 486.3 L4303.9 490.2 L4300.2 494.0 L4294.2 481.0 Z"></path>
+					<path d="M4311.8 497.7 L4394.75 576 L4191.824626865671 679 L4191.8 679.0 " fill="none"></path>
+					<path d="M4315.5 493.8 L4311.8 497.7 L4308.1 501.5 L4302.1 488.5 Z"></path>
 					<path d="M757.9 253.4 L765 278 L765 411.5 L765.0 411.5 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M760.4 243.0 L757.9 253.4 L750.2 245.9 L752.7 235.5 Z"></path>
@@ -454,14 +455,14 @@
 					<g fill="#eee8d5">
 						<path d="M2438.7 150.7 L2428.7 146.6 L2437.3 140.1 L2447.3 144.3 Z"></path>
 					</g>
-					<path d="M4123.5 490.1 L3968.75 576 L2727.5 701.6962025316456 L2727.5 701.7 " fill="none"></path>
+					<path d="M4110.0 497.6 L3968.75 576 L2727.5 701.6962025316456 L2727.5 701.7 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4134.2 490.2 L4123.5 490.1 L4129.0 480.9 L4139.8 481.0 Z"></path>
+						<path d="M4120.7 497.7 L4110.0 497.6 L4115.5 488.4 L4126.3 488.5 Z"></path>
 					</g>
 					<path d="M4988.8 152.7 L5150.75 278 L4402 400.09439124487005 L4402.0 400.1 " fill="none"></path>
 					<path d="M4992.1 148.4 L4988.8 152.7 L4985.6 156.9 L4978.3 144.5 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M4080.8 157.8 L4080.75 278 L4180.372483221477 373 L4180.4 373.0 " fill="none"></path>
+						<path d="M4080.8 157.8 L4080.75 278 L4172.50755033557 365.5 L4172.5 365.5 " fill="none"></path>
 					</g>
 					<path d="M4086.1 157.8 L4080.8 157.8 L4075.4 157.8 L4080.8 144.5 Z"></path>
 					<g stroke-dasharray="6 6">
@@ -880,24 +881,25 @@
 					</g>
 					<g data-name="StudyPageWidget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyPageWidget">
-							<rect x="4072.0" y="373.0" height="108.0" width="330.0" data-name="StudyPageWidget"></rect>
-							<path d="M4072.0 404.0 L4402.0 404.0" fill="none" data-name="StudyPageWidget"></path>
-							<path d="M4072.0 450.0 L4402.0 450.0" fill="none" data-name="StudyPageWidget"></path>
+							<rect x="4072.0" y="365.5" height="123.0" width="330.0" data-name="StudyPageWidget"></rect>
+							<path d="M4072.0 396.5 L4402.0 396.5" fill="none" data-name="StudyPageWidget"></path>
+							<path d="M4072.0 457.5 L4402.0 457.5" fill="none" data-name="StudyPageWidget"></path>
 						</g>
-						<g transform="translate(4072, 373)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyPageWidget">
+						<g transform="translate(4072, 365.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyPageWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyPageWidget">
 								<text x="157.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyPageWidget">StudyPageWidget</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4072, 404)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyPageWidget">
+						<g transform="translate(4072, 396.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyPageWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyPageWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyPageWidget">+studyCreationArgs: StudyCreationArgs</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyPageWidget">+studyId: String</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudyPageWidget">+isTemplate: bool</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4072, 450)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyPageWidget">
+						<g transform="translate(4072, 457.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyPageWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyPageWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyPageWidget">+Widget? banner()</text>
 								
