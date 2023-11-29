@@ -105,7 +105,7 @@ cases can be found [here](docker).
    docker-compose-db.yml up` to launch the Postgres database.
 4. In [`docker/supabase/`](docker/supabase), run `docker compose up` to launch
    Supabase.
-5. In [`docker/`](docker/nginx), run `docker compose -f docker-compose-proxy.yml
+5. In [`docker/nginx/`](docker/nginx), run `docker compose -f docker-compose-proxy.yml
    up` to launch the nginx reverse proxy.
 
 If you use [`kitty terminal`](https://sw.kovidgoyal.net/kitty/), with remote
