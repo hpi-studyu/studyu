@@ -11,7 +11,7 @@ TemplateConfiguration _$TemplateConfigurationFromJson(
     TemplateConfiguration(
       lockPublisherInformation:
           json['lockPublisherInformation'] as bool? ?? false,
-      lockParticipation: json['lockParticipation'] as bool? ?? false,
+      lockEnrollmentType: json['lockEnrollmentType'] as bool? ?? false,
       lockStudySchedule: json['lockStudySchedule'] as bool? ?? false,
     );
 
@@ -19,6 +19,6 @@ Map<String, dynamic> _$TemplateConfigurationToJson(
         TemplateConfiguration instance) =>
     <String, dynamic>{
       'lockPublisherInformation': instance.lockPublisherInformation,
-      'lockParticipation': instance.lockParticipation,
+      'lockEnrollmentType': instance.lockEnrollmentType,
       'lockStudySchedule': instance.lockStudySchedule,
     };

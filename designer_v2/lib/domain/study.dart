@@ -189,7 +189,8 @@ extension StudyRegistryX on Study {
 
 class StudyTemplates {
   static String get kUnnamedStudyTitle => tr.form_field_study_title_default;
-  static String get kUnnamedTemplateTitle => "Unnamed template";
+  static String get kUnnamedTemplateTitle => tr.form_field_template_title_default;
+  static String get kUnnamedSubStudyTitle => tr.form_field_substudy_title_default;
 
   static Study emptyStandaloneDraft(String userId) {
     final newDraft = Study.newStandalone(userId);
@@ -207,7 +208,7 @@ class StudyTemplates {
 
   static Study emptySubStudyDraft(String userId, Study parentTemplate) {
     final newDraft = Study.newSubStudy(userId, parentTemplate);
-    newDraft.title = StudyTemplates.kUnnamedStudyTitle;
+    newDraft.title = StudyTemplates.kUnnamedSubStudyTitle;
     newDraft.iconName = '';
     return newDraft;
   }

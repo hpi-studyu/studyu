@@ -12,6 +12,8 @@ abstract class StudyPageWidget extends ConsumerWidget implements IWithBanner {
 
   StudyID get studyId => studyCreationArgs.studyID;
 
+  bool get isTemplate => studyCreationArgs.isTemplate;
+
   @override
   Widget? banner(BuildContext context, WidgetRef ref) {
     return null; // override in subclasses to provide an optional banner

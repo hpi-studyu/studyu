@@ -42,41 +42,35 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
               children: <Widget>[
                 TextParagraph(text: tr.form_study_design_enrollment_description),
                 const SizedBox(height: 24.0),
-                FormTableLayout(
-                  rows: [
-                    FormTableRow(
-                        control: formViewModel.enrollmentTypeControl,
-                        label: tr.form_field_enrollment_type,
-                        labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                        input: Column(
-                          children: formViewModel.enrollmentTypeControlOptions
-                              .map<Widget>((option) => ReactiveRadioListTile<Participation>(
-                                    formControl: formViewModel.enrollmentTypeControl,
-                                    value: option.value,
-                                    title: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(option.value.whoShort,
-                                            style: theme.textTheme.bodyLarge),
-                                        const SizedBox(height: 2.0),
-                                      ],
-                                    ),
-                                    subtitle: (option.description) != null
-                                        ? TextParagraph(
-                                            text: option.description!,
-                                            selectable: false,
-                                            style: ThemeConfig.bodyTextMuted(theme),
-                                          )
-                                        : null,
-                                  ))
-                              .toList()
-                              .separatedBy(() => const SizedBox(height: 8.0)),
-                        )),
-                  ],
-                  columnWidths: const {
-                    0: FixedColumnWidth(130.0),
-                    1: FlexColumnWidth(),
-                  },
+                FormSectionHeader(
+                  title: tr.form_field_enrollment_type,
+                  showLock: !study.isStandalone,
+                  lockControl: formViewModel.lockEnrollmentTypeControl,
+                  lockHelpText: tr.form_section_lock_help,
+                ),
+                const SizedBox(height: 12.0),
+                Column(
+                  children: formViewModel.enrollmentTypeControlOptions
+                      .map<Widget>((option) => ReactiveRadioListTile<Participation>(
+                            formControl: formViewModel.enrollmentTypeControl,
+                            value: option.value,
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(option.value.whoShort, style: theme.textTheme.bodyLarge),
+                                const SizedBox(height: 2.0),
+                              ],
+                            ),
+                            subtitle: (option.description) != null
+                                ? TextParagraph(
+                                    text: option.description!,
+                                    selectable: false,
+                                    style: ThemeConfig.bodyTextMuted(theme),
+                                  )
+                                : null,
+                          ))
+                      .toList()
+                      .separatedBy(() => const SizedBox(height: 8.0)),
                 ),
                 const SizedBox(height: 32.0),
                 ReactiveFormArray(
@@ -86,12 +80,10 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       control: formViewModel.questionsArray,
                       items: formViewModel.questionModels,
                       onSelectItem: (viewModel) {
-                        final routeArgs =
-                            formViewModel.buildScreenerQuestionFormRouteArgs(viewModel);
+                        final routeArgs = formViewModel.buildScreenerQuestionFormRouteArgs(viewModel);
                         _showScreenerQuestionSidesheetWithArgs(routeArgs, context, ref);
                       },
-                      getActionsAt: (viewModel, _) =>
-                          formViewModel.availablePopupActions(viewModel),
+                      getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
                       onNewItem: () {
                         final routeArgs = formViewModel.buildNewScreenerQuestionFormRouteArgs();
                         _showScreenerQuestionSidesheetWithArgs(routeArgs, context, ref);
@@ -147,8 +139,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                         final routeArgs = formViewModel.buildConsentItemFormRouteArgs(viewModel);
                         _showConsentItemSidesheetWithArgs(routeArgs, context, ref);
                       },
-                      getActionsAt: (viewModel, _) =>
-                          formViewModel.consentItemDelegate.availableActions(viewModel),
+                      getActionsAt: (viewModel, _) => formViewModel.consentItemDelegate.availableActions(viewModel),
                       onNewItem: () {
                         final routeArgs = formViewModel.buildNewConsentItemFormRouteArgs();
                         _showConsentItemSidesheetWithArgs(routeArgs, context, ref);
@@ -207,8 +198,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
         FormSideSheetTab(
           title: tr.navlink_screener_question_logic,
           index: 1,
-          formViewBuilder: (formViewModel) =>
-              ScreenerQuestionLogicFormView(formViewModel: formViewModel),
+          formViewBuilder: (formViewModel) => ScreenerQuestionLogicFormView(formViewModel: formViewModel),
         ),
       ],
     );

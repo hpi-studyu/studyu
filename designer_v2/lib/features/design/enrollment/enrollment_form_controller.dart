@@ -55,14 +55,14 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   // - Form fields
 
   final FormControl<Participation> enrollmentTypeControl = FormControl();
+  final FormControl<bool> lockEnrollmentTypeControl = FormControl();
 
-  List<FormControlOption<Participation>> get enrollmentTypeControlOptions => Participation.values
-      .map((v) => FormControlOption(v, v.string, description: v.designDescription))
-      .toList();
+  List<FormControlOption<Participation>> get enrollmentTypeControlOptions =>
+      Participation.values.map((v) => FormControlOption(v, v.string, description: v.designDescription)).toList();
 
   late final FormArray consentItemArray = FormArray([]);
-  late final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData>
-      consentItemFormViewModels = FormViewModelCollection([], consentItemArray);
+  late final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData> consentItemFormViewModels =
+      FormViewModelCollection([], consentItemArray);
 
   List<ConsentItemFormViewModel> get consentItemModels => consentItemFormViewModels.formViewModels;
 
@@ -76,6 +76,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   @override
   late final FormGroup form = FormGroup({
     'enrollmentType': enrollmentTypeControl,
+    'lockEnrollmentType': lockEnrollmentTypeControl,
     'consentItems': consentItemArray,
     ...questionnaireControls,
   });
@@ -83,6 +84,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   @override
   void setControlsFrom(EnrollmentFormData data) {
     enrollmentTypeControl.value = data.enrollmentType;
+    lockEnrollmentTypeControl.value = data.lockEnrollmentType;
     setQuestionnaireControlsFrom(data.questionnaireFormData);
 
     if (data.consentItemsFormData != null) {
@@ -101,6 +103,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   EnrollmentFormData buildFormData() {
     return EnrollmentFormData(
       enrollmentType: enrollmentTypeControl.value!,
+      lockEnrollmentType: lockEnrollmentTypeControl.value ?? false,
       questionnaireFormData: buildQuestionnaireFormData(),
       consentItemsFormData: consentItemFormViewModels.formData,
     );
@@ -120,8 +123,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   @override
   List<ModelAction> availableActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableActions(model,
-        onEdit: onSelectItem, isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
   }
 
@@ -183,10 +185,8 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
     router.dispatch(RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.consent));
   }
 
-  bool get canTestScreener =>
-      !questionsArray.disabled && (questionsArray.value?.isNotEmpty ?? false);
-  bool get canTestConsent =>
-      !consentItemArray.disabled && (consentItemArray.value?.isNotEmpty ?? false);
+  bool get canTestScreener => !questionsArray.disabled && (questionsArray.value?.isNotEmpty ?? false);
+  bool get canTestConsent => !consentItemArray.disabled && (consentItemArray.value?.isNotEmpty ?? false);
 
   @override
   Map<FormMode, LocalizedStringResolver> get questionTitles => {

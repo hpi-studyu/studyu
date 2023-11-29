@@ -15,6 +15,8 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
+import '../../../common_views/form_table_layout.dart';
+
 class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
   const StudyDesignInterventionsFormView(super.studyCreationArgs, {super.key});
 
@@ -54,8 +56,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                       control: formViewModel.interventionsArray,
                       items: formViewModel.interventionsCollection.formViewModels,
                       onSelectItem: formViewModel.onSelectItem,
-                      getActionsAt: (viewModel, _) =>
-                          formViewModel.availablePopupActions(viewModel),
+                      getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
                       onNewItem: formViewModel.onNewItem,
                       onNewItemLabel: tr.form_array_interventions_new,
                       rowTitle: (viewModel) => viewModel.formData?.title ?? '',
@@ -83,26 +84,22 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                 );
               }),
               const SizedBox(height: 24.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    tr.form_section_crossover_schedule,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  (formViewModel.canTestStudySchedule)
-                      ? Opacity(
-                          opacity: ThemeConfig.kMuteFadeFactor,
-                          child: TextButton.icon(
-                            onPressed: formViewModel.testStudySchedule,
-                            icon: const Icon(Icons.play_circle_outline_rounded),
-                            label: Text(tr.navlink_crossover_schedule_test),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ],
+              FormSectionHeader(
+                title: tr.form_section_crossover_schedule,
+                showLock: !study.isStandalone,
+                lockControl: formViewModel.lockStudyScheduleControl,
+                lockHelpText: tr.form_section_lock_help,
+                right: formViewModel.canTestStudySchedule
+                    ? Opacity(
+                        opacity: ThemeConfig.kMuteFadeFactor,
+                        child: TextButton.icon(
+                          onPressed: formViewModel.testStudySchedule,
+                          icon: const Icon(Icons.play_circle_outline_rounded),
+                          label: Text(tr.navlink_crossover_schedule_test),
+                        ),
+                      )
+                    : null,
               ),
-              const Divider(),
               const SizedBox(height: 12.0),
               // TODO study schedule illustration
               StudyScheduleFormView(formViewModel: formViewModel),

@@ -32,6 +32,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   final FormControl<String> websiteControl = FormControl();
   final FormControl<String> phoneControl = FormControl();
   final FormControl<String> additionalInfoControl = FormControl();
+  final FormControl<bool> lockPublisherInfoControl = FormControl();
 
   @override
   late final FormGroup form = FormGroup({
@@ -45,7 +46,8 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     'email': emailControl,
     'website': websiteControl,
     'phone': phoneControl,
-    'additionalInfo': additionalInfoControl
+    'additionalInfo': additionalInfoControl,
+    'lockPublisherInfo': lockPublisherInfoControl,
   });
 
   @override
@@ -61,6 +63,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     websiteControl.value = data.contactInfoFormData.website;
     phoneControl.value = data.contactInfoFormData.phone;
     additionalInfoControl.value = data.contactInfoFormData.additionalInfo;
+    lockPublisherInfoControl.value = data.lockPublisherInfo;
   }
 
   @override
@@ -69,6 +72,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
         title: titleControl.value!, // required
         iconName: iconControl.value?.name ?? '',
         description: descriptionControl.value,
+        lockPublisherInfo: lockPublisherInfoControl.value ?? false,
         contactInfoFormData: StudyContactInfoFormData(
           organization: organizationControl.value,
           institutionalReviewBoard: reviewBoardControl.value,
@@ -109,12 +113,20 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   get titleRequired => FormControlValidation(control: titleControl, validators: [
         Validators.required
       ], validationMessages: {
-        ValidationMessage.required: (error) => tr.form_field_study_title_required,
+        ValidationMessage.required: (error) => switch (study.type) {
+              StudyType.standalone => tr.form_field_study_title_required,
+              StudyType.template => tr.form_field_template_title_required,
+              StudyType.subStudy => tr.form_field_substudy_title_required,
+            }
       });
   get descriptionRequired => FormControlValidation(control: descriptionControl, validators: [
         Validators.required
       ], validationMessages: {
-        ValidationMessage.required: (error) => tr.form_field_study_description_required,
+        ValidationMessage.required: (error) => switch (study.type) {
+              StudyType.standalone => tr.form_field_study_description_required,
+              StudyType.template => tr.form_field_template_description_required,
+              StudyType.subStudy => tr.form_field_substudy_description_required,
+            },
       });
   get iconRequired => FormControlValidation(control: iconControl, validators: [
         Validators.required

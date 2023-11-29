@@ -39,7 +39,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   final GoRouter router;
 
   // - Form fields
-
+  final FormControl<bool> lockStudyScheduleControl = FormControl();
   final FormArray interventionsArray = FormArray([]);
   late final interventionsCollection =
       FormViewModelCollection<InterventionFormViewModel, InterventionFormData>([], interventionsArray);
@@ -47,6 +47,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   @override
   late final FormGroup form = FormGroup({
     'interventions': interventionsArray,
+    'lockStudySchedule': lockStudyScheduleControl,
     ...studyScheduleControls,
   });
 
@@ -75,6 +76,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   @override
   void setControlsFrom(InterventionsFormData data) {
+    lockStudyScheduleControl.value = data.lockStudySchedule;
     final viewModels = data.interventionsData
         .map((data) => InterventionFormViewModel(
               study: study,
@@ -92,6 +94,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     return InterventionsFormData(
       interventionsData: interventionsCollection.formData,
       studyScheduleData: buildStudyScheduleFormData(),
+      lockStudySchedule: lockStudyScheduleControl.value ?? false,
     );
   }
 
