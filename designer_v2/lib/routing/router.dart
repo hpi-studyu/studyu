@@ -45,12 +45,12 @@ final routerProvider = Provider<GoRouter>((ref) {
 
     // Carry original location through the redirect flow so that we can
     // redirect the user to where they came from after initialization
-    final String? from;
+    final Uri? from;
     if (state.uri.queryParameters.containsKey('from')) {
-      from = state.uri.queryParameters['from'];
+      from = Uri.tryParse(state.uri.queryParameters['from']!);
     } else {
       if (state.matchedLocation.isNotEmpty && !(isOnDefaultPage | isOnSplashPage)) {
-        from = state.matchedLocation;
+        from = state.uri;
       } else {
         from = null;
       }
@@ -58,9 +58,9 @@ final routerProvider = Provider<GoRouter>((ref) {
     // Helper to generate routes carrying the 'from' param (if any)
     namedLocForwarded(String name) {
       final Map<String, String> qParams = {};
-      if (from != null && from != '/') {
+      if (from != null && from.toString() != '/') {
         // if (from != null && from != '/' && from != defaultLocation) {
-        qParams["from"] = from;
+        qParams["from"] = from.toString();
       }
       return router.namedLocation(name, queryParameters: qParams);
     }
@@ -87,16 +87,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         if (!isOnSplashPage && isOnPublicPage) {
           return null;
           // ... else send user to their origin location
-        } else if (from != state.matchedLocation) {
-          return from;
+        } else if (from.toString() != state.uri.toString()) {
+          return from.toString();
         }
       }
       // Redirect to login page as default
       return (isOnLoginPage) ? null : namedLocForwarded(loginRouteName);
     } else {
       // If the user is authenticated, forward to where they were going initially...
-      if (from != null && from != state.matchedLocation) {
-        return from;
+      if (from != null && from.toString() != state.uri.toString()) {
+        return from.toString();
       }
       // ...or send them to the default location if they just authenticated and weren't going anywhere
       if (isOnLoginPage || isOnSplashPage || isOnSignupPage) {
