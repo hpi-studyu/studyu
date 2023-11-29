@@ -29,6 +29,7 @@ jobs:
         run: |
           docker network create studyu_network || true
           cp docker/supabase/.env.example docker/supabase/.env
+          cp docker/nginx/.env.example docker/nginx/.env
           docker compose -f docker/supabase/docker-compose-db.yml up -d
           docker compose -f docker/supabase/docker-compose.yml up -d
           docker compose -f docker/nginx/docker-compose-proxy.yml up -d
