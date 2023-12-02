@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_core/core.dart';
@@ -57,12 +58,15 @@ class WrappedModel<T> {
   }
 }
 
-sealed class ModelInstanceCreationArgs {
+sealed class ModelInstanceCreationArgs extends Equatable {
   const ModelInstanceCreationArgs();
 }
 
 class NoArgs extends ModelInstanceCreationArgs {
   const NoArgs();
+
+  @override
+  List<Object> get props => [];
 }
 
 class StudyCreationArgs extends ModelInstanceCreationArgs {
@@ -70,9 +74,13 @@ class StudyCreationArgs extends ModelInstanceCreationArgs {
   final Study? parentTemplate;
   final bool isTemplate;
 
-  StudyCreationArgs({required this.studyID, this.parentTemplate, required this.isTemplate});
+  const StudyCreationArgs({required this.studyID, this.parentTemplate, required this.isTemplate});
 
-  factory StudyCreationArgs.fromStudy(Study study) => StudyCreationArgs(studyID: study.id, isTemplate: study.isTemplate, parentTemplate: study.parentTemplate);
+  factory StudyCreationArgs.fromStudy(Study study) => StudyCreationArgs(
+      studyID: study.id, isTemplate: study.isTemplate, parentTemplate: study.parentTemplate);
+
+  @override
+  List<Object> get props => [studyID, parentTemplate?.id ?? "", isTemplate];
 }
 
 class ModelRepositoryException implements Exception {}
