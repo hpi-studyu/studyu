@@ -13,6 +13,9 @@ class ThemeConfig {
 ThemeData get theme => ThemeData(
       brightness: Brightness.light,
       primaryColor: primaryColor,
-      colorScheme: ThemeData().colorScheme.copyWith(secondary: accentColor),
+      colorScheme: ThemeData().colorScheme.copyWith(
+        secondary: accentColor,
+        primary: primaryColor,
+      ),
       visualDensity: VisualDensity.adaptivePlatformDensity,
     );
