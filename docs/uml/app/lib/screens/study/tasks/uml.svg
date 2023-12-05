@@ -8,15 +8,6 @@
 	
 	[TaskScreen]o-[TaskInstance]
 	
-	[QuestionnaireTaskWidget
-	  |
-	  +task: QuestionnaireTask;
-	  +completionPeriod: CompletionPeriod
-	]
-	
-	[QuestionnaireTaskWidget]o-[QuestionnaireTask]
-	[QuestionnaireTaskWidget]o-[CompletionPeriod]
-	
 	[CheckmarkTaskWidget
 	  |
 	  +task: CheckmarkTask?;
@@ -25,6 +16,15 @@
 	
 	[CheckmarkTaskWidget]o-[CheckmarkTask]
 	[CheckmarkTaskWidget]o-[CompletionPeriod]
+	
+	[QuestionnaireTaskWidget
+	  |
+	  +task: QuestionnaireTask;
+	  +completionPeriod: CompletionPeriod
+	]
+	
+	[QuestionnaireTaskWidget]o-[QuestionnaireTask]
+	[QuestionnaireTaskWidget]o-[CompletionPeriod]
 	
 	</desc>
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
@@ -38,21 +38,21 @@
 					<g fill="#eee8d5">
 						<path d="M193.8 102.3 L188.5 111.7 L183.2 102.3 L188.5 93.0 Z"></path>
 					</g>
-					<path d="M499.6 95.3 L472.75 113 L472.75 133 L472.8 133.0 " fill="none"></path>
+					<path d="M499.6 94.7 L469.75 113 L469.75 133 L469.8 133.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M510.3 94.6 L499.6 95.3 L504.4 85.7 L515.2 85.0 Z"></path>
+						<path d="M510.4 94.4 L499.6 94.7 L504.8 85.3 L515.5 85.0 Z"></path>
 					</g>
-					<path d="M649.6 95.0 L677.75 113 L689.0176056338028 133 L689.0 133.0 " fill="none"></path>
+					<path d="M651.2 95.4 L677.25 113 L688.5176056338028 133 L688.5 133.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M644.6 85.5 L649.6 95.0 L638.9 94.5 L633.9 85.0 Z"></path>
+						<path d="M646.4 85.8 L651.2 95.4 L640.4 94.6 L635.7 85.0 Z"></path>
 					</g>
-					<path d="M948.5 102.9 L951.5 113 L951.5 133 L951.5 133.0 " fill="none"></path>
+					<path d="M953.5 102.9 L956.5 113 L956.5 133 L956.5 133.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M950.9 92.4 L948.5 102.9 L940.7 95.5 L943.1 85.0 Z"></path>
+						<path d="M955.9 92.4 L953.5 102.9 L945.7 95.5 L948.1 85.0 Z"></path>
 					</g>
-					<path d="M822.2 92.2 L772.5 113 L730.387323943662 133 L730.4 133.0 " fill="none"></path>
+					<path d="M827.2 92.2 L777.5 113 L732.2887323943662 133 L732.3 133.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M832.9 93.5 L822.2 92.2 L828.8 83.7 L839.4 85.0 Z"></path>
+						<path d="M837.9 93.5 L827.2 92.2 L833.8 83.7 L844.4 85.0 Z"></path>
 					</g>
 					<g data-name="TaskScreen">
 						<g fill="#eee8d5" stroke="#33322E" data-name="TaskScreen">
@@ -90,59 +90,18 @@
 							</g>
 						</g>
 					</g>
-					<g data-name="QuestionnaireTaskWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionnaireTaskWidget">
-							<rect x="417.0" y="8.0" height="77.0" width="313.0" data-name="QuestionnaireTaskWidget"></rect>
-							<path d="M417.0 39.0 L730.0 39.0" fill="none" data-name="QuestionnaireTaskWidget"></path>
-						</g>
-						<g transform="translate(417, 8)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionnaireTaskWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionnaireTaskWidget">
-								<text x="148.5" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionnaireTaskWidget">QuestionnaireTaskWidget</text>
-								
-							</g>
-						</g>
-						<g transform="translate(417, 39)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionnaireTaskWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionnaireTaskWidget">
-								<text x="0.0" y="13.5" stroke="none" data-name="QuestionnaireTaskWidget">+task: QuestionnaireTask</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="QuestionnaireTaskWidget">+completionPeriod: CompletionPeriod</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="QuestionnaireTask">
-						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionnaireTask">
-							<rect x="390.3" y="133.0" height="31.0" width="165.0" data-name="QuestionnaireTask"></rect>
-						</g>
-						<g transform="translate(390.25, 133)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionnaireTask">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionnaireTask">
-								<text x="74.5" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionnaireTask">QuestionnaireTask</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="CompletionPeriod">
-						<g fill="#eee8d5" stroke="#33322E" data-name="CompletionPeriod">
-							<rect x="619.8" y="133.0" height="31.0" width="156.0" data-name="CompletionPeriod"></rect>
-						</g>
-						<g transform="translate(619.75, 133)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CompletionPeriod">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CompletionPeriod">
-								<text x="70.0" y="13.5" stroke="none" text-anchor="middle" data-name="CompletionPeriod">CompletionPeriod</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="CheckmarkTaskWidget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="CheckmarkTaskWidget">
-							<rect x="770.0" y="8.0" height="77.0" width="323.0" data-name="CheckmarkTaskWidget"></rect>
-							<path d="M770.0 39.0 L1093.0 39.0" fill="none" data-name="CheckmarkTaskWidget"></path>
+							<rect x="417.0" y="8.0" height="77.0" width="323.0" data-name="CheckmarkTaskWidget"></rect>
+							<path d="M417.0 39.0 L740.0 39.0" fill="none" data-name="CheckmarkTaskWidget"></path>
 						</g>
-						<g transform="translate(770, 8)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CheckmarkTaskWidget">
+						<g transform="translate(417, 8)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CheckmarkTaskWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CheckmarkTaskWidget">
 								<text x="153.5" y="13.5" stroke="none" text-anchor="middle" data-name="CheckmarkTaskWidget">CheckmarkTaskWidget</text>
 								
 							</g>
 						</g>
-						<g transform="translate(770, 39)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CheckmarkTaskWidget">
+						<g transform="translate(417, 39)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CheckmarkTaskWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CheckmarkTaskWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="CheckmarkTaskWidget">+task: CheckmarkTask?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="CheckmarkTaskWidget">+completionPeriod: CompletionPeriod?</text>
@@ -152,11 +111,52 @@
 					</g>
 					<g data-name="CheckmarkTask">
 						<g fill="#eee8d5" stroke="#33322E" data-name="CheckmarkTask">
-							<rect x="880.0" y="133.0" height="31.0" width="143.0" data-name="CheckmarkTask"></rect>
+							<rect x="398.3" y="133.0" height="31.0" width="143.0" data-name="CheckmarkTask"></rect>
 						</g>
-						<g transform="translate(880, 133)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CheckmarkTask">
+						<g transform="translate(398.25, 133)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CheckmarkTask">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CheckmarkTask">
 								<text x="63.5" y="13.5" stroke="none" text-anchor="middle" data-name="CheckmarkTask">CheckmarkTask</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="CompletionPeriod">
+						<g fill="#eee8d5" stroke="#33322E" data-name="CompletionPeriod">
+							<rect x="619.3" y="133.0" height="31.0" width="156.0" data-name="CompletionPeriod"></rect>
+						</g>
+						<g transform="translate(619.25, 133)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CompletionPeriod">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CompletionPeriod">
+								<text x="70.0" y="13.5" stroke="none" text-anchor="middle" data-name="CompletionPeriod">CompletionPeriod</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="QuestionnaireTaskWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionnaireTaskWidget">
+							<rect x="780.0" y="8.0" height="77.0" width="313.0" data-name="QuestionnaireTaskWidget"></rect>
+							<path d="M780.0 39.0 L1093.0 39.0" fill="none" data-name="QuestionnaireTaskWidget"></path>
+						</g>
+						<g transform="translate(780, 8)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionnaireTaskWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionnaireTaskWidget">
+								<text x="148.5" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionnaireTaskWidget">QuestionnaireTaskWidget</text>
+								
+							</g>
+						</g>
+						<g transform="translate(780, 39)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionnaireTaskWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionnaireTaskWidget">
+								<text x="0.0" y="13.5" stroke="none" data-name="QuestionnaireTaskWidget">+task: QuestionnaireTask</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="QuestionnaireTaskWidget">+completionPeriod: CompletionPeriod</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="QuestionnaireTask">
+						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionnaireTask">
+							<rect x="874.0" y="133.0" height="31.0" width="165.0" data-name="QuestionnaireTask"></rect>
+						</g>
+						<g transform="translate(874, 133)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionnaireTask">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionnaireTask">
+								<text x="74.5" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionnaireTask">QuestionnaireTask</text>
 								
 							</g>
 						</g>
