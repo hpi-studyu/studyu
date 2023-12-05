@@ -316,6 +316,23 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
       rethrow;
     }
+
+    final List<Answer> answers = progress
+        .map((p) => (p.result.result as QuestionnaireState).answers.values)
+        .expand((answers) => answers)
+        .toList();
+
+    final List<String> observationPaths = answers
+        .where((e) =>
+          e.question == AudioRecordingQuestion.questionType ||
+          e.question == ImageCapturingQuestion.questionType,
+        )
+        .map((e) => e.response!.toString())
+        .toList();
+
+    if (observationPaths.isNotEmpty) {
+      BlobStorageHandler().removeObservation(observationPaths);
+    }
   }
 
   @override
