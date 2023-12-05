@@ -84,8 +84,7 @@ class CapturePictureScreenState extends State<CapturePictureScreen> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               // If the Future is complete, display the preview.
-              return Column(
-                  children: [CameraPreview(_cameraController), Text(_cameras[_selectedCameraID].lensDirection.name)]);
+              return CameraPreview(_cameraController);
             } else {
               return const Center(child: CircularProgressIndicator());
             }

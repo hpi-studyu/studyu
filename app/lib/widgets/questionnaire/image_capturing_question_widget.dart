@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/screens/study/multimodal/capture_picture_screen.dart';
+import 'package:studyu_app/widgets/questionnaire/capture_question_widget.dart';
 import 'package:studyu_core/core.dart';
 import 'question_widget.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -23,22 +24,10 @@ class _ImageCapturingQuestionWidgetState extends State<ImageCapturingQuestionWid
 
   @override
   Widget build(BuildContext context) {
-    Future<void> captureImage() async {
-      final pathAnswer = await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => CapturePictureScreen(
-              studyId: context.read<AppState>().activeSubject!.studyId,
-              userId: context.read<AppState>().activeSubject!.userId,
-            ),
-          ));
-      widget.onDone!(widget.question.constructAnswer(pathAnswer));
-    }
-
-    return Column(
-      children: [
-        TextButton(onPressed: captureImage, child: const Text("Capture!")),
-      ],
+    return CaptureQuestionWidget<ImageCapturingQuestion>(
+      captureType: CaptureType.image,
+      question: widget.question,
+      onDone: widget.onDone,
     );
   }
 }

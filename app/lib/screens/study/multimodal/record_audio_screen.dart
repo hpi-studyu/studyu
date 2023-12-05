@@ -83,27 +83,33 @@ class RecordAudioScreenState extends State<RecordAudioScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Audio Recorder'),
-        ),
-        body: FutureBuilder<void>(
-            future: _initializeRecorderPermissionsFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return Column(
-                  children: [
-                    _isRecording
-                        ? LoadingAnimationWidget.staggeredDotsWave(color: const Color(0xFFEA3799), size: 200)
-                        : Container(),
-                    ElevatedButton(
-                      onPressed: _toggleRecording,
-                      child: Text(_isRecording ? 'Stop Recording' : 'Start Recording'),
-                    )
-                  ],
-                );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            }));
+      appBar: AppBar(
+        title: const Text('Audio Recorder'),
+      ),
+      body: FutureBuilder<void>(
+        future: _initializeRecorderPermissionsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  _isRecording
+                      ? LoadingAnimationWidget.staggeredDotsWave(color: const Color(0xFFEA3799), size: 200)
+                      : Container(),
+                  ElevatedButton(
+                    onPressed: _toggleRecording,
+                    child: Text(_isRecording ? 'Stop Recording' : 'Start Recording'),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+    );
   }
 }
