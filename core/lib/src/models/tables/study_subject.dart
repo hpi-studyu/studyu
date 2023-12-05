@@ -323,9 +323,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
         .toList();
 
     final List<String> observationPaths = answers
-        .where((e) =>
-          e.question == AudioRecordingQuestion.questionType ||
-          e.question == ImageCapturingQuestion.questionType,
+        .where(
+          (e) => e.question == AudioRecordingQuestion.questionType || e.question == ImageCapturingQuestion.questionType,
         )
         .map((e) => e.response!.toString())
         .toList();
