@@ -1,3 +1,0 @@
-STUDYU_DEFAULT_COMPONENTS="supabase-db studyu-proxy supabase"
-STUDYU_PATH="/mnt/c/Users/Johannes/HPI/studyu"
-STUDYU_BASE_BRANCH="chore/supabase-upgrade-2023-11"
