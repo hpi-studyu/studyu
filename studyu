@@ -751,8 +751,9 @@ manage_components() {
       exit 1;
     fi
 
-    echo -e "${purple}Action: $action${reset}"
-    echo -e "${purple}Component: $component${reset}"
+    # todo later if everything is working
+    echo -e "${yellow}Action: $action${reset}"
+    echo -e "${yellow}Component: $component${reset}"
 
     case "$action" in
       "up"* )
@@ -779,7 +780,7 @@ manage_components() {
               create_specific_env_file "$proxy_env_path"
               source_env "$proxy_env_path"
               echo -e "${yellow}Default deployment settings stored at: $proxy_env_path${reset}"
-              echo -e "Changing the default settings is only necessary if you want to change the port or hostname of a StudyU component."
+              # echo -e "Changing the default settings is only necessary if you want to change the port or hostname of a StudyU component."
               if prompt_yes_no "Do you want to modify the deployment settings now?"; then
                 echo "Notice: Hostnames only include the domain name, e.g. 'example.com' without 'https://'"
                 STUDYU_APP_HOST=$(prompt_with_validation "Enter STUDYU_APP_HOST (hostname of the StudyU App)" "$STUDYU_APP_HOST")
@@ -906,7 +907,7 @@ manage_components() {
                 exit 1
               fi
             else
-              echo -e "${yellow}The public.app_config table is empty. Creating a new app_config...${reset}"
+              echo -e "${yellow}The public.app_config table is empty. A new app_config needs to be created.${reset}"
 
               local -A app_privacy
               local -A app_terms
