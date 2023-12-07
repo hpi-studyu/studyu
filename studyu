@@ -452,7 +452,7 @@ set_default_components() {
 
   # Validate selected components
   for component in "${default_components[@]}"; do
-    if [[ ! ${compose_files[$component]+_} ]]; then
+    if [ ! ${compose_files[$component]+_} ]; then
         echo -e "${red}Error: '$component' is not a valid component.${reset}"
         exit 1
     fi
@@ -463,7 +463,7 @@ set_default_components() {
     fi
 
     # Check if component matches "studyu*" and add "studyu-proxy"
-    if [[ "$component" == "studyu"* ]]; then
+    if [[ "$component" == "supabase" || "$component" == "studyu"* ]]; then
       default_components+=("studyu-proxy")
     fi
   done
@@ -951,7 +951,6 @@ manage_components() {
               "
 
               # Display the generated SQL query
-              # todo remove this
               echo "Generated SQL Query:"
               echo "$sql_query"
 
