@@ -81,7 +81,7 @@
 | public.get_study_record_from_invite | study | invite_code text | FUNCTION |
 | public.handle_new_user | trigger |  | FUNCTION |
 | public.has_study_ended | bool | psubject_id uuid | FUNCTION |
-| public.has_results_public | bool | param_subject_id uuid | FUNCTION |
+| public.has_results_public | bool | psubject_id uuid | FUNCTION |
 | public.has_study_ended | bool | subject study_subject | FUNCTION |
 | public.is_active_subject | bool | psubject_id uuid, days_active integer | FUNCTION |
 | public.is_study_subject_of | bool | _user_id uuid, _study_id uuid | FUNCTION |
