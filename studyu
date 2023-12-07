@@ -255,7 +255,7 @@ prompt_yes_no() {
 # email_pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 # phone_pattern="^\+?[0-9]+$"
 url_pattern="^[a-zA-Z0-9.-]+(.[a-zA-Z]{2,})?(:[0-9]{1,5})?(/.*)?$"
-text_pattern="^[a-zA-Z]+$"
+# text_pattern="^[a-zA-Z]+$"
 number_pattern="^[0-9]+$"
 
 
@@ -279,29 +279,20 @@ update_env_variable() {
   local new_value="$3"
   local pattern="$4"
 
-  # Check if the file exists
-  if [ ! -f "$file_path" ]; then
-    # Create the file and insert the variable in quoted form
-    echo "$variable_name=\"$new_value\"" > "$file_path"
-    return
+  if [ -z "$new_value" ] || { [ -n "$pattern" ] && ! is_valid_input "$new_value" "$pattern"; }; then
+    echo -e "${red}Error: Invalid new value for $variable_name.${reset}"
+    exit 1
   fi
 
-  if [ -z "$pattern" ]; then
-    if [ "$(is_valid_input "$new_value" "$pattern")" == false ]; then
-      echo -e "${red}Error: Invalid input for $variable_name.${reset}"
-      exit 1
-    fi
+  # Enclose the new value in double quotes if it's not already
+  if [[ "$new_value" != \"*\" ]]; then
+    new_value=\""$new_value"\"
   fi
 
-  # Check if the variable already exists in the file
-  if grep -q "^$variable_name=" "$file_path"; then
-    # Quote the new value
-    new_value_quoted=$(printf "%q" "$new_value")
-    # Update the existing variable
-    sed -i "/^$variable_name=/s|.*|$variable_name=$new_value_quoted|" "$file_path"
+  if [ -f "$file_path" ] && grep -q "^$variable_name=" "$file_path"; then
+    sed -i "/^$variable_name=/s|.*|$variable_name=$new_value|" "$file_path"
   else
-    # Variable does not exist, so add it in quoted form
-    echo "$variable_name=\"$new_value\"" >> "$file_path"
+    echo "$variable_name=$new_value" >> "$file_path"
   fi
 }
 
@@ -340,7 +331,7 @@ create_specific_env_file() {
   if [ ! -f "$env_path" ]; then
     cp "$env_path.example" "$env_path"
   else
-    echo -e "${yellow}Environment file already exists at $env_path${reset}"
+    echo -e "${red}Environment file already exists at $env_path${reset}"
   fi
 }
 
@@ -543,10 +534,12 @@ execute_sql_query() {
   local result
 
   if result=$(docker exec -i "$postgres_container_name" psql -U "$postgres_username" -tAc "$sql_query" | tr -d '\r'); then
-    echo "$result"
+    # echo "$result"
+    return 0
   else
     echo -e "${red}Error executing SQL query: $result${reset}"
-    exit 1
+    # exit 1
+    return 1
   fi
 }
 
@@ -725,6 +718,9 @@ run_docker_compose() {
 }
 
 clean_flag=false
+init_database_flag=false
+init_custom_database_path=''
+
 # Run given docker compose commands such as start/restart/stop
 manage_components() {
   local action=$1
@@ -786,11 +782,11 @@ manage_components() {
               echo -e "Changing the default settings is only necessary if you want to change the port or hostname of a StudyU component."
               if prompt_yes_no "Do you want to modify the deployment settings now?"; then
                 echo "Notice: Hostnames only include the domain name, e.g. 'example.com' without 'https://'"
-                STUDYU_APP_HOST=$(prompt_with_validation "Enter STUDYU_APP_HOST (hostname of the StudyU App)" "$STUDYU_APP_HOST" "$text_pattern")
+                STUDYU_APP_HOST=$(prompt_with_validation "Enter STUDYU_APP_HOST (hostname of the StudyU App)" "$STUDYU_APP_HOST")
                 STUDYU_APP_PORT=$(prompt_with_validation "Enter STUDYU_APP_PORT (port of the StudyU App)" "$STUDYU_APP_PORT" "$number_pattern")
-                STUDYU_DESIGNER_HOST=$(prompt_with_validation "Enter STUDYU_DESIGNER_HOST (hostname of the StudyU Designer)" "$STUDYU_DESIGNER_HOST" "$text_pattern")
+                STUDYU_DESIGNER_HOST=$(prompt_with_validation "Enter STUDYU_DESIGNER_HOST (hostname of the StudyU Designer)" "$STUDYU_DESIGNER_HOST")
                 STUDYU_DESIGNER_PORT=$(prompt_with_validation "Enter STUDYU_DESIGNER_PORT (port of the StudyU Designer)" "$STUDYU_DESIGNER_PORT" "$number_pattern")
-                STUDYU_SUPABASE_HOST=$(prompt_with_validation "Enter STUDYU_SUPABASE_HOST (hostname of the Supabase frontend)" "$STUDYU_SUPABASE_HOST" "$text_pattern")
+                STUDYU_SUPABASE_HOST=$(prompt_with_validation "Enter STUDYU_SUPABASE_HOST (hostname of the Supabase frontend)" "$STUDYU_SUPABASE_HOST")
                 STUDYU_SUPABASE_PORT=$(prompt_with_validation "Enter STUDYU_SUPABASE_PORT (port of the Supabase frontend)" "$STUDYU_SUPABASE_PORT" "$number_pattern")
                 update_env_variable "$proxy_env_path" "STUDYU_APP_HOST" "$STUDYU_APP_HOST"
                 update_env_variable "$proxy_env_path" "STUDYU_APP_PORT" "$STUDYU_APP_PORT"
@@ -855,7 +851,7 @@ manage_components() {
         ;;
       "stop" )
         ;;
-      "down" )
+      "down"* )
         ;;
       * )
         echo -e "${red}Error: Invalid action '$action'${reset}"
@@ -876,7 +872,7 @@ manage_components() {
       run_msg="$component is now running"
       case "$component" in
         "studyu-proxy")
-          echo -e "${green}$run_msg${reset}"
+          # echo -e "${green}$run_msg${reset}"
           ;;
         "supabase-db")
           # check if container is healthy
@@ -884,97 +880,120 @@ manage_components() {
             echo "Waiting for $component to be healthy..."
             sleep 3
           done
-          echo -e "${green}$run_msg${reset}"
-
+          # echo -e "${green}$run_msg${reset}"
           # Check if the result is zero (table is empty)
           if [ "$(check_app_config_empty)" -eq 0 ]; then
-            echo -e "${yellow}The public.app_config table is empty. Creating a new app_config...${reset}"
 
-            local -A app_privacy
-            local -A app_terms
-            local -A designer_privacy
-            local -A designer_terms
-            local -A imprint
-            local -A contact
-
-            while true; do
-            # Prompt for values with basic validation
-            id='prod'
-
-            prompt_multilingual "Enter app_privacy URLs" app_privacy
-            prompt_multilingual "Enter app_terms URLs" app_terms
-            prompt_multilingual "Enter designer_privacy URLs" designer_privacy
-            prompt_multilingual "Enter designer_terms URLs" designer_terms
-            prompt_multilingual "Enter imprint URLs" imprint
-            prompt_contact contact
-
-            analytics='{ "dsn": "example", "enabled": false, "samplingRate": 0 }'
-
-            app_privacy_json=$(generate_multilangual_json app_privacy)
-            app_terms_json=$(generate_multilangual_json app_terms)
-            designer_privacy_json=$(generate_multilangual_json designer_privacy)
-            designer_terms_json=$(generate_multilangual_json designer_terms)
-            imprint_json=$(generate_multilangual_json imprint)
-            contact_json=$(generate_contact_json contact)
-
-            # Construct SQL query
-            sql_query="
-            INSERT INTO public.app_config (id, app_privacy, app_terms, designer_privacy, designer_terms, imprint, contact, analytics)
-            VALUES (
-              '$id',
-              '$app_privacy_json',
-              '$app_terms_json',
-              '$designer_privacy_json',
-              '$designer_terms_json',
-              '$imprint_json',
-              '$contact_json',
-              '$analytics'
-            );
-            "
-
-            # Display the generated SQL query
-            # todo remove this
-            echo "Generated SQL Query:"
-            echo "$sql_query"
-
-            # Prompt user to confirm the generated SQL query
-            # todo create multiselect out of these three options instead of two prompts
-            if prompt_yes_no "Are you happy with your inputs to insert them into the database?"; then
-              if result=$(execute_sql_query "$sql_query"); then
-                echo -e "${green}Successfully inserted app_config.${reset}"
-                break
+            if [ "$init_database_flag" = true ]; then
+              if [ -n "$init_custom_database_path" ]; then
+                app_config_sql_path="$init_custom_database_path"
               else
-                echo -e "${red}Error: Failed to insert app_config.${reset}"
-                echo "$result"
-                echo -e "Here is the generated SQL query for you to insert it manually:"
-                echo "$sql_query"
-                break
+                app_config_sql_path="$STUDYU_PATH/database/app_config.sql.example"
               fi
-              else
-                if ! prompt_yes_no "Do you want to change some of the data you entered? (press n to skip and discard the data)"; then
-                  echo "Aborting..."
+              if [ -f "$app_config_sql_path" ]; then
+                if result=$(execute_sql_query "$(cat "$app_config_sql_path")"); then
+                  echo -e "${green}Successfully initialized the database with $app_config_sql_path${reset}"
+                  break
+                else
+                  echo -e "${red}Error: Failed to initialize the database with $app_config_sql_path${reset}"
+                  echo "$result"
+                  echo -e "Here is the SQL query for you to insert it manually:"
+                  cat "$app_config_sql_path"
                   break
                 fi
+              else
+                echo -e "${red}Error: Could not locate the database file at $app_config_sql_path${reset}"
+                exit 1
               fi
-            done
+            else
+              echo -e "${yellow}The public.app_config table is empty. Creating a new app_config...${reset}"
+
+              local -A app_privacy
+              local -A app_terms
+              local -A designer_privacy
+              local -A designer_terms
+              local -A imprint
+              local -A contact
+
+              while true; do
+              # Prompt for values with basic validation
+              id='prod'
+
+              prompt_multilingual "Enter app_privacy URLs" app_privacy
+              prompt_multilingual "Enter app_terms URLs" app_terms
+              prompt_multilingual "Enter designer_privacy URLs" designer_privacy
+              prompt_multilingual "Enter designer_terms URLs" designer_terms
+              prompt_multilingual "Enter imprint URLs" imprint
+              prompt_contact contact
+
+              analytics='{ "dsn": "example", "enabled": false, "samplingRate": 0 }'
+
+              app_privacy_json=$(generate_multilangual_json app_privacy)
+              app_terms_json=$(generate_multilangual_json app_terms)
+              designer_privacy_json=$(generate_multilangual_json designer_privacy)
+              designer_terms_json=$(generate_multilangual_json designer_terms)
+              imprint_json=$(generate_multilangual_json imprint)
+              contact_json=$(generate_contact_json contact)
+
+              # Construct SQL query
+              sql_query="
+              INSERT INTO public.app_config (id, app_privacy, app_terms, designer_privacy, designer_terms, imprint, contact, analytics)
+              VALUES (
+                '$id',
+                '$app_privacy_json',
+                '$app_terms_json',
+                '$designer_privacy_json',
+                '$designer_terms_json',
+                '$imprint_json',
+                '$contact_json',
+                '$analytics'
+              );
+              "
+
+              # Display the generated SQL query
+              # todo remove this
+              echo "Generated SQL Query:"
+              echo "$sql_query"
+
+              # Prompt user to confirm the generated SQL query
+              # todo create multiselect out of these three options instead of two prompts
+              if prompt_yes_no "Are you happy with your inputs to insert them into the database?"; then
+                if result=$(execute_sql_query "$sql_query"); then
+                  echo -e "${green}Successfully inserted app_config.${reset}"
+                  break
+                else
+                  echo -e "${red}Error: Failed to insert app_config.${reset}"
+                  echo "$result"
+                  echo -e "Here is the generated SQL query for you to insert it manually:"
+                  echo "$sql_query"
+                  break
+                fi
+                else
+                  if ! prompt_yes_no "Do you want to change some of the data you entered? (press n to skip and discard the data)"; then
+                    echo "Aborting..."
+                    break
+                  fi
+                fi
+              done
+            fi
           fi
           ;;
         "supabase")
           source_env "$proxy_env_path"
           supabase_url="$STUDYU_SUPABASE_HOST:$STUDYU_SUPABASE_PORT"
-          supabase_msg="$run_msg and can be accessed at: $supabase_url"
+          supabase_msg="$run_msg and can be accessed at $supabase_url"
           echo -e "${green}$supabase_msg${reset}"
           ;;
         "studyu-app")
           source_env "$proxy_env_path"
           studyu_app_url="$STUDYU_APP_HOST:$STUDYU_APP_PORT"
-          studyu_app_msg="$run_msg and can be accessed at: $studyu_app_url"
+          studyu_app_msg="$run_msg and can be accessed at $studyu_app_url"
           echo -e "${green}$studyu_app_msg${reset}"
           ;;
         "studyu-designer")
           source_env "$proxy_env_path"
           studyu_designer_url="$STUDYU_DESIGNER_HOST:$STUDYU_DESIGNER_PORT"
-          studyu_designer_msg="$run_msg and can be accessed at: $studyu_designer_url"
+          studyu_designer_msg="$run_msg and can be accessed at $studyu_designer_url"
           echo -e "${green}$studyu_designer_msg${reset}"
           ;;
         *)
@@ -1033,7 +1052,6 @@ start() {
   # Check if studyu_network exists, otherwise create it
   docker network inspect studyu_network >/dev/null 2>&1 || \
       docker network create --driver bridge studyu_network
-
   manage_components 'up -d' "${@}"
 }
 
@@ -1111,7 +1129,7 @@ update() {
 
 # Delete docker container, images, and volumes
 delete() {
-  local down_cmd="down "
+  local down_cmd=""
 
   if prompt_yes_no "Do you want to create a backup of the StudyU database?"; then
     backup
@@ -1128,8 +1146,8 @@ delete() {
   fi
 
   if [ -n "$down_cmd" ]; then
-    manage_components "$down_cmd"
-    echo -e "${green}StudyU components and data have been deleted.${reset}"
+    manage_components "down $down_cmd"
+    echo -e "${green}Selected data has been deleted.${reset}"
   else
     echo -e "No action taken."
   fi
@@ -1147,30 +1165,24 @@ backup() {
 
   # Check if the supabase-db component is running
   if ! component_is_running "$postgres_container_name"; then
-    echo -e "${yellow}The supabase-db component is not running.${reset}"
     is_running=false
-    if prompt_yes_no "Do you want to start supabase-db now?"; then
-      start start supabase-db
-      until docker inspect --format "{{json .State.Health.Status }}" "$postgres_container_name" | grep -q healthy; do
-        echo "Waiting for supabase-db to be healthy..."
-        sleep 3
-      done
-    else
-      echo -e "${red}Please start the supabase-db component before backing up.${reset}"
-      exit 1
-    fi
+    start supabase-db
+    until docker inspect --format "{{json .State.Health.Status }}" "$postgres_container_name" | grep -q healthy; do
+      echo "Waiting for supabase-db to be healthy..."
+      sleep 3
+    done
   fi
 
   # Execute pg_dump command inside the Docker container
   docker exec $postgres_container_name pg_dump -U "$postgres_username" -t "public.*" | gzip > "$BACKUP_FILE"
-  echo "StudyU database backup created at: '$BACKUP_FILE'"
 
   # Stop the container if it was not running before
   if [ "$is_running" = false ]; then
     stop supabase-db
   fi
 
-  echo -e "${green}StudyU database backup completed.${reset} It is advisable to schedule regular backups e.g. with 'crontab'."
+  echo -e "${green}StudyU database backup created at: $BACKUP_FILE${reset}"
+  echo "It is advisable to schedule regular backups e.g. with 'crontab'."
 }
 
 
@@ -1211,7 +1223,7 @@ print_start_help() {
   echo "Options:"
   echo "  -c, --clean                      Clean up orphaned containers"
   echo "  -i, --init-default-database      Initialize the default database"
-  echo "  -d, --init-database <file>       Initialize the database using a custom SQL file"
+  echo "  -d, --init-database <path>       Initialize the database using a custom SQL file"
 }
 
 # Function to display help for 'restart' command
@@ -1252,7 +1264,7 @@ print_env_edit_help() {
 
   echo "  studyu                                       Edit StudyU environment variables"
   echo "    -i, --init                                 Initialize StudyU environment file"
-  echo "    -s, --import-supabase-secrets              Import Supabase secrets for StudyU"
+  echo "    -s, --import-supabase-key                  Import Supabase public key to StudyU"
   echo "    -b, --set-supabase-url <value>             Set the Supabase URL"
   echo "    -k, --set-supabase-public-anon-key <value> Set the Supabase key"
   echo "    -g, --set-project-generator-url <value>    Set the StudyU project generator URL"
@@ -1346,32 +1358,26 @@ case "$1" in
           shift
           ;;
         -i|--init-default-database)
-          if [ "$(check_app_config_empty)" -eq 1 ]; then
-            app_config_sql_path="$STUDYU_PATH/database/app_config.sql.example"
-            if [ -f "$app_config_sql_path" ]; then
-              echo -e "{purple}Initializing default database with $app_config_sql_path${reset}"
-              execute_sql_query "$(cat "$app_config_sql_path")"
-            else
-              echo -e "${red}Error: Could not find app_config.sql.example at $app_config_sql_path${reset}"
-              exit 1
-            fi
-          else
-            echo -e "${yellow}The public.app_config table is not empty. Skipping...${reset}"
-          fi
+          init_database_flag=true
+          shift
           ;;
         -d|--init-database)
-          custom_app_config_path=$2
-          if [ "$(check_app_config_empty)" -eq 1 ]; then
-            if [ -f "$custom_app_config_path" ]; then
-              echo -e "${purple}Initializing database with $custom_app_config_path${reset}"
-              execute_sql_query "$(cat "$custom_app_config_path")"
-            else
-              echo -e "${red}Error: Could not find custom app_config at $custom_app_config_path${reset}"
-              exit 1
-            fi
+          init_database_flag=true
+          init_custom_database_path=$2
+
+          # Check if the path is already absolute
+          if [[ $init_custom_database_path == /* ]]; then
+            # The path is absolute
+            init_custom_database_path="$init_custom_database_path"
           else
-            echo -e "${yellow}The public.app_config table is not empty. Skipping...${reset}"
+            # The path is relative
+            init_custom_database_path="$SCRIPT_DIR/$init_custom_database_path"
           fi
+          if [ -z "$init_custom_database_path" ]; then
+            echo -e "${red}Error: No path to custom database file specified.${reset}"
+            exit 1
+          fi
+          shift 2
           ;;
         -*)
           echo -e "${red}Unknown option $1. Use '$0 start --help' to see available options.${reset}"
@@ -1412,18 +1418,23 @@ case "$1" in
     ;;
   stop)
     read_config
+    shift
     stop "$@"
     ;;
   down)
     read_config
+    shift
     down "$@"
     ;;
   env-edit)
     read_config
     case "$2" in
       proxy)
-        shift
-        # todo shift twice?
+        shift 2
+        if [ $# -eq 0 ]; then
+          print_env_edit_help
+          exit 0
+        fi
         while [[ $# -gt 0 ]]; do
           case $1 in
             -h | --help)
@@ -1431,58 +1442,54 @@ case "$1" in
               exit 0
               ;;
             -i | --init)
-              echo -e "${purple}Creating a default proxy env at: $proxy_env_path${reset}"
+              echo -e "${yellow}Creating a default proxy env at: $proxy_env_path${reset}"
               create_specific_env_file "$proxy_env_path"
               shift
               ;;
             -a | --set-app-host)
-              echo -e "${purple}Setting STUDYU_APP_HOST to: $2${reset}"
-              update_env_variable "$proxy_env_path" "STUDYU_APP_HOST" "$2" "$text_pattern"
+              echo -e "${yellow}Setting STUDYU_APP_HOST to: $2${reset}"
+              update_env_variable "$proxy_env_path" "STUDYU_APP_HOST" "$2"
               shift 2
               ;;
             -p | --set-app-port)
-              echo -e "${purple}Setting STUDYU_APP_PORT to: $2${reset}"
+              echo -e "${yellow}Setting STUDYU_APP_PORT to: $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_APP_PORT" "$2" "$number_pattern"
               shift 2
               ;;
             -d | --set-designer-host)
-              echo -e "${purple}Setting STUDYU_DESIGNER_HOST to: $2${reset}"
-              update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_HOST" "$2" "$text_pattern"
+              echo -e "${yellow}Setting STUDYU_DESIGNER_HOST to: $2${reset}"
+              update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_HOST" "$2"
               shift 2
               ;;
             -q | --set-designer-port)
-              echo -e "${purple}Setting STUDYU_DESIGNER_PORT to: $2${reset}"
+              echo -e "${yellow}Setting STUDYU_DESIGNER_PORT to: $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_PORT" "$2" "$number_pattern"
               shift 2
               ;;
             -s | --set-supabase-host)
-              echo -e "${purple}Setting STUDYU_SUPABASE_HOST to: $2${reset}"
-              update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_HOST" "$2" "$text_pattern"
+              echo -e "${yellow}Setting STUDYU_SUPABASE_HOST to: $2${reset}"
+              update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_HOST" "$2"
               shift 2
               ;;
             -u | --set-supabase-port)
-              echo -e "${purple}Setting STUDYU_SUPABASE_PORT to: $2${reset}"
+              echo -e "${yellow}Setting STUDYU_SUPABASE_PORT to: $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_PORT" "$2" "$number_pattern"
               shift 2
               ;;
-            -*)
+            *)
               echo -e "${red}Unknown option $1. Use '$0 env-edit proxy --help' to see available options.${reset}"
               exit 1
               ;;
-            *)
-              POSITIONAL_ARGS+=("$1")
-              shift
-              ;;
+
           esac
         done
-        if [ ${#POSITIONAL_ARGS[@]} -gt 0 ]; then
-          echo -e "${red}Unknown option ${POSITIONAL_ARGS[1]}. Use '$0 env-edit proxy --help' to see available options.${reset}"
-          exit 1
-        fi
         ;;
       supabase)
-        shift
-        # todo shift twice?
+        shift 2
+        if [ $# -eq 0 ]; then
+          print_env_edit_help
+          exit 0
+        fi
         while [[ $# -gt 0 ]]; do
           case $1 in
             -h | --help)
@@ -1490,63 +1497,58 @@ case "$1" in
               exit 0
               ;;
             -i | --init)
-              echo -e "${purple}Creating a default supabase env at: $supabase_env_path${reset}"
+              echo -e "${yellow}Creating a default supabase env at: $supabase_env_path${reset}"
               create_specific_env_file "$supabase_env_path"
               shift
               ;;
             -c | --create-supabase-secrets)
-              echo -e "${purple}Creating and setting Supabase secrets...${reset}"
+              echo -e "${yellow}Creating and setting Supabase secrets...${reset}"
               create_and_set_supabase_secrets
               shift
               ;;
             -p | --set-postgres_password)
-              echo -e "${purple}Setting POSTGRES_PASSWORD to: $2${reset}"
+              echo -e "${yellow}Setting POSTGRES_PASSWORD to: $2${reset}"
               update_env_variable "$supabase_env_path" "POSTGRES_PASSWORD" "$2"
               shift 2
               ;;
             -j | --set-jwt-secret)
-              echo -e "${purple}Setting JWT_SECRET to: $2${reset}"
+              echo -e "${yellow}Setting JWT_SECRET to: $2${reset}"
               update_env_variable "$supabase_env_path" "JWT_SECRET" "$2"
               shift 2
               ;;
             -a | --set-anon-key)
-              echo -e "${purple}Setting ANON_KEY to: $2${reset}"
+              echo -e "${yellow}Setting ANON_KEY to: $2${reset}"
               update_env_variable "$supabase_env_path" "ANON_KEY" "$2"
               shift 2
               ;;
             -s | --set-service-role-key)
-              echo -e "${purple}Setting SERVICE_ROLE_KEY to: $2${reset}"
+              echo -e "${yellow}Setting SERVICE_ROLE_KEY to: $2${reset}"
               update_env_variable "$supabase_env_path" "SERVICE_ROLE_KEY" "$2"
               shift 2
               ;;
             -u | --set-dashboard-username)
-              echo -e "${purple}Setting DASHBOARD_USERNAME to: $2${reset}"
+              echo -e "${yellow}Setting DASHBOARD_USERNAME to: $2${reset}"
               update_env_variable "$supabase_env_path" "DASHBOARD_USERNAME" "$2"
               shift 2
               ;;
             -w | --set-dashboard-password)
-            echo -e "${purple}Setting DASHBOARD_PASSWORD to: $2${reset}"
+            echo -e "${yellow}Setting DASHBOARD_PASSWORD to: $2${reset}"
               update_env_variable "$supabase_env_path" "DASHBOARD_PASSWORD" "$2"
               shift 2
               ;;
-            -*)
+            *)
               echo -e "${red}Unknown option $1. Use '$0 env-edit supabase --help' to see available options.${reset}"
               exit 1
               ;;
-            *)
-              POSITIONAL_ARGS+=("$1")
-              shift
-              ;;
           esac
         done
-        if [ ${#POSITIONAL_ARGS[@]} -gt 0 ]; then
-          echo -e "${red}Unknown option ${POSITIONAL_ARGS[1]}. Use '$0 env-edit supabase --help' to see available options.${reset}"
-          exit 1
-        fi
         ;;
       studyu)
-        shift #2
-        # todo shift twice?
+        shift 2
+        if [ $# -eq 0 ]; then
+          print_env_edit_help
+          exit 0
+        fi
         while [[ $# -gt 0 ]]; do
           case $1 in
             -h | --help)
@@ -1554,59 +1556,55 @@ case "$1" in
               exit 0
               ;;
             -i | --init)
-              echo -e "${purple}Creating a default studyu env at: $studyu_env_path${reset}"
+              echo -e "${yellow}Creating a default studyu env at: $studyu_env_path${reset}"
               create_specific_env_file "$studyu_env_path"
               shift
               ;;
-            -s | --import-supabase-secrets)
+            -s | --import-supabase-key)
+              if [ ! -f "$studyu_env_path" ]; then
+                echo -e "${red}Error: Create a default StudyU env first with '$0 env-edit studyu --init'${reset}"
+                exit 1
+              fi
               anon_key=$(grep "^ANON_KEY=" "$supabase_env_path" | cut -d'=' -f2)
               if [ -z "$anon_key" ]; then
                 echo -e "${red}Error: Could not find ANON_KEY in $supabase_env_path${reset}"
                 exit 1
               fi
-              echo -e "${purple}Importing Supabase secrets...${reset}"
-              update_env_variable "$studyu_env_path" "ANON_KEY" "$anon_key"
+              echo -e "${yellow}Importing Supabase key into StudyU env file.${reset}"
+              update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$anon_key"
               shift
               ;;
             -b | --set-supabase-url)
-              echo -e "${purple}Setting STUDYU_SUPABASE_URL to: $2${reset}"
+              echo -e "${yellow}Setting STUDYU_SUPABASE_URL to: $2${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_URL" "$2" "$url_pattern"
               shift 2
               ;;
             -k | --set-supabase-public-anon-key)
-              echo -e "${purple}Setting STUDYU_SUPABASE_PUBLIC_ANON_KEY to: $2${reset}"
+              echo -e "${yellow}Setting STUDYU_SUPABASE_PUBLIC_ANON_KEY to: $2${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$2"
               shift 2
               ;;
             -g | --set-project-generator-url)
-              echo -e "${purple}Setting STUDYU_PROJECT_GENERATOR_URL to: $2${reset}"
+              echo -e "${yellow}Setting STUDYU_PROJECT_GENERATOR_URL to: $2${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_PROJECT_GENERATOR_URL" "$2" "$url_pattern"
               shift 2
               ;;
             -a | --set-app-url)
-              echo -e "${purple}Setting STUDYU_APP_URL to: $2${reset}"
+              echo -e "${yellow}Setting STUDYU_APP_URL to: $2${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_APP_URL" "$2" "$url_pattern"
               shift 2
               ;;
             -d | --set-designer-url)
-              echo -e "${purple}Setting STUDYU_DESIGNER_URL to: $2${reset}"
+              echo -e "${yellow}Setting STUDYU_DESIGNER_URL to: $2${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_DESIGNER_URL" "$2" "$url_pattern"
               shift 2
               ;;
-            -*)
+            *)
               echo -e "${red}Unknown option $1. Use '$0 env-edit studyu --help' to see available options.${reset}"
               exit 1
               ;;
-            *)
-              POSITIONAL_ARGS+=("$1")
-              shift
-              ;;
           esac
         done
-        if [ ${#POSITIONAL_ARGS[@]} -gt 0 ]; then
-          echo -e "${red}Unknown option ${POSITIONAL_ARGS[1]}. Use '$0 env-edit studyu --help' to see available options.${reset}"
-          exit 1
-        fi
         ;;
       --help | -h)
         print_env_edit_help
