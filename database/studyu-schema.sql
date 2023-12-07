@@ -220,7 +220,7 @@ ALTER FUNCTION public.has_study_ended(psubject_id uuid) OWNER TO postgres;
 -- Name: has_results_public(uuid); Type: FUNCTION; Schema: public; Owner: postgres
 --
 
-CREATE FUNCTION public.has_results_public(param_subject_id uuid) RETURNS boolean
+CREATE FUNCTION public.has_results_public(psubject_id uuid) RETURNS boolean
   LANGUAGE plpgsql SECURITY DEFINER
   AS $$
   BEGIN
