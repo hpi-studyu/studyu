@@ -206,8 +206,8 @@ class StudyTemplates {
     return newDraft;
   }
 
-  static Study emptySubStudyDraft(String userId, Study parentTemplate) {
-    final newDraft = Study.newSubStudy(userId, parentTemplate);
+  static Study emptySubStudyDraft(String userId, String parentTemplateId) {
+    final newDraft = Study.newSubStudy(userId, parentTemplateId);
     newDraft.title = StudyTemplates.kUnnamedSubStudyTitle;
     newDraft.iconName = '';
     return newDraft;

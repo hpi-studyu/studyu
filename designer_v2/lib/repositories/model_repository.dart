@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
@@ -9,6 +10,7 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 
 import '../domain/study.dart';
+import '../routing/router_config.dart';
 
 typedef ModelID = String;
 
@@ -74,10 +76,22 @@ class StudyCreationArgs extends ModelInstanceCreationArgs {
   final StudyID? parentTemplateId;
   final bool isTemplate;
 
-  const StudyCreationArgs({required this.studyID, this.parentTemplateId, required this.isTemplate});
+  StudyCreationArgs({required this.studyID, this.parentTemplateId, required this.isTemplate}) {
+    if (parentTemplateId != null && isTemplate) {
+      throw ArgumentError("A sub-study cannot be a template");
+    }
+  }
 
   factory StudyCreationArgs.fromStudy(Study study) => StudyCreationArgs(
-      studyID: study.id, isTemplate: study.isTemplate, parentTemplateId: study.parentTemplate?.id);
+      studyID: study.id, isTemplate: study.isTemplate, parentTemplateId: study.parentTemplateId);
+
+  factory StudyCreationArgs.fromRoute(GoRouterState routerState) {
+    final studyId = routerState.pathParameters[RouteParams.studyId]!;
+    final isTemplate = routerState.uri.queryParameters[RouteParams.isTemplate] == true.toString();
+    final parentTemplateId = routerState.uri.queryParameters[RouteParams.parentTemplateId];
+    return StudyCreationArgs(
+        studyID: studyId, isTemplate: isTemplate, parentTemplateId: parentTemplateId);
+  }
 
   @override
   List<Object> get props => [studyID, parentTemplateId ?? "", isTemplate];
@@ -180,6 +194,11 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     late final WrappedModel<T>? wrappedModel;
     try {
       final model = await delegate.fetch(modelId);
+      if (model is Study && model.parentTemplateId != null) {
+        // TODO: find a general solution to fetch referenced models
+        final parentTemplate = await fetch(model.parentTemplateId!);
+        model.parentTemplate = parentTemplate.model as Study;
+      }
       wrappedModel = upsertLocally(model);
       wrappedModel.markAsFetched();
       emitModelEvent(IsFetched(modelId, model));

@@ -53,8 +53,8 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
 
   static const String baselineID = '__baseline';
   String id;
-  @JsonKey(name: 'parent_template')
-  Study? parentTemplate;
+  @JsonKey(name: 'parent_template_id')
+  String? parentTemplateId;
   @JsonKey(name: 'template_configuration')
   TemplateConfiguration? templateConfiguration;
   String? title;
@@ -82,6 +82,10 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   late List<String> collaboratorEmails = [];
   @JsonKey(name: 'registry_published')
   late bool registryPublished = false;
+
+  /// The fetched parent template from the database using the [parentTemplateId]
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  Study? parentTemplate;
 
   @JsonKey(includeToJson: false, includeFromJson: false)
   int participantCount = 0;
@@ -113,7 +117,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   Study.newTemplate(this.userId)
       : id = const Uuid().v4(),
         templateConfiguration = TemplateConfiguration();
-  Study.newSubStudy(this.userId, this.parentTemplate) : id = const Uuid().v4();
+  Study.newSubStudy(this.userId, this.parentTemplateId) : id = const Uuid().v4();
 
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
@@ -125,20 +129,23 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
 
     final List? invites = json['study_invite'] as List?;
     if (invites != null) {
-      study.invites = invites.map((json) => StudyInvite.fromJson(json as Map<String, dynamic>)).toList();
+      study.invites =
+          invites.map((json) => StudyInvite.fromJson(json as Map<String, dynamic>)).toList();
     }
 
     final List? participants = json['study_subject'] as List?;
     if (participants != null) {
-      study.participants = participants.map((json) => StudySubject.fromJson(json as Map<String, dynamic>)).toList();
+      study.participants =
+          participants.map((json) => StudySubject.fromJson(json as Map<String, dynamic>)).toList();
     }
 
     List? participantsProgress = json['study_progress'] as List?;
     participantsProgress = json['study_progress_export'] as List?;
     participantsProgress ??= json['subject_progress'] as List?;
     if (participantsProgress != null) {
-      study.participantsProgress =
-          participantsProgress.map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>)).toList();
+      study.participantsProgress = participantsProgress
+          .map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>))
+          .toList();
     }
 
     final int? participantCount = json['study_participant_count'] as int?;
@@ -187,7 +194,8 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
   static Future<List<Study>> publishedPublicStudies() async {
     try {
-      final response = await env.client.from(tableName).select().eq('participation', 'open') as List;
+      final response =
+          await env.client.from(tableName).select().eq('participation', 'open') as List;
       return SupabaseQuery.extractSupabaseList<Study>(List<Map<String, dynamic>>.from(response));
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
@@ -196,7 +204,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   }
 
   StudyType get type {
-    if (parentTemplate != null) {
+    if (parentTemplateId != null) {
       return StudyType.subStudy;
     }
     if (templateConfiguration != null) {
@@ -215,11 +223,13 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
 
   bool canEdit(User? user) => user != null && (isOwner(user) || isEditor(user));
 
-  bool get hasEligibilityCheck => eligibilityCriteria.isNotEmpty && questionnaire.questions.isNotEmpty;
+  bool get hasEligibilityCheck =>
+      eligibilityCriteria.isNotEmpty && questionnaire.questions.isNotEmpty;
 
   bool get hasConsentCheck => consent.isNotEmpty;
 
-  int get totalMissedDays => missedDays.isNotEmpty ? missedDays.reduce((total, days) => total += days) : 0;
+  int get totalMissedDays =>
+      missedDays.isNotEmpty ? missedDays.reduce((total, days) => total += days) : 0;
 
   double get percentageMissedDays => totalMissedDays / (participantCount * schedule.length);
 

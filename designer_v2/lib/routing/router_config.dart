@@ -159,16 +159,16 @@ class RouterConf {
       path: "/studies/:${RouteParams.studyId}/edit/info",
       name: studyEditInfoRouteName,
       pageBuilder: (context, state) {
-        final studyId = state.pathParameters[RouteParams.studyId]!;
-        final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-        final studyCreationArgs = StudyCreationArgs(studyID: studyId, isTemplate: isTemplate);
+        final studyCreationArgs = StudyCreationArgs.fromRoute(state);
         return MaterialPage(
             key: RouterKeys.studyKey,
             child: StudyScaffold(
               studyCreationArgs: studyCreationArgs,
-              tabsSubnav: StudyDesignNav.tabs(studyId, isTemplate),
-              selectedTab: StudyNav.edit(studyId, isTemplate),
-              selectedTabSubnav: StudyDesignNav.info(studyId, isTemplate),
+              tabsSubnav:
+                  StudyDesignNav.tabs(studyCreationArgs.studyID, studyCreationArgs.isTemplate),
+              selectedTab: StudyNav.edit(studyCreationArgs.studyID, studyCreationArgs.isTemplate),
+              selectedTabSubnav:
+                  StudyDesignNav.info(studyCreationArgs.studyID, studyCreationArgs.isTemplate),
               body: StudyDesignInfoFormView(studyCreationArgs),
               layoutType: SingleColumnLayoutType.boundedNarrow,
             ));
@@ -178,16 +178,16 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/edit/enrollment",
         name: studyEditEnrollmentRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.pathParameters[RouteParams.studyId]!;
-          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-          final studyCreationArgs = StudyCreationArgs(studyID: studyId, isTemplate: isTemplate);
+          final studyCreationArgs = StudyCreationArgs.fromRoute(state);
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyCreationArgs: studyCreationArgs,
-                tabsSubnav: StudyDesignNav.tabs(studyId, isTemplate),
-                selectedTab: StudyNav.edit(studyId, isTemplate),
-                selectedTabSubnav: StudyDesignNav.enrollment(studyId, isTemplate),
+                tabsSubnav:
+                    StudyDesignNav.tabs(studyCreationArgs.studyID, studyCreationArgs.isTemplate),
+                selectedTab: StudyNav.edit(studyCreationArgs.studyID, studyCreationArgs.isTemplate),
+                selectedTabSubnav: StudyDesignNav.enrollment(
+                    studyCreationArgs.studyID, studyCreationArgs.isTemplate),
                 body: StudyDesignEnrollmentFormView(studyCreationArgs),
                 layoutType: SingleColumnLayoutType.boundedNarrow,
               ));
@@ -196,16 +196,16 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/edit/interventions",
         name: studyEditInterventionsRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.pathParameters[RouteParams.studyId]!;
-          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-          final studyCreationArgs = StudyCreationArgs(studyID: studyId, isTemplate: isTemplate);
+          final studyCreationArgs = StudyCreationArgs.fromRoute(state);
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyCreationArgs: studyCreationArgs,
-                tabsSubnav: StudyDesignNav.tabs(studyId, isTemplate),
-                selectedTab: StudyNav.edit(studyId, isTemplate),
-                selectedTabSubnav: StudyDesignNav.interventions(studyId, isTemplate),
+                tabsSubnav:
+                    StudyDesignNav.tabs(studyCreationArgs.studyID, studyCreationArgs.isTemplate),
+                selectedTab: StudyNav.edit(studyCreationArgs.studyID, studyCreationArgs.isTemplate),
+                selectedTabSubnav: StudyDesignNav.interventions(
+                    studyCreationArgs.studyID, studyCreationArgs.isTemplate),
                 body: StudyDesignInterventionsFormView(studyCreationArgs),
                 layoutType: SingleColumnLayoutType.boundedNarrow,
               ));
@@ -215,9 +215,7 @@ class RouterConf {
               path: ":${RouteParams.interventionId}",
               name: studyEditInterventionRouteName,
               pageBuilder: (context, state) {
-                final studyId = state.pathParameters[RouteParams.studyId]!;
-                final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-                final studyCreationArgs = StudyCreationArgs(studyID: studyId, isTemplate: isTemplate);
+                final studyCreationArgs = StudyCreationArgs.fromRoute(state);
 
                 final routeArgs = InterventionFormRouteArgs(
                     studyCreationArgs: studyCreationArgs,
@@ -225,7 +223,8 @@ class RouterConf {
                 return MaterialPage(
                     child: StudyFormScaffold<InterventionFormViewModel>(
                   studyCreationArgs: studyCreationArgs,
-                  formViewModelBuilder: (ref) => ref.read(interventionFormViewModelProvider(routeArgs)),
+                  formViewModelBuilder: (ref) =>
+                      ref.read(interventionFormViewModelProvider(routeArgs)),
                   formViewBuilder: (formViewModel) => TwoColumnLayout.split(
                     leftWidget: InterventionFormView(formViewModel: formViewModel),
                     rightWidget: InterventionPreview(routeArgs: routeArgs),
@@ -243,16 +242,16 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/edit/measurements",
         name: studyEditMeasurementsRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.pathParameters[RouteParams.studyId]!;
-          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-          final studyCreationArgs = StudyCreationArgs(studyID: studyId, isTemplate: isTemplate);
+          final studyCreationArgs = StudyCreationArgs.fromRoute(state);
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyCreationArgs: studyCreationArgs,
-                tabsSubnav: StudyDesignNav.tabs(studyId, isTemplate),
-                selectedTab: StudyNav.edit(studyId, isTemplate),
-                selectedTabSubnav: StudyDesignNav.measurements(studyId, isTemplate),
+                tabsSubnav:
+                    StudyDesignNav.tabs(studyCreationArgs.studyID, studyCreationArgs.isTemplate),
+                selectedTab: StudyNav.edit(studyCreationArgs.studyID, studyCreationArgs.isTemplate),
+                selectedTabSubnav: StudyDesignNav.measurements(
+                    studyCreationArgs.studyID, studyCreationArgs.isTemplate),
                 body: StudyDesignMeasurementsFormView(studyCreationArgs),
                 layoutType: SingleColumnLayoutType.boundedNarrow,
               ));
@@ -262,9 +261,7 @@ class RouterConf {
               path: ":${RouteParams.measurementId}",
               name: studyEditMeasurementRouteName,
               pageBuilder: (context, state) {
-                final studyId = state.pathParameters[RouteParams.studyId]!;
-                final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-                final studyCreationArgs = StudyCreationArgs(studyID: studyId, isTemplate: isTemplate);
+                final studyCreationArgs = StudyCreationArgs.fromRoute(state);
                 final routeArgs = MeasurementFormRouteArgs(
                     studyCreationArgs: studyCreationArgs,
                     measurementId: state.pathParameters[RouteParams.measurementId]!);
@@ -289,16 +286,16 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/edit/reports",
         name: studyEditReportsRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.pathParameters[RouteParams.studyId]!;
-          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-          final studyCreationArgs = StudyCreationArgs(studyID: studyId, isTemplate: isTemplate);
+          final studyCreationArgs = StudyCreationArgs.fromRoute(state);
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyCreationArgs: studyCreationArgs,
-                tabsSubnav: StudyDesignNav.tabs(studyId, isTemplate),
-                selectedTab: StudyNav.edit(studyId, isTemplate),
-                selectedTabSubnav: StudyDesignNav.reports(studyId, isTemplate),
+                tabsSubnav:
+                    StudyDesignNav.tabs(studyCreationArgs.studyID, studyCreationArgs.isTemplate),
+                selectedTab: StudyNav.edit(studyCreationArgs.studyID, studyCreationArgs.isTemplate),
+                selectedTabSubnav:
+                    StudyDesignNav.reports(studyCreationArgs.studyID, studyCreationArgs.isTemplate),
                 body: StudyDesignReportsFormView(studyCreationArgs),
                 layoutType: SingleColumnLayoutType.boundedNarrow,
               ));
@@ -307,16 +304,14 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/test",
         name: studyTestRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.pathParameters[RouteParams.studyId]!;
-          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-          final studyCreationArgs = StudyCreationArgs(studyID: studyId, isTemplate: isTemplate);
+          final studyCreationArgs = StudyCreationArgs.fromRoute(state);
           final appRoute = state.uri.queryParameters[RouteParams.testAppRoute];
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyCreationArgs: studyCreationArgs,
-                selectedTab: StudyNav.test(studyId),
-                body: StudyTestScreen(studyId, previewRoute: appRoute),
+                selectedTab: StudyNav.test(studyCreationArgs.studyID),
+                body: StudyTestScreen(studyCreationArgs.studyID, previewRoute: appRoute),
                 layoutType: SingleColumnLayoutType.stretched,
               ));
         }),
@@ -324,14 +319,12 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/recruit",
         name: studyRecruitRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.pathParameters[RouteParams.studyId]!;
-          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-          final studyCreationArgs = StudyCreationArgs(studyID: studyId, isTemplate: isTemplate);
+          final studyCreationArgs = StudyCreationArgs.fromRoute(state);
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyCreationArgs: studyCreationArgs,
-                selectedTab: StudyNav.recruit(studyId),
+                selectedTab: StudyNav.recruit(studyCreationArgs.studyID),
                 body: StudyRecruitScreen(studyCreationArgs),
                 layoutType: SingleColumnLayoutType.boundedWide,
               ));
@@ -340,15 +333,13 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/monitor",
         name: studyMonitorRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.pathParameters[RouteParams.studyId]!;
-          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-          final studyCreationArgs = StudyCreationArgs(studyID: studyId, isTemplate: isTemplate);
+          final studyCreationArgs = StudyCreationArgs.fromRoute(state);
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyCreationArgs: studyCreationArgs,
-                selectedTab: StudyNav.monitor(studyId),
-                body: StudyMonitorScreen(studyId),
+                selectedTab: StudyNav.monitor(studyCreationArgs.studyID),
+                body: StudyMonitorScreen(studyCreationArgs.studyID),
                 layoutType: SingleColumnLayoutType.boundedWide,
               ));
         }),
@@ -356,14 +347,12 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/analyze",
         name: studyAnalyzeRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.pathParameters[RouteParams.studyId]!;
-          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-          final studyCreationArgs = StudyCreationArgs(studyID: studyId, isTemplate: isTemplate);
+          final studyCreationArgs = StudyCreationArgs.fromRoute(state);
           return MaterialPage(
               key: RouterKeys.studyKey,
               child: StudyScaffold(
                 studyCreationArgs: studyCreationArgs,
-                selectedTab: StudyNav.analyze(studyId),
+                selectedTab: StudyNav.analyze(studyCreationArgs.studyID),
                 body: StudyAnalyzeScreen(studyCreationArgs),
                 layoutType: SingleColumnLayoutType.boundedWide,
               ));
@@ -372,9 +361,7 @@ class RouterConf {
         path: "/studies/:${RouteParams.studyId}/settings",
         name: studySettingsRouteName,
         pageBuilder: (context, state) {
-          final studyId = state.pathParameters[RouteParams.studyId]!;
-          final isTemplate = state.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-          final studyCreationArgs = StudyCreationArgs(studyID: studyId, isTemplate: isTemplate);
+          final studyCreationArgs = StudyCreationArgs.fromRoute(state);
           return buildModalTransitionPage(
             context,
             state,
@@ -449,7 +436,8 @@ class MeasurementFormRouteArgs extends StudyFormRouteArgs {
   final MeasurementID measurementId;
 }
 
-class SurveyQuestionFormRouteArgs extends MeasurementFormRouteArgs implements QuestionFormRouteArgs {
+class SurveyQuestionFormRouteArgs extends MeasurementFormRouteArgs
+    implements QuestionFormRouteArgs {
   SurveyQuestionFormRouteArgs({
     required this.questionId,
     required super.studyCreationArgs,
