@@ -58,15 +58,18 @@ class FormTableLayout extends StatelessWidget {
       final isTrailing = i == rows.length - 1;
 
       final bottomSpacing = (!isTrailing) ? 10.0 : 0.0;
-      final stateColorStyle =
-          (row.control != null && row.control!.disabled) ? TextStyle(color: theme.disabledColor) : null;
+      final stateColorStyle = (row.control != null && row.control!.disabled)
+          ? TextStyle(color: theme.disabledColor)
+          : null;
       final actualRowLayout = row.layout ?? rowLayout ?? FormTableRowLayout.horizontal;
 
       final labelWidget = (row.labelBuilder != null)
           ? row.labelBuilder!(context)
           : Wrap(
               children: [
-                (actualRowLayout == FormTableRowLayout.vertical) ? const SizedBox(width: 2.0) : const SizedBox.shrink(),
+                (actualRowLayout == FormTableRowLayout.vertical)
+                    ? const SizedBox(width: 2.0)
+                    : const SizedBox.shrink(),
                 FormLabel(
                   labelText: row.label,
                   helpText: row.labelHelpText,
@@ -81,7 +84,8 @@ class FormTableLayout extends StatelessWidget {
         // Unfortunately need to override the theme here as a workaround to
         // change the text color for disabled controls
         child: Theme(
-          data: theme.copyWith(textTheme: TextTheme(titleMedium: inputTextTheme.merge(stateColorStyle))),
+          data: theme.copyWith(
+              textTheme: TextTheme(titleMedium: inputTextTheme.merge(stateColorStyle))),
           child: row.input,
         ),
       );
@@ -256,9 +260,10 @@ class FormLabel extends StatelessWidget {
 }
 
 class FormLock extends StatefulWidget {
-  const FormLock({super.key, required this.locked, this.onLockChanged});
+  const FormLock({super.key, required this.locked, this.onLockChanged, this.readOnly = false});
 
   final bool locked;
+  final bool readOnly;
   final ValueChanged<bool>? onLockChanged;
 
   @override
@@ -279,12 +284,14 @@ class _FormLockState extends State<FormLock> {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () {
-          setState(() {
-            _locked = !_locked;
-            widget.onLockChanged?.call(_locked);
-          });
-        },
+        onTap: widget.readOnly
+            ? null
+            : () {
+                setState(() {
+                  _locked = !_locked;
+                  widget.onLockChanged?.call(_locked);
+                });
+              },
         child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 250),
             child: Padding(
@@ -305,6 +312,7 @@ class ReactiveFormLock<T> extends ReactiveFormField<bool, bool> {
   }) : super(builder: (field) {
           return FormLock(
             locked: field.value ?? false,
+            readOnly: field.control.disabled,
             onLockChanged: field.control.enabled
                 ? (value) {
                     field.didChange(value);

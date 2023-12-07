@@ -1,5 +1,9 @@
 {
   "de": [
+    "action_button_study_publish",
+    "action_button_study_create_substudy",
+    "banner_template_readonly_title",
+    "banner_template_readonly_description",
     "report_status_primary",
     "report_status_secondary",
     "report_status_primary_description",

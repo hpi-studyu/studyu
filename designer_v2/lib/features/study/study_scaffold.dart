@@ -229,7 +229,9 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             // enable re-rendering based on form validation status
             builder: (context, form, child) {
           return PrimaryButton(
-            text: tr.action_button_study_launch,
+            text: widget.studyCreationArgs.isTemplate
+                ? tr.action_button_study_publish
+                : tr.action_button_study_launch,
             tooltipDisabled: "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
             icon: null,
             enabled: formViewModel.isValid,
@@ -238,6 +240,16 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
         }),
       );
       actionButtons.add(publishButton);
+      actionButtons.add(const SizedBox(width: 12.0)); // padding
+    }
+
+    if (state.isCreateNewSubstudyVisible) {
+      actionButtons.add(
+        PrimaryButton(
+            text: tr.action_button_study_create_substudy,
+            icon: null,
+            onPressed: () => controller.onCreateNewSubstudy()),
+      );
       actionButtons.add(const SizedBox(width: 12.0)); // padding
     }
 

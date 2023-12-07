@@ -71,16 +71,16 @@ class NoArgs extends ModelInstanceCreationArgs {
 
 class StudyCreationArgs extends ModelInstanceCreationArgs {
   final StudyID studyID;
-  final Study? parentTemplate;
+  final StudyID? parentTemplateId;
   final bool isTemplate;
 
-  const StudyCreationArgs({required this.studyID, this.parentTemplate, required this.isTemplate});
+  const StudyCreationArgs({required this.studyID, this.parentTemplateId, required this.isTemplate});
 
   factory StudyCreationArgs.fromStudy(Study study) => StudyCreationArgs(
-      studyID: study.id, isTemplate: study.isTemplate, parentTemplate: study.parentTemplate);
+      studyID: study.id, isTemplate: study.isTemplate, parentTemplateId: study.parentTemplate?.id);
 
   @override
-  List<Object> get props => [studyID, parentTemplate?.id ?? "", isTemplate];
+  List<Object> get props => [studyID, parentTemplateId ?? "", isTemplate];
 }
 
 class ModelRepositoryException implements Exception {}

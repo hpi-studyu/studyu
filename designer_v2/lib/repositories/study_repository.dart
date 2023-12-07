@@ -222,8 +222,8 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
       return StudyTemplates.emptyTemplateDraft(userId);
     }
 
-    if (args.parentTemplate != null) {
-      return StudyTemplates.emptySubStudyDraft(userId, args.parentTemplate!);
+    if (args.parentTemplateId != null) {
+      return StudyTemplates.emptySubStudyDraft(userId, args.parentTemplateId!);
     }
 
     return StudyTemplates.emptyStandaloneDraft(userId);

@@ -7,6 +7,7 @@ class StudyAnalyzeControllerState extends StudyControllerBaseState {
   const StudyAnalyzeControllerState({
     required super.currentUser,
     super.studyWithMetadata,
+    super.parentTemplateWithMetadata,
   });
 
   bool get canExport => study.value?.canExport(currentUser!) ?? false;
@@ -14,11 +15,11 @@ class StudyAnalyzeControllerState extends StudyControllerBaseState {
   String get exportDisabledReason => study.value?.exportDisabledReason(currentUser!) ?? '';
 
   @override
-  StudyAnalyzeControllerState copyWith({
-    WrappedModel<Study>? studyWithMetadata,
-  }) {
+  StudyAnalyzeControllerState copyWith(
+      {WrappedModel<Study>? studyWithMetadata, WrappedModel<Study>? parentTemplateWithMetadata}) {
     return StudyAnalyzeControllerState(
       studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
+      parentTemplateWithMetadata: parentTemplateWithMetadata ?? super.parentTemplateWithMetadata,
       currentUser: currentUser,
     );
   }

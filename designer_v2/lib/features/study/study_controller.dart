@@ -72,7 +72,10 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     }
     // filter out edit action since we are already editing the study
     return withIcons(
-        studyRepository.availableActions(study).where((action) => action.type != StudyActionType.edit).toList(),
+        studyRepository
+            .availableActions(study)
+            .where((action) => action.type != StudyActionType.edit)
+            .toList(),
         studyActionIcons);
   }
 
@@ -92,6 +95,10 @@ class StudyController extends StudyBaseController<StudyControllerState> {
 
   void onSettingsPressed() {
     router.dispatch(RoutingIntents.studySettings(studyId, studyCreationArgs.isTemplate));
+  }
+
+  void onCreateNewSubstudy() {
+    router.dispatch(RoutingIntents.substudyNew(studyId));
   }
 
   @override

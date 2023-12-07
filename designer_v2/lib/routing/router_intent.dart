@@ -59,6 +59,13 @@ class RoutingIntents {
         },
         queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
       );
+  static final substudyEdit = (StudyID studyId, StudyID parentTemplateId) => RoutingIntent(
+        route: RouterConf.route(studyEditRouteName),
+        params: {
+          RouteParams.studyId: studyId,
+        },
+        queryParams: {RouteParams.parentTemplateId: parentTemplateId},
+      );
   static final studyEditInfo = (StudyID studyId, bool isTemplate) => RoutingIntent(
         route: RouterConf.route(studyEditInfoRouteName),
         params: {
@@ -103,20 +110,21 @@ class RoutingIntents {
         },
         queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
       );
-  static final studyEditMeasurement = (StudyID studyId, MeasurementID measurementId, bool isTemplate) => RoutingIntent(
-        route: RouterConf.route(studyEditMeasurementRouteName),
-        params: {
-          RouteParams.studyId: studyId,
-          RouteParams.measurementId: measurementId,
-        },
-        queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
-      );
-  static final studyTest =
-      (StudyID studyId, {String? appRoute}) => RoutingIntent(route: RouterConf.route(studyTestRouteName), params: {
-            RouteParams.studyId: studyId,
-          }, queryParams: {
-            if (appRoute != null) RouteParams.testAppRoute: appRoute,
-          });
+  static final studyEditMeasurement =
+      (StudyID studyId, MeasurementID measurementId, bool isTemplate) => RoutingIntent(
+            route: RouterConf.route(studyEditMeasurementRouteName),
+            params: {
+              RouteParams.studyId: studyId,
+              RouteParams.measurementId: measurementId,
+            },
+            queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
+          );
+  static final studyTest = (StudyID studyId, {String? appRoute}) =>
+      RoutingIntent(route: RouterConf.route(studyTestRouteName), params: {
+        RouteParams.studyId: studyId,
+      }, queryParams: {
+        if (appRoute != null) RouteParams.testAppRoute: appRoute,
+      });
   static final studyRecruit = (StudyID studyId) => RoutingIntent(
         route: RouterConf.route(studyRecruitRouteName),
         params: {
@@ -146,6 +154,8 @@ class RoutingIntents {
     dispatch: RoutingIntentDispatch.push, // modal route
   );
   static final studyNew = (bool isTemplate) => studyEdit(Config.newStudyId, isTemplate);
+  static final substudyNew =
+      (StudyID parentTemplateId) => substudyEdit(Config.newStudyId, parentTemplateId);
   static final login = RoutingIntent(route: RouterConf.route(loginRouteName));
   static final signup = RoutingIntent(route: RouterConf.route(signupRouteName));
   static final passwordForgot = RoutingIntent(route: RouterConf.route(forgotPasswordRouteName));

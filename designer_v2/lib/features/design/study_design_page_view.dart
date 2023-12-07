@@ -21,11 +21,15 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextParagraph(
-                  text: tr.banner_study_readonly_title,
+                  text: studyCreationArgs.isTemplate
+                      ? tr.banner_template_readonly_title
+                      : tr.banner_study_readonly_title,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 TextParagraph(
-                  text: tr.banner_study_readonly_description,
+                  text: studyCreationArgs.isTemplate
+                      ? tr.banner_template_readonly_description
+                      : tr.banner_study_readonly_description,
                 ),
               ]),
           style: BannerStyle.info);
