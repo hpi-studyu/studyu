@@ -1,12 +1,13 @@
 # Run StudyU with the StudyU CLI
 
-The StudyU modules can be run with Docker allowing StudyU to be very easy to operate.
-This makes it possible to quickly deploy code changes to your own instance or to store
-data in a self-hosted Supabase instance data, rather than relying on a public cloud service.
+The StudyU modules can be run with Docker allowing StudyU to be very easy to
+operate. This makes it possible to quickly deploy code changes to your own
+instance or to store data in a self-hosted Supabase instance data, rather
+than relying on a public cloud service.
 
-Supabase can be [self-hosted](https://supabase.com/docs/guides/self-hosting/docker) by design,
-since they are open source. We provide a modified version of their docker setup, specifically
-optimized to work with StudyU.
+Supabase can be [self-hosted](https://supabase.com/docs/guides/self-hosting/docker)
+by design, since they are open source. We provide a modified version of their
+docker setup, specifically optimized to work with StudyU.
 
 You will need to install Docker to be able to run the StudyU CLI.
 Make sure you have [Docker](https://docker.com) installed and configured by
@@ -38,7 +39,7 @@ want to run. The following components are available:
 - `studyu-app`: A self-hosted instance of the StudyU App
 - `studyu-designer`: A self-hosted instance of the StudyU Designer
 
-Have a look into the use cases below for more details on the different 
+Have a look into the use cases below for more details on the different
 configurations.
 
 There are two components that are added automatically to the list of default
@@ -58,6 +59,7 @@ necessary. You can run `./studyu delete` for this. Be sure to only remove
 the containers and images and not the volumes.
 
 ### Add the StudyU CLI to your PATH
+
 The StudyU CLI can be added to your PATH to make it easier to run. This can be
 done by adding the following line to your `.bashrc` or `.zshrc` file:
 
@@ -114,4 +116,3 @@ Run the StudyU CLI with `./studyu backup` to backup the StudyU database.
 ## Update
 
 Run the StudyU CLI with `./studyu update` to update the repository.
-

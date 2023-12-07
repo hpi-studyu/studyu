@@ -73,7 +73,8 @@ Additionally, we have the following environment files:
 
 - `.env`: Production database used by default
 - `.env.dev`: Development database used by dev branch
-- `.env.local`: Local database for a custom Supabase instance (used by the StudyU CLI)
+- `.env.local`: Local database for a custom Supabase instance (used by the
+StudyU CLI)
 
 Ideally we should only use the development database or a local one for all our
 development work.
@@ -94,8 +95,8 @@ need to have all files generated, when being imported.
 
 We are using a self-hosted instance of [Supabase](https://supabase.com/) as a
 Backend-as-a-Service provider. Supabase provides different backend services
-such as a database, API, authentication, storage service all based around 
-PostgreSQL and other FOSS. Since Supabase is open-source, we are hosting our 
+such as a database, API, authentication, storage service all based around
+PostgreSQL and other FOSS. Since Supabase is open-source, we are hosting our
 own instance to ensure data privacy and security.
 
 ## Test Instance of Deprecated Packages

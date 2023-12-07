@@ -127,7 +127,7 @@ Case #2 (for local development, it is sufficient to copy the `supabase/.env.exam
 to `supabase/.env` and leave everything else as is). However, this will not be
 sufficient to access Supabase. Additionally, to the Supabase backend, a nginx
 reverse proxy, will need to be started. This is further explained in
-[Some words about nginx](#some-words-about-nginx).
+[Some words about nginx](#access-the-components-with-nginx).
 
 **BE AWARE THAT SUPABASE IS NOT SECURE BY DEFAULT. READ MORE AT [Advanced
 Configuration](#advanced-configuration)**
@@ -176,7 +176,7 @@ Additional security measures can be added by allowing only certain IP ranges to
 access the nginx reverse proxy. Have a look at the
 `nginx/conf.d/03_supabase.conf` file on how to enable this.
 
-### Access the components
+### Access the components with Nginx
 
 To run flutter apps like StudyU in a web browser, a web server is necessary. We
 have chosen to use nginx alpine for this task, since it features a very small
