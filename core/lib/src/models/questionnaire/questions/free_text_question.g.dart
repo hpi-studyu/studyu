@@ -9,10 +9,9 @@ part of 'free_text_question.dart';
 FreeTextQuestion _$FreeTextQuestionFromJson(Map<String, dynamic> json) =>
     FreeTextQuestion(
       textType: $enumDecode(_$FreeTextQuestionTypeEnumMap, json['textType']),
-      textLengthRange: (json['textLengthRange'] as List<dynamic>)
-          .map((e) => e as int)
-          .toList(),
-      textTypeExpression: json['textTypeExpression'] as String?,
+      lengthRange:
+          (json['lengthRange'] as List<dynamic>).map((e) => e as int).toList(),
+      customTypeExpression: json['customTypeExpression'] as String?,
     )
       ..type = json['type'] as String
       ..id = json['id'] as String
@@ -38,13 +37,14 @@ Map<String, dynamic> _$FreeTextQuestionToJson(FreeTextQuestion instance) {
   writeNotNull('prompt', instance.prompt);
   writeNotNull('rationale', instance.rationale);
   writeNotNull('conditional', instance.conditional?.toJson());
-  val['textLengthRange'] = instance.textLengthRange;
+  val['lengthRange'] = instance.lengthRange;
   val['textType'] = instance.textType.toJson();
-  writeNotNull('textTypeExpression', instance.textTypeExpression);
+  writeNotNull('customTypeExpression', instance.customTypeExpression);
   return val;
 }
 
 const _$FreeTextQuestionTypeEnumMap = {
+  FreeTextQuestionType.any: 'any',
   FreeTextQuestionType.alphanumeric: 'alphanumeric',
   FreeTextQuestionType.numeric: 'numeric',
   FreeTextQuestionType.custom: 'custom',
