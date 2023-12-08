@@ -28,30 +28,30 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
 
   QuestionWidget? getQuestionBody(BuildContext context) {
     switch (widget.question.runtimeType) {
-      case ChoiceQuestion _:
+      case const (ChoiceQuestion):
         return ChoiceQuestionWidget(
           question: widget.question as ChoiceQuestion,
           onDone: _onDone,
           multiSelectionText: AppLocalizations.of(context)!.eligible_choice_multi_selection,
         );
-      case BooleanQuestion _:
+      case const (BooleanQuestion):
         return BooleanQuestionWidget(
           question: widget.question as BooleanQuestion,
           onDone: _onDone,
         );
-      case ScaleQuestion _:
+      case const (ScaleQuestion):
         return ScaleQuestionWidget(
           question: widget.question as ScaleQuestion,
           onDone: _onDone,
         );
-      case VisualAnalogueQuestion _:
+      case const (VisualAnalogueQuestion):
         // todo remove this when older studies are finished
         // ignore: deprecated_member_use_from_same_package
         return VisualAnalogueQuestionWidget(
           question: widget.question as VisualAnalogueQuestion,
           onDone: _onDone,
         );
-      case AnnotatedScaleQuestion _:
+      case const (AnnotatedScaleQuestion):
         return AnnotatedScaleQuestionWidget(
           question: widget.question as AnnotatedScaleQuestion,
           onDone: _onDone,
