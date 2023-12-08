@@ -101,15 +101,17 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                     'Enter a survey title to see an example of the text field.'),
                 const SizedBox(width: 64.0),
                 Expanded(
-                  child: ReactiveFormConsumer(builder: (context, formGroup, child) {
-                    final borderColor = (formViewModel.freeTextExampleTextControl.dirty)
+                  child: ReactiveValueListenableBuilder(
+                      formControl: formViewModel.freeTextExampleTextControl,
+                      builder: (context, formControl, child) {
+                    final borderColor = (formControl.dirty)
                         ? Colors.green
                         : theme.inputDecorationTheme.enabledBorder?.borderSide.color ?? Colors.yellow;
                     return ReactiveTextField(
                         formControl: formViewModel.freeTextExampleTextControl,
                         decoration: InputDecoration(
-                          helperText: (formViewModel.freeTextExampleTextControl.dirty &&
-                                  formViewModel.freeTextExampleTextControl.valid)
+                          helperText: (formControl.dirty &&
+                                  formControl.valid)
                               ? 'Your example input is valid'
                               : 'Perform a validation test by entering text here.',
                           focusedBorder: OutlineInputBorder(
@@ -154,7 +156,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
     return {
       FreeTextQuestionType.any: 'Any input.',
       FreeTextQuestionType.alphanumeric:
-          'Alphanumeric input includes words with letters, numbers, and special characters.',
+          'Alphanumeric input includes letters, numbers, and special characters.',
       FreeTextQuestionType.numeric: 'Numeric input includes numbers without special characters.',
       FreeTextQuestionType.custom: 'Custom input allows you to specify a regular expression to validate the input.'
     };
