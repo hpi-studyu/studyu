@@ -57,6 +57,11 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
           question: widget.question as AnnotatedScaleQuestion,
           onDone: _onDone,
         );
+      case const (FreeTextQuestion):
+        return FreeTextQuestionWidget(
+          question: widget.question as FreeTextQuestion,
+          onDone: _onDone,
+        );
       default:
         print('Question not supported!');
         return null;

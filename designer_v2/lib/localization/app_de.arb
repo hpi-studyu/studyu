@@ -138,6 +138,7 @@
   "form_field_question_response_options_tooltip": "Definiere welche Optionen zur Beantwortung der Frage in der App verfügbar sind",
   "form_field_question_response_options_description": "Wähle die Antwortoptionen so, dass sie zur Frage passen und die von dir gewünschten Daten erhoben werden.",
   "question_type_choice": "Multiple-Choice",
+  "question_type_free_text": "Freitext",
   "question_type_bool": "Ja/Nein",
   "question_type_scale": "Skala",
   "form_array_response_options_bool_yes": "Ja",

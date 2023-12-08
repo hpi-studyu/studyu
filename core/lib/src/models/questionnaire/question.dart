@@ -13,6 +13,7 @@ abstract class Question<V> {
     ScaleQuestion.questionType: (json) => ScaleQuestion.fromJson(json),
     AnnotatedScaleQuestion.questionType: (json) => AnnotatedScaleQuestion.fromJson(json),
     VisualAnalogueQuestion.questionType: (json) => VisualAnalogueQuestion.fromJson(json),
+    FreeTextQuestion.questionType: (json) => FreeTextQuestion.fromJson(json),
   };
   static const String keyType = 'type';
   String type;
