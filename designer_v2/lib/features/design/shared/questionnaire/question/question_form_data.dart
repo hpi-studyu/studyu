@@ -407,9 +407,9 @@ class FreeTextQuestionFormData extends QuestionFormData {
       questionType: SurveyQuestionType.freeText,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
-      textLengthRange: question.textLengthRange,
+      textLengthRange: question.lengthRange,
       textType: question.textType,
-      textTypeExpression: question.textTypeExpression,
+      textTypeExpression: question.customTypeExpression,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -418,7 +418,7 @@ class FreeTextQuestionFormData extends QuestionFormData {
   @override
   Question toQuestion() {
     final question =
-        FreeTextQuestion(textType: textType, textLengthRange: textLengthRange, textTypeExpression: textTypeExpression);
+        FreeTextQuestion(textType: textType, lengthRange: textLengthRange, customTypeExpression: textTypeExpression);
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
