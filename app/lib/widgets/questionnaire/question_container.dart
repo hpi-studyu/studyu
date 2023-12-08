@@ -58,9 +58,9 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
           question: annotatedScaleQuestion,
           onDone: _onDone,
         );
-      case const (FreeTextQuestion):
+      case FreeTextQuestion freeTextQuestion:
         return FreeTextQuestionWidget(
-          question: widget.question as FreeTextQuestion,
+          question: freeTextQuestion,
           onDone: _onDone,
           formKey: widget.formKey,
         );
