@@ -70,7 +70,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
                   _isLoading = true;
                 });
                 switch (response.runtimeType) {
-                  case const (QuestionnaireState):
+                  case == QuestionnaireState:
                     await _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
                     break;
                 }
