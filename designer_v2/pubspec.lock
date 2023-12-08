@@ -708,6 +708,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  reactive_range_slider:
+    dependency: "direct main"
+    description:
+      name: reactive_range_slider
+      sha256: "63c35ef17a146e02d3d98c8912278ac718106ba1ed72679eeba8d784855c713a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   realtime_client:
     dependency: transitive
     description:

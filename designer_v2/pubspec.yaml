@@ -30,6 +30,7 @@ dependencies:
   reactive_color_picker: ^2.0.0
   reactive_forms: ^16.1.1
   reactive_multi_select_flutter: ^2.0.0
+  reactive_range_slider: ^2.0.0
   rxdart: ^0.27.7
   shared_preferences: ^2.2.2
   studyu_core: ^4.3.2
