@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/theme.dart';
 import 'package:studyu_core/core.dart';
 
-import 'custom_slider.dart';
+import '../custom_slider.dart';
 import 'question_widget.dart';
 
 class ScaleQuestionWidget extends QuestionWidget {
