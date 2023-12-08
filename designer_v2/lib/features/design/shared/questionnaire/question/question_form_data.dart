@@ -399,9 +399,9 @@ class FreeTextQuestionFormData extends QuestionFormData {
   List<String> get responseOptions => [];
 
   factory FreeTextQuestionFormData.fromDomainModel(
-      FreeTextQuestion question,
-      List<EligibilityCriterion> eligibilityCriteria,
-      ) {
+    FreeTextQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
     final data = FreeTextQuestionFormData(
       questionId: question.id,
       questionType: SurveyQuestionType.freeText,
@@ -417,11 +417,8 @@ class FreeTextQuestionFormData extends QuestionFormData {
 
   @override
   Question toQuestion() {
-    final question = FreeTextQuestion(
-        textType: textType,
-        textLengthRange: textLengthRange,
-        textTypeExpression: textTypeExpression
-    );
+    final question =
+        FreeTextQuestion(textType: textType, textLengthRange: textLengthRange, textTypeExpression: textTypeExpression);
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;

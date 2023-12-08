@@ -191,12 +191,12 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   }
 
   // Free Text
-  final FormControl<FreeTextQuestionType> freeTextTypeControl = FormControl<FreeTextQuestionType>(
-      value: FreeTextQuestionType.any
-  );
+  final FormControl<FreeTextQuestionType> freeTextTypeControl =
+      FormControl<FreeTextQuestionType>(value: FreeTextQuestionType.any);
 
   final FormControl<String> customRegexControl = FormControl<String>();
-  late final FormArray freeTextResponseOptionsArray = FormArray([freeTextLengthMin, freeTextLengthMax, freeTextTypeControl, customRegexControl]);
+  late final FormArray freeTextResponseOptionsArray =
+      FormArray([freeTextLengthMin, freeTextLengthMax, freeTextTypeControl, customRegexControl]);
   late final AbstractControl<int> freeTextLengthMin = FormControl(value: freeTextLengthControl.value!.start.toInt());
   late final AbstractControl<int> freeTextLengthMax = FormControl(value: freeTextLengthControl.value!.end.toInt());
   late final FormControl<String> freeTextExampleTextControl = FormControl<String>(
@@ -409,7 +409,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         break;
       case SurveyQuestionType.freeText:
         data = data as FreeTextQuestionFormData;
-        freeTextLengthControl.value = RangeValues(data.textLengthRange.first.toDouble(), data.textLengthRange.last.toDouble());
+        freeTextLengthControl.value =
+            RangeValues(data.textLengthRange.first.toDouble(), data.textLengthRange.last.toDouble());
         freeTextTypeControl.value = data.textType;
         customRegexControl.value = data.textTypeExpression;
         break;
@@ -510,7 +511,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   void onSelectItem(FormControl<dynamic> item) {
     return; // no-op
   }
-
 
   @override
   Future save() {

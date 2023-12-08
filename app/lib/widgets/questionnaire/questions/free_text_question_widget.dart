@@ -34,7 +34,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-        controller: textFieldController,
+      controller: textFieldController,
     );
   }
 }
