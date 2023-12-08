@@ -1,4 +1,4 @@
-import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
@@ -35,6 +35,8 @@ abstract class QuestionFormData implements IFormData {
         BoolQuestionFormData.fromDomainModel(question as BooleanQuestion, eligibilityCriteria),
     SurveyQuestionType.choice: (question, eligibilityCriteria) =>
         ChoiceQuestionFormData.fromDomainModel(question as ChoiceQuestion, eligibilityCriteria),
+    SurveyQuestionType.freeText: (question, eligibilityCriteria) =>
+        FreeTextQuestionFormData.fromDomainModel(question as FreeTextQuestion, eligibilityCriteria),
   };
 
   QuestionFormData({
@@ -375,5 +377,76 @@ class ScaleQuestionFormData extends QuestionFormData {
   Answer constructAnswerFor(responseOption) {
     final question = toQuestion();
     return question.constructAnswer(responseOption as double);
+  }
+}
+
+class FreeTextQuestionFormData extends QuestionFormData {
+  FreeTextQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    required this.textLengthRange,
+    required this.textType,
+    required this.textTypeExpression,
+    super.questionInfoText,
+  });
+
+  List<int> textLengthRange;
+  FreeTextQuestionType textType;
+  String? textTypeExpression;
+
+  @override
+  List<String> get responseOptions => [];
+
+  factory FreeTextQuestionFormData.fromDomainModel(
+      FreeTextQuestion question,
+      List<EligibilityCriterion> eligibilityCriteria,
+      ) {
+    final data = FreeTextQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.freeText,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+      textLengthRange: question.textLengthRange,
+      textType: question.textType,
+      textTypeExpression: question.textTypeExpression,
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question = FreeTextQuestion(
+        textType: textType,
+        textLengthRange: textLengthRange,
+        textTypeExpression: textTypeExpression
+    );
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    return question;
+  }
+
+  @override
+  FreeTextQuestionFormData copy() {
+    final data = FreeTextQuestionFormData(
+      questionId: const Uuid().v4(), // always regenerate id
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+      textLengthRange: textLengthRange,
+      textType: textType,
+      textTypeExpression: textTypeExpression,
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(responseOption) {
+    final question = toQuestion() as FreeTextQuestion;
+    final value = responseOption as String;
+    return question.constructAnswer(value);
   }
 }

@@ -1,6 +1,9 @@
+import 'dart:core';
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
@@ -29,6 +32,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     boolResponseOptionsArray.onChanged((control) => onResponseOptionsChanged(control.controls));
     choiceResponseOptionsArray.onChanged((control) => onResponseOptionsChanged(control.controls));
     _scaleResponseOptionsArray.onChanged((control) => onResponseOptionsChanged(control.controls));
+    freeTextResponseOptionsArray.onChanged((control) => onResponseOptionsChanged(control.controls));
   }
 
   /// Customized titles (if any) depending on the context of use
@@ -74,6 +78,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         SurveyQuestionType.bool: boolResponseOptionsArray,
         SurveyQuestionType.choice: choiceResponseOptionsArray,
         SurveyQuestionType.scale: _scaleResponseOptionsArray,
+        SurveyQuestionType.freeText: freeTextResponseOptionsArray,
       }[questionType]!;
 
   List<AbstractControl> get answerOptionsControls => answerOptionsArray.controls;
@@ -185,6 +190,66 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     scaleMidValueControls.markAsDisabled();
   }
 
+  // Free Text
+  final FormControl<FreeTextQuestionType> freeTextTypeControl = FormControl<FreeTextQuestionType>(
+      value: FreeTextQuestionType.any
+  );
+
+  final FormControl<String> customRegexControl = FormControl<String>();
+  late final FormArray freeTextResponseOptionsArray = FormArray([freeTextLengthMin, freeTextLengthMax, freeTextTypeControl, customRegexControl]);
+  late final AbstractControl<int> freeTextLengthMin = FormControl(value: freeTextLengthControl.value!.start.toInt());
+  late final AbstractControl<int> freeTextLengthMax = FormControl(value: freeTextLengthControl.value!.end.toInt());
+  late final FormControl<String> freeTextExampleTextControl = FormControl<String>(
+    value: '',
+    touched: true,
+    validators: [Validators.delegate(_validateFreeText)],
+  );
+
+  Map<String, dynamic>? _validateFreeText(AbstractControl<dynamic> control) {
+    List<Validator> validators = [];
+    validators.add(Validators.minLength(freeTextLengthMin.value!));
+    validators.add(Validators.maxLength(freeTextLengthMax.value!));
+    switch (freeTextTypeControl.value) {
+      case FreeTextQuestionType.any:
+        break;
+      case FreeTextQuestionType.alphanumeric:
+        validators.add(Validators.pattern(r'^[a-zA-Z0-9]*$'));
+        break;
+      case FreeTextQuestionType.numeric:
+        validators.add(Validators.number);
+        break;
+      case FreeTextQuestionType.custom:
+        print('customRegexControl.value: ${customRegexControl.value}');
+        if (customRegexControl.value != null) {
+          validators.add(Validators.pattern(r'^' + customRegexControl.value! + r'$'));
+        }
+        break;
+      case null:
+        return {'null': "freeTextTypeControl.value is null"};
+    }
+
+    return Validators.compose(validators)(control);
+  }
+
+  static const int kDefaultFreeTextMinLength = 0;
+  static const int kDefaultFreeTextMaxLength = 20;
+
+  late final FormControl<RangeValues> freeTextLengthControl = CustomFormControl<RangeValues>(
+    value: RangeValues(kDefaultFreeTextMinLength.toDouble(), kDefaultFreeTextMaxLength.toDouble()),
+    onValueChanged: (_) => _onFreeTextLengthChanged(),
+  );
+
+  _onFreeTextLengthChanged() {
+    // todo
+    /*if (formMode == FormMode.readonly) {
+      return; // prevent change listener from firing in readonly mode
+    }*/
+    freeTextLengthMin.value = freeTextLengthControl.value!.start.toInt();
+    freeTextLengthMax.value = freeTextLengthControl.value!.end.toInt();
+  }
+
+  // - Form fields (question type-specific) - end
+
   late final Map<SurveyQuestionType, FormGroup> _controlsByQuestionType = {
     SurveyQuestionType.bool: FormGroup({
       'boolOptionsArray': boolResponseOptionsArray,
@@ -203,6 +268,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       'scaleMidLabels': scaleMidLabelControls,
       'scaleMinColor': scaleMinColorControl,
       'scaleMaxColor': scaleMaxColorControl,
+    }),
+    SurveyQuestionType.freeText: FormGroup({
+      'freeTextOptionsArray': freeTextResponseOptionsArray,
     }),
   };
 
@@ -336,8 +404,15 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         scaleMinColorControl.value = data.minColor != null ? SerializableColor(data.minColor!.value) : null;
         scaleMaxColorControl.value = data.maxColor != null ? SerializableColor(data.maxColor!.value) : null;
         _updateScaleMidValueControls();
-      // TODO scaleInitialValueControl
-      // TODO scaleStepSizeControl
+        // TODO scaleInitialValueControl
+        // TODO scaleStepSizeControl
+        break;
+      case SurveyQuestionType.freeText:
+        data = data as FreeTextQuestionFormData;
+        freeTextLengthControl.value = RangeValues(data.textLengthRange.first.toDouble(), data.textLengthRange.last.toDouble());
+        freeTextTypeControl.value = data.textType;
+        customRegexControl.value = data.textTypeExpression;
+        break;
     }
   }
 
@@ -384,6 +459,19 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           // TODO scaleInitialValueControl
           // TODO scaleStepSizeControl
         );
+      case SurveyQuestionType.freeText:
+        return FreeTextQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+          textLengthRange: [
+            freeTextLengthControl.value!.start.toInt(),
+            freeTextLengthControl.value!.end.toInt()
+          ], // required
+          textType: freeTextTypeControl.value!,
+          textTypeExpression: customRegexControl.value,
+        );
     }
   }
 
@@ -421,6 +509,16 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   @override
   void onSelectItem(FormControl<dynamic> item) {
     return; // no-op
+  }
+
+
+  @override
+  Future save() {
+    // Clear custom regex if not custom type
+    if (freeTextTypeControl.value != FreeTextQuestionType.custom) {
+      customRegexControl.value = null;
+    }
+    return super.save();
   }
 
   @override

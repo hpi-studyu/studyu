@@ -57,6 +57,11 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
           question: annotatedScaleQuestion,
           onDone: _onDone,
         );
+      case const (FreeTextQuestion):
+        return FreeTextQuestionWidget(
+          question: widget.question as FreeTextQuestion,
+          onDone: _onDone,
+        );
       default:
         throw ArgumentError('Question type ${widget.question.type} not supported');
     }

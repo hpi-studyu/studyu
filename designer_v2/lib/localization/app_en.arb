@@ -138,6 +138,7 @@
   "form_field_question_response_options_tooltip": "Define the options that participants can answer your question with",
   "form_field_question_response_options_description": "Choose the response type that best matches your question and define the response options according to the data you want to collect.",
   "question_type_choice": "Multiple choice",
+  "question_type_free_text": "Free text",
   "question_type_bool": "Yes/no",
   "question_type_scale": "Scale",
   "form_array_response_options_bool_yes": "Yes",

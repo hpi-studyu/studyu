@@ -9,6 +9,7 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/bool_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/choice_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/free_text_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/scale_question_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
@@ -42,6 +43,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
       SurveyQuestionType.choice: (_) => ChoiceQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.bool: (_) => BoolQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.scale: (_) => ScaleQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.freeText: (_) => FreeTextQuestionFormView(formViewModel: formViewModel),
     };
     final questionType = formViewModel.questionType;
 
