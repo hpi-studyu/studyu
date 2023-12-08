@@ -74,6 +74,8 @@ class StandardTable<T> extends StatefulWidget {
     if (trailingActionsAt != null) {
       this.inputColumns = [...?columns];
       this.inputColumns.add(this.inputTrailingActionsColumn);
+    } else {
+      this.inputColumns = columns ?? [];
     }
   }
 
