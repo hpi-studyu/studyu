@@ -46,6 +46,8 @@ class Cache {
   }
 
   static Future<StudySubject> synchronize(StudySubject remoteSubject) async {
+    // Todo requires re-implementation
+    return remoteSubject;
     if (isSynchronizing) return remoteSubject;
     // No local subject found
     if (!(await sharedPrefs).containsKey(cacheSubjectKey)) return remoteSubject;
