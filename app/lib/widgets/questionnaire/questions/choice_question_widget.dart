@@ -4,7 +4,6 @@ import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart'
 import 'package:studyu_app/widgets/selectable_button.dart';
 import 'package:studyu_core/core.dart';
 
-
 class ChoiceQuestionWidget extends QuestionWidget {
   final ChoiceQuestion question;
   final Function(Answer) onDone;

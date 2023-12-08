@@ -18,10 +18,10 @@ abstract class QuestionFormData implements IFormData {
         BoolQuestionFormData.fromDomainModel(question as BooleanQuestion, eligibilityCriteria),
     SurveyQuestionType.scale: (question, eligibilityCriteria) {
       switch (question.runtimeType) {
-      // First check for general scale which implements the other interfaces
+        // First check for general scale which implements the other interfaces
         case ScaleQuestion:
           return ScaleQuestionFormData.fromDomainModel(question as ScaleQuestion, eligibilityCriteria);
-      // Remain backward compatible with specialized scale types
+        // Remain backward compatible with specialized scale types
         case AnnotatedScaleQuestion:
           return ScaleQuestionFormData.fromDomainModel(
             ScaleQuestion.fromAnnotatedScaleQuestion(question as AnnotatedScaleQuestion),
@@ -399,9 +399,9 @@ class FreeTextQuestionFormData extends QuestionFormData {
   List<String> get responseOptions => [];
 
   factory FreeTextQuestionFormData.fromDomainModel(
-      FreeTextQuestion question,
-      List<EligibilityCriterion> eligibilityCriteria,
-      ) {
+    FreeTextQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
     final data = FreeTextQuestionFormData(
       questionId: question.id,
       questionType: SurveyQuestionType.freeText,
@@ -417,11 +417,8 @@ class FreeTextQuestionFormData extends QuestionFormData {
 
   @override
   Question toQuestion() {
-    final question = FreeTextQuestion(
-        textType: textType,
-        textLengthRange: textLengthRange,
-        textTypeExpression: textTypeExpression
-    );
+    final question =
+        FreeTextQuestion(textType: textType, textLengthRange: textLengthRange, textTypeExpression: textTypeExpression);
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
