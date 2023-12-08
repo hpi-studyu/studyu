@@ -213,7 +213,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       case FreeTextQuestionType.any:
         break;
       case FreeTextQuestionType.alphanumeric:
-        validators.add(Validators.pattern(r'^[a-zA-Z0-9]*$'));
+        validators.add(Validators.pattern(alphanumericPattern));
         break;
       case FreeTextQuestionType.numeric:
         validators.add(Validators.number);

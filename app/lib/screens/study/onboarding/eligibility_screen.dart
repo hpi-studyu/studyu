@@ -32,6 +32,7 @@ class EligibilityScreen extends StatefulWidget {
 
 class _EligibilityScreenState extends State<EligibilityScreen> {
   EligibilityResult? activeResult;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -139,6 +140,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
               onChange: _invalidateResponse,
               onComplete: _evaluateResponse,
               shouldContinue: _checkContinuation,
+              formKey: formKey,
             ),
           ),
           if (activeResult != null) _constructResultBanner(),
