@@ -228,13 +228,13 @@ CREATE FUNCTION public.has_results_public(psubject_id uuid) RETURNS boolean
      SELECT EXISTS(
      SELECT 1
       FROM study, study_subject
-      WHERE (study_subject.study_id = study.id AND param_subject_id = study_subject.id AND study.result_sharing = 'public'::public.result_sharing))
+      WHERE (study_subject.study_id = study.id AND psubject_id = study_subject.id AND study.result_sharing = 'public'::public.result_sharing))
     );
   END;
 $$;
 
 
-ALTER FUNCTION public.has_results_public(param_subject_id uuid) OWNER TO postgres;
+ALTER FUNCTION public.has_results_public(psubject_id uuid) OWNER TO postgres;
 
 --
 -- Name: study_subject; Type: TABLE; Schema: public; Owner: postgres
