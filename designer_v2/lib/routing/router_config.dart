@@ -353,12 +353,12 @@ class RouterConf {
         path: "/password_recovery",
         name: recoverPasswordRouteName,
         pageBuilder: (context, state) => const MaterialPage(
-          key: RouterKeys.authKey,
-          child: AuthScaffold(
-            formKey: AuthFormKey.passwordRecovery,
-            body: PasswordRecoveryForm(),
-          ),
-        )),
+              key: RouterKeys.authKey,
+              child: AuthScaffold(
+                formKey: AuthFormKey.passwordRecovery,
+                body: PasswordRecoveryForm(),
+              ),
+            )),
   ];
 
   static GoRoute route(String name) {
