@@ -109,18 +109,18 @@ class SupabaseQuery {
   static void catchSupabaseException(Object error, StackTrace stacktrace) {
     Analytics.captureException(error, stackTrace: stacktrace);
     if (error is PostgrestException) {
-      Analytics.logger.severe('Message: ${error.message}');
-      Analytics.logger.severe('Hint: ${error.hint}');
-      Analytics.logger.severe('Details: ${error.details}');
-      Analytics.logger.severe('Code: ${error.code}');
-      Analytics.logger.severe('Stacktrace: $stacktrace');
+      StudyULogger.fatal('Message: ${error.message}');
+      StudyULogger.fatal('Hint: ${error.hint}');
+      StudyULogger.fatal('Details: ${error.details}');
+      StudyULogger.fatal('Code: ${error.code}');
+      StudyULogger.fatal('Stacktrace: $stacktrace');
       throw error;
     } else if (error is SocketException) {
-      Analytics.logger.info("App is suspected to be offline");
+      StudyULogger.info("App is suspected to be offline");
       throw error;
     } else {
-      Analytics.logger.severe('Caught Supabase Error: $error');
-      Analytics.logger.severe('Stacktrace: $stacktrace');
+      StudyULogger.fatal('Caught Supabase Error: $error');
+      StudyULogger.fatal('Stacktrace: $stacktrace');
       throw error;
     }
   }

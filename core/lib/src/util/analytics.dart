@@ -3,25 +3,18 @@
 import 'dart:async';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:logging/logging.dart';
+import 'package:logger/logger.dart';
 import 'package:sentry/sentry.dart';
 
 part 'analytics.g.dart';
 
 class Analytics {
-  static Logger logger = Logger('');
-
-  static late StreamSubscription<LogRecord> onLog;
-
   static void init() {
-    logger.level = Level.ALL;
-    onLog = logger.onRecord.listen((record) {
-      print(record);
-    });
+    // not yet implemented
   }
 
   static void dispose() {
-    onLog.cancel();
+    // not yet implemented
   }
 
   static Future<void> captureEvent(
@@ -57,6 +50,58 @@ class Analytics {
   static void addBreadcrumb({required String message, required String category}) {
     print("[Breadcrumb] $category: $message");
     Sentry.addBreadcrumb(Breadcrumb(message: message, category: category));
+  }
+}
+
+class StudyULogger {
+  static Logger logger = Logger();
+
+  static void trace(dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
+    logger.t(message, time: time, error: error, stackTrace: stackTrace);
+  }
+
+  static void debug(dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
+    logger.d(message, time: time, error: error, stackTrace: stackTrace);
+  }
+
+  static void info(dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
+    logger.i(message, time: time, error: error, stackTrace: stackTrace);
+  }
+
+  static void warning(dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
+    logger.w(message, time: time, error: error, stackTrace: stackTrace);
+  }
+
+  static void error(dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
+    logger.e(message, time: time, error: error, stackTrace: stackTrace);
+  }
+
+  static void fatal(dynamic message, {
+    DateTime? time,
+    Object? error,
+    StackTrace? stackTrace,
+  }) {
+    logger.f(message, time: time, error: error, stackTrace: stackTrace);
   }
 }
 

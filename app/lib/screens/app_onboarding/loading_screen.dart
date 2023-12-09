@@ -34,7 +34,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     Analytics.init();
 
     if (widget.queryParameters != null && widget.queryParameters!.isNotEmpty) {
-      Analytics.logger.info("Preview: Found query parameters ${widget.queryParameters}");
+      StudyULogger.info("Preview: Found query parameters ${widget.queryParameters}");
       var lang = context.watch<AppLanguage>();
       final preview = Preview(
         widget.queryParameters,
@@ -161,7 +161,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
 
     final selectedStudyObjectId = await getActiveSubjectId();
-    Analytics.logger.info('Subject ID: $selectedStudyObjectId');
+    StudyULogger.info('Subject ID: $selectedStudyObjectId');
     state.analytics.initBasic();
     if (!mounted) return;
     if (selectedStudyObjectId == null) {
@@ -180,13 +180,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
         try {
          InternetAddress.lookup(Uri.parse(supabaseUrl).host);
       } on SocketException catch (_) {
-        Analytics.logger.warning('Could not connect to supabase url. Fallback to offline mode');
+        StudyULogger.warning('Could not connect to supabase url. Fallback to offline mode');
         subject = await Cache.loadSubject();
       }
        */
       final connectivityResult = await (Connectivity().checkConnectivity());
       if (connectivityResult == ConnectivityResult.none) {
-        Analytics.logger.warning("Could not find any connection. Going to offline mode");
+        StudyULogger.warning("Could not find any connection. Going to offline mode");
         subject = await Cache.loadSubject();
       }
       subject ??= await SupabaseQuery.getById<StudySubject>(
@@ -198,7 +198,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ],
       );
     } catch (exception) {
-      Analytics.logger
+      StudyULogger
           .warning("Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
       /*await Analytics.captureEvent(
         SentryEvent(throwable: exception),
@@ -229,7 +229,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           // 5. Restart the app. Either only this error shows up, worst case is
           // app hangs and is unresponsive
 
-          Analytics.logger.warning('Could not login and retrieve the study subject.'
+          StudyULogger.warning('Could not login and retrieve the study subject.'
               'One reason for this might be that the study subject is no '
               'longer available and only resides in app backup');
           /*await Analytics.captureEvent(
@@ -238,7 +238,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           );*/
           // subject = await Cache.loadSubject();
         } catch (exception, stackTrace) {
-          Analytics.logger.severe('Error when initializing offline mode: ${exception.toString()}');
+          StudyULogger.fatal('Error when initializing offline mode: ${exception.toString()}');
           await Analytics.captureException(
             exception,
             stackTrace: stackTrace,
@@ -268,7 +268,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       state.init(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
-      Analytics.logger.severe('Subject is null -> welcome');
+      StudyULogger.fatal('Subject is null -> welcome');
       Navigator.pushReplacementNamed(context, Routes.welcome);
     }
   }
