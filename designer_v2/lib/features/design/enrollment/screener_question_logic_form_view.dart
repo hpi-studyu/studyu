@@ -65,9 +65,7 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
       // todo logic might check if field has content
       // todo logic might need that field is equal to a certain value
       return Text(tr.free_text_question_logic_not_supported,
-          style: const TextStyle(color: Colors.red),
-          textAlign: TextAlign.center
-      );
+          style: const TextStyle(color: Colors.red), textAlign: TextAlign.center);
     }
 
     return ReactiveFormArray(

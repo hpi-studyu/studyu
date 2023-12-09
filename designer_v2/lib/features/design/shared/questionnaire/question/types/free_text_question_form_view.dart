@@ -27,8 +27,8 @@ class FreeTextQuestionFormView extends ConsumerWidget {
     return Column(
       children: [
         generateRow(
-          label: tr.free_text_range_label,
-          labelHelpText: tr.free_text_range_label_helper,
+            label: tr.free_text_range_label,
+            labelHelpText: tr.free_text_range_label_helper,
             input: disableOnReadonly(
               child: ReactiveRangeSlider<RangeValues>(
                 formControl: formViewModel.freeTextLengthControl,
@@ -41,8 +41,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                   values.end.round().toString(),
                 ),
               ),
-            )
-        ),
+            )),
         const SizedBox(height: 16.0),
         generateRow(
           label: tr.free_text_type_label,
@@ -103,34 +102,33 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                   child: ReactiveValueListenableBuilder(
                       formControl: formViewModel.freeTextExampleTextControl,
                       builder: (context, formControl, child) {
-                    final borderColor = (formControl.dirty)
-                        ? Colors.green
-                        : theme.inputDecorationTheme.enabledBorder?.borderSide.color ?? Colors.yellow;
-                    return ReactiveTextField(
-                        formControl: formViewModel.freeTextExampleTextControl,
-                        decoration: InputDecoration(
-                          helperText: (formControl.dirty &&
-                                  formControl.valid)
-                              ? tr.free_text_example_valid
-                              : tr.free_text_example_default_helper,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: borderColor,
+                        final borderColor = (formControl.dirty)
+                            ? Colors.green
+                            : theme.inputDecorationTheme.enabledBorder?.borderSide.color ?? Colors.yellow;
+                        return ReactiveTextField(
+                            formControl: formViewModel.freeTextExampleTextControl,
+                            decoration: InputDecoration(
+                              helperText: (formControl.dirty && formControl.valid)
+                                  ? tr.free_text_example_valid
+                                  : tr.free_text_example_default_helper,
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: borderColor,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: borderColor,
+                                ),
+                              ),
                             ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: borderColor,
-                            ),
-                          ),
-                        ),
-                        validationMessages: {
-                          ValidationMessage.minLength: (error) => tr.free_text_validation_min_length(minLength),
-                          ValidationMessage.maxLength: (error) => tr.free_text_validation_max_length(maxLength),
-                          ValidationMessage.pattern: (error) => tr.free_text_validation_pattern,
-                          ValidationMessage.number: (error) => tr.free_text_validation_number,
-                        });
-                  }),
+                            validationMessages: {
+                              ValidationMessage.minLength: (error) => tr.free_text_validation_min_length(minLength),
+                              ValidationMessage.maxLength: (error) => tr.free_text_validation_max_length(maxLength),
+                              ValidationMessage.pattern: (error) => tr.free_text_validation_pattern,
+                              ValidationMessage.number: (error) => tr.free_text_validation_number,
+                            });
+                      }),
                 ),
               ],
             ),
@@ -139,9 +137,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
           ReactiveFormConsumer(
             builder: (context, formGroup, child) {
               return TextParagraph(
-                  text:
-                      "${type.capitalize()} ${tr.free_text_example_explanation(minLength, maxLength)}"
-              );
+                  text: "${type.capitalize()} ${tr.free_text_example_explanation(minLength, maxLength)}");
             },
           ),
         ]),
