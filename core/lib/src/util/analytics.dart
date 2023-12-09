@@ -56,7 +56,8 @@ class Analytics {
 class StudyULogger {
   static Logger logger = Logger();
 
-  static void trace(dynamic message, {
+  static void trace(
+    dynamic message, {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
@@ -64,7 +65,8 @@ class StudyULogger {
     logger.t(message, time: time, error: error, stackTrace: stackTrace);
   }
 
-  static void debug(dynamic message, {
+  static void debug(
+    dynamic message, {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
@@ -72,7 +74,8 @@ class StudyULogger {
     logger.d(message, time: time, error: error, stackTrace: stackTrace);
   }
 
-  static void info(dynamic message, {
+  static void info(
+    dynamic message, {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
@@ -80,7 +83,8 @@ class StudyULogger {
     logger.i(message, time: time, error: error, stackTrace: stackTrace);
   }
 
-  static void warning(dynamic message, {
+  static void warning(
+    dynamic message, {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
@@ -88,7 +92,8 @@ class StudyULogger {
     logger.w(message, time: time, error: error, stackTrace: stackTrace);
   }
 
-  static void error(dynamic message, {
+  static void error(
+    dynamic message, {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,
@@ -96,7 +101,8 @@ class StudyULogger {
     logger.e(message, time: time, error: error, stackTrace: stackTrace);
   }
 
-  static void fatal(dynamic message, {
+  static void fatal(
+    dynamic message, {
     DateTime? time,
     Object? error,
     StackTrace? stackTrace,

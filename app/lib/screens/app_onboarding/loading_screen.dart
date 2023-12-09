@@ -198,8 +198,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ],
       );
     } catch (exception) {
-      StudyULogger
-          .warning("Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
+      StudyULogger.warning("Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
       /*await Analytics.captureEvent(
         SentryEvent(throwable: exception),
         stackTrace: stackTrace,
