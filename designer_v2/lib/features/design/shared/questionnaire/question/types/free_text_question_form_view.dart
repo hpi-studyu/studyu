@@ -27,19 +27,22 @@ class FreeTextQuestionFormView extends ConsumerWidget {
     return Column(
       children: [
         generateRow(
-            label: 'Allowed range of text length',
-            labelHelpText: 'Specify the range of the text length that will be accepted a response is submitted.',
-            input: ReactiveRangeSlider<RangeValues>(
-              formControl: formViewModel.freeTextLengthControl,
-              min: QuestionFormViewModel.kDefaultFreeTextMinLength.toDouble(),
-              max: QuestionFormViewModel.kDefaultFreeTextMaxLength.toDouble(),
-              divisions: QuestionFormViewModel.kDefaultFreeTextMaxLength.toInt() -
-                  QuestionFormViewModel.kDefaultFreeTextMinLength.toInt(),
-              labelBuilder: (values) => RangeLabels(
-                values.start.round().toString(),
-                values.end.round().toString(),
+          label: 'Allowed range of text length',
+          labelHelpText: 'Specify the range of the text length that will be accepted a response is submitted.',
+            input: disableOnReadonly(
+              child: ReactiveRangeSlider<RangeValues>(
+                formControl: formViewModel.freeTextLengthControl,
+                min: QuestionFormViewModel.kDefaultFreeTextMinLength.toDouble(),
+                max: QuestionFormViewModel.kDefaultFreeTextMaxLength.toDouble(),
+                divisions: QuestionFormViewModel.kDefaultFreeTextMaxLength.toInt() -
+                    QuestionFormViewModel.kDefaultFreeTextMinLength.toInt(),
+                labelBuilder: (values) => RangeLabels(
+                  values.start.round().toString(),
+                  values.end.round().toString(),
+                ),
               ),
-            )),
+            )
+        ),
         const SizedBox(height: 16.0),
         generateRow(
           label: 'Allowed input format',
@@ -150,6 +153,14 @@ class FreeTextQuestionFormView extends ConsumerWidget {
         ]),
       ],
     );
+  }
+
+  Widget disableOnReadonly({required Widget child}) {
+    if (formViewModel.isReadonly) {
+      return AbsorbPointer(child: child);
+    } else {
+      return child;
+    }
   }
 
   get generateLabelHelpTextMap {
