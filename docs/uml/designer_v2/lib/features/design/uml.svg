@@ -271,6 +271,7 @@
 	  +generateLabelHelpTextMap: dynamic
 	  |
 	  +Widget build();
+	  +Widget disableOnReadonly();
 	  +Widget generateRow()
 	]
 	
@@ -1394,7 +1395,7 @@
 					<g fill="#eee8d5">
 						<path d="M16876.7 811.7 L16866.2 809.5 L16873.5 801.6 L16884.0 803.8 Z"></path>
 					</g>
-					<path d="M16365.1 398.9 L17060 531 L17060 686 L17060.0 686.0 " fill="none"></path>
+					<path d="M16365.1 398.9 L17060 531 L17060 678.5 L17060.0 678.5 " fill="none"></path>
 					<path d="M16366.1 393.7 L16365.1 398.9 L16364.1 404.2 L16352.0 396.4 Z"></path>
 					<path d="M14810.2 1731.4 L12950 2222 L12777.112600536193 2340 L12777.1 2340.0 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -2774,27 +2775,28 @@
 					</g>
 					<g data-name="FreeTextQuestionFormView">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FreeTextQuestionFormView">
-							<rect x="16884.0" y="686.0" height="123.0" width="352.0" data-name="FreeTextQuestionFormView"></rect>
-							<path d="M16884.0 717.0 L17236.0 717.0" fill="none" data-name="FreeTextQuestionFormView"></path>
-							<path d="M16884.0 763.0 L17236.0 763.0" fill="none" data-name="FreeTextQuestionFormView"></path>
+							<rect x="16884.0" y="678.5" height="138.0" width="352.0" data-name="FreeTextQuestionFormView"></rect>
+							<path d="M16884.0 709.5 L17236.0 709.5" fill="none" data-name="FreeTextQuestionFormView"></path>
+							<path d="M16884.0 755.5 L17236.0 755.5" fill="none" data-name="FreeTextQuestionFormView"></path>
 						</g>
-						<g transform="translate(16884, 686)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FreeTextQuestionFormView">
+						<g transform="translate(16884, 678.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FreeTextQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FreeTextQuestionFormView">
 								<text x="168.0" y="13.5" stroke="none" text-anchor="middle" data-name="FreeTextQuestionFormView">FreeTextQuestionFormView</text>
 								
 							</g>
 						</g>
-						<g transform="translate(16884, 717)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FreeTextQuestionFormView">
+						<g transform="translate(16884, 709.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FreeTextQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FreeTextQuestionFormView">
 								<text x="0.0" y="13.5" stroke="none" data-name="FreeTextQuestionFormView">+formViewModel: QuestionFormViewModel</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="FreeTextQuestionFormView">+generateLabelHelpTextMap: dynamic</text>
 								
 							</g>
 						</g>
-						<g transform="translate(16884, 763)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FreeTextQuestionFormView">
+						<g transform="translate(16884, 755.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FreeTextQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FreeTextQuestionFormView">
 								<text x="0.0" y="13.5" stroke="none" data-name="FreeTextQuestionFormView">+Widget build()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="FreeTextQuestionFormView">+Widget generateRow()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="FreeTextQuestionFormView">+Widget disableOnReadonly()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="FreeTextQuestionFormView">+Widget generateRow()</text>
 								
 							</g>
 						</g>
