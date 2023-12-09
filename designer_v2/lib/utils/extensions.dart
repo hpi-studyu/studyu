@@ -48,10 +48,6 @@ extension StringX on String {
     }
     return this;
   }
-
-  String capitalize() {
-    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
-  }
 }
 
 extension DurationX on Duration {

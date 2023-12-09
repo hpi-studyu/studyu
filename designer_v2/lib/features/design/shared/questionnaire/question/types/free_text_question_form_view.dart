@@ -6,10 +6,10 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/forms/form_control.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
-import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class FreeTextQuestionFormView extends ConsumerWidget {
   const FreeTextQuestionFormView({required this.formViewModel, super.key});
@@ -21,7 +21,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
     final theme = Theme.of(context);
     final minLength = formViewModel.freeTextLengthControl.value!.start;
     final maxLength = formViewModel.freeTextLengthControl.value!.end;
-    final type = formViewModel.freeTextTypeControl.value!.name;
+    final type = formViewModel.freeTextTypeControl.value!.string;
     formViewModel.freeTextLengthControl
         .onChanged((_) => formViewModel.freeTextExampleTextControl.updateValueAndValidity());
     return Column(
@@ -49,7 +49,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
           input: ReactiveDropdownField(
             formControl: formViewModel.freeTextTypeControl,
             items: FreeTextQuestionType.values
-                .map((e) => DropdownMenuItem(value: e, child: Text(e.name.capitalize())))
+                .map((e) => DropdownMenuItem(value: e, child: Text(e.string)))
                 .toList(),
             decoration: InputDecoration(
               helperText: generateLabelHelpTextMap[formViewModel.freeTextTypeControl.value],
@@ -136,8 +136,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
           const SizedBox(height: 8.0),
           ReactiveFormConsumer(
             builder: (context, formGroup, child) {
-              return TextParagraph(
-                  text: "${type.capitalize()} ${tr.free_text_example_explanation(minLength, maxLength)}");
+              return TextParagraph(text: tr.free_text_example_explanation(type, minLength, maxLength));
             },
           ),
         ]),

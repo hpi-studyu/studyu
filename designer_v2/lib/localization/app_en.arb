@@ -214,9 +214,10 @@
   },
   "free_text_validation_pattern": "The input must match the specified format.",
   "free_text_validation_number": "The input must be a number.",
-  "free_text_example_explanation": "input with a character length range of {countMin} to {countMax} will be accepted.",
+  "free_text_example_explanation": "Inputs of type {type} with a character length range of {countMin} to {countMax} will be accepted.",
   "@free_text_example_explanation": {
     "placeholders": {
+      "type": {},
       "countMin": {},
       "countMax": {}
     }
