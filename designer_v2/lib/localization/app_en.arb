@@ -182,9 +182,54 @@
       "count": {}
     }
   },
+  "free_text_question_logic_not_supported": "The screener question logic is not yet supported for free text questions.",
+  "free_text_question_type_any": "Any text",
+  "free_text_question_type_alphanumeric": "Alphanumeric",
+  "free_text_question_type_numeric": "Numeric",
+  "free_text_question_type_custom": "Custom",
+  "free_text_range_label": "Allowed range of text length",
+  "free_text_range_label_helper": "Enter the minimum and maximum number of characters that are allowed for the answer",
+  "free_text_type_label": "Allowed text type",
+  "free_text_type_label_helper": "Choose the type of text that is allowed for the answer",
+  "free_text_type_custom_label": "Regular expression",
+  "free_text_type_custom_label_helper": "Enter a regular expression that the answer must match",
+  "free_text_type_custom_helper": "Example: Enter [a-zA-Z]+ to only allow letters.",
+  "free_text_type_custom_explanation": "Any input that does not match the expression will be rejected. The input length constraints specified above are still applied. A leading ^ and trailing \\$ character will be added automatically.",
+  "free_text_example_label": "Example text field",
+  "free_text_example_label_helper": "This is an example of the text field that will be shown to the participant. The length and input type constraints specified above will be applied.",
+  "free_text_example_default_text": "Enter a survey title to see an example of the text field.",
+  "free_text_example_valid": "Your example input is valid",
+  "free_text_example_default_helper": "Perform a validation test by entering text here.",
+  "free_text_validation_min_length": "The input must be at least {countMin} characters long.",
+  "@free_text_validation_min_length": {
+    "placeholders": {
+      "countMin": {}
+    }
+  },
+  "free_text_validation_max_length": "The input must be at most {countMax} characters long.",
+  "@free_text_validation_max_length": {
+    "placeholders": {
+      "countMax": {}
+    }
+  },
+  "free_text_validation_pattern": "The input must match the specified format.",
+  "free_text_validation_number": "The input must be a number.",
+  "free_text_example_explanation": "input with a character length range of {countMin} to {countMax} will be accepted.",
+  "@free_text_example_explanation": {
+    "placeholders": {
+      "countMin": {},
+      "countMax": {}
+    }
+  },
+  "free_text_question_type_any_explanation": "Any input will be accepted.",
+  "free_text_question_type_alphanumeric_explanation": "Alphanumeric input includes letters and numbers only.",
+  "free_text_question_type_numeric_explanation": "Numeric input includes numbers without special characters.",
+  "free_text_question_type_custom_explanation": "The input must match the specified regular expression.",
+
+
   "banner_study_readonly_title": "This study cannot be edited.",
   "banner_study_readonly_description": "You can only make changes to studies where you are an owner or collaborator. Studies that have been launched cannot be changed by anyone.",
-  "form_section_scheduling": "Scheduling & Compliance",
+  "form_section_scheduling": "Scheduling and Compliance",
   "form_section_scheduling_description": "To improve compliance, you can set a limited window of time for participants to complete the task & send a reminder notification at the specified time.",
   "form_field_has_reminder": "App reminder",
   "form_field_has_reminder_tooltip": "Select this option to send a reminder notification from the StudyU app to the participant's phone at the time specified.",

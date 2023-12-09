@@ -64,8 +64,8 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
     if (formViewModel.questionType.name == FreeTextQuestion.questionType) {
       // todo logic might check if field has content
       // todo logic might need that field is equal to a certain value
-      return const Text("The screener question logic is not yet supported for free text questions.",
-          style: TextStyle(color: Colors.red),
+      return Text(tr.free_text_question_logic_not_supported,
+          style: const TextStyle(color: Colors.red),
           textAlign: TextAlign.center
       );
     }

@@ -182,6 +182,49 @@
       "count": {}
     }
   },
+  "free_text_question_logic_not_supported": "Logik ist für Freitext-Fragen noch nicht verfügbar",
+  "free_text_question_type_any": "Beliebig",
+  "free_text_question_type_alphanumeric": "Alphanumerisch",
+  "free_text_question_type_numeric": "Numerisch",
+  "free_text_question_type_custom": "Benutzerdefiniert",
+  "free_text_range_label": "Erlaubter Bereich der Textlänge",
+  "free_text_range_label_helper": "Geben Sie die minimale und maximale Anzahl von Zeichen ein, die für die Antwort erlaubt sind",
+  "free_text_type_label": "Erlaubter Texttyp",
+  "free_text_type_label_helper": "Wählen Sie den Typ des Texts aus, der für die Antwort erlaubt ist",
+  "free_text_type_custom_label": "Regulärer Ausdruck",
+  "free_text_type_custom_label_helper": "Geben Sie einen regulären Ausdruck ein, den die Antwort erfüllen muss",
+  "free_text_type_custom_helper": "Beispiel: Geben Sie [a-zA-Z]+ ein, um nur Buchstaben zuzulassen.",
+  "free_text_type_custom_explanation": "Jede Eingabe, die nicht dem Ausdruck entspricht, wird abgelehnt. Die oben angegebenen Einschränkungen zur Zeichenlänge werden weiterhin angewendet. Ein führendes ^-Zeichen und ein abschließendes \\$-Zeichen werden automatisch hinzugefügt.",
+  "free_text_example_label": "Beispieltextfeld",
+  "free_text_example_label_helper": "Dies ist ein Beispiel für das Textfeld, das dem Teilnehmer angezeigt wird. Die oben angegebenen Einschränkungen zur Länge und zum Eingabetyp werden angewendet.",
+  "free_text_example_default_text": "Geben Sie einen Umfragetitel ein, um ein Beispiel für das Textfeld zu sehen.",
+  "free_text_example_valid": "Ihre Beispiel-Eingabe ist gültig",
+  "free_text_example_default_helper": "Führen Sie einen Validierungstest durch, indem Sie hier Text eingeben.",
+  "free_text_validation_min_length": "Die Eingabe muss mindestens {countMin} Zeichen lang sein.",
+  "@free_text_validation_min_length": {
+    "placeholders": {
+      "countMin": {}
+    }
+  },
+  "free_text_validation_max_length": "Die Eingabe darf höchstens {countMax} Zeichen lang sein.",
+  "@free_text_validation_max_length": {
+    "placeholders": {
+      "countMax": {}
+    }
+  },
+  "free_text_validation_pattern": "Die Eingabe muss dem angegebenen Format entsprechen.",
+  "free_text_validation_number": "Die Eingabe muss eine Zahl sein.",
+  "free_text_example_explanation": "Eingaben mit einer Zeichenlänge im Bereich von {countMin} bis {countMax} werden akzeptiert.",
+  "@free_text_example_explanation": {
+    "placeholders": {
+      "countMin": {},
+      "countMax": {}
+    }
+  },
+  "free_text_question_type_any_explanation": "Jede Eingabe wird akzeptiert.",
+  "free_text_question_type_alphanumeric_explanation": "Alphanumerische Eingabe umfasst nur Buchstaben und Zahlen.",
+  "free_text_question_type_numeric_explanation": "Numerische Eingabe umfasst Zahlen ohne Sonderzeichen.",
+  "free_text_question_type_custom_explanation": "Die Eingabe muss dem angegebenen regulären Ausdruck entsprechen.",
   "banner_study_readonly_title": "Die Studie kann nicht bearbeitet werden.",
   "banner_study_readonly_description": "Du kannst nur Studien bearbeiten, die du selbst erstellt hast oder die mit dir zur Mitarbeit geteilt wurden. Studien, die bereits gestartet sind, können grundsätzlich nicht mehr verändert werden.",
   "form_section_scheduling": "Zeitplan & Einhaltung",

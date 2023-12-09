@@ -219,7 +219,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         validators.add(Validators.number);
         break;
       case FreeTextQuestionType.custom:
-        print('customRegexControl.value: ${customRegexControl.value}');
         if (customRegexControl.value != null) {
           validators.add(Validators.pattern(r'^' + customRegexControl.value! + r'$'));
         }
