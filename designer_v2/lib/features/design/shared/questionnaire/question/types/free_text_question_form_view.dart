@@ -3,13 +3,13 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_range_slider/reactive_range_slider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/forms/form_control.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
-
-import '../../../../../../common_views/form_table_layout.dart';
 
 class FreeTextQuestionFormView extends ConsumerWidget {
   const FreeTextQuestionFormView({required this.formViewModel, super.key});
@@ -27,8 +27,8 @@ class FreeTextQuestionFormView extends ConsumerWidget {
     return Column(
       children: [
         generateRow(
-          label: 'Allowed range of text length',
-          labelHelpText: 'Specify the range of the text length that will be accepted a response is submitted.',
+          label: tr.free_text_range_label,
+          labelHelpText: tr.free_text_range_label_helper,
             input: disableOnReadonly(
               child: ReactiveRangeSlider<RangeValues>(
                 formControl: formViewModel.freeTextLengthControl,
@@ -45,8 +45,8 @@ class FreeTextQuestionFormView extends ConsumerWidget {
         ),
         const SizedBox(height: 16.0),
         generateRow(
-          label: 'Allowed input format',
-          labelHelpText: 'Specify the format of the input that will be accepted when a response is submitted.',
+          label: tr.free_text_type_label,
+          labelHelpText: tr.free_text_type_label_helper,
           input: ReactiveDropdownField(
             formControl: formViewModel.freeTextTypeControl,
             items: FreeTextQuestionType.values
@@ -66,15 +66,14 @@ class FreeTextQuestionFormView extends ConsumerWidget {
           Column(
             children: [
               generateRow(
-                label: 'Regular expression',
-                labelHelpText:
-                    'Enter a regular expression to validate the input. Consult your favorite search engine to learn what regular expressions are and how to use them.',
+                label: tr.free_text_type_custom_label,
+                labelHelpText: tr.free_text_type_custom_label_helper,
                 input: ReactiveTextField(
                   formControl: formViewModel.customRegexControl,
-                  decoration: const InputDecoration(
-                    helperText: "Example: Enter [a-zA-Z]+ to only allow letters.",
-                    prefix: Text('^'),
-                    suffix: Text('\$'),
+                  decoration: InputDecoration(
+                    helperText: tr.free_text_type_custom_helper,
+                    prefix: const Text('^'),
+                    suffix: const Text('\$'),
                   ),
                   onChanged: (_) {
                     formViewModel.freeTextExampleTextControl.updateValueAndValidity();
@@ -83,8 +82,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
               ),
               const SizedBox(height: 8.0),
               TextParagraph(
-                text:
-                    'Any input that does not match the expression will be rejected. The input length constraints specified above are still applied. A leading ^ and trailing \$ character will be added automatically.',
+                text: tr.free_text_type_custom_explanation,
                 style: ThemeConfig.bodyTextMuted(theme),
               )
             ],
@@ -95,13 +93,11 @@ class FreeTextQuestionFormView extends ConsumerWidget {
         const SizedBox(height: 16.0),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           generateRow(
-            label: 'Example text field',
-            labelHelpText:
-                'This is an example of the text field that will be shown to the participant. The length and input type constraints specified above will be applied.',
+            label: tr.free_text_example_label,
+            labelHelpText: tr.free_text_example_label_helper,
             input: Row(
               children: [
-                Text(formViewModel.questionTextControl.value ??
-                    'Enter a survey title to see an example of the text field.'),
+                Text(formViewModel.questionTextControl.value ?? tr.free_text_example_default_text),
                 const SizedBox(width: 64.0),
                 Expanded(
                   child: ReactiveValueListenableBuilder(
@@ -115,8 +111,8 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                         decoration: InputDecoration(
                           helperText: (formControl.dirty &&
                                   formControl.valid)
-                              ? 'Your example input is valid'
-                              : 'Perform a validation test by entering text here.',
+                              ? tr.free_text_example_valid
+                              : tr.free_text_example_default_helper,
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: borderColor,
@@ -129,13 +125,10 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                           ),
                         ),
                         validationMessages: {
-                          ValidationMessage.required: (error) => 'This field is required.',
-                          ValidationMessage.minLength: (error) =>
-                              'The input must be at least $minLength characters long.',
-                          ValidationMessage.maxLength: (error) =>
-                              'The input must be at most $maxLength characters long.',
-                          ValidationMessage.pattern: (error) => 'The input must match the specified format.',
-                          ValidationMessage.number: (error) => 'The input must be a number.',
+                          ValidationMessage.minLength: (error) => tr.free_text_validation_min_length(minLength),
+                          ValidationMessage.maxLength: (error) => tr.free_text_validation_max_length(maxLength),
+                          ValidationMessage.pattern: (error) => tr.free_text_validation_pattern,
+                          ValidationMessage.number: (error) => tr.free_text_validation_number,
                         });
                   }),
                 ),
@@ -147,7 +140,8 @@ class FreeTextQuestionFormView extends ConsumerWidget {
             builder: (context, formGroup, child) {
               return TextParagraph(
                   text:
-                      "${type.capitalize()} input with a character length range of $minLength to $maxLength will be accepted. ");
+                      "${type.capitalize()} ${tr.free_text_example_explanation(minLength, maxLength)}"
+              );
             },
           ),
         ]),
@@ -165,11 +159,10 @@ class FreeTextQuestionFormView extends ConsumerWidget {
 
   get generateLabelHelpTextMap {
     return {
-      FreeTextQuestionType.any: 'Any input.',
-      FreeTextQuestionType.alphanumeric:
-          'Alphanumeric input includes letters, numbers, and special characters.',
-      FreeTextQuestionType.numeric: 'Numeric input includes numbers without special characters.',
-      FreeTextQuestionType.custom: 'Custom input allows you to specify a regular expression to validate the input.'
+      FreeTextQuestionType.any: tr.free_text_question_type_any_explanation,
+      FreeTextQuestionType.alphanumeric: tr.free_text_question_type_alphanumeric_explanation,
+      FreeTextQuestionType.numeric: tr.free_text_question_type_numeric_explanation,
+      FreeTextQuestionType.custom: tr.free_text_question_type_custom_explanation,
     };
   }
 

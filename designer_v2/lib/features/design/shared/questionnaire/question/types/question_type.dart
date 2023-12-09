@@ -56,3 +56,20 @@ enum SurveyQuestionType {
   String toJson() => name;
   static SurveyQuestionType fromJson(String json) => values.byName(json);
 }
+
+extension FreeTextQuestionTypeExtension on FreeTextQuestionType {
+  String get string {
+    switch (this) {
+      case FreeTextQuestionType.any:
+        return tr.free_text_question_type_any;
+      case FreeTextQuestionType.alphanumeric:
+        return tr.free_text_question_type_alphanumeric;
+      case FreeTextQuestionType.numeric:
+        return tr.free_text_question_type_numeric;
+      case FreeTextQuestionType.custom:
+        return tr.free_text_question_type_custom;
+      default:
+        return "[Invalid FreeTextQuestionType]";
+    }
+  }
+}
