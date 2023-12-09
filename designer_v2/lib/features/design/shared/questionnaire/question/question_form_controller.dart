@@ -240,10 +240,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   );
 
   _onFreeTextLengthChanged() {
-    // todo
-    /*if (formMode == FormMode.readonly) {
+    if (formMode == FormMode.readonly) {
       return; // prevent change listener from firing in readonly mode
-    }*/
+    }
     freeTextLengthMin.value = freeTextLengthControl.value!.start.toInt();
     freeTextLengthMax.value = freeTextLengthControl.value!.end.toInt();
   }
