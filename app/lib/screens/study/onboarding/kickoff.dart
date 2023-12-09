@@ -35,7 +35,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       setState(() => ready = true);
       Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
     } catch (e) {
-      print('Failed creating subject: $e');
+      StudyULogger.fatal('Failed creating subject: $e');
     }
   }
 
@@ -83,10 +83,10 @@ class _KickoffScreen extends State<KickoffScreen> {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16),
-                    OutlinedButton(
+                    /*OutlinedButton(
                       onPressed: () => _storeUserStudy(context),
                       child: Text(AppLocalizations.of(context)!.start_study),
-                    ),
+                    ),*/
                   ],
                 ),
               ),

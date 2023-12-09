@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -12,17 +14,17 @@ class Cache {
     if (subject == null) return;
     StudySubject newSubject;
     newSubject = await synchronize(subject);
-    Analytics.logger.info("Save to local cache");
+    print("Save to local cache");
     (await sharedPrefs).setString(cacheSubjectKey, jsonEncode(newSubject.toFullJson()));
     assert(newSubject == (await loadSubject()));
   }
 
   static Future<StudySubject> loadSubject() async {
-    Analytics.logger.info("Load subject from cache");
+    print("Load subject from cache");
     if ((await sharedPrefs).containsKey(cacheSubjectKey)) {
       return StudySubject.fromJson(jsonDecode((await sharedPrefs).getString(cacheSubjectKey)!));
     } else {
-      Analytics.logger.warning("No cached subject found");
+      StudyULogger.warning("No cached subject found");
       throw Exception("No cached subject found");
     }
   }
@@ -39,14 +41,12 @@ class Cache {
   }
 
   static Future<void> delete() async {
-    Analytics.logger.warning("Delete cache");
+    StudyULogger.warning("Delete cache");
     (await sharedPrefs).remove(cacheSubjectKey);
   }
 
   static Future<StudySubject> synchronize(StudySubject remoteSubject) async {
-    // Todo requires re-implementation
-    return remoteSubject;
-    /*if (isSynchronizing) return remoteSubject;
+    if (isSynchronizing) return remoteSubject;
     // No local subject found
     if (!(await sharedPrefs).containsKey(cacheSubjectKey)) return remoteSubject;
     final localSubject = await loadSubject();
@@ -55,14 +55,14 @@ class Cache {
     // remote subject has newer study
     if (!kDebugMode && remoteSubject.startedAt!.isAfter(localSubject.startedAt!)) return remoteSubject;
 
-    Analytics.logger.info("Synchronize with cache");
+    print("Synchronize with cache");
     isSynchronizing = true;
 
     try {
       // only minimal update
       // Check if progress has changed
       if (localSubject.progress.length != remoteSubject.progress.length) {
-        Analytics.logger.info("[Sync] Found different progress length");
+        StudyULogger.info("Cache found different progress length");
         /*if (remoteSubject.progress.isNotEmpty) {
         // sort remote progress list from oldest to newest
         remoteSubject.progress.sort((a, b) =>
@@ -94,18 +94,18 @@ class Cache {
         // We can either drop local or overwrite remote
         // ... for now do nothing
         if (!kDebugMode && localSubject.startedAt == remoteSubject.startedAt) {
-          Analytics.logger.severe("Cache synchronization found local changes that cannot be merged");
+          StudyULogger.fatal("Cache synchronization found local changes that cannot be merged");
           Analytics.captureMessage(
               "localSubject: ${localSubject.toFullJson()} \nremoteSubject: ${remoteSubject.toFullJson()}");
           Analytics.captureException(Exception("CacheSynchronizationException"));
         }
       }
     } on SocketException catch (_) {
-      Analytics.logger.info("SocketException on synchronizing (normal if offline)");
+      StudyULogger.info("SocketException on synchronizing (normal if offline)");
     } catch (exception) {
-      Analytics.logger.warning(exception);
+      StudyULogger.warning(exception);
     }
     isSynchronizing = false;
-    return remoteSubject;*/
+    return remoteSubject;
   }
 }
