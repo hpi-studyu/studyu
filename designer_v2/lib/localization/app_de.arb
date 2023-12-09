@@ -214,9 +214,10 @@
   },
   "free_text_validation_pattern": "Die Eingabe muss dem angegebenen Format entsprechen.",
   "free_text_validation_number": "Die Eingabe muss eine Zahl sein.",
-  "free_text_example_explanation": "Eingaben mit einer Zeichenlänge im Bereich von {countMin} bis {countMax} werden akzeptiert.",
+  "free_text_example_explanation": "Eingaben vom Typ {type} mit einer Zeichenlänge im Bereich von {countMin} bis {countMax} werden akzeptiert.",
   "@free_text_example_explanation": {
     "placeholders": {
+      "type": {},
       "countMin": {},
       "countMax": {}
     }
