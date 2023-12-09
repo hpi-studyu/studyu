@@ -47,7 +47,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             } else if (value.length > question.lengthRange.last) {
               return 'Please enter at most ${question.lengthRange.last} characters';
             }
-            switch(question.textType) {
+            switch (question.textType) {
               case FreeTextQuestionType.any:
                 return null;
               case FreeTextQuestionType.alphanumeric:
@@ -70,7 +70,6 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
                 }
             }
           },
-        )
-    );
+        ));
   }
 }
