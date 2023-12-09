@@ -120,6 +120,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                                 ),
                               ),
                             ),
+                            showErrors: (control) => control.invalid && control.dirty,
                             validationMessages: {
                               ValidationMessage.minLength: (error) => tr.free_text_validation_min_length(minLength),
                               ValidationMessage.maxLength: (error) => tr.free_text_validation_max_length(maxLength),

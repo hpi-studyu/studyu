@@ -201,7 +201,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   late final AbstractControl<int> freeTextLengthMax = FormControl(value: freeTextLengthControl.value!.end.toInt());
   late final FormControl<String> freeTextExampleTextControl = FormControl<String>(
     value: '',
-    touched: true,
     validators: [Validators.delegate(_validateFreeText)],
   );
 
