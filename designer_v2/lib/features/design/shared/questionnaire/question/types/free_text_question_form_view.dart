@@ -48,9 +48,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
           labelHelpText: tr.free_text_type_label_helper,
           input: ReactiveDropdownField(
             formControl: formViewModel.freeTextTypeControl,
-            items: FreeTextQuestionType.values
-                .map((e) => DropdownMenuItem(value: e, child: Text(e.string)))
-                .toList(),
+            items: FreeTextQuestionType.values.map((e) => DropdownMenuItem(value: e, child: Text(e.string))).toList(),
             decoration: InputDecoration(
               helperText: generateLabelHelpTextMap[formViewModel.freeTextTypeControl.value],
             ),
