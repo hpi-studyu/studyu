@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -48,7 +46,7 @@ class Cache {
   static Future<StudySubject> synchronize(StudySubject remoteSubject) async {
     // Todo requires re-implementation
     return remoteSubject;
-    if (isSynchronizing) return remoteSubject;
+    /*if (isSynchronizing) return remoteSubject;
     // No local subject found
     if (!(await sharedPrefs).containsKey(cacheSubjectKey)) return remoteSubject;
     final localSubject = await loadSubject();
@@ -108,6 +106,6 @@ class Cache {
       Analytics.logger.warning(exception);
     }
     isSynchronizing = false;
-    return remoteSubject;
+    return remoteSubject;*/
   }
 }
