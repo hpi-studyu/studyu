@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 
@@ -43,9 +44,9 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           },
           validator: (value) {
             if (value!.length < question.lengthRange.first) {
-              return 'Please enter at least ${question.lengthRange.first} characters';
+              return AppLocalizations.of(context)!.free_text_min_length_error(question.lengthRange.first);
             } else if (value.length > question.lengthRange.last) {
-              return 'Please enter at most ${question.lengthRange.last} characters';
+              return AppLocalizations.of(context)!.free_text_max_length_error(question.lengthRange.last);
             }
             switch (question.textType) {
               case FreeTextQuestionType.any:
@@ -54,19 +55,19 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
                 if (RegExp(alphanumericPattern).hasMatch(value)) {
                   return null;
                 } else {
-                  return 'Please enter only alphanumeric characters';
+                  return AppLocalizations.of(context)!.free_text_alphanumeric_error;
                 }
               case FreeTextQuestionType.numeric:
                 if (RegExp(r'^-?[0-9]+$').hasMatch(value)) {
                   return null;
                 } else {
-                  return 'Please enter only numeric characters';
+                  return AppLocalizations.of(context)!.free_text_numeric_error;
                 }
               case FreeTextQuestionType.custom:
                 if (RegExp(question.customTypeExpression!).hasMatch(value)) {
                   return null;
                 } else {
-                  return 'Please enter only characters matching the pattern ${question.customTypeExpression}';
+                  return AppLocalizations.of(context)!.free_text_custom_error(question.customTypeExpression!);
                 }
             }
           },
