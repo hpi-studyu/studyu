@@ -563,41 +563,41 @@ create_and_update_studyu_env() {
   if [ ! -f "$studyu_env_path" ]; then
     create_specific_env_file "$studyu_env_path"
     echo -e "${yellow}Created a default studyu/.env at: $studyu_env_path${reset}"
-    local anon_modified=false
-    echo -e "${purple}StudyU needs an ANON_KEY to connect to Supabase. How do you want to insert the key?${reset}"
-    PS3='Select an option: '
-    options=("Automatic import from supabase/.env (recommended)" "Manually provide the ANON_KEY" "Do not change the default key")
-    select opt in "${options[@]}"
-    do
-      case $opt in
-        "Automatic import from supabase/.env (recommended)")
-          if [ -z "$anon_key" ]; then
-            source_env "$supabase_env_path"
-            anon_key="$ANON_KEY"
-          fi
-          if [ -z "$anon_key" ]; then
-            echo -e "${red}Error: Could not find ANON_KEY in $supabase_env_path${reset}"
-            echo -e "It seems like you have not started Supabase locally. Please enter the ANON_KEY manually or stick with the default key."
-          else
-            anon_modified=true
-            break
-          fi
-          ;;
-        "Manually provide the ANON_KEY")
-          anon_key=$(prompt_with_validation "Enter ANON_KEY" "$anon_key")
+  fi
+  local anon_modified=false
+  echo -e "${purple}StudyU needs an ANON_KEY to connect to Supabase. How do you want to insert the key?${reset}"
+  PS3='Select an option: '
+  options=("Automatic import from supabase/.env (recommended)" "Manually provide the ANON_KEY" "Do not change the default key")
+  select opt in "${options[@]}"
+  do
+    case $opt in
+      "Automatic import from supabase/.env (recommended)")
+        if [ -z "$anon_key" ]; then
+          source_env "$supabase_env_path"
+          anon_key="$ANON_KEY"
+        fi
+        if [ -z "$anon_key" ]; then
+          echo -e "${red}Error: Could not find ANON_KEY in $supabase_env_path${reset}"
+          echo -e "It seems like you have not started Supabase locally. Please enter the ANON_KEY manually or stick with the default key."
+        else
           anon_modified=true
           break
-          ;;
-        "Do not change the default key")
-          break
-          ;;
-        *) echo "Invalid option \"$REPLY\". Please enter the number of your option.";;
-      esac
-    done
-    if [ "$anon_modified" = true ]; then
-      update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$anon_key"
-      echo -e "${green}Supabase ANON_KEY has been stored in $studyu_env_path${reset}"
-    fi
+        fi
+        ;;
+      "Manually provide the ANON_KEY")
+        anon_key=$(prompt_with_validation "Enter ANON_KEY" "$anon_key")
+        anon_modified=true
+        break
+        ;;
+      "Do not change the default key")
+        break
+        ;;
+      *) echo "Invalid option \"$REPLY\". Please enter the number of your option.";;
+    esac
+  done
+  if [ "$anon_modified" = true ]; then
+    update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$anon_key"
+    echo -e "${green}Supabase ANON_KEY has been stored in $studyu_env_path${reset}"
   fi
 }
 
@@ -761,12 +761,10 @@ manage_components() {
   done
   components=("${sorted_components[@]}")
 
-  echo -e "${yellow} The following components will be managed: ${components[*]}${reset}"
-
   # Loop through the components and run the Docker Compose command
   for component in ${components[*]}; do
     compose_file="${compose_files[$component]}"
-    # todo remove output later if everything is working
+
     echo -e "${yellow}Action: $action${reset}"
     echo -e "${yellow}Component: $component${reset}"
 
@@ -798,43 +796,53 @@ manage_components() {
               echo -e "Changing the default settings is only necessary if you want to change the port or hostname of a StudyU component."
               if ! prompt_yes_no "Do you want to keep the default deployment settings?"; then
                 echo "Notice: Hostnames only include the domain name, e.g. 'example.com' without 'https://'"
-                STUDYU_APP_HOST=$(prompt_with_validation "Enter STUDYU_APP_HOST (hostname of the StudyU App)" "$STUDYU_APP_HOST")
-                STUDYU_APP_PORT=$(prompt_with_validation "Enter STUDYU_APP_PORT (port of the StudyU App)" "$STUDYU_APP_PORT" "$number_pattern")
-                STUDYU_DESIGNER_HOST=$(prompt_with_validation "Enter STUDYU_DESIGNER_HOST (hostname of the StudyU Designer)" "$STUDYU_DESIGNER_HOST")
-                STUDYU_DESIGNER_PORT=$(prompt_with_validation "Enter STUDYU_DESIGNER_PORT (port of the StudyU Designer)" "$STUDYU_DESIGNER_PORT" "$number_pattern")
-                STUDYU_SUPABASE_HOST=$(prompt_with_validation "Enter STUDYU_SUPABASE_HOST (hostname of the Supabase frontend)" "$STUDYU_SUPABASE_HOST")
-                STUDYU_SUPABASE_PORT=$(prompt_with_validation "Enter STUDYU_SUPABASE_PORT (port of the Supabase frontend)" "$STUDYU_SUPABASE_PORT" "$number_pattern")
-                update_env_variable "$proxy_env_path" "STUDYU_APP_HOST" "$STUDYU_APP_HOST"
-                update_env_variable "$proxy_env_path" "STUDYU_APP_PORT" "$STUDYU_APP_PORT"
-                update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_HOST" "$STUDYU_DESIGNER_HOST"
-                update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_PORT" "$STUDYU_DESIGNER_PORT"
-                update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_HOST" "$STUDYU_SUPABASE_HOST"
-                update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_PORT" "$STUDYU_SUPABASE_PORT"
-                echo -e "${green}Deployment settings have been stored.${reset}"
+                while true; do
+                  STUDYU_APP_HOST=$(prompt_with_validation "Enter STUDYU_APP_HOST (hostname of the StudyU App)" "$STUDYU_APP_HOST")
+                  STUDYU_APP_PORT=$(prompt_with_validation "Enter STUDYU_APP_PORT (port of the StudyU App)" "$STUDYU_APP_PORT" "$number_pattern")
+                  STUDYU_DESIGNER_HOST=$(prompt_with_validation "Enter STUDYU_DESIGNER_HOST (hostname of the StudyU Designer)" "$STUDYU_DESIGNER_HOST")
+                  STUDYU_DESIGNER_PORT=$(prompt_with_validation "Enter STUDYU_DESIGNER_PORT (port of the StudyU Designer)" "$STUDYU_DESIGNER_PORT" "$number_pattern")
+                  STUDYU_SUPABASE_HOST=$(prompt_with_validation "Enter STUDYU_SUPABASE_HOST (hostname of the Supabase frontend)" "$STUDYU_SUPABASE_HOST")
+                  STUDYU_SUPABASE_PORT=$(prompt_with_validation "Enter STUDYU_SUPABASE_PORT (port of the Supabase frontend)" "$STUDYU_SUPABASE_PORT" "$number_pattern")
+                  echo -e "The StudyU deployment settings will be changed as follows:"
+                  echo -e "  STUDYU_APP_HOST=$STUDYU_APP_HOST"
+                  echo -e "  STUDYU_APP_PORT=$STUDYU_APP_PORT"
+                  echo -e "  STUDYU_DESIGNER_HOST=$STUDYU_DESIGNER_HOST"
+                  echo -e "  STUDYU_DESIGNER_PORT=$STUDYU_DESIGNER_PORT"
+                  echo -e "  STUDYU_SUPABASE_HOST=$STUDYU_SUPABASE_HOST"
+                  echo -e "  STUDYU_SUPABASE_PORT=$STUDYU_SUPABASE_PORT"
+                  if prompt_yes_no "Do you want to apply these changes?"; then
+                    update_env_variable "$proxy_env_path" "STUDYU_APP_HOST" "$STUDYU_APP_HOST"
+                    update_env_variable "$proxy_env_path" "STUDYU_APP_PORT" "$STUDYU_APP_PORT"
+                    update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_HOST" "$STUDYU_DESIGNER_HOST"
+                    update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_PORT" "$STUDYU_DESIGNER_PORT"
+                    update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_HOST" "$STUDYU_SUPABASE_HOST"
+                    update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_PORT" "$STUDYU_SUPABASE_PORT"
+                    echo -e "${green}Deployment settings have been stored in $proxy_env_path${reset}"
+                    break
+                  fi
+                done
 
                 if prompt_yes_no "Do you want to modify the studyu/.env settings too? (choose y if you plan to deploy a StudyU component)"; then
-                  create_and_update_studyu_env
-                  local protocol
-                  echo -e "${purple}Which protocol should be used to access StudyU and Supabase? Please note that using http is highly insecure in a production environment.${reset}"
-                  PS3='Select a protocol: '
-                  options=("https" "http")
-                  select opt in "${options[@]}"
-                  do
-                    case $opt in
-                      "https")
-                          protocol='https'
-                          break
-                          ;;
-                      "http")
-                          protocol='http'
-                          break
-                          ;;
-                      *) echo "Invalid option \"$REPLY\". Please enter the number of your option.";;
-                    esac
-                  done
-                  if [ -z "$protocol" ]; then
-                    echo -e "${red}Error: No protocol selected.${reset}"
-                  else
+                  while true; do
+                    create_and_update_studyu_env
+                    local protocol
+                    echo -e "${purple}Which protocol should be used to access StudyU and Supabase? Please note that using http is highly insecure in a production environment.${reset}"
+                    PS3='Select a protocol: '
+                    options=("https" "http")
+                    select opt in "${options[@]}"
+                    do
+                      case $opt in
+                        "https")
+                            protocol='https'
+                            break
+                            ;;
+                        "http")
+                            protocol='http'
+                            break
+                            ;;
+                        *) echo "Invalid option \"$REPLY\". Please enter the number of your option.";;
+                      esac
+                    done
                     studyu_supabase_url="$protocol://$STUDYU_SUPABASE_HOST:$STUDYU_SUPABASE_PORT"
                     studyu_app_url="$protocol://$STUDYU_APP_HOST:$STUDYU_APP_PORT"
                     studyu_designer_url="$protocol://$STUDYU_DESIGNER_HOST:$STUDYU_DESIGNER_PORT"
@@ -847,11 +855,10 @@ manage_components() {
                       update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_URL" "$studyu_supabase_url"
                       update_env_variable "$studyu_env_path" "STUDYU_APP_URL" "$studyu_app_url"
                       update_env_variable "$studyu_env_path" "STUDYU_DESIGNER_URL" "$studyu_designer_url"
-                      echo -e "${green}StudyU settings have been stored.${reset}"
-                    else
-                      echo -e "${yellow}StudyU settings have not been changed.${reset}"
+                      echo -e "${green}StudyU settings have been stored in $studyu_env_path${reset}"
+                      break;
                     fi
-                  fi
+                  done
                 fi
               fi
             else
