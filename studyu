@@ -29,11 +29,11 @@ fi
 
 # Dictionary to map components to Docker Compose files
 declare -A compose_files=(
-  ["studyu-proxy"]="nginx/docker-compose-proxy.yml"
   ["supabase-db"]="supabase/docker-compose-db.yml"
   ["supabase"]="supabase/docker-compose.yml"
   ["studyu-app"]="studyu/docker-compose-app.yml"
   ["studyu-designer"]="studyu/docker-compose-designer.yml"
+  ["studyu-proxy"]="proxy/docker-compose-proxy.yml"
 )
 
 declare -A component_descriptions=(
@@ -65,14 +65,14 @@ for key in "${!component_descriptions[@]}"; do
   fi
 done
 
-available_components="${bold}Available components:${reset}\n"
+selectable_components="${bold}Selectable components:${reset}\n"
 for key in "${!component_descriptions[@]}"; do
   value="${component_descriptions[$key]}"
   spaces=$(printf "%*s" $((max_length - ${#key})) "")
   formatted_component="  $key$spaces   $value\n"
-  available_components+="$formatted_component"
+  selectable_components+="$formatted_component"
 done
-available_components+="All components should be specified as a space-separated list. If no components are specified, the default components will be used."
+selectable_components+="All components should be specified as a space-separated list. If no components are specified, the default components will be used."
 
 
 # Function to generate a JWT token for Supabase
@@ -393,7 +393,7 @@ read_config() {
 
   studyu_env_path="$STUDYU_PATH/flutter_common/lib/envs/.env.local"
   supabase_env_path="$STUDYU_PATH/docker/supabase/.env"
-  proxy_env_path="$STUDYU_PATH/docker/nginx/.env"
+  proxy_env_path="$STUDYU_PATH/docker/proxy/.env"
 
   if [ "$failOnError" = true ]; then
       cd "$STUDYU_PATH/docker/" || exit 1
@@ -747,11 +747,26 @@ manage_components() {
     local compose_file="${compose_files[$component]}"
     if [ -z "$compose_file" ]; then
       echo -e "${red}Error: Invalid component '$component'${reset}"
-      echo -e "$available_components"
+      echo -e "$selectable_components"
       exit 1;
     fi
+  done
 
-    # todo later if everything is working
+  # Sort components by their order in the compose_files array
+  sorted_components=()
+  for key in "${!compose_files[@]}"; do
+    if [[ " ${components[*]} " =~ $key ]]; then
+      sorted_components+=("$key")
+    fi
+  done
+  components=("${sorted_components[@]}")
+
+  echo -e "${yellow} The following components will be managed: ${components[*]}${reset}"
+
+  # Loop through the components and run the Docker Compose command
+  for component in ${components[*]}; do
+    compose_file="${compose_files[$component]}"
+    # todo remove output later if everything is working
     echo -e "${yellow}Action: $action${reset}"
     echo -e "${yellow}Component: $component${reset}"
 
@@ -780,8 +795,8 @@ manage_components() {
               create_specific_env_file "$proxy_env_path"
               source_env "$proxy_env_path"
               echo -e "${yellow}Default deployment settings stored at: $proxy_env_path${reset}"
-              # echo -e "Changing the default settings is only necessary if you want to change the port or hostname of a StudyU component."
-              if prompt_yes_no "Do you want to modify the deployment settings now?"; then
+              echo -e "Changing the default settings is only necessary if you want to change the port or hostname of a StudyU component."
+              if ! prompt_yes_no "Do you want to keep the default deployment settings?"; then
                 echo "Notice: Hostnames only include the domain name, e.g. 'example.com' without 'https://'"
                 STUDYU_APP_HOST=$(prompt_with_validation "Enter STUDYU_APP_HOST (hostname of the StudyU App)" "$STUDYU_APP_HOST")
                 STUDYU_APP_PORT=$(prompt_with_validation "Enter STUDYU_APP_PORT (port of the StudyU App)" "$STUDYU_APP_PORT" "$number_pattern")
@@ -1135,7 +1150,7 @@ delete() {
     backup
   fi
 
-  if prompt_yes_no "Do you want to remove all containers and images used by StudyU services? This does not affect the StudyU data volumes."; then
+  if prompt_yes_no "Do you want to remove all containers used by StudyU services? This does not affect the StudyU volumes."; then
     down_cmd+="--rmi all --remove-orphans"
   fi
 
@@ -1203,7 +1218,7 @@ print_general_help() {
   echo "  delete                            Delete components and data (use with caution!)"
   echo "  help                              Display this help message"
   echo -e "${yellow}Use -h for each command or visit the StudyU website for advanced usage options: https://studyu.health ${reset}"
-  echo -e "$available_components"
+  echo -e "$selectable_components"
 }
 
 # Function to display help for 'config' command

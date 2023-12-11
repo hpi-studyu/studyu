@@ -16,6 +16,6 @@ services:
       - "${STUDYU_DESIGNER_PORT}:8081"
       - "${STUDYU_SUPABASE_PORT}:8082"
     volumes:
-      - ./templates:/etc/nginx/templates/
+      - ../nginx/proxy:/etc/nginx/templates:ro
     env_file:
       - .env
