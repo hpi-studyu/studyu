@@ -35,7 +35,7 @@ server {
     # access_log /var/log/nginx/db.access.log main;
     error_log /var/log/nginx/db.error.log;
 
-    include /etc/nginx/conf.d/common.conf;
+    include /etc/nginx/conf.d/01_common.conf;
 
     set $studio http://studio:3000;
     set $kong http://kong:8000;
@@ -43,13 +43,13 @@ server {
     # REST API
     location ~ ^/rest/v1/(.*)$ {
         proxy_pass $kong;
-        include     /etc/nginx/conf.d/common_location.conf;
+        include     /etc/nginx/conf.d/02_common_location.conf;
     }
 
     # GraphQL
     location ~ ^/graphql/v1/(.*)$ {
         proxy_pass $kong;
-        include     /etc/nginx/conf.d/common_location.conf;
+        include     /etc/nginx/conf.d/02_common_location.conf;
     }
 
     # Realtime
@@ -58,25 +58,25 @@ server {
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
-        include     /etc/nginx/conf.d/common_location.conf;
+        include     /etc/nginx/conf.d/02_common_location.conf;
     }
 
     # Authentication
     location ~ ^/auth/v1/(.*)$ {
         proxy_pass $kong;
-        include     /etc/nginx/conf.d/common_location.conf;
+        include     /etc/nginx/conf.d/02_common_location.conf;
     }
 
     # Storage
     location ~ ^/storage/v1/(.*)$ {
         proxy_pass $kong;
-        include     /etc/nginx/conf.d/common_location.conf;
+        include     /etc/nginx/conf.d/02_common_location.conf;
     }
 
     # Studio
     location / {
         proxy_pass $kong;
-        include     /etc/nginx/conf.d/common_location.conf;
+        include     /etc/nginx/conf.d/02_common_location.conf;
 
         # Enable both IP and basic auth conditions have to be satisfied
         # satisfy all;
@@ -110,12 +110,12 @@ server {
     # access_log /var/log/nginx/analytics.access.log main;
 #     error_log /var/log/nginx/analytics.error.log;
 
-#     include /etc/nginx/conf.d/common.conf;
+#     include /etc/nginx/conf.d/01_common.conf;
 
 #     set $analytics http://analytics:4000;
 
 #     location / {
 #         proxy_pass $analytics;
-#         include    /etc/nginx/conf.d/common_location.conf;
+#         include    /etc/nginx/conf.d/02_common_location.conf;
 #     }
 # }

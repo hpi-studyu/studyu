@@ -13,12 +13,12 @@ server {
     # access_log /var/log/nginx/app.access.log main;
     error_log /var/log/nginx/app.error.log;
 
-    include /etc/nginx/conf.d/common.conf;
+    include /etc/nginx/conf.d/01_common.conf;
 
     location / {
       set $upstream http://studyu-app:80;
       proxy_pass $upstream;
-      include    /etc/nginx/conf.d/common_location.conf;
+      include    /etc/nginx/conf.d/02_common_location.conf;
     }
 }
 
@@ -30,11 +30,11 @@ server {
     # access_log /var/log/nginx/designer.access.log main;
     error_log /var/log/nginx/designer.error.log;
 
-    include /etc/nginx/conf.d/common.conf;
+    include /etc/nginx/conf.d/01_common.conf;
 
     location / {
       set $upstream http://studyu-designer:80;
       proxy_pass $upstream;
-      include    /etc/nginx/conf.d/common_location.conf;
+      include    /etc/nginx/conf.d/02_common_location.conf;
     }
 }
