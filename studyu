@@ -564,24 +564,24 @@ create_and_update_studyu_env() {
     create_specific_env_file "$studyu_env_path"
     echo -e "${yellow}Created a default studyu/.env at: $studyu_env_path${reset}"
     local anon_modified=false
-    echo "StudyU needs an ANON_KEY to connect to Supabase. How do you want to insert the key?"
+    echo -e "${purple}StudyU needs an ANON_KEY to connect to Supabase. How do you want to insert the key?${reset}"
     PS3='Select an option: '
-    options=("Automatic import from supabase/.env (recommended)" "Manually provide the ANON_KEY" "Do not change the default key for now")
+    options=("Automatic import from supabase/.env (recommended)" "Manually provide the ANON_KEY" "Do not change the default key")
     select opt in "${options[@]}"
     do
       case $opt in
         "Automatic import from supabase/.env (recommended)")
           if [ -z "$anon_key" ]; then
-            # anon_key=$(grep "^ANON_KEY=" "$supabase_env_path" | cut -d'=' -f2)
             source_env "$supabase_env_path"
             anon_key="$ANON_KEY"
-            anon_modified=true
           fi
           if [ -z "$anon_key" ]; then
             echo -e "${red}Error: Could not find ANON_KEY in $supabase_env_path${reset}"
-            exit 1
+            echo -e "It seems like you have not started Supabase locally. Please enter the ANON_KEY manually or stick with the default key."
+          else
+            anon_modified=true
+            break
           fi
-          break
           ;;
         "Manually provide the ANON_KEY")
           anon_key=$(prompt_with_validation "Enter ANON_KEY" "$anon_key")
@@ -590,12 +590,12 @@ create_and_update_studyu_env() {
           ;;
         "Do not change the default key")
           break
-        ;;
+          ;;
         *) echo "Invalid option \"$REPLY\". Please enter the number of your option.";;
       esac
     done
     if [ "$anon_modified" = true ]; then
-      update_env_variable "$studyu_env_path" "ANON_KEY" "$anon_key"
+      update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$anon_key"
       echo -e "${green}Supabase ANON_KEY has been stored in $studyu_env_path${reset}"
     fi
   fi
@@ -815,7 +815,7 @@ manage_components() {
                 if prompt_yes_no "Do you want to modify the studyu/.env settings too? (choose y if you plan to deploy a StudyU component)"; then
                   create_and_update_studyu_env
                   local protocol
-                  echo "Which protocol should be used to access StudyU and Supabase? Please note that using http is highly insecure in a production environment."
+                  echo -e "${purple}Which protocol should be used to access StudyU and Supabase? Please note that using http is highly insecure in a production environment.${reset}"
                   PS3='Select a protocol: '
                   options=("https" "http")
                   select opt in "${options[@]}"
