@@ -16,7 +16,7 @@ server {
     include /etc/nginx/conf.d/common.conf;
 
     location / { 
-      proxy_pass http://${STUDYU_APP_HOST};
+      proxy_pass http://studyu-app;
       include    /etc/nginx/conf.d/common_location.conf;
     }
 }
@@ -32,7 +32,7 @@ server {
     include /etc/nginx/conf.d/common.conf;
 
     location / {
-      proxy_pass http://${STUDYU_DESIGNER_HOST};
+      proxy_pass http://studyu-designer;
       include    /etc/nginx/conf.d/common_location.conf;
     }
 }

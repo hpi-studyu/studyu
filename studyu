@@ -777,8 +777,8 @@ manage_components() {
             if [ ! -f "$supabase_env_path" ]; then
               create_specific_env_file "$supabase_env_path"
               echo -e "${yellow}Created a default supabase env at: $supabase_env_path${reset}"
-              echo -e "Some secrets need to be generated to ensure a secure usage of Supabase."
-              if prompt_yes_no "Do you want to create the secrets automatically?"; then
+              echo -e "Supabase needs a number of secrets to ensure a secure usage. Read more about it here: https://supabase.com/docs/guides/functions/secrets"
+              if prompt_yes_no "Do you want to create these secrets automatically?"; then
                 create_and_set_supabase_secrets
                 echo -e "${green}Generated secrets have been stored in $supabase_env_path${reset}"
                 supabase_installation_success=true
