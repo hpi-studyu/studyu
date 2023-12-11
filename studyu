@@ -1150,7 +1150,7 @@ delete() {
     backup
   fi
 
-  if prompt_yes_no "Do you want to remove all containers used by StudyU services? This does not affect the StudyU volumes."; then
+  if prompt_yes_no "Do you want to remove all containers and images used by StudyU services? This does not affect the StudyU volumes."; then
     down_cmd+="--rmi all --remove-orphans"
   fi
 

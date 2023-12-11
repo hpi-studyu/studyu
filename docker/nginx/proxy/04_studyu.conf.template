@@ -15,8 +15,9 @@ server {
 
     include /etc/nginx/conf.d/common.conf;
 
-    location / { 
-      proxy_pass http://studyu-app;
+    location / {
+      set $upstream http://studyu-app:80;
+      proxy_pass $upstream;
       include    /etc/nginx/conf.d/common_location.conf;
     }
 }
@@ -32,7 +33,8 @@ server {
     include /etc/nginx/conf.d/common.conf;
 
     location / {
-      proxy_pass http://studyu-designer;
+      set $upstream http://studyu-designer:80;
+      proxy_pass $upstream;
       include    /etc/nginx/conf.d/common_location.conf;
     }
 }
