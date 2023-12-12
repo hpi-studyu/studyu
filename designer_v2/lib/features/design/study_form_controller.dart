@@ -25,8 +25,7 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 
-class StudyFormViewModel extends FormViewModel<Study>
-    implements IFormViewModelDelegate<FormViewModel> {
+class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelDelegate<FormViewModel> {
   StudyFormViewModel({
     required this.router,
     required this.studyRepository,
@@ -47,6 +46,8 @@ class StudyFormViewModel extends FormViewModel<Study>
   final GoRouter router;
 
   bool get isStudyReadonly => formData?.isReadonly(authRepository.currentUser!) ?? false;
+
+  StudyType get studyType => formData?.type ?? StudyType.standalone;
 
   late final StudyInfoFormViewModel studyInfoFormViewModel = StudyInfoFormViewModel(
     formData: StudyInfoFormData.fromStudy(formData!),

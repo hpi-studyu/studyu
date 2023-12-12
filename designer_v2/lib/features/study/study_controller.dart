@@ -54,14 +54,14 @@ class StudyController extends StudyBaseController<StudyControllerState> {
   onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
     super.onStudySubscriptionUpdate(wrappedModel);
     final studyId = wrappedModel.model.id;
-    _redirectNewToActualStudyID(studyId, wrappedModel.model.isTemplate);
+    _redirectNewToActualStudyID(studyId);
   }
 
   /// Redirect to the study-specific URL to avoid disposing a dirty controller
   /// when building subroutes
-  _redirectNewToActualStudyID(StudyID actualStudyId, bool isTemplate) {
+  _redirectNewToActualStudyID(StudyID actualStudyId) {
     if (studyId == Config.newModelId) {
-      router.dispatch(RoutingIntents.study(actualStudyId, isTemplate));
+      router.dispatch(RoutingIntents.study(actualStudyId));
     }
   }
 
@@ -72,10 +72,7 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     }
     // filter out edit action since we are already editing the study
     return withIcons(
-        studyRepository
-            .availableActions(study)
-            .where((action) => action.type != StudyActionType.edit)
-            .toList(),
+        studyRepository.availableActions(study).where((action) => action.type != StudyActionType.edit).toList(),
         studyActionIcons);
   }
 
@@ -86,7 +83,7 @@ class StudyController extends StudyBaseController<StudyControllerState> {
   }
 
   void onChangeStudyParticipation() {
-    router.dispatch(RoutingIntents.studyEditEnrollment(studyId, studyCreationArgs.isTemplate));
+    router.dispatch(RoutingIntents.studyEditEnrollment(studyId));
   }
 
   void onAddParticipants() {
@@ -94,7 +91,7 @@ class StudyController extends StudyBaseController<StudyControllerState> {
   }
 
   void onSettingsPressed() {
-    router.dispatch(RoutingIntents.studySettings(studyId, studyCreationArgs.isTemplate));
+    router.dispatch(RoutingIntents.studySettings(studyId));
   }
 
   void onCreateNewSubstudy() {

@@ -75,6 +75,8 @@ class StudyControllerState extends StudyControllerBaseState
       studyWithMetadata?.model.status == StudyStatus.running &&
       studyWithMetadata?.model.isTemplate == true;
 
+  StudyType get studyType => studyWithMetadata?.model.type ?? StudyType.standalone;
+
   @override
   StudyStatus? get studyStatus => study.value?.status;
 

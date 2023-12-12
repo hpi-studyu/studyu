@@ -80,7 +80,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
     final theme = Theme.of(context);
     final state = ref.watch(studyControllerProvider(widget.studyCreationArgs));
 
-    final tabs = widget.tabs ?? StudyNav.tabs(widget.studyCreationArgs, state);
+    final tabs = widget.tabs ?? StudyNav.tabs(widget.studyCreationArgs.studyID, state);
 
     return Scaffold(
       appBar: AppBar(
@@ -134,9 +134,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                         softWrap: false,
                       ),
                     ),
-                    (state.isSyncIndicatorVisible)
-                        ? const SizedBox(width: 8.0)
-                        : const SizedBox.shrink(),
+                    (state.isSyncIndicatorVisible) ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
                     (state.isSyncIndicatorVisible)
                         ? IntrinsicWidth(
                             child: SyncIndicator(
@@ -182,9 +180,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                                   showPrefixIcon: true,
                                 )
                               : const SizedBox.shrink(),
-                          (state.isStatusBadgeVisible)
-                              ? const SizedBox(width: 12.0)
-                              : const SizedBox.shrink(),
+                          (state.isStatusBadgeVisible) ? const SizedBox(width: 12.0) : const SizedBox.shrink(),
                           ...actionButtons(context),
                         ],
                         spacing: widget.actionsSpacing,
@@ -229,9 +225,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             // enable re-rendering based on form validation status
             builder: (context, form, child) {
           return PrimaryButton(
-            text: widget.studyCreationArgs.isTemplate
-                ? tr.action_button_study_publish
-                : tr.action_button_study_launch,
+            text: tr.action_button_study_launch,
             tooltipDisabled: "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
             icon: null,
             enabled: formViewModel.isValid,

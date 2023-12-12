@@ -19,10 +19,10 @@ import 'package:studyu_designer_v2/theme.dart';
 
 class StudyTestScreen extends StudyPageWidget {
   const StudyTestScreen(
-    studyId, {
+    super.studyId, {
     this.previewRoute,
-    Key? key,
-  }) : super(studyId, key: key);
+    super.key,
+  });
 
   final String? previewRoute;
 
@@ -137,22 +137,19 @@ class StudyTestScreen extends StudyPageWidget {
       return null;
     }
     return BannerBox(
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextParagraph(
-              text: tr.banner_study_test_unavailable,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            ReactiveForm(
-                formGroup: formViewModel.form,
-                child: ReactiveFormConsumer(builder: (context, form, child) {
-                  return TextParagraph(
-                    text: form.validationErrorSummary,
-                  );
-                })),
-          ]),
+      body: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+        TextParagraph(
+          text: tr.banner_study_test_unavailable,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        ReactiveForm(
+            formGroup: formViewModel.form,
+            child: ReactiveFormConsumer(builder: (context, form, child) {
+              return TextParagraph(
+                text: form.validationErrorSummary,
+              );
+            })),
+      ]),
       style: BannerStyle.warning,
     );
   }

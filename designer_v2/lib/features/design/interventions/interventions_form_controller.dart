@@ -129,13 +129,13 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   void onSelectItem(InterventionFormViewModel item) {
     final studyId = study.id;
     final interventionId = item.interventionId;
-    router.dispatch(RoutingIntents.studyEditIntervention(studyId, interventionId, study.isTemplate));
+    router.dispatch(RoutingIntents.studyEditIntervention(studyId, interventionId));
   }
 
   @override
   void onNewItem() {
     final studyId = study.id;
-    router.dispatch(RoutingIntents.studyEditIntervention(studyId, Config.newModelId, study.isTemplate));
+    router.dispatch(RoutingIntents.studyEditIntervention(studyId, Config.newModelId));
   }
 
   // - IProviderArgsResolver

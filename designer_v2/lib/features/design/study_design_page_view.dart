@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/banner.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
@@ -21,13 +22,13 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextParagraph(
-                  text: studyCreationArgs.isTemplate
+                  text: viewModel.studyType == StudyType.template
                       ? tr.banner_template_readonly_title
                       : tr.banner_study_readonly_title,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 TextParagraph(
-                  text: studyCreationArgs.isTemplate
+                  text: viewModel.studyType == StudyType.template
                       ? tr.banner_template_readonly_description
                       : tr.banner_study_readonly_description,
                 ),

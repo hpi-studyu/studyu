@@ -17,8 +17,7 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 
 import 'dashboard_state.dart';
 
-class DashboardController extends StateNotifier<DashboardState>
-    implements IModelActionProvider<StudyGroup> {
+class DashboardController extends StateNotifier<DashboardState> implements IModelActionProvider<StudyGroup> {
   /// References to the data repositories injected by Riverpod
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
@@ -65,7 +64,7 @@ class DashboardController extends StateNotifier<DashboardState>
   }
 
   onSelectStudy(Study study) {
-    router.dispatch(RoutingIntents.studyEdit(study.id, study.isTemplate));
+    router.dispatch(RoutingIntents.studyEdit(study.id));
   }
 
   onClickNewStudy(bool isTemplate) {
@@ -144,8 +143,7 @@ class DashboardController extends StateNotifier<DashboardState>
   }
 }
 
-final dashboardControllerProvider =
-    StateNotifierProvider.autoDispose<DashboardController, DashboardState>((ref) {
+final dashboardControllerProvider = StateNotifierProvider.autoDispose<DashboardController, DashboardState>((ref) {
   final dashboardController = DashboardController(
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
