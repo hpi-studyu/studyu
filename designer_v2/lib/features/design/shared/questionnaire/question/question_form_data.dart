@@ -75,6 +75,7 @@ abstract class QuestionFormData implements IFormData {
 
   EligibilityCriterion toEligibilityCriterion() {
     final criterion = EligibilityCriterion.withId();
+    // todo implement other expression types
     final expression = ChoiceExpression()..target = questionId;
     // Screener conditions are implemented as disqualifying by default in the
     // app (as of now), so we need to generate conditions for the qualifying
