@@ -35,6 +35,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
         key: widget.formKey,
         child: TextFormField(
           controller: textFieldController,
+          maxLines: null,
           onChanged: (value) {
             if (widget.formKey.currentState!.validate()) {
               setState(() {
