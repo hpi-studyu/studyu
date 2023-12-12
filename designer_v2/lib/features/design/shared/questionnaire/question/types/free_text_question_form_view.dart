@@ -24,6 +24,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
     final type = formViewModel.freeTextTypeControl.value!.string;
     formViewModel.freeTextLengthControl
         .onChanged((_) => formViewModel.freeTextExampleTextControl.updateValueAndValidity());
+
     return Column(
       children: [
         generateRow(
@@ -105,6 +106,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                             : theme.inputDecorationTheme.enabledBorder?.borderSide.color ?? Colors.yellow;
                         return ReactiveTextField(
                             formControl: formViewModel.freeTextExampleTextControl,
+                            maxLines: null,
                             decoration: InputDecoration(
                               helperText: (formControl.dirty && formControl.valid)
                                   ? tr.free_text_example_valid
