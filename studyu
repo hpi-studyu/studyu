@@ -1301,8 +1301,8 @@ print_env_edit_help() {
   echo "    -s, --set-service-role-key <value>         Set the Supabase SERVICE_ROLE_KEY"
   echo "    -u, --set-dashboard-username <value>       Set the Supabase dashboard username"
   echo "    -w, --set-dashboard-password <value>       Set the Supabase dashboard password"
-  echo "    -n --get-dashboard-username                Set the Supabase dashboard username"
-  echo "    -o --set-dashboard-password                Set the Supabase dashboard password"
+  echo "    -n, --get-dashboard-username               Set the Supabase dashboard username"
+  echo "    -o, --set-dashboard-password               Set the Supabase dashboard password"
   # Add more supabase subcommands as needed...
 
   echo ""
