@@ -15,10 +15,9 @@ class QuestionContainer extends StatefulWidget {
   final Function(Answer, int) onDone;
   final Question question;
   final int index;
-  final GlobalKey<FormState> formKey;
 
   const QuestionContainer(
-      {required this.onDone, required this.question, required this.index, required this.formKey, super.key});
+      {required this.onDone, required this.question, required this.index, super.key});
 
   @override
   State<StatefulWidget> createState() => _QuestionContainerState();
@@ -63,7 +62,6 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
         return FreeTextQuestionWidget(
           question: widget.question as FreeTextQuestion,
           onDone: _onDone,
-          formKey: widget.formKey,
         );
       default:
         print('Question not supported!');

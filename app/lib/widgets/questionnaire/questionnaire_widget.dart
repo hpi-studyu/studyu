@@ -16,7 +16,6 @@ class QuestionnaireWidget extends StatefulWidget {
   final StateHandler? onChange;
   final StateHandler? onComplete;
   final ContinuationPredicate? shouldContinue;
-  final GlobalKey<FormState> formKey;
 
   const QuestionnaireWidget(
     this.questions, {
@@ -26,7 +25,6 @@ class QuestionnaireWidget extends StatefulWidget {
     this.onComplete,
     this.onChange,
     this.shouldContinue,
-    required this.formKey,
     super.key,
   });
 
@@ -70,7 +68,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         question: question,
         onDone: _onQuestionDone,
         index: shownQuestions.length,
-        formKey: widget.formKey,
       ),
     );
   }
