@@ -48,13 +48,15 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
       onComplete: (qs) => setState(() {
         response = qs;
       }),
-      formKey: formKey,
     );
     return Expanded(
       child: Column(
         children: [
           Expanded(
-            child: questionnaireWidget,
+            child: Form(
+              key: formKey,
+              child: questionnaireWidget,
+            ),
           ),
           if (response != null && responseValidator)
             ElevatedButton.icon(
