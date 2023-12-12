@@ -29,10 +29,11 @@ jobs:
         run: |
           docker network create studyu_network || true
           cp docker/supabase/.env.example docker/supabase/.env
-          cp docker/nginx/.env.example docker/nginx/.env
+          cp docker/proxy/.env.example docker/proxy/.env
+          cp flutter_common/lib/envs/.env.local.example flutter_common/lib/envs/.env.local
           docker compose -f docker/supabase/docker-compose-db.yml up -d
           docker compose -f docker/supabase/docker-compose.yml up -d
-          docker compose -f docker/nginx/docker-compose-proxy.yml up -d
+          docker compose -f docker/proxy/docker-compose-proxy.yml up -d
           while [ "$(docker inspect --format='{{.State.Health.Status}}' supabase-db)" != "healthy" ]; do sleep 1; done
           cat ./database/app_config.sql.example | docker exec -i supabase-db psql -U postgres -d postgres
 
