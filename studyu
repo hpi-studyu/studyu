@@ -39,9 +39,9 @@ declare -A compose_files=(
 declare -A component_descriptions=(
   #["studyu-proxy"]="Necessary to access the components"
   #["supabase-db"]="Database storing the Supabase data"
-  ["supabase"]="Supabase services" # (needs supabase-db)"
-  ["studyu-app"]="StudyU App"
-  ["studyu-designer"]="StudyU Designer"
+  ["supabase"]="Supabase provides authentication and storage capabilities for StudyU"
+  ["studyu-app"]="StudyU App (partake in digital studies)"
+  ["studyu-designer"]="StudyU Designer (create and manage studies)"
 )
 
 declare -A default_component_values=(
@@ -562,7 +562,7 @@ check_app_config_empty() {
 create_and_update_studyu_env() {
   if [ ! -f "$studyu_env_path" ]; then
     create_specific_env_file "$studyu_env_path"
-    echo -e "${yellow}Created a default studyu/.env at: $studyu_env_path${reset}"
+    echo -e "${green}Created a default studyu/.env at: $studyu_env_path${reset}"
   fi
   local anon_modified=false
   echo -e "${purple}StudyU needs an ANON_KEY to connect to Supabase. How do you want to insert the key?${reset}"
@@ -606,10 +606,13 @@ validate_studyu_env() {
     source_env "$studyu_env_path"
     source_env "$supabase_env_path"
     if [ "$STUDYU_SUPABASE_PUBLIC_ANON_KEY" != "$ANON_KEY" ]; then
-      echo -e "${yellow}Warning: STUDYU_SUPABASE_PUBLIC_ANON_KEY does not equal ANON_KEY in $supabase_env_path${reset}"
-      echo -e "STUDYU_SUPABASE_PUBLIC_ANON_KEY will be updated to ANON_KEY"
-      update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$ANON_KEY"
+      echo -e "${yellow}STUDYU_SUPABASE_PUBLIC_ANON_KEY does not equal ANON_KEY in $supabase_env_path${reset}"
+      create_and_update_studyu_env
+      #echo -e "STUDYU_SUPABASE_PUBLIC_ANON_KEY will be updated to ANON_KEY"
+      #update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$ANON_KEY"
     fi
+  else
+    create_and_update_studyu_env
   fi
 }
 
@@ -740,8 +743,6 @@ manage_components() {
 
   local supabase_installation_success=false
 
-  validate_studyu_env
-
   # Check if the components are valid
   for component in ${components[*]}; do
     local compose_file="${compose_files[$component]}"
@@ -774,7 +775,7 @@ manage_components() {
           "supabase"*)
             if [ ! -f "$supabase_env_path" ]; then
               create_specific_env_file "$supabase_env_path"
-              echo -e "${yellow}Created a default supabase env at: $supabase_env_path${reset}"
+              echo -e "${green}Created a default supabase env at: $supabase_env_path${reset}"
               echo -e "Supabase needs a number of secrets to ensure a secure usage. Read more about it here: https://supabase.com/docs/guides/functions/secrets"
               if prompt_yes_no "Do you want to create these secrets automatically?"; then
                 create_and_set_supabase_secrets
@@ -792,9 +793,9 @@ manage_components() {
             if [ ! -f "$proxy_env_path" ]; then
               create_specific_env_file "$proxy_env_path"
               source_env "$proxy_env_path"
-              echo -e "${yellow}Default deployment settings stored at: $proxy_env_path${reset}"
-              echo -e "Changing the default settings is only necessary if you want to change the port or hostname of a StudyU component."
-              if ! prompt_yes_no "Do you want to keep the default deployment settings?"; then
+              echo -e "${green}Default deployment settings stored at: $proxy_env_path${reset}"
+              echo -e "The selected components will bind to their default port on localhost. Changing the default settings is only necessary if you want to use a custom hostname or port."
+              if prompt_yes_no "Do you want to change the default deployment settings now?"; then
                 echo "Notice: Hostnames only include the domain name, e.g. 'example.com' without 'https://'"
                 while true; do
                   STUDYU_APP_HOST=$(prompt_with_validation "Enter STUDYU_APP_HOST (hostname of the StudyU App)" "$STUDYU_APP_HOST")
@@ -822,7 +823,7 @@ manage_components() {
                   fi
                 done
 
-                if prompt_yes_no "Do you want to modify the studyu/.env settings too? (choose y if you plan to deploy a StudyU component)"; then
+                if prompt_yes_no "Do you also want to modify the settings for the StudyU components? (choose y if you plan to deploy a StudyU component)"; then
                   while true; do
                     create_and_update_studyu_env
                     local protocol
@@ -866,7 +867,7 @@ manage_components() {
             fi
           ;;
           "studyu-app" | "studyu-designer")
-            create_and_update_studyu_env
+            validate_studyu_env
           ;;
         esac
         ;;
@@ -929,24 +930,30 @@ manage_components() {
                 exit 1
               fi
             else
-              echo -e "${yellow}The public.app_config table is empty. A new app_config needs to be created.${reset}"
+              echo -e "Some basic information must be obtained in order to identify this StudyU instance. The information will be visible to all users of the StudyU App and StudyU Designer within this instance."
 
+              # shellcheck disable=SC2034
               local -A app_privacy
+              # shellcheck disable=SC2034
               local -A app_terms
+              # shellcheck disable=SC2034
               local -A designer_privacy
+              # shellcheck disable=SC2034
               local -A designer_terms
+              # shellcheck disable=SC2034
               local -A imprint
+              # shellcheck disable=SC2034
               local -A contact
 
               while true; do
               # Prompt for values with basic validation
               id='prod'
 
-              prompt_multilingual "Enter app_privacy URLs" app_privacy
-              prompt_multilingual "Enter app_terms URLs" app_terms
-              prompt_multilingual "Enter designer_privacy URLs" designer_privacy
-              prompt_multilingual "Enter designer_terms URLs" designer_terms
-              prompt_multilingual "Enter imprint URLs" imprint
+              prompt_multilingual "Enter a URL to a privacy policy for the StudyU App" app_privacy
+              prompt_multilingual "Enter a URL to the terms of use for the StudyU App" app_terms
+              prompt_multilingual "Enter a URL to a privacy policy for the StudyU Designer" designer_privacy
+              prompt_multilingual "Enter a URL to the terms of use for the StudyU Designer" designer_terms
+              prompt_multilingual "Enter a URL to a legal notice for StudyU" imprint
               prompt_contact contact
 
               analytics='{ "dsn": "example", "enabled": false, "samplingRate": 0 }'
@@ -974,8 +981,8 @@ manage_components() {
               "
 
               # Display the generated SQL query
-              echo "Generated SQL Query:"
-              echo "$sql_query"
+              # echo "Generated SQL Query:"
+              # echo "$sql_query"
 
               # Prompt user to confirm the generated SQL query
               # todo create multiselect out of these three options instead of two prompts
@@ -1224,7 +1231,7 @@ print_general_help() {
   echo "  backup                            Dump StudyU data"
   echo "  delete                            Delete components and data (use with caution!)"
   echo "  help                              Display this help message"
-  echo -e "${yellow}Use -h for each command or visit the StudyU website for advanced usage options: https://studyu.health ${reset}"
+  echo -e "Use -h for each command or visit the StudyU website for advanced usage options: https://studyu.health"
   echo -e "$selectable_components"
 }
 
