@@ -36,8 +36,12 @@ class CapturePictureScreenState extends State<CapturePictureScreen> {
   Future<void> _initializeCameraController() async {
     await _identifyCamerasFuture;
     setState(() {
-      _cameraController = CameraController(_cameras[_selectedCameraID], ResolutionPreset.medium,
-          imageFormatGroup: ImageFormatGroup.bgra8888);
+      _cameraController = CameraController(
+          _cameras[_selectedCameraID],
+          ResolutionPreset.medium,
+          imageFormatGroup: ImageFormatGroup.bgra8888,
+          enableAudio: false,
+      );
       _initializeControllerFuture = _cameraController.initialize();
     });
   }
