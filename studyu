@@ -11,10 +11,11 @@ fi
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 # Color codes for better output
-purple='\e[0;35m'
+red='\e[0;31m'
 green='\e[0;32m'
 yellow='\e[1;33m'
-red='\e[0;31m'
+blue='\e[1;34m'
+purple='\e[0;35m'
 bold='\e[1m'
 reset='\e[0m'
 
@@ -224,13 +225,23 @@ function multiselect {
 }
 
 
+remove_studyu_docker_images() {
+  local studyu_images
+  studyu_images=$(docker images -q 'studyu*')
+  if [ -n "$studyu_images" ]; then
+      for image in $studyu_images; do
+          docker rmi "$image" > /dev/null 2>&1
+      done
+  fi
+}
+
+
 source_env() {
   env_path=$1
   if [ ! -f "$env_path" ]; then
     echo -e "${red}Error: File $env_path does not exist.${reset}"
     exit 1
   fi
-  # echo "Sourcing $env_path"
   # shellcheck disable=SC1090
   source <(grep -vE '^\s*$|^\s*#' "$env_path")
 }
@@ -250,6 +261,7 @@ prompt_yes_no() {
     esac
   done
 }
+
 
 # Define regex patterns for validation
 # email_pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -343,9 +355,10 @@ create_specific_env_file() {
   local env_path="$1"
   if [ ! -f "$env_path" ]; then
     cp "$env_path.example" "$env_path"
-  else
-    echo -e "${red}Environment file already exists at $env_path${reset}"
   fi
+  source_env "$env_path"
+  #else
+  #  echo -e "${red}Environment file already exists at $env_path${reset}"
 }
 
 
@@ -572,62 +585,179 @@ check_app_config_empty() {
   fi
 }
 
-create_and_update_studyu_env() {
-  if [ ! -f "$studyu_env_path" ]; then
-    create_specific_env_file "$studyu_env_path"
-    echo -e "${green}Created a default studyu/.env at $studyu_env_path${reset}"
+
+configure_proxy_env() {
+  local force_reconfiguration="$1"
+  if [ -f "$proxy_env_path" ]; then
+    source_env "$proxy_env_path"
+    if [ "$force_reconfiguration" != true ]; then
+      return 0
+    fi
   fi
-  local anon_modified=false
-  echo -e "${purple}StudyU needs an ANON_KEY to connect to Supabase. How do you want to insert the key?${reset}"
-  PS3='Select an option: '
-  options=("Automatic import from supabase/.env (recommended)" "Manually provide the ANON_KEY" "Do not change the default key")
-  select opt in "${options[@]}"
-  do
-    case $opt in
-      "Automatic import from supabase/.env (recommended)")
-        if [ -z "$anon_key" ]; then
-          source_env "$supabase_env_path"
-          anon_key="$ANON_KEY"
-        fi
-        if [ -z "$anon_key" ]; then
-          echo -e "${red}Error: Could not find ANON_KEY in $supabase_env_path${reset}"
-          echo -e "It seems like you have not started Supabase locally. Please enter the ANON_KEY manually or stick with the default key."
-        else
-          anon_modified=true
-          break
-        fi
-        ;;
-      "Manually provide the ANON_KEY")
-        anon_key=$(prompt_with_validation "Enter ANON_KEY" "$anon_key")
-        anon_modified=true
-        break
-        ;;
-      "Do not change the default key")
-        break
-        ;;
-      *) echo "Invalid option \"$REPLY\". Please enter the number of your option.";;
-    esac
+
+  # If the proxy component is running, ask the user if they want to down it
+  if component_is_running 'studyu-proxy'; then
+    if prompt_yes_no "The proxy component is running. Do you want to stop and remove it?"; then
+      down 'studyu-proxy'
+    else
+      echo -e "${red}Error: StudyU components are running.${reset}"
+      exit 1
+    fi
+  fi
+
+  create_specific_env_file "$proxy_env_path"
+  while true; do
+    echo -e "${purple}The StudyU components need a reverse proxy to be accessible. Which hostnames and ports do you want to use?${reset}"
+    echo "Hostnames only include the domain name, e.g. 'example.com' without 'https://'"
+    echo "Changing the default settings is only necessary if you want to use a custom hostname or port."
+    echo "If you do not plan to deploy one of the components, just leave the default settings."
+    STUDYU_APP_HOST=$(prompt_with_validation "Enter STUDYU_APP_HOST (hostname of the StudyU App)" "$STUDYU_APP_HOST")
+    STUDYU_APP_PORT=$(prompt_with_validation "Enter STUDYU_APP_PORT (port of the StudyU App)" "$STUDYU_APP_PORT" "$number_pattern")
+    STUDYU_DESIGNER_HOST=$(prompt_with_validation "Enter STUDYU_DESIGNER_HOST (hostname of the StudyU Designer)" "$STUDYU_DESIGNER_HOST")
+    STUDYU_DESIGNER_PORT=$(prompt_with_validation "Enter STUDYU_DESIGNER_PORT (port of the StudyU Designer)" "$STUDYU_DESIGNER_PORT" "$number_pattern")
+    STUDYU_SUPABASE_HOST=$(prompt_with_validation "Enter STUDYU_SUPABASE_HOST (hostname of the Supabase frontend)" "$STUDYU_SUPABASE_HOST")
+    STUDYU_SUPABASE_PORT=$(prompt_with_validation "Enter STUDYU_SUPABASE_PORT (port of the Supabase frontend)" "$STUDYU_SUPABASE_PORT" "$number_pattern")
+    echo -e "The StudyU deployment settings will be set as following:"
+    echo -e "  ${bold}STUDYU_APP_HOST=$STUDYU_APP_HOST${reset}"
+    echo -e "  ${bold}STUDYU_APP_PORT=$STUDYU_APP_PORT${reset}"
+    echo -e "  ${bold}STUDYU_DESIGNER_HOST=$STUDYU_DESIGNER_HOST${reset}"
+    echo -e "  ${bold}STUDYU_DESIGNER_PORT=$STUDYU_DESIGNER_PORT${reset}"
+    echo -e "  ${bold}STUDYU_SUPABASE_HOST=$STUDYU_SUPABASE_HOST${reset}"
+    echo -e "  ${bold}STUDYU_SUPABASE_PORT=$STUDYU_SUPABASE_PORT${reset}"
+    if prompt_yes_no "Do you want to apply these changes?"; then
+      update_env_variable "$proxy_env_path" "STUDYU_APP_HOST" "$STUDYU_APP_HOST"
+      update_env_variable "$proxy_env_path" "STUDYU_APP_PORT" "$STUDYU_APP_PORT"
+      update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_HOST" "$STUDYU_DESIGNER_HOST"
+      update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_PORT" "$STUDYU_DESIGNER_PORT"
+      update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_HOST" "$STUDYU_SUPABASE_HOST"
+      update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_PORT" "$STUDYU_SUPABASE_PORT"
+      echo -e "${green}Proxy settings have been stored at $proxy_env_path${reset}"
+      break
+    fi
   done
-  if [ "$anon_modified" = true ]; then
-    update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$anon_key"
-    echo -e "${green}Supabase ANON_KEY has been stored in $studyu_env_path${reset}"
-  fi
 }
 
-validate_studyu_env() {
-  if [ -f "$studyu_env_path" ] && [ -f "$supabase_env_path" ]; then
+
+configure_studyu_env() {
+  local force_reconfiguration="$1"
+  # this function depends on values from the proxy env
+  configure_proxy_env
+  if [ -f "$studyu_env_path" ]; then
     source_env "$studyu_env_path"
-    source_env "$supabase_env_path"
-    if [ "$STUDYU_SUPABASE_PUBLIC_ANON_KEY" != "$ANON_KEY" ]; then
-      echo -e "${yellow}STUDYU_SUPABASE_PUBLIC_ANON_KEY does not equal ANON_KEY in $supabase_env_path${reset}"
-      create_and_update_studyu_env
-      #echo -e "STUDYU_SUPABASE_PUBLIC_ANON_KEY will be updated to ANON_KEY"
-      #update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$ANON_KEY"
+    if [ "$force_reconfiguration" != true ]; then
+      return 0
     fi
-  else
-    create_and_update_studyu_env
   fi
+
+  # If the StudyU components are running, ask the user if they want to down them
+  if component_is_running "studyu-app" || component_is_running "studyu-designer"; then
+    if prompt_yes_no "StudyU components are running. Do you want to stop and remove them?"; then
+      local studyu_components=("studyu-app" "studyu-designer")
+      down "${studyu_components[@]}"
+    else
+      echo -e "${red}Error: StudyU components are running.${reset}"
+      exit 1
+    fi
+  fi
+
+  while true; do
+    echo -e "${purple}StudyU needs to connect to a Supabase instance for authentication and storage. Which Supabase instance do you want to use?${reset}"
+    PS3='Select an option: '
+    options=("Self-hosted Supabase (using this CLI)" "Default StudyU Supabase" "Use an external StudyU Supabase instance" "Exit")
+    select opt in "${options[@]}"
+    do
+      case $opt in
+        "${options[0]}")
+          if [ -f "$supabase_env_path" ]; then
+            source_env "$supabase_env_path"
+            anon_key="$ANON_KEY"
+          fi
+          if [ -z "$anon_key" ]; then
+           echo -e "${yellow}You need to configure the 'supabase' component first. Run '$0 config' and add 'supabase' to the list of default components. Afterwards run '$0 start'.${reset}"
+           continue
+          fi
+          local supabase_protocol
+          echo -e "${purple}Which protocol should be used to access ${reset}${bold}Supabase${reset}${purple}? Please note that using http is highly insecure in a production environment. If you do not deploy your own SSL reverse proxy, just select http as a default.${reset}"
+          PS3='Select a protocol for Supabase: '
+          options=("http" "https")
+          select opt in "${options[@]}"
+          do
+            case $opt in
+              "${options[0]}")
+                supabase_protocol='http'
+                break
+                ;;
+              "${options[1]}")
+                supabase_protocol='https'
+                break
+                ;;
+              *) echo "Invalid option \"$REPLY\". Please enter the number of your option.";;
+            esac
+          done
+          studyu_supabase_url="$supabase_protocol://$STUDYU_SUPABASE_HOST:$STUDYU_SUPABASE_PORT"
+          break
+          ;;
+        "${options[1]}")
+          default_default_env_path="$SCRIPT_DIR/flutter_common/lib/envs/.env"
+          source_env "$default_default_env_path"
+          # shellcheck disable=SC2153
+          studyu_supabase_url="$STUDYU_SUPABASE_URL"
+          anon_key="$STUDYU_SUPABASE_PUBLIC_ANON_KEY"
+          break
+          ;;
+        "${options[2]}")
+          studyu_supabase_url=$(prompt_with_validation "Enter STUDYU_SUPABASE_URL" "$studyu_supabase_url" "$url_pattern")
+          anon_key=$(prompt_with_validation "Enter ANON_KEY" "$anon_key")
+          break
+          ;;
+        "${options[3]}")
+          exit 0
+          ;;
+        *) echo "Invalid option \"$REPLY\". Please enter the number of your option.";;
+      esac
+    done
+
+    local studyu_protocol
+    echo -e "${purple}Which protocol should be used to access ${reset}${bold}StudyU${reset}${purple}? Please note that using http is highly insecure in a production environment. If you do not deploy your own SSL reverse proxy, just select http as a default.${reset}"
+    PS3='Select a protocol for StudyU: '
+    options=("http" "https")
+    select opt in "${options[@]}"
+    do
+      case $opt in
+        "${options[0]}")
+          studyu_protocol='http'
+          break
+          ;;
+        "${options[1]}")
+          studyu_protocol='https'
+          break
+          ;;
+        *) echo "Invalid option \"$REPLY\". Please enter the number of your option.";;
+      esac
+    done
+
+    studyu_app_url="$studyu_protocol://$STUDYU_APP_HOST:$STUDYU_APP_PORT"
+    studyu_designer_url="$studyu_protocol://$STUDYU_DESIGNER_HOST:$STUDYU_DESIGNER_PORT"
+
+    echo -e "The StudyU settings will be set as following:"
+    echo -e "  ${bold}STUDYU_SUPABASE_URL${reset}=$studyu_supabase_url"
+    echo -e "  ${bold}STUDYU_SUPABASE_PUBLIC_ANON_KEY${reset}=$anon_key"
+    echo -e "  ${bold}STUDYU_APP_URL${reset}=$studyu_app_url"
+    echo -e "  ${bold}STUDYU_DESIGNER_URL${reset}=$studyu_designer_url"
+    if prompt_yes_no "Do you want to apply these changes?"; then
+      create_specific_env_file "$studyu_env_path"
+      update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_URL" "$studyu_supabase_url"
+      update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$anon_key"
+      update_env_variable "$studyu_env_path" "STUDYU_APP_URL" "$studyu_app_url"
+      update_env_variable "$studyu_env_path" "STUDYU_DESIGNER_URL" "$studyu_designer_url"
+      echo -e "${green}StudyU settings have been stored at $studyu_env_path${reset}"
+      source_env "$studyu_env_path"
+      remove_studyu_docker_images
+      break;
+    fi
+  done
 }
+
 
 # Function to set configuration options
 configure() {
@@ -730,7 +860,6 @@ run_docker_compose() {
     # echo -e "Run with --verbose for more information."
     exit "$exit_status"
   fi
-
 }
 
 clean_flag=false
@@ -779,108 +908,36 @@ manage_components() {
   for component in ${components[*]}; do
     compose_file="${compose_files[$component]}"
 
-    echo -e "${yellow}Action: $action${reset}"
-    echo -e "${yellow}Component: $component${reset}"
+    echo -e "${blue}Action: $action${reset}"
+    echo -e "${blue}Component: $component${reset}"
 
     case "$action" in
       "up"* )
         case "$component" in
           "supabase"*)
             if [ ! -f "$supabase_env_path" ]; then
-              create_specific_env_file "$supabase_env_path"
-              echo -e "${green}Created a default supabase env at $supabase_env_path${reset}"
-              echo -e "Supabase needs a number of secrets to ensure a secure usage. Read more about it here: https://supabase.com/docs/guides/functions/secrets"
+              echo -e "${green}Created a default Supabase env at $supabase_env_path${reset}"
+              echo -e "Supabase needs some secrets to ensure a secure usage. Read more about it here: https://supabase.com/docs/guides/functions/secrets"
               if prompt_yes_no "Do you want to create these secrets automatically?"; then
+                create_specific_env_file "$supabase_env_path"
                 create_and_set_supabase_secrets
                 echo -e "${green}Generated secrets have been stored in $supabase_env_path${reset}"
                 supabase_installation_success=true
               else
-                echo -e "Please open the supabase env file and modify the default secrets by yourself."
+                create_specific_env_file "$supabase_env_path"
+                echo -e "Please open the Supabase env file and modify the default secrets by yourself."
                 echo -e "The file is located at $supabase_env_path"
                 echo -e "Have a look at the Supabase documentation if you need any help: https://supabase.com/docs/guides/self-hosting/docker#securing-your-services"
+                echo -e "Afterwards start the components again."
                 exit 0
               fi
             fi
             ;;
           "studyu-proxy")
-            if [ ! -f "$proxy_env_path" ]; then
-              create_specific_env_file "$proxy_env_path"
-              source_env "$proxy_env_path"
-              echo -e "${green}Default deployment settings stored at $proxy_env_path${reset}"
-              echo -e "The selected components will bind to their default port on localhost. Changing the default settings is only necessary if you want to use a custom hostname or port."
-              if prompt_yes_no "Do you want to change the default deployment settings now?"; then
-                echo "Notice: Hostnames only include the domain name, e.g. 'example.com' without 'https://'"
-                while true; do
-                  STUDYU_APP_HOST=$(prompt_with_validation "Enter STUDYU_APP_HOST (hostname of the StudyU App)" "$STUDYU_APP_HOST")
-                  STUDYU_APP_PORT=$(prompt_with_validation "Enter STUDYU_APP_PORT (port of the StudyU App)" "$STUDYU_APP_PORT" "$number_pattern")
-                  STUDYU_DESIGNER_HOST=$(prompt_with_validation "Enter STUDYU_DESIGNER_HOST (hostname of the StudyU Designer)" "$STUDYU_DESIGNER_HOST")
-                  STUDYU_DESIGNER_PORT=$(prompt_with_validation "Enter STUDYU_DESIGNER_PORT (port of the StudyU Designer)" "$STUDYU_DESIGNER_PORT" "$number_pattern")
-                  STUDYU_SUPABASE_HOST=$(prompt_with_validation "Enter STUDYU_SUPABASE_HOST (hostname of the Supabase frontend)" "$STUDYU_SUPABASE_HOST")
-                  STUDYU_SUPABASE_PORT=$(prompt_with_validation "Enter STUDYU_SUPABASE_PORT (port of the Supabase frontend)" "$STUDYU_SUPABASE_PORT" "$number_pattern")
-                  echo -e "The StudyU deployment settings will be changed as follows:"
-                  echo -e "  STUDYU_APP_HOST=$STUDYU_APP_HOST"
-                  echo -e "  STUDYU_APP_PORT=$STUDYU_APP_PORT"
-                  echo -e "  STUDYU_DESIGNER_HOST=$STUDYU_DESIGNER_HOST"
-                  echo -e "  STUDYU_DESIGNER_PORT=$STUDYU_DESIGNER_PORT"
-                  echo -e "  STUDYU_SUPABASE_HOST=$STUDYU_SUPABASE_HOST"
-                  echo -e "  STUDYU_SUPABASE_PORT=$STUDYU_SUPABASE_PORT"
-                  if prompt_yes_no "Do you want to apply these changes?"; then
-                    update_env_variable "$proxy_env_path" "STUDYU_APP_HOST" "$STUDYU_APP_HOST"
-                    update_env_variable "$proxy_env_path" "STUDYU_APP_PORT" "$STUDYU_APP_PORT"
-                    update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_HOST" "$STUDYU_DESIGNER_HOST"
-                    update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_PORT" "$STUDYU_DESIGNER_PORT"
-                    update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_HOST" "$STUDYU_SUPABASE_HOST"
-                    update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_PORT" "$STUDYU_SUPABASE_PORT"
-                    echo -e "${green}Deployment settings have been stored in $proxy_env_path${reset}"
-                    break
-                  fi
-                done
-
-                if prompt_yes_no "Do you also want to modify the settings for the StudyU components? (choose y if you plan to deploy a StudyU component)"; then
-                  while true; do
-                    create_and_update_studyu_env
-                    local protocol
-                    echo -e "${purple}Which protocol should be used to access StudyU and Supabase? Please note that using http is highly insecure in a production environment.${reset}"
-                    PS3='Select a protocol: '
-                    options=("https" "http")
-                    select opt in "${options[@]}"
-                    do
-                      case $opt in
-                        "https")
-                            protocol='https'
-                            break
-                            ;;
-                        "http")
-                            protocol='http'
-                            break
-                            ;;
-                        *) echo "Invalid option \"$REPLY\". Please enter the number of your option.";;
-                      esac
-                    done
-                    studyu_supabase_url="$protocol://$STUDYU_SUPABASE_HOST:$STUDYU_SUPABASE_PORT"
-                    studyu_app_url="$protocol://$STUDYU_APP_HOST:$STUDYU_APP_PORT"
-                    studyu_designer_url="$protocol://$STUDYU_DESIGNER_HOST:$STUDYU_DESIGNER_PORT"
-
-                    echo -e "The StudyU deployment settings will be changed as follows:"
-                    echo -e "  STUDYU_SUPABASE_URL=$studyu_supabase_url"
-                    echo -e "  STUDYU_APP_URL=$studyu_app_url"
-                    echo -e "  STUDYU_DESIGNER_URL=$studyu_designer_url"
-                    if prompt_yes_no "Do you want to apply these changes?"; then
-                      update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_URL" "$studyu_supabase_url"
-                      update_env_variable "$studyu_env_path" "STUDYU_APP_URL" "$studyu_app_url"
-                      update_env_variable "$studyu_env_path" "STUDYU_DESIGNER_URL" "$studyu_designer_url"
-                      echo -e "${green}StudyU settings have been stored in $studyu_env_path${reset}"
-                      break;
-                    fi
-                  done
-                fi
-              fi
-            else
-              source_env "$proxy_env_path"
-            fi
+            configure_proxy_env
           ;;
           "studyu-app" | "studyu-designer")
-            validate_studyu_env
+            configure_studyu_env
           ;;
         esac
         ;;
@@ -906,10 +963,9 @@ manage_components() {
       #  sleep 3
       #done
 
-      run_msg="$component is now running"
+      run_msg="🎉 $component is running"
       case "$component" in
         "studyu-proxy")
-          # echo -e "${green}$run_msg${reset}"
           ;;
         "supabase-db")
           # check if container is healthy
@@ -917,10 +973,9 @@ manage_components() {
             echo "Waiting for $component to be healthy..."
             sleep 3
           done
-          # echo -e "${green}$run_msg${reset}"
+
           # Check if the result is zero (table is empty)
           if [ "$(check_app_config_empty)" -eq 0 ]; then
-
             if [ "$init_database_flag" = true ]; then
               if [ -n "$init_custom_database_path" ]; then
                 app_config_sql_path="$init_custom_database_path"
@@ -959,83 +1014,82 @@ manage_components() {
               local -A contact
 
               while true; do
-              # Prompt for values with basic validation
-              id='prod'
+                # Prompt for values with basic validation
+                id='prod'
 
-              prompt_multilingual "Enter a URL to the privacy policy for the StudyU App" app_privacy
-              prompt_multilingual "Enter a URL to the terms of use for the StudyU App" app_terms
-              prompt_multilingual "Enter a URL to the privacy policy for the StudyU Designer" designer_privacy
-              prompt_multilingual "Enter a URL to the terms of use for the StudyU Designer" designer_terms
-              prompt_multilingual "Enter a URL to the legal notice for StudyU" imprint
-              prompt_contact contact
+                prompt_multilingual "Enter a URL to the privacy policy for the StudyU App" app_privacy
+                prompt_multilingual "Enter a URL to the terms of use for the StudyU App" app_terms
+                prompt_multilingual "Enter a URL to the privacy policy for the StudyU Designer" designer_privacy
+                prompt_multilingual "Enter a URL to the terms of use for the StudyU Designer" designer_terms
+                prompt_multilingual "Enter a URL to the legal notice for StudyU" imprint
+                prompt_contact contact
 
-              analytics='{ "dsn": "example", "enabled": false, "samplingRate": 0 }'
+                analytics='{ "dsn": "example", "enabled": false, "samplingRate": 0 }'
 
-              app_privacy_json=$(generate_multilangual_json app_privacy)
-              app_terms_json=$(generate_multilangual_json app_terms)
-              designer_privacy_json=$(generate_multilangual_json designer_privacy)
-              designer_terms_json=$(generate_multilangual_json designer_terms)
-              imprint_json=$(generate_multilangual_json imprint)
-              contact_json=$(generate_contact_json contact)
+                app_privacy_json=$(generate_multilangual_json app_privacy)
+                app_terms_json=$(generate_multilangual_json app_terms)
+                designer_privacy_json=$(generate_multilangual_json designer_privacy)
+                designer_terms_json=$(generate_multilangual_json designer_terms)
+                imprint_json=$(generate_multilangual_json imprint)
+                contact_json=$(generate_contact_json contact)
 
-              # Construct SQL query
-              sql_query="
-              INSERT INTO public.app_config (id, app_privacy, app_terms, designer_privacy, designer_terms, imprint, contact, analytics)
-              VALUES (
-                '$id',
-                '$app_privacy_json',
-                '$app_terms_json',
-                '$designer_privacy_json',
-                '$designer_terms_json',
-                '$imprint_json',
-                '$contact_json',
-                '$analytics'
-              );
-              "
+                # Construct SQL query
+                sql_query="
+                INSERT INTO public.app_config (id, app_privacy, app_terms, designer_privacy, designer_terms, imprint, contact, analytics)
+                VALUES (
+                  '$id',
+                  '$app_privacy_json',
+                  '$app_terms_json',
+                  '$designer_privacy_json',
+                  '$designer_terms_json',
+                  '$imprint_json',
+                  '$contact_json',
+                  '$analytics'
+                );
+                "
 
-              # Display the generated SQL query
-              # echo "Generated SQL Query:"
-              # echo "$sql_query"
-
-              # Prompt user to confirm the generated SQL query
-              # todo create multiselect out of these three options instead of two prompts
-              if prompt_yes_no "Are you happy with your inputs to insert them into the database?"; then
-                if result=$(execute_sql_query "$sql_query"); then
-                  echo -e "${green}Successfully inserted app_config.${reset}"
-                  break
-                else
-                  echo -e "${red}Error: Failed to insert app_config.${reset}"
-                  echo "$result"
-                  echo -e "Here is the generated SQL query for you to insert it manually:"
-                  echo "$sql_query"
-                  break
-                fi
-                else
-                  if ! prompt_yes_no "Do you want to change some of the data you entered? (press n to skip and discard the data)"; then
-                    echo "Aborting..."
+                echo -e "The following SQL query will be executed to insert the app_config:"
+                echo "$sql_query"
+                # Prompt user to confirm the generated SQL query
+                if prompt_yes_no "Are you happy with your inputs to insert them into the database?"; then
+                  if result=$(execute_sql_query "$sql_query"); then
+                    # Success
+                    break
+                  else
+                    echo -e "${red}Error: Failed to insert app_config.${reset}"
+                    echo "$result"
+                    echo -e "Here is the generated SQL query for you to insert it manually by running '$0 env-edit supabase --init-database <path>'"
+                    echo "$sql_query"
                     break
                   fi
                 fi
               done
             fi
           fi
+          if [ -f "$studyu_env_path" ] && [ -f "$supabase_env_path" ]; then
+            source_env "$studyu_env_path"
+            source_env "$supabase_env_path"
+            if [ "$STUDYU_SUPABASE_PUBLIC_ANON_KEY" != "$ANON_KEY" ]; then
+              echo -e "${yellow}StudyU is not set up correctly to connect with the local Supabase instance. You can fix this by running '$0 env-edit studyu --configure'. You might also want to reconfigure the proxy settings by running '$0 env-edit proxy --configure' ${reset}"
+            fi
+          fi
           ;;
         "supabase")
           source_env "$proxy_env_path"
           supabase_url="$STUDYU_SUPABASE_HOST:$STUDYU_SUPABASE_PORT"
-          supabase_msg="$run_msg and can be accessed at $supabase_url"
+          supabase_msg="$run_msg at $supabase_url"
           echo -e "${green}$supabase_msg${reset}"
           ;;
         "studyu-app")
           source_env "$proxy_env_path"
           studyu_app_url="$STUDYU_APP_HOST:$STUDYU_APP_PORT"
-          studyu_app_msg="$run_msg and can be accessed at $studyu_app_url"
+          studyu_app_msg="$run_msg at $studyu_app_url"
           echo -e "${green}$studyu_app_msg${reset}"
           ;;
         "studyu-designer")
           source_env "$proxy_env_path"
           studyu_designer_url="$STUDYU_DESIGNER_HOST:$STUDYU_DESIGNER_PORT"
-          studyu_designer_msg="$run_msg and can be accessed at $studyu_designer_url"
+          studyu_designer_msg="$run_msg at $studyu_designer_url"
           echo -e "${green}$studyu_designer_msg${reset}"
           ;;
         *)
@@ -1178,8 +1232,9 @@ delete() {
     backup
   fi
 
-  if prompt_yes_no "Do you want to remove all containers and images used by StudyU services? This does not affect the StudyU volumes."; then
-    down_cmd+="--rmi all --remove-orphans"
+  if prompt_yes_no "Do you want to remove all containers and images used by all StudyU components? This does not affect the StudyU volumes."; then
+    remove_studyu_docker_images
+    down_cmd+="--remove-orphans"
   fi
 
   if prompt_yes_no "Do you want to delete the StudyU Supabase volumes and the storage data?"; then
@@ -1196,6 +1251,27 @@ delete() {
   fi
 }
 
+# Permanently remove all configuration files
+reset() {
+  local files_to_remove=("$CONFIG_FILE" "$STUDYU_PATH/docker/supabase/.env" "$STUDYU_PATH/docker/proxy/.env" "$STUDYU_PATH/flutter_common/lib/envs/.env.local")
+  echo -e "${yellow}WARNING: This will permanently remove the following configuration files:${reset}"
+  for file in "${files_to_remove[@]}"; do
+    echo -e "  $file"
+  done
+  if prompt_yes_no "Are you REALLY sure you want to remove all those files?"; then
+    read -rp "$(echo -e "${purple}Enter 'remove' to confirm your choice: ${reset}")" input
+    if [ "$input" == "remove" ]; then
+      for file in "${files_to_remove[@]}"; do
+        if [ -f "$file" ]; then
+          rm "$file"
+        fi
+      done
+      echo -e "${green}All configuration files have been deleted.${reset}"
+      return 0;
+    fi
+  fi
+  echo -e "No action taken."
+}
 
 # Function to backup StudyU components
 backup() {
@@ -1241,9 +1317,10 @@ print_general_help() {
   echo "  down <components>                 Stop and remove components"
   echo "  status                            Check if components are running healthy"
   echo "  env-edit                          Edit environment variables"
-  echo "  update                            Perform StudyU update from specified branch"
+  echo "  update                            Fetch and merge the latest StudyU changes from the StudyU repository"
   echo "  backup                            Dump StudyU data"
   echo "  delete                            Delete components and data (use with caution!)"
+  echo "  reset                             Permanently removes all configuration files (use with EXTREME caution!)"
   echo "  help                              Display this help message"
   echo -e "Use -h for each command or visit the StudyU website for advanced usage options: https://studyu.health"
   echo -e "$selectable_components"
@@ -1265,8 +1342,8 @@ print_start_help() {
   echo "Usage: $0 start <components> [options]"
   echo "Options:"
   echo "  -c, --clean                      Clean up orphaned containers"
-  echo "  -i, --init-default-database      Initialize the default database"
-  echo "  -d, --init-database <path>       Initialize the database using a custom SQL file"
+  echo "  -i, --init-default-database      Initialize the StudyU database with the app_config.sql.example file"
+  echo "  -d, --init-database <path>       Initialize the StudyU database with a custom SQL file"
 }
 
 # Function to display help for 'restart' command
@@ -1281,13 +1358,14 @@ print_env_edit_help() {
   echo "Usage: $0 env-edit <subcommand> [options]"
   echo "Subcommands:"
   echo "  proxy                                        Edit proxy environment variables"
-  echo "    -i, --init                                 Initialize proxy environment file"
-  echo "    -a, --set-app-host <value>                 Set the application host"
-  echo "    -p, --set-app-port <value>                 Set the application port"
-  echo "    -d, --set-designer-host <value>            Set the designer host"
-  echo "    -q, --set-designer-port <value>            Set the designer port"
-  echo "    -s, --set-supabase-host <value>            Set the supabase host"
-  echo "    -u, --set-supabase-port <value>            Set the supabase port"
+  echo "    -i, --init                                 Initialize the proxy environment file"
+  echo "    -c, --configure                            Configure proxy environment variables"
+  echo "    -a, --set-app-host <value>                 Set the StudyU App host"
+  echo "    -p, --set-app-port <value>                 Set the Studyu App port"
+  echo "    -d, --set-designer-host <value>            Set the StudyU Designer host"
+  echo "    -q, --set-designer-port <value>            Set the StudyU Designer port"
+  echo "    -s, --set-supabase-host <value>            Set the Supabase host"
+  echo "    -u, --set-supabase-port <value>            Set the Supabase port"
   # Add more proxy subcommands as needed...
 
   echo ""
@@ -1301,14 +1379,15 @@ print_env_edit_help() {
   echo "    -s, --set-service-role-key <value>         Set the Supabase SERVICE_ROLE_KEY"
   echo "    -u, --set-dashboard-username <value>       Set the Supabase dashboard username"
   echo "    -w, --set-dashboard-password <value>       Set the Supabase dashboard password"
-  echo "    -n, --get-dashboard-username               Set the Supabase dashboard username"
-  echo "    -o, --set-dashboard-password               Set the Supabase dashboard password"
+  echo "    -n, --get-dashboard-username               Get the Supabase dashboard username"
+  echo "    -o, --get-dashboard-password               Get the Supabase dashboard password"
   # Add more supabase subcommands as needed...
 
   echo ""
 
   echo "  studyu                                       Edit StudyU environment variables"
   echo "    -i, --init                                 Initialize StudyU environment file"
+  echo "    -c, --configure                            Configure StudyU environment variables"
   echo "    -s, --import-supabase-key                  Import Supabase public key to StudyU"
   echo "    -b, --set-supabase-url <value>             Set the Supabase URL"
   echo "    -k, --set-supabase-public-anon-key <value> Set the Supabase key"
@@ -1491,6 +1570,11 @@ case "$1" in
               create_specific_env_file "$proxy_env_path"
               shift
               ;;
+            -c | --configure)
+              configure_proxy_env true
+              echo -e "If you made any changes to the StudyU deployment settings, be sure to also update the StudyU settings by running '$0 env-edit studyu --configure'"
+              shift
+              ;;
             -a | --set-app-host)
               echo -e "${yellow}Setting STUDYU_APP_HOST to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_APP_HOST" "$2"
@@ -1613,6 +1697,11 @@ case "$1" in
               create_specific_env_file "$studyu_env_path"
               shift
               ;;
+            -c | --configure)
+              configure_studyu_env true
+              echo -e "If you made any changes related to local components, be sure to also update the proxy settings by running '$0 env-edit proxy --configure'"
+              shift
+              ;;
             -s | --import-supabase-key)
               if [ ! -f "$studyu_env_path" ]; then
                 echo -e "${red}Error: Create a default StudyU env first with '$0 env-edit studyu --init'${reset}"
@@ -1681,6 +1770,10 @@ case "$1" in
   delete)
     read_config
     delete
+    ;;
+  reset)
+    read_config
+    reset
     ;;
   help | --help | -h)
     print_general_help
