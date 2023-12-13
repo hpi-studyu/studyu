@@ -85,13 +85,13 @@ class _SettingsState extends State<Settings> {
             width: 5,
           ),
           Switch(
-            value: _analyticsValue!,
-            onChanged: (value) {
-              setState(() {
-                _analyticsValue = value;
-              });
-              AppAnalytics.setEnabled(value);
-            }),
+              value: _analyticsValue!,
+              onChanged: (value) {
+                setState(() {
+                  _analyticsValue = value;
+                });
+                AppAnalytics.setEnabled(value);
+              }),
         ])
       ],
     );
