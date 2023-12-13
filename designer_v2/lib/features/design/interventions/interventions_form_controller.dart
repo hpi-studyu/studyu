@@ -69,7 +69,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
       };
 
   get interventionsRequired => FormControlValidation(control: interventionsArray, validators: [
-        Validators.minLength(2)
+        Validators.minLength(study.isTemplate ? 0 : 2)
       ], validationMessages: {
         ValidationMessage.minLength: (error) => tr.form_array_interventions_minlength((error as Map)['requiredLength']),
       });
