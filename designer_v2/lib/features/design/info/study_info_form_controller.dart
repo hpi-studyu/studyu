@@ -34,6 +34,8 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   final FormControl<String> additionalInfoControl = FormControl();
   final FormControl<bool> lockPublisherInfoControl = FormControl();
 
+  bool get publisherInfoLocked => study.parentTemplate?.templateConfiguration?.lockPublisherInformation == true;
+
   @override
   late final FormGroup form = FormGroup({
     'title': titleControl,

@@ -23,6 +23,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
+        final parentTemplate = study.parentTemplate;
         final formViewModel = ref.read(studyInfoFormViewModelProvider(studyCreationArgs));
         return ReactiveForm(
           formGroup: formViewModel.form,
@@ -32,6 +33,28 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
             children: <Widget>[
               TextParagraph(text: tr.form_study_design_info_description),
               const SizedBox(height: 24.0),
+              parentTemplate != null
+                  ? FormTableLayout(rows: [
+                      FormTableRow(
+                          label: tr.form_field_template_title,
+                          input: TextField(
+                            controller: TextEditingController(text: parentTemplate.title),
+                            enabled: false,
+                            readOnly: true,
+                          )),
+                      FormTableRow(
+                          label: tr.form_field_template_description,
+                          input: TextField(
+                            controller: TextEditingController(text: parentTemplate.description),
+                            enabled: false,
+                            readOnly: true,
+                          )),
+                    ], columnWidths: const {
+                      0: FixedColumnWidth(185.0),
+                      1: FlexColumnWidth(),
+                    })
+                  : const SizedBox.shrink(),
+              parentTemplate != null ? const SizedBox(height: 24.0) : const SizedBox.shrink(),
               FormTableLayout(rows: [
                 FormTableRow(
                   control: formViewModel.titleControl,
@@ -108,6 +131,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
               FormSectionHeader(
                 title: tr.form_section_publisher,
                 showLock: !study.isStandalone,
+                readOnlyLock: !study.isTemplate,
                 lockControl: formViewModel.lockPublisherInfoControl,
                 lockHelpText: tr.form_section_lock_help,
               ),
@@ -120,6 +144,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_organization,
                   input: ReactiveTextField(
                     formControl: formViewModel.organizationControl,
+                    readOnly: formViewModel.publisherInfoLocked,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
@@ -131,6 +156,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_review_board,
                   input: ReactiveTextField(
                     formControl: formViewModel.reviewBoardControl,
+                    readOnly: formViewModel.publisherInfoLocked,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
@@ -142,6 +168,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_review_board_number,
                   input: ReactiveTextField(
                     formControl: formViewModel.reviewBoardNumberControl,
+                    readOnly: formViewModel.publisherInfoLocked,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
@@ -153,6 +180,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_researchers,
                   input: ReactiveTextField(
                     formControl: formViewModel.researchersControl,
+                    readOnly: formViewModel.publisherInfoLocked,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
@@ -164,6 +192,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_website,
                   input: ReactiveTextField(
                     formControl: formViewModel.websiteControl,
+                    readOnly: formViewModel.publisherInfoLocked,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(300),
                     ],
@@ -175,6 +204,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_contact_email,
                   input: ReactiveTextField(
                     formControl: formViewModel.emailControl,
+                    readOnly: formViewModel.publisherInfoLocked,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(100),
                     ],
@@ -186,6 +216,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_contact_phone,
                   input: ReactiveTextField(
                     formControl: formViewModel.phoneControl,
+                    readOnly: formViewModel.publisherInfoLocked,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(50),
                     ],
@@ -197,6 +228,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: tr.form_field_contact_additional_info,
                   input: ReactiveTextField(
                     formControl: formViewModel.additionalInfoControl,
+                    readOnly: formViewModel.publisherInfoLocked,
                     keyboardType: TextInputType.multiline,
                     minLines: 5,
                     maxLines: 5,
