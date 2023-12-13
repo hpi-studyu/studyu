@@ -496,6 +496,7 @@
   "code_list_section_title": "Access Codes",
   "code_list_empty_title": "You haven't invited anyone yet",
   "code_list_empty_description": "Add participants to your study via access codes.",
+  "code_list_template_title": "Recruiting participants is not available for templates.",
   "code_list_header_code": "Code",
   "action_button_code_new": "New code",
   "@__________________STUDYPAGE_ANALYZE__________________": {},

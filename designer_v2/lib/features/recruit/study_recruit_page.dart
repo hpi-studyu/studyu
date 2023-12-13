@@ -22,6 +22,16 @@ class StudyRecruitScreen extends StudyPageWidget {
     final state = ref.watch(studyRecruitControllerProvider(studyCreationArgs));
     final controller = ref.watch(studyRecruitControllerProvider(studyCreationArgs).notifier);
 
+    if (state.studyWithMetadata?.model.isTemplate == true) {
+      return Padding(
+          padding: const EdgeInsets.only(top: 24),
+          child: EmptyBody(
+            icon: Icons.link_off_rounded,
+            title: tr.code_list_template_title,
+            description: "",
+          ));
+    }
+
     return AsyncValueWidget<List<StudyInvite>?>(
         value: state.invites,
         data: (studyInvites) => Column(
@@ -53,8 +63,7 @@ class StudyRecruitScreen extends StudyPageWidget {
   Widget _inviteCodesSectionHeader(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        SelectableText(tr.code_list_section_title,
-            style: Theme.of(context).textTheme.headlineSmall),
+        SelectableText(tr.code_list_section_title, style: Theme.of(context).textTheme.headlineSmall),
         Container(width: 32.0),
         _newInviteCodeButton(context, ref),
         Container(width: 32.0),
