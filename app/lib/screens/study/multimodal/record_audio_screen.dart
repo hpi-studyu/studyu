@@ -14,10 +14,10 @@ class RecordAudioScreen extends StatefulWidget {
   const RecordAudioScreen({super.key, required this.userId, required this.studyId});
 
   @override
-  RecordAudioScreenState createState() => RecordAudioScreenState();
+  State<RecordAudioScreen> createState() => _RecordAudioScreenState();
 }
 
-class RecordAudioScreenState extends State<RecordAudioScreen> {
+class _RecordAudioScreenState extends State<RecordAudioScreen> {
   final AudioRecorder _audioRecorder;
   bool _isRecording = false;
   late Future<void> _initializeRecorderPermissionsFuture;
@@ -28,7 +28,7 @@ class RecordAudioScreenState extends State<RecordAudioScreen> {
     await Permission.microphone.request();
   }
 
-  RecordAudioScreenState() : _audioRecorder = AudioRecorder() {
+  _RecordAudioScreenState() : _audioRecorder = AudioRecorder() {
     _audioRecorder.onStateChanged().listen((event) async {
       if (event == RecordState.stop || event == RecordState.pause) {
         _storeFinalizer((String aPath) => Navigator.pop(context, aPath));

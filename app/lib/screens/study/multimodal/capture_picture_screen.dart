@@ -13,17 +13,17 @@ class CapturePictureScreen extends StatefulWidget {
   const CapturePictureScreen({super.key, required this.userId, required this.studyId});
 
   @override
-  CapturePictureScreenState createState() => CapturePictureScreenState();
+  State<CapturePictureScreen> createState() => _CapturePictureScreenState();
 }
 
-class CapturePictureScreenState extends State<CapturePictureScreen> {
+class _CapturePictureScreenState extends State<CapturePictureScreen> {
   late List<CameraDescription> _cameras;
   int _selectedCameraID = 0;
   late CameraController _cameraController;
   late Future<void> _identifyCamerasFuture;
   Future<void> _initializeControllerFuture;
 
-  CapturePictureScreenState() : _initializeControllerFuture = Completer<void>().future;
+  _CapturePictureScreenState() : _initializeControllerFuture = Completer<void>().future;
 
   Future<void> _identifyCameras() async {
     _cameras = (await availableCameras())
