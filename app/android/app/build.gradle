@@ -60,7 +60,6 @@ android {
             keyAlias keystoreProperties['keyAlias']
             keyPassword keystoreProperties['keyPassword']
             storeFile rootProject.file(keystoreProperties['storeFile'])
-            // storeFile file("key.jks")
             storePassword keystoreProperties['storePassword']
         }
     }
