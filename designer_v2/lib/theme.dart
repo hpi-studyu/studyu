@@ -419,7 +419,6 @@ class ThemeProvider extends InheritedWidget {
       tooltipTheme: tooltipTheme(colorScheme),
       disabledColor: colorScheme.onSurface.withOpacity(0.5),
       shadowColor: colorScheme.primaryContainer.withOpacity(0.4),
-      useMaterial3: true,
     );
   }
 
@@ -447,7 +446,6 @@ class ThemeProvider extends InheritedWidget {
       tooltipTheme: tooltipTheme(colorScheme),
       disabledColor: colorScheme.onSurface.withOpacity(0.5),
       shadowColor: colorScheme.primaryContainer.withOpacity(0.4),
-      useMaterial3: true,
     );
   }
 
