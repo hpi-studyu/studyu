@@ -76,6 +76,8 @@ class StudyController extends StudyBaseController<StudyControllerState> {
         studyActionIcons);
   }
 
+  StudyType get studyType => state.study.value?.type ?? StudyType.standalone;
+
   Future publishStudy({toRegistry = false}) {
     final study = state.study.value!;
     study.registryPublished = toRegistry;
