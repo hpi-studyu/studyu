@@ -91,7 +91,7 @@ Choose the following components:
 ### Use Case #2: Run StudyU only
 
 Choose this method if you made changes to the StudyU codebase that are not
-related to the database schema. In this case the self-hosted StudyU instances 
+related to the database schema. In this case the self-hosted StudyU instances
 will use the default StudyU Supabase instance.
 
 Choose the following components:
