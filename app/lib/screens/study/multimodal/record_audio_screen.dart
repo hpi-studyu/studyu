@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
@@ -71,7 +72,7 @@ class RecordAudioScreenState extends State<RecordAudioScreen> {
       });
     } catch (e) {
       if (kDebugMode) {
-        print('Recording stop error: $e');
+        print(AppLocalizations.of(context)!.error_recording + ": $e");
       }
     }
   }
@@ -100,7 +101,7 @@ class RecordAudioScreenState extends State<RecordAudioScreen> {
                       : Container(),
                   ElevatedButton(
                     onPressed: _toggleRecording,
-                    child: Text(_isRecording ? 'Stop Recording' : 'Start Recording'),
+                    child: Text(_isRecording ? AppLocalizations.of(context)!.stop_recording : AppLocalizations.of(context)!.start_recording),
                   ),
                 ],
               ),

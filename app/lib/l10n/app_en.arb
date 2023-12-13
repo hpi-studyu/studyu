@@ -98,6 +98,13 @@
 
   "could_not_save_results": "Could not save results",
 
+  "take_a_photo": "Take a photo",
+  "start_recording": "Start recording",
+  "stop_recording": "Stop recording",
+  "error_recording": "Error occurred during recording",
+  "data_captured": "Data captured",
+  "multimodal_not_supported": "Multimodal Trials are currently not supported to run in a web browser. Please use the StudyU App for Android or iOS.",
+
   "language": "Language",
   "en": "English",
   "de": "German",
@@ -151,7 +158,6 @@
   "report_outcome_inconclusive": "The results are inconclusive. There does not seem to be a statistically significant difference between the interventions.",
   "report_outcome_neither": "Both interventions seem to have a negative effect on the outcome for you.",
   "report_outcome_one": "The intervention {intervention} seems to improve the outcome for you.",
-
   "report_axis_phase": "Phase",
 
   "study_not_started": "Your study has not started yet. Please check back tomorrow!",

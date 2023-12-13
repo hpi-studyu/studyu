@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/screens/study/multimodal/capture_picture_screen.dart';
@@ -58,13 +59,12 @@ class _CaptureQuestionWidgetState extends State<CaptureQuestionWidget> {
       children: [
         captureAnswer == null
             ? TextButton.icon(
-                label: Text(widget.captureType == CaptureType.image ? "Take a picture" : "Start Recording"),
+                label: Text(widget.captureType == CaptureType.image ? AppLocalizations.of(context)!.take_a_photo : AppLocalizations.of(context)!.start_recording),
                 icon: Icon(widget.captureType == CaptureType.image ? MdiIcons.camera : Icons.mic),
                 onPressed: () {
                   if (kIsWeb) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text(
-                          "Multimodal Trials are currently not supported to run in a web browser. Please use the StudyU App for Android or iOS."),
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(AppLocalizations.of(context)!.multimodal_not_supported),
                     ));
                   } else {
                     captureData();
@@ -77,7 +77,7 @@ class _CaptureQuestionWidgetState extends State<CaptureQuestionWidget> {
                     MdiIcons.checkCircleOutline,
                   ),
                   const SizedBox(width: 10.0),
-                  const Text('Data captured'),
+                  Text(AppLocalizations.of(context)!.data_captured),
                 ],
               ),
       ],

@@ -99,6 +99,13 @@
 
   "could_not_save_results": "Ergebnisse konnten nicht gespeichert werden.",
 
+  "take_a_photo": "Mache ein Foto",
+  "start_recording": "Starte eine Aufnahme",
+  "stop_recording": "Stoppe die Aufnahme",
+  "error_recording": "Fehler bei der Aufnahme",
+  "data_captured": "Daten aufgenommen",
+  "multimodal_not_supported": "Multimodale Aufgaben werden in der Web-Version zur Zeit nicht unterstützt. Bitte verwenden Sie die App Version für iOS oder Android.",
+
   "language": "Sprache",
   "en": "Englisch",
   "de": "Deutsch",
