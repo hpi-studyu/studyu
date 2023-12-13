@@ -1148,7 +1148,7 @@ status() {
 start() {
   # Check if studyu_network exists, otherwise create it
   docker network inspect studyu_network >/dev/null 2>&1 || \
-      docker network create --driver bridge studyu_network
+      docker network create --driver bridge studyu_network >/dev/null 2>&1
   manage_components 'up -d' "${@}"
 }
 
