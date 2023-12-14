@@ -1224,13 +1224,14 @@ update() {
 # Delete docker container, images, and volumes
 delete() {
   local down_cmd=""
+  local delete_images=false
 
   if prompt_yes_no "Do you want to create a backup of the StudyU database?"; then
     backup
   fi
 
   if prompt_yes_no "Do you want to remove all containers and images used by all StudyU components? This does not affect the StudyU volumes."; then
-    remove_studyu_docker_images
+    delete_images=true
     down_cmd+="--remove-orphans"
   fi
 
@@ -1242,6 +1243,9 @@ delete() {
 
   if [ -n "$down_cmd" ]; then
     manage_components "down $down_cmd"
+    if [ "$delete_images" = true ]; then
+      remove_studyu_docker_images
+    fi
     echo -e "${green}Selected data has been deleted.${reset}"
   else
     echo -e "No action taken."
