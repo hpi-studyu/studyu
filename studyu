@@ -812,7 +812,7 @@ configure() {
 
   # STUDYU_BASE_BRANCH
   # Set base branch to STUDYU_BASE_BRANCH, if empty to current branch, if empty to main
-  current_branch=$(git rev-parse --abbrev-ref HEAD)
+  current_branch=$(cd "$studyu_path" && git rev-parse --abbrev-ref HEAD)
   base_branch=${STUDYU_BASE_BRANCH:-$current_branch}
   base_branch=${base_branch:-'main'}
   read -i "$base_branch" -e -rp "$(echo -e "${purple}Enter the StudyU repository base branch for updating${reset} (default: main): ")" base_branch
@@ -1197,7 +1197,7 @@ update() {
   fi
 
   # Check if we are in $STUDYU_BASE_BRANCH; if not, ask the user if the branch should be switched; else, stop.
-  CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  CURRENT_BRANCH=$(cd "$STUDYU_PATH" && git rev-parse --abbrev-ref HEAD)
   if [ "$CURRENT_BRANCH" != "$STUDYU_BASE_BRANCH" ]; then
     if prompt_yes_no "You are on branch '$CURRENT_BRANCH'. Do you want to switch to '$STUDYU_BASE_BRANCH'?"; then
       git checkout "$STUDYU_BASE_BRANCH"
