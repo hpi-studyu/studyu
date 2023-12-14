@@ -1060,7 +1060,7 @@ manage_components() {
                   else
                     echo -e "${red}Error: Failed to insert app_config.${reset}"
                     echo "$result"
-                    echo -e "Here is the generated SQL query for you again to insert it manually by running '$0 env-edit supabase --init-database <path>'"
+                    echo -e "Here is the generated SQL query for you again to insert it manually by running '$0 env supabase --init-database <path>'"
                     echo "${sql_query[*]}"
                     break
                   fi
@@ -1072,7 +1072,7 @@ manage_components() {
             source_env "$studyu_env_path"
             source_env "$supabase_env_path"
             if [ "$STUDYU_SUPABASE_PUBLIC_ANON_KEY" != "$ANON_KEY" ]; then
-              echo -e "${yellow}StudyU is not set up correctly to connect with the local Supabase instance. You can fix this by running '$0 env-edit studyu --configure'. You might also want to reconfigure the proxy settings by running '$0 env-edit proxy --configure' ${reset}"
+              echo -e "${yellow}StudyU is not set up correctly to connect with the local Supabase instance. You can fix this by running '$0 env studyu --configure'. You might also want to reconfigure the proxy settings by running '$0 env proxy --configure' ${reset}"
             fi
           fi
           ;;
@@ -1322,7 +1322,7 @@ print_general_help() {
   echo "  stop <components>                 Stop components"
   echo "  down <components>                 Stop and remove components"
   echo "  status                            Check if components are running healthy"
-  echo "  env-edit                          Edit environment variables"
+  echo "  env                               Read and write environment settings"
   echo "  update                            Fetch and merge the latest StudyU changes from the StudyU repository"
   echo "  backup                            Dump StudyU data"
   echo "  delete                            Delete components and data (use with caution!)"
@@ -1361,9 +1361,9 @@ print_restart_help() {
   echo "  -b, --build                      Force rebuild of StudyU components (if components are selected)"
 }
 
-# Function to display help for 'env-edit' command
+# Function to display help for 'env' command
 print_env_edit_help() {
-  echo "Usage: $0 env-edit <subcommand> [options]"
+  echo "Usage: $0 env <subcommand> [options]"
   echo "Subcommands:"
   echo "  proxy                                        Edit proxy environment variables"
   echo "    -i, --init                                 Initialize the proxy environment file"
@@ -1566,7 +1566,7 @@ case "$1" in
     shift
     down "$@"
     ;;
-  env-edit)
+  env)
     read_config
     case "$2" in
       proxy)
@@ -1621,12 +1621,12 @@ case "$1" in
               shift 2
               ;;
             *)
-              echo -e "${red}Unknown option $1. Use '$0 env-edit proxy --help' to see available options.${reset}"
+              echo -e "${red}Unknown option $1. Use '$0 env proxy --help' to see available options.${reset}"
               exit 1
               ;;
           esac
         done
-        echo -e "${yellow}If you made any changes to the StudyU deployment settings, be sure to also update the StudyU settings by running '$0 env-edit studyu --configure'${reset}"
+        echo -e "${yellow}If you made any changes to the StudyU deployment settings, be sure to also update the StudyU settings by running '$0 env studyu --configure'${reset}"
         ;;
       supabase)
         shift 2
@@ -1689,7 +1689,7 @@ case "$1" in
               shift 1
               ;;
             *)
-              echo -e "${red}Unknown option $1. Use '$0 env-edit supabase --help' to see available options.${reset}"
+              echo -e "${red}Unknown option $1. Use '$0 env supabase --help' to see available options.${reset}"
               exit 1
               ;;
           esac
@@ -1718,7 +1718,7 @@ case "$1" in
               ;;
             -s | --import-supabase-key)
               if [ ! -f "$studyu_env_path" ]; then
-                echo -e "${red}Error: Create a default StudyU env first with '$0 env-edit studyu --init'${reset}"
+                echo -e "${red}Error: Create a default StudyU env first with '$0 env studyu --init'${reset}"
                 exit 1
               fi
               anon_key=$(grep "^ANON_KEY=" "$supabase_env_path" | cut -d'=' -f2)
@@ -1756,12 +1756,12 @@ case "$1" in
               shift 2
               ;;
             *)
-              echo -e "${red}Unknown option $1. Use '$0 env-edit studyu --help' to see available options.${reset}"
+              echo -e "${red}Unknown option $1. Use '$0 env studyu --help' to see available options.${reset}"
               exit 1
               ;;
           esac
         done
-          echo -e "${yellow}If you made any changes to URLs, be sure to also update the proxy settings by running '$0 env-edit proxy --configure'${reset}"
+          echo -e "${yellow}If you made any changes to URLs, be sure to also update the proxy settings by running '$0 env proxy --configure'${reset}"
           echo -e "${yellow}To reflect the changes in the StudyU App and StudyU Designer, you need to rebuild the containers on the next start by running '$0 start --build'${reset}"
         ;;
       --help | -h)
