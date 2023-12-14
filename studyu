@@ -1439,21 +1439,21 @@ case "$1" in
             components+=("$1")
             shift
           done
-          echo -e "${purple}Setting default components to ${components[*]}${reset}"
+          echo -e "${green}Setting default components to ${components[*]}${reset}"
           set_default_components components[@]
           ;;
         -p | --set-studyu-path)
-          echo -e "${purple}Setting StudyU path to $2${reset}"
+          echo -e "${green}Setting StudyU path to $2${reset}"
           set_studyu_path "$2"
           shift 2
           ;;
         -b | --set-studyu-base-branch)
-          echo -e "${purple}Setting StudyU base branch to $2${reset}"
+          echo -e "${green}Setting StudyU base branch to $2${reset}"
           set_studyu_base_branch "$2"
           shift 2
           ;;
         -s | --set-studyu-secrets-manager)
-          echo -e "${purple}Setting StudyU secrets manager to $2${reset}"
+          echo -e "${green}Setting StudyU secrets manager to $2${reset}"
           set_studyu_secrets_manager "$2"
           shift 2
           ;;
@@ -1582,7 +1582,7 @@ case "$1" in
               exit 0
               ;;
             -i | --init)
-              echo -e "${yellow}Creating a default proxy env at $proxy_env_path${reset}"
+              echo -e "${green}Creating a default proxy env at $proxy_env_path${reset}"
               create_specific_env_file "$proxy_env_path"
               shift
               ;;
@@ -1591,32 +1591,32 @@ case "$1" in
               shift
               ;;
             -a | --set-app-host)
-              echo -e "${yellow}Setting STUDYU_APP_HOST to $2${reset}"
+              echo -e "${green}Setting STUDYU_APP_HOST to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_APP_HOST" "$2"
               shift 2
               ;;
             -p | --set-app-port)
-              echo -e "${yellow}Setting STUDYU_APP_PORT to $2${reset}"
+              echo -e "${green}Setting STUDYU_APP_PORT to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_APP_PORT" "$2" "$number_pattern"
               shift 2
               ;;
             -d | --set-designer-host)
-              echo -e "${yellow}Setting STUDYU_DESIGNER_HOST to $2${reset}"
+              echo -e "${green}Setting STUDYU_DESIGNER_HOST to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_HOST" "$2"
               shift 2
               ;;
             -q | --set-designer-port)
-              echo -e "${yellow}Setting STUDYU_DESIGNER_PORT to $2${reset}"
+              echo -e "${green}Setting STUDYU_DESIGNER_PORT to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_PORT" "$2" "$number_pattern"
               shift 2
               ;;
             -s | --set-supabase-host)
-              echo -e "${yellow}Setting STUDYU_SUPABASE_HOST to $2${reset}"
+              echo -e "${green}Setting STUDYU_SUPABASE_HOST to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_HOST" "$2"
               shift 2
               ;;
             -u | --set-supabase-port)
-              echo -e "${yellow}Setting STUDYU_SUPABASE_PORT to $2${reset}"
+              echo -e "${green}Setting STUDYU_SUPABASE_PORT to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_PORT" "$2" "$number_pattern"
               shift 2
               ;;
@@ -1641,42 +1641,42 @@ case "$1" in
               exit 0
               ;;
             -i | --init)
-              echo -e "${yellow}Creating a default supabase env at $supabase_env_path${reset}"
+              echo -e "${green}Creating a default supabase env at $supabase_env_path${reset}"
               create_specific_env_file "$supabase_env_path"
               shift
               ;;
             -c | --create-supabase-secrets)
-              echo -e "${yellow}Creating and setting Supabase secrets...${reset}"
+              echo -e "${green}Creating and setting Supabase secrets...${reset}"
               create_and_set_supabase_secrets
               shift
               ;;
             -p | --set-postgres_password)
-              echo -e "${yellow}Setting POSTGRES_PASSWORD to $2${reset}"
+              echo -e "${green}Setting POSTGRES_PASSWORD to $2${reset}"
               update_env_variable "$supabase_env_path" "POSTGRES_PASSWORD" "$2"
               shift 2
               ;;
             -j | --set-jwt-secret)
-              echo -e "${yellow}Setting JWT_SECRET to $2${reset}"
+              echo -e "${green}Setting JWT_SECRET to $2${reset}"
               update_env_variable "$supabase_env_path" "JWT_SECRET" "$2"
               shift 2
               ;;
             -a | --set-anon-key)
-              echo -e "${yellow}Setting ANON_KEY to $2${reset}"
+              echo -e "${green}Setting ANON_KEY to $2${reset}"
               update_env_variable "$supabase_env_path" "ANON_KEY" "$2"
               shift 2
               ;;
             -s | --set-service-role-key)
-              echo -e "${yellow}Setting SERVICE_ROLE_KEY to $2${reset}"
+              echo -e "${green}Setting SERVICE_ROLE_KEY to $2${reset}"
               update_env_variable "$supabase_env_path" "SERVICE_ROLE_KEY" "$2"
               shift 2
               ;;
             -u | --set-dashboard-username)
-              echo -e "${yellow}Setting DASHBOARD_USERNAME to $2${reset}"
+              echo -e "${green}Setting DASHBOARD_USERNAME to $2${reset}"
               update_env_variable "$supabase_env_path" "DASHBOARD_USERNAME" "$2"
               shift 2
               ;;
             -w | --set-dashboard-password)
-            echo -e "${yellow}Setting DASHBOARD_PASSWORD to $2${reset}"
+            echo -e "${green}Setting DASHBOARD_PASSWORD to $2${reset}"
               update_env_variable "$supabase_env_path" "DASHBOARD_PASSWORD" "$2"
               shift 2
               ;;
@@ -1726,32 +1726,32 @@ case "$1" in
                 echo -e "${red}Error: Could not find ANON_KEY in $supabase_env_path${reset}"
                 exit 1
               fi
-              echo -e "${yellow}Importing Supabase key into StudyU env file.${reset}"
+              echo -e "${green}Importing Supabase key into StudyU env file.${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$anon_key"
               shift
               ;;
             -b | --set-supabase-url)
-              echo -e "${yellow}Setting STUDYU_SUPABASE_URL to $2${reset}"
+              echo -e "${green}Setting STUDYU_SUPABASE_URL to $2${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_URL" "$2"
               shift 2
               ;;
             -k | --set-supabase-public-anon-key)
-              echo -e "${yellow}Setting STUDYU_SUPABASE_PUBLIC_ANON_KEY to $2${reset}"
+              echo -e "${green}Setting STUDYU_SUPABASE_PUBLIC_ANON_KEY to $2${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$2"
               shift 2
               ;;
             -g | --set-project-generator-url)
-              echo -e "${yellow}Setting STUDYU_PROJECT_GENERATOR_URL to $2${reset}"
+              echo -e "${green}Setting STUDYU_PROJECT_GENERATOR_URL to $2${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_PROJECT_GENERATOR_URL" "$2"
               shift 2
               ;;
             -a | --set-app-url)
-              echo -e "${yellow}Setting STUDYU_APP_URL to $2${reset}"
+              echo -e "${green}Setting STUDYU_APP_URL to $2${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_APP_URL" "$2"
               shift 2
               ;;
             -d | --set-designer-url)
-              echo -e "${yellow}Setting STUDYU_DESIGNER_URL to $2${reset}"
+              echo -e "${green}Setting STUDYU_DESIGNER_URL to $2${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_DESIGNER_URL" "$2"
               shift 2
               ;;
