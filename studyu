@@ -1341,6 +1341,10 @@ print_config_help() {
   echo "  -p, --set-studyu-path            Set the StudyU path"
   echo "  -b, --set-studyu-base-branch     Set the base branch for StudyU"
   echo "  -s, --set-studyu-secrets-manager Set the secrets manager for StudyU"
+  echo "  -d  --get-default-components     Get default components"
+  echo "  -e  --get-studyu-path            Get the StudyU path"
+  echo "  -f  --get-studyu-base-branch     Get the base branch for StudyU"
+  echo "  -g  --get-studyu-secrets-manager Get the secrets manager for StudyU"
 }
 
 # Function to display help for 'start' command
@@ -1363,7 +1367,7 @@ print_restart_help() {
 
 # Function to display help for 'env' command
 print_env_edit_help() {
-  echo "Usage: $0 env <subcommand> [options]"
+  echo "Usage: $0 env <subcommand> [options] [-h]"
   echo "Subcommands:"
   echo "  proxy                                        Edit proxy environment variables"
   echo "    -i, --init                                 Initialize the proxy environment file"
@@ -1374,7 +1378,12 @@ print_env_edit_help() {
   echo "    -q, --set-designer-port <value>            Set the StudyU Designer port"
   echo "    -s, --set-supabase-host <value>            Set the Supabase host"
   echo "    -u, --set-supabase-port <value>            Set the Supabase port"
-  # Add more proxy subcommands as needed...
+  echo "    -j  --get-app-host                         Get the StudyU App host"
+  echo "    -k  --get-app-port                         Get the StudyU App port"
+  echo "    -l  --get-designer-host                    Get the StudyU Designer host"
+  echo "    -m  --get-designer-port                    Get the StudyU Designer port"
+  echo "    -n  --get-supabase-host                    Get the Supabase host"
+  echo "    -o  --get-supabase-port                    Get the Supabase port"
 
   echo ""
 
@@ -1387,9 +1396,12 @@ print_env_edit_help() {
   echo "    -s, --set-service-role-key <value>         Set the Supabase SERVICE_ROLE_KEY"
   echo "    -u, --set-dashboard-username <value>       Set the Supabase dashboard username"
   echo "    -w, --set-dashboard-password <value>       Set the Supabase dashboard password"
+  echo "    -g, --get-postgres-password                Get the Supabase Postgres password"
+  echo "    -k, --get-jwt-secret                       Get the Supabase JWT secret"
+  echo "    -b, --get-anon-key                         Get the Supabase ANON_KEY"
+  echo "    -r, --get-service-role-key                 Get the Supabase SERVICE_ROLE_KEY"
   echo "    -n, --get-dashboard-username               Get the Supabase dashboard username"
   echo "    -o, --get-dashboard-password               Get the Supabase dashboard password"
-  # Add more supabase subcommands as needed...
 
   echo ""
 
@@ -1402,7 +1414,11 @@ print_env_edit_help() {
   echo "    -g, --set-project-generator-url <value>    Set the StudyU project generator URL"
   echo "    -a, --set-app-url <value>                  Set the StudyU App URL"
   echo "    -d, --set-designer-url <value>             Set the StudyU Designer URL"
-  # Add more studyu subcommands as needed...
+  echo "    -l, --get-supabase-url                     Get the Supabase URL"
+  echo "    -m, --get-supabase-public-anon-key         Get the Supabase key"
+  echo "    -n, --get-project-generator-url            Get the StudyU project generator URL"
+  echo "    -o, --get-app-url                          Get the StudyU App URL"
+  echo "    -p, --get-designer-url                     Get the StudyU Designer URL"
 }
 
 
@@ -1457,6 +1473,26 @@ case "$1" in
           set_studyu_secrets_manager "$2"
           shift 2
           ;;
+        -d | --get-default-components)
+          read_config
+          echo -e "${green}Default components: ${STUDYU_DEFAULT_COMPONENTS[*]}${reset}"
+          exit 0
+          ;;
+        -e | --get-studyu-path)
+          read_config
+          echo -e "${green}StudyU path: $STUDYU_PATH${reset}"
+          exit 0
+          ;;
+        -f | --get-studyu-base-branch)
+          read_config
+          echo -e "${green}StudyU base branch: $STUDYU_BASE_BRANCH${reset}"
+          exit 0
+          ;;
+        -g | --get-studyu-secrets-manager)
+          read_config
+          echo -e "${green}StudyU secrets manager: $STUDYU_SECRETS_MANAGER${reset}"
+          exit 0
+          ;;
         -*)
           echo -e "${red}Unknown option $1. Use '$0 config --help' to see available options.${reset}"
           exit 1
@@ -1500,7 +1536,6 @@ case "$1" in
         -d|--init-database)
           init_database_flag=true
           init_custom_database_path=$2
-
           # Check if the path is already absolute
           if [[ $init_custom_database_path == /* ]]; then
             # The path is absolute
@@ -1620,6 +1655,30 @@ case "$1" in
               update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_PORT" "$2" "$number_pattern"
               shift 2
               ;;
+            -j | --get-app-host)
+              get_env_variable "$proxy_env_path" "STUDYU_APP_HOST"
+              shift 1
+              ;;
+            -k | --get-app-port)
+              get_env_variable "$proxy_env_path" "STUDYU_APP_PORT"
+              shift 1
+              ;;
+            -l | --get-designer-host)
+              get_env_variable "$proxy_env_path" "STUDYU_DESIGNER_HOST"
+              shift 1
+              ;;
+            -m | --get-designer-port)
+              get_env_variable "$proxy_env_path" "STUDYU_DESIGNER_PORT"
+              shift 1
+              ;;
+            -n | --get-supabase-host)
+              get_env_variable "$proxy_env_path" "STUDYU_SUPABASE_HOST"
+              shift 1
+              ;;
+            -o | --get-supabase-port)
+              get_env_variable "$proxy_env_path" "STUDYU_SUPABASE_PORT"
+              shift 1
+              ;;
             *)
               echo -e "${red}Unknown option $1. Use '$0 env proxy --help' to see available options.${reset}"
               exit 1
@@ -1679,6 +1738,22 @@ case "$1" in
             echo -e "${green}Setting DASHBOARD_PASSWORD to $2${reset}"
               update_env_variable "$supabase_env_path" "DASHBOARD_PASSWORD" "$2"
               shift 2
+              ;;
+            -g | --get-postgres-password)
+              get_env_variable "$supabase_env_path" "POSTGRES_PASSWORD"
+              shift 1
+              ;;
+            -k | --get-jwt-secret)
+              get_env_variable "$supabase_env_path" "JWT_SECRET"
+              shift 1
+              ;;
+            -b | --get-anon-key)
+              get_env_variable "$supabase_env_path" "ANON_KEY"
+              shift 1
+              ;;
+            -r | --get-service-role-key)
+              get_env_variable "$supabase_env_path" "SERVICE_ROLE_KEY"
+              shift 1
               ;;
             -n | --get-dashboard-username)
               get_env_variable "$supabase_env_path" "DASHBOARD_USERNAME"
@@ -1754,6 +1829,26 @@ case "$1" in
               echo -e "${green}Setting STUDYU_DESIGNER_URL to $2${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_DESIGNER_URL" "$2"
               shift 2
+              ;;
+            -l | --get-supabase-url)
+              get_env_variable "$studyu_env_path" "STUDYU_SUPABASE_URL"
+              shift 1
+              ;;
+            -m | --get-supabase-public-anon-key)
+              get_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY"
+              shift 1
+              ;;
+            -n | --get-project-generator-url)
+              get_env_variable "$studyu_env_path" "STUDYU_PROJECT_GENERATOR_URL"
+              shift 1
+              ;;
+            -o | --get-app-url)
+              get_env_variable "$studyu_env_path" "STUDYU_APP_URL"
+              shift 1
+              ;;
+            -p | --get-designer-url)
+              get_env_variable "$studyu_env_path" "STUDYU_DESIGNER_URL"
+              shift 1
               ;;
             *)
               echo -e "${red}Unknown option $1. Use '$0 env studyu --help' to see available options.${reset}"
