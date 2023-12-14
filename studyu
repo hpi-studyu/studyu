@@ -266,7 +266,7 @@ prompt_yes_no() {
 # Define regex patterns for validation
 # email_pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 # phone_pattern="^\+?[0-9]+$"
-url_pattern="^[a-zA-Z0-9.-]+(.[a-zA-Z]{2,})?(:[0-9]{1,5})?(/.*)?$"
+# url_pattern="^[a-zA-Z0-9.-]+(.[a-zA-Z]{2,})?(:[0-9]{1,5})?(/.*)?$"
 # text_pattern="^[a-zA-Z]+$"
 number_pattern="^[0-9]+$"
 
@@ -704,7 +704,7 @@ configure_studyu_env() {
           break
           ;;
         "${options[2]}")
-          studyu_supabase_url=$(prompt_with_validation "Enter STUDYU_SUPABASE_URL" "$studyu_supabase_url" "$url_pattern")
+          studyu_supabase_url=$(prompt_with_validation "Enter STUDYU_SUPABASE_URL" "$studyu_supabase_url")
           anon_key=$(prompt_with_validation "Enter ANON_KEY" "$anon_key")
           break
           ;;
@@ -1719,7 +1719,7 @@ case "$1" in
               ;;
             -b | --set-supabase-url)
               echo -e "${yellow}Setting STUDYU_SUPABASE_URL to $2${reset}"
-              update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_URL" "$2" "$url_pattern"
+              update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_URL" "$2"
               shift 2
               ;;
             -k | --set-supabase-public-anon-key)
@@ -1729,17 +1729,17 @@ case "$1" in
               ;;
             -g | --set-project-generator-url)
               echo -e "${yellow}Setting STUDYU_PROJECT_GENERATOR_URL to $2${reset}"
-              update_env_variable "$studyu_env_path" "STUDYU_PROJECT_GENERATOR_URL" "$2" "$url_pattern"
+              update_env_variable "$studyu_env_path" "STUDYU_PROJECT_GENERATOR_URL" "$2"
               shift 2
               ;;
             -a | --set-app-url)
               echo -e "${yellow}Setting STUDYU_APP_URL to $2${reset}"
-              update_env_variable "$studyu_env_path" "STUDYU_APP_URL" "$2" "$url_pattern"
+              update_env_variable "$studyu_env_path" "STUDYU_APP_URL" "$2"
               shift 2
               ;;
             -d | --set-designer-url)
               echo -e "${yellow}Setting STUDYU_DESIGNER_URL to $2${reset}"
-              update_env_variable "$studyu_env_path" "STUDYU_DESIGNER_URL" "$2" "$url_pattern"
+              update_env_variable "$studyu_env_path" "STUDYU_DESIGNER_URL" "$2"
               shift 2
               ;;
             *)
