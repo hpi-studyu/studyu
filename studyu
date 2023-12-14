@@ -316,7 +316,7 @@ get_env_variable() {
 
   if [ -f "$file_path" ] && grep -q "^$variable_name=" "$file_path"; then
     local value
-    value=$(grep "^$variable_name=" "$file_path" | cut -d '=' -f2-)
+    value=$(grep "^$variable_name=" "$file_path" | cut -d '=' -f2- | sed 's/^"\|"$//g')
     echo "$value"
   fi
 }
