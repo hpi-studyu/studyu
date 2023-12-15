@@ -263,10 +263,20 @@ prompt_yes_no() {
 }
 
 
+prompt_remove() {
+read -rp "$(echo -e "${purple}Enter 'remove' to confirm your choice: ${reset}")" input
+  if [ "$input" == "remove" ]; then
+    return 0;
+  else
+    return 1;
+  fi
+}
+
+
 # Define regex patterns for validation
 # email_pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 # phone_pattern="^\+?[0-9]+$"
-url_pattern="^[a-zA-Z0-9.-]+(.[a-zA-Z]{2,})?(:[0-9]{1,5})?(/.*)?$"
+# url_pattern="^[a-zA-Z0-9.-]+(.[a-zA-Z]{2,})?(:[0-9]{1,5})?(/.*)?$"
 # text_pattern="^[a-zA-Z]+$"
 number_pattern="^[0-9]+$"
 
@@ -316,7 +326,7 @@ get_env_variable() {
 
   if [ -f "$file_path" ] && grep -q "^$variable_name=" "$file_path"; then
     local value
-    value=$(grep "^$variable_name=" "$file_path" | cut -d '=' -f2-)
+    value=$(grep "^$variable_name=" "$file_path" | cut -d '=' -f2- | sed 's/^"\|"$//g')
     echo "$value"
   fi
 }
@@ -593,12 +603,11 @@ configure_proxy_env() {
     fi
   fi
 
-  # If the proxy component is running, ask the user if they want to down it
   if component_is_running 'studyu-proxy'; then
-    if prompt_yes_no "The proxy component is running. Do you want to stop and remove it?"; then
+    if prompt_yes_no "The proxy component needs to be stopped in order to configure it. Do you want to stop and remove it?"; then
       down 'studyu-proxy'
     else
-      echo -e "${red}Error: StudyU components are running.${reset}"
+      echo -e "${red}Error: Cannot configure proxy while it is running.${reset}"
       exit 1
     fi
   fi
@@ -704,7 +713,7 @@ configure_studyu_env() {
           break
           ;;
         "${options[2]}")
-          studyu_supabase_url=$(prompt_with_validation "Enter STUDYU_SUPABASE_URL" "$studyu_supabase_url" "$url_pattern")
+          studyu_supabase_url=$(prompt_with_validation "Enter STUDYU_SUPABASE_URL" "$studyu_supabase_url")
           anon_key=$(prompt_with_validation "Enter ANON_KEY" "$anon_key")
           break
           ;;
@@ -812,7 +821,7 @@ configure() {
 
   # STUDYU_BASE_BRANCH
   # Set base branch to STUDYU_BASE_BRANCH, if empty to current branch, if empty to main
-  current_branch=$(git rev-parse --abbrev-ref HEAD)
+  current_branch=$(cd "$studyu_path" && git rev-parse --abbrev-ref HEAD)
   base_branch=${STUDYU_BASE_BRANCH:-$current_branch}
   base_branch=${base_branch:-'main'}
   read -i "$base_branch" -e -rp "$(echo -e "${purple}Enter the StudyU repository base branch for updating${reset} (default: main): ")" base_branch
@@ -861,6 +870,7 @@ run_docker_compose() {
 }
 
 clean_flag=false
+build_flag=false
 init_database_flag=false
 init_custom_database_path=''
 
@@ -868,8 +878,9 @@ init_custom_database_path=''
 manage_components() {
   local action=$1
   shift
-
   components=$*
+
+  local supabase_installation_success=false
 
   if [ "$clean_flag" = true ]; then
     echo -e "${yellow}Option -c detected. Orphan containers will be cleaned up.${reset}"
@@ -880,8 +891,6 @@ manage_components() {
   if [ -z "${components[*]}" ]; then
     components=("$STUDYU_DEFAULT_COMPONENTS")
   fi
-
-  local supabase_installation_success=false
 
   # Check if the components are valid
   for component in ${components[*]}; do
@@ -904,6 +913,7 @@ manage_components() {
 
   # Loop through the components and run the Docker Compose command
   for component in ${components[*]}; do
+    local component_specific_action=''
     compose_file="${compose_files[$component]}"
 
     echo -e "${blue}Action: $action${reset}"
@@ -935,6 +945,10 @@ manage_components() {
             configure_proxy_env
           ;;
           "studyu-app" | "studyu-designer")
+            if [ "$build_flag" = true ]; then
+              echo -e "${yellow}Option -b detected. StudyU components will be built.${reset}"
+              component_specific_action+=' --build'
+            fi
             configure_studyu_env
           ;;
         esac
@@ -951,7 +965,7 @@ manage_components() {
         ;;
     esac
 
-    run_docker_compose "$compose_file" "$action"
+    run_docker_compose "$compose_file" "$action""$component_specific_action"
   done
   # if action is up or restart, wait for components to be running
   if [[ "$action" == "up"* ]] || [[ "$action" == "restart" ]]; then
@@ -1055,7 +1069,7 @@ manage_components() {
                   else
                     echo -e "${red}Error: Failed to insert app_config.${reset}"
                     echo "$result"
-                    echo -e "Here is the generated SQL query for you again to insert it manually by running '$0 env-edit supabase --init-database <path>'"
+                    echo -e "Here is the generated SQL query for you again to insert it manually by running '$0 env supabase --init-database <path>'"
                     echo "${sql_query[*]}"
                     break
                   fi
@@ -1067,7 +1081,7 @@ manage_components() {
             source_env "$studyu_env_path"
             source_env "$supabase_env_path"
             if [ "$STUDYU_SUPABASE_PUBLIC_ANON_KEY" != "$ANON_KEY" ]; then
-              echo -e "${yellow}StudyU is not set up correctly to connect with the local Supabase instance. You can fix this by running '$0 env-edit studyu --configure'. You might also want to reconfigure the proxy settings by running '$0 env-edit proxy --configure' ${reset}"
+              echo -e "${yellow}StudyU is not set up correctly to connect with the local Supabase instance. You can fix this by running '$0 env studyu --configure'. You might also want to reconfigure the proxy settings by running '$0 env proxy --configure' ${reset}"
             fi
           fi
           ;;
@@ -1197,7 +1211,7 @@ update() {
   fi
 
   # Check if we are in $STUDYU_BASE_BRANCH; if not, ask the user if the branch should be switched; else, stop.
-  CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+  CURRENT_BRANCH=$(cd "$STUDYU_PATH" && git rev-parse --abbrev-ref HEAD)
   if [ "$CURRENT_BRANCH" != "$STUDYU_BASE_BRANCH" ]; then
     if prompt_yes_no "You are on branch '$CURRENT_BRANCH'. Do you want to switch to '$STUDYU_BASE_BRANCH'?"; then
       git checkout "$STUDYU_BASE_BRANCH"
@@ -1224,47 +1238,64 @@ update() {
 # Delete docker container, images, and volumes
 delete() {
   local down_cmd=""
+  local delete_images=false
 
   if prompt_yes_no "Do you want to create a backup of the StudyU database?"; then
     backup
   fi
 
-  if prompt_yes_no "Do you want to remove all containers and images used by all StudyU components? This does not affect the StudyU volumes."; then
-    remove_studyu_docker_images
+  if prompt_yes_no "Do you want to remove all containers and images of the StudyU components? This does not affect any volumes."; then
+    delete_images=true
     down_cmd+="--remove-orphans"
+    echo -e "${yellow}Containers and images will be deleted.${reset}"
   fi
 
   if prompt_yes_no "Do you want to delete the StudyU Supabase volumes and the storage data?"; then
     if prompt_yes_no "Are you REALLY sure you want to delete all data? This includes all created studies, users, and their data."; then
-      down_cmd+=" --volumes"
+      if prompt_remove; then
+        down_cmd+=" --volumes"
+        echo -e "${yellow}Volumes will be deleted.${reset}"
+      else
+        echo -e "Volumes will not be deleted."
+      fi
     fi
   fi
 
   if [ -n "$down_cmd" ]; then
     manage_components "down $down_cmd"
+    if [ "$delete_images" = true ]; then
+      remove_studyu_docker_images
+    fi
     echo -e "${green}Selected data has been deleted.${reset}"
   else
-    echo -e "No action taken."
+    echo -e "No action taken. No data has been deleted."
   fi
 }
+
 
 # Permanently remove all configuration files
 reset() {
   local files_to_remove=("$CONFIG_FILE" "$STUDYU_PATH/docker/supabase/.env" "$STUDYU_PATH/docker/proxy/.env" "$STUDYU_PATH/flutter_common/lib/envs/.env.local")
+
+  for component in "${!compose_files[@]}"; do
+    if component_is_running "$component"; then
+      echo -e "${red}Error: Components are still running. Please stop them before resetting.${reset}"
+      exit 1
+    fi
+  done
+
   echo -e "${yellow}WARNING: This will permanently remove the following configuration files:${reset}"
   for file in "${files_to_remove[@]}"; do
     echo -e "  $file"
   done
   if prompt_yes_no "Are you REALLY sure you want to remove all those files?"; then
-    read -rp "$(echo -e "${purple}Enter 'remove' to confirm your choice: ${reset}")" input
-    if [ "$input" == "remove" ]; then
+    if prompt_remove; then
       for file in "${files_to_remove[@]}"; do
         if [ -f "$file" ]; then
           rm "$file"
         fi
       done
-      echo -e "${green}All configuration files have been deleted.${reset}"
-      return 0;
+      echo -e "${green}All configuration files have been removed.${reset}"
     fi
   fi
   echo -e "No action taken."
@@ -1313,7 +1344,7 @@ print_general_help() {
   echo "  stop <components>                 Stop components"
   echo "  down <components>                 Stop and remove components"
   echo "  status                            Check if components are running healthy"
-  echo "  env-edit                          Edit environment variables"
+  echo "  env                               Read and write environment settings"
   echo "  update                            Fetch and merge the latest StudyU changes from the StudyU repository"
   echo "  backup                            Dump StudyU data"
   echo "  delete                            Delete components and data (use with caution!)"
@@ -1332,6 +1363,10 @@ print_config_help() {
   echo "  -p, --set-studyu-path            Set the StudyU path"
   echo "  -b, --set-studyu-base-branch     Set the base branch for StudyU"
   echo "  -s, --set-studyu-secrets-manager Set the secrets manager for StudyU"
+  echo "  -d  --get-default-components     Get default components"
+  echo "  -e  --get-studyu-path            Get the StudyU path"
+  echo "  -f  --get-studyu-base-branch     Get the base branch for StudyU"
+  echo "  -g  --get-studyu-secrets-manager Get the secrets manager for StudyU"
 }
 
 # Function to display help for 'start' command
@@ -1339,6 +1374,7 @@ print_start_help() {
   echo "Usage: $0 start <components> [options]"
   echo "Options:"
   echo "  -c, --clean                      Clean up orphaned containers"
+  echo "  -b, --build                      Force rebuild of StudyU components (if components are selected)"
   echo "  -i, --init-default-database      Initialize the StudyU database with the app_config.sql.example file"
   echo "  -d, --init-database <path>       Initialize the StudyU database with a custom SQL file"
 }
@@ -1348,11 +1384,12 @@ print_restart_help() {
   echo "Usage: $0 restart <components> [options]"
   echo "Options:"
   echo "  -c, --clean                      Clean up orphaned containers"
+  echo "  -b, --build                      Force rebuild of StudyU components (if components are selected)"
 }
 
-# Function to display help for 'env-edit' command
+# Function to display help for 'env' command
 print_env_edit_help() {
-  echo "Usage: $0 env-edit <subcommand> [options]"
+  echo "Usage: $0 env <subcommand> [options] [-h]"
   echo "Subcommands:"
   echo "  proxy                                        Edit proxy environment variables"
   echo "    -i, --init                                 Initialize the proxy environment file"
@@ -1363,7 +1400,12 @@ print_env_edit_help() {
   echo "    -q, --set-designer-port <value>            Set the StudyU Designer port"
   echo "    -s, --set-supabase-host <value>            Set the Supabase host"
   echo "    -u, --set-supabase-port <value>            Set the Supabase port"
-  # Add more proxy subcommands as needed...
+  echo "    -j  --get-app-host                         Get the StudyU App host"
+  echo "    -k  --get-app-port                         Get the StudyU App port"
+  echo "    -l  --get-designer-host                    Get the StudyU Designer host"
+  echo "    -m  --get-designer-port                    Get the StudyU Designer port"
+  echo "    -n  --get-supabase-host                    Get the Supabase host"
+  echo "    -o  --get-supabase-port                    Get the Supabase port"
 
   echo ""
 
@@ -1376,9 +1418,12 @@ print_env_edit_help() {
   echo "    -s, --set-service-role-key <value>         Set the Supabase SERVICE_ROLE_KEY"
   echo "    -u, --set-dashboard-username <value>       Set the Supabase dashboard username"
   echo "    -w, --set-dashboard-password <value>       Set the Supabase dashboard password"
+  echo "    -g, --get-postgres-password                Get the Supabase Postgres password"
+  echo "    -k, --get-jwt-secret                       Get the Supabase JWT secret"
+  echo "    -b, --get-anon-key                         Get the Supabase ANON_KEY"
+  echo "    -r, --get-service-role-key                 Get the Supabase SERVICE_ROLE_KEY"
   echo "    -n, --get-dashboard-username               Get the Supabase dashboard username"
   echo "    -o, --get-dashboard-password               Get the Supabase dashboard password"
-  # Add more supabase subcommands as needed...
 
   echo ""
 
@@ -1391,7 +1436,17 @@ print_env_edit_help() {
   echo "    -g, --set-project-generator-url <value>    Set the StudyU project generator URL"
   echo "    -a, --set-app-url <value>                  Set the StudyU App URL"
   echo "    -d, --set-designer-url <value>             Set the StudyU Designer URL"
-  # Add more studyu subcommands as needed...
+  echo "    -l, --get-supabase-url                     Get the Supabase URL"
+  echo "    -m, --get-supabase-public-anon-key         Get the Supabase key"
+  echo "    -n, --get-project-generator-url            Get the StudyU project generator URL"
+  echo "    -o, --get-app-url                          Get the StudyU App URL"
+  echo "    -p, --get-designer-url                     Get the StudyU Designer URL"
+
+  echo ""
+
+  echo -e "${yellow}After making changes to the StudyU environment, be sure to also update the proxy settings by running '$0 env proxy --configure'${reset}"
+  echo -e "${yellow}After making changes to the proxy environment, be sure to also update the StudyU settings by running '$0 env studyu --configure'${reset}"
+  echo -e "${yellow}To reflect the changes in the StudyU App and StudyU Designer, you need to rebuild the containers on the next start by running '$0 start --build'${reset}"
 }
 
 
@@ -1428,23 +1483,43 @@ case "$1" in
             components+=("$1")
             shift
           done
-          echo -e "${purple}Setting default components to ${components[*]}${reset}"
+          echo -e "${green}Setting default components to ${components[*]}${reset}"
           set_default_components components[@]
           ;;
         -p | --set-studyu-path)
-          echo -e "${purple}Setting StudyU path to $2${reset}"
+          echo -e "${green}Setting StudyU path to $2${reset}"
           set_studyu_path "$2"
           shift 2
           ;;
         -b | --set-studyu-base-branch)
-          echo -e "${purple}Setting StudyU base branch to $2${reset}"
+          echo -e "${green}Setting StudyU base branch to $2${reset}"
           set_studyu_base_branch "$2"
           shift 2
           ;;
         -s | --set-studyu-secrets-manager)
-          echo -e "${purple}Setting StudyU secrets manager to $2${reset}"
+          echo -e "${green}Setting StudyU secrets manager to $2${reset}"
           set_studyu_secrets_manager "$2"
           shift 2
+          ;;
+        -d | --get-default-components)
+          read_config
+          echo -e "${green}Default components: ${STUDYU_DEFAULT_COMPONENTS[*]}${reset}"
+          exit 0
+          ;;
+        -e | --get-studyu-path)
+          read_config
+          echo -e "${green}StudyU path: $STUDYU_PATH${reset}"
+          exit 0
+          ;;
+        -f | --get-studyu-base-branch)
+          read_config
+          echo -e "${green}StudyU base branch: $STUDYU_BASE_BRANCH${reset}"
+          exit 0
+          ;;
+        -g | --get-studyu-secrets-manager)
+          read_config
+          echo -e "${green}StudyU secrets manager: $STUDYU_SECRETS_MANAGER${reset}"
+          exit 0
           ;;
         -*)
           echo -e "${red}Unknown option $1. Use '$0 config --help' to see available options.${reset}"
@@ -1478,6 +1553,10 @@ case "$1" in
           clean_flag=true
           shift
           ;;
+        -b | --build)
+          build_flag=true
+          shift
+          ;;
         -i|--init-default-database)
           init_database_flag=true
           shift
@@ -1485,7 +1564,6 @@ case "$1" in
         -d|--init-database)
           init_database_flag=true
           init_custom_database_path=$2
-
           # Check if the path is already absolute
           if [[ $init_custom_database_path == /* ]]; then
             # The path is absolute
@@ -1525,6 +1603,10 @@ case "$1" in
           clean_flag=true
           shift
           ;;
+        -b | --build)
+          build_flag=true
+          shift
+          ;;
         -*)
           echo -e "${red}Unknown option $1. Use '$0 restart --help' to see available options.${reset}"
           exit 1
@@ -1547,7 +1629,7 @@ case "$1" in
     shift
     down "$@"
     ;;
-  env-edit)
+  env)
     read_config
     case "$2" in
       proxy)
@@ -1563,50 +1645,72 @@ case "$1" in
               exit 0
               ;;
             -i | --init)
-              echo -e "${yellow}Creating a default proxy env at $proxy_env_path${reset}"
+              echo -e "${green}Creating a default proxy env at $proxy_env_path${reset}"
               create_specific_env_file "$proxy_env_path"
               shift
               ;;
             -c | --configure)
               configure_proxy_env true
-              echo -e "If you made any changes to the StudyU deployment settings, be sure to also update the StudyU settings by running '$0 env-edit studyu --configure'"
               shift
               ;;
             -a | --set-app-host)
-              echo -e "${yellow}Setting STUDYU_APP_HOST to $2${reset}"
+              echo -e "${green}Setting STUDYU_APP_HOST to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_APP_HOST" "$2"
               shift 2
               ;;
             -p | --set-app-port)
-              echo -e "${yellow}Setting STUDYU_APP_PORT to $2${reset}"
+              echo -e "${green}Setting STUDYU_APP_PORT to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_APP_PORT" "$2" "$number_pattern"
               shift 2
               ;;
             -d | --set-designer-host)
-              echo -e "${yellow}Setting STUDYU_DESIGNER_HOST to $2${reset}"
+              echo -e "${green}Setting STUDYU_DESIGNER_HOST to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_HOST" "$2"
               shift 2
               ;;
             -q | --set-designer-port)
-              echo -e "${yellow}Setting STUDYU_DESIGNER_PORT to $2${reset}"
+              echo -e "${green}Setting STUDYU_DESIGNER_PORT to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_DESIGNER_PORT" "$2" "$number_pattern"
               shift 2
               ;;
             -s | --set-supabase-host)
-              echo -e "${yellow}Setting STUDYU_SUPABASE_HOST to $2${reset}"
+              echo -e "${green}Setting STUDYU_SUPABASE_HOST to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_HOST" "$2"
               shift 2
               ;;
             -u | --set-supabase-port)
-              echo -e "${yellow}Setting STUDYU_SUPABASE_PORT to $2${reset}"
+              echo -e "${green}Setting STUDYU_SUPABASE_PORT to $2${reset}"
               update_env_variable "$proxy_env_path" "STUDYU_SUPABASE_PORT" "$2" "$number_pattern"
               shift 2
               ;;
+            -j | --get-app-host)
+              get_env_variable "$proxy_env_path" "STUDYU_APP_HOST"
+              shift 1
+              ;;
+            -k | --get-app-port)
+              get_env_variable "$proxy_env_path" "STUDYU_APP_PORT"
+              shift 1
+              ;;
+            -l | --get-designer-host)
+              get_env_variable "$proxy_env_path" "STUDYU_DESIGNER_HOST"
+              shift 1
+              ;;
+            -m | --get-designer-port)
+              get_env_variable "$proxy_env_path" "STUDYU_DESIGNER_PORT"
+              shift 1
+              ;;
+            -n | --get-supabase-host)
+              get_env_variable "$proxy_env_path" "STUDYU_SUPABASE_HOST"
+              shift 1
+              ;;
+            -o | --get-supabase-port)
+              get_env_variable "$proxy_env_path" "STUDYU_SUPABASE_PORT"
+              shift 1
+              ;;
             *)
-              echo -e "${red}Unknown option $1. Use '$0 env-edit proxy --help' to see available options.${reset}"
+              echo -e "${red}Unknown option $1. Use '$0 env proxy --help' to see available options.${reset}"
               exit 1
               ;;
-
           esac
         done
         ;;
@@ -1623,44 +1727,60 @@ case "$1" in
               exit 0
               ;;
             -i | --init)
-              echo -e "${yellow}Creating a default supabase env at $supabase_env_path${reset}"
+              echo -e "${green}Creating a default supabase env at $supabase_env_path${reset}"
               create_specific_env_file "$supabase_env_path"
               shift
               ;;
             -c | --create-supabase-secrets)
-              echo -e "${yellow}Creating and setting Supabase secrets...${reset}"
+              echo -e "${green}Creating and setting Supabase secrets...${reset}"
               create_and_set_supabase_secrets
               shift
               ;;
             -p | --set-postgres_password)
-              echo -e "${yellow}Setting POSTGRES_PASSWORD to $2${reset}"
+              echo -e "${green}Setting POSTGRES_PASSWORD to $2${reset}"
               update_env_variable "$supabase_env_path" "POSTGRES_PASSWORD" "$2"
               shift 2
               ;;
             -j | --set-jwt-secret)
-              echo -e "${yellow}Setting JWT_SECRET to $2${reset}"
+              echo -e "${green}Setting JWT_SECRET to $2${reset}"
               update_env_variable "$supabase_env_path" "JWT_SECRET" "$2"
               shift 2
               ;;
             -a | --set-anon-key)
-              echo -e "${yellow}Setting ANON_KEY to $2${reset}"
+              echo -e "${green}Setting ANON_KEY to $2${reset}"
               update_env_variable "$supabase_env_path" "ANON_KEY" "$2"
               shift 2
               ;;
             -s | --set-service-role-key)
-              echo -e "${yellow}Setting SERVICE_ROLE_KEY to $2${reset}"
+              echo -e "${green}Setting SERVICE_ROLE_KEY to $2${reset}"
               update_env_variable "$supabase_env_path" "SERVICE_ROLE_KEY" "$2"
               shift 2
               ;;
             -u | --set-dashboard-username)
-              echo -e "${yellow}Setting DASHBOARD_USERNAME to $2${reset}"
+              echo -e "${green}Setting DASHBOARD_USERNAME to $2${reset}"
               update_env_variable "$supabase_env_path" "DASHBOARD_USERNAME" "$2"
               shift 2
               ;;
             -w | --set-dashboard-password)
-            echo -e "${yellow}Setting DASHBOARD_PASSWORD to $2${reset}"
+            echo -e "${green}Setting DASHBOARD_PASSWORD to $2${reset}"
               update_env_variable "$supabase_env_path" "DASHBOARD_PASSWORD" "$2"
               shift 2
+              ;;
+            -g | --get-postgres-password)
+              get_env_variable "$supabase_env_path" "POSTGRES_PASSWORD"
+              shift 1
+              ;;
+            -k | --get-jwt-secret)
+              get_env_variable "$supabase_env_path" "JWT_SECRET"
+              shift 1
+              ;;
+            -b | --get-anon-key)
+              get_env_variable "$supabase_env_path" "ANON_KEY"
+              shift 1
+              ;;
+            -r | --get-service-role-key)
+              get_env_variable "$supabase_env_path" "SERVICE_ROLE_KEY"
+              shift 1
               ;;
             -n | --get-dashboard-username)
               get_env_variable "$supabase_env_path" "DASHBOARD_USERNAME"
@@ -1671,7 +1791,7 @@ case "$1" in
               shift 1
               ;;
             *)
-              echo -e "${red}Unknown option $1. Use '$0 env-edit supabase --help' to see available options.${reset}"
+              echo -e "${red}Unknown option $1. Use '$0 env supabase --help' to see available options.${reset}"
               exit 1
               ;;
           esac
@@ -1696,12 +1816,11 @@ case "$1" in
               ;;
             -c | --configure)
               configure_studyu_env true
-              echo -e "If you made any changes related to local components, be sure to also update the proxy settings by running '$0 env-edit proxy --configure'"
               shift
               ;;
             -s | --import-supabase-key)
               if [ ! -f "$studyu_env_path" ]; then
-                echo -e "${red}Error: Create a default StudyU env first with '$0 env-edit studyu --init'${reset}"
+                echo -e "${red}Error: Create a default StudyU env first with '$0 env studyu --init'${reset}"
                 exit 1
               fi
               anon_key=$(grep "^ANON_KEY=" "$supabase_env_path" | cut -d'=' -f2)
@@ -1709,37 +1828,57 @@ case "$1" in
                 echo -e "${red}Error: Could not find ANON_KEY in $supabase_env_path${reset}"
                 exit 1
               fi
-              echo -e "${yellow}Importing Supabase key into StudyU env file.${reset}"
+              echo -e "${green}Importing Supabase key into StudyU env file.${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$anon_key"
               shift
               ;;
             -b | --set-supabase-url)
-              echo -e "${yellow}Setting STUDYU_SUPABASE_URL to $2${reset}"
-              update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_URL" "$2" "$url_pattern"
+              echo -e "${green}Setting STUDYU_SUPABASE_URL to $2${reset}"
+              update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_URL" "$2"
               shift 2
               ;;
             -k | --set-supabase-public-anon-key)
-              echo -e "${yellow}Setting STUDYU_SUPABASE_PUBLIC_ANON_KEY to $2${reset}"
+              echo -e "${green}Setting STUDYU_SUPABASE_PUBLIC_ANON_KEY to $2${reset}"
               update_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY" "$2"
               shift 2
               ;;
             -g | --set-project-generator-url)
-              echo -e "${yellow}Setting STUDYU_PROJECT_GENERATOR_URL to $2${reset}"
-              update_env_variable "$studyu_env_path" "STUDYU_PROJECT_GENERATOR_URL" "$2" "$url_pattern"
+              echo -e "${green}Setting STUDYU_PROJECT_GENERATOR_URL to $2${reset}"
+              update_env_variable "$studyu_env_path" "STUDYU_PROJECT_GENERATOR_URL" "$2"
               shift 2
               ;;
             -a | --set-app-url)
-              echo -e "${yellow}Setting STUDYU_APP_URL to $2${reset}"
-              update_env_variable "$studyu_env_path" "STUDYU_APP_URL" "$2" "$url_pattern"
+              echo -e "${green}Setting STUDYU_APP_URL to $2${reset}"
+              update_env_variable "$studyu_env_path" "STUDYU_APP_URL" "$2"
               shift 2
               ;;
             -d | --set-designer-url)
-              echo -e "${yellow}Setting STUDYU_DESIGNER_URL to $2${reset}"
-              update_env_variable "$studyu_env_path" "STUDYU_DESIGNER_URL" "$2" "$url_pattern"
+              echo -e "${green}Setting STUDYU_DESIGNER_URL to $2${reset}"
+              update_env_variable "$studyu_env_path" "STUDYU_DESIGNER_URL" "$2"
               shift 2
               ;;
+            -l | --get-supabase-url)
+              get_env_variable "$studyu_env_path" "STUDYU_SUPABASE_URL"
+              shift 1
+              ;;
+            -m | --get-supabase-public-anon-key)
+              get_env_variable "$studyu_env_path" "STUDYU_SUPABASE_PUBLIC_ANON_KEY"
+              shift 1
+              ;;
+            -n | --get-project-generator-url)
+              get_env_variable "$studyu_env_path" "STUDYU_PROJECT_GENERATOR_URL"
+              shift 1
+              ;;
+            -o | --get-app-url)
+              get_env_variable "$studyu_env_path" "STUDYU_APP_URL"
+              shift 1
+              ;;
+            -p | --get-designer-url)
+              get_env_variable "$studyu_env_path" "STUDYU_DESIGNER_URL"
+              shift 1
+              ;;
             *)
-              echo -e "${red}Unknown option $1. Use '$0 env-edit studyu --help' to see available options.${reset}"
+              echo -e "${red}Unknown option $1. Use '$0 env studyu --help' to see available options.${reset}"
               exit 1
               ;;
           esac
