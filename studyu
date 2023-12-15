@@ -263,6 +263,16 @@ prompt_yes_no() {
 }
 
 
+prompt_remove() {
+read -rp "$(echo -e "${purple}Enter 'remove' to confirm your choice: ${reset}")" input
+  if [ "$input" == "remove" ]; then
+    return 0;
+  else
+    return 1;
+  fi
+}
+
+
 # Define regex patterns for validation
 # email_pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 # phone_pattern="^\+?[0-9]+$"
@@ -937,7 +947,7 @@ manage_components() {
           ;;
           "studyu-app" | "studyu-designer")
             if [ "$build_flag" = true ]; then
-              echo -e "${yellow}Option -b detected. StudyU components will be rebuilt.${reset}"
+              echo -e "${yellow}Option -b detected. StudyU components will be built.${reset}"
               component_specific_action+=' --build'
             fi
             configure_studyu_env
@@ -1235,14 +1245,18 @@ delete() {
     backup
   fi
 
-  if prompt_yes_no "Do you want to remove all containers and images used by all StudyU components? This does not affect the StudyU volumes."; then
+  if prompt_yes_no "Do you want to remove all containers and images of the StudyU components? This does not affect any volumes."; then
     delete_images=true
     down_cmd+="--remove-orphans"
   fi
 
   if prompt_yes_no "Do you want to delete the StudyU Supabase volumes and the storage data?"; then
     if prompt_yes_no "Are you REALLY sure you want to delete all data? This includes all created studies, users, and their data."; then
-      down_cmd+=" --volumes"
+      if prompt_remove; then
+        down_cmd+=" --volumes"
+      else
+        echo -e "No action taken."
+      fi
     fi
   fi
 
@@ -1257,23 +1271,30 @@ delete() {
   fi
 }
 
+
 # Permanently remove all configuration files
 reset() {
   local files_to_remove=("$CONFIG_FILE" "$STUDYU_PATH/docker/supabase/.env" "$STUDYU_PATH/docker/proxy/.env" "$STUDYU_PATH/flutter_common/lib/envs/.env.local")
+
+  for component in "${!compose_files[@]}"; do
+    if component_is_running "$component"; then
+      echo -e "${red}Error: Components are still running. Please stop them before resetting.${reset}"
+      exit 1
+    fi
+  done
+
   echo -e "${yellow}WARNING: This will permanently remove the following configuration files:${reset}"
   for file in "${files_to_remove[@]}"; do
     echo -e "  $file"
   done
   if prompt_yes_no "Are you REALLY sure you want to remove all those files?"; then
-    read -rp "$(echo -e "${purple}Enter 'remove' to confirm your choice: ${reset}")" input
-    if [ "$input" == "remove" ]; then
+    if prompt_remove; then
       for file in "${files_to_remove[@]}"; do
         if [ -f "$file" ]; then
           rm "$file"
         fi
       done
-      echo -e "${green}All configuration files have been deleted.${reset}"
-      return 0;
+      echo -e "${green}All configuration files have been removed.${reset}"
     fi
   fi
   echo -e "No action taken."
@@ -1419,6 +1440,12 @@ print_env_edit_help() {
   echo "    -n, --get-project-generator-url            Get the StudyU project generator URL"
   echo "    -o, --get-app-url                          Get the StudyU App URL"
   echo "    -p, --get-designer-url                     Get the StudyU Designer URL"
+
+  echo ""
+
+  echo -e "${yellow}After making changes to the StudyU environment, be sure to also update the proxy settings by running '$0 env proxy --configure'${reset}"
+  echo -e "${yellow}After making changes to the proxy environment, be sure to also update the StudyU settings by running '$0 env studyu --configure'${reset}"
+  echo -e "${yellow}To reflect the changes in the StudyU App and StudyU Designer, you need to rebuild the containers on the next start by running '$0 start --build'${reset}"
 }
 
 
@@ -1685,7 +1712,6 @@ case "$1" in
               ;;
           esac
         done
-        echo -e "${yellow}If you made any changes to the StudyU deployment settings, be sure to also update the StudyU settings by running '$0 env studyu --configure'${reset}"
         ;;
       supabase)
         shift 2
@@ -1856,8 +1882,6 @@ case "$1" in
               ;;
           esac
         done
-          echo -e "${yellow}If you made any changes to URLs, be sure to also update the proxy settings by running '$0 env proxy --configure'${reset}"
-          echo -e "${yellow}To reflect the changes in the StudyU App and StudyU Designer, you need to rebuild the containers on the next start by running '$0 start --build'${reset}"
         ;;
       --help | -h)
         print_env_edit_help
