@@ -603,12 +603,11 @@ configure_proxy_env() {
     fi
   fi
 
-  # If the proxy component is running, ask the user if they want to down it
   if component_is_running 'studyu-proxy'; then
-    if prompt_yes_no "The proxy component is running. Do you want to stop and remove it?"; then
+    if prompt_yes_no "The proxy component needs to be stopped in order to configure it. Do you want to stop and remove it?"; then
       down 'studyu-proxy'
     else
-      echo -e "${red}Error: StudyU components are running.${reset}"
+      echo -e "${red}Error: Cannot configure proxy while it is running.${reset}"
       exit 1
     fi
   fi
