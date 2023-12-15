@@ -1247,14 +1247,16 @@ delete() {
   if prompt_yes_no "Do you want to remove all containers and images of the StudyU components? This does not affect any volumes."; then
     delete_images=true
     down_cmd+="--remove-orphans"
+    echo -e "${yellow}Containers and images will be deleted.${reset}"
   fi
 
   if prompt_yes_no "Do you want to delete the StudyU Supabase volumes and the storage data?"; then
     if prompt_yes_no "Are you REALLY sure you want to delete all data? This includes all created studies, users, and their data."; then
       if prompt_remove; then
         down_cmd+=" --volumes"
+        echo -e "${yellow}Volumes will be deleted.${reset}"
       else
-        echo -e "No action taken."
+        echo -e "Volumes will not be deleted."
       fi
     fi
   fi
@@ -1266,7 +1268,7 @@ delete() {
     fi
     echo -e "${green}Selected data has been deleted.${reset}"
   else
-    echo -e "No action taken."
+    echo -e "No action taken. No data has been deleted."
   fi
 }
 
