@@ -15,6 +15,7 @@ class DashboardState extends Equatable {
     this.query = '',
     this.sortByColumn = StudiesTableColumn.title,
     this.sortAscending = true,
+    this.createNewMenuOpen = false,
     required this.currentUser,
   });
 
@@ -39,6 +40,8 @@ class DashboardState extends Equatable {
 
   final String query;
 
+  final bool createNewMenuOpen;
+
   /// The currently displayed list of studies as by the selected filter,
   /// selected sort column, and selected sort direction
   ///
@@ -47,8 +50,7 @@ class DashboardState extends Equatable {
   AsyncValue<List<StudyGroup>> displayedStudies(Set<String> pinnedStudies, String query) {
     return studies.when(
       data: (studies) {
-        List<Study> updatedStudies =
-            studiesFilter.apply(studies: studies, user: currentUser).toList();
+        List<Study> updatedStudies = studiesFilter.apply(studies: studies, user: currentUser).toList();
         updatedStudies = filter(studiesToFilter: updatedStudies);
         updatedStudies = sort(pinnedStudies: pinnedStudies, studiesToSort: updatedStudies);
         return AsyncValue.data(group(updatedStudies));
@@ -75,8 +77,7 @@ class DashboardState extends Equatable {
     final studyGroups = studies.map((s) => StudyGroup.single(s)).toList();
 
     if (index != null && group.isNotEmpty) {
-      studyGroups.insert(
-          index!, StudyGroup(group, "N-of-1 trials to improve sleep", "group_id_123"));
+      studyGroups.insert(index!, StudyGroup(group, "N-of-1 trials to improve sleep", "group_id_123"));
     }
     return studyGroups;
   }
@@ -108,11 +109,9 @@ class DashboardState extends Equatable {
         break;
       case StudiesTableColumn.participation:
         if (sortAscending) {
-          sortedStudies.sort(
-              (study, other) => study.participation.index.compareTo(other.participation.index));
+          sortedStudies.sort((study, other) => study.participation.index.compareTo(other.participation.index));
         } else {
-          sortedStudies.sort(
-              (study, other) => other.participation.index.compareTo(study.participation.index));
+          sortedStudies.sort((study, other) => other.participation.index.compareTo(study.participation.index));
         }
         break;
       case StudiesTableColumn.createdAt:
@@ -124,20 +123,16 @@ class DashboardState extends Equatable {
         break;
       case StudiesTableColumn.enrolled:
         if (sortAscending) {
-          sortedStudies
-              .sort((study, other) => study.participantCount.compareTo(other.participantCount));
+          sortedStudies.sort((study, other) => study.participantCount.compareTo(other.participantCount));
         } else {
-          sortedStudies
-              .sort((study, other) => other.participantCount.compareTo(study.participantCount));
+          sortedStudies.sort((study, other) => other.participantCount.compareTo(study.participantCount));
         }
         break;
       case StudiesTableColumn.active:
         if (sortAscending) {
-          sortedStudies
-              .sort((study, other) => study.activeSubjectCount.compareTo(other.activeSubjectCount));
+          sortedStudies.sort((study, other) => study.activeSubjectCount.compareTo(other.activeSubjectCount));
         } else {
-          sortedStudies
-              .sort((study, other) => other.activeSubjectCount.compareTo(study.activeSubjectCount));
+          sortedStudies.sort((study, other) => other.activeSubjectCount.compareTo(study.activeSubjectCount));
         }
         break;
       case StudiesTableColumn.completed:
@@ -176,6 +171,7 @@ class DashboardState extends Equatable {
     String? query,
     StudiesTableColumn? sortByColumn,
     bool? sortAscending,
+    bool? createNewMenuOpen,
   }) {
     return DashboardState(
         studies: studies != null ? studies() : this.studies,
@@ -183,7 +179,8 @@ class DashboardState extends Equatable {
         currentUser: currentUser != null ? currentUser() : this.currentUser,
         query: query ?? this.query,
         sortByColumn: sortByColumn ?? this.sortByColumn,
-        sortAscending: sortAscending ?? this.sortAscending);
+        sortAscending: sortAscending ?? this.sortAscending,
+        createNewMenuOpen: createNewMenuOpen ?? this.createNewMenuOpen);
   }
 
   // - Equatable

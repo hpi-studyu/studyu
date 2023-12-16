@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/features/app.dart';
@@ -9,6 +10,8 @@ import 'package:studyu_designer_v2/utils/performance.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 import 'package:flutter_web_plugins/url_strategy.dart';
+
+import 'constants.dart';
 
 Future<void> main() async {
   /// See: https://stackoverflow.com/questions/57879455/flutter-catching-all-unhandled-exceptions
@@ -30,9 +33,15 @@ Future<void> main() async {
     runApp(
         // Make dependencies managed by Riverpod available in Widget.build methods
         // by wrapping the app in a [ProviderScope]
-        ProviderScope(overrides: [
-      sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-    ], child: const App()));
+        ProviderScope(
+            overrides: [
+          sharedPreferencesProvider.overrideWithValue(sharedPreferences),
+        ],
+            child: const Portal(
+                child: Portal(
+              labels: [outPortalLabel],
+              child: App(),
+            ))));
   }, (error, stackTrace) {
     // TODO: top-level error handling
     print("Exception: ${error.toString()}");

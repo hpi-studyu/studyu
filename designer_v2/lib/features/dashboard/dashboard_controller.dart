@@ -85,6 +85,10 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     state = state.copyWith(sortByColumn: sortByColumn, sortAscending: ascending);
   }
 
+  void setCreateNewMenuOpen(bool open) {
+    state = state.copyWith(createNewMenuOpen: open);
+  }
+
   void filterStudies(String? query) async {
     state = state.copyWith(
       query: query,

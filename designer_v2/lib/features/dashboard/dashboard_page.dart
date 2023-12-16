@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
@@ -14,6 +15,8 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
+import '../../constants.dart';
+
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({required this.filter, Key? key}) : super(key: key);
 
@@ -26,8 +29,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   late final DashboardController controller;
   late final DashboardState state;
-  final _link = LayerLink();
-  final _overlayController = OverlayPortalController();
 
   @override
   void initState() {
@@ -59,66 +60,56 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: <Widget>[
           Row(
             children: [
-              CompositedTransformTarget(
-                link: _link,
-                child: OverlayPortal(
-                  controller: _overlayController,
-                  child: PrimaryButton(
-                    icon: Icons.add,
-                    text: tr.action_button_create,
-                    onPressed: () => _overlayController.toggle(),
+              PortalTarget(
+                  visible: state.createNewMenuOpen,
+                  portalCandidateLabels: const [outPortalLabel],
+                  portalFollower: GestureDetector(
+                    onTap: () => controller.setCreateNewMenuOpen(false),
+                    child: Container(color: Colors.transparent),
                   ),
-                  overlayChildBuilder: (context) {
-                    return GestureDetector(
-                      onTap: () => _overlayController.hide(),
-                      child: Container(
-                        color: Colors.transparent,
-                        child: CompositedTransformFollower(
-                          link: _link,
-                          offset: const Offset(0, 10),
-                          targetAnchor: Alignment.bottomLeft,
-                          child: Align(
-                            alignment: AlignmentDirectional.topStart,
-                            child: Align(
-                              alignment: AlignmentDirectional.topStart,
-                              child: SizedBox(
-                                width: 600,
-                                child: Material(
-                                  color: theme.colorScheme.onPrimary,
-                                  borderRadius: BorderRadius.circular(16),
-                                  elevation: 20.0,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        _buildCreateNewDropdownItem(
-                                          title: tr.action_button_standalone_study_title,
-                                          subtitle: tr.action_button_standalone_study_subtitle,
-                                          onTap: () => controller.onClickNewStudy(false),
-                                        ),
-                                        const Divider(
-                                          height: 0,
-                                        ),
-                                        _buildCreateNewDropdownItem(
-                                          title: tr.action_button_template_title,
-                                          subtitle: tr.action_button_template_subtitle,
-                                          hint: tr.action_button_template_hint,
-                                          onTap: () => controller.onClickNewStudy(true),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                  child: const SizedBox.shrink()),
+              PortalTarget(
+                visible: state.createNewMenuOpen,
+                anchor: const Aligned(follower: Alignment.topLeft, target: Alignment.bottomLeft),
+                portalFollower: GestureDetector(
+                  onTap: () => controller.setCreateNewMenuOpen(false),
+                  child: SizedBox(
+                    width: 600,
+                    child: Material(
+                      color: theme.colorScheme.onPrimary,
+                      borderRadius: BorderRadius.circular(16),
+                      elevation: 20.0,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildCreateNewDropdownItem(
+                              title: tr.action_button_standalone_study_title,
+                              subtitle: tr.action_button_standalone_study_subtitle,
+                              onTap: () => controller.onClickNewStudy(false),
                             ),
-                          ),
+                            const Divider(
+                              height: 0,
+                            ),
+                            _buildCreateNewDropdownItem(
+                              title: tr.action_button_template_title,
+                              subtitle: tr.action_button_template_subtitle,
+                              hint: tr.action_button_template_hint,
+                              onTap: () => controller.onClickNewStudy(true),
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ),
+                ),
+                child: PrimaryButton(
+                  icon: Icons.add,
+                  text: tr.action_button_create,
+                  onPressed: () => controller.setCreateNewMenuOpen(!state.createNewMenuOpen),
                 ),
               ),
               const SizedBox(width: 28.0),
