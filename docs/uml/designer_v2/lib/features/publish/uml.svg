@@ -1,10 +1,10 @@
 <svg version="1.1" baseProfile="full" width="687.0" height="189.0" viewbox="0 0 687 189" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[PublishSuccessDialog
+	<desc >[PublishDialog
 	  |
 	  +Widget build()
 	]
 	
-	[&lt;abstract&gt;StudyPageWidget]&lt;:-[PublishSuccessDialog]
+	[&lt;abstract&gt;StudyPageWidget]&lt;:-[PublishDialog]
 	
 	[PublishConfirmationDialog
 	  |
@@ -13,12 +13,12 @@
 	
 	[&lt;abstract&gt;StudyPageWidget]&lt;:-[PublishConfirmationDialog]
 	
-	[PublishDialog
+	[PublishSuccessDialog
 	  |
 	  +Widget build()
 	]
 	
-	[&lt;abstract&gt;StudyPageWidget]&lt;:-[PublishDialog]
+	[&lt;abstract&gt;StudyPageWidget]&lt;:-[PublishSuccessDialog]
 	
 	</desc>
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
@@ -28,35 +28,35 @@
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M251.3 28.7 L95.5 51 L95.5 71 L95.5 71.0 " fill="none"></path>
-					<path d="M252.1 33.9 L251.3 28.7 L250.5 23.4 L264.5 26.8 Z"></path>
-					<path d="M343.0 44.3 L343 51 L343 71 L343.0 71.0 " fill="none"></path>
-					<path d="M348.3 44.3 L343.0 44.3 L337.7 44.3 L343.0 31.0 Z"></path>
-					<path d="M434.7 30.3 L563 51 L563 71 L563.0 71.0 " fill="none"></path>
-					<path d="M435.5 25.0 L434.7 30.3 L433.8 35.6 L421.5 28.2 Z"></path>
-					<g data-name="PublishSuccessDialog">
-						<g fill="#eee8d5" stroke="#33322E" data-name="PublishSuccessDialog">
-							<rect x="0.0" y="71.0" height="62.0" width="191.0" data-name="PublishSuccessDialog"></rect>
-							<path d="M0.0 102.0 L191.0 102.0" fill="none" data-name="PublishSuccessDialog"></path>
+					<path d="M196.3 30.3 L68 51 L68 71 L68.0 71.0 " fill="none"></path>
+					<path d="M197.2 35.6 L196.3 30.3 L195.5 25.0 L209.5 28.2 Z"></path>
+					<path d="M288.0 44.3 L288 51 L288 71 L288.0 71.0 " fill="none"></path>
+					<path d="M293.3 44.3 L288.0 44.3 L282.7 44.3 L288.0 31.0 Z"></path>
+					<path d="M379.7 28.7 L535.5 51 L535.5 71 L535.5 71.0 " fill="none"></path>
+					<path d="M380.5 23.4 L379.7 28.7 L378.9 33.9 L366.5 26.8 Z"></path>
+					<g data-name="PublishDialog">
+						<g fill="#eee8d5" stroke="#33322E" data-name="PublishDialog">
+							<rect x="0.0" y="71.0" height="62.0" width="136.0" data-name="PublishDialog"></rect>
+							<path d="M0.0 102.0 L136.0 102.0" fill="none" data-name="PublishDialog"></path>
 						</g>
-						<g transform="translate(0, 71)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PublishSuccessDialog">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PublishSuccessDialog">
-								<text x="87.5" y="13.5" stroke="none" text-anchor="middle" data-name="PublishSuccessDialog">PublishSuccessDialog</text>
+						<g transform="translate(0, 71)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PublishDialog">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PublishDialog">
+								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="PublishDialog">PublishDialog</text>
 								
 							</g>
 						</g>
-						<g transform="translate(0, 102)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PublishSuccessDialog">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PublishSuccessDialog">
-								<text x="0.0" y="13.5" stroke="none" data-name="PublishSuccessDialog">+Widget build()</text>
+						<g transform="translate(0, 102)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PublishDialog">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PublishDialog">
+								<text x="0.0" y="13.5" stroke="none" data-name="PublishDialog">+Widget build()</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="StudyPageWidget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyPageWidget">
-							<rect x="264.5" y="0.0" height="31.0" width="157.0" data-name="StudyPageWidget"></rect>
+							<rect x="209.5" y="0.0" height="31.0" width="157.0" data-name="StudyPageWidget"></rect>
 						</g>
-						<g transform="translate(264.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyPageWidget">
+						<g transform="translate(209.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyPageWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyPageWidget">
 								<text x="70.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyPageWidget">StudyPageWidget</text>
 								
@@ -65,36 +65,36 @@
 					</g>
 					<g data-name="PublishConfirmationDialog">
 						<g fill="#eee8d5" stroke="#33322E" data-name="PublishConfirmationDialog">
-							<rect x="231.0" y="71.0" height="62.0" width="224.0" data-name="PublishConfirmationDialog"></rect>
-							<path d="M231.0 102.0 L455.0 102.0" fill="none" data-name="PublishConfirmationDialog"></path>
+							<rect x="176.0" y="71.0" height="62.0" width="224.0" data-name="PublishConfirmationDialog"></rect>
+							<path d="M176.0 102.0 L400.0 102.0" fill="none" data-name="PublishConfirmationDialog"></path>
 						</g>
-						<g transform="translate(231, 71)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PublishConfirmationDialog">
+						<g transform="translate(176, 71)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PublishConfirmationDialog">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PublishConfirmationDialog">
 								<text x="104.0" y="13.5" stroke="none" text-anchor="middle" data-name="PublishConfirmationDialog">PublishConfirmationDialog</text>
 								
 							</g>
 						</g>
-						<g transform="translate(231, 102)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PublishConfirmationDialog">
+						<g transform="translate(176, 102)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PublishConfirmationDialog">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PublishConfirmationDialog">
 								<text x="0.0" y="13.5" stroke="none" data-name="PublishConfirmationDialog">+Widget build()</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="PublishDialog">
-						<g fill="#eee8d5" stroke="#33322E" data-name="PublishDialog">
-							<rect x="495.0" y="71.0" height="62.0" width="136.0" data-name="PublishDialog"></rect>
-							<path d="M495.0 102.0 L631.0 102.0" fill="none" data-name="PublishDialog"></path>
+					<g data-name="PublishSuccessDialog">
+						<g fill="#eee8d5" stroke="#33322E" data-name="PublishSuccessDialog">
+							<rect x="440.0" y="71.0" height="62.0" width="191.0" data-name="PublishSuccessDialog"></rect>
+							<path d="M440.0 102.0 L631.0 102.0" fill="none" data-name="PublishSuccessDialog"></path>
 						</g>
-						<g transform="translate(495, 71)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PublishDialog">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PublishDialog">
-								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="PublishDialog">PublishDialog</text>
+						<g transform="translate(440, 71)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PublishSuccessDialog">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PublishSuccessDialog">
+								<text x="87.5" y="13.5" stroke="none" text-anchor="middle" data-name="PublishSuccessDialog">PublishSuccessDialog</text>
 								
 							</g>
 						</g>
-						<g transform="translate(495, 102)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PublishDialog">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PublishDialog">
-								<text x="0.0" y="13.5" stroke="none" data-name="PublishDialog">+Widget build()</text>
+						<g transform="translate(440, 102)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PublishSuccessDialog">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PublishSuccessDialog">
+								<text x="0.0" y="13.5" stroke="none" data-name="PublishSuccessDialog">+Widget build()</text>
 								
 							</g>
 						</g>
