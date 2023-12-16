@@ -9,12 +9,18 @@ packages:
   - flutter_common
 
 command:
-  # todo remove if build issue is fixed
   bootstrap:
-    hooks:
-      pre: >
-        melos get-dart --no-select
-        melos get-flutter --no-select
+    # Running "pub get" in parallel seems to be responsible for the melos bootstrap
+    # command failing in some CI and Docker related environments.
+    # Reference: https://github.com/dart-lang/pub/issues/3404
+    # Since we still want to utilize the speed advantage of parallel runs during
+    # development, we will not set "runPubGetInParallel: false" for the bootstrap command.
+    # However, certain CI environments, might need to modify this setting.
+    runPubGetInParallel: true
+    # hooks:
+    #  pre: >
+    #    melos exec --no-flutter -c 1 --fail-fast --order-dependents -- "dart pub get"
+    #    melos exec --flutter -c 1 --fail-fast --order-dependents -- "flutter pub get"
 
   clean:
     hooks:
@@ -29,24 +35,6 @@ command:
         melos exec --flutter -- "flutter clean"
 
 scripts:
-  get-dart:
-    exec: dart pub get
-    packageFilters:
-      flutter: false
-    concurrency: 1
-    orderDependents: true
-    failFast: true
-    description: Get all dart dependencies
-
-  get-flutter:
-    exec: flutter pub get
-    packageFilters:
-      flutter: true
-    concurrency: 1
-    orderDependents: true
-    failFast: true
-    description: Get all flutter dependencies
-
   analyze:
     # Exit with success if markdownlint is not installed so it's not a requirement
     # (stream redirection has to be POSIX compliant for GH runners)

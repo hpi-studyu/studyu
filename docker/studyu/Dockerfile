@@ -25,6 +25,9 @@ RUN mkdir ~/src/
 COPY --chown=bob:bob . ~/src/
 WORKDIR ~/src/
 
+# Disable parallel pub get
+RUN sed -i 's/runPubGetInParallel: true/runPubGetInParallel: false/' melos.yaml
+
 # Install melos
 RUN dart pub global activate melos
 
