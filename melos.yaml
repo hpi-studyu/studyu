@@ -9,6 +9,13 @@ packages:
   - flutter_common
 
 command:
+  # todo remove if build issue is fixed
+  bootstrap:
+    hooks:
+      pre: >
+        melos get-dart --no-select
+        melos get-flutter --no-select
+
   clean:
     hooks:
       # Clean things very deeply, can be used to establish "pristine checkout" status
@@ -22,6 +29,24 @@ command:
         melos exec --flutter -- "flutter clean"
 
 scripts:
+  get-dart:
+    exec: dart pub get
+    packageFilters:
+      flutter: false
+    concurrency: 1
+    orderDependents: true
+    failFast: true
+    description: Get all dart dependencies
+
+  get-flutter:
+    exec: flutter pub get
+    packageFilters:
+      flutter: true
+    concurrency: 1
+    orderDependents: true
+    failFast: true
+    description: Get all flutter dependencies
+
   analyze:
     # Exit with success if markdownlint is not installed so it's not a requirement
     # (stream redirection has to be POSIX compliant for GH runners)
