@@ -7,7 +7,6 @@ class StudyTestControllerState extends StudyControllerBaseState {
   const StudyTestControllerState({
     required super.currentUser,
     super.studyWithMetadata,
-    super.parentTemplateWithMetadata,
     this.serializedSession = '',
     this.languageCode = 'en',
   });
@@ -31,13 +30,11 @@ class StudyTestControllerState extends StudyControllerBaseState {
   @override
   StudyTestControllerState copyWith({
     WrappedModel<Study>? studyWithMetadata,
-    WrappedModel<Study>? parentTemplateWithMetadata,
     String? serializedSession,
     String? languageCode,
   }) {
     return StudyTestControllerState(
       studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
-      parentTemplateWithMetadata: parentTemplateWithMetadata ?? super.parentTemplateWithMetadata,
       serializedSession: serializedSession ?? this.serializedSession,
       languageCode: languageCode ?? this.languageCode,
       currentUser: currentUser,

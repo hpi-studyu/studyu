@@ -6,12 +6,10 @@ import 'package:studyu_designer_v2/features/study/study_base_state.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
-class StudyControllerState extends StudyControllerBaseState
-    implements IStudyAppBarViewModel, ISyncIndicatorViewModel {
+class StudyControllerState extends StudyControllerBaseState implements IStudyAppBarViewModel, ISyncIndicatorViewModel {
   const StudyControllerState({
     required super.currentUser,
     super.studyWithMetadata,
-    super.parentTemplateWithMetadata,
     this.isDirty = false,
     this.syncState = const AsyncValue<void>.data(null),
     this.lastSynced,
@@ -53,12 +51,10 @@ class StudyControllerState extends StudyControllerBaseState
   @override
   bool get isAnalyzeTabEnabled =>
       study.value == null ||
-      (study.value != null &&
-          (study.value!.canEdit(super.currentUser) || study.value!.publishedToRegistryResults));
+      (study.value != null && (study.value!.canEdit(super.currentUser) || study.value!.publishedToRegistryResults));
 
   @override
-  get isSettingsEnabled =>
-      study.value != null && study.value!.canChangeSettings(super.currentUser!);
+  get isSettingsEnabled => study.value != null && study.value!.canChangeSettings(super.currentUser!);
 
   // - IStudyAppBarViewModel
 
@@ -72,8 +68,7 @@ class StudyControllerState extends StudyControllerBaseState
   bool get isPublishVisible => studyWithMetadata?.model.status == StudyStatus.draft;
 
   bool get isCreateNewSubstudyVisible =>
-      studyWithMetadata?.model.status == StudyStatus.running &&
-      studyWithMetadata?.model.isTemplate == true;
+      studyWithMetadata?.model.status == StudyStatus.running && studyWithMetadata?.model.isTemplate == true;
 
   StudyType get studyType => studyWithMetadata?.model.type ?? StudyType.standalone;
 
@@ -91,14 +86,12 @@ class StudyControllerState extends StudyControllerBaseState
   @override
   StudyControllerState copyWith({
     WrappedModel<Study>? studyWithMetadata,
-    WrappedModel<Study>? parentTemplateWithMetadata,
     bool? isDirty,
     AsyncValue? syncState,
     DateTime? lastSynced,
   }) {
     return StudyControllerState(
       studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
-      parentTemplateWithMetadata: parentTemplateWithMetadata ?? super.parentTemplateWithMetadata,
       isDirty: isDirty ?? this.isDirty,
       syncState: syncState ?? this.syncState,
       lastSynced: lastSynced ?? this.lastSynced,
