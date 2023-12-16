@@ -118,7 +118,7 @@ scripts:
   build:android:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build apk --no-tree-shake-icons --multidex"
+        "flutter build apk --multidex"
     description: Build app for Android.
     packageFilters:
       dir-exists: android
@@ -126,7 +126,7 @@ scripts:
   build:ios:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build ipa --no-codesign --no-tree-shake-icons"
+        "flutter build ipa --no-codesign"
     description: Build app for iOS.
     packageFilters:
       dir-exists: ios
@@ -134,7 +134,7 @@ scripts:
   build:web:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons"
+        "flutter build web"
     description: Build app for Web.
     packageFilters:
       scope: [studyu_app, studyu_designer_v2]
@@ -143,7 +143,7 @@ scripts:
   build:web:app:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons"
+        "flutter build web"
     description: Build app for Web.
     packageFilters:
       scope: studyu_app
@@ -151,7 +151,7 @@ scripts:
   build:web:designer_v2:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons"
+        "flutter build web"
     description: Build designer_v2 for Web.
     packageFilters:
       scope: studyu_designer_v2
@@ -159,7 +159,7 @@ scripts:
   build:web:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.dev"
+        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
     description: Build web dev.
     packageFilters:
       scope: [studyu_app, studyu_designer_v2]
@@ -168,7 +168,7 @@ scripts:
   build:web:app:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.dev"
+        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
     description: Build web app dev.
     packageFilters:
       scope: studyu_app
@@ -177,7 +177,7 @@ scripts:
   build:web:designer_v2:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.dev"
+        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
     description: Build web designer_v2 dev.
     packageFilters:
       scope: studyu_designer_v2
