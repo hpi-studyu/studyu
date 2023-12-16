@@ -19,7 +19,7 @@ command:
         git clean -x -d -f -q || true
       # Additional cleanup lifecycle script, executed when `melos clean` is ran.
       post: >
-        melos exec --flutter --concurrency=3 -- "flutter clean"
+        melos exec --flutter -- "flutter clean"
 
 scripts:
   analyze:
