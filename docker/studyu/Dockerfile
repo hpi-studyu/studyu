@@ -12,7 +12,7 @@ ENV PATH="${PATH}:${HOME}/flutter/bin:${HOME}/.pub-cache/bin"
 
 RUN git clone -b master https://github.com/flutter/flutter.git ~/flutter
 
- RUN flutter channel stable
+RUN flutter channel stable
 RUN flutter config --enable-web
 RUN flutter upgrade
 RUN flutter doctor -v
