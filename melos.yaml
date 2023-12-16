@@ -12,6 +12,9 @@ command:
   clean:
     hooks:
       # Clean things very deeply, can be used to establish "pristine checkout" status
+      # No git information will be available when this is ran with docker, as we want
+      # to preserve all file changes on the host. Since git clean will fail in this case,
+      # we need to ignore the exit code.
       pre: >
         git clean -x -d -f -q || true
       # Additional cleanup lifecycle script, executed when `melos clean` is ran.
