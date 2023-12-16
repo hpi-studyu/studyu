@@ -1300,7 +1300,6 @@ reset() {
       echo -e "${green}All configuration files have been removed.${reset}"
     fi
   fi
-  echo -e "No action taken."
 }
 
 # Function to backup StudyU components
