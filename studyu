@@ -236,14 +236,24 @@ function multiselect {
   eval "$return_value"='("${selected[@]}")'
 }
 
+multiselect_print_help() {
+  echo -e "Multiselect help:"
+  echo -e "  j or ↓ => Go down";
+  echo -e "  k or ↑ => Go up";
+  echo -e "  ␣ (Space) => Toggle selection";
+  echo -e "  ↵ (Enter) => Confirm selection\n";
+}
+
 
 remove_studyu_docker_images() {
   local studyu_images
   studyu_images=$(docker images -q 'studyu*')
   if [ -n "$studyu_images" ]; then
       for image in $studyu_images; do
-          docker rmi "$image" > /dev/null 2>&1
+          docker rmi "$image"
       done
+  else
+    echo -e "${yellow}No StudyU images found.${reset}"
   fi
 }
 
@@ -788,15 +798,8 @@ configure() {
 
   # STUDYU_DEFAULT_COMPONENTS
   echo -e "${purple}Select the components that should be managed when none are explicitly defined.${reset}"
-  echo -e "Multiselect help:"
-  echo -e "  j or ↓ => Go down";
-  echo -e "  k or ↑ => Go up";
-  echo -e "  ␣ (Space) => Toggle selection";
-  echo -e "  ↵ (Enter) => Confirm selection\n";
+  multiselect_print_help
   local key_array=("${!component_descriptions[@]}")
-  #for key in "${!component_descriptions[@]}"; do
-  #  multi_options+=("${bold}$key${reset} - ${component_descriptions[$key]}")
-  #done
 
   # Set default components to all components if STUDYU_DEFAULT_COMPONENTS is empty
   # else use STUDYU_DEFAULT_COMPONENTS
@@ -1131,12 +1134,12 @@ manage_components() {
   fi
 }
 
-# Check if components are running
+# Check if containers are running
 status() {
   container_names=$(docker ps --filter "name=supabase" --filter "name=studyu" --format "{{.Names}}")
 
   if [ -z "$container_names" ]; then
-    echo -e "No components are currently running."
+    echo -e "No containers are currently running."
     exit 2
   fi
 
@@ -1246,31 +1249,49 @@ delete() {
     backup
   fi
 
-  if prompt_yes_no "Do you want to remove all containers and images of the StudyU components? This does not affect any volumes."; then
-    delete_images=true
-    down_cmd+="--remove-orphans"
-    echo -e "${yellow}Containers and images will be deleted.${reset}"
-  fi
+  echo -e "${purple}Select the items that should be deleted.${reset}"
+  multiselect_print_help
+  local results
+  # shellcheck disable=SC2034
+  local items=("Containers" "StudyU Images" "Volumes (Warning: This removes all data from Supabase and StudyU irreversibly!)")
+  # shellcheck disable=SC2034
+  local preselection=("true" "false" "false")
 
-  if prompt_yes_no "Do you want to delete the StudyU Supabase volumes and the storage data?"; then
-    if prompt_yes_no "Are you REALLY sure you want to delete all data? This includes all created studies, users, and their data."; then
-      if prompt_remove; then
-        down_cmd+=" --volumes"
-        echo -e "${yellow}Volumes will be deleted.${reset}"
-      else
-        echo -e "Volumes will not be deleted."
-      fi
+  multiselect results items preselection
+
+  for ((index=0; index<${#results[@]}; index++)); do
+    if ${results[$index]}; then
+      selected_item=${items[$index]}
+      case $selected_item in
+        "${items[0]}")
+          down_cmd+=" --rmi local"
+          ;;
+        "${items[1]}")
+          delete_images=true
+          ;;
+        "${items[2]}")
+          local deleted_volumes=false
+          if prompt_yes_no "Are you REALLY sure you want to delete all volumes? This includes all created studies, study results, and user data."; then
+            if prompt_remove; then
+              down_cmd+=" --volumes"
+              deleted_volumes=true
+            fi
+          fi
+          if [ "$deleted_volumes" ]; then
+            echo -e "${yellow}Volumes will not be deleted.${reset}"
+          fi
+          ;;
+      esac
     fi
+  done
+
+  if [ "$delete_images" = true ]; then
+    remove_studyu_docker_images
   fi
 
   if [ -n "$down_cmd" ]; then
     manage_components "down $down_cmd"
-    if [ "$delete_images" = true ]; then
-      remove_studyu_docker_images
-    fi
     echo -e "${green}Selected data has been deleted.${reset}"
-  else
-    echo -e "No action taken. No data has been deleted."
   fi
 }
 
