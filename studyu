@@ -1142,22 +1142,18 @@ status() {
 
   all_containers_running=true
   for name in $container_names; do
-    # todo also check for health status if available
-    # until docker inspect --format "{{json .State.Health.Status }}" "$component" | grep -q healthy; do
-    running_status=$(docker inspect --format='{{.State.Running}}' "$name")
+    running_status=$(docker inspect --format='{{.State.Status}}' "$name")
 
-    if [ "$running_status" = true ]; then
-      echo -e "$name (${green}running${reset})"
+    if [ "$running_status" = 'running' ]; then
+      echo -e "$name (${green}$running_status${reset})"
     else
-      echo -e "$name (${red}not running${reset})"
+      echo -e "$name (${red}$running_status${reset})"
       all_containers_running=false
     fi
   done
   echo ""
   if [ "$all_containers_running" = false ]; then
-    echo -e "${red}Some components are not running. Check 'docker-compose ps' for troubleshooting and try to restart the components with '$0 restart'.${reset}"
-  else
-    echo -e "${green}All components are running.${reset}"
+    echo -e "Some containers are not running correctly. Check 'docker logs <container-name>' for troubleshooting and try to restart the components with '$0 restart'."
   fi
 }
 
