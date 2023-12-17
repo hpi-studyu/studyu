@@ -568,6 +568,7 @@ create_supabase_secrets() {
 }
 
 create_and_set_supabase_secrets() {
+  create_specific_env_file "$supabase_env_path"
   create_supabase_secrets
   update_env_variable "$supabase_env_path" "POSTGRES_PASSWORD" "${supabase_secrets[POSTGRES_PASSWORD]}"
   update_env_variable "$supabase_env_path" "JWT_SECRET" "${supabase_secrets[JWT_SECRET]}"
@@ -938,7 +939,6 @@ manage_components() {
               echo -e "${green}Created a default Supabase env at $supabase_env_path${reset}"
               echo -e "Supabase needs some secrets to ensure a secure usage. Read more about it here: https://supabase.com/docs/guides/functions/secrets"
               if prompt_yes_no "Do you want to create these secrets automatically?"; then
-                create_specific_env_file "$supabase_env_path"
                 create_and_set_supabase_secrets
                 echo -e "${green}Generated secrets have been stored in $supabase_env_path${reset}"
                 supabase_installation_success=true
