@@ -106,20 +106,24 @@ generate_supabase_jwt() {
   ${JWT_SECRET_BASE64_ENCODED:-false} && \
     JWT_SECRET=$(printf %s "$JWT_SECRET" | base64 --decode)
 
-  header='{
-    "alg": "HS256",
-    "typ": "JWT"
-  }'
+  header=(
+  "{"
+    "\"alg\": \"HS256\","
+    "\"typ\": \"JWT\""
+  "}"
+  )
 
-  payload="{
-    \"role\": \"$role\",
-    \"iss\": \"supabase\",
-    \"iat\": $(date +%s),
-    \"exp\": $(($(date +%s) + expire_seconds))
-  }"
+  payload=(
+  "{"
+    "\"role\": \"$role\","
+    "\"iss\": \"supabase\","
+    "\"iat\": $(date +%s),"
+    "\"exp\": $(($(date +%s) + expire_seconds))"
+  "}"
+  )
 
-  header_base64=$(printf %s "$header" | base64_urlencode)
-  payload_base64=$(printf %s "$payload" | base64_urlencode)
+  header_base64=$(printf %s "${header[@]}" | base64_urlencode)
+  payload_base64=$(printf %s "${payload[@]}" | base64_urlencode)
   signed_content="${header_base64}.${payload_base64}"
   signature=$(printf %s "$signed_content" | openssl dgst -binary -sha256 -hmac "$secret" | base64_urlencode)
 
