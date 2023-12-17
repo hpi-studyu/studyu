@@ -1069,7 +1069,7 @@ manage_components() {
                   "    '$analytics'"
                   "  );"
                 )
-                echo -e "The following SQL query will be executed to insert the app_config:"
+                echo -e "${blue}The following SQL query will be executed to insert the app_config:${reset}"
                 printf "%s\n" "${sql_query[@]}"
 
                 # Prompt user to confirm the generated SQL query
@@ -1449,8 +1449,8 @@ print_env_edit_help() {
 
   echo ""
 
-  echo -e "${yellow}After making changes to the StudyU environment, be sure to also update the proxy settings by running '$0 env proxy --configure'${reset}"
-  echo -e "${yellow}After making changes to the proxy environment, be sure to also update the StudyU settings by running '$0 env studyu --configure'${reset}"
+  echo -e "${blue}After making changes to the StudyU environment, be sure to also update the proxy settings by running '$0 env proxy --configure'${reset}"
+  echo -e "${blue}After making changes to the proxy environment, be sure to also update the StudyU settings by running '$0 env studyu --configure'${reset}"
 }
 
 
