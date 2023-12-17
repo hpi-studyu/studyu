@@ -55,6 +55,7 @@ server {
     # Realtime
     location ~ ^/realtime/v1/(.*)$ {
         proxy_pass $kong;
+        # Use websocket
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
@@ -103,19 +104,19 @@ server {
 }
 
 # Analytics
-# server {
-#     listen 4000;
-#     server_name localhost;
+server {
+   listen 4000;
+   server_name ${STUDYU_SUPABASE_HOST};
 
-    # access_log /var/log/nginx/analytics.access.log main;
-#     error_log /var/log/nginx/analytics.error.log;
+  # access_log /var/log/nginx/analytics.access.log main;
+   error_log /var/log/nginx/analytics.error.log;
 
-#     include /etc/nginx/conf.d/01_common.conf;
+   include /etc/nginx/conf.d/01_common.conf;
 
-#     set $analytics http://analytics:4000;
+   set $analytics http://analytics:4000;
 
-#     location / {
-#         proxy_pass $analytics;
-#         include    /etc/nginx/conf.d/02_common_location.conf;
-#     }
-# }
+   location / {
+       proxy_pass $analytics;
+       include    /etc/nginx/conf.d/02_common_location.conf;
+   }
+}
