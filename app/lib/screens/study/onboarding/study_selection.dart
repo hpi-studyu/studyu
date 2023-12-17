@@ -154,8 +154,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                       'get_study_from_invite',
                       params: {'invite_code': _controller.text},
                     )
-                    .single()
-                    .select<Map<String, dynamic>>();
+                    .select().single();
               } on PostgrestException catch (error) {
                 print(error.message);
                 setState(() {

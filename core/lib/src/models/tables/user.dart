@@ -9,7 +9,7 @@ class StudyUUser extends SupabaseObjectFunctions<StudyUUser> {
   static const String tableName = 'user';
 
   @override
-  Map<String, dynamic> get primaryKeys => {'id': id};
+  Map<String, Object> get primaryKeys => {'id': id};
 
   @JsonKey(name: 'id')
   String id;

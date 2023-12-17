@@ -6,21 +6,19 @@ late final String supabaseAnonKey;
 late final String? appUrl;
 late final String? designerUrl;
 late final String? projectGeneratorUrl;
-late final String? authRedirectToUrl;
 
 void setEnv(
   String envSupabaseUrl,
   String envSupabaseAnonKey, {
+  required SupabaseClient supabaseClient,
   String? envAppUrl,
   String? envDesignerUrl,
   String? envProjectGeneratorUrl,
-  SupabaseClient? supabaseClient,
 }) {
   supabaseUrl = envSupabaseUrl;
   supabaseAnonKey = envSupabaseAnonKey;
-  projectGeneratorUrl = envProjectGeneratorUrl;
+  client = supabaseClient;
   appUrl = envAppUrl;
   designerUrl = envDesignerUrl;
-  authRedirectToUrl = envDesignerUrl;
-  client = supabaseClient ?? SupabaseClient(supabaseUrl, supabaseAnonKey);
+  projectGeneratorUrl = envProjectGeneratorUrl;
 }
