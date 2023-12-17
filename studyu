@@ -1340,7 +1340,7 @@ backup() {
 
 # Function to display general help
 print_general_help() {
-  echo -e "${bold}Welcome to the StudyU CLI${reset}"
+  echo -e "${bold}Welcome to the StudyU CLI (https://studyu.health)${reset}"
   echo "Usage: $0 [options] [-h]"
   echo "Options:"
   echo "  config                            Configure StudyU CLI settings"
@@ -1355,7 +1355,11 @@ print_general_help() {
   echo "  delete                            Delete components and data (use with caution!)"
   echo "  reset                             Permanently removes all configuration files (use with EXTREME caution!)"
   echo "  help                              Display this help message"
-  echo -e "Use -h for each command or visit the StudyU website for advanced usage options: https://studyu.health"
+
+  echo -e "Add -h to each command or visit the StudyU website for advanced usage options: https://studyu.health"
+
+  echo ""
+
   echo -e "$selectable_components"
 }
 
@@ -1392,10 +1396,7 @@ print_restart_help() {
   echo "  -b, --build                      Force rebuild of StudyU components"
 }
 
-# Function to display help for 'env' command
-print_env_edit_help() {
-  echo "Usage: $0 env <subcommand> [options] [-h]"
-  echo "Subcommands:"
+print_env_proxy_help() {
   echo "  proxy                                        Edit proxy environment variables"
   echo "    -i, --init                                 Initialize the proxy environment file"
   echo "    -c, --configure                            Configure proxy environment variables"
@@ -1411,9 +1412,9 @@ print_env_edit_help() {
   echo "    -m  --get-designer-port                    Get the StudyU Designer port"
   echo "    -n  --get-supabase-host                    Get the Supabase host"
   echo "    -o  --get-supabase-port                    Get the Supabase port"
+}
 
-  echo ""
-
+print_env_supabase_help() {
   echo "  supabase                                     Edit Supabase environment variables"
   echo "    -i, --init                                 Initialize Supabase environment file"
   echo "    -c, --create-supabase-secrets              Create and set Supabase secrets"
@@ -1429,9 +1430,9 @@ print_env_edit_help() {
   echo "    -r, --get-service-role-key                 Get the Supabase SERVICE_ROLE_KEY"
   echo "    -n, --get-dashboard-username               Get the Supabase dashboard username"
   echo "    -o, --get-dashboard-password               Get the Supabase dashboard password"
+}
 
-  echo ""
-
+print_env_studyu_help() {
   echo "  studyu                                       Edit StudyU environment variables"
   echo "    -i, --init                                 Initialize StudyU environment file"
   echo "    -c, --configure                            Configure StudyU environment variables"
@@ -1446,6 +1447,22 @@ print_env_edit_help() {
   echo "    -n, --get-project-generator-url            Get the StudyU project generator URL"
   echo "    -o, --get-app-url                          Get the StudyU App URL"
   echo "    -p, --get-designer-url                     Get the StudyU Designer URL"
+}
+
+# Function to display help for 'env' command
+print_env_edit_help() {
+  echo "Usage: $0 env <subcommand> [options] [-h]"
+  echo "Subcommands:"
+
+  print_env_proxy_help
+
+  echo ""
+
+  print_env_supabase_help
+
+  echo ""
+
+  print_env_studyu_help
 
   echo ""
 
@@ -1639,13 +1656,13 @@ case "$1" in
       proxy)
         shift 2
         if [ $# -eq 0 ]; then
-          print_env_edit_help
+          print_env_proxy_help
           exit 0
         fi
         while [[ $# -gt 0 ]]; do
           case $1 in
             -h | --help)
-              print_env_edit_help
+              print_env_proxy_help
               exit 0
               ;;
             -i | --init)
@@ -1721,13 +1738,13 @@ case "$1" in
       supabase)
         shift 2
         if [ $# -eq 0 ]; then
-          print_env_edit_help
+          print_env_supabase_help
           exit 0
         fi
         while [[ $# -gt 0 ]]; do
           case $1 in
             -h | --help)
-              print_env_edit_help
+              print_env_supabase_help
               exit 0
               ;;
             -i | --init)
@@ -1804,13 +1821,13 @@ case "$1" in
       studyu)
         shift 2
         if [ $# -eq 0 ]; then
-          print_env_edit_help
+          print_env_studyu_help
           exit 0
         fi
         while [[ $# -gt 0 ]]; do
           case $1 in
             -h | --help)
-              print_env_edit_help
+              print_env_studyu_help
               exit 0
               ;;
             -i | --init)
