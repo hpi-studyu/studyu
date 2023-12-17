@@ -30,15 +30,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Seed database
-        run: cp database/studyu-schema.sql docker/supabase/seed.sql
-
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v1
         with:
           version: latest
 
       - name: Initialize Supabase
+        working-directory: docker
+        run: |
+          supabase init
+
+      - name: Seed database
+        run: cp database/studyu-schema.sql docker/supabase/seed.sql
+
+      - name: Start Database
         working-directory: docker
         run: |
           supabase db start
