@@ -4,8 +4,8 @@
 #   Stop:           docker compose down
 #   Destroy:        docker compose -f docker-compose.yml -f ./dev/docker-compose.dev.yml down -v --remove-orphans
 
-version: '3.8'
 name: 'studyu_supabase'
+version: '3.8'
 
 volumes:
   blob:
@@ -19,7 +19,7 @@ services:
 
   studio:
     container_name: supabase-studio
-    image: supabase/studio:20231023-7e2cd92
+    image: supabase/studio:20231123-64a766a
     restart: unless-stopped
     healthcheck:
       test:
@@ -79,7 +79,7 @@ services:
 
   auth:
     container_name: supabase-auth
-    image: supabase/gotrue:v2.99.0
+    image: supabase/gotrue:v2.125.1
     healthcheck:
       test:
         [
@@ -132,7 +132,7 @@ services:
 
   rest:
     container_name: supabase-rest
-    image: postgrest/postgrest:v11.2.0
+    image: postgrest/postgrest:v11.2.2
     restart: unless-stopped
     environment:
       PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
@@ -146,7 +146,7 @@ services:
 
   realtime:
     container_name: realtime-dev.supabase-realtime
-    image: supabase/realtime:v2.25.27
+    image: supabase/realtime:v2.25.35
     healthcheck:
       test:
         [
@@ -180,7 +180,7 @@ services:
 
   storage:
     container_name: supabase-storage
-    image: supabase/storage-api:v0.40.4
+    image: supabase/storage-api:v0.43.11
     depends_on:
       rest:
         condition: service_started
@@ -216,7 +216,7 @@ services:
       ENABLE_IMAGE_TRANSFORMATION: "true"
       IMGPROXY_URL: http://imgproxy:5001
     volumes:
-      - blob:/var/lib/storage
+      - blob:/var/lib/storage:z
 
   imgproxy:
     container_name: supabase-imgproxy
@@ -232,11 +232,11 @@ services:
       IMGPROXY_USE_ETAG: "true"
       IMGPROXY_ENABLE_WEBP_DETECTION: ${IMGPROXY_ENABLE_WEBP_DETECTION}
     volumes:
-      - blob:/var/lib/storage
+      - blob:/var/lib/storage:z
 
   meta:
     container_name: supabase-meta
-    image: supabase/postgres-meta:v0.68.0
+    image: supabase/postgres-meta:v0.75.0
     restart: unless-stopped
     environment:
       PG_META_PORT: 8080
@@ -248,7 +248,7 @@ services:
 
   functions:
     container_name: supabase-edge-functions
-    image: supabase/edge-runtime:v1.22.3
+    image: supabase/edge-runtime:v1.29.1
     restart: unless-stopped
     environment:
       JWT_SECRET: ${JWT_SECRET}
@@ -265,4 +265,45 @@ services:
       - --main-service
       - /home/deno/functions/main
 
-  # TODO: For analytics check guidelines at: https://supabase.com/docs/reference/self-hosting-analytics/introduction#production-recommendations
+  analytics:
+    container_name: supabase-analytics
+    image: supabase/logflare:1.4.0
+    #healthcheck:
+    #  test: [ "CMD", "curl", "http://localhost:4000/health" ]
+    #  timeout: 5s
+    #  interval: 5s
+    #  retries: 10
+    restart: unless-stopped
+    #depends_on:
+    #  db:
+        # Disable this if you are using an external Postgres database
+    #    condition: service_healthy
+    # Uncomment to use Big Query backend for analytics
+    # volumes:
+    #   - type: bind
+    #     source: ${PWD}/gcloud.json
+    #     target: /opt/app/rel/logflare/bin/gcloud.json
+    #     read_only: true
+    # TODO use a different postgres container for this
+    environment:
+      LOGFLARE_NODE_HOST:  127.0.0.1
+      DB_USERNAME: supabase_admin
+      DB_DATABASE: ${POSTGRES_DB}
+      DB_HOSTNAME: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_SCHEMA: _analytics
+      LOGFLARE_API_KEY: ${LOGFLARE_API_KEY}
+      LOGFLARE_SINGLE_TENANT: true
+      LOGFLARE_SUPABASE_MODE: true
+
+      # Comment variables to use Big Query backend for analytics
+      POSTGRES_BACKEND_URL: postgresql://supabase_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      POSTGRES_BACKEND_SCHEMA: _analytics
+      LOGFLARE_FEATURE_FLAG_OVERRIDE: multibackend=true
+
+      # Uncomment to use Big Query backend for analytics
+      # GOOGLE_PROJECT_ID: ${GOOGLE_PROJECT_ID}
+      # GOOGLE_PROJECT_NUMBER: ${GOOGLE_PROJECT_NUMBER}
+    # ports:
+    #   - 4000:4000
