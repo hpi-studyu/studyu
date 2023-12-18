@@ -40,12 +40,14 @@ dependencies:
   uuid: ^4.2.1 # flutter_test
 
 dev_dependencies:
+  custom_lint:
   flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
   patrol_finders: ^2.0.1+1
+  riverpod_lint:
   test: ^1.24.9 # integration_test
 
 flutter:
