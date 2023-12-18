@@ -1,15 +1,25 @@
-<svg version="1.1" baseProfile="full" width="2881.0" height="458.0" viewbox="0 0 2881 458" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[&lt;abstract&gt;IClipboardService
+<svg version="1.1" baseProfile="full" width="2798.5" height="472.0" viewbox="0 0 2798.5 472" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[Notifications
 	  |
-	  +dynamic copy()
+	  &lt;static&gt;+credentialsInvalid: SnackbarIntent;
+	  &lt;static&gt;+userAlreadyRegistered: SnackbarIntent;
+	  &lt;static&gt;+passwordReset: SnackbarIntent;
+	  &lt;static&gt;+passwordResetSuccess: SnackbarIntent;
+	  &lt;static&gt;+studyDeleted: SnackbarIntent;
+	  &lt;static&gt;+inviteCodeDeleted: SnackbarIntent;
+	  &lt;static&gt;+inviteCodeClipped: SnackbarIntent;
+	  &lt;static&gt;+studyDeleteConfirmation: AlertIntent
 	]
 	
-	[ClipboardService
+	[Notifications]o-[SnackbarIntent]
+	[Notifications]o-[AlertIntent]
+	
+	[NotificationDefaultActions
 	  |
-	  +dynamic copy()
+	  &lt;static&gt;+cancel: NotificationAction
 	]
 	
-	[&lt;abstract&gt;IClipboardService]&lt;:--[ClipboardService]
+	[NotificationDefaultActions]o-[NotificationAction]
 	
 	[&lt;abstract&gt;NotificationIntent
 	  |
@@ -63,25 +73,29 @@
 	[NotificationType]o-[NotificationType]
 	[Enum]&lt;:--[NotificationType]
 	
-	[Notifications
+	[&lt;abstract&gt;IClipboardService
 	  |
-	  &lt;static&gt;+passwordReset: SnackbarIntent;
-	  &lt;static&gt;+passwordResetSuccess: SnackbarIntent;
-	  &lt;static&gt;+studyDeleted: SnackbarIntent;
-	  &lt;static&gt;+inviteCodeDeleted: SnackbarIntent;
-	  &lt;static&gt;+inviteCodeClipped: SnackbarIntent;
-	  &lt;static&gt;+studyDeleteConfirmation: AlertIntent
+	  +dynamic copy()
 	]
 	
-	[Notifications]o-[SnackbarIntent]
-	[Notifications]o-[AlertIntent]
-	
-	[NotificationDefaultActions
+	[ClipboardService
 	  |
-	  &lt;static&gt;+cancel: NotificationAction
+	  +dynamic copy()
 	]
 	
-	[NotificationDefaultActions]o-[NotificationAction]
+	[&lt;abstract&gt;IClipboardService]&lt;:--[ClipboardService]
+	
+	[NotificationDispatcher
+	  |
+	  +child: Widget?;
+	  +snackbarInnerPadding: double;
+	  +snackbarWidth: double?;
+	  +snackbarBehavior: SnackBarBehavior;
+	  +snackbarDefaultDuration: int
+	]
+	
+	[NotificationDispatcher]o-[&lt;abstract&gt;Widget]
+	[NotificationDispatcher]o-[SnackBarBehavior]
 	
 	[&lt;abstract&gt;INotificationService
 	  |
@@ -104,135 +118,188 @@
 	[NotificationService]o-[BehaviorSubject]
 	[&lt;abstract&gt;INotificationService]&lt;:--[NotificationService]
 	
-	[NotificationDispatcher
-	  |
-	  +child: Widget?;
-	  +snackbarInnerPadding: double;
-	  +snackbarWidth: double?;
-	  +snackbarBehavior: SnackBarBehavior;
-	  +snackbarDefaultDuration: int
-	]
-	
-	[NotificationDispatcher]o-[&lt;abstract&gt;Widget]
-	[NotificationDispatcher]o-[SnackBarBehavior]
-	
 	</desc>
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="458.0" width="2881.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="472.0" width="2798.5" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
-				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<g stroke-dasharray="6 6">
-						<path d="M78.0 120.8 L78 173 L78 231 L78.0 231.0 " fill="none"></path>
-					</g>
-					<path d="M83.3 120.8 L78.0 120.8 L72.7 120.8 L78.0 107.5 Z"></path>
-					<path d="M305.7 141.9 L229 173 L546.75 253.05590941259732 L546.8 253.1 " fill="none"></path>
+				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+					<path d="M203.5 185.7 L203.5 187 L203.5 245 L203.5 245.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M316.4 143.3 L305.7 141.9 L312.3 133.5 L323.0 134.9 Z"></path>
+						<path d="M208.8 176.3 L203.5 185.7 L198.2 176.3 L203.5 167.0 Z"></path>
 					</g>
-					<path d="M331.4 163.0 L315.75 173 L250.71488764044943 246.5 L250.7 246.5 " fill="none"></path>
+					<path d="M335.7 177.8 L348.5 187 L389.5674157303371 230 L389.6 230.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M342.1 162.5 L331.4 163.0 L336.4 153.5 L347.1 153.0 Z"></path>
+						<path d="M331.2 168.1 L335.7 177.8 L325.0 176.8 L320.5 167.0 Z"></path>
 					</g>
-					<path d="M391.9 167.4 L387.25 173 L657.75 228.59930715935334 L657.8 228.6 " fill="none"></path>
+					<path d="M670.2 130.6 L703.5 187 L703.5 230 L703.5 230.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M401.9 163.6 L391.9 167.4 L393.7 156.8 L403.8 153.0 Z"></path>
+						<path d="M670.1 119.8 L670.2 130.6 L660.9 125.2 L660.8 114.5 Z"></path>
 					</g>
-					<path d="M1200.8 326.7 L1200.75 351 L1200.75 371 L1200.8 371.0 " fill="none"></path>
+					<path d="M970.0 178.7 L970 187 L1113.0772471910113 260.5 L1113.1 260.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1206.1 317.3 L1200.8 326.7 L1195.4 317.3 L1200.8 308.0 Z"></path>
+						<path d="M975.3 169.3 L970.0 178.7 L964.7 169.3 L970.0 160.0 Z"></path>
 					</g>
-					<path d="M536.1 163.4 L543.75 173 L1368.75 255.22284434490481 L1368.8 255.2 " fill="none"></path>
-					<path d="M540.3 160.1 L536.1 163.4 L532.0 166.8 L527.8 153.0 Z"></path>
-					<path d="M623.0 151.1 L668.75 173 L1544.75 252.71779141104295 L1544.8 252.7 " fill="none"></path>
-					<path d="M625.3 146.3 L623.0 151.1 L620.7 155.9 L611.0 145.4 Z"></path>
-					<path d="M1000.5 204.9 L1012.75 201 L1020.25 201 L1020.25 201 L1027.75 262 L1027.75 262 L1020.25 323 L1020.25 323 L1012.75 323 L1012.75 323 L982.75 313.4935064935065 L982.8 313.5 " fill="none"></path>
+					<path d="M1132.1 122.9 L1396 187 L1396 260.5 L1396.0 260.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M990.0 202.6 L1000.5 204.9 L993.3 212.8 L982.8 210.5 Z"></path>
+						<path d="M1124.3 115.5 L1132.1 122.9 L1121.8 125.9 L1114.0 118.5 Z"></path>
 					</g>
-					<g stroke-dasharray="6 6">
-						<path d="M796.0 105.3 L796 173 L803.629213483146 201 L803.6 201.0 " fill="none"></path>
-					</g>
-					<path d="M801.3 105.3 L796.0 105.3 L790.7 105.3 L796.0 92.0 Z"></path>
-					<path d="M1849.2 154.2 L1816 173 L1504.75 246.0421885299934 L1504.8 246.0 " fill="none"></path>
+					<path d="M1132.4 113.0 L1539 187 L1571.4044943820224 215 L1571.4 215.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1859.9 154.2 L1849.2 154.2 L1854.6 145.0 L1865.4 145.0 Z"></path>
+						<path d="M1124.1 106.1 L1132.4 113.0 L1122.2 116.6 L1114.0 109.7 Z"></path>
 					</g>
-					<path d="M2074.5 157.6 L2091.25 173 L1748.75 241.57705286839146 L1748.8 241.6 " fill="none"></path>
+					<path d="M703.5 340.7 L703.5 365 L703.5 385 L703.5 385.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2071.3 147.4 L2074.5 157.6 L2064.0 155.2 L2060.8 145.0 Z"></path>
+						<path d="M708.8 331.3 L703.5 340.7 L698.2 331.3 L703.5 322.0 Z"></path>
 					</g>
-					<path d="M1010.0 126.2 L1010 173 L1102.1601123595506 216 L1102.2 216.0 " fill="none"></path>
+					<path d="M812.8 108.1 L308.5 187 L240.07303370786516 245 L240.1 245.0 " fill="none"></path>
+					<path d="M813.7 113.4 L812.8 108.1 L812.0 102.8 L826.0 106.0 Z"></path>
+					<path d="M813.1 122.0 L548.5 187 L492.93820224719104 230 L492.9 230.0 " fill="none"></path>
+					<path d="M814.3 127.2 L813.1 122.0 L811.8 116.9 L826.0 118.9 Z"></path>
+					<path d="M1822.3 218.9 L1834.5 215 L1842 215 L1842 215 L1849.5 276 L1849.5 276 L1842 337 L1842 337 L1834.5 337 L1834.5 337 L1804.5 327.4935064935065 L1804.5 327.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1015.3 116.8 L1010.0 126.2 L1004.7 116.8 L1010.0 107.5 Z"></path>
-					</g>
-					<path d="M2597.5 349.7 L2597.5 351 L2597.5 371 L2597.5 371.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2602.8 340.3 L2597.5 349.7 L2592.2 340.3 L2597.5 331.0 Z"></path>
+						<path d="M1811.8 216.6 L1822.3 218.9 L1815.0 226.8 L1804.5 224.5 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M2597.5 143.3 L2597.5 173 L2597.5 193 L2597.5 193.0 " fill="none"></path>
+						<path d="M1863.0 106.0 L1731.75 187 L1703.5140449438202 215 L1703.5 215.0 " fill="none"></path>
 					</g>
-					<path d="M2602.8 143.3 L2597.5 143.3 L2592.2 143.3 L2597.5 130.0 Z"></path>
-					<path d="M1243.5 147.5 L1203 173 L617.75 256.91018928715266 L617.8 256.9 " fill="none"></path>
+					<path d="M1865.8 110.5 L1863.0 106.0 L1860.2 101.5 L1874.4 99.0 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M2016.6 125.1 L1970 187 L1970 245 L1970.0 245.0 " fill="none"></path>
+					</g>
+					<path d="M2020.9 128.4 L2016.6 125.1 L2012.4 121.9 L2024.6 114.5 Z"></path>
+					<path d="M1350.7 156.8 L1316.5 187 L1173.4227528089887 260.5 L1173.4 260.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1254.2 147.0 L1243.5 147.5 L1248.5 138.0 L1259.3 137.5 Z"></path>
+						<path d="M1361.3 154.7 L1350.7 156.8 L1354.2 146.7 L1364.7 144.5 Z"></path>
 					</g>
-					<path d="M1536.7 119.3 L1763.25 173 L2160.25 246.918410041841 L2160.3 246.9 " fill="none"></path>
+					<path d="M1615.0 109.1 L2166.5 187 L2166.5 260.5 L2166.5 260.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1528.8 112.0 L1536.7 119.3 L1526.4 122.3 L1518.5 115.0 Z"></path>
+						<path d="M1606.5 102.5 L1615.0 109.1 L1605.0 113.0 L1596.5 106.5 Z"></path>
 					</g>
-					<g data-name="IClipboardService">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IClipboardService">
-							<rect x="0.0" y="45.5" height="62.0" width="156.0" data-name="IClipboardService"></rect>
-							<path d="M0.0 76.5 L156.0 76.5" fill="none" data-name="IClipboardService"></path>
+					<path d="M2515.0 363.7 L2515 365 L2515 385 L2515.0 385.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2520.3 354.3 L2515.0 363.7 L2509.7 354.3 L2515.0 345.0 Z"></path>
+					</g>
+					<g stroke-dasharray="6 6">
+						<path d="M2515.0 150.3 L2515 187 L2515 207 L2515.0 207.0 " fill="none"></path>
+					</g>
+					<path d="M2520.3 150.3 L2515.0 150.3 L2509.7 150.3 L2515.0 137.0 Z"></path>
+					<g data-name="Notifications">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Notifications">
+							<rect x="0.0" y="0.0" height="167.0" width="407.0" data-name="Notifications"></rect>
+							<path d="M0.0 31.0 L407.0 31.0" fill="none" data-name="Notifications"></path>
 						</g>
-						<g transform="translate(0, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IClipboardService">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IClipboardService">
-								<text x="70.0" y="13.5" stroke="none" text-anchor="middle" data-name="IClipboardService">IClipboardService</text>
+						<g transform="translate(0, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Notifications">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Notifications">
+								<text x="195.5" y="13.5" stroke="none" text-anchor="middle" data-name="Notifications">Notifications</text>
 								
 							</g>
 						</g>
-						<g transform="translate(0, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IClipboardService">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IClipboardService">
-								<text x="0.0" y="13.5" stroke="none" data-name="IClipboardService">+dynamic copy()</text>
+						<g transform="translate(0, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Notifications">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Notifications">
+								<text x="0.0" y="13.5" stroke="none" data-name="Notifications">&lt;static&gt;+credentialsInvalid: SnackbarIntent</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="Notifications">&lt;static&gt;+userAlreadyRegistered: SnackbarIntent</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="Notifications">&lt;static&gt;+passwordReset: SnackbarIntent</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="Notifications">&lt;static&gt;+passwordResetSuccess: SnackbarIntent</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="Notifications">&lt;static&gt;+studyDeleted: SnackbarIntent</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="Notifications">&lt;static&gt;+inviteCodeDeleted: SnackbarIntent</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="Notifications">&lt;static&gt;+inviteCodeClipped: SnackbarIntent</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="Notifications">&lt;static&gt;+studyDeleteConfirmation: AlertIntent</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="ClipboardService">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ClipboardService">
-							<rect x="2.5" y="231.0" height="62.0" width="151.0" data-name="ClipboardService"></rect>
-							<path d="M2.5 262.0 L153.5 262.0" fill="none" data-name="ClipboardService"></path>
+					<g data-name="SnackbarIntent">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SnackbarIntent">
+							<rect x="135.5" y="245.0" height="62.0" width="136.0" data-name="SnackbarIntent"></rect>
+							<path d="M135.5 276.0 L271.5 276.0" fill="none" data-name="SnackbarIntent"></path>
 						</g>
-						<g transform="translate(2.5, 231)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ClipboardService">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ClipboardService">
-								<text x="67.5" y="13.5" stroke="none" text-anchor="middle" data-name="ClipboardService">ClipboardService</text>
+						<g transform="translate(135.5, 245)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SnackbarIntent">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SnackbarIntent">
+								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="SnackbarIntent">SnackbarIntent</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2.5, 262)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ClipboardService">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ClipboardService">
-								<text x="0.0" y="13.5" stroke="none" data-name="ClipboardService">+dynamic copy()</text>
+						<g transform="translate(135.5, 276)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SnackbarIntent">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SnackbarIntent">
+								<text x="0.0" y="13.5" stroke="none" data-name="SnackbarIntent">+duration: int?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="AlertIntent">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AlertIntent">
+							<rect x="331.5" y="230.0" height="92.0" width="204.0" data-name="AlertIntent"></rect>
+							<path d="M331.5 261.0 L535.5 261.0" fill="none" data-name="AlertIntent"></path>
+						</g>
+						<g transform="translate(331.5, 230)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AlertIntent">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AlertIntent">
+								<text x="94.0" y="13.5" stroke="none" text-anchor="middle" data-name="AlertIntent">AlertIntent</text>
+								
+							</g>
+						</g>
+						<g transform="translate(331.5, 261)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AlertIntent">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AlertIntent">
+								<text x="0.0" y="13.5" stroke="none" data-name="AlertIntent">+title: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="AlertIntent">+dismissOnAction: bool</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="AlertIntent">+isDestructive: dynamic</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="NotificationDefaultActions">
+						<g fill="#eee8d5" stroke="#33322E" data-name="NotificationDefaultActions">
+							<rect x="499.0" y="52.5" height="62.0" width="287.0" data-name="NotificationDefaultActions"></rect>
+							<path d="M499.0 83.5 L786.0 83.5" fill="none" data-name="NotificationDefaultActions"></path>
+						</g>
+						<g transform="translate(499, 52.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotificationDefaultActions">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NotificationDefaultActions">
+								<text x="135.5" y="13.5" stroke="none" text-anchor="middle" data-name="NotificationDefaultActions">NotificationDefaultActions</text>
+								
+							</g>
+						</g>
+						<g transform="translate(499, 83.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationDefaultActions">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationDefaultActions">
+								<text x="0.0" y="13.5" stroke="none" data-name="NotificationDefaultActions">&lt;static&gt;+cancel: NotificationAction</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="NotificationAction">
+						<g fill="#eee8d5" stroke="#33322E" data-name="NotificationAction">
+							<rect x="575.5" y="230.0" height="92.0" width="256.0" data-name="NotificationAction"></rect>
+							<path d="M575.5 261.0 L831.5 261.0" fill="none" data-name="NotificationAction"></path>
+						</g>
+						<g transform="translate(575.5, 230)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotificationAction">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NotificationAction">
+								<text x="120.0" y="13.5" stroke="none" text-anchor="middle" data-name="NotificationAction">NotificationAction</text>
+								
+							</g>
+						</g>
+						<g transform="translate(575.5, 261)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationAction">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationAction">
+								<text x="0.0" y="13.5" stroke="none" data-name="NotificationAction">+label: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="NotificationAction">+onSelect: dynamic Function()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="NotificationAction">+isDestructive: bool</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="NotificationIntent">
 						<g fill="#eee8d5" stroke="#33322E" data-name="NotificationIntent">
-							<rect x="323.0" y="0.0" height="153.0" width="288.0" data-name="NotificationIntent"></rect>
-							<path d="M323.0 31.0 L611.0 31.0" fill="none" data-name="NotificationIntent"></path>
-							<path d="M323.0 122.0 L611.0 122.0" fill="none" data-name="NotificationIntent"></path>
+							<rect x="826.0" y="7.0" height="153.0" width="288.0" data-name="NotificationIntent"></rect>
+							<path d="M826.0 38.0 L1114.0 38.0" fill="none" data-name="NotificationIntent"></path>
+							<path d="M826.0 129.0 L1114.0 129.0" fill="none" data-name="NotificationIntent"></path>
 						</g>
-						<g transform="translate(323, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="NotificationIntent">
+						<g transform="translate(826, 7)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="NotificationIntent">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NotificationIntent">
 								<text x="136.0" y="13.5" stroke="none" text-anchor="middle" data-name="NotificationIntent">NotificationIntent</text>
 								
 							</g>
 						</g>
-						<g transform="translate(323, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationIntent">
+						<g transform="translate(826, 38)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationIntent">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationIntent">
 								<text x="0.0" y="13.5" stroke="none" data-name="NotificationIntent">+message: String?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="NotificationIntent">+customContent: Widget?</text>
@@ -242,7 +309,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(323, 122)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationIntent">
+						<g transform="translate(826, 129)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationIntent">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationIntent">
 								<text x="0.0" y="13.5" stroke="none" data-name="NotificationIntent">+void register()</text>
 								
@@ -251,9 +318,9 @@
 					</g>
 					<g data-name="Widget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Widget">
-							<rect x="546.8" y="246.5" height="31.0" width="71.0" data-name="Widget"></rect>
+							<rect x="1107.8" y="260.5" height="31.0" width="71.0" data-name="Widget"></rect>
 						</g>
-						<g transform="translate(546.75, 246.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Widget">
+						<g transform="translate(1107.75, 260.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Widget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget">
 								<text x="27.5" y="13.5" stroke="none" text-anchor="middle" data-name="Widget">Widget</text>
 								
@@ -262,9 +329,9 @@
 					</g>
 					<g data-name="IconData">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IconData">
-							<rect x="193.5" y="246.5" height="31.0" width="87.0" data-name="IconData"></rect>
+							<rect x="1352.5" y="260.5" height="31.0" width="87.0" data-name="IconData"></rect>
 						</g>
-						<g transform="translate(193.5, 246.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IconData">
+						<g transform="translate(1352.5, 260.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IconData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IconData">
 								<text x="35.5" y="13.5" stroke="none" text-anchor="middle" data-name="IconData">IconData</text>
 								
@@ -273,16 +340,16 @@
 					</g>
 					<g data-name="NotificationType">
 						<g fill="#eee8d5" stroke="#33322E" data-name="NotificationType">
-							<rect x="657.8" y="201.0" height="122.0" width="325.0" data-name="NotificationType"></rect>
-							<path d="M657.8 232.0 L982.8 232.0" fill="none" data-name="NotificationType"></path>
+							<rect x="1479.5" y="215.0" height="122.0" width="325.0" data-name="NotificationType"></rect>
+							<path d="M1479.5 246.0 L1804.5 246.0" fill="none" data-name="NotificationType"></path>
 						</g>
-						<g transform="translate(657.75, 201)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotificationType">
+						<g transform="translate(1479.5, 215)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotificationType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NotificationType">
 								<text x="154.5" y="13.5" stroke="none" text-anchor="middle" data-name="NotificationType">NotificationType</text>
 								
 							</g>
 						</g>
-						<g transform="translate(657.75, 232)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationType">
+						<g transform="translate(1479.5, 246)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationType">
 								<text x="0.0" y="13.5" stroke="none" data-name="NotificationType">+index: int</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="NotificationType">&lt;static&gt;+values: List&lt;NotificationType&gt;</text>
@@ -293,199 +360,76 @@
 							</g>
 						</g>
 					</g>
-					<g data-name="NotificationAction">
-						<g fill="#eee8d5" stroke="#33322E" data-name="NotificationAction">
-							<rect x="1072.8" y="216.0" height="92.0" width="256.0" data-name="NotificationAction"></rect>
-							<path d="M1072.8 247.0 L1328.8 247.0" fill="none" data-name="NotificationAction"></path>
-						</g>
-						<g transform="translate(1072.75, 216)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotificationAction">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NotificationAction">
-								<text x="120.0" y="13.5" stroke="none" text-anchor="middle" data-name="NotificationAction">NotificationAction</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1072.75, 247)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationAction">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationAction">
-								<text x="0.0" y="13.5" stroke="none" data-name="NotificationAction">+label: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="NotificationAction">+onSelect: dynamic Function()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="NotificationAction">+isDestructive: bool</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="dynamic Function()">
 						<g fill="#eee8d5" stroke="#33322E" data-name="dynamic Function()">
-							<rect x="1117.3" y="371.0" height="31.0" width="167.0" data-name="dynamic Function()"></rect>
+							<rect x="620.0" y="385.0" height="31.0" width="167.0" data-name="dynamic Function()"></rect>
 						</g>
-						<g transform="translate(1117.25, 371)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function()">
+						<g transform="translate(620, 385)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function()">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="dynamic Function()">
 								<text x="75.5" y="13.5" stroke="none" text-anchor="middle" data-name="dynamic Function()">dynamic Function()</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="SnackbarIntent">
-						<g fill="#eee8d5" stroke="#33322E" data-name="SnackbarIntent">
-							<rect x="1368.8" y="231.0" height="62.0" width="136.0" data-name="SnackbarIntent"></rect>
-							<path d="M1368.8 262.0 L1504.8 262.0" fill="none" data-name="SnackbarIntent"></path>
-						</g>
-						<g transform="translate(1368.75, 231)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SnackbarIntent">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SnackbarIntent">
-								<text x="60.0" y="13.5" stroke="none" text-anchor="middle" data-name="SnackbarIntent">SnackbarIntent</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1368.75, 262)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SnackbarIntent">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SnackbarIntent">
-								<text x="0.0" y="13.5" stroke="none" data-name="SnackbarIntent">+duration: int?</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="AlertIntent">
-						<g fill="#eee8d5" stroke="#33322E" data-name="AlertIntent">
-							<rect x="1544.8" y="216.0" height="92.0" width="204.0" data-name="AlertIntent"></rect>
-							<path d="M1544.8 247.0 L1748.8 247.0" fill="none" data-name="AlertIntent"></path>
-						</g>
-						<g transform="translate(1544.75, 216)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AlertIntent">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AlertIntent">
-								<text x="94.0" y="13.5" stroke="none" text-anchor="middle" data-name="AlertIntent">AlertIntent</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1544.75, 247)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AlertIntent">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AlertIntent">
-								<text x="0.0" y="13.5" stroke="none" data-name="AlertIntent">+title: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="AlertIntent">+dismissOnAction: bool</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="AlertIntent">+isDestructive: dynamic</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="Enum">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Enum">
-							<rect x="765.5" y="61.0" height="31.0" width="61.0" data-name="Enum"></rect>
+							<rect x="1869.0" y="68.0" height="31.0" width="61.0" data-name="Enum"></rect>
 						</g>
-						<g transform="translate(765.5, 61)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
+						<g transform="translate(1869, 68)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Enum">
 								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Enum">Enum</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="Notifications">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Notifications">
-							<rect x="1782.8" y="8.0" height="137.0" width="407.0" data-name="Notifications"></rect>
-							<path d="M1782.8 39.0 L2189.8 39.0" fill="none" data-name="Notifications"></path>
+					<g data-name="IClipboardService">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IClipboardService">
+							<rect x="1970.0" y="52.5" height="62.0" width="156.0" data-name="IClipboardService"></rect>
+							<path d="M1970.0 83.5 L2126.0 83.5" fill="none" data-name="IClipboardService"></path>
 						</g>
-						<g transform="translate(1782.75, 8)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Notifications">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Notifications">
-								<text x="195.5" y="13.5" stroke="none" text-anchor="middle" data-name="Notifications">Notifications</text>
+						<g transform="translate(1970, 52.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IClipboardService">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IClipboardService">
+								<text x="70.0" y="13.5" stroke="none" text-anchor="middle" data-name="IClipboardService">IClipboardService</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1782.75, 39)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Notifications">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Notifications">
-								<text x="0.0" y="13.5" stroke="none" data-name="Notifications">&lt;static&gt;+passwordReset: SnackbarIntent</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="Notifications">&lt;static&gt;+passwordResetSuccess: SnackbarIntent</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="Notifications">&lt;static&gt;+studyDeleted: SnackbarIntent</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="Notifications">&lt;static&gt;+inviteCodeDeleted: SnackbarIntent</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="Notifications">&lt;static&gt;+inviteCodeClipped: SnackbarIntent</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="Notifications">&lt;static&gt;+studyDeleteConfirmation: AlertIntent</text>
+						<g transform="translate(1970, 83.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IClipboardService">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IClipboardService">
+								<text x="0.0" y="13.5" stroke="none" data-name="IClipboardService">+dynamic copy()</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="NotificationDefaultActions">
-						<g fill="#eee8d5" stroke="#33322E" data-name="NotificationDefaultActions">
-							<rect x="866.5" y="45.5" height="62.0" width="287.0" data-name="NotificationDefaultActions"></rect>
-							<path d="M866.5 76.5 L1153.5 76.5" fill="none" data-name="NotificationDefaultActions"></path>
+					<g data-name="ClipboardService">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ClipboardService">
+							<rect x="1894.5" y="245.0" height="62.0" width="151.0" data-name="ClipboardService"></rect>
+							<path d="M1894.5 276.0 L2045.5 276.0" fill="none" data-name="ClipboardService"></path>
 						</g>
-						<g transform="translate(866.5, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotificationDefaultActions">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NotificationDefaultActions">
-								<text x="135.5" y="13.5" stroke="none" text-anchor="middle" data-name="NotificationDefaultActions">NotificationDefaultActions</text>
+						<g transform="translate(1894.5, 245)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ClipboardService">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ClipboardService">
+								<text x="67.5" y="13.5" stroke="none" text-anchor="middle" data-name="ClipboardService">ClipboardService</text>
 								
 							</g>
 						</g>
-						<g transform="translate(866.5, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationDefaultActions">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationDefaultActions">
-								<text x="0.0" y="13.5" stroke="none" data-name="NotificationDefaultActions">&lt;static&gt;+cancel: NotificationAction</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="INotificationService">
-						<g fill="#eee8d5" stroke="#33322E" data-name="INotificationService">
-							<rect x="2400.0" y="23.0" height="107.0" width="395.0" data-name="INotificationService"></rect>
-							<path d="M2400.0 54.0 L2795.0 54.0" fill="none" data-name="INotificationService"></path>
-						</g>
-						<g transform="translate(2400, 23)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="INotificationService">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="INotificationService">
-								<text x="189.5" y="13.5" stroke="none" text-anchor="middle" data-name="INotificationService">INotificationService</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2400, 54)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="INotificationService">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="INotificationService">
-								<text x="0.0" y="13.5" stroke="none" data-name="INotificationService">+void showMessage()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="INotificationService">+void show()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="INotificationService">+Stream&lt;NotificationIntent&gt; watchNotifications()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="INotificationService">+void dispose()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="NotificationService">
-						<g fill="#eee8d5" stroke="#33322E" data-name="NotificationService">
-							<rect x="2370.0" y="193.0" height="138.0" width="455.0" data-name="NotificationService"></rect>
-							<path d="M2370.0 224.0 L2825.0 224.0" fill="none" data-name="NotificationService"></path>
-							<path d="M2370.0 255.0 L2825.0 255.0" fill="none" data-name="NotificationService"></path>
-						</g>
-						<g transform="translate(2370, 193)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotificationService">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NotificationService">
-								<text x="219.5" y="13.5" stroke="none" text-anchor="middle" data-name="NotificationService">NotificationService</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2370, 224)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationService">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationService">
-								<text x="0.0" y="13.5" stroke="none" data-name="NotificationService">-_streamController: BehaviorSubject&lt;NotificationIntent&gt;</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2370, 255)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationService">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationService">
-								<text x="0.0" y="13.5" stroke="none" data-name="NotificationService">+Stream&lt;NotificationIntent&gt; watchNotifications()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="NotificationService">+void showMessage()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="NotificationService">+void show()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="NotificationService">+void dispose()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="BehaviorSubject">
-						<g fill="#eee8d5" stroke="#33322E" data-name="BehaviorSubject">
-							<rect x="2525.0" y="371.0" height="31.0" width="145.0" data-name="BehaviorSubject"></rect>
-						</g>
-						<g transform="translate(2525, 371)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BehaviorSubject">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BehaviorSubject">
-								<text x="64.5" y="13.5" stroke="none" text-anchor="middle" data-name="BehaviorSubject">BehaviorSubject</text>
+						<g transform="translate(1894.5, 276)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ClipboardService">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ClipboardService">
+								<text x="0.0" y="13.5" stroke="none" data-name="ClipboardService">+dynamic copy()</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="NotificationDispatcher">
 						<g fill="#eee8d5" stroke="#33322E" data-name="NotificationDispatcher">
-							<rect x="1193.5" y="15.5" height="122.0" width="325.0" data-name="NotificationDispatcher"></rect>
-							<path d="M1193.5 46.5 L1518.5 46.5" fill="none" data-name="NotificationDispatcher"></path>
+							<rect x="1271.5" y="22.5" height="122.0" width="325.0" data-name="NotificationDispatcher"></rect>
+							<path d="M1271.5 53.5 L1596.5 53.5" fill="none" data-name="NotificationDispatcher"></path>
 						</g>
-						<g transform="translate(1193.5, 15.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotificationDispatcher">
+						<g transform="translate(1271.5, 22.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotificationDispatcher">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NotificationDispatcher">
 								<text x="154.5" y="13.5" stroke="none" text-anchor="middle" data-name="NotificationDispatcher">NotificationDispatcher</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1193.5, 46.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationDispatcher">
+						<g transform="translate(1271.5, 53.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationDispatcher">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationDispatcher">
 								<text x="0.0" y="13.5" stroke="none" data-name="NotificationDispatcher">+child: Widget?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="NotificationDispatcher">+snackbarInnerPadding: double</text>
@@ -498,11 +442,71 @@
 					</g>
 					<g data-name="SnackBarBehavior">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SnackBarBehavior">
-							<rect x="2160.3" y="246.5" height="31.0" width="162.0" data-name="SnackBarBehavior"></rect>
+							<rect x="2085.5" y="260.5" height="31.0" width="162.0" data-name="SnackBarBehavior"></rect>
 						</g>
-						<g transform="translate(2160.25, 246.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SnackBarBehavior">
+						<g transform="translate(2085.5, 260.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SnackBarBehavior">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SnackBarBehavior">
 								<text x="73.0" y="13.5" stroke="none" text-anchor="middle" data-name="SnackBarBehavior">SnackBarBehavior</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="INotificationService">
+						<g fill="#eee8d5" stroke="#33322E" data-name="INotificationService">
+							<rect x="2317.5" y="30.0" height="107.0" width="395.0" data-name="INotificationService"></rect>
+							<path d="M2317.5 61.0 L2712.5 61.0" fill="none" data-name="INotificationService"></path>
+						</g>
+						<g transform="translate(2317.5, 30)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="INotificationService">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="INotificationService">
+								<text x="189.5" y="13.5" stroke="none" text-anchor="middle" data-name="INotificationService">INotificationService</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2317.5, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="INotificationService">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="INotificationService">
+								<text x="0.0" y="13.5" stroke="none" data-name="INotificationService">+void showMessage()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="INotificationService">+void show()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="INotificationService">+Stream&lt;NotificationIntent&gt; watchNotifications()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="INotificationService">+void dispose()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="NotificationService">
+						<g fill="#eee8d5" stroke="#33322E" data-name="NotificationService">
+							<rect x="2287.5" y="207.0" height="138.0" width="455.0" data-name="NotificationService"></rect>
+							<path d="M2287.5 238.0 L2742.5 238.0" fill="none" data-name="NotificationService"></path>
+							<path d="M2287.5 269.0 L2742.5 269.0" fill="none" data-name="NotificationService"></path>
+						</g>
+						<g transform="translate(2287.5, 207)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotificationService">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NotificationService">
+								<text x="219.5" y="13.5" stroke="none" text-anchor="middle" data-name="NotificationService">NotificationService</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2287.5, 238)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationService">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationService">
+								<text x="0.0" y="13.5" stroke="none" data-name="NotificationService">-_streamController: BehaviorSubject&lt;NotificationIntent&gt;</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2287.5, 269)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationService">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationService">
+								<text x="0.0" y="13.5" stroke="none" data-name="NotificationService">+Stream&lt;NotificationIntent&gt; watchNotifications()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="NotificationService">+void showMessage()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="NotificationService">+void show()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="NotificationService">+void dispose()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="BehaviorSubject">
+						<g fill="#eee8d5" stroke="#33322E" data-name="BehaviorSubject">
+							<rect x="2442.5" y="385.0" height="31.0" width="145.0" data-name="BehaviorSubject"></rect>
+						</g>
+						<g transform="translate(2442.5, 385)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BehaviorSubject">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BehaviorSubject">
+								<text x="64.5" y="13.5" stroke="none" text-anchor="middle" data-name="BehaviorSubject">BehaviorSubject</text>
 								
 							</g>
 						</g>
