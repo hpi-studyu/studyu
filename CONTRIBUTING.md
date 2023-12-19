@@ -98,8 +98,3 @@ Backend-as-a-Service provider. Supabase provides different backend services
 such as a database, API, authentication, storage service all based around
 PostgreSQL and other FOSS. Since Supabase is open-source, we are hosting our
 own instance to ensure data privacy and security.
-
-## Test Instance of Deprecated Packages
-
-- [StudyU App v1](https://app-v1.studyu.health)
-- [StudyU Designer v1](https://designer-v1.studyu.health)
