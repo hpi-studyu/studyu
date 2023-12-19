@@ -1,3 +1,7 @@
+## 1.6.2-dev.0
+
+ - Update a dependency to the latest release.
+
 ## 1.6.1
 
  - **FIX**: upgrade deps. ([f37d0a71](https://github.com/hpi-studyu/studyu/commit/f37d0a711ab9a126b7da13b7eb4fbb9b784f3725))

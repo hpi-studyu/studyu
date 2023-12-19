@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2023-12-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.6.5-dev.0`](#studyu_app---v265-dev0)
+ - [`studyu_flutter_common` - `v1.7.0-dev.0`](#studyu_flutter_common---v170-dev0)
+ - [`studyu_designer_v2` - `v1.6.2-dev.0`](#studyu_designer_v2---v162-dev0)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `studyu_designer_v2` - `v1.6.2-dev.0`
+
+---
+
+#### `studyu_app` - `v2.6.5-dev.0`
+
+ - **FIX**: refresh dashboard on app resume. ([9bcd0e51](https://github.com/hpi-studyu/studyu/commit/9bcd0e5159d80e1f4cd4948f0ee8956705cd8c38))
+ - **FIX**: add required manifest entries for notifications to work again. ([5c8e4bbe](https://github.com/hpi-studyu/studyu/commit/5c8e4bbe42e6e5d93ee0f20a5732d8f28324df1a))
+
+#### `studyu_flutter_common` - `v1.7.0-dev.0`
+
+ - **FIX**: do not rely on hardcoded authcallback. ([e6787fb7](https://github.com/hpi-studyu/studyu/commit/e6787fb7027b50181441bec0a6ee5a47eec1146d))
+ - **FIX**(cli): debug command line arguments. ([e16f5e49](https://github.com/hpi-studyu/studyu/commit/e16f5e4954ce3247073b31479e8b28f0ff1693df))
+ - **FIX**: Use default env urls again. ([ac3c3981](https://github.com/hpi-studyu/studyu/commit/ac3c39819ff23faa99a6812e88700d29184bb9f4))
+ - **FEAT**(docker): Introduce advanced cli functionality. ([a1c749aa](https://github.com/hpi-studyu/studyu/commit/a1c749aa6241d4b3521e53462db116a96c0bf246))
+
+
 ## 2023-11-14
 
 ### Changes

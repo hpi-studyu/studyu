@@ -1,3 +1,8 @@
+## 2.6.5-dev.0
+
+ - **FIX**: refresh dashboard on app resume. ([9bcd0e51](https://github.com/hpi-studyu/studyu/commit/9bcd0e5159d80e1f4cd4948f0ee8956705cd8c38))
+ - **FIX**: add required manifest entries for notifications to work again. ([5c8e4bbe](https://github.com/hpi-studyu/studyu/commit/5c8e4bbe42e6e5d93ee0f20a5732d8f28324df1a))
+
 ## 2.6.4
 
  - **FIX**: upgrade deps. ([f37d0a71](https://github.com/hpi-studyu/studyu/commit/f37d0a711ab9a126b7da13b7eb4fbb9b784f3725))
