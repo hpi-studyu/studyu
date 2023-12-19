@@ -20,7 +20,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   flutter_localizations:
     sdk: flutter
-  flutter_riverpod: ^2.4.6
+  flutter_riverpod: ^2.4.9
   flutter_web_plugins:
     sdk: flutter
   go_router: ^12.1.1
@@ -37,7 +37,7 @@ dependencies:
   supabase: ^1.11.11
   supabase_flutter: ^1.10.25
   url_launcher: ^6.2.1
-  uuid: ^4.1.0 # flutter_test
+  uuid: ^4.2.1
 
 dev_dependencies:
   flutter_lints: ^3.0.1
