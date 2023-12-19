@@ -1,3 +1,10 @@
+## 1.7.0-dev.0
+
+ - **FIX**: do not rely on hardcoded authcallback. ([e6787fb7](https://github.com/hpi-studyu/studyu/commit/e6787fb7027b50181441bec0a6ee5a47eec1146d))
+ - **FIX**(cli): debug command line arguments. ([e16f5e49](https://github.com/hpi-studyu/studyu/commit/e16f5e4954ce3247073b31479e8b28f0ff1693df))
+ - **FIX**: Use default env urls again. ([ac3c3981](https://github.com/hpi-studyu/studyu/commit/ac3c39819ff23faa99a6812e88700d29184bb9f4))
+ - **FEAT**(docker): Introduce advanced cli functionality. ([a1c749aa](https://github.com/hpi-studyu/studyu/commit/a1c749aa6241d4b3521e53462db116a96c0bf246))
+
 ## 1.6.4
 
  - **FIX**: upgrade deps. ([f37d0a71](https://github.com/hpi-studyu/studyu/commit/f37d0a711ab9a126b7da13b7eb4fbb9b784f3725))
