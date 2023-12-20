@@ -2,7 +2,6 @@ import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
@@ -14,39 +13,17 @@ import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class StudyGroup {
-  final bool isSingleStudy;
-  final String id;
-  final String? title;
-  final List<Study> studies;
-  Study get first => studies.first;
-  DateTime? get createdAt => studies
-      .where((s) => s.createdAt != null)
-      .sortedBy((s) => s.createdAt!)
-      .firstOrNull
-      ?.createdAt;
-  int get participantCount => studies.map((s) => s.participantCount).sum;
-  int get activeSubjectCount => studies.map((s) => s.activeSubjectCount).sum;
-  int get endedCount => studies.map((s) => s.endedCount).sum;
+  final Study standaloneOrTemplate;
+  final List<Study> subStudies;
 
-  StudyGroup(this.studies, this.title, this.id, {this.isSingleStudy = false}) {
-    if (studies.isEmpty) {
-      throw ArgumentError("The studies list should not be empty.");
-    }
-  }
-  StudyGroup.single(Study study) : this([study], study.title, study.id, isSingleStudy: true);
+  StudyGroup(this.standaloneOrTemplate, this.subStudies);
+
+  StudyGroup.standalone(Study standaloneStudy) : this(standaloneStudy, []);
+
+  StudyGroup.template(Template templateStudy, List<Study> subStudies) : this(templateStudy, subStudies);
 }
 
-enum StudiesTableColumn {
-  pin,
-  title,
-  status,
-  participation,
-  createdAt,
-  enrolled,
-  active,
-  completed,
-  action
-}
+enum StudiesTableColumn { pin, title, status, participation, createdAt, enrolled, active, completed, action }
 
 class StudiesTableColumnSize {
   final int? flex;
@@ -70,6 +47,7 @@ class StudiesTable extends StatelessWidget {
     required this.studyGroups,
     required this.onSelect,
     required this.getActions,
+    required this.getSubActions,
     required this.emptyWidget,
     required this.pinnedStudies,
     required this.dashboardController,
@@ -87,6 +65,7 @@ class StudiesTable extends StatelessWidget {
   final List<StudyGroup> studyGroups;
   final OnSelectHandler<Study> onSelect;
   final ActionsProviderFor<StudyGroup> getActions;
+  final ActionsProviderAt<StudyGroup> getSubActions;
   final Widget emptyWidget;
   final Iterable<String> pinnedStudies;
   final DashboardController dashboardController;
@@ -103,31 +82,31 @@ class StudiesTable extends StatelessWidget {
       tr.studies_list_header_participants_active,
       tr.studies_list_header_participants_completed,
     ];
-    final int maxStatTitleLength =
-        statTitles.fold(0, (max, element) => max > element.length ? max : element.length);
+    final int maxStatTitleLength = statTitles.fold(0, (max, element) => max > element.length ? max : element.length);
     final double statsColumnWidth = maxStatTitleLength * 9.5;
 
     // Calculate the minimum status column width
     final statuses = HashSet<StudyStatus>();
     for (final studyGroup in studyGroups) {
-      for (final study in studyGroup.studies) {
+      statuses.add(studyGroup.standaloneOrTemplate.status);
+      for (final study in studyGroup.subStudies) {
         statuses.add(study.status);
       }
     }
-    int maxStatusLength = statuses.fold(
-        0, (max, element) => max > element.string.length ? max : element.string.length);
+    int maxStatusLength = statuses.fold(0, (max, element) => max > element.string.length ? max : element.string.length);
     maxStatusLength = max(maxStatusLength, tr.studies_list_header_status.length);
     final double statusColumnWidth = maxStatusLength * 11.5;
 
     // Calculate the minimum participation column width
     final participations = HashSet<Participation>();
     for (final studyGroup in studyGroups) {
-      for (final study in studyGroup.studies) {
+      participations.add(studyGroup.standaloneOrTemplate.participation);
+      for (final study in studyGroup.subStudies) {
         participations.add(study.participation);
       }
     }
-    int maxParticipationLength = participations.fold(
-        0, (max, element) => max > element.whoShort.length ? max : element.whoShort.length);
+    int maxParticipationLength =
+        participations.fold(0, (max, element) => max > element.whoShort.length ? max : element.whoShort.length);
     maxStatusLength = max(maxStatusLength, tr.studies_list_header_participation.length);
     final double participationColumnWidth = 20 + (maxParticipationLength * 7.5);
 
@@ -151,57 +130,39 @@ class StudiesTable extends StatelessWidget {
           height: itemHeight,
           child: Row(
             children: [
-              columnDefinitions[0]
-                  .value
-                  .createContainer(child: _buildColumnHeader(columnDefinitions[0].key)),
+              columnDefinitions[0].value.createContainer(child: _buildColumnHeader(columnDefinitions[0].key)),
               SizedBox(
                 width: columnSpacing,
               ),
-              columnDefinitions[1]
-                  .value
-                  .createContainer(child: _buildColumnHeader(columnDefinitions[1].key)),
+              columnDefinitions[1].value.createContainer(child: _buildColumnHeader(columnDefinitions[1].key)),
               SizedBox(
                 width: columnSpacing,
               ),
-              columnDefinitions[2]
-                  .value
-                  .createContainer(child: _buildColumnHeader(columnDefinitions[2].key)),
+              columnDefinitions[2].value.createContainer(child: _buildColumnHeader(columnDefinitions[2].key)),
               SizedBox(
                 width: columnSpacing,
               ),
-              columnDefinitions[3]
-                  .value
-                  .createContainer(child: _buildColumnHeader(columnDefinitions[3].key)),
+              columnDefinitions[3].value.createContainer(child: _buildColumnHeader(columnDefinitions[3].key)),
               SizedBox(
                 width: columnSpacing,
               ),
-              columnDefinitions[4]
-                  .value
-                  .createContainer(child: _buildColumnHeader(columnDefinitions[4].key)),
+              columnDefinitions[4].value.createContainer(child: _buildColumnHeader(columnDefinitions[4].key)),
               SizedBox(
                 width: columnSpacing,
               ),
-              columnDefinitions[5]
-                  .value
-                  .createContainer(child: _buildColumnHeader(columnDefinitions[5].key)),
+              columnDefinitions[5].value.createContainer(child: _buildColumnHeader(columnDefinitions[5].key)),
               SizedBox(
                 width: columnSpacing,
               ),
-              columnDefinitions[6]
-                  .value
-                  .createContainer(child: _buildColumnHeader(columnDefinitions[6].key)),
+              columnDefinitions[6].value.createContainer(child: _buildColumnHeader(columnDefinitions[6].key)),
               SizedBox(
                 width: columnSpacing,
               ),
-              columnDefinitions[7]
-                  .value
-                  .createContainer(child: _buildColumnHeader(columnDefinitions[7].key)),
+              columnDefinitions[7].value.createContainer(child: _buildColumnHeader(columnDefinitions[7].key)),
               SizedBox(
                 width: columnSpacing,
               ),
-              columnDefinitions[8]
-                  .value
-                  .createContainer(child: _buildColumnHeader(columnDefinitions[8].key)),
+              columnDefinitions[8].value.createContainer(child: _buildColumnHeader(columnDefinitions[8].key)),
               SizedBox(
                 width: columnSpacing,
               ),
@@ -219,14 +180,15 @@ class StudiesTable extends StatelessWidget {
               studyGroup: item,
               columnSizes: columnDefinitionsMap.values.toList(),
               actions: getActions(item),
-              isPinned: pinnedStudies.contains(item.id),
+              getSubActions: getSubActions,
+              isPinned: pinnedStudies.contains(item.standaloneOrTemplate.id),
               itemHeight: itemHeight,
               rowSpacing: rowSpacing,
               columnSpacing: columnSpacing,
               onPinnedChanged: (study, pinned) {
-                pinnedStudies.contains(item.id)
-                    ? dashboardController.pinOffStudy(item.id)
-                    : dashboardController.pinStudy(item.id);
+                pinnedStudies.contains(item.standaloneOrTemplate.id)
+                    ? dashboardController.pinOffStudy(item.standaloneOrTemplate.id)
+                    : dashboardController.pinStudy(item.standaloneOrTemplate.id);
               },
               onTapStudy: (study) => onSelect.call(study),
             );
@@ -277,8 +239,7 @@ class StudiesTable extends StatelessWidget {
       sortAscending: sortAscending,
       onSort: sortable
           ? () {
-              dashboardController.setSorting(
-                  column, sortingActive ? !sortAscending : sortAscending);
+              dashboardController.setSorting(column, sortingActive ? !sortAscending : sortAscending);
             }
           : null,
     );

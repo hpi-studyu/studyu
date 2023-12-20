@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
+import 'package:collection/collection.dart';
 
 import '../../common_views/action_popup_menu.dart';
 import '../../theme.dart';
@@ -17,6 +18,7 @@ class StudiesTableItem extends StatefulWidget {
   final double rowSpacing;
   final double columnSpacing;
   final List<ModelAction> actions;
+  final ActionsProviderAt<StudyGroup> getSubActions;
   final List<StudiesTableColumnSize> columnSizes;
   final bool isPinned;
   final void Function(StudyGroup, bool)? onPinnedChanged;
@@ -26,6 +28,7 @@ class StudiesTableItem extends StatefulWidget {
       {super.key,
       required this.studyGroup,
       required this.actions,
+      required this.getSubActions,
       required this.columnSizes,
       required this.isPinned,
       this.onPinnedChanged,
@@ -58,9 +61,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
             side: BorderSide(
-                color:
-                    widget.isPinned ? theme.colorScheme.primary.withAlpha(70) : Colors.transparent,
-                width: 1.0),
+                color: widget.isPinned ? theme.colorScheme.primary.withAlpha(70) : Colors.transparent, width: 1.0),
           ),
           elevation: isHovering ? 4.0 : 1.5,
           child: _buildRow(theme, widget.studyGroup),
@@ -70,54 +71,71 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
   }
 
   Widget _buildRow(ThemeData theme, StudyGroup studyGroup) {
-    final row = _buildSingleStudyOrGroupHeaderRow(theme, studyGroup);
-    final List<Widget> subRows = [];
+    if (studyGroup.standaloneOrTemplate is Template) {
+      final participantCount = studyGroup.subStudies.map((s) => s.participantCount).sum;
+      final activeSubjectCount = studyGroup.subStudies.map((s) => s.activeSubjectCount).sum;
+      final endedCount = studyGroup.subStudies.map((s) => s.endedCount).sum;
 
-    if (!studyGroup.isSingleStudy && isExpanded) {
-      for (final study in studyGroup.studies) {
-        subRows.add(_buildSingleStudyOrGroupHeaderRow(theme, StudyGroup.single(study)));
+      final row = _buildStudyRow(
+        theme,
+        studyGroup.standaloneOrTemplate,
+        actions: widget.actions,
+        participantCount: participantCount,
+        activeSubjectCount: activeSubjectCount,
+        endedCount: endedCount,
+      );
+      final List<Widget> subRows = [];
+
+      if (isExpanded && studyGroup.subStudies.isNotEmpty) {
+        for (final subStudy in studyGroup.subStudies) {
+          final subActions = widget.getSubActions(studyGroup, studyGroup.subStudies.indexOf(subStudy));
+          subRows.add(_buildStudyRow(theme, subStudy, actions: subActions));
+          subRows.add(const Divider(
+            thickness: 0.3,
+          ));
+        }
+        subRows.removeLast();
         subRows.add(const Divider(
           thickness: 0.3,
+          color: Colors.transparent,
         ));
       }
-      subRows.removeLast();
-      subRows.add(const Divider(
-        thickness: 0.3,
-        color: Colors.transparent,
-      ));
+
+      return Column(
+        children: [
+          row,
+          Column(
+            children: subRows,
+          )
+        ],
+      );
     }
 
-    return Column(
-      children: [
-        row,
-        Column(
-          children: subRows,
-        )
-      ],
-    );
+    return _buildStudyRow(theme, studyGroup.standaloneOrTemplate, actions: widget.actions);
   }
 
-  Widget _buildSingleStudyOrGroupHeaderRow(ThemeData theme, StudyGroup studyGroup) {
-    final normalTextStyle = isExpanded && !studyGroup.isSingleStudy
-        ? const TextStyle(fontWeight: FontWeight.bold)
-        : null;
+  Widget _buildStudyRow(ThemeData theme, Study study,
+      {required List<ModelAction> actions, int? participantCount, int? activeSubjectCount, int? endedCount}) {
+    final normalTextStyle = isExpanded && study.isTemplate ? const TextStyle(fontWeight: FontWeight.bold) : null;
 
     TextStyle? mutedTextStyleIfZero(int value) {
-      return (value > 0)
-          ? normalTextStyle
-          : ThemeConfig.bodyTextBackground(theme).merge(normalTextStyle);
+      return (value > 0) ? normalTextStyle : ThemeConfig.bodyTextBackground(theme).merge(normalTextStyle);
     }
+
+    participantCount ??= study.participantCount;
+    activeSubjectCount ??= study.activeSubjectCount;
+    endedCount ??= study.endedCount;
 
     final row = InkWell(
       onTap: () {
-        if (studyGroup.isSingleStudy) {
-          widget.onTapStudy?.call(studyGroup.first);
+        if (study.isTemplate) {
+          setState(() {
+            isExpanded = !isExpanded;
+          });
           return;
         }
 
-        setState(() {
-          isExpanded = !isExpanded;
-        });
+        widget.onTapStudy?.call(study);
       },
       onHover: (hover) {
         setState(() {
@@ -135,7 +153,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
               children: [
                 widget.columnSizes[0].createContainer(
                     height: widget.itemHeight,
-                    child: !studyGroup.isSingleStudy
+                    child: study.isTemplate
                         ? Align(
                             alignment: Alignment.centerRight,
                             child: AnimatedRotation(
@@ -152,51 +170,43 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                 SizedBox(width: widget.columnSpacing),
                 widget.columnSizes[1].createContainer(
                   child: Text(
-                    studyGroup.title ?? '[Missing study title]',
+                    study.title ?? '[Missing study title]',
                     style: normalTextStyle,
                   ),
                 ),
                 SizedBox(width: widget.columnSpacing),
                 widget.columnSizes[2].createContainer(
-                  child: studyGroup.isSingleStudy
-                      ? StudyStatusBadge(
-                          status: studyGroup.first.status,
-                          showPrefixIcon: false,
-                          showTooltip: false,
-                        )
-                      : const SizedBox.shrink(),
+                  child: StudyStatusBadge(
+                    status: study.status,
+                    showPrefixIcon: false,
+                    showTooltip: false,
+                  ),
                 ),
                 SizedBox(width: widget.columnSpacing),
                 widget.columnSizes[3].createContainer(
-                  child: studyGroup.isSingleStudy
-                      ? StudyParticipationBadge(
-                          participation: studyGroup.first.participation,
-                          center: false,
-                        )
-                      : const SizedBox.shrink(),
+                  child: StudyParticipationBadge(
+                    participation: study.participation,
+                    center: false,
+                  ),
                 ),
                 SizedBox(width: widget.columnSpacing),
-                widget.columnSizes[4].createContainer(
-                    child: Text(studyGroup.createdAt?.toTimeAgoString() ?? '',
-                        style: normalTextStyle)),
+                widget.columnSizes[4]
+                    .createContainer(child: Text(study.createdAt?.toTimeAgoString() ?? '', style: normalTextStyle)),
                 SizedBox(width: widget.columnSpacing),
                 widget.columnSizes[5].createContainer(
-                  child: Text(studyGroup.participantCount.toString(),
-                      style: mutedTextStyleIfZero(studyGroup.participantCount)),
+                  child: Text(participantCount.toString(), style: mutedTextStyleIfZero(participantCount)),
                 ),
                 SizedBox(width: widget.columnSpacing),
                 widget.columnSizes[6].createContainer(
-                  child: Text(studyGroup.activeSubjectCount.toString(),
-                      style: mutedTextStyleIfZero(studyGroup.activeSubjectCount)),
+                  child: Text(activeSubjectCount.toString(), style: mutedTextStyleIfZero(activeSubjectCount)),
                 ),
                 SizedBox(width: widget.columnSpacing),
                 widget.columnSizes[7].createContainer(
-                  child: Text(studyGroup.endedCount.toString(),
-                      style: mutedTextStyleIfZero(studyGroup.endedCount)),
+                  child: Text(endedCount.toString(), style: mutedTextStyleIfZero(endedCount)),
                 ),
                 SizedBox(width: widget.columnSpacing),
                 widget.columnSizes[8].createContainer(
-                  child: _buildActionMenu(context, widget.actions),
+                  child: _buildActionMenu(context, actions),
                 ),
                 SizedBox(
                   width: widget.columnSpacing,
@@ -207,7 +217,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
         ),
       ),
     );
-    return !studyGroup.isSingleStudy
+    return study.isTemplate
         ? Material(
             color: theme.colorScheme.onPrimary,
             elevation: isExpanded ? 1.5 : 0.0,

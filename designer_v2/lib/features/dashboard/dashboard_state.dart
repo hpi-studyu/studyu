@@ -61,33 +61,39 @@ class DashboardState extends Equatable {
   }
 
   List<StudyGroup> group(List<Study> studies) {
-    //TODO: change to real implementation
-    const String keyWord = "N-of-1 trials to improve sleep";
-    final List<Study> group = [];
-    int? index;
-    studies.removeWhere((study) {
-      if (study.title != null && study.title!.startsWith(keyWord)) {
-        index ??= studies.indexOf(study);
-        group.add(study);
-        return true;
+    List<StudyGroup> result = [];
+
+    for (final study in studies) {
+      switch (study.type) {
+        case StudyType.standalone:
+          result.add(StudyGroup.standalone(study));
+          break;
+        case StudyType.template:
+          final List<Study> subStudies = studies.where((s) => s.parentTemplateId == study.id).toList();
+          result.add(StudyGroup.template(study as Template, subStudies));
+        case StudyType.subStudy:
+          break;
       }
-      return false;
-    });
-
-    final studyGroups = studies.map((s) => StudyGroup.single(s)).toList();
-
-    if (index != null && group.isNotEmpty) {
-      studyGroups.insert(index!, StudyGroup(group, "N-of-1 trials to improve sleep", "group_id_123"));
     }
-    return studyGroups;
+
+    return result;
   }
 
   List<Study> filter({List<Study>? studiesToFilter}) {
-    final filteredStudies = studiesToFilter ?? studies.value!;
+    studiesToFilter = studiesToFilter ?? studies.value!;
     if (query.isNotEmpty) {
-      return filteredStudies.where((s) => s.title!.toLowerCase().contains(query)).toList();
+      final filteredStudies = studiesToFilter.where((s) => s.title!.toLowerCase().contains(query)).toList();
+
+      // Add removed parent templates again
+      for (final study in filteredStudies) {
+        if (study.isSubStudy && !filteredStudies.any((s) => s.isTemplate && s.id == study.parentTemplateId)) {
+          final parentTemplate = studiesToFilter.firstWhere((s) => s.isTemplate && s.id == study.parentTemplateId);
+          filteredStudies.add(parentTemplate);
+        }
+      }
     }
-    return filteredStudies;
+
+    return studiesToFilter;
   }
 
   List<Study> sort({required Set<String> pinnedStudies, List<Study>? studiesToSort}) {

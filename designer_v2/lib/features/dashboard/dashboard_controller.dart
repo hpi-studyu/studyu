@@ -114,28 +114,36 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
 
   @override
   List<ModelAction> availableActions(StudyGroup model) {
-    // TODO(hig): Adapt for study group
+    return _availableActions(model.standaloneOrTemplate);
+  }
+
+  List<ModelAction> availableSubActions(StudyGroup model, int index) {
+    final subStudy = model.subStudies[index];
+    return _availableActions(subStudy);
+  }
+
+  List<ModelAction> _availableActions(Study study) {
     final pinActions = [
       ModelAction(
         type: StudyActionType.pin,
         label: StudyActionType.pin.string,
         onExecute: () async {
-          await pinStudy(model.id);
+          await pinStudy(study.id);
         },
-        isAvailable: !isPinned(model.first),
+        isAvailable: !study.isSubStudy && !isPinned(study),
       ),
       ModelAction(
         type: StudyActionType.pinoff,
         label: StudyActionType.pinoff.string,
         onExecute: () async {
-          await pinOffStudy(model.id);
+          await pinOffStudy(study.id);
         },
-        isAvailable: isPinned(model.first),
+        isAvailable: !study.isSubStudy && isPinned(study),
       )
     ].where((action) => action.isAvailable).toList();
 
     return withIcons(
-      [...pinActions, ...studyRepository.availableActions(model.first)],
+      [...pinActions, ...studyRepository.availableActions(study)],
       studyActionIcons,
     );
   }

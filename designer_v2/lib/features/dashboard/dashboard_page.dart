@@ -135,6 +135,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             dashboardController: ref.read(dashboardControllerProvider.notifier),
                             onSelect: controller.onSelectStudy,
                             getActions: controller.availableActions,
+                            getSubActions: controller.availableSubActions,
                             emptyWidget: (widget.filter == null || widget.filter == StudiesFilter.owned)
                                 ? (state.query.isNotEmpty)
                                     ? Padding(
