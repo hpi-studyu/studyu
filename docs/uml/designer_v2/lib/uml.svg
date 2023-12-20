@@ -4206,7 +4206,8 @@
 	  &lt;static&gt;+duplicateDraft: StudyActionType;
 	  &lt;static&gt;+addCollaborator: StudyActionType;
 	  &lt;static&gt;+export: StudyActionType;
-	  &lt;static&gt;+delete: StudyActionType
+	  &lt;static&gt;+delete: StudyActionType;
+	  &lt;static&gt;+createSubStudy: StudyActionType
 	]
 	
 	[StudyActionType]o-[StudyActionType]
@@ -6587,12 +6588,12 @@
 					<g fill="#eee8d5">
 						<path d="M53656.3 2552.8 L53651.0 2562.2 L53645.7 2552.8 L53651.0 2543.5 Z"></path>
 					</g>
-					<path d="M609.4 3123.2 L622.5 3117 L630 3117 L630 3117 L637.5 3215.5 L637.5 3215.5 L630 3314 L630 3314 L622.5 3314 L622.5 3314 L592.5 3299.8612440191387 L592.5 3299.9 " fill="none"></path>
+					<path d="M609.1 3116.3 L622.5 3109.5 L630 3109.5 L630 3109.5 L637.5 3215.5 L637.5 3215.5 L630 3321.5 L630 3321.5 L622.5 3321.5 L622.5 3321.5 L592.5 3306.284688995215 L592.5 3306.3 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M598.7 3122.3 L609.4 3123.2 L603.2 3132.0 L592.5 3131.1 Z"></path>
+						<path d="M598.4 3115.7 L609.1 3116.3 L603.2 3125.3 L592.5 3124.7 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M1054.1 2513.9 L415 3029 L414.29222520107237 3117 L414.3 3117.0 " fill="none"></path>
+						<path d="M1054.1 2513.9 L415 3029 L414.3525469168901 3109.5 L414.4 3109.5 " fill="none"></path>
 					</g>
 					<path d="M1057.5 2518.0 L1054.1 2513.9 L1050.8 2509.7 L1064.5 2505.5 Z"></path>
 					<path d="M67543.3 679.2 L67543.25 966 L67543.25 1197 L67543.3 1197.0 " fill="none"></path>
@@ -15955,16 +15956,16 @@
 					</g>
 					<g data-name="StudyActionType">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyActionType">
-							<rect x="234.5" y="3117.0" height="197.0" width="358.0" data-name="StudyActionType"></rect>
-							<path d="M234.5 3148.0 L592.5 3148.0" fill="none" data-name="StudyActionType"></path>
+							<rect x="234.5" y="3109.5" height="212.0" width="358.0" data-name="StudyActionType"></rect>
+							<path d="M234.5 3140.5 L592.5 3140.5" fill="none" data-name="StudyActionType"></path>
 						</g>
-						<g transform="translate(234.5, 3117)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyActionType">
+						<g transform="translate(234.5, 3109.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyActionType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyActionType">
 								<text x="171.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyActionType">StudyActionType</text>
 								
 							</g>
 						</g>
-						<g transform="translate(234.5, 3148)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyActionType">
+						<g transform="translate(234.5, 3140.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyActionType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyActionType">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyActionType">+index: int</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+values: List&lt;StudyActionType&gt;</text>
@@ -15976,6 +15977,7 @@
 								<text x="0.0" y="118.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+addCollaborator: StudyActionType</text>
 								<text x="0.0" y="133.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+export: StudyActionType</text>
 								<text x="0.0" y="148.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+delete: StudyActionType</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+createSubStudy: StudyActionType</text>
 								
 							</g>
 						</g>

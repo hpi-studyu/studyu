@@ -1,4 +1,4 @@
-<svg version="1.1" baseProfile="full" width="1703.8" height="446.0" viewbox="0 0 1703.75 446" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<svg version="1.1" baseProfile="full" width="1703.8" height="461.0" viewbox="0 0 1703.75 461" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
 	<desc >[&lt;abstract&gt;ResultTypes
 	]
 	
@@ -50,7 +50,8 @@
 	  &lt;static&gt;+duplicateDraft: StudyActionType;
 	  &lt;static&gt;+addCollaborator: StudyActionType;
 	  &lt;static&gt;+export: StudyActionType;
-	  &lt;static&gt;+delete: StudyActionType
+	  &lt;static&gt;+delete: StudyActionType;
+	  &lt;static&gt;+createSubStudy: StudyActionType
 	]
 	
 	[StudyActionType]o-[StudyActionType]
@@ -60,21 +61,21 @@
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="446.0" width="1703.8" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="461.0" width="1703.8" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M240.7 99.2 L126 173 L126 253 L126.0 253.0 " fill="none"></path>
+					<path d="M240.7 99.2 L126 173 L126 260.5 L126.0 260.5 " fill="none"></path>
 					<path d="M243.6 103.7 L240.7 99.2 L237.8 94.7 L251.9 92.0 Z"></path>
-					<path d="M311.3 99.2 L426 173 L426 253 L426.0 253.0 " fill="none"></path>
+					<path d="M311.3 99.2 L426 173 L426 260.5 L426.0 260.5 " fill="none"></path>
 					<path d="M314.2 94.7 L311.3 99.2 L308.4 103.7 L300.1 92.0 Z"></path>
-					<path d="M680.3 148.7 L680.25 173 L680.25 276 L680.3 276.0 " fill="none"></path>
+					<path d="M680.3 148.7 L680.25 173 L680.25 283.5 L680.3 283.5 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M685.6 139.3 L680.3 148.7 L674.9 139.3 L680.3 130.0 Z"></path>
 					</g>
-					<path d="M1609.6 199.2 L1622.75 193 L1630.25 193 L1630.25 193 L1637.75 291.5 L1637.75 291.5 L1630.25 390 L1630.25 390 L1622.75 390 L1622.75 390 L1592.75 375.8612440191388 L1592.8 375.9 " fill="none"></path>
+					<path d="M1609.4 199.8 L1622.75 193 L1630.25 193 L1630.25 193 L1637.75 299 L1637.75 299 L1630.25 405 L1630.25 405 L1622.75 405 L1622.75 405 L1592.75 389.78468899521533 L1592.8 389.8 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1598.9 198.3 L1609.6 199.2 L1603.5 208.0 L1592.8 207.1 Z"></path>
+						<path d="M1598.7 199.2 L1609.4 199.8 L1603.5 208.8 L1592.8 208.2 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
 						<path d="M1413.8 105.3 L1413.75 173 L1413.75 193 L1413.8 193.0 " fill="none"></path>
@@ -93,16 +94,16 @@
 					</g>
 					<g data-name="MeasurementResultTypes">
 						<g fill="#eee8d5" stroke="#33322E" data-name="MeasurementResultTypes">
-							<rect x="0.0" y="253.0" height="77.0" width="252.0" data-name="MeasurementResultTypes"></rect>
-							<path d="M0.0 284.0 L252.0 284.0" fill="none" data-name="MeasurementResultTypes"></path>
+							<rect x="0.0" y="260.5" height="77.0" width="252.0" data-name="MeasurementResultTypes"></rect>
+							<path d="M0.0 291.5 L252.0 291.5" fill="none" data-name="MeasurementResultTypes"></path>
 						</g>
-						<g transform="translate(0, 253)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MeasurementResultTypes">
+						<g transform="translate(0, 260.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MeasurementResultTypes">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MeasurementResultTypes">
 								<text x="118.0" y="13.5" stroke="none" text-anchor="middle" data-name="MeasurementResultTypes">MeasurementResultTypes</text>
 								
 							</g>
 						</g>
-						<g transform="translate(0, 284)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MeasurementResultTypes">
+						<g transform="translate(0, 291.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MeasurementResultTypes">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MeasurementResultTypes">
 								<text x="0.0" y="13.5" stroke="none" data-name="MeasurementResultTypes">&lt;static&gt;+questionnaire: String</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="MeasurementResultTypes">&lt;static&gt;+values: List&lt;String&gt;</text>
@@ -112,16 +113,16 @@
 					</g>
 					<g data-name="InterventionResultTypes">
 						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionResultTypes">
-							<rect x="292.0" y="253.0" height="77.0" width="268.0" data-name="InterventionResultTypes"></rect>
-							<path d="M292.0 284.0 L560.0 284.0" fill="none" data-name="InterventionResultTypes"></path>
+							<rect x="292.0" y="260.5" height="77.0" width="268.0" data-name="InterventionResultTypes"></rect>
+							<path d="M292.0 291.5 L560.0 291.5" fill="none" data-name="InterventionResultTypes"></path>
 						</g>
-						<g transform="translate(292, 253)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionResultTypes">
+						<g transform="translate(292, 260.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionResultTypes">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionResultTypes">
 								<text x="126.0" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionResultTypes">InterventionResultTypes</text>
 								
 							</g>
 						</g>
-						<g transform="translate(292, 284)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionResultTypes">
+						<g transform="translate(292, 291.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionResultTypes">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionResultTypes">
 								<text x="0.0" y="13.5" stroke="none" data-name="InterventionResultTypes">&lt;static&gt;+checkmarkTask: String</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="InterventionResultTypes">&lt;static&gt;+values: List&lt;String&gt;</text>
@@ -152,9 +153,9 @@
 					</g>
 					<g data-name="Study">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Study">
-							<rect x="649.8" y="276.0" height="31.0" width="61.0" data-name="Study"></rect>
+							<rect x="649.8" y="283.5" height="31.0" width="61.0" data-name="Study"></rect>
 						</g>
-						<g transform="translate(649.75, 276)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Study">
+						<g transform="translate(649.75, 283.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Study">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Study">
 								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Study">Study</text>
 								
@@ -192,7 +193,7 @@
 					</g>
 					<g data-name="StudyActionType">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyActionType">
-							<rect x="1234.8" y="193.0" height="197.0" width="358.0" data-name="StudyActionType"></rect>
+							<rect x="1234.8" y="193.0" height="212.0" width="358.0" data-name="StudyActionType"></rect>
 							<path d="M1234.8 224.0 L1592.8 224.0" fill="none" data-name="StudyActionType"></path>
 						</g>
 						<g transform="translate(1234.75, 193)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyActionType">
@@ -213,6 +214,7 @@
 								<text x="0.0" y="118.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+addCollaborator: StudyActionType</text>
 								<text x="0.0" y="133.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+export: StudyActionType</text>
 								<text x="0.0" y="148.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+delete: StudyActionType</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+createSubStudy: StudyActionType</text>
 								
 							</g>
 						</g>
