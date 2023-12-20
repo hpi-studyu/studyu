@@ -202,7 +202,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 width: 20,
               ),
               Icon(
-                Icons.chevron_right_rounded,
+                Icons.add,
                 color: theme.colorScheme.primary,
                 size: 28,
               ),
