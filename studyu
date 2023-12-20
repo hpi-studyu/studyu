@@ -16,7 +16,7 @@ fi
 # todo introduce debug mode that additionally logs to file
 # export BUILDKIT_PROGRESS=plain
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SCRIPT_DIR=$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)
 
 # Color codes for better output
 red='\e[0;31m'
