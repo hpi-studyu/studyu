@@ -21,8 +21,7 @@ client_max_body_size 100m;
 resolver 127.0.0.11 valid=30s;
 
 server {
-    listen 8082;
-    listen 8445 ssl;
+    listen 8082 ${STUDYU_SSL_ENABLED:+ssl};
     server_name ${STUDYU_SUPABASE_HOST}; # db.example.com
 
     # access_log /var/log/nginx/db.access.log main;

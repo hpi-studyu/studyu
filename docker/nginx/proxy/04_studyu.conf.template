@@ -1,6 +1,5 @@
 server {
-    listen       8080;
-    listen       8443 ssl;
+    listen       8080 ${STUDYU_SSL_ENABLED:+ssl};
     server_name  ${STUDYU_APP_HOST};
 
     # access_log /var/log/nginx/app.access.log main;
@@ -16,8 +15,7 @@ server {
 }
 
 server {
-    listen       8081;
-    listen       8444 ssl;
+    listen       8081 ${STUDYU_SSL_ENABLED:+ssl};
     server_name  ${STUDYU_DESIGNER_HOST};
 
     # access_log /var/log/nginx/designer.access.log main;
