@@ -1,11 +1,14 @@
 server {
-    listen       8080 ${STUDYU_SSL_FLAG};
+    listen       8080;
+    listen 8443 ssl;
     server_name  ${STUDYU_APP_HOST};
 
     # access_log /var/log/nginx/app.access.log main;
     error_log /var/log/nginx/app.error.log;
 
     include /etc/nginx/conf.d/01_common.conf;
+
+    include /etc/nginx/conf.d/05_common.conf*;
 
     location / {
       set $upstream http://studyu-app;
@@ -15,13 +18,16 @@ server {
 }
 
 server {
-    listen       8081 ${STUDYU_SSL_FLAG};
+    listen       8081;
+    listen 8444 ssl;
     server_name  ${STUDYU_DESIGNER_HOST};
 
     # access_log /var/log/nginx/designer.access.log main;
     error_log /var/log/nginx/designer.error.log;
 
     include /etc/nginx/conf.d/01_common.conf;
+
+    include /etc/nginx/conf.d/05_common.conf*;
 
     location / {
       set $upstream http://studyu-designer;

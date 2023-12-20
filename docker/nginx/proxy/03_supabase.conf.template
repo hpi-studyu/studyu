@@ -29,10 +29,11 @@ server {
     error_log /var/log/nginx/db.error.log;
 
     include /etc/nginx/conf.d/01_common.conf;
+
     include /etc/nginx/conf.d/05_common.conf*;
-    if ($scheme != 'https') {
-      return 308 https://$host$request_uri;
-    }
+    #if ($scheme != 'https') {
+    #  return 308 https://$host$request_uri;
+    #}
 
     set $studio http://studio:3000;
     set $kong http://kong:8000;
