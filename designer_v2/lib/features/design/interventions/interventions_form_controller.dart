@@ -90,7 +90,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
             ))
         .toList();
     interventionsCollection.reset(viewModels);
-    final studyScheduleLocked = study.templateConfiguration?.lockStudySchedule == true;
+    final studyScheduleLocked = study.isSubStudy && study.templateConfiguration?.lockStudySchedule == true;
     setStudyScheduleControlsFrom(data.studyScheduleData, studyScheduleLocked);
   }
 

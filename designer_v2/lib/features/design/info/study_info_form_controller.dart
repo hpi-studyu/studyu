@@ -71,7 +71,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
       lockPublisherInfoControl.markAsDisabled();
     }
 
-    if (study.templateConfiguration?.lockPublisherInformation == true) {
+    if (study.isSubStudy && study.templateConfiguration?.lockPublisherInformation == true) {
       organizationControl.markAsDisabled();
       reviewBoardControl.markAsDisabled();
       reviewBoardNumberControl.markAsDisabled();
