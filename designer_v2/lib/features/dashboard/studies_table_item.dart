@@ -106,7 +106,11 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                   ),
                   SizedBox(width: widget.columnSpacing),
                   widget.columnSizes[1].createContainer(
-                    child: Text(widget.study.title ?? '[Missing study title]'),
+                    child: Text(
+                      widget.study.title ?? '[Missing study title]',
+                      maxLines: 3,
+                      overflow: TextOverflow.fade,
+                    ),
                   ),
                   SizedBox(width: widget.columnSpacing),
                   widget.columnSizes[2].createContainer(
@@ -125,7 +129,11 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                   ),
                   SizedBox(width: widget.columnSpacing),
                   widget.columnSizes[4].createContainer(
-                      child: Text(widget.study.createdAt?.toTimeAgoString() ?? '')),
+                      child: Text(
+                    widget.study.createdAt?.toTimeAgoString() ?? '',
+                    maxLines: 3,
+                    overflow: TextOverflow.fade,
+                  )),
                   SizedBox(width: widget.columnSpacing),
                   widget.columnSizes[5].createContainer(
                     child: Text(widget.study.participantCount.toString(),
@@ -138,8 +146,8 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                   ),
                   SizedBox(width: widget.columnSpacing),
                   widget.columnSizes[7].createContainer(
-                    child: Text(widget.study.endedCount.toString(),
-                        style: mutedTextStyleIfZero(widget.study.endedCount)),
+                    child:
+                        Text(widget.study.endedCount.toString(), style: mutedTextStyleIfZero(widget.study.endedCount)),
                   ),
                   SizedBox(width: widget.columnSpacing),
                   widget.columnSizes[8].createContainer(
