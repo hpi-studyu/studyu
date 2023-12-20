@@ -202,6 +202,7 @@
   "form_field_time_restriction_start_hint": "From",
   "form_field_time_restriction_end_hint": "To",
   "form_section_lock_help": "If locked, the information in this section cannot be modified by sub-studies.",
+  "form_section_publish_lock_help": "The study settings cannot be modified by sub-studies.",
   "@__________________STUDYPAGE_DESIGN_INFO__________________": {},
   "form_study_design_info_description": "Provide general information about your study to participants. If you decide to make your study available in the study registry, this information will be available to other researchers & clinicians as well.",
   "form_field_study_title": "Study title",

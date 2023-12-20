@@ -25,6 +25,7 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
 
   final FormControl<bool> isPublishedToRegistryControl = FormControl(value: defaultPublishedToRegistry);
   final FormControl<bool> isPublishedToRegistryResultsControl = FormControl(value: defaultPublishedToRegistryResults);
+  final FormControl<bool> lockPublishSettingsControl = FormControl(value: true, disabled: true);
 
   @override
   late final FormGroup form = FormGroup({
@@ -36,6 +37,11 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
   void setControlsFrom(Study data) {
     isPublishedToRegistryControl.value = data.publishedToRegistry;
     isPublishedToRegistryResultsControl.value = data.publishedToRegistryResults;
+
+    if (data.isSubStudy) {
+      isPublishedToRegistryControl.markAsDisabled();
+      isPublishedToRegistryResultsControl.markAsDisabled();
+    }
   }
 
   @override

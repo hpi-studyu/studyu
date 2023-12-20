@@ -25,7 +25,12 @@ class StudySettingsDialog extends StudyPageWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 12.0),
-            FormSectionHeader(title: tr.navlink_public_studies),
+            FormSectionHeader(
+              title: tr.navlink_public_studies,
+              showLock: formViewModel.study.value?.isStandalone != true,
+              lockControl: formViewModel.lockPublishSettingsControl,
+              lockHelpText: tr.form_section_publish_lock_help,
+            ),
             const SizedBox(height: 6.0),
             TextParagraph(text: tr.navlink_public_studies_description),
             const SizedBox(height: 24.0),

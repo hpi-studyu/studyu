@@ -198,6 +198,7 @@
   "form_field_time_restriction_start_hint": "Von",
   "form_field_time_restriction_end_hint": "Bis",
   "form_section_lock_help": "Wenn gesperrt, kann die Information in diesem Abschnitt nicht von Unterstudien geändert werden.",
+  "form_section_publish_lock_help": "Die Studieneinstellungen können nicht von Unterstudien geändert werden.",
   "@__________________STUDYPAGE_DESIGN_INFO__________________": {},
   "form_study_design_info_description": "Auf dieser Seite gibst du allgemeine Informationen für Teilnehmer der Studie an. Wenn du dich entscheidest, die Studie im Studienregister zu veröffentlichen, sind diese Informationen auch für andere Forscher und Kliniker einsehbar.",
   "form_field_study_title": "Studientitel",
