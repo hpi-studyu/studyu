@@ -1,25 +1,3 @@
-stream {
-    upstream http {
-        server localhost:8004;
-    }
-
-    upstream https {
-        server localhost:8005;
-    }
-
-    map $ssl_preread_protocol $upstream {
-        default https;
-        "" http;
-    }
-
-    server {
-        listen 8082;
-        proxy_pass $upstream;
-        ssl_preread on;
-    }
-}
-
-
 map $http_upgrade $connection_upgrade {
     default upgrade;
     ''      close;
