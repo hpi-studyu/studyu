@@ -929,6 +929,7 @@
 	  &lt;static&gt;+defaultPublishedToRegistryResults: bool;
 	  +isPublishedToRegistryControl: FormControl&lt;bool&gt;;
 	  +isPublishedToRegistryResultsControl: FormControl&lt;bool&gt;;
+	  +lockPublishSettingsControl: FormControl&lt;bool&gt;;
 	  +form: FormGroup;
 	  +titles: Map&lt;FormMode, String&gt;
 	  |
@@ -4784,23 +4785,23 @@
 					<path d="M13540.8 2631.6 L13535.5 2632.2 L13530.2 2632.9 L13534.0 2619.0 Z"></path>
 					<path d="M13508.7 2632.3 L13479.25 3029 L13139.5 3174.5792647903504 L13139.5 3174.6 " fill="none"></path>
 					<path d="M13514.0 2632.7 L13508.7 2632.3 L13503.4 2631.9 L13509.7 2619.0 Z"></path>
-					<path d="M71568.7 2636.7 L71701.75 3029 L51571.5 3214.9964391434128 L51571.5 3215.0 " fill="none"></path>
+					<path d="M71571.3 2644.2 L71701.75 3029 L51571.5 3214.9964391434128 L51571.5 3215.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M71570.8 2626.1 L71568.7 2636.7 L71560.7 2629.6 L71562.7 2619.0 Z"></path>
+						<path d="M71573.3 2633.6 L71571.3 2644.2 L71563.2 2637.1 L71565.3 2626.5 Z"></path>
 					</g>
-					<path d="M71557.9 2637.0 L71661.75 3029 L72173.5 3178.770694389957 L72173.5 3178.8 " fill="none"></path>
+					<path d="M71559.9 2644.5 L71661.75 3029 L72173.5 3178.770694389957 L72173.5 3178.8 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M71560.7 2626.7 L71557.9 2637.0 L71550.4 2629.4 L71553.2 2619.0 Z"></path>
+						<path d="M71562.7 2634.2 L71559.9 2644.5 L71552.4 2636.9 L71555.2 2626.5 Z"></path>
 					</g>
-					<path d="M71483.0 2637.1 L71387 3029 L54399 3214.8817800463494 L54399.0 3214.9 " fill="none"></path>
+					<path d="M71481.1 2644.6 L71387 3029 L54399 3214.8817800463494 L54399.0 3214.9 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M71490.4 2629.3 L71483.0 2637.1 L71480.0 2626.8 L71487.4 2619.0 Z"></path>
+						<path d="M71488.5 2636.8 L71481.1 2644.6 L71478.2 2634.3 L71485.6 2626.5 Z"></path>
 					</g>
-					<path d="M71444.8 2635.6 L71244.25 3029 L70698.70040214478 3200 L70698.7 3200.0 " fill="none"></path>
+					<path d="M71440.9 2643.1 L71244.25 3029 L70698.70040214478 3200 L70698.7 3200.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M71453.8 2629.7 L71444.8 2635.6 L71444.3 2624.9 L71453.2 2619.0 Z"></path>
+						<path d="M71449.9 2637.2 L71440.9 2643.1 L71440.4 2632.4 L71449.4 2626.5 Z"></path>
 					</g>
-					<path d="M76265.4 658.6 L71519 966 L71519 1212.5 L71519 1212.5 L71519 1459 L71519 1459 L71519 1705 L71519 1705 L71519 1951 L71519 1951 L71519 2361 L71519.0 2361.0 " fill="none"></path>
+					<path d="M76265.4 658.6 L71519 966 L71519 1212.5 L71519 1212.5 L71519 1459 L71519 1459 L71519 1705 L71519 1705 L71519 1951 L71519 1951 L71519 2353.5 L71519.0 2353.5 " fill="none"></path>
 					<path d="M76265.8 663.9 L76265.4 658.6 L76265.1 653.3 L76278.8 657.7 Z"></path>
 					<path d="M26808.0 1755.1 L26113.25 1951 L28601.25 2471.688021743351 L28601.3 2471.7 " fill="none"></path>
 					<path d="M26809.4 1760.3 L26808.0 1755.1 L26806.5 1750.0 L26820.8 1751.5 Z"></path>
@@ -9164,17 +9165,17 @@
 					</g>
 					<g data-name="StudySettingsFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudySettingsFormViewModel">
-							<rect x="71279.5" y="2361.0" height="258.0" width="479.0" data-name="StudySettingsFormViewModel"></rect>
-							<path d="M71279.5 2392.0 L71758.5 2392.0" fill="none" data-name="StudySettingsFormViewModel"></path>
-							<path d="M71279.5 2528.0 L71758.5 2528.0" fill="none" data-name="StudySettingsFormViewModel"></path>
+							<rect x="71279.5" y="2353.5" height="273.0" width="479.0" data-name="StudySettingsFormViewModel"></rect>
+							<path d="M71279.5 2384.5 L71758.5 2384.5" fill="none" data-name="StudySettingsFormViewModel"></path>
+							<path d="M71279.5 2535.5 L71758.5 2535.5" fill="none" data-name="StudySettingsFormViewModel"></path>
 						</g>
-						<g transform="translate(71279.5, 2361)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudySettingsFormViewModel">
+						<g transform="translate(71279.5, 2353.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudySettingsFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudySettingsFormViewModel">
 								<text x="231.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudySettingsFormViewModel">StudySettingsFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(71279.5, 2392)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudySettingsFormViewModel">
+						<g transform="translate(71279.5, 2384.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudySettingsFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudySettingsFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudySettingsFormViewModel">+study: AsyncValue&lt;Study&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudySettingsFormViewModel">+studyRepository: IStudyRepository</text>
@@ -9182,12 +9183,13 @@
 								<text x="0.0" y="58.5" stroke="none" data-name="StudySettingsFormViewModel">&lt;static&gt;+defaultPublishedToRegistryResults: bool</text>
 								<text x="0.0" y="73.5" stroke="none" data-name="StudySettingsFormViewModel">+isPublishedToRegistryControl: FormControl&lt;bool&gt;</text>
 								<text x="0.0" y="88.5" stroke="none" data-name="StudySettingsFormViewModel">+isPublishedToRegistryResultsControl: FormControl&lt;bool&gt;</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="StudySettingsFormViewModel">+form: FormGroup</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="StudySettingsFormViewModel">+titles: Map&lt;FormMode, String&gt;</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="StudySettingsFormViewModel">+lockPublishSettingsControl: FormControl&lt;bool&gt;</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="StudySettingsFormViewModel">+form: FormGroup</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="StudySettingsFormViewModel">+titles: Map&lt;FormMode, String&gt;</text>
 								
 							</g>
 						</g>
-						<g transform="translate(71279.5, 2528)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudySettingsFormViewModel">
+						<g transform="translate(71279.5, 2535.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudySettingsFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudySettingsFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudySettingsFormViewModel">+void setControlsFrom()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudySettingsFormViewModel">+Study buildFormData()</text>
