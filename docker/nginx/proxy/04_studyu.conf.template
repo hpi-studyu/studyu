@@ -1,37 +1,37 @@
 server {
-    listen       8080;
+    listen 8080;
     listen 8443 ssl;
-    server_name  ${STUDYU_APP_HOST};
+    server_name ${STUDYU_APP_HOST};
 
     # access_log /var/log/nginx/app.access.log main;
     error_log /var/log/nginx/app.error.log;
 
     include /etc/nginx/conf.d/01_common.conf;
 
-    include /etc/nginx/conf.d/05_common.conf*;
+    include /etc/nginx/conf.d/05_custom.conf*;
 
     location / {
       set $upstream http://studyu-app;
       proxy_pass $upstream;
-      include    /etc/nginx/conf.d/02_common_location.conf;
+      include /etc/nginx/conf.d/02_common_location.conf;
     }
 }
 
 server {
-    listen       8081;
+    listen 8081;
     listen 8444 ssl;
-    server_name  ${STUDYU_DESIGNER_HOST};
+    server_name ${STUDYU_DESIGNER_HOST};
 
     # access_log /var/log/nginx/designer.access.log main;
     error_log /var/log/nginx/designer.error.log;
 
     include /etc/nginx/conf.d/01_common.conf;
 
-    include /etc/nginx/conf.d/05_common.conf*;
+    include /etc/nginx/conf.d/05_custom.conf*;
 
     location / {
       set $upstream http://studyu-designer;
       proxy_pass $upstream;
-      include    /etc/nginx/conf.d/02_common_location.conf;
+      include /etc/nginx/conf.d/02_common_location.conf;
     }
 }

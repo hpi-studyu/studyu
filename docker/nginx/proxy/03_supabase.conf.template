@@ -30,7 +30,7 @@ server {
 
     include /etc/nginx/conf.d/01_common.conf;
 
-    include /etc/nginx/conf.d/05_common.conf*;
+    include /etc/nginx/conf.d/05_custom.conf*;
     #if ($scheme != 'https') {
     #  return 308 https://$host$request_uri;
     #}
