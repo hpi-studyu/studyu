@@ -61,7 +61,7 @@ class AuthRepository implements IAuthRepository {
     _authSubscription = supabaseClient.auth.onAuthStateChange.listen((data) {
       final AuthChangeEvent event = data.event;
 
-      // handle auth state change
+      // Handle auth state change
       switch (event) {
         case AuthChangeEvent.initialSession:
           print("authRepo initialSession");
