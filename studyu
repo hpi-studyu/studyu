@@ -955,10 +955,10 @@ manage_components() {
               fi
             fi
             ;;
-          "studyu-proxy")
+          "studyu-proxy"*)
             configure_proxy_env
           ;;
-          "studyu-app" | "studyu-designer")
+          "studyu-app"* | "studyu-designer"*)
             if [ "$build_flag" = true ]; then
               echo -e "${yellow}Option -b detected. StudyU components will be built.${reset}"
               component_specific_action+=' --build'
@@ -967,9 +967,9 @@ manage_components() {
           ;;
         esac
         ;;
-      "restart" )
+      "restart"* )
         ;;
-      "stop" )
+      "stop"* )
         ;;
       "down"* )
         ;;
@@ -1242,7 +1242,8 @@ update() {
 
 # Delete docker container, images, and volumes
 delete() {
-  local down_cmd=""
+  local delete_cmd=""
+  local delete_args=""
   local delete_images=false
 
   if prompt_yes_no "Do you want to create a backup of the StudyU database?"; then
@@ -1264,7 +1265,7 @@ delete() {
       selected_item=${items[$index]}
       case $selected_item in
         "${items[0]}")
-          down_cmd+=" --rmi local"
+          delete_cmd="down"
           ;;
         "${items[1]}")
           delete_images=true
@@ -1273,11 +1274,12 @@ delete() {
           local deleted_volumes=false
           if prompt_yes_no "Are you REALLY sure you want to delete all volumes? This includes all created studies, study results, and user data."; then
             if prompt_remove; then
-              down_cmd+=" --volumes"
+              delete_cmd="down"
+              delete_args+=" --volumes"
               deleted_volumes=true
             fi
           fi
-          if [ "$deleted_volumes" ]; then
+          if [ "$deleted_volumes" = false ]; then
             echo -e "${yellow}Volumes will not be deleted.${reset}"
           fi
           ;;
@@ -1287,10 +1289,11 @@ delete() {
 
   if [ "$delete_images" = true ]; then
     remove_studyu_docker_images
+    echo -e "${green}StudyU images have been deleted.${reset}"
   fi
 
-  if [ -n "$down_cmd" ]; then
-    manage_components "down $down_cmd"
+  if [ -n "$delete_cmd" ]; then
+    manage_components "$delete_cmd $delete_args"
     echo -e "${green}Selected data has been deleted.${reset}"
   fi
 }
