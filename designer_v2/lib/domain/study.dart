@@ -193,21 +193,21 @@ class StudyTemplates {
   static String get kUnnamedSubStudyTitle => tr.form_field_substudy_title_default;
 
   static Study emptyStandaloneDraft(String userId) {
-    final newDraft = Study.newStandalone(userId);
+    final newDraft = Study.create(userId);
     newDraft.title = StudyTemplates.kUnnamedStudyTitle;
     newDraft.iconName = '';
     return newDraft;
   }
 
-  static Study emptyTemplateDraft(String userId) {
-    final newDraft = Study.newTemplate(userId);
+  static Template emptyTemplateDraft(String userId) {
+    final newDraft = Template.create(userId);
     newDraft.title = StudyTemplates.kUnnamedTemplateTitle;
     newDraft.iconName = '';
     return newDraft;
   }
 
-  static Study emptySubStudyDraft(String userId, String parentTemplateId) {
-    final newDraft = Study.newSubStudy(userId, parentTemplateId);
+  static TemplateSubStudy emptySubStudyDraft(String userId, Template parentTemplate) {
+    final newDraft = TemplateSubStudy.create(userId, parentTemplate);
     newDraft.title = StudyTemplates.kUnnamedSubStudyTitle;
     newDraft.iconName = '';
     return newDraft;

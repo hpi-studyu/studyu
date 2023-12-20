@@ -211,14 +211,18 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
       throw ArgumentError("args should be StudyCreationArgs");
     }
 
+    if (!args.validForCreation) {
+      throw ArgumentError("args should be valid for creation");
+    }
+
     final userId = authRepository.currentUser!.id;
 
     if (args.isTemplate) {
       return StudyTemplates.emptyTemplateDraft(userId);
     }
 
-    if (args.parentTemplateId != null) {
-      return StudyTemplates.emptySubStudyDraft(userId, args.parentTemplateId!);
+    if (args.parentTemplate != null) {
+      return StudyTemplates.emptySubStudyDraft(userId, args.parentTemplate!);
     }
 
     return StudyTemplates.emptyStandaloneDraft(userId);

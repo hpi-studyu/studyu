@@ -52,7 +52,7 @@ class RouterKeys {
 class RouteParams {
   static const studiesFilter = 'filter';
   static const studyId = 'studyId';
-  static const parentTemplateId = 'parentTemplateId';
+  static const parentTemplate = 'parentTemplate';
   static const isTemplate = 'isTemplate';
   static const measurementId = 'measurementId';
   static const interventionId = 'interventionId';

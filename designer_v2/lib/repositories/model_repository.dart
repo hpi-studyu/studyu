@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -73,28 +74,36 @@ class NoArgs extends ModelInstanceCreationArgs {
 
 class StudyCreationArgs extends ModelInstanceCreationArgs {
   final StudyID studyID;
-  final StudyID? parentTemplateId;
+  final Template? parentTemplate;
   final bool isTemplate;
+  final bool validForCreation;
 
-  StudyCreationArgs({required this.studyID, this.parentTemplateId, required this.isTemplate}) {
-    if (parentTemplateId != null && isTemplate) {
+  StudyCreationArgs(
+      {required this.studyID, this.parentTemplate, required this.isTemplate, this.validForCreation = true}) {
+    if (parentTemplate != null && isTemplate) {
       throw ArgumentError("A sub-study cannot be a template");
     }
   }
 
-  factory StudyCreationArgs.fromStudy(Study study) => StudyCreationArgs(
-      studyID: study.id, isTemplate: study.isTemplate, parentTemplateId: study.parentTemplateId);
+  /// This method should only be used to create StudyCreationArgs for an en already created study.
+  /// That means the StudyCreationArgs will not be used to create a new instance, instead it
+  /// will be used for the equality check in the ref.watch method of riverpod.
+  /// That is why we use dummy data for [isTemplate] and [parentTemplate] as only the [studyID]
+  /// will be used for the equality check. In addition the [validForCreation] flag is set to false.
+  factory StudyCreationArgs.fromStudy(Study study) =>
+      StudyCreationArgs(studyID: study.id, isTemplate: false, parentTemplate: null, validForCreation: false);
 
   factory StudyCreationArgs.fromRoute(GoRouterState routerState) {
     final studyId = routerState.pathParameters[RouteParams.studyId]!;
     final isTemplate = routerState.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-    final parentTemplateId = routerState.uri.queryParameters[RouteParams.parentTemplateId];
-    return StudyCreationArgs(
-        studyID: studyId, isTemplate: isTemplate, parentTemplateId: parentTemplateId);
+    final parentTemplateEncoded = routerState.uri.queryParameters[RouteParams.parentTemplate];
+    final parentTemplate =
+        parentTemplateEncoded != null ? Study.fromJson(jsonDecode(Uri.decodeFull(parentTemplateEncoded))) : null;
+    return StudyCreationArgs(studyID: studyId, isTemplate: isTemplate, parentTemplate: parentTemplate as Template?);
   }
 
   @override
-  List<Object> get props => [studyID, parentTemplateId ?? "", isTemplate];
+  List<Object> get props => [studyID];
 }
 
 class ModelRepositoryException implements Exception {}
@@ -194,11 +203,6 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     late final WrappedModel<T>? wrappedModel;
     try {
       final model = await delegate.fetch(modelId);
-      if (model is Study && model.parentTemplateId != null) {
-        // TODO: find a general solution to fetch referenced models
-        final parentTemplate = await fetch(model.parentTemplateId!);
-        model.parentTemplate = parentTemplate.model as Study;
-      }
       wrappedModel = upsertLocally(model);
       wrappedModel.markAsFetched();
       emitModelEvent(IsFetched(modelId, model));
@@ -326,9 +330,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   /// anyway, but emit a [ModelNotFoundException] error event.
   @override
   Stream<WrappedModel<T>> watch(ModelID modelId,
-      {fetchOnSubscribe = true,
-      emitLastEvent = true,
-      ModelInstanceCreationArgs args = const NoArgs()}) {
+      {fetchOnSubscribe = true, emitLastEvent = true, ModelInstanceCreationArgs args = const NoArgs()}) {
     WrappedModel<T>? wrappedModel;
 
     if (modelId == Config.newModelId) {
@@ -350,8 +352,8 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       return null;
     }
 
-    final modelController = _buildModelSpecificController(
-        modelId, _allModelsStreamController, modelStreamControllers, selectModel);
+    final modelController =
+        _buildModelSpecificController(modelId, _allModelsStreamController, modelStreamControllers, selectModel);
 
     if (fetchOnSubscribe) {
       if (!(wrappedModel != null && wrappedModel.isLocalOnly)) {
@@ -381,8 +383,8 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       return null;
     }
 
-    final modelEventsController = _buildModelSpecificController(modelId,
-        _allModelEventsStreamController, modelEventsStreamControllers, selectModelChangeEvent);
+    final modelEventsController = _buildModelSpecificController(
+        modelId, _allModelEventsStreamController, modelEventsStreamControllers, selectModelChangeEvent);
     return modelEventsController;
   }
 

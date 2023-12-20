@@ -23,8 +23,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final parentTemplate = study.parentTemplate;
         final formViewModel = ref.read(studyInfoFormViewModelProvider(studyCreationArgs));
+        final hasParentTitleAndDescription =
+            study.templateConfiguration?.title != null && study.templateConfiguration?.description != null;
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -33,19 +34,19 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
             children: <Widget>[
               TextParagraph(text: tr.form_study_design_info_description),
               const SizedBox(height: 24.0),
-              parentTemplate != null
+              hasParentTitleAndDescription
                   ? FormTableLayout(rows: [
                       FormTableRow(
                           label: tr.form_field_template_title,
                           input: TextField(
-                            controller: TextEditingController(text: parentTemplate.title),
+                            controller: TextEditingController(text: study.templateConfiguration!.title),
                             enabled: false,
                             readOnly: true,
                           )),
                       FormTableRow(
                           label: tr.form_field_template_description,
                           input: TextField(
-                            controller: TextEditingController(text: parentTemplate.description),
+                            controller: TextEditingController(text: study.templateConfiguration!.description),
                             enabled: false,
                             readOnly: true,
                           )),
@@ -54,7 +55,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       1: FlexColumnWidth(),
                     })
                   : const SizedBox.shrink(),
-              parentTemplate != null ? const SizedBox(height: 24.0) : const SizedBox.shrink(),
+              hasParentTitleAndDescription ? const SizedBox(height: 24.0) : const SizedBox.shrink(),
               FormTableLayout(rows: [
                 FormTableRow(
                   control: formViewModel.titleControl,
