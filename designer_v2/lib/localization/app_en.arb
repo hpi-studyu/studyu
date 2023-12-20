@@ -566,6 +566,7 @@
   "action_unpin": "Remove pin",
   "action_delete": "Delete",
   "action_remove": "Remove",
+  "action_new_substudy": "Create new sub-study",
   "action_duplicate": "Duplicate",
   "action_clipboard": "Copy to clipboard",
   "action_reportPrimary": "Set as primary report",

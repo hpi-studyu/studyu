@@ -110,6 +110,14 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
     // TODO: review Postgres policies to match [ModelAction.isAvailable]
     final actions = [
       ModelAction(
+        type: StudyActionType.createSubStudy,
+        label: StudyActionType.createSubStudy.string,
+        onExecute: () {
+          return ref.read(routerProvider).dispatch(RoutingIntents.substudyNew(model as Template));
+        },
+        isAvailable: model.status != StudyStatus.draft && model.isTemplate,
+      ),
+      ModelAction(
         type: StudyActionType.edit,
         label: StudyActionType.edit.string,
         onExecute: () {

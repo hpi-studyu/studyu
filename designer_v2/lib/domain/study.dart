@@ -15,6 +15,7 @@ enum StudyActionType {
   addCollaborator,
   export,
   delete,
+  createSubStudy,
 }
 
 /// Provides a human-readable translation of the model action type
@@ -37,6 +38,8 @@ extension StudyActionTypeFormatted on StudyActionType {
         return "[StudyActionType.addCollaborator]"; // todo not implemented yet
       case StudyActionType.export:
         return tr.action_study_export_results;
+      case StudyActionType.createSubStudy:
+        return tr.action_new_substudy;
       default:
         return "[Invalid ModelActionType]";
     }

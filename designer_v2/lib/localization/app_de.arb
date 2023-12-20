@@ -519,6 +519,7 @@
   "action_delete": "Löschen",
   "action_remove": "Entfernen",
   "action_duplicate": "Duplizieren",
+  "action_new_substudy": "Neue Unterstudie erstellen",
   "action_clipboard": "In Zwischenablage kopieren",
   "action_reportPrimary": "Als Primärauswertung setzen",
   "action_study_duplicate_draft": "Als Entwurf duplizieren",
