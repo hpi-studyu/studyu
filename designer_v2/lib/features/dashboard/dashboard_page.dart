@@ -73,8 +73,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 anchor: const Aligned(follower: Alignment.topLeft, target: Alignment.bottomLeft),
                 portalFollower: GestureDetector(
                   onTap: () => controller.setCreateNewMenuOpen(false),
-                  child: SizedBox(
+                  child: Container(
                     width: 600,
+                    margin: const EdgeInsets.only(top: 10.0),
                     child: Material(
                       color: theme.colorScheme.onPrimary,
                       borderRadius: BorderRadius.circular(16),
