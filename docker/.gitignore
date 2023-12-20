@@ -2,3 +2,4 @@
 **/test.http
 **/docker-compose.override.yml
 nginx/certs/*
+nginx/proxy/05_custom.conf.template

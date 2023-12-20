@@ -1,4 +1,6 @@
-# SSL configuration
+## Example configuration for a SSL-enabled site:
+
+# SSL certificate files
 ssl_certificate /etc/ssl/private/cert.pem;
 ssl_certificate_key /etc/ssl/private/key.pem;
 
