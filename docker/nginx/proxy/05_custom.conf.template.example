@@ -5,4 +5,4 @@ ssl_certificate /etc/ssl/private/cert.pem;
 ssl_certificate_key /etc/ssl/private/key.pem;
 
 # Redirect http traffic to https
-# error_page 497 301 =308 https://$http_host$request_uri;
+error_page 497 301 =308 https://$http_host$request_uri;
