@@ -99,7 +99,6 @@
 	  +helpTextDisabled: bool;
 	  +right: Widget?;
 	  +showLock: bool;
-	  +readOnlyLock: bool;
 	  +lockControl: FormControl&lt;bool&gt;?;
 	  +lockHelpText: String?
 	  |
@@ -133,8 +132,6 @@
 	[FormLock]o-[void Function(bool)?]
 	
 	[ReactiveFormLock
-	  |
-	  +readOnly: bool
 	]
 	
 	[ReactiveFormField]&lt;:-[ReactiveFormLock]
@@ -879,7 +876,7 @@
 					<g fill="#eee8d5">
 						<path d="M3509.3 251.3 L3504.0 260.7 L3498.7 251.3 L3504.0 242.0 Z"></path>
 					</g>
-					<path d="M9727.9 200.1 L4811.5 412 L4811.5 559.5 L4811.5 559.5 " fill="none"></path>
+					<path d="M9727.9 200.1 L4811.5 412 L4811.5 575 L4811.5 575.0 " fill="none"></path>
 					<path d="M9728.2 205.4 L9727.9 200.1 L9727.7 194.8 L9741.3 199.5 Z"></path>
 					<path d="M1585.1 807.0 L1597 804 L1604.5 804 L1604.5 804 L1612 857.5 L1612 857.5 L1604.5 911 L1604.5 911 L1597 911 L1597 911 L1567 903.5348837209302 L1567.0 903.5 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -1548,17 +1545,17 @@
 					</g>
 					<g data-name="FormSectionHeader">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormSectionHeader">
-							<rect x="5157.0" y="476.5" height="228.0" width="286.0" data-name="FormSectionHeader"></rect>
-							<path d="M5157.0 507.5 L5443.0 507.5" fill="none" data-name="FormSectionHeader"></path>
-							<path d="M5157.0 673.5 L5443.0 673.5" fill="none" data-name="FormSectionHeader"></path>
+							<rect x="5157.0" y="484.0" height="213.0" width="286.0" data-name="FormSectionHeader"></rect>
+							<path d="M5157.0 515.0 L5443.0 515.0" fill="none" data-name="FormSectionHeader"></path>
+							<path d="M5157.0 666.0 L5443.0 666.0" fill="none" data-name="FormSectionHeader"></path>
 						</g>
-						<g transform="translate(5157, 476.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormSectionHeader">
+						<g transform="translate(5157, 484)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormSectionHeader">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormSectionHeader">
 								<text x="135.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormSectionHeader">FormSectionHeader</text>
 								
 							</g>
 						</g>
-						<g transform="translate(5157, 507.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormSectionHeader">
+						<g transform="translate(5157, 515)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormSectionHeader">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormSectionHeader">
 								<text x="0.0" y="13.5" stroke="none" data-name="FormSectionHeader">+title: String</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="FormSectionHeader">+titleTextStyle: TextStyle?</text>
@@ -1567,13 +1564,12 @@
 								<text x="0.0" y="73.5" stroke="none" data-name="FormSectionHeader">+helpTextDisabled: bool</text>
 								<text x="0.0" y="88.5" stroke="none" data-name="FormSectionHeader">+right: Widget?</text>
 								<text x="0.0" y="103.5" stroke="none" data-name="FormSectionHeader">+showLock: bool</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="FormSectionHeader">+readOnlyLock: bool</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="FormSectionHeader">+lockControl: FormControl&lt;bool&gt;?</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="FormSectionHeader">+lockHelpText: String?</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="FormSectionHeader">+lockControl: FormControl&lt;bool&gt;?</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="FormSectionHeader">+lockHelpText: String?</text>
 								
 							</g>
 						</g>
-						<g transform="translate(5157, 673.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormSectionHeader">
+						<g transform="translate(5157, 666)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FormSectionHeader">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FormSectionHeader">
 								<text x="0.0" y="13.5" stroke="none" data-name="FormSectionHeader">+Widget build()</text>
 								
@@ -1652,18 +1648,11 @@
 					</g>
 					<g data-name="ReactiveFormLock">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ReactiveFormLock">
-							<rect x="4730.0" y="559.5" height="62.0" width="163.0" data-name="ReactiveFormLock"></rect>
-							<path d="M4730.0 590.5 L4893.0 590.5" fill="none" data-name="ReactiveFormLock"></path>
+							<rect x="4730.0" y="575.0" height="31.0" width="163.0" data-name="ReactiveFormLock"></rect>
 						</g>
-						<g transform="translate(4730, 559.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReactiveFormLock">
+						<g transform="translate(4730, 575)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReactiveFormLock">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReactiveFormLock">
 								<text x="73.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReactiveFormLock">ReactiveFormLock</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4730, 590.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReactiveFormLock">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReactiveFormLock">
-								<text x="0.0" y="13.5" stroke="none" data-name="ReactiveFormLock">+readOnly: bool</text>
 								
 							</g>
 						</g>
