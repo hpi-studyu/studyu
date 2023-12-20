@@ -85,6 +85,15 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   void setControlsFrom(EnrollmentFormData data) {
     enrollmentTypeControl.value = data.enrollmentType;
     lockEnrollmentTypeControl.value = data.lockEnrollmentType;
+
+    if (!study.isTemplate) {
+      lockEnrollmentTypeControl.markAsDisabled();
+    }
+
+    if (study.templateConfiguration?.lockEnrollmentType == true) {
+      enrollmentTypeControl.markAsDisabled();
+    }
+
     setQuestionnaireControlsFrom(data.questionnaireFormData);
 
     if (data.consentItemsFormData != null) {

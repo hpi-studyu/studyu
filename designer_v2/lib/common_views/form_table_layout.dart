@@ -150,7 +150,6 @@ class FormSectionHeader extends StatelessWidget {
     this.titleTextStyle,
     this.right,
     this.showLock = false,
-    this.readOnlyLock = false,
     this.lockControl,
     this.lockHelpText,
     this.divider = true,
@@ -164,7 +163,6 @@ class FormSectionHeader extends StatelessWidget {
   final bool helpTextDisabled;
   final Widget? right;
   final bool showLock;
-  final bool readOnlyLock;
   final FormControl<bool>? lockControl;
   final String? lockHelpText;
 
@@ -208,7 +206,6 @@ class FormSectionHeader extends StatelessWidget {
             showLock
                 ? ReactiveFormLock(
                     formControl: lockControl,
-                    readOnly: readOnlyLock,
                   )
                 : const SizedBox.shrink(),
           ],
@@ -303,18 +300,16 @@ class _FormLockState extends State<FormLock> {
 }
 
 class ReactiveFormLock<T> extends ReactiveFormField<bool, bool> {
-  final bool readOnly;
   ReactiveFormLock({
     super.key,
     super.formControlName,
     super.formControl,
-    this.readOnly = false,
     ReactiveFormFieldCallback<bool>? onChanged,
   }) : super(builder: (field) {
           return FormLock(
             locked: field.value ?? false,
-            readOnly: field.control.disabled || readOnly,
-            onLockChanged: field.control.enabled && !readOnly
+            readOnly: field.control.disabled,
+            onLockChanged: field.control.enabled
                 ? (value) {
                     field.didChange(value);
                     onChanged?.call(field.control);

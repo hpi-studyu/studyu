@@ -77,6 +77,10 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   @override
   void setControlsFrom(InterventionsFormData data) {
     lockStudyScheduleControl.value = data.lockStudySchedule;
+    if (!study.isTemplate) {
+      lockStudyScheduleControl.markAsDisabled();
+    }
+
     final viewModels = data.interventionsData
         .map((data) => InterventionFormViewModel(
               study: study,
@@ -86,7 +90,8 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
             ))
         .toList();
     interventionsCollection.reset(viewModels);
-    setStudyScheduleControlsFrom(data.studyScheduleData);
+    final studyScheduleLocked = study.templateConfiguration?.lockStudySchedule == true;
+    setStudyScheduleControlsFrom(data.studyScheduleData, studyScheduleLocked);
   }
 
   @override

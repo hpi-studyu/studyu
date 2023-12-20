@@ -200,7 +200,10 @@ abstract class FormViewModel<T> implements IFormGroupController {
     for (final entry in form.controls.entries) {
       final controlName = entry.key;
       final control = entry.value;
-      final isEnabledByDefault = _defaultControlStates[controlName] ?? true;
+      final isEnabledByDefault = _defaultControlStates[controlName];
+      if (isEnabledByDefault == null) {
+        return;
+      }
       if (isEnabledByDefault) {
         control.markAsEnabled(emitEvent: emitEvent, updateParent: updateParent);
       } else {

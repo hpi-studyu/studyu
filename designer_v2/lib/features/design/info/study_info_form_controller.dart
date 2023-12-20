@@ -66,6 +66,21 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     phoneControl.value = data.contactInfoFormData.phone;
     additionalInfoControl.value = data.contactInfoFormData.additionalInfo;
     lockPublisherInfoControl.value = data.lockPublisherInfo;
+
+    if (!study.isTemplate) {
+      lockPublisherInfoControl.markAsDisabled();
+    }
+
+    if (study.templateConfiguration?.lockPublisherInformation == true) {
+      organizationControl.markAsDisabled();
+      reviewBoardControl.markAsDisabled();
+      reviewBoardNumberControl.markAsDisabled();
+      researchersControl.markAsDisabled();
+      emailControl.markAsDisabled();
+      websiteControl.markAsDisabled();
+      phoneControl.markAsDisabled();
+      additionalInfoControl.markAsDisabled();
+    }
   }
 
   @override
