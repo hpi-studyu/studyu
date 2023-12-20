@@ -21,13 +21,26 @@ client_max_body_size 100m;
 resolver 127.0.0.11 valid=30s;
 
 server {
+    listen 8082;
+    server_name ${STUDYU_SUPABASE_HOST};
+    #if ($scheme != 'https') {
+    return 308 https://$host$request_uri;
+    #}
+}
+
+server {
     listen 8082 ${STUDYU_SSL_FLAG};
-    server_name ${STUDYU_SUPABASE_HOST}; # db.example.com
+    server_name ${STUDYU_SUPABASE_HOST};
 
     # access_log /var/log/nginx/db.access.log main;
     error_log /var/log/nginx/db.error.log;
 
     include /etc/nginx/conf.d/01_common.conf;
+    include /etc/nginx/conf.d/05_common.conf*;
+
+    #if ($scheme != 'https') {
+    #  return 308 https://$host$request_uri;
+    #}
 
     set $studio http://studio:3000;
     set $kong http://kong:8000;

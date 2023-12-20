@@ -1,10 +1,4 @@
 # Force SSL if enabled
-if ($STUDYU_SSL_FLAG  == "ssl") {
-  ssl_certificate /etc/ssl/private/cert.pem;
-  ssl_certificate_key /etc/ssl/private/key.pem;
 
-  # Redirect all HTTP traffic to HTTPS
-  if ($scheme != 'https') {
-    return 308 https://$host$request_uri;
-  }
-}
+ssl_certificate /etc/ssl/private/cert.pem;
+ssl_certificate_key /etc/ssl/private/key.pem;
