@@ -2,3 +2,12 @@ add_header Strict-Transport-Security    "max-age=31536000; includeSubDomains" al
 add_header X-Frame-Options              SAMEORIGIN;
 add_header X-Content-Type-Options       nosniff;
 add_header X-XSS-Protection             "1; mode=block";
+
+## SSL Settings
+
+# SSL certificate files
+ssl_certificate /etc/ssl/private/cert.pem;
+ssl_certificate_key /etc/ssl/private/key.pem;
+
+# Redirect http traffic to https
+error_page 497 301 =308 https://$http_host$request_uri;
