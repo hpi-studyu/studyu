@@ -64,11 +64,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               const SizedBox(width: 28.0),
               SelectableText(state.visibleListTitle, style: theme.textTheme.headlineMedium),
-              const Spacer(),
-              Search(
-                  searchController: controller.searchController,
-                  hintText: tr.search,
-                  onQueryChanged: (query) => controller.filterStudies(query)),
+              const SizedBox(width: 28.0),
+              Expanded(
+                  child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: Search(
+                            searchController: controller.searchController,
+                            hintText: tr.search,
+                            onQueryChanged: (query) => controller.filterStudies(query)),
+                      ))),
             ],
           ),
           const SizedBox(height: 24.0), // spacing between body elements
