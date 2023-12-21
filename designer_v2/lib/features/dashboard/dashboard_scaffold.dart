@@ -5,17 +5,25 @@ import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class DashboardScaffold extends StatelessWidget {
+  static const double compactWidthThreshold = 800;
   const DashboardScaffold({required this.body, super.key});
 
   final Widget body;
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isCompact = size.width < compactWidthThreshold;
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor.faded(0.75),
-        appBar: null, // default app bar not suitable for our layout
+        appBar: isCompact
+            ? AppBar(
+                title: Text(tr.studyu),
+              )
+            : null,
+        drawer: isCompact ? AppDrawer(title: tr.studyu) : null,
         body: TwoColumnLayout(
-          leftWidget: AppDrawer(title: tr.studyu),
+          leftWidget: isCompact ? const SizedBox.shrink() : AppDrawer(title: tr.studyu),
           rightWidget: body,
           dividerWidget: const VerticalDivider(
             width: 1,
