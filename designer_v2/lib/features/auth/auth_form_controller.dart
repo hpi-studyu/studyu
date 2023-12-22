@@ -111,6 +111,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
 
   late final Map<AuthFormKey, Map<FormControl, List<Validator<dynamic>>>> controlValidatorsByForm = {
     AuthFormKey.signup: {
+      emailControl: [Validators.required, Validators.email],
       passwordControl: [Validators.minLength(8)],
       passwordConfirmationControl: [Validators.required],
       termsOfServiceControl: [Validators.required, Validators.requiredTrue],
