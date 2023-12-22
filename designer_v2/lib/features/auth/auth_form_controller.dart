@@ -10,7 +10,6 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/services/shared_prefs.dart';
-import 'package:studyu_designer_v2/utils/validation.dart';
 import 'package:supabase/supabase.dart';
 
 enum AuthFormKey {
@@ -95,7 +94,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     'passwordConfirmation': passwordConfirmationControl,
     'termsOfService': termsOfServiceControl,
   }, validators: [
-    StudyUMustMatchValidator(control: passwordControl, matchingControl: passwordConfirmationControl)
+    Validators.mustMatch('password', 'passwordConfirmation'),
   ]);
 
   late final FormGroup passwordForgotForm = FormGroup({
@@ -106,7 +105,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     'password': passwordControl,
     'passwordConfirmation': passwordConfirmationControl,
   }, validators: [
-    StudyUMustMatchValidator(control: passwordControl, matchingControl: passwordConfirmationControl)
+    Validators.mustMatch('password', 'passwordConfirmation'),
   ]);
 
   late final Map<AuthFormKey, Map<FormControl, List<Validator<dynamic>>>> controlValidatorsByForm = {

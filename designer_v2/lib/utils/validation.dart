@@ -52,42 +52,6 @@ class CountWhereValidator<T> extends Validator<T> {
   }
 }
 
-// todo replace this with reactive forms validator
-class StudyUMustMatchValidator extends Validator<dynamic> {
-  StudyUMustMatchValidator({this.control, this.matchingControl}) : super();
-
-  final AbstractControl? control;
-  final AbstractControl? matchingControl;
-
-  @override
-  Map<String, dynamic>? validate(AbstractControl<dynamic> control) {
-    if (this.control == null || matchingControl == null) {
-      return null;
-    }
-    if (this.control!.value != matchingControl!.value) {
-      matchingControl!.setErrors({'mustMatch': true});
-      // force messages to show up as soon as possible
-      matchingControl!.markAsTouched();
-    } else {
-      matchingControl!.removeError('mustMatch');
-    }
-    return null;
-  }
-}
-
-// todo replace this with reactive forms validator
-class FieldValidators {
-  static String? emailValidator(String? email) {
-    if (email == null) {
-      return 'Not a valid email'; //return null;
-    }
-    if (!RegExp(Patterns.emailFormatString).hasMatch(email)) {
-      return 'Not a valid email';
-    }
-    return null;
-  }
-}
-
 class Patterns {
   /// Regex pattern for hh:mm time format (with or without leading zero)
   //static const timeFormatString = r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$';
