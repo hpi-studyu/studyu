@@ -1,0 +1,34 @@
+name: Check Uncommitted Changes
+
+on:
+  push:
+    paths:
+      - '*.gitignore'
+      - 'melos.yaml'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+      - 'core/**'
+      - 'flutter_common/**'
+      - 'app/**'
+      - 'designer_v2/**'
+  workflow_dispatch:
+
+jobs:
+  check_changes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Install melos
+        run: dart pub global activate melos
+      - name: Bootstrap workspace
+        run: melos bootstrap
+      - name: Generate code
+        run: melos run generate
+      - name: Check for uncommitted changes
+        run: git diff --exit-code
