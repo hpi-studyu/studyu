@@ -2,10 +2,6 @@ name: E2E tests
 
 on:
   push:
-    branches:
-      - '**'
-      - '!dev'
-      - '!main'
     paths:
       - 'designer_v2/**'
       - 'core/**'

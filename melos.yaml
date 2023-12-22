@@ -36,18 +36,20 @@ scripts:
       Run `dart analyze` in all packages, and, if `markdownlint` is installed, lint Markdown files.
        - Note: you can also rely on your IDEs Dart Analysis / Issues window.
 
-  format:
-    run: |
-      melos exec -c 6 -- \
-        "dart format -l 120 ."
-      markdownlint --ignore-path '.meta/.markdownlintignore' --config '.meta/.mdlrc' './**/*.md' --fix
-    description: Format all code and markdown files
-
   fix:
     run: |
       melos exec -c 6 -- \
         "dart fix --apply"
     description: Fix auto-fixable lint errors
+
+  # todo exclude *.g.dart files in a platform agnostic way
+  # dart format sadly does not support this yet: https://github.com/dart-lang/dart_style/issues/864
+  format:
+    run: |
+      melos exec -c 6 -- \
+        "dart format -l 120 ."
+        markdownlint --ignore-path '.meta/.markdownlintignore' --config '.meta/.mdlrc' './**/*.md' --fix
+    description: Format all code and markdown files
 
   format:ci:
     run: |

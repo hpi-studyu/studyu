@@ -2,18 +2,6 @@ name: All packages
 
 on:
   push:
-    branches:
-      - main
-      - dev
-    paths:
-      - "app/**"
-      - "core/**"
-      - "designer/**"
-      - "flutter_common/**"
-      - "notebook_uploader/**"
-      - "repo_generator/**"
-      - ".github/workflows/all_packages.yml"
-  pull_request:
     paths:
       - "app/**"
       - "core/**"
@@ -36,9 +24,9 @@ jobs:
           channel: stable
       - name: Install melos
         run: dart pub global activate melos
-      - name: "Bootstrap Workspace"
+      - name: Bootstrap workspace
         run: melos bootstrap
-      - name: "Run Analyze"
+      - name: Run analyze
         run: melos run analyze
 
   format:
@@ -52,9 +40,9 @@ jobs:
           channel: stable
       - name: Install melos
         run: dart pub global activate melos
-      - name: "Bootstrap Workspace"
+      - name: Bootstrap workspace
         run: melos bootstrap
-      - name: "Run Format"
+      - name: Run format
         run: melos run format:ci
 
   test:
@@ -68,7 +56,7 @@ jobs:
           channel: stable
       - name: Install melos
         run: dart pub global activate melos
-      - name: "Bootstrap Workspace"
+      - name: Bootstrap workspace
         run: melos bootstrap
-      - name: "Run Test"
+      - name: Run Test
         run: melos run test --no-select
