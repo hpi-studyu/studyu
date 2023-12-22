@@ -21,9 +21,9 @@ class DashboardScaffold extends StatelessWidget {
                 title: Text(tr.studyu),
               )
             : null,
-        drawer: isCompact ? AppDrawer(title: tr.studyu) : null,
+        drawer: isCompact ? const AppDrawer() : null,
         body: TwoColumnLayout(
-          leftWidget: isCompact ? const SizedBox.shrink() : AppDrawer(title: tr.studyu),
+          leftWidget: isCompact ? const SizedBox.shrink() : const AppDrawer(),
           rightWidget: body,
           dividerWidget: const VerticalDivider(
             width: 1,
