@@ -68,7 +68,6 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
 
   // - Form controls
 
-  final FormControl<String> testControl = FormControl();
   final FormControl<String> emailControl = FormControl();
   final FormControl<String> passwordControl = FormControl();
   final FormControl<String> passwordConfirmationControl = FormControl();
