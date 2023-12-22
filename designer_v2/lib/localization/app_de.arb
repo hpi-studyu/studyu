@@ -448,7 +448,7 @@
   "action_button_study_participation_change": "Teilnahme\nändern",
   "@__________________FORMS__________________": {},
   "form_field_required": "Das Feld darf nicht leer sein",
-  "form_invalid_prompt": "Bitte fülle alle Felder vollständig & korrekt aus",
+  "form_invalid_prompt": "Bitte fülle alle Felder vollständig aus",
   "@__________________COMMON__________________": {},
   "copy_suffix_label": "Kopie",
   "date_diff_years": "{count,plural, =1{Vor einem Jahr} other{Vor {count} Jahren}}",
