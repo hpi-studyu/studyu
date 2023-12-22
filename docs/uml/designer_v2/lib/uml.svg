@@ -2439,7 +2439,6 @@
 	
 	[AppDrawer
 	  |
-	  +title: String;
 	  +width: int;
 	  +leftPaddingEntries: double;
 	  +logoPaddingVertical: double;
@@ -11875,25 +11874,24 @@
 					</g>
 					<g data-name="AppDrawer">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AppDrawer">
-							<rect x="63612.5" y="53.0" height="167.0" width="269.0" data-name="AppDrawer"></rect>
-							<path d="M63612.5 84.0 L63881.5 84.0" fill="none" data-name="AppDrawer"></path>
+							<rect x="63612.5" y="60.5" height="152.0" width="269.0" data-name="AppDrawer"></rect>
+							<path d="M63612.5 91.5 L63881.5 91.5" fill="none" data-name="AppDrawer"></path>
 						</g>
-						<g transform="translate(63612.5, 53)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AppDrawer">
+						<g transform="translate(63612.5, 60.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AppDrawer">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AppDrawer">
 								<text x="126.5" y="13.5" stroke="none" text-anchor="middle" data-name="AppDrawer">AppDrawer</text>
 								
 							</g>
 						</g>
-						<g transform="translate(63612.5, 84)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppDrawer">
+						<g transform="translate(63612.5, 91.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppDrawer">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppDrawer">
-								<text x="0.0" y="13.5" stroke="none" data-name="AppDrawer">+title: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="AppDrawer">+width: int</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="AppDrawer">+leftPaddingEntries: double</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="AppDrawer">+logoPaddingVertical: double</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="AppDrawer">+logoPaddingHorizontal: double</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="AppDrawer">+logoMaxHeight: double</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="AppDrawer">+logoSectionMinHeight: double</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="AppDrawer">+logoSectionMaxHeight: double</text>
+								<text x="0.0" y="13.5" stroke="none" data-name="AppDrawer">+width: int</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="AppDrawer">+leftPaddingEntries: double</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="AppDrawer">+logoPaddingVertical: double</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="AppDrawer">+logoPaddingHorizontal: double</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="AppDrawer">+logoMaxHeight: double</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="AppDrawer">+logoSectionMinHeight: double</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="AppDrawer">+logoSectionMaxHeight: double</text>
 								
 							</g>
 						</g>
