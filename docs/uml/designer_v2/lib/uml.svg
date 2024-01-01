@@ -2416,6 +2416,7 @@
 	  +localizedHelpText: String Function()?;
 	  +enabled: bool;
 	  +onSelected: void Function(BuildContext, WidgetRef)?;
+	  +autoCloseDrawer: bool;
 	  +title: String;
 	  +helpText: String?
 	  |
@@ -2440,6 +2441,7 @@
 	[AppDrawer
 	  |
 	  +width: int;
+	  +autoCloseDrawer: bool;
 	  +leftPaddingEntries: double;
 	  +logoPaddingVertical: double;
 	  +logoPaddingHorizontal: double;
@@ -5446,20 +5448,20 @@
 					<g fill="#eee8d5">
 						<path d="M61028.6 1221.4 L61037.6 1227.3 L61028.0 1232.1 L61019.0 1226.2 Z"></path>
 					</g>
-					<path d="M60796.5 1322.7 L60796.5 1459 L60796.5 1682 L60796.5 1682.0 " fill="none"></path>
+					<path d="M60796.5 1330.2 L60796.5 1459 L60796.5 1682 L60796.5 1682.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M60801.8 1313.3 L60796.5 1322.7 L60791.2 1313.3 L60796.5 1304.0 Z"></path>
+						<path d="M60801.8 1320.8 L60796.5 1330.2 L60791.2 1320.8 L60796.5 1311.5 Z"></path>
 					</g>
-					<path d="M60676.0 1316.2 L60510 1459 L60510 1682 L60510.0 1682.0 " fill="none"></path>
+					<path d="M60667.3 1323.7 L60510 1459 L60510 1682 L60510.0 1682.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M60686.6 1314.1 L60676.0 1316.2 L60679.6 1306.0 L60690.2 1304.0 Z"></path>
+						<path d="M60677.8 1321.6 L60667.3 1323.7 L60670.9 1313.5 L60681.4 1311.5 Z"></path>
 					</g>
 					<path d="M60207.5 1762.7 L60207.5 1936 L27047.75 2472.5969467023933 L27047.8 2472.6 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M60212.8 1753.3 L60207.5 1762.7 L60202.2 1753.3 L60207.5 1744.0 Z"></path>
 					</g>
-					<path d="M60565.6 1309.1 L60207.5 1459 L60207.5 1651 L60207.5 1651.0 " fill="none"></path>
-					<path d="M60567.6 1314.1 L60565.6 1309.1 L60563.5 1304.2 L60577.9 1304.0 Z"></path>
+					<path d="M60561.7 1310.8 L60207.5 1459 L60207.5 1651 L60207.5 1651.0 " fill="none"></path>
+					<path d="M60563.8 1315.7 L60561.7 1310.8 L60559.6 1305.8 L60574.0 1305.6 Z"></path>
 					<g stroke-dasharray="6 6">
 						<path d="M1731.2 2503.8 L1703.5 3014 L17531 3198.772229351194 L17531.0 3198.8 " fill="none"></path>
 					</g>
@@ -11785,29 +11787,30 @@
 					</g>
 					<g data-name="DrawerEntry">
 						<g fill="#eee8d5" stroke="#33322E" data-name="DrawerEntry">
-							<rect x="60574.0" y="1121.0" height="183.0" width="445.0" data-name="DrawerEntry"></rect>
-							<path d="M60574.0 1152.0 L61019.0 1152.0" fill="none" data-name="DrawerEntry"></path>
-							<path d="M60574.0 1273.0 L61019.0 1273.0" fill="none" data-name="DrawerEntry"></path>
+							<rect x="60574.0" y="1113.5" height="198.0" width="445.0" data-name="DrawerEntry"></rect>
+							<path d="M60574.0 1144.5 L61019.0 1144.5" fill="none" data-name="DrawerEntry"></path>
+							<path d="M60574.0 1280.5 L61019.0 1280.5" fill="none" data-name="DrawerEntry"></path>
 						</g>
-						<g transform="translate(60574, 1121)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DrawerEntry">
+						<g transform="translate(60574, 1113.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DrawerEntry">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DrawerEntry">
 								<text x="214.5" y="13.5" stroke="none" text-anchor="middle" data-name="DrawerEntry">DrawerEntry</text>
 								
 							</g>
 						</g>
-						<g transform="translate(60574, 1152)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DrawerEntry">
+						<g transform="translate(60574, 1144.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DrawerEntry">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DrawerEntry">
 								<text x="0.0" y="13.5" stroke="none" data-name="DrawerEntry">+localizedTitle: String Function()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="DrawerEntry">+icon: IconData?</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="DrawerEntry">+localizedHelpText: String Function()?</text>
 								<text x="0.0" y="58.5" stroke="none" data-name="DrawerEntry">+enabled: bool</text>
 								<text x="0.0" y="73.5" stroke="none" data-name="DrawerEntry">+onSelected: void Function(BuildContext, WidgetRef)?</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="DrawerEntry">+title: String</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="DrawerEntry">+helpText: String?</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="DrawerEntry">+autoCloseDrawer: bool</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="DrawerEntry">+title: String</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="DrawerEntry">+helpText: String?</text>
 								
 							</g>
 						</g>
-						<g transform="translate(60574, 1273)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DrawerEntry">
+						<g transform="translate(60574, 1280.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DrawerEntry">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DrawerEntry">
 								<text x="0.0" y="13.5" stroke="none" data-name="DrawerEntry">+void onClick()</text>
 								
@@ -11874,24 +11877,25 @@
 					</g>
 					<g data-name="AppDrawer">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AppDrawer">
-							<rect x="63612.5" y="60.5" height="152.0" width="269.0" data-name="AppDrawer"></rect>
-							<path d="M63612.5 91.5 L63881.5 91.5" fill="none" data-name="AppDrawer"></path>
+							<rect x="63612.5" y="53.0" height="167.0" width="269.0" data-name="AppDrawer"></rect>
+							<path d="M63612.5 84.0 L63881.5 84.0" fill="none" data-name="AppDrawer"></path>
 						</g>
-						<g transform="translate(63612.5, 60.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AppDrawer">
+						<g transform="translate(63612.5, 53)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AppDrawer">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AppDrawer">
 								<text x="126.5" y="13.5" stroke="none" text-anchor="middle" data-name="AppDrawer">AppDrawer</text>
 								
 							</g>
 						</g>
-						<g transform="translate(63612.5, 91.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppDrawer">
+						<g transform="translate(63612.5, 84)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppDrawer">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppDrawer">
 								<text x="0.0" y="13.5" stroke="none" data-name="AppDrawer">+width: int</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="AppDrawer">+leftPaddingEntries: double</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="AppDrawer">+logoPaddingVertical: double</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="AppDrawer">+logoPaddingHorizontal: double</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="AppDrawer">+logoMaxHeight: double</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="AppDrawer">+logoSectionMinHeight: double</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="AppDrawer">+logoSectionMaxHeight: double</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="AppDrawer">+autoCloseDrawer: bool</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="AppDrawer">+leftPaddingEntries: double</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="AppDrawer">+logoPaddingVertical: double</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="AppDrawer">+logoPaddingHorizontal: double</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="AppDrawer">+logoMaxHeight: double</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="AppDrawer">+logoSectionMinHeight: double</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="AppDrawer">+logoSectionMaxHeight: double</text>
 								
 							</g>
 						</g>
