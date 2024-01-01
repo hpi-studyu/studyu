@@ -16,6 +16,7 @@ typedef OnEntrySelectedCallback = void Function(BuildContext, WidgetRef);
 class DrawerEntry {
   const DrawerEntry({
     required this.localizedTitle,
+    required this.autoCloseDrawer,
     this.icon,
     this.onSelected,
     this.localizedHelpText,
@@ -26,11 +27,15 @@ class DrawerEntry {
   final LocalizedStringResolver? localizedHelpText;
   final bool enabled;
   final OnEntrySelectedCallback? onSelected;
+  final bool autoCloseDrawer;
 
   String get title => localizedTitle();
   String? get helpText => localizedHelpText?.call();
 
   void onClick(BuildContext context, WidgetRef ref) {
+    if (autoCloseDrawer) {
+      Navigator.pop(context);
+    }
     if (onSelected != null) {
       onSelected!(context, ref);
     }
@@ -40,6 +45,7 @@ class DrawerEntry {
 class GoRouterDrawerEntry extends DrawerEntry {
   const GoRouterDrawerEntry({
     required super.localizedTitle,
+    required super.autoCloseDrawer,
     super.icon,
     super.localizedHelpText,
     super.enabled,
@@ -57,6 +63,7 @@ class GoRouterDrawerEntry extends DrawerEntry {
 class AppDrawer extends ConsumerStatefulWidget {
   const AppDrawer({
     this.width = 250,
+    this.autoCloseDrawer = true,
     this.leftPaddingEntries = 28.0,
     this.logoPaddingVertical = 24.0,
     this.logoPaddingHorizontal = 48.0,
@@ -67,6 +74,7 @@ class AppDrawer extends ConsumerStatefulWidget {
   });
 
   final int width;
+  final bool autoCloseDrawer;
   final double leftPaddingEntries;
   final double logoPaddingVertical;
   final double logoPaddingHorizontal;
@@ -80,54 +88,66 @@ class AppDrawer extends ConsumerStatefulWidget {
 
 class _AppDrawerState extends ConsumerState<AppDrawer> {
   /// List of sections with their corresponding menu entries
-  final List<List<GoRouterDrawerEntry>> topEntries = [
-    [
-      GoRouterDrawerEntry(
-        localizedTitle: () => tr.navlink_my_studies,
-        icon: Icons.folder_copy_rounded,
-        intent: RoutingIntents.studies,
-      ),
-      GoRouterDrawerEntry(
-        localizedTitle: () => tr.navlink_shared_studies,
-        icon: Icons.folder_shared_rounded,
-        intent: RoutingIntents.studiesShared,
-        enabled: false,
-      ),
-    ],
-    [
-      GoRouterDrawerEntry(
-        localizedTitle: () => tr.navlink_public_studies,
-        icon: Icons.public,
-        intent: RoutingIntents.publicRegistry,
-        localizedHelpText: () => tr.navlink_public_studies_tooltip,
-      ),
-    ]
-  ];
+  late final List<List<GoRouterDrawerEntry>> topEntries;
 
   /// List of sections with their corresponding menu entries
-  final List<List<DrawerEntry>> bottomEntries = [
-    [
-      DrawerEntry(
-          localizedTitle: () => tr.navlink_account_settings,
-          icon: Icons.settings_rounded,
-          onSelected: (context, ref) {
-            showDialog(context: context, builder: (context) => const AccountSettingsDialog());
-          }),
-      DrawerEntry(
-        localizedTitle: () => tr.navlink_logout,
-        icon: Icons.logout_rounded,
-        onSelected: (context, ref) {
-          ref.read(authRepositoryProvider).signOut();
-        },
-      ),
-    ],
-  ];
+  late final List<List<DrawerEntry>> bottomEntries;
 
   List<DrawerEntry> get allEntries => [...topEntries, ...bottomEntries].expand((e) => e).toList();
 
   /// Index of the currently selected [[NavigationGoRouterEntry]]
   /// Defaults to -1 if none of the entries is currently selected
   int _selectedIdx = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    topEntries = [
+      [
+        GoRouterDrawerEntry(
+          localizedTitle: () => tr.navlink_my_studies,
+          autoCloseDrawer: widget.autoCloseDrawer,
+          icon: Icons.folder_copy_rounded,
+          intent: RoutingIntents.studies,
+        ),
+        GoRouterDrawerEntry(
+          localizedTitle: () => tr.navlink_shared_studies,
+          autoCloseDrawer: widget.autoCloseDrawer,
+          icon: Icons.folder_shared_rounded,
+          intent: RoutingIntents.studiesShared,
+          enabled: false,
+        ),
+      ],
+      [
+        GoRouterDrawerEntry(
+          localizedTitle: () => tr.navlink_public_studies,
+          autoCloseDrawer: widget.autoCloseDrawer,
+          icon: Icons.public,
+          intent: RoutingIntents.publicRegistry,
+          localizedHelpText: () => tr.navlink_public_studies_tooltip,
+        ),
+      ]
+    ];
+    bottomEntries = [
+      [
+        DrawerEntry(
+            localizedTitle: () => tr.navlink_account_settings,
+            autoCloseDrawer: widget.autoCloseDrawer,
+            icon: Icons.settings_rounded,
+            onSelected: (context, ref) {
+              showDialog(context: context, builder: (context) => const AccountSettingsDialog());
+            }),
+        DrawerEntry(
+          localizedTitle: () => tr.navlink_logout,
+          autoCloseDrawer: widget.autoCloseDrawer,
+          icon: Icons.logout_rounded,
+          onSelected: (context, ref) {
+            ref.read(authRepositoryProvider).signOut();
+          },
+        ),
+      ],
+    ];
+  }
 
   @override
   void didUpdateWidget(AppDrawer oldWidget) {
