@@ -20,7 +20,7 @@ class DashboardScaffold extends StatelessWidget {
             ? AppBar(
                 title: Image.asset(
                   Assets.logoWide,
-                  height: 50,
+                  height: 40,
                 ),
               )
             : null,
