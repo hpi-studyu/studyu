@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/assets.dart';
 import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
-import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class DashboardScaffold extends StatelessWidget {
   static const double compactWidthThreshold = 800;
@@ -18,12 +18,15 @@ class DashboardScaffold extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor.faded(0.75),
         appBar: isCompact
             ? AppBar(
-                title: Text(tr.studyu),
+                title: Image.asset(
+                  Assets.logoWide,
+                  height: 50,
+                ),
               )
             : null,
-        drawer: isCompact ? AppDrawer(title: tr.studyu) : null,
+        drawer: isCompact ? const AppDrawer() : null,
         body: TwoColumnLayout(
-          leftWidget: isCompact ? const SizedBox.shrink() : AppDrawer(title: tr.studyu),
+          leftWidget: isCompact ? const SizedBox.shrink() : const AppDrawer(),
           rightWidget: body,
           dividerWidget: const VerticalDivider(
             width: 1,

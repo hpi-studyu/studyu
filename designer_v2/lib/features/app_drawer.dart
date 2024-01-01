@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/assets.dart';
 import 'package:studyu_designer_v2/common_views/icons.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -55,7 +56,6 @@ class GoRouterDrawerEntry extends DrawerEntry {
 
 class AppDrawer extends ConsumerStatefulWidget {
   const AppDrawer({
-    required this.title,
     this.width = 250,
     this.leftPaddingEntries = 28.0,
     this.logoPaddingVertical = 24.0,
@@ -66,7 +66,6 @@ class AppDrawer extends ConsumerStatefulWidget {
     super.key,
   });
 
-  final String title;
   final int width;
   final double leftPaddingEntries;
   final double logoPaddingVertical;
@@ -215,8 +214,8 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 backgroundBlendMode: BlendMode.color,
               ),
               child: Image.asset(
-                'assets/images/icon_wide.png',
-                fit: BoxFit.scaleDown,
+                Assets.logoWide,
+                fit: BoxFit.cover,
               ),
             ),
           ),
