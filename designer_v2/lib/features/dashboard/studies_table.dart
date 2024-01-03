@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -46,8 +45,9 @@ class StudiesTable extends StatelessWidget {
     this.itemPadding = 10.0,
     this.rowSpacing = 9.0,
     this.columnSpacing = 10.0,
-    this.compactWidthThreshold = 800.0,
+    this.compactWidthThreshold = 1000.0,
     this.superCompactWidthThreshold = 600.0,
+    this.compactStatTitleThreshold = 1100.0,
     super.key,
   });
 
@@ -57,6 +57,7 @@ class StudiesTable extends StatelessWidget {
   final double columnSpacing;
   final double compactWidthThreshold;
   final double superCompactWidthThreshold;
+  final double compactStatTitleThreshold;
   final List<Study> studies;
   final OnSelectHandler<Study> onSelect;
   final ActionsProviderFor<Study> getActions;
@@ -74,16 +75,12 @@ class StudiesTable extends StatelessWidget {
       builder: (context, constraints) {
         final isCompact = constraints.maxWidth < compactWidthThreshold;
         final isSuperCompact = constraints.maxWidth < superCompactWidthThreshold;
+        final isCompactStatTitle = constraints.maxWidth < compactStatTitleThreshold;
         debugPrint('studies table width: ${constraints.maxWidth}');
         // Calculate the minimum stat column width
-        List<String> statTitles = [
-          tr.studies_list_header_participants_enrolled,
-          tr.studies_list_header_participants_active,
-          tr.studies_list_header_participants_completed,
-        ];
         final int maxStatTitleLength =
-            statTitles.fold(0, (max, element) => max > element.length ? max : element.length);
-        final double statsColumnWidth = maxStatTitleLength * 9.5;
+            isCompactStatTitle ? "Completed".length : tr.studies_list_header_participants_completed.length;
+        final double statsColumnWidth = maxStatTitleLength * 9.9;
 
         // Calculate the minimum status column width
         int maxStatusLength = "Entwurf".length;
@@ -91,9 +88,9 @@ class StudiesTable extends StatelessWidget {
         final double statusColumnWidth = maxStatusLength * 11.5;
 
         // Calculate the minimum participation column width
-        const int maxParticipationLength = "Invite-only".length;
+        final int maxParticipationLength = isCompact ? "Invite-only".length : tr.participation_invite_who.length;
         maxStatusLength = max(maxStatusLength, tr.studies_list_header_participation.length);
-        const double participationColumnWidth = 20 + (maxParticipationLength * 7.5);
+        final double participationColumnWidth = 20 + (maxParticipationLength * 7.5);
 
         // Set column definitions
         final columnDefinitionsMap = {

@@ -11,11 +11,7 @@ class StudiesTableColumnHeader extends StatefulWidget {
   final void Function()? onSort;
 
   const StudiesTableColumnHeader(this.title,
-      {super.key,
-      required this.sortable,
-      required this.sortingActive,
-      required this.sortAscending,
-      this.onSort});
+      {super.key, required this.sortable, required this.sortingActive, required this.sortAscending, this.onSort});
 
   @override
   State<StudiesTableColumnHeader> createState() => _StudiesTableColumnHeaderState();
@@ -32,15 +28,16 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
       builder: (context, state) {
         return Row(
           children: [
-            Text(
+            Expanded(
+                child: Text(
               widget.title,
-              overflow: TextOverflow.visible,
               maxLines: 1,
+              overflow: TextOverflow.fade,
               softWrap: false,
               style: theme.textTheme.bodySmall!.copyWith(
                 color: theme.colorScheme.onSurface.withOpacity(0.8),
               ),
-            ),
+            )),
             widget.sortable ? _getIcon() ?? const SizedBox(width: 17) : const SizedBox.shrink(),
           ],
         );
@@ -62,9 +59,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
     }
 
     if (!widget.sortingActive) {
-      return isHovering
-          ? (widget.sortAscending ? hoveredAscendingIcon : hoveredDescendingIcon)
-          : null;
+      return isHovering ? (widget.sortAscending ? hoveredAscendingIcon : hoveredDescendingIcon) : null;
     }
 
     return widget.sortAscending ? ascendingIcon : descendingIcon;
