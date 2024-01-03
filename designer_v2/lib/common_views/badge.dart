@@ -57,7 +57,8 @@ class Badge extends StatelessWidget {
                     )
                   : const SizedBox.shrink(),
               (icon != null) ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
-              Text(
+              Expanded(
+                  child: Text(
                 label,
                 softWrap: false,
                 maxLines: 1,
@@ -69,7 +70,7 @@ class Badge extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     )
                     .merge(labelStyle),
-              ),
+              )),
             ],
           ),
         ),
