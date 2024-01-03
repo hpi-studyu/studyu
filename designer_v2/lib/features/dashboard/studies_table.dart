@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
-import 'package:studyu_designer_v2/domain/participation.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
@@ -85,30 +83,14 @@ class StudiesTable extends StatelessWidget {
         final double statsColumnWidth = maxStatTitleLength * 9.5;
 
         // Calculate the minimum status column width
-        final statuses = HashSet<StudyStatus>();
-        for (final study in studies) {
-          statuses.add(study.status);
-          if (studies.length >= StudyStatus.values.length) {
-            break;
-          }
-        }
-        int maxStatusLength =
-            statuses.fold(0, (max, element) => max > element.string.length ? max : element.string.length);
+        int maxStatusLength = "Entwurf".length;
         maxStatusLength = max(maxStatusLength, tr.studies_list_header_status.length);
         final double statusColumnWidth = maxStatusLength * 11.5;
 
         // Calculate the minimum participation column width
-        final participations = HashSet<Participation>();
-        for (final study in studies) {
-          participations.add(study.participation);
-          if (participations.length >= Participation.values.length) {
-            break;
-          }
-        }
-        int maxParticipationLength =
-            participations.fold(0, (max, element) => max > element.whoShort.length ? max : element.whoShort.length);
+        const int maxParticipationLength = "Invite-only".length;
         maxStatusLength = max(maxStatusLength, tr.studies_list_header_participation.length);
-        final double participationColumnWidth = 20 + (maxParticipationLength * 7.5);
+        const double participationColumnWidth = 20 + (maxParticipationLength * 7.5);
 
         // Set column definitions
         final columnDefinitionsMap = {
