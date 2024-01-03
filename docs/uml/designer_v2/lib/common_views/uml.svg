@@ -8,7 +8,8 @@
 	  +type: BadgeType;
 	  +padding: EdgeInsets;
 	  +iconSize: double?;
-	  +labelStyle: TextStyle?
+	  +labelStyle: TextStyle?;
+	  +center: bool
 	  |
 	  +Widget build();
 	  -Color? _getBackgroundColor();
@@ -1231,17 +1232,17 @@
 					</g>
 					<g data-name="Badge">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Badge">
-							<rect x="5660.8" y="469.0" height="243.0" width="263.0" data-name="Badge"></rect>
-							<path d="M5660.8 500.0 L5923.8 500.0" fill="none" data-name="Badge"></path>
-							<path d="M5660.8 636.0 L5923.8 636.0" fill="none" data-name="Badge"></path>
+							<rect x="5660.8" y="461.5" height="258.0" width="263.0" data-name="Badge"></rect>
+							<path d="M5660.8 492.5 L5923.8 492.5" fill="none" data-name="Badge"></path>
+							<path d="M5660.8 643.5 L5923.8 643.5" fill="none" data-name="Badge"></path>
 						</g>
-						<g transform="translate(5660.75, 469)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Badge">
+						<g transform="translate(5660.75, 461.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Badge">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Badge">
 								<text x="123.5" y="13.5" stroke="none" text-anchor="middle" data-name="Badge">Badge</text>
 								
 							</g>
 						</g>
-						<g transform="translate(5660.75, 500)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Badge">
+						<g transform="translate(5660.75, 492.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Badge">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Badge">
 								<text x="0.0" y="13.5" stroke="none" data-name="Badge">+icon: IconData?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="Badge">+color: Color?</text>
@@ -1251,10 +1252,11 @@
 								<text x="0.0" y="88.5" stroke="none" data-name="Badge">+padding: EdgeInsets</text>
 								<text x="0.0" y="103.5" stroke="none" data-name="Badge">+iconSize: double?</text>
 								<text x="0.0" y="118.5" stroke="none" data-name="Badge">+labelStyle: TextStyle?</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="Badge">+center: bool</text>
 								
 							</g>
 						</g>
-						<g transform="translate(5660.75, 636)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Badge">
+						<g transform="translate(5660.75, 643.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Badge">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Badge">
 								<text x="0.0" y="13.5" stroke="none" data-name="Badge">+Widget build()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="Badge">-Color? _getBackgroundColor()</text>

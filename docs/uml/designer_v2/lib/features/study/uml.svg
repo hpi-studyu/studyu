@@ -171,7 +171,8 @@
 	  |
 	  +participation: Participation;
 	  +type: BadgeType;
-	  +showPrefixIcon: bool
+	  +showPrefixIcon: bool;
+	  +center: bool
 	  |
 	  +Widget build()
 	]
@@ -389,13 +390,13 @@
 					<path d="M1846.8 157.8 L1841.5 157.8 L1836.2 157.8 L1841.5 144.5 Z"></path>
 					<path d="M2212.1 474.3 L2010.25 576 L1836.75 661.0054844606947 L1836.8 661.0 " fill="none"></path>
 					<path d="M2214.5 479.1 L2212.1 474.3 L2209.7 469.5 L2224.0 468.3 Z"></path>
-					<path d="M3745.2 208.5 L3763.75 278 L3965.567953020134 411.5 L3965.6 411.5 " fill="none"></path>
+					<path d="M3747.2 216.0 L3763.75 278 L3965.567953020134 411.5 L3965.6 411.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3748.0 198.1 L3745.2 208.5 L3737.7 200.9 L3740.4 190.5 Z"></path>
+						<path d="M3750.0 205.6 L3747.2 216.0 L3739.7 208.4 L3742.4 198.0 Z"></path>
 					</g>
-					<path d="M3713.3 209.0 L3704 278 L3580.3557046979868 411.5 L3580.4 411.5 " fill="none"></path>
+					<path d="M3712.3 216.5 L3704 278 L3580.3557046979868 411.5 L3580.4 411.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3719.8 200.5 L3713.3 209.0 L3709.2 199.0 L3715.7 190.5 Z"></path>
+						<path d="M3718.8 208.0 L3712.3 216.5 L3708.2 206.5 L3714.7 198.0 Z"></path>
 					</g>
 					<path d="M4094.4 178.0 L4242.25 278 L4015.344798657718 411.5 L4015.3 411.5 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -941,25 +942,26 @@
 					</g>
 					<g data-name="StudyParticipationBadge">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyParticipationBadge">
-							<rect x="3608.5" y="67.5" height="123.0" width="231.0" data-name="StudyParticipationBadge"></rect>
-							<path d="M3608.5 98.5 L3839.5 98.5" fill="none" data-name="StudyParticipationBadge"></path>
-							<path d="M3608.5 159.5 L3839.5 159.5" fill="none" data-name="StudyParticipationBadge"></path>
+							<rect x="3608.5" y="60.0" height="138.0" width="231.0" data-name="StudyParticipationBadge"></rect>
+							<path d="M3608.5 91.0 L3839.5 91.0" fill="none" data-name="StudyParticipationBadge"></path>
+							<path d="M3608.5 167.0 L3839.5 167.0" fill="none" data-name="StudyParticipationBadge"></path>
 						</g>
-						<g transform="translate(3608.5, 67.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyParticipationBadge">
+						<g transform="translate(3608.5, 60)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyParticipationBadge">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyParticipationBadge">
 								<text x="107.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyParticipationBadge">StudyParticipationBadge</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3608.5, 98.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyParticipationBadge">
+						<g transform="translate(3608.5, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyParticipationBadge">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyParticipationBadge">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyParticipationBadge">+participation: Participation</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyParticipationBadge">+type: BadgeType</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="StudyParticipationBadge">+showPrefixIcon: bool</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudyParticipationBadge">+center: bool</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3608.5, 159.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyParticipationBadge">
+						<g transform="translate(3608.5, 167)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyParticipationBadge">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyParticipationBadge">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyParticipationBadge">+Widget build()</text>
 								
