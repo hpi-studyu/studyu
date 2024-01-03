@@ -47,6 +47,7 @@ class StudiesTable extends StatelessWidget {
     this.rowSpacing = 9.0,
     this.columnSpacing = 10.0,
     this.compactWidthThreshold = 800.0,
+    this.superCompactWidthThreshold = 600.0,
     super.key,
   });
 
@@ -55,6 +56,7 @@ class StudiesTable extends StatelessWidget {
   final double rowSpacing;
   final double columnSpacing;
   final double compactWidthThreshold;
+  final double superCompactWidthThreshold;
   final List<Study> studies;
   final OnSelectHandler<Study> onSelect;
   final ActionsProviderFor<Study> getActions;
@@ -71,7 +73,8 @@ class StudiesTable extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isCompact = constraints.maxWidth < compactWidthThreshold;
-        debugPrint('isCompact: ${constraints.maxWidth}');
+        final isSuperCompact = constraints.maxWidth < superCompactWidthThreshold;
+        debugPrint('studies table width: ${constraints.maxWidth}');
         // Calculate the minimum stat column width
         List<String> statTitles = [
           tr.studies_list_header_participants_enrolled,
@@ -98,7 +101,8 @@ class StudiesTable extends StatelessWidget {
           StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(24),
           StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(statusColumnWidth),
           StudiesTableColumn.participation: StudiesTableColumnSize.fixedWidth(participationColumnWidth),
-          StudiesTableColumn.createdAt: StudiesTableColumnSize.flexWidth(10),
+          StudiesTableColumn.createdAt:
+              isSuperCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.flexWidth(10),
           StudiesTableColumn.enrolled:
               isCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
           StudiesTableColumn.active:
