@@ -3,6 +3,12 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
 
 class Notifications {
+  static final credentialsInvalid = SnackbarIntent(
+    message: tr.notification_credentials_invalid,
+  );
+  static final userAlreadyRegistered = SnackbarIntent(
+    message: tr.notification_user_already_registered,
+  );
   static final passwordReset = SnackbarIntent(
     message: tr.notification_password_reset_check_email,
   );

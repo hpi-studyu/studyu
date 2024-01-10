@@ -8,7 +8,6 @@ import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/repositories/supabase_client.dart';
 import 'package:studyu_designer_v2/services/shared_prefs.dart';
 import 'package:studyu_designer_v2/utils/behaviour_subject.dart';
-import 'package:studyu_designer_v2/utils/exceptions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class IAuthRepository extends IAppDelegate {
@@ -19,11 +18,11 @@ abstract class IAuthRepository extends IAppDelegate {
   String? get serializedSession;
   late bool allowPasswordReset = false;
   Stream<User?> watchAuthStateChanges({bool emitLastEvent});
-  Future<bool> signUp({required String email, required String password});
-  Future<bool> signInWith({required String email, required String password});
+  Future<AuthResponse> signUp({required String email, required String password});
+  Future<AuthResponse> signInWith({required String email, required String password});
   Future<void> signOut();
-  Future<bool> resetPasswordForEmail({required String email});
-  Future<bool> updateUser({required String newPassword});
+  Future<void> resetPasswordForEmail({required String email});
+  Future<UserResponse> updateUser({required String newPassword});
   // - Lifecycle
   void dispose();
 }
@@ -118,53 +117,28 @@ class AuthRepository implements IAuthRepository {
       (emitLastEvent) ? _authStateStreamController : _authStateSuppressedController.subject;
 
   @override
-  Future<bool> signUp({required String email, required String password}) async {
-    try {
-      await authClient.signUp(email: email, password: password);
-      return true;
-    } catch (error) {
-      throw StudyUException(error.toString());
-    }
+  Future<AuthResponse> signUp({required String email, required String password}) async {
+    return await authClient.signUp(email: email, password: password);
   }
 
   @override
-  Future<bool> signInWith({required String email, required String password}) async {
-    try {
-      await authClient.signInWithPassword(email: email, password: password);
-      return true;
-    } catch (error) {
-      throw StudyUException(error.toString());
-    }
+  Future<AuthResponse> signInWith({required String email, required String password}) async {
+    return await authClient.signInWithPassword(email: email, password: password);
   }
 
   @override
-  Future<bool> signOut() async {
-    try {
-      await authClient.signOut();
-      return true;
-    } catch (error) {
-      throw StudyUException(error.toString());
-    }
+  Future<void> signOut() async {
+    return await authClient.signOut();
   }
 
   @override
-  Future<bool> resetPasswordForEmail({required String email}) async {
-    try {
-      await authClient.resetPasswordForEmail(email);
-      return true;
-    } catch (error) {
-      throw StudyUException(error.toString());
-    }
+  Future<void> resetPasswordForEmail({required String email}) async {
+    return await authClient.resetPasswordForEmail(email);
   }
 
   @override
-  Future<bool> updateUser({required String newPassword}) async {
-    try {
-      await authClient.updateUser(UserAttributes(password: newPassword));
-      return true;
-    } catch (error) {
-      throw StudyUException(error.toString());
-    }
+  Future<UserResponse> updateUser({required String newPassword}) async {
+    return await authClient.updateUser(UserAttributes(password: newPassword));
   }
 
   @override

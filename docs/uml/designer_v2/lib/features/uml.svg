@@ -400,6 +400,7 @@
 	  +formKey: AuthFormKey;
 	  +form: FormGroup
 	  |
+	  -dynamic _getFormFor();
 	  -dynamic _onChangeFormKey();
 	  +dynamic resetControlsFor();
 	  -dynamic _forceValidationMessages();
@@ -2424,21 +2425,21 @@
 					<g fill="#eee8d5">
 						<path d="M6164.6 2208.8 L6159.3 2218.2 L6153.9 2208.8 L6159.3 2199.5 Z"></path>
 					</g>
-					<path d="M37555.2 2448.7 L37418.25 2685 L26877.5 2870.2521850778617 L26877.5 2870.3 " fill="none"></path>
+					<path d="M37550.8 2456.2 L37418.25 2685 L26877.5 2870.2521850778617 L26877.5 2870.3 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M37564.5 2443.2 L37555.2 2448.7 L37555.2 2437.9 L37564.5 2432.5 Z"></path>
+						<path d="M37560.1 2450.7 L37550.8 2456.2 L37550.9 2445.4 L37560.2 2440.0 Z"></path>
 					</g>
-					<path d="M37722.4 2451.2 L37716.25 2685 L27086.5 2870.0291317637725 L27086.5 2870.0 " fill="none"></path>
+					<path d="M37722.2 2458.7 L37716.25 2685 L27086.5 2870.0291317637725 L27086.5 2870.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M37728.0 2442.0 L37722.4 2451.2 L37717.3 2441.7 L37722.9 2432.5 Z"></path>
+						<path d="M37727.8 2449.5 L37722.2 2458.7 L37717.1 2449.2 L37722.7 2440.0 Z"></path>
 					</g>
-					<path d="M37745.1 2451.1 L37756.25 2685 L24576 2870.318930584089 L24576.0 2870.3 " fill="none"></path>
+					<path d="M37745.4 2458.6 L37756.25 2685 L24576 2870.318930584089 L24576.0 2870.3 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M37750.0 2441.6 L37745.1 2451.1 L37739.3 2442.1 L37744.2 2432.5 Z"></path>
+						<path d="M37750.3 2449.1 L37745.4 2458.6 L37739.7 2449.6 L37744.5 2440.0 Z"></path>
 					</g>
-					<path d="M37909.0 2448.6 L38048.5 2685 L29922 2870.450260018354 L29922.0 2870.5 " fill="none"></path>
+					<path d="M37913.4 2456.1 L38048.5 2685 L29922 2870.450260018354 L29922.0 2870.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M37908.9 2437.8 L37909.0 2448.6 L37899.7 2443.2 L37899.5 2432.5 Z"></path>
+						<path d="M37913.3 2445.3 L37913.4 2456.1 L37904.1 2450.7 L37904.0 2440.0 Z"></path>
 					</g>
 					<path d="M38172.0 2380.9 L38743.5 2685 L23785.75 2870.7981833924437 L23785.8 2870.8 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -2453,7 +2454,7 @@
 						<path d="M38166.2 2354.9 L38172.2 2363.8 L38161.5 2364.5 L38155.5 2355.6 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M35229.6 96.1 L37730.5 203 L37730.5 539.5 L37730.5 539.5 L37730.5 876 L37730.5 876 L37730.5 1025 L37730.5 1025 L37730.5 1174 L37730.5 1174 L37730.5 1390.5 L37730.5 1390.5 L37730.5 1607 L37730.5 1607 L37730.5 1859.5 L37730.5 1859.5 " fill="none"></path>
+						<path d="M35229.6 96.1 L37730.5 203 L37730.5 539.5 L37730.5 539.5 L37730.5 876 L37730.5 876 L37730.5 1025 L37730.5 1025 L37730.5 1174 L37730.5 1174 L37730.5 1390.5 L37730.5 1390.5 L37730.5 1607 L37730.5 1607 L37730.5 1852 L37730.5 1852.0 " fill="none"></path>
 					</g>
 					<path d="M35229.8 90.7 L35229.6 96.1 L35229.3 101.4 L35216.3 95.5 Z"></path>
 					<path d="M12208.1 2793.1 L12220.75 2788 L12228.25 2788 L12228.25 2788 L12235.75 2871.5 L12235.75 2871.5 L12228.25 2955 L12228.25 2955 L12220.75 2955 L12220.75 2955 L12190.75 2942.9277108433735 L12190.8 2942.9 " fill="none"></path>
@@ -4555,17 +4556,17 @@
 					</g>
 					<g data-name="AuthFormController">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AuthFormController">
-							<rect x="37305.5" y="1859.5" height="573.0" width="850.0" data-name="AuthFormController"></rect>
-							<path d="M37305.5 1890.5 L38155.5 1890.5" fill="none" data-name="AuthFormController"></path>
-							<path d="M37305.5 2191.5 L38155.5 2191.5" fill="none" data-name="AuthFormController"></path>
+							<rect x="37305.5" y="1852.0" height="588.0" width="850.0" data-name="AuthFormController"></rect>
+							<path d="M37305.5 1883.0 L38155.5 1883.0" fill="none" data-name="AuthFormController"></path>
+							<path d="M37305.5 2184.0 L38155.5 2184.0" fill="none" data-name="AuthFormController"></path>
 						</g>
-						<g transform="translate(37305.5, 1859.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AuthFormController">
+						<g transform="translate(37305.5, 1852)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AuthFormController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AuthFormController">
 								<text x="417.0" y="13.5" stroke="none" text-anchor="middle" data-name="AuthFormController">AuthFormController</text>
 								
 							</g>
 						</g>
-						<g transform="translate(37305.5, 1890.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AuthFormController">
+						<g transform="translate(37305.5, 1883)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AuthFormController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AuthFormController">
 								<text x="0.0" y="13.5" stroke="none" data-name="AuthFormController">+authRepository: IAuthRepository</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="AuthFormController">+sharedPreferences: SharedPreferences</text>
@@ -4589,23 +4590,24 @@
 								
 							</g>
 						</g>
-						<g transform="translate(37305.5, 2191.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AuthFormController">
+						<g transform="translate(37305.5, 2184)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AuthFormController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AuthFormController">
-								<text x="0.0" y="13.5" stroke="none" data-name="AuthFormController">-dynamic _onChangeFormKey()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="AuthFormController">+dynamic resetControlsFor()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="AuthFormController">-dynamic _forceValidationMessages()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="AuthFormController">+dynamic signUp()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="AuthFormController">-dynamic _signUp()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="AuthFormController">+dynamic signIn()</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="AuthFormController">-dynamic _signInWith()</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="AuthFormController">+dynamic signOut()</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="AuthFormController">+dynamic resetPasswordForEmail()</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="AuthFormController">+dynamic sendPasswordResetLink()</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="AuthFormController">+dynamic recoverPassword()</text>
-								<text x="0.0" y="178.5" stroke="none" data-name="AuthFormController">+dynamic updateUser()</text>
-								<text x="0.0" y="193.5" stroke="none" data-name="AuthFormController">-void _setRememberMe()</text>
-								<text x="0.0" y="208.5" stroke="none" data-name="AuthFormController">-void _delRememberMe()</text>
-								<text x="0.0" y="223.5" stroke="none" data-name="AuthFormController">-void _initRememberMe()</text>
+								<text x="0.0" y="13.5" stroke="none" data-name="AuthFormController">-dynamic _getFormFor()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="AuthFormController">-dynamic _onChangeFormKey()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="AuthFormController">+dynamic resetControlsFor()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="AuthFormController">-dynamic _forceValidationMessages()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="AuthFormController">+dynamic signUp()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="AuthFormController">-dynamic _signUp()</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="AuthFormController">+dynamic signIn()</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="AuthFormController">-dynamic _signInWith()</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="AuthFormController">+dynamic signOut()</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="AuthFormController">+dynamic resetPasswordForEmail()</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="AuthFormController">+dynamic sendPasswordResetLink()</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="AuthFormController">+dynamic recoverPassword()</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="AuthFormController">+dynamic updateUser()</text>
+								<text x="0.0" y="208.5" stroke="none" data-name="AuthFormController">-void _setRememberMe()</text>
+								<text x="0.0" y="223.5" stroke="none" data-name="AuthFormController">-void _delRememberMe()</text>
+								<text x="0.0" y="238.5" stroke="none" data-name="AuthFormController">-void _initRememberMe()</text>
 								
 							</g>
 						</g>

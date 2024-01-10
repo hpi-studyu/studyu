@@ -231,7 +231,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
   /// Updates & re-evaluates [AbstractControl.validators] and
   /// [AbstractControl.asyncValidators] for all [FormControl]'s in the
   /// current [form] (or the [FormGroup] itself) with the validators of
-  /// the [FormValidationConfig]corresponding to the given [validationSet]
+  /// the [FormValidationConfig] corresponding to the given [validationSet]
   /// (as defined in [sharedValidationConfig])
   ///
   /// Note: this will only look at immediate child controls of the [form]
