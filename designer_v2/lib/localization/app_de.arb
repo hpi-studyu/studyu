@@ -92,7 +92,7 @@
   "action_button_template_subtitle": "Erstellen Sie eine neue Vorlage für vorlagenbasierte Unterstudien.\nDie Vorlage kann die Anpassung der Unterstudien einschränken.\nDie Unterstudien sind mit der Konfiguration der Vorlage vorab gefüllt.\nDie Vorlage selbst ist keine Studie und kann nicht ausgeführt werden.",
   "action_button_template_hint": "Hinweis: Verwenden Sie das Dreipunktemenü neben einer Vorlage, um eine Unterstudie zu erstellen.",
   "search": "Suche",
-  "studies_list_header_title": "Studientitel",
+  "studies_list_header_title": "Titel",
   "studies_list_header_status": "Status",
   "studies_list_header_participation": "Teilnahme",
   "studies_list_header_created_at": "Erstellt",

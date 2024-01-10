@@ -1,12 +1,9 @@
-import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
-import 'package:studyu_designer_v2/domain/participation.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
@@ -60,7 +57,9 @@ class StudiesTable extends StatelessWidget {
     this.itemPadding = 10.0,
     this.rowSpacing = 9.0,
     this.columnSpacing = 10.0,
-    this.compactWidthThreshold = 800.0,
+    this.compactWidthThreshold = 1000.0,
+    this.superCompactWidthThreshold = 600.0,
+    this.compactStatTitleThreshold = 1100.0,
     super.key,
   });
 
@@ -69,6 +68,8 @@ class StudiesTable extends StatelessWidget {
   final double rowSpacing;
   final double columnSpacing;
   final double compactWidthThreshold;
+  final double superCompactWidthThreshold;
+  final double compactStatTitleThreshold;
   final List<StudyGroup> studyGroups;
   final OnSelectHandler<Study> onSelect;
   final ActionsProviderFor<StudyGroup> getActions;
@@ -86,46 +87,21 @@ class StudiesTable extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isCompact = constraints.maxWidth < compactWidthThreshold;
-        debugPrint('isCompact: ${constraints.maxWidth}');
+        final isSuperCompact = constraints.maxWidth < superCompactWidthThreshold;
+        final isCompactStatTitle = constraints.maxWidth < compactStatTitleThreshold;
+        debugPrint('studies table width: ${constraints.maxWidth}');
         // Calculate the minimum stat column width
-        List<String> statTitles = [
-          tr.studies_list_header_participants_enrolled,
-          tr.studies_list_header_participants_active,
-          tr.studies_list_header_participants_completed,
-        ];
         final int maxStatTitleLength =
-            statTitles.fold(0, (max, element) => max > element.length ? max : element.length);
-        final double statsColumnWidth = maxStatTitleLength * 9.5;
+            isCompactStatTitle ? "Completed".length : tr.studies_list_header_participants_completed.length;
+        final double statsColumnWidth = maxStatTitleLength * 9.9;
 
         // Calculate the minimum status column width
-        final statuses = HashSet<StudyStatus>();
-        for (final studyGroup in studyGroups) {
-          statuses.add(studyGroup.standaloneOrTemplate.status);
-          for (final study in studyGroup.subStudies) {
-            statuses.add(study.status);
-          }
-          if (statuses.length >= StudyStatus.values.length) {
-            break;
-          }
-        }
-        int maxStatusLength =
-            statuses.fold(0, (max, element) => max > element.string.length ? max : element.string.length);
+        int maxStatusLength = "Entwurf".length;
         maxStatusLength = max(maxStatusLength, tr.studies_list_header_status.length);
         final double statusColumnWidth = maxStatusLength * 11.5;
 
         // Calculate the minimum participation column width
-        final participations = HashSet<Participation>();
-        for (final studyGroup in studyGroups) {
-          participations.add(studyGroup.standaloneOrTemplate.participation);
-          for (final study in studyGroup.subStudies) {
-            participations.add(study.participation);
-          }
-          if (participations.length >= Participation.values.length) {
-            break;
-          }
-        }
-        int maxParticipationLength =
-            participations.fold(0, (max, element) => max > element.whoShort.length ? max : element.whoShort.length);
+        final int maxParticipationLength = isCompact ? "Invite-only".length : tr.participation_invite_who.length;
         maxStatusLength = max(maxStatusLength, tr.studies_list_header_participation.length);
         final double participationColumnWidth = 20 + (maxParticipationLength * 7.5);
 
@@ -135,7 +111,8 @@ class StudiesTable extends StatelessWidget {
           StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(24),
           StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(statusColumnWidth),
           StudiesTableColumn.participation: StudiesTableColumnSize.fixedWidth(participationColumnWidth),
-          StudiesTableColumn.createdAt: StudiesTableColumnSize.flexWidth(10),
+          StudiesTableColumn.createdAt:
+              isSuperCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.flexWidth(10),
           StudiesTableColumn.enrolled:
               isCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
           StudiesTableColumn.active:
@@ -154,39 +131,39 @@ class StudiesTable extends StatelessWidget {
                 children: [
                   columnDefinitions[0].value.createContainer(child: _buildColumnHeader(columnDefinitions[0].key)),
                   SizedBox(
-                    width: columnSpacing,
+                    width: columnDefinitions[0].value.collapsed ? 0 : columnSpacing,
                   ),
                   columnDefinitions[1].value.createContainer(child: _buildColumnHeader(columnDefinitions[1].key)),
                   SizedBox(
-                    width: columnSpacing,
+                    width: columnDefinitions[1].value.collapsed ? 0 : columnSpacing,
                   ),
                   columnDefinitions[2].value.createContainer(child: _buildColumnHeader(columnDefinitions[2].key)),
                   SizedBox(
-                    width: columnSpacing,
+                    width: columnDefinitions[2].value.collapsed ? 0 : columnSpacing,
                   ),
                   columnDefinitions[3].value.createContainer(child: _buildColumnHeader(columnDefinitions[3].key)),
                   SizedBox(
-                    width: columnSpacing,
+                    width: columnDefinitions[3].value.collapsed ? 0 : columnSpacing,
                   ),
                   columnDefinitions[4].value.createContainer(child: _buildColumnHeader(columnDefinitions[4].key)),
                   SizedBox(
-                    width: columnSpacing,
+                    width: columnDefinitions[4].value.collapsed ? 0 : columnSpacing,
                   ),
                   columnDefinitions[5].value.createContainer(child: _buildColumnHeader(columnDefinitions[5].key)),
                   SizedBox(
-                    width: columnSpacing,
+                    width: columnDefinitions[5].value.collapsed ? 0 : columnSpacing,
                   ),
                   columnDefinitions[6].value.createContainer(child: _buildColumnHeader(columnDefinitions[6].key)),
                   SizedBox(
-                    width: columnSpacing,
+                    width: columnDefinitions[6].value.collapsed ? 0 : columnSpacing,
                   ),
                   columnDefinitions[7].value.createContainer(child: _buildColumnHeader(columnDefinitions[7].key)),
                   SizedBox(
-                    width: columnSpacing,
+                    width: columnDefinitions[7].value.collapsed ? 0 : columnSpacing,
                   ),
                   columnDefinitions[8].value.createContainer(child: _buildColumnHeader(columnDefinitions[8].key)),
                   SizedBox(
-                    width: columnSpacing,
+                    width: columnDefinitions[8].value.collapsed ? 0 : columnSpacing,
                   ),
                 ],
               ),

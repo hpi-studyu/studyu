@@ -47,16 +47,14 @@ class SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        width: 400.0,
-        child: SearchBar(
-          hintText: widget.hintText ?? "Search",
-          controller: _searchController,
-          leading: const Icon(Icons.search),
-          shadowColor: MaterialStateProperty.resolveWith((states) {
-            return Colors.transparent;
-          }),
-        ));
+    return SearchBar(
+      hintText: widget.hintText ?? "Search",
+      controller: _searchController,
+      leading: const Icon(Icons.search),
+      shadowColor: MaterialStateProperty.resolveWith((states) {
+        return Colors.transparent;
+      }),
+    );
   }
 
   @override
