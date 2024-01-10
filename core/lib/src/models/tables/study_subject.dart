@@ -16,7 +16,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   final _controller = StreamController<StudySubject>();
 
   @override
-  Map<String, dynamic> get primaryKeys => {'id': id};
+  Map<String, Object> get primaryKeys => {'id': id};
 
   String id;
   @JsonKey(name: 'study_id')
@@ -290,7 +290,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @override
   Future<StudySubject> save() async {
     try {
-      final response = await env.client.from(tableName).upsert(toJson()).select<List>();
+      final response = await env.client.from(tableName).upsert(toJson()).select();
       final json = toFullJson(partialJson: List<Map<String, dynamic>>.from(response).single);
       final newSubject = StudySubject.fromJson(json);
       _controller.add(newSubject);
@@ -324,7 +324,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   Future<StudySubject> delete() async {
     await deleteProgress();
     try {
-      final response = await env.client.from(tableName).delete().eq('id', id).single().select<Map<String, dynamic>>();
+      final response = await env.client.from(tableName).delete().eq('id', id).select().single();
       response['study'] = study.toJson();
       return StudySubject.fromJson(response);
     } catch (error, stacktrace) {

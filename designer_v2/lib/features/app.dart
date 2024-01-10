@@ -26,11 +26,6 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return const AppContent();
   }
-
-  @override
-  void initState() {
-    super.initState();
-  }
 }
 
 class AppContent extends ConsumerStatefulWidget {

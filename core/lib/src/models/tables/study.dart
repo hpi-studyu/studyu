@@ -39,7 +39,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   static const String tableName = 'study';
 
   @override
-  Map<String, dynamic> get primaryKeys => {'id': id};
+  Map<String, Object> get primaryKeys => {'id': id};
 
   static const String baselineID = '__baseline';
   String id;
@@ -169,7 +169,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
   static Future<List<Study>> publishedPublicStudies() async {
     try {
-      final response = await env.client.from(tableName).select().eq('participation', 'open') as List;
+      final response = await env.client.from(tableName).select().eq('participation', 'open');
       return SupabaseQuery.extractSupabaseList<Study>(List<Map<String, dynamic>>.from(response));
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
@@ -194,7 +194,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   static Future<String> fetchResultsCSVTable(String studyId) async {
     final List res;
     try {
-      res = await env.client.from('study_progress').select().eq('study_id', studyId) as List;
+      res = await env.client.from('study_progress').select().eq('study_id', studyId);
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
       rethrow;
