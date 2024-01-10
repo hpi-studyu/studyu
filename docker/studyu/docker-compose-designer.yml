@@ -15,9 +15,9 @@ services:
       dockerfile: ./docker/studyu/Dockerfile
       args:
         FLUTTER_APP_FOLDER: designer_v2
-    ports:
-      - 8081:8081
+    environment:
+      - STUDYU_COMPONENT=designer_v2
     volumes:
-      - ../nginx/conf.d:/etc/nginx/conf.d:ro
+      - ../nginx/studyu:/etc/nginx/templates:ro
     env_file:
       - ../../flutter_common/lib/envs/.env.local

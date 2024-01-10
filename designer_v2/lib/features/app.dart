@@ -15,7 +15,7 @@ final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey();
 
 /// Entry widget of the app.
 class App extends StatefulWidget {
-  const App({Key? key}) : super(key: key);
+  const App({super.key});
 
   @override
   State<App> createState() => _AppState();
@@ -34,7 +34,7 @@ class _AppState extends State<App> {
 }
 
 class AppContent extends ConsumerStatefulWidget {
-  const AppContent({Key? key}) : super(key: key);
+  const AppContent({super.key});
 
   @override
   ConsumerState<AppContent> createState() => _AppContentState();

@@ -18,8 +18,8 @@ class TwoColumnLayout extends StatefulWidget {
     this.backgroundColorLeft,
     this.backgroundColorRight,
     this.stretchHeight = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   static const VerticalDivider defaultDivider = VerticalDivider(
     width: 1,

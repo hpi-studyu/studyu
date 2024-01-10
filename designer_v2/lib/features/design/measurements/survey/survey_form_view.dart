@@ -18,7 +18,7 @@ import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class MeasurementSurveyFormView extends ConsumerStatefulWidget {
-  const MeasurementSurveyFormView({required this.formViewModel, Key? key}) : super(key: key);
+  const MeasurementSurveyFormView({required this.formViewModel, super.key});
 
   final MeasurementSurveyFormViewModel formViewModel;
 
@@ -45,6 +45,9 @@ class _MeasurementSurveyFormViewState extends ConsumerState<MeasurementSurveyFor
             labelHelpText: tr.form_field_measurement_survey_title_tooltip,
             input: ReactiveTextField(
               formControl: widget.formViewModel.surveyTitleControl,
+              decoration: InputDecoration(
+                hintText: tr.form_field_measurement_survey_title,
+              ),
               inputFormatters: [
                 LengthLimitingTextInputFormatter(200),
               ],
@@ -81,6 +84,7 @@ class _MeasurementSurveyFormViewState extends ConsumerState<MeasurementSurveyFor
             ),
             input: ReactiveTextField(
               formControl: widget.formViewModel.surveyIntroTextControl,
+              decoration: InputDecoration(hintText: tr.form_field_measurement_survey_intro_text_hint),
               inputFormatters: [
                 LengthLimitingTextInputFormatter(2000),
               ],
@@ -88,7 +92,6 @@ class _MeasurementSurveyFormViewState extends ConsumerState<MeasurementSurveyFor
               keyboardType: TextInputType.multiline,
               minLines: 5,
               maxLines: 5,
-              decoration: InputDecoration(hintText: tr.form_field_measurement_survey_intro_text_hint),
             ),
           ),
           FormTableRow(
@@ -121,6 +124,7 @@ class _MeasurementSurveyFormViewState extends ConsumerState<MeasurementSurveyFor
             ),
             input: ReactiveTextField(
               formControl: widget.formViewModel.surveyOutroTextControl,
+              decoration: InputDecoration(hintText: tr.form_field_measurement_survey_outro_text_hint),
               inputFormatters: [
                 LengthLimitingTextInputFormatter(2000),
               ],
@@ -128,7 +132,6 @@ class _MeasurementSurveyFormViewState extends ConsumerState<MeasurementSurveyFor
               keyboardType: TextInputType.multiline,
               minLines: 5,
               maxLines: 5,
-              decoration: InputDecoration(hintText: tr.form_field_measurement_survey_outro_text_hint),
             ),
           ),
         ]),

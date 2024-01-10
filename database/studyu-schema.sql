@@ -1,3 +1,5 @@
+BEGIN;
+
 --
 -- PostgreSQL database dump
 --
@@ -215,6 +217,26 @@ $$;
 
 
 ALTER FUNCTION public.has_study_ended(psubject_id uuid) OWNER TO postgres;
+
+--
+-- Name: has_results_public(uuid); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.has_results_public(psubject_id uuid) RETURNS boolean
+  LANGUAGE plpgsql SECURITY DEFINER
+  AS $$
+  BEGIN
+    RETURN (
+     SELECT EXISTS(
+     SELECT 1
+      FROM study, study_subject
+      WHERE (study_subject.study_id = study.id AND psubject_id = study_subject.id AND study.result_sharing = 'public'::public.result_sharing))
+    );
+  END;
+$$;
+
+
+ALTER FUNCTION public.has_results_public(psubject_id uuid) OWNER TO postgres;
 
 --
 -- Name: study_subject; Type: TABLE; Schema: public; Owner: postgres
@@ -558,7 +580,7 @@ ALTER TABLE public.subject_progress OWNER TO postgres;
 -- Name: study_progress_export; Type: VIEW; Schema: public; Owner: postgres
 --
 
-CREATE VIEW public.study_progress_export AS
+CREATE VIEW public.study_progress_export with(security_invoker=true) AS
  SELECT subject_progress.completed_at,
     subject_progress.intervention_id,
     subject_progress.task_id,
@@ -840,14 +862,24 @@ CREATE POLICY "Users can do everything with their progress" ON public.subject_pr
 
 
 --
--- Name: Allow users to manage their own user; Type: POLICY; Schema: public; Owner:
+-- Name: Enable read access for all users if results are public; Type: POLICY; Schema: public; Owner: postgres
 --
 
-CREATE POLICY "Allow users to manage their own user"
-ON public."user" FOR ALL
-USING (
-  auth.uid() = id
-);
+CREATE POLICY "Enable read access for all users if results are public" ON public.subject_progress
+USING (public.has_results_public(subject_id));
+
+--
+-- Name: Enable read access for all users if results are public; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Enable read access for all users if results are public" ON public.study_subject
+USING (public.has_results_public(id));
+
+--
+-- Name: Allow users to manage their own user; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Allow users to manage their own user" ON public."user" FOR ALL USING (auth.uid() = id);
 
 --
 -- Name: app_config; Type: ROW SECURITY; Schema: public; Owner: postgres
@@ -892,6 +924,13 @@ ALTER TABLE public.subject_progress ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public."user" ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: study_progress_export; Type: ROW SECURITY; Schema: public; Owner: postgres
+--
+
+ALTER VIEW public.study_progress_export SET (security_invoker = on);
+
+--
 -- PostgreSQL database dump complete
 --
 
+COMMIT;

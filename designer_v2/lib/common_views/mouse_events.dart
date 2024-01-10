@@ -18,8 +18,7 @@ class MouseEventsRegion extends StatefulWidget {
       this.onExit,
       this.cursor = defaultCursor,
       this.autoselectCursor = true,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final MouseEventsRegionBuilder builder;
   final MaterialStatesChangedCallback? onStateChanged;

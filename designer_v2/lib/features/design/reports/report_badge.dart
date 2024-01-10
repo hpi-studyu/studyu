@@ -8,8 +8,7 @@ class ReportBadge extends StatelessWidget {
       this.type = study_badge.BadgeType.outlineFill,
       this.showPrefixIcon = true,
       this.showTooltip = true,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final ReportStatus? status;
   final study_badge.BadgeType type;

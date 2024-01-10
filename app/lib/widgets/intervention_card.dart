@@ -19,8 +19,8 @@ class InterventionCard extends StatelessWidget {
     this.showCheckbox = false,
     this.showTasks = true,
     this.showDescription = true,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +55,8 @@ class InterventionCardTitle extends StatelessWidget {
     this.showCheckbox = false,
     this.showDescriptionButton = true,
     this.onTap,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +103,7 @@ class InterventionCardTitle extends StatelessWidget {
 class InterventionCardDescription extends StatelessWidget {
   final Intervention intervention;
 
-  const InterventionCardDescription({required this.intervention, Key? key}) : super(key: key);
+  const InterventionCardDescription({required this.intervention, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +126,7 @@ class InterventionCardDescription extends StatelessWidget {
 class _TaskList extends StatelessWidget {
   final List<InterventionTask> tasks;
 
-  const _TaskList({required this.tasks, Key? key}) : super(key: key);
+  const _TaskList({required this.tasks});
 
   String scheduleString(List<CompletionPeriod> schedules) {
     return schedules

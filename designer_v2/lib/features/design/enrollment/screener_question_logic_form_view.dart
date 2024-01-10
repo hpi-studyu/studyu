@@ -15,7 +15,7 @@ abstract class IScreenerQuestionLogicFormViewModel {
 }
 
 class ScreenerQuestionLogicFormView extends FormConsumerWidget {
-  const ScreenerQuestionLogicFormView({required this.formViewModel, Key? key}) : super(key: key);
+  const ScreenerQuestionLogicFormView({required this.formViewModel, super.key});
 
   final ScreenerQuestionFormViewModel formViewModel;
 

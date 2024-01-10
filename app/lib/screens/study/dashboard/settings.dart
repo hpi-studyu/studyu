@@ -12,7 +12,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+  const Settings({super.key});
 
   @override
   State<Settings> createState() => _SettingsState();
@@ -119,7 +119,10 @@ class _SettingsState extends State<Settings> {
             ElevatedButton.icon(
               icon: Icon(MdiIcons.exitToApp),
               label: Text(AppLocalizations.of(context)!.opt_out),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange[800],
+                foregroundColor: Colors.white,
+              ),
               onPressed: () {
                 showDialog(context: context, builder: (_) => OptOutAlertDialog(subject: subject));
               },
@@ -128,7 +131,7 @@ class _SettingsState extends State<Settings> {
             ElevatedButton.icon(
               icon: const Icon(Icons.delete),
               label: Text(AppLocalizations.of(context)!.delete_data),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
               onPressed: () {
                 showDialog(context: context, builder: (_) => DeleteAlertDialog(subject: subject));
               },
@@ -143,7 +146,7 @@ class _SettingsState extends State<Settings> {
 class OptOutAlertDialog extends StatelessWidget {
   final StudySubject? subject;
 
-  const OptOutAlertDialog({Key? key, required this.subject}) : super(key: key);
+  const OptOutAlertDialog({super.key, required this.subject});
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +175,7 @@ class OptOutAlertDialog extends StatelessWidget {
         ElevatedButton.icon(
           icon: Icon(MdiIcons.exitToApp),
           label: Text(AppLocalizations.of(context)!.opt_out),
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800], elevation: 0),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800], foregroundColor: Colors.white),
           onPressed: () async {
             await subject!.softDelete();
             await deleteActiveStudyReference();
@@ -193,14 +196,14 @@ class OptOutAlertDialog extends StatelessWidget {
 class DeleteAlertDialog extends StatelessWidget {
   final StudySubject? subject;
 
-  const DeleteAlertDialog({Key? key, required this.subject}) : super(key: key);
+  const DeleteAlertDialog({super.key, required this.subject});
 
   @override
   Widget build(BuildContext context) => AlertDialog(
         title: Text('${AppLocalizations.of(context)!.delete_data} ?'),
         // todo translate
         content: const Text(
-          'You are about to delete all data from your device & our servers. '
+          'You are about to delete all data from your device and our servers. '
           'You will not be able to restore your data.\nYour anonymized data will '
           'not be available for research purposes anymore.',
         ),
@@ -208,7 +211,7 @@ class DeleteAlertDialog extends StatelessWidget {
           ElevatedButton.icon(
             icon: const Icon(Icons.delete),
             label: Text(AppLocalizations.of(context)!.delete_data),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, elevation: 0),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
             onPressed: () async {
               try {
                 await subject!.delete(); // hard-delete

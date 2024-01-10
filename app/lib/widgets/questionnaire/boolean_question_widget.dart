@@ -10,7 +10,7 @@ class BooleanQuestionWidget extends QuestionWidget {
   final BooleanQuestion question;
   final Function(Answer)? onDone;
 
-  const BooleanQuestionWidget({Key? key, required this.question, this.onDone}) : super(key: key);
+  const BooleanQuestionWidget({super.key, required this.question, this.onDone});
 
   @override
   State<BooleanQuestionWidget> createState() => _BooleanQuestionWidgetState();

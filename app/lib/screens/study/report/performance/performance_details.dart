@@ -13,7 +13,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
         settings: const RouteSettings(name: Routes.performanceDetails),
       );
 
-  const PerformanceDetailsScreen(this.reportSubject, {Key? key}) : super(key: key);
+  const PerformanceDetailsScreen(this.reportSubject, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class InterventionPerformanceBar extends StatelessWidget {
   final Intervention intervention;
   final StudySubject? subject;
 
-  const InterventionPerformanceBar({required this.intervention, required this.subject, Key? key}) : super(key: key);
+  const InterventionPerformanceBar({required this.intervention, required this.subject, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +115,7 @@ class ObservationPerformanceBar extends StatelessWidget {
   final Observation observation;
   final StudySubject? subject;
 
-  const ObservationPerformanceBar({required this.observation, required this.subject, Key? key}) : super(key: key);
+  const ObservationPerformanceBar({required this.observation, required this.subject, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +137,7 @@ class PerformanceBar extends StatelessWidget {
   final int completed;
   final int total;
 
-  const PerformanceBar({required this.task, required this.completed, required this.total, Key? key}) : super(key: key);
+  const PerformanceBar({required this.task, required this.completed, required this.total, super.key});
 
   @override
   Widget build(BuildContext context) {

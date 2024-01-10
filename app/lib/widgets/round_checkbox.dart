@@ -5,7 +5,7 @@ class RoundCheckbox extends StatelessWidget {
   final Function(bool)? onChanged;
   final bool? value;
 
-  const RoundCheckbox({Key? key, this.onChanged, this.value}) : super(key: key);
+  const RoundCheckbox({super.key, this.onChanged, this.value});
 
   @override
   Widget build(BuildContext context) {

@@ -9,7 +9,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/language_picker.dart';
 
 class AccountSettingsDialog extends ConsumerWidget {
-  const AccountSettingsDialog({Key? key}) : super(key: key);
+  const AccountSettingsDialog({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -23,8 +23,7 @@ class FormScaffold<T extends FormViewModel> extends ConsumerStatefulWidget {
       this.drawer,
       this.actionsSpacing = 8.0,
       this.actionsPadding = 24.0,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final T formViewModel;
   final List<Widget>? actions;

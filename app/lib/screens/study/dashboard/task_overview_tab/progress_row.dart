@@ -10,7 +10,7 @@ import '../../../../widgets/intervention_card.dart';
 class ProgressRow extends StatefulWidget {
   final StudySubject? subject;
 
-  const ProgressRow({Key? key, this.subject}) : super(key: key);
+  const ProgressRow({super.key, this.subject});
 
   @override
   State<ProgressRow> createState() => _ProgressRowState();
@@ -78,8 +78,8 @@ class InterventionSegment extends StatelessWidget {
     required this.isCurrent,
     required this.isFuture,
     required this.phaseDuration,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   List<Widget> buildSeparators(int nbSeparators) {
     final sep = <Widget>[];

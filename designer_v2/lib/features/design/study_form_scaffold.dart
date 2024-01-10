@@ -8,10 +8,7 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
 class StudyFormScaffold<T extends FormViewModel> extends ConsumerWidget {
   const StudyFormScaffold(
-      {required this.studyCreationArgs,
-      required this.formViewModelBuilder,
-      required this.formViewBuilder,
-      super.key});
+      {required this.studyCreationArgs, required this.formViewModelBuilder, required this.formViewBuilder, super.key});
 
   final StudyCreationArgs studyCreationArgs;
   final FormViewModelBuilder<T> formViewModelBuilder;

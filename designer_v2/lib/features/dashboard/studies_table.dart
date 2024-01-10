@@ -26,14 +26,19 @@ class StudyGroup {
 enum StudiesTableColumn { pin, title, status, participation, createdAt, enrolled, active, completed, action }
 
 class StudiesTableColumnSize {
+  final bool collapsed;
   final int? flex;
   final double? width;
 
-  StudiesTableColumnSize._(this.flex, this.width);
-  StudiesTableColumnSize.fixedWidth(double width) : this._(null, width);
-  StudiesTableColumnSize.flexWidth(int flex) : this._(flex, null);
+  StudiesTableColumnSize._(this.flex, this.width, this.collapsed);
+  StudiesTableColumnSize.fixedWidth(double width) : this._(null, width, false);
+  StudiesTableColumnSize.flexWidth(int flex) : this._(flex, null, false);
+  StudiesTableColumnSize.collapsed() : this._(null, null, true);
 
   Widget createContainer({required Widget child, double? height}) {
+    if (collapsed) {
+      return const SizedBox.shrink();
+    }
     if (flex != null) {
       return Expanded(flex: flex!, child: child);
     }
@@ -55,6 +60,7 @@ class StudiesTable extends StatelessWidget {
     this.itemPadding = 10.0,
     this.rowSpacing = 9.0,
     this.columnSpacing = 10.0,
+    this.compactWidthThreshold = 800.0,
     super.key,
   });
 
@@ -62,6 +68,7 @@ class StudiesTable extends StatelessWidget {
   final double itemPadding;
   final double rowSpacing;
   final double columnSpacing;
+  final double compactWidthThreshold;
   final List<StudyGroup> studyGroups;
   final OnSelectHandler<Study> onSelect;
   final ActionsProviderFor<StudyGroup> getActions;
@@ -76,125 +83,141 @@ class StudiesTable extends StatelessWidget {
       return emptyWidget;
     }
 
-    // Calculate the minimum stat column width
-    List<String> statTitles = [
-      tr.studies_list_header_participants_enrolled,
-      tr.studies_list_header_participants_active,
-      tr.studies_list_header_participants_completed,
-    ];
-    final int maxStatTitleLength = statTitles.fold(0, (max, element) => max > element.length ? max : element.length);
-    final double statsColumnWidth = maxStatTitleLength * 9.5;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isCompact = constraints.maxWidth < compactWidthThreshold;
+        debugPrint('isCompact: ${constraints.maxWidth}');
+        // Calculate the minimum stat column width
+        List<String> statTitles = [
+          tr.studies_list_header_participants_enrolled,
+          tr.studies_list_header_participants_active,
+          tr.studies_list_header_participants_completed,
+        ];
+        final int maxStatTitleLength =
+            statTitles.fold(0, (max, element) => max > element.length ? max : element.length);
+        final double statsColumnWidth = maxStatTitleLength * 9.5;
 
-    // Calculate the minimum status column width
-    final statuses = HashSet<StudyStatus>();
-    for (final studyGroup in studyGroups) {
-      statuses.add(studyGroup.standaloneOrTemplate.status);
-      for (final study in studyGroup.subStudies) {
-        statuses.add(study.status);
-      }
-    }
-    int maxStatusLength = statuses.fold(0, (max, element) => max > element.string.length ? max : element.string.length);
-    maxStatusLength = max(maxStatusLength, tr.studies_list_header_status.length);
-    final double statusColumnWidth = maxStatusLength * 11.5;
+        // Calculate the minimum status column width
+        final statuses = HashSet<StudyStatus>();
+        for (final studyGroup in studyGroups) {
+          statuses.add(studyGroup.standaloneOrTemplate.status);
+          for (final study in studyGroup.subStudies) {
+            statuses.add(study.status);
+          }
+          if (statuses.length >= StudyStatus.values.length) {
+            break;
+          }
+        }
+        int maxStatusLength =
+            statuses.fold(0, (max, element) => max > element.string.length ? max : element.string.length);
+        maxStatusLength = max(maxStatusLength, tr.studies_list_header_status.length);
+        final double statusColumnWidth = maxStatusLength * 11.5;
 
-    // Calculate the minimum participation column width
-    final participations = HashSet<Participation>();
-    for (final studyGroup in studyGroups) {
-      participations.add(studyGroup.standaloneOrTemplate.participation);
-      for (final study in studyGroup.subStudies) {
-        participations.add(study.participation);
-      }
-    }
-    int maxParticipationLength =
-        participations.fold(0, (max, element) => max > element.whoShort.length ? max : element.whoShort.length);
-    maxStatusLength = max(maxStatusLength, tr.studies_list_header_participation.length);
-    final double participationColumnWidth = 20 + (maxParticipationLength * 7.5);
+        // Calculate the minimum participation column width
+        final participations = HashSet<Participation>();
+        for (final studyGroup in studyGroups) {
+          participations.add(studyGroup.standaloneOrTemplate.participation);
+          for (final study in studyGroup.subStudies) {
+            participations.add(study.participation);
+          }
+          if (participations.length >= Participation.values.length) {
+            break;
+          }
+        }
+        int maxParticipationLength =
+            participations.fold(0, (max, element) => max > element.whoShort.length ? max : element.whoShort.length);
+        maxStatusLength = max(maxStatusLength, tr.studies_list_header_participation.length);
+        final double participationColumnWidth = 20 + (maxParticipationLength * 7.5);
 
-    // Set column definitions
-    final columnDefinitionsMap = {
-      StudiesTableColumn.pin: StudiesTableColumnSize.fixedWidth(40),
-      StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(24),
-      StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(statusColumnWidth),
-      StudiesTableColumn.participation: StudiesTableColumnSize.fixedWidth(participationColumnWidth),
-      StudiesTableColumn.createdAt: StudiesTableColumnSize.flexWidth(10),
-      StudiesTableColumn.enrolled: StudiesTableColumnSize.fixedWidth(statsColumnWidth),
-      StudiesTableColumn.active: StudiesTableColumnSize.fixedWidth(statsColumnWidth),
-      StudiesTableColumn.completed: StudiesTableColumnSize.fixedWidth(statsColumnWidth),
-      StudiesTableColumn.action: StudiesTableColumnSize.fixedWidth(itemHeight)
-    };
-    final columnDefinitions = columnDefinitionsMap.entries.toList();
+        // Set column definitions
+        final columnDefinitionsMap = {
+          StudiesTableColumn.pin: StudiesTableColumnSize.fixedWidth(40),
+          StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(24),
+          StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(statusColumnWidth),
+          StudiesTableColumn.participation: StudiesTableColumnSize.fixedWidth(participationColumnWidth),
+          StudiesTableColumn.createdAt: StudiesTableColumnSize.flexWidth(10),
+          StudiesTableColumn.enrolled:
+              isCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
+          StudiesTableColumn.active:
+              isCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
+          StudiesTableColumn.completed:
+              isCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
+          StudiesTableColumn.action: StudiesTableColumnSize.fixedWidth(itemHeight)
+        };
+        final columnDefinitions = columnDefinitionsMap.entries.toList();
 
-    return Column(
-      children: [
-        SizedBox(
-          height: itemHeight,
-          child: Row(
-            children: [
-              columnDefinitions[0].value.createContainer(child: _buildColumnHeader(columnDefinitions[0].key)),
-              SizedBox(
-                width: columnSpacing,
+        return Column(
+          children: [
+            SizedBox(
+              height: itemHeight,
+              child: Row(
+                children: [
+                  columnDefinitions[0].value.createContainer(child: _buildColumnHeader(columnDefinitions[0].key)),
+                  SizedBox(
+                    width: columnSpacing,
+                  ),
+                  columnDefinitions[1].value.createContainer(child: _buildColumnHeader(columnDefinitions[1].key)),
+                  SizedBox(
+                    width: columnSpacing,
+                  ),
+                  columnDefinitions[2].value.createContainer(child: _buildColumnHeader(columnDefinitions[2].key)),
+                  SizedBox(
+                    width: columnSpacing,
+                  ),
+                  columnDefinitions[3].value.createContainer(child: _buildColumnHeader(columnDefinitions[3].key)),
+                  SizedBox(
+                    width: columnSpacing,
+                  ),
+                  columnDefinitions[4].value.createContainer(child: _buildColumnHeader(columnDefinitions[4].key)),
+                  SizedBox(
+                    width: columnSpacing,
+                  ),
+                  columnDefinitions[5].value.createContainer(child: _buildColumnHeader(columnDefinitions[5].key)),
+                  SizedBox(
+                    width: columnSpacing,
+                  ),
+                  columnDefinitions[6].value.createContainer(child: _buildColumnHeader(columnDefinitions[6].key)),
+                  SizedBox(
+                    width: columnSpacing,
+                  ),
+                  columnDefinitions[7].value.createContainer(child: _buildColumnHeader(columnDefinitions[7].key)),
+                  SizedBox(
+                    width: columnSpacing,
+                  ),
+                  columnDefinitions[8].value.createContainer(child: _buildColumnHeader(columnDefinitions[8].key)),
+                  SizedBox(
+                    width: columnSpacing,
+                  ),
+                ],
               ),
-              columnDefinitions[1].value.createContainer(child: _buildColumnHeader(columnDefinitions[1].key)),
-              SizedBox(
-                width: columnSpacing,
-              ),
-              columnDefinitions[2].value.createContainer(child: _buildColumnHeader(columnDefinitions[2].key)),
-              SizedBox(
-                width: columnSpacing,
-              ),
-              columnDefinitions[3].value.createContainer(child: _buildColumnHeader(columnDefinitions[3].key)),
-              SizedBox(
-                width: columnSpacing,
-              ),
-              columnDefinitions[4].value.createContainer(child: _buildColumnHeader(columnDefinitions[4].key)),
-              SizedBox(
-                width: columnSpacing,
-              ),
-              columnDefinitions[5].value.createContainer(child: _buildColumnHeader(columnDefinitions[5].key)),
-              SizedBox(
-                width: columnSpacing,
-              ),
-              columnDefinitions[6].value.createContainer(child: _buildColumnHeader(columnDefinitions[6].key)),
-              SizedBox(
-                width: columnSpacing,
-              ),
-              columnDefinitions[7].value.createContainer(child: _buildColumnHeader(columnDefinitions[7].key)),
-              SizedBox(
-                width: columnSpacing,
-              ),
-              columnDefinitions[8].value.createContainer(child: _buildColumnHeader(columnDefinitions[8].key)),
-              SizedBox(
-                width: columnSpacing,
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: rowSpacing),
-        ListView.builder(
-          itemCount: studyGroups.length,
-          //itemExtent: (2 * itemPadding) + itemHeight + rowSpacing,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            final item = studyGroups[index];
-            return StudiesTableItem(
-              studyGroup: item,
-              columnSizes: columnDefinitionsMap.values.toList(),
-              actions: getActions(item),
-              getSubActions: getSubActions,
-              isPinned: pinnedStudies.contains(item.standaloneOrTemplate.id),
-              itemHeight: itemHeight,
-              rowSpacing: rowSpacing,
-              columnSpacing: columnSpacing,
-              onPinnedChanged: (study, pinned) {
-                pinnedStudies.contains(item.standaloneOrTemplate.id)
-                    ? dashboardController.pinOffStudy(item.standaloneOrTemplate.id)
-                    : dashboardController.pinStudy(item.standaloneOrTemplate.id);
+            ),
+            SizedBox(height: rowSpacing),
+            ListView.builder(
+              itemCount: studyGroups.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final item = studyGroups[index];
+                return StudiesTableItem(
+                  studyGroup: item,
+                  columnSizes: columnDefinitionsMap.values.toList(),
+                  actions: getActions(item),
+                  getSubActions: getSubActions,
+                  isPinned: pinnedStudies.contains(item.standaloneOrTemplate.id),
+                  itemHeight: itemHeight,
+                  rowSpacing: rowSpacing,
+                  columnSpacing: columnSpacing,
+                  onPinnedChanged: (study, pinned) {
+                    pinnedStudies.contains(item.standaloneOrTemplate.id)
+                        ? dashboardController.pinOffStudy(item.standaloneOrTemplate.id)
+                        : dashboardController.pinStudy(item.standaloneOrTemplate.id);
+                  },
+                  onTapStudy: (study) => onSelect.call(study),
+                );
               },
-              onTapStudy: (study) => onSelect.call(study),
-            );
-          },
-        )
-      ],
+            )
+          ],
+        );
+      },
     );
   }
 

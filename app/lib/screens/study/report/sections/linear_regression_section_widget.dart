@@ -5,7 +5,7 @@ import 'package:studyu_core/core.dart';
 class LinearRegressionSectionWidget extends ReportSectionWidget {
   final LinearRegressionSection section;
 
-  const LinearRegressionSectionWidget(StudySubject subject, this.section, {Key? key}) : super(subject, key: key);
+  const LinearRegressionSectionWidget(super.subject, this.section, {super.key});
 
   @override
   Widget build(BuildContext context) {

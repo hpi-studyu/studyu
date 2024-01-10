@@ -5,7 +5,7 @@ import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
 class InterventionPreview extends ConsumerWidget {
-  const InterventionPreview({required this.routeArgs, Key? key}) : super(key: key);
+  const InterventionPreview({required this.routeArgs, super.key});
 
   final InterventionFormRouteArgs routeArgs;
 

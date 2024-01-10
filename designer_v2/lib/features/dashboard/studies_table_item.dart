@@ -53,7 +53,6 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      //height: widget.itemHeight,
       margin: EdgeInsets.only(bottom: widget.rowSpacing),
       child: LayoutBuilder(builder: (_, constraints) {
         return Material(
@@ -172,6 +171,8 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                   child: Text(
                     study.title ?? '[Missing study title]',
                     style: normalTextStyle,
+                    maxLines: 3,
+                    overflow: TextOverflow.fade,
                   ),
                 ),
                 SizedBox(width: widget.columnSpacing),

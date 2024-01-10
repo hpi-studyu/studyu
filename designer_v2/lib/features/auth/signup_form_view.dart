@@ -15,7 +15,7 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SignupForm extends FormConsumerRefWidget {
-  const SignupForm({Key? key}) : super(key: key);
+  const SignupForm({super.key});
 
   final AuthFormKey formKey = AuthFormKey.signup;
 

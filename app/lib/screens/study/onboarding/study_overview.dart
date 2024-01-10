@@ -13,7 +13,7 @@ import '../dashboard/contact_tab/contact_screen.dart';
 import 'eligibility_screen.dart';
 
 class StudyOverviewScreen extends StatefulWidget {
-  const StudyOverviewScreen({Key? key}) : super(key: key);
+  const StudyOverviewScreen({super.key});
 
   @override
   State<StudyOverviewScreen> createState() => _StudyOverviewScreen();
@@ -96,7 +96,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 class StudyDetailsView extends StatelessWidget {
   final Study? study;
 
-  const StudyDetailsView({required this.study, Key? key}) : super(key: key);
+  const StudyDetailsView({required this.study, super.key});
 
   double get iconSize => 40;
 

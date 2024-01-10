@@ -10,7 +10,7 @@ class CheckmarkTaskWidget extends StatefulWidget {
   final CheckmarkTask? task;
   final CompletionPeriod? completionPeriod;
 
-  const CheckmarkTaskWidget({this.task, this.completionPeriod, Key? key}) : super(key: key);
+  const CheckmarkTaskWidget({this.task, this.completionPeriod, super.key});
 
   @override
   State<CheckmarkTaskWidget> createState() => _CheckmarkTaskWidgetState();
@@ -23,7 +23,9 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
-      style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+          textStyle: MaterialStateProperty.all<TextStyle>(const TextStyle(color: Colors.white))),
       onPressed: () async {
         if (isRedundantClick(loginClickTime)) return;
         setState(() {

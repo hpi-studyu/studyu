@@ -63,7 +63,7 @@ class RouteParams {
 /// Note: Make sure to always specify [GoRoute.name] so that [RoutingIntent]s
 /// can be dispatched correctly.
 class RouterConf {
-  static late final GoRouter router;
+  static late GoRouter router;
 
   static final List<GoRoute> routes = publicRoutes + privateRoutes;
 
@@ -101,16 +101,6 @@ class RouterConf {
               child: AuthScaffold(
                 formKey: AuthFormKey.passwordForgot,
                 body: PasswordForgotForm(),
-              ),
-            )),
-    GoRoute(
-        path: "/password_recovery",
-        name: recoverPasswordRouteName,
-        pageBuilder: (context, state) => const MaterialPage(
-              key: RouterKeys.authKey,
-              child: AuthScaffold(
-                formKey: AuthFormKey.passwordRecovery,
-                body: PasswordRecoveryForm(),
               ),
             )),
     GoRoute(
@@ -365,6 +355,16 @@ class RouterConf {
             const AccountSettingsDialog(),
           );
         }),
+    GoRoute(
+        path: "/password_recovery",
+        name: recoverPasswordRouteName,
+        pageBuilder: (context, state) => const MaterialPage(
+              key: RouterKeys.authKey,
+              child: AuthScaffold(
+                formKey: AuthFormKey.passwordRecovery,
+                body: PasswordRecoveryForm(),
+              ),
+            )),
   ];
 
   static GoRoute route(String name) {

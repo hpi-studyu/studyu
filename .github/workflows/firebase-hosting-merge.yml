@@ -7,9 +7,12 @@ on:
     branches:
       - main
     paths:
-      - '**.dart'
-      - '**/pubspec.yaml'
-      - '**/pubspec.lock'
+      - 'app/**'
+      - 'designer_v2/**'
+      - 'core/**'
+      - 'flutter_common/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
       - 'melos.yaml'
       - 'firebase.json'
       - '.firebaserc'

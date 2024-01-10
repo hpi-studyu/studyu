@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
 class PasswordRecoveryForm extends FormConsumerRefWidget {
-  const PasswordRecoveryForm({Key? key}) : super(key: key);
+  const PasswordRecoveryForm({super.key});
 
   final AuthFormKey formKey = AuthFormKey.passwordRecovery;
 

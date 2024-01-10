@@ -28,7 +28,7 @@
 | [extensions.pg_stat_statements](extensions.pg_stat_statements.md) | 43 |  | VIEW |
 | [pgsodium.key](pgsodium.key.md) | 14 | This table holds metadata for derived keys given a key_id and key_context. The raw key is never stored. | BASE TABLE |
 | [pgsodium.valid_key](pgsodium.valid_key.md) | 9 |  | VIEW |
-| [pgsodium.masking_rule](pgsodium.masking_rule.md) | 13 |  | VIEW |
+| [pgsodium.masking_rule](pgsodium.masking_rule.md) | 14 |  | VIEW |
 | [pgsodium.mask_columns](pgsodium.mask_columns.md) | 7 |  | VIEW |
 | [pgsodium.decrypted_key](pgsodium.decrypted_key.md) | 14 |  | VIEW |
 | [vault.secrets](vault.secrets.md) | 8 | Table with encrypted `secret` column for storing sensitive information on disk. | BASE TABLE |
@@ -38,7 +38,6 @@
 
 | Name | ReturnType | Arguments | Type |
 | ---- | ------- | ------- | ---- |
-| pgsodium.crypto_box_noncegen | bytea |  | FUNCTION |
 | extensions.uuid_generate_v4 | uuid |  | FUNCTION |
 | pgbouncer.get_auth | record | p_usename text | FUNCTION |
 | storage.filename | text | name text | FUNCTION |
@@ -66,16 +65,12 @@
 | net._await_response | bool | request_id bigint | FUNCTION |
 | net._urlencode_string | text | string character varying | FUNCTION |
 | net._encode_url_with_params_array | text | url text, params_array text[] | FUNCTION |
-| extensions.pgp_sym_decrypt | text | bytea, text | FUNCTION |
-| extensions.pgp_sym_decrypt_bytea | bytea | bytea, text | FUNCTION |
-| extensions.pgp_sym_decrypt | text | bytea, text, text | FUNCTION |
-| extensions.pgp_sym_decrypt_bytea | bytea | bytea, text, text | FUNCTION |
-| extensions.pgp_pub_encrypt | bytea | text, bytea | FUNCTION |
-| extensions.pgp_pub_encrypt_bytea | bytea | bytea, bytea | FUNCTION |
-| extensions.pgp_pub_encrypt | bytea | text, bytea, text | FUNCTION |
-| extensions.pgp_pub_encrypt_bytea | bytea | bytea, bytea, text | FUNCTION |
-| extensions.pgp_pub_decrypt | text | bytea, bytea | FUNCTION |
-| extensions.pgp_pub_decrypt_bytea | bytea | bytea, bytea | FUNCTION |
+| graphql.increment_schema_version | event_trigger |  | FUNCTION |
+| graphql.get_schema_version | int4 |  | FUNCTION |
+| graphql.resolve | jsonb | query text, variables jsonb DEFAULT '{}'::jsonb, "operationName" text DEFAULT NULL::text, extensions jsonb DEFAULT NULL::jsonb | FUNCTION |
+| extensions.pgp_pub_decrypt_bytea | bytea | bytea, bytea, text | FUNCTION |
+| extensions.pgp_pub_decrypt | text | bytea, bytea, text, text | FUNCTION |
+| extensions.pgp_pub_decrypt_bytea | bytea | bytea, bytea, text, text | FUNCTION |
 | net.http_delete | int8 | url text, params jsonb DEFAULT '{}'::jsonb, headers jsonb DEFAULT '{}'::jsonb, timeout_milliseconds integer DEFAULT 2000 | FUNCTION |
 | net._http_collect_response | http_response_result | request_id bigint, async boolean DEFAULT true | FUNCTION |
 | net.http_collect_response | http_response_result | request_id bigint, async boolean DEFAULT true | FUNCTION |
@@ -86,6 +81,7 @@
 | public.get_study_record_from_invite | study | invite_code text | FUNCTION |
 | public.handle_new_user | trigger |  | FUNCTION |
 | public.has_study_ended | bool | psubject_id uuid | FUNCTION |
+| public.has_results_public | bool | psubject_id uuid | FUNCTION |
 | public.has_study_ended | bool | subject study_subject | FUNCTION |
 | public.is_active_subject | bool | psubject_id uuid, days_active integer | FUNCTION |
 | public.is_study_subject_of | bool | _user_id uuid, _study_id uuid | FUNCTION |
@@ -94,53 +90,49 @@
 | public.study_ended_count | int4 | study study | FUNCTION |
 | public.study_length | int4 | study_param study | FUNCTION |
 | public.study_missed_days | _int4 | study_param study | FUNCTION |
+| net.http_get | int8 | url text, params jsonb DEFAULT '{}'::jsonb, headers jsonb DEFAULT '{}'::jsonb, timeout_milliseconds integer DEFAULT 2000 | FUNCTION |
+| extensions.pgp_sym_decrypt_bytea | bytea | bytea, text, text | FUNCTION |
 | public.study_participant_count | int4 | study study | FUNCTION |
 | public.study_total_tasks | int4 | subject study_subject | FUNCTION |
-| net.http_get | int8 | url text, params jsonb DEFAULT '{}'::jsonb, headers jsonb DEFAULT '{}'::jsonb, timeout_milliseconds integer DEFAULT 2000 | FUNCTION |
-| extensions.pgp_pub_decrypt_bytea | bytea | bytea, bytea, text, text | FUNCTION |
-| extensions.pgp_key_id | text | bytea | FUNCTION |
-| extensions.armor | text | bytea | FUNCTION |
-| extensions.armor | text | bytea, text[], text[] | FUNCTION |
-| extensions.dearmor | bytea | text | FUNCTION |
-| extensions.pgp_armor_headers | record | text, OUT key text, OUT value text | FUNCTION |
-| extensions.url_encode | text | data bytea | FUNCTION |
-| extensions.url_decode | bytea | data text | FUNCTION |
-| extensions.algorithm_sign | text | signables text, secret text, algorithm text | FUNCTION |
 | public.subject_current_day | int4 | subject study_subject | FUNCTION |
 | public.subject_total_active_days | int4 | subject study_subject | FUNCTION |
 | public.user_email | text | user_id uuid | FUNCTION |
-| extensions.hmac | bytea | bytea, bytea, text | FUNCTION |
+| extensions.pgp_pub_encrypt | bytea | text, bytea | FUNCTION |
+| extensions.pgp_pub_encrypt_bytea | bytea | bytea, bytea | FUNCTION |
+| extensions.pgp_pub_encrypt | bytea | text, bytea, text | FUNCTION |
+| extensions.pgp_pub_encrypt_bytea | bytea | bytea, bytea, text | FUNCTION |
+| extensions.pgp_pub_decrypt | text | bytea, bytea | FUNCTION |
+| extensions.pgp_pub_decrypt_bytea | bytea | bytea, bytea | FUNCTION |
+| extensions.pgp_pub_decrypt | text | bytea, bytea, text | FUNCTION |
+| extensions.gen_salt | text | text, integer | FUNCTION |
 | auth.role | text |  | FUNCTION |
 | extensions.uuid_generate_v5 | uuid | namespace uuid, name text | FUNCTION |
 | extensions.digest | bytea | bytea, text | FUNCTION |
 | extensions.hmac | bytea | text, text, text | FUNCTION |
+| extensions.hmac | bytea | bytea, bytea, text | FUNCTION |
 | extensions.crypt | text | text, text | FUNCTION |
 | extensions.gen_salt | text | text | FUNCTION |
-| extensions.gen_salt | text | text, integer | FUNCTION |
-| extensions.try_cast_double | float8 | inp text | FUNCTION |
-| extensions.moddatetime | trigger |  | FUNCTION |
-| extensions.pgrst_drop_watch | event_trigger |  | FUNCTION |
-| pgsodium.crypto_pwhash_saltgen | bytea |  | FUNCTION |
+| extensions.sign | text | payload json, secret text, algorithm text DEFAULT 'HS256'::text | FUNCTION |
 | extensions.pgrst_ddl_watch | event_trigger |  | FUNCTION |
+| graphql._internal_resolve | jsonb | query text, variables jsonb DEFAULT '{}'::jsonb, "operationName" text DEFAULT NULL::text, extensions jsonb DEFAULT NULL::jsonb | FUNCTION |
+| graphql.exception | text | message text | FUNCTION |
+| graphql.comment_directive | jsonb | comment_ text | FUNCTION |
+| extensions.pgrst_drop_watch | event_trigger |  | FUNCTION |
+| graphql_public.graphql | jsonb | "operationName" text DEFAULT NULL::text, query text DEFAULT NULL::text, variables jsonb DEFAULT NULL::jsonb, extensions jsonb DEFAULT NULL::jsonb | FUNCTION |
+| extensions.grant_pg_graphql_access | event_trigger |  | FUNCTION |
+| net.http_post | int8 | url text, body jsonb DEFAULT '{}'::jsonb, params jsonb DEFAULT '{}'::jsonb, headers jsonb DEFAULT '{"Content-Type": "application/json"}'::jsonb, timeout_milliseconds integer DEFAULT 2000 | FUNCTION |
+| pgsodium.crypto_pwhash_saltgen | bytea |  | FUNCTION |
 | pgsodium.crypto_kx_client_session_keys | crypto_kx_session | client_pk bytea, client_sk bytea, server_pk bytea | FUNCTION |
 | pgsodium.crypto_kx_server_session_keys | crypto_kx_session | server_pk bytea, server_sk bytea, client_pk bytea | FUNCTION |
 | pgsodium.crypto_auth_hmacsha512_keygen | bytea |  | FUNCTION |
 | pgsodium.crypto_box_new_seed | bytea |  | FUNCTION |
 | pgsodium.crypto_sign_new_seed | bytea |  | FUNCTION |
-| extensions.set_graphql_placeholder | event_trigger |  | FUNCTION |
-| extensions.grant_pg_graphql_access | event_trigger |  | FUNCTION |
-| graphql_public.graphql | jsonb | "operationName" text DEFAULT NULL::text, query text DEFAULT NULL::text, variables jsonb DEFAULT NULL::jsonb, extensions jsonb DEFAULT NULL::jsonb | FUNCTION |
-| graphql.resolve | jsonb | query text, variables jsonb DEFAULT '{}'::jsonb, "operationName" text DEFAULT NULL::text, extensions jsonb DEFAULT NULL::jsonb | FUNCTION |
-| graphql.increment_schema_version | event_trigger |  | FUNCTION |
-| graphql.get_schema_version | int4 |  | FUNCTION |
-| graphql.comment_directive | jsonb | comment_ text | FUNCTION |
-| graphql.exception | text | message text | FUNCTION |
-| net.http_post | int8 | url text, body jsonb DEFAULT '{}'::jsonb, params jsonb DEFAULT '{}'::jsonb, headers jsonb DEFAULT '{"Content-Type": "application/json"}'::jsonb, timeout_milliseconds integer DEFAULT 2000 | FUNCTION |
 | pgsodium.derive_key | bytea | key_id bigint, key_len integer DEFAULT 32, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.pgsodium_derive | bytea | key_id bigint, key_len integer DEFAULT 32, context bytea DEFAULT decode('pgsodium'::text, 'escape'::text) | FUNCTION |
 | pgsodium.randombytes_new_seed | bytea |  | FUNCTION |
 | pgsodium.crypto_secretbox_keygen | bytea |  | FUNCTION |
 | pgsodium.crypto_auth_keygen | bytea |  | FUNCTION |
+| pgsodium.crypto_box_noncegen | bytea |  | FUNCTION |
 | pgsodium.crypto_aead_ietf_keygen | bytea |  | FUNCTION |
 | pgsodium.crypto_shorthash_keygen | bytea |  | FUNCTION |
 | pgsodium.crypto_generichash_keygen | bytea |  | FUNCTION |
@@ -167,28 +159,23 @@
 | pgsodium.crypto_aead_det_decrypt | bytea | message bytea, additional bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea, nonce bytea DEFAULT NULL::bytea | FUNCTION |
 | pgsodium.version | text |  | FUNCTION |
 | pgsodium.crypto_aead_det_noncegen | bytea |  | FUNCTION |
-| pgsodium.crypto_pwhash_str | bytea | password bytea | FUNCTION |
 | pgsodium.has_mask | bool | role regrole, source_name text | FUNCTION |
 | pgsodium.mask_columns | record | source_relid oid | FUNCTION |
+| pgsodium.crypto_sign_final_verify | bool | state bytea, signature bytea, key bytea | FUNCTION |
 | pgsodium.create_mask_view | void | relid oid, debug boolean DEFAULT false | FUNCTION |
 | pgsodium.create_key | valid_key | key_type pgsodium.key_type DEFAULT 'aead-det'::pgsodium.key_type, name text DEFAULT NULL::text, raw_key bytea DEFAULT NULL::bytea, raw_key_nonce bytea DEFAULT NULL::bytea, parent_key uuid DEFAULT NULL::uuid, key_context bytea DEFAULT '\x7067736f6469756d'::bytea, expires timestamp with time zone DEFAULT NULL::timestamp with time zone, associated_data text DEFAULT ''::text | FUNCTION |
-| pgsodium.crypto_aead_ietf_decrypt | bytea | message bytea, additional bytea, nonce bytea, key bytea | FUNCTION |
-| pgsodium.crypto_pwhash_str_verify | bool | hashed_password bytea, password bytea | FUNCTION |
+| pgsodium.get_key_by_name | valid_key | text | FUNCTION |
 | pgsodium.quote_assoc | text | text, boolean DEFAULT false | FUNCTION |
-| pgsodium.crypto_shorthash | bytea | message bytea, key bytea | FUNCTION |
+| pgsodium.crypto_sign_open | bytea | signed_message bytea, key bytea | FUNCTION |
 | pgsodium.crypto_kdf_derive_from_key | bytea | subkey_size integer, subkey_id bigint, context bytea, primary_key uuid | FUNCTION |
-| pgsodium.crypto_pwhash | bytea | password bytea, salt bytea | FUNCTION |
+| pgsodium.get_named_keys | valid_key | filter text DEFAULT '%'::text | FUNCTION |
 | pgsodium.crypto_aead_det_encrypt | bytea | message bytea, additional bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_aead_det_decrypt | bytea | message bytea, additional bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_aead_ietf_encrypt | bytea | message bytea, additional bytea, nonce bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.get_key_by_id | valid_key | uuid | FUNCTION |
-| pgsodium.get_key_by_name | valid_key | text | FUNCTION |
-| pgsodium.get_named_keys | valid_key | filter text DEFAULT '%'::text | FUNCTION |
-| pgsodium.crypto_aead_ietf_encrypt | bytea | message bytea, additional bytea, nonce bytea, key_uuid uuid | FUNCTION |
 | pgsodium.enable_security_label_trigger | void |  | FUNCTION |
 | pgsodium.disable_security_label_trigger | void |  | FUNCTION |
 | pgsodium.update_mask | void | target oid, debug boolean DEFAULT false | FUNCTION |
-| pgsodium.mask_role | void | masked_role regrole, source_name text, view_name text | FUNCTION |
 | pgsodium.crypto_sign_update_agg1 | bytea | state bytea, message bytea | FUNCTION |
 | pgsodium.crypto_sign_update_agg2 | bytea | cur_state bytea, initial_state bytea, message bytea | FUNCTION |
 | pgsodium.crypto_sign_update_agg | bytea | message bytea | a |
@@ -196,6 +183,8 @@
 | pgsodium.encrypted_columns | text | relid oid | FUNCTION |
 | pgsodium.decrypted_columns | text | relid oid | FUNCTION |
 | pgsodium.crypto_aead_ietf_encrypt | bytea | message bytea, additional bytea, nonce bytea, key bytea | FUNCTION |
+| pgsodium.crypto_aead_ietf_encrypt | bytea | message bytea, additional bytea, nonce bytea, key_uuid uuid | FUNCTION |
+| pgsodium.crypto_aead_ietf_decrypt | bytea | message bytea, additional bytea, nonce bytea, key bytea | FUNCTION |
 | pgsodium.crypto_aead_ietf_decrypt | bytea | message bytea, additional bytea, nonce bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.crypto_aead_ietf_decrypt | bytea | message bytea, additional bytea, nonce bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_auth | bytea | message bytea, key bytea | FUNCTION |
@@ -213,6 +202,7 @@
 | pgsodium.crypto_generichash | bytea | message bytea, key bytea DEFAULT NULL::bytea | FUNCTION |
 | pgsodium.crypto_generichash | bytea | message bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_shorthash | bytea | message bytea, key bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
+| pgsodium.crypto_shorthash | bytea | message bytea, key bytea | FUNCTION |
 | pgsodium.crypto_shorthash | bytea | message bytea, key_uuid uuid | FUNCTION |
 | pgsodium.sodium_bin2base64 | text | bin bytea | FUNCTION |
 | pgsodium.sodium_base642bin | bytea | base64 text | FUNCTION |
@@ -226,9 +216,13 @@
 | pgsodium.crypto_auth_hmacsha256 | bytea | message bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.crypto_auth_hmacsha256 | bytea | message bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_auth_hmacsha256_verify | bool | hash bytea, message bytea, secret bytea | FUNCTION |
+| pgsodium.crypto_sign_final_create | bytea | state bytea, key bytea | FUNCTION |
 | pgsodium.crypto_auth_hmacsha256_verify | bool | hash bytea, message bytea, key_id bigint, context bytea DEFAULT '\x7067736f6469756d'::bytea | FUNCTION |
 | pgsodium.crypto_auth_hmacsha256_verify | bool | signature bytea, message bytea, key_uuid uuid | FUNCTION |
 | pgsodium.crypto_kdf_derive_from_key | bytea | subkey_size bigint, subkey_id bigint, context bytea, primary_key bytea | FUNCTION |
+| pgsodium.crypto_pwhash | bytea | password bytea, salt bytea | FUNCTION |
+| pgsodium.crypto_pwhash_str | bytea | password bytea | FUNCTION |
+| pgsodium.crypto_pwhash_str_verify | bool | hashed_password bytea, password bytea | FUNCTION |
 | pgsodium.randombytes_uniform | int4 | upper_bound integer | FUNCTION |
 | pgsodium.randombytes_buf | bytea | size integer | FUNCTION |
 | pgsodium.randombytes_buf_deterministic | bytea | size integer, seed bytea | FUNCTION |
@@ -242,9 +236,6 @@
 | pgsodium.crypto_hash_sha512 | bytea | message bytea | FUNCTION |
 | pgsodium.crypto_sign | bytea | message bytea, key bytea | FUNCTION |
 | pgsodium.crypto_sign_detached | bytea | message bytea, key bytea | FUNCTION |
-| pgsodium.crypto_sign_final_create | bytea | state bytea, key bytea | FUNCTION |
-| pgsodium.crypto_sign_final_verify | bool | state bytea, signature bytea, key bytea | FUNCTION |
-| pgsodium.crypto_sign_open | bytea | signed_message bytea, key bytea | FUNCTION |
 | pgsodium.crypto_sign_seed_new_keypair | crypto_sign_keypair | seed bytea | FUNCTION |
 | pgsodium.crypto_sign_verify_detached | bool | sig bytea, message bytea, key bytea | FUNCTION |
 | pgsodium.crypto_signcrypt_sign_after | bytea | state bytea, sender_sk bytea, ciphertext bytea | FUNCTION |
@@ -261,28 +252,39 @@
 | pgsodium.encrypted_column | text | relid oid, m record | FUNCTION |
 | pgsodium.update_masks | void | debug boolean DEFAULT false | FUNCTION |
 | pgsodium.key_encrypt_secret_raw_key | trigger |  | FUNCTION |
-| pgsodium.trg_mask_update | event_trigger |  | FUNCTION |
+| pgsodium.mask_role | void | masked_role regrole, source_name text, view_name text | FUNCTION |
 | pgsodium.create_mask_view | void | relid oid, subid integer, debug boolean DEFAULT false | FUNCTION |
+| pgsodium.trg_mask_update | event_trigger |  | FUNCTION |
 | pgsodium.crypto_aead_det_decrypt | bytea | message bytea, additional bytea, key_uuid uuid, nonce bytea | FUNCTION |
 | pgsodium.crypto_aead_det_encrypt | bytea | message bytea, additional bytea, key_uuid uuid, nonce bytea | FUNCTION |
 | pgsodium.crypto_aead_det_keygen | bytea |  | FUNCTION |
 | vault.secrets_encrypt_secret_secret | trigger |  | FUNCTION |
 | vault.create_secret | uuid | new_secret text, new_name text DEFAULT NULL::text, new_description text DEFAULT ''::text, new_key_id uuid DEFAULT NULL::uuid | FUNCTION |
 | vault.update_secret | void | secret_id uuid, new_secret text DEFAULT NULL::text, new_name text DEFAULT NULL::text, new_description text DEFAULT NULL::text, new_key_id uuid DEFAULT NULL::uuid | FUNCTION |
-| extensions.pgp_pub_decrypt | text | bytea, bytea, text | FUNCTION |
-| extensions.pgp_pub_decrypt_bytea | bytea | bytea, bytea, text | FUNCTION |
-| extensions.pgp_pub_decrypt | text | bytea, bytea, text, text | FUNCTION |
-| extensions.sign | text | payload json, secret text, algorithm text DEFAULT 'HS256'::text | FUNCTION |
+| extensions.pgp_key_id | text | bytea | FUNCTION |
+| extensions.armor | text | bytea | FUNCTION |
+| extensions.armor | text | bytea, text[], text[] | FUNCTION |
+| extensions.dearmor | bytea | text | FUNCTION |
+| extensions.pgp_armor_headers | record | text, OUT key text, OUT value text | FUNCTION |
+| extensions.url_encode | text | data bytea | FUNCTION |
+| extensions.url_decode | bytea | data text | FUNCTION |
+| extensions.try_cast_double | float8 | inp text | FUNCTION |
+| extensions.moddatetime | trigger |  | FUNCTION |
 | extensions.pgp_sym_encrypt | bytea | text, text | FUNCTION |
 | extensions.pgp_sym_encrypt_bytea | bytea | bytea, text | FUNCTION |
 | extensions.pgp_sym_encrypt | bytea | text, text, text | FUNCTION |
 | extensions.pgp_sym_encrypt_bytea | bytea | bytea, text, text | FUNCTION |
-| extensions.pg_stat_statements_info | record | OUT dealloc bigint, OUT stats_reset timestamp with time zone | FUNCTION |
-| extensions.pg_stat_statements | record | showtext boolean, OUT userid oid, OUT dbid oid, OUT toplevel boolean, OUT queryid bigint, OUT query text, OUT plans bigint, OUT total_plan_time double precision, OUT min_plan_time double precision, OUT max_plan_time double precision, OUT mean_plan_time double precision, OUT stddev_plan_time double precision, OUT calls bigint, OUT total_exec_time double precision, OUT min_exec_time double precision, OUT max_exec_time double precision, OUT mean_exec_time double precision, OUT stddev_exec_time double precision, OUT rows bigint, OUT shared_blks_hit bigint, OUT shared_blks_read bigint, OUT shared_blks_dirtied bigint, OUT shared_blks_written bigint, OUT local_blks_hit bigint, OUT local_blks_read bigint, OUT local_blks_dirtied bigint, OUT local_blks_written bigint, OUT temp_blks_read bigint, OUT temp_blks_written bigint, OUT blk_read_time double precision, OUT blk_write_time double precision, OUT temp_blk_read_time double precision, OUT temp_blk_write_time double precision, OUT wal_records bigint, OUT wal_fpi bigint, OUT wal_bytes numeric, OUT jit_functions bigint, OUT jit_generation_time double precision, OUT jit_inlining_count bigint, OUT jit_inlining_time double precision, OUT jit_optimization_count bigint, OUT jit_optimization_time double precision, OUT jit_emission_count bigint, OUT jit_emission_time double precision | FUNCTION |
+| extensions.pgp_sym_decrypt | text | bytea, text | FUNCTION |
+| extensions.pgp_sym_decrypt_bytea | bytea | bytea, text | FUNCTION |
+| extensions.pgp_sym_decrypt | text | bytea, text, text | FUNCTION |
+| extensions.algorithm_sign | text | signables text, secret text, algorithm text | FUNCTION |
 | extensions.verify | record | token text, secret text, algorithm text DEFAULT 'HS256'::text | FUNCTION |
 | extensions.grant_pg_cron_access | event_trigger |  | FUNCTION |
 | extensions.grant_pg_net_access | event_trigger |  | FUNCTION |
 | extensions.pg_stat_statements_reset | void | userid oid DEFAULT 0, dbid oid DEFAULT 0, queryid bigint DEFAULT 0 | FUNCTION |
+| extensions.pg_stat_statements_info | record | OUT dealloc bigint, OUT stats_reset timestamp with time zone | FUNCTION |
+| extensions.pg_stat_statements | record | showtext boolean, OUT userid oid, OUT dbid oid, OUT toplevel boolean, OUT queryid bigint, OUT query text, OUT plans bigint, OUT total_plan_time double precision, OUT min_plan_time double precision, OUT max_plan_time double precision, OUT mean_plan_time double precision, OUT stddev_plan_time double precision, OUT calls bigint, OUT total_exec_time double precision, OUT min_exec_time double precision, OUT max_exec_time double precision, OUT mean_exec_time double precision, OUT stddev_exec_time double precision, OUT rows bigint, OUT shared_blks_hit bigint, OUT shared_blks_read bigint, OUT shared_blks_dirtied bigint, OUT shared_blks_written bigint, OUT local_blks_hit bigint, OUT local_blks_read bigint, OUT local_blks_dirtied bigint, OUT local_blks_written bigint, OUT temp_blks_read bigint, OUT temp_blks_written bigint, OUT blk_read_time double precision, OUT blk_write_time double precision, OUT temp_blk_read_time double precision, OUT temp_blk_write_time double precision, OUT wal_records bigint, OUT wal_fpi bigint, OUT wal_bytes numeric, OUT jit_functions bigint, OUT jit_generation_time double precision, OUT jit_inlining_count bigint, OUT jit_inlining_time double precision, OUT jit_optimization_count bigint, OUT jit_optimization_time double precision, OUT jit_emission_count bigint, OUT jit_emission_time double precision | FUNCTION |
+| extensions.set_graphql_placeholder | event_trigger |  | FUNCTION |
 
 ## Relations
 

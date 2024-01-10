@@ -20,8 +20,7 @@ class BannerBox extends StatefulWidget {
       this.dismissable = true,
       this.onDismissed,
       this.dismissIconSize = 24.0,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final Widget? prefixIcon;
   final Widget body;

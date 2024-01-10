@@ -12,7 +12,7 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 class WebFrame extends StatelessWidget {
   final String previewSrc;
   final String studyId;
-  const WebFrame(this.previewSrc, this.studyId, {Key? key}) : super(key: key);
+  const WebFrame(this.previewSrc, this.studyId, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class WebFrame extends StatelessWidget {
 }
 
 class DisabledFrame extends StatelessWidget {
-  const DisabledFrame({Key? key}) : super(key: key);
+  const DisabledFrame({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +63,7 @@ class PhoneContainer extends StatelessWidget {
       this.borderWidth = 8.0,
       this.borderRadius = 25.0,
       this.innerContentBackgroundColor = Colors.white,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final double width;
   final double height;
@@ -124,7 +123,7 @@ class PhoneContainer extends StatelessWidget {
 }
 
 class MobileFrame extends StatelessWidget {
-  const MobileFrame({Key? key}) : super(key: key);
+  const MobileFrame({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +137,7 @@ class MobileFrame extends StatelessWidget {
 }
 
 class DesktopFrame extends StatelessWidget {
-  const DesktopFrame({Key? key}) : super(key: key);
+  const DesktopFrame({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,0 +1,40 @@
+# Force SSL
+# server {
+#     listen 80;
+#     server_name app.example.com;
+#     return 301 https://$server_name$request_uri;
+# }
+
+server {
+    listen       8080;
+    # listen       443 ssl;
+    server_name  ${STUDYU_APP_HOST};
+
+    # access_log /var/log/nginx/app.access.log main;
+    error_log /var/log/nginx/app.error.log;
+
+    include /etc/nginx/conf.d/01_common.conf;
+
+    location / {
+      set $upstream http://studyu-app:80;
+      proxy_pass $upstream;
+      include    /etc/nginx/conf.d/02_common_location.conf;
+    }
+}
+
+server {
+    listen       8081;
+    # listen       443 ssl;
+    server_name  ${STUDYU_DESIGNER_HOST};
+
+    # access_log /var/log/nginx/designer.access.log main;
+    error_log /var/log/nginx/designer.error.log;
+
+    include /etc/nginx/conf.d/01_common.conf;
+
+    location / {
+      set $upstream http://studyu-designer:80;
+      proxy_pass $upstream;
+      include    /etc/nginx/conf.d/02_common_location.conf;
+    }
+}

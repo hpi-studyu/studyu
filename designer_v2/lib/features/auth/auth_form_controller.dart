@@ -309,26 +309,14 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
   }
 }
 
-final _authFormControllerProvider = StateNotifierProvider<AuthFormController, AsyncValue<void>>((ref) {
+final authFormControllerProvider =
+    StateNotifierProvider.autoDispose.family<AuthFormController, AsyncValue<void>, AuthFormKey>((ref, formKey) {
   final authFormController = AuthFormController(
     authRepository: ref.watch(authRepositoryProvider),
     sharedPreferences: ref.watch(sharedPreferencesProvider),
     notificationService: ref.watch(notificationServiceProvider),
     router: ref.watch(routerProvider),
   );
-  authFormController.addListener((state) {
-    print("_authFormController.state updated");
-  });
-  ref.onDispose(() {
-    print("_authFormControllerProviderProvider.DISPOSE");
-  });
-  print("_authFormControllerProvider");
-  return authFormController;
-});
-
-final authFormControllerProvider =
-    StateNotifierProvider.family<AuthFormController, AsyncValue<void>, AuthFormKey>((ref, formKey) {
-  final authFormController = ref.read(_authFormControllerProvider.notifier);
   authFormController.formKey = formKey;
   authFormController.resetControlsFor(formKey);
   authFormController.addListener((state) {
