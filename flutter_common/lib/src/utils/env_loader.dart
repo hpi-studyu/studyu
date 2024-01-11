@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -25,9 +24,7 @@ Future<void> loadEnv() async {
   await Supabase.initialize(
     url: supabaseUrl!,
     anonKey: supabaseAnonKey!,
-    authCallbackUrlHostname: kIsWeb ? null : 'designer.studyu.health', // optional
     debug: true,
-    // optional
   );
   env.setEnv(
     supabaseUrl,

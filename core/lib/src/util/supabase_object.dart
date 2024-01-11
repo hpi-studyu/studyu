@@ -5,7 +5,7 @@ import 'package:studyu_core/src/env/env.dart' as env;
 import 'package:supabase/supabase.dart';
 
 abstract class SupabaseObject {
-  Map<String, dynamic> get primaryKeys;
+  Map<String, Object> get primaryKeys;
 
   Map<String, dynamic> toJson();
 }
@@ -56,7 +56,7 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
   }
 
   Future<T> delete() async => SupabaseQuery.extractSupabaseSingleRow<T>(
-        await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).single().select<Map<String, dynamic>>(),
+        await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).select().single(),
       );
 
   Future<T> save() async {
@@ -79,8 +79,7 @@ class SupabaseQuery {
   static Future<T> getById<T extends SupabaseObject>(String id, {List<String> selectedColumns = const ['*']}) async {
     try {
       return extractSupabaseSingleRow(
-        await env.client.from(tableName(T)).select(selectedColumns.join(',')).eq('id', id).single()
-            as Map<String, dynamic>,
+        await env.client.from(tableName(T)).select(selectedColumns.join(',')).eq('id', id).single(),
       );
     } catch (error, stacktrace) {
       catchSupabaseException(error, stacktrace);
@@ -128,7 +127,7 @@ class SupabaseQuery {
 }
 
 extension PrimaryKeyFilterBuilder on PostgrestFilterBuilder {
-  PostgrestFilterBuilder primaryKeys(Map<String, dynamic> primaryKeys) {
+  PostgrestFilterBuilder primaryKeys(Map<String, Object> primaryKeys) {
     var primaryKeyFilter = this;
     primaryKeys.forEach((columnKey, value) {
       primaryKeyFilter = primaryKeyFilter.eq(columnKey, value);

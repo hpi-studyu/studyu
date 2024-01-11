@@ -1,6 +1,7 @@
 # Custom
 backup/
-docker/.studyu_config
+.cli_config
+flutter_common/lib/envs/.env.local
 
 # Miscellaneous
 *.class
