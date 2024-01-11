@@ -16,8 +16,7 @@ class QuestionContainer extends StatefulWidget {
   final Question question;
   final int index;
 
-  const QuestionContainer(
-      {required this.onDone, required this.question, required this.index, super.key});
+  const QuestionContainer({required this.onDone, required this.question, required this.index, super.key});
 
   @override
   State<StatefulWidget> createState() => _QuestionContainerState();

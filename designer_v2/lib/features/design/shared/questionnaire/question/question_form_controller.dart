@@ -233,7 +233,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   static const int kDefaultFreeTextMaxLength = 120;
 
   late final FormControl<RangeValues> freeTextLengthControl = CustomFormControl<RangeValues>(
-    value: RangeValues(kDefaultFreeTextMinLength.toDouble(), kDefaultFreeTextMaxLength.toDouble()/2),
+    value: RangeValues(kDefaultFreeTextMinLength.toDouble(), kDefaultFreeTextMaxLength.toDouble() / 2),
     onValueChanged: (_) => _onFreeTextLengthChanged(),
   );
 

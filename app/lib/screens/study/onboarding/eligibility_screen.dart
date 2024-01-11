@@ -83,12 +83,13 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   // make all free text questions eligible
   bool _isFreeTextCriterion(EligibilityCriterion criterion) {
     return widget.study?.questionnaire.questions.any((element) {
-      if (criterion.condition.type == ChoiceExpression.expressionType) {
-        ChoiceExpression choiceExpression = criterion.condition as ChoiceExpression;
-        return element.id == choiceExpression.target!;
-      }
-      return false;
-    }) ?? false;
+          if (criterion.condition.type == ChoiceExpression.expressionType) {
+            ChoiceExpression choiceExpression = criterion.condition as ChoiceExpression;
+            return element.id == choiceExpression.target!;
+          }
+          return false;
+        }) ??
+        false;
   }
 
   void _finish() {
