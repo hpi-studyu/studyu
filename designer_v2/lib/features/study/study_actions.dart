@@ -11,5 +11,6 @@ Map<StudyActionType, IconData> studyActionIcons = {
   StudyActionType.addCollaborator: Icons.person_add_rounded,
   StudyActionType.export: Icons.download_rounded,
   StudyActionType.delete: Icons.delete_rounded,
-  StudyActionType.createSubStudy: Icons.add_rounded
+  StudyActionType.createSubStudy: Icons.add_rounded,
+  StudyActionType.view: Icons.visibility_rounded,
 };

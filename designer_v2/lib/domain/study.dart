@@ -16,6 +16,7 @@ enum StudyActionType {
   export,
   delete,
   createSubStudy,
+  view
 }
 
 /// Provides a human-readable translation of the model action type
@@ -40,6 +41,8 @@ extension StudyActionTypeFormatted on StudyActionType {
         return tr.action_study_export_results;
       case StudyActionType.createSubStudy:
         return tr.action_new_substudy;
+      case StudyActionType.view:
+        return tr.action_view;
       default:
         return "[Invalid ModelActionType]";
     }
