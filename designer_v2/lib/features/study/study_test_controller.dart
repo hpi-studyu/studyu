@@ -23,7 +23,7 @@ class StudyTestController extends StudyBaseController<StudyTestControllerState> 
           currentUser: currentUser,
           languageCode: languageCode,
         )) {
-    state = state.copyWith(serializedSession: authRepository.session?.persistSessionString ?? '');
+    state = state.copyWith(serializedSession: authRepository.serializedSession ?? '');
   }
 
   final IAuthRepository authRepository;

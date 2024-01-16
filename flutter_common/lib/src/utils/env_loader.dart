@@ -25,7 +25,6 @@ Future<void> loadEnv() async {
     url: supabaseUrl!,
     anonKey: supabaseAnonKey!,
     debug: true,
-    // optional
   );
   env.setEnv(
     supabaseUrl,

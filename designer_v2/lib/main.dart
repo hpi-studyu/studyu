@@ -29,7 +29,6 @@ Future<void> main() async {
     };
     // Turn off the # in the URLs on the web
     usePathUrlStrategy();
-
     runApp(
         // Make dependencies managed by Riverpod available in Widget.build methods
         // by wrapping the app in a [ProviderScope]
