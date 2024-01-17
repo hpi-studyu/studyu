@@ -10,50 +10,28 @@ abstract class SupabaseObject {
   Map<String, dynamic> toJson();
 }
 
-String tableName(Type cls) {
-  switch (cls) {
-    case Study:
-      return Study.tableName;
-    case StudySubject:
-      return StudySubject.tableName;
-    case SubjectProgress:
-      return SubjectProgress.tableName;
-    case AppConfig:
-      return AppConfig.tableName;
-    case Repo:
-      return Repo.tableName;
-    case StudyInvite:
-      return StudyInvite.tableName;
-    case StudyUUser:
-      return StudyUUser.tableName;
-    default:
-      print('$cls is not a supported Supabase type');
-      throw TypeError();
-  }
-}
+String tableName(Type cls) => switch (cls) {
+      == Study => Study.tableName,
+      == StudySubject => StudySubject.tableName,
+      == SubjectProgress => SubjectProgress.tableName,
+      == AppConfig => AppConfig.tableName,
+      == Repo => Repo.tableName,
+      == StudyInvite => StudyInvite.tableName,
+      == StudyUUser => StudyUUser.tableName,
+      _ => throw ArgumentError('$cls is not a supported Supabase type'),
+    };
 
 abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements SupabaseObject {
-  static T fromJson<T extends SupabaseObject>(Map<String, dynamic> json) {
-    switch (T) {
-      case Study:
-        return Study.fromJson(json) as T;
-      case StudySubject:
-        return StudySubject.fromJson(json) as T;
-      case SubjectProgress:
-        return SubjectProgress.fromJson(json) as T;
-      case AppConfig:
-        return AppConfig.fromJson(json) as T;
-      case Repo:
-        return Repo.fromJson(json) as T;
-      case StudyInvite:
-        return StudyInvite.fromJson(json) as T;
-      case StudyUUser:
-        return StudyUUser.fromJson(json) as T;
-      default:
-        print('$T is not a supported Supabase type');
-        throw TypeError();
-    }
-  }
+  static T fromJson<T extends SupabaseObject>(Map<String, dynamic> json) => switch (T) {
+        == Study => Study.fromJson(json) as T,
+        == StudySubject => StudySubject.fromJson(json) as T,
+        == SubjectProgress => SubjectProgress.fromJson(json) as T,
+        == AppConfig => AppConfig.fromJson(json) as T,
+        == Repo => Repo.fromJson(json) as T,
+        == StudyInvite => StudyInvite.fromJson(json) as T,
+        == StudyUUser => StudyUUser.fromJson(json) as T,
+        _ => throw ArgumentError('$T is not a supported Supabase type'),
+      };
 
   Future<T> delete() async => SupabaseQuery.extractSupabaseSingleRow<T>(
         await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).select().single(),
