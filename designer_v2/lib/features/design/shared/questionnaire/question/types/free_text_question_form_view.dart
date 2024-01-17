@@ -31,17 +31,21 @@ class FreeTextQuestionFormView extends ConsumerWidget {
             label: tr.free_text_range_label,
             labelHelpText: tr.free_text_range_label_helper,
             input: disableOnReadonly(
-              child: ReactiveRangeSlider<RangeValues>(
-                formControl: formViewModel.freeTextLengthControl,
-                min: QuestionFormViewModel.kDefaultFreeTextMinLength.toDouble(),
-                max: QuestionFormViewModel.kDefaultFreeTextMaxLength.toDouble(),
-                divisions: QuestionFormViewModel.kDefaultFreeTextMaxLength.toInt() -
-                    QuestionFormViewModel.kDefaultFreeTextMinLength.toInt(),
-                labelBuilder: (values) => RangeLabels(
-                  values.start.round().toString(),
-                  values.end.round().toString(),
-                ),
-              ),
+              child: SliderTheme(
+                  data: Theme.of(context).sliderTheme.copyWith(
+                      rangeThumbShape: IndicatorRangeSliderThumbShape(minLength.toInt(), maxLength.toInt()),
+                      showValueIndicator: ShowValueIndicator.never),
+                  child: ReactiveRangeSlider<RangeValues>(
+                    formControl: formViewModel.freeTextLengthControl,
+                    min: QuestionFormViewModel.kDefaultFreeTextMinLength.toDouble(),
+                    max: QuestionFormViewModel.kDefaultFreeTextMaxLength.toDouble(),
+                    divisions: QuestionFormViewModel.kDefaultFreeTextMaxLength.toInt() -
+                        QuestionFormViewModel.kDefaultFreeTextMinLength.toInt(),
+                    labelBuilder: (values) => RangeLabels(
+                      values.start.round().toString(),
+                      values.end.round().toString(),
+                    ),
+                  )),
             )),
         const SizedBox(height: 16.0),
         generateRow(
@@ -178,5 +182,50 @@ class FreeTextQuestionFormView extends ConsumerWidget {
         ),
       ),
     ]);
+  }
+}
+
+// Workaround to always show the value indicator for the range slider
+// Source: https://github.com/flutter/flutter/issues/34704#issuecomment-1338849463
+class IndicatorRangeSliderThumbShape<T> extends RangeSliderThumbShape {
+  IndicatorRangeSliderThumbShape(this.start, this.end);
+
+  @override
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
+    return const Size(15, 40);
+  }
+
+  T start;
+  T end;
+  late TextPainter labelTextPainter = TextPainter()..textDirection = TextDirection.ltr;
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    bool? isDiscrete,
+    bool? isEnabled,
+    bool? isOnTop,
+    TextDirection? textDirection,
+    required SliderThemeData sliderTheme,
+    Thumb? thumb,
+    bool? isPressed,
+  }) {
+    final Canvas canvas = context.canvas;
+    final Paint strokePaint = Paint()
+      ..color = sliderTheme.thumbColor ?? Colors.yellow
+      ..strokeWidth = 3.0
+      ..style = PaintingStyle.stroke;
+    canvas.drawCircle(center, 7.5, Paint()..color = Colors.white);
+    canvas.drawCircle(center, 7.5, strokePaint);
+    if (thumb == null) {
+      return;
+    }
+    final value = thumb == Thumb.start ? start : end;
+    labelTextPainter.text = TextSpan(text: value.toString());
+    labelTextPainter.layout();
+    labelTextPainter.paint(canvas, center.translate(-labelTextPainter.width / 2, (labelTextPainter.height / 2) + 4));
   }
 }
