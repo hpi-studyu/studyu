@@ -26,7 +26,7 @@ class Answer<V> {
 
   static Answer fromJson(Map<String, dynamic> data) {
     final dynamic value = data[keyResponse];
-    switch (value.runtimeType) {
+    switch (value) {
       case bool:
         return Answer<bool>.parseJson(data);
       case num:

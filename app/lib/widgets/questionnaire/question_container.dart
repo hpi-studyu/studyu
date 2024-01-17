@@ -26,46 +26,45 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
     widget.onDone(answer, widget.index);
   }
 
-  QuestionWidget? getQuestionBody(BuildContext context) {
-    switch (widget.question.runtimeType) {
-      case ChoiceQuestion _:
+  QuestionWidget getQuestionBody(BuildContext context) {
+    switch (widget.question) {
+      case ChoiceQuestion choiceQuestion:
         return ChoiceQuestionWidget(
-          question: widget.question as ChoiceQuestion,
+          question: choiceQuestion,
           onDone: _onDone,
           multiSelectionText: AppLocalizations.of(context)!.eligible_choice_multi_selection,
         );
-      case BooleanQuestion _:
+      case BooleanQuestion booleanQuestion:
         return BooleanQuestionWidget(
-          question: widget.question as BooleanQuestion,
+          question: booleanQuestion,
           onDone: _onDone,
         );
-      case ScaleQuestion _:
+      case ScaleQuestion scaleQuestion:
         return ScaleQuestionWidget(
-          question: widget.question as ScaleQuestion,
+          question: scaleQuestion,
           onDone: _onDone,
         );
-      case VisualAnalogueQuestion _:
+      case VisualAnalogueQuestion visualAnalogueQuestion:
         // todo remove this when older studies are finished
         // ignore: deprecated_member_use_from_same_package
         return VisualAnalogueQuestionWidget(
-          question: widget.question as VisualAnalogueQuestion,
+          question: visualAnalogueQuestion,
           onDone: _onDone,
         );
-      case AnnotatedScaleQuestion _:
+      case AnnotatedScaleQuestion annotatedScaleQuestion:
         return AnnotatedScaleQuestionWidget(
-          question: widget.question as AnnotatedScaleQuestion,
+          question: annotatedScaleQuestion,
           onDone: _onDone,
         );
       default:
-        print('Question not supported!');
-        return null;
+        throw ArgumentError('Question type ${widget.question.type} not supported');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final questionBody = getQuestionBody(context)!;
+    final questionBody = getQuestionBody(context);
 
     return Card(
       child: Padding(
