@@ -31,7 +31,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   Future<void> initStudy() async {
     final state = context.read<AppState>();
-    Analytics.init();
 
     if (widget.queryParameters != null && widget.queryParameters!.isNotEmpty) {
       StudyULogger.info("Preview: Found query parameters ${widget.queryParameters}");
@@ -170,7 +169,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         Navigator.pushReplacementNamed(context, Routes.studySelection);
         return;
       }*/
-      Analytics.addBreadcrumb(category: 'waypoint', message: 'No subject ID found and not logged in -> welcome');
+      StudyUDiagnostics.addBreadcrumb(category: 'waypoint', message: 'No subject ID found and not logged in -> welcome');
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
@@ -238,7 +237,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           // subject = await Cache.loadSubject();
         } catch (exception, stackTrace) {
           StudyULogger.fatal('Error when initializing offline mode: ${exception.toString()}');
-          await Analytics.captureException(
+          await StudyUDiagnostics.captureException(
             exception,
             stackTrace: stackTrace,
           );

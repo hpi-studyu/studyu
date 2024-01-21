@@ -111,11 +111,11 @@ handleTaskCompletion(BuildContext context, Function(StudySubject?) completionCal
     }
   } on SocketException catch (exception, stackTrace) {
     print("Saving results in offline mode");
-    Analytics.captureEvent(exception, stackTrace: stackTrace);
+    StudyUDiagnostics.captureEvent(exception, stackTrace: stackTrace);
     await Cache.storeSubject(activeSubject);
   } catch (exception, stackTrace) {
     print("Could not save results");
-    Analytics.captureException(exception, stackTrace: stackTrace);
+    StudyUDiagnostics.captureException(exception, stackTrace: stackTrace);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

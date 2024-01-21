@@ -8,15 +8,7 @@ import 'package:sentry/sentry.dart';
 
 part 'analytics.g.dart';
 
-class Analytics {
-  static void init() {
-    // not yet implemented
-  }
-
-  static void dispose() {
-    // not yet implemented
-  }
-
+class StudyUDiagnostics {
   static Future<void> captureEvent(
     dynamic event, {
     StackTrace? stackTrace,

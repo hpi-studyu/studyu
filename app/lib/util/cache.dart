@@ -95,9 +95,9 @@ class Cache {
         // ... for now do nothing
         if (!kDebugMode && localSubject.startedAt == remoteSubject.startedAt) {
           StudyULogger.fatal("Cache synchronization found local changes that cannot be merged");
-          Analytics.captureMessage(
+          StudyUDiagnostics.captureMessage(
               "localSubject: ${localSubject.toFullJson()} \nremoteSubject: ${remoteSubject.toFullJson()}");
-          Analytics.captureException(Exception("CacheSynchronizationException"));
+          StudyUDiagnostics.captureException(Exception("CacheSynchronizationException"));
         }
       }
     } on SocketException catch (_) {
