@@ -86,3 +86,5 @@ generated/
 
 # Ruby bundler files for fastlane
 .bundle
+
+megalinter-reports/
