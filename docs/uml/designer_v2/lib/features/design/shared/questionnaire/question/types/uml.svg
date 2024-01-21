@@ -1,4 +1,4 @@
-<svg version="1.1" baseProfile="full" width="2364.0" height="367.0" viewbox="0 0 2364 367" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<svg version="1.1" baseProfile="full" width="2037.0" height="367.0" viewbox="0 0 2037 367" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
 	<desc >[SurveyQuestionType
 	  |
 	  +index: int;
@@ -57,24 +57,11 @@
 	[FreeTextQuestionFormView]o-[QuestionFormViewModel]
 	[&lt;abstract&gt;ConsumerWidget]&lt;:-[FreeTextQuestionFormView]
 	
-	[IndicatorRangeSliderThumbShape
-	  |
-	  +start: T;
-	  +end: T;
-	  +labelTextPainter: TextPainter
-	  |
-	  +Size getPreferredSize();
-	  +void paint()
-	]
-	
-	[IndicatorRangeSliderThumbShape]o-[TextPainter]
-	[&lt;abstract&gt;RangeSliderThumbShape]&lt;:-[IndicatorRangeSliderThumbShape]
-	
 	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="367.0" width="2364.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="367.0" width="2037.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
@@ -108,12 +95,6 @@
 					</g>
 					<path d="M1502.2 42.6 L1805 82 L1805 102 L1805.0 102.0 " fill="none"></path>
 					<path d="M1502.9 37.3 L1502.2 42.6 L1501.5 47.9 L1489.0 40.9 Z"></path>
-					<path d="M2164.5 258.7 L2164.5 260 L2164.5 280 L2164.5 280.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2169.8 249.3 L2164.5 258.7 L2159.2 249.3 L2164.5 240.0 Z"></path>
-					</g>
-					<path d="M2164.5 59.8 L2164.5 82 L2164.5 102 L2164.5 102.0 " fill="none"></path>
-					<path d="M2169.8 59.8 L2164.5 59.8 L2159.2 59.8 L2164.5 46.5 Z"></path>
 					<g data-name="SurveyQuestionType">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SurveyQuestionType">
 							<rect x="0.0" y="102.5" height="137.0" width="363.0" data-name="SurveyQuestionType"></rect>
@@ -280,56 +261,6 @@
 								<text x="0.0" y="13.5" stroke="none" data-name="FreeTextQuestionFormView">+Widget build()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="FreeTextQuestionFormView">+Widget disableOnReadonly()</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="FreeTextQuestionFormView">+Widget generateRow()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="IndicatorRangeSliderThumbShape">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IndicatorRangeSliderThumbShape">
-							<rect x="2021.0" y="102.0" height="138.0" width="287.0" data-name="IndicatorRangeSliderThumbShape"></rect>
-							<path d="M2021.0 133.0 L2308.0 133.0" fill="none" data-name="IndicatorRangeSliderThumbShape"></path>
-							<path d="M2021.0 194.0 L2308.0 194.0" fill="none" data-name="IndicatorRangeSliderThumbShape"></path>
-						</g>
-						<g transform="translate(2021, 102)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IndicatorRangeSliderThumbShape">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IndicatorRangeSliderThumbShape">
-								<text x="135.5" y="13.5" stroke="none" text-anchor="middle" data-name="IndicatorRangeSliderThumbShape">IndicatorRangeSliderThumbShape</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2021, 133)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IndicatorRangeSliderThumbShape">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IndicatorRangeSliderThumbShape">
-								<text x="0.0" y="13.5" stroke="none" data-name="IndicatorRangeSliderThumbShape">+start: T</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="IndicatorRangeSliderThumbShape">+end: T</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="IndicatorRangeSliderThumbShape">+labelTextPainter: TextPainter</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2021, 194)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IndicatorRangeSliderThumbShape">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IndicatorRangeSliderThumbShape">
-								<text x="0.0" y="13.5" stroke="none" data-name="IndicatorRangeSliderThumbShape">+Size getPreferredSize()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="IndicatorRangeSliderThumbShape">+void paint()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="TextPainter">
-						<g fill="#eee8d5" stroke="#33322E" data-name="TextPainter">
-							<rect x="2111.5" y="280.0" height="31.0" width="106.0" data-name="TextPainter"></rect>
-						</g>
-						<g transform="translate(2111.5, 280)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TextPainter">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TextPainter">
-								<text x="45.0" y="13.5" stroke="none" text-anchor="middle" data-name="TextPainter">TextPainter</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="RangeSliderThumbShape">
-						<g fill="#eee8d5" stroke="#33322E" data-name="RangeSliderThumbShape">
-							<rect x="2055.5" y="15.5" height="31.0" width="218.0" data-name="RangeSliderThumbShape"></rect>
-						</g>
-						<g transform="translate(2055.5, 15.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="RangeSliderThumbShape">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RangeSliderThumbShape">
-								<text x="101.0" y="13.5" stroke="none" text-anchor="middle" data-name="RangeSliderThumbShape">RangeSliderThumbShape</text>
 								
 							</g>
 						</g>
