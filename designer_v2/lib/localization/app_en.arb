@@ -197,7 +197,6 @@
   "free_text_type_custom_explanation": "Any input that does not match the expression will be rejected. The input length constraints specified above are still applied. A leading ^ and trailing $ character will be added automatically.",
   "free_text_example_label": "Example text field",
   "free_text_example_label_helper": "This is an example of the text field that will be shown to the participant. The length and input type constraints specified above will be applied.",
-  "free_text_example_default_text": "Enter a survey title to see an example of the text field.",
   "free_text_example_valid": "Your example input is valid",
   "free_text_example_default_helper": "Perform a validation test by entering text here.",
   "free_text_validation_min_length": "The input must be at least {countMin} characters long.",

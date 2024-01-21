@@ -197,7 +197,6 @@
   "free_text_type_custom_explanation": "Jede Eingabe, die nicht dem Ausdruck entspricht, wird abgelehnt. Die oben angegebenen Einschränkungen zur Zeichenlänge werden weiterhin angewendet. Ein führendes ^ Zeichen und ein abschließendes $ Zeichen werden automatisch hinzugefügt.",
   "free_text_example_label": "Beispieltextfeld",
   "free_text_example_label_helper": "Dies ist ein Beispiel für das Textfeld, das dem Teilnehmer angezeigt wird. Die oben angegebenen Einschränkungen zur Länge und zum Eingabetyp werden angewendet.",
-  "free_text_example_default_text": "Geben Sie einen Umfragetitel ein, um ein Beispiel für das Textfeld zu sehen.",
   "free_text_example_valid": "Ihre Beispiel-Eingabe ist gültig",
   "free_text_example_default_helper": "Führen Sie einen Validierungstest durch, indem Sie hier Text eingeben.",
   "free_text_validation_min_length": "Die Eingabe muss mindestens {countMin} Zeichen lang sein.",

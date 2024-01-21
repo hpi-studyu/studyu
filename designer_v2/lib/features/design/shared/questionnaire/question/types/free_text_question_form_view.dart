@@ -95,8 +95,6 @@ class FreeTextQuestionFormView extends ConsumerWidget {
             labelHelpText: tr.free_text_example_label_helper,
             input: Row(
               children: [
-                Text(formViewModel.questionTextControl.value ?? tr.free_text_example_default_text),
-                const SizedBox(width: 64.0),
                 Expanded(
                   child: ReactiveValueListenableBuilder(
                       formControl: formViewModel.freeTextExampleTextControl,
@@ -134,7 +132,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
               ],
             ),
           ),
-          const SizedBox(height: 8.0),
+          const SizedBox(height: 16.0),
           ReactiveFormConsumer(
             builder: (context, formGroup, child) {
               return TextParagraph(text: tr.free_text_example_explanation(type, minLength, maxLength));

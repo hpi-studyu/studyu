@@ -14,13 +14,13 @@ class Cache {
     if (subject == null) return;
     StudySubject newSubject;
     newSubject = await synchronize(subject);
-    print("Save to local cache");
+    debugPrint("Save to local cache");
     (await sharedPrefs).setString(cacheSubjectKey, jsonEncode(newSubject.toFullJson()));
     assert(newSubject == (await loadSubject()));
   }
 
   static Future<StudySubject> loadSubject() async {
-    print("Load subject from cache");
+    debugPrint("Load subject from cache");
     if ((await sharedPrefs).containsKey(cacheSubjectKey)) {
       return StudySubject.fromJson(jsonDecode((await sharedPrefs).getString(cacheSubjectKey)!));
     } else {
@@ -55,7 +55,7 @@ class Cache {
     // remote subject has newer study
     if (!kDebugMode && remoteSubject.startedAt!.isAfter(localSubject.startedAt!)) return remoteSubject;
 
-    print("Synchronize with cache");
+    debugPrint("Synchronize with cache");
     isSynchronizing = true;
 
     try {

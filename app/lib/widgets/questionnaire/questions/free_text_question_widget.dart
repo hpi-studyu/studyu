@@ -14,7 +14,7 @@ class FreeTextQuestionWidget extends QuestionWidget {
 }
 
 class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
-  final textFieldController = TextEditingController();
+  final _textFieldController = TextEditingController();
   final _formFieldKey = GlobalKey<FormFieldState>();
 
   @override
@@ -24,7 +24,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
 
   @override
   void dispose() {
-    textFieldController.dispose();
+    _textFieldController.dispose();
     super.dispose();
   }
 
@@ -33,7 +33,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     final question = widget.question;
     return TextFormField(
       key: _formFieldKey,
-      controller: textFieldController,
+      controller: _textFieldController,
       maxLines: null,
       onChanged: (value) {
         if (_formFieldKey.currentState!.validate()) {
