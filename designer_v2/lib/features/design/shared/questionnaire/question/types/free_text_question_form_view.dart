@@ -19,8 +19,8 @@ class FreeTextQuestionFormView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final minLength = formViewModel.freeTextLengthControl.value!.start;
-    final maxLength = formViewModel.freeTextLengthControl.value!.end;
+    final minLength = formViewModel.freeTextLengthControl.value!.start.toInt();
+    final maxLength = formViewModel.freeTextLengthControl.value!.end.toInt();
     final type = formViewModel.freeTextTypeControl.value!.string;
     formViewModel.freeTextLengthControl
         .onChanged((_) => formViewModel.freeTextExampleTextControl.updateValueAndValidity());
