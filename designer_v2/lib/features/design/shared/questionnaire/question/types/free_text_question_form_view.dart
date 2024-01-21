@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:reactive_range_slider/reactive_range_slider.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
+import 'package:studyu_designer_v2/common_views/range_slider.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
@@ -33,7 +34,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
             input: disableOnReadonly(
               child: SliderTheme(
                   data: Theme.of(context).sliderTheme.copyWith(
-                      rangeThumbShape: IndicatorRangeSliderThumbShape(minLength.toInt(), maxLength.toInt()),
+                      rangeThumbShape: IndicatorRangeSliderThumbShape(context, minLength.toInt(), maxLength.toInt()),
                       showValueIndicator: ShowValueIndicator.never),
                   child: ReactiveRangeSlider<RangeValues>(
                     formControl: formViewModel.freeTextLengthControl,
@@ -182,50 +183,5 @@ class FreeTextQuestionFormView extends ConsumerWidget {
         ),
       ),
     ]);
-  }
-}
-
-// Workaround to always show the value indicator for the range slider
-// Source: https://github.com/flutter/flutter/issues/34704#issuecomment-1338849463
-class IndicatorRangeSliderThumbShape<T> extends RangeSliderThumbShape {
-  IndicatorRangeSliderThumbShape(this.start, this.end);
-
-  @override
-  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
-    return const Size(15, 40);
-  }
-
-  T start;
-  T end;
-  late TextPainter labelTextPainter = TextPainter()..textDirection = TextDirection.ltr;
-
-  @override
-  void paint(
-    PaintingContext context,
-    Offset center, {
-    required Animation<double> activationAnimation,
-    required Animation<double> enableAnimation,
-    bool? isDiscrete,
-    bool? isEnabled,
-    bool? isOnTop,
-    TextDirection? textDirection,
-    required SliderThemeData sliderTheme,
-    Thumb? thumb,
-    bool? isPressed,
-  }) {
-    final Canvas canvas = context.canvas;
-    final Paint strokePaint = Paint()
-      ..color = sliderTheme.thumbColor ?? Colors.yellow
-      ..strokeWidth = 3.0
-      ..style = PaintingStyle.stroke;
-    canvas.drawCircle(center, 7.5, Paint()..color = Colors.white);
-    canvas.drawCircle(center, 7.5, strokePaint);
-    if (thumb == null) {
-      return;
-    }
-    final value = thumb == Thumb.start ? start : end;
-    labelTextPainter.text = TextSpan(text: value.toString());
-    labelTextPainter.layout();
-    labelTextPainter.paint(canvas, center.translate(-labelTextPainter.width / 2, (labelTextPainter.height / 2) + 4));
   }
 }
