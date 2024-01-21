@@ -11,9 +11,9 @@ on:
   push:
 
   pull_request:
-    branches:
-      - main
-      - master
+#branches:
+#- main
+#- master
 
 # Comment env block if you do not want to apply fixes
 env:
@@ -84,11 +84,14 @@ jobs:
           #     github.event_name == 'push' &&
           #     contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref)
           #   }}
-          VALIDATE_ALL_CODEBASE: >-
-            ${{
-              github.event_name == 'push' &&
-              contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref)
-            }}
+          # TODO initially set VALIDATE_ALL_CODEBASE to true in order to lint all
+          # sources. Then set it to the above value to lint only the diff with main
+          VALIDATE_ALL_CODEBASE: true
+          #VALIDATE_ALL_CODEBASE: >-
+            #${{
+              #github.event_name == 'push' &&
+              #contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref)
+            #}}
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
