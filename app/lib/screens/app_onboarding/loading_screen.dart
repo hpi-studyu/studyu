@@ -169,7 +169,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         Navigator.pushReplacementNamed(context, Routes.studySelection);
         return;
       }*/
-      StudyUDiagnostics.addBreadcrumb(category: 'waypoint', message: 'No subject ID found and not logged in -> welcome');
+      StudyUDiagnostics.addBreadcrumb(
+          category: 'waypoint', message: 'No subject ID found and not logged in -> welcome');
       Navigator.pushReplacementNamed(context, Routes.welcome);
       return;
     }
