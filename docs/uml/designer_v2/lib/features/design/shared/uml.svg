@@ -1,4 +1,4 @@
-<svg version="1.1" baseProfile="full" width="6417.0" height="1953.0" viewbox="0 0 6417 1953" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<svg version="1.1" baseProfile="full" width="6090.0" height="1953.0" viewbox="0 0 6090 1953" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
 	<desc >[&lt;abstract&gt;IFormDataWithSchedule
 	  |
 	  +instanceId: String;
@@ -114,19 +114,6 @@
 	
 	[FreeTextQuestionFormView]o-[QuestionFormViewModel]
 	[&lt;abstract&gt;ConsumerWidget]&lt;:-[FreeTextQuestionFormView]
-	
-	[IndicatorRangeSliderThumbShape
-	  |
-	  +start: T;
-	  +end: T;
-	  +labelTextPainter: TextPainter
-	  |
-	  +Size getPreferredSize();
-	  +void paint()
-	]
-	
-	[IndicatorRangeSliderThumbShape]o-[TextPainter]
-	[&lt;abstract&gt;RangeSliderThumbShape]&lt;:-[IndicatorRangeSliderThumbShape]
 	
 	[&lt;abstract&gt;QuestionFormData
 	  |
@@ -342,7 +329,7 @@
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="1953.0" width="6417.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="1953.0" width="6090.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
@@ -364,11 +351,11 @@
 					<g fill="#eee8d5">
 						<path d="M2746.3 1050.9 L2738.8 1058.6 L2735.9 1048.3 L2743.4 1040.5 Z"></path>
 					</g>
-					<path d="M2969.2 1052.8 L3502.25 1518 L3053.128048780488 1666.5 L3053.1 1666.5 " fill="none"></path>
+					<path d="M2950.9 1053.5 L3429.25 1518 L3046.2286585365855 1666.5 L3046.2 1666.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2965.6 1042.6 L2969.2 1052.8 L2958.6 1050.7 L2955.1 1040.5 Z"></path>
+						<path d="M2947.9 1043.2 L2950.9 1053.5 L2940.5 1050.8 L2937.5 1040.5 Z"></path>
 					</g>
-					<path d="M3213.5 228.2 L3213.5 260 L4210 677.0316034597472 L4210.0 677.0 " fill="none"></path>
+					<path d="M3213.5 228.2 L3213.5 260 L3883 618.0914115646258 L3883.0 618.1 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M3218.8 218.8 L3213.5 228.2 L3208.2 218.8 L3213.5 209.5 Z"></path>
 					</g>
@@ -380,34 +367,28 @@
 						<path d="M2444.3 917.8 L2444.25 1518 L2382.233231707317 1613.5 L2382.2 1613.5 " fill="none"></path>
 					</g>
 					<path d="M2449.6 917.8 L2444.3 917.8 L2438.9 917.8 L2444.3 904.5 Z"></path>
-					<path d="M3605.5 220.7 L3605.5 260 L4210 602.2416741674167 L4210.0 602.2 " fill="none"></path>
+					<path d="M3605.5 220.7 L3605.5 260 L3883 482.6371173469388 L3883.0 482.6 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M3610.8 211.3 L3605.5 220.7 L3600.2 211.3 L3605.5 202.0 Z"></path>
 					</g>
-					<path d="M4324.5 236.2 L4324.5 260 L4336.964228934818 280 L4337.0 280.0 " fill="none"></path>
+					<path d="M3997.5 236.2 L3997.5 260 L4009.964228934817 280 L4010.0 280.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4329.8 226.8 L4324.5 236.2 L4319.2 226.8 L4324.5 217.5 Z"></path>
+						<path d="M4002.8 226.8 L3997.5 236.2 L3992.2 226.8 L3997.5 217.5 Z"></path>
 					</g>
-					<path d="M4627.3 42.6 L4324.5 82 L4324.5 124.5 L4324.5 124.5 " fill="none"></path>
-					<path d="M4628.0 47.9 L4627.3 42.6 L4626.6 37.3 L4640.5 40.9 Z"></path>
-					<path d="M4716.5 236.2 L4716.5 260 L4716.5 280 L4716.5 280.0 " fill="none"></path>
+					<path d="M4300.3 42.6 L3997.5 82 L3997.5 124.5 L3997.5 124.5 " fill="none"></path>
+					<path d="M4301.0 47.9 L4300.3 42.6 L4299.6 37.3 L4313.5 40.9 Z"></path>
+					<path d="M4389.5 236.2 L4389.5 260 L4389.5 280 L4389.5 280.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4721.8 226.8 L4716.5 236.2 L4711.2 226.8 L4716.5 217.5 Z"></path>
+						<path d="M4394.8 226.8 L4389.5 236.2 L4384.2 226.8 L4389.5 217.5 Z"></path>
 					</g>
-					<path d="M4716.5 59.8 L4716.5 82 L4716.5 124.5 L4716.5 124.5 " fill="none"></path>
-					<path d="M4721.8 59.8 L4716.5 59.8 L4711.2 59.8 L4716.5 46.5 Z"></path>
-					<path d="M5108.5 258.7 L5108.5 260 L5096.035771065182 280 L5096.0 280.0 " fill="none"></path>
+					<path d="M4389.5 59.8 L4389.5 82 L4389.5 124.5 L4389.5 124.5 " fill="none"></path>
+					<path d="M4394.8 59.8 L4389.5 59.8 L4384.2 59.8 L4389.5 46.5 Z"></path>
+					<path d="M4781.5 258.7 L4781.5 260 L4769.035771065182 280 L4769.0 280.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M5113.8 249.3 L5108.5 258.7 L5103.2 249.3 L5108.5 240.0 Z"></path>
+						<path d="M4786.8 249.3 L4781.5 258.7 L4776.2 249.3 L4781.5 240.0 Z"></path>
 					</g>
-					<path d="M4805.7 42.6 L5108.5 82 L5108.5 102 L5108.5 102.0 " fill="none"></path>
-					<path d="M4806.4 37.3 L4805.7 42.6 L4805.0 47.9 L4792.5 40.9 Z"></path>
-					<path d="M3965.0 258.7 L3965 260 L3856.97913354531 873.5 L3857.0 873.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3970.3 249.3 L3965.0 258.7 L3959.7 249.3 L3965.0 240.0 Z"></path>
-					</g>
-					<path d="M3965.0 59.8 L3965 82 L3965 102 L3965.0 102.0 " fill="none"></path>
-					<path d="M3970.3 59.8 L3965.0 59.8 L3959.7 59.8 L3965.0 46.5 Z"></path>
+					<path d="M4478.7 42.6 L4781.5 82 L4781.5 102 L4781.5 102.0 " fill="none"></path>
+					<path d="M4479.4 37.3 L4478.7 42.6 L4478.0 47.9 L4465.5 40.9 Z"></path>
 					<path d="M973.2 1032.2 L555.5 1518 L2156.25 1665.2986393603592 L2156.3 1665.3 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M983.3 1028.6 L973.2 1032.2 L975.2 1021.6 L985.3 1018.0 Z"></path>
@@ -432,48 +413,48 @@
 					</g>
 					<path d="M1279.6 1026.0 L1938 1518 L1810.9268292682927 1598 L1810.9 1598.0 " fill="none"></path>
 					<path d="M1282.8 1021.7 L1279.6 1026.0 L1276.4 1030.3 L1268.9 1018.0 Z"></path>
-					<path d="M4193.5 1169.1 L3542.25 1518 L2519.25 1657.2876712328766 L2519.3 1657.3 " fill="none"></path>
+					<path d="M3867.6 1245.7 L3469.25 1518 L2519.25 1655.6933274414494 L2519.3 1655.7 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4204.3 1169.4 L4193.5 1169.1 L4199.3 1160.0 L4210.0 1160.3 Z"></path>
+						<path d="M3878.3 1244.9 L3867.6 1245.7 L3872.3 1236.1 L3883.0 1235.2 Z"></path>
 					</g>
-					<path d="M4193.9 1193.7 L3637.75 1518 L3230.2804878048782 1666.5 L3230.3 1666.5 " fill="none"></path>
+					<path d="M3868.2 1286.6 L3564.75 1518 L3223.381097560976 1666.5 L3223.4 1666.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4204.6 1193.6 L4193.9 1193.7 L4199.3 1184.4 L4210.0 1184.3 Z"></path>
+						<path d="M3878.8 1285.2 L3868.2 1286.6 L3872.3 1276.7 L3883.0 1275.3 Z"></path>
 					</g>
-					<path d="M4808.5 1516.5 L4808.75 1518 L4898.393292682927 1666.5 L4898.4 1666.5 " fill="none"></path>
+					<path d="M4571.6 1515.9 L4572.25 1518 L4661.893292682927 1666.5 L4661.9 1666.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4812.4 1506.5 L4808.5 1516.5 L4801.9 1508.0 L4805.8 1498.0 Z"></path>
+						<path d="M4574.2 1505.5 L4571.6 1515.9 L4563.9 1508.5 L4566.4 1498.0 Z"></path>
 					</g>
-					<path d="M5237.7 1294.9 L5524.25 1518 L4818.75 1667.3892834086507 L4818.8 1667.4 " fill="none"></path>
+					<path d="M4910.7 1294.9 L5197.25 1518 L4577.8963414634145 1666.5 L4577.9 1666.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M5233.6 1284.9 L5237.7 1294.9 L5227.1 1293.4 L5223.0 1283.4 Z"></path>
+						<path d="M4906.6 1284.9 L4910.7 1294.9 L4900.1 1293.4 L4896.0 1283.4 Z"></path>
 					</g>
-					<path d="M5238.2 1259.1 L5603.25 1518 L5802.91006097561 1666.5 L5802.9 1666.5 " fill="none"></path>
+					<path d="M4911.2 1259.1 L5276.25 1518 L5475.91006097561 1666.5 L5475.9 1666.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M5233.7 1249.3 L5238.2 1259.1 L5227.5 1258.0 L5223.0 1248.3 Z"></path>
+						<path d="M4906.7 1249.3 L4911.2 1259.1 L4900.5 1258.0 L4896.0 1248.3 Z"></path>
 					</g>
-					<path d="M5432.0 199.8 L5432 260 L5223 443.7330538085255 L5223.0 443.7 " fill="none"></path>
-					<path d="M5437.3 199.8 L5432.0 199.8 L5426.7 199.8 L5432.0 186.5 Z"></path>
+					<path d="M5105.0 199.8 L5105 260 L4896 443.7330538085255 L4896.0 443.7 " fill="none"></path>
+					<path d="M5110.3 199.8 L5105.0 199.8 L5099.7 199.8 L5105.0 186.5 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M5661.5 199.8 L5661.5 260 L5223 551.8693121693123 L5223.0 551.9 " fill="none"></path>
+						<path d="M5334.5 199.8 L5334.5 260 L4896 551.8693121693123 L4896.0 551.9 " fill="none"></path>
 					</g>
-					<path d="M5666.8 199.8 L5661.5 199.8 L5656.2 199.8 L5661.5 186.5 Z"></path>
-					<path d="M5961.3 1034.2 L5682.25 1518 L4956.75 1671.6242737249838 L4956.8 1671.6 " fill="none"></path>
+					<path d="M5339.8 199.8 L5334.5 199.8 L5329.2 199.8 L5334.5 186.5 Z"></path>
+					<path d="M5634.3 1034.2 L5355.25 1518 L4720.25 1670.251461988304 L4720.3 1670.3 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M5970.6 1028.7 L5961.3 1034.2 L5961.3 1023.4 L5970.6 1018.0 Z"></path>
+						<path d="M5643.6 1028.7 L5634.3 1034.2 L5634.3 1023.4 L5643.6 1018.0 Z"></path>
 					</g>
-					<path d="M6078.1 1036.2 L6186.25 1518 L6186.25 1666.5 L6186.3 1666.5 " fill="none"></path>
+					<path d="M5751.1 1036.2 L5859.25 1518 L5859.25 1666.5 L5859.3 1666.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M6081.2 1025.9 L6078.1 1036.2 L6070.8 1028.3 L6074.0 1018.0 Z"></path>
+						<path d="M5754.2 1025.9 L5751.1 1036.2 L5743.8 1028.3 L5747.0 1018.0 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M5892.0 199.8 L5892 260 L6013.621621621622 760 L6013.6 760.0 " fill="none"></path>
+						<path d="M5565.0 199.8 L5565 260 L5686.621621621622 760 L5686.6 760.0 " fill="none"></path>
 					</g>
-					<path d="M5897.3 199.8 L5892.0 199.8 L5886.7 199.8 L5892.0 186.5 Z"></path>
+					<path d="M5570.3 199.8 L5565.0 199.8 L5559.7 199.8 L5565.0 186.5 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M6137.0 199.8 L6137 260 L6063.868044515103 760 L6063.9 760.0 " fill="none"></path>
+						<path d="M5810.0 199.8 L5810 260 L5736.868044515103 760 L5736.9 760.0 " fill="none"></path>
 					</g>
-					<path d="M6142.3 199.8 L6137.0 199.8 L6131.7 199.8 L6137.0 186.5 Z"></path>
+					<path d="M5815.3 199.8 L5810.0 199.8 L5804.7 199.8 L5810.0 186.5 Z"></path>
 					<g stroke-dasharray="6 6">
 						<path d="M1562.5 179.0 L2189.75 260 L2189.75 820 L2189.8 820.0 " fill="none"></path>
 					</g>
@@ -649,17 +630,17 @@
 					</g>
 					<g data-name="QuestionFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionFormViewModel">
-							<rect x="4210.0" y="280.0" height="1218.0" width="1013.0" data-name="QuestionFormViewModel"></rect>
-							<path d="M4210.0 311.0 L5223.0 311.0" fill="none" data-name="QuestionFormViewModel"></path>
-							<path d="M4210.0 1212.0 L5223.0 1212.0" fill="none" data-name="QuestionFormViewModel"></path>
+							<rect x="3883.0" y="280.0" height="1218.0" width="1013.0" data-name="QuestionFormViewModel"></rect>
+							<path d="M3883.0 311.0 L4896.0 311.0" fill="none" data-name="QuestionFormViewModel"></path>
+							<path d="M3883.0 1212.0 L4896.0 1212.0" fill="none" data-name="QuestionFormViewModel"></path>
 						</g>
-						<g transform="translate(4210, 280)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionFormViewModel">
+						<g transform="translate(3883, 280)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionFormViewModel">
 								<text x="498.5" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionFormViewModel">QuestionFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4210, 311)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionFormViewModel">
+						<g transform="translate(3883, 311)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="QuestionFormViewModel">&lt;static&gt;+defaultQuestionType: SurveyQuestionType</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="QuestionFormViewModel">-_titles: Map&lt;FormMode, String Function()&gt;?</text>
@@ -723,7 +704,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(4210, 1212)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionFormViewModel">
+						<g transform="translate(3883, 1212)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="QuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="QuestionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="QuestionFormViewModel">+String? scaleMidLabelAt()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="QuestionFormViewModel">-dynamic _onScaleRangeChanged()</text>
@@ -783,16 +764,16 @@
 					</g>
 					<g data-name="IScaleQuestionFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IScaleQuestionFormViewModel">
-							<rect x="3212.3" y="0.0" height="62.0" width="309.0" data-name="IScaleQuestionFormViewModel"></rect>
-							<path d="M3212.3 31.0 L3521.3 31.0" fill="none" data-name="IScaleQuestionFormViewModel"></path>
+							<rect x="3245.0" y="0.0" height="62.0" width="309.0" data-name="IScaleQuestionFormViewModel"></rect>
+							<path d="M3245.0 31.0 L3554.0 31.0" fill="none" data-name="IScaleQuestionFormViewModel"></path>
 						</g>
-						<g transform="translate(3212.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IScaleQuestionFormViewModel">
+						<g transform="translate(3245, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IScaleQuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IScaleQuestionFormViewModel">
 								<text x="146.5" y="13.5" stroke="none" text-anchor="middle" data-name="IScaleQuestionFormViewModel">IScaleQuestionFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3212.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IScaleQuestionFormViewModel">
+						<g transform="translate(3245, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IScaleQuestionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IScaleQuestionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="IScaleQuestionFormViewModel">+isMidValuesClearedInfoVisible: bool</text>
 								
@@ -819,23 +800,23 @@
 					</g>
 					<g data-name="ChoiceQuestionFormView">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ChoiceQuestionFormView">
-							<rect x="4148.5" y="124.5" height="93.0" width="352.0" data-name="ChoiceQuestionFormView"></rect>
-							<path d="M4148.5 155.5 L4500.5 155.5" fill="none" data-name="ChoiceQuestionFormView"></path>
-							<path d="M4148.5 186.5 L4500.5 186.5" fill="none" data-name="ChoiceQuestionFormView"></path>
+							<rect x="3821.5" y="124.5" height="93.0" width="352.0" data-name="ChoiceQuestionFormView"></rect>
+							<path d="M3821.5 155.5 L4173.5 155.5" fill="none" data-name="ChoiceQuestionFormView"></path>
+							<path d="M3821.5 186.5 L4173.5 186.5" fill="none" data-name="ChoiceQuestionFormView"></path>
 						</g>
-						<g transform="translate(4148.5, 124.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChoiceQuestionFormView">
+						<g transform="translate(3821.5, 124.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChoiceQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ChoiceQuestionFormView">
 								<text x="168.0" y="13.5" stroke="none" text-anchor="middle" data-name="ChoiceQuestionFormView">ChoiceQuestionFormView</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4148.5, 155.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceQuestionFormView">
+						<g transform="translate(3821.5, 155.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ChoiceQuestionFormView">
 								<text x="0.0" y="13.5" stroke="none" data-name="ChoiceQuestionFormView">+formViewModel: QuestionFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4148.5, 186.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceQuestionFormView">
+						<g transform="translate(3821.5, 186.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ChoiceQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ChoiceQuestionFormView">
 								<text x="0.0" y="13.5" stroke="none" data-name="ChoiceQuestionFormView">+Widget build()</text>
 								
@@ -844,9 +825,9 @@
 					</g>
 					<g data-name="ConsumerWidget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ConsumerWidget">
-							<rect x="4640.5" y="15.5" height="31.0" width="152.0" data-name="ConsumerWidget"></rect>
+							<rect x="4313.5" y="15.5" height="31.0" width="152.0" data-name="ConsumerWidget"></rect>
 						</g>
-						<g transform="translate(4640.5, 15.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ConsumerWidget">
+						<g transform="translate(4313.5, 15.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ConsumerWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ConsumerWidget">
 								<text x="68.0" y="13.5" stroke="none" text-anchor="middle" data-name="ConsumerWidget">ConsumerWidget</text>
 								
@@ -855,23 +836,23 @@
 					</g>
 					<g data-name="BoolQuestionFormView">
 						<g fill="#eee8d5" stroke="#33322E" data-name="BoolQuestionFormView">
-							<rect x="4540.5" y="124.5" height="93.0" width="352.0" data-name="BoolQuestionFormView"></rect>
-							<path d="M4540.5 155.5 L4892.5 155.5" fill="none" data-name="BoolQuestionFormView"></path>
-							<path d="M4540.5 186.5 L4892.5 186.5" fill="none" data-name="BoolQuestionFormView"></path>
+							<rect x="4213.5" y="124.5" height="93.0" width="352.0" data-name="BoolQuestionFormView"></rect>
+							<path d="M4213.5 155.5 L4565.5 155.5" fill="none" data-name="BoolQuestionFormView"></path>
+							<path d="M4213.5 186.5 L4565.5 186.5" fill="none" data-name="BoolQuestionFormView"></path>
 						</g>
-						<g transform="translate(4540.5, 124.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BoolQuestionFormView">
+						<g transform="translate(4213.5, 124.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BoolQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BoolQuestionFormView">
 								<text x="168.0" y="13.5" stroke="none" text-anchor="middle" data-name="BoolQuestionFormView">BoolQuestionFormView</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4540.5, 155.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BoolQuestionFormView">
+						<g transform="translate(4213.5, 155.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BoolQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BoolQuestionFormView">
 								<text x="0.0" y="13.5" stroke="none" data-name="BoolQuestionFormView">+formViewModel: QuestionFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4540.5, 186.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BoolQuestionFormView">
+						<g transform="translate(4213.5, 186.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BoolQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BoolQuestionFormView">
 								<text x="0.0" y="13.5" stroke="none" data-name="BoolQuestionFormView">+Widget build()</text>
 								
@@ -880,78 +861,28 @@
 					</g>
 					<g data-name="FreeTextQuestionFormView">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FreeTextQuestionFormView">
-							<rect x="4932.5" y="102.0" height="138.0" width="352.0" data-name="FreeTextQuestionFormView"></rect>
-							<path d="M4932.5 133.0 L5284.5 133.0" fill="none" data-name="FreeTextQuestionFormView"></path>
-							<path d="M4932.5 179.0 L5284.5 179.0" fill="none" data-name="FreeTextQuestionFormView"></path>
+							<rect x="4605.5" y="102.0" height="138.0" width="352.0" data-name="FreeTextQuestionFormView"></rect>
+							<path d="M4605.5 133.0 L4957.5 133.0" fill="none" data-name="FreeTextQuestionFormView"></path>
+							<path d="M4605.5 179.0 L4957.5 179.0" fill="none" data-name="FreeTextQuestionFormView"></path>
 						</g>
-						<g transform="translate(4932.5, 102)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FreeTextQuestionFormView">
+						<g transform="translate(4605.5, 102)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FreeTextQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FreeTextQuestionFormView">
 								<text x="168.0" y="13.5" stroke="none" text-anchor="middle" data-name="FreeTextQuestionFormView">FreeTextQuestionFormView</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4932.5, 133)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FreeTextQuestionFormView">
+						<g transform="translate(4605.5, 133)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FreeTextQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FreeTextQuestionFormView">
 								<text x="0.0" y="13.5" stroke="none" data-name="FreeTextQuestionFormView">+formViewModel: QuestionFormViewModel</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="FreeTextQuestionFormView">+generateLabelHelpTextMap: dynamic</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4932.5, 179)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FreeTextQuestionFormView">
+						<g transform="translate(4605.5, 179)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="FreeTextQuestionFormView">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="FreeTextQuestionFormView">
 								<text x="0.0" y="13.5" stroke="none" data-name="FreeTextQuestionFormView">+Widget build()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="FreeTextQuestionFormView">+Widget disableOnReadonly()</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="FreeTextQuestionFormView">+Widget generateRow()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="IndicatorRangeSliderThumbShape">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IndicatorRangeSliderThumbShape">
-							<rect x="3821.5" y="102.0" height="138.0" width="287.0" data-name="IndicatorRangeSliderThumbShape"></rect>
-							<path d="M3821.5 133.0 L4108.5 133.0" fill="none" data-name="IndicatorRangeSliderThumbShape"></path>
-							<path d="M3821.5 194.0 L4108.5 194.0" fill="none" data-name="IndicatorRangeSliderThumbShape"></path>
-						</g>
-						<g transform="translate(3821.5, 102)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IndicatorRangeSliderThumbShape">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IndicatorRangeSliderThumbShape">
-								<text x="135.5" y="13.5" stroke="none" text-anchor="middle" data-name="IndicatorRangeSliderThumbShape">IndicatorRangeSliderThumbShape</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3821.5, 133)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IndicatorRangeSliderThumbShape">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IndicatorRangeSliderThumbShape">
-								<text x="0.0" y="13.5" stroke="none" data-name="IndicatorRangeSliderThumbShape">+start: T</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="IndicatorRangeSliderThumbShape">+end: T</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="IndicatorRangeSliderThumbShape">+labelTextPainter: TextPainter</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3821.5, 194)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IndicatorRangeSliderThumbShape">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IndicatorRangeSliderThumbShape">
-								<text x="0.0" y="13.5" stroke="none" data-name="IndicatorRangeSliderThumbShape">+Size getPreferredSize()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="IndicatorRangeSliderThumbShape">+void paint()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="TextPainter">
-						<g fill="#eee8d5" stroke="#33322E" data-name="TextPainter">
-							<rect x="3801.3" y="873.5" height="31.0" width="106.0" data-name="TextPainter"></rect>
-						</g>
-						<g transform="translate(3801.25, 873.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TextPainter">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TextPainter">
-								<text x="45.0" y="13.5" stroke="none" text-anchor="middle" data-name="TextPainter">TextPainter</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="RangeSliderThumbShape">
-						<g fill="#eee8d5" stroke="#33322E" data-name="RangeSliderThumbShape">
-							<rect x="3856.0" y="15.5" height="31.0" width="218.0" data-name="RangeSliderThumbShape"></rect>
-						</g>
-						<g transform="translate(3856, 15.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="RangeSliderThumbShape">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RangeSliderThumbShape">
-								<text x="101.0" y="13.5" stroke="none" text-anchor="middle" data-name="RangeSliderThumbShape">RangeSliderThumbShape</text>
 								
 							</g>
 						</g>
@@ -1142,9 +1073,9 @@
 					</g>
 					<g data-name="FormArray">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormArray">
-							<rect x="4858.8" y="1666.5" height="31.0" width="98.0" data-name="FormArray"></rect>
+							<rect x="4622.3" y="1666.5" height="31.0" width="98.0" data-name="FormArray"></rect>
 						</g>
-						<g transform="translate(4858.75, 1666.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormArray">
+						<g transform="translate(4622.25, 1666.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormArray">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormArray">
 								<text x="41.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormArray">FormArray</text>
 								
@@ -1153,9 +1084,9 @@
 					</g>
 					<g data-name="AbstractControl">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AbstractControl">
-							<rect x="4680.8" y="1666.5" height="31.0" width="138.0" data-name="AbstractControl"></rect>
+							<rect x="4444.3" y="1666.5" height="31.0" width="138.0" data-name="AbstractControl"></rect>
 						</g>
-						<g transform="translate(4680.75, 1666.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="AbstractControl">
+						<g transform="translate(4444.25, 1666.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="AbstractControl">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AbstractControl">
 								<text x="61.0" y="13.5" stroke="none" text-anchor="middle" data-name="AbstractControl">AbstractControl</text>
 								
@@ -1164,9 +1095,9 @@
 					</g>
 					<g data-name="FormGroup">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormGroup">
-							<rect x="5771.3" y="1666.5" height="31.0" width="105.0" data-name="FormGroup"></rect>
+							<rect x="5444.3" y="1666.5" height="31.0" width="105.0" data-name="FormGroup"></rect>
 						</g>
-						<g transform="translate(5771.25, 1666.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
+						<g transform="translate(5444.25, 1666.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormGroup">
 								<text x="44.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormGroup">FormGroup</text>
 								
@@ -1175,9 +1106,9 @@
 					</g>
 					<g data-name="ManagedFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ManagedFormViewModel">
-							<rect x="5324.5" y="155.5" height="31.0" width="215.0" data-name="ManagedFormViewModel"></rect>
+							<rect x="4997.5" y="155.5" height="31.0" width="215.0" data-name="ManagedFormViewModel"></rect>
 						</g>
-						<g transform="translate(5324.5, 155.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ManagedFormViewModel">
+						<g transform="translate(4997.5, 155.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ManagedFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ManagedFormViewModel">
 								<text x="99.5" y="13.5" stroke="none" text-anchor="middle" data-name="ManagedFormViewModel">ManagedFormViewModel</text>
 								
@@ -1186,9 +1117,9 @@
 					</g>
 					<g data-name="IListActionProvider">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IListActionProvider">
-							<rect x="5579.5" y="155.5" height="31.0" width="164.0" data-name="IListActionProvider"></rect>
+							<rect x="5252.5" y="155.5" height="31.0" width="164.0" data-name="IListActionProvider"></rect>
 						</g>
-						<g transform="translate(5579.5, 155.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IListActionProvider">
+						<g transform="translate(5252.5, 155.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IListActionProvider">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IListActionProvider">
 								<text x="74.0" y="13.5" stroke="none" text-anchor="middle" data-name="IListActionProvider">IListActionProvider</text>
 								
@@ -1197,17 +1128,17 @@
 					</g>
 					<g data-name="WithQuestionnaireControls">
 						<g fill="#eee8d5" stroke="#33322E" data-name="WithQuestionnaireControls">
-							<rect x="5729.0" y="760.0" height="258.0" width="632.0" data-name="WithQuestionnaireControls"></rect>
-							<path d="M5729.0 791.0 L6361.0 791.0" fill="none" data-name="WithQuestionnaireControls"></path>
-							<path d="M5729.0 897.0 L6361.0 897.0" fill="none" data-name="WithQuestionnaireControls"></path>
+							<rect x="5402.0" y="760.0" height="258.0" width="632.0" data-name="WithQuestionnaireControls"></rect>
+							<path d="M5402.0 791.0 L6034.0 791.0" fill="none" data-name="WithQuestionnaireControls"></path>
+							<path d="M5402.0 897.0 L6034.0 897.0" fill="none" data-name="WithQuestionnaireControls"></path>
 						</g>
-						<g transform="translate(5729, 760)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="WithQuestionnaireControls">
+						<g transform="translate(5402, 760)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="WithQuestionnaireControls">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WithQuestionnaireControls">
 								<text x="308.0" y="13.5" stroke="none" text-anchor="middle" data-name="WithQuestionnaireControls">WithQuestionnaireControls</text>
 								
 							</g>
 						</g>
-						<g transform="translate(5729, 791)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WithQuestionnaireControls">
+						<g transform="translate(5402, 791)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WithQuestionnaireControls">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WithQuestionnaireControls">
 								<text x="0.0" y="13.5" stroke="none" data-name="WithQuestionnaireControls">+questionsArray: FormArray&lt;dynamic&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="WithQuestionnaireControls">+questionFormViewModels: FormViewModelCollection&lt;Q, QuestionFormData&gt;</text>
@@ -1218,7 +1149,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(5729, 897)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WithQuestionnaireControls">
+						<g transform="translate(5402, 897)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WithQuestionnaireControls">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WithQuestionnaireControls">
 								<text x="0.0" y="13.5" stroke="none" data-name="WithQuestionnaireControls">+void setQuestionnaireControlsFrom()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="WithQuestionnaireControls">+QuestionnaireFormData buildQuestionnaireFormData()</text>
@@ -1233,9 +1164,9 @@
 					</g>
 					<g data-name="FormViewModelCollection">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormViewModelCollection">
-							<rect x="6076.8" y="1666.5" height="31.0" width="219.0" data-name="FormViewModelCollection"></rect>
+							<rect x="5749.8" y="1666.5" height="31.0" width="219.0" data-name="FormViewModelCollection"></rect>
 						</g>
-						<g transform="translate(6076.75, 1666.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormViewModelCollection">
+						<g transform="translate(5749.75, 1666.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormViewModelCollection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormViewModelCollection">
 								<text x="101.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormViewModelCollection">FormViewModelCollection</text>
 								
@@ -1244,9 +1175,9 @@
 					</g>
 					<g data-name="IFormViewModelDelegate">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IFormViewModelDelegate">
-							<rect x="5783.5" y="155.5" height="31.0" width="217.0" data-name="IFormViewModelDelegate"></rect>
+							<rect x="5456.5" y="155.5" height="31.0" width="217.0" data-name="IFormViewModelDelegate"></rect>
 						</g>
-						<g transform="translate(5783.5, 155.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormViewModelDelegate">
+						<g transform="translate(5456.5, 155.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormViewModelDelegate">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormViewModelDelegate">
 								<text x="100.5" y="13.5" stroke="none" text-anchor="middle" data-name="IFormViewModelDelegate">IFormViewModelDelegate</text>
 								
@@ -1255,9 +1186,9 @@
 					</g>
 					<g data-name="IProviderArgsResolver">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IProviderArgsResolver">
-							<rect x="6040.5" y="155.5" height="31.0" width="193.0" data-name="IProviderArgsResolver"></rect>
+							<rect x="5713.5" y="155.5" height="31.0" width="193.0" data-name="IProviderArgsResolver"></rect>
 						</g>
-						<g transform="translate(6040.5, 155.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IProviderArgsResolver">
+						<g transform="translate(5713.5, 155.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IProviderArgsResolver">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IProviderArgsResolver">
 								<text x="88.5" y="13.5" stroke="none" text-anchor="middle" data-name="IProviderArgsResolver">IProviderArgsResolver</text>
 								
