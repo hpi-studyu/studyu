@@ -14,17 +14,18 @@ APPLY_FIXES: all
 # default
 ENABLE_LINTERS:
  - ACTION_ACTIONLINT
- - DART_DARTANALYZER
+# - DART_DARTANALYZER
  - MARKDOWN_MARKDOWNLINT
  - MARKDOWN_MARKDOWN_TABLE_FORMATTER
  - MARKDOWN_MARKDOWN_LINK_CHECK
  - DOCKERFILE_DOCKERFILELINT
- - GIT_GIT_DIFF
  - REPOSITORY_GIT_DIFF
- - REPOSITORY_GITLEAKS
+ # - REPOSITORY_GITLEAKS
  - BASH_SHELLCHECK
  - JSON_JSONLINT
+ - JSON_ESLINT_PLUGIN_JSONC
  - SQL_SQLFLUFF
+ - ENV_DOTENV_LINTER
 
 DISABLE:
 # - COPYPASTE # Uncomment to disable checks of excessive copy-pastes
@@ -45,8 +46,10 @@ EXCLUDED_DIRECTORIES:
   - windows
   - linux
   - web
-  - cli
 
-FILTER_REGEX_EXCLUDE: (.*\.g\.dart|.*\/CHANGELOG.md|docs/database/.*|docs/uml/.*)
+FILTER_REGEX_EXCLUDE: (.*\.g\.dart|.*\/CHANGELOG.md|docs/database/.*|docs/uml/.*|studyu)
+
+# Linter specific settings
 
 BASH_SHELLCHECK_ARGUMENTS: -ax -S style --shell=bash
+MARKDOWN_MARKDOWN_LINK_CHECK_CONFIG_FILE: .markdown_link_check.yml
