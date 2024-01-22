@@ -4,10 +4,6 @@ on:
     paths:
       - "database/**"
       - "docker/**"
-  pull_request:
-    paths:
-      - "database/**"
-      - "docker/**"
   workflow_dispatch:
 
 jobs:

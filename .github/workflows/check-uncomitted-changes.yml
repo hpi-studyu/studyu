@@ -11,7 +11,6 @@ on:
       - 'flutter_common/**'
       - 'app/**'
       - 'designer_v2/**'
-  pull_request:
   workflow_dispatch:
 
 jobs:

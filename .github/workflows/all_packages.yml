@@ -8,7 +8,6 @@ on:
       - "designer/**"
       - "flutter_common/**"
       - ".github/workflows/all_packages.yml"
-  pull_request:
   workflow_dispatch:
 
 jobs:

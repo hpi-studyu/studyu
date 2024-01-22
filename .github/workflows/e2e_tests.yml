@@ -6,7 +6,6 @@ on:
       - 'designer_v2/**'
       - 'core/**'
       - 'flutter_common/**'
-  pull_request:
   workflow_dispatch:
 
 concurrency:
