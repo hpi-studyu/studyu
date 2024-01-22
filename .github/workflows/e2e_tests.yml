@@ -31,7 +31,7 @@ jobs:
           docker compose -f docker/supabase/docker-compose.yml up -d
           docker compose -f docker/proxy/docker-compose-proxy.yml up -d
           while [ "$(docker inspect --format='{{.State.Health.Status}}' supabase-db)" != "healthy" ]; do sleep 1; done
-          cat ./database/app_config.sql.example | docker exec -i supabase-db psql -U postgres -d postgres
+          docker exec -i supabase-db psql -U postgres -d postgres < ./database/app_config.sql.example
 
       - name: Start Chrome Driver
         run: |

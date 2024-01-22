@@ -7,7 +7,7 @@ env_file="../.env"
 if [ -f "$env_file" ]; then
   # Source the .env file to set environment variables
   set -a
-  # shellcheck source=../.env
+  # shellcheck disable=SC1090
   . "$env_file"
   set +a
 else
@@ -38,10 +38,7 @@ sql_file="$1"
 docker cp "$sql_file" "$POSTGRES_HOST:/tmp/"
 
 # Connect to the PostgreSQL database and execute the SQL file from within the container
-docker exec -i "$POSTGRES_HOST" psql -h "$container_ip" -U "$db_username" -d "$POSTGRES_DB" -c "\i /tmp/$(basename "$sql_file")" > execute_supabase_sql_output.txt 2>&1
-
-# Check the exit code to see if the SQL script execution was successful
-if [ $? -eq 0 ]; then
+if docker exec -i "$POSTGRES_HOST" psql -h "$container_ip" -U "$db_username" -d "$POSTGRES_DB" -c "\i /tmp/$(basename "$sql_file")" > execute_supabase_sql_output.txt 2>&1; then
   echo "SQL script executed successfully."
 else
   echo "SQL script execution failed."

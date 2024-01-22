@@ -16,7 +16,7 @@ jobs:
         with:
           workflowId: 'publish_pubdev.yml'
       - name: Get the tag name
-        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_ENV"
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Decrypt files
