@@ -12,11 +12,23 @@ APPLY_FIXES: all
 
 # If you use ENABLE_LINTERS variable, all other linters will be disabled by
 # default
-# ENABLE_LINTERS:
+ENABLE_LINTERS:
+ - ACTION_ACTIONLINT
+ - DART_DARTANALYZER
+ - MARKDOWN_MARKDOWNLINT
+ - MARKDOWN_MARKDOWN_TABLE_FORMATTER
+ - MARKDOWN_MARKDOWN_LINK_CHECK
+ - DOCKERFILE_DOCKERFILELINT
+ - GIT_GIT_DIFF
+ - REPOSITORY_GIT_DIFF
+ - REPOSITORY_GITLEAKS
+ - BASH_SHELLCHECK
+ - JSON_JSONLINT
+ - SQL_SQLFLUFF
 
-# DISABLE:
-  # - COPYPASTE # Uncomment to disable checks of excessive copy-pastes
-  # - SPELL # Uncomment to disable checks of spelling mistakes
+DISABLE:
+# - COPYPASTE # Uncomment to disable checks of excessive copy-pastes
+ - SPELL # Uncomment to disable checks of spelling mistakes
 
 SHOW_ELAPSED_TIME: true
 
@@ -27,5 +39,14 @@ FILEIO_REPORTER: false
 
 EXCLUDED_DIRECTORIES:
   - .git
+  - android
+  - ios
+  - macos
+  - windows
+  - linux
+  - web
+  - cli
 
 FILTER_REGEX_EXCLUDE: (.*\.g\.dart|.*\/CHANGELOG.md|docs/database/.*|docs/uml/.*)
+
+BASH_SHELLCHECK_ARGUMENTS: -ax -S style --shell=bash
