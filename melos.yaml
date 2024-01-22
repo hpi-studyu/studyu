@@ -20,20 +20,11 @@ command:
 
 scripts:
   analyze:
-    # Exit with success if markdownlint is not installed so it's not a requirement
-    # (stream redirection has to be POSIX compliant for GH runners)
     run: |
       melos exec -c 6 -- \
         "flutter analyze --fatal-infos ."
-      if markdownlint -V >/dev/null 2>&1; then
-        printf "\n\033[1mLinting Markdown files ...\033[0;31m\n\n"
-        markdownlint --ignore-path '.meta/.markdownlintignore' --config '.meta/.mdlrc' './**/*.md' \
-          && printf "\033[0;32mSuccess!\033[0m\n"
-      else
-        printf "\n\033[1mCannot lint markdown files since markdownlint is not installed.\033[0m\n\n"
-      fi
     description: |
-      Run `dart analyze` in all packages, and, if `markdownlint` is installed, lint Markdown files.
+      Run `dart analyze` in all packages.
        - Note: you can also rely on your IDEs Dart Analysis / Issues window.
 
   fix:
