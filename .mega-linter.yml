@@ -53,3 +53,4 @@ FILTER_REGEX_EXCLUDE: (.*\.g\.dart|.*\/CHANGELOG.md|docs/database/.*|docs/uml/.*
 
 BASH_SHELLCHECK_ARGUMENTS: -ax -S style --shell=bash
 MARKDOWN_MARKDOWN_LINK_CHECK_CONFIG_FILE: .markdown_link_check.yml
+ACTION_ACTIONLINT_FILTER_REGEX_EXCLUDE: (.*\/.github\/workflows\/init-workspace\/action\.yml)
