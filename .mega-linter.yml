@@ -24,7 +24,7 @@ ENABLE_LINTERS:
  - BASH_SHELLCHECK
  - JSON_JSONLINT
  - JSON_ESLINT_PLUGIN_JSONC
- - SQL_SQLFLUFF
+# - SQL_SQLFLUFF
  - ENV_DOTENV_LINTER
 
 DISABLE:
@@ -47,10 +47,11 @@ EXCLUDED_DIRECTORIES:
   - linux
   - web
 
-FILTER_REGEX_EXCLUDE: (.*\.g\.dart|.*\/CHANGELOG.md|docs/database/.*|docs/uml/.*|studyu)
+FILTER_REGEX_EXCLUDE: (.*\.g\.dart|.*\/CHANGELOG.md|docs/database/.*|docs/uml/.*|studyu|docker\/supabase\/volumes\/.*)
 
 # Linter specific settings
 
 BASH_SHELLCHECK_ARGUMENTS: -ax -S style --shell=bash
 MARKDOWN_MARKDOWN_LINK_CHECK_CONFIG_FILE: .markdown_link_check.yml
 ACTION_ACTIONLINT_FILTER_REGEX_EXCLUDE: (.*\/.github\/workflows\/init-workspace\/action\.yml)
+# SQL_SQLFLUFF_CONFIG_FILE: .sqlfluff
