@@ -1,4 +1,8 @@
-#!/usr/bin/env bash
+#!/opt/homebrew/bin/bash
+
+export LC_CTYPE=C 
+export LANG=C
+alias sed='gsed'
 
 # This script is a CLI for the StudyU project and wraps the Docker Compose commands.
 # It can be used to start and stop the StudyU components and to configure the deployment settings.
