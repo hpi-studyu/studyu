@@ -21,21 +21,13 @@ concurrency:
 jobs:
   generate-docs:
     runs-on: ubuntu-latest
-
     steps:
       - name: "Check out repo"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: "Set up Flutter"
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - name: "Install melos"
-        run: dart pub global activate melos
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
       - name: "Install dcdg"
         run: dart pub global activate dcdg
 

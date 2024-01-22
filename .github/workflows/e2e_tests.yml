@@ -22,18 +22,14 @@ jobs:
           workflowId: 'publish_pubdev.yml'
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup ChromeDriver
         uses: nanasess/setup-chromedriver@v2
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
       - name: Enable web support
         run: flutter config --enable-web
-      - name: Install melos
-        run: dart pub global activate melos
-      - name: "Bootstrap Workspace"
-        run: dart pub get && melos bootstrap
       - name: Initialize Supabase
         run: |
           docker network create studyu_network || true

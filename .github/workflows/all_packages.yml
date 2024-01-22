@@ -11,49 +11,43 @@ on:
       - ".github/workflows/init-workspace/**"
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.ref }}-all-packages
+  cancel-in-progress: true
+
 jobs:
-  prepare:
+  analyze:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: .
-          key: init-workspace
-
-  analyze:
-    needs: prepare
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/cache@v3
-        with:
-          path: .
-          key: init-workspace
       - name: Run analyze
         run: melos run analyze
 
   format:
-    needs: prepare
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/cache@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          path: .
-          key: init-workspace
+          fetch-depth: 0
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
       - name: Run format
         run: melos run format:ci
 
   test:
-    needs: prepare
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/cache@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          path: .
-          key: init-workspace
+          fetch-depth: 0
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
       - name: Run Test
         run: melos run test --no-select

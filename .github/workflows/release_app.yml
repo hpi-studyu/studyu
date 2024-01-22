@@ -6,6 +6,10 @@ on:
       - 'studyu_app-v*'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.ref }}-github-release
+  cancel-in-progress: true
+
 jobs:
   github-release:
     name: Create Github Release
@@ -19,6 +23,8 @@ jobs:
         run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_ENV"
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Decrypt files
         id: decrypt_files
         run: |

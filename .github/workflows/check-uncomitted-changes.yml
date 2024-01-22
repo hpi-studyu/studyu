@@ -13,6 +13,10 @@ on:
       - 'designer_v2/**'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.ref }}-uncommitted-changes
+  cancel-in-progress: true
+
 jobs:
   check_changes:
     runs-on: ubuntu-latest
@@ -20,14 +24,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
         with:
-          channel: stable
-      - name: Install melos
-        run: dart pub global activate melos
-      - name: Bootstrap workspace
-        run: melos bootstrap
+          fetch-depth: 0
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
       - name: Generate code
         run: melos run generate
       - name: Check for uncommitted changes
