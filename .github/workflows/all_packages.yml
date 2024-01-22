@@ -1,4 +1,4 @@
-name: All packages
+name: All Packages
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
       - "designer/**"
       - "flutter_common/**"
       - ".github/workflows/all_packages.yml"
+      - ".github/workflows/init-workspace/**"
   workflow_dispatch:
 
 jobs:
@@ -16,16 +17,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - name: Install melos
-        run: dart pub global activate melos
-      - name: Bootstrap workspace
-        run: melos bootstrap
-      - name: Dart pub root project
-        run: dart pub get
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
       - name: Run analyze
         run: melos run analyze
 
@@ -34,16 +27,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - name: Install melos
-        run: dart pub global activate melos
-      - name: Bootstrap workspace
-        run: melos bootstrap
-      - name: Dart pub root project
-        run: dart pub get
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
       - name: Run format
         run: melos run format:ci
 
@@ -52,15 +37,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - name: Install melos
-        run: dart pub global activate melos
-      - name: Bootstrap workspace
-        run: melos bootstrap
-      - name: Dart pub root project
-        run: dart pub get
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
       - name: Run Test
         run: melos run test --no-select
