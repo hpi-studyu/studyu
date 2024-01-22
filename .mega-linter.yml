@@ -25,5 +25,10 @@ FILEIO_REPORTER: false
 # Uncomment if you want MegaLinter to detect errors but not block CI to pass
 # DISABLE_ERRORS: true
 
-#EXCLUDED_DIRECTORIES:
-#  - .git
+EXCLUDED_DIRECTORIES:
+  - .git
+  - docs/database
+  - docs/uml
+
+FILTER_REGEX_EXCLUDE:
+  (.*\.g\.dart | CHANGELOG.md)
