@@ -26,7 +26,8 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel = ref.read(interventionsFormViewModelProvider(studyId));
+        final formViewModel =
+            ref.read(interventionsFormViewModelProvider(studyId));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -52,9 +53,11 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                   builder: (context, formArray, child) {
                     return FormArrayTable<InterventionFormViewModel>(
                       control: formViewModel.interventionsArray,
-                      items: formViewModel.interventionsCollection.formViewModels,
+                      items:
+                          formViewModel.interventionsCollection.formViewModels,
                       onSelectItem: formViewModel.onSelectItem,
-                      getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
+                      getActionsAt: (viewModel, _) =>
+                          formViewModel.availablePopupActions(viewModel),
                       onNewItem: formViewModel.onNewItem,
                       onNewItemLabel: tr.form_array_interventions_new,
                       rowTitle: (viewModel) => viewModel.formData?.title ?? '',
@@ -62,7 +65,8 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                       sectionTitleDivider: false,
                       emptyIcon: Icons.content_paste_off_rounded,
                       emptyTitle: tr.form_array_interventions_empty_title,
-                      emptyDescription: tr.form_array_interventions_empty_description,
+                      emptyDescription:
+                          tr.form_array_interventions_empty_description,
                       hideLeadingTrailingWhenEmpty: true,
                       rowPrefix: (context, viewModel, rowIdx) {
                         return Row(
@@ -70,7 +74,9 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                             Text(
                               ''.alphabetLetterFrom(rowIdx).toUpperCase(),
                               style: TextStyle(
-                                color: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.color,
+                                color: ThemeConfig.dropdownMenuItemTheme(theme)
+                                    .iconTheme!
+                                    .color,
                               ),
                             ),
                             const SizedBox(width: 16.0),
@@ -105,6 +111,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
               const SizedBox(height: 12.0),
               // TODO study schedule illustration
               StudyScheduleFormView(formViewModel: formViewModel),
+              // num interventions
             ],
           ),
         );

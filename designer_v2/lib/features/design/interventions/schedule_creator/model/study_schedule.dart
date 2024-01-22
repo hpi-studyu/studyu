@@ -69,7 +69,7 @@ class Baseline extends StudyScheduleSegment {
 
 class Alternating extends StudyScheduleSegment {
   @override
-  final String type = "alterating";
+  final String type = "alternating";
 
   int interventionDuration;
   int cycleAmount;

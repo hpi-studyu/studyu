@@ -23,6 +23,8 @@ class _ReorderableListViewExampleState extends State<ReorderableExample> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      // set width to 100% of parent
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // list interventions
         // _schedule.interventions.isEmpty
@@ -66,10 +68,6 @@ class _ReorderableListViewExampleState extends State<ReorderableExample> {
               icon: const Icon(Icons.arrow_drop_down_sharp),
               elevation: 16,
               style: const TextStyle(color: Colors.deepPurple),
-              // underline: Container(
-              //   height: 2,
-              //   color: Colors.deepPurpleAccent,
-              // ),
               onChanged: (String? value) {
                 // This is called when the user selects an item.
                 setState(() {
@@ -104,7 +102,10 @@ class _ReorderableListViewExampleState extends State<ReorderableExample> {
             ),
           ],
         ),
-        Text("Total Duration: ${_schedule.duration} days"),
+        Text(
+          "Total Duration: ${_schedule.duration} days",
+          textAlign: TextAlign.center,
+        ),
       ],
     );
   }

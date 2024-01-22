@@ -8,13 +8,19 @@ class StudyScheduleFormData implements IStudyFormData {
       required this.sequenceTypeCustom,
       required this.numCycles,
       required this.phaseDuration,
-      required this.includeBaseline});
+      required this.includeBaseline,
+      
+      
+      });
 
   final PhaseSequence sequenceType;
   final String sequenceTypeCustom;
   final int numCycles;
   final int phaseDuration;
   final bool includeBaseline;
+
+
+
 
   factory StudyScheduleFormData.fromDomainModel(StudySchedule schedule) {
     return StudyScheduleFormData(
