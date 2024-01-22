@@ -7,9 +7,8 @@ on:
       - "core/**"
       - "designer/**"
       - "flutter_common/**"
-      - "notebook_uploader/**"
-      - "repo_generator/**"
       - ".github/workflows/all_packages.yml"
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -17,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -26,6 +25,8 @@ jobs:
         run: dart pub global activate melos
       - name: Bootstrap workspace
         run: melos bootstrap
+      - name: Dart pub root project
+        run: dart pub get
       - name: Run analyze
         run: melos run analyze
 
@@ -33,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -42,6 +43,8 @@ jobs:
         run: dart pub global activate melos
       - name: Bootstrap workspace
         run: melos bootstrap
+      - name: Dart pub root project
+        run: dart pub get
       - name: Run format
         run: melos run format:ci
 
@@ -49,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -58,5 +61,7 @@ jobs:
         run: dart pub global activate melos
       - name: Bootstrap workspace
         run: melos bootstrap
+      - name: Dart pub root project
+        run: dart pub get
       - name: Run Test
         run: melos run test --no-select

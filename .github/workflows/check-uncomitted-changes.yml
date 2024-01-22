@@ -11,6 +11,7 @@ on:
       - 'flutter_common/**'
       - 'app/**'
       - 'designer_v2/**'
+  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -19,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:

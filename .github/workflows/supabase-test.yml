@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Seed database
         run: cp database/studyu-schema.sql docker/supabase/seed.sql
