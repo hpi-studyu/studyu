@@ -125,7 +125,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
   ///
   /// Note: [AbstractControl.dirty] does not work reliably when the [form]'s
   /// values are initialized in [setControlsFrom] (controls that are set
-  /// programmatically are incorrectly marked as dirty without any user input)
+  /// programmatically are incorrectly marked as dirty without any user input).
   bool get isDirty {
     _rememberDefaultControlStates();
 
@@ -133,11 +133,6 @@ abstract class FormViewModel<T> implements IFormGroupController {
       control.markAsEnabled(emitEvent: false, updateParent: false);
     }
     final isEqual = jsonEncode(prevFormValue) == jsonEncode(form.value);
-
-    // Note: unfortunately this line is needed because despite disabling
-    // all the updateParent and emitEvent flags, there's a bug in reactive
-    // forms where the updateParent gets propagated & causes an infinite loop
-    prevFormValue = {...form.value};
 
     for (final control in form.controls.values) {
       control.markAsEnabled(emitEvent: false, updateParent: false);
@@ -236,7 +231,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
   /// Updates & re-evaluates [AbstractControl.validators] and
   /// [AbstractControl.asyncValidators] for all [FormControl]'s in the
   /// current [form] (or the [FormGroup] itself) with the validators of
-  /// the [FormValidationConfig]corresponding to the given [validationSet]
+  /// the [FormValidationConfig] corresponding to the given [validationSet]
   /// (as defined in [sharedValidationConfig])
   ///
   /// Note: this will only look at immediate child controls of the [form]
