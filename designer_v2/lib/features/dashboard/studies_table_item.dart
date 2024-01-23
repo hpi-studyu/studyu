@@ -77,8 +77,12 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       child: LayoutBuilder(builder: (_, constraints) {
         return Material(
           color: theme.colorScheme.onPrimary,
-          borderRadius: const BorderRadius.all(Radius.circular(4)),
-          elevation: isHovering ? 4.0 : 1.5,
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
+            side:
+                BorderSide(color: theme.colorScheme.primaryContainer.withOpacity(0.9), width: isHovering ? 1.5 : 0.75),
+          ),
+          elevation: 0.0,
           child: InkWell(
             onTap: () => widget.onTap?.call(widget.study),
             onHover: (hover) {
