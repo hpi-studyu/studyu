@@ -11,6 +11,10 @@ on:
       - 'flutter_common/**'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.ref }}-deploy-apps
+  cancel-in-progress: true
+
 jobs:
   play-store-release:
     name: Create Play Store Release
@@ -21,9 +25,11 @@ jobs:
         with:
           workflowId: 'publish_pubdev.yml'
       - name: Get the tag name
-        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_ENV"
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up ruby env
         uses: ruby/setup-ruby@v1
         with:
@@ -60,7 +66,9 @@ jobs:
         with:
           workflowId: 'publish_pubdev.yml'
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up ruby env
         uses: ruby/setup-ruby@v1
         with:

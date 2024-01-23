@@ -94,16 +94,16 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     required T result,
     bool? offline,
   }) async {
-    late final Result<T> resultObject;
-    switch (T) {
-      case == QuestionnaireState:
-        resultObject = Result<T>.app(type: 'QuestionnaireState', periodId: periodId, result: result);
-      case == bool:
-        resultObject = Result<T>.app(type: 'bool', periodId: periodId, result: result);
-      default:
-        print('Unsupported question type: $T');
-        resultObject = Result<T>.app(type: 'unknown', periodId: periodId, result: result);
+    final Result<T> resultObject = switch (result) {
+      QuestionnaireState() => Result<T>.app(type: 'QuestionnaireState', periodId: periodId, result: result),
+      bool() => Result<T>.app(type: 'bool', periodId: periodId, result: result),
+      _ => Result<T>.app(type: 'unknown', periodId: periodId, result: result),
+    };
+
+    if (resultObject.type == 'unknown') {
+      print('Unsupported question type: $T');
     }
+
     SubjectProgress p = SubjectProgress(
       subjectId: id,
       interventionId: getInterventionForDate(DateTime.now())!.id,

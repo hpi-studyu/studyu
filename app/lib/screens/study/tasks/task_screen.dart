@@ -34,23 +34,22 @@ class _TaskScreenState extends State<TaskScreen> {
     taskInstance = TaskInstance.fromInstanceId(widget.taskInstance.id, study: subject!.study);
   }
 
-  Widget? _buildTask() {
-    switch (taskInstance.task.runtimeType) {
-      case == CheckmarkTask:
+  Widget _buildTask() {
+    switch (taskInstance.task) {
+      case CheckmarkTask checkmarkTask:
         return CheckmarkTaskWidget(
-          task: taskInstance.task as CheckmarkTask,
+          task: checkmarkTask,
           key: UniqueKey(),
           completionPeriod: taskInstance.completionPeriod,
         );
-      case == QuestionnaireTask:
+      case QuestionnaireTask questionnaireTask:
         return QuestionnaireTaskWidget(
-          task: taskInstance.task as QuestionnaireTask,
+          task: questionnaireTask,
           key: UniqueKey(),
           completionPeriod: taskInstance.completionPeriod,
         );
       default:
-        print('${taskInstance.task.runtimeType} is not a supported Task!');
-        return null;
+        throw ArgumentError('Task ${taskInstance.task.type} not supported');
     }
   }
 
@@ -93,7 +92,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 ),
               ]),
               const SizedBox(height: 20),
-              _buildTask()!,
+              _buildTask(),
             ],
           ),
         ),

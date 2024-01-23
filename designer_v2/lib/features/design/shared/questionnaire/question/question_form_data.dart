@@ -13,19 +13,19 @@ typedef SurveyQuestionFormDataFactory = QuestionFormData Function(
 abstract class QuestionFormData implements IFormData {
   static Map<SurveyQuestionType, SurveyQuestionFormDataFactory> questionTypeFormDataFactories = {
     SurveyQuestionType.scale: (question, eligibilityCriteria) {
-      switch (question.runtimeType) {
+      switch (question) {
         // First check for general scale which implements the other interfaces
-        case ScaleQuestion:
-          return ScaleQuestionFormData.fromDomainModel(question as ScaleQuestion, eligibilityCriteria);
+        case ScaleQuestion scaleQuestion:
+          return ScaleQuestionFormData.fromDomainModel(scaleQuestion, eligibilityCriteria);
         // Remain backward compatible with specialized scale types
-        case AnnotatedScaleQuestion:
+        case AnnotatedScaleQuestion annotatedScaleQuestion:
           return ScaleQuestionFormData.fromDomainModel(
-            ScaleQuestion.fromAnnotatedScaleQuestion(question as AnnotatedScaleQuestion),
+            ScaleQuestion.fromAnnotatedScaleQuestion(annotatedScaleQuestion),
             eligibilityCriteria,
           );
-        case VisualAnalogueQuestion:
+        case VisualAnalogueQuestion visualAnalogueQuestion:
           return ScaleQuestionFormData.fromDomainModel(
-            ScaleQuestion.fromVisualAnalogueQuestion(question as VisualAnalogueQuestion),
+            ScaleQuestion.fromVisualAnalogueQuestion(visualAnalogueQuestion),
             eligibilityCriteria,
           );
       }

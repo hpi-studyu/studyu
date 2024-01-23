@@ -5,12 +5,19 @@ name: Deploy to Firebase Hosting on PR
 on:
   pull_request:
     paths:
-      - '**.dart'
-      - '**/pubspec.yaml'
-      - '**/pubspec.lock'
+      - 'app/**'
+      - 'designer_v2/**'
+      - 'core/**'
+      - 'flutter_common/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
       - 'melos.yaml'
       - 'firebase.json'
       - '.firebaserc'
+
+concurrency:
+  group: ${{ github.ref }}-pr
+  cancel-in-progress: true
 
 jobs:
   build_and_preview:
@@ -22,17 +29,14 @@ jobs:
         with:
           workflowId: 'publish_pubdev.yml'
       - name: Checkout code
-        uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
+        uses: actions/checkout@v4
         with:
-          channel: stable
+          fetch-depth: 0
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
       - name: Enable web support
         run: flutter config --enable-web
-      - name: Install melos
-        run: dart pub global activate melos
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
-      - name: "Build Web"
+      - name: Build Web
         run: melos run build:web:dev --no-select
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
