@@ -1,3 +1,9 @@
+## 2.6.5-dev.1
+
+ - **FIX**: upgrade deps. ([304430c8](https://github.com/hpi-studyu/studyu/commit/304430c858d4035a279b42114c7ccf86299357a2))
+ - **FIX**: type checks and matching. ([92629cb4](https://github.com/hpi-studyu/studyu/commit/92629cb4395d8e456a0531647d6ba1de4a77a92f))
+ - **FIX**: type checks. ([b85e073d](https://github.com/hpi-studyu/studyu/commit/b85e073d7075b8d45d15f32e62d5761416cdad4a))
+
 ## 2.6.5-dev.0
 
  - **FIX**: refresh dashboard on app resume. ([9bcd0e51](https://github.com/hpi-studyu/studyu/commit/9bcd0e5159d80e1f4cd4948f0ee8956705cd8c38))

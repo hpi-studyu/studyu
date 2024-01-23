@@ -1,3 +1,13 @@
+## 1.6.2-dev.1
+
+ - **REFACTOR**: replace custom validators with native ones. ([e7d8c50b](https://github.com/hpi-studyu/studyu/commit/e7d8c50bb419520ce0889a71a0295c239aa62807))
+ - **FIX**: upgrade deps. ([304430c8](https://github.com/hpi-studyu/studyu/commit/304430c858d4035a279b42114c7ccf86299357a2))
+ - **FIX**: type checks. ([b85e073d](https://github.com/hpi-studyu/studyu/commit/b85e073d7075b8d45d15f32e62d5761416cdad4a))
+ - **FIX**: validate email on signup. ([e5257abe](https://github.com/hpi-studyu/studyu/commit/e5257abe64031731d4c2cfba389f5460bca9a618))
+ - **FIX**: show auth validation messages. ([eb7c5a46](https://github.com/hpi-studyu/studyu/commit/eb7c5a463ce02676802bdb06f21225531d21d6db))
+ - **FIX**: isDirty evaluation is now based on current state. ([1a24011f](https://github.com/hpi-studyu/studyu/commit/1a24011fe29f711aac37fb1e35b461ee62eaa77e))
+ - **FIX**: replace deprecated popcallback with popentry. ([d35d0e4f](https://github.com/hpi-studyu/studyu/commit/d35d0e4f3e5b94b5f1d18138969370f3f0876022))
+
 ## 1.6.2-dev.0
 
  - Update a dependency to the latest release.
