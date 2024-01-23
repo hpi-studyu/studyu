@@ -26,11 +26,22 @@ Future<void> navigateToStudyOverview(
   Navigator.pushNamed(context, Routes.studyOverview);
 }
 
+class StudySelectionScreenArgs {
+  final List<Study> subStudies;
+
+  StudySelectionScreenArgs({this.subStudies = const []});
+}
+
 class StudySelectionScreen extends StatelessWidget {
   const StudySelectionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    List<Study> subStudies = [];
+    final args = ModalRoute.of(context)!.settings.arguments;
+    if (args is StudySelectionScreenArgs) {
+      subStudies = args.subStudies;
+    }
     final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
@@ -42,7 +53,9 @@ class StudySelectionScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.study_selection_description,
+                      subStudies.isEmpty
+                          ? AppLocalizations.of(context)!.study_selection_description
+                          : AppLocalizations.of(context)!.sub_study_selection_description,
                       style: theme.textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
@@ -76,17 +89,34 @@ class StudySelectionScreen extends StatelessWidget {
               ),
               Expanded(
                 child: RetryFutureBuilder<List<Study>>(
-                  tryFunction: () async => Study.publishedPublicStudies(),
+                  tryFunction: () async =>
+                      subStudies.isEmpty ? Study.publishedPublicStudies() : Future.value(subStudies),
                   successBuilder: (BuildContext context, List<Study>? studies) {
+                    // Filter out sub-studies and templates without sub studies
+                    final filteredStudies = subStudies.isEmpty
+                        ? studies!
+                            .where((study) =>
+                                !study.isSubStudy &&
+                                (!study.isTemplate || studies.any((s) => s.parentTemplateId == study.id)))
+                            .toList()
+                        : studies!;
+
                     return ListView.builder(
-                      itemCount: studies!.length,
+                      itemCount: filteredStudies.length,
                       itemBuilder: (context, index) {
+                        final study = filteredStudies[index];
                         return Hero(
-                          tag: 'study_tile_${studies[index].id}',
+                          tag: 'study_tile_${study.id}',
                           child: Material(
                             child: StudyTile.fromStudy(
-                              study: studies[index],
-                              onTap: () => navigateToStudyOverview(context, studies[index]),
+                              study: study,
+                              onTap: () => study.isTemplate
+                                  ? Navigator.pushNamed(context, Routes.studySelection,
+                                      arguments: StudySelectionScreenArgs(
+                                          subStudies: studies
+                                              .where((s) => s.isSubStudy && s.parentTemplateId == study.id)
+                                              .toList()))
+                                  : navigateToStudyOverview(context, study),
                             ),
                           ),
                         );
