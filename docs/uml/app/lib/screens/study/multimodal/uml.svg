@@ -1,11 +1,11 @@
 <svg version="1.1" baseProfile="full" width="460.0" height="133.0" viewbox="0 0 460 133" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[RecordAudioScreen
+	<desc >[CapturePictureScreen
 	  |
 	  +userId: String;
 	  +studyId: String
 	]
 	
-	[CapturePictureScreen
+	[RecordAudioScreen
 	  |
 	  +userId: String;
 	  +studyId: String
@@ -19,40 +19,40 @@
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)">
-					<g data-name="RecordAudioScreen">
-						<g fill="#eee8d5" stroke="#33322E" data-name="RecordAudioScreen">
-							<rect x="0.0" y="0.0" height="77.0" width="174.0" data-name="RecordAudioScreen"></rect>
-							<path d="M0.0 31.0 L174.0 31.0" fill="none" data-name="RecordAudioScreen"></path>
-						</g>
-						<g transform="translate(0, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RecordAudioScreen">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RecordAudioScreen">
-								<text x="79.0" y="13.5" stroke="none" text-anchor="middle" data-name="RecordAudioScreen">RecordAudioScreen</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RecordAudioScreen">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RecordAudioScreen">
-								<text x="0.0" y="13.5" stroke="none" data-name="RecordAudioScreen">+userId: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="RecordAudioScreen">+studyId: String</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="CapturePictureScreen">
 						<g fill="#eee8d5" stroke="#33322E" data-name="CapturePictureScreen">
-							<rect x="214.0" y="0.0" height="77.0" width="190.0" data-name="CapturePictureScreen"></rect>
-							<path d="M214.0 31.0 L404.0 31.0" fill="none" data-name="CapturePictureScreen"></path>
+							<rect x="0.0" y="0.0" height="77.0" width="190.0" data-name="CapturePictureScreen"></rect>
+							<path d="M0.0 31.0 L190.0 31.0" fill="none" data-name="CapturePictureScreen"></path>
 						</g>
-						<g transform="translate(214, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CapturePictureScreen">
+						<g transform="translate(0, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CapturePictureScreen">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CapturePictureScreen">
 								<text x="87.0" y="13.5" stroke="none" text-anchor="middle" data-name="CapturePictureScreen">CapturePictureScreen</text>
 								
 							</g>
 						</g>
-						<g transform="translate(214, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CapturePictureScreen">
+						<g transform="translate(0, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CapturePictureScreen">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CapturePictureScreen">
 								<text x="0.0" y="13.5" stroke="none" data-name="CapturePictureScreen">+userId: String</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="CapturePictureScreen">+studyId: String</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="RecordAudioScreen">
+						<g fill="#eee8d5" stroke="#33322E" data-name="RecordAudioScreen">
+							<rect x="230.0" y="0.0" height="77.0" width="174.0" data-name="RecordAudioScreen"></rect>
+							<path d="M230.0 31.0 L404.0 31.0" fill="none" data-name="RecordAudioScreen"></path>
+						</g>
+						<g transform="translate(230, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RecordAudioScreen">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RecordAudioScreen">
+								<text x="79.0" y="13.5" stroke="none" text-anchor="middle" data-name="RecordAudioScreen">RecordAudioScreen</text>
+								
+							</g>
+						</g>
+						<g transform="translate(230, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RecordAudioScreen">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RecordAudioScreen">
+								<text x="0.0" y="13.5" stroke="none" data-name="RecordAudioScreen">+userId: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="RecordAudioScreen">+studyId: String</text>
 								
 							</g>
 						</g>
