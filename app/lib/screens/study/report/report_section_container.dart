@@ -9,12 +9,6 @@ import 'report_section_widget.dart';
 typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, StudySubject subject);
 
 class ReportSectionContainer extends StatelessWidget {
-  static Map<Type, SectionBuilder> sectionTypes = {
-    AverageSection: (section, instance) => AverageSectionWidget(instance, section as AverageSection),
-    LinearRegressionSection: (section, instance) =>
-        LinearRegressionSectionWidget(instance, section as LinearRegressionSection),
-  };
-
   final ReportSection section;
   final StudySubject subject;
   final bool primary;
@@ -22,7 +16,12 @@ class ReportSectionContainer extends StatelessWidget {
 
   const ReportSectionContainer(this.section, {super.key, required this.subject, this.onTap, this.primary = false});
 
-  ReportSectionWidget buildContents(BuildContext context) => sectionTypes[section.runtimeType]!(section, subject);
+  ReportSectionWidget buildContents(BuildContext context) => switch (section) {
+        AverageSection averageSection => AverageSectionWidget(subject, averageSection),
+        LinearRegressionSection linearRegressionSection =>
+          LinearRegressionSectionWidget(subject, linearRegressionSection),
+        _ => throw ArgumentError('Section type ${section.type} not supported.'),
+      };
 
   List<Widget> buildPrimaryHeader(BuildContext context, ThemeData theme) => [
         Text(
