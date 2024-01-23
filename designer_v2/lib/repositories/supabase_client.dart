@@ -44,7 +44,6 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
   Future<List<T>> getAll<T extends SupabaseObject>({List<String> selectedColumns = const ['*']}) async {
     try {
       final data = await supabaseClient.from(tableName(T)).select(selectedColumns.join(','));
-      if (data == null) return [];
       return deserializeList<T>(data);
     } on PostgrestException catch (error) {
       throw SupabaseQueryError(statusCode: error.code, message: error.message, details: error.details);

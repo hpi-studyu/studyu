@@ -72,7 +72,7 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
       });
     } catch (e) {
       if (kDebugMode) {
-        print(AppLocalizations.of(context)!.error_recording + ": $e");
+        print("${AppLocalizations.of(context)!.error_recording}: $e");
       }
     }
   }
