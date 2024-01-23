@@ -45,9 +45,10 @@ class StudiesTableItem extends StatefulWidget {
 }
 
 class _StudiesTableItemState extends State<StudiesTableItem> {
-  bool isHovering = false;
-  bool isHoveringPin = false;
+  Study? hoveredStudy;
   bool isExpanded = false;
+
+  bool get isHovering => hoveredStudy != null;
 
   @override
   Widget build(BuildContext context) {
@@ -89,18 +90,15 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       final List<Widget> subRows = [];
 
       if (isExpanded && studyGroup.subStudies.isNotEmpty) {
+        subRows.add(Divider(
+          thickness: isHovering ? 1.5 : 0.75,
+          color: theme.colorScheme.primaryContainer.withOpacity(0.9),
+          height: 0.0,
+        ));
         for (final subStudy in studyGroup.subStudies) {
           final subActions = widget.getSubActions(studyGroup, studyGroup.subStudies.indexOf(subStudy));
           subRows.add(_buildStudyRow(theme, subStudy, actions: subActions));
-          subRows.add(const Divider(
-            thickness: 0.3,
-          ));
         }
-        subRows.removeLast();
-        subRows.add(const Divider(
-          thickness: 0.3,
-          color: Colors.transparent,
-        ));
       }
 
       return Column(
@@ -118,8 +116,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
 
   Widget _buildStudyRow(ThemeData theme, Study study,
       {required List<ModelAction> actions, int? participantCount, int? activeSubjectCount, int? endedCount}) {
-    final normalTextStyle = isExpanded && study.isTemplate ? const TextStyle(fontWeight: FontWeight.bold) : null;
-
+    const TextStyle? normalTextStyle = null;
     TextStyle? mutedTextStyleIfZero(int value) {
       return (value > 0) ? normalTextStyle : ThemeConfig.bodyTextBackground(theme).merge(normalTextStyle);
     }
@@ -141,7 +138,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       },
       onHover: (hover) {
         setState(() {
-          isHovering = hover;
+          hoveredStudy = hover ? study : null;
         });
       },
       hoverColor: theme.colorScheme.onPrimary,
@@ -168,7 +165,16 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                               ),
                             ),
                           )
-                        : const SizedBox.shrink()),
+                        : (study.isSubStudy && hoveredStudy == study
+                            ? const Align(
+                                alignment: Alignment.centerRight,
+                                child: Icon(
+                                  Icons.subdirectory_arrow_right_rounded,
+                                  color: Colors.grey,
+                                  size: 16,
+                                ),
+                              )
+                            : const SizedBox.shrink())),
                 SizedBox(width: widget.columnSizes[0].collapsed ? 0 : widget.columnSpacing),
                 widget.columnSizes[1].createContainer(
                   child: Text(
@@ -224,13 +230,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
         ),
       ),
     );
-    return study.isTemplate
-        ? Material(
-            color: theme.colorScheme.onPrimary,
-            elevation: isExpanded ? 1.5 : 0.0,
-            child: row,
-          )
-        : row;
+    return row;
   }
 
   Widget _buildActionMenu(BuildContext context, List<ModelAction> actions) {
