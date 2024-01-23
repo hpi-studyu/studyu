@@ -55,6 +55,7 @@ scripts:
 
   upgrade:
     run: |
+      dart pub upgrade
       melos exec -c 6 --fail-fast -- \
         "dart pub upgrade" && melos bootstrap
     description: Check all outdated dependencies
