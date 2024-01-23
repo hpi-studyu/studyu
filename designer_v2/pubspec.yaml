@@ -1,6 +1,6 @@
 name: studyu_designer_v2
 version: 1.6.2-dev.1
-description: Implement digital N-of-1 studies seamlessly with the brand new StudyU Designer
+description: Implement digital N-of-1 studies seamlessly with the StudyU Health Designer
 publish_to: none
 homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
@@ -42,6 +42,7 @@ dependencies:
 
 dev_dependencies:
   custom_lint:
+  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
@@ -56,5 +57,11 @@ flutter:
   generate: true
   assets:
     - assets/
-    - assets/images/
+    - assets/icon/
 
+flutter_launcher_icons:
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#dfdfdf"
+    theme_color: "#389bea"
