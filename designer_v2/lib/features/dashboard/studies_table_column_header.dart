@@ -28,7 +28,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
       builder: (context, state) {
         return Row(
           children: [
-            Expanded(
+            Flexible(
                 child: Text(
               widget.title,
               maxLines: 1,
