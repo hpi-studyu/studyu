@@ -14,15 +14,14 @@ concurrency:
   group: ${{ github.ref }}-db-docs
   cancel-in-progress: true
 
-
 jobs:
   generate-docs:
     runs-on: ubuntu-latest
-
     steps:
       - name: Check out repo
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Generate documentation
         env:
           POSTGRES_PORT: 5432

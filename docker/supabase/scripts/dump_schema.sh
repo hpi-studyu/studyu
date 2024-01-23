@@ -18,7 +18,7 @@ env_file="../.env"
 if [ -f "$env_file" ]; then
   # Source the .env file to set environment variables
   set -a
-  # shellcheck source=../.env
+  # shellcheck disable=SC1090
   . "$env_file"
   set +a
 else
