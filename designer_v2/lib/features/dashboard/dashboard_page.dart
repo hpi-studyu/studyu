@@ -107,11 +107,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                   ),
                 ),
-                child: PrimaryButton(
-                  icon: Icons.add,
-                  text: tr.action_button_create,
-                  onPressed: () => controller.setCreateNewMenuOpen(!state.createNewMenuOpen),
-                ),
+                child: SizedBox(
+                    height: 36.0,
+                    child: PrimaryButton(
+                      icon: Icons.add,
+                      text: tr.action_button_create,
+                      onPressed: () => controller.setCreateNewMenuOpen(!state.createNewMenuOpen),
+                    )),
               ),
               const SizedBox(width: 28.0),
               SelectableText(state.visibleListTitle, style: theme.textTheme.headlineMedium),

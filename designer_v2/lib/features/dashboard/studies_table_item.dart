@@ -58,11 +58,14 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
         return Material(
           color: theme.colorScheme.onPrimary,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: const BorderRadius.all(Radius.circular(4)),
             side: BorderSide(
-                color: widget.isPinned ? theme.colorScheme.primary.withAlpha(70) : Colors.transparent, width: 1.0),
+                color: widget.isPinned
+                    ? theme.colorScheme.primary.withOpacity(0.6)
+                    : theme.colorScheme.primaryContainer.withOpacity(0.9),
+                width: isHovering ? 1.5 : 0.75),
           ),
-          elevation: isHovering ? 4.0 : 1.5,
+          elevation: 0.0,
           child: _buildRow(theme, widget.studyGroup),
         );
       }),

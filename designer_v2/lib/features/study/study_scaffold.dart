@@ -38,7 +38,7 @@ class StudyScaffold extends ConsumerStatefulWidget {
     this.tabsSubnav,
     this.selectedTab,
     this.selectedTabSubnav,
-    this.drawer = const AppDrawer(title: 'StudyU'),
+    this.drawer = const AppDrawer(),
     this.disableActions = false,
     this.actionsSpacing = 2.0,
     this.actionsPadding = 4.0,

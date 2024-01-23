@@ -50,19 +50,21 @@ class GoRouterDrawerEntry extends DrawerEntry {
     super.localizedHelpText,
     super.enabled,
     required this.intent,
+    this.onNavigated,
   });
   final RoutingIntent intent;
+  final void Function()? onNavigated;
 
   @override
   onClick(BuildContext context, WidgetRef ref) {
     super.onClick(context, ref);
     ref.read(routerProvider).dispatch(intent);
+    onNavigated?.call();
   }
 }
 
 class AppDrawer extends ConsumerStatefulWidget {
   const AppDrawer({
-    required this.title,
     this.width = 250,
     this.autoCloseDrawer = true,
     this.leftPaddingEntries = 28.0,
@@ -74,7 +76,6 @@ class AppDrawer extends ConsumerStatefulWidget {
     super.key,
   });
 
-  final String title;
   final int width;
   final bool autoCloseDrawer;
   final double leftPaddingEntries;
@@ -111,6 +112,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
           autoCloseDrawer: widget.autoCloseDrawer,
           icon: Icons.folder_copy_rounded,
           intent: RoutingIntents.studies,
+          onNavigated: () => _updateSelectedRoute(hintEntryIdx: 0),
         ),
         GoRouterDrawerEntry(
           localizedTitle: () => tr.navlink_shared_studies,
@@ -118,6 +120,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
           icon: Icons.folder_shared_rounded,
           intent: RoutingIntents.studiesShared,
           enabled: false,
+          onNavigated: () => _updateSelectedRoute(hintEntryIdx: 1),
         ),
       ],
       [
@@ -127,6 +130,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
           icon: Icons.public,
           intent: RoutingIntents.publicRegistry,
           localizedHelpText: () => tr.navlink_public_studies_tooltip,
+          onNavigated: () => _updateSelectedRoute(hintEntryIdx: 2),
         ),
       ]
     ];
@@ -152,16 +156,13 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   }
 
   @override
-  void didUpdateWidget(AppDrawer oldWidget) {
-    // Changing routes will rebuilt the widget if it's below the Navigator
-    // (which should almost always be the case for a drawer)
-    // That means we can listen for route changes here
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _updateSelectedRoute();
-    super.didUpdateWidget(oldWidget);
   }
 
-  void _updateSelectedRoute() {
-    final entryIdx = _getCurrentRouteIndex();
+  void _updateSelectedRoute({int? hintEntryIdx}) {
+    final entryIdx = hintEntryIdx ?? _getCurrentRouteIndex();
     setSelectedIdx(entryIdx);
   }
 
