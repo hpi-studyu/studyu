@@ -13,6 +13,10 @@ on:
       - 'studyu_flutter_common-v*'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.ref }}-publish-pubdev
+  cancel-in-progress: true
+
 jobs:
   publishing:
     name: 'Publish to Pub.dev'

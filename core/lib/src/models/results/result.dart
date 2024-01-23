@@ -25,19 +25,17 @@ class Result<T> {
   factory Result.fromJson(Map<String, dynamic> json) => _fromJson(json) as Result<T>;
 
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> resultMap;
-    switch (T) {
-      case QuestionnaireState:
-        resultMap = {keyResult: (result as QuestionnaireState).toJson()};
-        break;
-      case bool:
-        resultMap = {keyResult: result};
-        break;
-      default:
-        print('Unsupported question type: $T');
-        resultMap = {keyResult: ''};
-    }
+    final Map<String, dynamic> resultMap = switch (result) {
+      final QuestionnaireState questionnaireState => {keyResult: questionnaireState.toJson()},
+      bool() => {keyResult: result},
+      _ => {keyResult: _getUnsupportedResult()}
+    };
     return mergeMaps<String, dynamic>(_$ResultToJson(this), resultMap);
+  }
+
+  String _getUnsupportedResult() {
+    print('Unsupported question type: $T');
+    return '';
   }
 
   static Result _fromJson(Map<String, dynamic> data) {

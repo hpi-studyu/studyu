@@ -2,10 +2,6 @@ name: E2E tests
 
 on:
   push:
-    branches:
-      - '**'
-      - '!dev'
-      - '!main'
     paths:
       - 'designer_v2/**'
       - 'core/**'
@@ -25,19 +21,15 @@ jobs:
         with:
           workflowId: 'publish_pubdev.yml'
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup ChromeDriver
         uses: nanasess/setup-chromedriver@v2
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
       - name: Enable web support
         run: flutter config --enable-web
-      - name: Install melos
-        run: dart pub global activate melos
-      - name: "Bootstrap Workspace"
-        run: dart pub get && melos bootstrap
       - name: Initialize Supabase
         run: |
           docker network create studyu_network || true
@@ -48,7 +40,7 @@ jobs:
           docker compose -f docker/supabase/docker-compose.yml up -d
           docker compose -f docker/proxy/docker-compose-proxy.yml up -d
           while [ "$(docker inspect --format='{{.State.Health.Status}}' supabase-db)" != "healthy" ]; do sleep 1; done
-          cat ./database/app_config.sql.example | docker exec -i supabase-db psql -U postgres -d postgres
+          docker exec -i supabase-db psql -U postgres -d postgres < ./database/app_config.sql.example
       - name: Start Chrome Driver
         run: |
           export DISPLAY=:99
