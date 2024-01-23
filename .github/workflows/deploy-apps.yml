@@ -47,13 +47,10 @@ jobs:
         with:
           channel: stable
       - name: Build StudyU app bundle
-        run: flutter build appbundle --no-tree-shake-icons --build-number ${{ github.run_number }}
-        working-directory: ./app
+        run: flutter build appbundle --build-number ${{ github.run_number }}
       - name: Fastlane upload
-        uses: maierj/fastlane-action@v3.0.0
-        with:
-          lane: 'internal'
-          subdirectory: './app/android'
+        working-directory: ./app/android
+        run: fastlane deploy
         env:
           PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
 
@@ -80,13 +77,11 @@ jobs:
         with:
           channel: stable
       - name: Build StudyU ios without codesign
-        run: flutter build ios --no-codesign --no-tree-shake-icons --build-number ${{ github.run_number }}
+        run: flutter build ios --no-codesign --build-number ${{ github.run_number }}
         working-directory: ./app
       - name: Fastlane upload
-        uses: maierj/fastlane-action@v3.0.0
-        with:
-          lane: 'upload_testflight'
-          subdirectory: './app/ios'
+        working-directory: ./app/ios
+        run: fastlane upload_testflight
         env:
           FASTLANE_APP_IOS_KEY_ID: ${{ secrets.FASTLANE_APP_IOS_KEY_ID }}
           FASTLANE_APP_IOS_ISSUER_ID: ${{ secrets.FASTLANE_APP_IOS_ISSUER_ID }}

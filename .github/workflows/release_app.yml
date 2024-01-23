@@ -39,7 +39,7 @@ jobs:
         with:
           channel: stable
       - name: Build StudyU app apk
-        run: flutter build apk --no-tree-shake-icons --build-number ${{ github.run_number }}
+        run: flutter build apk --build-number ${{ github.run_number }}
         working-directory: ./app
       - name: Create Release
         id: create_release
