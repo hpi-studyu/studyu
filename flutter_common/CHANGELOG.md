@@ -1,3 +1,7 @@
+## 1.7.0-dev.1
+
+ - **FIX**: upgrade deps. ([1940357e](https://github.com/hpi-studyu/studyu/commit/1940357e4d9975743c0913825aa585958410ebca))
+
 ## 1.7.0-dev.0
 
  - **FIX**: do not rely on hardcoded authcallback. ([e6787fb7](https://github.com/hpi-studyu/studyu/commit/e6787fb7027b50181441bec0a6ee5a47eec1146d))

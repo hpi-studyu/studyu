@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-01-23
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.6.5-dev.1`](#studyu_app---v265-dev1)
+ - [`studyu_core` - `v4.3.3-dev.0`](#studyu_core---v433-dev0)
+ - [`studyu_designer_v2` - `v1.6.2-dev.1`](#studyu_designer_v2---v162-dev1)
+ - [`studyu_flutter_common` - `v1.7.0-dev.1`](#studyu_flutter_common---v170-dev1)
+
+---
+
+#### `studyu_app` - `v2.6.5-dev.1`
+
+ - **FIX**: upgrade deps. ([1940357e](https://github.com/hpi-studyu/studyu/commit/1940357e4d9975743c0913825aa585958410ebca))
+
+#### `studyu_core` - `v4.3.3-dev.0`
+
+ - **FIX**: upgrade deps. ([1940357e](https://github.com/hpi-studyu/studyu/commit/1940357e4d9975743c0913825aa585958410ebca))
+
+#### `studyu_designer_v2` - `v1.6.2-dev.1`
+
+ - **REFACTOR**: replace custom validators with native ones. ([e7d8c50b](https://github.com/hpi-studyu/studyu/commit/e7d8c50bb419520ce0889a71a0295c239aa62807))
+ - **FIX**: upgrade deps. ([1940357e](https://github.com/hpi-studyu/studyu/commit/1940357e4d9975743c0913825aa585958410ebca))
+ - **FIX**: validate email on signup. ([e5257abe](https://github.com/hpi-studyu/studyu/commit/e5257abe64031731d4c2cfba389f5460bca9a618))
+ - **FIX**: show auth validation messages. ([eb7c5a46](https://github.com/hpi-studyu/studyu/commit/eb7c5a463ce02676802bdb06f21225531d21d6db))
+ - **FIX**: isDirty evaluation is now based on current state. ([1a24011f](https://github.com/hpi-studyu/studyu/commit/1a24011fe29f711aac37fb1e35b461ee62eaa77e))
+ - **FIX**: replace deprecated popcallback with popentry. ([d35d0e4f](https://github.com/hpi-studyu/studyu/commit/d35d0e4f3e5b94b5f1d18138969370f3f0876022))
+
+#### `studyu_flutter_common` - `v1.7.0-dev.1`
+
+ - **FIX**: upgrade deps. ([1940357e](https://github.com/hpi-studyu/studyu/commit/1940357e4d9975743c0913825aa585958410ebca))
+
+
 ## 2023-12-19
 
 ### Changes

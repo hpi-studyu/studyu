@@ -1,3 +1,7 @@
+## 2.6.5-dev.1
+
+ - **FIX**: upgrade deps. ([1940357e](https://github.com/hpi-studyu/studyu/commit/1940357e4d9975743c0913825aa585958410ebca))
+
 ## 2.6.5-dev.0
 
  - **FIX**: refresh dashboard on app resume. ([9bcd0e51](https://github.com/hpi-studyu/studyu/commit/9bcd0e5159d80e1f4cd4948f0ee8956705cd8c38))
