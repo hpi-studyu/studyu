@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/assets.dart';
 import 'package:studyu_designer_v2/common_views/icons.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -215,7 +216,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 backgroundBlendMode: BlendMode.color,
               ),
               child: Image.asset(
-                'assets/images/icon_wide.png',
+                Assets.logoWide,
                 fit: BoxFit.scaleDown,
               ),
             ),

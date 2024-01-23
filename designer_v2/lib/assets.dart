@@ -1,3 +1,3 @@
 class Assets {
-  static const logoWide = 'assets/images/icon_wide.png';
+  static const logoWide = 'assets/icon/icon_wide.png';
 }

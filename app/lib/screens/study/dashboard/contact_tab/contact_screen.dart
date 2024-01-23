@@ -36,7 +36,7 @@ class _ContactScreenState extends State<ContactScreen> {
           Container(
             alignment: Alignment.topCenter,
             child: const Image(
-              image: AssetImage('assets/images/icon_wide.png'),
+              image: AssetImage('assets/icon/icon_wide.png'),
               height: 80,
             ),
           ),
