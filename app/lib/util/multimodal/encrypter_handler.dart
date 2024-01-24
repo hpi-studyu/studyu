@@ -5,7 +5,8 @@ import 'key_storage.dart';
 
 class EncrypterHandler {
   static Future<Encrypter> _buildEncrypter(EncrypterHandler handler) async {
-    return Encrypter(AES(await handler._keyStorage.getEncryptionKey()));
+    final key = await handler._keyStorage.getEncryptionKey();
+    return Encrypter(AES(key));
   }
 
   final KeyStorage _keyStorage;
@@ -27,16 +28,15 @@ class EncrypterHandler {
 
   Future<Uint8List> encryptFile(Uint8List aFileContent) async {
     final Encrypter encrypter = await _buildEncrypter(this);
-    return encrypter.encryptBytes(aFileContent, iv: await _keyStorage.getIV()).bytes;
+    final iv = await _keyStorage.getIV();
+    return encrypter.encryptBytes(aFileContent, iv: iv).bytes;
   }
 
   Future<Uint8List> decryptFile(Uint8List anEncryptedFileContent) async {
     final Encrypter encrypter = await _buildEncrypter(this);
+    final iv = await _keyStorage.getIV();
     return Uint8List.fromList(
-      encrypter.decryptBytes(
-        Encrypted(anEncryptedFileContent),
-        iv: await _keyStorage.getIV(),
-      ),
+      encrypter.decryptBytes(Encrypted(anEncryptedFileContent), iv: iv),
     );
   }
 }

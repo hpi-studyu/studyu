@@ -23,7 +23,7 @@ class KeyStorage {
     final String? valueRep = await SecureStorage.read(accessKey);
     if (valueRep == null) {
       initIfNotExist();
-      return _getStorageValue<T>(
+      return await _getStorageValue<T>(
         initIfNotExist,
         accessKey,
         convertRep,
