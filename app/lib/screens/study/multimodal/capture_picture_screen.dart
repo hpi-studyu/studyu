@@ -43,11 +43,11 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
 
   Future<void> _identifyCameras() async {
     try {
-    _cameras = (await availableCameras())
-        .where((CameraDescription aCameraDescription) =>
-    aCameraDescription.lensDirection == CameraLensDirection.back ||
-        aCameraDescription.lensDirection == CameraLensDirection.front)
-        .toList();
+      _cameras = (await availableCameras())
+          .where((CameraDescription aCameraDescription) =>
+              aCameraDescription.lensDirection == CameraLensDirection.back ||
+              aCameraDescription.lensDirection == CameraLensDirection.front)
+          .toList();
     } on CameraException {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -137,12 +137,10 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
               children: [
                 const CircularProgressIndicator(),
                 const SizedBox(height: 16),
-                StatefulBuilder(
-                    builder: (BuildContext context, StateSetter setState) {
-                      dialogStateSetter = setState;
-                      return Text(dialogText);
-                    }
-                ),
+                StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+                  dialogStateSetter = setState;
+                  return Text(dialogText);
+                }),
               ],
             ),
           ),
@@ -194,17 +192,19 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
               margin: const EdgeInsets.all(10),
               child: FloatingActionButton(
                 heroTag: "captureImage",
-                onPressed: _isReady ? () {
-                  try {
-                  _capturePicture();
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(AppLocalizations.of(context)!.camera_error),
-                      ),
-                    );
-                  }
-                } : null,
+                onPressed: _isReady
+                    ? () {
+                        try {
+                          _capturePicture();
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(AppLocalizations.of(context)!.camera_error),
+                            ),
+                          );
+                        }
+                      }
+                    : null,
                 child: const Icon(Icons.camera_alt),
               ),
             ),

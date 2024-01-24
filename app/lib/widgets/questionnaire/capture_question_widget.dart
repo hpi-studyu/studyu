@@ -59,7 +59,9 @@ class _CaptureQuestionWidgetState extends State<CaptureQuestionWidget> {
       children: [
         captureAnswer == null
             ? TextButton.icon(
-                label: Text(widget.captureType == CaptureType.image ? AppLocalizations.of(context)!.take_a_photo : AppLocalizations.of(context)!.start_recording),
+                label: Text(widget.captureType == CaptureType.image
+                    ? AppLocalizations.of(context)!.take_a_photo
+                    : AppLocalizations.of(context)!.start_recording),
                 icon: Icon(widget.captureType == CaptureType.image ? MdiIcons.camera : Icons.mic),
                 onPressed: () {
                   if (kIsWeb) {

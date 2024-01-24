@@ -9,8 +9,7 @@ class RecordAudioScreen extends StatefulWidget {
   final String userId;
   final String studyId;
 
-  const RecordAudioScreen(
-      {super.key, required this.userId, required this.studyId});
+  const RecordAudioScreen({super.key, required this.userId, required this.studyId});
 
   @override
   State<RecordAudioScreen> createState() => _RecordAudioScreenState();
@@ -128,8 +127,7 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _isRecording
-                      ? LoadingAnimationWidget.staggeredDotsWave(
-                          color: const Color(0xFFEA3799), size: 200)
+                      ? LoadingAnimationWidget.staggeredDotsWave(color: const Color(0xFFEA3799), size: 200)
                       : Container(),
                   ElevatedButton(
                     onPressed: _toggleRecording,

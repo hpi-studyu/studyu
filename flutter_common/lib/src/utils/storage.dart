@@ -32,7 +32,7 @@ class SecureStorage {
   static Future<bool> containsKey(String key) async {
     return storage.containsKey(key: key);
   }
-  
+
   static Future<void> write(String key, String value) async {
     return storage.write(key: key, value: value);
   }
