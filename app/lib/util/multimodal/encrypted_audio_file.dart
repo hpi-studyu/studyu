@@ -2,7 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:studyu_app/util/multimodal/persistent_storage_handler.dart';
 
 class EncryptedAudioFile {
-  late AudioPlayer _audioPlayer;
+  late final AudioPlayer _audioPlayer;
   final String _encryptedAudioFilePath;
   late String _temporaryUnencryptedFilePath;
   final PersistentStorageHandler _storageHandler;

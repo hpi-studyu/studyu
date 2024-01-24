@@ -105,6 +105,10 @@
   "error_recording": "Fehler bei der Aufnahme",
   "data_captured": "Daten aufgenommen",
   "multimodal_not_supported": "Multimodale Aufgaben werden in der Web-Version zur Zeit nicht unterstützt. Bitte verwenden Sie die App Version für iOS oder Android.",
+  "camera_access_denied": "Zugriff auf Kamera verweigert",
+  "camera_error": "Kamerafehler",
+  "recording_error": "Aufnahme fehlgeschlagen",
+  "storing_audio": "Audio wird gespeichert",
 
   "language": "Sprache",
   "en": "Englisch",

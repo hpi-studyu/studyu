@@ -1,17 +1,16 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
-
-import '../../../util/multimodal/persistent_storage_handler.dart';
+import 'package:studyu_app/util/multimodal/persistent_storage_handler.dart';
 
 class RecordAudioScreen extends StatefulWidget {
   final String userId;
   final String studyId;
 
-  const RecordAudioScreen({super.key, required this.userId, required this.studyId});
+  const RecordAudioScreen(
+      {super.key, required this.userId, required this.studyId});
 
   @override
   State<RecordAudioScreen> createState() => _RecordAudioScreenState();
@@ -20,18 +19,46 @@ class RecordAudioScreen extends StatefulWidget {
 class _RecordAudioScreenState extends State<RecordAudioScreen> {
   final AudioRecorder _audioRecorder;
   bool _isRecording = false;
-  late Future<void> _initializeRecorderPermissionsFuture;
   late PersistentStorageHandler _storageHandler;
   late Function _storeFinalizer;
+  PermissionStatus _recordingPermission = PermissionStatus.denied;
 
-  Future<void> _initializeAudioRecorderPermissions() async {
-    await Permission.microphone.request();
+  _requestPermission() async {
+    PermissionStatus permission = await Permission.microphone.request();
+    setState(() {
+      _recordingPermission = permission;
+    });
   }
 
   _RecordAudioScreenState() : _audioRecorder = AudioRecorder() {
     _audioRecorder.onStateChanged().listen((event) async {
       if (event == RecordState.stop || event == RecordState.pause) {
-        _storeFinalizer((String aPath) => Navigator.pop(context, aPath));
+        BuildContext? dialogContext;
+        // todo create scaffold template for multimodal screens for shared loading animation, feedback, and error handling
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            dialogContext = context;
+            return Dialog(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 16),
+                    Text(AppLocalizations.of(context)!.storing_audio),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+        _storeFinalizer((String aPath) {
+          Navigator.pop(dialogContext!);
+          Navigator.pop(context, aPath);
+        });
       }
     });
   }
@@ -39,7 +66,9 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeRecorderPermissionsFuture = _initializeAudioRecorderPermissions();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _requestPermission();
+    });
   }
 
   @override
@@ -58,9 +87,12 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
         _isRecording = true;
       });
     } catch (e) {
-      if (kDebugMode) {
-        print(e.toString());
-      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.recording_error),
+        ),
+      );
     }
   }
 
@@ -71,9 +103,11 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
         _isRecording = false;
       });
     } catch (e) {
-      if (kDebugMode) {
-        print("${AppLocalizations.of(context)!.error_recording}: $e");
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.recording_error),
+        ),
+      );
     }
   }
 
@@ -87,29 +121,25 @@ class _RecordAudioScreenState extends State<RecordAudioScreen> {
       appBar: AppBar(
         title: const Text('Audio Recorder'),
       ),
-      body: FutureBuilder<void>(
-        future: _initializeRecorderPermissionsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Center(
-              child: Column(
+      body: Center(
+        child: _recordingPermission.isGranted
+            ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _isRecording
-                      ? LoadingAnimationWidget.staggeredDotsWave(color: const Color(0xFFEA3799), size: 200)
+                      ? LoadingAnimationWidget.staggeredDotsWave(
+                          color: const Color(0xFFEA3799), size: 200)
                       : Container(),
                   ElevatedButton(
                     onPressed: _toggleRecording,
-                    child: Text(_isRecording ? AppLocalizations.of(context)!.stop_recording : AppLocalizations.of(context)!.start_recording),
+                    child: Text(_isRecording
+                        ? AppLocalizations.of(context)!.stop_recording
+                        : AppLocalizations.of(context)!.start_recording),
                   ),
                 ],
-              ),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
+              )
+            : const CircularProgressIndicator(),
       ),
     );
   }
