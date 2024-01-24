@@ -1,4 +1,4 @@
-<svg version="1.1" baseProfile="full" width="1699.0" height="488.0" viewbox="0 0 1699 488" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<svg version="1.1" baseProfile="full" width="2260.0" height="488.0" viewbox="0 0 2260 488" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
 	<desc >[AppLanguage
 	  |
 	  &lt;static&gt;+keyLanguageCode: String;
@@ -30,14 +30,35 @@
 	[RetryFutureBuilder]o-[Widget Function(BuildContext)?]
 	[RetryFutureBuilder]o-[Widget Function(BuildContext, dynamic, void Function())?]
 	
+	[SupabaseStorage
+	  |
+	  +dynamic initialize();
+	  +dynamic hasAccessToken();
+	  +dynamic accessToken();
+	  +dynamic persistSession();
+	  +dynamic removePersistedSession()
+	]
+	
+	[&lt;abstract&gt;LocalStorage]&lt;:-[SupabaseStorage]
+	
+	[SecureStorage
+	  |
+	  &lt;static&gt;+dynamic containsKey();
+	  &lt;static&gt;+dynamic write();
+	  &lt;static&gt;+dynamic read();
+	  &lt;static&gt;+dynamic readBool();
+	  &lt;static&gt;+dynamic delete();
+	  &lt;static&gt;+dynamic deleteAll()
+	]
+	
 	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="488.0" width="1699.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="488.0" width="2260.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
-				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
 					<path d="M147.0 379.7 L147 381 L147 401 L147.0 401.0 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M152.3 370.3 L147.0 379.7 L141.7 370.3 L147.0 361.0 Z"></path>
@@ -60,6 +81,8 @@
 					<g fill="#eee8d5">
 						<path d="M1171.1 139.1 L1179.4 146.0 L1169.2 149.5 L1161.0 142.6 Z"></path>
 					</g>
+					<path d="M1835.5 112.8 L1835.5 188 L1835.5 223.5 L1835.5 223.5 " fill="none"></path>
+					<path d="M1840.8 112.8 L1835.5 112.8 L1830.2 112.8 L1835.5 99.5 Z"></path>
 					<g data-name="AppLanguage">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AppLanguage">
 							<rect x="0.0" y="208.0" height="153.0" width="294.0" data-name="AppLanguage"></rect>
@@ -181,6 +204,62 @@
 						<g transform="translate(1173, 269)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Widget Function(BuildContext, dynamic, void Function())?">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget Function(BuildContext, dynamic, void Function())?">
 								<text x="227.0" y="13.5" stroke="none" text-anchor="middle" data-name="Widget Function(BuildContext, dynamic, void Function())?">Widget Function(BuildContext, dynamic, void Function())?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SupabaseStorage">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseStorage">
+							<rect x="1683.0" y="223.5" height="122.0" width="305.0" data-name="SupabaseStorage"></rect>
+							<path d="M1683.0 254.5 L1988.0 254.5" fill="none" data-name="SupabaseStorage"></path>
+						</g>
+						<g transform="translate(1683, 223.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SupabaseStorage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseStorage">
+								<text x="144.5" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseStorage">SupabaseStorage</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1683, 254.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseStorage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseStorage">
+								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseStorage">+dynamic initialize()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="SupabaseStorage">+dynamic hasAccessToken()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="SupabaseStorage">+dynamic accessToken()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="SupabaseStorage">+dynamic persistSession()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="SupabaseStorage">+dynamic removePersistedSession()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="LocalStorage">
+						<g fill="#eee8d5" stroke="#33322E" data-name="LocalStorage">
+							<rect x="1775.0" y="68.5" height="31.0" width="121.0" data-name="LocalStorage"></rect>
+						</g>
+						<g transform="translate(1775, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="LocalStorage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LocalStorage">
+								<text x="52.5" y="13.5" stroke="none" text-anchor="middle" data-name="LocalStorage">LocalStorage</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SecureStorage">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SecureStorage">
+							<rect x="1936.0" y="15.5" height="137.0" width="268.0" data-name="SecureStorage"></rect>
+							<path d="M1936.0 46.5 L2204.0 46.5" fill="none" data-name="SecureStorage"></path>
+						</g>
+						<g transform="translate(1936, 15.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SecureStorage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SecureStorage">
+								<text x="126.0" y="13.5" stroke="none" text-anchor="middle" data-name="SecureStorage">SecureStorage</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1936, 46.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SecureStorage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SecureStorage">
+								<text x="0.0" y="13.5" stroke="none" data-name="SecureStorage">&lt;static&gt;+dynamic containsKey()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="SecureStorage">&lt;static&gt;+dynamic write()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="SecureStorage">&lt;static&gt;+dynamic read()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="SecureStorage">&lt;static&gt;+dynamic readBool()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="SecureStorage">&lt;static&gt;+dynamic delete()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="SecureStorage">&lt;static&gt;+dynamic deleteAll()</text>
 								
 							</g>
 						</g>
