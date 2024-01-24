@@ -107,6 +107,7 @@
   "camera_access_denied": "Camera access denied",
   "camera_error": "Camera error",
   "recording_error": "Recording error",
+  "storing_photo": "The photo is being stored",
   "storing_audio": "The audio file is being stored",
 
   "language": "Language",

@@ -108,6 +108,7 @@
   "camera_access_denied": "Zugriff auf Kamera verweigert",
   "camera_error": "Kamerafehler",
   "recording_error": "Aufnahme fehlgeschlagen",
+  "storing_photo": "Foto wird gespeichert",
   "storing_audio": "Audio wird gespeichert",
 
   "language": "Sprache",

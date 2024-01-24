@@ -122,7 +122,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
     String dialogText = "";
     StateSetter? dialogStateSetter;
     setState(() {
-      dialogText = "Capturing Picture..."; // todo tr
+      dialogText = AppLocalizations.of(context)!.take_a_photo;
     });
     showDialog(
       context: context,
@@ -149,7 +149,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
     );
     final XFile image = await _cameraController.takePicture();
     dialogStateSetter!(() {
-      dialogText = "Storing Picture..."; // todo tr
+      dialogText = AppLocalizations.of(context)!.storing_photo;
     });
     PersistentStorageHandler aPersistentStorageHandler = PersistentStorageHandler(widget.userId, widget.studyId);
     await aPersistentStorageHandler.storeImage(image, pathCallback: (String aPath) {
