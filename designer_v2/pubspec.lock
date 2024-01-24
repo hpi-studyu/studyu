@@ -452,6 +452,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  logger:
+    dependency: transitive
+    description:
+      name: logger
+      sha256: "6bbb9d6f7056729537a4309bda2e74e18e5d9f14302489cc1e93f33b3fe32cac"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2+1"
   logging:
     dependency: transitive
     description:
@@ -713,6 +721,14 @@ packages:
     description:
       name: reactive_multi_select_flutter
       sha256: "78bd530847d9d37d2ec05b18413ca68ec670cd65ddc59ba40a4bbf532757093e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  reactive_range_slider:
+    dependency: "direct main"
+    description:
+      name: reactive_range_slider
+      sha256: "63c35ef17a146e02d3d98c8912278ac718106ba1ed72679eeba8d784855c713a"
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"

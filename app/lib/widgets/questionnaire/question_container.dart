@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:studyu_app/widgets/questionnaire/scale_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/choice_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/free_text_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/scale_question_widget.dart';
 import 'package:studyu_core/core.dart';
 
-import 'annotated_scale_question_widget.dart';
-import 'boolean_question_widget.dart';
-import 'choice_question_widget.dart';
+import 'questions/annotated_scale_question_widget.dart';
+import 'questions/boolean_question_widget.dart';
 import 'question_header.dart';
-import 'question_widget.dart';
-import 'visual_analogue_question_widget.dart';
+import 'questions/question_widget.dart';
+import 'questions/visual_analogue_question_widget.dart';
 
 class QuestionContainer extends StatefulWidget {
   final Function(Answer, int) onDone;
@@ -54,6 +55,11 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
       case AnnotatedScaleQuestion annotatedScaleQuestion:
         return AnnotatedScaleQuestionWidget(
           question: annotatedScaleQuestion,
+          onDone: _onDone,
+        );
+      case FreeTextQuestion freeTextQuestion:
+        return FreeTextQuestionWidget(
+          question: freeTextQuestion,
           onDone: _onDone,
         );
       default:

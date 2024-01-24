@@ -292,7 +292,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       final json = toFullJson(partialJson: List<Map<String, dynamic>>.from(response).single);
       final newSubject = StudySubject.fromJson(json);
       _controller.add(newSubject);
-      Analytics.logger.info("Saving study subject");
+      print("Saving study subject");
       return newSubject;
     } catch (e, stack) {
       SupabaseQuery.catchSupabaseException(e, stack);

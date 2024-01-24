@@ -1,26 +1,5 @@
-<svg version="1.1" baseProfile="full" width="2447.0" height="507.0" viewbox="0 0 2447 507" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[Cache
-	  |
-	  &lt;static&gt;+isSynchronizing: bool;
-	  &lt;static&gt;+sharedPrefs: dynamic
-	  |
-	  &lt;static&gt;+dynamic storeSubject();
-	  &lt;static&gt;+dynamic loadSubject();
-	  &lt;static&gt;+dynamic storeAnalytics();
-	  &lt;static&gt;+dynamic loadAnalytics();
-	  &lt;static&gt;+dynamic delete();
-	  &lt;static&gt;+dynamic synchronize()
-	]
-	
-	[StudyNotification
-	  |
-	  +taskInstance: TaskInstance;
-	  +date: DateTime
-	]
-	
-	[StudyNotification]o-[TaskInstance]
-	
-	[NotificationValidators
+<svg version="1.1" baseProfile="full" width="2411.0" height="507.0" viewbox="0 0 2411 507" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[NotificationValidators
 	  |
 	  +didNotificationLaunchApp: bool;
 	  +wasNotificationActionHandled: bool;
@@ -79,6 +58,27 @@
 	[AppAnalytics]o-[&lt;abstract&gt;BuildContext]
 	[AppAnalytics]o-[StudySubject]
 	
+	[StudyNotification
+	  |
+	  +taskInstance: TaskInstance;
+	  +date: DateTime
+	]
+	
+	[StudyNotification]o-[TaskInstance]
+	
+	[Cache
+	  |
+	  &lt;static&gt;+isSynchronizing: bool;
+	  &lt;static&gt;+sharedPrefs: dynamic
+	  |
+	  &lt;static&gt;+dynamic storeSubject();
+	  &lt;static&gt;+dynamic loadSubject();
+	  &lt;static&gt;+dynamic storeAnalytics();
+	  &lt;static&gt;+dynamic loadAnalytics();
+	  &lt;static&gt;+dynamic delete();
+	  &lt;static&gt;+dynamic synchronize()
+	]
+	
 	[GroupedIterable
 	  |
 	  +data: Map&lt;K, Iterable&lt;V&gt;&gt;;
@@ -94,117 +94,56 @@
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="507.0" width="2447.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="507.0" width="2411.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M443.5 201.2 L443.5 308 L443.5 374 L443.5 374.0 " fill="none"></path>
+					<path d="M575.3 256.5 L424 308 L216.28220858895705 374 L216.3 374.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M448.8 191.8 L443.5 201.2 L438.2 191.8 L443.5 182.5 Z"></path>
+						<path d="M585.9 258.6 L575.3 256.5 L582.4 248.5 L593.0 250.5 Z"></path>
 					</g>
-					<path d="M1180.0 236.6 L925 308 L733.4785276073619 374 L733.5 374.0 " fill="none"></path>
+					<path d="M855.2 305.8 L854.5 308 L854.5 374 L854.5 374.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1190.4 239.2 L1180.0 236.6 L1187.6 229.0 L1198.0 231.6 Z"></path>
+						<path d="M863.1 298.5 L855.2 305.8 L852.9 295.3 L860.8 288.0 Z"></path>
 					</g>
-					<path d="M1288.0 298.6 L1274.5 308 L1274.5 374 L1274.5 374.0 " fill="none"></path>
+					<path d="M634.9 297.2 L615.75 308 L540.6395705521472 374 L540.6 374.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1298.7 297.7 L1288.0 298.6 L1292.6 288.9 L1303.3 288.0 Z"></path>
+						<path d="M645.6 297.2 L634.9 297.2 L640.4 287.9 L651.1 288.0 Z"></path>
 					</g>
-					<path d="M1180.9 290.6 L1141.75 308 L1066.6395705521472 374 L1066.6 374.0 " fill="none"></path>
+					<path d="M1087.4 300.2 L1096.5 308 L1096.5 374 L1096.5 374.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1191.6 291.7 L1180.9 290.6 L1187.3 281.9 L1198.0 283.0 Z"></path>
+						<path d="M1083.8 290.0 L1087.4 300.2 L1076.9 298.1 L1073.3 288.0 Z"></path>
 					</g>
-					<path d="M1516.5 306.7 L1516.5 308 L1516.5 374 L1516.5 374.0 " fill="none"></path>
+					<path d="M1236.6 260.2 L1372.5 308 L1372.5 343.5 L1372.5 343.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1521.5 297.1 L1516.5 306.7 L1510.8 297.5 L1515.8 288.0 Z"></path>
+						<path d="M1229.6 252.1 L1236.6 260.2 L1226.0 262.2 L1219.0 254.0 Z"></path>
 					</g>
-					<path d="M1774.3 297.4 L1792.5 308 L1792.5 343.5 L1792.5 343.5 " fill="none"></path>
+					<path d="M351.3 245.7 L464 308 L511.77914110429447 374 L511.8 374.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1768.9 288.1 L1774.3 297.4 L1763.6 297.3 L1758.2 288.0 Z"></path>
+						<path d="M345.7 236.5 L351.3 245.7 L340.6 245.8 L335.0 236.6 Z"></path>
 					</g>
-					<path d="M954.8 260.6 L1029 308 L1045.196319018405 374 L1045.2 374.0 " fill="none"></path>
+					<path d="M167.5 269.2 L167.5 308 L167.5 374 L167.5 374.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M949.8 251.0 L954.8 260.6 L944.1 260.0 L939.1 250.5 Z"></path>
+						<path d="M172.8 259.8 L167.5 269.2 L162.2 259.8 L167.5 250.5 Z"></path>
 					</g>
-					<path d="M666.3 264.5 L628 308 L676.9938650306749 374 L677.0 374.0 " fill="none"></path>
+					<path d="M1635.0 201.2 L1635 308 L1635 374 L1635.0 374.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M676.5 261.0 L666.3 264.5 L668.5 254.0 L678.7 250.5 Z"></path>
+						<path d="M1640.3 191.8 L1635.0 201.2 L1629.7 191.8 L1635.0 182.5 Z"></path>
 					</g>
-					<path d="M2192.5 172.8 L2192.5 308 L2192.5 328 L2192.5 328.0 " fill="none"></path>
-					<path d="M2197.8 172.8 L2192.5 172.8 L2187.2 172.8 L2192.5 159.5 Z"></path>
-					<g data-name="Cache">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Cache">
-							<rect x="0.0" y="52.5" height="183.0" width="282.0" data-name="Cache"></rect>
-							<path d="M0.0 83.5 L282.0 83.5" fill="none" data-name="Cache"></path>
-							<path d="M0.0 129.5 L282.0 129.5" fill="none" data-name="Cache"></path>
-						</g>
-						<g transform="translate(0, 52.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Cache">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Cache">
-								<text x="133.0" y="13.5" stroke="none" text-anchor="middle" data-name="Cache">Cache</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 83.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Cache">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Cache">
-								<text x="0.0" y="13.5" stroke="none" data-name="Cache">&lt;static&gt;+isSynchronizing: bool</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="Cache">&lt;static&gt;+sharedPrefs: dynamic</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 129.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Cache">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Cache">
-								<text x="0.0" y="13.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic storeSubject()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic loadSubject()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic storeAnalytics()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic loadAnalytics()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic delete()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic synchronize()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyNotification">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyNotification">
-							<rect x="322.0" y="105.5" height="77.0" width="243.0" data-name="StudyNotification"></rect>
-							<path d="M322.0 136.5 L565.0 136.5" fill="none" data-name="StudyNotification"></path>
-						</g>
-						<g transform="translate(322, 105.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyNotification">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyNotification">
-								<text x="113.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyNotification">StudyNotification</text>
-								
-							</g>
-						</g>
-						<g transform="translate(322, 136.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyNotification">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyNotification">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyNotification">+taskInstance: TaskInstance</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyNotification">+date: DateTime</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="TaskInstance">
-						<g fill="#eee8d5" stroke="#33322E" data-name="TaskInstance">
-							<rect x="382.5" y="374.0" height="31.0" width="122.0" data-name="TaskInstance"></rect>
-						</g>
-						<g transform="translate(382.5, 374)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TaskInstance">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TaskInstance">
-								<text x="53.0" y="13.5" stroke="none" text-anchor="middle" data-name="TaskInstance">TaskInstance</text>
-								
-							</g>
-						</g>
-					</g>
+					<path d="M2156.5 172.8 L2156.5 308 L2156.5 328 L2156.5 328.0 " fill="none"></path>
+					<path d="M2161.8 172.8 L2156.5 172.8 L2151.2 172.8 L2156.5 159.5 Z"></path>
 					<g data-name="NotificationValidators">
 						<g fill="#eee8d5" stroke="#33322E" data-name="NotificationValidators">
-							<rect x="1631.0" y="343.5" height="92.0" width="323.0" data-name="NotificationValidators"></rect>
-							<path d="M1631.0 374.5 L1954.0 374.5" fill="none" data-name="NotificationValidators"></path>
+							<rect x="1211.0" y="343.5" height="92.0" width="323.0" data-name="NotificationValidators"></rect>
+							<path d="M1211.0 374.5 L1534.0 374.5" fill="none" data-name="NotificationValidators"></path>
 						</g>
-						<g transform="translate(1631, 343.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotificationValidators">
+						<g transform="translate(1211, 343.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NotificationValidators">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NotificationValidators">
 								<text x="153.5" y="13.5" stroke="none" text-anchor="middle" data-name="NotificationValidators">NotificationValidators</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1631, 374.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationValidators">
+						<g transform="translate(1211, 374.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NotificationValidators">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NotificationValidators">
 								<text x="0.0" y="13.5" stroke="none" data-name="NotificationValidators">+didNotificationLaunchApp: bool</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="NotificationValidators">+wasNotificationActionHandled: bool</text>
@@ -215,17 +154,17 @@
 					</g>
 					<g data-name="StudyNotifications">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyNotifications">
-							<rect x="1198.0" y="0.0" height="288.0" width="626.0" data-name="StudyNotifications"></rect>
-							<path d="M1198.0 31.0 L1824.0 31.0" fill="none" data-name="StudyNotifications"></path>
-							<path d="M1198.0 167.0 L1824.0 167.0" fill="none" data-name="StudyNotifications"></path>
+							<rect x="593.0" y="0.0" height="288.0" width="626.0" data-name="StudyNotifications"></rect>
+							<path d="M593.0 31.0 L1219.0 31.0" fill="none" data-name="StudyNotifications"></path>
+							<path d="M593.0 167.0 L1219.0 167.0" fill="none" data-name="StudyNotifications"></path>
 						</g>
-						<g transform="translate(1198, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyNotifications">
+						<g transform="translate(593, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyNotifications">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyNotifications">
 								<text x="305.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyNotifications">StudyNotifications</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1198, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyNotifications">
+						<g transform="translate(593, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyNotifications">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyNotifications">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyNotifications">+subject: StudySubject?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyNotifications">+flutterLocalNotificationsPlugin: FlutterLocalNotificationsPlugin</text>
@@ -238,7 +177,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(1198, 167)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyNotifications">
+						<g transform="translate(593, 167)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyNotifications">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyNotifications">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyNotifications">&lt;static&gt;+dynamic create()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyNotifications">-dynamic _isAndroidPermissionGranted()</text>
@@ -253,9 +192,9 @@
 					</g>
 					<g data-name="StudySubject">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudySubject">
-							<rect x="628.5" y="374.0" height="31.0" width="120.0" data-name="StudySubject"></rect>
+							<rect x="107.5" y="374.0" height="31.0" width="120.0" data-name="StudySubject"></rect>
 						</g>
-						<g transform="translate(628.5, 374)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudySubject">
+						<g transform="translate(107.5, 374)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudySubject">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudySubject">
 								<text x="52.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudySubject">StudySubject</text>
 								
@@ -264,9 +203,9 @@
 					</g>
 					<g data-name="FlutterLocalNotificationsPlugin">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FlutterLocalNotificationsPlugin">
-							<rect x="1147.0" y="374.0" height="31.0" width="255.0" data-name="FlutterLocalNotificationsPlugin"></rect>
+							<rect x="727.0" y="374.0" height="31.0" width="255.0" data-name="FlutterLocalNotificationsPlugin"></rect>
 						</g>
-						<g transform="translate(1147, 374)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FlutterLocalNotificationsPlugin">
+						<g transform="translate(727, 374)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FlutterLocalNotificationsPlugin">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FlutterLocalNotificationsPlugin">
 								<text x="119.5" y="13.5" stroke="none" text-anchor="middle" data-name="FlutterLocalNotificationsPlugin">FlutterLocalNotificationsPlugin</text>
 								
@@ -275,9 +214,9 @@
 					</g>
 					<g data-name="BuildContext">
 						<g fill="#eee8d5" stroke="#33322E" data-name="BuildContext">
-							<rect x="991.0" y="374.0" height="31.0" width="116.0" data-name="BuildContext"></rect>
+							<rect x="465.0" y="374.0" height="31.0" width="116.0" data-name="BuildContext"></rect>
 						</g>
-						<g transform="translate(991, 374)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="BuildContext">
+						<g transform="translate(465, 374)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="BuildContext">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BuildContext">
 								<text x="50.0" y="13.5" stroke="none" text-anchor="middle" data-name="BuildContext">BuildContext</text>
 								
@@ -286,9 +225,9 @@
 					</g>
 					<g data-name="StreamController">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StreamController">
-							<rect x="1442.0" y="374.0" height="31.0" width="149.0" data-name="StreamController"></rect>
+							<rect x="1022.0" y="374.0" height="31.0" width="149.0" data-name="StreamController"></rect>
 						</g>
-						<g transform="translate(1442, 374)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StreamController">
+						<g transform="translate(1022, 374)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StreamController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StreamController">
 								<text x="66.5" y="13.5" stroke="none" text-anchor="middle" data-name="StreamController">StreamController</text>
 								
@@ -297,16 +236,16 @@
 					</g>
 					<g data-name="ReceivedNotification">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ReceivedNotification">
-							<rect x="980.0" y="90.5" height="107.0" width="178.0" data-name="ReceivedNotification"></rect>
-							<path d="M980.0 121.5 L1158.0 121.5" fill="none" data-name="ReceivedNotification"></path>
+							<rect x="375.0" y="90.5" height="107.0" width="178.0" data-name="ReceivedNotification"></rect>
+							<path d="M375.0 121.5 L553.0 121.5" fill="none" data-name="ReceivedNotification"></path>
 						</g>
-						<g transform="translate(980, 90.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReceivedNotification">
+						<g transform="translate(375, 90.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReceivedNotification">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReceivedNotification">
 								<text x="81.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReceivedNotification">ReceivedNotification</text>
 								
 							</g>
 						</g>
-						<g transform="translate(980, 121.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReceivedNotification">
+						<g transform="translate(375, 121.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReceivedNotification">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReceivedNotification">
 								<text x="0.0" y="13.5" stroke="none" data-name="ReceivedNotification">+id: int?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ReceivedNotification">+title: String?</text>
@@ -318,17 +257,17 @@
 					</g>
 					<g data-name="AppAnalytics">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AppAnalytics">
-							<rect x="605.0" y="37.5" height="213.0" width="335.0" data-name="AppAnalytics"></rect>
-							<path d="M605.0 68.5 L940.0 68.5" fill="none" data-name="AppAnalytics"></path>
-							<path d="M605.0 159.5 L940.0 159.5" fill="none" data-name="AppAnalytics"></path>
+							<rect x="0.0" y="37.5" height="213.0" width="335.0" data-name="AppAnalytics"></rect>
+							<path d="M0.0 68.5 L335.0 68.5" fill="none" data-name="AppAnalytics"></path>
+							<path d="M0.0 159.5 L335.0 159.5" fill="none" data-name="AppAnalytics"></path>
 						</g>
-						<g transform="translate(605, 37.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AppAnalytics">
+						<g transform="translate(0, 37.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AppAnalytics">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AppAnalytics">
 								<text x="159.5" y="13.5" stroke="none" text-anchor="middle" data-name="AppAnalytics">AppAnalytics</text>
 								
 							</g>
 						</g>
-						<g transform="translate(605, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppAnalytics">
+						<g transform="translate(0, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppAnalytics">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppAnalytics">
 								<text x="0.0" y="13.5" stroke="none" data-name="AppAnalytics">&lt;static&gt;-_userEnabled: bool?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="AppAnalytics">&lt;static&gt;+keyAnalyticsUserEnable: String</text>
@@ -338,7 +277,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(605, 159.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppAnalytics">
+						<g transform="translate(0, 159.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppAnalytics">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppAnalytics">
 								<text x="0.0" y="13.5" stroke="none" data-name="AppAnalytics">&lt;static&gt;+dynamic init()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="AppAnalytics">&lt;static&gt;+dynamic start()</text>
@@ -349,26 +288,87 @@
 							</g>
 						</g>
 					</g>
+					<g data-name="StudyNotification">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyNotification">
+							<rect x="1513.5" y="105.5" height="77.0" width="243.0" data-name="StudyNotification"></rect>
+							<path d="M1513.5 136.5 L1756.5 136.5" fill="none" data-name="StudyNotification"></path>
+						</g>
+						<g transform="translate(1513.5, 105.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyNotification">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyNotification">
+								<text x="113.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyNotification">StudyNotification</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1513.5, 136.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyNotification">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyNotification">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyNotification">+taskInstance: TaskInstance</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudyNotification">+date: DateTime</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="TaskInstance">
+						<g fill="#eee8d5" stroke="#33322E" data-name="TaskInstance">
+							<rect x="1574.0" y="374.0" height="31.0" width="122.0" data-name="TaskInstance"></rect>
+						</g>
+						<g transform="translate(1574, 374)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TaskInstance">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TaskInstance">
+								<text x="53.0" y="13.5" stroke="none" text-anchor="middle" data-name="TaskInstance">TaskInstance</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Cache">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Cache">
+							<rect x="1796.5" y="52.5" height="183.0" width="282.0" data-name="Cache"></rect>
+							<path d="M1796.5 83.5 L2078.5 83.5" fill="none" data-name="Cache"></path>
+							<path d="M1796.5 129.5 L2078.5 129.5" fill="none" data-name="Cache"></path>
+						</g>
+						<g transform="translate(1796.5, 52.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Cache">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Cache">
+								<text x="133.0" y="13.5" stroke="none" text-anchor="middle" data-name="Cache">Cache</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1796.5, 83.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Cache">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Cache">
+								<text x="0.0" y="13.5" stroke="none" data-name="Cache">&lt;static&gt;+isSynchronizing: bool</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="Cache">&lt;static&gt;+sharedPrefs: dynamic</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1796.5, 129.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Cache">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Cache">
+								<text x="0.0" y="13.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic storeSubject()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic loadSubject()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic storeAnalytics()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic loadAnalytics()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic delete()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic synchronize()</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="GroupedIterable">
 						<g fill="#eee8d5" stroke="#33322E" data-name="GroupedIterable">
-							<rect x="1994.0" y="328.0" height="123.0" width="397.0" data-name="GroupedIterable"></rect>
-							<path d="M1994.0 359.0 L2391.0 359.0" fill="none" data-name="GroupedIterable"></path>
-							<path d="M1994.0 405.0 L2391.0 405.0" fill="none" data-name="GroupedIterable"></path>
+							<rect x="1958.0" y="328.0" height="123.0" width="397.0" data-name="GroupedIterable"></rect>
+							<path d="M1958.0 359.0 L2355.0 359.0" fill="none" data-name="GroupedIterable"></path>
+							<path d="M1958.0 405.0 L2355.0 405.0" fill="none" data-name="GroupedIterable"></path>
 						</g>
-						<g transform="translate(1994, 328)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GroupedIterable">
+						<g transform="translate(1958, 328)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GroupedIterable">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GroupedIterable">
 								<text x="190.5" y="13.5" stroke="none" text-anchor="middle" data-name="GroupedIterable">GroupedIterable</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1994, 359)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GroupedIterable">
+						<g transform="translate(1958, 359)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GroupedIterable">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="GroupedIterable">
 								<text x="0.0" y="13.5" stroke="none" data-name="GroupedIterable">+data: Map&lt;K, Iterable&lt;V&gt;&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="GroupedIterable">+iterator: Iterator&lt;MapEntry&lt;K, Iterable&lt;V&gt;&gt;&gt;</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1994, 405)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GroupedIterable">
+						<g transform="translate(1958, 405)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GroupedIterable">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="GroupedIterable">
 								<text x="0.0" y="13.5" stroke="none" data-name="GroupedIterable">+Iterable&lt;MapEntry&lt;K, R&gt;&gt; aggregate()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="GroupedIterable">+Iterable&lt;MapEntry&lt;K, R&gt;&gt; aggregateWithKey()</text>
@@ -378,9 +378,9 @@
 					</g>
 					<g data-name="Iterable">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Iterable">
-							<rect x="2154.5" y="128.5" height="31.0" width="76.0" data-name="Iterable"></rect>
+							<rect x="2118.5" y="128.5" height="31.0" width="76.0" data-name="Iterable"></rect>
 						</g>
-						<g transform="translate(2154.5, 128.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Iterable">
+						<g transform="translate(2118.5, 128.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Iterable">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Iterable">
 								<text x="30.0" y="13.5" stroke="none" text-anchor="middle" data-name="Iterable">Iterable</text>
 								
