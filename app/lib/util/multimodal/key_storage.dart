@@ -7,7 +7,7 @@ class KeyStorage {
 
   void _initEncryptionKey() {
     final Key key = Key.fromSecureRandom(32);
-    SecureStorage.write(KeyStorage.pefKeyForIV, key.base64);
+    SecureStorage.write(KeyStorage.prefKeyForKey, key.base64);
   }
 
   void _initEncryptionIV() {
