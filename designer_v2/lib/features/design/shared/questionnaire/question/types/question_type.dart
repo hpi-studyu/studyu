@@ -7,7 +7,7 @@ enum SurveyQuestionType {
   bool,
   scale,
   image,
-  audio;
+  audio,
   freeText;
 
   static SurveyQuestionType of(Question question) {
