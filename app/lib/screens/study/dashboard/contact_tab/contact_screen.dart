@@ -182,7 +182,7 @@ class ContactItem extends StatelessWidget {
       if (await canLaunchUrl(uri)) {
         launchUrl(uri);
       } else {
-        Analytics.logger.warning("Cannot launch Url: $uri");
+        StudyULogger.warning("Cannot launch Url: $uri");
       }
     }
   }

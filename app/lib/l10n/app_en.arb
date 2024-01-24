@@ -177,5 +177,26 @@
   "website": "Website",
   "email": "Email",
   "phone": "Phone",
-  "additionalInfo": "Additional information"
+  "additionalInfo": "Additional information",
+
+  "free_text_min_length_error": "Please enter at least {min} characters",
+  "@free_text_min_length_error": {
+    "placeholders": {
+      "min": {}
+    }
+  },
+  "free_text_max_length_error": "Please enter at most {max} characters",
+  "@free_text_max_length_error": {
+    "placeholders": {
+      "max": {}
+    }
+  },
+  "free_text_alphanumeric_error": "Please enter only alphanumeric characters",
+  "free_text_numeric_error": "Please enter only numeric characters",
+  "free_text_custom_error": "Please enter only characters matching the pattern {pattern}",
+  "@free_text_custom_error": {
+      "placeholders": {
+      "pattern": {}
+      }
+  }
 }

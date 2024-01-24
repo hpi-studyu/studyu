@@ -15,6 +15,7 @@ abstract class Question<V> {
     VisualAnalogueQuestion.questionType: (json) => VisualAnalogueQuestion.fromJson(json),
     ImageCapturingQuestion.questionType: (json) => ImageCapturingQuestion.fromJson(json),
     AudioRecordingQuestion.questionType: (json) => AudioRecordingQuestion.fromJson(json),
+    FreeTextQuestion.questionType: (json) => FreeTextQuestion.fromJson(json),
   };
   static const String keyType = 'type';
   String type;

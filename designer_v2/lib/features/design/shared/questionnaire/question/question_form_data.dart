@@ -1,4 +1,4 @@
-import 'package:flutter/rendering.dart';
+import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
@@ -39,6 +39,8 @@ abstract class QuestionFormData implements IFormData {
         ImageQuestionFormData.fromDomainModel(question as ImageCapturingQuestion, eligibilityCriteria),
     SurveyQuestionType.audio: (question, eligibilityCriteria) =>
         AudioQuestionFormData.fromDomainModel(question as AudioRecordingQuestion, eligibilityCriteria),
+    SurveyQuestionType.freeText: (question, eligibilityCriteria) =>
+        FreeTextQuestionFormData.fromDomainModel(question as FreeTextQuestion, eligibilityCriteria),
   };
 
   QuestionFormData({
@@ -77,6 +79,7 @@ abstract class QuestionFormData implements IFormData {
 
   EligibilityCriterion toEligibilityCriterion() {
     final criterion = EligibilityCriterion.withId();
+    // todo implement other expression types
     final expression = ChoiceExpression()..target = questionId;
     // Screener conditions are implemented as disqualifying by default in the
     // app (as of now), so we need to generate conditions for the qualifying
@@ -491,5 +494,73 @@ class ScaleQuestionFormData extends QuestionFormData {
   Answer constructAnswerFor(responseOption) {
     final question = toQuestion();
     return question.constructAnswer(responseOption as double);
+  }
+}
+
+class FreeTextQuestionFormData extends QuestionFormData {
+  FreeTextQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    required this.textLengthRange,
+    required this.textType,
+    required this.textTypeExpression,
+    super.questionInfoText,
+  });
+
+  List<int> textLengthRange;
+  FreeTextQuestionType textType;
+  String? textTypeExpression;
+
+  @override
+  List<String> get responseOptions => [];
+
+  factory FreeTextQuestionFormData.fromDomainModel(
+    FreeTextQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = FreeTextQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.freeText,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+      textLengthRange: question.lengthRange,
+      textType: question.textType,
+      textTypeExpression: question.customTypeExpression,
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question =
+        FreeTextQuestion(textType: textType, lengthRange: textLengthRange, customTypeExpression: textTypeExpression);
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    return question;
+  }
+
+  @override
+  FreeTextQuestionFormData copy() {
+    final data = FreeTextQuestionFormData(
+      questionId: const Uuid().v4(), // always regenerate id
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+      textLengthRange: textLengthRange,
+      textType: textType,
+      textTypeExpression: textTypeExpression,
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(responseOption) {
+    final question = toQuestion() as FreeTextQuestion;
+    final value = responseOption as String;
+    return question.constructAnswer(value);
   }
 }

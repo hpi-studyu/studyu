@@ -141,7 +141,7 @@ class _MeasurementSurveyFormViewState extends ConsumerState<MeasurementSurveyFor
         ),
         const SizedBox(height: 28.0),
         ReactiveFormConsumer(
-            // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
+            // [ReactiveFormConsumer] is needed to to re-render when descendant controls are updated
             // By default, ReactiveFormArray only updates when adding/removing controls
             builder: (context, form, child) {
           return ReactiveFormArray(

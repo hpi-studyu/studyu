@@ -22,6 +22,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   late bool responseValidator;
   DateTime? loginClickTime;
   bool _isLoading = false;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
     await handleTaskCompletion(context, (StudySubject? subject) async {
@@ -52,13 +53,19 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
       child: Column(
         children: [
           Expanded(
-            child: questionnaireWidget,
+            child: Form(
+              key: formKey,
+              child: questionnaireWidget,
+            ),
           ),
           if (response != null && responseValidator)
             ElevatedButton.icon(
               style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
               onPressed: () async {
                 if (isRedundantClick(loginClickTime)) {
+                  return;
+                }
+                if (!formKey.currentState!.validate()) {
                   return;
                 }
                 setState(() {
