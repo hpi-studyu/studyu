@@ -46,7 +46,6 @@
       "minLength": {}
     }
   },
-  "form_field_remember_me": "Remember me",
   "form_field_password_new": "New password",
   "form_field_password_new_hint": "Enter new password",
   "form_field_password_new_confirm": "Confirm new password",

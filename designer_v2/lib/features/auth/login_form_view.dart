@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
-import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
@@ -35,26 +34,9 @@ class LoginForm extends FormConsumerRefWidget {
         ),
         const SizedBox(height: 8.0),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IntrinsicWidth(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ReactiveCheckbox(
-                    key: ObjectKey(controller.rememberMeControl),
-                    formControl: controller.rememberMeControl,
-                  ),
-                  const SizedBox(width: 3.0),
-                  FormControlLabel(
-                    formControl: controller.rememberMeControl,
-                    text: tr.form_field_remember_me,
-                  ),
-                  const SizedBox(width: 8.0),
-                ],
-              ),
-            ),
             Hyperlink(
               text: tr.link_forgot_password,
               style: TextStyle(fontSize: theme.textTheme.bodySmall!.fontSize),

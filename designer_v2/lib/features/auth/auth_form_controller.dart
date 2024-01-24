@@ -56,7 +56,6 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     required this.notificationService,
     required this.router,
   }) : super(const AsyncValue.data(null)) {
-    _initRememberMe();
     _onChangeFormKey(formKey);
   }
 
@@ -226,16 +225,12 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     try {
       state = const AsyncValue.loading();
       final response = await authRepository.signInWith(email: email, password: password);
-      if (shouldRemember) {
-        _setRememberMe();
-      }
       return response;
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     } finally {
       state = const AsyncValue.data(null);
     }
-    _delRememberMe();
     return Future.value(AuthResponse());
   }
 
@@ -294,37 +289,6 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
       state = const AsyncValue.data(null);
     }
     return false;
-  }
-
-  // - Remember Me
-  // TODO properly implement this to auto-login instead of autofill
-
-  void _setRememberMe() {
-    sharedPreferences.setBool("rememberMe", rememberMeControl.value ?? false);
-    sharedPreferences.setString('email', emailControl.value ?? '');
-    sharedPreferences.setString('password', passwordControl.value ?? '');
-  }
-
-  void _delRememberMe() {
-    sharedPreferences.remove("rememberMe");
-    sharedPreferences.remove("email");
-    sharedPreferences.remove("password");
-  }
-
-  void _initRememberMe() async {
-    try {
-      final email = sharedPreferences.getString("email");
-      final password = sharedPreferences.getString("password");
-      final rememberMe = sharedPreferences.getBool("rememberMe") ?? false;
-      if (rememberMe) {
-        rememberMeControl.value = true;
-        emailControl.value = email ?? '';
-        passwordControl.value = password ?? '';
-      }
-    } catch (e) {
-      emailControl.value = '';
-      passwordControl.value = '';
-    }
   }
 }
 
