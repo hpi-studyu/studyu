@@ -8,16 +8,12 @@ repository: https://github.com/hpi-studyu/studyu
 environment:
   sdk: '>=3.2.0 <4.0.0'
 dependencies:
-  # todo check package
   audioplayers: ^5.2.1
-  # todo check package
-  camera: ^0.10.5+5
+  camera: ^0.10.5+9
   collection: ^1.18.0 # flutter_test
   connectivity_plus: ^5.0.2
-  # todo check package
-  cross_file: ^0.3.3+6
+  cross_file: ^0.3.3+8
   cupertino_icons: ^1.0.6
-  # todo what is this package
   encrypt: ^5.0.3
   fl_chart: ^0.66.1
   flutter:
@@ -32,7 +28,6 @@ dependencies:
   flutter_widget_from_html: ^0.14.11
   intersperse: ^2.0.0
   intl: ^0.18.1 # flutter_localizations
-  # todo what is this package
   loading_animation_widget: ^1.2.0+4
   material_design_icons_flutter: ^7.0.7296
   package_info_plus: ^5.0.1
@@ -43,7 +38,6 @@ dependencies:
   provider: ^6.1.1
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
-  # todo check package
   record: ^5.0.1
   sentry_flutter: ^7.15.0
   sentry_logging: ^7.15.0
