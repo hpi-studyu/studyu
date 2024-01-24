@@ -11,7 +11,7 @@ class KeyStorage {
   }
 
   void _initEncryptionIV() {
-    final IV iv = IV.fromSecureRandom(8);
+    final IV iv = IV.fromSecureRandom(16);
     SecureStorage.write(KeyStorage.pefKeyForIV, iv.base64);
   }
 
