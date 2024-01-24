@@ -2,12 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class Cache {
-  static Future<SharedPreferences> get sharedPrefs => SharedPreferences.getInstance();
   static bool isSynchronizing = false;
 
   static Future<void> storeSubject(StudySubject? subject) async {
@@ -15,14 +13,14 @@ class Cache {
     StudySubject newSubject;
     newSubject = await synchronize(subject);
     Analytics.logger.info("Save to local cache");
-    (await sharedPrefs).setString(cacheSubjectKey, jsonEncode(newSubject.toFullJson()));
+    SecureStorage.write(cacheSubjectKey, jsonEncode(newSubject.toFullJson()));
     assert(newSubject == (await loadSubject()));
   }
 
   static Future<StudySubject> loadSubject() async {
     Analytics.logger.info("Load subject from cache");
-    if ((await sharedPrefs).containsKey(cacheSubjectKey)) {
-      return StudySubject.fromJson(jsonDecode((await sharedPrefs).getString(cacheSubjectKey)!));
+    if (await SecureStorage.containsKey(cacheSubjectKey)) {
+      return StudySubject.fromJson(jsonDecode((await SecureStorage.read(cacheSubjectKey))!));
     } else {
       Analytics.logger.warning("No cached subject found");
       throw Exception("No cached subject found");
@@ -30,25 +28,25 @@ class Cache {
   }
 
   static Future<void> storeAnalytics(StudyUAnalytics analytics) async {
-    (await sharedPrefs).setString(StudyUAnalytics.keyStudyUAnalytics, jsonEncode(analytics.toJson()));
+    SecureStorage.write(StudyUAnalytics.keyStudyUAnalytics, jsonEncode(analytics.toJson()));
   }
 
   static Future<StudyUAnalytics?> loadAnalytics() async {
-    if ((await sharedPrefs).containsKey(cacheSubjectKey)) {
-      return StudyUAnalytics.fromJson(jsonDecode((await sharedPrefs).getString(StudyUAnalytics.keyStudyUAnalytics)!));
+    if (await SecureStorage.containsKey(cacheSubjectKey)) {
+      return StudyUAnalytics.fromJson(jsonDecode((await SecureStorage.read(StudyUAnalytics.keyStudyUAnalytics))!));
     }
     return null;
   }
 
   static Future<void> delete() async {
     Analytics.logger.warning("Delete cache");
-    (await sharedPrefs).remove(cacheSubjectKey);
+    SecureStorage.delete(cacheSubjectKey);
   }
 
   static Future<StudySubject> synchronize(StudySubject remoteSubject) async {
     if (isSynchronizing) return remoteSubject;
     // No local subject found
-    if (!(await sharedPrefs).containsKey(cacheSubjectKey)) return remoteSubject;
+    if (!(await SecureStorage.containsKey(cacheSubjectKey))) return remoteSubject;
     final localSubject = await loadSubject();
     // local and remote subject are equal, nothing to synchronize
     if (localSubject == remoteSubject) return remoteSubject;

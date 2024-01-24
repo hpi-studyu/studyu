@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 import 'locale_providers.dart';
 
@@ -49,7 +49,6 @@ class LocaleStateNotifier extends StateNotifier<LocaleState> {
     if (supportedLocales.contains(locale)) {
       state = state.copyWith(locale: locale);
       save();
-      return;
     }
 
     // Get the closest language locale and set that instead
@@ -62,10 +61,7 @@ class LocaleStateNotifier extends StateNotifier<LocaleState> {
     if (closestLocale != null) {
       state = state.copyWith(locale: closestLocale);
       save();
-      return;
     }
-
-    return;
   }
 
   /// Restore Locale from Storage
@@ -84,8 +80,7 @@ class LocaleStateNotifier extends StateNotifier<LocaleState> {
 
   Future<LocaleState?> load() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      String? locString = prefs.getString(_localStorageKey);
+      String? locString = await SecureStorage.read(_localStorageKey);
       if (locString != null) {
         final locale = locString.split('-');
         return LocaleState(Locale(locale.first, locale.last));
@@ -96,11 +91,7 @@ class LocaleStateNotifier extends StateNotifier<LocaleState> {
     return null;
   }
 
-  Future<bool> save() async {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setString(_localStorageKey, state.locale.toLanguageTag());
-      return true;
-    });
-    return false;
+  Future<void> save() async {
+    SecureStorage.write(_localStorageKey, state.locale.toLanguageTag());
   }
 }

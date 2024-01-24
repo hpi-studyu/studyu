@@ -294,8 +294,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
 /*Future<bool> migrateParticipantToNewDB(String selectedStudyObjectId) async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
+    if (await SecureStorage.containsKey(userEmailKey) && await SecureStorage.containsKey(userPasswordKey)) {
       try {
         // create new account
         if (await anonymousSignUp()) {

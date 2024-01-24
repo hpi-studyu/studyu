@@ -8,13 +8,10 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:studyu_designer_v2/services/shared_prefs.dart';
 
 import 'robots/robots.dart';
 
 void main() {
-  late SharedPreferences sharedPreferences;
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -23,19 +20,18 @@ void main() {
     await runAsync(prefetchEmojiFont);
     // Turn off the # in the URLs on the web
     usePathUrlStrategy();
-    sharedPreferences = await SharedPreferences.getInstance();
-    await sharedPreferences.clear();
+    await SecureStorage.deleteAll();
   });
 
   group('end-to-end tests', () {
     // NOTE:
     //  the hydration of user is inconsistent and derails the tests
-    //  thus, we need to clear the sharedPreferences so that the
+    //  thus, we need to clear the storage so that the
     //  hydration does not happen
     // When 'Remember me is added, this method can be removed - but
     //  it could be a good practice to keep it so that the test instances
     //  do not share any information in the app cache
-    setUp(() async => await sharedPreferences.clear()); // RM
+    setUp(() async => await SecureStorage.deleteAll()); // RM
 
     // todo Find a way to run tests consecutively
 
@@ -47,9 +43,7 @@ void main() {
       final authRobot = AuthRobot($);
       final studiesRobot = StudiesRobot($);
 
-      await $.pumpWidgetAndSettle(ProviderScope(overrides: [
-        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-      ], child: const App()));
+      await $.pumpWidgetAndSettle(const ProviderScope(child: App()));
       await appRobot.validateOnLoginScreen();
       await authRobot.navigateToSignUpScreen();
       await authRobot.enterEmail('test@email.com');
@@ -69,9 +63,7 @@ void main() {
       final authRobot = AuthRobot($);
       final studiesRobot = StudiesRobot($);
 
-      await $.pumpWidgetAndSettle(ProviderScope(overrides: [
-        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-      ], child: const App()));
+      await $.pumpWidgetAndSettle(const ProviderScope(child: App()));
       await appRobot.validateOnLoginScreen();
       await authRobot.enterEmail('test@email.com');
       await authRobot.enterPassword('password');
@@ -91,9 +83,7 @@ void main() {
     patrolWidgetTest('Remember me function test', semanticsEnabled: false, skip: true, ($) async {
       final studiesRobot = StudiesRobot($);
 
-      await $.pumpWidgetAndSettle(ProviderScope(overrides: [
-        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-      ], child: const App()));
+      await $.pumpWidgetAndSettle(const ProviderScope(child: App()));
 
       studiesRobot.validateOnStudiesScreen();
     });
@@ -105,9 +95,7 @@ void main() {
       final studyDesignRobot = StudyDesignRobot($);
       final studyInfoRobot = StudyInfoRobot($);
 
-      await $.pumpWidgetAndSettle(ProviderScope(overrides: [
-        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-      ], child: const App()));
+      await $.pumpWidgetAndSettle(const ProviderScope(child: App()));
       await appRobot.validateOnLoginScreen(); // RM
       await authRobot.enterEmail('test@email.com'); // RM
       await authRobot.enterPassword('password'); // RM
@@ -141,9 +129,7 @@ void main() {
       final studyInterventionsRobot = StudyInterventionsRobot($);
       final studyMeasurementsRobot = StudyMeasurementsRobot($);
 
-      await $.pumpWidgetAndSettle(ProviderScope(overrides: [
-        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-      ], child: const App()));
+      await $.pumpWidgetAndSettle(const ProviderScope(child: App()));
 
       /* START SIGN UP */
       await appRobot.validateOnLoginScreen();

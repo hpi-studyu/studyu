@@ -1,5 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:studyu_core/env.dart' as env;
+import 'package:studyu_flutter_common/src/utils/storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 const envsAssetPath = 'packages/studyu_flutter_common/envs';
@@ -24,6 +25,9 @@ Future<void> loadEnv() async {
   await Supabase.initialize(
     url: supabaseUrl!,
     anonKey: supabaseAnonKey!,
+    authOptions: FlutterAuthClientOptions(
+      localStorage: SupabaseStorage(),
+    ),
     debug: true,
   );
   env.setEnv(
