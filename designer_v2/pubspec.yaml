@@ -38,7 +38,7 @@ dependencies:
   supabase: ^2.0.6
   supabase_flutter: ^2.3.1
   url_launcher: ^6.2.4
-  uuid: ^4.2.1 # flutter_test
+  uuid: ^4.3.3
 
 dev_dependencies:
   custom_lint:
