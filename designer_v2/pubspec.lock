@@ -165,18 +165,18 @@ packages:
     dependency: transitive
     description:
       name: custom_lint_builder
-      sha256: "8df6634b38a36a6c6cb74a9c0eb02e9ba0b0ab89b29e38e6daa86e8ed2c6288d"
+      sha256: badc07d7737b71e9a9f960f53463f06e09cc6ccdaa1779623015eaf9f9ee8410
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.8"
+    version: "0.5.10"
   custom_lint_core:
     dependency: transitive
     description:
       name: custom_lint_core
-      sha256: "2b235be098d157e244f18ea905a15a18c16a205e30553888fac6544bbf52f03f"
+      sha256: bfcc6b518c54d386ad0647ad7a4f415b4db3ea270d09fd9b7f4a1a2df07c3d84
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.8"
+    version: "0.5.10"
   dart_style:
     dependency: transitive
     description:
@@ -504,10 +504,10 @@ packages:
     dependency: transitive
     description:
       name: mime
-      sha256: e4ff8e8564c03f255408decd16e7899da1733852a9110a58fe6d1b817684a63e
+      sha256: "2e123074287cc9fd6c09de8336dae606d1ddb88d9ac47358826db698c176a1f2"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   multi_select_flutter:
     dependency: transitive
     description:
