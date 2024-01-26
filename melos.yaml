@@ -39,7 +39,6 @@ scripts:
     run: |
       melos exec -c 6 -- \
         "dart format -l 120 ."
-        markdownlint --ignore-path '.meta/.markdownlintignore' --config '.meta/.mdlrc' './**/*.md' --fix
     description: Format all code and markdown files
 
   format:ci:
