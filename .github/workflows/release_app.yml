@@ -18,7 +18,7 @@ jobs:
       - name: Await potential publishing on Pub.dev
         uses: johannesvedder/await-workflow@v1
         with:
-          workflowId: 'publish_pubdev.yml'
+          workflowId: publish_pubdev.yml
       - name: Get the tag name
         run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_ENV"
       - name: Checkout code
@@ -33,8 +33,8 @@ jobs:
           echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
       - uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: temurin
+          java-version: 17
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
