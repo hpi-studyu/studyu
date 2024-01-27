@@ -11,7 +11,6 @@
 #
 
 opt_out_usage
-# Uncomment the line if you want fastlane to automatically update itself
 update_fastlane
 
 def delete_temp_keychain(name)
@@ -37,6 +36,7 @@ default_platform(:ios)
 
 platform :ios do
   lane :upload_testflight do
+    # setup_ci if ENV['CI']
     keychain_name = ENV["TEMP_KEYCHAIN_USER"]
     keychain_password = ENV["TEMP_KEYCHAIN_PASSWORD"]
     ensure_temp_keychain(keychain_name, keychain_password)
@@ -46,6 +46,7 @@ platform :ios do
       issuer_id: ENV['FASTLANE_APP_IOS_ISSUER_ID'],
       key_content: ENV['FASTLANE_APP_IOS_KEY_CONTENT']
     )
+
     match(
       git_url: ENV['FASTLANE_APP_IOS_MATCH_GIT_URL'],
       git_private_key: ENV['FASTLANE_APP_IOS_MATCH_GIT_PRIVATE_KEY'],
@@ -53,9 +54,11 @@ platform :ios do
       keychain_name: keychain_name,
       keychain_password: keychain_password 
     )
+
     build_app(
       export_method: "app-store"
     )
+
     pilot
 
     delete_temp_keychain(keychain_name)

@@ -29,17 +29,18 @@ jobs:
         id: decrypt_files
         run: |
           echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
-          gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
+          gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/app/studyu-keystore.jks
           echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
       - name: Build StudyU app apk
-        run: flutter build apk --build-number ${{ github.run_number }}
+        run: flutter build apk --release --build-number ${{ github.run_number }}
         working-directory: ./app
       - name: Create Release
         id: create_release

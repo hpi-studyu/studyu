@@ -6,9 +6,6 @@ buildscript {
     }
 
     dependencies {
-        // Start flutter_local_notifications
-        // classpath 'com.android.tools.build:gradle:7.3.1'
-        // End flutter_local_notifications
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
