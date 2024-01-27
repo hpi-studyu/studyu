@@ -15,6 +15,10 @@ concurrency:
   group: ${{ github.ref }}-deploy-apps
   cancel-in-progress: true
 
+defaults:
+  run:
+    working-directory: app
+
 jobs:
   play-store-release:
     name: Create Play Store Release
@@ -35,7 +39,6 @@ jobs:
         with:
           ruby-version: 3.2.1
           bundler-cache: true
-          working-directory: './app/android'
       - name: Decrypt files
         id: decrypt_files
         run: |
@@ -49,7 +52,6 @@ jobs:
       - name: Build StudyU app bundle
         run: flutter build appbundle --build-number ${{ github.run_number }}
       - name: Fastlane upload
-        working-directory: ./app/android
         run: fastlane deploy
         env:
           PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
@@ -71,7 +73,6 @@ jobs:
         with:
           ruby-version: 3.2.1
           bundler-cache: true
-          working-directory: './app/ios'
       - name: Set up flutter
         uses: subosito/flutter-action@v2
         with:
@@ -80,7 +81,6 @@ jobs:
         run: flutter build ios --no-codesign --build-number ${{ github.run_number }}
         working-directory: ./app
       - name: Fastlane upload
-        working-directory: ./app/ios
         run: fastlane upload_testflight
         env:
           FASTLANE_APP_IOS_KEY_ID: ${{ secrets.FASTLANE_APP_IOS_KEY_ID }}
