@@ -78,8 +78,13 @@ jobs:
         with:
           channel: stable
       - name: Build StudyU ios without codesign
-        run: flutter build ios --no-codesign --build-number ${{ github.run_number }}
-        working-directory: ./app
+        run: |
+          # Get version from pubspec.yaml and make it CFBundleShortVersionString compatible
+          version=$(flutter pub deps --json | jq -r '.packages[] | select(.name == "studyu_app").version')
+          major=$(echo "$version" | awk -F '.' '{print $1}')
+          minor=$(echo "$version" | awk -F '.' '{print $2}')
+          patch=$(echo "$version" | awk -F '.' '{print $3}')
+          flutter build ios --no-codesign --build-number ${{ github.run_number }} --build-name "$major.$minor.$patch"
       - name: Fastlane upload
         run: fastlane upload_testflight
         env:
