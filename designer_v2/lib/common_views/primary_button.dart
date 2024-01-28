@@ -12,7 +12,8 @@ class PrimaryButton extends StatefulWidget {
     this.onPressedFuture,
     this.enabled = true,
     this.showLoadingEarliestAfterMs = 100,
-    this.innerPadding = const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+    this.innerPadding =
+        const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
     this.minimumSize,
     super.key,
   });
@@ -39,7 +40,8 @@ class PrimaryButton extends StatefulWidget {
 
   final EdgeInsets innerPadding;
 
-  bool get isDisabled => !enabled || (onPressed == null && onPressedFuture == null);
+  bool get isDisabled =>
+      !enabled || (onPressed == null && onPressedFuture == null);
 
   final Size? minimumSize;
 
@@ -59,7 +61,8 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       minimumSize: widget.minimumSize,
     ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0));
 
-    final tooltipMessage = (!widget.isDisabled) ? widget.tooltip : widget.tooltipDisabled;
+    final tooltipMessage =
+        (!widget.isDisabled) ? widget.tooltip : widget.tooltipDisabled;
 
     onButtonPressed() {
       widget.onPressed?.call();
@@ -71,7 +74,8 @@ class _PrimaryButtonState extends State<PrimaryButton> {
             });
           }
         });
-        Future.delayed(Duration(milliseconds: widget.showLoadingEarliestAfterMs), () {
+        Future.delayed(
+            Duration(milliseconds: widget.showLoadingEarliestAfterMs), () {
           if (mounted) {
             setState(() {
               trackedFuture = future;
@@ -84,40 +88,51 @@ class _PrimaryButtonState extends State<PrimaryButton> {
     if (widget.icon != null) {
       return Tooltip(
         message: tooltipMessage,
-        child: ElevatedButton.icon(
+        child: ElevatedButton(
           style: primaryStyle,
           onPressed: (widget.isDisabled) ? null : onButtonPressed,
-          icon: widget.isLoading
-              ? SizedBox(
-                  width: theme.iconTheme.size ?? 14.0,
-                  height: theme.iconTheme.size ?? 14.0,
-                  child: const CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2.0,
-                  ),
-                )
-              : Icon(widget.icon),
-          label: Text(widget.text, textAlign: TextAlign.center),
+          child: Padding(
+            padding: widget.innerPadding,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                widget.isLoading
+                    ? SizedBox(
+                        width: theme.iconTheme.size ?? 14.0,
+                        height: theme.iconTheme.size ?? 14.0,
+                        child: const CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2.0,
+                        ),
+                      )
+                    : Icon(widget.icon),
+                const SizedBox(width: 6.0),
+                Text(widget.text, textAlign: TextAlign.center),
+              ],
+            ),
+          ),
         ),
       );
     }
 
     return Tooltip(
-      message: tooltipMessage,
-      child: ElevatedButton(
-        style: primaryStyle,
-        onPressed: widget.isDisabled ? null : onButtonPressed,
-        child: widget.isLoading
-            ? SizedBox(
-                width: theme.iconTheme.size ?? 14.0,
-                height: theme.iconTheme.size ?? 14.0,
-                child: const CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2.0,
-                ),
-              )
-            : Text(widget.text, textAlign: TextAlign.center),
-      ),
-    );
+        message: tooltipMessage,
+        child: ElevatedButton(
+          style: primaryStyle,
+          onPressed: widget.isDisabled ? null : onButtonPressed,
+          child: Padding(
+            padding: widget.innerPadding,
+            child: widget.isLoading
+                ? SizedBox(
+                    width: theme.iconTheme.size ?? 14.0,
+                    height: theme.iconTheme.size ?? 14.0,
+                    child: const CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2.0,
+                    ),
+                  )
+                : Text(widget.text, textAlign: TextAlign.center),
+          ),
+        ));
   }
 }
