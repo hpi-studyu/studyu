@@ -1,10 +1,10 @@
 {
-    "name": "StudyU Health App",
+    "name": "StudyU App | StudyU Health",
     "short_name": "studyu_app",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#dfdfdf",
-    "theme_color": "#389bea",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
     "description": "Partake in digital N-of-1 trials with the innovative StudyU Health App",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,

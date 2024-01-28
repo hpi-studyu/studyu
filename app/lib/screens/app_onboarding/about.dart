@@ -327,7 +327,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Image(image: AssetImage('assets/icon/icon_wide.png'), height: 200),
+                const Image(image: AssetImage('assets/icon/logo.png'), height: 200),
                 const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.description_part9,

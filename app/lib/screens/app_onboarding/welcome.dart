@@ -16,7 +16,7 @@ class WelcomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Spacer(),
-              const Image(image: AssetImage('assets/icon/icon_wide.png'), height: 200),
+              const Image(image: AssetImage('assets/icon/logo.png'), height: 200),
               const SizedBox(height: 20),
               OutlinedButton.icon(
                 icon: const Icon(Icons.info),

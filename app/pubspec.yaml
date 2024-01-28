@@ -51,25 +51,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-flutter_launcher_icons:
-  android: true
-  ios: true
-  image_path: "assets/icon/icon.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
-  web:
-    generate: true
-    image_path: "assets/icon/icon.png"
-    background_color: "#dfdfdf"
-    theme_color: "#389bea"
-  windows:
-    generate: true
-    image_path: "assets/icon/icon.png"
-    icon_size: 48 # min:48, max:256, default: 48
-  macos:
-    generate: true
-    image_path: "assets/icon/icon.png"
-
-
 flutter:
   generate: true
   uses-material-design: true
@@ -77,3 +58,23 @@ flutter:
     - assets/
     - assets/icon/
     - assets/fonts/
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"
+  image_path_ios: "assets/icon/icon_bg.png"
+  remove_alpha_ios: true
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#0175C2" # "#dfdfdf"
+    theme_color: "#0175C2" # "#389bea"
+  windows:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    icon_size: 256 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/icon/icon.png"
