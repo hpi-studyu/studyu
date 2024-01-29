@@ -46,7 +46,7 @@ jobs:
           cache: true
       - name: Prepare upload key
         run: |
-          echo "$STUDYU_ANDROID_KEYSTORE_BASE64" | base64 --decode > keystore.jks
+          echo "$STUDYU_ANDROID_KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
           echo "$STUDYU_KEY_PROPERTIES" > key.properties
         working-directory: app/android
         env:
