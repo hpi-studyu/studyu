@@ -2,22 +2,15 @@ import 'package:studyu_core/src/models/questionnaire/answer.dart';
 import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
 import 'package:studyu_core/src/models/questionnaire/questions/questions.dart';
+import 'package:studyu_core/src/models/questionnaire/questions/unknown_question.dart';
 import 'package:uuid/uuid.dart';
 
 typedef QuestionParser = Question Function(Map<String, dynamic> data);
 
 abstract class Question<V> {
-  static Map<String, QuestionParser> questionTypes = {
-    BooleanQuestion.questionType: (json) => BooleanQuestion.fromJson(json),
-    ChoiceQuestion.questionType: (json) => ChoiceQuestion.fromJson(json),
-    ScaleQuestion.questionType: (json) => ScaleQuestion.fromJson(json),
-    AnnotatedScaleQuestion.questionType: (json) => AnnotatedScaleQuestion.fromJson(json),
-    VisualAnalogueQuestion.questionType: (json) => VisualAnalogueQuestion.fromJson(json),
-    FreeTextQuestion.questionType: (json) => FreeTextQuestion.fromJson(json),
-  };
   static const String keyType = 'type';
   String type;
-
+  bool get isSupported => true;
   late String id;
   String? prompt;
   String? rationale;
@@ -29,9 +22,15 @@ abstract class Question<V> {
 
   Question.withId(this.type) : id = const Uuid().v4();
 
-  factory Question.fromJson(Map<String, dynamic> data) {
-    return questionTypes[data[keyType]]!(data) as Question<V>;
-  }
+  factory Question.fromJson(Map<String, dynamic> data) => switch (data[keyType]) {
+        BooleanQuestion.questionType => BooleanQuestion.fromJson(data),
+        ChoiceQuestion.questionType => ChoiceQuestion.fromJson(data),
+        ScaleQuestion.questionType => ScaleQuestion.fromJson(data),
+        AnnotatedScaleQuestion.questionType => AnnotatedScaleQuestion.fromJson(data),
+        VisualAnalogueQuestion.questionType => VisualAnalogueQuestion.fromJson(data),
+        FreeTextQuestion.questionType => FreeTextQuestion.fromJson(data),
+        _ => UnknownQuestion(),
+      } as Question<V>;
 
   Map<String, dynamic> toJson();
 

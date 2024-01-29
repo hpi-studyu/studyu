@@ -5,7 +5,7 @@ import 'package:studyu_core/src/util/supabase_object.dart';
 
 part 'repo.g.dart';
 
-enum GitProvider { gitlab }
+enum GitProvider { unknown, gitlab }
 
 @JsonSerializable()
 class Repo extends SupabaseObjectFunctions<Repo> {
@@ -20,6 +20,7 @@ class Repo extends SupabaseObjectFunctions<Repo> {
   String userId;
   @JsonKey(name: 'study_id')
   String studyId;
+  @JsonKey(unknownEnumValue: GitProvider.unknown)
   GitProvider provider;
   @JsonKey(name: 'web_url')
   String? webUrl;

@@ -11,6 +11,8 @@ class ReportSpecification {
 
   ReportSpecification();
 
+  bool get isSupported => (primary == null || primary!.isSupported) && secondary.every((r) => r.isSupported);
+
   factory ReportSpecification.fromJson(Map<String, dynamic> json) => _$ReportSpecificationFromJson(json);
   Map<String, dynamic> toJson() => _$ReportSpecificationToJson(this);
 

@@ -64,6 +64,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       : id = const Uuid().v4(),
         studyId = study.id;
 
+  bool get isSupported => study.isSupported && progress.every((p) => p.isSupported);
+
   List<String> get interventionOrder => [
         if (study.schedule.includeBaseline) Study.baselineID,
         ...study.schedule.generateWith(0).map<String>((int index) => selectedInterventionIds[index]),

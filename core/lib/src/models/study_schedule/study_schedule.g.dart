@@ -13,7 +13,8 @@ StudySchedule _$StudyScheduleFromJson(Map<String, dynamic> json) =>
       ..numberOfCycles = json['numberOfCycles'] as int
       ..phaseDuration = json['phaseDuration'] as int
       ..includeBaseline = json['includeBaseline'] as bool
-      ..sequence = $enumDecode(_$PhaseSequenceEnumMap, json['sequence']);
+      ..sequence = $enumDecode(_$PhaseSequenceEnumMap, json['sequence'],
+          unknownValue: PhaseSequence.unknown);
 
 Map<String, dynamic> _$StudyScheduleToJson(StudySchedule instance) =>
     <String, dynamic>{
@@ -25,6 +26,7 @@ Map<String, dynamic> _$StudyScheduleToJson(StudySchedule instance) =>
     };
 
 const _$PhaseSequenceEnumMap = {
+  PhaseSequence.unknown: 'unknown',
   PhaseSequence.alternating: 'alternating',
   PhaseSequence.counterBalanced: 'counterBalanced',
   PhaseSequence.randomized: 'randomized',

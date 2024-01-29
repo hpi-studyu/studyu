@@ -23,4 +23,5 @@ class EligibilityCriterion {
 
   bool isSatisfied(QuestionnaireState qs) => condition.evaluate(qs) == true;
   bool isViolated(QuestionnaireState qs) => condition.evaluate(qs) == false;
+  bool get isSupported => condition.isSupported;
 }

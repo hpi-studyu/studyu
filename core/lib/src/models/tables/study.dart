@@ -18,6 +18,7 @@ enum StudyStatus {
 }
 
 enum Participation {
+  unknown,
   open,
   invite;
 
@@ -26,6 +27,7 @@ enum Participation {
 }
 
 enum ResultSharing {
+  unknown,
   public,
   private,
   organization;
@@ -47,8 +49,9 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   String? description;
   @JsonKey(name: 'user_id')
   String userId;
+  @JsonKey(unknownEnumValue: Participation.unknown)
   Participation participation = Participation.invite;
-  @JsonKey(name: 'result_sharing')
+  @JsonKey(name: 'result_sharing', unknownEnumValue: ResultSharing.unknown)
   ResultSharing resultSharing = ResultSharing.private;
   late Contact contact = Contact();
   @JsonKey(name: 'icon_name')
@@ -175,6 +178,23 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
       SupabaseQuery.catchSupabaseException(error, stacktrace);
       rethrow;
     }
+  }
+
+  /// Returns true if the deserialized study does not contain any unknown values
+  bool get isSupported {
+    if (participation == Participation.unknown) return false;
+    if (resultSharing == ResultSharing.unknown) return false;
+    if (!questionnaire.isSupported) return false;
+    if (!eligibilityCriteria.every((criterion) => criterion.isSupported)) return false;
+    if (!interventions.every((intervention) => intervention.isSupported)) return false;
+    if (!observations.every((observation) => observation.isSupported)) return false;
+    if (!schedule.isSupported) return false;
+    if (!reportSpecification.isSupported) return false;
+    if (!results.every((result) => result.isSupported)) return false;
+    if (repo?.provider == GitProvider.unknown) return false;
+    if (participants != null && !participants!.every((participant) => participant.isSupported)) return false;
+    if (participantsProgress != null && !participantsProgress!.every((progress) => progress.isSupported)) return false;
+    return true;
   }
 
   bool isOwner(User? user) => user != null && userId == user.id;

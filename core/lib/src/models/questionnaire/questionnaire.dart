@@ -6,6 +6,8 @@ class StudyUQuestionnaire {
 
   StudyUQuestionnaire();
 
+  bool get isSupported => questions.every((question) => question.isSupported);
+
   factory StudyUQuestionnaire.fromJson(List<dynamic> data) =>
       StudyUQuestionnaire()..questions = data.map((entry) => Question.fromJson(entry as Map<String, dynamic>)).toList();
 

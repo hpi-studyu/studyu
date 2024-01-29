@@ -35,6 +35,7 @@ class StudyParticipationBadge extends StatelessWidget {
             icon: showPrefixIcon ? Icons.people_rounded : null,
             padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0)));
       case Participation.invite:
+      case Participation.unknown:
         return inTooltip(studybadge.Badge(
           label: participation.whoShort,
           color: colorScheme.onPrimaryContainer.withOpacity(0.6),

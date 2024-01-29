@@ -21,6 +21,9 @@ class QuestionnaireTask extends Observation {
   Map<String, dynamic> toJson() => _$QuestionnaireTaskToJson(this);
 
   @override
+  bool get isSupported => questions.isSupported;
+
+  @override
   Map<DateTime, T> extractPropertyResults<T>(String property, List<SubjectProgress> sourceResults) {
     final Question? targetQuestion = questions.questions.firstWhereOrNull((q) => q.id == property);
     if (targetQuestion == null) {

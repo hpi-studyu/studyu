@@ -26,6 +26,22 @@ Future<void> navigateToStudyOverview(
   Navigator.pushNamed(context, Routes.studyOverview);
 }
 
+Future<void> showAppOutdatedDialog(BuildContext context) async {
+  await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(AppLocalizations.of(context)!.study_selection_unsupported_title),
+      content: Text(AppLocalizations.of(context)!.study_selection_unsupported),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("OK"),
+        ),
+      ],
+    ),
+  );
+}
+
 class StudySelectionScreen extends StatelessWidget {
   const StudySelectionScreen({super.key});
 
@@ -81,12 +97,19 @@ class StudySelectionScreen extends StatelessWidget {
                     return ListView.builder(
                       itemCount: studies!.length,
                       itemBuilder: (context, index) {
+                        final study = studies[index];
                         return Hero(
                           tag: 'study_tile_${studies[index].id}',
                           child: Material(
                             child: StudyTile.fromStudy(
-                              study: studies[index],
-                              onTap: () => navigateToStudyOverview(context, studies[index]),
+                              study: study,
+                              onTap: () async {
+                                if (!study.isSupported) {
+                                  await showAppOutdatedDialog(context);
+                                  return;
+                                }
+                                await navigateToStudyOverview(context, study);
+                              },
                             ),
                           ),
                         );
@@ -190,6 +213,11 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
                   if (!mounted) return;
                   Navigator.pop(context);
+
+                  if (!study.isSupported) {
+                    await showAppOutdatedDialog(context);
+                    return;
+                  }
 
                   if (result.containsKey('preselected_intervention_ids') &&
                       result['preselected_intervention_ids'] != null) {

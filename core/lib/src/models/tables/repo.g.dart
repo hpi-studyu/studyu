@@ -10,7 +10,8 @@ Repo _$RepoFromJson(Map<String, dynamic> json) => Repo(
       json['project_id'] as String,
       json['user_id'] as String,
       json['study_id'] as String,
-      $enumDecode(_$GitProviderEnumMap, json['provider']),
+      $enumDecode(_$GitProviderEnumMap, json['provider'],
+          unknownValue: GitProvider.unknown),
       json['web_url'] as String?,
       json['git_url'] as String?,
     );
@@ -35,5 +36,6 @@ Map<String, dynamic> _$RepoToJson(Repo instance) {
 }
 
 const _$GitProviderEnumMap = {
+  GitProvider.unknown: 'unknown',
   GitProvider.gitlab: 'gitlab',
 };

@@ -20,6 +20,8 @@
   "study_selection_single": "You can only participate in one study at a time.",
   "study_selection_single_why": "Why?",
   "study_selection_single_reason": "If you were to participate in multiple studies at a time, the interventions of these studies might interfere with one another and alter the results.",
+  "study_selection_unsupported_title": "Outdated app version",
+  "study_selection_unsupported": "The study you are trying to join is not compatible with your app version. Please update the app to the latest version.",
   "study_overview_title": "Overview",
   "eligibility_questionnaire_title": "Questionnaire",
   "please_answer_eligibility": "Please answer a few questions to make sure that you can safely participate in this study.",

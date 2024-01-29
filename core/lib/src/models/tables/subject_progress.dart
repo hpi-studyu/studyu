@@ -29,6 +29,8 @@ class SubjectProgress extends SupabaseObjectFunctions<SubjectProgress> {
   @JsonKey(includeToJson: false, includeFromJson: false)
   DateTime? startedAt;
 
+  bool get isSupported => result.isSupported;
+
   SubjectProgress({
     required this.subjectId,
     required this.interventionId,
