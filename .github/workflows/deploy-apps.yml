@@ -48,8 +48,6 @@ jobs:
         run: |
           echo "$STUDYU_ANDROID_KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
           echo "$STUDYU_KEY_PROPERTIES" > key.properties
-          ls -la
-          ls -la app
         working-directory: app/android
         env:
           STUDYU_ANDROID_KEYSTORE_BASE64: ${{ secrets.STUDYU_ANDROID_KEYSTORE_BASE64 }}
@@ -95,8 +93,8 @@ jobs:
           app_version=$(flutter pub deps --json | jq -r '.packages[] | select(.name == "studyu_app").version')
           if [[ $app_version =~ $regex ]]; then
             short_version_string="STUDYU_APP_VERSION=${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${BASH_REMATCH[3]}"
-            echo $short_version_string
-            echo $short_version_string >> $GITHUB_ENV
+            echo "$short_version_string"
+            echo "$short_version_string" >> "$GITHUB_ENV"
           else
             echo "Version $app_version is not a valid semantic version"
             exit 1
