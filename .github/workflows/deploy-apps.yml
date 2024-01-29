@@ -48,6 +48,8 @@ jobs:
         run: |
           echo "$STUDYU_ANDROID_KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
           echo "$STUDYU_KEY_PROPERTIES" > key.properties
+          ls -la
+          ls -la app
         working-directory: app/android
         env:
           STUDYU_ANDROID_KEYSTORE_BASE64: ${{ secrets.STUDYU_ANDROID_KEYSTORE_BASE64 }}
