@@ -25,12 +25,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Decrypt files
-        id: decrypt_files
+      - name: Prepare upload key
         run: |
-          echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
-          gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/app/studyu-keystore.jks
-          echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
+          echo "$STUDYU_ANDROID_KEYSTORE_BASE64" | base64 --decode > keystore.jks
+          echo "$STUDYU_KEY_PROPERTIES" > key.properties
+        working-directory: app/android
+        env:
+          STUDYU_ANDROID_KEYSTORE_BASE64: ${{ secrets.STUDYU_ANDROID_KEYSTORE_BASE64 }}
+          STUDYU_KEY_PROPERTIES: ${{ secrets.STUDYU_KEY_PROPERTIES }}
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
