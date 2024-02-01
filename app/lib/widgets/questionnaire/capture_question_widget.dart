@@ -30,31 +30,6 @@ class _CaptureQuestionWidgetState extends State<CaptureQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> captureData() async {
-      final newPathAnswer = await Navigator.push(context, MaterialPageRoute(
-        builder: (context) {
-          switch (widget.captureType) {
-            case CaptureType.image:
-              return CapturePictureScreen(
-                studyId: context.read<AppState>().activeSubject!.studyId,
-                userId: context.read<AppState>().activeSubject!.userId,
-              );
-            case CaptureType.audio:
-              return RecordAudioScreen(
-                studyId: context.read<AppState>().activeSubject!.studyId,
-                userId: context.read<AppState>().activeSubject!.userId,
-              );
-          }
-        },
-      ));
-      if (newPathAnswer != null) {
-        setState(() {
-          captureAnswer = newPathAnswer;
-        });
-        widget.onDone!(widget.question.constructAnswer(newPathAnswer));
-      }
-    }
-
     return Column(
       children: [
         captureAnswer == null
@@ -84,5 +59,30 @@ class _CaptureQuestionWidgetState extends State<CaptureQuestionWidget> {
               ),
       ],
     );
+  }
+
+  Future<void> captureData() async {
+    final newPathAnswer = await Navigator.push(context, MaterialPageRoute(
+      builder: (context) {
+        switch (widget.captureType) {
+          case CaptureType.image:
+            return CapturePictureScreen(
+              studyId: context.read<AppState>().activeSubject!.studyId,
+              userId: context.read<AppState>().activeSubject!.userId,
+            );
+          case CaptureType.audio:
+            return RecordAudioScreen(
+              studyId: context.read<AppState>().activeSubject!.studyId,
+              userId: context.read<AppState>().activeSubject!.userId,
+            );
+        }
+      },
+    ));
+    if (newPathAnswer != null) {
+      setState(() {
+        captureAnswer = newPathAnswer;
+      });
+      widget.onDone!(widget.question.constructAnswer(newPathAnswer));
+    }
   }
 }

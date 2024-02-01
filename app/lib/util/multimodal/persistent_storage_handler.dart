@@ -66,10 +66,10 @@ class PersistentStorageHandler {
     }
   }
 
-  Future<void> storeImage(
-    XFile image, {
-    void Function(String)? pathCallback,
-  }) async {
+  /// Stores the image in the local file system and uploads it to the blob storage.
+  /// Returns the name of the uploaded file.
+  Future<String> storeImage(XFile image) async {
+    final File temporaryImageFile = File(image.path);
     final Uint8List imageByteContent = await image.readAsBytes();
     final Uint8List encryptedImageByteContent = await _encrypterHandler.encryptFile(imageByteContent);
 
@@ -85,8 +85,10 @@ class PersistentStorageHandler {
 
     await _blobStorageHandler.uploadObservation(
       uploadFileName,
-      File(image.path),
+      temporaryImageFile,
     );
+
+    await temporaryImageFile.delete();
 
     final String localTargetPath = path.join((await _applicationMediaDirectory).path, encryptedFileName);
     final File encryptedFile = File(localTargetPath);
@@ -98,9 +100,7 @@ class PersistentStorageHandler {
       data not explicitly encrypted.
      */
     _deleteAllUnencryptedFileSystemEntities();
-    if (pathCallback != null) {
-      pathCallback(uploadFileName);
-    }
+    return uploadFileName;
   }
 
   Future<void> _finalizeStoreAudio(

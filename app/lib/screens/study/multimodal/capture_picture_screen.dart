@@ -16,175 +16,195 @@ class CapturePictureScreen extends StatefulWidget {
 }
 
 class _CapturePictureScreenState extends State<CapturePictureScreen> with WidgetsBindingObserver {
-  late CameraController _cameraController;
-  late List<CameraDescription> _cameras;
-  int _selectedCameraID = 0;
-  late Future<void> _identifyCamerasFuture;
-  Future<void> _initializeControllerFuture;
-  bool _isReady = false;
+  CameraController? _cameraController;
+  List<CameraDescription>? _cameras;
+  int _jumpToNextCameraTaps = 0;
+  bool _isTakingPicture = false;
+  bool _isStoringPicture = false;
 
-  _CapturePictureScreenState() : _initializeControllerFuture = Completer<void>().future;
+  _CapturePictureScreenState();
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    final CameraController cameraController = _cameraController;
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await _initializeCameraController();
+    });
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _cameraController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    final CameraController? cameraController = _cameraController;
 
     // App state changed before we got the chance to initialize.
-    if (cameraController.value.isInitialized) {
+    if (cameraController == null || cameraController.value.isInitialized) {
       return;
     }
 
     if (state == AppLifecycleState.inactive) {
-      cameraController.dispose();
+      await cameraController.dispose();
     } else if (state == AppLifecycleState.resumed) {
-      _initializeCameraController();
+      await _initializeCameraController();
     }
   }
 
-  Future<void> _identifyCameras() async {
+  Future<void> _initializeCameraController() async {
     try {
-      _cameras = (await availableCameras())
-          .where((CameraDescription aCameraDescription) =>
-              aCameraDescription.lensDirection == CameraLensDirection.back ||
-              aCameraDescription.lensDirection == CameraLensDirection.front)
-          .toList();
-    } on CameraException {
+      final oldCameraController = _cameraController;
+      final cameras = _cameras ?? await _getAvailableCameras();
+      _cameras = cameras;
+      if (cameras.isEmpty) {
+        throw CameraException("NoCameraAvailable", "No cameras are available");
+      }
+      if (oldCameraController != null) {
+        await oldCameraController.dispose();
+      }
+      final cameraIndex = _jumpToNextCameraTaps % cameras.length;
+      final newCameraController = CameraController(
+        cameras[cameraIndex],
+        ResolutionPreset.max,
+        enableAudio: false,
+        imageFormatGroup: ImageFormatGroup.jpeg,
+      );
+      await newCameraController.initialize();
+      setState(() {
+        _cameraController = newCameraController;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      String errorText = AppLocalizations.of(context)!.camera_error;
+      if (e is CameraException) {
+        switch (e.code) {
+          case 'CameraAccessDenied':
+          case 'CameraAccessDeniedWithoutPrompt':
+          case 'CameraAccessRestricted':
+            errorText = AppLocalizations.of(context)!.camera_access_denied;
+            break;
+          case 'NoCameraAvailable':
+            errorText = AppLocalizations.of(context)!.no_camera_available;
+            break;
+        }
+      }
+
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorText),
+        ),
+      );
+    }
+  }
+
+  Future<List<CameraDescription>> _getAvailableCameras() async {
+    return (await availableCameras())
+        .where((CameraDescription aCameraDescription) =>
+            aCameraDescription.lensDirection == CameraLensDirection.back ||
+            aCameraDescription.lensDirection == CameraLensDirection.front)
+        .toList();
+  }
+
+  Future<void> _jumpToNextCamera() async {
+    _jumpToNextCameraTaps++;
+    await _initializeCameraController();
+  }
+
+  Future<void> _tryCapturePicture() async {
+    final cameraController = _cameraController;
+    if (cameraController == null || !cameraController.value.isInitialized || cameraController.value.isTakingPicture) {
+      return;
+    }
+
+    setState(() {
+      _isTakingPicture = true;
+      _isStoringPicture = false;
+    });
+
+    XFile image;
+    try {
+      image = await cameraController.takePicture();
+    } on Exception catch (e) {
+      debugPrint("Failed to take picture: $e");
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context)!.camera_error),
         ),
       );
+      setState(() {
+        _isStoringPicture = false;
+        _isTakingPicture = false;
+      });
+      return;
     }
-  }
 
-  Future<void> _initializeCameraController() async {
+    setState(() {
+      _isStoringPicture = true;
+      _isTakingPicture = false;
+    });
+
     try {
-      await _identifyCamerasFuture;
-      _cameraController = CameraController(
-        _cameras[_selectedCameraID],
-        ResolutionPreset.max,
-        enableAudio: false,
-      );
-    } catch (e) {
+      final persistentStorageHandler = PersistentStorageHandler(widget.userId, widget.studyId);
+      final uploadedImagePath = await persistentStorageHandler.storeImage(image);
+      if (!mounted) return;
+      Navigator.pop(context, uploadedImagePath);
+    } on Exception catch (e) {
+      debugPrint("Failed to upload picture: $e");
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.camera_access_denied),
+          content: Text(AppLocalizations.of(context)!.upload_error),
         ),
       );
-    }
-    _initializeControllerFuture = _cameraController.initialize().then((_) {
-      if (!mounted) return;
       setState(() {
-        _isReady = true;
+        _isStoringPicture = false;
+        _isTakingPicture = false;
       });
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.camera_access_denied),
-              ),
-            );
-            break;
-          default:
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(AppLocalizations.of(context)!.camera_error),
-              ),
-            );
-            break;
-        }
-      }
-    });
-  }
-
-  void _jumpToNextCamera() async {
-    setState(() {
-      _isReady = false;
-    });
-    _cameraController.dispose();
-    if (_selectedCameraID == _cameras.length - 1) {
-      _selectedCameraID = 0;
-    } else {
-      _selectedCameraID = _selectedCameraID + 1;
     }
-    _initializeCameraController();
-  }
-
-  Future<void> _capturePicture() async {
-    setState(() {
-      _isReady = false;
-    });
-    BuildContext? dialogContext;
-    String dialogText = "";
-    StateSetter? dialogStateSetter;
-    setState(() {
-      dialogText = AppLocalizations.of(context)!.take_a_photo;
-    });
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        dialogContext = context;
-        return Dialog(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(height: 16),
-                StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-                  dialogStateSetter = setState;
-                  return Text(dialogText);
-                }),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-    final XFile image = await _cameraController.takePicture();
-    dialogStateSetter!(() {
-      dialogText = AppLocalizations.of(context)!.storing_photo;
-    });
-    PersistentStorageHandler aPersistentStorageHandler = PersistentStorageHandler(widget.userId, widget.studyId);
-    await aPersistentStorageHandler.storeImage(image, pathCallback: (String aPath) {
-      Navigator.pop(dialogContext!);
-      Navigator.pop(context, aPath);
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _identifyCamerasFuture = _identifyCameras();
-    _initializeCameraController();
-  }
-
-  @override
-  void dispose() {
-    _cameraController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final cameraController = _cameraController;
     return Scaffold(
         appBar: AppBar(title: Text(AppLocalizations.of(context)!.take_a_photo)),
-        body: FutureBuilder<void>(
-          future: _initializeControllerFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done && _cameraController.value.isInitialized) {
-              return CameraPreview(_cameraController);
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
-        ),
+        body: cameraController == null
+            ? const Center(child: CircularProgressIndicator())
+            : Stack(
+                children: [
+                  CameraPreview(cameraController),
+                  _isTakingPicture || _isStoringPicture
+                      ? Container(
+                          color: Colors.black.withOpacity(0.5),
+                          alignment: Alignment.center,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).dialogBackgroundColor,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const CircularProgressIndicator(),
+                                const SizedBox(height: 16),
+                                Text(_isStoringPicture
+                                    ? AppLocalizations.of(context)!.storing_photo
+                                    : AppLocalizations.of(context)!.take_a_photo),
+                              ],
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              ),
         floatingActionButton: Wrap(
           direction: Axis.horizontal,
           children: [
@@ -192,17 +212,9 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
               margin: const EdgeInsets.all(10),
               child: FloatingActionButton(
                 heroTag: "captureImage",
-                onPressed: _isReady
-                    ? () {
-                        try {
-                          _capturePicture();
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(AppLocalizations.of(context)!.camera_error),
-                            ),
-                          );
-                        }
+                onPressed: cameraController != null && !_isTakingPicture && !_isStoringPicture
+                    ? () async {
+                        await _tryCapturePicture();
                       }
                     : null,
                 child: const Icon(Icons.camera_alt),
@@ -212,7 +224,9 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
               margin: const EdgeInsets.all(10),
               child: FloatingActionButton(
                 heroTag: "jumpToNextCamera",
-                onPressed: _isReady ? _jumpToNextCamera : null,
+                onPressed: cameraController != null && !_isTakingPicture && !_isStoringPicture
+                    ? () async => await _jumpToNextCamera()
+                    : null,
                 child: const Icon(Icons.autorenew),
               ),
             )
