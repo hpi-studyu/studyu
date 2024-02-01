@@ -1,5 +1,17 @@
 <svg version="1.1" baseProfile="full" width="645.0" height="1208.0" viewbox="0 0 645 1208" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[PersistentStorageHandler
+	<desc >[KeyStorage
+	  |
+	  &lt;static&gt;+prefKeyForKey: String;
+	  &lt;static&gt;+pefKeyForIV: String
+	  |
+	  -void _initEncryptionKey();
+	  -void _initEncryptionIV();
+	  -dynamic _getStorageValue();
+	  +dynamic getEncryptionKey();
+	  +dynamic getIV()
+	]
+	
+	[PersistentStorageHandler
 	  |
 	  &lt;static&gt;-_encryptedBaseNamePrefix: String;
 	  &lt;static&gt;-_stagingBaseNamePrefix: String;
@@ -54,18 +66,6 @@
 	[EncryptedAudioFile]o-[AudioPlayer]
 	[EncryptedAudioFile]o-[PersistentStorageHandler]
 	
-	[KeyStorage
-	  |
-	  &lt;static&gt;+prefKeyForKey: String;
-	  &lt;static&gt;+pefKeyForIV: String
-	  |
-	  -void _initEncryptionKey();
-	  -void _initEncryptionIV();
-	  -dynamic _getStorageValue();
-	  +dynamic getEncryptionKey();
-	  +dynamic getIV()
-	]
-	
 	[EncrypterHandler
 	  |
 	  -_keyStorage: KeyStorage
@@ -80,7 +80,7 @@
 	[EncrypterHandler]o-[KeyStorage]
 	
 	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
 				<rect x="0.0" y="0.0" height="1208.0" width="645.0" stroke="none"></rect>
@@ -106,6 +106,36 @@
 					<path d="M360.5 962.7 L360.5 964 L360.5 984 L360.5 984.0 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M365.8 953.3 L360.5 962.7 L355.2 953.3 L360.5 944.0 Z"></path>
+					</g>
+					<g data-name="KeyStorage">
+						<g fill="#eee8d5" stroke="#33322E" data-name="KeyStorage">
+							<rect x="230.0" y="984.0" height="168.0" width="261.0" data-name="KeyStorage"></rect>
+							<path d="M230.0 1015.0 L491.0 1015.0" fill="none" data-name="KeyStorage"></path>
+							<path d="M230.0 1061.0 L491.0 1061.0" fill="none" data-name="KeyStorage"></path>
+						</g>
+						<g transform="translate(230, 984)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="KeyStorage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="KeyStorage">
+								<text x="122.5" y="13.5" stroke="none" text-anchor="middle" data-name="KeyStorage">KeyStorage</text>
+								
+							</g>
+						</g>
+						<g transform="translate(230, 1015)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="KeyStorage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="KeyStorage">
+								<text x="0.0" y="13.5" stroke="none" data-name="KeyStorage">&lt;static&gt;+prefKeyForKey: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="KeyStorage">&lt;static&gt;+pefKeyForIV: String</text>
+								
+							</g>
+						</g>
+						<g transform="translate(230, 1061)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="KeyStorage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="KeyStorage">
+								<text x="0.0" y="13.5" stroke="none" data-name="KeyStorage">-void _initEncryptionKey()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="KeyStorage">-void _initEncryptionIV()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="KeyStorage">-dynamic _getStorageValue()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="KeyStorage">+dynamic getEncryptionKey()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="KeyStorage">+dynamic getIV()</text>
+								
+							</g>
+						</g>
 					</g>
 					<g data-name="PersistentStorageHandler">
 						<g fill="#eee8d5" stroke="#33322E" data-name="PersistentStorageHandler">
@@ -239,36 +269,6 @@
 						<g transform="translate(478, 471.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AudioPlayer">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AudioPlayer">
 								<text x="47.5" y="13.5" stroke="none" text-anchor="middle" data-name="AudioPlayer">AudioPlayer</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="KeyStorage">
-						<g fill="#eee8d5" stroke="#33322E" data-name="KeyStorage">
-							<rect x="230.0" y="984.0" height="168.0" width="261.0" data-name="KeyStorage"></rect>
-							<path d="M230.0 1015.0 L491.0 1015.0" fill="none" data-name="KeyStorage"></path>
-							<path d="M230.0 1061.0 L491.0 1061.0" fill="none" data-name="KeyStorage"></path>
-						</g>
-						<g transform="translate(230, 984)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="KeyStorage">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="KeyStorage">
-								<text x="122.5" y="13.5" stroke="none" text-anchor="middle" data-name="KeyStorage">KeyStorage</text>
-								
-							</g>
-						</g>
-						<g transform="translate(230, 1015)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="KeyStorage">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="KeyStorage">
-								<text x="0.0" y="13.5" stroke="none" data-name="KeyStorage">&lt;static&gt;+prefKeyForKey: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="KeyStorage">&lt;static&gt;+pefKeyForIV: String</text>
-								
-							</g>
-						</g>
-						<g transform="translate(230, 1061)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="KeyStorage">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="KeyStorage">
-								<text x="0.0" y="13.5" stroke="none" data-name="KeyStorage">-void _initEncryptionKey()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="KeyStorage">-void _initEncryptionIV()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="KeyStorage">-dynamic _getStorageValue()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="KeyStorage">+dynamic getEncryptionKey()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="KeyStorage">+dynamic getIV()</text>
 								
 							</g>
 						</g>
