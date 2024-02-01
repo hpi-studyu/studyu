@@ -323,7 +323,10 @@ class AudioQuestionFormData extends QuestionFormData {
     required super.questionText,
     required super.questionType,
     super.questionInfoText,
+    required this.maxRecordingDurationSeconds,
   });
+
+  final int maxRecordingDurationSeconds;
 
   static Map<String, String> get kResponseOptions => {tr.form_field_response_audio: 'audio'};
 
@@ -339,6 +342,7 @@ class AudioQuestionFormData extends QuestionFormData {
       questionType: SurveyQuestionType.audio,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
+      maxRecordingDurationSeconds: question.maxRecordingDurationSeconds,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -346,7 +350,7 @@ class AudioQuestionFormData extends QuestionFormData {
 
   @override
   Question toQuestion() {
-    final question = AudioRecordingQuestion();
+    final question = AudioRecordingQuestion(maxRecordingDurationSeconds: maxRecordingDurationSeconds);
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
@@ -360,6 +364,7 @@ class AudioQuestionFormData extends QuestionFormData {
       questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
+      maxRecordingDurationSeconds: maxRecordingDurationSeconds,
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;

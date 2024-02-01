@@ -108,9 +108,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   late final FormArray<String> imageResponseOptionsArray = FormArray(imageOptions);
 
   // Audio
+  static const int kDefaultMaxRecordingDurationSeconds = 60;
+  static const int kMaxRecordingDurationSeconds = 3600;
   List<AbstractControl<String>> get audioOptions =>
       AudioQuestionFormData.kResponseOptions.keys.map((e) => FormControl(value: e, disabled: true)).toList();
   late final FormArray<String> audioResponseOptionsArray = FormArray(audioOptions);
+  final FormControl<int> maxRecordingDurationSecondsControl = FormControl(
+      value: kDefaultMaxRecordingDurationSeconds,
+      validators: [Validators.number, Validators.min(1), Validators.max(kMaxRecordingDurationSeconds)]);
 
   // Scale
   static const int kDefaultScaleMinValue = 0;
@@ -285,6 +290,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     }),
     SurveyQuestionType.audio: FormGroup({
       'audioOptionsArray': audioResponseOptionsArray,
+      'maxRecordingDurationSeconds': maxRecordingDurationSecondsControl,
     }),
     SurveyQuestionType.freeText: FormGroup({
       'freeTextOptionsArray': freeTextResponseOptionsArray,
@@ -304,6 +310,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.scale: {
       StudyFormValidationSet.draft: [scaleRangeValid],
       StudyFormValidationSet.publish: [scaleRangeValid],
+    },
+    SurveyQuestionType.audio: {
+      StudyFormValidationSet.draft: [maxRecordingDurationValid],
+      StudyFormValidationSet.publish: [maxRecordingDurationValid],
     },
   };
 
@@ -347,6 +357,19 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     ], validationMessages: {
       'min': (error) => tr.form_array_response_options_scale_rangevalid_min,
       'max': (error) => tr.form_array_response_options_scale_rangevalid_max(scaleRangeValidMax),
+    });
+  }
+
+  get maxRecordingDurationValid {
+    return FormControlValidation(control: maxRecordingDurationSecondsControl, validators: [
+      Validators.number,
+      Validators.min(1),
+      Validators.max(kMaxRecordingDurationSeconds),
+    ], validationMessages: {
+      ValidationMessage.min: (error) => tr.audio_recording_max_duration_rangevalid_min,
+      ValidationMessage.max: (error) =>
+          tr.audio_recording_max_duration_rangevalid_max(QuestionFormViewModel.kMaxRecordingDurationSeconds),
+      ValidationMessage.number: (error) => tr.free_text_validation_number,
     });
   }
 
@@ -403,6 +426,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       case SurveyQuestionType.image:
         break;
       case SurveyQuestionType.audio:
+        data = data as AudioQuestionFormData;
+        maxRecordingDurationSecondsControl.value = data.maxRecordingDurationSeconds;
         break;
       case SurveyQuestionType.choice:
         data = data as ChoiceQuestionFormData;
@@ -461,6 +486,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
+          maxRecordingDurationSeconds: maxRecordingDurationSecondsControl.value!,
         );
       case SurveyQuestionType.choice:
         return ChoiceQuestionFormData(
