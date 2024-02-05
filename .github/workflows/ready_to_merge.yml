@@ -25,7 +25,6 @@ jobs:
             ];
             console.log("Initializing with workflows to check: " + workflows_to_check);
 
-            // todo increase
             console.log("Sleeping 10s to give other runs a chance to start");
             await sleep(10000);
             const { owner, repo } = context.repo;
@@ -115,38 +114,43 @@ jobs:
             }
             console.log("All given workflow runs completed.");
 
-            console.log("Checking check runs...");
-            let checkRuns = await fetchCheckRuns();
-            let inProgressFound = false;
-            for (const checkRun of checkRuns) {
-              let retryCount = 0;
-              do {
-                inProgressFound = false;
-                console.log("Checking check run: " + checkRun.name + " with status: " + checkRun.status + " and conclusion: " + checkRun.conclusion);
-                if (checkRun.name === excludedCheckRunName) {
-                  console.log("Skipping excluded check run: " + checkRun.name);
-                  break;
-                }
-                if (checkRun.status === "in_progress") {
-                  console.log("Check run in progress: " + checkRun.name);
-                  if (retryCount >= maxRetries) {
-                    core.setFailed(
-                      "Maximum retries reached with check runs still in progress."
-                    );
+            // Do not check the check runs for now, since this currently checks for all running workflows
+            // Todo: find another way to check for checks that are not part of this repository
+            // e.g. GitGuardian
+            /* 
+              console.log("Checking check runs...");
+              let checkRuns = await fetchCheckRuns();
+              let inProgressFound = false;
+              for (const checkRun of checkRuns) {
+                let retryCount = 0;
+                do {
+                  inProgressFound = false;
+                  console.log("Checking check run: " + checkRun.name + " with status: " + checkRun.status + " and conclusion: " + checkRun.conclusion);
+                  if (checkRun.name === excludedCheckRunName) {
+                    console.log("Skipping excluded check run: " + checkRun.name);
                     break;
                   }
-                  console.log("Waiting for 1 minute before rechecking...");
-                  await sleep(60000);
-                  checkRuns = await fetchCheckRuns();
-                  retryCount++;
-                  inProgressFound = true;
-                }
-                if (checkRun.conclusion === "failure") {
-                  core.setFailed("The check run '" +
-                    checkRun.name + "' has failed. Please fix the failed checks. Check run URL: " +
-                    checkRun.html_url
-                  );
-                }
-              } while (inProgressFound);
-            }
-            console.log("All check runs completed successfully.");
+                  if (checkRun.status === "in_progress") {
+                    console.log("Check run in progress: " + checkRun.name);
+                    if (retryCount >= maxRetries) {
+                      core.setFailed(
+                        "Maximum retries reached with check runs still in progress."
+                      );
+                      break;
+                    }
+                    console.log("Waiting for 1 minute before rechecking...");
+                    await sleep(60000);
+                    checkRuns = await fetchCheckRuns();
+                    retryCount++;
+                    inProgressFound = true;
+                  }
+                  if (checkRun.conclusion === "failure") {
+                    core.setFailed("The check run '" +
+                      checkRun.name + "' has failed. Please fix the failed checks. Check run URL: " +
+                      checkRun.html_url
+                    );
+                  }
+                } while (inProgressFound);
+              }
+              console.log("All check runs completed successfully.");
+            */
