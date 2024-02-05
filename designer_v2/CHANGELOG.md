@@ -1,3 +1,21 @@
+## 1.6.2-dev.2
+
+ - **REFACTOR**: rename free text attributes. ([f145b425](https://github.com/hpi-studyu/studyu/commit/f145b425e885501993f5ec60aa5028c68024cb0a))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+ - **FIX**: resolve suggestions. ([e3584b70](https://github.com/hpi-studyu/studyu/commit/e3584b706e3ac44e51257165dcf9e0678205d8a5))
+ - **FIX**: do not show length as double. ([76704bd2](https://github.com/hpi-studyu/studyu/commit/76704bd218cc4d99df8ef5c91260f83628806fef))
+ - **FIX**: quickfix for free text eligibility. ([5bb2e42b](https://github.com/hpi-studyu/studyu/commit/5bb2e42b89383611fd9cd0882c1cdb6df4c07544))
+ - **FIX**: free text show errors only when dirty. ([d0841113](https://github.com/hpi-studyu/studyu/commit/d08411135a2d2c468a46d72d02f7186319106b4d))
+ - **FIX**: free text localization. ([bb1fc558](https://github.com/hpi-studyu/studyu/commit/bb1fc558f3d708ae75307319a85fc1f12105c29d))
+ - **FIX**: disable free text options on readonly. ([c882c6d0](https://github.com/hpi-studyu/studyu/commit/c882c6d0be77b8f5fb5fe4c2f6be5ba16f1d775e))
+ - **FIX**: standard table error. ([341a8415](https://github.com/hpi-studyu/studyu/commit/341a84155bca30fd023eb92efdf7268160c668eb))
+ - **FIX**: reactive free text validation. ([caecd761](https://github.com/hpi-studyu/studyu/commit/caecd761f151abbb127b693a50177cca99e299fd))
+ - **FEAT**: use workaround to always show value indicator for range slider. ([61a06ad9](https://github.com/hpi-studyu/studyu/commit/61a06ad9cba422f4ba5a88d9e1d2ea3e7e847557))
+ - **FEAT**: increase max free text range. ([5b288caf](https://github.com/hpi-studyu/studyu/commit/5b288cafc67f6f841671afd94b0f5cdaa56d60af))
+ - **FEAT**: translate free text. ([0cad3ff9](https://github.com/hpi-studyu/studyu/commit/0cad3ff9ea05f56f25fe16b223b7e140c530ff89))
+ - **FEAT**: implement free text validator for app. ([44c3fa20](https://github.com/hpi-studyu/studyu/commit/44c3fa2070e0073a6ab4352daa4d96d7ee1632fe))
+ - **FEAT**: implement free_text for designer. ([f0ce3512](https://github.com/hpi-studyu/studyu/commit/f0ce3512f28b1eaae1bc69f75701038e42e6936d))
+
 ## 1.6.2-dev.1
 
  - **REFACTOR**: replace custom validators with native ones. ([e7d8c50b](https://github.com/hpi-studyu/studyu/commit/e7d8c50bb419520ce0889a71a0295c239aa62807))
