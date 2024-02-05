@@ -84,40 +84,51 @@ class _PrimaryButtonState extends State<PrimaryButton> {
     if (widget.icon != null) {
       return Tooltip(
         message: tooltipMessage,
-        child: ElevatedButton.icon(
+        child: ElevatedButton(
           style: primaryStyle,
           onPressed: (widget.isDisabled) ? null : onButtonPressed,
-          icon: widget.isLoading
-              ? SizedBox(
-                  width: theme.iconTheme.size ?? 14.0,
-                  height: theme.iconTheme.size ?? 14.0,
-                  child: const CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2.0,
-                  ),
-                )
-              : Icon(widget.icon),
-          label: Text(widget.text, textAlign: TextAlign.center),
+          child: Padding(
+            padding: widget.innerPadding,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                widget.isLoading
+                    ? SizedBox(
+                        width: theme.iconTheme.size ?? 14.0,
+                        height: theme.iconTheme.size ?? 14.0,
+                        child: const CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2.0,
+                        ),
+                      )
+                    : Icon(widget.icon),
+                const SizedBox(width: 6.0),
+                Text(widget.text, textAlign: TextAlign.center),
+              ],
+            ),
+          ),
         ),
       );
     }
 
     return Tooltip(
-      message: tooltipMessage,
-      child: ElevatedButton(
-        style: primaryStyle,
-        onPressed: widget.isDisabled ? null : onButtonPressed,
-        child: widget.isLoading
-            ? SizedBox(
-                width: theme.iconTheme.size ?? 14.0,
-                height: theme.iconTheme.size ?? 14.0,
-                child: const CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2.0,
-                ),
-              )
-            : Text(widget.text, textAlign: TextAlign.center),
-      ),
-    );
+        message: tooltipMessage,
+        child: ElevatedButton(
+          style: primaryStyle,
+          onPressed: widget.isDisabled ? null : onButtonPressed,
+          child: Padding(
+            padding: widget.innerPadding,
+            child: widget.isLoading
+                ? SizedBox(
+                    width: theme.iconTheme.size ?? 14.0,
+                    height: theme.iconTheme.size ?? 14.0,
+                    child: const CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2.0,
+                    ),
+                  )
+                : Text(widget.text, textAlign: TextAlign.center),
+          ),
+        ));
   }
 }
