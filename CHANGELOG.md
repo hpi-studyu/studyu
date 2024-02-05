@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-01-26
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.6.5-dev.2`](#studyu_app---v265-dev2)
+ - [`studyu_core` - `v4.3.3-dev.1`](#studyu_core---v433-dev1)
+ - [`studyu_designer_v2` - `v1.6.2-dev.2`](#studyu_designer_v2---v162-dev2)
+ - [`studyu_flutter_common` - `v1.7.0-dev.2`](#studyu_flutter_common---v170-dev2)
+
+---
+
+#### `studyu_app` - `v2.6.5-dev.2`
+
+ - **REFACTOR**: rename analytics. ([98386b03](https://github.com/hpi-studyu/studyu/commit/98386b03ada1a47d28469afbd15e3bde411ef6b9))
+ - **REFACTOR**: enable cache again and add new logger. ([e0ad446f](https://github.com/hpi-studyu/studyu/commit/e0ad446fe03c94261782606a186a0364dbe87428))
+ - **REFACTOR**: disable cache addition. ([711da599](https://github.com/hpi-studyu/studyu/commit/711da599025242748700959b2d1e59b34fb44028))
+ - **REFACTOR**: move questions to subdir. ([0a28df5a](https://github.com/hpi-studyu/studyu/commit/0a28df5a2bf39b18dfb642dcdeb3dd1863eba50a))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+ - **FIX**: resolve suggestions. ([e3584b70](https://github.com/hpi-studyu/studyu/commit/e3584b706e3ac44e51257165dcf9e0678205d8a5))
+ - **FIX**: quickfix for free text eligibility. ([5bb2e42b](https://github.com/hpi-studyu/studyu/commit/5bb2e42b89383611fd9cd0882c1cdb6df4c07544))
+ - **FIX**: free text form fields. ([b2badeb0](https://github.com/hpi-studyu/studyu/commit/b2badeb00e43d16518c8af29e4ec0d18f1389b14))
+ - **FIX**: use correct switch case for questions. ([c13e67f6](https://github.com/hpi-studyu/studyu/commit/c13e67f6b05571b9476fe476154bb927108fff1f))
+ - **FIX**: disable cache synchronization for now. ([204157cd](https://github.com/hpi-studyu/studyu/commit/204157cd970cb7228cf4d2d1a804bed1fabb657a))
+ - **FEAT**: increase max free text range. ([5b288caf](https://github.com/hpi-studyu/studyu/commit/5b288cafc67f6f841671afd94b0f5cdaa56d60af))
+ - **FEAT**: improve translation. ([c4b9f1ec](https://github.com/hpi-studyu/studyu/commit/c4b9f1ec4da93eb5ce189c5c001f9884ba34d152))
+ - **FEAT**: implement free text validator for app. ([44c3fa20](https://github.com/hpi-studyu/studyu/commit/44c3fa2070e0073a6ab4352daa4d96d7ee1632fe))
+ - **FEAT**: implement free_text for designer. ([f0ce3512](https://github.com/hpi-studyu/studyu/commit/f0ce3512f28b1eaae1bc69f75701038e42e6936d))
+
+#### `studyu_core` - `v4.3.3-dev.1`
+
+ - **REFACTOR**: rename analytics. ([98386b03](https://github.com/hpi-studyu/studyu/commit/98386b03ada1a47d28469afbd15e3bde411ef6b9))
+ - **REFACTOR**: enable cache again and add new logger. ([e0ad446f](https://github.com/hpi-studyu/studyu/commit/e0ad446fe03c94261782606a186a0364dbe87428))
+ - **REFACTOR**: rename free text attributes. ([f145b425](https://github.com/hpi-studyu/studyu/commit/f145b425e885501993f5ec60aa5028c68024cb0a))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+ - **FIX**: quickfix for free text eligibility. ([5bb2e42b](https://github.com/hpi-studyu/studyu/commit/5bb2e42b89383611fd9cd0882c1cdb6df4c07544))
+ - **FIX**: upgrade deps. ([304430c8](https://github.com/hpi-studyu/studyu/commit/304430c858d4035a279b42114c7ccf86299357a2))
+ - **FIX**: upgrade deps. ([1940357e](https://github.com/hpi-studyu/studyu/commit/1940357e4d9975743c0913825aa585958410ebca))
+ - **FIX**: type checks and matching. ([92629cb4](https://github.com/hpi-studyu/studyu/commit/92629cb4395d8e456a0531647d6ba1de4a77a92f))
+ - **FIX**: type checks. ([b85e073d](https://github.com/hpi-studyu/studyu/commit/b85e073d7075b8d45d15f32e62d5761416cdad4a))
+ - **FEAT**: implement free_text for designer. ([f0ce3512](https://github.com/hpi-studyu/studyu/commit/f0ce3512f28b1eaae1bc69f75701038e42e6936d))
+
+#### `studyu_designer_v2` - `v1.6.2-dev.2`
+
+ - **REFACTOR**: rename free text attributes. ([f145b425](https://github.com/hpi-studyu/studyu/commit/f145b425e885501993f5ec60aa5028c68024cb0a))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+ - **FIX**: resolve suggestions. ([e3584b70](https://github.com/hpi-studyu/studyu/commit/e3584b706e3ac44e51257165dcf9e0678205d8a5))
+ - **FIX**: do not show length as double. ([76704bd2](https://github.com/hpi-studyu/studyu/commit/76704bd218cc4d99df8ef5c91260f83628806fef))
+ - **FIX**: quickfix for free text eligibility. ([5bb2e42b](https://github.com/hpi-studyu/studyu/commit/5bb2e42b89383611fd9cd0882c1cdb6df4c07544))
+ - **FIX**: free text show errors only when dirty. ([d0841113](https://github.com/hpi-studyu/studyu/commit/d08411135a2d2c468a46d72d02f7186319106b4d))
+ - **FIX**: free text localization. ([bb1fc558](https://github.com/hpi-studyu/studyu/commit/bb1fc558f3d708ae75307319a85fc1f12105c29d))
+ - **FIX**: disable free text options on readonly. ([c882c6d0](https://github.com/hpi-studyu/studyu/commit/c882c6d0be77b8f5fb5fe4c2f6be5ba16f1d775e))
+ - **FIX**: standard table error. ([341a8415](https://github.com/hpi-studyu/studyu/commit/341a84155bca30fd023eb92efdf7268160c668eb))
+ - **FIX**: reactive free text validation. ([caecd761](https://github.com/hpi-studyu/studyu/commit/caecd761f151abbb127b693a50177cca99e299fd))
+ - **FEAT**: use workaround to always show value indicator for range slider. ([61a06ad9](https://github.com/hpi-studyu/studyu/commit/61a06ad9cba422f4ba5a88d9e1d2ea3e7e847557))
+ - **FEAT**: increase max free text range. ([5b288caf](https://github.com/hpi-studyu/studyu/commit/5b288cafc67f6f841671afd94b0f5cdaa56d60af))
+ - **FEAT**: translate free text. ([0cad3ff9](https://github.com/hpi-studyu/studyu/commit/0cad3ff9ea05f56f25fe16b223b7e140c530ff89))
+ - **FEAT**: implement free text validator for app. ([44c3fa20](https://github.com/hpi-studyu/studyu/commit/44c3fa2070e0073a6ab4352daa4d96d7ee1632fe))
+ - **FEAT**: implement free_text for designer. ([f0ce3512](https://github.com/hpi-studyu/studyu/commit/f0ce3512f28b1eaae1bc69f75701038e42e6936d))
+
+#### `studyu_flutter_common` - `v1.7.0-dev.2`
+
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+
+
 ## 2024-01-23
 
 ### Changes
