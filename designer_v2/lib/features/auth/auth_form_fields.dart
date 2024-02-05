@@ -10,10 +10,8 @@ class EmailTextField extends StatefulWidget {
     this.formControl,
     hintText,
     super.key,
-  })  : assert(
-  (formControlName != null && formControl == null) ||
-      (formControlName == null && formControl != null),
-  "Must provide either formControlName or formControl"),
+  })  : assert((formControlName != null && formControl == null) || (formControlName == null && formControl != null),
+            "Must provide either formControlName or formControl"),
         labelText = labelText ?? tr.form_field_email,
         hintText = hintText ?? tr.form_field_email_hint;
 
@@ -56,10 +54,8 @@ class PasswordTextField extends StatefulWidget {
     labelText,
     hintText,
     super.key,
-  })  : assert(
-  (formControlName != null && formControl == null) ||
-      (formControlName == null && formControl != null),
-  "Must provide either formControlName or formControl"),
+  })  : assert((formControlName != null && formControl == null) || (formControlName == null && formControl != null),
+            "Must provide either formControlName or formControl"),
         labelText = labelText ?? tr.form_field_password,
         hintText = hintText ?? tr.form_field_password_hint;
 
@@ -83,27 +79,24 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
       rows: [
         FormTableRow(
             input: ReactiveTextField(
-              formControl: widget.formControl,
-              formControlName: widget.formControlName,
-              obscureText: !passwordVisibility,
-              onSubmitted: widget.onSubmitted,
-              decoration: InputDecoration(
-                labelText: widget.labelText,
-                hintText: widget.hintText,
-                suffixIcon: InkWell(
-                  onTap: () => setState(
-                        () => passwordVisibility = !passwordVisibility,
-                  ),
-                  focusNode: FocusNode(skipTraversal: true),
-                  child: Icon(
-                    passwordVisibility
-                        ? Icons.visibility_outlined
-                        : Icons.visibility_off_outlined,
-                  ),
-                ),
+          formControl: widget.formControl,
+          formControlName: widget.formControlName,
+          obscureText: !passwordVisibility,
+          onSubmitted: widget.onSubmitted,
+          decoration: InputDecoration(
+            labelText: widget.labelText,
+            hintText: widget.hintText,
+            suffixIcon: InkWell(
+              onTap: () => setState(
+                () => passwordVisibility = !passwordVisibility,
               ),
-            )
-        )
+              focusNode: FocusNode(skipTraversal: true),
+              child: Icon(
+                passwordVisibility ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+              ),
+            ),
+          ),
+        ))
       ],
     );
   }
