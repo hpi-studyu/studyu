@@ -188,5 +188,7 @@
       "placeholders": {
       "pattern": {}
       }
-  }
+  },
+  "app_outdated_message": "Your app is outdated.\nPlease update to the latest version.",
+  "open_store": "Open Store"
 }

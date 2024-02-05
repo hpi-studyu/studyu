@@ -189,5 +189,7 @@
     "placeholders": {
       "pattern": {}
     }
-  }
+  },
+  "app_outdated_message": "Ihre App ist veraltet.\nBitte aktualisieren Sie auf die neueste Version.",
+  "open_store": "Store öffnen"
 }

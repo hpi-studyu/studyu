@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -36,18 +38,39 @@ Future<void> main() async {
   // Turn off the # in the URLs on the web
   usePathUrlStrategy();
   AppConfig? appConfig;
+  String initialRoute = Routes.loading;
   try {
     appConfig = await AppConfig.getAppConfig();
+    if (await isAppOutdated(appConfig)) {
+      initialRoute = Routes.appOutdated;
+    }
   } catch (error) {
     // device could be offline
   }
 
   await AppAnalytics.init();
   if (!kDebugMode && AppAnalytics.isUserEnabled) {
-    AppAnalytics.start(appConfig, MyApp(queryParameters, appConfig));
+    AppAnalytics.start(appConfig, MyApp(queryParameters, appConfig, initialRoute: initialRoute));
   } else {
-    runApp(MyApp(queryParameters, appConfig));
+    runApp(MyApp(queryParameters, appConfig, initialRoute: initialRoute));
   }
+}
+
+/// Checks major and minor version of the app against the minimum version required by the backend
+/// Returns true if the app is outdated
+Future<bool> isAppOutdated(AppConfig appConfig) async {
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  final appVersion = packageInfo.version;
+  final appVersionParts = appVersion.split('.');
+  final minVersionParts = appConfig.appMinVersion.split('.');
+
+  final appVersionMajor = int.parse(appVersionParts[0]);
+  final appVersionMinor = int.parse(appVersionParts[1]);
+
+  final minVersionMajor = int.parse(minVersionParts[0]);
+  final minVersionMinor = int.parse(minVersionParts[1]);
+
+  return appVersionMajor < minVersionMajor || (appVersionMajor == minVersionMajor && appVersionMinor < minVersionMinor);
 }
 
 /// This is needed for flutter_local_notifications
