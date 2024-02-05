@@ -76,7 +76,6 @@ class StudiesTable extends StatelessWidget {
         final isCompact = constraints.maxWidth < compactWidthThreshold;
         final isSuperCompact = constraints.maxWidth < superCompactWidthThreshold;
         final isCompactStatTitle = constraints.maxWidth < compactStatTitleThreshold;
-        debugPrint('studies table width: ${constraints.maxWidth}');
         // Calculate the minimum stat column width
         final int maxStatTitleLength =
             isCompactStatTitle ? "Completed".length : tr.studies_list_header_participants_completed.length;
