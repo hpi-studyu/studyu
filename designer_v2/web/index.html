@@ -52,11 +52,7 @@
           serviceWorkerVersion: serviceWorkerVersion,
         },
         onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine({
-            // Enable color emojis again for flutter 3.10
-            // todo is this necessary anymore?
-            // useColorEmoji: true,
-          }).then(function(appRunner) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
             appRunner.runApp();
           });
         }
