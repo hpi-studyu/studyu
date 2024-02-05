@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -57,6 +58,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     required this.router,
   }) : super(const AsyncValue.data(null)) {
     _initRememberMe();
+    _readDebugUser();
     _onChangeFormKey(formKey);
   }
 
@@ -294,6 +296,18 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
       state = const AsyncValue.data(null);
     }
     return false;
+  }
+
+  Future<void> _readDebugUser() async {
+    if (!kDebugMode) {
+      return;
+    }
+    const email = String.fromEnvironment('EMAIL');
+    const password = String.fromEnvironment('PASSWORD');
+    if (email.isNotEmpty && password.isNotEmpty) {
+      emailControl.value = email;
+      passwordControl.value = password;
+    }
   }
 
   // - Remember Me
