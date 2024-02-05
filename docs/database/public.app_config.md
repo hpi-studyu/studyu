@@ -9,6 +9,9 @@ Stores app config for different envs
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
 | id | text |  | false |  |  |  |
+| app_min_version | text | '0.0.0'::text | false |  |  |  |
+| app_playstore_url | text | 'https://play.google.com/store/apps/details?id=health.studyu.app'::text | false |  |  |  |
+| app_appstore_url | text | 'https://itunes.apple.com/app/id1571991198'::text | false |  |  |  |
 | app_privacy | jsonb |  | false |  |  |  |
 | app_terms | jsonb |  | false |  |  |  |
 | designer_privacy | jsonb |  | false |  |  |  |
