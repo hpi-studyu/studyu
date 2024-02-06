@@ -10,8 +10,6 @@ abstract class Expression {
 
   Expression(this.type);
 
-  bool get isSupported => true;
-
   factory Expression.fromJson(Map<String, dynamic> data) => switch (data[keyType]) {
         BooleanExpression.expressionType => BooleanExpression.fromJson(data),
         ChoiceExpression.expressionType => ChoiceExpression.fromJson(data),

@@ -9,8 +9,6 @@ abstract class InterventionTask extends Task {
 
   InterventionTask.withId(super.type) : super.withId();
 
-  bool get isSupported => true;
-
   factory InterventionTask.fromJson(Map<String, dynamic> data) => switch (data[Task.keyType]) {
         CheckmarkTask.taskType => CheckmarkTask.fromJson(data),
         _ => throw UnknownJsonTypeError(data[Task.keyType]),
