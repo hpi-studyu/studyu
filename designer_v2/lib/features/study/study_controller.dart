@@ -96,8 +96,8 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     router.dispatch(RoutingIntents.studySettings(studyId));
   }
 
-  void onCreateNewSubstudy() {
-    router.dispatch(RoutingIntents.substudyNew(state.study.value! as Template));
+  void onCreateNewTemplateTrial() {
+    router.dispatch(RoutingIntents.templatetrialNew(state.study.value! as Template));
   }
 
   @override

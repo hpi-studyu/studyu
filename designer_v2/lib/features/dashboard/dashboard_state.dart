@@ -71,7 +71,7 @@ class DashboardState extends Equatable {
         case StudyType.template:
           final List<Study> subStudies = studies.where((s) => s.parentTemplateId == study.id).toList();
           result.add(StudyGroup.template(study as Template, subStudies));
-        case StudyType.subStudy:
+        case StudyType.templatetrial:
           break;
       }
     }
@@ -86,7 +86,7 @@ class DashboardState extends Equatable {
 
       // Add removed parent templates again
       for (final study in filteredStudies) {
-        if (study.isSubStudy && !filteredStudies.any((s) => s.isTemplate && s.id == study.parentTemplateId)) {
+        if (study.isTemplateTrial && !filteredStudies.any((s) => s.isTemplate && s.id == study.parentTemplateId)) {
           final parentTemplate = studiesToFilter.firstWhere((s) => s.isTemplate && s.id == study.parentTemplateId);
           filteredStudies.add(parentTemplate);
         }

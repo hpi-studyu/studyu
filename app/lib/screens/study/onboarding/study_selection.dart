@@ -27,9 +27,9 @@ Future<void> navigateToStudyOverview(
 }
 
 class StudySelectionScreenArgs {
-  final List<Study> subStudies;
+  final List<Study> templatetrials;
 
-  StudySelectionScreenArgs({this.subStudies = const []});
+  StudySelectionScreenArgs({this.templatetrials = const []});
 }
 
 class StudySelectionScreen extends StatelessWidget {
@@ -37,10 +37,10 @@ class StudySelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Study> subStudies = [];
+    List<Study> templatetrials = [];
     final args = ModalRoute.of(context)!.settings.arguments;
     if (args is StudySelectionScreenArgs) {
-      subStudies = args.subStudies;
+      templatetrials = args.templatetrials;
     }
     final theme = Theme.of(context);
     return Scaffold(
@@ -53,9 +53,9 @@ class StudySelectionScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      subStudies.isEmpty
+                      templatetrials.isEmpty
                           ? AppLocalizations.of(context)!.study_selection_description
-                          : AppLocalizations.of(context)!.sub_study_selection_description,
+                          : AppLocalizations.of(context)!.template_trial_selection_description,
                       style: theme.textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
@@ -90,13 +90,13 @@ class StudySelectionScreen extends StatelessWidget {
               Expanded(
                 child: RetryFutureBuilder<List<Study>>(
                   tryFunction: () async =>
-                      subStudies.isEmpty ? Study.publishedPublicStudies() : Future.value(subStudies),
+                      templatetrials.isEmpty ? Study.publishedPublicStudies() : Future.value(templatetrials),
                   successBuilder: (BuildContext context, List<Study>? studies) {
-                    // Filter out sub-studies and templates without sub studies
-                    final filteredStudies = subStudies.isEmpty
+                    // Filter out sub-trials and templates without sub studies
+                    final filteredStudies = templatetrials.isEmpty
                         ? studies!
                             .where((study) =>
-                                !study.isSubStudy &&
+                                !study.isTemplateTrial &&
                                 (!study.isTemplate || studies.any((s) => s.parentTemplateId == study.id)))
                             .toList()
                         : studies!;
@@ -113,8 +113,8 @@ class StudySelectionScreen extends StatelessWidget {
                               onTap: () => study.isTemplate
                                   ? Navigator.pushNamed(context, Routes.studySelection,
                                       arguments: StudySelectionScreenArgs(
-                                          subStudies: studies
-                                              .where((s) => s.isSubStudy && s.parentTemplateId == study.id)
+                                          templatetrials: studies
+                                              .where((s) => s.isTemplateTrial && s.parentTemplateId == study.id)
                                               .toList()))
                                   : navigateToStudyOverview(context, study),
                             ),

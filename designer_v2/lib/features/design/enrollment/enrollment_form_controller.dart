@@ -90,7 +90,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
       lockEnrollmentTypeControl.markAsDisabled();
     }
 
-    if (study.isSubStudy && study.templateConfiguration?.lockEnrollmentType == true) {
+    if (study.isTemplateTrial && study.templateConfiguration?.lockEnrollmentType == true) {
       enrollmentTypeControl.markAsDisabled();
     }
 

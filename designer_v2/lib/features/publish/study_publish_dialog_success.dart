@@ -45,7 +45,7 @@ class PublishSuccessDialog extends StudyPageWidget {
                   ? tr.action_button_post_launch_followup_template
                   : tr.action_button_post_launch_followup,
               onPressed: () => Navigator.maybePop(context).whenComplete(() => controller.studyType == StudyType.template
-                  ? controller.onCreateNewSubstudy()
+                  ? controller.onCreateNewTemplateTrial()
                   : controller.onAddParticipants()),
             ),
             const SizedBox(height: 8.0),

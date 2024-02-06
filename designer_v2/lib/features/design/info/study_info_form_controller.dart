@@ -71,7 +71,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
       lockPublisherInfoControl.markAsDisabled();
     }
 
-    if (study.isSubStudy && study.templateConfiguration?.lockPublisherInformation == true) {
+    if (study.isTemplateTrial && study.templateConfiguration?.lockPublisherInformation == true) {
       organizationControl.markAsDisabled();
       reviewBoardControl.markAsDisabled();
       reviewBoardNumberControl.markAsDisabled();
@@ -133,7 +133,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
         ValidationMessage.required: (error) => switch (study.type) {
               StudyType.standalone => tr.form_field_study_title_required,
               StudyType.template => tr.form_field_template_title_required,
-              StudyType.subStudy => tr.form_field_substudy_title_required,
+              StudyType.templatetrial => tr.form_field_template_trial_title_required,
             }
       });
   get descriptionRequired => FormControlValidation(control: descriptionControl, validators: [
@@ -142,7 +142,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
         ValidationMessage.required: (error) => switch (study.type) {
               StudyType.standalone => tr.form_field_study_description_required,
               StudyType.template => tr.form_field_template_description_required,
-              StudyType.subStudy => tr.form_field_substudy_description_required,
+              StudyType.templatetrial => tr.form_field_template_trial_description_required,
             },
       });
   get iconRequired => FormControlValidation(control: iconControl, validators: [

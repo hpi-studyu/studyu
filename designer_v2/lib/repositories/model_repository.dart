@@ -81,7 +81,7 @@ class StudyCreationArgs extends ModelInstanceCreationArgs {
   StudyCreationArgs(
       {required this.studyID, this.parentTemplate, required this.isTemplate, this.validForCreation = true}) {
     if (parentTemplate != null && isTemplate) {
-      throw ArgumentError("A sub-study cannot be a template");
+      throw ArgumentError("A templatetrial cannot be a template");
     }
   }
 

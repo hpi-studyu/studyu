@@ -118,8 +118,8 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
   }
 
   List<ModelAction> availableSubActions(StudyGroup model, int index) {
-    final subStudy = model.subStudies[index];
-    return _availableActions(subStudy);
+    final templatetrial = model.subStudies[index];
+    return _availableActions(templatetrial);
   }
 
   List<ModelAction> _availableActions(Study study) {
@@ -130,7 +130,7 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
         onExecute: () async {
           await pinStudy(study.id);
         },
-        isAvailable: !study.isSubStudy && !isPinned(study),
+        isAvailable: !study.isTemplateTrial && !isPinned(study),
       ),
       ModelAction(
         type: StudyActionType.pinoff,
@@ -138,7 +138,7 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
         onExecute: () async {
           await pinOffStudy(study.id);
         },
-        isAvailable: !study.isSubStudy && isPinned(study),
+        isAvailable: !study.isTemplateTrial && isPinned(study),
       )
     ].where((action) => action.isAvailable).toList();
 

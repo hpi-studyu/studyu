@@ -95,9 +95,9 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
           color: theme.colorScheme.primaryContainer.withOpacity(0.9),
           height: 0.0,
         ));
-        for (final subStudy in studyGroup.subStudies) {
-          final subActions = widget.getSubActions(studyGroup, studyGroup.subStudies.indexOf(subStudy));
-          subRows.add(_buildStudyRow(theme, subStudy, actions: subActions));
+        for (final templatetrial in studyGroup.subStudies) {
+          final subActions = widget.getSubActions(studyGroup, studyGroup.subStudies.indexOf(templatetrial));
+          subRows.add(_buildStudyRow(theme, templatetrial, actions: subActions));
         }
       }
 
@@ -165,7 +165,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                               ),
                             ),
                           )
-                        : (study.isSubStudy && hoveredStudy == study
+                        : (study.isTemplateTrial && hoveredStudy == study
                             ? const Align(
                                 alignment: Alignment.centerRight,
                                 child: Icon(

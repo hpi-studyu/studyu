@@ -237,12 +237,12 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
       actionButtons.add(const SizedBox(width: 12.0)); // padding
     }
 
-    if (state.isCreateNewSubstudyVisible) {
+    if (state.isCreateNewTemplateTrialVisible) {
       actionButtons.add(
         PrimaryButton(
-            text: tr.action_button_study_create_substudy,
+            text: tr.action_button_study_create_template_trial,
             icon: null,
-            onPressed: () => controller.onCreateNewSubstudy()),
+            onPressed: () => controller.onCreateNewTemplateTrial()),
       );
       actionButtons.add(const SizedBox(width: 12.0)); // padding
     }

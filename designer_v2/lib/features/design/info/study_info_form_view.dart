@@ -62,12 +62,12 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: switch (study.type) {
                     StudyType.standalone => tr.form_field_study_title,
                     StudyType.template => tr.form_field_template_title,
-                    StudyType.subStudy => tr.form_field_substudy_title,
+                    StudyType.templatetrial => tr.form_field_template_trial_title,
                   },
                   labelHelpText: switch (study.type) {
                     StudyType.standalone => tr.form_field_study_title_tooltip,
                     StudyType.template => tr.form_field_template_title_tooltip,
-                    StudyType.subStudy => tr.form_field_substudy_title_tooltip,
+                    StudyType.templatetrial => tr.form_field_template_trial_title_tooltip,
                   },
                   input: Row(
                     children: [
@@ -103,12 +103,12 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   label: switch (study.type) {
                     StudyType.standalone => tr.form_field_study_description,
                     StudyType.template => tr.form_field_template_description,
-                    StudyType.subStudy => tr.form_field_substudy_description,
+                    StudyType.templatetrial => tr.form_field_template_trial_description,
                   },
                   labelHelpText: switch (study.type) {
                     StudyType.standalone => tr.form_field_study_description_tooltip,
                     StudyType.template => tr.form_field_template_description_tooltip,
-                    StudyType.subStudy => tr.form_field_substudy_description_tooltip,
+                    StudyType.templatetrial => tr.form_field_template_trial_description_tooltip,
                   },
                   input: ReactiveTextField(
                     formControl: formViewModel.descriptionControl,
@@ -123,7 +123,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                         hintText: switch (study.type) {
                       StudyType.standalone => tr.form_field_study_description_hint,
                       StudyType.template => tr.form_field_template_description_hint,
-                      StudyType.subStudy => tr.form_field_substudy_description_hint,
+                      StudyType.templatetrial => tr.form_field_template_trial_description_hint,
                     }),
                   ),
                 ),

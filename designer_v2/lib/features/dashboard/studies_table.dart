@@ -17,7 +17,7 @@ class StudyGroup {
 
   StudyGroup.standalone(Study standaloneStudy) : this(standaloneStudy, []);
 
-  StudyGroup.template(Template templateStudy, List<Study> subStudies) : this(templateStudy, subStudies);
+  StudyGroup.template(Template templateTrial, List<Study> templatetrials) : this(templateTrial, templatetrials);
 }
 
 enum StudiesTableColumn { pin, title, status, participation, createdAt, enrolled, active, completed, action }

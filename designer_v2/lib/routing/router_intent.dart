@@ -146,7 +146,7 @@ class RoutingIntents {
         queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
       );
 
-  static final substudyNew = (Template parentTemplate) => RoutingIntent(
+  static final templatetrialNew = (Template parentTemplate) => RoutingIntent(
         route: RouterConf.route(studyEditInfoRouteName),
         params: const {
           RouteParams.studyId: Config.newModelId,

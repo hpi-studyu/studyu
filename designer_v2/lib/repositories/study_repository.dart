@@ -118,10 +118,10 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         isAvailable: model.isTemplate && !model.canEditDraft(currentUser),
       ),
       ModelAction(
-        type: StudyActionType.createSubStudy,
-        label: StudyActionType.createSubStudy.string,
+        type: StudyActionType.createTemplateTrial,
+        label: StudyActionType.createTemplateTrial.string,
         onExecute: () {
-          return ref.read(routerProvider).dispatch(RoutingIntents.substudyNew(model as Template));
+          return ref.read(routerProvider).dispatch(RoutingIntents.templatetrialNew(model as Template));
         },
         isAvailable: model.status != StudyStatus.draft && model.isTemplate,
       ),
@@ -238,7 +238,7 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
     }
 
     if (args.parentTemplate != null) {
-      return StudyTemplates.emptySubStudyDraft(userId, args.parentTemplate!);
+      return StudyTemplates.emptyTemplateTrialDraft(userId, args.parentTemplate!);
     }
 
     return StudyTemplates.emptyStandaloneDraft(userId);

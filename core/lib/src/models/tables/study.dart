@@ -38,7 +38,7 @@ enum ResultSharing {
 enum StudyType {
   standalone,
   template,
-  subStudy;
+  templatetrial;
 
   String toJson() => name;
   static StudyType fromJson(String json) => values.byName(json);
@@ -114,7 +114,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
     final parentTemplateId = json['parent_template_id'] as String?;
     final templateConfiguration = json['template_configuration'];
     final study = parentTemplateId != null
-        ? _$TemplateSubStudyFromJson(json)
+        ? _$TemplateTrialFromJson(json)
         : (templateConfiguration != null ? _$TemplateFromJson(json) : _$StudyFromJson(json));
 
     final List? repo = json['repo'] as List?;
@@ -196,7 +196,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
 
   StudyType get type {
     if (parentTemplateId != null) {
-      return StudyType.subStudy;
+      return StudyType.templatetrial;
     }
     if (templateConfiguration != null) {
       return StudyType.template;
@@ -206,7 +206,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
 
   bool get isStandalone => type == StudyType.standalone;
   bool get isTemplate => type == StudyType.template;
-  bool get isSubStudy => type == StudyType.subStudy;
+  bool get isTemplateTrial => type == StudyType.templatetrial;
 
   bool isOwner(User? user) => user != null && userId == user.id;
 
@@ -294,10 +294,10 @@ class Template extends Study {
 }
 
 @JsonSerializable()
-class TemplateSubStudy extends Study {
-  TemplateSubStudy(super.id, super.userId);
+class TemplateTrial extends Study {
+  TemplateTrial(super.id, super.userId);
 
-  TemplateSubStudy.create(String userId, Template template) : super(const Uuid().v4(), userId) {
+  TemplateTrial.create(String userId, Template template) : super(const Uuid().v4(), userId) {
     if (template.templateConfiguration == null) {
       throw ArgumentError('Template must have a templateConfiguration');
     }

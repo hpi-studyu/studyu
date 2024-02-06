@@ -177,8 +177,8 @@ Map<String, dynamic> _$TemplateToJson(Template instance) {
   return val;
 }
 
-TemplateSubStudy _$TemplateSubStudyFromJson(Map<String, dynamic> json) =>
-    TemplateSubStudy(
+TemplateTrial _$TemplateTrialFromJson(Map<String, dynamic> json) =>
+    TemplateTrial(
       json['id'] as String,
       json['user_id'] as String,
     )
@@ -222,7 +222,7 @@ TemplateSubStudy _$TemplateSubStudyFromJson(Map<String, dynamic> json) =>
           .toList()
       ..registryPublished = json['registry_published'] as bool;
 
-Map<String, dynamic> _$TemplateSubStudyToJson(TemplateSubStudy instance) {
+Map<String, dynamic> _$TemplateTrialToJson(TemplateTrial instance) {
   final val = <String, dynamic>{
     'id': instance.id,
   };

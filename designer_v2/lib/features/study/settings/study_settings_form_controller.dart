@@ -38,7 +38,7 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
     isPublishedToRegistryControl.value = data.publishedToRegistry;
     isPublishedToRegistryResultsControl.value = data.publishedToRegistryResults;
 
-    if (data.isSubStudy) {
+    if (data.isTemplateTrial) {
       isPublishedToRegistryControl.markAsDisabled();
       isPublishedToRegistryResultsControl.markAsDisabled();
     }
