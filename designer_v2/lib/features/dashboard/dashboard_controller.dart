@@ -5,6 +5,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
@@ -80,6 +81,10 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     sortStudies();
   }
 
+  void setSorting(StudiesTableColumn sortByColumn, bool ascending) {
+    state = state.copyWith(sortByColumn: sortByColumn, sortAscending: ascending);
+  }
+
   void filterStudies(String? query) async {
     state = state.copyWith(
       query: query,
@@ -92,6 +97,12 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
       studies: () => AsyncValue.data(studies),
     );
   }
+
+  bool isSortingActiveForColumn(StudiesTableColumn column) {
+    return state.sortByColumn == column;
+  }
+
+  bool get isSortAscending => state.sortAscending;
 
   bool isPinned(Study study) {
     return userRepository.user.preferences.pinnedStudies.contains(study.id);
