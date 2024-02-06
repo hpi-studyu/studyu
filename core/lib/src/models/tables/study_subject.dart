@@ -64,8 +64,6 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       : id = const Uuid().v4(),
         studyId = study.id;
 
-  bool get isSupported => study.isSupported && progress.every((p) => p.isSupported);
-
   List<String> get interventionOrder => [
         if (study.schedule.includeBaseline) Study.baselineID,
         ...study.schedule.generateWith(0).map<String>((int index) => selectedInterventionIds[index]),
@@ -282,7 +280,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   Future<void> setStartDateBackBy({required int days}) async {
     await deleteProgress();
-    progress = await SupabaseQuery.batchUpsert(progress.map((p) => p.setStartDateBackBy(days: days).toJson()).toList());
+    progress = (await SupabaseQuery.batchUpsert<SubjectProgress>(
+      progress.map((p) => p.setStartDateBackBy(days: days).toJson()).toList(),
+    ))
+        .extracted;
     startedAt = startedAt!.subtract(Duration(days: days));
     save();
   }
@@ -338,7 +339,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return save();
   }
 
-  static Future<List<StudySubject>> getStudyHistory(String userId) async {
+  static Future<ExtractedSupabaseListResult<StudySubject>> getStudyHistory(String userId) async {
     return SupabaseQuery.extractSupabaseList<StudySubject>(
       await env.client.from(tableName).select('*,study!study_subject_studyId_fkey(*),subject_progress(*)'),
     );

@@ -120,7 +120,7 @@ class Preview {
     if (selectedStudyObjectId != null) {
       try {
         if (selectedRoute == '/intervention') {
-          final List<StudySubject> studySubjects = await SupabaseQuery.getAll<StudySubject>(
+          final studySubjects = await SupabaseQuery.getAll<StudySubject>(
             selectedColumns: [
               '*',
               'study!study_subject_studyId_fkey(*)',
@@ -130,7 +130,7 @@ class Preview {
           // If the user has a study object Id, there was already a subject created
           // and we need to find the last one they created for the study
           // with the correct interventions
-          subject = studySubjects.lastWhere(
+          subject = studySubjects.extracted.lastWhere(
             (foundSubject) {
               // todo baseline
               foundSubject.study.schedule.includeBaseline = false;

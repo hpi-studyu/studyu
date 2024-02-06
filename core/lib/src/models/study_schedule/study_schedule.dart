@@ -9,15 +9,12 @@ class StudySchedule {
   int numberOfCycles = 2;
   int phaseDuration = 7;
   bool includeBaseline = true;
-  @JsonKey(unknownEnumValue: PhaseSequence.unknown)
   PhaseSequence sequence = PhaseSequence.alternating;
   String sequenceCustom;
 
   StudySchedule({
     this.sequenceCustom = 'ABAB',
   });
-
-  bool get isSupported => sequence != PhaseSequence.unknown;
 
   factory StudySchedule.fromJson(Map<String, dynamic> json) => _$StudyScheduleFromJson(json);
   Map<String, dynamic> toJson() => _$StudyScheduleToJson(this);
@@ -81,8 +78,6 @@ class StudySchedule {
         return 'Random';
       case PhaseSequence.customized:
         return 'Custom';
-      case PhaseSequence.unknown:
-        return 'Unknown';
     }
   }
 
@@ -93,7 +88,6 @@ class StudySchedule {
 }
 
 enum PhaseSequence {
-  unknown,
   alternating,
   counterBalanced,
   randomized,

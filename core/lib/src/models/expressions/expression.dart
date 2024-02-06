@@ -1,6 +1,6 @@
 import 'package:studyu_core/src/models/expressions/types/types.dart';
-import 'package:studyu_core/src/models/expressions/types/unknown_expression.dart';
 import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
+import 'package:studyu_core/src/models/unknown_json_type_error.dart';
 
 typedef ExpressionParser = Expression Function(Map<String, dynamic> data);
 
@@ -16,7 +16,7 @@ abstract class Expression {
         BooleanExpression.expressionType => BooleanExpression.fromJson(data),
         ChoiceExpression.expressionType => ChoiceExpression.fromJson(data),
         NotExpression.expressionType => NotExpression.fromJson(data),
-        _ => UnknownExpression()
+        _ => throw UnknownJsonTypeError(data[keyType])
       };
 
   Map<String, dynamic> toJson();

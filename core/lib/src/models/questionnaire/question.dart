@@ -2,7 +2,7 @@ import 'package:studyu_core/src/models/questionnaire/answer.dart';
 import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
 import 'package:studyu_core/src/models/questionnaire/questions/questions.dart';
-import 'package:studyu_core/src/models/questionnaire/questions/unknown_question.dart';
+import 'package:studyu_core/src/models/unknown_json_type_error.dart';
 import 'package:uuid/uuid.dart';
 
 typedef QuestionParser = Question Function(Map<String, dynamic> data);
@@ -10,7 +10,6 @@ typedef QuestionParser = Question Function(Map<String, dynamic> data);
 abstract class Question<V> {
   static const String keyType = 'type';
   String type;
-  bool get isSupported => true;
   late String id;
   String? prompt;
   String? rationale;
@@ -29,7 +28,7 @@ abstract class Question<V> {
         AnnotatedScaleQuestion.questionType => AnnotatedScaleQuestion.fromJson(data),
         VisualAnalogueQuestion.questionType => VisualAnalogueQuestion.fromJson(data),
         FreeTextQuestion.questionType => FreeTextQuestion.fromJson(data),
-        _ => UnknownQuestion(),
+        _ => throw UnknownJsonTypeError(data[keyType]),
       } as Question<V>;
 
   Map<String, dynamic> toJson();

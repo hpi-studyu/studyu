@@ -12,12 +12,10 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
     )
       ..title = json['title'] as String?
       ..description = json['description'] as String?
-      ..participation = $enumDecode(
-          _$ParticipationEnumMap, json['participation'],
-          unknownValue: Participation.unknown)
-      ..resultSharing = $enumDecode(
-          _$ResultSharingEnumMap, json['result_sharing'],
-          unknownValue: ResultSharing.unknown)
+      ..participation =
+          $enumDecode(_$ParticipationEnumMap, json['participation'])
+      ..resultSharing =
+          $enumDecode(_$ResultSharingEnumMap, json['result_sharing'])
       ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
       ..iconName = json['icon_name'] as String
       ..published = json['published'] as bool
@@ -81,13 +79,11 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
 }
 
 const _$ParticipationEnumMap = {
-  Participation.unknown: 'unknown',
   Participation.open: 'open',
   Participation.invite: 'invite',
 };
 
 const _$ResultSharingEnumMap = {
-  ResultSharing.unknown: 'unknown',
   ResultSharing.public: 'public',
   ResultSharing.private: 'private',
   ResultSharing.organization: 'organization',

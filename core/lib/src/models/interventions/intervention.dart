@@ -17,8 +17,6 @@ class Intervention {
 
   Intervention.withId() : id = const Uuid().v4();
 
-  bool get isSupported => tasks.every((task) => task.isSupported);
-
   factory Intervention.fromJson(Map<String, dynamic> data) => _$InterventionFromJson(data);
 
   Map<String, dynamic> toJson() => _$InterventionToJson(this);

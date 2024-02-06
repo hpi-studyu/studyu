@@ -91,23 +91,22 @@ class StudySelectionScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: RetryFutureBuilder<List<Study>>(
+                child: RetryFutureBuilder<ExtractedSupabaseListResult<Study>>(
                   tryFunction: () async => Study.publishedPublicStudies(),
-                  successBuilder: (BuildContext context, List<Study>? studies) {
+                  successBuilder: (BuildContext context, ExtractedSupabaseListResult<Study>? studies) {
+                    if (studies!.notExtracted.isNotEmpty) {
+                      debugPrint('${studies.notExtracted.length} studies could not be extracted.');
+                    }
                     return ListView.builder(
-                      itemCount: studies!.length,
+                      itemCount: studies.extracted.length,
                       itemBuilder: (context, index) {
-                        final study = studies[index];
+                        final study = studies.extracted[index];
                         return Hero(
-                          tag: 'study_tile_${studies[index].id}',
+                          tag: 'study_tile_${studies.extracted[index].id}',
                           child: Material(
                             child: StudyTile.fromStudy(
                               study: study,
                               onTap: () async {
-                                if (!study.isSupported) {
-                                  await showAppOutdatedDialog(context);
-                                  return;
-                                }
                                 await navigateToStudyOverview(context, study);
                               },
                             ),
@@ -209,15 +208,21 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 }
 
                 if (studyResult != null) {
-                  final study = Study.fromJson(studyResult);
-
-                  if (!mounted) return;
-                  Navigator.pop(context);
-
-                  if (!study.isSupported) {
+                  Study study;
+                  try {
+                    study = Study.fromJson(studyResult);
+                    // ignore: avoid_catching_errors
+                  } on ArgumentError catch (error) {
+                    // We are catching ArgumentError because unknown enums throw an ArgumentError
+                    // and UnknownJsonTypeError is a subclass of ArgumentError
+                    debugPrint('Study selection from invite failed: $error');
+                    if (!mounted) return;
                     await showAppOutdatedDialog(context);
                     return;
                   }
+
+                  if (!mounted) return;
+                  Navigator.pop(context);
 
                   if (result.containsKey('preselected_intervention_ids') &&
                       result['preselected_intervention_ids'] != null) {

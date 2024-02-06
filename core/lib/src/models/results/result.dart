@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
-
 import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
+import 'package:studyu_core/src/models/unknown_json_type_error.dart';
 
 part 'result.g.dart';
 
@@ -13,8 +13,6 @@ class Result<T> {
   String? periodId;
 
   static const String keyResult = 'result';
-
-  bool get isSupported => type != 'unknown';
 
   @JsonKey(includeToJson: false, includeFromJson: false)
   late T result;
@@ -29,7 +27,7 @@ class Result<T> {
         'QuestionnaireState' => Result<QuestionnaireState>.parseJson(json)
           ..result = QuestionnaireState.fromJson(List<Map<String, dynamic>>.from(json[keyResult] as List)),
         'bool' => Result<bool>.parseJson(json)..result = json[keyResult] as bool,
-        _ => Result<bool>("unknown")..result = false,
+        _ => throw UnknownJsonTypeError(json[keyType]),
       } as Result<T>;
 
   Map<String, dynamic> toJson() {
