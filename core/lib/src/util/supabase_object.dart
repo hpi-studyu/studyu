@@ -38,15 +38,13 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
       );
 
   Future<T> save() async {
-    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).select())
-        .extracted
-        .single;
+    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).select()).single;
   }
 }
 
 // ignore: avoid_classes_with_only_static_members
 class SupabaseQuery {
-  static Future<ExtractedSupabaseListResult<T>> getAll<T extends SupabaseObject>({
+  static Future<List<T>> getAll<T extends SupabaseObject>({
     List<String> selectedColumns = const ['*'],
   }) async {
     try {
@@ -68,7 +66,7 @@ class SupabaseQuery {
     }
   }
 
-  static Future<ExtractedSupabaseListResult<T>> batchUpsert<T extends SupabaseObject>(
+  static Future<List<T>> batchUpsert<T extends SupabaseObject>(
     List<Map<String, dynamic>> batchJson,
   ) async {
     try {
@@ -79,11 +77,13 @@ class SupabaseQuery {
     }
   }
 
-  static ExtractedSupabaseListResult<T> extractSupabaseList<T extends SupabaseObject>(
+  static List<JsonWithError> faultyStudies = <JsonWithError>[];
+
+  static List<T> extractSupabaseList<T extends SupabaseObject>(
     List<Map<String, dynamic>> response,
   ) {
     final extracted = <T>[];
-    final notExtracted = <JsonWithError>[];
+    faultyStudies.clear();
     for (final json in response) {
       try {
         extracted.add(SupabaseObjectFunctions.fromJson<T>(json));
@@ -91,11 +91,10 @@ class SupabaseQuery {
       } on ArgumentError catch (error) {
         // We are catching ArgumentError because unknown enums throw an ArgumentError
         // and UnknownJsonTypeError is a subclass of ArgumentError
-        notExtracted.add(JsonWithError(json, error));
+        faultyStudies.add(JsonWithError(json, error));
       }
     }
-
-    return ExtractedSupabaseListResult(extracted, notExtracted);
+    return extracted;
   }
 
   static T extractSupabaseSingleRow<T extends SupabaseObject>(Map<String, dynamic> response) {
@@ -130,13 +129,6 @@ extension PrimaryKeyFilterBuilder on PostgrestFilterBuilder {
     });
     return primaryKeyFilter;
   }
-}
-
-class ExtractedSupabaseListResult<T> {
-  final List<T> extracted;
-  final List<JsonWithError> notExtracted;
-
-  ExtractedSupabaseListResult(this.extracted, this.notExtracted);
 }
 
 class JsonWithError {

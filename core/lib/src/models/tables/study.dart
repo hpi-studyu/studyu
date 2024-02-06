@@ -155,7 +155,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<ExtractedSupabaseListResult<Study>> getResearcherDashboardStudies() async =>
+  static Future<List<Study>> getResearcherDashboardStudies() async =>
       SupabaseQuery.getAll<Study>(
         selectedColumns: [
           '*',
@@ -168,7 +168,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
       );
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
-  static Future<ExtractedSupabaseListResult<Study>> publishedPublicStudies() async {
+  static Future<List<Study>> publishedPublicStudies() async {
     try {
       final response = await env.client.from(tableName).select().eq('participation', 'open');
       return SupabaseQuery.extractSupabaseList<Study>(List<Map<String, dynamic>>.from(response));
