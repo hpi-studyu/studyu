@@ -299,14 +299,14 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
   }
 
   Future<void> _readDebugUser() async {
-    if (!kDebugMode) {
-      return;
-    }
+    if (!kDebugMode) return;
     const email = String.fromEnvironment('EMAIL');
     const password = String.fromEnvironment('PASSWORD');
+    const autoLogin = bool.fromEnvironment('AUTO_LOGIN');
     if (email.isNotEmpty && password.isNotEmpty) {
       emailControl.value = email;
       passwordControl.value = password;
+      if (autoLogin && form.valid) await signIn();
     }
   }
 
