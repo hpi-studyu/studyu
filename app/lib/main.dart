@@ -41,11 +41,12 @@ Future<void> main() async {
   String initialRoute = Routes.loading;
   try {
     appConfig = await AppConfig.getAppConfig();
-    if (await isAppOutdated(appConfig)) {
-      initialRoute = Routes.appOutdated;
-    }
   } catch (error) {
     // device could be offline
+  }
+
+  if (appConfig != null && await isAppOutdated(appConfig)) {
+    initialRoute = Routes.appOutdated;
   }
 
   await AppAnalytics.init();

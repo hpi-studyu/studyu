@@ -491,9 +491,7 @@ ALTER FUNCTION public.user_email(user_id uuid) OWNER TO postgres;
 
 CREATE TABLE public.app_config (
     id text NOT NULL,
-    app_min_version text NOT NULL DEFAULT '0.0.0',
-    app_playstore_url text NOT NULL DEFAULT 'https://play.google.com/store/apps/details?id=health.studyu.app',
-    app_appstore_url text NOT NULL DEFAULT 'https://itunes.apple.com/app/id1571991198',
+    app_min_version text NOT NULL,
     app_privacy jsonb NOT NULL,
     app_terms jsonb NOT NULL,
     designer_privacy jsonb NOT NULL,

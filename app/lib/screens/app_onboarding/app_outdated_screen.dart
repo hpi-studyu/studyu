@@ -3,25 +3,24 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../models/app_state.dart';
-
 class AppOutdatedScreen extends StatelessWidget {
+  static const String kPlayStoreUrl = 'https://play.google.com/store/apps/details?id=health.studyu.app';
+  static const String kAppstoreUrl = 'https://itunes.apple.com/app/id1571991198';
+
   const AppOutdatedScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    final state = context.read<AppState>();
     String? storeUrl;
     IconData? storeIcon;
     if (Platform.isAndroid) {
-      storeUrl = state.appConfig?.appPlayStoreUrl;
+      storeUrl = kPlayStoreUrl;
       storeIcon = MdiIcons.googlePlay;
     } else if (Platform.isIOS) {
-      storeUrl = state.appConfig?.appAppstoreUrl;
+      storeUrl = kAppstoreUrl;
       storeIcon = MdiIcons.apple;
     }
     return Scaffold(
@@ -43,10 +42,7 @@ class AppOutdatedScreen extends StatelessWidget {
                   ? OutlinedButton.icon(
                       icon: Icon(storeIcon),
                       onPressed: () async {
-                        await launchUrl(Uri.parse(storeUrl!),
-                            mode: Platform.isAndroid
-                                ? LaunchMode.externalNonBrowserApplication
-                                : LaunchMode.platformDefault);
+                        await launchUrl(Uri.parse(storeUrl!), mode: LaunchMode.externalNonBrowserApplication);
                       },
                       label: Text(loc.open_store, style: const TextStyle(fontSize: 20)),
                     )

@@ -9,8 +9,6 @@ part of 'app_config.dart';
 AppConfig _$AppConfigFromJson(Map<String, dynamic> json) => AppConfig(
       json['id'] as String,
       appMinVersion: json['app_min_version'] as String,
-      appPlayStoreUrl: json['app_playstore_url'] as String,
-      appAppstoreUrl: json['app_appstore_url'] as String,
       appPrivacy: Map<String, String>.from(json['app_privacy'] as Map),
       appTerms: Map<String, String>.from(json['app_terms'] as Map),
       designerPrivacy:
@@ -27,8 +25,6 @@ Map<String, dynamic> _$AppConfigToJson(AppConfig instance) {
   final val = <String, dynamic>{
     'id': instance.id,
     'app_min_version': instance.appMinVersion,
-    'app_playstore_url': instance.appPlayStoreUrl,
-    'app_appstore_url': instance.appAppstoreUrl,
     'app_privacy': instance.appPrivacy,
     'app_terms': instance.appTerms,
     'designer_privacy': instance.designerPrivacy,

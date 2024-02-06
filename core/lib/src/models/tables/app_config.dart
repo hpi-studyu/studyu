@@ -14,10 +14,6 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   String id;
   @JsonKey(name: 'app_min_version')
   String appMinVersion;
-  @JsonKey(name: 'app_playstore_url')
-  String appPlayStoreUrl;
-  @JsonKey(name: 'app_appstore_url')
-  String appAppstoreUrl;
   @JsonKey(name: 'app_privacy')
   Map<String, String> appPrivacy;
   @JsonKey(name: 'app_terms')
@@ -33,8 +29,6 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   AppConfig(
     this.id, {
     required this.appMinVersion,
-    required this.appPlayStoreUrl,
-    required this.appAppstoreUrl,
     required this.appPrivacy,
     required this.appTerms,
     required this.designerPrivacy,
