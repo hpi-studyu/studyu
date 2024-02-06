@@ -155,8 +155,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<List<Study>> getResearcherDashboardStudies() async =>
-      SupabaseQuery.getAll<Study>(
+  static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
         selectedColumns: [
           '*',
           'repo(*)',
