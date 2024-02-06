@@ -1,6 +1,6 @@
 name: studyu_app
-version: 2.6.5-dev.1
-description: Partake in digital N-of-1 trials with the innovative StudyU App
+version: 2.6.5-dev.2
+description: Partake in digital N-of-1 trials with the innovative StudyU Health App
 publish_to: none
 homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
@@ -42,15 +42,15 @@ dependencies:
   sentry_flutter: ^7.15.0
   sentry_logging: ^7.15.0
   shared_preferences: ^2.2.2
-  studyu_core: ^4.3.3-dev.0
-  studyu_flutter_common: ^1.7.0-dev.1
+  studyu_core: ^4.3.3-dev.1
+  studyu_flutter_common: ^1.7.0-dev.2
   supabase: ^2.0.6
   supabase_flutter: ^2.3.1
   timeline_tile: ^2.0.0
   timezone: ^0.9.2
   universal_html: ^2.2.4
   url_launcher: ^6.2.4
-  uuid: ^4.2.1 # flutter_test
+  uuid: ^4.3.3
   wakelock_plus: ^1.1.4
 
 dev_dependencies:
@@ -59,15 +59,30 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-flutter_icons:
-  image_path: assets/images/icon.png
-  android: true
-  ios: true
-
 flutter:
   generate: true
   uses-material-design: true
   assets:
     - assets/
-    - assets/images/
+    - assets/icon/
     - assets/fonts/
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon.png"
+  image_path_ios: "assets/icon/icon_bg.png"
+  remove_alpha_ios: true
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#0175C2" # "#dfdfdf"
+    theme_color: "#0175C2" # "#389bea"
+  windows:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    icon_size: 256 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/icon/icon.png"
