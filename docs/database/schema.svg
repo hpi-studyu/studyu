@@ -535,44 +535,38 @@
 <!-- public.app_config -->
 <g id="node15" class="node">
 <title>public.app_config</title>
-<polygon fill="#efefef" stroke="transparent" points="4969,-3250.5 4969,-3285.5 5250,-3285.5 5250,-3250.5 4969,-3250.5"/>
-<polygon fill="none" stroke="#000000" points="4969,-3250.5 4969,-3285.5 5250,-3285.5 5250,-3250.5 4969,-3250.5"/>
-<text text-anchor="start" x="4975.6915" y="-3263.3" font-family="Arial Bold" font-size="18.00" fill="#000000">public.app_config</text>
-<text text-anchor="start" x="5115.7405" y="-3263.3" font-family="Arial" font-size="14.00" fill="#000000">    </text>
-<text text-anchor="start" x="5149.9453" y="-3263.3" font-family="Arial" font-size="14.00" fill="#666666">[BASE TABLE]</text>
-<polygon fill="none" stroke="#000000" points="4969,-3220.5 4969,-3250.5 5250,-3250.5 5250,-3220.5 4969,-3220.5"/>
-<text text-anchor="start" x="4976" y="-3231.9" font-family="Arial" font-size="14.00" fill="#000000">id    </text>
-<text text-anchor="start" x="5021.094" y="-3231.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<polygon fill="#efefef" stroke="transparent" points="4969,-3220.5 4969,-3255.5 5250,-3255.5 5250,-3220.5 4969,-3220.5"/>
+<polygon fill="none" stroke="#000000" points="4969,-3220.5 4969,-3255.5 5250,-3255.5 5250,-3220.5 4969,-3220.5"/>
+<text text-anchor="start" x="4975.6915" y="-3233.3" font-family="Arial Bold" font-size="18.00" fill="#000000">public.app_config</text>
+<text text-anchor="start" x="5115.7405" y="-3233.3" font-family="Arial" font-size="14.00" fill="#000000">    </text>
+<text text-anchor="start" x="5149.9453" y="-3233.3" font-family="Arial" font-size="14.00" fill="#666666">[BASE TABLE]</text>
 <polygon fill="none" stroke="#000000" points="4969,-3190.5 4969,-3220.5 5250,-3220.5 5250,-3190.5 4969,-3190.5"/>
-<text text-anchor="start" x="4976" y="-3201.9" font-family="Arial" font-size="14.00" fill="#000000">app_min_version    </text>
-<text text-anchor="start" x="5116.7826" y="-3201.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<text text-anchor="start" x="4976" y="-3201.9" font-family="Arial" font-size="14.00" fill="#000000">id    </text>
+<text text-anchor="start" x="5021.094" y="-3201.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
 <polygon fill="none" stroke="#000000" points="4969,-3160.5 4969,-3190.5 5250,-3190.5 5250,-3160.5 4969,-3160.5"/>
-<text text-anchor="start" x="4976" y="-3171.9" font-family="Arial" font-size="14.00" fill="#000000">app_playstore_url    </text>
-<text text-anchor="start" x="5121.4558" y="-3171.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<text text-anchor="start" x="4976" y="-3171.9" font-family="Arial" font-size="14.00" fill="#000000">app_min_version    </text>
+<text text-anchor="start" x="5116.7826" y="-3171.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
 <polygon fill="none" stroke="#000000" points="4969,-3130.5 4969,-3160.5 5250,-3160.5 5250,-3130.5 4969,-3130.5"/>
-<text text-anchor="start" x="4976" y="-3141.9" font-family="Arial" font-size="14.00" fill="#000000">app_appstore_url    </text>
-<text text-anchor="start" x="5119.1318" y="-3141.9" font-family="Arial" font-size="14.00" fill="#666666">[text]</text>
+<text text-anchor="start" x="4976" y="-3141.9" font-family="Arial" font-size="14.00" fill="#000000">app_privacy    </text>
+<text text-anchor="start" x="5085.6676" y="-3141.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
 <polygon fill="none" stroke="#000000" points="4969,-3100.5 4969,-3130.5 5250,-3130.5 5250,-3100.5 4969,-3100.5"/>
-<text text-anchor="start" x="4976" y="-3111.9" font-family="Arial" font-size="14.00" fill="#000000">app_privacy    </text>
-<text text-anchor="start" x="5085.6676" y="-3111.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
+<text text-anchor="start" x="4976" y="-3111.9" font-family="Arial" font-size="14.00" fill="#000000">app_terms    </text>
+<text text-anchor="start" x="5076.3296" y="-3111.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
 <polygon fill="none" stroke="#000000" points="4969,-3070.5 4969,-3100.5 5250,-3100.5 5250,-3070.5 4969,-3070.5"/>
-<text text-anchor="start" x="4976" y="-3081.9" font-family="Arial" font-size="14.00" fill="#000000">app_terms    </text>
-<text text-anchor="start" x="5076.3296" y="-3081.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
+<text text-anchor="start" x="4976" y="-3081.9" font-family="Arial" font-size="14.00" fill="#000000">designer_privacy    </text>
+<text text-anchor="start" x="5116" y="-3081.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
 <polygon fill="none" stroke="#000000" points="4969,-3040.5 4969,-3070.5 5250,-3070.5 5250,-3040.5 4969,-3040.5"/>
-<text text-anchor="start" x="4976" y="-3051.9" font-family="Arial" font-size="14.00" fill="#000000">designer_privacy    </text>
-<text text-anchor="start" x="5116" y="-3051.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
+<text text-anchor="start" x="4976" y="-3051.9" font-family="Arial" font-size="14.00" fill="#000000">designer_terms    </text>
+<text text-anchor="start" x="5106.662" y="-3051.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
 <polygon fill="none" stroke="#000000" points="4969,-3010.5 4969,-3040.5 5250,-3040.5 5250,-3010.5 4969,-3010.5"/>
-<text text-anchor="start" x="4976" y="-3021.9" font-family="Arial" font-size="14.00" fill="#000000">designer_terms    </text>
-<text text-anchor="start" x="5106.662" y="-3021.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
+<text text-anchor="start" x="4976" y="-3021.9" font-family="Arial" font-size="14.00" fill="#000000">imprint    </text>
+<text text-anchor="start" x="5052.195" y="-3021.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
 <polygon fill="none" stroke="#000000" points="4969,-2980.5 4969,-3010.5 5250,-3010.5 5250,-2980.5 4969,-2980.5"/>
-<text text-anchor="start" x="4976" y="-2991.9" font-family="Arial" font-size="14.00" fill="#000000">imprint    </text>
-<text text-anchor="start" x="5052.195" y="-2991.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
+<text text-anchor="start" x="4976" y="-2991.9" font-family="Arial" font-size="14.00" fill="#000000">contact    </text>
+<text text-anchor="start" x="5055.3338" y="-2991.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
 <polygon fill="none" stroke="#000000" points="4969,-2950.5 4969,-2980.5 5250,-2980.5 5250,-2950.5 4969,-2950.5"/>
-<text text-anchor="start" x="4976" y="-2961.9" font-family="Arial" font-size="14.00" fill="#000000">contact    </text>
-<text text-anchor="start" x="5055.3338" y="-2961.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
-<polygon fill="none" stroke="#000000" points="4969,-2920.5 4969,-2950.5 5250,-2950.5 5250,-2920.5 4969,-2920.5"/>
-<text text-anchor="start" x="4976" y="-2931.9" font-family="Arial" font-size="14.00" fill="#000000">analytics    </text>
-<text text-anchor="start" x="5064.6564" y="-2931.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
+<text text-anchor="start" x="4976" y="-2961.9" font-family="Arial" font-size="14.00" fill="#000000">analytics    </text>
+<text text-anchor="start" x="5064.6564" y="-2961.9" font-family="Arial" font-size="14.00" fill="#666666">[jsonb]</text>
 </g>
 <!-- public.repo -->
 <g id="node16" class="node">

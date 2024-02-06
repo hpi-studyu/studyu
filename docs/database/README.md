@@ -18,7 +18,7 @@
 | [supabase_functions.hooks](supabase_functions.hooks.md) | 5 | Supabase Functions Hooks: Audit trail for triggered hooks. | BASE TABLE |
 | [public.study](public.study.md) | 21 |  | BASE TABLE |
 | [public.study_subject](public.study_subject.md) | 7 |  | BASE TABLE |
-| [public.app_config](public.app_config.md) | 11 | Stores app config for different envs | BASE TABLE |
+| [public.app_config](public.app_config.md) | 9 | Stores app config for different envs | BASE TABLE |
 | [public.repo](public.repo.md) | 4 | Git repo where the generated project is stored | BASE TABLE |
 | [public.study_invite](public.study_invite.md) | 3 | Study invite codes | BASE TABLE |
 | [public.subject_progress](public.subject_progress.md) | 6 |  | BASE TABLE |
