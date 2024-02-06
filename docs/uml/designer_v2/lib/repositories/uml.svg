@@ -1,5 +1,264 @@
-<svg version="1.1" baseProfile="full" width="5267.0" height="2662.0" viewbox="0 0 5267 2662" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[&lt;abstract&gt;StudyUApi
+<svg version="1.1" baseProfile="full" width="4572.3" height="2662.0" viewbox="0 0 4572.25 2662" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[WrappedModel
+	  |
+	  -_model: T;
+	  +asyncValue: AsyncValue&lt;T&gt;;
+	  +isLocalOnly: bool;
+	  +isDirty: bool;
+	  +isDeleted: bool;
+	  +lastSaved: DateTime?;
+	  +lastFetched: DateTime?;
+	  +lastUpdated: DateTime?;
+	  +model: T
+	  |
+	  +dynamic markWithError();
+	  +dynamic markAsLoading();
+	  +dynamic markAsFetched();
+	  +dynamic markAsSaved()
+	]
+	
+	[WrappedModel]o-[&lt;abstract&gt;AsyncValue]
+	
+	[ModelInstanceCreationArgs
+	]
+	
+	[&lt;abstract&gt;Equatable]&lt;:-[ModelInstanceCreationArgs]
+	
+	[NoArgs
+	  |
+	  +props: List&lt;Object&gt;
+	]
+	
+	[ModelInstanceCreationArgs]&lt;:-[NoArgs]
+	
+	[StudyCreationArgs
+	  |
+	  +studyID: String;
+	  +parentTemplate: Template?;
+	  +isTemplate: bool;
+	  +validForCreation: bool;
+	  +props: List&lt;Object&gt;
+	]
+	
+	[StudyCreationArgs]o-[Template]
+	[ModelInstanceCreationArgs]&lt;:-[StudyCreationArgs]
+	
+	[ModelRepositoryException
+	]
+	
+	[Exception]&lt;:--[ModelRepositoryException]
+	
+	[ModelNotFoundException
+	]
+	
+	[ModelRepositoryException]&lt;:--[ModelNotFoundException]
+	
+	[&lt;abstract&gt;IModelRepository
+	  |
+	  +String getKey();
+	  +WrappedModel&lt;T&gt;? get();
+	  +dynamic fetchAll();
+	  +dynamic fetch();
+	  +dynamic save();
+	  +dynamic delete();
+	  +dynamic duplicateAndSave();
+	  +dynamic duplicateAndSaveFromRemote();
+	  +Stream&lt;WrappedModel&lt;T&gt;&gt; watch();
+	  +Stream&lt;List&lt;WrappedModel&lt;T&gt;&gt;&gt; watchAll();
+	  +Stream&lt;ModelEvent&lt;T&gt;&gt; watchChanges();
+	  +Stream&lt;ModelEvent&lt;T&gt;&gt; watchAllChanges();
+	  +dynamic ensurePersisted();
+	  +void dispose()
+	]
+	
+	[&lt;abstract&gt;IModelActionProvider]&lt;:--[&lt;abstract&gt;IModelRepository]
+	
+	[&lt;abstract&gt;IModelRepositoryDelegate
+	  |
+	  +dynamic fetchAll();
+	  +dynamic fetch();
+	  +dynamic save();
+	  +dynamic delete();
+	  +T createNewInstance();
+	  +T createDuplicate();
+	  +dynamic onError()
+	]
+	
+	[&lt;abstract&gt;ModelRepository
+	  |
+	  +delegate: IModelRepositoryDelegate&lt;T&gt;;
+	  -_allModelsStreamController: BehaviorSubject&lt;List&lt;WrappedModel&lt;T&gt;&gt;&gt;;
+	  -_allModelEventsStreamController: BehaviorSubject&lt;ModelEvent&lt;T&gt;&gt;;
+	  +modelStreamControllers: Map&lt;String, BehaviorSubject&lt;WrappedModel&lt;T&gt;&gt;&gt;;
+	  +modelEventsStreamControllers: Map&lt;String, BehaviorSubject&lt;ModelEvent&lt;T&gt;&gt;&gt;;
+	  -_allModels: Map&lt;String, WrappedModel&lt;T&gt;&gt;
+	  |
+	  +WrappedModel&lt;T&gt;? get();
+	  +dynamic fetchAll();
+	  +dynamic fetch();
+	  +dynamic save();
+	  +dynamic delete();
+	  +dynamic duplicateAndSave();
+	  +dynamic duplicateAndSaveFromRemote();
+	  +Stream&lt;List&lt;WrappedModel&lt;T&gt;&gt;&gt; watchAll();
+	  +Stream&lt;WrappedModel&lt;T&gt;&gt; watch();
+	  +Stream&lt;ModelEvent&lt;T&gt;&gt; watchAllChanges();
+	  +Stream&lt;ModelEvent&lt;T&gt;&gt; watchChanges();
+	  -dynamic _buildModelSpecificController();
+	  +dynamic ensurePersisted();
+	  +WrappedModel&lt;T&gt; upsertLocally();
+	  +List&lt;WrappedModel&lt;T&gt;&gt; upsertAllLocally();
+	  +dynamic emitUpdate();
+	  +dynamic emitModelEvent();
+	  +dynamic emitError();
+	  +void dispose();
+	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()
+	]
+	
+	[&lt;abstract&gt;ModelRepository]o-[&lt;abstract&gt;IModelRepositoryDelegate]
+	[&lt;abstract&gt;ModelRepository]o-[BehaviorSubject]
+	[&lt;abstract&gt;IModelRepository]&lt;:-[&lt;abstract&gt;ModelRepository]
+	
+	[&lt;abstract&gt;IStudyRepository
+	  |
+	  +dynamic launch();
+	  +dynamic deleteParticipants()
+	]
+	
+	[&lt;abstract&gt;ModelRepository]&lt;:--[&lt;abstract&gt;IStudyRepository]
+	
+	[StudyRepository
+	  |
+	  +apiClient: StudyUApi;
+	  +authRepository: IAuthRepository;
+	  +ref: ProviderRef&lt;dynamic&gt;;
+	  +sortCallback: void Function()?
+	  |
+	  +String getKey();
+	  +dynamic deleteParticipants();
+	  +dynamic launch();
+	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()
+	]
+	
+	[StudyRepository]o-[&lt;abstract&gt;StudyUApi]
+	[StudyRepository]o-[&lt;abstract&gt;IAuthRepository]
+	[StudyRepository]o-[&lt;abstract&gt;ProviderRef]
+	[StudyRepository]o-[void Function()?]
+	[&lt;abstract&gt;ModelRepository]&lt;:-[StudyRepository]
+	[&lt;abstract&gt;IStudyRepository]&lt;:--[StudyRepository]
+	
+	[StudyRepositoryDelegate
+	  |
+	  +apiClient: StudyUApi;
+	  +authRepository: IAuthRepository
+	  |
+	  +dynamic fetchAll();
+	  +dynamic fetch();
+	  +dynamic save();
+	  +dynamic delete();
+	  +dynamic onError();
+	  +Study createNewInstance();
+	  +Study createDuplicate()
+	]
+	
+	[StudyRepositoryDelegate]o-[&lt;abstract&gt;StudyUApi]
+	[StudyRepositoryDelegate]o-[&lt;abstract&gt;IAuthRepository]
+	[&lt;abstract&gt;IModelRepositoryDelegate]&lt;:-[StudyRepositoryDelegate]
+	
+	[&lt;abstract&gt;IInviteCodeRepository
+	  |
+	  +dynamic isCodeAlreadyUsed()
+	]
+	
+	[&lt;abstract&gt;ModelRepository]&lt;:--[&lt;abstract&gt;IInviteCodeRepository]
+	
+	[InviteCodeRepository
+	  |
+	  +studyId: String;
+	  +ref: ProviderRef&lt;dynamic&gt;;
+	  +apiClient: StudyUApi;
+	  +authRepository: IAuthRepository;
+	  +studyRepository: IStudyRepository;
+	  +study: Study
+	  |
+	  +String getKey();
+	  +dynamic isCodeAlreadyUsed();
+	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions();
+	  +dynamic emitUpdate()
+	]
+	
+	[InviteCodeRepository]o-[&lt;abstract&gt;ProviderRef]
+	[InviteCodeRepository]o-[&lt;abstract&gt;StudyUApi]
+	[InviteCodeRepository]o-[&lt;abstract&gt;IAuthRepository]
+	[InviteCodeRepository]o-[&lt;abstract&gt;IStudyRepository]
+	[InviteCodeRepository]o-[Study]
+	[&lt;abstract&gt;ModelRepository]&lt;:-[InviteCodeRepository]
+	[&lt;abstract&gt;IInviteCodeRepository]&lt;:--[InviteCodeRepository]
+	
+	[InviteCodeRepositoryDelegate
+	  |
+	  +study: Study;
+	  +apiClient: StudyUApi;
+	  +studyRepository: IStudyRepository
+	  |
+	  +dynamic fetch();
+	  +dynamic fetchAll();
+	  +dynamic save();
+	  +dynamic delete();
+	  +dynamic onError();
+	  +StudyInvite createDuplicate();
+	  +StudyInvite createNewInstance()
+	]
+	
+	[InviteCodeRepositoryDelegate]o-[Study]
+	[InviteCodeRepositoryDelegate]o-[&lt;abstract&gt;StudyUApi]
+	[InviteCodeRepositoryDelegate]o-[&lt;abstract&gt;IStudyRepository]
+	[&lt;abstract&gt;IModelRepositoryDelegate]&lt;:-[InviteCodeRepositoryDelegate]
+	
+	[&lt;abstract&gt;IAppRepository
+	  |
+	  +dynamic fetchAppConfig();
+	  +void dispose()
+	]
+	
+	[AppRepository
+	  |
+	  +apiClient: StudyUApi
+	  |
+	  +dynamic fetchAppConfig();
+	  +void dispose()
+	]
+	
+	[AppRepository]o-[&lt;abstract&gt;StudyUApi]
+	[&lt;abstract&gt;IAppRepository]&lt;:--[AppRepository]
+	
+	[&lt;abstract&gt;ModelEvent
+	  |
+	  +modelId: String;
+	  +model: T
+	]
+	
+	[IsFetched
+	]
+	
+	[&lt;abstract&gt;ModelEvent]&lt;:-[IsFetched]
+	
+	[IsSaving
+	]
+	
+	[&lt;abstract&gt;ModelEvent]&lt;:-[IsSaving]
+	
+	[IsSaved
+	]
+	
+	[&lt;abstract&gt;ModelEvent]&lt;:-[IsSaved]
+	
+	[IsDeleted
+	]
+	
+	[&lt;abstract&gt;ModelEvent]&lt;:-[IsDeleted]
+	
+	[&lt;abstract&gt;StudyUApi
 	  |
 	  +dynamic saveStudy();
 	  +dynamic fetchStudy();
@@ -97,220 +356,6 @@
 	[&lt;abstract&gt;SupabaseQueryMixin]&lt;:-[StudyUApiClient]
 	[&lt;abstract&gt;StudyUApi]&lt;:--[StudyUApiClient]
 	
-	[&lt;abstract&gt;IStudyRepository
-	  |
-	  +dynamic launch();
-	  +dynamic deleteParticipants()
-	]
-	
-	[&lt;abstract&gt;ModelRepository]&lt;:--[&lt;abstract&gt;IStudyRepository]
-	
-	[StudyRepository
-	  |
-	  +apiClient: StudyUApi;
-	  +authRepository: IAuthRepository;
-	  +ref: ProviderRef&lt;dynamic&gt;;
-	  +sortCallback: void Function()?
-	  |
-	  +String getKey();
-	  +dynamic deleteParticipants();
-	  +dynamic launch();
-	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()
-	]
-	
-	[StudyRepository]o-[&lt;abstract&gt;StudyUApi]
-	[StudyRepository]o-[&lt;abstract&gt;IAuthRepository]
-	[StudyRepository]o-[&lt;abstract&gt;ProviderRef]
-	[StudyRepository]o-[void Function()?]
-	[&lt;abstract&gt;ModelRepository]&lt;:-[StudyRepository]
-	[&lt;abstract&gt;IStudyRepository]&lt;:--[StudyRepository]
-	
-	[StudyRepositoryDelegate
-	  |
-	  +apiClient: StudyUApi;
-	  +authRepository: IAuthRepository
-	  |
-	  +dynamic fetchAll();
-	  +dynamic fetch();
-	  +dynamic save();
-	  +dynamic delete();
-	  +dynamic onError();
-	  +Study createNewInstance();
-	  +Study createDuplicate()
-	]
-	
-	[StudyRepositoryDelegate]o-[&lt;abstract&gt;StudyUApi]
-	[StudyRepositoryDelegate]o-[&lt;abstract&gt;IAuthRepository]
-	[&lt;abstract&gt;IModelRepositoryDelegate]&lt;:-[StudyRepositoryDelegate]
-	
-	[&lt;abstract&gt;IAppRepository
-	  |
-	  +dynamic fetchAppConfig();
-	  +void dispose()
-	]
-	
-	[AppRepository
-	  |
-	  +apiClient: StudyUApi
-	  |
-	  +dynamic fetchAppConfig();
-	  +void dispose()
-	]
-	
-	[AppRepository]o-[&lt;abstract&gt;StudyUApi]
-	[&lt;abstract&gt;IAppRepository]&lt;:--[AppRepository]
-	
-	[WrappedModel
-	  |
-	  -_model: T;
-	  +asyncValue: AsyncValue&lt;T&gt;;
-	  +isLocalOnly: bool;
-	  +isDirty: bool;
-	  +isDeleted: bool;
-	  +lastSaved: DateTime?;
-	  +lastFetched: DateTime?;
-	  +lastUpdated: DateTime?;
-	  +model: T
-	  |
-	  +dynamic markWithError();
-	  +dynamic markAsLoading();
-	  +dynamic markAsFetched();
-	  +dynamic markAsSaved()
-	]
-	
-	[WrappedModel]o-[&lt;abstract&gt;AsyncValue]
-	
-	[ModelRepositoryException
-	]
-	
-	[Exception]&lt;:--[ModelRepositoryException]
-	
-	[ModelNotFoundException
-	]
-	
-	[ModelRepositoryException]&lt;:--[ModelNotFoundException]
-	
-	[&lt;abstract&gt;IModelRepository
-	  |
-	  +String getKey();
-	  +WrappedModel&lt;T&gt;? get();
-	  +dynamic fetchAll();
-	  +dynamic fetch();
-	  +dynamic save();
-	  +dynamic delete();
-	  +dynamic duplicateAndSave();
-	  +dynamic duplicateAndSaveFromRemote();
-	  +Stream&lt;WrappedModel&lt;T&gt;&gt; watch();
-	  +Stream&lt;List&lt;WrappedModel&lt;T&gt;&gt;&gt; watchAll();
-	  +Stream&lt;ModelEvent&lt;T&gt;&gt; watchChanges();
-	  +Stream&lt;ModelEvent&lt;T&gt;&gt; watchAllChanges();
-	  +dynamic ensurePersisted();
-	  +void dispose()
-	]
-	
-	[&lt;abstract&gt;IModelActionProvider]&lt;:--[&lt;abstract&gt;IModelRepository]
-	
-	[&lt;abstract&gt;IModelRepositoryDelegate
-	  |
-	  +dynamic fetchAll();
-	  +dynamic fetch();
-	  +dynamic save();
-	  +dynamic delete();
-	  +T createNewInstance();
-	  +T createDuplicate();
-	  +dynamic onError()
-	]
-	
-	[&lt;abstract&gt;ModelRepository
-	  |
-	  +delegate: IModelRepositoryDelegate&lt;T&gt;;
-	  -_allModelsStreamController: BehaviorSubject&lt;List&lt;WrappedModel&lt;T&gt;&gt;&gt;;
-	  -_allModelEventsStreamController: BehaviorSubject&lt;ModelEvent&lt;T&gt;&gt;;
-	  +modelStreamControllers: Map&lt;String, BehaviorSubject&lt;WrappedModel&lt;T&gt;&gt;&gt;;
-	  +modelEventsStreamControllers: Map&lt;String, BehaviorSubject&lt;ModelEvent&lt;T&gt;&gt;&gt;;
-	  -_allModels: Map&lt;String, WrappedModel&lt;T&gt;&gt;
-	  |
-	  +WrappedModel&lt;T&gt;? get();
-	  +dynamic fetchAll();
-	  +dynamic fetch();
-	  +dynamic save();
-	  +dynamic delete();
-	  +dynamic duplicateAndSave();
-	  +dynamic duplicateAndSaveFromRemote();
-	  +Stream&lt;List&lt;WrappedModel&lt;T&gt;&gt;&gt; watchAll();
-	  +Stream&lt;WrappedModel&lt;T&gt;&gt; watch();
-	  +Stream&lt;ModelEvent&lt;T&gt;&gt; watchAllChanges();
-	  +Stream&lt;ModelEvent&lt;T&gt;&gt; watchChanges();
-	  -dynamic _buildModelSpecificController();
-	  +dynamic ensurePersisted();
-	  +WrappedModel&lt;T&gt; upsertLocally();
-	  +List&lt;WrappedModel&lt;T&gt;&gt; upsertAllLocally();
-	  +dynamic emitUpdate();
-	  +dynamic emitModelEvent();
-	  +dynamic emitError();
-	  +void dispose();
-	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()
-	]
-	
-	[&lt;abstract&gt;ModelRepository]o-[&lt;abstract&gt;IModelRepositoryDelegate]
-	[&lt;abstract&gt;ModelRepository]o-[BehaviorSubject]
-	[&lt;abstract&gt;IModelRepository]&lt;:-[&lt;abstract&gt;ModelRepository]
-	
-	[StudyLaunched
-	]
-	
-	[&lt;abstract&gt;ModelEvent]&lt;:-[StudyLaunched]
-	
-	[&lt;abstract&gt;IInviteCodeRepository
-	  |
-	  +dynamic isCodeAlreadyUsed()
-	]
-	
-	[&lt;abstract&gt;ModelRepository]&lt;:--[&lt;abstract&gt;IInviteCodeRepository]
-	
-	[InviteCodeRepository
-	  |
-	  +studyId: String;
-	  +ref: ProviderRef&lt;dynamic&gt;;
-	  +apiClient: StudyUApi;
-	  +authRepository: IAuthRepository;
-	  +studyRepository: IStudyRepository;
-	  +study: Study
-	  |
-	  +String getKey();
-	  +dynamic isCodeAlreadyUsed();
-	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions();
-	  +dynamic emitUpdate()
-	]
-	
-	[InviteCodeRepository]o-[&lt;abstract&gt;ProviderRef]
-	[InviteCodeRepository]o-[&lt;abstract&gt;StudyUApi]
-	[InviteCodeRepository]o-[&lt;abstract&gt;IAuthRepository]
-	[InviteCodeRepository]o-[&lt;abstract&gt;IStudyRepository]
-	[InviteCodeRepository]o-[Study]
-	[&lt;abstract&gt;ModelRepository]&lt;:-[InviteCodeRepository]
-	[&lt;abstract&gt;IInviteCodeRepository]&lt;:--[InviteCodeRepository]
-	
-	[InviteCodeRepositoryDelegate
-	  |
-	  +study: Study;
-	  +apiClient: StudyUApi;
-	  +studyRepository: IStudyRepository
-	  |
-	  +dynamic fetch();
-	  +dynamic fetchAll();
-	  +dynamic save();
-	  +dynamic delete();
-	  +dynamic onError();
-	  +StudyInvite createDuplicate();
-	  +StudyInvite createNewInstance()
-	]
-	
-	[InviteCodeRepositoryDelegate]o-[Study]
-	[InviteCodeRepositoryDelegate]o-[&lt;abstract&gt;StudyUApi]
-	[InviteCodeRepositoryDelegate]o-[&lt;abstract&gt;IStudyRepository]
-	[&lt;abstract&gt;IModelRepositoryDelegate]&lt;:-[InviteCodeRepositoryDelegate]
-	
 	[&lt;abstract&gt;IAuthRepository
 	  |
 	  +allowPasswordReset: bool;
@@ -399,31 +444,10 @@
 	[PreferenceAction]o-[PreferenceAction]
 	[Enum]&lt;:--[PreferenceAction]
 	
-	[&lt;abstract&gt;ModelEvent
-	  |
-	  +modelId: String;
-	  +model: T
+	[StudyLaunched
 	]
 	
-	[IsFetched
-	]
-	
-	[&lt;abstract&gt;ModelEvent]&lt;:-[IsFetched]
-	
-	[IsSaving
-	]
-	
-	[&lt;abstract&gt;ModelEvent]&lt;:-[IsSaving]
-	
-	[IsSaved
-	]
-	
-	[&lt;abstract&gt;ModelEvent]&lt;:-[IsSaved]
-	
-	[IsDeleted
-	]
-	
-	[&lt;abstract&gt;ModelEvent]&lt;:-[IsDeleted]
+	[&lt;abstract&gt;ModelEvent]&lt;:-[StudyLaunched]
 	
 	[&lt;abstract&gt;SupabaseClientDependant
 	  |
@@ -455,529 +479,486 @@
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="2662.0" width="5267.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="2662.0" width="4572.3" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+					<path d="M125.5 276.7 L125.5 278 L125.5 411 L125.5 411.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M130.8 267.3 L125.5 276.7 L120.2 267.3 L125.5 258.0 Z"></path>
+					</g>
+					<path d="M339.0 157.8 L339 278 L339 411 L339.0 411.0 " fill="none"></path>
+					<path d="M344.3 157.8 L339.0 157.8 L333.7 157.8 L339.0 144.5 Z"></path>
+					<path d="M320.1 452.8 L232.25 575 L232.25 790.5 L232.3 790.5 " fill="none"></path>
+					<path d="M324.4 455.9 L320.1 452.8 L315.7 449.7 L327.9 442.0 Z"></path>
+					<path d="M483.8 901.2 L483.75 1068 L483.75 1148.5 L483.8 1148.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M489.1 891.8 L483.8 901.2 L478.4 891.8 L483.8 882.5 Z"></path>
+					</g>
+					<path d="M363.4 451.5 L483.75 575 L483.75 760.5 L483.8 760.5 " fill="none"></path>
+					<path d="M367.2 447.8 L363.4 451.5 L359.6 455.3 L354.1 442.0 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M3701.2 132.9 L1462.5 278 L1462.5 411 L1462.5 411.0 " fill="none"></path>
+						<path d="M3008.4 132.9 L754.75 278 L754.75 411 L754.8 411.0 " fill="none"></path>
 					</g>
-					<path d="M3701.5 138.2 L3701.2 132.9 L3700.8 127.6 L3714.5 132.0 Z"></path>
-					<path d="M1388.7 434.6 L108 575 L108 806 L108.0 806.0 " fill="none"></path>
-					<path d="M1389.3 439.9 L1388.7 434.6 L1388.2 429.3 L1402.0 433.1 Z"></path>
-					<path d="M1388.8 436.8 L395.5 575 L395.5 806 L395.5 806.0 " fill="none"></path>
-					<path d="M1389.5 442.0 L1388.8 436.8 L1388.1 431.5 L1402.0 434.9 Z"></path>
-					<path d="M1388.9 440.8 L696 575 L696 806 L696.0 806.0 " fill="none"></path>
-					<path d="M1389.9 446.0 L1388.9 440.8 L1387.9 435.5 L1402.0 438.2 Z"></path>
-					<path d="M1400.7 446.0 L992.5 575 L992.5 806 L992.5 806.0 " fill="none"></path>
-					<path d="M1402.3 451.1 L1400.7 446.0 L1399.1 440.9 L1413.4 442.0 Z"></path>
-					<path d="M1435.8 451.0 L1300.5 575 L1300.5 806 L1300.5 806.0 " fill="none"></path>
-					<path d="M1439.4 454.9 L1435.8 451.0 L1432.2 447.1 L1445.6 442.0 Z"></path>
-					<path d="M1489.2 451.0 L1624.5 575 L1624.5 806 L1624.5 806.0 " fill="none"></path>
-					<path d="M1492.8 447.1 L1489.2 451.0 L1485.6 454.9 L1479.4 442.0 Z"></path>
-					<path d="M1523.8 446.1 L1928 575 L1928 806 L1928.0 806.0 " fill="none"></path>
-					<path d="M1525.4 441.0 L1523.8 446.1 L1522.2 451.1 L1511.1 442.0 Z"></path>
-					<path d="M1536.1 440.9 L2221.5 575 L2221.5 806 L2221.5 806.0 " fill="none"></path>
-					<path d="M1537.1 435.7 L1536.1 440.9 L1535.1 446.1 L1523.0 438.3 Z"></path>
-					<path d="M1536.2 436.7 L2532.5 575 L2532.5 806 L2532.5 806.0 " fill="none"></path>
-					<path d="M1536.9 431.4 L1536.2 436.7 L1535.5 442.0 L1523.0 434.9 Z"></path>
-					<path d="M1536.3 434.7 L2806 575 L2806 806 L2806.0 806.0 " fill="none"></path>
-					<path d="M1536.8 429.4 L1536.3 434.7 L1535.7 440.0 L1523.0 433.2 Z"></path>
-					<path d="M2536.5 2553.7 L2536.5 2555 L2469.0352112676055 2575 L2469.0 2575.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2541.8 2544.3 L2536.5 2553.7 L2531.2 2544.3 L2536.5 2535.0 Z"></path>
-					</g>
-					<path d="M2477.7 2087.4 L2594 2182 L2587.8337801608577 2202 L2587.8 2202.0 " fill="none"></path>
-					<path d="M2481.1 2083.3 L2477.7 2087.4 L2474.3 2091.6 L2467.4 2079.0 Z"></path>
-					<path d="M2604.2 2123.9 L2516.5 2182 L2518.6447721179625 2202 L2518.6 2202.0 " fill="none"></path>
-					<path d="M2607.2 2128.3 L2604.2 2123.9 L2601.3 2119.4 L2615.4 2116.5 Z"></path>
+					<path d="M3008.8 138.2 L3008.4 132.9 L3008.1 127.6 L3021.8 132.0 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M2257.8 2152.9 L2295.5 2182 L2321.344504021448 2202 L2321.3 2202.0 " fill="none"></path>
+						<path d="M754.8 455.3 L754.75 575 L754.75 806 L754.8 806.0 " fill="none"></path>
 					</g>
-					<path d="M2261.1 2148.7 L2257.8 2152.9 L2254.6 2157.2 L2247.3 2144.8 Z"></path>
+					<path d="M760.1 455.3 L754.8 455.3 L749.4 455.3 L754.8 442.0 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M3623.8 1003.1 L3746.25 1068 L3746.25 1164 L3746.25 1164 L3746.25 1260 L3746.25 1260 L3746.25 1386.5 L3746.25 1386.5 L3746.25 1513 L3746.25 1513 L3713.14263803681 1556 L3713.1 1556.0 " fill="none"></path>
+						<path d="M879.1 149.0 L1235.25 278 L1235.25 298 L1235.3 298.0 " fill="none"></path>
 					</g>
-					<path d="M3626.3 998.4 L3623.8 1003.1 L3621.3 1007.8 L3612.0 996.9 Z"></path>
-					<path d="M3624.4 1811.8 L2289.75 1914 L2247.25 1947.8988095238096 L2247.3 1947.9 " fill="none"></path>
+					<path d="M880.9 144.0 L879.1 149.0 L877.3 154.1 L866.6 144.5 Z"></path>
+					<path d="M1584.2 919.6 L2112.25 1068 L2112.25 1088 L2112.3 1088.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3634.1 1816.5 L3624.4 1811.8 L3633.3 1805.8 L3643.0 1810.4 Z"></path>
+						<path d="M1576.7 911.9 L1584.2 919.6 L1573.8 922.2 L1566.3 914.5 Z"></path>
 					</g>
-					<path d="M3844.5 1905.2 L3844.5 1914 L3298.25 2019.50990990991 L3298.3 2019.5 " fill="none"></path>
+					<path d="M1104.7 1064.4 L1102.75 1068 L1102.75 1148.5 L1102.8 1148.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3849.8 1895.8 L3844.5 1905.2 L3839.2 1895.8 L3844.5 1886.5 Z"></path>
+						<path d="M1113.8 1058.7 L1104.7 1064.4 L1104.4 1053.7 L1113.5 1048.0 Z"></path>
 					</g>
-					<path d="M4064.2 1846.7 L4350.5 1914 L4294.566231343284 2032.5 L4294.6 2032.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M4056.3 1839.3 L4064.2 1846.7 L4053.9 1849.7 L4046.0 1842.4 Z"></path>
-					</g>
-					<path d="M4064.3 1837.9 L4453.75 1914 L4453.75 2032.5 L4453.8 2032.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M4056.2 1830.9 L4064.3 1837.9 L4054.1 1841.4 L4046.0 1834.4 Z"></path>
-					</g>
-					<path d="M3624.5 952.5 L3927.25 1068 L3927.25 1164 L3927.25 1164 L3927.25 1260 L3927.25 1260 L3927.25 1386.5 L3927.25 1386.5 L3927.25 1513 L3927.25 1513 L3927.25 1594.5 L3927.25 1594.5 L3927.25 1676 L3927.25 1676 L3908.127100840336 1703.5 L3908.1 1703.5 " fill="none"></path>
-					<path d="M3626.4 947.5 L3624.5 952.5 L3622.6 957.5 L3612.0 947.8 Z"></path>
+					<path d="M1235.3 568.3 L1235.25 575 L1235.25 595 L1235.3 595.0 " fill="none"></path>
+					<path d="M1240.6 568.3 L1235.3 568.3 L1229.9 568.3 L1235.3 555.0 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M3683.5 1646.3 L3683.5 1676 L3720.705882352941 1703.5 L3720.7 1703.5 " fill="none"></path>
+						<path d="M1215.8 1061.3 L1215.25 1068 L1215.25 1164 L1215.25 1164 L1215.25 1260 L1215.25 1260 L1215.25 1386.5 L1215.25 1386.5 L1215.25 1513 L1215.25 1513 L1406 1562.1577075098814 L1406.0 1562.2 " fill="none"></path>
 					</g>
-					<path d="M3688.8 1646.3 L3683.5 1646.3 L3678.2 1646.3 L3683.5 1633.0 Z"></path>
-					<path d="M2249.8 1912.7 L2249.75 1914 L2223.0037313432836 1942 L2223.0 1942.0 " fill="none"></path>
+					<path d="M1221.1 1061.7 L1215.8 1061.3 L1210.5 1060.9 L1216.9 1048.0 Z"></path>
+					<path d="M1460.0 1839.8 L1824.5 1914 L2002.25 1992.5441055234955 L2002.3 1992.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2255.1 1903.3 L2249.8 1912.7 L2244.4 1903.3 L2249.8 1894.0 Z"></path>
+						<path d="M1452.0 1832.7 L1460.0 1839.8 L1449.8 1843.1 L1441.8 1836.0 Z"></path>
 					</g>
-					<path d="M2409.3 1809.5 L3562.75 1914 L3298.25 2000.0266990291261 L3298.3 2000.0 " fill="none"></path>
+					<path d="M1460.3 1817.6 L2400.25 1914 L2464.75 1954.7688679245284 L2464.8 1954.8 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2400.5 1803.3 L2409.3 1809.5 L2399.6 1813.9 L2390.8 1807.8 Z"></path>
+						<path d="M1451.6 1811.3 L1460.3 1817.6 L1450.5 1821.9 L1441.8 1815.7 Z"></path>
 					</g>
-					<path d="M2249.8 1253.3 L2249.75 1260 L2249.75 1386.5 L2249.75 1386.5 L2249.75 1513 L2249.75 1513 L2249.75 1594.5 L2249.75 1594.5 L2249.75 1676 L2249.75 1676 L2249.75 1696 L2249.8 1696.0 " fill="none"></path>
-					<path d="M2255.1 1253.3 L2249.8 1253.3 L2244.4 1253.3 L2249.8 1240.0 Z"></path>
-					<path d="M1953.8 1867.7 L1953.75 1914 L1996.25 1947.8988095238096 L1996.3 1947.9 " fill="none"></path>
+					<path d="M1020.6 1848.8 L754.25 1914 L771.9365671641791 2032.5 L771.9 2032.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1959.1 1858.3 L1953.8 1867.7 L1948.4 1858.3 L1953.8 1849.0 Z"></path>
+						<path d="M1031.0 1851.7 L1020.6 1848.8 L1028.4 1841.4 L1038.8 1844.3 Z"></path>
 					</g>
+					<path d="M1037.4 1894.7 L998.25 1914 L998.25 2032.5 L998.3 2032.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1048.2 1895.4 L1037.4 1894.7 L1043.4 1885.8 L1054.2 1886.5 Z"></path>
+					</g>
+					<path d="M1000.7 1057.5 L990.25 1068 L990.25 1164 L990.25 1164 L990.25 1260 L990.25 1260 L990.25 1386.5 L990.25 1386.5 L990.25 1513 L990.25 1513 L990.25 1594.5 L990.25 1594.5 L990.25 1676 L990.25 1676 L1048.0231092436975 1703.5 L1048.0 1703.5 " fill="none"></path>
+					<path d="M1004.5 1061.2 L1000.7 1057.5 L996.9 1053.7 L1010.1 1048.0 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M1953.8 1646.3 L1953.75 1676 L1953.75 1741 L1953.8 1741.0 " fill="none"></path>
+						<path d="M1531.5 1646.3 L1531.5 1676 L1441.75 1712.6703862660945 L1441.8 1712.7 " fill="none"></path>
 					</g>
-					<path d="M1959.1 1646.3 L1953.8 1646.3 L1948.4 1646.3 L1953.8 1633.0 Z"></path>
-					<path d="M2383.6 164.2 L2848 278 L2848 411 L2848.0 411.0 " fill="none"></path>
+					<path d="M1536.8 1646.3 L1531.5 1646.3 L1526.2 1646.3 L1531.5 1633.0 Z"></path>
+					<path d="M2084.1 1850.2 L1901 1914 L2002.25 1973.8346196251377 L2002.3 1973.8 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2375.8 156.8 L2383.6 164.2 L2373.3 167.2 L2365.5 159.8 Z"></path>
+						<path d="M2094.7 1852.2 L2084.1 1850.2 L2091.2 1842.1 L2101.8 1844.1 Z"></path>
 					</g>
+					<path d="M2400.0 1884.9 L2450.75 1914 L2474.85447761194 1934 L2474.9 1934.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2394.5 1875.7 L2400.0 1884.9 L2389.2 1884.9 L2383.8 1875.7 Z"></path>
+					</g>
+					<path d="M2226.3 1247.9 L2242.75 1260 L2242.75 1386.5 L2242.75 1386.5 L2242.75 1513 L2242.75 1513 L2242.75 1594.5 L2242.75 1594.5 L2242.75 1676 L2242.75 1676 L2242.75 1696 L2242.8 1696.0 " fill="none"></path>
+					<path d="M2229.5 1243.6 L2226.3 1247.9 L2223.1 1252.2 L2215.6 1240.0 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M3761.5 157.8 L3761.5 278 L3761.5 411 L3761.5 411.0 " fill="none"></path>
+						<path d="M1528.4 1056.3 L1543 1068 L1543 1133 L1543.0 1133.0 " fill="none"></path>
 					</g>
-					<path d="M3766.8 157.8 L3761.5 157.8 L3756.2 157.8 L3761.5 144.5 Z"></path>
+					<path d="M1531.8 1052.2 L1528.4 1056.3 L1525.1 1060.5 L1518.0 1048.0 Z"></path>
+					<path d="M1236.9 1428.5 L794.25 1513 L794.25 1594.5 L794.25 1594.5 L794.25 1676 L794.25 1676 L794.25 1795 L794.25 1795 L794.25 1914 L794.25 1914 L776.5634328358209 2032.5 L776.6 2032.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1247.1 1432.0 L1236.9 1428.5 L1245.1 1421.5 L1255.3 1425.0 Z"></path>
+					</g>
+					<path d="M1676.5 1435.7 L2021.75 1513 L2021.75 1594.5 L2021.75 1594.5 L2021.75 1676 L2021.75 1676 L2021.75 1795 L2021.75 1795 L2021.75 1914 L2021.75 1914 L2043.8992537313434 1942 L2043.9 1942.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1668.5 1428.4 L1676.5 1435.7 L1666.2 1438.9 L1658.3 1431.6 Z"></path>
+					</g>
+					<path d="M1676.8 1409.0 L2696.25 1513 L2696.25 1594.5 L2696.25 1594.5 L2696.25 1676 L2696.25 1676 L2696.25 1795 L2696.25 1795 L2696.25 1914 L2696.25 1914 L2683.7126865671644 1934 L2683.7 1934.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1668.1 1402.7 L1676.8 1409.0 L1667.0 1413.3 L1658.3 1407.1 Z"></path>
+					</g>
+					<path d="M1456.8 1511.7 L1456.75 1513 L1496.1886503067485 1556 L1496.2 1556.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1462.1 1502.3 L1456.8 1511.7 L1451.4 1502.3 L1456.8 1493.0 Z"></path>
+					</g>
+					<path d="M1237.0 1436.0 L895 1513 L911.1963190184049 1579 L911.2 1579.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1247.3 1439.1 L1237.0 1436.0 L1245.0 1428.7 L1255.3 1431.9 Z"></path>
+					</g>
+					<path d="M1352.1 1060.0 L1356 1068 L1356 1164 L1356 1164 L1356 1260 L1356 1260 L1371.9288537549407 1280 L1371.9 1280.0 " fill="none"></path>
+					<path d="M1356.9 1057.6 L1352.1 1060.0 L1347.3 1062.3 L1346.2 1048.0 Z"></path>
 					<g stroke-dasharray="6 6">
-						<path d="M3761.5 455.3 L3761.5 575 L3761.5 806 L3761.5 806.0 " fill="none"></path>
+						<path d="M1543.0 1208.3 L1543 1260 L1529.3636363636363 1280 L1529.4 1280.0 " fill="none"></path>
 					</g>
-					<path d="M3766.8 455.3 L3761.5 455.3 L3756.2 455.3 L3761.5 442.0 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M3173.1 154.5 L3281 278 L3281 298 L3281.0 298.0 " fill="none"></path>
-					</g>
-					<path d="M3177.1 151.0 L3173.1 154.5 L3169.1 158.0 L3164.3 144.5 Z"></path>
-					<path d="M2931.8 905.0 L2249.75 1068 L2249.75 1088 L2249.8 1088.0 " fill="none"></path>
+					<path d="M1548.3 1208.3 L1543.0 1208.3 L1537.7 1208.3 L1543.0 1195.0 Z"></path>
+					<path d="M1713.0 1409.0 L935 1513 L918.8036809815951 1579 L918.8 1579.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2942.2 908.0 L2931.8 905.0 L2939.7 897.6 L2950.0 900.6 Z"></path>
+						<path d="M1723.0 1413.0 L1713.0 1409.0 L1721.5 1402.4 L1731.5 1406.5 Z"></path>
 					</g>
-					<path d="M2961.7 1059.1 L2949.75 1068 L2949.75 1148.5 L2949.8 1148.5 " fill="none"></path>
+					<path d="M2045.8 1501.8 L2061.75 1513 L2061.75 1594.5 L2061.75 1594.5 L2061.75 1676 L2061.75 1676 L2061.75 1795 L2061.75 1795 L2061.75 1914 L2061.75 1914 L2075.5410447761196 1942 L2075.5 1942.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2972.3 1057.9 L2961.7 1059.1 L2966.0 1049.3 L2976.6 1048.0 Z"></path>
+						<path d="M2041.2 1492.1 L2045.8 1501.8 L2035.1 1500.9 L2030.5 1491.1 Z"></path>
 					</g>
-					<path d="M3281.0 568.3 L3281 575 L3281 595 L3281.0 595.0 " fill="none"></path>
-					<path d="M3286.3 568.3 L3281.0 568.3 L3275.7 568.3 L3281.0 555.0 Z"></path>
-					<path d="M4609.5 147.0 L3985 278 L3985 411 L3985.0 411.0 " fill="none"></path>
-					<path d="M4610.5 152.2 L4609.5 147.0 L4608.4 141.7 L4622.5 144.2 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M3197.3 1060.6 L3194.75 1068 L3194.75 1133 L3194.8 1133.0 " fill="none"></path>
-					</g>
-					<path d="M3202.4 1062.3 L3197.3 1060.6 L3192.3 1058.8 L3201.7 1048.0 Z"></path>
-					<path d="M3501.0 1414.7 L4267.25 1513 L4267.25 1594.5 L4267.25 1594.5 L4267.25 1676 L4267.25 1676 L4267.25 1795 L4267.25 1795 L4267.25 1914 L4267.25 1914 L4284.936567164179 2032.5 L4284.9 2032.5 " fill="none"></path>
+					<path d="M1881.0 1511.7 L1881 1513 L1657 1565.2346208869815 L1657.0 1565.2 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3492.4 1408.2 L3501.0 1414.7 L3491.1 1418.8 L3482.5 1412.3 Z"></path>
+						<path d="M1886.3 1502.3 L1881.0 1511.7 L1875.7 1502.3 L1881.0 1493.0 Z"></path>
 					</g>
-					<path d="M3060.9 1404.0 L1688.25 1513 L1688.25 1594.5 L1688.25 1594.5 L1688.25 1676 L1688.25 1676 L1688.25 1795 L1688.25 1795 L1688.25 1914 L1688.25 1914 L1996.25 2009.20645905421 L1996.3 2009.2 " fill="none"></path>
+					<path d="M1987.4 1215.8 L1881 1260 L1881 1280 L1881.0 1280.0 " fill="none"></path>
+					<path d="M1989.5 1220.7 L1987.4 1215.8 L1985.4 1210.9 L1999.8 1210.7 Z"></path>
+					<path d="M2423.2 1857.9 L2320.25 1914 L2253.25 1960.638961038961 L2253.3 1960.6 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3070.6 1408.6 L3060.9 1404.0 L3069.8 1397.9 L3079.5 1402.5 Z"></path>
-					</g>
-					<path d="M3281.0 1511.7 L3281 1513 L3281 1594.5 L3281 1594.5 L3281 1676 L3281 1676 L3281 1795 L3281 1795 L3281 1914 L3281 1914 L3261.5597014925374 1934 L3261.6 1934.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3286.3 1502.3 L3281.0 1511.7 L3275.7 1502.3 L3281.0 1493.0 Z"></path>
-					</g>
-					<path d="M3500.1 1462.6 L3645.5 1513 L3665.5490797546013 1556 L3665.5 1556.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3493.1 1454.5 L3500.1 1462.6 L3489.6 1464.5 L3482.5 1456.4 Z"></path>
-					</g>
-					<path d="M3060.9 1404.9 L1768.25 1513 L1768.25 1579 L1768.3 1579.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3070.6 1409.4 L3060.9 1404.9 L3069.8 1398.8 L3079.5 1403.3 Z"></path>
-					</g>
-					<path d="M3589.8 1056.1 L3605.5 1068 L3605.5 1164 L3605.5 1164 L3605.5 1260 L3605.5 1260 L3482.5 1307.949152542373 L3482.5 1307.9 " fill="none"></path>
-					<path d="M3593.0 1051.8 L3589.8 1056.1 L3586.6 1060.3 L3579.2 1048.0 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M3194.8 1208.3 L3194.75 1260 L3208.3863636363635 1280 L3208.4 1280.0 " fill="none"></path>
-					</g>
-					<path d="M3200.1 1208.3 L3194.8 1208.3 L3189.4 1208.3 L3194.8 1195.0 Z"></path>
-					<path d="M1728.3 1511.7 L1728.25 1513 L1760.6426380368098 1579 L1760.6 1579.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1733.6 1502.3 L1728.3 1511.7 L1722.9 1502.3 L1728.3 1493.0 Z"></path>
-					</g>
-					<path d="M1650.9 1508.8 L1648.25 1513 L1648.25 1594.5 L1648.25 1594.5 L1648.25 1676 L1648.25 1676 L1648.25 1795 L1648.25 1795 L1648.25 1914 L1648.25 1914 L1996.25 2012.4836325237593 L1996.3 2012.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1660.4 1503.7 L1650.9 1508.8 L1651.4 1498.0 L1660.9 1493.0 Z"></path>
-					</g>
-					<path d="M1896.4 1398.0 L3582.75 1513 L3635.9064417177915 1556 L3635.9 1556.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1887.4 1392.0 L1896.4 1398.0 L1886.7 1402.7 L1877.8 1396.7 Z"></path>
-					</g>
-					<path d="M2124.1 1187.1 L1728.25 1260 L1728.25 1280 L1728.3 1280.0 " fill="none"></path>
-					<path d="M2125.1 1192.4 L2124.1 1187.1 L2123.2 1181.9 L2137.3 1184.7 Z"></path>
-					<path d="M2985.9 2114.0 L2816 2182 L2816 2368.5 L2816 2368.5 L2816 2555 L2816 2555 L2816 2575 L2816.0 2575.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2996.6 2115.5 L2985.9 2114.0 L2992.6 2105.6 L3003.3 2107.0 Z"></path>
-					</g>
-					<path d="M3251.6 2176.7 L3255.75 2182 L3255.75 2368.5 L3255.75 2368.5 L3255.75 2555 L3255.75 2555 L3255.75 2575 L3255.8 2575.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3250.0 2166.1 L3251.6 2176.7 L3241.6 2172.6 L3240.1 2162.0 Z"></path>
-					</g>
-					<path d="M3030.3 1823.8 L3030.25 1914 L3048.2350746268658 1934 L3048.2 1934.0 " fill="none"></path>
-					<path d="M3035.6 1823.8 L3030.3 1823.8 L3024.9 1823.8 L3030.3 1810.5 Z"></path>
-					<path d="M2857.6 2413.8 L2272 2555 L2353.549295774648 2575 L2353.5 2575.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2867.9 2416.8 L2857.6 2413.8 L2865.4 2406.5 L2875.8 2409.5 Z"></path>
-					</g>
-					<path d="M3232.5 2461.6 L3419.75 2555 L3419.75 2575 L3419.8 2575.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3226.5 2452.7 L3232.5 2461.6 L3221.7 2462.2 L3215.8 2453.3 Z"></path>
-					</g>
-					<path d="M3233.5 2431.2 L3604.25 2555 L3604.25 2575 L3604.3 2575.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3226.3 2423.2 L3233.5 2431.2 L3222.9 2433.3 L3215.8 2425.3 Z"></path>
-					</g>
-					<path d="M3045.8 2538.7 L3045.75 2555 L3216.25 2583.822619047619 L3216.3 2583.8 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3051.1 2529.3 L3045.8 2538.7 L3040.4 2529.3 L3045.8 2520.0 Z"></path>
-					</g>
-					<path d="M2858.4 2443.0 L2576.5 2555 L2789.5 2586.572025052192 L2789.5 2586.6 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2869.0 2444.5 L2858.4 2443.0 L2865.1 2434.6 L2875.8 2436.1 Z"></path>
+						<path d="M2434.0 1858.1 L2423.2 1857.9 L2428.9 1848.8 L2439.6 1849.0 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M3053.2 2172.5 L3045.75 2182 L3045.75 2217 L3045.8 2217.0 " fill="none"></path>
+						<path d="M2538.8 1646.3 L2538.75 1676 L2538.75 1741 L2538.8 1741.0 " fill="none"></path>
 					</g>
-					<path d="M3057.4 2175.8 L3053.2 2172.5 L3049.0 2169.2 L3061.4 2162.0 Z"></path>
-					<path d="M4245.7 1616.0 L4659 1676 L4659 1795 L4659 1795 L4659 1914 L4659 1914 L4625.174440298508 2032.5 L4625.2 2032.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M4237.3 1609.4 L4245.7 1616.0 L4235.7 1620.0 L4227.3 1613.4 Z"></path>
+					<path d="M2544.1 1646.3 L2538.8 1646.3 L2533.4 1646.3 L2538.8 1633.0 Z"></path>
+					<path d="M2114.2 147.9 L1524 278 L1524 411 L1524.0 411.0 " fill="none"></path>
+					<path d="M2115.4 153.1 L2114.2 147.9 L2113.1 142.6 L2127.3 145.0 Z"></path>
+					<path d="M2114.4 152.3 L1653 278 L1653 411 L1653.0 411.0 " fill="none"></path>
+					<path d="M2115.8 157.4 L2114.4 152.3 L2113.0 147.1 L2127.3 148.8 Z"></path>
+					<path d="M2114.7 158.8 L1775 278 L1775 411 L1775.0 411.0 " fill="none"></path>
+					<path d="M2116.4 163.9 L2114.7 158.8 L2112.9 153.8 L2127.3 154.4 Z"></path>
+					<path d="M2115.3 171.0 L1900.5 278 L1900.5 411 L1900.5 411.0 " fill="none"></path>
+					<path d="M2117.7 175.8 L2115.3 171.0 L2112.9 166.3 L2127.3 165.1 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M3068.8 157.8 L3068.75 278 L3068.75 411 L3068.8 411.0 " fill="none"></path>
 					</g>
-					<path d="M3302.4 1805.2 L1608.25 1914 L1996.25 2015.2502434274586 L1996.3 2015.3 " fill="none"></path>
+					<path d="M3074.1 157.8 L3068.8 157.8 L3063.4 157.8 L3068.8 144.5 Z"></path>
+					<path d="M2995.0 434.6 L1714.25 575 L1714.25 806 L1714.3 806.0 " fill="none"></path>
+					<path d="M2995.6 439.9 L2995.0 434.6 L2994.4 429.3 L3008.3 433.1 Z"></path>
+					<path d="M2995.0 436.8 L2001.75 575 L2001.75 806 L2001.8 806.0 " fill="none"></path>
+					<path d="M2995.8 442.0 L2995.0 436.8 L2994.3 431.5 L3008.3 434.9 Z"></path>
+					<path d="M2995.2 440.8 L2302.25 575 L2302.25 806 L2302.3 806.0 " fill="none"></path>
+					<path d="M2996.2 446.0 L2995.2 440.8 L2994.1 435.5 L3008.3 438.2 Z"></path>
+					<path d="M3007.0 446.0 L2598.75 575 L2598.75 806 L2598.8 806.0 " fill="none"></path>
+					<path d="M3008.6 451.1 L3007.0 446.0 L3005.4 440.9 L3019.7 442.0 Z"></path>
+					<path d="M3042.0 451.0 L2906.75 575 L2906.75 806 L2906.8 806.0 " fill="none"></path>
+					<path d="M3045.6 454.9 L3042.0 451.0 L3038.4 447.1 L3051.8 442.0 Z"></path>
+					<path d="M3095.5 451.0 L3230.75 575 L3230.75 806 L3230.8 806.0 " fill="none"></path>
+					<path d="M3099.1 447.1 L3095.5 451.0 L3091.9 454.9 L3085.7 442.0 Z"></path>
+					<path d="M3130.0 446.1 L3534.25 575 L3534.25 806 L3534.3 806.0 " fill="none"></path>
+					<path d="M3131.7 441.0 L3130.0 446.1 L3128.4 451.1 L3117.3 442.0 Z"></path>
+					<path d="M3142.3 440.9 L3827.75 575 L3827.75 806 L3827.8 806.0 " fill="none"></path>
+					<path d="M3143.4 435.7 L3142.3 440.9 L3141.3 446.1 L3129.3 438.3 Z"></path>
+					<path d="M3142.5 436.7 L4138.75 575 L4138.75 806 L4138.8 806.0 " fill="none"></path>
+					<path d="M3143.2 431.4 L3142.5 436.7 L3141.7 442.0 L3129.3 434.9 Z"></path>
+					<path d="M3142.5 434.7 L4412.25 575 L4412.25 806 L4412.3 806.0 " fill="none"></path>
+					<path d="M3143.1 429.4 L3142.5 434.7 L3141.9 440.0 L3129.3 433.2 Z"></path>
+					<path d="M1278.5 2553.7 L1278.5 2555 L1463.75 2580.714076246334 L1463.8 2580.7 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3312.0 1810.0 L3302.4 1805.2 L3311.3 1799.3 L3321.0 1804.1 Z"></path>
+						<path d="M1283.8 2544.3 L1278.5 2553.7 L1273.2 2544.3 L1278.5 2535.0 Z"></path>
 					</g>
-					<path d="M3302.4 1811.8 L2329.75 1914 L3003.25 2023.9257003654081 L3003.3 2023.9 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3312.3 1816.1 L3302.4 1811.8 L3311.2 1805.5 L3321.0 1809.8 Z"></path>
+					<path d="M489.3 2087.4 L373 2182 L1039 2319.1717283268913 L1039.0 2319.2 " fill="none"></path>
+					<path d="M492.7 2091.6 L489.3 2087.4 L485.9 2083.3 L499.6 2079.0 Z"></path>
+					<path d="M342.8 2124.9 L413 2182 L1039 2316.891969959561 L1039.0 2316.9 " fill="none"></path>
+					<path d="M346.2 2120.8 L342.8 2124.9 L339.4 2129.1 L332.5 2116.5 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M1989.2 2075.1 L1443.25 2182 L1425.5824396782841 2202 L1425.6 2202.0 " fill="none"></path>
 					</g>
-					<path d="M3621.6 1809.9 L4737.25 1914 L4737.25 2032.5 L4737.3 2032.5 " fill="none"></path>
+					<path d="M1990.2 2080.4 L1989.2 2075.1 L1988.1 2069.9 L2002.3 2072.6 Z"></path>
+					<path d="M2492.9 2175.6 L2487 2182 L2487 2368.5 L2487 2368.5 L2487 2555 L2487 2555 L2514.323943661972 2575 L2514.3 2575.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3612.8 1803.7 L3621.6 1809.9 L3611.8 1814.3 L3603.0 1808.2 Z"></path>
+						<path d="M2503.2 2172.5 L2492.9 2175.6 L2495.4 2165.2 L2505.7 2162.0 Z"></path>
 					</g>
-					<path d="M3621.6 1812.3 L4557.25 1914 L4613.4048507462685 2032.5 L4613.4 2032.5 " fill="none"></path>
+					<path d="M2612.3 2180.7 L2612.25 2182 L2612.25 2368.5 L2612.25 2368.5 L2612.25 2555 L2612.25 2555 L2648.024647887324 2575 L2648.0 2575.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3612.9 1806.0 L3621.6 1812.3 L3611.7 1816.6 L3603.0 1810.3 Z"></path>
+						<path d="M2617.6 2171.3 L2612.3 2180.7 L2606.9 2171.3 L2612.3 2162.0 Z"></path>
+					</g>
+					<path d="M2797.8 1823.8 L2797.75 1914 L2759.75 1941.4501347708895 L2759.8 1941.5 " fill="none"></path>
+					<path d="M2803.1 1823.8 L2797.8 1823.8 L2792.4 1823.8 L2797.8 1810.5 Z"></path>
+					<path d="M2633.8 2396.3 L1559.25 2555 L1545.1654929577464 2575 L1545.2 2575.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2643.8 2400.2 L2633.8 2396.3 L2642.2 2389.7 L2652.3 2393.6 Z"></path>
+					</g>
+					<path d="M2914.1 2536.4 L2924.25 2555 L2924.25 2575 L2924.3 2575.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2914.3 2525.6 L2914.1 2536.4 L2904.9 2530.7 L2905.1 2520.0 Z"></path>
+					</g>
+					<path d="M3007.9 2489.3 L3108.75 2555 L3108.75 2575 L3108.8 2575.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3003.0 2479.8 L3007.9 2489.3 L2997.2 2488.7 L2992.3 2479.2 Z"></path>
+					</g>
+					<path d="M2822.3 2538.7 L2822.25 2555 L2715.25 2580.928327645051 L2715.3 2580.9 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2827.6 2529.3 L2822.3 2538.7 L2816.9 2529.3 L2822.3 2520.0 Z"></path>
+					</g>
+					<path d="M2637.2 2504.5 L2568.5 2555 L2549.9084507042253 2575 L2549.9 2575.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2647.9 2503.3 L2637.2 2504.5 L2641.6 2494.7 L2652.3 2493.4 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M3954.0 1612.9 L3462 1676 L3462 1711 L3462.0 1711.0 " fill="none"></path>
+						<path d="M2771.0 2149.3 L2822.25 2182 L2822.25 2217 L2822.3 2217.0 " fill="none"></path>
 					</g>
-					<path d="M3954.7 1618.2 L3954.0 1612.9 L3953.3 1607.6 L3967.3 1611.2 Z"></path>
-					<path d="M4447.0 376.3 L4459 373 L4466.5 373 L4466.5 373 L4474 426.5 L4474 426.5 L4466.5 480 L4466.5 480 L4459 480 L4459 480 L4429 471.8527918781726 L4429.0 471.9 " fill="none"></path>
+					<path d="M2773.9 2144.8 L2771.0 2149.3 L2768.1 2153.8 L2759.8 2142.1 Z"></path>
+					<path d="M3212.9 1668.5 L3221.25 1676 L3221.25 1795 L3221.25 1795 L3221.25 1914 L3221.25 1914 L3248.4430970149256 2032.5 L3248.4 2032.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4436.6 373.6 L4447.0 376.3 L4439.4 383.8 L4429.0 381.1 Z"></path>
+						<path d="M3209.5 1658.3 L3212.9 1668.5 L3202.4 1666.2 L3199.0 1656.0 Z"></path>
+					</g>
+					<path d="M2880.9 1822.9 L2360.25 1914 L2253.25 1975.6688172043011 L2253.3 1975.7 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M2891.0 1826.5 L2880.9 1822.9 L2889.1 1816.0 L2899.3 1819.7 Z"></path>
+					</g>
+					<path d="M3040.3 1897.7 L3040.25 1914 L2759.75 2001.820093457944 L2759.8 2001.8 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3045.6 1888.3 L3040.3 1897.7 L3034.9 1888.3 L3040.3 1879.0 Z"></path>
+					</g>
+					<path d="M3198.8 1852.5 L3368.5 1914 L3368.5 2032.5 L3368.5 2032.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3191.8 1844.3 L3198.8 1852.5 L3188.2 1854.3 L3181.3 1846.1 Z"></path>
+					</g>
+					<path d="M3198.1 1870.1 L3290.25 1914 L3256.4244402985073 2032.5 L3256.4 2032.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3192.0 1861.3 L3198.1 1870.1 L3187.4 1870.9 L3181.3 1862.1 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M4268.7 157.8 L4262 278 L4262 373 L4262.0 373.0 " fill="none"></path>
+						<path d="M3052.6 1664.9 L3040.25 1676 L3040.25 1711 L3040.3 1711.0 " fill="none"></path>
 					</g>
-					<path d="M4274.0 158.1 L4268.7 157.8 L4263.3 157.5 L4269.4 144.5 Z"></path>
-					<path d="M4652.9 177.6 L4566 278 L4566 411 L4566.0 411.0 " fill="none"></path>
-					<path d="M4657.0 181.1 L4652.9 177.6 L4648.9 174.1 L4661.7 167.5 Z"></path>
-					<path d="M4695.0 180.8 L4695 278 L4695 411 L4695.0 411.0 " fill="none"></path>
-					<path d="M4700.3 180.8 L4695.0 180.8 L4689.7 180.8 L4695.0 167.5 Z"></path>
-					<path d="M4735.0 177.8 L4817 278 L4817 411 L4817.0 411.0 " fill="none"></path>
-					<path d="M4739.1 174.4 L4735.0 177.8 L4730.8 181.2 L4726.5 167.5 Z"></path>
-					<path d="M4770.4 174.4 L4942.5 278 L4942.5 411 L4942.5 411.0 " fill="none"></path>
-					<path d="M4773.1 169.8 L4770.4 174.4 L4767.6 178.9 L4759.0 167.5 Z"></path>
-					<path d="M2368.2 2089.5 L2232 2182 L2232 2368.5 L2232 2368.5 L2232 2555 L2232 2555 L2346.25 2576.953315290934 L2346.3 2577.0 " fill="none"></path>
+					<path d="M3056.1 1668.9 L3052.6 1664.9 L3049.0 1661.0 L3062.5 1656.0 Z"></path>
+					<path d="M3521.3 376.3 L3533.25 373 L3540.75 373 L3540.75 373 L3548.25 426.5 L3548.25 426.5 L3540.75 480 L3540.75 480 L3533.25 480 L3533.25 480 L3503.25 471.8527918781726 L3503.3 471.9 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2378.9 2088.7 L2368.2 2089.5 L2372.9 2079.8 L2383.6 2079.0 Z"></path>
+						<path d="M3510.9 373.6 L3521.3 376.3 L3513.7 383.8 L3503.3 381.1 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M3821.8 135.6 L5119.5 278 L5119.5 380.5 L5119.5 380.5 " fill="none"></path>
+						<path d="M3336.3 157.8 L3336.25 278 L3336.25 373 L3336.3 373.0 " fill="none"></path>
 					</g>
-					<path d="M3822.3 130.3 L3821.8 135.6 L3821.2 140.9 L3808.5 134.2 Z"></path>
-					<g data-name="StudyUApi">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyUApi">
-							<rect x="1996.3" y="1942.0" height="212.0" width="251.0" data-name="StudyUApi"></rect>
-							<path d="M1996.3 1973.0 L2247.3 1973.0" fill="none" data-name="StudyUApi"></path>
+					<path d="M3341.6 157.8 L3336.3 157.8 L3330.9 157.8 L3336.3 144.5 Z"></path>
+					<path d="M2285.5 137.7 L3663.25 278 L3663.25 411 L3663.3 411.0 " fill="none"></path>
+					<path d="M2286.1 132.4 L2285.5 137.7 L2285.0 143.0 L2272.3 136.4 Z"></path>
+					<path d="M698.3 2066.5 L1699 2182 L1699 2368.5 L1699 2368.5 L1699 2555 L1699 2555 L1604.75 2575.3088012139606 L1604.8 2575.3 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M689.6 2060.2 L698.3 2066.5 L688.4 2070.8 L679.8 2064.4 Z"></path>
+					</g>
+					<g stroke-dasharray="6 6">
+						<path d="M3128.9 140.3 L3864.75 278 L3864.75 380.5 L3864.8 380.5 " fill="none"></path>
+					</g>
+					<path d="M3129.8 135.0 L3128.9 140.3 L3127.9 145.5 L3115.8 137.8 Z"></path>
+					<g data-name="WrappedModel">
+						<g fill="#eee8d5" stroke="#33322E" data-name="WrappedModel">
+							<rect x="0.0" y="0.0" height="258.0" width="251.0" data-name="WrappedModel"></rect>
+							<path d="M0.0 31.0 L251.0 31.0" fill="none" data-name="WrappedModel"></path>
+							<path d="M0.0 182.0 L251.0 182.0" fill="none" data-name="WrappedModel"></path>
 						</g>
-						<g transform="translate(1996.25, 1942)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyUApi">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyUApi">
-								<text x="117.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyUApi">StudyUApi</text>
+						<g transform="translate(0, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="WrappedModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WrappedModel">
+								<text x="117.5" y="13.5" stroke="none" text-anchor="middle" data-name="WrappedModel">WrappedModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1996.25, 1973)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUApi">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyUApi">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyUApi">+dynamic saveStudy()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyUApi">+dynamic fetchStudy()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudyUApi">+dynamic getUserStudies()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="StudyUApi">+dynamic deleteStudy()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="StudyUApi">+dynamic saveStudyInvite()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="StudyUApi">+dynamic fetchStudyInvite()</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="StudyUApi">+dynamic deleteStudyInvite()</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="StudyUApi">+dynamic deleteParticipants()</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="StudyUApi">+dynamic fetchAppConfig()</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="StudyUApi">+dynamic fetchUser()</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="StudyUApi">+dynamic saveUser()</text>
+						<g transform="translate(0, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WrappedModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WrappedModel">
+								<text x="0.0" y="13.5" stroke="none" data-name="WrappedModel">-_model: T</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="WrappedModel">+asyncValue: AsyncValue&lt;T&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="WrappedModel">+isLocalOnly: bool</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="WrappedModel">+isDirty: bool</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="WrappedModel">+isDeleted: bool</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="WrappedModel">+lastSaved: DateTime?</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="WrappedModel">+lastFetched: DateTime?</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="WrappedModel">+lastUpdated: DateTime?</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="WrappedModel">+model: T</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 182)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WrappedModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WrappedModel">
+								<text x="0.0" y="13.5" stroke="none" data-name="WrappedModel">+dynamic markWithError()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="WrappedModel">+dynamic markAsLoading()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="WrappedModel">+dynamic markAsFetched()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="WrappedModel">+dynamic markAsSaved()</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="APIException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="APIException">
-							<rect x="1402.0" y="411.0" height="31.0" width="121.0" data-name="APIException"></rect>
+					<g data-name="AsyncValue">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AsyncValue">
+							<rect x="71.0" y="411.0" height="31.0" width="109.0" data-name="AsyncValue"></rect>
 						</g>
-						<g transform="translate(1402, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="APIException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="APIException">
-								<text x="52.5" y="13.5" stroke="none" text-anchor="middle" data-name="APIException">APIException</text>
+						<g transform="translate(71, 411)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="AsyncValue">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AsyncValue">
+								<text x="46.5" y="13.5" stroke="none" text-anchor="middle" data-name="AsyncValue">AsyncValue</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ModelInstanceCreationArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ModelInstanceCreationArgs">
+							<rect x="221.5" y="411.0" height="31.0" width="235.0" data-name="ModelInstanceCreationArgs"></rect>
+						</g>
+						<g transform="translate(221.5, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ModelInstanceCreationArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ModelInstanceCreationArgs">
+								<text x="109.5" y="13.5" stroke="none" text-anchor="middle" data-name="ModelInstanceCreationArgs">ModelInstanceCreationArgs</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Equatable">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Equatable">
+							<rect x="291.0" y="113.5" height="31.0" width="96.0" data-name="Equatable"></rect>
+						</g>
+						<g transform="translate(291, 113.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Equatable">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Equatable">
+								<text x="40.0" y="13.5" stroke="none" text-anchor="middle" data-name="Equatable">Equatable</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="NoArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="NoArgs">
+							<rect x="142.3" y="790.5" height="62.0" width="180.0" data-name="NoArgs"></rect>
+							<path d="M142.3 821.5 L322.3 821.5" fill="none" data-name="NoArgs"></path>
+						</g>
+						<g transform="translate(142.25, 790.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoArgs">
+								<text x="82.0" y="13.5" stroke="none" text-anchor="middle" data-name="NoArgs">NoArgs</text>
+								
+							</g>
+						</g>
+						<g transform="translate(142.25, 821.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoArgs">
+								<text x="0.0" y="13.5" stroke="none" data-name="NoArgs">+props: List&lt;Object&gt;</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyCreationArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyCreationArgs">
+							<rect x="362.3" y="760.5" height="122.0" width="243.0" data-name="StudyCreationArgs"></rect>
+							<path d="M362.3 791.5 L605.3 791.5" fill="none" data-name="StudyCreationArgs"></path>
+						</g>
+						<g transform="translate(362.25, 760.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyCreationArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyCreationArgs">
+								<text x="113.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyCreationArgs">StudyCreationArgs</text>
+								
+							</g>
+						</g>
+						<g transform="translate(362.25, 791.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyCreationArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyCreationArgs">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyCreationArgs">+studyID: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudyCreationArgs">+parentTemplate: Template?</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudyCreationArgs">+isTemplate: bool</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudyCreationArgs">+validForCreation: bool</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="StudyCreationArgs">+props: List&lt;Object&gt;</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Template">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Template">
+							<rect x="439.3" y="1148.5" height="31.0" width="89.0" data-name="Template"></rect>
+						</g>
+						<g transform="translate(439.25, 1148.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Template">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Template">
+								<text x="36.5" y="13.5" stroke="none" text-anchor="middle" data-name="Template">Template</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ModelRepositoryException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ModelRepositoryException">
+							<rect x="641.3" y="411.0" height="31.0" width="227.0" data-name="ModelRepositoryException"></rect>
+						</g>
+						<g transform="translate(641.25, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ModelRepositoryException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ModelRepositoryException">
+								<text x="105.5" y="13.5" stroke="none" text-anchor="middle" data-name="ModelRepositoryException">ModelRepositoryException</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="Exception">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Exception">
-							<rect x="3714.5" y="113.5" height="31.0" width="94.0" data-name="Exception"></rect>
+							<rect x="3021.8" y="113.5" height="31.0" width="94.0" data-name="Exception"></rect>
 						</g>
-						<g transform="translate(3714.5, 113.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Exception">
+						<g transform="translate(3021.75, 113.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Exception">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Exception">
 								<text x="39.0" y="13.5" stroke="none" text-anchor="middle" data-name="Exception">Exception</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="StudyNotFoundException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyNotFoundException">
-							<rect x="0.0" y="806.0" height="31.0" width="216.0" data-name="StudyNotFoundException"></rect>
+					<g data-name="ModelNotFoundException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ModelNotFoundException">
+							<rect x="645.3" y="806.0" height="31.0" width="219.0" data-name="ModelNotFoundException"></rect>
 						</g>
-						<g transform="translate(0, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyNotFoundException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyNotFoundException">
-								<text x="100.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyNotFoundException">StudyNotFoundException</text>
+						<g transform="translate(645.25, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ModelNotFoundException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ModelNotFoundException">
+								<text x="101.5" y="13.5" stroke="none" text-anchor="middle" data-name="ModelNotFoundException">ModelNotFoundException</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="MeasurementNotFoundException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="MeasurementNotFoundException">
-							<rect x="256.0" y="806.0" height="31.0" width="279.0" data-name="MeasurementNotFoundException"></rect>
+					<g data-name="IModelRepository">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IModelRepository">
+							<rect x="1044.3" y="298.0" height="257.0" width="382.0" data-name="IModelRepository"></rect>
+							<path d="M1044.3 329.0 L1426.3 329.0" fill="none" data-name="IModelRepository"></path>
 						</g>
-						<g transform="translate(256, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MeasurementNotFoundException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MeasurementNotFoundException">
-								<text x="131.5" y="13.5" stroke="none" text-anchor="middle" data-name="MeasurementNotFoundException">MeasurementNotFoundException</text>
+						<g transform="translate(1044.25, 298)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IModelRepository">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IModelRepository">
+								<text x="183.0" y="13.5" stroke="none" text-anchor="middle" data-name="IModelRepository">IModelRepository</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1044.25, 329)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IModelRepository">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IModelRepository">
+								<text x="0.0" y="13.5" stroke="none" data-name="IModelRepository">+String getKey()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="IModelRepository">+WrappedModel&lt;T&gt;? get()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="IModelRepository">+dynamic fetchAll()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="IModelRepository">+dynamic fetch()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="IModelRepository">+dynamic save()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="IModelRepository">+dynamic delete()</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="IModelRepository">+dynamic duplicateAndSave()</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="IModelRepository">+dynamic duplicateAndSaveFromRemote()</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="IModelRepository">+Stream&lt;WrappedModel&lt;T&gt;&gt; watch()</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="IModelRepository">+Stream&lt;List&lt;WrappedModel&lt;T&gt;&gt;&gt; watchAll()</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="IModelRepository">+Stream&lt;ModelEvent&lt;T&gt;&gt; watchChanges()</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="IModelRepository">+Stream&lt;ModelEvent&lt;T&gt;&gt; watchAllChanges()</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="IModelRepository">+dynamic ensurePersisted()</text>
+								<text x="0.0" y="208.5" stroke="none" data-name="IModelRepository">+void dispose()</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="QuestionNotFoundException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionNotFoundException">
-							<rect x="575.0" y="806.0" height="31.0" width="242.0" data-name="QuestionNotFoundException"></rect>
+					<g data-name="IModelActionProvider">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IModelActionProvider">
+							<rect x="731.8" y="113.5" height="31.0" width="184.0" data-name="IModelActionProvider"></rect>
 						</g>
-						<g transform="translate(575, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionNotFoundException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionNotFoundException">
-								<text x="113.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionNotFoundException">QuestionNotFoundException</text>
+						<g transform="translate(731.75, 113.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IModelActionProvider">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IModelActionProvider">
+								<text x="84.0" y="13.5" stroke="none" text-anchor="middle" data-name="IModelActionProvider">IModelActionProvider</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="ConsentItemNotFoundException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ConsentItemNotFoundException">
-							<rect x="857.0" y="806.0" height="31.0" width="271.0" data-name="ConsentItemNotFoundException"></rect>
+					<g data-name="IModelRepositoryDelegate">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IModelRepositoryDelegate">
+							<rect x="1999.8" y="1088.0" height="152.0" width="225.0" data-name="IModelRepositoryDelegate"></rect>
+							<path d="M1999.8 1119.0 L2224.8 1119.0" fill="none" data-name="IModelRepositoryDelegate"></path>
 						</g>
-						<g transform="translate(857, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ConsentItemNotFoundException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ConsentItemNotFoundException">
-								<text x="127.5" y="13.5" stroke="none" text-anchor="middle" data-name="ConsentItemNotFoundException">ConsentItemNotFoundException</text>
+						<g transform="translate(1999.75, 1088)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IModelRepositoryDelegate">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IModelRepositoryDelegate">
+								<text x="104.5" y="13.5" stroke="none" text-anchor="middle" data-name="IModelRepositoryDelegate">IModelRepositoryDelegate</text>
 								
 							</g>
 						</g>
-					</g>
-					<g data-name="InterventionNotFoundException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionNotFoundException">
-							<rect x="1168.0" y="806.0" height="31.0" width="265.0" data-name="InterventionNotFoundException"></rect>
-						</g>
-						<g transform="translate(1168, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionNotFoundException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionNotFoundException">
-								<text x="124.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionNotFoundException">InterventionNotFoundException</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="InterventionTaskNotFoundException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionTaskNotFoundException">
-							<rect x="1473.0" y="806.0" height="31.0" width="303.0" data-name="InterventionTaskNotFoundException"></rect>
-						</g>
-						<g transform="translate(1473, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionTaskNotFoundException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionTaskNotFoundException">
-								<text x="143.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionTaskNotFoundException">InterventionTaskNotFoundException</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ReportNotFoundException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReportNotFoundException">
-							<rect x="1816.0" y="806.0" height="31.0" width="224.0" data-name="ReportNotFoundException"></rect>
-						</g>
-						<g transform="translate(1816, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportNotFoundException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportNotFoundException">
-								<text x="104.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReportNotFoundException">ReportNotFoundException</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ReportSectionNotFoundException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReportSectionNotFoundException">
-							<rect x="2080.0" y="806.0" height="31.0" width="283.0" data-name="ReportSectionNotFoundException"></rect>
-						</g>
-						<g transform="translate(2080, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportSectionNotFoundException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportSectionNotFoundException">
-								<text x="133.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportSectionNotFoundException">ReportSectionNotFoundException</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyInviteNotFoundException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyInviteNotFoundException">
-							<rect x="2403.0" y="806.0" height="31.0" width="259.0" data-name="StudyInviteNotFoundException"></rect>
-						</g>
-						<g transform="translate(2403, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyInviteNotFoundException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyInviteNotFoundException">
-								<text x="121.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyInviteNotFoundException">StudyInviteNotFoundException</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="UserNotFoundException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="UserNotFoundException">
-							<rect x="2702.0" y="806.0" height="31.0" width="208.0" data-name="UserNotFoundException"></rect>
-						</g>
-						<g transform="translate(2702, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="UserNotFoundException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="UserNotFoundException">
-								<text x="96.0" y="13.5" stroke="none" text-anchor="middle" data-name="UserNotFoundException">UserNotFoundException</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyUApiClient">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyUApiClient">
-							<rect x="2297.0" y="2202.0" height="333.0" width="479.0" data-name="StudyUApiClient"></rect>
-							<path d="M2297.0 2233.0 L2776.0 2233.0" fill="none" data-name="StudyUApiClient"></path>
-							<path d="M2297.0 2309.0 L2776.0 2309.0" fill="none" data-name="StudyUApiClient"></path>
-						</g>
-						<g transform="translate(2297, 2202)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyUApiClient">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyUApiClient">
-								<text x="231.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyUApiClient">StudyUApiClient</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2297, 2233)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUApiClient">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyUApiClient">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyUApiClient">+supabaseClient: SupabaseClient</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyUApiClient">&lt;static&gt;+studyColumns: List&lt;String&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudyUApiClient">&lt;static&gt;+studyWithParticipantActivityColumns: List&lt;String&gt;</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="StudyUApiClient">+testDelayMilliseconds: int</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2297, 2309)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUApiClient">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyUApiClient">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyUApiClient">+dynamic deleteParticipants()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyUApiClient">+dynamic getUserStudies()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudyUApiClient">+dynamic fetchStudy()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="StudyUApiClient">+dynamic deleteStudy()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="StudyUApiClient">+dynamic saveStudy()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="StudyUApiClient">+dynamic fetchStudyInvite()</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="StudyUApiClient">+dynamic saveStudyInvite()</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="StudyUApiClient">+dynamic deleteStudyInvite()</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="StudyUApiClient">+dynamic fetchAppConfig()</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="StudyUApiClient">+dynamic fetchUser()</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="StudyUApiClient">+dynamic saveUser()</text>
-								<text x="0.0" y="178.5" stroke="none" data-name="StudyUApiClient">-dynamic _awaitGuarded()</text>
-								<text x="0.0" y="193.5" stroke="none" data-name="StudyUApiClient">-dynamic _apiException()</text>
-								<text x="0.0" y="208.5" stroke="none" data-name="StudyUApiClient">-dynamic _testDelay()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="SupabaseClient">
-						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseClient">
-							<rect x="2346.3" y="2575.0" height="31.0" width="141.0" data-name="SupabaseClient"></rect>
-						</g>
-						<g transform="translate(2346.25, 2575)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SupabaseClient">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseClient">
-								<text x="62.5" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseClient">SupabaseClient</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="SupabaseClientDependant">
-						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseClientDependant">
-							<rect x="2287.3" y="2017.0" height="62.0" width="284.0" data-name="SupabaseClientDependant"></rect>
-							<path d="M2287.3 2048.0 L2571.3 2048.0" fill="none" data-name="SupabaseClientDependant"></path>
-						</g>
-						<g transform="translate(2287.25, 2017)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="SupabaseClientDependant">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseClientDependant">
-								<text x="134.0" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseClientDependant">SupabaseClientDependant</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2287.25, 2048)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseClientDependant">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseClientDependant">
-								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseClientDependant">+supabaseClient: SupabaseClient</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="SupabaseQueryMixin">
-						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseQueryMixin">
-							<rect x="2611.3" y="1979.5" height="137.0" width="215.0" data-name="SupabaseQueryMixin"></rect>
-							<path d="M2611.3 2010.5 L2826.3 2010.5" fill="none" data-name="SupabaseQueryMixin"></path>
-						</g>
-						<g transform="translate(2611.25, 1979.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="SupabaseQueryMixin">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseQueryMixin">
-								<text x="99.5" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseQueryMixin">SupabaseQueryMixin</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2611.25, 2010.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseQueryMixin">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseQueryMixin">
-								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseQueryMixin">+dynamic deleteAll()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="SupabaseQueryMixin">+dynamic getAll()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="SupabaseQueryMixin">+dynamic getById()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="SupabaseQueryMixin">+dynamic getByColumn()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="SupabaseQueryMixin">+List&lt;T&gt; deserializeList()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="SupabaseQueryMixin">+T deserializeObject()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="IStudyRepository">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IStudyRepository">
-							<rect x="3558.0" y="1556.0" height="77.0" width="251.0" data-name="IStudyRepository"></rect>
-							<path d="M3558.0 1587.0 L3809.0 1587.0" fill="none" data-name="IStudyRepository"></path>
-						</g>
-						<g transform="translate(3558, 1556)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IStudyRepository">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IStudyRepository">
-								<text x="117.5" y="13.5" stroke="none" text-anchor="middle" data-name="IStudyRepository">IStudyRepository</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3558, 1587)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IStudyRepository">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IStudyRepository">
-								<text x="0.0" y="13.5" stroke="none" data-name="IStudyRepository">+dynamic launch()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="IStudyRepository">+dynamic deleteParticipants()</text>
+						<g transform="translate(1999.75, 1119)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IModelRepositoryDelegate">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IModelRepositoryDelegate">
+								<text x="0.0" y="13.5" stroke="none" data-name="IModelRepositoryDelegate">+dynamic fetchAll()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="IModelRepositoryDelegate">+dynamic fetch()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="IModelRepositoryDelegate">+dynamic save()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="IModelRepositoryDelegate">+dynamic delete()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="IModelRepositoryDelegate">+T createNewInstance()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="IModelRepositoryDelegate">+T createDuplicate()</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="IModelRepositoryDelegate">+dynamic onError()</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="ModelRepository">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ModelRepository">
-							<rect x="2950.0" y="595.0" height="453.0" width="662.0" data-name="ModelRepository"></rect>
-							<path d="M2950.0 626.0 L3612.0 626.0" fill="none" data-name="ModelRepository"></path>
-							<path d="M2950.0 732.0 L3612.0 732.0" fill="none" data-name="ModelRepository"></path>
+							<rect x="904.3" y="595.0" height="453.0" width="662.0" data-name="ModelRepository"></rect>
+							<path d="M904.3 626.0 L1566.3 626.0" fill="none" data-name="ModelRepository"></path>
+							<path d="M904.3 732.0 L1566.3 732.0" fill="none" data-name="ModelRepository"></path>
 						</g>
-						<g transform="translate(2950, 595)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ModelRepository">
+						<g transform="translate(904.25, 595)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ModelRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ModelRepository">
 								<text x="323.0" y="13.5" stroke="none" text-anchor="middle" data-name="ModelRepository">ModelRepository</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2950, 626)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ModelRepository">
+						<g transform="translate(904.25, 626)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ModelRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ModelRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="ModelRepository">+delegate: IModelRepositoryDelegate&lt;T&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ModelRepository">-_allModelsStreamController: BehaviorSubject&lt;List&lt;WrappedModel&lt;T&gt;&gt;&gt;</text>
@@ -988,7 +969,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(2950, 732)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ModelRepository">
+						<g transform="translate(904.25, 732)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ModelRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ModelRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="ModelRepository">+WrappedModel&lt;T&gt;? get()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ModelRepository">+dynamic fetchAll()</text>
@@ -1014,19 +995,49 @@
 							</g>
 						</g>
 					</g>
+					<g data-name="BehaviorSubject">
+						<g fill="#eee8d5" stroke="#33322E" data-name="BehaviorSubject">
+							<rect x="1030.3" y="1148.5" height="31.0" width="145.0" data-name="BehaviorSubject"></rect>
+						</g>
+						<g transform="translate(1030.25, 1148.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BehaviorSubject">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BehaviorSubject">
+								<text x="64.5" y="13.5" stroke="none" text-anchor="middle" data-name="BehaviorSubject">BehaviorSubject</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IStudyRepository">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IStudyRepository">
+							<rect x="1406.0" y="1556.0" height="77.0" width="251.0" data-name="IStudyRepository"></rect>
+							<path d="M1406.0 1587.0 L1657.0 1587.0" fill="none" data-name="IStudyRepository"></path>
+						</g>
+						<g transform="translate(1406, 1556)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IStudyRepository">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IStudyRepository">
+								<text x="117.5" y="13.5" stroke="none" text-anchor="middle" data-name="IStudyRepository">IStudyRepository</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1406, 1587)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IStudyRepository">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IStudyRepository">
+								<text x="0.0" y="13.5" stroke="none" data-name="IStudyRepository">+dynamic launch()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="IStudyRepository">+dynamic deleteParticipants()</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="StudyRepository">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyRepository">
-							<rect x="3643.0" y="1703.5" height="183.0" width="403.0" data-name="StudyRepository"></rect>
-							<path d="M3643.0 1734.5 L4046.0 1734.5" fill="none" data-name="StudyRepository"></path>
-							<path d="M3643.0 1810.5 L4046.0 1810.5" fill="none" data-name="StudyRepository"></path>
+							<rect x="1038.8" y="1703.5" height="183.0" width="403.0" data-name="StudyRepository"></rect>
+							<path d="M1038.8 1734.5 L1441.8 1734.5" fill="none" data-name="StudyRepository"></path>
+							<path d="M1038.8 1810.5 L1441.8 1810.5" fill="none" data-name="StudyRepository"></path>
 						</g>
-						<g transform="translate(3643, 1703.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyRepository">
+						<g transform="translate(1038.75, 1703.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyRepository">
 								<text x="193.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyRepository">StudyRepository</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3643, 1734.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRepository">
+						<g transform="translate(1038.75, 1734.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyRepository">+apiClient: StudyUApi</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyRepository">+authRepository: IAuthRepository</text>
@@ -1035,7 +1046,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(3643, 1810.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRepository">
+						<g transform="translate(1038.75, 1810.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyRepository">+String getKey()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyRepository">+dynamic deleteParticipants()</text>
@@ -1045,19 +1056,47 @@
 							</g>
 						</g>
 					</g>
+					<g data-name="StudyUApi">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyUApi">
+							<rect x="2002.3" y="1942.0" height="212.0" width="251.0" data-name="StudyUApi"></rect>
+							<path d="M2002.3 1973.0 L2253.3 1973.0" fill="none" data-name="StudyUApi"></path>
+						</g>
+						<g transform="translate(2002.25, 1942)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyUApi">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyUApi">
+								<text x="117.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyUApi">StudyUApi</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2002.25, 1973)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUApi">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyUApi">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyUApi">+dynamic saveStudy()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudyUApi">+dynamic fetchStudy()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudyUApi">+dynamic getUserStudies()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudyUApi">+dynamic deleteStudy()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="StudyUApi">+dynamic saveStudyInvite()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="StudyUApi">+dynamic fetchStudyInvite()</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="StudyUApi">+dynamic deleteStudyInvite()</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="StudyUApi">+dynamic deleteParticipants()</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="StudyUApi">+dynamic fetchAppConfig()</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="StudyUApi">+dynamic fetchUser()</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="StudyUApi">+dynamic saveUser()</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="IAuthRepository">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IAuthRepository">
-							<rect x="3003.3" y="1934.0" height="228.0" width="295.0" data-name="IAuthRepository"></rect>
-							<path d="M3003.3 1965.0 L3298.3 1965.0" fill="none" data-name="IAuthRepository"></path>
-							<path d="M3003.3 2056.0 L3298.3 2056.0" fill="none" data-name="IAuthRepository"></path>
+							<rect x="2464.8" y="1934.0" height="228.0" width="295.0" data-name="IAuthRepository"></rect>
+							<path d="M2464.8 1965.0 L2759.8 1965.0" fill="none" data-name="IAuthRepository"></path>
+							<path d="M2464.8 2056.0 L2759.8 2056.0" fill="none" data-name="IAuthRepository"></path>
 						</g>
-						<g transform="translate(3003.25, 1934)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IAuthRepository">
+						<g transform="translate(2464.75, 1934)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IAuthRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IAuthRepository">
 								<text x="139.5" y="13.5" stroke="none" text-anchor="middle" data-name="IAuthRepository">IAuthRepository</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3003.25, 1965)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IAuthRepository">
+						<g transform="translate(2464.75, 1965)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IAuthRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IAuthRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="IAuthRepository">+allowPasswordReset: bool</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="IAuthRepository">+currentUser: User?</text>
@@ -1067,7 +1106,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(3003.25, 2056)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IAuthRepository">
+						<g transform="translate(2464.75, 2056)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IAuthRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IAuthRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="IAuthRepository">+dynamic signUp()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="IAuthRepository">+dynamic signInWith()</text>
@@ -1081,9 +1120,9 @@
 					</g>
 					<g data-name="ProviderRef">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ProviderRef">
-							<rect x="4232.8" y="2032.5" height="31.0" width="109.0" data-name="ProviderRef"></rect>
+							<rect x="719.8" y="2032.5" height="31.0" width="109.0" data-name="ProviderRef"></rect>
 						</g>
-						<g transform="translate(4232.75, 2032.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ProviderRef">
+						<g transform="translate(719.75, 2032.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ProviderRef">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ProviderRef">
 								<text x="46.5" y="13.5" stroke="none" text-anchor="middle" data-name="ProviderRef">ProviderRef</text>
 								
@@ -1092,9 +1131,9 @@
 					</g>
 					<g data-name="void Function()?">
 						<g fill="#eee8d5" stroke="#33322E" data-name="void Function()?">
-							<rect x="4381.8" y="2032.5" height="31.0" width="144.0" data-name="void Function()?"></rect>
+							<rect x="926.3" y="2032.5" height="31.0" width="144.0" data-name="void Function()?"></rect>
 						</g>
-						<g transform="translate(4381.75, 2032.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function()?">
+						<g transform="translate(926.25, 2032.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function()?">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function()?">
 								<text x="64.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function()?">void Function()?</text>
 								
@@ -1103,24 +1142,24 @@
 					</g>
 					<g data-name="StudyRepositoryDelegate">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyRepositoryDelegate">
-							<rect x="2108.8" y="1696.0" height="198.0" width="282.0" data-name="StudyRepositoryDelegate"></rect>
-							<path d="M2108.8 1727.0 L2390.8 1727.0" fill="none" data-name="StudyRepositoryDelegate"></path>
-							<path d="M2108.8 1773.0 L2390.8 1773.0" fill="none" data-name="StudyRepositoryDelegate"></path>
+							<rect x="2101.8" y="1696.0" height="198.0" width="282.0" data-name="StudyRepositoryDelegate"></rect>
+							<path d="M2101.8 1727.0 L2383.8 1727.0" fill="none" data-name="StudyRepositoryDelegate"></path>
+							<path d="M2101.8 1773.0 L2383.8 1773.0" fill="none" data-name="StudyRepositoryDelegate"></path>
 						</g>
-						<g transform="translate(2108.75, 1696)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyRepositoryDelegate">
+						<g transform="translate(2101.75, 1696)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyRepositoryDelegate">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyRepositoryDelegate">
 								<text x="133.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyRepositoryDelegate">StudyRepositoryDelegate</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2108.75, 1727)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRepositoryDelegate">
+						<g transform="translate(2101.75, 1727)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRepositoryDelegate">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyRepositoryDelegate">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyRepositoryDelegate">+apiClient: StudyUApi</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyRepositoryDelegate">+authRepository: IAuthRepository</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2108.75, 1773)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRepositoryDelegate">
+						<g transform="translate(2101.75, 1773)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyRepositoryDelegate">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyRepositoryDelegate">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyRepositoryDelegate">+dynamic fetchAll()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyRepositoryDelegate">+dynamic fetch()</text>
@@ -1133,239 +1172,18 @@
 							</g>
 						</g>
 					</g>
-					<g data-name="IModelRepositoryDelegate">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IModelRepositoryDelegate">
-							<rect x="2137.3" y="1088.0" height="152.0" width="225.0" data-name="IModelRepositoryDelegate"></rect>
-							<path d="M2137.3 1119.0 L2362.3 1119.0" fill="none" data-name="IModelRepositoryDelegate"></path>
-						</g>
-						<g transform="translate(2137.25, 1088)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IModelRepositoryDelegate">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IModelRepositoryDelegate">
-								<text x="104.5" y="13.5" stroke="none" text-anchor="middle" data-name="IModelRepositoryDelegate">IModelRepositoryDelegate</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2137.25, 1119)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IModelRepositoryDelegate">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IModelRepositoryDelegate">
-								<text x="0.0" y="13.5" stroke="none" data-name="IModelRepositoryDelegate">+dynamic fetchAll()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="IModelRepositoryDelegate">+dynamic fetch()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="IModelRepositoryDelegate">+dynamic save()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="IModelRepositoryDelegate">+dynamic delete()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="IModelRepositoryDelegate">+T createNewInstance()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="IModelRepositoryDelegate">+T createDuplicate()</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="IModelRepositoryDelegate">+dynamic onError()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="IAppRepository">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IAppRepository">
-							<rect x="1838.8" y="1556.0" height="77.0" width="230.0" data-name="IAppRepository"></rect>
-							<path d="M1838.8 1587.0 L2068.8 1587.0" fill="none" data-name="IAppRepository"></path>
-						</g>
-						<g transform="translate(1838.75, 1556)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IAppRepository">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IAppRepository">
-								<text x="107.0" y="13.5" stroke="none" text-anchor="middle" data-name="IAppRepository">IAppRepository</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1838.75, 1587)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IAppRepository">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IAppRepository">
-								<text x="0.0" y="13.5" stroke="none" data-name="IAppRepository">+dynamic fetchAppConfig()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="IAppRepository">+void dispose()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="AppRepository">
-						<g fill="#eee8d5" stroke="#33322E" data-name="AppRepository">
-							<rect x="1838.8" y="1741.0" height="108.0" width="230.0" data-name="AppRepository"></rect>
-							<path d="M1838.8 1772.0 L2068.8 1772.0" fill="none" data-name="AppRepository"></path>
-							<path d="M1838.8 1803.0 L2068.8 1803.0" fill="none" data-name="AppRepository"></path>
-						</g>
-						<g transform="translate(1838.75, 1741)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AppRepository">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AppRepository">
-								<text x="107.0" y="13.5" stroke="none" text-anchor="middle" data-name="AppRepository">AppRepository</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1838.75, 1772)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppRepository">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppRepository">
-								<text x="0.0" y="13.5" stroke="none" data-name="AppRepository">+apiClient: StudyUApi</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1838.75, 1803)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppRepository">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppRepository">
-								<text x="0.0" y="13.5" stroke="none" data-name="AppRepository">+dynamic fetchAppConfig()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="AppRepository">+void dispose()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="WrappedModel">
-						<g fill="#eee8d5" stroke="#33322E" data-name="WrappedModel">
-							<rect x="2114.5" y="0.0" height="258.0" width="251.0" data-name="WrappedModel"></rect>
-							<path d="M2114.5 31.0 L2365.5 31.0" fill="none" data-name="WrappedModel"></path>
-							<path d="M2114.5 182.0 L2365.5 182.0" fill="none" data-name="WrappedModel"></path>
-						</g>
-						<g transform="translate(2114.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="WrappedModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WrappedModel">
-								<text x="117.5" y="13.5" stroke="none" text-anchor="middle" data-name="WrappedModel">WrappedModel</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2114.5, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WrappedModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WrappedModel">
-								<text x="0.0" y="13.5" stroke="none" data-name="WrappedModel">-_model: T</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="WrappedModel">+asyncValue: AsyncValue&lt;T&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="WrappedModel">+isLocalOnly: bool</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="WrappedModel">+isDirty: bool</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="WrappedModel">+isDeleted: bool</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="WrappedModel">+lastSaved: DateTime?</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="WrappedModel">+lastFetched: DateTime?</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="WrappedModel">+lastUpdated: DateTime?</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="WrappedModel">+model: T</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2114.5, 182)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WrappedModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WrappedModel">
-								<text x="0.0" y="13.5" stroke="none" data-name="WrappedModel">+dynamic markWithError()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="WrappedModel">+dynamic markAsLoading()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="WrappedModel">+dynamic markAsFetched()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="WrappedModel">+dynamic markAsSaved()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="AsyncValue">
-						<g fill="#eee8d5" stroke="#33322E" data-name="AsyncValue">
-							<rect x="2793.5" y="411.0" height="31.0" width="109.0" data-name="AsyncValue"></rect>
-						</g>
-						<g transform="translate(2793.5, 411)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="AsyncValue">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AsyncValue">
-								<text x="46.5" y="13.5" stroke="none" text-anchor="middle" data-name="AsyncValue">AsyncValue</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ModelRepositoryException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ModelRepositoryException">
-							<rect x="3648.0" y="411.0" height="31.0" width="227.0" data-name="ModelRepositoryException"></rect>
-						</g>
-						<g transform="translate(3648, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ModelRepositoryException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ModelRepositoryException">
-								<text x="105.5" y="13.5" stroke="none" text-anchor="middle" data-name="ModelRepositoryException">ModelRepositoryException</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ModelNotFoundException">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ModelNotFoundException">
-							<rect x="3652.0" y="806.0" height="31.0" width="219.0" data-name="ModelNotFoundException"></rect>
-						</g>
-						<g transform="translate(3652, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ModelNotFoundException">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ModelNotFoundException">
-								<text x="101.5" y="13.5" stroke="none" text-anchor="middle" data-name="ModelNotFoundException">ModelNotFoundException</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="IModelRepository">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IModelRepository">
-							<rect x="3090.0" y="298.0" height="257.0" width="382.0" data-name="IModelRepository"></rect>
-							<path d="M3090.0 329.0 L3472.0 329.0" fill="none" data-name="IModelRepository"></path>
-						</g>
-						<g transform="translate(3090, 298)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IModelRepository">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IModelRepository">
-								<text x="183.0" y="13.5" stroke="none" text-anchor="middle" data-name="IModelRepository">IModelRepository</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3090, 329)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IModelRepository">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IModelRepository">
-								<text x="0.0" y="13.5" stroke="none" data-name="IModelRepository">+String getKey()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="IModelRepository">+WrappedModel&lt;T&gt;? get()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="IModelRepository">+dynamic fetchAll()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="IModelRepository">+dynamic fetch()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="IModelRepository">+dynamic save()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="IModelRepository">+dynamic delete()</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="IModelRepository">+dynamic duplicateAndSave()</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="IModelRepository">+dynamic duplicateAndSaveFromRemote()</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="IModelRepository">+Stream&lt;WrappedModel&lt;T&gt;&gt; watch()</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="IModelRepository">+Stream&lt;List&lt;WrappedModel&lt;T&gt;&gt;&gt; watchAll()</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="IModelRepository">+Stream&lt;ModelEvent&lt;T&gt;&gt; watchChanges()</text>
-								<text x="0.0" y="178.5" stroke="none" data-name="IModelRepository">+Stream&lt;ModelEvent&lt;T&gt;&gt; watchAllChanges()</text>
-								<text x="0.0" y="193.5" stroke="none" data-name="IModelRepository">+dynamic ensurePersisted()</text>
-								<text x="0.0" y="208.5" stroke="none" data-name="IModelRepository">+void dispose()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="IModelActionProvider">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IModelActionProvider">
-							<rect x="3058.8" y="113.5" height="31.0" width="184.0" data-name="IModelActionProvider"></rect>
-						</g>
-						<g transform="translate(3058.75, 113.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IModelActionProvider">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IModelActionProvider">
-								<text x="84.0" y="13.5" stroke="none" text-anchor="middle" data-name="IModelActionProvider">IModelActionProvider</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="BehaviorSubject">
-						<g fill="#eee8d5" stroke="#33322E" data-name="BehaviorSubject">
-							<rect x="2877.3" y="1148.5" height="31.0" width="145.0" data-name="BehaviorSubject"></rect>
-						</g>
-						<g transform="translate(2877.25, 1148.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BehaviorSubject">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BehaviorSubject">
-								<text x="64.5" y="13.5" stroke="none" text-anchor="middle" data-name="BehaviorSubject">BehaviorSubject</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyLaunched">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyLaunched">
-							<rect x="3915.0" y="411.0" height="31.0" width="140.0" data-name="StudyLaunched"></rect>
-						</g>
-						<g transform="translate(3915, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyLaunched">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyLaunched">
-								<text x="62.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyLaunched">StudyLaunched</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ModelEvent">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ModelEvent">
-							<rect x="4622.5" y="90.5" height="77.0" width="145.0" data-name="ModelEvent"></rect>
-							<path d="M4622.5 121.5 L4767.5 121.5" fill="none" data-name="ModelEvent"></path>
-						</g>
-						<g transform="translate(4622.5, 90.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ModelEvent">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ModelEvent">
-								<text x="64.5" y="13.5" stroke="none" text-anchor="middle" data-name="ModelEvent">ModelEvent</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4622.5, 121.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ModelEvent">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ModelEvent">
-								<text x="0.0" y="13.5" stroke="none" data-name="ModelEvent">+modelId: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ModelEvent">+model: T</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="IInviteCodeRepository">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IInviteCodeRepository">
-							<rect x="3062.3" y="1133.0" height="62.0" width="265.0" data-name="IInviteCodeRepository"></rect>
-							<path d="M3062.3 1164.0 L3327.3 1164.0" fill="none" data-name="IInviteCodeRepository"></path>
+							<rect x="1410.5" y="1133.0" height="62.0" width="265.0" data-name="IInviteCodeRepository"></rect>
+							<path d="M1410.5 1164.0 L1675.5 1164.0" fill="none" data-name="IInviteCodeRepository"></path>
 						</g>
-						<g transform="translate(3062.25, 1133)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IInviteCodeRepository">
+						<g transform="translate(1410.5, 1133)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IInviteCodeRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IInviteCodeRepository">
 								<text x="124.5" y="13.5" stroke="none" text-anchor="middle" data-name="IInviteCodeRepository">IInviteCodeRepository</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3062.25, 1164)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IInviteCodeRepository">
+						<g transform="translate(1410.5, 1164)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IInviteCodeRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IInviteCodeRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="IInviteCodeRepository">+dynamic isCodeAlreadyUsed()</text>
 								
@@ -1374,17 +1192,17 @@
 					</g>
 					<g data-name="InviteCodeRepository">
 						<g fill="#eee8d5" stroke="#33322E" data-name="InviteCodeRepository">
-							<rect x="3079.5" y="1280.0" height="213.0" width="403.0" data-name="InviteCodeRepository"></rect>
-							<path d="M3079.5 1311.0 L3482.5 1311.0" fill="none" data-name="InviteCodeRepository"></path>
-							<path d="M3079.5 1417.0 L3482.5 1417.0" fill="none" data-name="InviteCodeRepository"></path>
+							<rect x="1255.3" y="1280.0" height="213.0" width="403.0" data-name="InviteCodeRepository"></rect>
+							<path d="M1255.3 1311.0 L1658.3 1311.0" fill="none" data-name="InviteCodeRepository"></path>
+							<path d="M1255.3 1417.0 L1658.3 1417.0" fill="none" data-name="InviteCodeRepository"></path>
 						</g>
-						<g transform="translate(3079.5, 1280)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InviteCodeRepository">
+						<g transform="translate(1255.25, 1280)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InviteCodeRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InviteCodeRepository">
 								<text x="193.5" y="13.5" stroke="none" text-anchor="middle" data-name="InviteCodeRepository">InviteCodeRepository</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3079.5, 1311)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InviteCodeRepository">
+						<g transform="translate(1255.25, 1311)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InviteCodeRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InviteCodeRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="InviteCodeRepository">+studyId: String</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="InviteCodeRepository">+ref: ProviderRef&lt;dynamic&gt;</text>
@@ -1395,7 +1213,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(3079.5, 1417)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InviteCodeRepository">
+						<g transform="translate(1255.25, 1417)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InviteCodeRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InviteCodeRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="InviteCodeRepository">+String getKey()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="InviteCodeRepository">+dynamic isCodeAlreadyUsed()</text>
@@ -1407,9 +1225,9 @@
 					</g>
 					<g data-name="Study">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Study">
-							<rect x="1737.8" y="1579.0" height="31.0" width="61.0" data-name="Study"></rect>
+							<rect x="884.5" y="1579.0" height="31.0" width="61.0" data-name="Study"></rect>
 						</g>
-						<g transform="translate(1737.75, 1579)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Study">
+						<g transform="translate(884.5, 1579)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Study">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Study">
 								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Study">Study</text>
 								
@@ -1418,17 +1236,17 @@
 					</g>
 					<g data-name="InviteCodeRepositoryDelegate">
 						<g fill="#eee8d5" stroke="#33322E" data-name="InviteCodeRepositoryDelegate">
-							<rect x="1578.8" y="1280.0" height="213.0" width="299.0" data-name="InviteCodeRepositoryDelegate"></rect>
-							<path d="M1578.8 1311.0 L1877.8 1311.0" fill="none" data-name="InviteCodeRepositoryDelegate"></path>
-							<path d="M1578.8 1372.0 L1877.8 1372.0" fill="none" data-name="InviteCodeRepositoryDelegate"></path>
+							<rect x="1731.5" y="1280.0" height="213.0" width="299.0" data-name="InviteCodeRepositoryDelegate"></rect>
+							<path d="M1731.5 1311.0 L2030.5 1311.0" fill="none" data-name="InviteCodeRepositoryDelegate"></path>
+							<path d="M1731.5 1372.0 L2030.5 1372.0" fill="none" data-name="InviteCodeRepositoryDelegate"></path>
 						</g>
-						<g transform="translate(1578.75, 1280)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InviteCodeRepositoryDelegate">
+						<g transform="translate(1731.5, 1280)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InviteCodeRepositoryDelegate">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InviteCodeRepositoryDelegate">
 								<text x="141.5" y="13.5" stroke="none" text-anchor="middle" data-name="InviteCodeRepositoryDelegate">InviteCodeRepositoryDelegate</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1578.75, 1311)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InviteCodeRepositoryDelegate">
+						<g transform="translate(1731.5, 1311)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InviteCodeRepositoryDelegate">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InviteCodeRepositoryDelegate">
 								<text x="0.0" y="13.5" stroke="none" data-name="InviteCodeRepositoryDelegate">+study: Study</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="InviteCodeRepositoryDelegate">+apiClient: StudyUApi</text>
@@ -1436,7 +1254,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(1578.75, 1372)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InviteCodeRepositoryDelegate">
+						<g transform="translate(1731.5, 1372)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InviteCodeRepositoryDelegate">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InviteCodeRepositoryDelegate">
 								<text x="0.0" y="13.5" stroke="none" data-name="InviteCodeRepositoryDelegate">+dynamic fetch()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="InviteCodeRepositoryDelegate">+dynamic fetchAll()</text>
@@ -1449,11 +1267,333 @@
 							</g>
 						</g>
 					</g>
+					<g data-name="IAppRepository">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IAppRepository">
+							<rect x="2423.8" y="1556.0" height="77.0" width="230.0" data-name="IAppRepository"></rect>
+							<path d="M2423.8 1587.0 L2653.8 1587.0" fill="none" data-name="IAppRepository"></path>
+						</g>
+						<g transform="translate(2423.75, 1556)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IAppRepository">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IAppRepository">
+								<text x="107.0" y="13.5" stroke="none" text-anchor="middle" data-name="IAppRepository">IAppRepository</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2423.75, 1587)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IAppRepository">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IAppRepository">
+								<text x="0.0" y="13.5" stroke="none" data-name="IAppRepository">+dynamic fetchAppConfig()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="IAppRepository">+void dispose()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="AppRepository">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AppRepository">
+							<rect x="2423.8" y="1741.0" height="108.0" width="230.0" data-name="AppRepository"></rect>
+							<path d="M2423.8 1772.0 L2653.8 1772.0" fill="none" data-name="AppRepository"></path>
+							<path d="M2423.8 1803.0 L2653.8 1803.0" fill="none" data-name="AppRepository"></path>
+						</g>
+						<g transform="translate(2423.75, 1741)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AppRepository">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AppRepository">
+								<text x="107.0" y="13.5" stroke="none" text-anchor="middle" data-name="AppRepository">AppRepository</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2423.75, 1772)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppRepository">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppRepository">
+								<text x="0.0" y="13.5" stroke="none" data-name="AppRepository">+apiClient: StudyUApi</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2423.75, 1803)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppRepository">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppRepository">
+								<text x="0.0" y="13.5" stroke="none" data-name="AppRepository">+dynamic fetchAppConfig()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="AppRepository">+void dispose()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ModelEvent">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ModelEvent">
+							<rect x="2127.3" y="90.5" height="77.0" width="145.0" data-name="ModelEvent"></rect>
+							<path d="M2127.3 121.5 L2272.3 121.5" fill="none" data-name="ModelEvent"></path>
+						</g>
+						<g transform="translate(2127.25, 90.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ModelEvent">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ModelEvent">
+								<text x="64.5" y="13.5" stroke="none" text-anchor="middle" data-name="ModelEvent">ModelEvent</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2127.25, 121.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ModelEvent">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ModelEvent">
+								<text x="0.0" y="13.5" stroke="none" data-name="ModelEvent">+modelId: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ModelEvent">+model: T</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IsFetched">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IsFetched">
+							<rect x="1477.0" y="411.0" height="31.0" width="94.0" data-name="IsFetched"></rect>
+						</g>
+						<g transform="translate(1477, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IsFetched">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IsFetched">
+								<text x="39.0" y="13.5" stroke="none" text-anchor="middle" data-name="IsFetched">IsFetched</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IsSaving">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IsSaving">
+							<rect x="1611.0" y="411.0" height="31.0" width="84.0" data-name="IsSaving"></rect>
+						</g>
+						<g transform="translate(1611, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IsSaving">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IsSaving">
+								<text x="34.0" y="13.5" stroke="none" text-anchor="middle" data-name="IsSaving">IsSaving</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IsSaved">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IsSaved">
+							<rect x="1735.0" y="411.0" height="31.0" width="80.0" data-name="IsSaved"></rect>
+						</g>
+						<g transform="translate(1735, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IsSaved">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IsSaved">
+								<text x="32.0" y="13.5" stroke="none" text-anchor="middle" data-name="IsSaved">IsSaved</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IsDeleted">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IsDeleted">
+							<rect x="1855.0" y="411.0" height="31.0" width="91.0" data-name="IsDeleted"></rect>
+						</g>
+						<g transform="translate(1855, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IsDeleted">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IsDeleted">
+								<text x="37.5" y="13.5" stroke="none" text-anchor="middle" data-name="IsDeleted">IsDeleted</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="APIException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="APIException">
+							<rect x="3008.3" y="411.0" height="31.0" width="121.0" data-name="APIException"></rect>
+						</g>
+						<g transform="translate(3008.25, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="APIException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="APIException">
+								<text x="52.5" y="13.5" stroke="none" text-anchor="middle" data-name="APIException">APIException</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyNotFoundException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyNotFoundException">
+							<rect x="1606.3" y="806.0" height="31.0" width="216.0" data-name="StudyNotFoundException"></rect>
+						</g>
+						<g transform="translate(1606.25, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyNotFoundException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyNotFoundException">
+								<text x="100.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyNotFoundException">StudyNotFoundException</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="MeasurementNotFoundException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="MeasurementNotFoundException">
+							<rect x="1862.3" y="806.0" height="31.0" width="279.0" data-name="MeasurementNotFoundException"></rect>
+						</g>
+						<g transform="translate(1862.25, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MeasurementNotFoundException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MeasurementNotFoundException">
+								<text x="131.5" y="13.5" stroke="none" text-anchor="middle" data-name="MeasurementNotFoundException">MeasurementNotFoundException</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="QuestionNotFoundException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionNotFoundException">
+							<rect x="2181.3" y="806.0" height="31.0" width="242.0" data-name="QuestionNotFoundException"></rect>
+						</g>
+						<g transform="translate(2181.25, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionNotFoundException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionNotFoundException">
+								<text x="113.0" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionNotFoundException">QuestionNotFoundException</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ConsentItemNotFoundException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ConsentItemNotFoundException">
+							<rect x="2463.3" y="806.0" height="31.0" width="271.0" data-name="ConsentItemNotFoundException"></rect>
+						</g>
+						<g transform="translate(2463.25, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ConsentItemNotFoundException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ConsentItemNotFoundException">
+								<text x="127.5" y="13.5" stroke="none" text-anchor="middle" data-name="ConsentItemNotFoundException">ConsentItemNotFoundException</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="InterventionNotFoundException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionNotFoundException">
+							<rect x="2774.3" y="806.0" height="31.0" width="265.0" data-name="InterventionNotFoundException"></rect>
+						</g>
+						<g transform="translate(2774.25, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionNotFoundException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionNotFoundException">
+								<text x="124.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionNotFoundException">InterventionNotFoundException</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="InterventionTaskNotFoundException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionTaskNotFoundException">
+							<rect x="3079.3" y="806.0" height="31.0" width="303.0" data-name="InterventionTaskNotFoundException"></rect>
+						</g>
+						<g transform="translate(3079.25, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionTaskNotFoundException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionTaskNotFoundException">
+								<text x="143.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionTaskNotFoundException">InterventionTaskNotFoundException</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ReportNotFoundException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReportNotFoundException">
+							<rect x="3422.3" y="806.0" height="31.0" width="224.0" data-name="ReportNotFoundException"></rect>
+						</g>
+						<g transform="translate(3422.25, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportNotFoundException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportNotFoundException">
+								<text x="104.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReportNotFoundException">ReportNotFoundException</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ReportSectionNotFoundException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReportSectionNotFoundException">
+							<rect x="3686.3" y="806.0" height="31.0" width="283.0" data-name="ReportSectionNotFoundException"></rect>
+						</g>
+						<g transform="translate(3686.25, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReportSectionNotFoundException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportSectionNotFoundException">
+								<text x="133.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportSectionNotFoundException">ReportSectionNotFoundException</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyInviteNotFoundException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyInviteNotFoundException">
+							<rect x="4009.3" y="806.0" height="31.0" width="259.0" data-name="StudyInviteNotFoundException"></rect>
+						</g>
+						<g transform="translate(4009.25, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyInviteNotFoundException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyInviteNotFoundException">
+								<text x="121.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyInviteNotFoundException">StudyInviteNotFoundException</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="UserNotFoundException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="UserNotFoundException">
+							<rect x="4308.3" y="806.0" height="31.0" width="208.0" data-name="UserNotFoundException"></rect>
+						</g>
+						<g transform="translate(4308.25, 806)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="UserNotFoundException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="UserNotFoundException">
+								<text x="96.0" y="13.5" stroke="none" text-anchor="middle" data-name="UserNotFoundException">UserNotFoundException</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyUApiClient">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyUApiClient">
+							<rect x="1039.0" y="2202.0" height="333.0" width="479.0" data-name="StudyUApiClient"></rect>
+							<path d="M1039.0 2233.0 L1518.0 2233.0" fill="none" data-name="StudyUApiClient"></path>
+							<path d="M1039.0 2309.0 L1518.0 2309.0" fill="none" data-name="StudyUApiClient"></path>
+						</g>
+						<g transform="translate(1039, 2202)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyUApiClient">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyUApiClient">
+								<text x="231.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyUApiClient">StudyUApiClient</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1039, 2233)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUApiClient">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyUApiClient">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyUApiClient">+supabaseClient: SupabaseClient</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudyUApiClient">&lt;static&gt;+studyColumns: List&lt;String&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudyUApiClient">&lt;static&gt;+studyWithParticipantActivityColumns: List&lt;String&gt;</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudyUApiClient">+testDelayMilliseconds: int</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1039, 2309)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyUApiClient">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyUApiClient">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyUApiClient">+dynamic deleteParticipants()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudyUApiClient">+dynamic getUserStudies()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudyUApiClient">+dynamic fetchStudy()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudyUApiClient">+dynamic deleteStudy()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="StudyUApiClient">+dynamic saveStudy()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="StudyUApiClient">+dynamic fetchStudyInvite()</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="StudyUApiClient">+dynamic saveStudyInvite()</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="StudyUApiClient">+dynamic deleteStudyInvite()</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="StudyUApiClient">+dynamic fetchAppConfig()</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="StudyUApiClient">+dynamic fetchUser()</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="StudyUApiClient">+dynamic saveUser()</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="StudyUApiClient">-dynamic _awaitGuarded()</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="StudyUApiClient">-dynamic _apiException()</text>
+								<text x="0.0" y="208.5" stroke="none" data-name="StudyUApiClient">-dynamic _testDelay()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SupabaseClient">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseClient">
+							<rect x="1463.8" y="2575.0" height="31.0" width="141.0" data-name="SupabaseClient"></rect>
+						</g>
+						<g transform="translate(1463.75, 2575)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SupabaseClient">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseClient">
+								<text x="62.5" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseClient">SupabaseClient</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SupabaseClientDependant">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseClientDependant">
+							<rect x="395.8" y="2017.0" height="62.0" width="284.0" data-name="SupabaseClientDependant"></rect>
+							<path d="M395.8 2048.0 L679.8 2048.0" fill="none" data-name="SupabaseClientDependant"></path>
+						</g>
+						<g transform="translate(395.75, 2017)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="SupabaseClientDependant">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseClientDependant">
+								<text x="134.0" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseClientDependant">SupabaseClientDependant</text>
+								
+							</g>
+						</g>
+						<g transform="translate(395.75, 2048)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseClientDependant">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseClientDependant">
+								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseClientDependant">+supabaseClient: SupabaseClient</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SupabaseQueryMixin">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseQueryMixin">
+							<rect x="140.8" y="1979.5" height="137.0" width="215.0" data-name="SupabaseQueryMixin"></rect>
+							<path d="M140.8 2010.5 L355.8 2010.5" fill="none" data-name="SupabaseQueryMixin"></path>
+						</g>
+						<g transform="translate(140.75, 1979.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="SupabaseQueryMixin">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseQueryMixin">
+								<text x="99.5" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseQueryMixin">SupabaseQueryMixin</text>
+								
+							</g>
+						</g>
+						<g transform="translate(140.75, 2010.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseQueryMixin">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseQueryMixin">
+								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseQueryMixin">+dynamic deleteAll()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="SupabaseQueryMixin">+dynamic getAll()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="SupabaseQueryMixin">+dynamic getById()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="SupabaseQueryMixin">+dynamic getByColumn()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="SupabaseQueryMixin">+List&lt;T&gt; deserializeList()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="SupabaseQueryMixin">+T deserializeObject()</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="User">
 						<g fill="#eee8d5" stroke="#33322E" data-name="User">
-							<rect x="2789.5" y="2575.0" height="31.0" width="53.0" data-name="User"></rect>
+							<rect x="2509.0" y="2575.0" height="31.0" width="53.0" data-name="User"></rect>
 						</g>
-						<g transform="translate(2789.5, 2575)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="User">
+						<g transform="translate(2509, 2575)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="User">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="User">
 								<text x="18.5" y="13.5" stroke="none" text-anchor="middle" data-name="User">User</text>
 								
@@ -1462,9 +1602,9 @@
 					</g>
 					<g data-name="Session">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Session">
-							<rect x="3216.3" y="2575.0" height="31.0" width="79.0" data-name="Session"></rect>
+							<rect x="2636.3" y="2575.0" height="31.0" width="79.0" data-name="Session"></rect>
 						</g>
-						<g transform="translate(3216.25, 2575)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Session">
+						<g transform="translate(2636.25, 2575)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Session">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Session">
 								<text x="31.5" y="13.5" stroke="none" text-anchor="middle" data-name="Session">Session</text>
 								
@@ -1473,9 +1613,9 @@
 					</g>
 					<g data-name="IAppDelegate">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IAppDelegate">
-							<rect x="2968.8" y="1779.5" height="31.0" width="123.0" data-name="IAppDelegate"></rect>
+							<rect x="2736.3" y="1779.5" height="31.0" width="123.0" data-name="IAppDelegate"></rect>
 						</g>
-						<g transform="translate(2968.75, 1779.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IAppDelegate">
+						<g transform="translate(2736.25, 1779.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IAppDelegate">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IAppDelegate">
 								<text x="53.5" y="13.5" stroke="none" text-anchor="middle" data-name="IAppDelegate">IAppDelegate</text>
 								
@@ -1484,17 +1624,17 @@
 					</g>
 					<g data-name="AuthRepository">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AuthRepository">
-							<rect x="2875.8" y="2217.0" height="303.0" width="340.0" data-name="AuthRepository"></rect>
-							<path d="M2875.8 2248.0 L3215.8 2248.0" fill="none" data-name="AuthRepository"></path>
-							<path d="M2875.8 2384.0 L3215.8 2384.0" fill="none" data-name="AuthRepository"></path>
+							<rect x="2652.3" y="2217.0" height="303.0" width="340.0" data-name="AuthRepository"></rect>
+							<path d="M2652.3 2248.0 L2992.3 2248.0" fill="none" data-name="AuthRepository"></path>
+							<path d="M2652.3 2384.0 L2992.3 2384.0" fill="none" data-name="AuthRepository"></path>
 						</g>
-						<g transform="translate(2875.75, 2217)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AuthRepository">
+						<g transform="translate(2652.25, 2217)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AuthRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AuthRepository">
 								<text x="162.0" y="13.5" stroke="none" text-anchor="middle" data-name="AuthRepository">AuthRepository</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2875.75, 2248)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AuthRepository">
+						<g transform="translate(2652.25, 2248)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AuthRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AuthRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="AuthRepository">+supabaseClient: SupabaseClient</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="AuthRepository">+sharedPreferences: SharedPreferences</text>
@@ -1507,7 +1647,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(2875.75, 2384)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AuthRepository">
+						<g transform="translate(2652.25, 2384)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AuthRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AuthRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="AuthRepository">-void _registerAuthListener()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="AuthRepository">+dynamic signUp()</text>
@@ -1523,9 +1663,9 @@
 					</g>
 					<g data-name="SharedPreferences">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SharedPreferences">
-							<rect x="3335.3" y="2575.0" height="31.0" width="169.0" data-name="SharedPreferences"></rect>
+							<rect x="2839.8" y="2575.0" height="31.0" width="169.0" data-name="SharedPreferences"></rect>
 						</g>
-						<g transform="translate(3335.25, 2575)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SharedPreferences">
+						<g transform="translate(2839.75, 2575)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SharedPreferences">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SharedPreferences">
 								<text x="76.5" y="13.5" stroke="none" text-anchor="middle" data-name="SharedPreferences">SharedPreferences</text>
 								
@@ -1534,9 +1674,9 @@
 					</g>
 					<g data-name="GoTrueClient">
 						<g fill="#eee8d5" stroke="#33322E" data-name="GoTrueClient">
-							<rect x="3544.3" y="2575.0" height="31.0" width="120.0" data-name="GoTrueClient"></rect>
+							<rect x="3048.8" y="2575.0" height="31.0" width="120.0" data-name="GoTrueClient"></rect>
 						</g>
-						<g transform="translate(3544.25, 2575)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoTrueClient">
+						<g transform="translate(3048.75, 2575)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoTrueClient">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GoTrueClient">
 								<text x="52.0" y="13.5" stroke="none" text-anchor="middle" data-name="GoTrueClient">GoTrueClient</text>
 								
@@ -1545,23 +1685,23 @@
 					</g>
 					<g data-name="IUserRepository">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IUserRepository">
-							<rect x="3967.3" y="1533.0" height="123.0" width="260.0" data-name="IUserRepository"></rect>
-							<path d="M3967.3 1564.0 L4227.3 1564.0" fill="none" data-name="IUserRepository"></path>
-							<path d="M3967.3 1595.0 L4227.3 1595.0" fill="none" data-name="IUserRepository"></path>
+							<rect x="3000.8" y="1533.0" height="123.0" width="260.0" data-name="IUserRepository"></rect>
+							<path d="M3000.8 1564.0 L3260.8 1564.0" fill="none" data-name="IUserRepository"></path>
+							<path d="M3000.8 1595.0 L3260.8 1595.0" fill="none" data-name="IUserRepository"></path>
 						</g>
-						<g transform="translate(3967.25, 1533)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IUserRepository">
+						<g transform="translate(3000.75, 1533)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IUserRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IUserRepository">
 								<text x="122.0" y="13.5" stroke="none" text-anchor="middle" data-name="IUserRepository">IUserRepository</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3967.25, 1564)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IUserRepository">
+						<g transform="translate(3000.75, 1564)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IUserRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IUserRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="IUserRepository">+user: StudyUUser</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3967.25, 1595)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IUserRepository">
+						<g transform="translate(3000.75, 1595)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="IUserRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="IUserRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="IUserRepository">+dynamic fetchUser()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="IUserRepository">+dynamic saveUser()</text>
@@ -1572,9 +1712,9 @@
 					</g>
 					<g data-name="StudyUUser">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyUUser">
-							<rect x="4565.8" y="2032.5" height="31.0" width="110.0" data-name="StudyUUser"></rect>
+							<rect x="3197.0" y="2032.5" height="31.0" width="110.0" data-name="StudyUUser"></rect>
 						</g>
-						<g transform="translate(4565.75, 2032.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyUUser">
+						<g transform="translate(3197, 2032.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyUUser">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyUUser">
 								<text x="47.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyUUser">StudyUUser</text>
 								
@@ -1583,17 +1723,17 @@
 					</g>
 					<g data-name="UserRepository">
 						<g fill="#eee8d5" stroke="#33322E" data-name="UserRepository">
-							<rect x="3321.0" y="1711.0" height="168.0" width="282.0" data-name="UserRepository"></rect>
-							<path d="M3321.0 1742.0 L3603.0 1742.0" fill="none" data-name="UserRepository"></path>
-							<path d="M3321.0 1818.0 L3603.0 1818.0" fill="none" data-name="UserRepository"></path>
+							<rect x="2899.3" y="1711.0" height="168.0" width="282.0" data-name="UserRepository"></rect>
+							<path d="M2899.3 1742.0 L3181.3 1742.0" fill="none" data-name="UserRepository"></path>
+							<path d="M2899.3 1818.0 L3181.3 1818.0" fill="none" data-name="UserRepository"></path>
 						</g>
-						<g transform="translate(3321, 1711)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="UserRepository">
+						<g transform="translate(2899.25, 1711)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="UserRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="UserRepository">
 								<text x="133.0" y="13.5" stroke="none" text-anchor="middle" data-name="UserRepository">UserRepository</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3321, 1742)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UserRepository">
+						<g transform="translate(2899.25, 1742)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UserRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="UserRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="UserRepository">+apiClient: StudyUApi</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="UserRepository">+authRepository: IAuthRepository</text>
@@ -1602,7 +1742,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(3321, 1818)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UserRepository">
+						<g transform="translate(2899.25, 1818)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UserRepository">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="UserRepository">
 								<text x="0.0" y="13.5" stroke="none" data-name="UserRepository">+dynamic fetchUser()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="UserRepository">+dynamic saveUser()</text>
@@ -1613,9 +1753,9 @@
 					</g>
 					<g data-name="Ref">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Ref">
-							<rect x="4715.8" y="2032.5" height="31.0" width="43.0" data-name="Ref"></rect>
+							<rect x="3347.0" y="2032.5" height="31.0" width="43.0" data-name="Ref"></rect>
 						</g>
-						<g transform="translate(4715.75, 2032.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Ref">
+						<g transform="translate(3347, 2032.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Ref">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Ref">
 								<text x="13.5" y="13.5" stroke="none" text-anchor="middle" data-name="Ref">Ref</text>
 								
@@ -1624,16 +1764,16 @@
 					</g>
 					<g data-name="PreferenceAction">
 						<g fill="#eee8d5" stroke="#33322E" data-name="PreferenceAction">
-							<rect x="4095.0" y="373.0" height="107.0" width="334.0" data-name="PreferenceAction"></rect>
-							<path d="M4095.0 404.0 L4429.0 404.0" fill="none" data-name="PreferenceAction"></path>
+							<rect x="3169.3" y="373.0" height="107.0" width="334.0" data-name="PreferenceAction"></rect>
+							<path d="M3169.3 404.0 L3503.3 404.0" fill="none" data-name="PreferenceAction"></path>
 						</g>
-						<g transform="translate(4095, 373)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PreferenceAction">
+						<g transform="translate(3169.25, 373)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PreferenceAction">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PreferenceAction">
 								<text x="159.0" y="13.5" stroke="none" text-anchor="middle" data-name="PreferenceAction">PreferenceAction</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4095, 404)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PreferenceAction">
+						<g transform="translate(3169.25, 404)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PreferenceAction">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PreferenceAction">
 								<text x="0.0" y="13.5" stroke="none" data-name="PreferenceAction">+index: int</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="PreferenceAction">&lt;static&gt;+values: List&lt;PreferenceAction&gt;</text>
@@ -1645,71 +1785,38 @@
 					</g>
 					<g data-name="Enum">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Enum">
-							<rect x="4239.8" y="113.5" height="31.0" width="61.0" data-name="Enum"></rect>
+							<rect x="3305.8" y="113.5" height="31.0" width="61.0" data-name="Enum"></rect>
 						</g>
-						<g transform="translate(4239.75, 113.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
+						<g transform="translate(3305.75, 113.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Enum">
 								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Enum">Enum</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="IsFetched">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IsFetched">
-							<rect x="4519.0" y="411.0" height="31.0" width="94.0" data-name="IsFetched"></rect>
+					<g data-name="StudyLaunched">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyLaunched">
+							<rect x="3593.3" y="411.0" height="31.0" width="140.0" data-name="StudyLaunched"></rect>
 						</g>
-						<g transform="translate(4519, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IsFetched">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IsFetched">
-								<text x="39.0" y="13.5" stroke="none" text-anchor="middle" data-name="IsFetched">IsFetched</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="IsSaving">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IsSaving">
-							<rect x="4653.0" y="411.0" height="31.0" width="84.0" data-name="IsSaving"></rect>
-						</g>
-						<g transform="translate(4653, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IsSaving">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IsSaving">
-								<text x="34.0" y="13.5" stroke="none" text-anchor="middle" data-name="IsSaving">IsSaving</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="IsSaved">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IsSaved">
-							<rect x="4777.0" y="411.0" height="31.0" width="80.0" data-name="IsSaved"></rect>
-						</g>
-						<g transform="translate(4777, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IsSaved">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IsSaved">
-								<text x="32.0" y="13.5" stroke="none" text-anchor="middle" data-name="IsSaved">IsSaved</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="IsDeleted">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IsDeleted">
-							<rect x="4897.0" y="411.0" height="31.0" width="91.0" data-name="IsDeleted"></rect>
-						</g>
-						<g transform="translate(4897, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="IsDeleted">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IsDeleted">
-								<text x="37.5" y="13.5" stroke="none" text-anchor="middle" data-name="IsDeleted">IsDeleted</text>
+						<g transform="translate(3593.25, 411)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyLaunched">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyLaunched">
+								<text x="62.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyLaunched">StudyLaunched</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="SupabaseQueryError">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseQueryError">
-							<rect x="5028.0" y="380.5" height="92.0" width="183.0" data-name="SupabaseQueryError"></rect>
-							<path d="M5028.0 411.5 L5211.0 411.5" fill="none" data-name="SupabaseQueryError"></path>
+							<rect x="3773.3" y="380.5" height="92.0" width="183.0" data-name="SupabaseQueryError"></rect>
+							<path d="M3773.3 411.5 L3956.3 411.5" fill="none" data-name="SupabaseQueryError"></path>
 						</g>
-						<g transform="translate(5028, 380.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SupabaseQueryError">
+						<g transform="translate(3773.25, 380.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SupabaseQueryError">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseQueryError">
 								<text x="83.5" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseQueryError">SupabaseQueryError</text>
 								
 							</g>
 						</g>
-						<g transform="translate(5028, 411.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseQueryError">
+						<g transform="translate(3773.25, 411.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseQueryError">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseQueryError">
 								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseQueryError">+statusCode: String?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="SupabaseQueryError">+message: String</text>
