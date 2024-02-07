@@ -91,11 +91,11 @@ class StudySelectionScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: RetryFutureBuilder<List<Study>>(
+                child: RetryFutureBuilder<ExtractedSupabaseListResult<Study>>(
                   tryFunction: () async => Study.publishedPublicStudies(),
-                  successBuilder: (BuildContext context, List<Study>? studies) {
-                    if (SupabaseQuery.faultyStudies.isNotEmpty) {
-                      debugPrint('${SupabaseQuery.faultyStudies.length} studies could not be extracted.');
+                  successBuilder: (BuildContext context, ExtractedSupabaseListResult<Study>? studies) {
+                    if (studies!.notExtracted.isNotEmpty) {
+                      debugPrint('${studies.notExtracted.length} studies could not be extracted.');
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(AppLocalizations.of(context)!.study_selection_hidden_studies),
@@ -103,11 +103,11 @@ class StudySelectionScreen extends StatelessWidget {
                       );
                     }
                     return ListView.builder(
-                      itemCount: studies!.length,
+                      itemCount: studies.extracted.length,
                       itemBuilder: (context, index) {
-                        final study = studies[index];
+                        final study = studies.extracted[index];
                         return Hero(
-                          tag: 'study_tile_${studies[index].id}',
+                          tag: 'study_tile_${studies.extracted[index].id}',
                           child: Material(
                             child: StudyTile.fromStudy(
                               study: study,

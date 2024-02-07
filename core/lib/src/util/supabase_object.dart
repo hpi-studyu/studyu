@@ -78,13 +78,11 @@ class SupabaseQuery {
     }
   }
 
-  static List<JsonWithError> faultyStudies = <JsonWithError>[];
-
   static List<T> extractSupabaseList<T extends SupabaseObject>(
     List<Map<String, dynamic>> response,
   ) {
     final extracted = <T>[];
-    faultyStudies.clear();
+    final notExtracted = <JsonWithError>[];
     for (final json in response) {
       try {
         extracted.add(SupabaseObjectFunctions.fromJson<T>(json));
@@ -92,8 +90,13 @@ class SupabaseQuery {
       } on ArgumentError catch (error) {
         // We are catching ArgumentError because unknown enums throw an ArgumentError
         // and UnknownJsonTypeError is a subclass of ArgumentError
-        faultyStudies.add(JsonWithError(json, error));
+        notExtracted.add(JsonWithError(json, error));
       }
+    }
+    if (notExtracted.isNotEmpty) {
+      // If some records could not be extracted, we throw an exception
+      // with the extracted records and the faulty records
+      throw ExtractedSupabaseListResult(extracted, notExtracted);
     }
     return extracted;
   }
@@ -130,6 +133,13 @@ extension PrimaryKeyFilterBuilder on PostgrestFilterBuilder {
     });
     return primaryKeyFilter;
   }
+}
+
+class ExtractedSupabaseListResult<T> {
+  final List<T> extracted;
+  final List<JsonWithError> notExtracted;
+
+  ExtractedSupabaseListResult(this.extracted, this.notExtracted);
 }
 
 class JsonWithError {
