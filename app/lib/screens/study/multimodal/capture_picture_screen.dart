@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:studyu_app/util/multimodal/temporary_storage_handler.dart';
+import 'package:studyu_app/util/temporary_storage_handler.dart';
 
 class CapturePictureScreen extends StatefulWidget {
   final String userId;

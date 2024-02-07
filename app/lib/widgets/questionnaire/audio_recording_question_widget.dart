@@ -7,7 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/util/multimodal/temporary_storage_handler.dart';
+import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 
