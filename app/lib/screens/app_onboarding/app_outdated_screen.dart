@@ -3,12 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:studyu_app/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppOutdatedScreen extends StatelessWidget {
-  static const String kPlayStoreUrl = 'https://play.google.com/store/apps/details?id=health.studyu.app';
-  static const String kAppstoreUrl = 'https://itunes.apple.com/app/id1571991198';
-
   const AppOutdatedScreen({super.key});
 
   @override
@@ -17,10 +15,10 @@ class AppOutdatedScreen extends StatelessWidget {
     String? storeUrl;
     IconData? storeIcon;
     if (Platform.isAndroid) {
-      storeUrl = kPlayStoreUrl;
+      storeUrl = playStoreUrl;
       storeIcon = MdiIcons.googlePlay;
     } else if (Platform.isIOS) {
-      storeUrl = kAppstoreUrl;
+      storeUrl = appstoreUrl;
       storeIcon = MdiIcons.apple;
     }
     return Scaffold(
