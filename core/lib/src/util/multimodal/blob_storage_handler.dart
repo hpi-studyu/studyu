@@ -12,11 +12,11 @@ class BlobStorageHandler {
     await env.client.storage.from(_observationsBucketName).uploadBinary(blobPath, await file.readAsBytes());
   }
 
-  Future<Uint8List> downloadObservation(String path) async {
-    return await env.client.storage.from(_observationsBucketName).download(path);
+  Future<Uint8List> downloadObservation(String blobPath) async {
+    return await env.client.storage.from(_observationsBucketName).download(blobPath);
   }
 
-  Future<List<FileObject>> removeObservation(List<String> paths) async {
-    return await env.client.storage.from(_observationsBucketName).remove(paths);
+  Future<List<FileObject>> removeObservation(List<String> blobPaths) async {
+    return await env.client.storage.from(_observationsBucketName).remove(blobPaths);
   }
 }
