@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -125,6 +126,13 @@ class _AudioRecordingQuestionWidgetState extends State<AudioRecordingQuestionWid
   }
 
   Future<void> _startRecording(String studyId, String userId) async {
+    if (kIsWeb) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(AppLocalizations.of(context)!.multimodal_not_supported),
+      ));
+      return;
+    }
+
     if (_isRecording || _hasRecorded) return;
     setState(() {
       _isRecording = true;
