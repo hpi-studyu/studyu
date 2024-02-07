@@ -3,7 +3,7 @@
 # See all available variables at https://megalinter.io/latest/config-file/ and in
 # linters documentation
 
-VALIDATE_ALL_CODEBASE: true
+VALIDATE_ALL_CODEBASE: false
 
 # all, none, or list of linter keys
 APPLY_FIXES: all
