@@ -10,7 +10,7 @@ import 'package:studyu_core/core.dart';
 
 class ImageCapturingQuestionWidget extends QuestionWidget {
   final ImageCapturingQuestion question;
-  final Function(Answer)? onDone;
+  final Function(Answer<FutureBlobFile>)? onDone;
 
   const ImageCapturingQuestionWidget({super.key, required this.question, this.onDone});
 
@@ -60,7 +60,7 @@ class _ImageCapturingQuestionWidgetState extends State<ImageCapturingQuestionWid
       return;
     }
     final appState = context.read<AppState>();
-    final newPathAnswer = await Navigator.push(context, MaterialPageRoute(
+    FutureBlobFile? imageFile = await Navigator.push(context, MaterialPageRoute(
       builder: (context) {
         return CapturePictureScreen(
           studyId: appState.activeSubject!.studyId,
@@ -68,11 +68,11 @@ class _ImageCapturingQuestionWidgetState extends State<ImageCapturingQuestionWid
         );
       },
     ));
-    if (newPathAnswer != null) {
+    if (imageFile != null) {
       setState(() {
         _hasCaptured = true;
       });
-      widget.onDone!(widget.question.constructAnswer(newPathAnswer));
+      widget.onDone!(widget.question.constructAnswer(imageFile));
     }
   }
 }

@@ -13,7 +13,7 @@ import 'package:studyu_core/core.dart';
 
 class AudioRecordingQuestionWidget extends QuestionWidget {
   final AudioRecordingQuestion question;
-  final Function(Answer)? onDone;
+  final Function(Answer<FutureBlobFile>)? onDone;
 
   const AudioRecordingQuestionWidget({super.key, required this.question, this.onDone});
 
@@ -27,6 +27,7 @@ class _AudioRecordingQuestionWidgetState extends State<AudioRecordingQuestionWid
   late final AudioRecorder _audioRecorder;
   Timer? _timer;
   int _recordDurationSeconds = 0;
+  FutureBlobFile? _recordedFile;
 
   @override
   void initState() {
@@ -149,8 +150,8 @@ class _AudioRecordingQuestionWidgetState extends State<AudioRecordingQuestionWid
       final storage = TemporaryStorageHandler(studyId, userId);
       const encoder = AudioEncoder.aacLc;
       const config = RecordConfig(encoder: encoder, numChannels: 1);
-      final recordingPath = await storage.getStagingAudioFilePath();
-      await _audioRecorder.start(config, path: recordingPath);
+      _recordedFile = await storage.getStagingAudio();
+      await _audioRecorder.start(config, path: _recordedFile!.localFilePath);
       _startTimer();
     } catch (e) {
       debugPrint('Error starting recording: $e');
@@ -167,10 +168,14 @@ class _AudioRecordingQuestionWidgetState extends State<AudioRecordingQuestionWid
     try {
       _timer?.cancel();
       final recordedFilePath = await _audioRecorder.stop();
-      if (recordedFilePath == null) {
+      final recordedFile = _recordedFile;
+      if (recordedFile == null) {
+        throw ArgumentError('Recorded file is null');
+      }
+      if (recordedFilePath != recordedFile.localFilePath) {
         throw ArgumentError('No file path returned from stop');
       }
-      widget.onDone!(widget.question.constructAnswer(recordedFilePath));
+      widget.onDone!(widget.question.constructAnswer(recordedFile));
     } catch (e) {
       debugPrint('Error stopping recording: $e');
       _handleRecordingError();

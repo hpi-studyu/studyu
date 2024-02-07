@@ -144,11 +144,11 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
     // Move the image to the staging directory
     final imageFile = File(image.path);
     final storage = TemporaryStorageHandler(widget.studyId, widget.userId);
-    final stagingImagePath = await storage.getStagingImageFilePath();
-    await imageFile.rename(stagingImagePath);
+    final stagingImageFile = await storage.getStagingImage();
+    await imageFile.rename(stagingImageFile.localFilePath);
 
     if (!mounted) return;
-    Navigator.pop(context, stagingImagePath);
+    Navigator.pop(context, stagingImageFile);
   }
 
   @override

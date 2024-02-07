@@ -269,7 +269,8 @@ class ImageQuestionFormData extends QuestionFormData {
     super.questionInfoText,
   });
 
-  static Map<String, String> get kResponseOptions => {tr.form_field_response_image: 'image'};
+  static Map<String, FutureBlobFile> get kResponseOptions =>
+      {tr.form_field_response_image: FutureBlobFile("image", "image")};
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();
@@ -312,7 +313,7 @@ class ImageQuestionFormData extends QuestionFormData {
   @override
   Answer constructAnswerFor(responseOption) {
     final question = toQuestion() as ImageCapturingQuestion;
-    final value = kResponseOptions[responseOption] as String;
+    final value = kResponseOptions[responseOption] as FutureBlobFile;
     return question.constructAnswer(value);
   }
 }
@@ -328,7 +329,8 @@ class AudioQuestionFormData extends QuestionFormData {
 
   final int maxRecordingDurationSeconds;
 
-  static Map<String, String> get kResponseOptions => {tr.form_field_response_audio: 'audio'};
+  static Map<String, FutureBlobFile> get kResponseOptions =>
+      {tr.form_field_response_audio: FutureBlobFile("audio", "audio")};
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();
@@ -373,7 +375,7 @@ class AudioQuestionFormData extends QuestionFormData {
   @override
   Answer constructAnswerFor(responseOption) {
     final question = toQuestion() as AudioRecordingQuestion;
-    final value = kResponseOptions[responseOption] as String;
+    final value = kResponseOptions[responseOption] as FutureBlobFile;
     return question.constructAnswer(value);
   }
 }

@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyu_core/core.dart';
 
-import 'package:studyu_core/src/models/questionnaire/answer.dart';
-import 'package:studyu_core/src/models/questionnaire/question.dart';
 import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 
 part 'image_capturing_question.g.dart';
@@ -18,5 +17,5 @@ class ImageCapturingQuestion extends Question<ImageCapturingQuestion> {
   @override
   Map<String, dynamic> toJson() => _$ImageCapturingQuestionToJson(this);
 
-  Answer<String> constructAnswer(String response) => Answer.forQuestion(this, response);
+  Answer<FutureBlobFile> constructAnswer(FutureBlobFile response) => Answer.forQuestion(this, response);
 }
