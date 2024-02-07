@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:studyu_app/util/multimodal/persistent_storage_handler.dart';
+import 'package:studyu_app/util/multimodal/temporary_storage_handler.dart';
 
 class CapturePictureScreen extends StatefulWidget {
   final String userId;
@@ -20,9 +21,6 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
   List<CameraDescription>? _cameras;
   int _jumpToNextCameraTaps = 0;
   bool _isTakingPicture = false;
-  bool _isStoringPicture = false;
-
-  _CapturePictureScreenState();
 
   @override
   void initState() {
@@ -124,7 +122,6 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
 
     setState(() {
       _isTakingPicture = true;
-      _isStoringPicture = false;
     });
 
     XFile image;
@@ -139,35 +136,19 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
         ),
       );
       setState(() {
-        _isStoringPicture = false;
         _isTakingPicture = false;
       });
       return;
     }
 
-    setState(() {
-      _isStoringPicture = true;
-      _isTakingPicture = false;
-    });
+    // Move the image to the staging directory
+    final imageFile = File(image.path);
+    final storage = TemporaryStorageHandler(widget.studyId, widget.userId);
+    final stagingImagePath = await storage.getStagingImageFilePath();
+    await imageFile.rename(stagingImagePath);
 
-    try {
-      final persistentStorageHandler = PersistentStorageHandler(widget.userId, widget.studyId);
-      final uploadedImagePath = await persistentStorageHandler.storeImage(image);
-      if (!mounted) return;
-      Navigator.pop(context, uploadedImagePath);
-    } on Exception catch (e) {
-      debugPrint("Failed to upload picture: $e");
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.upload_error),
-        ),
-      );
-      setState(() {
-        _isStoringPicture = false;
-        _isTakingPicture = false;
-      });
-    }
+    if (!mounted) return;
+    Navigator.pop(context, stagingImagePath);
   }
 
   @override
@@ -180,7 +161,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
             : Stack(
                 children: [
                   CameraPreview(cameraController),
-                  _isTakingPicture || _isStoringPicture
+                  _isTakingPicture
                       ? Container(
                           color: Colors.black.withOpacity(0.5),
                           alignment: Alignment.center,
@@ -195,9 +176,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
                               children: [
                                 const CircularProgressIndicator(),
                                 const SizedBox(height: 16),
-                                Text(_isStoringPicture
-                                    ? AppLocalizations.of(context)!.storing_photo
-                                    : AppLocalizations.of(context)!.take_a_photo),
+                                Text(AppLocalizations.of(context)!.take_a_photo),
                               ],
                             ),
                           ),
@@ -212,7 +191,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
               margin: const EdgeInsets.all(10),
               child: FloatingActionButton(
                 heroTag: "captureImage",
-                onPressed: cameraController != null && !_isTakingPicture && !_isStoringPicture
+                onPressed: cameraController != null && !_isTakingPicture
                     ? () async {
                         await _tryCapturePicture();
                       }
@@ -224,9 +203,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
               margin: const EdgeInsets.all(10),
               child: FloatingActionButton(
                 heroTag: "jumpToNextCamera",
-                onPressed: cameraController != null && !_isTakingPicture && !_isStoringPicture
-                    ? () async => await _jumpToNextCamera()
-                    : null,
+                onPressed: cameraController != null && !_isTakingPicture ? () async => await _jumpToNextCamera() : null,
                 child: const Icon(Icons.autorenew),
               ),
             )
