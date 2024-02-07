@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/misc.dart';
+import 'package:studyu_app/util/multimodal/temporary_storage_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
 
@@ -36,6 +37,12 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
     });
     if (!mounted) return;
     Navigator.pop(context, true);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    TemporaryStorageHandler.deleteAllStagingFiles();
   }
 
   @override
