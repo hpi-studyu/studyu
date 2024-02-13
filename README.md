@@ -1,6 +1,6 @@
 # StudyU: N-of-1 Trials Made Easy
 
-<img src="https://www.studyu.health/img/icon_wide.png" height="130" align="right"
+<img src="https://www.studyu.health/img/logo.png" height="130" align="right"
 alt="StudyU Icon">
 
 StudyU is an [award-winning](https://www.studyu.health/blog/best-idea-award)

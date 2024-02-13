@@ -107,15 +107,15 @@ handleTaskCompletion(BuildContext context, Function(StudySubject?) completionCal
   try {
     if (state.trackParticipantProgress) {
       await completionCallback(activeSubject);
-      Analytics.logger.info("Saved results in online mode");
+      debugPrint("Saved results in online mode");
     }
   } on SocketException catch (exception, stackTrace) {
-    Analytics.logger.info("Saving results in offline mode");
-    Analytics.captureEvent(exception, stackTrace: stackTrace);
+    debugPrint("Saving results in offline mode");
+    StudyUDiagnostics.captureEvent(exception, stackTrace: stackTrace);
     await Cache.storeSubject(activeSubject);
   } catch (exception, stackTrace) {
-    Analytics.logger.severe("Could not save results");
-    Analytics.captureException(exception, stackTrace: stackTrace);
+    debugPrint("Could not save results");
+    StudyUDiagnostics.captureException(exception, stackTrace: stackTrace);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

@@ -5,7 +5,8 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 enum SurveyQuestionType {
   choice,
   bool,
-  scale;
+  scale,
+  freeText;
 
   static SurveyQuestionType of(Question question) {
     final typeMapping = {
@@ -14,6 +15,7 @@ enum SurveyQuestionType {
       ScaleQuestion.questionType: SurveyQuestionType.scale,
       AnnotatedScaleQuestion.questionType: SurveyQuestionType.scale,
       VisualAnalogueQuestion.questionType: SurveyQuestionType.scale,
+      FreeTextQuestion.questionType: SurveyQuestionType.freeText,
     };
     if (!typeMapping.containsKey(question.type)) {
       throw UnimplementedError("Missing SurveyQuestionType for question of type: ${question.type}");
@@ -29,6 +31,8 @@ enum SurveyQuestionType {
         return tr.question_type_bool;
       case SurveyQuestionType.scale:
         return tr.question_type_scale;
+      case SurveyQuestionType.freeText:
+        return tr.question_type_free_text;
       default:
         return "[Invalid SurveyQuestionType]";
     }
@@ -42,6 +46,8 @@ enum SurveyQuestionType {
         return Icons.rule_rounded; // Icons.contrast
       case SurveyQuestionType.scale:
         return Icons.tune_rounded;
+      case SurveyQuestionType.freeText:
+        return Icons.edit_square;
       default:
         return null;
     }
@@ -49,4 +55,21 @@ enum SurveyQuestionType {
 
   String toJson() => name;
   static SurveyQuestionType fromJson(String json) => values.byName(json);
+}
+
+extension FreeTextQuestionTypeExtension on FreeTextQuestionType {
+  String get string {
+    switch (this) {
+      case FreeTextQuestionType.any:
+        return tr.free_text_question_type_any;
+      case FreeTextQuestionType.alphanumeric:
+        return tr.free_text_question_type_alphanumeric;
+      case FreeTextQuestionType.numeric:
+        return tr.free_text_question_type_numeric;
+      case FreeTextQuestionType.custom:
+        return tr.free_text_question_type_custom;
+      default:
+        return "[Invalid FreeTextQuestionType]";
+    }
+  }
 }

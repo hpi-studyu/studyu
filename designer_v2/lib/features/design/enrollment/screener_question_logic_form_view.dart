@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/banner.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
@@ -60,6 +61,13 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
   }
 
   _buildAnswerOptionsLogicControls() {
+    if (formViewModel.questionType.name == FreeTextQuestion.questionType) {
+      // todo logic might check if field has content
+      // todo logic might need that field is equal to a certain value
+      return Text(tr.free_text_question_logic_not_supported,
+          style: const TextStyle(color: Colors.red), textAlign: TextAlign.center);
+    }
+
     return ReactiveFormArray(
       formArray: formViewModel.responseOptionsDisabledArray,
       builder: (context, formArray, child) {

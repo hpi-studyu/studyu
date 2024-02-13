@@ -5,7 +5,7 @@ on:
     paths:
       - "app/**"
       - "core/**"
-      - "designer/**"
+      - "designer_v2/**"
       - "flutter_common/**"
       - ".github/workflows/all_packages.yml"
       - ".github/workflows/init-workspace/**"

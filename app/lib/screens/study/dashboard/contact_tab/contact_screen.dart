@@ -36,7 +36,7 @@ class _ContactScreenState extends State<ContactScreen> {
           Container(
             alignment: Alignment.topCenter,
             child: const Image(
-              image: AssetImage('assets/images/icon_wide.png'),
+              image: AssetImage('assets/icon/logo.png'),
               height: 80,
             ),
           ),
@@ -182,7 +182,7 @@ class ContactItem extends StatelessWidget {
       if (await canLaunchUrl(uri)) {
         launchUrl(uri);
       } else {
-        Analytics.logger.warning("Cannot launch Url: $uri");
+        StudyULogger.warning("Cannot launch Url: $uri");
       }
     }
   }
