@@ -1,6 +1,7 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'package:studyu_designer_v2/features/design/interventions/schedule_creator/model/intervention.dart';
+import 'dart:math';
 
 class StudySchedule {
   List<Intervention> interventions = [];
@@ -89,5 +90,48 @@ class Alternating extends StudyScheduleSegment {
     }
     final interventionIndex = day % interventions.length;
     return interventions[interventionIndex];
+  }
+}
+
+
+class ThompsonSamplingAlgo {
+  final List<double> means;
+  final List<double> variances;
+
+  ThompsonSamplingAlgo(List<double> initialMeans, List<double> initialVariances)
+      : means = List.from(initialMeans),
+        variances = List.from(initialVariances);
+
+  void updateObservations(int armIndex, double newObservation) {
+    // Update mean and variance based on new observation
+    final double oldMean = means[armIndex];
+    final double oldVariance = variances[armIndex];
+
+    // Update mean and variance using online update formulas
+    final double newMean = (oldMean + newObservation) / 2;
+    final double newVariance =
+        (oldVariance + pow(newObservation - oldMean, 2)) / 2;
+
+    means[armIndex] = newMean;
+    variances[armIndex] = newVariance;
+  }
+
+  int selectArm() {
+    // Number of arms (options)
+    final int numArms = means.length;
+
+    // Perform Thompson Sampling for each arm
+    final List<double> samples = List.generate(numArms, (index) {
+      // Generate a random sample for each arm using the Normal distribution
+      final double sample = Random().nextDouble();
+
+      // Calculate the sampled value from the Normal distribution
+      return means[index] + sqrt(variances[index]) * cos(2 * pi * sample);
+    });
+
+    // Choose the arm with the highest sampled value
+    final int selectedArm = samples.indexOf(samples.reduce(max));
+
+    return selectedArm;
   }
 }
