@@ -82,8 +82,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
               }
               final pdfContent = await generatePdfContent();
               if (!context.mounted) return;
-              final savedFilePath =
-                  await savePDF(context, '${subject!.study.title}_consent', pdfContent);
+              final savedFilePath = await savePDF(context, '${subject!.study.title}_consent', pdfContent);
               if (savedFilePath != null) {
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
