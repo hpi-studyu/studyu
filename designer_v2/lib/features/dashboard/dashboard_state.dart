@@ -91,6 +91,8 @@ class DashboardState extends Equatable {
           filteredStudies.add(parentTemplate);
         }
       }
+
+      return filteredStudies;
     }
 
     return studiesToFilter;
