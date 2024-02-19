@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
@@ -383,14 +384,14 @@ class RouterConf {
 
 // - Route Args
 
-abstract class StudyFormRouteArgs {
-  StudyFormRouteArgs({required this.studyCreationArgs});
+abstract class StudyFormRouteArgs extends Equatable {
+  const StudyFormRouteArgs({required this.studyCreationArgs});
 
   final StudyCreationArgs studyCreationArgs;
 }
 
 abstract class QuestionFormRouteArgs extends StudyFormRouteArgs {
-  QuestionFormRouteArgs({
+  const QuestionFormRouteArgs({
     required this.questionId,
     required super.studyCreationArgs,
   });
@@ -399,32 +400,41 @@ abstract class QuestionFormRouteArgs extends StudyFormRouteArgs {
 }
 
 class ScreenerQuestionFormRouteArgs extends QuestionFormRouteArgs {
-  ScreenerQuestionFormRouteArgs({
+  const ScreenerQuestionFormRouteArgs({
     required super.questionId,
     required super.studyCreationArgs,
   });
+
+  @override
+  List<Object> get props => [questionId, studyCreationArgs];
 }
 
 class ConsentItemFormRouteArgs extends StudyFormRouteArgs {
-  ConsentItemFormRouteArgs({
+  const ConsentItemFormRouteArgs({
     required super.studyCreationArgs,
     required this.consentId,
   });
 
   final ConsentID consentId;
+
+  @override
+  List<Object> get props => [studyCreationArgs, consentId];
 }
 
 class MeasurementFormRouteArgs extends StudyFormRouteArgs {
-  MeasurementFormRouteArgs({
+  const MeasurementFormRouteArgs({
     required this.measurementId,
     required super.studyCreationArgs,
   });
 
   final MeasurementID measurementId;
+
+  @override
+  List<Object> get props => [studyCreationArgs, measurementId];
 }
 
 class SurveyQuestionFormRouteArgs extends MeasurementFormRouteArgs implements QuestionFormRouteArgs {
-  SurveyQuestionFormRouteArgs({
+  const SurveyQuestionFormRouteArgs({
     required this.questionId,
     required super.studyCreationArgs,
     required super.measurementId,
@@ -432,32 +442,44 @@ class SurveyQuestionFormRouteArgs extends MeasurementFormRouteArgs implements Qu
 
   @override
   final QuestionID questionId;
+
+  @override
+  List<Object> get props => [studyCreationArgs, measurementId, questionId];
 }
 
 class InterventionFormRouteArgs extends StudyFormRouteArgs {
-  InterventionFormRouteArgs({
+  const InterventionFormRouteArgs({
     required this.interventionId,
     required super.studyCreationArgs,
   });
 
   final InterventionID interventionId;
+
+  @override
+  List<Object> get props => [studyCreationArgs, interventionId];
 }
 
 class InterventionTaskFormRouteArgs extends InterventionFormRouteArgs {
-  InterventionTaskFormRouteArgs({
+  const InterventionTaskFormRouteArgs({
     required this.taskId,
     required super.studyCreationArgs,
     required super.interventionId,
   });
 
   final TaskID taskId;
+
+  @override
+  List<Object> get props => [studyCreationArgs, interventionId, taskId];
 }
 
 class ReportItemFormRouteArgs extends StudyFormRouteArgs {
-  ReportItemFormRouteArgs({
+  const ReportItemFormRouteArgs({
     required super.studyCreationArgs,
     required this.sectionId,
   });
 
   final SectionID sectionId;
+
+  @override
+  List<Object> get props => [studyCreationArgs, sectionId];
 }
