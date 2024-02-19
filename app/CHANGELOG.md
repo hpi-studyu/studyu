@@ -1,3 +1,7 @@
+## 2.6.5-dev.4
+
+ - **FIX**: breaking deps. ([34896ad3](https://github.com/hpi-studyu/studyu/commit/34896ad381b38a4ad03caf92f57ad527bc1f6706))
+
 ## 2.6.5-dev.3
 
  - **REFACTOR**: rework android release platform and pipeline. ([08f4c97f](https://github.com/hpi-studyu/studyu/commit/08f4c97f07c84491bac4147955ba7f03a5bae65d))

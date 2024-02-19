@@ -1,3 +1,7 @@
+## 1.6.2-dev.4
+
+ - **FIX**: breaking deps. ([34896ad3](https://github.com/hpi-studyu/studyu/commit/34896ad381b38a4ad03caf92f57ad527bc1f6706))
+
 ## 1.6.2-dev.3
 
  - **REVERT**: "refactor: remove unused title"". ([c473bba4](https://github.com/hpi-studyu/studyu/commit/c473bba43f9952dbadb5424e5ad00ae791f85e46))

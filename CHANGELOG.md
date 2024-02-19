@@ -15,6 +15,32 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`studyu_app` - `v2.6.5-dev.4`](#studyu_app---v265-dev4)
+ - [`studyu_designer_v2` - `v1.6.2-dev.4`](#studyu_designer_v2---v162-dev4)
+
+---
+
+#### `studyu_app` - `v2.6.5-dev.4`
+
+ - **FIX**: breaking deps. ([34896ad3](https://github.com/hpi-studyu/studyu/commit/34896ad381b38a4ad03caf92f57ad527bc1f6706))
+
+#### `studyu_designer_v2` - `v1.6.2-dev.4`
+
+ - **FIX**: breaking deps. ([34896ad3](https://github.com/hpi-studyu/studyu/commit/34896ad381b38a4ad03caf92f57ad527bc1f6706))
+
+
+## 2024-02-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`studyu_app` - `v2.6.5-dev.3`](#studyu_app---v265-dev3)
  - [`studyu_core` - `v4.3.3-dev.2`](#studyu_core---v433-dev2)
  - [`studyu_designer_v2` - `v1.6.2-dev.3`](#studyu_designer_v2---v162-dev3)
