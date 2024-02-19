@@ -81,21 +81,18 @@ class DashboardState extends Equatable {
 
   List<Study> filter({List<Study>? studiesToFilter}) {
     studiesToFilter = studiesToFilter ?? studies.value!;
-    if (query.isNotEmpty) {
-      final filteredStudies = studiesToFilter.where((s) => s.title!.toLowerCase().contains(query)).toList();
+    if (query.isEmpty) return studiesToFilter;
 
-      // Add removed parent templates again
-      for (final study in filteredStudies) {
-        if (study.isSubStudy && !filteredStudies.any((s) => s.isTemplate && s.id == study.parentTemplateId)) {
-          final parentTemplate = studiesToFilter.firstWhere((s) => s.isTemplate && s.id == study.parentTemplateId);
-          filteredStudies.add(parentTemplate);
-        }
+    final filteredStudies = studiesToFilter.where((s) => s.title!.toLowerCase().contains(query)).toList();
+    // Add removed parent templates again
+    for (final study in filteredStudies) {
+      if (study.isSubStudy && !filteredStudies.any((s) => s.isTemplate && s.id == study.parentTemplateId)) {
+        final parentTemplate = studiesToFilter.firstWhere((s) => s.isTemplate && s.id == study.parentTemplateId);
+        filteredStudies.add(parentTemplate);
       }
-
-      return filteredStudies;
     }
 
-    return studiesToFilter;
+    return filteredStudies;
   }
 
   List<Study> sort({required Set<String> pinnedStudies, List<Study>? studiesToSort}) {
