@@ -999,14 +999,14 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "4.3.3-dev.1"
+    version: "4.3.3-dev.2"
   studyu_flutter_common:
     dependency: "direct main"
     description:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.7.0-dev.2"
+    version: "1.7.0-dev.3"
   supabase:
     dependency: "direct main"
     description:
