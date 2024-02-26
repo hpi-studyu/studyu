@@ -17,7 +17,7 @@
   "get_started": "Get started",
   "study_selection": "Study Selection",
   "study_selection_description": "Please select a study.",
-  "sub_study_selection_description": "Please select a sub-study.",
+  "sub_study_selection_description": "Please select a Subtrial.",
   "study_selection_single": "You can only participate in one study at a time.",
   "study_selection_single_why": "Why?",
   "study_selection_single_reason": "If you were to participate in multiple studies at a time, the interventions of these studies might interfere with one another and alter the results.",
