@@ -115,7 +115,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
   /// Flag indicating whether the current [form] data is different from
   /// the most recently set [formData]
   ///
-  /// The comparison is based on the [form]'s JSON [form.value], including
+  /// The comparison is based on the [form]'s JSON [form.rawValue], including
   /// values from disabled controls (which is not the case by default) so
   /// that controls can be marked as disabled when needed for the UI
   /// without affecting the dirty status.
@@ -127,18 +127,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
   /// values are initialized in [setControlsFrom] (controls that are set
   /// programmatically are incorrectly marked as dirty without any user input).
   bool get isDirty {
-    _rememberDefaultControlStates();
-
-    for (final control in form.controls.values) {
-      control.markAsEnabled(emitEvent: false, updateParent: false);
-    }
-    final isEqual = jsonEncode(prevFormValue) == jsonEncode(form.value);
-
-    for (final control in form.controls.values) {
-      control.markAsEnabled(emitEvent: false, updateParent: false);
-    }
-    _restoreControlStates(emitEvent: false, updateParent: false);
-
+    final isEqual = jsonEncode(prevFormValue) == jsonEncode(form.rawValue);
     return !isEqual;
   }
 
@@ -153,7 +142,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
     if (formData != null) {
       setControlsFrom(formData); // update [form] controls automatically
     }
-    prevFormValue = {...form.value};
+    prevFormValue = {...form.rawValue};
     form.updateValueAndValidity();
   }
 
