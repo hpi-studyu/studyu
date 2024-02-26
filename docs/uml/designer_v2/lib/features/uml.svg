@@ -43,8 +43,10 @@
 	  +getSubActions: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(StudyGroup, int);
 	  +columnSizes: List&lt;StudiesTableColumnSize&gt;;
 	  +isPinned: bool;
+	  +isExpanded: bool;
 	  +onPinnedChanged: void Function(StudyGroup, bool)?;
-	  +onTapStudy: void Function(Study)?
+	  +onTapStudy: void Function(Study)?;
+	  +onExpandStudy: void Function(Study)?
 	]
 	
 	[StudiesTableItem]o-[StudyGroup]
@@ -108,10 +110,12 @@
 	  +compactStatTitleThreshold: double;
 	  +studyGroups: List&lt;StudyGroup&gt;;
 	  +onSelect: void Function(Study);
+	  +onExpand: void Function(Study);
 	  +getActions: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(StudyGroup);
 	  +getSubActions: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(StudyGroup, int);
 	  +emptyWidget: Widget;
 	  +pinnedStudies: Iterable&lt;String&gt;;
+	  +expandedStudies: Iterable&lt;String&gt;;
 	  +dashboardController: DashboardController
 	  |
 	  +Widget build();
@@ -155,14 +159,16 @@
 	  -dynamic _subscribeStudies();
 	  +dynamic setSearchText();
 	  +dynamic setStudiesFilter();
+	  +dynamic setPinnedStudies();
+	  +dynamic setExpandedStudies();
 	  +dynamic onSelectStudy();
 	  +dynamic onClickNewStudy();
+	  +dynamic onExpandStudy();
 	  +dynamic pinStudy();
 	  +dynamic pinOffStudy();
 	  +void setSorting();
 	  +void setCreateNewMenuOpen();
 	  +void filterStudies();
-	  +void sortStudies();
 	  +bool isSortingActiveForColumn();
 	  +bool isPinned();
 	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions();
@@ -2392,21 +2398,21 @@
 						<path d="M563.2 2260.6 L1213.25 2865 L2533.25 3032.697547683924 L2533.3 3032.7 " fill="none"></path>
 					</g>
 					<path d="M566.8 2256.7 L563.2 2260.6 L559.6 2264.5 L553.4 2251.5 Z"></path>
-					<path d="M1181.8 1504.9 L1384.25 1607 L1384.25 2197.5 L1384.3 2197.5 " fill="none"></path>
+					<path d="M1211.6 1519.9 L1384.25 1607 L1384.25 2197.5 L1384.3 2197.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1175.9 1495.9 L1181.8 1504.9 L1171.1 1505.5 L1165.2 1496.5 Z"></path>
+						<path d="M1205.6 1510.9 L1211.6 1519.9 L1200.8 1520.5 L1194.9 1511.5 Z"></path>
 					</g>
-					<path d="M1103.5 1508.1 L1228.5 1607 L2342.8461844197136 2220.5 L2342.8 2220.5 " fill="none"></path>
+					<path d="M1122.5 1523.1 L1228.5 1607 L2342.8461844197136 2220.5 L2342.8 2220.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1099.5 1498.1 L1103.5 1508.1 L1092.9 1506.5 L1088.9 1496.5 Z"></path>
+						<path d="M1118.5 1513.1 L1122.5 1523.1 L1111.9 1521.5 L1107.9 1511.5 Z"></path>
 					</g>
-					<path d="M1021.6 1512.9 L1072.75 1607 L1072.75 2220.5 L1072.8 2220.5 " fill="none"></path>
+					<path d="M1029.7 1527.9 L1072.75 1607 L1072.75 2220.5 L1072.8 2220.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1021.8 1502.2 L1021.6 1512.9 L1012.4 1507.2 L1012.7 1496.5 Z"></path>
+						<path d="M1030.0 1517.2 L1029.7 1527.9 L1020.6 1522.2 L1020.8 1511.5 Z"></path>
 					</g>
-					<path d="M866.8 1511.6 L797.25 1607 L797.25 2220.5 L797.3 2220.5 " fill="none"></path>
+					<path d="M855.8 1526.6 L797.25 1607 L797.25 2220.5 L797.3 2220.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M876.6 1507.2 L866.8 1511.6 L868.0 1500.9 L877.8 1496.5 Z"></path>
+						<path d="M865.6 1522.2 L855.8 1526.6 L857.0 1515.9 L866.8 1511.5 Z"></path>
 					</g>
 					<path d="M1495.0 1470.2 L1495 1607 L9314.5 2230.2611670785022 L9314.5 2230.3 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -2424,25 +2430,25 @@
 					<g fill="#eee8d5">
 						<path d="M1389.6 2283.8 L1384.3 2293.2 L1378.9 2283.8 L1384.3 2274.5 Z"></path>
 					</g>
-					<path d="M2520.6 1554.2 L2581.75 1607 L4029.4246820349763 2220.5 L4029.4 2220.5 " fill="none"></path>
+					<path d="M2538.0 1569.2 L2581.75 1607 L4029.4246820349763 2220.5 L4029.4 2220.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2517.0 1544.1 L2520.6 1554.2 L2510.0 1552.1 L2506.5 1542.0 Z"></path>
+						<path d="M2534.4 1559.1 L2538.0 1569.2 L2527.4 1567.1 L2523.8 1557.0 Z"></path>
 					</g>
-					<path d="M2491.5 1555.4 L2541.75 1607 L3481.7509936406996 2220.5 L3481.8 2220.5 " fill="none"></path>
+					<path d="M2506.1 1570.4 L2541.75 1607 L3481.7509936406996 2220.5 L3481.8 2220.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2488.8 1545.0 L2491.5 1555.4 L2481.2 1552.4 L2478.5 1542.0 Z"></path>
+						<path d="M2503.4 1560.0 L2506.1 1570.4 L2495.8 1567.4 L2493.1 1557.0 Z"></path>
 					</g>
-					<path d="M2362.4 1560.4 L2371 1607 L2371 2220.5 L2371.0 2220.5 " fill="none"></path>
+					<path d="M2365.2 1575.4 L2371 1607 L2371 2220.5 L2371.0 2220.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2365.9 1550.2 L2362.4 1560.4 L2355.4 1552.1 L2359.0 1542.0 Z"></path>
+						<path d="M2368.7 1565.2 L2365.2 1575.4 L2358.2 1567.1 L2361.8 1557.0 Z"></path>
 					</g>
-					<path d="M2183.5 1555.9 L2138 1607 L14161.75 2234.1483508510064 L14161.8 2234.1 " fill="none"></path>
+					<path d="M2170.2 1570.9 L2138 1607 L14161.75 2234.1483508510064 L14161.8 2234.1 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2193.7 1552.5 L2183.5 1555.9 L2185.8 1545.4 L2195.9 1542.0 Z"></path>
+						<path d="M2180.3 1567.5 L2170.2 1570.9 L2172.4 1560.4 L2182.6 1557.0 Z"></path>
 					</g>
-					<path d="M2154.3 1554.7 L2098 1607 L2660.5298092209855 2024.5 L2660.5 2024.5 " fill="none"></path>
+					<path d="M2138.1 1569.7 L2098 1607 L2640.319157392687 2009.5 L2640.3 2009.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2164.7 1552.3 L2154.3 1554.7 L2157.5 1544.4 L2168.0 1542.0 Z"></path>
+						<path d="M2148.6 1567.3 L2138.1 1569.7 L2141.3 1559.4 L2151.8 1557.0 Z"></path>
 					</g>
 					<path d="M1210.2 2952.2 L1223.5 2945.5 L1231 2945.5 L1231 2945.5 L1238.5 3051.5 L1238.5 3051.5 L1231 3157.5 L1231 3157.5 L1223.5 3157.5 L1223.5 3157.5 L1193.5 3142.393111638955 L1193.5 3142.4 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -2452,32 +2458,32 @@
 						<path d="M561.9 2260.9 L1173.25 2865 L1104.0804289544235 2945.5 L1104.1 2945.5 " fill="none"></path>
 					</g>
 					<path d="M565.7 2257.1 L561.9 2260.9 L558.2 2264.7 L552.4 2251.5 Z"></path>
-					<path d="M3115.1 2462.4 L3416.5 2865 L19815.25 3050.6452873423677 L19815.3 3050.6 " fill="none"></path>
+					<path d="M3126.3 2477.4 L3416.5 2865 L19815.25 3050.6452873423677 L19815.3 3050.6 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3113.7 2451.8 L3115.1 2462.4 L3105.2 2458.2 L3103.9 2447.5 Z"></path>
+						<path d="M3125.0 2466.8 L3126.3 2477.4 L3116.4 2473.2 L3115.1 2462.5 Z"></path>
 					</g>
-					<path d="M3101.0 2462.9 L3376.5 2865 L19633.25 3050.6890186951664 L19633.3 3050.7 " fill="none"></path>
+					<path d="M3111.3 2477.9 L3376.5 2865 L19633.25 3050.6890186951664 L19633.3 3050.7 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3100.1 2452.2 L3101.0 2462.9 L3091.3 2458.2 L3090.4 2447.5 Z"></path>
+						<path d="M3110.4 2467.2 L3111.3 2477.9 L3101.6 2473.2 L3100.7 2462.5 Z"></path>
 					</g>
-					<path d="M3086.8 2463.4 L3336.5 2865 L3022.6943699731905 3036 L3022.7 3036.0 " fill="none"></path>
+					<path d="M3096.2 2478.4 L3336.5 2865 L3022.6943699731905 3036 L3022.7 3036.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3086.4 2452.6 L3086.8 2463.4 L3077.4 2458.2 L3077.0 2447.5 Z"></path>
+						<path d="M3095.8 2467.6 L3096.2 2478.4 L3086.7 2473.2 L3086.3 2462.5 Z"></path>
 					</g>
-					<path d="M2813.4 2463.6 L2580.5 2865 L26700.75 3051.1450007758754 L26700.8 3051.1 " fill="none"></path>
+					<path d="M2804.7 2478.6 L2580.5 2865 L26700.75 3051.1450007758754 L26700.8 3051.1 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2822.7 2458.2 L2813.4 2463.6 L2813.5 2452.9 L2822.8 2447.5 Z"></path>
+						<path d="M2814.0 2473.2 L2804.7 2478.6 L2804.8 2467.9 L2814.1 2462.5 Z"></path>
 					</g>
-					<path d="M2799.2 2463.2 L2540.5 2865 L8945.25 3049.0573018991486 L8945.3 3049.1 " fill="none"></path>
+					<path d="M2789.6 2478.2 L2540.5 2865 L8945.25 3049.0573018991486 L8945.3 3049.1 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2808.8 2458.2 L2799.2 2463.2 L2799.8 2452.5 L2809.3 2447.5 Z"></path>
+						<path d="M2799.1 2473.2 L2789.6 2478.2 L2790.1 2467.5 L2799.7 2462.5 Z"></path>
 					</g>
-					<path d="M2670.1 2459.3 L2169.5 2865 L1442.4061662198392 3036 L1442.4 3036.0 " fill="none"></path>
+					<path d="M2651.6 2474.3 L2169.5 2865 L1442.4061662198392 3036 L1442.4 3036.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M2680.7 2457.5 L2670.1 2459.3 L2674.0 2449.2 L2684.6 2447.5 Z"></path>
+						<path d="M2662.2 2472.5 L2651.6 2474.3 L2655.5 2464.2 L2666.1 2462.5 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M2861.3 1418.2 L2945.5 1607 L2945.5 2024.5 L2945.5 2024.5 " fill="none"></path>
+						<path d="M2861.3 1418.2 L2945.5 1607 L2945.5 2009.5 L2945.5 2009.5 " fill="none"></path>
 					</g>
 					<path d="M2866.2 1416.0 L2861.3 1418.2 L2856.5 1420.3 L2855.9 1406.0 Z"></path>
 					<path d="M22823.3 1449.5 L22881.5 1607 L26510.25 2221.1074191161633 L26510.3 2221.1 " fill="none"></path>
@@ -3783,16 +3789,16 @@
 					</g>
 					<g data-name="StudiesTableItem">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudiesTableItem">
-							<rect x="660.5" y="1284.5" height="212.0" width="589.0" data-name="StudiesTableItem"></rect>
-							<path d="M660.5 1315.5 L1249.5 1315.5" fill="none" data-name="StudiesTableItem"></path>
+							<rect x="660.5" y="1269.5" height="242.0" width="589.0" data-name="StudiesTableItem"></rect>
+							<path d="M660.5 1300.5 L1249.5 1300.5" fill="none" data-name="StudiesTableItem"></path>
 						</g>
-						<g transform="translate(660.5, 1284.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudiesTableItem">
+						<g transform="translate(660.5, 1269.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudiesTableItem">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudiesTableItem">
 								<text x="286.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudiesTableItem">StudiesTableItem</text>
 								
 							</g>
 						</g>
-						<g transform="translate(660.5, 1315.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTableItem">
+						<g transform="translate(660.5, 1300.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTableItem">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTableItem">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTableItem">+studyGroup: StudyGroup</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudiesTableItem">+itemHeight: double</text>
@@ -3803,8 +3809,10 @@
 								<text x="0.0" y="103.5" stroke="none" data-name="StudiesTableItem">+getSubActions: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(StudyGroup, int)</text>
 								<text x="0.0" y="118.5" stroke="none" data-name="StudiesTableItem">+columnSizes: List&lt;StudiesTableColumnSize&gt;</text>
 								<text x="0.0" y="133.5" stroke="none" data-name="StudiesTableItem">+isPinned: bool</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="StudiesTableItem">+onPinnedChanged: void Function(StudyGroup, bool)?</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="StudiesTableItem">+onTapStudy: void Function(Study)?</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="StudiesTableItem">+isExpanded: bool</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="StudiesTableItem">+onPinnedChanged: void Function(StudyGroup, bool)?</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="StudiesTableItem">+onTapStudy: void Function(Study)?</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="StudiesTableItem">+onExpandStudy: void Function(Study)?</text>
 								
 							</g>
 						</g>
@@ -3989,17 +3997,17 @@
 					</g>
 					<g data-name="StudiesTable">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudiesTable">
-							<rect x="2036.5" y="1239.0" height="303.0" width="589.0" data-name="StudiesTable"></rect>
-							<path d="M2036.5 1270.0 L2625.5 1270.0" fill="none" data-name="StudiesTable"></path>
-							<path d="M2036.5 1496.0 L2625.5 1496.0" fill="none" data-name="StudiesTable"></path>
+							<rect x="2036.5" y="1224.0" height="333.0" width="589.0" data-name="StudiesTable"></rect>
+							<path d="M2036.5 1255.0 L2625.5 1255.0" fill="none" data-name="StudiesTable"></path>
+							<path d="M2036.5 1511.0 L2625.5 1511.0" fill="none" data-name="StudiesTable"></path>
 						</g>
-						<g transform="translate(2036.5, 1239)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudiesTable">
+						<g transform="translate(2036.5, 1224)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudiesTable">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudiesTable">
 								<text x="286.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudiesTable">StudiesTable</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2036.5, 1270)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTable">
+						<g transform="translate(2036.5, 1255)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTable">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTable">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTable">+itemHeight: double</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudiesTable">+itemPadding: double</text>
@@ -4010,15 +4018,17 @@
 								<text x="0.0" y="103.5" stroke="none" data-name="StudiesTable">+compactStatTitleThreshold: double</text>
 								<text x="0.0" y="118.5" stroke="none" data-name="StudiesTable">+studyGroups: List&lt;StudyGroup&gt;</text>
 								<text x="0.0" y="133.5" stroke="none" data-name="StudiesTable">+onSelect: void Function(Study)</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="StudiesTable">+getActions: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(StudyGroup)</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="StudiesTable">+getSubActions: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(StudyGroup, int)</text>
-								<text x="0.0" y="178.5" stroke="none" data-name="StudiesTable">+emptyWidget: Widget</text>
-								<text x="0.0" y="193.5" stroke="none" data-name="StudiesTable">+pinnedStudies: Iterable&lt;String&gt;</text>
-								<text x="0.0" y="208.5" stroke="none" data-name="StudiesTable">+dashboardController: DashboardController</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="StudiesTable">+onExpand: void Function(Study)</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="StudiesTable">+getActions: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(StudyGroup)</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="StudiesTable">+getSubActions: List&lt;ModelAction&lt;dynamic&gt;&gt; Function(StudyGroup, int)</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="StudiesTable">+emptyWidget: Widget</text>
+								<text x="0.0" y="208.5" stroke="none" data-name="StudiesTable">+pinnedStudies: Iterable&lt;String&gt;</text>
+								<text x="0.0" y="223.5" stroke="none" data-name="StudiesTable">+expandedStudies: Iterable&lt;String&gt;</text>
+								<text x="0.0" y="238.5" stroke="none" data-name="StudiesTable">+dashboardController: DashboardController</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2036.5, 1496)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTable">
+						<g transform="translate(2036.5, 1511)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudiesTable">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTable">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTable">+Widget build()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudiesTable">-Widget _buildColumnHeader()</text>
@@ -4050,17 +4060,17 @@
 					</g>
 					<g data-name="DashboardController">
 						<g fill="#eee8d5" stroke="#33322E" data-name="DashboardController">
-							<rect x="2638.5" y="2024.5" height="423.0" width="614.0" data-name="DashboardController"></rect>
-							<path d="M2638.5 2055.5 L3252.5 2055.5" fill="none" data-name="DashboardController"></path>
-							<path d="M2638.5 2176.5 L3252.5 2176.5" fill="none" data-name="DashboardController"></path>
+							<rect x="2638.5" y="2009.5" height="453.0" width="614.0" data-name="DashboardController"></rect>
+							<path d="M2638.5 2040.5 L3252.5 2040.5" fill="none" data-name="DashboardController"></path>
+							<path d="M2638.5 2161.5 L3252.5 2161.5" fill="none" data-name="DashboardController"></path>
 						</g>
-						<g transform="translate(2638.5, 2024.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DashboardController">
+						<g transform="translate(2638.5, 2009.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DashboardController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DashboardController">
 								<text x="299.0" y="13.5" stroke="none" text-anchor="middle" data-name="DashboardController">DashboardController</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2638.5, 2055.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardController">
+						<g transform="translate(2638.5, 2040.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DashboardController">
 								<text x="0.0" y="13.5" stroke="none" data-name="DashboardController">+studyRepository: IStudyRepository</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="DashboardController">+authRepository: IAuthRepository</text>
@@ -4072,25 +4082,27 @@
 								
 							</g>
 						</g>
-						<g transform="translate(2638.5, 2176.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardController">
+						<g transform="translate(2638.5, 2161.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DashboardController">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DashboardController">
 								<text x="0.0" y="13.5" stroke="none" data-name="DashboardController">-dynamic _subscribeStudies()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="DashboardController">+dynamic setSearchText()</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="DashboardController">+dynamic setStudiesFilter()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="DashboardController">+dynamic onSelectStudy()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="DashboardController">+dynamic onClickNewStudy()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="DashboardController">+dynamic pinStudy()</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="DashboardController">+dynamic pinOffStudy()</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="DashboardController">+void setSorting()</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="DashboardController">+void setCreateNewMenuOpen()</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="DashboardController">+void filterStudies()</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="DashboardController">+void sortStudies()</text>
-								<text x="0.0" y="178.5" stroke="none" data-name="DashboardController">+bool isSortingActiveForColumn()</text>
-								<text x="0.0" y="193.5" stroke="none" data-name="DashboardController">+bool isPinned()</text>
-								<text x="0.0" y="208.5" stroke="none" data-name="DashboardController">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()</text>
-								<text x="0.0" y="223.5" stroke="none" data-name="DashboardController">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableSubActions()</text>
-								<text x="0.0" y="238.5" stroke="none" data-name="DashboardController">-List&lt;ModelAction&lt;dynamic&gt;&gt; _availableActions()</text>
-								<text x="0.0" y="253.5" stroke="none" data-name="DashboardController">+void dispose()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="DashboardController">+dynamic setPinnedStudies()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="DashboardController">+dynamic setExpandedStudies()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="DashboardController">+dynamic onSelectStudy()</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="DashboardController">+dynamic onClickNewStudy()</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="DashboardController">+dynamic onExpandStudy()</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="DashboardController">+dynamic pinStudy()</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="DashboardController">+dynamic pinOffStudy()</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="DashboardController">+void setSorting()</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="DashboardController">+void setCreateNewMenuOpen()</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="DashboardController">+void filterStudies()</text>
+								<text x="0.0" y="208.5" stroke="none" data-name="DashboardController">+bool isSortingActiveForColumn()</text>
+								<text x="0.0" y="223.5" stroke="none" data-name="DashboardController">+bool isPinned()</text>
+								<text x="0.0" y="238.5" stroke="none" data-name="DashboardController">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()</text>
+								<text x="0.0" y="253.5" stroke="none" data-name="DashboardController">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableSubActions()</text>
+								<text x="0.0" y="268.5" stroke="none" data-name="DashboardController">-List&lt;ModelAction&lt;dynamic&gt;&gt; _availableActions()</text>
+								<text x="0.0" y="283.5" stroke="none" data-name="DashboardController">+void dispose()</text>
 								
 							</g>
 						</g>
