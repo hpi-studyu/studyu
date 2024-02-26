@@ -194,7 +194,7 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                                   ));
                           testNotifications(context);
                         },
-                        child: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
+                        child: const Image(image: AssetImage('assets/icon/icon.png'), height: 32),
                       ),
                       applicationVersion: '${packageInfo.version} - ${packageInfo.buildNumber}',
                       children: [

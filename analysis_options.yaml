@@ -1,3 +1,5 @@
+# This file is used by all dart projects in this monorepo.
+
 include: package:lint/strict.yaml
 
 analyzer:
@@ -19,3 +21,5 @@ linter:
     # DISABLE
     # We have prints for better debugging. Maybe not the best option.
     avoid_print: false
+    # Automatically sort pub dependencies
+    sort_pub_dependencies: true
