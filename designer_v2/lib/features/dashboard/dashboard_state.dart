@@ -112,6 +112,13 @@ class DashboardState extends Equatable {
           sortedStudies.sort((study, other) => other.title!.compareTo(study.title!));
         }
         break;
+      case StudiesTableColumn.type:
+        if (sortAscending) {
+          sortedStudies.sort((study, other) => study.type.index.compareTo(other.type.index));
+        } else {
+          sortedStudies.sort((study, other) => other.type.index.compareTo(study.type.index));
+        }
+        break;
       case StudiesTableColumn.status:
         if (sortAscending) {
           sortedStudies.sort((study, other) => study.status.index.compareTo(other.status.index));

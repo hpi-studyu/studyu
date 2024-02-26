@@ -11,6 +11,8 @@ import '../study/study_status_badge.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
+import '../study/study_type_badge.dart';
+
 class StudiesTableItem extends StatefulWidget {
   final StudyGroup studyGroup;
   final double itemHeight;
@@ -19,30 +21,30 @@ class StudiesTableItem extends StatefulWidget {
   final double columnSpacing;
   final List<ModelAction> actions;
   final ActionsProviderAt<StudyGroup> getSubActions;
-  final List<StudiesTableColumnSize> columnSizes;
+  final Map<StudiesTableColumn, StudiesTableColumnSize> columnDefinitions;
   final bool isPinned;
   final bool isExpanded;
+  final TextStyle? normalTextStyle;
   final void Function(StudyGroup, bool)? onPinnedChanged;
   final void Function(Study)? onTapStudy;
   final void Function(Study)? onExpandStudy;
 
-  StudiesTableItem(
+  const StudiesTableItem(
       {super.key,
       required this.studyGroup,
       required this.actions,
       required this.getSubActions,
-      required this.columnSizes,
+      required this.columnDefinitions,
       required this.isPinned,
       required this.isExpanded,
+      this.normalTextStyle,
       this.onPinnedChanged,
       this.onTapStudy,
       this.onExpandStudy,
       this.itemHeight = 60.0,
       this.itemPadding = 10.0,
       this.rowSpacing = 9.0,
-      this.columnSpacing = 10.0}) {
-    assert(columnSizes.length == 9);
-  }
+      this.columnSpacing = 10.0});
 
   @override
   State<StudiesTableItem> createState() => _StudiesTableItemState();
@@ -116,16 +118,31 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
     return _buildStudyRow(theme, studyGroup.standaloneOrTemplate, actions: widget.actions);
   }
 
+  TextStyle? _mutedTextStyleIfZero(int value) {
+    return (value > 0)
+        ? widget.normalTextStyle
+        : ThemeConfig.bodyTextBackground(Theme.of(context)).merge(widget.normalTextStyle);
+  }
+
   Widget _buildStudyRow(ThemeData theme, Study study,
       {required List<ModelAction> actions, int? participantCount, int? activeSubjectCount, int? endedCount}) {
-    const TextStyle? normalTextStyle = null;
-    TextStyle? mutedTextStyleIfZero(int value) {
-      return (value > 0) ? normalTextStyle : ThemeConfig.bodyTextBackground(theme).merge(normalTextStyle);
-    }
-
     participantCount ??= study.participantCount;
     activeSubjectCount ??= study.activeSubjectCount;
     endedCount ??= study.endedCount;
+
+    final List<Widget> columnRows = [];
+    for (final columnDefinition in widget.columnDefinitions.entries) {
+      columnRows.add(columnDefinition.value.createContainer(
+          child: _buildRowColumn(columnDefinition.key, study,
+              actions: actions,
+              participantCount: participantCount,
+              activeSubjectCount: activeSubjectCount,
+              endedCount: endedCount),
+          height: columnDefinition.key == StudiesTableColumn.pin ? widget.itemHeight : null));
+      if (!columnDefinition.value.collapsed) {
+        columnRows.add(SizedBox(width: widget.columnSpacing));
+      }
+    }
 
     final row = InkWell(
       onTap: () {
@@ -149,82 +166,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
             Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                widget.columnSizes[0].createContainer(
-                    height: widget.itemHeight,
-                    child: study.isTemplate
-                        ? Align(
-                            alignment: Alignment.centerRight,
-                            child: AnimatedRotation(
-                              turns: widget.isExpanded ? 0.25 : 0,
-                              duration: const Duration(milliseconds: 250),
-                              child: const Icon(
-                                Icons.chevron_right_rounded,
-                                color: Colors.grey,
-                                size: 24,
-                              ),
-                            ),
-                          )
-                        : (study.isSubStudy && hoveredStudy == study
-                            ? const Align(
-                                alignment: Alignment.centerRight,
-                                child: Icon(
-                                  Icons.subdirectory_arrow_right_rounded,
-                                  color: Colors.grey,
-                                  size: 16,
-                                ),
-                              )
-                            : const SizedBox.shrink())),
-                SizedBox(width: widget.columnSizes[0].collapsed ? 0 : widget.columnSpacing),
-                widget.columnSizes[1].createContainer(
-                  child: Text(
-                    study.title ?? '[Missing study title]',
-                    style: normalTextStyle,
-                    maxLines: 3,
-                    overflow: TextOverflow.fade,
-                  ),
-                ),
-                SizedBox(width: widget.columnSizes[1].collapsed ? 0 : widget.columnSpacing),
-                widget.columnSizes[2].createContainer(
-                  child: StudyStatusBadge(
-                    status: study.status,
-                    showPrefixIcon: false,
-                    showTooltip: false,
-                  ),
-                ),
-                SizedBox(width: widget.columnSizes[2].collapsed ? 0 : widget.columnSpacing),
-                widget.columnSizes[3].createContainer(
-                  child: StudyParticipationBadge(
-                    participation: study.participation,
-                    center: false,
-                  ),
-                ),
-                SizedBox(width: widget.columnSizes[3].collapsed ? 0 : widget.columnSpacing),
-                widget.columnSizes[4].createContainer(
-                    child: Text(
-                  study.createdAt?.toTimeAgoString() ?? '',
-                  style: normalTextStyle,
-                  maxLines: 3,
-                  overflow: TextOverflow.fade,
-                )),
-                SizedBox(width: widget.columnSizes[4].collapsed ? 0 : widget.columnSpacing),
-                widget.columnSizes[5].createContainer(
-                  child: Text(participantCount.toString(), style: mutedTextStyleIfZero(participantCount)),
-                ),
-                SizedBox(width: widget.columnSizes[5].collapsed ? 0 : widget.columnSpacing),
-                widget.columnSizes[6].createContainer(
-                  child: Text(activeSubjectCount.toString(), style: mutedTextStyleIfZero(activeSubjectCount)),
-                ),
-                SizedBox(width: widget.columnSizes[6].collapsed ? 0 : widget.columnSpacing),
-                widget.columnSizes[7].createContainer(
-                  child: Text(endedCount.toString(), style: mutedTextStyleIfZero(endedCount)),
-                ),
-                SizedBox(width: widget.columnSizes[7].collapsed ? 0 : widget.columnSpacing),
-                widget.columnSizes[8].createContainer(
-                  child: _buildActionMenu(context, actions),
-                ),
-                SizedBox(width: widget.columnSizes[8].collapsed ? 0 : widget.columnSpacing),
-              ],
+              children: columnRows,
             ),
           ],
         ),
@@ -233,7 +175,113 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
     return row;
   }
 
-  Widget _buildActionMenu(BuildContext context, List<ModelAction> actions) {
+  Widget _buildRowColumn(StudiesTableColumn column, Study study,
+      {required List<ModelAction> actions,
+      required int participantCount,
+      required int activeSubjectCount,
+      required int endedCount}) {
+    switch (column) {
+      case StudiesTableColumn.pin:
+        return _buildPin(study);
+      case StudiesTableColumn.title:
+        return _buildTitle(study);
+      case StudiesTableColumn.type:
+        return _buildType(study);
+      case StudiesTableColumn.status:
+        return _buildStatus(study);
+      case StudiesTableColumn.participation:
+        return _buildParticipation(study);
+      case StudiesTableColumn.createdAt:
+        return _buildCreatedAt(study);
+      case StudiesTableColumn.enrolled:
+        return _buildEnrolled(participantCount);
+      case StudiesTableColumn.active:
+        return _buildActive(activeSubjectCount);
+      case StudiesTableColumn.completed:
+        return _buildCompleted(endedCount);
+      case StudiesTableColumn.action:
+        return _buildAction(actions);
+    }
+  }
+
+  Widget _buildPin(Study study) {
+    return study.isTemplate
+        ? Align(
+            alignment: Alignment.centerRight,
+            child: AnimatedRotation(
+              turns: widget.isExpanded ? 0.25 : 0,
+              duration: const Duration(milliseconds: 250),
+              child: const Icon(
+                Icons.chevron_right_rounded,
+                color: Colors.grey,
+                size: 24,
+              ),
+            ),
+          )
+        : (study.isSubStudy && hoveredStudy == study
+            ? const Align(
+                alignment: Alignment.centerRight,
+                child: Icon(
+                  Icons.subdirectory_arrow_right_rounded,
+                  color: Colors.grey,
+                  size: 16,
+                ),
+              )
+            : const SizedBox.shrink());
+  }
+
+  Widget _buildTitle(Study study) {
+    return Text(
+      study.title ?? '[Missing study title]',
+      style: widget.normalTextStyle,
+      maxLines: 3,
+      overflow: TextOverflow.fade,
+    );
+  }
+
+  Widget _buildType(Study study) {
+    return StudyTypeBadge(
+      studyType: study.type,
+    );
+  }
+
+  Widget _buildStatus(Study study) {
+    return StudyStatusBadge(
+      status: study.status,
+      showPrefixIcon: false,
+      showTooltip: false,
+    );
+  }
+
+  Widget _buildParticipation(Study study) {
+    return StudyParticipationBadge(
+      participation: study.participation,
+      center: false,
+    );
+  }
+
+  Widget _buildCreatedAt(Study study) {
+    return Text(
+      study.createdAt?.toTimeAgoString() ?? '',
+      style: widget.normalTextStyle,
+      maxLines: 3,
+      overflow: TextOverflow.fade,
+    );
+  }
+
+  Widget _buildEnrolled(int participantCount) {
+    return Text(participantCount.toString(), style: _mutedTextStyleIfZero(participantCount));
+  }
+
+  Widget _buildActive(int activeSubjectCount) {
+    return Text(activeSubjectCount.toString(), style: _mutedTextStyleIfZero(activeSubjectCount));
+  }
+
+  Widget _buildCompleted(int endedCount) {
+    return Text(endedCount.toString(), style: _mutedTextStyleIfZero(endedCount));
+  }
+
+  Widget _buildAction(List<ModelAction> actions) {
     final theme = Theme.of(context);
 
     return Align(
