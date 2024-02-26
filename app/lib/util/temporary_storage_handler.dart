@@ -21,15 +21,43 @@ class TemporaryStorageHandler {
     return "user-id_${_userId}_study-id_${_studyId}_$timestamp";
   }
 
-  static Future<Directory> _getMultimodalDirectory() async {
+  static Future<Directory> _getMultimodalTempDirectory() async {
+    final tempAppData = await getTemporaryDirectory();
+    final multimodalTempDirectory = Directory("${tempAppData.path}/multimodal-temp");
+    await multimodalTempDirectory.create(recursive: true);
+    return multimodalTempDirectory;
+  }
+
+  static Future<Directory> _getMultimodalUploadDirectory() async {
     final appData = await getApplicationDocumentsDirectory();
-    final applicationMediaDirectory = Directory("${appData.path}/multimodal-artifacts");
-    await applicationMediaDirectory.create(recursive: true);
-    return applicationMediaDirectory;
+    final multimodalUploadDirectory = Directory("${appData.path}/multimodal-upload");
+    await multimodalUploadDirectory.create(recursive: true);
+    return multimodalUploadDirectory;
+  }
+
+  static Future<void> moveStagingFileToUploadDirectory(String stagingFilePath, String blobId) async {
+    final stagingFile = File(stagingFilePath);
+    final uploadDirectory = await _getMultimodalUploadDirectory();
+    final uploadFile = File(path.join(
+        uploadDirectory.path,
+        [
+          blobId,
+        ].join()));
+    await stagingFile.rename(uploadFile.path);
+  }
+
+  static Future<List<FutureBlobFile>> getFutureBlobFiles() async {
+    final uploadDirectory = await _getMultimodalUploadDirectory();
+    final files = await uploadDirectory.list().toList();
+    final futureBlobFiles = files.map((file) {
+      final fileName = path.basename(file.path);
+      return FutureBlobFile(file.path, fileName);
+    }).toList();
+    return futureBlobFiles;
   }
 
   Future<FutureBlobFile> getStagingAudio() async {
-    final temporaryMultimodalDirectory = await _getMultimodalDirectory();
+    final temporaryMultimodalDirectory = await _getMultimodalTempDirectory();
     final fileName = _buildFileName();
     final localFilePath = path.join(
       temporaryMultimodalDirectory.path,
@@ -44,7 +72,7 @@ class TemporaryStorageHandler {
   }
 
   Future<FutureBlobFile> getStagingImage() async {
-    final temporaryMultimodalDirectory = await _getMultimodalDirectory();
+    final temporaryMultimodalDirectory = await _getMultimodalTempDirectory();
     final fileName = _buildFileName();
     final localFilePath = path.join(
       temporaryMultimodalDirectory.path,
@@ -59,7 +87,7 @@ class TemporaryStorageHandler {
   }
 
   static Future<void> deleteAllStagingFiles() async {
-    final temporaryMultimodalDirectory = await _getMultimodalDirectory();
+    final temporaryMultimodalDirectory = await _getMultimodalTempDirectory();
     for (final file in await temporaryMultimodalDirectory
         .list()
         .where((f) => path.basename(f.path).startsWith(TemporaryStorageHandler._stagingBaseNamePrefix))
