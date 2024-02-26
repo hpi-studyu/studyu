@@ -16,6 +16,8 @@ class DashboardState extends Equatable {
     this.sortByColumn = StudiesTableColumn.title,
     this.sortAscending = true,
     this.createNewMenuOpen = false,
+    this.pinnedStudies = const {},
+    this.expandedStudies = const {},
     required this.currentUser,
   });
 
@@ -42,17 +44,22 @@ class DashboardState extends Equatable {
 
   final bool createNewMenuOpen;
 
+  final Set<String> pinnedStudies;
+
+  final Set<String> expandedStudies;
+
   /// The currently displayed list of studies as by the selected filter,
   /// selected sort column, and selected sort direction
   ///
   /// Wrapped in an [AsyncValue] that mirrors the [studies]' async states,
   /// but resolves to a different subset of studies based on the [studiesFilter]
-  AsyncValue<List<StudyGroup>> displayedStudies(Set<String> pinnedStudies, String query) {
+  AsyncValue<List<StudyGroup>> displayedStudies({Set<String>? pinnedStudies}) {
+    final localPinnedStudies = pinnedStudies ?? this.pinnedStudies;
     return studies.when(
       data: (studies) {
         List<Study> updatedStudies = studiesFilter.apply(studies: studies, user: currentUser).toList();
         updatedStudies = filter(studiesToFilter: updatedStudies);
-        updatedStudies = sort(pinnedStudies: pinnedStudies, studiesToSort: updatedStudies);
+        updatedStudies = sort(pinnedStudies: localPinnedStudies, studiesToSort: updatedStudies);
         return AsyncValue.data(group(updatedStudies));
       },
       error: (error, _) => AsyncValue.error(error, StackTrace.current),
@@ -177,6 +184,8 @@ class DashboardState extends Equatable {
     StudiesTableColumn? sortByColumn,
     bool? sortAscending,
     bool? createNewMenuOpen,
+    Set<String>? pinnedStudies,
+    Set<String>? expandedStudies,
   }) {
     return DashboardState(
         studies: studies != null ? studies() : this.studies,
@@ -185,7 +194,9 @@ class DashboardState extends Equatable {
         query: query ?? this.query,
         sortByColumn: sortByColumn ?? this.sortByColumn,
         sortAscending: sortAscending ?? this.sortAscending,
-        createNewMenuOpen: createNewMenuOpen ?? this.createNewMenuOpen);
+        createNewMenuOpen: createNewMenuOpen ?? this.createNewMenuOpen,
+        pinnedStudies: pinnedStudies ?? this.pinnedStudies,
+        expandedStudies: expandedStudies ?? this.expandedStudies);
   }
 
   // - Equatable

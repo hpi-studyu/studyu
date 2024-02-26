@@ -63,6 +63,14 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     state = state.copyWith(studiesFilter: () => filter ?? DashboardState.defaultFilter);
   }
 
+  setPinnedStudies(Set<String> pinnedStudies) {
+    state = state.copyWith(pinnedStudies: pinnedStudies);
+  }
+
+  setExpandedStudies(Set<String> expandedStudies) {
+    state = state.copyWith(expandedStudies: expandedStudies);
+  }
+
   onSelectStudy(Study study) {
     router.dispatch(RoutingIntents.studyEdit(study.id));
   }
@@ -71,14 +79,21 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     router.dispatch(RoutingIntents.studyNew(isTemplate));
   }
 
+  onExpandStudy(Study study) {
+    final expandedStudies = state.expandedStudies.contains(study.id)
+        ? state.expandedStudies.difference({study.id})
+        : state.expandedStudies.union({study.id});
+    setExpandedStudies(expandedStudies);
+  }
+
   Future<void> pinStudy(String modelId) async {
     await userRepository.updatePreferences(PreferenceAction.pin, modelId);
-    sortStudies();
+    setPinnedStudies(userRepository.user.preferences.pinnedStudies);
   }
 
   Future<void> pinOffStudy(String modelId) async {
     await userRepository.updatePreferences(PreferenceAction.pinOff, modelId);
-    sortStudies();
+    setPinnedStudies(userRepository.user.preferences.pinnedStudies);
   }
 
   void setSorting(StudiesTableColumn sortByColumn, bool ascending) {
@@ -92,13 +107,6 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
   void filterStudies(String? query) async {
     state = state.copyWith(
       query: query,
-    );
-  }
-
-  void sortStudies() async {
-    final studies = state.sort(pinnedStudies: userRepository.user.preferences.pinnedStudies);
-    state = state.copyWith(
-      studies: () => AsyncValue.data(studies),
     );
   }
 

@@ -48,10 +48,12 @@ class StudiesTable extends StatelessWidget {
   const StudiesTable({
     required this.studyGroups,
     required this.onSelect,
+    required this.onExpand,
     required this.getActions,
     required this.getSubActions,
     required this.emptyWidget,
     required this.pinnedStudies,
+    required this.expandedStudies,
     required this.dashboardController,
     this.itemHeight = 60.0,
     this.itemPadding = 10.0,
@@ -72,10 +74,12 @@ class StudiesTable extends StatelessWidget {
   final double compactStatTitleThreshold;
   final List<StudyGroup> studyGroups;
   final OnSelectHandler<Study> onSelect;
+  final OnSelectHandler<Study> onExpand;
   final ActionsProviderFor<StudyGroup> getActions;
   final ActionsProviderAt<StudyGroup> getSubActions;
   final Widget emptyWidget;
   final Iterable<String> pinnedStudies;
+  final Iterable<String> expandedStudies;
   final DashboardController dashboardController;
 
   @override
@@ -179,6 +183,7 @@ class StudiesTable extends StatelessWidget {
                   actions: getActions(item),
                   getSubActions: getSubActions,
                   isPinned: pinnedStudies.contains(item.standaloneOrTemplate.id),
+                  isExpanded: expandedStudies.contains(item.standaloneOrTemplate.id),
                   itemHeight: itemHeight,
                   rowSpacing: rowSpacing,
                   columnSpacing: columnSpacing,
@@ -188,6 +193,7 @@ class StudiesTable extends StatelessWidget {
                         : dashboardController.pinStudy(item.standaloneOrTemplate.id);
                   },
                   onTapStudy: (study) => onSelect.call(study),
+                  onExpandStudy: (study) => onExpand.call(study),
                 );
               },
             )

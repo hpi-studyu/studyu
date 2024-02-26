@@ -135,13 +135,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               future: userRepo.fetchUser(), // todo cache this with ModelRepository
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  final pinnedStudies = snapshot.data!.preferences.pinnedStudies;
                   return AsyncValueWidget<List<StudyGroup>>(
-                      value: state.displayedStudies(snapshot.data!.preferences.pinnedStudies, state.query),
+                      value: state.displayedStudies(pinnedStudies: pinnedStudies),
                       data: (visibleStudies) => StudiesTable(
                             studyGroups: visibleStudies,
-                            pinnedStudies: snapshot.data!.preferences.pinnedStudies,
+                            pinnedStudies: pinnedStudies,
+                            expandedStudies: state.expandedStudies,
                             dashboardController: ref.read(dashboardControllerProvider.notifier),
                             onSelect: controller.onSelectStudy,
+                            onExpand: controller.onExpandStudy,
                             getActions: controller.availableActions,
                             getSubActions: controller.availableSubActions,
                             emptyWidget: (widget.filter == null || widget.filter == StudiesFilter.owned)

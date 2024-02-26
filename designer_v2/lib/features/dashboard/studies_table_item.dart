@@ -21,8 +21,10 @@ class StudiesTableItem extends StatefulWidget {
   final ActionsProviderAt<StudyGroup> getSubActions;
   final List<StudiesTableColumnSize> columnSizes;
   final bool isPinned;
+  final bool isExpanded;
   final void Function(StudyGroup, bool)? onPinnedChanged;
   final void Function(Study)? onTapStudy;
+  final void Function(Study)? onExpandStudy;
 
   StudiesTableItem(
       {super.key,
@@ -31,8 +33,10 @@ class StudiesTableItem extends StatefulWidget {
       required this.getSubActions,
       required this.columnSizes,
       required this.isPinned,
+      required this.isExpanded,
       this.onPinnedChanged,
       this.onTapStudy,
+      this.onExpandStudy,
       this.itemHeight = 60.0,
       this.itemPadding = 10.0,
       this.rowSpacing = 9.0,
@@ -46,8 +50,6 @@ class StudiesTableItem extends StatefulWidget {
 
 class _StudiesTableItemState extends State<StudiesTableItem> {
   Study? hoveredStudy;
-  bool isExpanded = false;
-
   bool get isHovering => hoveredStudy != null;
 
   @override
@@ -89,7 +91,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       );
       final List<Widget> subRows = [];
 
-      if (isExpanded && studyGroup.subStudies.isNotEmpty) {
+      if (widget.isExpanded && studyGroup.subStudies.isNotEmpty) {
         subRows.add(Divider(
           thickness: isHovering ? 1.5 : 0.75,
           color: theme.colorScheme.primaryContainer.withOpacity(0.9),
@@ -128,9 +130,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
     final row = InkWell(
       onTap: () {
         if (study.isTemplate) {
-          setState(() {
-            isExpanded = !isExpanded;
-          });
+          widget.onExpandStudy?.call(study);
           return;
         }
 
@@ -156,7 +156,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                         ? Align(
                             alignment: Alignment.centerRight,
                             child: AnimatedRotation(
-                              turns: isExpanded ? 0.25 : 0,
+                              turns: widget.isExpanded ? 0.25 : 0,
                               duration: const Duration(milliseconds: 250),
                               child: const Icon(
                                 Icons.chevron_right_rounded,
