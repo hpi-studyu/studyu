@@ -195,17 +195,10 @@ class FormSectionHeader extends StatelessWidget {
                     ],
                   )
                 : const SizedBox.shrink(),
-            (showLock && lockHelpText != null)
-                ? Row(
-                    children: [
-                      HelpIcon(tooltipText: lockHelpText),
-                      const SizedBox(width: 8.0),
-                    ],
-                  )
-                : const SizedBox.shrink(),
             showLock
                 ? ReactiveFormLock(
                     formControl: lockControl,
+                    helpText: lockHelpText,
                   )
                 : const SizedBox.shrink(),
           ],
@@ -256,11 +249,12 @@ class FormLabel extends StatelessWidget {
 }
 
 class FormLock extends StatefulWidget {
-  const FormLock({super.key, required this.locked, this.onLockChanged, this.readOnly = false});
+  const FormLock({super.key, required this.locked, this.onLockChanged, this.readOnly = false, this.helpText});
 
   final bool locked;
   final bool readOnly;
   final ValueChanged<bool>? onLockChanged;
+  final String? helpText;
 
   @override
   State<FormLock> createState() => _FormLockState();
@@ -277,7 +271,7 @@ class _FormLockState extends State<FormLock> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    final lockView = Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: widget.readOnly
@@ -296,6 +290,15 @@ class _FormLockState extends State<FormLock> {
             )),
       ),
     );
+
+    if (widget.helpText != null) {
+      return Tooltip(
+        message: widget.helpText!,
+        child: lockView,
+      );
+    }
+
+    return lockView;
   }
 }
 
@@ -305,10 +308,12 @@ class ReactiveFormLock<T> extends ReactiveFormField<bool, bool> {
     super.formControlName,
     super.formControl,
     ReactiveFormFieldCallback<bool>? onChanged,
+    String? helpText,
   }) : super(builder: (field) {
           return FormLock(
             locked: field.value ?? false,
             readOnly: field.control.disabled,
+            helpText: helpText,
             onLockChanged: field.control.enabled
                 ? (value) {
                     field.didChange(value);
