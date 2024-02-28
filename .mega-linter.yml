@@ -3,6 +3,8 @@
 # See all available variables at https://megalinter.io/latest/config-file/ and in
 # linters documentation
 
+VALIDATE_ALL_CODEBASE: false
+
 # all, none, or list of linter keys
 APPLY_FIXES: all
 
@@ -31,7 +33,7 @@ DISABLE:
 # - COPYPASTE # Uncomment to disable checks of excessive copy-pastes
  - SPELL # Uncomment to disable checks of spelling mistakes
 
-SHOW_ELAPSED_TIME: true
+SHOW_ELAPSED_TIME: false
 
 FILEIO_REPORTER: false
 
