@@ -78,6 +78,9 @@ class SupabaseQuery {
     }
   }
 
+  /// Extracts a list of SupabaseObjects from a response.
+  /// If some records could not be extracted, [ExtractedSupabaseListResult] is
+  /// thrown containing the extracted records and the faulty records.
   static List<T> extractSupabaseList<T extends SupabaseObject>(
     List<Map<String, dynamic>> response,
   ) {
