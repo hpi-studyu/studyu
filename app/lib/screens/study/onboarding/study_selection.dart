@@ -188,7 +188,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 if (studyResult != null) {
                   final study = Study.fromJson(studyResult);
 
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   Navigator.pop(context);
 
                   if (result.containsKey('preselected_intervention_ids') &&

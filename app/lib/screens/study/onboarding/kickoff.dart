@@ -26,12 +26,12 @@ class _KickoffScreen extends State<KickoffScreen> {
       final now = DateTime.now();
       subject!.startedAt = DateTime(now.year, now.month, now.day + 1).toUtc();
       subject = await subject!.save();
-      if (!mounted) return;
+      if (!context.mounted) return;
       context.read<AppState>().activeSubject = subject;
       context.read<AppState>().init(context);
       await Cache.storeSubject(context.read<AppState>().activeSubject);
       await storeActiveSubjectId(subject!.id);
-      if (!mounted) return;
+      if (!context.mounted) return;
       setState(() => ready = true);
       Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
     } catch (e) {
