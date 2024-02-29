@@ -28,10 +28,10 @@ class LoginForm extends FormConsumerRefWidget {
         EmailTextField(
           formControl: controller.emailControl,
         ),
-        //const SizedBox(height: 16.0),
         const SizedBox(height: 4.0),
         PasswordTextField(
           formControl: controller.passwordControl,
+          onSubmitted: (_) => form.valid ? ref.read(authFormControllerProvider(formKey).notifier).signIn() : null,
         ),
         const SizedBox(height: 8.0),
         Row(

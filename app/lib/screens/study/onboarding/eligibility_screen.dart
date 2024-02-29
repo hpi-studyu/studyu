@@ -49,10 +49,10 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   bool _checkContinuation(QuestionnaireState qs) {
     final criteria = widget.study!.eligibilityCriteria;
     EligibilityCriterion? failingResult = criteria.firstWhereOrNull((element) => element.isViolated(qs));
-    // freetext quickfix start
-    failingResult = _isFreeTextCriterion(failingResult!) ? null : failingResult;
-    // freetext quickfix end
     if (failingResult == null) return true;
+    // freetext quickfix start
+    failingResult = _isFreeTextCriterion(failingResult) ? null : failingResult;
+    // freetext quickfix end
     setState(() {
       activeResult = EligibilityResult(qs, eligible: false, firstFailed: failingResult);
     });

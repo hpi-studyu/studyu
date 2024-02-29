@@ -1,0 +1,171 @@
+name: Ready to Merge
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}-ready-to-merge
+  cancel-in-progress: true
+
+jobs:
+  check_commit_status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if PR is mergeable
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Define a list of workflows that need to finish successfully if run before merging  
+            workflows_to_check = [
+              "all_packages.yml",
+              "check-uncommitted-changes.yml",
+              "mega-linter.yml",
+              "e2e_tests.yml",
+              "supabase-test.yml",
+              "uml-docs.yml",
+            ];
+            console.log("Initializing with workflows to check: " + workflows_to_check);
+            const { owner, repo } = context.repo;
+            let branch_name;
+            if (context.payload.pull_request !== undefined) {
+              // PR event detected
+              branch_name = context.payload.pull_request.head.ref;
+            } else {
+              // Workflow dispatch event detected
+              branch_name = context.ref.split("/").pop();
+            }
+            console.log("Branch name: " + branch_name);
+            const maxRetries = 15; // Maximum number of retries
+            
+            async function fetchLatestWorkflowRun(workflowId) {
+              console.log("Fetching workflow runs for: " + workflowId);
+              try {
+                const response = await github.rest.actions.listWorkflowRuns({
+                  owner,
+                  repo,
+                  workflow_id: workflowId,
+                  branch: branch_name,
+                  per_page: 1,
+                });
+                return response.data.workflow_runs[0];
+              } catch (error) {
+                if (error.status === 404) {
+                  console.warn("Workflow not found: " + workflowId + ". It will be ignored.");
+                  return;
+                }
+                core.setFailed("Error fetching workflow runs for: " + workflowId + ". Error: " + error.message);
+                process.exit();
+              }
+            }
+
+            async function sleep(ms) {
+              return new Promise((resolve) => setTimeout(resolve, ms));
+            }
+            
+            console.log("Sleeping 10s to give other runs a chance to start");
+            await sleep(10000);
+            for (const workflowId of workflows_to_check) {
+              let retryCount = 0;
+              let inProgressFound = false;
+              let workflowRun = await fetchLatestWorkflowRun(workflowId);
+              if (!workflowRun) {
+                console.log("No workflow runs found for: " + workflowId);
+                continue;
+              }
+              do {
+                console.log("Checking workflow run: " + workflowRun.name + " with status: " + workflowRun.status + " and conclusion: " + workflowRun.conclusion);
+                if (retryCount >= maxRetries) {
+                  core.setFailed(
+                    "Maximum retries reached with check runs still in progress."
+                  );
+                  break;
+                }
+                if (workflowRun.conclusion === "success" || workflowRun.conclusion === "skipped" || workflowRun.conclusion === "cancelled") {
+                  console.log("Workflow run completed successfully: " + workflowRun.name + " with conclusion: " + workflowRun.conclusion);
+                  break;
+                }
+                if (workflowRun.conclusion === "failure") {
+                  console.log("Workflow run failed: " + workflowRun.name);
+                  const checkSuiteId = workflowRun.check_suite_id;
+                  const urlOfFailedCheckSuite = workflowRun.html_url;
+                  const checkRuns = await github.rest.checks.listForSuite({
+                    owner,
+                    repo,
+                    check_suite_id: checkSuiteId,
+                  });
+                  const failedCheckNames = checkRuns.data.check_runs
+                      .filter((checkRun) => checkRun.conclusion === "failure")
+                      .map((checkRun) => checkRun.name);
+                  core.setFailed("The workflow run '" +
+                    workflowRun.name + "' has failed. Please fix the failed checks: '" +
+                    failedCheckNames.join(", ") + "'. Check suite URL: " +
+                    urlOfFailedCheckSuite
+                  );
+                  break;
+                }
+                console.log("Waiting for 1 minute before rechecking...");
+                await sleep(60000);
+                workflowRun = await fetchLatestWorkflowRun(workflowId);
+                retryCount++;
+              } while (true);
+            }
+            console.log("All given workflow runs completed.");
+
+            // Do not check the check runs for now, since fetchCheckRuns also 
+            // includes the workflows we checked above for the latest commit.
+            // Todo: find another way to check for checks that are not part 
+            // of this repository e.g. GitGuardian
+
+            /* 
+              const commit_sha = context.payload.pull_request.head.sha; // Get the SHA of the head commit of the PR
+              console.log("commit_sha " + commit_sha);
+              // exclude the current workflow from the list of workflows to check
+              const excludedCheckRunName = 'check_commit_status'
+              // console.log("context sha: " + context.sha);
+              // console.log("github sha: " + github.sha);
+              async function fetchCheckRuns() {
+                const response = await github.rest.checks.listForRef({
+                  owner,
+                  repo,
+                  ref: commit_sha,
+                  per_page: 100,
+                });
+                console.log("Found " + response.data.check_runs.length + " check runs.");
+                return response.data.check_runs;
+              }
+              console.log("Checking check runs...");
+              let checkRuns = await fetchCheckRuns();
+              let inProgressFound = false;
+              for (const checkRun of checkRuns) {
+                let retryCount = 0;
+                do {
+                  inProgressFound = false;
+                  console.log("Checking check run: " + checkRun.name + " with status: " + checkRun.status + " and conclusion: " + checkRun.conclusion);
+                  if (checkRun.name === excludedCheckRunName) {
+                    console.log("Skipping excluded check run: " + checkRun.name);
+                    break;
+                  }
+                  if (checkRun.status === "in_progress") {
+                    console.log("Check run in progress: " + checkRun.name);
+                    if (retryCount >= maxRetries) {
+                      core.setFailed(
+                        "Maximum retries reached with check runs still in progress."
+                      );
+                      break;
+                    }
+                    console.log("Waiting for 1 minute before rechecking...");
+                    await sleep(60000);
+                    checkRuns = await fetchCheckRuns();
+                    retryCount++;
+                    inProgressFound = true;
+                  }
+                  if (checkRun.conclusion === "failure") {
+                    core.setFailed("The check run '" +
+                      checkRun.name + "' has failed. Please fix the failed checks. Check run URL: " +
+                      checkRun.html_url
+                    );
+                  }
+                } while (inProgressFound);
+              }
+              console.log("All check runs completed successfully.");
+            */

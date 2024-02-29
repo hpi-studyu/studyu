@@ -57,18 +57,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: <Widget>[
           Row(
             children: [
-              PrimaryButton(
-                icon: Icons.add,
-                text: tr.action_button_new_study,
-                onPressed: controller.onClickNewStudy,
+              SizedBox(
+                height: 36.0,
+                child: PrimaryButton(
+                  icon: Icons.add,
+                  text: tr.action_button_new_study,
+                  onPressed: controller.onClickNewStudy,
+                ),
               ),
               const SizedBox(width: 28.0),
               SelectableText(state.visibleListTitle, style: theme.textTheme.headlineMedium),
-              const Spacer(),
-              Search(
-                  searchController: controller.searchController,
-                  hintText: tr.search,
-                  onQueryChanged: (query) => controller.filterStudies(query)),
+              const SizedBox(width: 28.0),
+              Expanded(
+                  child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: Search(
+                            searchController: controller.searchController,
+                            hintText: tr.search,
+                            onQueryChanged: (query) => controller.filterStudies(query)),
+                      ))),
             ],
           ),
           const SizedBox(height: 24.0), // spacing between body elements
@@ -77,7 +86,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return AsyncValueWidget<List<Study>>(
-                      value: state.visibleStudies(snapshot.data!.preferences.pinnedStudies, state.query),
+                      value: state.displayedStudies(snapshot.data!.preferences.pinnedStudies, state.query),
                       data: (visibleStudies) => StudiesTable(
                             studies: visibleStudies,
                             pinnedStudies: snapshot.data!.preferences.pinnedStudies,

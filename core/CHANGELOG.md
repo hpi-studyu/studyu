@@ -1,3 +1,23 @@
+## 4.3.3-dev.2
+
+ - **FIX**: upgrade deps. ([6ad9bea4](https://github.com/hpi-studyu/studyu/commit/6ad9bea42903a25a5be5a84f2af8b70654d05616))
+ - **FIX**: update gitignore files. ([939d6be4](https://github.com/hpi-studyu/studyu/commit/939d6be422ee37f2ea56b39bb3921060fd1844cd))
+ - **FIX**: upgrade deps. ([7ac0d4ca](https://github.com/hpi-studyu/studyu/commit/7ac0d4cab42b1ce27ec200a5241f92d612ade499))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+
+## 4.3.3-dev.1
+
+ - **REFACTOR**: rename analytics. ([98386b03](https://github.com/hpi-studyu/studyu/commit/98386b03ada1a47d28469afbd15e3bde411ef6b9))
+ - **REFACTOR**: enable cache again and add new logger. ([e0ad446f](https://github.com/hpi-studyu/studyu/commit/e0ad446fe03c94261782606a186a0364dbe87428))
+ - **REFACTOR**: rename free text attributes. ([f145b425](https://github.com/hpi-studyu/studyu/commit/f145b425e885501993f5ec60aa5028c68024cb0a))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+ - **FIX**: quickfix for free text eligibility. ([5bb2e42b](https://github.com/hpi-studyu/studyu/commit/5bb2e42b89383611fd9cd0882c1cdb6df4c07544))
+ - **FIX**: upgrade deps. ([304430c8](https://github.com/hpi-studyu/studyu/commit/304430c858d4035a279b42114c7ccf86299357a2))
+ - **FIX**: upgrade deps. ([1940357e](https://github.com/hpi-studyu/studyu/commit/1940357e4d9975743c0913825aa585958410ebca))
+ - **FIX**: type checks and matching. ([92629cb4](https://github.com/hpi-studyu/studyu/commit/92629cb4395d8e456a0531647d6ba1de4a77a92f))
+ - **FIX**: type checks. ([b85e073d](https://github.com/hpi-studyu/studyu/commit/b85e073d7075b8d45d15f32e62d5761416cdad4a))
+ - **FEAT**: implement free_text for designer. ([f0ce3512](https://github.com/hpi-studyu/studyu/commit/f0ce3512f28b1eaae1bc69f75701038e42e6936d))
+
 ## 4.3.3-dev.0
 
  - **FIX**: upgrade deps. ([304430c8](https://github.com/hpi-studyu/studyu/commit/304430c858d4035a279b42114c7ccf86299357a2))

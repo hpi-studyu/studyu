@@ -151,7 +151,7 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                   onTap: () async {
                     final iconAuthors = ['Kiranshastry'];
                     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-                    if (!mounted) return;
+                    if (!context.mounted) return;
                     showAboutDialog(
                       context: context,
                       applicationIcon: GestureDetector(
@@ -194,7 +194,7 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                                   ));
                           testNotifications(context);
                         },
-                        child: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
+                        child: const Image(image: AssetImage('assets/icon/icon.png'), height: 32),
                       ),
                       applicationVersion: '${packageInfo.version} - ${packageInfo.buildNumber}',
                       children: [

@@ -1,3 +1,56 @@
+## 1.6.2-dev.4
+
+ - **FIX**: breaking deps. ([34896ad3](https://github.com/hpi-studyu/studyu/commit/34896ad381b38a4ad03caf92f57ad527bc1f6706))
+
+## 1.6.2-dev.3
+
+ - **REVERT**: "refactor: remove unused title"". ([c473bba4](https://github.com/hpi-studyu/studyu/commit/c473bba43f9952dbadb5424e5ad00ae791f85e46))
+ - **REVERT**: "refactor: remove unused title". ([26f1ab93](https://github.com/hpi-studyu/studyu/commit/26f1ab9321ab0ddfab9c23bcca48557f95599b9f))
+ - **REFACTOR**: use logo in app bar for compact view. ([4f0d81c3](https://github.com/hpi-studyu/studyu/commit/4f0d81c386b7054c85fc3c58b5e32fed53593339))
+ - **REFACTOR**: remove unused title. ([3121af17](https://github.com/hpi-studyu/studyu/commit/3121af17f8bdc8de0850c2ff0d94527b28035e4d))
+ - **FIX**: upgrade deps. ([6ad9bea4](https://github.com/hpi-studyu/studyu/commit/6ad9bea42903a25a5be5a84f2af8b70654d05616))
+ - **FIX**: remove debugPrint of screen width. ([a313908a](https://github.com/hpi-studyu/studyu/commit/a313908a1d2fe037131463b82ecd040d6f45fff6))
+ - **FIX**: update gitignore files. ([939d6be4](https://github.com/hpi-studyu/studyu/commit/939d6be422ee37f2ea56b39bb3921060fd1844cd))
+ - **FIX**: use icon directory. ([d3d627cd](https://github.com/hpi-studyu/studyu/commit/d3d627cda35c14af026507f4181c232b8c43e22d))
+ - **FIX**: new web deployment with generated icons. ([fd8fcc9f](https://github.com/hpi-studyu/studyu/commit/fd8fcc9f459cc0f46c5185d96cce6586adbfc543))
+ - **FIX**: upgrade deps. ([7ac0d4ca](https://github.com/hpi-studyu/studyu/commit/7ac0d4cab42b1ce27ec200a5241f92d612ade499))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+ - **FIX**: alignment of the sorting arrows. ([8b3938c1](https://github.com/hpi-studyu/studyu/commit/8b3938c14aed65b58a5797de754cc87858967b03))
+ - **FIX**: restore new study button height. ([67fd5bd0](https://github.com/hpi-studyu/studyu/commit/67fd5bd031545959063f0e075094ab2233a1b9c2))
+ - **FIX**: update of selected route in app drawer. ([c0509d9c](https://github.com/hpi-studyu/studyu/commit/c0509d9cabd4b4aa371febe9aba009d01f0ac927))
+ - **FIX**: Layout overflow of column headers. ([f550e20a](https://github.com/hpi-studyu/studyu/commit/f550e20a1860db920c40ecb9d1dcdf9b225ac548))
+ - **FIX**: Shorter text for study title in German. ([ca965ac4](https://github.com/hpi-studyu/studyu/commit/ca965ac461ba0c2298ed4d996e5388b3f252db40))
+ - **FIX**: Remove column spacing when column is collapsed. ([331a0702](https://github.com/hpi-studyu/studyu/commit/331a0702dbe316186eada6fffa37365d065b91cd))
+ - **FIX**: Layout overflow of status and participation badge. ([38e7a197](https://github.com/hpi-studyu/studyu/commit/38e7a197df8b3f12a43d49cbca28d21d6eb1b18e))
+ - **FIX**: Close drawer after selection. ([9e1adb1c](https://github.com/hpi-studyu/studyu/commit/9e1adb1c7ddc6efffc27dbea2a853478be3cee64))
+ - **FIX**: hardcoded width of search bar. ([22778eba](https://github.com/hpi-studyu/studyu/commit/22778eba1142dec0a74dc3813f1be93b4dc04458))
+ - **FEAT**: add optional AUTO_LOGIN bool. ([10e8ff74](https://github.com/hpi-studyu/studyu/commit/10e8ff74ab46420766f705e8ecf101ac20345d9b))
+ - **FEAT**: handle onSubmitted for password fields. ([f9ce231b](https://github.com/hpi-studyu/studyu/commit/f9ce231baa3e8a93b1436263fa8d457ab75ea3e0))
+ - **FEAT**: add other platforms. ([34f5dafa](https://github.com/hpi-studyu/studyu/commit/34f5dafadafda6bc8652639245901620a2a116ab))
+ - **FEAT**: style study table item without elevation. ([e45a0021](https://github.com/hpi-studyu/studyu/commit/e45a0021ff0d839f8684a01ff655d8a3d3a58772))
+ - **FEAT**: Collapse "Created" column when available width is very low. ([970478db](https://github.com/hpi-studyu/studyu/commit/970478dbd5d2f71bff654c1fe16987fb16a4d50f))
+ - **FEAT**: collapse dashboard drawer if horizontal space is low. ([400badea](https://github.com/hpi-studyu/studyu/commit/400badea08f02b24a1fe9792dcb6d05ab0dc8cc9))
+ - **FEAT**: collapse enrolled, active, completed if horizontal space is low. ([12ec8b3f](https://github.com/hpi-studyu/studyu/commit/12ec8b3ffb9a4cb0f89da02940f5794892128fa0))
+ - **FEAT**: implement studies table using ListView. ([e3f5756e](https://github.com/hpi-studyu/studyu/commit/e3f5756eb87435d2b670f6402f8bbc53fe390553))
+
+## 1.6.2-dev.2
+
+ - **REFACTOR**: rename free text attributes. ([f145b425](https://github.com/hpi-studyu/studyu/commit/f145b425e885501993f5ec60aa5028c68024cb0a))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+ - **FIX**: resolve suggestions. ([e3584b70](https://github.com/hpi-studyu/studyu/commit/e3584b706e3ac44e51257165dcf9e0678205d8a5))
+ - **FIX**: do not show length as double. ([76704bd2](https://github.com/hpi-studyu/studyu/commit/76704bd218cc4d99df8ef5c91260f83628806fef))
+ - **FIX**: quickfix for free text eligibility. ([5bb2e42b](https://github.com/hpi-studyu/studyu/commit/5bb2e42b89383611fd9cd0882c1cdb6df4c07544))
+ - **FIX**: free text show errors only when dirty. ([d0841113](https://github.com/hpi-studyu/studyu/commit/d08411135a2d2c468a46d72d02f7186319106b4d))
+ - **FIX**: free text localization. ([bb1fc558](https://github.com/hpi-studyu/studyu/commit/bb1fc558f3d708ae75307319a85fc1f12105c29d))
+ - **FIX**: disable free text options on readonly. ([c882c6d0](https://github.com/hpi-studyu/studyu/commit/c882c6d0be77b8f5fb5fe4c2f6be5ba16f1d775e))
+ - **FIX**: standard table error. ([341a8415](https://github.com/hpi-studyu/studyu/commit/341a84155bca30fd023eb92efdf7268160c668eb))
+ - **FIX**: reactive free text validation. ([caecd761](https://github.com/hpi-studyu/studyu/commit/caecd761f151abbb127b693a50177cca99e299fd))
+ - **FEAT**: use workaround to always show value indicator for range slider. ([61a06ad9](https://github.com/hpi-studyu/studyu/commit/61a06ad9cba422f4ba5a88d9e1d2ea3e7e847557))
+ - **FEAT**: increase max free text range. ([5b288caf](https://github.com/hpi-studyu/studyu/commit/5b288cafc67f6f841671afd94b0f5cdaa56d60af))
+ - **FEAT**: translate free text. ([0cad3ff9](https://github.com/hpi-studyu/studyu/commit/0cad3ff9ea05f56f25fe16b223b7e140c530ff89))
+ - **FEAT**: implement free text validator for app. ([44c3fa20](https://github.com/hpi-studyu/studyu/commit/44c3fa2070e0073a6ab4352daa4d96d7ee1632fe))
+ - **FEAT**: implement free_text for designer. ([f0ce3512](https://github.com/hpi-studyu/studyu/commit/f0ce3512f28b1eaae1bc69f75701038e42e6936d))
+
 ## 1.6.2-dev.1
 
  - **REFACTOR**: replace custom validators with native ones. ([e7d8c50b](https://github.com/hpi-studyu/studyu/commit/e7d8c50bb419520ce0889a71a0295c239aa62807))
