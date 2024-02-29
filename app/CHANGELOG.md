@@ -1,3 +1,22 @@
+## 2.6.5-dev.4
+
+ - **FIX**: breaking deps. ([34896ad3](https://github.com/hpi-studyu/studyu/commit/34896ad381b38a4ad03caf92f57ad527bc1f6706))
+
+## 2.6.5-dev.3
+
+ - **REFACTOR**: rework android release platform and pipeline. ([08f4c97f](https://github.com/hpi-studyu/studyu/commit/08f4c97f07c84491bac4147955ba7f03a5bae65d))
+ - **FIX**: upgrade deps. ([6ad9bea4](https://github.com/hpi-studyu/studyu/commit/6ad9bea42903a25a5be5a84f2af8b70654d05616))
+ - **FIX**: null value. ([3a0e6592](https://github.com/hpi-studyu/studyu/commit/3a0e65928dd74f0b630fd53a15efb3cbbc1ec555))
+ - **FIX**: add notification icon again. ([23656f60](https://github.com/hpi-studyu/studyu/commit/23656f60d3de85d2007e9c88c28656b4503d7e7b))
+ - **FIX**: crash on Android 12L / 13. ([1d8dd104](https://github.com/hpi-studyu/studyu/commit/1d8dd10479aebf490c3941cf5f0493c95de494bc))
+ - **FIX**: wrong notification icon path. ([7b91f55f](https://github.com/hpi-studyu/studyu/commit/7b91f55f06d132739e1066e7df814b92d8470634))
+ - **FIX**: update gitignore files. ([939d6be4](https://github.com/hpi-studyu/studyu/commit/939d6be422ee37f2ea56b39bb3921060fd1844cd))
+ - **FIX**: use icon directory. ([d3d627cd](https://github.com/hpi-studyu/studyu/commit/d3d627cda35c14af026507f4181c232b8c43e22d))
+ - **FIX**: new web deployment with generated icons. ([fd8fcc9f](https://github.com/hpi-studyu/studyu/commit/fd8fcc9f459cc0f46c5185d96cce6586adbfc543))
+ - **FIX**: upgrade deps. ([7ac0d4ca](https://github.com/hpi-studyu/studyu/commit/7ac0d4cab42b1ce27ec200a5241f92d612ade499))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+ - **FEAT**: add other platforms. ([34f5dafa](https://github.com/hpi-studyu/studyu/commit/34f5dafadafda6bc8652639245901620a2a116ab))
+
 ## 2.6.5-dev.2
 
  - **REFACTOR**: rename analytics. ([98386b03](https://github.com/hpi-studyu/studyu/commit/98386b03ada1a47d28469afbd15e3bde411ef6b9))

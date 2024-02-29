@@ -221,7 +221,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                     return;
                   }
 
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   Navigator.pop(context);
 
                   if (result.containsKey('preselected_intervention_ids') &&
