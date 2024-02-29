@@ -151,7 +151,7 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                   onTap: () async {
                     final iconAuthors = ['Kiranshastry'];
                     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-                    if (!mounted) return;
+                    if (!context.mounted) return;
                     showAboutDialog(
                       context: context,
                       applicationIcon: GestureDetector(
