@@ -26,9 +26,9 @@ dependencies:
   intl: ^0.18.1 # flutter_localizations
   material_design_icons_flutter: ^7.0.7296
   package_info_plus: ^5.0.1
-  pdf: ^3.10.7
+  pdf: ^3.10.8
   permission_handler: ^11.3.0
-  provider: ^6.1.1
+  provider: ^6.1.2
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
   sentry_flutter: ^7.16.1
