@@ -9,6 +9,9 @@ on:
   # Comment this line to trigger action only on pull-requests
   # (not recommended if you don't pay for GH Actions)
   push:
+    paths-ignore:
+      - 'docs/database/**'
+      - 'docs/uml/**'
   workflow_dispatch:
 
 # Comment env block if you do not want to apply fixes
@@ -78,11 +81,11 @@ jobs:
           #     github.event_name == 'push' &&
           #     github.ref == 'refs/heads/main'
           #   }}
-          VALIDATE_ALL_CODEBASE: >-
-            ${{
-              github.event_name == 'push' &&
-              contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref)
-            }}
+          # VALIDATE_ALL_CODEBASE: >-
+          #   ${{
+          #     github.event_name == 'push' &&
+          #     contains(fromJSON('["refs/heads/main", "refs/heads/master"]'), github.ref)
+          #   }}
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

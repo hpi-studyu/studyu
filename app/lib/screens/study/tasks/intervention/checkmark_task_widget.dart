@@ -45,7 +45,7 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
         setState(() {
           _isLoading = false;
         });
-        if (!mounted) return;
+        if (!context.mounted) return;
         Navigator.pop(context, true);
       },
       icon: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Icon(Icons.check),

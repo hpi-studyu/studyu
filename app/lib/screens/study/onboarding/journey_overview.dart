@@ -28,7 +28,7 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     } else {
       consentGiven = true;
     }
-    if (!mounted) return;
+    if (!context.mounted) return;
     if (consentGiven != null && consentGiven) {
       Navigator.pushNamed(context, Routes.kickoff);
     } else {

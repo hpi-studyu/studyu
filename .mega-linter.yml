@@ -3,6 +3,8 @@
 # See all available variables at https://megalinter.io/latest/config-file/ and in
 # linters documentation
 
+VALIDATE_ALL_CODEBASE: false
+
 # all, none, or list of linter keys
 APPLY_FIXES: all
 
@@ -31,7 +33,7 @@ DISABLE:
 # - COPYPASTE # Uncomment to disable checks of excessive copy-pastes
  - SPELL # Uncomment to disable checks of spelling mistakes
 
-SHOW_ELAPSED_TIME: true
+SHOW_ELAPSED_TIME: false
 
 FILEIO_REPORTER: false
 
@@ -53,5 +55,6 @@ FILTER_REGEX_EXCLUDE: (.*\.g\.dart|.*\/CHANGELOG.md|docs/database/.*|docs/uml/.*
 
 BASH_SHELLCHECK_ARGUMENTS: -ax -S style --shell=bash
 MARKDOWN_MARKDOWN_LINK_CHECK_CONFIG_FILE: .markdown_link_check.yml
-ACTION_ACTIONLINT_FILTER_REGEX_EXCLUDE: (.*\/.github\/workflows\/init-workspace\/action\.yml)
+# todo deploy-apps.yml can be removed from the excluded list after actionlint#393 is released
+ACTION_ACTIONLINT_FILTER_REGEX_EXCLUDE: (.*\/.github\/workflows\/init-workspace\/action\.yml|.*\/.github\/workflows\/deploy-apps\.yml)
 # SQL_SQLFLUFF_CONFIG_FILE: .sqlfluff

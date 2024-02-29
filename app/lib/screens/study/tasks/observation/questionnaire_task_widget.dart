@@ -36,7 +36,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         rethrow;
       }
     });
-    if (!mounted) return;
+    if (!context.mounted) return;
     Navigator.pop(context, true);
   }
 

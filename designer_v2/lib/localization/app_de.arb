@@ -87,7 +87,7 @@
   "@__________________DASHBOARD__________________": {},
   "action_button_new_study": "Neue Studie",
   "search": "Suche",
-  "studies_list_header_title": "Studientitel",
+  "studies_list_header_title": "Titel",
   "studies_list_header_status": "Status",
   "studies_list_header_participation": "Teilnahme",
   "studies_list_header_created_at": "Erstellt",
