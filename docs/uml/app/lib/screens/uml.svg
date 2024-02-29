@@ -1,4 +1,4 @@
-<svg version="1.1" baseProfile="full" width="17287.8" height="788.0" viewbox="0 0 17287.75 788" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<svg version="1.1" baseProfile="full" width="17503.8" height="788.0" viewbox="0 0 17503.75 788" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
 	<desc >[StudySelectionScreen
 	  |
 	  +Widget build()
@@ -557,6 +557,11 @@
 	  +void listen()
 	]
 	
+	[AppOutdatedScreen
+	  |
+	  +Widget build()
+	]
+	
 	[TermsScreen
 	]
 	
@@ -613,7 +618,7 @@
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="788.0" width="17287.8" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="788.0" width="17503.8" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
@@ -621,7 +626,7 @@
 					<g fill="#eee8d5">
 						<path d="M4722.8 252.3 L4717.5 261.7 L4712.2 252.3 L4717.5 243.0 Z"></path>
 					</g>
-					<path d="M5195.5 223.7 L5195.5 353 L4070 506.62630045776115 L4070.0 506.6 " fill="none"></path>
+					<path d="M5195.5 223.7 L5195.5 353 L4178 505.60173754000914 L4178.0 505.6 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M5200.8 214.3 L5195.5 223.7 L5190.2 214.3 L5195.5 205.0 Z"></path>
 					</g>
@@ -693,7 +698,7 @@
 					<g fill="#eee8d5">
 						<path d="M12326.0 217.4 L12326.6 228.1 L12317.1 223.2 L12316.4 212.5 Z"></path>
 					</g>
-					<path d="M12314.1 229.6 L12368.5 353 L14232.25 514.8292521508935 L14232.3 514.8 " fill="none"></path>
+					<path d="M12314.1 229.6 L12368.5 353 L14340.25 514.9466633279078 L14340.3 514.9 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M12315.2 218.9 L12314.1 229.6 L12305.4 223.2 L12306.5 212.5 Z"></path>
 					</g>
@@ -709,7 +714,7 @@
 					<g fill="#eee8d5">
 						<path d="M10969.9 230.6 L10959.8 234.3 L10961.7 223.7 L10971.7 220.0 Z"></path>
 					</g>
-					<path d="M12820.3 231.7 L12820.25 353 L13500.25 506.82068965517243 L13500.3 506.8 " fill="none"></path>
+					<path d="M12820.3 231.7 L12820.25 353 L13608.25 508.140456182473 L13608.3 508.1 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M12825.6 222.3 L12820.3 231.7 L12814.9 222.3 L12820.3 213.0 Z"></path>
 					</g>
@@ -741,7 +746,7 @@
 						<path d="M13001.8 195.3 L13001.75 353 L11411 501.50320193539204 L11411.0 501.5 " fill="none"></path>
 					</g>
 					<path d="M13007.1 195.3 L13001.8 195.3 L12996.4 195.3 L13001.8 182.0 Z"></path>
-					<path d="M13833.5 239.2 L13833.5 353 L15047.5 505.2140672782875 L15047.5 505.2 " fill="none"></path>
+					<path d="M13833.5 239.2 L13833.5 353 L15155.5 506.11299435028246 L15155.5 506.1 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M13838.8 229.8 L13833.5 239.2 L13828.2 229.8 L13833.5 220.5 Z"></path>
 					</g>
@@ -749,23 +754,23 @@
 					<g fill="#eee8d5">
 						<path d="M10669.8 222.3 L10664.5 231.7 L10659.2 222.3 L10664.5 213.0 Z"></path>
 					</g>
-					<path d="M14442.4 215.6 L14640.5 353 L15808.75 507.54164145997174 L15808.8 507.5 " fill="none"></path>
+					<path d="M14442.4 215.6 L14640.5 353 L15916.75 508.2995733630124 L15916.8 508.3 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M14437.7 205.9 L14442.4 215.6 L14431.7 214.7 L14427.0 205.0 Z"></path>
 					</g>
-					<path d="M14325.6 219.1 L14208.5 353 L15438.5 507.2201834862385 L15438.5 507.2 " fill="none"></path>
+					<path d="M14325.6 219.1 L14208.5 353 L15546.5 507.96610169491527 L15546.5 508.0 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M14335.7 215.5 L14325.6 219.1 L14327.7 208.5 L14337.9 205.0 Z"></path>
 					</g>
-					<path d="M15099.6 210.2 L15589.75 353 L16466.75 502.8989056800417 L16466.8 502.9 " fill="none"></path>
+					<path d="M15122.1 209.5 L15697.75 353 L16682.75 504.3255269320843 L16682.8 504.3 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M15092.1 202.5 L15099.6 210.2 L15089.1 212.7 L15081.7 205.0 Z"></path>
+						<path d="M15114.3 202.1 L15122.1 209.5 L15111.7 212.4 L15104.0 205.0 Z"></path>
 					</g>
-					<path d="M14878.6 215.6 L14680.5 353 L15438.5 501.69856459330146 L15438.5 501.7 " fill="none"></path>
+					<path d="M14878.6 215.6 L14680.5 353 L15546.5 503.4491525423729 L15546.5 503.4 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M14889.3 214.7 L14878.6 215.6 L14883.3 205.9 L14894.0 205.0 Z"></path>
 					</g>
-					<path d="M13437.5 236.6 L13574.25 353 L14809.5 504.83136593591905 L14809.5 504.8 " fill="none"></path>
+					<path d="M13437.5 236.6 L13574.25 353 L14917.5 505.7425897035881 L14917.5 505.7 " fill="none"></path>
 					<path d="M13440.9 232.6 L13437.5 236.6 L13434.0 240.7 L13427.3 228.0 Z"></path>
 					<path d="M11426.3 272.4 L11492.25 353 L11948.842225609756 501.5 L11948.8 501.5 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -791,7 +796,7 @@
 					<g fill="#eee8d5">
 						<path d="M13410.8 232.3 L13412.1 243.0 L13402.2 238.7 L13400.9 228.0 Z"></path>
 					</g>
-					<path d="M13394.0 239.8 L13454.25 353 L13994.25 491.59154929577466 L13994.3 491.6 " fill="none"></path>
+					<path d="M13394.0 239.8 L13454.25 353 L14102.25 495.26506024096386 L14102.3 495.3 " fill="none"></path>
 					<path d="M13398.7 237.3 L13394.0 239.8 L13389.3 242.3 L13387.7 228.0 Z"></path>
 					<path d="M1617.5 239.2 L1617.5 353 L5105.25 514.2264111056303 L5105.3 514.2 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -813,23 +818,23 @@
 					<g fill="#eee8d5">
 						<path d="M8896.9 231.2 L8887.2 235.8 L8888.2 225.1 L8897.9 220.5 Z"></path>
 					</g>
-					<path d="M16974.8 246.7 L16974.75 353 L16974.75 501.5 L16974.8 501.5 " fill="none"></path>
+					<path d="M17190.8 246.7 L17190.75 353 L17190.75 501.5 L17190.8 501.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M16980.1 237.3 L16974.8 246.7 L16969.4 237.3 L16974.8 228.0 Z"></path>
+						<path d="M17196.1 237.3 L17190.8 246.7 L17185.4 237.3 L17190.8 228.0 Z"></path>
 					</g>
-					<path d="M13323.4 240.3 L13275 353 L13630.25 465.63605606573225 L13630.3 465.6 " fill="none"></path>
+					<path d="M13323.4 240.3 L13275 353 L13738.25 474.5081967213115 L13738.3 474.5 " fill="none"></path>
 					<path d="M13328.3 242.4 L13323.4 240.3 L13318.5 238.2 L13328.6 228.0 Z"></path>
-					<path d="M13263.3 679.7 L13263.25 681 L13263.25 701 L13263.3 701.0 " fill="none"></path>
+					<path d="M13371.3 679.7 L13371.25 681 L13371.25 701 L13371.3 701.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M13268.6 670.3 L13263.3 679.7 L13257.9 670.3 L13263.3 661.0 Z"></path>
+						<path d="M13376.6 670.3 L13371.3 679.7 L13365.9 670.3 L13371.3 661.0 Z"></path>
 					</g>
-					<path d="M12594.7 209.1 L12675.5 353 L13066.25 462.0310506167588 L13066.3 462.0 " fill="none"></path>
+					<path d="M12594.7 209.1 L12675.5 353 L13174.25 470.5637800934244 L13174.3 470.6 " fill="none"></path>
 					<path d="M12599.3 206.5 L12594.7 209.1 L12590.0 211.7 L12588.2 197.5 Z"></path>
-					<path d="M12880.3 582.2 L12880.25 681 L12880.25 701 L12880.3 701.0 " fill="none"></path>
+					<path d="M12988.3 582.2 L12988.25 681 L12988.25 701 L12988.3 701.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M12885.6 572.8 L12880.3 582.2 L12874.9 572.8 L12880.3 563.5 Z"></path>
+						<path d="M12993.6 572.8 L12988.3 582.2 L12982.9 572.8 L12988.3 563.5 Z"></path>
 					</g>
-					<path d="M12566.6 210.8 L12553.25 353 L12787.533536585366 470.5 L12787.5 470.5 " fill="none"></path>
+					<path d="M12566.6 210.8 L12553.25 353 L12864.911585365853 470.5 L12864.9 470.5 " fill="none"></path>
 					<path d="M12571.9 211.3 L12566.6 210.8 L12561.3 210.3 L12567.8 197.5 Z"></path>
 					<path d="M12540.2 213.1 L12448.5 353 L5225.25 515.6489547935331 L5225.3 515.6 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -847,13 +852,13 @@
 					<g fill="#eee8d5">
 						<path d="M1000.8 222.3 L995.5 231.7 L990.2 222.3 L995.5 213.0 Z"></path>
 					</g>
-					<path d="M16282.6 284.1 L16290 353 L14282.25 514.9830279178453 L14282.3 515.0 " fill="none"></path>
+					<path d="M16498.6 284.1 L16506 353 L14390.25 515.0847833703142 L14390.3 515.1 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M16286.9 274.2 L16282.6 284.1 L16276.3 275.3 L16280.6 265.5 Z"></path>
+						<path d="M16502.9 274.2 L16498.6 284.1 L16492.3 275.3 L16496.6 265.5 Z"></path>
 					</g>
-					<path d="M16107.3 221.5 L15718 353 L16671.75 502.2865664519208 L16671.8 502.3 " fill="none"></path>
+					<path d="M16323.0 212.5 L15826 353 L16887.75 503.661475232533 L16887.8 503.7 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M16117.9 223.5 L16107.3 221.5 L16114.5 213.4 L16125.0 215.5 Z"></path>
+						<path d="M16333.5 215.1 L16323.0 212.5 L16330.6 204.9 L16341.0 207.5 Z"></path>
 					</g>
 					<path d="M7806.3 350.2 L7807.5 353 L6861.75 506.6814466187763 L6861.8 506.7 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -1006,9 +1011,9 @@
 					</g>
 					<g data-name="EligibilityCriterion">
 						<g fill="#eee8d5" stroke="#33322E" data-name="EligibilityCriterion">
-							<rect x="3918.0" y="501.5" height="31.0" width="152.0" data-name="EligibilityCriterion"></rect>
+							<rect x="4026.0" y="501.5" height="31.0" width="152.0" data-name="EligibilityCriterion"></rect>
 						</g>
-						<g transform="translate(3918, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EligibilityCriterion">
+						<g transform="translate(4026, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EligibilityCriterion">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EligibilityCriterion">
 								<text x="68.0" y="13.5" stroke="none" text-anchor="middle" data-name="EligibilityCriterion">EligibilityCriterion</text>
 								
@@ -1547,9 +1552,9 @@
 					</g>
 					<g data-name="Icon">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Icon">
-							<rect x="14232.3" y="501.5" height="31.0" width="50.0" data-name="Icon"></rect>
+							<rect x="14340.3" y="501.5" height="31.0" width="50.0" data-name="Icon"></rect>
 						</g>
-						<g transform="translate(14232.25, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Icon">
+						<g transform="translate(14340.25, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Icon">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Icon">
 								<text x="17.0" y="13.5" stroke="none" text-anchor="middle" data-name="Icon">Icon</text>
 								
@@ -1644,9 +1649,9 @@
 					</g>
 					<g data-name="SizedBox">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SizedBox">
-							<rect x="13500.3" y="501.5" height="31.0" width="90.0" data-name="SizedBox"></rect>
+							<rect x="13608.3" y="501.5" height="31.0" width="90.0" data-name="SizedBox"></rect>
 						</g>
-						<g transform="translate(13500.25, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SizedBox">
+						<g transform="translate(13608.25, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SizedBox">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SizedBox">
 								<text x="37.0" y="13.5" stroke="none" text-anchor="middle" data-name="SizedBox">SizedBox</text>
 								
@@ -1786,16 +1791,16 @@
 					</g>
 					<g data-name="Entry">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Entry">
-							<rect x="15047.5" y="478.5" height="77.0" width="188.0" data-name="Entry"></rect>
-							<path d="M15047.5 509.5 L15235.5 509.5" fill="none" data-name="Entry"></path>
+							<rect x="15155.5" y="478.5" height="77.0" width="188.0" data-name="Entry"></rect>
+							<path d="M15155.5 509.5 L15343.5 509.5" fill="none" data-name="Entry"></path>
 						</g>
-						<g transform="translate(15047.5, 478.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Entry">
+						<g transform="translate(15155.5, 478.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Entry">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Entry">
 								<text x="86.0" y="13.5" stroke="none" text-anchor="middle" data-name="Entry">Entry</text>
 								
 							</g>
 						</g>
-						<g transform="translate(15047.5, 509.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Entry">
+						<g transform="translate(15155.5, 509.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Entry">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Entry">
 								<text x="0.0" y="13.5" stroke="none" data-name="Entry">+title: String</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="Entry">+children: List&lt;Entry&gt;</text>
@@ -1875,9 +1880,9 @@
 					</g>
 					<g data-name="CheckmarkTask">
 						<g fill="#eee8d5" stroke="#33322E" data-name="CheckmarkTask">
-							<rect x="15808.8" y="501.5" height="31.0" width="143.0" data-name="CheckmarkTask"></rect>
+							<rect x="15916.8" y="501.5" height="31.0" width="143.0" data-name="CheckmarkTask"></rect>
 						</g>
-						<g transform="translate(15808.75, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CheckmarkTask">
+						<g transform="translate(15916.75, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CheckmarkTask">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CheckmarkTask">
 								<text x="63.5" y="13.5" stroke="none" text-anchor="middle" data-name="CheckmarkTask">CheckmarkTask</text>
 								
@@ -1886,9 +1891,9 @@
 					</g>
 					<g data-name="CompletionPeriod">
 						<g fill="#eee8d5" stroke="#33322E" data-name="CompletionPeriod">
-							<rect x="15438.5" y="501.5" height="31.0" width="156.0" data-name="CompletionPeriod"></rect>
+							<rect x="15546.5" y="501.5" height="31.0" width="156.0" data-name="CompletionPeriod"></rect>
 						</g>
-						<g transform="translate(15438.5, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CompletionPeriod">
+						<g transform="translate(15546.5, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CompletionPeriod">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CompletionPeriod">
 								<text x="70.0" y="13.5" stroke="none" text-anchor="middle" data-name="CompletionPeriod">CompletionPeriod</text>
 								
@@ -1916,9 +1921,9 @@
 					</g>
 					<g data-name="QuestionnaireTask">
 						<g fill="#eee8d5" stroke="#33322E" data-name="QuestionnaireTask">
-							<rect x="16466.8" y="501.5" height="31.0" width="165.0" data-name="QuestionnaireTask"></rect>
+							<rect x="16682.8" y="501.5" height="31.0" width="165.0" data-name="QuestionnaireTask"></rect>
 						</g>
-						<g transform="translate(16466.75, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionnaireTask">
+						<g transform="translate(16682.75, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="QuestionnaireTask">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="QuestionnaireTask">
 								<text x="74.5" y="13.5" stroke="none" text-anchor="middle" data-name="QuestionnaireTask">QuestionnaireTask</text>
 								
@@ -1927,16 +1932,16 @@
 					</g>
 					<g data-name="DisclaimerSection">
 						<g fill="#eee8d5" stroke="#33322E" data-name="DisclaimerSection">
-							<rect x="14809.5" y="486.0" height="62.0" width="198.0" data-name="DisclaimerSection"></rect>
-							<path d="M14809.5 517.0 L15007.5 517.0" fill="none" data-name="DisclaimerSection"></path>
+							<rect x="14917.5" y="486.0" height="62.0" width="198.0" data-name="DisclaimerSection"></rect>
+							<path d="M14917.5 517.0 L15115.5 517.0" fill="none" data-name="DisclaimerSection"></path>
 						</g>
-						<g transform="translate(14809.5, 486)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DisclaimerSection">
+						<g transform="translate(14917.5, 486)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DisclaimerSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DisclaimerSection">
 								<text x="91.0" y="13.5" stroke="none" text-anchor="middle" data-name="DisclaimerSection">DisclaimerSection</text>
 								
 							</g>
 						</g>
-						<g transform="translate(14809.5, 517)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DisclaimerSection">
+						<g transform="translate(14917.5, 517)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DisclaimerSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DisclaimerSection">
 								<text x="0.0" y="13.5" stroke="none" data-name="DisclaimerSection">+Widget buildContent()</text>
 								
@@ -2051,16 +2056,16 @@
 					</g>
 					<g data-name="GeneralDetailsSection">
 						<g fill="#eee8d5" stroke="#33322E" data-name="GeneralDetailsSection">
-							<rect x="13994.3" y="486.0" height="62.0" width="198.0" data-name="GeneralDetailsSection"></rect>
-							<path d="M13994.3 517.0 L14192.3 517.0" fill="none" data-name="GeneralDetailsSection"></path>
+							<rect x="14102.3" y="486.0" height="62.0" width="198.0" data-name="GeneralDetailsSection"></rect>
+							<path d="M14102.3 517.0 L14300.3 517.0" fill="none" data-name="GeneralDetailsSection"></path>
 						</g>
-						<g transform="translate(13994.25, 486)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GeneralDetailsSection">
+						<g transform="translate(14102.25, 486)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GeneralDetailsSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GeneralDetailsSection">
 								<text x="91.0" y="13.5" stroke="none" text-anchor="middle" data-name="GeneralDetailsSection">GeneralDetailsSection</text>
 								
 							</g>
 						</g>
-						<g transform="translate(13994.25, 517)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GeneralDetailsSection">
+						<g transform="translate(14102.25, 517)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="GeneralDetailsSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="GeneralDetailsSection">
 								<text x="0.0" y="13.5" stroke="none" data-name="GeneralDetailsSection">+Widget buildContent()</text>
 								
@@ -2158,17 +2163,17 @@
 					</g>
 					<g data-name="PerformanceBar">
 						<g fill="#eee8d5" stroke="#33322E" data-name="PerformanceBar">
-							<rect x="16902.8" y="105.0" height="123.0" width="144.0" data-name="PerformanceBar"></rect>
-							<path d="M16902.8 136.0 L17046.8 136.0" fill="none" data-name="PerformanceBar"></path>
-							<path d="M16902.8 197.0 L17046.8 197.0" fill="none" data-name="PerformanceBar"></path>
+							<rect x="17118.8" y="105.0" height="123.0" width="144.0" data-name="PerformanceBar"></rect>
+							<path d="M17118.8 136.0 L17262.8 136.0" fill="none" data-name="PerformanceBar"></path>
+							<path d="M17118.8 197.0 L17262.8 197.0" fill="none" data-name="PerformanceBar"></path>
 						</g>
-						<g transform="translate(16902.75, 105)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PerformanceBar">
+						<g transform="translate(17118.75, 105)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PerformanceBar">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PerformanceBar">
 								<text x="64.0" y="13.5" stroke="none" text-anchor="middle" data-name="PerformanceBar">PerformanceBar</text>
 								
 							</g>
 						</g>
-						<g transform="translate(16902.75, 136)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PerformanceBar">
+						<g transform="translate(17118.75, 136)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PerformanceBar">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PerformanceBar">
 								<text x="0.0" y="13.5" stroke="none" data-name="PerformanceBar">+task: Task</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="PerformanceBar">+completed: int</text>
@@ -2176,7 +2181,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(16902.75, 197)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PerformanceBar">
+						<g transform="translate(17118.75, 197)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PerformanceBar">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PerformanceBar">
 								<text x="0.0" y="13.5" stroke="none" data-name="PerformanceBar">+Widget build()</text>
 								
@@ -2185,9 +2190,9 @@
 					</g>
 					<g data-name="Task">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Task">
-							<rect x="16947.8" y="501.5" height="31.0" width="54.0" data-name="Task"></rect>
+							<rect x="17163.8" y="501.5" height="31.0" width="54.0" data-name="Task"></rect>
 						</g>
-						<g transform="translate(16947.75, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Task">
+						<g transform="translate(17163.75, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Task">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Task">
 								<text x="19.0" y="13.5" stroke="none" text-anchor="middle" data-name="Task">Task</text>
 								
@@ -2196,24 +2201,24 @@
 					</g>
 					<g data-name="PerformanceSection">
 						<g fill="#eee8d5" stroke="#33322E" data-name="PerformanceSection">
-							<rect x="13630.3" y="448.0" height="138.0" width="324.0" data-name="PerformanceSection"></rect>
-							<path d="M13630.3 479.0 L13954.3 479.0" fill="none" data-name="PerformanceSection"></path>
-							<path d="M13630.3 525.0 L13954.3 525.0" fill="none" data-name="PerformanceSection"></path>
+							<rect x="13738.3" y="448.0" height="138.0" width="324.0" data-name="PerformanceSection"></rect>
+							<path d="M13738.3 479.0 L14062.3 479.0" fill="none" data-name="PerformanceSection"></path>
+							<path d="M13738.3 525.0 L14062.3 525.0" fill="none" data-name="PerformanceSection"></path>
 						</g>
-						<g transform="translate(13630.25, 448)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PerformanceSection">
+						<g transform="translate(13738.25, 448)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PerformanceSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PerformanceSection">
 								<text x="154.0" y="13.5" stroke="none" text-anchor="middle" data-name="PerformanceSection">PerformanceSection</text>
 								
 							</g>
 						</g>
-						<g transform="translate(13630.25, 479)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PerformanceSection">
+						<g transform="translate(13738.25, 479)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PerformanceSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PerformanceSection">
 								<text x="0.0" y="13.5" stroke="none" data-name="PerformanceSection">+minimumRatio: double</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="PerformanceSection">+maximum: double</text>
 								
 							</g>
 						</g>
-						<g transform="translate(13630.25, 525)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PerformanceSection">
+						<g transform="translate(13738.25, 525)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PerformanceSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PerformanceSection">
 								<text x="0.0" y="13.5" stroke="none" data-name="PerformanceSection">+Widget buildContent()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="PerformanceSection">+String getPowerLevelDescription()</text>
@@ -2224,17 +2229,17 @@
 					</g>
 					<g data-name="AverageSectionWidget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AverageSectionWidget">
-							<rect x="13066.3" y="373.0" height="288.0" width="394.0" data-name="AverageSectionWidget"></rect>
-							<path d="M13066.3 404.0 L13460.3 404.0" fill="none" data-name="AverageSectionWidget"></path>
-							<path d="M13066.3 465.0 L13460.3 465.0" fill="none" data-name="AverageSectionWidget"></path>
+							<rect x="13174.3" y="373.0" height="288.0" width="394.0" data-name="AverageSectionWidget"></rect>
+							<path d="M13174.3 404.0 L13568.3 404.0" fill="none" data-name="AverageSectionWidget"></path>
+							<path d="M13174.3 465.0 L13568.3 465.0" fill="none" data-name="AverageSectionWidget"></path>
 						</g>
-						<g transform="translate(13066.25, 373)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AverageSectionWidget">
+						<g transform="translate(13174.25, 373)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AverageSectionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AverageSectionWidget">
 								<text x="189.0" y="13.5" stroke="none" text-anchor="middle" data-name="AverageSectionWidget">AverageSectionWidget</text>
 								
 							</g>
 						</g>
-						<g transform="translate(13066.25, 404)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AverageSectionWidget">
+						<g transform="translate(13174.25, 404)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AverageSectionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AverageSectionWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="AverageSectionWidget">+section: AverageSection</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="AverageSectionWidget">+titlePos: List&lt;int&gt;</text>
@@ -2242,7 +2247,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(13066.25, 465)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AverageSectionWidget">
+						<g transform="translate(13174.25, 465)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AverageSectionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AverageSectionWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="AverageSectionWidget">+Widget build()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="AverageSectionWidget">+Widget getLegend()</text>
@@ -2262,9 +2267,9 @@
 					</g>
 					<g data-name="AverageSection">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AverageSection">
-							<rect x="13192.8" y="701.0" height="31.0" width="141.0" data-name="AverageSection"></rect>
+							<rect x="13300.8" y="701.0" height="31.0" width="141.0" data-name="AverageSection"></rect>
 						</g>
-						<g transform="translate(13192.75, 701)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AverageSection">
+						<g transform="translate(13300.75, 701)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AverageSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AverageSection">
 								<text x="62.5" y="13.5" stroke="none" text-anchor="middle" data-name="AverageSection">AverageSection</text>
 								
@@ -2312,23 +2317,23 @@
 					</g>
 					<g data-name="LinearRegressionSectionWidget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="LinearRegressionSectionWidget">
-							<rect x="12734.3" y="470.5" height="93.0" width="292.0" data-name="LinearRegressionSectionWidget"></rect>
-							<path d="M12734.3 501.5 L13026.3 501.5" fill="none" data-name="LinearRegressionSectionWidget"></path>
-							<path d="M12734.3 532.5 L13026.3 532.5" fill="none" data-name="LinearRegressionSectionWidget"></path>
+							<rect x="12842.3" y="470.5" height="93.0" width="292.0" data-name="LinearRegressionSectionWidget"></rect>
+							<path d="M12842.3 501.5 L13134.3 501.5" fill="none" data-name="LinearRegressionSectionWidget"></path>
+							<path d="M12842.3 532.5 L13134.3 532.5" fill="none" data-name="LinearRegressionSectionWidget"></path>
 						</g>
-						<g transform="translate(12734.25, 470.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearRegressionSectionWidget">
+						<g transform="translate(12842.25, 470.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearRegressionSectionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LinearRegressionSectionWidget">
 								<text x="138.0" y="13.5" stroke="none" text-anchor="middle" data-name="LinearRegressionSectionWidget">LinearRegressionSectionWidget</text>
 								
 							</g>
 						</g>
-						<g transform="translate(12734.25, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearRegressionSectionWidget">
+						<g transform="translate(12842.25, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearRegressionSectionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LinearRegressionSectionWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="LinearRegressionSectionWidget">+section: LinearRegressionSection</text>
 								
 							</g>
 						</g>
-						<g transform="translate(12734.25, 532.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearRegressionSectionWidget">
+						<g transform="translate(12842.25, 532.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearRegressionSectionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LinearRegressionSectionWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="LinearRegressionSectionWidget">+Widget build()</text>
 								
@@ -2337,9 +2342,9 @@
 					</g>
 					<g data-name="LinearRegressionSection">
 						<g fill="#eee8d5" stroke="#33322E" data-name="LinearRegressionSection">
-							<rect x="12772.8" y="701.0" height="31.0" width="215.0" data-name="LinearRegressionSection"></rect>
+							<rect x="12880.8" y="701.0" height="31.0" width="215.0" data-name="LinearRegressionSection"></rect>
 						</g>
-						<g transform="translate(12772.75, 701)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearRegressionSection">
+						<g transform="translate(12880.75, 701)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearRegressionSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LinearRegressionSection">
 								<text x="99.5" y="13.5" stroke="none" text-anchor="middle" data-name="LinearRegressionSection">LinearRegressionSection</text>
 								
@@ -2515,11 +2520,29 @@
 							</g>
 						</g>
 					</g>
+					<g data-name="AppOutdatedScreen">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AppOutdatedScreen">
+							<rect x="15964.0" y="135.5" height="62.0" width="176.0" data-name="AppOutdatedScreen"></rect>
+							<path d="M15964.0 166.5 L16140.0 166.5" fill="none" data-name="AppOutdatedScreen"></path>
+						</g>
+						<g transform="translate(15964, 135.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AppOutdatedScreen">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AppOutdatedScreen">
+								<text x="80.0" y="13.5" stroke="none" text-anchor="middle" data-name="AppOutdatedScreen">AppOutdatedScreen</text>
+								
+							</g>
+						</g>
+						<g transform="translate(15964, 166.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppOutdatedScreen">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppOutdatedScreen">
+								<text x="0.0" y="13.5" stroke="none" data-name="AppOutdatedScreen">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="TermsScreen">
 						<g fill="#eee8d5" stroke="#33322E" data-name="TermsScreen">
-							<rect x="15964.0" y="151.0" height="31.0" width="121.0" data-name="TermsScreen"></rect>
+							<rect x="16180.0" y="151.0" height="31.0" width="121.0" data-name="TermsScreen"></rect>
 						</g>
-						<g transform="translate(15964, 151)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TermsScreen">
+						<g transform="translate(16180, 151)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TermsScreen">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TermsScreen">
 								<text x="52.5" y="13.5" stroke="none" text-anchor="middle" data-name="TermsScreen">TermsScreen</text>
 								
@@ -2528,17 +2551,17 @@
 					</g>
 					<g data-name="LegalSection">
 						<g fill="#eee8d5" stroke="#33322E" data-name="LegalSection">
-							<rect x="16125.0" y="67.5" height="198.0" width="290.0" data-name="LegalSection"></rect>
-							<path d="M16125.0 98.5 L16415.0 98.5" fill="none" data-name="LegalSection"></path>
-							<path d="M16125.0 234.5 L16415.0 234.5" fill="none" data-name="LegalSection"></path>
+							<rect x="16341.0" y="67.5" height="198.0" width="290.0" data-name="LegalSection"></rect>
+							<path d="M16341.0 98.5 L16631.0 98.5" fill="none" data-name="LegalSection"></path>
+							<path d="M16341.0 234.5 L16631.0 234.5" fill="none" data-name="LegalSection"></path>
 						</g>
-						<g transform="translate(16125, 67.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LegalSection">
+						<g transform="translate(16341, 67.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LegalSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LegalSection">
 								<text x="137.0" y="13.5" stroke="none" text-anchor="middle" data-name="LegalSection">LegalSection</text>
 								
 							</g>
 						</g>
-						<g transform="translate(16125, 98.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LegalSection">
+						<g transform="translate(16341, 98.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LegalSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LegalSection">
 								<text x="0.0" y="13.5" stroke="none" data-name="LegalSection">+title: String?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="LegalSection">+description: String?</text>
@@ -2551,7 +2574,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(16125, 234.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LegalSection">
+						<g transform="translate(16341, 234.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LegalSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LegalSection">
 								<text x="0.0" y="13.5" stroke="none" data-name="LegalSection">+Widget build()</text>
 								
@@ -2560,9 +2583,9 @@
 					</g>
 					<g data-name="void Function(bool?)?">
 						<g fill="#eee8d5" stroke="#33322E" data-name="void Function(bool?)?">
-							<rect x="16671.8" y="501.5" height="31.0" width="188.0" data-name="void Function(bool?)?"></rect>
+							<rect x="16887.8" y="501.5" height="31.0" width="188.0" data-name="void Function(bool?)?"></rect>
 						</g>
-						<g transform="translate(16671.75, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(bool?)?">
+						<g transform="translate(16887.75, 501.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="void Function(bool?)?">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="void Function(bool?)?">
 								<text x="86.0" y="13.5" stroke="none" text-anchor="middle" data-name="void Function(bool?)?">void Function(bool?)?</text>
 								
@@ -2623,16 +2646,16 @@
 					</g>
 					<g data-name="WelcomeScreen">
 						<g fill="#eee8d5" stroke="#33322E" data-name="WelcomeScreen">
-							<rect x="17086.8" y="135.5" height="62.0" width="145.0" data-name="WelcomeScreen"></rect>
-							<path d="M17086.8 166.5 L17231.8 166.5" fill="none" data-name="WelcomeScreen"></path>
+							<rect x="17302.8" y="135.5" height="62.0" width="145.0" data-name="WelcomeScreen"></rect>
+							<path d="M17302.8 166.5 L17447.8 166.5" fill="none" data-name="WelcomeScreen"></path>
 						</g>
-						<g transform="translate(17086.75, 135.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="WelcomeScreen">
+						<g transform="translate(17302.75, 135.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="WelcomeScreen">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WelcomeScreen">
 								<text x="64.5" y="13.5" stroke="none" text-anchor="middle" data-name="WelcomeScreen">WelcomeScreen</text>
 								
 							</g>
 						</g>
-						<g transform="translate(17086.75, 166.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WelcomeScreen">
+						<g transform="translate(17302.75, 166.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="WelcomeScreen">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="WelcomeScreen">
 								<text x="0.0" y="13.5" stroke="none" data-name="WelcomeScreen">+Widget build()</text>
 								
