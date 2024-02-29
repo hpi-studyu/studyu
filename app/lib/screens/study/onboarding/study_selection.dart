@@ -91,9 +91,9 @@ class StudySelectionScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: RetryFutureBuilder<ExtractedSupabaseListResult<Study>>(
+                child: RetryFutureBuilder<ExtractingFailedException<Study>>(
                   tryFunction: () async => Study.publishedPublicStudies(),
-                  successBuilder: (BuildContext context, ExtractedSupabaseListResult<Study>? studies) {
+                  successBuilder: (BuildContext context, ExtractingFailedException<Study>? studies) {
                     if (studies!.notExtracted.isNotEmpty) {
                       debugPrint('${studies.notExtracted.length} studies could not be extracted.');
                       ScaffoldMessenger.of(context).showSnackBar(

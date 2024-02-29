@@ -99,7 +99,7 @@ class SupabaseQuery {
     if (notExtracted.isNotEmpty) {
       // If some records could not be extracted, we throw an exception
       // with the extracted records and the faulty records
-      throw ExtractedSupabaseListResult(extracted, notExtracted);
+      throw ExtractingFailedException(extracted, notExtracted);
     }
     return extracted;
   }
@@ -138,11 +138,15 @@ extension PrimaryKeyFilterBuilder on PostgrestFilterBuilder {
   }
 }
 
-class ExtractedSupabaseListResult<T> {
+abstract class IExtractingFailedException<T> implements Exception {
+  const IExtractingFailedException(this.extracted, this.notExtracted);
+
   final List<T> extracted;
   final List<JsonWithError> notExtracted;
+}
 
-  ExtractedSupabaseListResult(this.extracted, this.notExtracted);
+class ExtractingFailedException<T> extends IExtractingFailedException<T> {
+  ExtractingFailedException(super.extracted, super.notExtracted);
 }
 
 class JsonWithError {
