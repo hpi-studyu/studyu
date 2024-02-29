@@ -216,7 +216,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                     // We are catching ArgumentError because unknown enums throw an ArgumentError
                     // and UnknownJsonTypeError is a subclass of ArgumentError
                     debugPrint('Study selection from invite failed: $error');
-                    if (!mounted) return;
+                    if (!context.mounted) return;
                     await showAppOutdatedDialog(context);
                     return;
                   }
