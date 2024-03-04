@@ -79,7 +79,7 @@ class SupabaseQuery {
   }
 
   /// Extracts a list of SupabaseObjects from a response.
-  /// If some records could not be extracted, [ExtractedSupabaseListResult] is
+  /// If some records could not be extracted, [ExtractionFailedException] is
   /// thrown containing the extracted records and the faulty records.
   static List<T> extractSupabaseList<T extends SupabaseObject>(
     List<Map<String, dynamic>> response,
@@ -99,7 +99,7 @@ class SupabaseQuery {
     if (notExtracted.isNotEmpty) {
       // If some records could not be extracted, we throw an exception
       // with the extracted records and the faulty records
-      throw ExtractingFailedException(extracted, notExtracted);
+      throw ExtractionFailedException(extracted, notExtracted);
     }
     return extracted;
   }
@@ -138,15 +138,20 @@ extension PrimaryKeyFilterBuilder on PostgrestFilterBuilder {
   }
 }
 
-abstract class IExtractingFailedException<T> implements Exception {
-  const IExtractingFailedException(this.extracted, this.notExtracted);
-
+sealed class ExtractionResult<T> {
   final List<T> extracted;
-  final List<JsonWithError> notExtracted;
+
+  ExtractionResult(this.extracted);
 }
 
-class ExtractingFailedException<T> extends IExtractingFailedException<T> {
-  ExtractingFailedException(super.extracted, super.notExtracted);
+class ExtractionSuccess<T> extends ExtractionResult<T> {
+  ExtractionSuccess(super.extracted);
+}
+
+class ExtractionFailedException<T> extends ExtractionResult<T> implements Exception {
+  final List<JsonWithError> notExtracted;
+
+  ExtractionFailedException(super.extracted, this.notExtracted);
 }
 
 class JsonWithError {
