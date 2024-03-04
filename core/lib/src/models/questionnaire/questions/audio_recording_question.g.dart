@@ -8,7 +8,9 @@ part of 'audio_recording_question.dart';
 
 AudioRecordingQuestion _$AudioRecordingQuestionFromJson(
         Map<String, dynamic> json) =>
-    AudioRecordingQuestion()
+    AudioRecordingQuestion(
+      maxRecordingDurationSeconds: json['maxRecordingDurationSeconds'] as int,
+    )
       ..type = json['type'] as String
       ..id = json['id'] as String
       ..prompt = json['prompt'] as String?
@@ -34,5 +36,6 @@ Map<String, dynamic> _$AudioRecordingQuestionToJson(
   writeNotNull('prompt', instance.prompt);
   writeNotNull('rationale', instance.rationale);
   writeNotNull('conditional', instance.conditional?.toJson());
+  val['maxRecordingDurationSeconds'] = instance.maxRecordingDurationSeconds;
   return val;
 }

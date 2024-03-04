@@ -105,10 +105,13 @@
   "data_captured": "Data captured",
   "multimodal_not_supported": "Multimodal Trials are currently not supported to run in a web browser. Please use the StudyU App for Android or iOS.",
   "camera_access_denied": "Camera access denied",
+  "no_camera_available": "No camera available",
+  "microphone_access_denied": "Microphone access denied",
   "camera_error": "Camera error",
   "recording_error": "Recording error",
   "storing_photo": "The photo is being stored",
   "storing_audio": "The audio file is being stored",
+  "upload_error": "The file could not be uploaded",
 
   "language": "Language",
   "en": "English",

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -43,6 +44,15 @@ class Cache {
     SecureStorage.delete(cacheSubjectKey);
   }
 
+  static Future<void> uploadBlobFiles() async {
+    final blobStorageHandler = BlobStorageHandler();
+    final futureBlobFiles = await TemporaryStorageHandler.getFutureBlobFiles();
+    for (final futureBlobFile in futureBlobFiles) {
+      await blobStorageHandler.uploadObservation(futureBlobFile.futureBlobId, File(futureBlobFile.localFilePath));
+      await File(futureBlobFile.localFilePath).delete();
+    }
+  }
+
   static Future<StudySubject> synchronize(StudySubject remoteSubject) async {
     if (isSynchronizing) return remoteSubject;
     // No local subject found
@@ -57,6 +67,8 @@ class Cache {
     isSynchronizing = true;
 
     try {
+      await uploadBlobFiles();
+
       // only minimal update
       // Check if progress has changed
       if (localSubject.progress.length != remoteSubject.progress.length) {

@@ -269,7 +269,8 @@ class ImageQuestionFormData extends QuestionFormData {
     super.questionInfoText,
   });
 
-  static Map<String, String> get kResponseOptions => {tr.form_field_response_image: 'image'};
+  static Map<String, FutureBlobFile> get kResponseOptions =>
+      {tr.form_field_response_image: FutureBlobFile("image", "image")};
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();
@@ -312,7 +313,7 @@ class ImageQuestionFormData extends QuestionFormData {
   @override
   Answer constructAnswerFor(responseOption) {
     final question = toQuestion() as ImageCapturingQuestion;
-    final value = kResponseOptions[responseOption] as String;
+    final value = kResponseOptions[responseOption] as FutureBlobFile;
     return question.constructAnswer(value);
   }
 }
@@ -323,9 +324,13 @@ class AudioQuestionFormData extends QuestionFormData {
     required super.questionText,
     required super.questionType,
     super.questionInfoText,
+    required this.maxRecordingDurationSeconds,
   });
 
-  static Map<String, String> get kResponseOptions => {tr.form_field_response_audio: 'audio'};
+  final int maxRecordingDurationSeconds;
+
+  static Map<String, FutureBlobFile> get kResponseOptions =>
+      {tr.form_field_response_audio: FutureBlobFile("audio", "audio")};
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();
@@ -339,6 +344,7 @@ class AudioQuestionFormData extends QuestionFormData {
       questionType: SurveyQuestionType.audio,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
+      maxRecordingDurationSeconds: question.maxRecordingDurationSeconds,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -346,7 +352,7 @@ class AudioQuestionFormData extends QuestionFormData {
 
   @override
   Question toQuestion() {
-    final question = AudioRecordingQuestion();
+    final question = AudioRecordingQuestion(maxRecordingDurationSeconds: maxRecordingDurationSeconds);
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
@@ -360,6 +366,7 @@ class AudioQuestionFormData extends QuestionFormData {
       questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
+      maxRecordingDurationSeconds: maxRecordingDurationSeconds,
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;
@@ -368,7 +375,7 @@ class AudioQuestionFormData extends QuestionFormData {
   @override
   Answer constructAnswerFor(responseOption) {
     final question = toQuestion() as AudioRecordingQuestion;
-    final value = kResponseOptions[responseOption] as String;
+    final value = kResponseOptions[responseOption] as FutureBlobFile;
     return question.constructAnswer(value);
   }
 }
