@@ -42,8 +42,15 @@ Future<void> showAppOutdatedDialog(BuildContext context) async {
   );
 }
 
-class StudySelectionScreen extends StatelessWidget {
+class StudySelectionScreen extends StatefulWidget {
   const StudySelectionScreen({super.key});
+
+  @override
+  State<StudySelectionScreen> createState() => _StudySelectionScreenState();
+}
+
+class _StudySelectionScreenState extends State<StudySelectionScreen> {
+  bool _hiddenStudies = false;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +97,22 @@ class StudySelectionScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              _hiddenStudies
+                  ? MaterialBanner(
+                      padding: const EdgeInsets.all(8),
+                      leading: Icon(
+                        MdiIcons.exclamationThick,
+                        color: Colors.orange,
+                        size: 32,
+                      ),
+                      content: Text(
+                        AppLocalizations.of(context)!.study_selection_hidden_studies,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      actions: [Container()],
+                      backgroundColor: Colors.yellow[100],
+                    )
+                  : const SizedBox.shrink(),
               Expanded(
                 child: RetryFutureBuilder<ExtractionResult<Study>>(
                   tryFunction: () async => Study.publishedPublicStudies(),
@@ -98,11 +121,10 @@ class StudySelectionScreen extends StatelessWidget {
                     if (extractionResult is ExtractionFailedException<Study>) {
                       debugPrint('${extractionResult.notExtracted.length} studies could not be extracted.');
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(AppLocalizations.of(context)!.study_selection_hidden_studies),
-                          ),
-                        );
+                        if (_hiddenStudies) return;
+                        setState(() {
+                          _hiddenStudies = true;
+                        });
                       });
                     }
                     return ListView.builder(
