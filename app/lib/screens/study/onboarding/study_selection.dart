@@ -144,11 +144,13 @@ class StudySelectionScreen extends StatelessWidget {
                       itemCount: filteredStudies.length,
                       itemBuilder: (context, index) {
                         final study = filteredStudies[index];
+                        final numSubtrials = studies.where((s) => s.parentTemplateId == study.id).length;
                         return Hero(
                           tag: 'study_tile_${study.id}',
                           child: Material(
                             child: StudyTile.fromStudy(
                               study: study,
+                              numSubtrials: numSubtrials,
                               onTap: () => study is Template
                                   ? Navigator.pushNamed(context, Routes.studySelection,
                                       arguments: StudySelectionScreenArgs(
