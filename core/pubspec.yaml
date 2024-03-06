@@ -11,7 +11,7 @@ dependencies:
   collection: ^1.18.0
   csv: ^6.0.0
   json_annotation: ^4.8.1
-  logger: ^2.0.2+1
+  logger: ^2.1.0
   quiver: ^3.2.1
   sentry: ^7.16.1
   supabase: ^2.0.8

@@ -15,7 +15,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.2
-  flutter_local_notifications: ^16.3.2
+  flutter_local_notifications: ^16.3.3
   flutter_localizations:
     sdk: flutter
   flutter_timezone: ^1.0.8
@@ -41,7 +41,7 @@ dependencies:
   timeline_tile: ^2.0.0
   timezone: ^0.9.2
   universal_html: ^2.2.4
-  url_launcher: ^6.2.4
+  url_launcher: ^6.2.5
   uuid: ^4.3.3
   wakelock_plus: ^1.1.4 # connectivity_plus <= 5.0.2
 
