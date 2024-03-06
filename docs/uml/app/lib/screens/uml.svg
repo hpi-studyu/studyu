@@ -380,8 +380,6 @@
 	[ConsentElement]o-[IconData]
 	
 	[StudySelectionScreen
-	  |
-	  +Widget build()
 	]
 	
 	[InviteCodeDialog
@@ -1998,18 +1996,11 @@
 					</g>
 					<g data-name="StudySelectionScreen">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudySelectionScreen">
-							<rect x="10582.5" y="135.5" height="62.0" width="190.0" data-name="StudySelectionScreen"></rect>
-							<path d="M10582.5 166.5 L10772.5 166.5" fill="none" data-name="StudySelectionScreen"></path>
+							<rect x="10582.5" y="151.0" height="31.0" width="190.0" data-name="StudySelectionScreen"></rect>
 						</g>
-						<g transform="translate(10582.5, 135.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudySelectionScreen">
+						<g transform="translate(10582.5, 151)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudySelectionScreen">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudySelectionScreen">
 								<text x="87.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudySelectionScreen">StudySelectionScreen</text>
-								
-							</g>
-						</g>
-						<g transform="translate(10582.5, 166.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudySelectionScreen">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudySelectionScreen">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudySelectionScreen">+Widget build()</text>
 								
 							</g>
 						</g>
