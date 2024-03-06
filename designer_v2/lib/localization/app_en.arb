@@ -97,7 +97,7 @@
   "action_button_template_hint": "Hint: Use the three dots menu next to a Template Trial to create a Subtrial.",
   "search": "Search",
   "studies_list_header_title": "Title",
-  "studies_list_header_type": "Type",
+  "studies_list_header_type": "Trial type",
   "studies_list_header_status": "Status",
   "studies_list_header_participation": "Participation",
   "studies_list_header_created_at": "Created",

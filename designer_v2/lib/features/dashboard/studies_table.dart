@@ -104,7 +104,7 @@ class StudiesTable extends StatelessWidget {
         final double statusColumnWidth = maxStatusLength * 11.5;
 
         // Calculate the minimum type column width
-        int maxTypeLength = "Standalone Trial".length;
+        int maxTypeLength = "Standalone".length;
         final double typeColumnWidth = maxTypeLength * 8.5;
 
         // Calculate the minimum participation column width

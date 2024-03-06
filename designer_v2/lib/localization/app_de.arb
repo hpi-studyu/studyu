@@ -97,7 +97,7 @@
   "action_button_template_hint": "Hinweis: Verwenden Sie das Dreipunktemenü neben einem Template Trial, um ein Subtrial zu erstellen.",
   "search": "Suche",
   "studies_list_header_title": "Titel",
-  "studies_list_header_type": "Typ",
+  "studies_list_header_type": "Trial Typ",
   "studies_list_header_status": "Status",
   "studies_list_header_participation": "Teilnahme",
   "studies_list_header_created_at": "Erstellt",

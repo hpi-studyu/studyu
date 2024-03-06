@@ -3,7 +3,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/badge.dart' as studybadge;
 
 class StudyTypeBadge extends StatelessWidget {
-  const StudyTypeBadge({required this.studyType, this.type = studybadge.BadgeType.outlineFill, super.key});
+  const StudyTypeBadge({required this.studyType, this.type = studybadge.BadgeType.plain, super.key});
 
   final StudyType? studyType;
   final studybadge.BadgeType type;
@@ -14,22 +14,25 @@ class StudyTypeBadge extends StatelessWidget {
     switch (studyType) {
       case StudyType.standalone:
         return studybadge.Badge(
-          label: "Standalone Trial",
-          color: colorScheme.secondary.withOpacity(0.75),
+          label: "Standalone",
+          padding: const EdgeInsets.all(0),
+          color: colorScheme.secondary.withOpacity(0.85),
           icon: null,
           type: type,
         );
       case StudyType.template:
         return studybadge.Badge(
-          label: "Template Trial",
-          color: colorScheme.primary.withOpacity(0.75),
+          label: "Template",
+          padding: const EdgeInsets.all(0),
+          color: colorScheme.secondary.withOpacity(0.85),
           icon: null,
           type: type,
         );
       case StudyType.subStudy:
         return studybadge.Badge(
           label: "Subtrial",
-          color: colorScheme.primary.withOpacity(0.75),
+          padding: const EdgeInsets.all(0),
+          color: colorScheme.secondary.withOpacity(0.85),
           icon: null,
           type: type,
         );
