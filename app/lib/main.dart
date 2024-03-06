@@ -43,6 +43,7 @@ Future<void> main() async {
     appConfig = await AppConfig.getAppConfig();
   } catch (error) {
     // device could be offline
+    debugPrint('Error fetching app config: $error');
   }
 
   if (appConfig != null && await isAppOutdated(appConfig)) {
@@ -55,6 +56,26 @@ Future<void> main() async {
   } else {
     runApp(MyApp(queryParameters, appConfig, initialRoute: initialRoute));
   }
+
+  AppLifecycleListener(onResume: () async {
+    try {
+      final navigatorState = navigatorKey.currentState;
+      if (navigatorState == null) return;
+      String? currentRoute;
+      navigatorState.popUntil((route) {
+        currentRoute = route.settings.name;
+        return true;
+      });
+      if (currentRoute == Routes.appOutdated) return;
+      final appConfig = await AppConfig.getAppConfig();
+      if (await isAppOutdated(appConfig)) {
+        await navigatorState.pushNamedAndRemoveUntil(Routes.appOutdated, (route) => false);
+      }
+    } catch (error) {
+      // device could be offline
+      debugPrint('Error fetching app config: $error');
+    }
+  });
 }
 
 /// Checks major and minor version of the app against the minimum version required by the backend
