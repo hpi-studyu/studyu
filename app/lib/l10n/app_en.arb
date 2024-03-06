@@ -189,6 +189,6 @@
       "pattern": {}
       }
   },
-  "app_outdated_message": "A new version of the StudyU app is available. Please update it to receive the latest features and improvements. Thank you for your support!",
-  "open_store": "Open Store"
+  "app_outdated_message": "A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!",
+  "update_now": "Update now"
 }
