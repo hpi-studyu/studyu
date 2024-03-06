@@ -145,7 +145,7 @@ class StudyNotifications {
   void _initNotificationsPlugin() {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@drawable/ic_launcher');
+        AndroidInitializationSettings('@drawable/ic_notification');
     final DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(
       onDidReceiveLocalNotification: (
         int id,
