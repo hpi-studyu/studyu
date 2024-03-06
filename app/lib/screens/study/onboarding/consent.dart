@@ -80,10 +80,11 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   ),
                 );
               }
-              final savedFilePath =
-                  await savePDF(context, '${subject!.study.title}_consent', await generatePdfContent());
-              if (!mounted) return;
+              final pdfContent = await generatePdfContent();
+              if (!context.mounted) return;
+              final savedFilePath = await savePDF(context, '${subject!.study.title}_consent', pdfContent);
               if (savedFilePath != null) {
+                if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('${AppLocalizations.of(context)!.was_saved_to}$savedFilePath.'),

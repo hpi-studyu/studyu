@@ -44,7 +44,7 @@ class _TermsScreenState extends State<TermsScreen> {
             ? () async {
                 final success = await anonymousSignUp();
                 if (success) {
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   Navigator.pushNamed(context, Routes.studySelection);
                 }
               }
