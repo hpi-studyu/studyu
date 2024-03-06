@@ -97,11 +97,13 @@ class StudySelectionScreen extends StatelessWidget {
                     final studies = extractionResult!.extracted;
                     if (extractionResult is ExtractionFailedException<Study>) {
                       debugPrint('${extractionResult.notExtracted.length} studies could not be extracted.');
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(AppLocalizations.of(context)!.study_selection_hidden_studies),
-                        ),
-                      );
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(AppLocalizations.of(context)!.study_selection_hidden_studies),
+                          ),
+                        );
+                      });
                     }
                     return ListView.builder(
                       itemCount: studies.length,
