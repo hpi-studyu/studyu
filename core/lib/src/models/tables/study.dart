@@ -167,22 +167,19 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
       );
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
-  static Future<ExtractingFailedException<Study>> publishedPublicStudies() async {
-    List<Study> extractedStudies;
-    List<JsonWithError> notExtracted = [];
+  static Future<ExtractionResult<Study>> publishedPublicStudies() async {
+    ExtractionResult<Study> result;
     try {
       final response = await env.client.from(tableName).select().eq('participation', 'open');
-      extractedStudies = SupabaseQuery.extractSupabaseList<Study>(List<Map<String, dynamic>>.from(response));
-    } on ExtractingFailedException<Study> catch (error) {
-      // If some records could not be extracted, catch the exception and
-      // return the extracted records and the faulty records
-      extractedStudies = error.extracted;
-      notExtracted = error.notExtracted;
+      final extracted = SupabaseQuery.extractSupabaseList<Study>(List<Map<String, dynamic>>.from(response));
+      result = ExtractionSuccess<Study>(extracted);
+    } on ExtractionFailedException<Study> catch (error) {
+      result = error;
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
       rethrow;
     }
-    return ExtractingFailedException<Study>(extractedStudies, notExtracted);
+    return result;
   }
 
   bool isOwner(User? user) => user != null && userId == user.id;
