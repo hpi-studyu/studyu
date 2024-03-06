@@ -20,13 +20,13 @@ class ReportHistoryScreen extends StatelessWidget {
           AppLocalizations.of(context)!.report_history,
         ),
       ),
-      body: RetryFutureBuilder<ExtractedSupabaseListResult<StudySubject>>(
+      body: RetryFutureBuilder<List<StudySubject>>(
         tryFunction: () => StudySubject.getStudyHistory(Supabase.instance.client.auth.currentUser!.id),
-        successBuilder: (BuildContext context, ExtractedSupabaseListResult<StudySubject>? pastStudies) {
+        successBuilder: (BuildContext context, List<StudySubject>? pastStudies) {
           return ListView.builder(
-            itemCount: pastStudies!.extracted.length,
+            itemCount: pastStudies!.length,
             itemBuilder: (context, index) {
-              return ReportHistoryItem(pastStudies.extracted[index]);
+              return ReportHistoryItem(pastStudies[index]);
             },
           );
         },

@@ -280,10 +280,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   Future<void> setStartDateBackBy({required int days}) async {
     await deleteProgress();
-    progress = (await SupabaseQuery.batchUpsert<SubjectProgress>(
+    progress = await SupabaseQuery.batchUpsert<SubjectProgress>(
       progress.map((p) => p.setStartDateBackBy(days: days).toJson()).toList(),
-    ))
-        .extracted;
+    );
     startedAt = startedAt!.subtract(Duration(days: days));
     save();
   }
@@ -339,7 +338,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return save();
   }
 
-  static Future<ExtractedSupabaseListResult<StudySubject>> getStudyHistory(String userId) async {
+  static Future<List<StudySubject>> getStudyHistory(String userId) async {
     return SupabaseQuery.extractSupabaseList<StudySubject>(
       await env.client.from(tableName).select('*,study!study_subject_studyId_fkey(*),subject_progress(*)'),
     );

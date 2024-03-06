@@ -130,7 +130,7 @@ class Preview {
           // If the user has a study object Id, there was already a subject created
           // and we need to find the last one they created for the study
           // with the correct interventions
-          subject = studySubjects.extracted.lastWhere(
+          subject = studySubjects.lastWhere(
             (foundSubject) {
               // todo baseline
               foundSubject.study.schedule.includeBaseline = false;

@@ -39,14 +39,13 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
 
   Future<T> save() async {
     return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).select())
-        .extracted
         .single;
   }
 }
 
 // ignore: avoid_classes_with_only_static_members
 class SupabaseQuery {
-  static Future<ExtractedSupabaseListResult<T>> getAll<T extends SupabaseObject>({
+  static Future<List<T>> getAll<T extends SupabaseObject>({
     List<String> selectedColumns = const ['*'],
   }) async {
     try {
@@ -68,7 +67,7 @@ class SupabaseQuery {
     }
   }
 
-  static Future<ExtractedSupabaseListResult<T>> batchUpsert<T extends SupabaseObject>(
+  static Future<List<T>> batchUpsert<T extends SupabaseObject>(
     List<Map<String, dynamic>> batchJson,
   ) async {
     try {
@@ -79,7 +78,10 @@ class SupabaseQuery {
     }
   }
 
-  static ExtractedSupabaseListResult<T> extractSupabaseList<T extends SupabaseObject>(
+  /// Extracts a list of SupabaseObjects from a response.
+  /// If some records could not be extracted, [ExtractionFailedException] is
+  /// thrown containing the extracted records and the faulty records.
+  static List<T> extractSupabaseList<T extends SupabaseObject>(
     List<Map<String, dynamic>> response,
   ) {
     final extracted = <T>[];
@@ -94,8 +96,12 @@ class SupabaseQuery {
         notExtracted.add(JsonWithError(json, error));
       }
     }
-
-    return ExtractedSupabaseListResult(extracted, notExtracted);
+    if (notExtracted.isNotEmpty) {
+      // If some records could not be extracted, we throw an exception
+      // with the extracted records and the faulty records
+      throw ExtractionFailedException(extracted, notExtracted);
+    }
+    return extracted;
   }
 
   static T extractSupabaseSingleRow<T extends SupabaseObject>(Map<String, dynamic> response) {
@@ -132,11 +138,20 @@ extension PrimaryKeyFilterBuilder on PostgrestFilterBuilder {
   }
 }
 
-class ExtractedSupabaseListResult<T> {
+sealed class ExtractionResult<T> {
   final List<T> extracted;
+
+  ExtractionResult(this.extracted);
+}
+
+class ExtractionSuccess<T> extends ExtractionResult<T> {
+  ExtractionSuccess(super.extracted);
+}
+
+class ExtractionFailedException<T> extends ExtractionResult<T> implements Exception {
   final List<JsonWithError> notExtracted;
 
-  ExtractedSupabaseListResult(this.extracted, this.notExtracted);
+  ExtractionFailedException(super.extracted, this.notExtracted);
 }
 
 class JsonWithError {
