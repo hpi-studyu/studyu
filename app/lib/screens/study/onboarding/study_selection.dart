@@ -51,6 +51,7 @@ class StudySelectionScreen extends StatefulWidget {
 
 class _StudySelectionScreenState extends State<StudySelectionScreen> {
   bool _hiddenStudies = false;
+  late final publishedStudies = Study.publishedPublicStudies();
 
   @override
   Widget build(BuildContext context) {
@@ -98,30 +99,35 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                 ),
               ),
               _hiddenStudies
-                  ? MaterialBanner(
-                      padding: const EdgeInsets.all(8),
-                      leading: Icon(
-                        MdiIcons.exclamationThick,
-                        color: Colors.orange,
-                        size: 32,
-                      ),
-                      content: Text(
-                        AppLocalizations.of(context)!.study_selection_hidden_studies,
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      actions: [Container()],
-                      backgroundColor: Colors.yellow[100],
+                  ? Column(
+                      children: [
+                        MaterialBanner(
+                          padding: const EdgeInsets.all(8),
+                          leading: Icon(
+                            MdiIcons.exclamationThick,
+                            color: Colors.orange,
+                            size: 32,
+                          ),
+                          content: Text(
+                            AppLocalizations.of(context)!.study_selection_hidden_studies,
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          actions: const [SizedBox.shrink()],
+                          backgroundColor: Colors.yellow[100],
+                        ),
+                        const SizedBox(height: 16),
+                      ],
                     )
                   : const SizedBox.shrink(),
               Expanded(
                 child: RetryFutureBuilder<ExtractionResult<Study>>(
-                  tryFunction: () async => Study.publishedPublicStudies(),
+                  tryFunction: () async => publishedStudies,
                   successBuilder: (BuildContext context, ExtractionResult<Study>? extractionResult) {
                     final studies = extractionResult!.extracted;
                     if (extractionResult is ExtractionFailedException<Study>) {
-                      debugPrint('${extractionResult.notExtracted.length} studies could not be extracted.');
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         if (_hiddenStudies) return;
+                        debugPrint('${extractionResult.notExtracted.length} studies could not be extracted.');
                         setState(() {
                           _hiddenStudies = true;
                         });
