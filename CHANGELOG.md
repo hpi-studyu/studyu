@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-03-06
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.6.5-dev.5`](#studyu_app---v265-dev5)
+ - [`studyu_core` - `v4.3.3-dev.3`](#studyu_core---v433-dev3)
+ - [`studyu_designer_v2` - `v1.6.2-dev.5`](#studyu_designer_v2---v162-dev5)
+ - [`studyu_flutter_common` - `v1.7.0-dev.4`](#studyu_flutter_common---v170-dev4)
+
+---
+
+#### `studyu_app` - `v2.6.5-dev.5`
+
+ - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))
+ - **FIX**: missing notification icon. ([679ebc64](https://github.com/hpi-studyu/studyu/commit/679ebc64d779b87589dcec24135c3f8533b7ed62))
+ - **FIX**: correct CFBundleDisplayName. ([eb364558](https://github.com/hpi-studyu/studyu/commit/eb364558133f18d47737e198b585544e2344a03c))
+ - **FIX**: add notification icon again". ([5905e4e4](https://github.com/hpi-studyu/studyu/commit/5905e4e4dda66734d9205e90c0a78a7c999ace18))
+
+#### `studyu_core` - `v4.3.3-dev.3`
+
+ - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))
+
+#### `studyu_designer_v2` - `v1.6.2-dev.5`
+
+ - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))
+ - **FIX**: alert dialog box constraints. ([332d1d14](https://github.com/hpi-studyu/studyu/commit/332d1d148e1d8abd18b83426218be25ab3fb512f))
+
+#### `studyu_flutter_common` - `v1.7.0-dev.4`
+
+ - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))
+
+
 ## 2024-02-19
 
 ### Changes

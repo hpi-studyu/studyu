@@ -1,3 +1,8 @@
+## 1.6.2-dev.5
+
+ - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))
+ - **FIX**: alert dialog box constraints. ([332d1d14](https://github.com/hpi-studyu/studyu/commit/332d1d148e1d8abd18b83426218be25ab3fb512f))
+
 ## 1.6.2-dev.4
 
  - **FIX**: breaking deps. ([34896ad3](https://github.com/hpi-studyu/studyu/commit/34896ad381b38a4ad03caf92f57ad527bc1f6706))
