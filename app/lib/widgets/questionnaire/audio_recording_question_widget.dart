@@ -97,7 +97,7 @@ class _AudioRecordingQuestionWidgetState extends State<AudioRecordingQuestionWid
               const Spacer(),
               Text(
                 _hasRecorded
-                    ? loc.data_captured
+                    ? loc.audio_recorded
                     : _isRecording
                         ? loc.stop_recording
                         : loc.start_recording,

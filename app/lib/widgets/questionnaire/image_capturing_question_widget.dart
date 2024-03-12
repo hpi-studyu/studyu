@@ -29,26 +29,42 @@ class _ImageCapturingQuestionWidgetState extends State<ImageCapturingQuestionWid
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
-    return Column(
-      children: [
-        !_hasCaptured
-            ? TextButton.icon(
-                label: Text(loc.take_a_photo),
-                icon: Icon(MdiIcons.camera),
-                onPressed: () async {
-                  await _captureImage();
-                },
-              )
-            : Row(
-                children: <Widget>[
-                  Icon(
-                    MdiIcons.checkCircleOutline,
-                  ),
-                  const SizedBox(width: 10.0),
-                  Text(loc.data_captured),
-                ],
+    final theme = Theme.of(context);
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        backgroundColor: null,
+        foregroundColor: theme.colorScheme.primary,
+        side: BorderSide(width: 1.0, color: _hasCaptured ? Colors.black38 : theme.colorScheme.primary),
+      ),
+      onPressed: !_hasCaptured
+          ? () async {
+              await _captureImage();
+            }
+          : null,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 8.0,
+          horizontal: 2.0,
+        ),
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Icon(
+                _hasCaptured ? MdiIcons.checkCircleOutline : MdiIcons.camera,
+                color: _hasCaptured ? Colors.black38 : theme.colorScheme.primary,
+                size: 24,
               ),
-      ],
+            ),
+            const Spacer(),
+            Text(
+              _hasCaptured ? loc.photo_captured : loc.take_a_photo,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const Spacer(),
+          ],
+        ),
+      ),
     );
   }
 

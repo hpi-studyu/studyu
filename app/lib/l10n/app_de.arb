@@ -103,6 +103,8 @@
   "start_recording": "Starte eine Aufnahme",
   "stop_recording": "Stoppe die Aufnahme",
   "error_recording": "Fehler bei der Aufnahme",
+  "photo_captured": "Foto aufgenommen",
+  "audio_recorded": "Audio aufgenommen",
   "data_captured": "Daten aufgenommen",
   "multimodal_not_supported": "Multimodale Aufgaben werden in der Web-Version zur Zeit nicht unterstützt. Bitte verwenden Sie die App Version für iOS oder Android.",
   "camera_access_denied": "Zugriff auf Kamera verweigert",
