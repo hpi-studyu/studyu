@@ -51,7 +51,7 @@ class StudySelectionScreen extends StatefulWidget {
 
 class _StudySelectionScreenState extends State<StudySelectionScreen> {
   bool _hiddenStudies = false;
-  late final publishedStudies = Study.publishedPublicStudies();
+  final publishedStudies = Study.publishedPublicStudies();
 
   @override
   Widget build(BuildContext context) {
