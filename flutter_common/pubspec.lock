@@ -5,10 +5,10 @@ packages:
     dependency: transitive
     description:
       name: app_links
-      sha256: "4e392b5eba997df356ca6021f28431ce1cfeb16758699553a94b13add874a3bb"
+      sha256: "3ced568a5d9e309e99af71285666f1f3117bddd0bd5b3317979dccc1a40cada4"
       url: "https://pub.dev"
     source: hosted
-    version: "3.5.0"
+    version: "3.5.1"
   async:
     dependency: transitive
     description:
@@ -61,10 +61,10 @@ packages:
     dependency: transitive
     description:
       name: csv
-      sha256: "63ed2871dd6471193dffc52c0e6c76fb86269c00244d244297abbb355c84a86e"
+      sha256: c6aa2679b2a18cb57652920f674488d89712efaf4d3fdf2e537215b35fc19d6c
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.1"
+    version: "6.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -118,54 +118,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
-  flutter_secure_storage:
-    dependency: "direct main"
-    description:
-      name: flutter_secure_storage
-      sha256: ffdbb60130e4665d2af814a0267c481bcf522c41ae2e43caf69fa0146876d685
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.0.0"
-  flutter_secure_storage_linux:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_linux
-      sha256: "3d5032e314774ee0e1a7d0a9f5e2793486f0dff2dd9ef5a23f4e3fb2a0ae6a9e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
-  flutter_secure_storage_macos:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_macos
-      sha256: bd33935b4b628abd0b86c8ca20655c5b36275c3a3f5194769a7b3f37c905369c
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.1"
-  flutter_secure_storage_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_platform_interface
-      sha256: "0d4d3a5dd4db28c96ae414d7ba3b8422fd735a8255642774803b2532c9a61d7e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
-  flutter_secure_storage_web:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_web
-      sha256: "30f84f102df9dcdaa2241866a958c2ec976902ebdaa8883fbfe525f1f2f3cf20"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.2"
-  flutter_secure_storage_windows:
-    dependency: transitive
-    description:
-      name: flutter_secure_storage_windows
-      sha256: "5809c66f9dd3b4b93b0a6e2e8561539405322ee767ac2f64d084e2ab5429d108"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -216,14 +168,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  js:
-    dependency: transitive
-    description:
-      name: js
-      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.7"
   json_annotation:
     dependency: transitive
     description:
@@ -276,10 +220,10 @@ packages:
     dependency: transitive
     description:
       name: logger
-      sha256: "6bbb9d6f7056729537a4309bda2e74e18e5d9f14302489cc1e93f33b3fe32cac"
+      sha256: b3ff55aeb08d9d8901b767650285872cb1bb8f508373b3e348d60268b0c7f770
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.2+1"
+    version: "2.1.0"
   matcher:
     dependency: transitive
     description:
@@ -547,7 +491,7 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "4.3.3-dev.2"
+    version: "4.3.3-dev.3"
   supabase:
     dependency: transitive
     description:
@@ -680,10 +624,10 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: "1d9158c616048c38f712a6646e317a3426da10e884447626167240d45209cbad"
+      sha256: "97da13628db363c635202ad97068d47c5b8aa555808e7a9411963c533b449b27"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "0.5.1"
   web_socket_channel:
     dependency: transitive
     description:
