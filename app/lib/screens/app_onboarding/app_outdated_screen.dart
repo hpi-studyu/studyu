@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -14,10 +15,10 @@ class AppOutdatedScreen extends StatelessWidget {
     final loc = AppLocalizations.of(context)!;
     String? storeUrl;
     IconData? storeIcon;
-    if (Platform.isAndroid) {
+    if (!kIsWeb && Platform.isAndroid) {
       storeUrl = playStoreUrl;
       storeIcon = MdiIcons.googlePlay;
-    } else if (Platform.isIOS) {
+    } else if (!kIsWeb && Platform.isIOS) {
       storeUrl = appstoreUrl;
       storeIcon = MdiIcons.apple;
     }
