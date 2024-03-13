@@ -1,3 +1,8 @@
+## 4.3.3-dev.4
+
+ - **FIX**: check min app version improvements. ([8d36dc78](https://github.com/hpi-studyu/studyu/commit/8d36dc78771d748483bbf3ad22794a95e73dad06))
+ - **FEAT**: check min app version and force update. ([08f33618](https://github.com/hpi-studyu/studyu/commit/08f3361865aa4b158e9e29e69efd30547db9991a))
+
 ## 4.3.3-dev.3
 
  - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))

@@ -1,3 +1,12 @@
+## 2.6.5-dev.6
+
+ - **REFACTOR**: move constants to separate file. ([b4d3853d](https://github.com/hpi-studyu/studyu/commit/b4d3853d827c3e0f08db16234f5a136094938a0d))
+ - **FIX**: web compatibility for app outdated screen. ([40f39afe](https://github.com/hpi-studyu/studyu/commit/40f39afe60293bfd62ea705a55f59012c6aa00e3))
+ - **FIX**: review comments. ([71896db6](https://github.com/hpi-studyu/studyu/commit/71896db6425a04cbfe644fb73045102287abcd2b))
+ - **FIX**: check min app version improvements. ([8d36dc78](https://github.com/hpi-studyu/studyu/commit/8d36dc78771d748483bbf3ad22794a95e73dad06))
+ - **FEAT**: check app min version on resume. ([e82c3ac6](https://github.com/hpi-studyu/studyu/commit/e82c3ac68beb4adf0662753c551d7cf3d53814b9))
+ - **FEAT**: check min app version and force update. ([08f33618](https://github.com/hpi-studyu/studyu/commit/08f3361865aa4b158e9e29e69efd30547db9991a))
+
 ## 2.6.5-dev.5
 
  - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))
