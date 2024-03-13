@@ -8,7 +8,7 @@ part 'choice_question.g.dart';
 
 @JsonSerializable()
 class ChoiceQuestion extends Question<List<String>> {
-  static String questionType = 'choice';
+  static const String questionType = 'choice';
 
   bool multiple = false;
   List<Choice> choices = [];

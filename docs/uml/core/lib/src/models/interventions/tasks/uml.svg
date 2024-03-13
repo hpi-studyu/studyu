@@ -1,66 +1,11 @@
-<svg version="1.1" baseProfile="full" width="428.0" height="265.0" viewbox="0 0 428 265" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[CheckmarkTask
-	  |
-	  &lt;static&gt;+taskType: String
-	  |
-	  +Map&lt;String, dynamic&gt; toJson();
-	  +Map&lt;DateTime, T&gt; extractPropertyResults();
-	  +Map&lt;String, Type&gt; getAvailableProperties();
-	  +String? getHumanReadablePropertyName()
-	]
-	
-	[&lt;abstract&gt;InterventionTask]&lt;:-[CheckmarkTask]
-	
-	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+<svg version="1.1" baseProfile="full" width="0.0" height="8.0" viewbox="0 0 0 8" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="265.0" width="428.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="8.0" width="0.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
-				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M186.0 44.3 L186 51 L186 71 L186.0 71.0 " fill="none"></path>
-					<path d="M191.3 44.3 L186.0 44.3 L180.7 44.3 L186.0 31.0 Z"></path>
-					<g data-name="CheckmarkTask">
-						<g fill="#eee8d5" stroke="#33322E" data-name="CheckmarkTask">
-							<rect x="0.0" y="71.0" height="138.0" width="372.0" data-name="CheckmarkTask"></rect>
-							<path d="M0.0 102.0 L372.0 102.0" fill="none" data-name="CheckmarkTask"></path>
-							<path d="M0.0 133.0 L372.0 133.0" fill="none" data-name="CheckmarkTask"></path>
-						</g>
-						<g transform="translate(0, 71)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="CheckmarkTask">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="CheckmarkTask">
-								<text x="178.0" y="13.5" stroke="none" text-anchor="middle" data-name="CheckmarkTask">CheckmarkTask</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 102)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CheckmarkTask">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CheckmarkTask">
-								<text x="0.0" y="13.5" stroke="none" data-name="CheckmarkTask">&lt;static&gt;+taskType: String</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 133)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="CheckmarkTask">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="CheckmarkTask">
-								<text x="0.0" y="13.5" stroke="none" data-name="CheckmarkTask">+Map&lt;String, dynamic&gt; toJson()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="CheckmarkTask">+Map&lt;DateTime, T&gt; extractPropertyResults()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="CheckmarkTask">+Map&lt;String, Type&gt; getAvailableProperties()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="CheckmarkTask">+String? getHumanReadablePropertyName()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="InterventionTask">
-						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionTask">
-							<rect x="112.0" y="0.0" height="31.0" width="148.0" data-name="InterventionTask"></rect>
-						</g>
-						<g transform="translate(112, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="InterventionTask">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionTask">
-								<text x="66.0" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionTask">InterventionTask</text>
-								
-							</g>
-						</g>
-					</g>
-				</g>
+				
 			</g>
 		</g>
 	</g>

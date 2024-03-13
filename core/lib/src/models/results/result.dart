@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
-
 import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
+import 'package:studyu_core/src/models/unknown_json_type_error.dart';
 
 part 'result.g.dart';
 
@@ -13,6 +13,7 @@ class Result<T> {
   String? periodId;
 
   static const String keyResult = 'result';
+
   @JsonKey(includeToJson: false, includeFromJson: false)
   late T result;
 
@@ -22,31 +23,19 @@ class Result<T> {
 
   factory Result.parseJson(Map<String, dynamic> json) => _$ResultFromJson(json);
 
-  factory Result.fromJson(Map<String, dynamic> json) => _fromJson(json) as Result<T>;
+  factory Result.fromJson(Map<String, dynamic> json) => switch (json[keyType]) {
+        'QuestionnaireState' => Result<QuestionnaireState>.parseJson(json)
+          ..result = QuestionnaireState.fromJson(List<Map<String, dynamic>>.from(json[keyResult] as List)),
+        'bool' => Result<bool>.parseJson(json)..result = json[keyResult] as bool,
+        _ => throw UnknownJsonTypeError(json[keyType]),
+      } as Result<T>;
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> resultMap = switch (result) {
-      final QuestionnaireState questionnaireState => {keyResult: questionnaireState.toJson()},
-      bool() => {keyResult: result},
-      _ => {keyResult: _getUnsupportedResult()}
+    final Map<String, dynamic> resultMap = switch (type) {
+      'QuestionnaireState' => {keyResult: (result as QuestionnaireState).toJson()},
+      'bool' => {keyResult: result},
+      _ => throw ArgumentError('Unknown result type $type'),
     };
     return mergeMaps<String, dynamic>(_$ResultToJson(this), resultMap);
-  }
-
-  String _getUnsupportedResult() {
-    print('Unsupported question type: $T');
-    return '';
-  }
-
-  static Result _fromJson(Map<String, dynamic> data) {
-    switch (data[keyType] as String) {
-      case 'QuestionnaireState':
-        return Result<QuestionnaireState>.parseJson(data)
-          ..result = QuestionnaireState.fromJson(List<Map<String, dynamic>>.from(data[keyResult] as List));
-      case 'bool':
-        return Result<bool>.parseJson(data)..result = data[keyResult] as bool;
-      default:
-        throw ArgumentError('Type ${data[keyType]} not supported.');
-    }
   }
 }
