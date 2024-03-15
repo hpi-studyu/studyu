@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppLanguage>(create: (context) => AppLanguage(AppLocalizations.supportedLocales)),
-        ChangeNotifierProvider<AppState>(create: (context) => AppState(widget.appConfig)),
+        ChangeNotifierProvider<AppState>(create: (context) => AppState()),
       ],
       child: Consumer<AppLanguage>(
         builder: (context, model, child) {

@@ -118,7 +118,7 @@ class SupabaseQuery {
       StudyULogger.fatal('Stacktrace: $stacktrace');
       throw error;
     } else if (error is SocketException) {
-      StudyULogger.info("App is suspected to be offline");
+      // StudyULogger.info("App is suspected to be offline");
       throw error;
     } else {
       StudyULogger.fatal('Caught Supabase Error: $error');

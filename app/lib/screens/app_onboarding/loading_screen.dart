@@ -1,4 +1,5 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -176,20 +177,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
     StudySubject? subject;
     try {
-      /*
-        try {
-         InternetAddress.lookup(Uri.parse(supabaseUrl).host);
-      } on SocketException catch (_) {
-        StudyULogger.warning('Could not connect to supabase url. Fallback to offline mode');
-        subject = await Cache.loadSubject();
-      }
-       */
-      final connectivityResult = await (Connectivity().checkConnectivity());
-      if (connectivityResult == ConnectivityResult.none) {
-        StudyULogger.warning("Could not find any connection. Going to offline mode");
-        subject = await Cache.loadSubject();
-      }
-      subject ??= await SupabaseQuery.getById<StudySubject>(
+      subject = await SupabaseQuery.getById<StudySubject>(
         selectedStudyObjectId,
         selectedColumns: [
           '*',
@@ -217,8 +205,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
             ],
           );
         }
-      } catch (exception) {
-        try {
+      } catch (exception, stackTrace) {
+        if (exception is SocketException) {
+          subject = await Cache.loadSubject();
+          StudyULogger.info("Going to offline mode with cached subject: $subject");
+        } else {
           // TODO further analyze this. How to recreate:
           // 1. Participate in a study and wait some time until playstore uploads
           // a backup of your current subject
@@ -227,21 +218,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
           // 4. Open the app but do not join a study
           // 5. Restart the app. Either only this error shows up, worst case is
           // app hangs and is unresponsive
-
           StudyULogger.warning('Could not login and retrieve the study subject.'
               'One reason for this might be that the study subject is no '
               'longer available and only resides in app backup');
-          /*await Analytics.captureEvent(
-            SentryEvent(throwable: exception),
-            stackTrace: stackTrace,
-          );*/
-          // subject = await Cache.loadSubject();
-        } catch (exception, stackTrace) {
-          StudyULogger.fatal('Error when initializing offline mode: ${exception.toString()}');
-          await StudyUDiagnostics.captureException(
-            exception,
-            stackTrace: stackTrace,
-          );
+          StudyUDiagnostics.captureException(exception, stackTrace: stackTrace);
         }
       }
       /*if (!signInRes) {
@@ -260,7 +240,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
 
     if (subject != null) {
-      // storeCache(subject);
       subject = await Cache.synchronize(subject);
       if (!mounted) return;
       state.activeSubject = subject;

@@ -112,7 +112,7 @@ handleTaskCompletion(BuildContext context, Function(StudySubject?) completionCal
   } on SocketException catch (exception, stackTrace) {
     debugPrint("Saving results in offline mode");
     StudyUDiagnostics.captureEvent(exception, stackTrace: stackTrace);
-    await Cache.storeSubject(activeSubject);
+    await Cache.synchronizeSubject(activeSubject);
   } catch (exception, stackTrace) {
     debugPrint("Could not save results");
     StudyUDiagnostics.captureException(exception, stackTrace: stackTrace);
