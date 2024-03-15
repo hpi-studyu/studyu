@@ -121,7 +121,6 @@ class _SettingsState extends State<Settings> {
               label: Text(AppLocalizations.of(context)!.opt_out),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange[800],
-                foregroundColor: Colors.white,
               ),
               onPressed: () {
                 showDialog(context: context, builder: (_) => OptOutAlertDialog(subject: subject));
@@ -131,7 +130,7 @@ class _SettingsState extends State<Settings> {
             ElevatedButton.icon(
               icon: const Icon(Icons.delete),
               label: Text(AppLocalizations.of(context)!.delete_data),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               onPressed: () {
                 showDialog(context: context, builder: (_) => DeleteAlertDialog(subject: subject));
               },
@@ -175,7 +174,7 @@ class OptOutAlertDialog extends StatelessWidget {
         ElevatedButton.icon(
           icon: Icon(MdiIcons.exitToApp),
           label: Text(AppLocalizations.of(context)!.opt_out),
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800], foregroundColor: Colors.white),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
           onPressed: () async {
             await subject!.softDelete();
             await deleteActiveStudyReference();
@@ -211,7 +210,7 @@ class DeleteAlertDialog extends StatelessWidget {
           ElevatedButton.icon(
             icon: const Icon(Icons.delete),
             label: Text(AppLocalizations.of(context)!.delete_data),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () async {
               try {
                 await subject!.delete(); // hard-delete
