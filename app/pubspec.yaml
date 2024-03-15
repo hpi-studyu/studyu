@@ -15,7 +15,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.2
-  flutter_local_notifications: ^16.3.3
+  flutter_local_notifications: ^17.0.0
   flutter_localizations:
     sdk: flutter
   flutter_timezone: ^1.0.8
@@ -31,8 +31,8 @@ dependencies:
   provider: ^6.1.2
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
-  sentry_flutter: ^7.16.1
-  sentry_logging: ^7.16.1
+  sentry_flutter: ^7.18.0
+  sentry_logging: ^7.18.0
   shared_preferences: ^2.2.2
   studyu_core: ^4.3.3-dev.3
   studyu_flutter_common: ^1.7.0-dev.4
