@@ -5,6 +5,7 @@ import 'screens/app_onboarding/about.dart';
 import 'screens/app_onboarding/loading_screen.dart';
 import 'screens/app_onboarding/terms.dart';
 import 'screens/app_onboarding/welcome.dart';
+import 'screens/app_onboarding/app_outdated_screen.dart';
 import 'screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'screens/study/dashboard/contact_tab/faq.dart';
 import 'screens/study/dashboard/dashboard.dart';
@@ -20,6 +21,7 @@ import 'screens/study/report/report_history.dart';
 class Routes {
   static const String loading = '/loading';
   static const String preview = '/preview';
+  static const String appOutdated = '/appOutdated';
   static const String dashboard = '/dashboard';
   static const String welcome = '/welcome';
   static const String about = '/about';
@@ -60,6 +62,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => const LoadingScreen(), settings: settings);
       case preview:
         return MaterialPageRoute(builder: (_) => LoadingScreen(queryParameters: queryParameters), settings: settings);
+      case appOutdated:
+        return MaterialPageRoute(builder: (_) => const AppOutdatedScreen(), settings: settings);
       case dashboard:
         return MaterialPageRoute(builder: (_) => const DashboardScreen(), settings: settings);
       case welcome:
