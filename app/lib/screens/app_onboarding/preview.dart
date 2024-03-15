@@ -120,7 +120,7 @@ class Preview {
     if (selectedStudyObjectId != null) {
       try {
         if (selectedRoute == '/intervention') {
-          final List<StudySubject> studySubjects = await SupabaseQuery.getAll<StudySubject>(
+          final studySubjects = await SupabaseQuery.getAll<StudySubject>(
             selectedColumns: [
               '*',
               'study!study_subject_studyId_fkey(*)',
