@@ -8,7 +8,6 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:studyu_app/routes.dart';
-import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -50,12 +49,7 @@ Future<void> main() async {
     initialRoute = Routes.appOutdated;
   }
 
-  await AppAnalytics.init();
-  if (!kDebugMode && AppAnalytics.isUserEnabled) {
-    AppAnalytics.start(appConfig, MyApp(queryParameters, appConfig, initialRoute: initialRoute));
-  } else {
-    runApp(MyApp(queryParameters, appConfig, initialRoute: initialRoute));
-  }
+  runApp(MyApp(queryParameters, appConfig, initialRoute: initialRoute));
 
   AppLifecycleListener(onResume: () async {
     try {

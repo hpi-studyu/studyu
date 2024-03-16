@@ -104,8 +104,6 @@
   "language": "Language",
   "en": "English",
   "de": "German",
-  "allow_analytics": "Allow app analytics",
-  "allow_analytics_desc": "All collected data is used only to improve app performance and never for tracking purposes. You can read more about this in our data privacy.",
 
   "video_test": "This is a video test",
   "survey_test": "This is a survey test",

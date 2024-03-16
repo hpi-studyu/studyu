@@ -32,17 +32,6 @@ class Cache {
     }
   }
 
-  static Future<void> storeAnalytics(StudyUAnalytics analytics) async {
-    (await sharedPrefs).setString(StudyUAnalytics.keyStudyUAnalytics, jsonEncode(analytics.toJson()));
-  }
-
-  static Future<StudyUAnalytics?> loadAnalytics() async {
-    if ((await sharedPrefs).containsKey(cacheSubjectKey)) {
-      return StudyUAnalytics.fromJson(jsonDecode((await sharedPrefs).getString(StudyUAnalytics.keyStudyUAnalytics)!));
-    }
-    return null;
-  }
-
   static Future<void> delete() async {
     StudyULogger.warning("Delete cache");
     (await sharedPrefs).remove(cacheSubjectKey);
@@ -98,9 +87,6 @@ class Cache {
         // ... for now do nothing
         if (!kDebugMode && localSubject.startedAt == remoteSubject.startedAt) {
           StudyULogger.fatal("Cache synchronization found local changes that cannot be merged");
-          StudyUDiagnostics.captureMessage(
-              "localSubject: ${localSubject.toFullJson()} \nremoteSubject: ${remoteSubject.toFullJson()}");
-          StudyUDiagnostics.captureException(Exception("CacheSynchronizationException"));
         }
       }
     } catch (exception) {

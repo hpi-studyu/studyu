@@ -109,7 +109,6 @@ class SupabaseQuery {
   }
 
   static void catchSupabaseException(Object error, StackTrace stacktrace) {
-    StudyUDiagnostics.captureException(error, stackTrace: stacktrace);
     if (error is PostgrestException) {
       StudyULogger.fatal('Message: ${error.message}');
       StudyULogger.fatal('Hint: ${error.hint}');

@@ -24,7 +24,6 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   Map<String, String> designerTerms;
   Map<String, String> imprint;
   Contact contact;
-  StudyUAnalytics? analytics;
 
   AppConfig(
     this.id, {
@@ -35,7 +34,6 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
     required this.designerTerms,
     required this.contact,
     required this.imprint,
-    required this.analytics,
   });
 
   factory AppConfig.fromJson(Map<String, dynamic> json) => _$AppConfigFromJson(json);

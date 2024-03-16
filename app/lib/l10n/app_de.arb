@@ -105,8 +105,6 @@
   "language": "Sprache",
   "en": "Englisch",
   "de": "Deutsch",
-  "allow_analytics": "Analysefunktionen erlauben",
-  "allow_analytics_desc": "Die App sammelt Analysedaten ausschließlich zu Verbesserungszwecken und niemals zur Nutzerverfolgung. Details können in den Datenschutzbestimmungen nachgelesen werden.",
 
   "video_test": "Das ist ein Videotest",
   "survey_test": "Das ist ein Umfragetest",
