@@ -636,7 +636,6 @@
 	  &lt;static&gt;+isSynchronizing: bool;
 	  &lt;static&gt;+sharedPrefs: dynamic
 	  |
-	  &lt;static&gt;+dynamic synchronizeSubject();
 	  &lt;static&gt;+dynamic storeSubject();
 	  &lt;static&gt;+dynamic loadSubject();
 	  &lt;static&gt;+dynamic storeAnalytics();
@@ -3268,32 +3267,31 @@
 					</g>
 					<g data-name="Cache">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Cache">
-							<rect x="13543.0" y="97.5" height="198.0" width="326.0" data-name="Cache"></rect>
-							<path d="M13543.0 128.5 L13869.0 128.5" fill="none" data-name="Cache"></path>
-							<path d="M13543.0 174.5 L13869.0 174.5" fill="none" data-name="Cache"></path>
+							<rect x="13565.0" y="105.0" height="183.0" width="282.0" data-name="Cache"></rect>
+							<path d="M13565.0 136.0 L13847.0 136.0" fill="none" data-name="Cache"></path>
+							<path d="M13565.0 182.0 L13847.0 182.0" fill="none" data-name="Cache"></path>
 						</g>
-						<g transform="translate(13543, 97.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Cache">
+						<g transform="translate(13565, 105)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Cache">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Cache">
-								<text x="155.0" y="13.5" stroke="none" text-anchor="middle" data-name="Cache">Cache</text>
+								<text x="133.0" y="13.5" stroke="none" text-anchor="middle" data-name="Cache">Cache</text>
 								
 							</g>
 						</g>
-						<g transform="translate(13543, 128.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Cache">
+						<g transform="translate(13565, 136)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Cache">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Cache">
 								<text x="0.0" y="13.5" stroke="none" data-name="Cache">&lt;static&gt;+isSynchronizing: bool</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="Cache">&lt;static&gt;+sharedPrefs: dynamic</text>
 								
 							</g>
 						</g>
-						<g transform="translate(13543, 174.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Cache">
+						<g transform="translate(13565, 182)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Cache">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Cache">
-								<text x="0.0" y="13.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic synchronizeSubject()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic storeSubject()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic loadSubject()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic storeAnalytics()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic loadAnalytics()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic delete()</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic synchronize()</text>
+								<text x="0.0" y="13.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic storeSubject()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic loadSubject()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic storeAnalytics()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic loadAnalytics()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic delete()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="Cache">&lt;static&gt;+dynamic synchronize()</text>
 								
 							</g>
 						</g>
@@ -3391,16 +3389,16 @@
 					</g>
 					<g data-name="ReceivedNotification">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ReceivedNotification">
-							<rect x="13909.0" y="143.0" height="107.0" width="178.0" data-name="ReceivedNotification"></rect>
-							<path d="M13909.0 174.0 L14087.0 174.0" fill="none" data-name="ReceivedNotification"></path>
+							<rect x="13887.0" y="143.0" height="107.0" width="178.0" data-name="ReceivedNotification"></rect>
+							<path d="M13887.0 174.0 L14065.0 174.0" fill="none" data-name="ReceivedNotification"></path>
 						</g>
-						<g transform="translate(13909, 143)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReceivedNotification">
+						<g transform="translate(13887, 143)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReceivedNotification">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReceivedNotification">
 								<text x="81.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReceivedNotification">ReceivedNotification</text>
 								
 							</g>
 						</g>
-						<g transform="translate(13909, 174)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReceivedNotification">
+						<g transform="translate(13887, 174)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ReceivedNotification">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ReceivedNotification">
 								<text x="0.0" y="13.5" stroke="none" data-name="ReceivedNotification">+id: int?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="ReceivedNotification">+title: String?</text>
