@@ -1,11 +1,281 @@
-<svg version="1.1" baseProfile="full" width="0.0" height="8.0" viewbox="0 0 0 8" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt">
+<svg version="1.1" baseProfile="full" width="1670.0" height="371.0" viewbox="0 0 1670 371" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[StudyULogger
+	  |
+	  &lt;static&gt;+logger: Logger
+	  |
+	  &lt;static&gt;+void trace();
+	  &lt;static&gt;+void debug();
+	  &lt;static&gt;+void info();
+	  &lt;static&gt;+void warning();
+	  &lt;static&gt;+void error();
+	  &lt;static&gt;+void fatal()
+	]
+	
+	[StudyULogger]o-[Logger]
+	
+	[&lt;abstract&gt;SupabaseObject
+	  |
+	  +primaryKeys: Map&lt;String, Object&gt;
+	  |
+	  +Map&lt;String, dynamic&gt; toJson()
+	]
+	
+	[&lt;abstract&gt;SupabaseObjectFunctions
+	  |
+	  &lt;static&gt;+T fromJson();
+	  +dynamic ();
+	  +dynamic delete();
+	  +dynamic save()
+	]
+	
+	[&lt;abstract&gt;SupabaseObject]&lt;:--[&lt;abstract&gt;SupabaseObjectFunctions]
+	
+	[SupabaseQuery
+	  |
+	  &lt;static&gt;+dynamic getAll();
+	  &lt;static&gt;+dynamic getById();
+	  &lt;static&gt;+dynamic batchUpsert();
+	  &lt;static&gt;+List&lt;T&gt; extractSupabaseList();
+	  &lt;static&gt;+T extractSupabaseSingleRow();
+	  &lt;static&gt;+void catchSupabaseException()
+	]
+	
+	[ExtractionResult
+	  |
+	  +extracted: List&lt;T&gt;
+	]
+	
+	[ExtractionSuccess
+	]
+	
+	[ExtractionResult]&lt;:-[ExtractionSuccess]
+	
+	[ExtractionFailedException
+	  |
+	  +notExtracted: List&lt;JsonWithError&gt;
+	]
+	
+	[ExtractionResult]&lt;:-[ExtractionFailedException]
+	[Exception]&lt;:--[ExtractionFailedException]
+	
+	[JsonWithError
+	  |
+	  +json: Map&lt;String, dynamic&gt;;
+	  +error: Object
+	]
+	
+	</desc>
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="8.0" width="0.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="371.0" width="1670.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
-				
+				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+					<path d="M102.0 186.7 L102 188 L102 246 L102.0 246.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M107.3 177.3 L102.0 186.7 L96.7 177.3 L102.0 168.0 Z"></path>
+					</g>
+					<g stroke-dasharray="6 6">
+						<path d="M391.5 143.8 L391.5 188 L391.5 208 L391.5 208.0 " fill="none"></path>
+					</g>
+					<path d="M396.8 143.8 L391.5 143.8 L386.2 143.8 L391.5 130.5 Z"></path>
+					<path d="M967.8 120.9 L833.25 188 L833.25 246 L833.3 246.0 " fill="none"></path>
+					<path d="M970.2 125.7 L967.8 120.9 L965.5 116.2 L979.8 115.0 Z"></path>
+					<path d="M1092.6 123.2 L1176.5 188 L1225.938775510204 230.5 L1225.9 230.5 " fill="none"></path>
+					<path d="M1095.9 118.9 L1092.6 123.2 L1089.4 127.4 L1082.1 115.0 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M1282.0 112.8 L1282 188 L1270.4353741496598 230.5 L1270.4 230.5 " fill="none"></path>
+					</g>
+					<path d="M1287.3 112.8 L1282.0 112.8 L1276.7 112.8 L1282.0 99.5 Z"></path>
+					<g data-name="StudyULogger">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyULogger">
+							<rect x="0.0" y="0.0" height="168.0" width="204.0" data-name="StudyULogger"></rect>
+							<path d="M0.0 31.0 L204.0 31.0" fill="none" data-name="StudyULogger"></path>
+							<path d="M0.0 62.0 L204.0 62.0" fill="none" data-name="StudyULogger"></path>
+						</g>
+						<g transform="translate(0, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyULogger">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyULogger">
+								<text x="94.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyULogger">StudyULogger</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyULogger">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyULogger">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyULogger">&lt;static&gt;+logger: Logger</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 62)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyULogger">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyULogger">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyULogger">&lt;static&gt;+void trace()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudyULogger">&lt;static&gt;+void debug()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudyULogger">&lt;static&gt;+void info()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudyULogger">&lt;static&gt;+void warning()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="StudyULogger">&lt;static&gt;+void error()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="StudyULogger">&lt;static&gt;+void fatal()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Logger">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Logger">
+							<rect x="66.0" y="246.0" height="31.0" width="72.0" data-name="Logger"></rect>
+						</g>
+						<g transform="translate(66, 246)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Logger">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Logger">
+								<text x="28.0" y="13.5" stroke="none" text-anchor="middle" data-name="Logger">Logger</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SupabaseObject">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseObject">
+							<rect x="244.0" y="37.5" height="93.0" width="295.0" data-name="SupabaseObject"></rect>
+							<path d="M244.0 68.5 L539.0 68.5" fill="none" data-name="SupabaseObject"></path>
+							<path d="M244.0 99.5 L539.0 99.5" fill="none" data-name="SupabaseObject"></path>
+						</g>
+						<g transform="translate(244, 37.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="SupabaseObject">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseObject">
+								<text x="139.5" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseObject">SupabaseObject</text>
+								
+							</g>
+						</g>
+						<g transform="translate(244, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseObject">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseObject">
+								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseObject">+primaryKeys: Map&lt;String, Object&gt;</text>
+								
+							</g>
+						</g>
+						<g transform="translate(244, 99.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseObject">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseObject">
+								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseObject">+Map&lt;String, dynamic&gt; toJson()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SupabaseObjectFunctions">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseObjectFunctions">
+							<rect x="279.5" y="208.0" height="107.0" width="224.0" data-name="SupabaseObjectFunctions"></rect>
+							<path d="M279.5 239.0 L503.5 239.0" fill="none" data-name="SupabaseObjectFunctions"></path>
+						</g>
+						<g transform="translate(279.5, 208)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="SupabaseObjectFunctions">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseObjectFunctions">
+								<text x="104.0" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseObjectFunctions">SupabaseObjectFunctions</text>
+								
+							</g>
+						</g>
+						<g transform="translate(279.5, 239)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseObjectFunctions">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseObjectFunctions">
+								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseObjectFunctions">&lt;static&gt;+T fromJson()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="SupabaseObjectFunctions">+dynamic ()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="SupabaseObjectFunctions">+dynamic delete()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="SupabaseObjectFunctions">+dynamic save()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="SupabaseQuery">
+						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseQuery">
+							<rect x="579.0" y="15.5" height="137.0" width="339.0" data-name="SupabaseQuery"></rect>
+							<path d="M579.0 46.5 L918.0 46.5" fill="none" data-name="SupabaseQuery"></path>
+						</g>
+						<g transform="translate(579, 15.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SupabaseQuery">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseQuery">
+								<text x="161.5" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseQuery">SupabaseQuery</text>
+								
+							</g>
+						</g>
+						<g transform="translate(579, 46.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseQuery">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseQuery">
+								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseQuery">&lt;static&gt;+dynamic getAll()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="SupabaseQuery">&lt;static&gt;+dynamic getById()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="SupabaseQuery">&lt;static&gt;+dynamic batchUpsert()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="SupabaseQuery">&lt;static&gt;+List&lt;T&gt; extractSupabaseList()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="SupabaseQuery">&lt;static&gt;+T extractSupabaseSingleRow()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="SupabaseQuery">&lt;static&gt;+void catchSupabaseException()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ExtractionResult">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ExtractionResult">
+							<rect x="958.0" y="53.0" height="62.0" width="168.0" data-name="ExtractionResult"></rect>
+							<path d="M958.0 84.0 L1126.0 84.0" fill="none" data-name="ExtractionResult"></path>
+						</g>
+						<g transform="translate(958, 53)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ExtractionResult">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ExtractionResult">
+								<text x="76.0" y="13.5" stroke="none" text-anchor="middle" data-name="ExtractionResult">ExtractionResult</text>
+								
+							</g>
+						</g>
+						<g transform="translate(958, 84)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExtractionResult">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ExtractionResult">
+								<text x="0.0" y="13.5" stroke="none" data-name="ExtractionResult">+extracted: List&lt;T&gt;</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ExtractionSuccess">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ExtractionSuccess">
+							<rect x="752.3" y="246.0" height="31.0" width="162.0" data-name="ExtractionSuccess"></rect>
+						</g>
+						<g transform="translate(752.25, 246)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ExtractionSuccess">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ExtractionSuccess">
+								<text x="73.0" y="13.5" stroke="none" text-anchor="middle" data-name="ExtractionSuccess">ExtractionSuccess</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ExtractionFailedException">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ExtractionFailedException">
+							<rect x="1114.0" y="230.5" height="62.0" width="296.0" data-name="ExtractionFailedException"></rect>
+							<path d="M1114.0 261.5 L1410.0 261.5" fill="none" data-name="ExtractionFailedException"></path>
+						</g>
+						<g transform="translate(1114, 230.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ExtractionFailedException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ExtractionFailedException">
+								<text x="140.0" y="13.5" stroke="none" text-anchor="middle" data-name="ExtractionFailedException">ExtractionFailedException</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1114, 261.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExtractionFailedException">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ExtractionFailedException">
+								<text x="0.0" y="13.5" stroke="none" data-name="ExtractionFailedException">+notExtracted: List&lt;JsonWithError&gt;</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Exception">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Exception">
+							<rect x="1235.0" y="68.5" height="31.0" width="94.0" data-name="Exception"></rect>
+						</g>
+						<g transform="translate(1235, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Exception">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Exception">
+								<text x="39.0" y="13.5" stroke="none" text-anchor="middle" data-name="Exception">Exception</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="JsonWithError">
+						<g fill="#eee8d5" stroke="#33322E" data-name="JsonWithError">
+							<rect x="1369.0" y="45.5" height="77.0" width="245.0" data-name="JsonWithError"></rect>
+							<path d="M1369.0 76.5 L1614.0 76.5" fill="none" data-name="JsonWithError"></path>
+						</g>
+						<g transform="translate(1369, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="JsonWithError">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="JsonWithError">
+								<text x="114.5" y="13.5" stroke="none" text-anchor="middle" data-name="JsonWithError">JsonWithError</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1369, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="JsonWithError">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="JsonWithError">
+								<text x="0.0" y="13.5" stroke="none" data-name="JsonWithError">+json: Map&lt;String, dynamic&gt;</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="JsonWithError">+error: Object</text>
+								
+							</g>
+						</g>
+					</g>
+				</g>
 			</g>
 		</g>
 	</g>
