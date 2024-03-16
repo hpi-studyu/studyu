@@ -9,14 +9,8 @@ class Cache {
   static Future<SharedPreferences> get sharedPrefs => SharedPreferences.getInstance();
   static bool isSynchronizing = false;
 
-  static Future<void> synchronizeSubject(StudySubject? subject) async {
-    if (subject == null) return;
-    StudySubject newSubject;
-    newSubject = await synchronize(subject);
-    await storeSubject(newSubject);
-  }
-
   static Future<void> storeSubject(StudySubject? subject) async {
+    debugPrint("Store subject in cache");
     if (subject == null) return;
     (await sharedPrefs).setString(cacheSubjectKey, jsonEncode(subject.toFullJson()));
     assert(subject == (await loadSubject()));
@@ -27,7 +21,6 @@ class Cache {
     if ((await sharedPrefs).containsKey(cacheSubjectKey)) {
       return StudySubject.fromJson(jsonDecode((await sharedPrefs).getString(cacheSubjectKey)!));
     } else {
-      StudyULogger.warning("No cached subject found");
       throw Exception("No cached subject found");
     }
   }
@@ -55,7 +48,7 @@ class Cache {
     final localSubject = await loadSubject();
     // local and remote subject are equal, nothing to synchronize
     if (localSubject == remoteSubject) return remoteSubject;
-    // remote subject has newer study
+    // remote subject belongs to a different study
     if (!kDebugMode && remoteSubject.startedAt!.isAfter(localSubject.startedAt!)) return remoteSubject;
 
     debugPrint("Synchronize subject with cache");
