@@ -1,111 +1,5 @@
-<svg version="1.1" baseProfile="full" width="5247.0" height="1474.0" viewbox="0 0 5247 1474" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[InterventionTaskFormData
-	  |
-	  +taskId: String;
-	  +taskTitle: String;
-	  +taskDescription: String?;
-	  &lt;static&gt;+kDefaultTitle: String;
-	  +id: String
-	  |
-	  +CheckmarkTask toTask();
-	  +InterventionTaskFormData copy()
-	]
-	
-	[&lt;abstract&gt;IFormDataWithSchedule]&lt;:-[InterventionTaskFormData]
-	
-	[StudyScheduleFormData
-	  |
-	  +sequenceType: PhaseSequence;
-	  +sequenceTypeCustom: String;
-	  +numCycles: int;
-	  +phaseDuration: int;
-	  +includeBaseline: bool;
-	  +id: String
-	  |
-	  +StudySchedule toStudySchedule();
-	  +Study apply();
-	  +StudyScheduleFormData copy()
-	]
-	
-	[StudyScheduleFormData]o-[PhaseSequence]
-	[&lt;abstract&gt;IStudyFormData]&lt;:--[StudyScheduleFormData]
-	
-	[InterventionFormView
-	  |
-	  +formViewModel: InterventionFormViewModel
-	]
-	
-	[InterventionFormView]o-[InterventionFormViewModel]
-	
-	[&lt;abstract&gt;StudyScheduleControls
-	  |
-	  &lt;static&gt;+defaultScheduleType: PhaseSequence;
-	  &lt;static&gt;+defaultScheduleTypeSequence: String;
-	  &lt;static&gt;+defaultNumCycles: int;
-	  &lt;static&gt;+defaultPeriodLength: int;
-	  +sequenceTypeControl: FormControl&lt;PhaseSequence&gt;;
-	  +sequenceTypeCustomControl: FormControl&lt;String&gt;;
-	  +phaseDurationControl: FormControl&lt;int&gt;;
-	  +numCyclesControl: FormControl&lt;int&gt;;
-	  +includeBaselineControl: FormControl&lt;bool&gt;;
-	  +demoControl: FormControl&lt;int&gt;;
-	  +studyScheduleControls: Map&lt;String, FormControl&lt;Object&gt;&gt;;
-	  &lt;static&gt;+kNumCyclesMin: int;
-	  &lt;static&gt;+kNumCyclesMax: int;
-	  &lt;static&gt;+kPhaseDurationMin: int;
-	  &lt;static&gt;+kPhaseDurationMax: int;
-	  +sequenceTypeControlOptions: List&lt;FormControlOption&lt;PhaseSequence&gt;&gt;;
-	  +studyScheduleValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;;
-	  +numCyclesRange: dynamic;
-	  +phaseDurationRange: dynamic;
-	  +customSequenceRequired: dynamic
-	  |
-	  +void setStudyScheduleControlsFrom();
-	  +StudyScheduleFormData buildStudyScheduleFormData();
-	  +bool isSequencingCustom()
-	]
-	
-	[&lt;abstract&gt;StudyScheduleControls]o-[PhaseSequence]
-	[&lt;abstract&gt;StudyScheduleControls]o-[FormControl]
-	
-	[InterventionsFormViewModel
-	  |
-	  +study: Study;
-	  +router: GoRouter;
-	  +interventionsArray: FormArray&lt;dynamic&gt;;
-	  +interventionsCollection: FormViewModelCollection&lt;InterventionFormViewModel, InterventionFormData&gt;;
-	  +form: FormGroup;
-	  +sharedValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;;
-	  +interventionsRequired: dynamic;
-	  +titles: Map&lt;FormMode, String&gt;;
-	  +canTestStudySchedule: bool
-	  |
-	  +void setControlsFrom();
-	  +InterventionsFormData buildFormData();
-	  +void read();
-	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions();
-	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availablePopupActions();
-	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableInlineActions();
-	  +void onSelectItem();
-	  +void onNewItem();
-	  +InterventionFormViewModel provide();
-	  +void onCancel();
-	  +dynamic onSave();
-	  +dynamic testStudySchedule()
-	]
-	
-	[InterventionsFormViewModel]o-[Study]
-	[InterventionsFormViewModel]o-[GoRouter]
-	[InterventionsFormViewModel]o-[FormArray]
-	[InterventionsFormViewModel]o-[FormViewModelCollection]
-	[InterventionsFormViewModel]o-[FormGroup]
-	[&lt;abstract&gt;FormViewModel]&lt;:-[InterventionsFormViewModel]
-	[&lt;abstract&gt;StudyScheduleControls]&lt;:-[InterventionsFormViewModel]
-	[&lt;abstract&gt;IFormViewModelDelegate]&lt;:--[InterventionsFormViewModel]
-	[&lt;abstract&gt;IListActionProvider]&lt;:--[InterventionsFormViewModel]
-	[&lt;abstract&gt;IProviderArgsResolver]&lt;:--[InterventionsFormViewModel]
-	
-	[InterventionFormViewModel
+<svg version="1.1" baseProfile="full" width="5352.8" height="1203.0" viewbox="0 0 5352.75 1203" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[InterventionFormViewModel
 	  |
 	  +study: Study;
 	  +interventionIdControl: FormControl&lt;String&gt;;
@@ -147,35 +41,68 @@
 	[&lt;abstract&gt;IListActionProvider]&lt;:--[InterventionFormViewModel]
 	[&lt;abstract&gt;IProviderArgsResolver]&lt;:--[InterventionFormViewModel]
 	
-	[InterventionsFormData
+	[InterventionTaskFormView
+	  |
+	  +formViewModel: InterventionTaskFormViewModel
+	]
+	
+	[InterventionTaskFormView]o-[InterventionTaskFormViewModel]
+	
+	[InterventionPreview
+	  |
+	  +routeArgs: InterventionFormRouteArgs
+	  |
+	  +Widget build()
+	]
+	
+	[InterventionPreview]o-[InterventionFormRouteArgs]
+	[&lt;abstract&gt;ConsumerWidget]&lt;:-[InterventionPreview]
+	
+	[InterventionTaskFormData
+	  |
+	  +taskId: String;
+	  +taskTitle: String;
+	  +taskDescription: String?;
+	  &lt;static&gt;+kDefaultTitle: String;
+	  +id: String
+	  |
+	  +CheckmarkTask toTask();
+	  +InterventionTaskFormData copy()
+	]
+	
+	[&lt;abstract&gt;IFormDataWithSchedule]&lt;:-[InterventionTaskFormData]
+	
+	[MP23InterventionsFormData
 	  |
 	  +interventionsData: List&lt;InterventionFormData&gt;;
-	  +studyScheduleData: StudyScheduleFormData;
+	  +studyScheduleData: MP23StudyScheduleFormData;
 	  +id: String
 	  |
 	  +Study apply();
-	  +InterventionsFormData copy()
+	  +MP23InterventionsFormData copy()
 	]
 	
-	[InterventionsFormData]o-[StudyScheduleFormData]
-	[&lt;abstract&gt;IStudyFormData]&lt;:--[InterventionsFormData]
+	[MP23InterventionsFormData]o-[MP23StudyScheduleFormData]
+	[&lt;abstract&gt;IStudyFormData]&lt;:--[MP23InterventionsFormData]
 	
-	[StudyDesignInterventionsFormView
+	[InterventionFormView
 	  |
-	  +Widget build()
+	  +formViewModel: InterventionFormViewModel
 	]
 	
-	[&lt;abstract&gt;StudyDesignPageWidget]&lt;:-[StudyDesignInterventionsFormView]
+	[InterventionFormView]o-[InterventionFormViewModel]
 	
-	[StudyScheduleFormView
+	[MP23StudyScheduleFormData
 	  |
-	  +formViewModel: StudyScheduleControls
+	  +segments: List&lt;StudyScheduleSegment&gt;;
+	  +id: String
 	  |
-	  +Widget build()
+	  +MP23StudySchedule toMP23StudySchedule();
+	  +Study apply();
+	  +MP23StudyScheduleFormData copy()
 	]
 	
-	[StudyScheduleFormView]o-[&lt;abstract&gt;StudyScheduleControls]
-	[&lt;abstract&gt;FormConsumerWidget]&lt;:-[StudyScheduleFormView]
+	[&lt;abstract&gt;IStudyFormData]&lt;:--[MP23StudyScheduleFormData]
 	
 	[InterventionTaskFormViewModel
 	  |
@@ -201,77 +128,6 @@
 	[&lt;abstract&gt;ManagedFormViewModel]&lt;:-[InterventionTaskFormViewModel]
 	[&lt;abstract&gt;WithScheduleControls]&lt;:-[InterventionTaskFormViewModel]
 	
-	[ReorderableExample
-	]
-	
-	[ExpandableSegementItem
-	  |
-	  +index: int;
-	  +segment: StudyScheduleSegment;
-	  +interventions: List&lt;Intervention&gt;
-	]
-	
-	[ExpandableSegementItem]o-[&lt;abstract&gt;StudyScheduleSegment]
-	
-	[StudySchedule
-	  |
-	  +interventions: List&lt;Intervention&gt;;
-	  +segments: List&lt;StudyScheduleSegment&gt;;
-	  +duration: int
-	  |
-	  +dynamic ();
-	  +dynamic getSegmentForDay();
-	  +Intervention? getInterventionForDay()
-	]
-	
-	[&lt;abstract&gt;StudyScheduleSegment
-	  |
-	  +type: String
-	  |
-	  +int getDuration();
-	  +Intervention? getIntervetionOnDay()
-	]
-	
-	[Baseline
-	  |
-	  +duration: int;
-	  +type: String
-	  |
-	  +int getDuration();
-	  +Intervention? getIntervetionOnDay()
-	]
-	
-	[&lt;abstract&gt;StudyScheduleSegment]&lt;:-[Baseline]
-	
-	[Alternating
-	  |
-	  +type: String;
-	  +interventionDuration: int;
-	  +cycleAmount: int
-	  |
-	  +int getDuration();
-	  +Intervention? getIntervetionOnDay()
-	]
-	
-	[&lt;abstract&gt;StudyScheduleSegment]&lt;:-[Alternating]
-	
-	[ThompsonSamplingAlgo
-	  |
-	  +means: List&lt;double&gt;;
-	  +variances: List&lt;double&gt;
-	  |
-	  +void updateObservations();
-	  +int selectArm()
-	]
-	
-	[Intervention
-	  |
-	  +id: String;
-	  +name: String?;
-	  +description: String?;
-	  +icon: String
-	]
-	
 	[InterventionFormData
 	  |
 	  +interventionId: String;
@@ -288,297 +144,269 @@
 	
 	[&lt;abstract&gt;IFormData]&lt;:-[InterventionFormData]
 	
-	[InterventionTaskFormView
-	  |
-	  +formViewModel: InterventionTaskFormViewModel
-	]
-	
-	[InterventionTaskFormView]o-[InterventionTaskFormViewModel]
-	
-	[InterventionPreview
-	  |
-	  +routeArgs: InterventionFormRouteArgs
+	[MP23StudyDesignInterventionsFormView
 	  |
 	  +Widget build()
 	]
 	
-	[InterventionPreview]o-[InterventionFormRouteArgs]
-	[&lt;abstract&gt;ConsumerWidget]&lt;:-[InterventionPreview]
+	[&lt;abstract&gt;StudyDesignPageWidget]&lt;:-[MP23StudyDesignInterventionsFormView]
+	
+	[ReorderableExample
+	]
+	
+	[ExpandableSegementItem
+	  |
+	  +index: int;
+	  +segment: StudyScheduleSegment;
+	  +interventions: List&lt;Intervention&gt;
+	]
+	
+	[ExpandableSegementItem]o-[&lt;abstract&gt;StudyScheduleSegment]
+	
+	[ReorderableExample
+	]
+	
+	[ExpandableSegementItem
+	  |
+	  +index: int;
+	  +segment: StudyScheduleSegment;
+	  +interventions: List&lt;Intervention&gt;
+	]
+	
+	[ExpandableSegementItem]o-[&lt;abstract&gt;StudyScheduleSegment]
+	
+	[MP23StudyScheduleFormView
+	  |
+	  +formViewModel: MP23StudyScheduleControls
+	  |
+	  +Widget build()
+	]
+	
+	[MP23StudyScheduleFormView]o-[&lt;abstract&gt;MP23StudyScheduleControls]
+	[&lt;abstract&gt;FormConsumerWidget]&lt;:-[MP23StudyScheduleFormView]
+	
+	[MP23StudyScheduleFormView
+	  |
+	  +formViewModel: MP23StudyScheduleControls
+	  |
+	  +Widget build()
+	]
+	
+	[MP23StudyScheduleFormView]o-[&lt;abstract&gt;MP23StudyScheduleControls]
+	[&lt;abstract&gt;FormConsumerWidget]&lt;:-[MP23StudyScheduleFormView]
+	
+	[MP23InterventionsFormViewModel
+	  |
+	  +study: Study;
+	  +router: GoRouter;
+	  +interventionsArray: FormArray&lt;dynamic&gt;;
+	  +interventionsCollection: FormViewModelCollection&lt;InterventionFormViewModel, InterventionFormData&gt;;
+	  +form: FormGroup;
+	  +sharedValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;;
+	  +interventionsRequired: dynamic;
+	  +titles: Map&lt;FormMode, String&gt;;
+	  +canTestStudySchedule: bool
+	  |
+	  +void setControlsFrom();
+	  +MP23InterventionsFormData buildFormData();
+	  +void read();
+	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions();
+	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availablePopupActions();
+	  +List&lt;ModelAction&lt;dynamic&gt;&gt; availableInlineActions();
+	  +void onSelectItem();
+	  +void onNewItem();
+	  +InterventionFormViewModel provide();
+	  +void onCancel();
+	  +dynamic onSave();
+	  +dynamic testStudySchedule()
+	]
+	
+	[MP23InterventionsFormViewModel]o-[Study]
+	[MP23InterventionsFormViewModel]o-[GoRouter]
+	[MP23InterventionsFormViewModel]o-[FormArray]
+	[MP23InterventionsFormViewModel]o-[FormViewModelCollection]
+	[MP23InterventionsFormViewModel]o-[FormGroup]
+	[&lt;abstract&gt;FormViewModel]&lt;:-[MP23InterventionsFormViewModel]
+	[&lt;abstract&gt;MP23StudyScheduleControls]&lt;:-[MP23InterventionsFormViewModel]
+	[&lt;abstract&gt;IFormViewModelDelegate]&lt;:--[MP23InterventionsFormViewModel]
+	[&lt;abstract&gt;IListActionProvider]&lt;:--[MP23InterventionsFormViewModel]
+	[&lt;abstract&gt;IProviderArgsResolver]&lt;:--[MP23InterventionsFormViewModel]
+	
+	[&lt;abstract&gt;MP23StudyScheduleControls
+	  |
+	  +segmentsControl: FormArray&lt;dynamic&gt;;
+	  +studyScheduleControls: Map&lt;String, FormArray&lt;dynamic&gt;&gt;;
+	  +studyScheduleValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;
+	  |
+	  +void addFormGroupToSegments();
+	  +FormGroup createBaselineFormGroup();
+	  +FormGroup createThompsonSamplingFormGroup();
+	  +FormGroup createAlternatingFormGroup();
+	  +void setStudyScheduleControlsFrom();
+	  +MP23StudyScheduleFormData buildStudyScheduleFormData()
+	]
+	
+	[&lt;abstract&gt;MP23StudyScheduleControls]o-[FormArray]
 	
 	</desc>
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="1474.0" width="5247.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="1203.0" width="5352.8" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
-				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M145.0 105.3 L145 173 L145 208 L145.0 208.0 " fill="none"></path>
-					<path d="M150.3 105.3 L145.0 105.3 L139.7 105.3 L145.0 92.0 Z"></path>
-					<path d="M437.0 752.7 L437 859 L617.9876968503937 1097.5 L618.0 1097.5 " fill="none"></path>
+				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+					<path d="M3687.1 874.9 L685.25 1096 L696.5176056338028 1116 L696.5 1116.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M442.3 743.3 L437.0 752.7 L431.7 743.3 L437.0 734.0 Z"></path>
+						<path d="M3696.8 879.5 L3687.1 874.9 L3696.1 868.9 L3705.8 873.5 Z"></path>
+					</g>
+					<path d="M4578.0 1022.7 L4758.5 1096 L4968.75 1123.9807872539832 L4968.8 1124.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M4571.4 1014.2 L4578.0 1022.7 L4567.4 1024.1 L4560.8 1015.7 Z"></path>
+					</g>
+					<path d="M3687.1 877.1 L909.25 1096 L1110 1124.535035035035 L1110.0 1124.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3696.9 881.7 L3687.1 877.1 L3696.0 871.1 L3705.8 875.7 Z"></path>
+					</g>
+					<path d="M4133.3 1094.7 L4133.25 1096 L4133.25 1116 L4133.3 1116.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M4138.6 1085.3 L4133.3 1094.7 L4127.9 1085.3 L4133.3 1076.0 Z"></path>
+					</g>
+					<path d="M4545.2 1085.5 L4563 1096 L4619.901408450704 1116 L4619.9 1116.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M4539.9 1076.2 L4545.2 1085.5 L4534.5 1085.3 L4529.2 1076.0 Z"></path>
+					</g>
+					<path d="M3942.7 497.7 L3927.75 588 L3943.931102362205 608 L3943.9 608.0 " fill="none"></path>
+					<path d="M3948.0 498.5 L3942.7 497.7 L3937.5 496.8 L3944.9 484.5 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M1229.1 474.1 L3967.75 588 L3980.781496062992 608 L3980.8 608.0 " fill="none"></path>
+					</g>
+					<path d="M1229.3 468.7 L1229.1 474.1 L1228.9 479.4 L1215.8 473.5 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M1433.1 473.2 L4007.75 588 L4017.6318897637793 608 L4017.6 608.0 " fill="none"></path>
+					</g>
+					<path d="M1433.3 467.9 L1433.1 473.2 L1432.8 478.6 L1419.8 472.7 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M1666.1 474.1 L4135.25 588 L4135.092519685039 608 L4135.1 608.0 " fill="none"></path>
+					</g>
+					<path d="M1666.3 468.7 L1666.1 474.1 L1665.8 479.4 L1652.8 473.5 Z"></path>
+					<path d="M4708.3 518.4 L4696.75 588 L4813.324803149606 705.5 L4813.3 705.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M4715.1 510.1 L4708.3 518.4 L4704.6 508.3 L4711.4 500.0 Z"></path>
+					</g>
+					<path d="M1809.3 296.2 L1809.25 350 L1809.25 453.5 L1809.3 453.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1814.6 286.8 L1809.3 296.2 L1803.9 286.8 L1809.3 277.5 Z"></path>
+					</g>
+					<path d="M1809.3 74.8 L1809.25 112 L1809.25 184.5 L1809.3 184.5 " fill="none"></path>
+					<path d="M1814.6 74.8 L1809.3 74.8 L1803.9 74.8 L1809.3 61.5 Z"></path>
+					<path d="M1208.5 74.8 L1208.5 112 L1208.5 147 L1208.5 147.0 " fill="none"></path>
+					<path d="M1213.8 74.8 L1208.5 74.8 L1203.2 74.8 L1208.5 61.5 Z"></path>
+					<path d="M3479.3 318.7 L3479.25 350 L3532.926470588235 400 L3532.9 400.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M3484.6 309.3 L3479.3 318.7 L3473.9 309.3 L3479.3 300.0 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M413.0 101.7 L345 173 L345 292 L345 292 L345 411 L345 411 L396.3392857142857 536 L396.3 536.0 " fill="none"></path>
+						<path d="M3565.2 67.6 L3479.25 112 L3479.25 162 L3479.3 162.0 " fill="none"></path>
 					</g>
-					<path d="M416.9 105.3 L413.0 101.7 L409.2 98.0 L422.2 92.0 Z"></path>
-					<path d="M812.5 684.7 L812.5 859 L2482.5 1061.2312276519667 L2482.5 1061.2 " fill="none"></path>
+					<path d="M3567.6 72.4 L3565.2 67.6 L3562.7 62.9 L3577.0 61.5 Z"></path>
+					<path d="M4274.3 518.4 L4262.75 588 L4252.5531496062995 608 L4252.6 608.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M817.8 675.3 L812.5 684.7 L807.2 675.3 L812.5 666.0 Z"></path>
-					</g>
-					<path d="M1152.5 850.7 L1142.25 859 L661.0246062992126 1097.5 L661.0 1097.5 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1163.1 849.0 L1152.5 850.7 L1156.3 840.7 L1167.0 839.0 Z"></path>
-					</g>
-					<path d="M1445.3 857.5 L1445.5 859 L1445.5 1113 L1445.5 1113 L1445.5 1367 L1445.5 1367 L2633.75 1400.8886322554729 L2633.8 1400.9 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1449.5 847.6 L1445.3 857.5 L1438.9 848.9 L1443.1 839.0 Z"></path>
-					</g>
-					<path d="M1812.9 1314.9 L1758.75 1367 L2114.5 1399.6967637540454 L2114.5 1399.7 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1823.3 1312.3 L1812.9 1314.9 L1815.9 1304.6 L1826.4 1302.0 Z"></path>
-					</g>
-					<path d="M1843.8 1316.0 L1798.75 1367 L1623.25 1395.127539503386 L1623.3 1395.1 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M1854.0 1312.5 L1843.8 1316.0 L1846.0 1305.5 L1856.1 1302.0 Z"></path>
-					</g>
-					<path d="M2137.6 1318.3 L2164.75 1367 L2488.5 1397.8333333333333 L2488.5 1397.8 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2137.7 1307.6 L2137.6 1318.3 L2128.4 1312.7 L2128.5 1302.0 Z"></path>
-					</g>
-					<path d="M2369.8 1311.3 L2467.25 1367 L2906.25 1395.4129443938014 L2906.3 1395.4 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2364.3 1302.0 L2369.8 1311.3 L2359.0 1311.3 L2353.6 1302.0 Z"></path>
-					</g>
-					<path d="M2459.5 1309.2 L2588.25 1367 L3245.25 1399.8731501057082 L3245.3 1399.9 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2453.2 1300.5 L2459.5 1309.2 L2448.8 1310.2 L2442.5 1301.5 Z"></path>
-					</g>
-					<path d="M1935.0 663.8 L1935 859 L1957.51968503937 924 L1957.5 924.0 " fill="none"></path>
-					<path d="M1940.3 663.8 L1935.0 663.8 L1929.7 663.8 L1935.0 650.5 Z"></path>
-					<path d="M1676.3 847.5 L1690.25 859 L1775.4025590551182 924 L1775.4 924.0 " fill="none"></path>
-					<path d="M1679.7 843.4 L1676.3 847.5 L1672.9 851.6 L1666.0 839.0 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M2142.9 662.9 L2064.5 859 L2053.8799212598424 924 L2053.9 924.0 " fill="none"></path>
-					</g>
-					<path d="M2147.8 664.9 L2142.9 662.9 L2137.9 660.9 L2147.8 650.5 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M2829.7 658.6 L2568 859 L2428.531496062992 924 L2428.5 924.0 " fill="none"></path>
-					</g>
-					<path d="M2832.9 662.8 L2829.7 658.6 L2826.4 654.4 L2840.3 650.5 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M3067.9 662.9 L2989.75 859 L2442.5 1002.7822601499871 L2442.5 1002.8 " fill="none"></path>
-					</g>
-					<path d="M3072.8 664.9 L3067.9 662.9 L3062.9 660.9 L3072.8 650.5 Z"></path>
-					<path d="M2636.6 1359.5 L2628.25 1367 L2175.5 1400.2594412829799 L2175.5 1400.3 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2647.1 1357.2 L2636.6 1359.5 L2639.9 1349.3 L2650.4 1347.0 Z"></path>
-					</g>
-					<path d="M2674.4 1360.5 L2668.25 1367 L2680.644366197183 1387 L2680.6 1387.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M2684.7 1357.4 L2674.4 1360.5 L2677.0 1350.1 L2687.3 1347.0 Z"></path>
-					</g>
-					<path d="M3000.1 1364.6 L3001 1367 L2586.5 1398.7470334412083 L2586.5 1398.7 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3002.0 1354.0 L3000.1 1364.6 L2992.0 1357.6 L2993.8 1347.0 Z"></path>
-					</g>
-					<path d="M3354.3 1326.1 L3439.5 1367 L3125.25 1393.3265486725663 L3125.3 1393.3 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3348.2 1317.3 L3354.3 1326.1 L3343.6 1326.9 L3337.5 1318.1 Z"></path>
-					</g>
-					<path d="M3354.5 1311.3 L3479.5 1367 L3350.25 1392.2455295735901 L3350.3 1392.2 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M3348.2 1302.6 L3354.5 1311.3 L3343.9 1312.3 L3337.5 1303.7 Z"></path>
-					</g>
-					<path d="M3375.4 663.8 L3358 859 L3322.7244094488187 879 L3322.7 879.0 " fill="none"></path>
-					<path d="M3380.7 664.3 L3375.4 663.8 L3370.1 663.3 L3376.6 650.5 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M2187.0 658.2 L2473 859 L2507.4094488188975 879 L2507.4 879.0 " fill="none"></path>
-					</g>
-					<path d="M2190.1 653.8 L2187.0 658.2 L2183.9 662.5 L2176.1 650.5 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M2866.8 663.5 L2910 859 L2910 879 L2910.0 879.0 " fill="none"></path>
-					</g>
-					<path d="M2872.0 662.4 L2866.8 663.5 L2861.6 664.7 L2863.9 650.5 Z"></path>
-					<g stroke-dasharray="6 6">
-						<path d="M3091.6 662.6 L3181 859 L3159.6614173228345 879 L3159.7 879.0 " fill="none"></path>
-					</g>
-					<path d="M3096.4 660.4 L3091.6 662.6 L3086.7 664.8 L3086.1 650.5 Z"></path>
-					<path d="M582.8 379.7 L582.75 411 L501.4162946428571 536 L501.4 536.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M588.1 370.3 L582.8 379.7 L577.4 370.3 L582.8 361.0 Z"></path>
+						<path d="M4281.1 510.1 L4274.3 518.4 L4270.6 508.3 L4277.4 500.0 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M471.5 99.4 L582.75 173 L582.75 223 L582.8 223.0 " fill="none"></path>
+						<path d="M3648.8 67.6 L3734.75 112 L3734.75 231 L3734.75 231 L3734.75 350 L3734.75 350 L3681.073529411765 400 L3681.1 400.0 " fill="none"></path>
 					</g>
-					<path d="M474.5 94.9 L471.5 99.4 L468.6 103.8 L460.4 92.0 Z"></path>
-					<path d="M967.8 105.3 L967.75 173 L967.75 261 L967.8 261.0 " fill="none"></path>
-					<path d="M973.1 105.3 L967.8 105.3 L962.4 105.3 L967.8 92.0 Z"></path>
-					<path d="M1419.0 357.2 L1419 411 L1419 431 L1419.0 431.0 " fill="none"></path>
+					<path d="M3651.3 62.9 L3648.8 67.6 L3646.4 72.4 L3637.0 61.5 Z"></path>
+					<path d="M5007.2 995.9 L5045.25 1096 L5033.982394366197 1116 L5034.0 1116.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1424.3 347.8 L1419.0 357.2 L1413.7 347.8 L1419.0 338.5 Z"></path>
+						<path d="M5008.9 985.3 L5007.2 995.9 L4998.9 989.1 L5000.6 978.5 Z"></path>
 					</g>
-					<path d="M1419.0 105.3 L1419 173 L1419 245.5 L1419.0 245.5 " fill="none"></path>
-					<path d="M1424.3 105.3 L1419.0 105.3 L1413.7 105.3 L1419.0 92.0 Z"></path>
-					<path d="M3610.3 1264.4 L3532.25 1367 L2746.75 1400.1178741092638 L2746.8 1400.1 " fill="none"></path>
+					<path d="M4747.9 989.6 L4603 1096 L4637.366197183099 1116 L4637.4 1116.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3620.2 1260.2 L3610.3 1264.4 L3611.8 1253.7 L3621.6 1249.5 Z"></path>
+						<path d="M4758.6 988.3 L4747.9 989.6 L4752.3 979.7 L4762.9 978.5 Z"></path>
 					</g>
-					<path d="M3737.7 1268.1 L3745.5 1367 L3350.25 1398.3375209380235 L3350.3 1398.3 " fill="none"></path>
+					<path d="M4068.2 486.3 L4780 588 L4858.0634842519685 705.5 L4858.1 705.5 " fill="none"></path>
+					<path d="M4069.0 481.0 L4068.2 486.3 L4067.4 491.5 L4055.0 484.4 Z"></path>
+					<path d="M5058.5 497.8 L5058.5 588 L5007.729822834645 705.5 L5007.7 705.5 " fill="none"></path>
+					<path d="M5063.8 497.8 L5058.5 497.8 L5053.2 497.8 L5058.5 484.5 Z"></path>
+					<path d="M2205.3 74.8 L2205.25 112 L2205.25 132 L2205.3 132.0 " fill="none"></path>
+					<path d="M2210.6 74.8 L2205.3 74.8 L2199.9 74.8 L2205.3 61.5 Z"></path>
+					<path d="M2606.8 74.8 L2606.75 112 L2606.75 200 L2606.8 200.0 " fill="none"></path>
+					<path d="M2612.1 74.8 L2606.8 74.8 L2601.4 74.8 L2606.8 61.5 Z"></path>
+					<path d="M2956.8 91.8 L2884 112 L3090.34768907563 215.5 L3090.3 215.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M3742.3 1258.4 L3737.7 1268.1 L3731.7 1259.2 L3736.2 1249.5 Z"></path>
+						<path d="M2967.2 94.4 L2956.8 91.8 L2964.3 84.1 L2974.8 86.8 Z"></path>
 					</g>
-					<path d="M3390.5 662.6 L3479.5 859 L3593.299212598425 976.5 L3593.3 976.5 " fill="none"></path>
-					<path d="M3395.4 660.4 L3390.5 662.6 L3385.7 664.8 L3385.0 650.5 Z"></path>
-					<path d="M3621.0 663.8 L3621 859 L3669.341535433071 976.5 L3669.3 976.5 " fill="none"></path>
-					<path d="M3626.3 663.8 L3621.0 663.8 L3615.7 663.8 L3621.0 650.5 Z"></path>
-					<path d="M4191.0 141.2 L4191 173 L4191 238 L4191.0 238.0 " fill="none"></path>
+					<path d="M3249.3 99.2 L3280.25 112 L3141.9600840336134 215.5 L3142.0 215.5 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4196.3 131.8 L4191.0 141.2 L4185.7 131.8 L4191.0 122.5 Z"></path>
+						<path d="M3242.7 90.7 L3249.3 99.2 L3238.6 100.5 L3232.1 92.0 Z"></path>
 					</g>
-					<path d="M4051.9 351.2 L3911.5 411 L3911.5 573.5 L3911.5 573.5 " fill="none"></path>
-					<path d="M4054.0 356.1 L4051.9 351.2 L4049.8 346.3 L4064.2 346.0 Z"></path>
-					<path d="M4229.8 357.5 L4261.5 411 L4261.5 566 L4261.5 566.0 " fill="none"></path>
-					<path d="M4234.4 354.8 L4229.8 357.5 L4225.2 360.2 L4223.0 346.0 Z"></path>
-					<path d="M2335.0 105.3 L2335 173 L2335 193 L2335.0 193.0 " fill="none"></path>
-					<path d="M2340.3 105.3 L2335.0 105.3 L2329.7 105.3 L2335.0 92.0 Z"></path>
-					<path d="M4663.0 684.7 L4663 859 L4073.5 1018.7152 L4073.5 1018.7 " fill="none"></path>
+					<path d="M568.8 295.9 L559.75 350 L563.1113445378152 370 L563.1 370.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M4668.3 675.3 L4663.0 684.7 L4657.7 675.3 L4663.0 666.0 Z"></path>
+						<path d="M575.6 287.6 L568.8 295.9 L565.1 285.8 L571.9 277.5 Z"></path>
 					</g>
-					<path d="M5026.0 357.2 L5026 411 L5026 619.5 L5026.0 619.5 " fill="none"></path>
+					<path d="M571.2 74.3 L559.75 112 L571.9348739495798 184.5 L571.9 184.5 " fill="none"></path>
+					<path d="M576.3 75.8 L571.2 74.3 L566.1 72.7 L575.1 61.5 Z"></path>
+					<path d="M791.1 273.3 L1174.5 350 L958.75 393.1681378730559 L958.8 393.2 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M5031.3 347.8 L5026.0 357.2 L5020.7 347.8 L5026.0 338.5 Z"></path>
+						<path d="M782.9 266.2 L791.1 273.3 L780.9 276.7 L772.8 269.6 Z"></path>
 					</g>
-					<path d="M5026.0 105.3 L5026 173 L5026 245.5 L5026.0 245.5 " fill="none"></path>
-					<path d="M5031.3 105.3 L5026.0 105.3 L5020.7 105.3 L5026.0 92.0 Z"></path>
-					<g data-name="InterventionTaskFormData">
-						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionTaskFormData">
-							<rect x="0.0" y="208.0" height="168.0" width="290.0" data-name="InterventionTaskFormData"></rect>
-							<path d="M0.0 239.0 L290.0 239.0" fill="none" data-name="InterventionTaskFormData"></path>
-							<path d="M0.0 330.0 L290.0 330.0" fill="none" data-name="InterventionTaskFormData"></path>
-						</g>
-						<g transform="translate(0, 208)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionTaskFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionTaskFormData">
-								<text x="137.0" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionTaskFormData">InterventionTaskFormData</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 239)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionTaskFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionTaskFormData">
-								<text x="0.0" y="13.5" stroke="none" data-name="InterventionTaskFormData">+taskId: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="InterventionTaskFormData">+taskTitle: String</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="InterventionTaskFormData">+taskDescription: String?</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="InterventionTaskFormData">&lt;static&gt;+kDefaultTitle: String</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="InterventionTaskFormData">+id: String</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 330)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionTaskFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionTaskFormData">
-								<text x="0.0" y="13.5" stroke="none" data-name="InterventionTaskFormData">+CheckmarkTask toTask()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="InterventionTaskFormData">+InterventionTaskFormData copy()</text>
-								
-							</g>
-						</g>
+					<path d="M688.9 63.2 L999.5 112 L743.7699579831933 184.5 L743.8 184.5 " fill="none"></path>
+					<path d="M689.7 57.9 L688.9 63.2 L688.1 68.4 L675.8 61.1 Z"></path>
+					<path d="M768.0 1047.6 L743.5 1096 L721.9507042253521 1116 L722.0 1116.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M777.0 1041.7 L768.0 1047.6 L767.5 1036.9 L776.4 1031.0 Z"></path>
 					</g>
-					<g data-name="IFormDataWithSchedule">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IFormDataWithSchedule">
-							<rect x="41.5" y="61.0" height="31.0" width="207.0" data-name="IFormDataWithSchedule"></rect>
-						</g>
-						<g transform="translate(41.5, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormDataWithSchedule">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormDataWithSchedule">
-								<text x="95.5" y="13.5" stroke="none" text-anchor="middle" data-name="IFormDataWithSchedule">IFormDataWithSchedule</text>
-								
-							</g>
-						</g>
+					<path d="M831.0 1049.3 L821.75 1096 L821.75 1116 L821.8 1116.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M838.1 1041.2 L831.0 1049.3 L827.6 1039.1 L834.7 1031.0 Z"></path>
 					</g>
-					<g data-name="StudyScheduleFormData">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyScheduleFormData">
-							<rect x="289.0" y="536.0" height="198.0" width="296.0" data-name="StudyScheduleFormData"></rect>
-							<path d="M289.0 567.0 L585.0 567.0" fill="none" data-name="StudyScheduleFormData"></path>
-							<path d="M289.0 673.0 L585.0 673.0" fill="none" data-name="StudyScheduleFormData"></path>
-						</g>
-						<g transform="translate(289, 536)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyScheduleFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyScheduleFormData">
-								<text x="140.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyScheduleFormData">StudyScheduleFormData</text>
-								
-							</g>
-						</g>
-						<g transform="translate(289, 567)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyScheduleFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyScheduleFormData">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyScheduleFormData">+sequenceType: PhaseSequence</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyScheduleFormData">+sequenceTypeCustom: String</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudyScheduleFormData">+numCycles: int</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="StudyScheduleFormData">+phaseDuration: int</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="StudyScheduleFormData">+includeBaseline: bool</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="StudyScheduleFormData">+id: String</text>
-								
-							</g>
-						</g>
-						<g transform="translate(289, 673)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyScheduleFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyScheduleFormData">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyScheduleFormData">+StudySchedule toStudySchedule()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyScheduleFormData">+Study apply()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudyScheduleFormData">+StudyScheduleFormData copy()</text>
-								
-							</g>
-						</g>
+					<path d="M935.0 1048.9 L949.25 1096 L1110 1123.2067938021455 L1110.0 1123.2 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M937.4 1038.4 L935.0 1048.9 L927.1 1041.5 L929.5 1031.0 Z"></path>
 					</g>
-					<g data-name="PhaseSequence">
-						<g fill="#eee8d5" stroke="#33322E" data-name="PhaseSequence">
-							<rect x="556.8" y="1097.5" height="31.0" width="146.0" data-name="PhaseSequence"></rect>
-						</g>
-						<g transform="translate(556.75, 1097.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PhaseSequence">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PhaseSequence">
-								<text x="65.0" y="13.5" stroke="none" text-anchor="middle" data-name="PhaseSequence">PhaseSequence</text>
-								
-							</g>
-						</g>
+					<path d="M1310.4 872.5 L4523 1096 L4242.75 1121.5262989095575 L4242.8 1121.5 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1301.4 866.5 L1310.4 872.5 L1300.7 877.2 L1291.8 871.2 Z"></path>
 					</g>
-					<g data-name="IStudyFormData">
-						<g fill="#eee8d5" stroke="#33322E" data-name="IStudyFormData">
-							<rect x="365.5" y="61.0" height="31.0" width="143.0" data-name="IStudyFormData"></rect>
-						</g>
-						<g transform="translate(365.5, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IStudyFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IStudyFormData">
-								<text x="63.5" y="13.5" stroke="none" text-anchor="middle" data-name="IStudyFormData">IStudyFormData</text>
-								
-							</g>
-						</g>
+					<path d="M1310.4 870.9 L4718.5 1096 L4687.795774647887 1116 L4687.8 1116.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M1301.4 865.0 L1310.4 870.9 L1300.7 875.6 L1291.8 869.7 Z"></path>
 					</g>
-					<g data-name="InterventionFormView">
-						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionFormView">
-							<rect x="625.0" y="604.0" height="62.0" width="375.0" data-name="InterventionFormView"></rect>
-							<path d="M625.0 635.0 L1000.0 635.0" fill="none" data-name="InterventionFormView"></path>
-						</g>
-						<g transform="translate(625, 604)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionFormView">
-								<text x="179.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionFormView">InterventionFormView</text>
-								
-							</g>
-						</g>
-						<g transform="translate(625, 635)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionFormView">
-								<text x="0.0" y="13.5" stroke="none" data-name="InterventionFormView">+formViewModel: InterventionFormViewModel</text>
-								
-							</g>
-						</g>
+					<path d="M70.5 497.8 L70.5 588 L452.75 709.0994699095728 L452.8 709.1 " fill="none"></path>
+					<path d="M75.8 497.8 L70.5 497.8 L65.2 497.8 L70.5 484.5 Z"></path>
+					<path d="M561.1 581.2 L560 588 L639.9064960629921 653 L639.9 653.0 " fill="none"></path>
+					<path d="M566.4 582.0 L561.1 581.2 L555.9 580.3 L563.3 568.0 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M1102.5 497.7 L1087.5 588 L1032.416338582677 653 L1032.4 653.0 " fill="none"></path>
+					</g>
+					<path d="M1107.8 498.5 L1102.5 497.7 L1097.2 496.8 L1104.7 484.5 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M1333.0 497.7 L1318 588 L1203.9301181102362 653 L1203.9 653.0 " fill="none"></path>
+					</g>
+					<path d="M1338.3 498.5 L1333.0 497.7 L1327.7 496.8 L1335.2 484.5 Z"></path>
+					<g stroke-dasharray="6 6">
+						<path d="M1551.5 497.7 L1536.5 588 L1291.75 681.5890101618367 L1291.8 681.6 " fill="none"></path>
+					</g>
+					<path d="M1556.8 498.5 L1551.5 497.7 L1546.2 496.8 L1553.7 484.5 Z"></path>
+					<path d="M977.4 491.3 L2704.25 588 L2704.25 842 L2704.25 842 L2704.25 1096 L2704.25 1096 L1208 1130.3742921857304 L1208.0 1130.4 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M968.4 485.4 L977.4 491.3 L967.8 496.1 L958.8 490.2 Z"></path>
 					</g>
 					<g data-name="InterventionFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionFormViewModel">
-							<rect x="2482.5" y="879.0" height="468.0" width="855.0" data-name="InterventionFormViewModel"></rect>
-							<path d="M2482.5 910.0 L3337.5 910.0" fill="none" data-name="InterventionFormViewModel"></path>
-							<path d="M2482.5 1136.0 L3337.5 1136.0" fill="none" data-name="InterventionFormViewModel"></path>
+							<rect x="3705.8" y="608.0" height="468.0" width="855.0" data-name="InterventionFormViewModel"></rect>
+							<path d="M3705.8 639.0 L4560.8 639.0" fill="none" data-name="InterventionFormViewModel"></path>
+							<path d="M3705.8 865.0 L4560.8 865.0" fill="none" data-name="InterventionFormViewModel"></path>
 						</g>
-						<g transform="translate(2482.5, 879)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionFormViewModel">
+						<g transform="translate(3705.75, 608)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionFormViewModel">
 								<text x="419.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionFormViewModel">InterventionFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2482.5, 910)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionFormViewModel">
+						<g transform="translate(3705.75, 639)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="InterventionFormViewModel">+study: Study</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="InterventionFormViewModel">+interventionIdControl: FormControl&lt;String&gt;</text>
@@ -597,7 +425,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(2482.5, 1136)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionFormViewModel">
+						<g transform="translate(3705.75, 865)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="InterventionFormViewModel">+void setControlsFrom()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="InterventionFormViewModel">+InterventionFormData buildFormData()</text>
@@ -616,134 +444,33 @@
 							</g>
 						</g>
 					</g>
-					<g data-name="StudyScheduleControls">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyScheduleControls">
-							<rect x="1040.0" y="431.0" height="408.0" width="758.0" data-name="StudyScheduleControls"></rect>
-							<path d="M1040.0 462.0 L1798.0 462.0" fill="none" data-name="StudyScheduleControls"></path>
-							<path d="M1040.0 778.0 L1798.0 778.0" fill="none" data-name="StudyScheduleControls"></path>
-						</g>
-						<g transform="translate(1040, 431)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyScheduleControls">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyScheduleControls">
-								<text x="371.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyScheduleControls">StudyScheduleControls</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1040, 462)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyScheduleControls">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyScheduleControls">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyScheduleControls">&lt;static&gt;+defaultScheduleType: PhaseSequence</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyScheduleControls">&lt;static&gt;+defaultScheduleTypeSequence: String</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudyScheduleControls">&lt;static&gt;+defaultNumCycles: int</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="StudyScheduleControls">&lt;static&gt;+defaultPeriodLength: int</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="StudyScheduleControls">+sequenceTypeControl: FormControl&lt;PhaseSequence&gt;</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="StudyScheduleControls">+sequenceTypeCustomControl: FormControl&lt;String&gt;</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="StudyScheduleControls">+phaseDurationControl: FormControl&lt;int&gt;</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="StudyScheduleControls">+numCyclesControl: FormControl&lt;int&gt;</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="StudyScheduleControls">+includeBaselineControl: FormControl&lt;bool&gt;</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="StudyScheduleControls">+demoControl: FormControl&lt;int&gt;</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="StudyScheduleControls">+studyScheduleControls: Map&lt;String, FormControl&lt;Object&gt;&gt;</text>
-								<text x="0.0" y="178.5" stroke="none" data-name="StudyScheduleControls">&lt;static&gt;+kNumCyclesMin: int</text>
-								<text x="0.0" y="193.5" stroke="none" data-name="StudyScheduleControls">&lt;static&gt;+kNumCyclesMax: int</text>
-								<text x="0.0" y="208.5" stroke="none" data-name="StudyScheduleControls">&lt;static&gt;+kPhaseDurationMin: int</text>
-								<text x="0.0" y="223.5" stroke="none" data-name="StudyScheduleControls">&lt;static&gt;+kPhaseDurationMax: int</text>
-								<text x="0.0" y="238.5" stroke="none" data-name="StudyScheduleControls">+sequenceTypeControlOptions: List&lt;FormControlOption&lt;PhaseSequence&gt;&gt;</text>
-								<text x="0.0" y="253.5" stroke="none" data-name="StudyScheduleControls">+studyScheduleValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;</text>
-								<text x="0.0" y="268.5" stroke="none" data-name="StudyScheduleControls">+numCyclesRange: dynamic</text>
-								<text x="0.0" y="283.5" stroke="none" data-name="StudyScheduleControls">+phaseDurationRange: dynamic</text>
-								<text x="0.0" y="298.5" stroke="none" data-name="StudyScheduleControls">+customSequenceRequired: dynamic</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1040, 778)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyScheduleControls">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyScheduleControls">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyScheduleControls">+void setStudyScheduleControlsFrom()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyScheduleControls">+StudyScheduleFormData buildStudyScheduleFormData()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudyScheduleControls">+bool isSequencingCustom()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="FormControl">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormControl">
-							<rect x="2633.8" y="1387.0" height="31.0" width="113.0" data-name="FormControl"></rect>
-						</g>
-						<g transform="translate(2633.75, 1387)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControl">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormControl">
-								<text x="48.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormControl">FormControl</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="InterventionsFormViewModel">
-						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionsFormViewModel">
-							<rect x="1603.5" y="924.0" height="378.0" width="839.0" data-name="InterventionsFormViewModel"></rect>
-							<path d="M1603.5 955.0 L2442.5 955.0" fill="none" data-name="InterventionsFormViewModel"></path>
-							<path d="M1603.5 1106.0 L2442.5 1106.0" fill="none" data-name="InterventionsFormViewModel"></path>
-						</g>
-						<g transform="translate(1603.5, 924)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionsFormViewModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionsFormViewModel">
-								<text x="411.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionsFormViewModel">InterventionsFormViewModel</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1603.5, 955)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionsFormViewModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionsFormViewModel">
-								<text x="0.0" y="13.5" stroke="none" data-name="InterventionsFormViewModel">+study: Study</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="InterventionsFormViewModel">+router: GoRouter</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="InterventionsFormViewModel">+interventionsArray: FormArray&lt;dynamic&gt;</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="InterventionsFormViewModel">+interventionsCollection: FormViewModelCollection&lt;InterventionFormViewModel, InterventionFormData&gt;</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="InterventionsFormViewModel">+form: FormGroup</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="InterventionsFormViewModel">+sharedValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="InterventionsFormViewModel">+interventionsRequired: dynamic</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="InterventionsFormViewModel">+titles: Map&lt;FormMode, String&gt;</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="InterventionsFormViewModel">+canTestStudySchedule: bool</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1603.5, 1106)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionsFormViewModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionsFormViewModel">
-								<text x="0.0" y="13.5" stroke="none" data-name="InterventionsFormViewModel">+void setControlsFrom()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="InterventionsFormViewModel">+InterventionsFormData buildFormData()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="InterventionsFormViewModel">+void read()</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="InterventionsFormViewModel">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="InterventionsFormViewModel">+List&lt;ModelAction&lt;dynamic&gt;&gt; availablePopupActions()</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="InterventionsFormViewModel">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableInlineActions()</text>
-								<text x="0.0" y="103.5" stroke="none" data-name="InterventionsFormViewModel">+void onSelectItem()</text>
-								<text x="0.0" y="118.5" stroke="none" data-name="InterventionsFormViewModel">+void onNewItem()</text>
-								<text x="0.0" y="133.5" stroke="none" data-name="InterventionsFormViewModel">+InterventionFormViewModel provide()</text>
-								<text x="0.0" y="148.5" stroke="none" data-name="InterventionsFormViewModel">+void onCancel()</text>
-								<text x="0.0" y="163.5" stroke="none" data-name="InterventionsFormViewModel">+dynamic onSave()</text>
-								<text x="0.0" y="178.5" stroke="none" data-name="InterventionsFormViewModel">+dynamic testStudySchedule()</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="Study">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Study">
-							<rect x="2114.5" y="1387.0" height="31.0" width="61.0" data-name="Study"></rect>
+							<rect x="674.8" y="1116.0" height="31.0" width="61.0" data-name="Study"></rect>
 						</g>
-						<g transform="translate(2114.5, 1387)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Study">
+						<g transform="translate(674.75, 1116)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Study">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Study">
 								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Study">Study</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="GoRouter">
-						<g fill="#eee8d5" stroke="#33322E" data-name="GoRouter">
-							<rect x="1531.3" y="1387.0" height="31.0" width="92.0" data-name="GoRouter"></rect>
+					<g data-name="FormControl">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormControl">
+							<rect x="4968.8" y="1116.0" height="31.0" width="113.0" data-name="FormControl"></rect>
 						</g>
-						<g transform="translate(1531.25, 1387)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoRouter">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GoRouter">
-								<text x="38.0" y="13.5" stroke="none" text-anchor="middle" data-name="GoRouter">GoRouter</text>
+						<g transform="translate(4968.75, 1116)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormControl">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormControl">
+								<text x="48.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormControl">FormControl</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="FormArray">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormArray">
-							<rect x="2488.5" y="1387.0" height="31.0" width="98.0" data-name="FormArray"></rect>
+							<rect x="1110.0" y="1116.0" height="31.0" width="98.0" data-name="FormArray"></rect>
 						</g>
-						<g transform="translate(2488.5, 1387)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormArray">
+						<g transform="translate(1110, 1116)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormArray">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormArray">
 								<text x="41.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormArray">FormArray</text>
 								
@@ -752,9 +479,9 @@
 					</g>
 					<g data-name="FormViewModelCollection">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormViewModelCollection">
-							<rect x="2906.3" y="1387.0" height="31.0" width="219.0" data-name="FormViewModelCollection"></rect>
+							<rect x="4023.8" y="1116.0" height="31.0" width="219.0" data-name="FormViewModelCollection"></rect>
 						</g>
-						<g transform="translate(2906.25, 1387)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormViewModelCollection">
+						<g transform="translate(4023.75, 1116)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormViewModelCollection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormViewModelCollection">
 								<text x="101.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormViewModelCollection">FormViewModelCollection</text>
 								
@@ -763,31 +490,31 @@
 					</g>
 					<g data-name="FormGroup">
 						<g fill="#eee8d5" stroke="#33322E" data-name="FormGroup">
-							<rect x="3245.3" y="1387.0" height="31.0" width="105.0" data-name="FormGroup"></rect>
+							<rect x="4611.5" y="1116.0" height="31.0" width="105.0" data-name="FormGroup"></rect>
 						</g>
-						<g transform="translate(3245.25, 1387)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
+						<g transform="translate(4611.5, 1116)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="FormGroup">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormGroup">
 								<text x="44.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormGroup">FormGroup</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="FormViewModel">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormViewModel">
-							<rect x="1864.5" y="619.5" height="31.0" width="141.0" data-name="FormViewModel"></rect>
+					<g data-name="ManagedFormViewModel">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ManagedFormViewModel">
+							<rect x="3840.0" y="453.5" height="31.0" width="215.0" data-name="ManagedFormViewModel"></rect>
 						</g>
-						<g transform="translate(1864.5, 619.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormViewModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormViewModel">
-								<text x="62.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormViewModel">FormViewModel</text>
+						<g transform="translate(3840, 453.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ManagedFormViewModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ManagedFormViewModel">
+								<text x="99.5" y="13.5" stroke="none" text-anchor="middle" data-name="ManagedFormViewModel">ManagedFormViewModel</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="IFormViewModelDelegate">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IFormViewModelDelegate">
-							<rect x="2045.5" y="619.5" height="31.0" width="217.0" data-name="IFormViewModelDelegate"></rect>
+							<rect x="998.8" y="453.5" height="31.0" width="217.0" data-name="IFormViewModelDelegate"></rect>
 						</g>
-						<g transform="translate(2045.5, 619.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormViewModelDelegate">
+						<g transform="translate(998.75, 453.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormViewModelDelegate">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormViewModelDelegate">
 								<text x="100.5" y="13.5" stroke="none" text-anchor="middle" data-name="IFormViewModelDelegate">IFormViewModelDelegate</text>
 								
@@ -796,9 +523,9 @@
 					</g>
 					<g data-name="IListActionProvider">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IListActionProvider">
-							<rect x="2778.5" y="619.5" height="31.0" width="164.0" data-name="IListActionProvider"></rect>
+							<rect x="1255.8" y="453.5" height="31.0" width="164.0" data-name="IListActionProvider"></rect>
 						</g>
-						<g transform="translate(2778.5, 619.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IListActionProvider">
+						<g transform="translate(1255.75, 453.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IListActionProvider">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IListActionProvider">
 								<text x="74.0" y="13.5" stroke="none" text-anchor="middle" data-name="IListActionProvider">IListActionProvider</text>
 								
@@ -807,132 +534,46 @@
 					</g>
 					<g data-name="IProviderArgsResolver">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IProviderArgsResolver">
-							<rect x="2982.5" y="619.5" height="31.0" width="193.0" data-name="IProviderArgsResolver"></rect>
+							<rect x="1459.8" y="453.5" height="31.0" width="193.0" data-name="IProviderArgsResolver"></rect>
 						</g>
-						<g transform="translate(2982.5, 619.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IProviderArgsResolver">
+						<g transform="translate(1459.75, 453.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IProviderArgsResolver">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IProviderArgsResolver">
 								<text x="88.5" y="13.5" stroke="none" text-anchor="middle" data-name="IProviderArgsResolver">IProviderArgsResolver</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="ManagedFormViewModel">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ManagedFormViewModel">
-							<rect x="3270.5" y="619.5" height="31.0" width="215.0" data-name="ManagedFormViewModel"></rect>
+					<g data-name="InterventionTaskFormView">
+						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionTaskFormView">
+							<rect x="4510.0" y="438.0" height="62.0" width="413.0" data-name="InterventionTaskFormView"></rect>
+							<path d="M4510.0 469.0 L4923.0 469.0" fill="none" data-name="InterventionTaskFormView"></path>
 						</g>
-						<g transform="translate(3270.5, 619.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ManagedFormViewModel">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ManagedFormViewModel">
-								<text x="99.5" y="13.5" stroke="none" text-anchor="middle" data-name="ManagedFormViewModel">ManagedFormViewModel</text>
+						<g transform="translate(4510, 438)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionTaskFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionTaskFormView">
+								<text x="198.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionTaskFormView">InterventionTaskFormView</text>
 								
 							</g>
 						</g>
-					</g>
-					<g data-name="InterventionsFormData">
-						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionsFormData">
-							<rect x="385.8" y="223.0" height="138.0" width="394.0" data-name="InterventionsFormData"></rect>
-							<path d="M385.8 254.0 L779.8 254.0" fill="none" data-name="InterventionsFormData"></path>
-							<path d="M385.8 315.0 L779.8 315.0" fill="none" data-name="InterventionsFormData"></path>
-						</g>
-						<g transform="translate(385.75, 223)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionsFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionsFormData">
-								<text x="189.0" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionsFormData">InterventionsFormData</text>
-								
-							</g>
-						</g>
-						<g transform="translate(385.75, 254)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionsFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionsFormData">
-								<text x="0.0" y="13.5" stroke="none" data-name="InterventionsFormData">+interventionsData: List&lt;InterventionFormData&gt;</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="InterventionsFormData">+studyScheduleData: StudyScheduleFormData</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="InterventionsFormData">+id: String</text>
-								
-							</g>
-						</g>
-						<g transform="translate(385.75, 315)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionsFormData">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionsFormData">
-								<text x="0.0" y="13.5" stroke="none" data-name="InterventionsFormData">+Study apply()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="InterventionsFormData">+InterventionsFormData copy()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyDesignInterventionsFormView">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyDesignInterventionsFormView">
-							<rect x="819.8" y="261.0" height="62.0" width="296.0" data-name="StudyDesignInterventionsFormView"></rect>
-							<path d="M819.8 292.0 L1115.8 292.0" fill="none" data-name="StudyDesignInterventionsFormView"></path>
-						</g>
-						<g transform="translate(819.75, 261)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyDesignInterventionsFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyDesignInterventionsFormView">
-								<text x="140.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyDesignInterventionsFormView">StudyDesignInterventionsFormView</text>
-								
-							</g>
-						</g>
-						<g transform="translate(819.75, 292)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyDesignInterventionsFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyDesignInterventionsFormView">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyDesignInterventionsFormView">+Widget build()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyDesignPageWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyDesignPageWidget">
-							<rect x="861.8" y="61.0" height="31.0" width="212.0" data-name="StudyDesignPageWidget"></rect>
-						</g>
-						<g transform="translate(861.75, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyDesignPageWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyDesignPageWidget">
-								<text x="98.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyDesignPageWidget">StudyDesignPageWidget</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyScheduleFormView">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyScheduleFormView">
-							<rect x="1248.5" y="245.5" height="93.0" width="341.0" data-name="StudyScheduleFormView"></rect>
-							<path d="M1248.5 276.5 L1589.5 276.5" fill="none" data-name="StudyScheduleFormView"></path>
-							<path d="M1248.5 307.5 L1589.5 307.5" fill="none" data-name="StudyScheduleFormView"></path>
-						</g>
-						<g transform="translate(1248.5, 245.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyScheduleFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyScheduleFormView">
-								<text x="162.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyScheduleFormView">StudyScheduleFormView</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1248.5, 276.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyScheduleFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyScheduleFormView">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyScheduleFormView">+formViewModel: StudyScheduleControls</text>
-								
-							</g>
-						</g>
-						<g transform="translate(1248.5, 307.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyScheduleFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyScheduleFormView">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyScheduleFormView">+Widget build()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="FormConsumerWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="FormConsumerWidget">
-							<rect x="1323.0" y="61.0" height="31.0" width="192.0" data-name="FormConsumerWidget"></rect>
-						</g>
-						<g transform="translate(1323, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormConsumerWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormConsumerWidget">
-								<text x="88.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormConsumerWidget">FormConsumerWidget</text>
+						<g transform="translate(4510, 469)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionTaskFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionTaskFormView">
+								<text x="0.0" y="13.5" stroke="none" data-name="InterventionTaskFormView">+formViewModel: InterventionTaskFormViewModel</text>
 								
 							</g>
 						</g>
 					</g>
 					<g data-name="InterventionTaskFormViewModel">
 						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionTaskFormViewModel">
-							<rect x="3377.5" y="976.5" height="273.0" width="696.0" data-name="InterventionTaskFormViewModel"></rect>
-							<path d="M3377.5 1007.5 L4073.5 1007.5" fill="none" data-name="InterventionTaskFormViewModel"></path>
-							<path d="M3377.5 1188.5 L4073.5 1188.5" fill="none" data-name="InterventionTaskFormViewModel"></path>
+							<rect x="4600.8" y="705.5" height="273.0" width="696.0" data-name="InterventionTaskFormViewModel"></rect>
+							<path d="M4600.8 736.5 L5296.8 736.5" fill="none" data-name="InterventionTaskFormViewModel"></path>
+							<path d="M4600.8 917.5 L5296.8 917.5" fill="none" data-name="InterventionTaskFormViewModel"></path>
 						</g>
-						<g transform="translate(3377.5, 976.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionTaskFormViewModel">
+						<g transform="translate(4600.75, 705.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionTaskFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionTaskFormViewModel">
 								<text x="340.0" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionTaskFormViewModel">InterventionTaskFormViewModel</text>
 								
 							</g>
 						</g>
-						<g transform="translate(3377.5, 1007.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionTaskFormViewModel">
+						<g transform="translate(4600.75, 736.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionTaskFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionTaskFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="InterventionTaskFormViewModel">+taskIdControl: FormControl&lt;String&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="InterventionTaskFormViewModel">+instanceIdControl: FormControl&lt;String&gt;</text>
@@ -948,7 +589,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(3377.5, 1188.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionTaskFormViewModel">
+						<g transform="translate(4600.75, 917.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionTaskFormViewModel">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionTaskFormViewModel">
 								<text x="0.0" y="13.5" stroke="none" data-name="InterventionTaskFormViewModel">+void setControlsFrom()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="InterventionTaskFormViewModel">+InterventionTaskFormData buildFormData()</text>
@@ -957,219 +598,203 @@
 							</g>
 						</g>
 					</g>
+					<g data-name="InterventionPreview">
+						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionPreview">
+							<rect x="1644.3" y="184.5" height="93.0" width="330.0" data-name="InterventionPreview"></rect>
+							<path d="M1644.3 215.5 L1974.3 215.5" fill="none" data-name="InterventionPreview"></path>
+							<path d="M1644.3 246.5 L1974.3 246.5" fill="none" data-name="InterventionPreview"></path>
+						</g>
+						<g transform="translate(1644.25, 184.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionPreview">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionPreview">
+								<text x="157.0" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionPreview">InterventionPreview</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1644.25, 215.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionPreview">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionPreview">
+								<text x="0.0" y="13.5" stroke="none" data-name="InterventionPreview">+routeArgs: InterventionFormRouteArgs</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1644.25, 246.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionPreview">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionPreview">
+								<text x="0.0" y="13.5" stroke="none" data-name="InterventionPreview">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="InterventionFormRouteArgs">
+						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionFormRouteArgs">
+							<rect x="1692.8" y="453.5" height="31.0" width="233.0" data-name="InterventionFormRouteArgs"></rect>
+						</g>
+						<g transform="translate(1692.75, 453.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionFormRouteArgs">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionFormRouteArgs">
+								<text x="108.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionFormRouteArgs">InterventionFormRouteArgs</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ConsumerWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ConsumerWidget">
+							<rect x="1733.3" y="30.5" height="31.0" width="152.0" data-name="ConsumerWidget"></rect>
+						</g>
+						<g transform="translate(1733.25, 30.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ConsumerWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ConsumerWidget">
+								<text x="68.0" y="13.5" stroke="none" text-anchor="middle" data-name="ConsumerWidget">ConsumerWidget</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="InterventionTaskFormData">
+						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionTaskFormData">
+							<rect x="1063.5" y="147.0" height="168.0" width="290.0" data-name="InterventionTaskFormData"></rect>
+							<path d="M1063.5 178.0 L1353.5 178.0" fill="none" data-name="InterventionTaskFormData"></path>
+							<path d="M1063.5 269.0 L1353.5 269.0" fill="none" data-name="InterventionTaskFormData"></path>
+						</g>
+						<g transform="translate(1063.5, 147)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionTaskFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionTaskFormData">
+								<text x="137.0" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionTaskFormData">InterventionTaskFormData</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1063.5, 178)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionTaskFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionTaskFormData">
+								<text x="0.0" y="13.5" stroke="none" data-name="InterventionTaskFormData">+taskId: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="InterventionTaskFormData">+taskTitle: String</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="InterventionTaskFormData">+taskDescription: String?</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="InterventionTaskFormData">&lt;static&gt;+kDefaultTitle: String</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="InterventionTaskFormData">+id: String</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1063.5, 269)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionTaskFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionTaskFormData">
+								<text x="0.0" y="13.5" stroke="none" data-name="InterventionTaskFormData">+CheckmarkTask toTask()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="InterventionTaskFormData">+InterventionTaskFormData copy()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IFormDataWithSchedule">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IFormDataWithSchedule">
+							<rect x="1105.0" y="30.5" height="31.0" width="207.0" data-name="IFormDataWithSchedule"></rect>
+						</g>
+						<g transform="translate(1105, 30.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormDataWithSchedule">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormDataWithSchedule">
+								<text x="95.5" y="13.5" stroke="none" text-anchor="middle" data-name="IFormDataWithSchedule">IFormDataWithSchedule</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="MP23InterventionsFormData">
+						<g fill="#eee8d5" stroke="#33322E" data-name="MP23InterventionsFormData">
+							<rect x="3263.8" y="162.0" height="138.0" width="431.0" data-name="MP23InterventionsFormData"></rect>
+							<path d="M3263.8 193.0 L3694.8 193.0" fill="none" data-name="MP23InterventionsFormData"></path>
+							<path d="M3263.8 254.0 L3694.8 254.0" fill="none" data-name="MP23InterventionsFormData"></path>
+						</g>
+						<g transform="translate(3263.75, 162)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MP23InterventionsFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MP23InterventionsFormData">
+								<text x="207.5" y="13.5" stroke="none" text-anchor="middle" data-name="MP23InterventionsFormData">MP23InterventionsFormData</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3263.75, 193)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23InterventionsFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23InterventionsFormData">
+								<text x="0.0" y="13.5" stroke="none" data-name="MP23InterventionsFormData">+interventionsData: List&lt;InterventionFormData&gt;</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="MP23InterventionsFormData">+studyScheduleData: MP23StudyScheduleFormData</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="MP23InterventionsFormData">+id: String</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3263.75, 254)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23InterventionsFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23InterventionsFormData">
+								<text x="0.0" y="13.5" stroke="none" data-name="MP23InterventionsFormData">+Study apply()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="MP23InterventionsFormData">+MP23InterventionsFormData copy()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="MP23StudyScheduleFormData">
+						<g fill="#eee8d5" stroke="#33322E" data-name="MP23StudyScheduleFormData">
+							<rect x="3414.0" y="400.0" height="138.0" width="386.0" data-name="MP23StudyScheduleFormData"></rect>
+							<path d="M3414.0 431.0 L3800.0 431.0" fill="none" data-name="MP23StudyScheduleFormData"></path>
+							<path d="M3414.0 477.0 L3800.0 477.0" fill="none" data-name="MP23StudyScheduleFormData"></path>
+						</g>
+						<g transform="translate(3414, 400)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MP23StudyScheduleFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MP23StudyScheduleFormData">
+								<text x="185.0" y="13.5" stroke="none" text-anchor="middle" data-name="MP23StudyScheduleFormData">MP23StudyScheduleFormData</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3414, 431)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23StudyScheduleFormData">
+								<text x="0.0" y="13.5" stroke="none" data-name="MP23StudyScheduleFormData">+segments: List&lt;StudyScheduleSegment&gt;</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="MP23StudyScheduleFormData">+id: String</text>
+								
+							</g>
+						</g>
+						<g transform="translate(3414, 477)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23StudyScheduleFormData">
+								<text x="0.0" y="13.5" stroke="none" data-name="MP23StudyScheduleFormData">+MP23StudySchedule toMP23StudySchedule()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="MP23StudyScheduleFormData">+Study apply()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="MP23StudyScheduleFormData">+MP23StudyScheduleFormData copy()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="IStudyFormData">
+						<g fill="#eee8d5" stroke="#33322E" data-name="IStudyFormData">
+							<rect x="3535.5" y="30.5" height="31.0" width="143.0" data-name="IStudyFormData"></rect>
+						</g>
+						<g transform="translate(3535.5, 30.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IStudyFormData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IStudyFormData">
+								<text x="63.5" y="13.5" stroke="none" text-anchor="middle" data-name="IStudyFormData">IStudyFormData</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="InterventionFormView">
+						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionFormView">
+							<rect x="4095.0" y="438.0" height="62.0" width="375.0" data-name="InterventionFormView"></rect>
+							<path d="M4095.0 469.0 L4470.0 469.0" fill="none" data-name="InterventionFormView"></path>
+						</g>
+						<g transform="translate(4095, 438)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionFormView">
+								<text x="179.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionFormView">InterventionFormView</text>
+								
+							</g>
+						</g>
+						<g transform="translate(4095, 469)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionFormView">
+								<text x="0.0" y="13.5" stroke="none" data-name="InterventionFormView">+formViewModel: InterventionFormViewModel</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="WithScheduleControls">
 						<g fill="#eee8d5" stroke="#33322E" data-name="WithScheduleControls">
-							<rect x="3525.5" y="619.5" height="31.0" width="191.0" data-name="WithScheduleControls"></rect>
+							<rect x="4963.0" y="453.5" height="31.0" width="191.0" data-name="WithScheduleControls"></rect>
 						</g>
-						<g transform="translate(3525.5, 619.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="WithScheduleControls">
+						<g transform="translate(4963, 453.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="WithScheduleControls">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="WithScheduleControls">
 								<text x="87.5" y="13.5" stroke="none" text-anchor="middle" data-name="WithScheduleControls">WithScheduleControls</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="ReorderableExample">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReorderableExample">
-							<rect x="2064.0" y="61.0" height="31.0" width="182.0" data-name="ReorderableExample"></rect>
-						</g>
-						<g transform="translate(2064, 61)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReorderableExample">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReorderableExample">
-								<text x="83.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReorderableExample">ReorderableExample</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ExpandableSegementItem">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ExpandableSegementItem">
-							<rect x="4044.5" y="30.5" height="92.0" width="293.0" data-name="ExpandableSegementItem"></rect>
-							<path d="M4044.5 61.5 L4337.5 61.5" fill="none" data-name="ExpandableSegementItem"></path>
-						</g>
-						<g transform="translate(4044.5, 30.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ExpandableSegementItem">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ExpandableSegementItem">
-								<text x="138.5" y="13.5" stroke="none" text-anchor="middle" data-name="ExpandableSegementItem">ExpandableSegementItem</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4044.5, 61.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExpandableSegementItem">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ExpandableSegementItem">
-								<text x="0.0" y="13.5" stroke="none" data-name="ExpandableSegementItem">+index: int</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ExpandableSegementItem">+segment: StudyScheduleSegment</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="ExpandableSegementItem">+interventions: List&lt;Intervention&gt;</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudyScheduleSegment">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudyScheduleSegment">
-							<rect x="4036.0" y="238.0" height="108.0" width="310.0" data-name="StudyScheduleSegment"></rect>
-							<path d="M4036.0 269.0 L4346.0 269.0" fill="none" data-name="StudyScheduleSegment"></path>
-							<path d="M4036.0 300.0 L4346.0 300.0" fill="none" data-name="StudyScheduleSegment"></path>
-						</g>
-						<g transform="translate(4036, 238)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyScheduleSegment">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyScheduleSegment">
-								<text x="147.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyScheduleSegment">StudyScheduleSegment</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4036, 269)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyScheduleSegment">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyScheduleSegment">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyScheduleSegment">+type: String</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4036, 300)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyScheduleSegment">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyScheduleSegment">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudyScheduleSegment">+int getDuration()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudyScheduleSegment">+Intervention? getIntervetionOnDay()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="StudySchedule">
-						<g fill="#eee8d5" stroke="#33322E" data-name="StudySchedule">
-							<rect x="2424.0" y="0.0" height="153.0" width="350.0" data-name="StudySchedule"></rect>
-							<path d="M2424.0 31.0 L2774.0 31.0" fill="none" data-name="StudySchedule"></path>
-							<path d="M2424.0 92.0 L2774.0 92.0" fill="none" data-name="StudySchedule"></path>
-						</g>
-						<g transform="translate(2424, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudySchedule">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudySchedule">
-								<text x="167.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudySchedule">StudySchedule</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2424, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudySchedule">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudySchedule">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudySchedule">+interventions: List&lt;Intervention&gt;</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudySchedule">+segments: List&lt;StudyScheduleSegment&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudySchedule">+duration: int</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2424, 92)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudySchedule">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudySchedule">
-								<text x="0.0" y="13.5" stroke="none" data-name="StudySchedule">+dynamic ()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="StudySchedule">+dynamic getSegmentForDay()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudySchedule">+Intervention? getInterventionForDay()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Baseline">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Baseline">
-							<rect x="3756.5" y="573.5" height="123.0" width="310.0" data-name="Baseline"></rect>
-							<path d="M3756.5 604.5 L4066.5 604.5" fill="none" data-name="Baseline"></path>
-							<path d="M3756.5 650.5 L4066.5 650.5" fill="none" data-name="Baseline"></path>
-						</g>
-						<g transform="translate(3756.5, 573.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Baseline">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Baseline">
-								<text x="147.0" y="13.5" stroke="none" text-anchor="middle" data-name="Baseline">Baseline</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3756.5, 604.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Baseline">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Baseline">
-								<text x="0.0" y="13.5" stroke="none" data-name="Baseline">+duration: int</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="Baseline">+type: String</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3756.5, 650.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Baseline">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Baseline">
-								<text x="0.0" y="13.5" stroke="none" data-name="Baseline">+int getDuration()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="Baseline">+Intervention? getIntervetionOnDay()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Alternating">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Alternating">
-							<rect x="4106.5" y="566.0" height="138.0" width="310.0" data-name="Alternating"></rect>
-							<path d="M4106.5 597.0 L4416.5 597.0" fill="none" data-name="Alternating"></path>
-							<path d="M4106.5 658.0 L4416.5 658.0" fill="none" data-name="Alternating"></path>
-						</g>
-						<g transform="translate(4106.5, 566)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Alternating">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Alternating">
-								<text x="147.0" y="13.5" stroke="none" text-anchor="middle" data-name="Alternating">Alternating</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4106.5, 597)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Alternating">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Alternating">
-								<text x="0.0" y="13.5" stroke="none" data-name="Alternating">+type: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="Alternating">+interventionDuration: int</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="Alternating">+cycleAmount: int</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4106.5, 658)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Alternating">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Alternating">
-								<text x="0.0" y="13.5" stroke="none" data-name="Alternating">+int getDuration()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="Alternating">+Intervention? getIntervetionOnDay()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ThompsonSamplingAlgo">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ThompsonSamplingAlgo">
-							<rect x="2814.0" y="15.0" height="123.0" width="236.0" data-name="ThompsonSamplingAlgo"></rect>
-							<path d="M2814.0 46.0 L3050.0 46.0" fill="none" data-name="ThompsonSamplingAlgo"></path>
-							<path d="M2814.0 92.0 L3050.0 92.0" fill="none" data-name="ThompsonSamplingAlgo"></path>
-						</g>
-						<g transform="translate(2814, 15)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ThompsonSamplingAlgo">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ThompsonSamplingAlgo">
-								<text x="110.0" y="13.5" stroke="none" text-anchor="middle" data-name="ThompsonSamplingAlgo">ThompsonSamplingAlgo</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2814, 46)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ThompsonSamplingAlgo">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ThompsonSamplingAlgo">
-								<text x="0.0" y="13.5" stroke="none" data-name="ThompsonSamplingAlgo">+means: List&lt;double&gt;</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ThompsonSamplingAlgo">+variances: List&lt;double&gt;</text>
-								
-							</g>
-						</g>
-						<g transform="translate(2814, 92)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ThompsonSamplingAlgo">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ThompsonSamplingAlgo">
-								<text x="0.0" y="13.5" stroke="none" data-name="ThompsonSamplingAlgo">+void updateObservations()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="ThompsonSamplingAlgo">+int selectArm()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Intervention">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Intervention">
-							<rect x="3090.0" y="23.0" height="107.0" width="179.0" data-name="Intervention"></rect>
-							<path d="M3090.0 54.0 L3269.0 54.0" fill="none" data-name="Intervention"></path>
-						</g>
-						<g transform="translate(3090, 23)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Intervention">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Intervention">
-								<text x="81.5" y="13.5" stroke="none" text-anchor="middle" data-name="Intervention">Intervention</text>
-								
-							</g>
-						</g>
-						<g transform="translate(3090, 54)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Intervention">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Intervention">
-								<text x="0.0" y="13.5" stroke="none" data-name="Intervention">+id: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="Intervention">+name: String?</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="Intervention">+description: String?</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="Intervention">+icon: String</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="InterventionFormData">
 						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionFormData">
-							<rect x="2144.0" y="193.0" height="198.0" width="382.0" data-name="InterventionFormData"></rect>
-							<path d="M2144.0 224.0 L2526.0 224.0" fill="none" data-name="InterventionFormData"></path>
-							<path d="M2144.0 345.0 L2526.0 345.0" fill="none" data-name="InterventionFormData"></path>
+							<rect x="2014.3" y="132.0" height="198.0" width="382.0" data-name="InterventionFormData"></rect>
+							<path d="M2014.3 163.0 L2396.3 163.0" fill="none" data-name="InterventionFormData"></path>
+							<path d="M2014.3 284.0 L2396.3 284.0" fill="none" data-name="InterventionFormData"></path>
 						</g>
-						<g transform="translate(2144, 193)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionFormData">
+						<g transform="translate(2014.25, 132)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionFormData">
 								<text x="183.0" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionFormData">InterventionFormData</text>
 								
 							</g>
 						</g>
-						<g transform="translate(2144, 224)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionFormData">
+						<g transform="translate(2014.25, 163)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionFormData">
 								<text x="0.0" y="13.5" stroke="none" data-name="InterventionFormData">+interventionId: String</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="InterventionFormData">+title: String</text>
@@ -1181,7 +806,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(2144, 345)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionFormData">
+						<g transform="translate(2014.25, 284)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionFormData">
 								<text x="0.0" y="13.5" stroke="none" data-name="InterventionFormData">+Intervention toIntervention()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="InterventionFormData">+InterventionFormData copy()</text>
@@ -1191,76 +816,216 @@
 					</g>
 					<g data-name="IFormData">
 						<g fill="#eee8d5" stroke="#33322E" data-name="IFormData">
-							<rect x="2286.0" y="61.0" height="31.0" width="98.0" data-name="IFormData"></rect>
+							<rect x="2156.3" y="30.5" height="31.0" width="98.0" data-name="IFormData"></rect>
 						</g>
-						<g transform="translate(2286, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormData">
+						<g transform="translate(2156.25, 30.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="IFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="IFormData">
 								<text x="41.0" y="13.5" stroke="none" text-anchor="middle" data-name="IFormData">IFormData</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="InterventionTaskFormView">
-						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionTaskFormView">
-							<rect x="4456.5" y="604.0" height="62.0" width="413.0" data-name="InterventionTaskFormView"></rect>
-							<path d="M4456.5 635.0 L4869.5 635.0" fill="none" data-name="InterventionTaskFormView"></path>
+					<g data-name="MP23StudyDesignInterventionsFormView">
+						<g fill="#eee8d5" stroke="#33322E" data-name="MP23StudyDesignInterventionsFormView">
+							<rect x="2436.3" y="200.0" height="62.0" width="341.0" data-name="MP23StudyDesignInterventionsFormView"></rect>
+							<path d="M2436.3 231.0 L2777.3 231.0" fill="none" data-name="MP23StudyDesignInterventionsFormView"></path>
 						</g>
-						<g transform="translate(4456.5, 604)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionTaskFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionTaskFormView">
-								<text x="198.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionTaskFormView">InterventionTaskFormView</text>
+						<g transform="translate(2436.25, 200)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MP23StudyDesignInterventionsFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MP23StudyDesignInterventionsFormView">
+								<text x="162.5" y="13.5" stroke="none" text-anchor="middle" data-name="MP23StudyDesignInterventionsFormView">MP23StudyDesignInterventionsFormView</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4456.5, 635)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionTaskFormView">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionTaskFormView">
-								<text x="0.0" y="13.5" stroke="none" data-name="InterventionTaskFormView">+formViewModel: InterventionTaskFormViewModel</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="InterventionPreview">
-						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionPreview">
-							<rect x="4861.0" y="245.5" height="93.0" width="330.0" data-name="InterventionPreview"></rect>
-							<path d="M4861.0 276.5 L5191.0 276.5" fill="none" data-name="InterventionPreview"></path>
-							<path d="M4861.0 307.5 L5191.0 307.5" fill="none" data-name="InterventionPreview"></path>
-						</g>
-						<g transform="translate(4861, 245.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionPreview">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionPreview">
-								<text x="157.0" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionPreview">InterventionPreview</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4861, 276.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionPreview">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionPreview">
-								<text x="0.0" y="13.5" stroke="none" data-name="InterventionPreview">+routeArgs: InterventionFormRouteArgs</text>
-								
-							</g>
-						</g>
-						<g transform="translate(4861, 307.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionPreview">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionPreview">
-								<text x="0.0" y="13.5" stroke="none" data-name="InterventionPreview">+Widget build()</text>
+						<g transform="translate(2436.25, 231)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyDesignInterventionsFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23StudyDesignInterventionsFormView">
+								<text x="0.0" y="13.5" stroke="none" data-name="MP23StudyDesignInterventionsFormView">+Widget build()</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="InterventionFormRouteArgs">
-						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionFormRouteArgs">
-							<rect x="4909.5" y="619.5" height="31.0" width="233.0" data-name="InterventionFormRouteArgs"></rect>
+					<g data-name="StudyDesignPageWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyDesignPageWidget">
+							<rect x="2500.8" y="30.5" height="31.0" width="212.0" data-name="StudyDesignPageWidget"></rect>
 						</g>
-						<g transform="translate(4909.5, 619.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionFormRouteArgs">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionFormRouteArgs">
-								<text x="108.5" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionFormRouteArgs">InterventionFormRouteArgs</text>
+						<g transform="translate(2500.75, 30.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyDesignPageWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyDesignPageWidget">
+								<text x="98.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyDesignPageWidget">StudyDesignPageWidget</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="ConsumerWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ConsumerWidget">
-							<rect x="4950.0" y="61.0" height="31.0" width="152.0" data-name="ConsumerWidget"></rect>
+					<g data-name="ReorderableExample">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReorderableExample">
+							<rect x="2752.8" y="30.5" height="31.0" width="182.0" data-name="ReorderableExample"></rect>
 						</g>
-						<g transform="translate(4950, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ConsumerWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ConsumerWidget">
-								<text x="68.0" y="13.5" stroke="none" text-anchor="middle" data-name="ConsumerWidget">ConsumerWidget</text>
+						<g transform="translate(2752.75, 30.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ReorderableExample">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReorderableExample">
+								<text x="83.0" y="13.5" stroke="none" text-anchor="middle" data-name="ReorderableExample">ReorderableExample</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ExpandableSegementItem">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ExpandableSegementItem">
+							<rect x="2974.8" y="0.0" height="92.0" width="293.0" data-name="ExpandableSegementItem"></rect>
+							<path d="M2974.8 31.0 L3267.8 31.0" fill="none" data-name="ExpandableSegementItem"></path>
+						</g>
+						<g transform="translate(2974.75, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ExpandableSegementItem">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ExpandableSegementItem">
+								<text x="138.5" y="13.5" stroke="none" text-anchor="middle" data-name="ExpandableSegementItem">ExpandableSegementItem</text>
+								
+							</g>
+						</g>
+						<g transform="translate(2974.75, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExpandableSegementItem">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ExpandableSegementItem">
+								<text x="0.0" y="13.5" stroke="none" data-name="ExpandableSegementItem">+index: int</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="ExpandableSegementItem">+segment: StudyScheduleSegment</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="ExpandableSegementItem">+interventions: List&lt;Intervention&gt;</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyScheduleSegment">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyScheduleSegment">
+							<rect x="3018.8" y="215.5" height="31.0" width="205.0" data-name="StudyScheduleSegment"></rect>
+						</g>
+						<g transform="translate(3018.75, 215.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyScheduleSegment">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyScheduleSegment">
+								<text x="94.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyScheduleSegment">StudyScheduleSegment</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="MP23StudyScheduleFormView">
+						<g fill="#eee8d5" stroke="#33322E" data-name="MP23StudyScheduleFormView">
+							<rect x="386.8" y="184.5" height="93.0" width="386.0" data-name="MP23StudyScheduleFormView"></rect>
+							<path d="M386.8 215.5 L772.8 215.5" fill="none" data-name="MP23StudyScheduleFormView"></path>
+							<path d="M386.8 246.5 L772.8 246.5" fill="none" data-name="MP23StudyScheduleFormView"></path>
+						</g>
+						<g transform="translate(386.75, 184.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MP23StudyScheduleFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MP23StudyScheduleFormView">
+								<text x="185.0" y="13.5" stroke="none" text-anchor="middle" data-name="MP23StudyScheduleFormView">MP23StudyScheduleFormView</text>
+								
+							</g>
+						</g>
+						<g transform="translate(386.75, 215.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23StudyScheduleFormView">
+								<text x="0.0" y="13.5" stroke="none" data-name="MP23StudyScheduleFormView">+formViewModel: MP23StudyScheduleControls</text>
+								
+							</g>
+						</g>
+						<g transform="translate(386.75, 246.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleFormView">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23StudyScheduleFormView">
+								<text x="0.0" y="13.5" stroke="none" data-name="MP23StudyScheduleFormView">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="MP23StudyScheduleControls">
+						<g fill="#eee8d5" stroke="#33322E" data-name="MP23StudyScheduleControls">
+							<rect x="200.8" y="370.0" height="198.0" width="758.0" data-name="MP23StudyScheduleControls"></rect>
+							<path d="M200.8 401.0 L958.8 401.0" fill="none" data-name="MP23StudyScheduleControls"></path>
+							<path d="M200.8 462.0 L958.8 462.0" fill="none" data-name="MP23StudyScheduleControls"></path>
+						</g>
+						<g transform="translate(200.75, 370)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="MP23StudyScheduleControls">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MP23StudyScheduleControls">
+								<text x="371.0" y="13.5" stroke="none" text-anchor="middle" data-name="MP23StudyScheduleControls">MP23StudyScheduleControls</text>
+								
+							</g>
+						</g>
+						<g transform="translate(200.75, 401)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleControls">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23StudyScheduleControls">
+								<text x="0.0" y="13.5" stroke="none" data-name="MP23StudyScheduleControls">+segmentsControl: FormArray&lt;dynamic&gt;</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="MP23StudyScheduleControls">+studyScheduleControls: Map&lt;String, FormArray&lt;dynamic&gt;&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="MP23StudyScheduleControls">+studyScheduleValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;</text>
+								
+							</g>
+						</g>
+						<g transform="translate(200.75, 462)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleControls">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23StudyScheduleControls">
+								<text x="0.0" y="13.5" stroke="none" data-name="MP23StudyScheduleControls">+void addFormGroupToSegments()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="MP23StudyScheduleControls">+FormGroup createBaselineFormGroup()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="MP23StudyScheduleControls">+FormGroup createThompsonSamplingFormGroup()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="MP23StudyScheduleControls">+FormGroup createAlternatingFormGroup()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="MP23StudyScheduleControls">+void setStudyScheduleControlsFrom()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="MP23StudyScheduleControls">+MP23StudyScheduleFormData buildStudyScheduleFormData()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FormConsumerWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormConsumerWidget">
+							<rect x="483.8" y="30.5" height="31.0" width="192.0" data-name="FormConsumerWidget"></rect>
+						</g>
+						<g transform="translate(483.75, 30.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormConsumerWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormConsumerWidget">
+								<text x="88.0" y="13.5" stroke="none" text-anchor="middle" data-name="FormConsumerWidget">FormConsumerWidget</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="MP23InterventionsFormViewModel">
+						<g fill="#eee8d5" stroke="#33322E" data-name="MP23InterventionsFormViewModel">
+							<rect x="452.8" y="653.0" height="378.0" width="839.0" data-name="MP23InterventionsFormViewModel"></rect>
+							<path d="M452.8 684.0 L1291.8 684.0" fill="none" data-name="MP23InterventionsFormViewModel"></path>
+							<path d="M452.8 835.0 L1291.8 835.0" fill="none" data-name="MP23InterventionsFormViewModel"></path>
+						</g>
+						<g transform="translate(452.75, 653)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MP23InterventionsFormViewModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MP23InterventionsFormViewModel">
+								<text x="411.5" y="13.5" stroke="none" text-anchor="middle" data-name="MP23InterventionsFormViewModel">MP23InterventionsFormViewModel</text>
+								
+							</g>
+						</g>
+						<g transform="translate(452.75, 684)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23InterventionsFormViewModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23InterventionsFormViewModel">
+								<text x="0.0" y="13.5" stroke="none" data-name="MP23InterventionsFormViewModel">+study: Study</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="MP23InterventionsFormViewModel">+router: GoRouter</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="MP23InterventionsFormViewModel">+interventionsArray: FormArray&lt;dynamic&gt;</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="MP23InterventionsFormViewModel">+interventionsCollection: FormViewModelCollection&lt;InterventionFormViewModel, InterventionFormData&gt;</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="MP23InterventionsFormViewModel">+form: FormGroup</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="MP23InterventionsFormViewModel">+sharedValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="MP23InterventionsFormViewModel">+interventionsRequired: dynamic</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="MP23InterventionsFormViewModel">+titles: Map&lt;FormMode, String&gt;</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="MP23InterventionsFormViewModel">+canTestStudySchedule: bool</text>
+								
+							</g>
+						</g>
+						<g transform="translate(452.75, 835)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23InterventionsFormViewModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23InterventionsFormViewModel">
+								<text x="0.0" y="13.5" stroke="none" data-name="MP23InterventionsFormViewModel">+void setControlsFrom()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="MP23InterventionsFormViewModel">+MP23InterventionsFormData buildFormData()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="MP23InterventionsFormViewModel">+void read()</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="MP23InterventionsFormViewModel">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableActions()</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="MP23InterventionsFormViewModel">+List&lt;ModelAction&lt;dynamic&gt;&gt; availablePopupActions()</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="MP23InterventionsFormViewModel">+List&lt;ModelAction&lt;dynamic&gt;&gt; availableInlineActions()</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="MP23InterventionsFormViewModel">+void onSelectItem()</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="MP23InterventionsFormViewModel">+void onNewItem()</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="MP23InterventionsFormViewModel">+InterventionFormViewModel provide()</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="MP23InterventionsFormViewModel">+void onCancel()</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="MP23InterventionsFormViewModel">+dynamic onSave()</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="MP23InterventionsFormViewModel">+dynamic testStudySchedule()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="GoRouter">
+						<g fill="#eee8d5" stroke="#33322E" data-name="GoRouter">
+							<rect x="775.8" y="1116.0" height="31.0" width="92.0" data-name="GoRouter"></rect>
+						</g>
+						<g transform="translate(775.75, 1116)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="GoRouter">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="GoRouter">
+								<text x="38.0" y="13.5" stroke="none" text-anchor="middle" data-name="GoRouter">GoRouter</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="FormViewModel">
+						<g fill="#eee8d5" stroke="#33322E" data-name="FormViewModel">
+							<rect x="0.0" y="453.5" height="31.0" width="141.0" data-name="FormViewModel"></rect>
+						</g>
+						<g transform="translate(0, 453.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="FormViewModel">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="FormViewModel">
+								<text x="62.5" y="13.5" stroke="none" text-anchor="middle" data-name="FormViewModel">FormViewModel</text>
 								
 							</g>
 						</g>
