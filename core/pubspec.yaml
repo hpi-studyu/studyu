@@ -5,11 +5,12 @@ homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
 
 environment:
-  sdk: ">=2.17.0 <4.0.0"
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   collection: ^1.18.0
   csv: ^5.1.1
+  data: ^0.12.0
   json_annotation: ^4.8.1
   logging: ^1.2.0
   quiver: ^3.2.1

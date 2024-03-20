@@ -5,7 +5,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
-import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_view.dart';
+import 'package:studyu_designer_v2/features/design/interventions/mp23_study_schedule_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
@@ -15,8 +15,8 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
-class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
-  const StudyDesignInterventionsFormView(super.studyId, {super.key});
+class MP23StudyDesignInterventionsFormView extends StudyDesignPageWidget {
+  const MP23StudyDesignInterventionsFormView(super.studyId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -110,7 +110,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
               const Divider(),
               const SizedBox(height: 12.0),
               // TODO study schedule illustration
-              StudyScheduleFormView(formViewModel: formViewModel),
+              MP23StudyScheduleFormView(formViewModel: formViewModel),
               // num interventions
             ],
           ),

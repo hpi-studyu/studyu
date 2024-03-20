@@ -2,6 +2,7 @@ import 'package:csv/csv.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
 import 'package:studyu_core/src/models/models.dart';
+import 'package:studyu_core/src/models/study_schedule/mp23_study_schedule.dart';
 import 'package:studyu_core/src/util/supabase_object.dart';
 import 'package:supabase/supabase.dart';
 import 'package:uuid/uuid.dart';
@@ -35,7 +36,8 @@ enum ResultSharing {
 }
 
 @JsonSerializable()
-class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> {
+class Study extends SupabaseObjectFunctions<Study>
+    implements Comparable<Study> {
   static const String tableName = 'study';
 
   @override
@@ -61,6 +63,8 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   late List<Intervention> interventions = [];
   late List<Observation> observations = [];
   late StudySchedule schedule = StudySchedule();
+  @JsonKey(includeToJson: true, includeFromJson: false)
+  late MP23StudySchedule mp23Schedule = MP23StudySchedule(interventions);
   @JsonKey(name: 'report_specification')
   late ReportSpecification reportSpecification = ReportSpecification();
   late List<StudyResult> results = [];
@@ -100,27 +104,39 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
 
+    final MP23StudySchedule mp23Schedule = MP23StudySchedule.fromJson(
+        json['mp23Schedule'] as Map<String, dynamic>);
+
+    mp23Schedule.interventions = study.interventions;
+    study.mp23Schedule = mp23Schedule;
+
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
-      study.repo = Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
+      study.repo =
+          Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
     }
 
     final List? invites = json['study_invite'] as List?;
     if (invites != null) {
-      study.invites = invites.map((json) => StudyInvite.fromJson(json as Map<String, dynamic>)).toList();
+      study.invites = invites
+          .map((json) => StudyInvite.fromJson(json as Map<String, dynamic>))
+          .toList();
     }
 
     final List? participants = json['study_subject'] as List?;
     if (participants != null) {
-      study.participants = participants.map((json) => StudySubject.fromJson(json as Map<String, dynamic>)).toList();
+      study.participants = participants
+          .map((json) => StudySubject.fromJson(json as Map<String, dynamic>))
+          .toList();
     }
 
     List? participantsProgress = json['study_progress'] as List?;
     participantsProgress = json['study_progress_export'] as List?;
     participantsProgress ??= json['subject_progress'] as List?;
     if (participantsProgress != null) {
-      study.participantsProgress =
-          participantsProgress.map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>)).toList();
+      study.participantsProgress = participantsProgress
+          .map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>))
+          .toList();
     }
 
     final int? participantCount = json['study_participant_count'] as int?;
@@ -155,7 +171,8 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<List<Study>> getResearcherDashboardStudies() async => SupabaseQuery.getAll<Study>(
+  static Future<List<Study>> getResearcherDashboardStudies() async =>
+      SupabaseQuery.getAll<Study>(
         selectedColumns: [
           '*',
           'repo(*)',
@@ -169,8 +186,10 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
   static Future<List<Study>> publishedPublicStudies() async {
     try {
-      final response = await env.client.from(tableName).select().eq('participation', 'open');
-      return SupabaseQuery.extractSupabaseList<Study>(List<Map<String, dynamic>>.from(response));
+      final response =
+          await env.client.from(tableName).select().eq('participation', 'open');
+      return SupabaseQuery.extractSupabaseList<Study>(
+          List<Map<String, dynamic>>.from(response));
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
       rethrow;
@@ -179,22 +198,30 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
 
   bool isOwner(User? user) => user != null && userId == user.id;
 
-  bool isEditor(User? user) => user != null && collaboratorEmails.contains(user.email);
+  bool isEditor(User? user) =>
+      user != null && collaboratorEmails.contains(user.email);
 
   bool canEdit(User? user) => user != null && (isOwner(user) || isEditor(user));
 
-  bool get hasEligibilityCheck => eligibilityCriteria.isNotEmpty && questionnaire.questions.isNotEmpty;
+  bool get hasEligibilityCheck =>
+      eligibilityCriteria.isNotEmpty && questionnaire.questions.isNotEmpty;
 
   bool get hasConsentCheck => consent.isNotEmpty;
 
-  int get totalMissedDays => missedDays.isNotEmpty ? missedDays.reduce((total, days) => total += days) : 0;
+  int get totalMissedDays => missedDays.isNotEmpty
+      ? missedDays.reduce((total, days) => total += days)
+      : 0;
 
-  double get percentageMissedDays => totalMissedDays / (participantCount * schedule.length);
+  double get percentageMissedDays =>
+      totalMissedDays / (participantCount * schedule.length);
 
   static Future<String> fetchResultsCSVTable(String studyId) async {
     final List res;
     try {
-      res = await env.client.from('study_progress').select().eq('study_id', studyId);
+      res = await env.client
+          .from('study_progress')
+          .select()
+          .eq('study_id', studyId);
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
       rethrow;
@@ -205,7 +232,8 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
     final tableHeadersSet = jsonList[0].keys.toSet();
     final flattenedQuestions = jsonList.map((progress) {
       if (progress['result_type'] == 'QuestionnaireState') {
-        for (final result in List<Map<String, dynamic>>.from(progress['result'] as List)) {
+        for (final result
+            in List<Map<String, dynamic>>.from(progress['result'] as List)) {
           progress[result['question'] as String] = result['response'];
           tableHeadersSet.add(result['question'] as String);
         }
@@ -218,7 +246,9 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
     final resultsTable = [
       tableHeaders,
       ...flattenedQuestions.map(
-        (progress) => tableHeaders.map((header) => progress[header] ?? '').toList(growable: false),
+        (progress) => tableHeaders
+            .map((header) => progress[header] ?? '')
+            .toList(growable: false),
       ),
     ];
     return const ListToCsvConverter().convert(resultsTable);
@@ -244,7 +274,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
 
   @override
   String toString() {
-    return 'Study{id: $id, title: $title, description: $description, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: $published, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
+    return 'Study{id: $id, title: $title, description: $description, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: $published, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, mp23Schedule: $mp23Schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
   }
 
   @override

@@ -148,6 +148,41 @@ class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
           labelText: 'Duration',
         ),
       ));
+      // } else if (segment is model.Alternating) {
+      //   // title
+      //   final cycleAmountController =
+      //       TextEditingController(text: segment.cycleAmount.toString());
+
+      //   final interventionDurationController =
+      //       TextEditingController(text: segment.interventionDuration.toString());
+
+      //   // text input for duration, change context.schedule.segments[index] duration
+      //   controls.add(TextField(
+      //     controller: cycleAmountController,
+      //     onChanged: (value) {
+      //       setState(() {
+      //         segment.cycleAmount = int.parse(value);
+      //       });
+      //     },
+      //     decoration: const InputDecoration(
+      //       border: OutlineInputBorder(),
+      //       labelText: 'Cycle Amount',
+      //     ),
+      //   ));
+
+      //   controls.add(TextField(
+      //     controller: interventionDurationController,
+      //     onChanged: (value) {
+      //       setState(() {
+      //         segment.interventionDuration = int.parse(value);
+      //       });
+      //     },
+      //     decoration: const InputDecoration(
+      //       border: OutlineInputBorder(),
+      //       labelText: 'Intervention Duration',
+      //     ),
+      //   ));
+      // }
     } else {
       throw UnimplementedError("Unknown segment type");
     }
