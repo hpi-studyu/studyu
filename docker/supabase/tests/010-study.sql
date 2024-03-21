@@ -10,9 +10,10 @@ select tests.create_supabase_user('test_creator_1', 'test_creator_1@studyu.healt
 select tests.create_supabase_user('test_creator_2', 'test_creator_2@studyu.health');
 select tests.create_supabase_user('test_consumer', 'test_consumer@studyu.health');
 
-INSERT INTO public.app_config (id, app_privacy, app_terms, designer_privacy, designer_terms, imprint, contact, analytics)
+INSERT INTO public.app_config (id, app_min_version, app_privacy, app_terms, designer_privacy, designer_terms, imprint, contact, analytics)
 VALUES (
     'prod',
+    '2.6.0',
     '{ "de": "example.com", "en": "example.com" }',
     '{ "de": "example.com", "en": "example.com" }',
     '{ "de": "example.com", "en": "example.com" }',

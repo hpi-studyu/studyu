@@ -9,6 +9,7 @@ Stores app config for different envs
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
 | id | text |  | false |  |  |  |
+| app_min_version | text |  | false |  |  |  |
 | app_privacy | jsonb |  | false |  |  |  |
 | app_terms | jsonb |  | false |  |  |  |
 | designer_privacy | jsonb |  | false |  |  |  |

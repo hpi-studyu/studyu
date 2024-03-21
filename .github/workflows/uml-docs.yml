@@ -13,6 +13,7 @@ on:
       - '!designer_v2/integration_test/**'
       - '!designer_v2/test_driver/**'
       - 'app/**/*.dart'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.ref }}-uml-docs

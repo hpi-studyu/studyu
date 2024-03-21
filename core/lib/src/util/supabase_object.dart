@@ -45,7 +45,9 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
 
 // ignore: avoid_classes_with_only_static_members
 class SupabaseQuery {
-  static Future<List<T>> getAll<T extends SupabaseObject>({List<String> selectedColumns = const ['*']}) async {
+  static Future<List<T>> getAll<T extends SupabaseObject>({
+    List<String> selectedColumns = const ['*'],
+  }) async {
     try {
       return extractSupabaseList(await env.client.from(tableName(T)).select(selectedColumns.join(',')));
     } catch (error, stacktrace) {
@@ -65,7 +67,9 @@ class SupabaseQuery {
     }
   }
 
-  static Future<List<T>> batchUpsert<T extends SupabaseObject>(List<Map<String, dynamic>> batchJson) async {
+  static Future<List<T>> batchUpsert<T extends SupabaseObject>(
+    List<Map<String, dynamic>> batchJson,
+  ) async {
     try {
       return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(batchJson).select());
     } catch (error, stacktrace) {
@@ -74,10 +78,30 @@ class SupabaseQuery {
     }
   }
 
-  static List<T> extractSupabaseList<T extends SupabaseObject>(List<Map<String, dynamic>> response) {
-    return List<T>.from(
-      List<Map<String, dynamic>>.from(response).map((json) => SupabaseObjectFunctions.fromJson<T>(json)),
-    );
+  /// Extracts a list of SupabaseObjects from a response.
+  /// If some records could not be extracted, [ExtractionFailedException] is
+  /// thrown containing the extracted records and the faulty records.
+  static List<T> extractSupabaseList<T extends SupabaseObject>(
+    List<Map<String, dynamic>> response,
+  ) {
+    final extracted = <T>[];
+    final notExtracted = <JsonWithError>[];
+    for (final json in response) {
+      try {
+        extracted.add(SupabaseObjectFunctions.fromJson<T>(json));
+        // ignore: avoid_catching_errors
+      } on ArgumentError catch (error) {
+        // We are catching ArgumentError because unknown enums throw an ArgumentError
+        // and UnknownJsonTypeError is a subclass of ArgumentError
+        notExtracted.add(JsonWithError(json, error));
+      }
+    }
+    if (notExtracted.isNotEmpty) {
+      // If some records could not be extracted, we throw an exception
+      // with the extracted records and the faulty records
+      throw ExtractionFailedException(extracted, notExtracted);
+    }
+    return extracted;
   }
 
   static T extractSupabaseSingleRow<T extends SupabaseObject>(Map<String, dynamic> response) {
@@ -112,4 +136,27 @@ extension PrimaryKeyFilterBuilder on PostgrestFilterBuilder {
     });
     return primaryKeyFilter;
   }
+}
+
+sealed class ExtractionResult<T> {
+  final List<T> extracted;
+
+  ExtractionResult(this.extracted);
+}
+
+class ExtractionSuccess<T> extends ExtractionResult<T> {
+  ExtractionSuccess(super.extracted);
+}
+
+class ExtractionFailedException<T> extends ExtractionResult<T> implements Exception {
+  final List<JsonWithError> notExtracted;
+
+  ExtractionFailedException(super.extracted, this.notExtracted);
+}
+
+class JsonWithError {
+  final Map<String, dynamic> json;
+  final Object error;
+
+  JsonWithError(this.json, this.error);
 }

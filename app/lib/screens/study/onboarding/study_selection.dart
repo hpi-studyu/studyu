@@ -26,6 +26,22 @@ Future<void> navigateToStudyOverview(
   Navigator.pushNamed(context, Routes.studyOverview);
 }
 
+Future<void> showAppOutdatedDialog(BuildContext context) async {
+  await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(AppLocalizations.of(context)!.study_selection_unsupported_title),
+      content: Text(AppLocalizations.of(context)!.study_selection_unsupported),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("OK"),
+        ),
+      ],
+    ),
+  );
+}
+
 class StudySelectionScreenArgs {
   final Template? template;
   final List<TemplateSubStudy> subStudies;
@@ -33,8 +49,16 @@ class StudySelectionScreenArgs {
   StudySelectionScreenArgs({this.template, this.subStudies = const []});
 }
 
-class StudySelectionScreen extends StatelessWidget {
+class StudySelectionScreen extends StatefulWidget {
   const StudySelectionScreen({super.key});
+
+  @override
+  State<StudySelectionScreen> createState() => _StudySelectionScreenState();
+}
+
+class _StudySelectionScreenState extends State<StudySelectionScreen> {
+  bool _hiddenStudies = false;
+  final publishedStudies = Study.publishedPublicStudies();
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +113,27 @@ class StudySelectionScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              _hiddenStudies && template == null
+                  ? Column(
+                      children: [
+                        MaterialBanner(
+                          padding: const EdgeInsets.all(8),
+                          leading: Icon(
+                            MdiIcons.exclamationThick,
+                            color: Colors.orange,
+                            size: 32,
+                          ),
+                          content: Text(
+                            AppLocalizations.of(context)!.study_selection_hidden_studies,
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          actions: const [SizedBox.shrink()],
+                          backgroundColor: Colors.yellow[100],
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    )
+                  : const SizedBox.shrink(),
               template != null
                   ? Container(
                       padding: const EdgeInsets.all(20),
@@ -127,19 +172,27 @@ class StudySelectionScreen extends StatelessWidget {
                     )
                   : const SizedBox.shrink(),
               Expanded(
-                child: RetryFutureBuilder<List<Study>>(
-                  tryFunction: () async =>
-                      subStudies.isEmpty ? Study.publishedPublicStudies() : Future.value(subStudies),
-                  successBuilder: (BuildContext context, List<Study>? studies) {
+                child: RetryFutureBuilder<ExtractionResult<Study>>(
+                  tryFunction: () async => subStudies.isEmpty ? publishedStudies : Future.value(subStudies),
+                  successBuilder: (BuildContext context, ExtractionResult<Study>? extractionResult) {
+                    final studies = extractionResult!.extracted;
+                    if (extractionResult is ExtractionFailedException<Study>) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (_hiddenStudies) return;
+                        debugPrint('${extractionResult.notExtracted.length} studies could not be extracted.');
+                        setState(() {
+                          _hiddenStudies = true;
+                        });
+                      });
+                    }
                     // Filter out sub-studies and templates without sub studies
                     final filteredStudies = subStudies.isEmpty
                         ? studies!
-                            .where((study) =>
-                                !study.isSubStudy &&
-                                (!study.isTemplate || studies.any((s) => s.parentTemplateId == study.id)))
-                            .toList()
+                        .where((study) =>
+                    !study.isSubStudy &&
+                        (!study.isTemplate || studies.any((s) => s.parentTemplateId == study.id)))
+                        .toList()
                         : studies!;
-
                     return ListView.builder(
                       itemCount: filteredStudies.length,
                       itemBuilder: (context, index) {
@@ -153,12 +206,12 @@ class StudySelectionScreen extends StatelessWidget {
                               numSubtrials: numSubtrials,
                               onTap: () => study is Template
                                   ? Navigator.pushNamed(context, Routes.studySelection,
-                                      arguments: StudySelectionScreenArgs(
-                                          template: study,
-                                          subStudies: studies
-                                              .where((s) => s is TemplateSubStudy && s.parentTemplateId == study.id)
-                                              .map((s) => s as TemplateSubStudy)
-                                              .toList()))
+                                  arguments: StudySelectionScreenArgs(
+                                      template: study,
+                                      subStudies: studies
+                                          .where((s) => s is TemplateSubStudy && s.parentTemplateId == study.id)
+                                          .map((s) => s as TemplateSubStudy)
+                                          .toList()))
                                   : navigateToStudyOverview(context, study),
                             ),
                           ),
@@ -259,7 +312,18 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 }
 
                 if (studyResult != null) {
-                  final study = Study.fromJson(studyResult);
+                  Study study;
+                  try {
+                    study = Study.fromJson(studyResult);
+                    // ignore: avoid_catching_errors
+                  } on ArgumentError catch (error) {
+                    // We are catching ArgumentError because unknown enums throw an ArgumentError
+                    // and UnknownJsonTypeError is a subclass of ArgumentError
+                    debugPrint('Study selection from invite failed: $error');
+                    if (!context.mounted) return;
+                    await showAppOutdatedDialog(context);
+                    return;
+                  }
 
                   if (!context.mounted) return;
                   Navigator.pop(context);
