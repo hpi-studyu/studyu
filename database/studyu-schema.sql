@@ -47,7 +47,8 @@ ALTER TYPE public.git_provider OWNER TO postgres;
 
 CREATE TYPE public.participation AS ENUM (
     'open',
-    'invite'
+    'invite',
+    'closed'
 );
 
 
@@ -835,6 +836,19 @@ CREATE POLICY "Editors can see subjects from their studies" ON public.study_subj
 CREATE POLICY "Invite code needs to be valid (not possible in the app)" ON public.study_subject AS RESTRICTIVE FOR INSERT WITH CHECK (((invite_code IS NULL) OR (study_id IN ( SELECT code_fun.study_id
    FROM public.get_study_from_invite(study_subject.invite_code) code_fun(study_id, preselected_intervention_ids)))));
 
+--
+-- Name: study_subject Joining a closed study should not be possible; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Joining a closed study should not be possible" ON public.study_subject
+AS RESTRICTIVE
+FOR INSERT
+WITH CHECK (NOT EXISTS (
+    SELECT 1
+    FROM public.study
+    WHERE study.id = study_subject.study_id
+    AND study.participation = 'closed'
+));
 
 --
 -- Name: subject_progress Editors can see their study subjects progress; Type: POLICY; Schema: public; Owner: postgres

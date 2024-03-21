@@ -19,7 +19,8 @@ enum StudyStatus {
 
 enum Participation {
   open,
-  invite;
+  invite,
+  closed;
 
   String toJson() => name;
   static Participation fromJson(String json) => values.byName(json);

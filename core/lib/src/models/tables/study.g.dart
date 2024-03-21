@@ -81,6 +81,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
 const _$ParticipationEnumMap = {
   Participation.open: 'open',
   Participation.invite: 'invite',
+  Participation.closed: 'closed',
 };
 
 const _$ResultSharingEnumMap = {

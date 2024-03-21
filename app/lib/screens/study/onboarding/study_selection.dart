@@ -42,6 +42,22 @@ Future<void> showAppOutdatedDialog(BuildContext context) async {
   );
 }
 
+Future<void> showStudyClosedDialog(BuildContext context) async {
+  await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(AppLocalizations.of(context)!.study_selection_closed_title),
+      content: Text(AppLocalizations.of(context)!.study_selection_closed),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("OK"),
+        ),
+      ],
+    ),
+  );
+}
+
 class StudySelectionScreen extends StatefulWidget {
   const StudySelectionScreen({super.key});
 
@@ -143,6 +159,10 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             child: StudyTile.fromStudy(
                               study: study,
                               onTap: () async {
+                                if (study.participation == Participation.closed) {
+                                  await showStudyClosedDialog(context);
+                                  return;
+                                }
                                 await navigateToStudyOverview(context, study);
                               },
                             ),
@@ -253,7 +273,15 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                     // and UnknownJsonTypeError is a subclass of ArgumentError
                     debugPrint('Study selection from invite failed: $error');
                     if (!context.mounted) return;
+                    Navigator.pop(context);
                     await showAppOutdatedDialog(context);
+                    return;
+                  }
+
+                  if (study.participation == Participation.closed) {
+                    if (!context.mounted) return;
+                    Navigator.pop(context);
+                    await showStudyClosedDialog(context);
                     return;
                   }
 

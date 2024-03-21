@@ -105,6 +105,13 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
               () => ref.read(notificationServiceProvider).show(Notifications.studyDeleted)));
     }
 
+    Future<void> onCloseCallback() {
+      model.participation = Participation.closed;
+      return save(model).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies)).then((value) =>
+          Future.delayed(const Duration(milliseconds: 200),
+              () => ref.read(notificationServiceProvider).show(Notifications.studyClosed)));
+    }
+
     final currentUser = authRepository.currentUser!;
 
     // TODO: review Postgres policies to match [ModelAction.isAvailable]
@@ -152,6 +159,16 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
           runAsync(() => model.exportData.downloadAsZip());
         },
         isAvailable: model.canExport(currentUser),
+      ),
+      ModelAction(
+        type: StudyActionType.close,
+        label: StudyActionType.close.string,
+        onExecute: () {
+          return ref.read(notificationServiceProvider).show(Notifications.studyCloseConfirmation, actions: [
+            NotificationAction(label: StudyActionType.close.string, onSelect: onCloseCallback),
+          ]);
+        },
+        isAvailable: model.canClose(currentUser) && model.participation != Participation.closed,
       ),
       ModelAction(
         type: StudyActionType.delete,

@@ -55,8 +55,10 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   final FormControl<Participation> enrollmentTypeControl = FormControl();
 
-  List<FormControlOption<Participation>> get enrollmentTypeControlOptions =>
-      Participation.values.map((v) => FormControlOption(v, v.string, description: v.designDescription)).toList();
+  List<FormControlOption<Participation>> get enrollmentTypeControlOptions => Participation.values
+      .where((p) => p != Participation.closed)
+      .map((v) => FormControlOption(v, v.string, description: v.designDescription))
+      .toList();
 
   late final FormArray consentItemArray = FormArray([]);
   late final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData> consentItemFormViewModels =

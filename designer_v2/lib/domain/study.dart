@@ -14,6 +14,7 @@ enum StudyActionType {
   duplicateDraft,
   addCollaborator,
   export,
+  close,
   delete,
 }
 
@@ -27,6 +28,8 @@ extension StudyActionTypeFormatted on StudyActionType {
         return tr.action_unpin;
       case StudyActionType.edit:
         return tr.action_edit;
+      case StudyActionType.close:
+        return tr.action_close;
       case StudyActionType.delete:
         return tr.action_delete;
       case StudyActionType.duplicate:
@@ -222,6 +225,10 @@ extension StudyPermissionsX on Study {
   }
 
   bool canDelete(sb.User user) {
+    return isOwner(user);
+  }
+
+  bool canClose(sb.User user) {
     return isOwner(user);
   }
 
