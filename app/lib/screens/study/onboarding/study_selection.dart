@@ -173,7 +173,8 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   : const SizedBox.shrink(),
               Expanded(
                 child: RetryFutureBuilder<ExtractionResult<Study>>(
-                  tryFunction: () async => subStudies.isEmpty ? publishedStudies : Future.value(subStudies),
+                  tryFunction: () async =>
+                      subStudies.isEmpty ? publishedStudies : Future.value(ExtractionSuccess(subStudies)),
                   successBuilder: (BuildContext context, ExtractionResult<Study>? extractionResult) {
                     final studies = extractionResult!.extracted;
                     if (extractionResult is ExtractionFailedException<Study>) {
@@ -187,12 +188,12 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                     }
                     // Filter out sub-studies and templates without sub studies
                     final filteredStudies = subStudies.isEmpty
-                        ? studies!
-                        .where((study) =>
-                    !study.isSubStudy &&
-                        (!study.isTemplate || studies.any((s) => s.parentTemplateId == study.id)))
-                        .toList()
-                        : studies!;
+                        ? studies
+                            .where((study) =>
+                                !study.isSubStudy &&
+                                (!study.isTemplate || studies.any((s) => s.parentTemplateId == study.id)))
+                            .toList()
+                        : studies;
                     return ListView.builder(
                       itemCount: filteredStudies.length,
                       itemBuilder: (context, index) {
@@ -206,12 +207,12 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                               numSubtrials: numSubtrials,
                               onTap: () => study is Template
                                   ? Navigator.pushNamed(context, Routes.studySelection,
-                                  arguments: StudySelectionScreenArgs(
-                                      template: study,
-                                      subStudies: studies
-                                          .where((s) => s is TemplateSubStudy && s.parentTemplateId == study.id)
-                                          .map((s) => s as TemplateSubStudy)
-                                          .toList()))
+                                      arguments: StudySelectionScreenArgs(
+                                          template: study,
+                                          subStudies: studies
+                                              .where((s) => s is TemplateSubStudy && s.parentTemplateId == study.id)
+                                              .map((s) => s as TemplateSubStudy)
+                                              .toList()))
                                   : navigateToStudyOverview(context, study),
                             ),
                           ),
