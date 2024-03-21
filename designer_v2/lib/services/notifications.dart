@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
 
@@ -18,6 +19,9 @@ class Notifications {
   static final studyDeleted = SnackbarIntent(
     message: tr.notification_study_deleted,
   );
+  static final studyClosed = SnackbarIntent(
+    message: tr.notification_study_closed,
+  );
   static final inviteCodeDeleted = SnackbarIntent(
     message: tr.notification_code_deleted,
   );
@@ -28,6 +32,11 @@ class Notifications {
       title: tr.dialog_study_delete_title,
       message: tr.dialog_study_delete_description,
       icon: Icons.delete_rounded,
+      actions: [NotificationDefaultActions.cancel]);
+  static final studyCloseConfirmation = AlertIntent(
+      title: tr.dialog_study_close_title,
+      message: tr.dialog_study_close_description,
+      icon: MdiIcons.accountLock,
       actions: [NotificationDefaultActions.cancel]);
 }
 
