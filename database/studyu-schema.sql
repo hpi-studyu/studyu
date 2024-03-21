@@ -852,6 +852,20 @@ CREATE POLICY "Editors can see their study subjects progress" ON public.subject_
     public.study_subject
   WHERE ((study.id = study_subject.study_id) AND (study_subject.id = subject_progress.subject_id))));
 
+--
+-- Name: study_subject Joining a Template Trial should not be possible; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Joining a Template Trial should not be possible" ON public.study_subject
+AS RESTRICTIVE
+FOR INSERT
+WITH CHECK (NOT EXISTS (
+    SELECT 1
+    FROM public.study
+    WHERE study.id = study_subject.study_id
+    AND study.template_configuration IS NOT NULL
+    AND study.parent_template_id IS NULL
+));
 
 --
 -- Name: subject_progress Users can do everything with their progress; Type: POLICY; Schema: public; Owner: postgres
