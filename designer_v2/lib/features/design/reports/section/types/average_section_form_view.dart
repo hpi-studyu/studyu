@@ -44,8 +44,7 @@ class AverageSectionFormView extends ConsumerWidget {
               labelHelpText: tr.form_field_report_average_temporalAggregation_tooltip,
               // TODO: extract custom dropdown component with theme + focus fix
               input: Theme(
-                data: theme.copyWith(
-                    inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+                data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<TemporalAggregationFormatted>(
                   formControl: formViewModel.temporalAggregationControl,
                   hint: const Text("Select an aggregation value"),
@@ -58,9 +57,7 @@ class AverageSectionFormView extends ConsumerWidget {
                         children: [
                           (option.value.icon != null)
                               ? Icon(option.value.icon,
-                                  size: iconTheme.size,
-                                  color: iconTheme.color,
-                                  shadows: iconTheme.shadows)
+                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
                               : const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
                           Text(option.label)

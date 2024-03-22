@@ -41,8 +41,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                       control: formViewModel.measurementsArray,
                       items: formViewModel.measurementViewModels,
                       onSelectItem: formViewModel.onSelectItem,
-                      getActionsAt: (viewModel, _) =>
-                          formViewModel.availablePopupActions(viewModel),
+                      getActionsAt: (viewModel, _) => formViewModel.availablePopupActions(viewModel),
                       onNewItem: formViewModel.onNewItem,
                       onNewItemLabel: tr.form_array_measurements_surveys_new,
                       rowTitle: (viewModel) => viewModel.formData?.title ?? '',

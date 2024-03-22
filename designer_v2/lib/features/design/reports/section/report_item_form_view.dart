@@ -13,8 +13,7 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ReportItemFormView extends StatelessWidget {
-  const ReportItemFormView(
-      {required this.formViewModel, required this.studyCreationArgs, super.key});
+  const ReportItemFormView({required this.formViewModel, required this.studyCreationArgs, super.key});
 
   final ReportItemFormViewModel formViewModel;
   final StudyCreationArgs studyCreationArgs;
@@ -111,8 +110,7 @@ class ReportItemFormView extends StatelessWidget {
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
               // TODO: extract custom dropdown component with theme + focus fix
               input: Theme(
-                data: theme.copyWith(
-                    inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+                data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<ReportSectionType>(
                   formControl: formViewModel.sectionTypeControl,
                   items: ReportItemFormViewModel.sectionTypeControlOptions.map((option) {
@@ -124,9 +122,7 @@ class ReportItemFormView extends StatelessWidget {
                         children: [
                           (option.value.icon != null)
                               ? Icon(option.value.icon,
-                                  size: iconTheme.size,
-                                  color: iconTheme.color,
-                                  shadows: iconTheme.shadows)
+                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
                               : const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
                           Text(option.label)

@@ -22,20 +22,20 @@ import 'package:studyu_designer_v2/routing/router_config.dart';
 
 // - Study Info
 
-final studyInfoFormViewModelProvider = Provider.autoDispose
-    .family<StudyInfoFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
+final studyInfoFormViewModelProvider =
+    Provider.autoDispose.family<StudyInfoFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
   return ref.watch(studyFormViewModelProvider(studyCreationArgs)).studyInfoFormViewModel;
 });
 
 // - Enrollment
 
-final enrollmentFormViewModelProvider = Provider.autoDispose
-    .family<EnrollmentFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
+final enrollmentFormViewModelProvider =
+    Provider.autoDispose.family<EnrollmentFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
   return ref.watch(studyFormViewModelProvider(studyCreationArgs)).enrollmentFormViewModel;
 });
 
-final screenerQuestionFormViewModelProvider = Provider.autoDispose
-    .family<ScreenerQuestionFormViewModel, ScreenerQuestionFormRouteArgs>((ref, args) {
+final screenerQuestionFormViewModelProvider =
+    Provider.autoDispose.family<ScreenerQuestionFormViewModel, ScreenerQuestionFormRouteArgs>((ref, args) {
   final owner = ref.watch(enrollmentFormViewModelProvider(args.studyCreationArgs));
   return owner.provide(args);
 });
@@ -48,8 +48,8 @@ final consentItemFormViewModelProvider =
 
 // - Interventions
 
-final interventionsFormViewModelProvider = Provider.autoDispose
-    .family<InterventionsFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
+final interventionsFormViewModelProvider =
+    Provider.autoDispose.family<InterventionsFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
   return ref.watch(studyFormViewModelProvider(studyCreationArgs)).interventionsFormViewModel;
 });
 
@@ -59,21 +59,21 @@ final interventionFormViewModelProvider =
   return owner.provide(args);
 });
 
-final interventionTaskFormViewModelProvider = Provider.autoDispose
-    .family<InterventionTaskFormViewModel, InterventionTaskFormRouteArgs>((ref, args) {
+final interventionTaskFormViewModelProvider =
+    Provider.autoDispose.family<InterventionTaskFormViewModel, InterventionTaskFormRouteArgs>((ref, args) {
   final owner = ref.watch(interventionFormViewModelProvider(args));
   return owner.provide(args);
 });
 
 // - Measurements
 
-final measurementsFormViewModelProvider = Provider.autoDispose
-    .family<MeasurementsFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
+final measurementsFormViewModelProvider =
+    Provider.autoDispose.family<MeasurementsFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
   return ref.watch(studyFormViewModelProvider(studyCreationArgs)).measurementsFormViewModel;
 });
 
-final surveyFormViewModelProvider = Provider.autoDispose
-    .family<MeasurementSurveyFormViewModel, MeasurementFormRouteArgs>((ref, args) {
+final surveyFormViewModelProvider =
+    Provider.autoDispose.family<MeasurementSurveyFormViewModel, MeasurementFormRouteArgs>((ref, args) {
   final owner = ref.watch(measurementsFormViewModelProvider(args.studyCreationArgs));
   return owner.provide(args);
 });

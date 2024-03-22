@@ -157,22 +157,19 @@ Widget? previewBanner(WidgetRef ref, StudyCreationArgs studyCreationArgs) {
     return null;
   }
   return BannerBox(
-    body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextParagraph(
-            text: tr.banner_study_preview_unavailable,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          ReactiveForm(
-              formGroup: formViewModel.form,
-              child: ReactiveFormConsumer(builder: (context, form, child) {
-                return TextParagraph(
-                  text: form.validationErrorSummary,
-                );
-              })),
-        ]),
+    body: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+      TextParagraph(
+        text: tr.banner_study_preview_unavailable,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
+      ReactiveForm(
+          formGroup: formViewModel.form,
+          child: ReactiveFormConsumer(builder: (context, form, child) {
+            return TextParagraph(
+              text: form.validationErrorSummary,
+            );
+          })),
+    ]),
     style: BannerStyle.warning,
   );
 }

@@ -67,12 +67,11 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
       if (widget.routeArgs is InterventionFormRouteArgs) {
         route = 'intervention';
-        frameController!.generateUrl(
-            route: route, extra: (widget.routeArgs as InterventionFormRouteArgs).interventionId);
+        frameController!
+            .generateUrl(route: route, extra: (widget.routeArgs as InterventionFormRouteArgs).interventionId);
       } else if (widget.routeArgs is MeasurementFormRouteArgs) {
         route = 'observation';
-        frameController!.generateUrl(
-            route: route, extra: (widget.routeArgs as MeasurementFormRouteArgs).measurementId);
+        frameController!.generateUrl(route: route, extra: (widget.routeArgs as MeasurementFormRouteArgs).measurementId);
       } else {
         frameController!.generateUrl();
       }

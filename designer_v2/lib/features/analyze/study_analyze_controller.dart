@@ -27,8 +27,7 @@ class StudyAnalyzeController extends StudyBaseController<StudyAnalyzeControllerS
 }
 
 final studyAnalyzeControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyAnalyzeController, StudyAnalyzeControllerState, StudyCreationArgs>(
-        (ref, studyCreationArgs) {
+    .family<StudyAnalyzeController, StudyAnalyzeControllerState, StudyCreationArgs>((ref, studyCreationArgs) {
   return StudyAnalyzeController(
     studyCreationArgs: studyCreationArgs,
     currentUser: ref.watch(authRepositoryProvider).currentUser,
