@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,20 +10,17 @@ class Cache {
   static bool isSynchronizing = false;
 
   static Future<void> storeSubject(StudySubject? subject) async {
+    debugPrint("Store subject in cache");
     if (subject == null) return;
-    StudySubject newSubject;
-    newSubject = await synchronize(subject);
-    debugPrint("Save to local cache");
-    (await sharedPrefs).setString(cacheSubjectKey, jsonEncode(newSubject.toFullJson()));
-    assert(newSubject == (await loadSubject()));
+    (await sharedPrefs).setString(cacheSubjectKey, jsonEncode(subject.toFullJson()));
+    assert(subject == (await loadSubject()));
   }
 
   static Future<StudySubject> loadSubject() async {
-    debugPrint("Load subject from cache");
+    // debugPrint("Load subject from cache");
     if ((await sharedPrefs).containsKey(cacheSubjectKey)) {
       return StudySubject.fromJson(jsonDecode((await sharedPrefs).getString(cacheSubjectKey)!));
     } else {
-      StudyULogger.warning("No cached subject found");
       throw Exception("No cached subject found");
     }
   }
@@ -52,10 +48,10 @@ class Cache {
     final localSubject = await loadSubject();
     // local and remote subject are equal, nothing to synchronize
     if (localSubject == remoteSubject) return remoteSubject;
-    // remote subject has newer study
+    // remote subject belongs to a different study
     if (!kDebugMode && remoteSubject.startedAt!.isAfter(localSubject.startedAt!)) return remoteSubject;
 
-    debugPrint("Synchronize with cache");
+    debugPrint("Synchronize subject with cache");
     isSynchronizing = true;
 
     try {
@@ -100,8 +96,6 @@ class Cache {
           StudyUDiagnostics.captureException(Exception("CacheSynchronizationException"));
         }
       }
-    } on SocketException catch (_) {
-      StudyULogger.info("SocketException on synchronizing (normal if offline)");
     } catch (exception) {
       StudyULogger.warning(exception);
     }
