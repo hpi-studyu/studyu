@@ -51,7 +51,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       };
 
   get measurementRequired => FormControlValidation(control: measurementsArray, validators: [
-        Validators.minLength(1)
+        Validators.minLength(study.isTemplate ? 0 : 1)
       ], validationMessages: {
         ValidationMessage.minLength: (error) => tr.form_array_measurements_minlength((error as Map)['requiredLength']),
       });

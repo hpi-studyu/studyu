@@ -1,5 +1,6 @@
 {
   "de": [
+    "action_button_study_publish",
     "report_status_primary",
     "report_status_secondary",
     "report_status_primary_description",

@@ -110,6 +110,22 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
     // TODO: review Postgres policies to match [ModelAction.isAvailable]
     final actions = [
       ModelAction(
+        type: StudyActionType.view,
+        label: StudyActionType.view.string,
+        onExecute: () {
+          ref.read(routerProvider).dispatch(RoutingIntents.studyEdit(model.id));
+        },
+        isAvailable: model.isTemplate && !model.canEditDraft(currentUser),
+      ),
+      ModelAction(
+        type: StudyActionType.createSubStudy,
+        label: StudyActionType.createSubStudy.string,
+        onExecute: () {
+          return ref.read(routerProvider).dispatch(RoutingIntents.substudyNew(model as Template));
+        },
+        isAvailable: model.status != StudyStatus.draft && model.isTemplate,
+      ),
+      ModelAction(
         type: StudyActionType.edit,
         label: StudyActionType.edit.string,
         onExecute: () {
@@ -206,8 +222,26 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
   }
 
   @override
-  Study createNewInstance() {
-    return StudyTemplates.emptyDraft(authRepository.currentUser!.id);
+  Study createNewInstance({ModelInstanceCreationArgs args = const NoArgs()}) {
+    if (args is! StudyCreationArgs) {
+      throw ArgumentError("args should be StudyCreationArgs");
+    }
+
+    if (!args.validForCreation) {
+      throw ArgumentError("args should be valid for creation");
+    }
+
+    final userId = authRepository.currentUser!.id;
+
+    if (args.isTemplate) {
+      return StudyTemplates.emptyTemplateDraft(userId);
+    }
+
+    if (args.parentTemplate != null) {
+      return StudyTemplates.emptySubStudyDraft(userId, args.parentTemplate!);
+    }
+
+    return StudyTemplates.emptyStandaloneDraft(userId);
   }
 
   @override

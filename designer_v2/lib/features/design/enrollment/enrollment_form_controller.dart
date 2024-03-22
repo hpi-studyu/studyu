@@ -18,6 +18,7 @@ import 'package:studyu_designer_v2/features/forms/form_view_model_collection_act
 import 'package:studyu_designer_v2/features/study/study_test_app_routes.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
@@ -54,6 +55,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   // - Form fields
 
   final FormControl<Participation> enrollmentTypeControl = FormControl();
+  final FormControl<bool> lockEnrollmentTypeControl = FormControl();
 
   List<FormControlOption<Participation>> get enrollmentTypeControlOptions =>
       Participation.values.map((v) => FormControlOption(v, v.string, description: v.designDescription)).toList();
@@ -74,6 +76,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   @override
   late final FormGroup form = FormGroup({
     'enrollmentType': enrollmentTypeControl,
+    'lockEnrollmentType': lockEnrollmentTypeControl,
     'consentItems': consentItemArray,
     ...questionnaireControls,
   });
@@ -81,6 +84,16 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   @override
   void setControlsFrom(EnrollmentFormData data) {
     enrollmentTypeControl.value = data.enrollmentType;
+    lockEnrollmentTypeControl.value = data.lockEnrollmentType;
+
+    if (!study.isTemplate) {
+      lockEnrollmentTypeControl.markAsDisabled();
+    }
+
+    if (study.isSubStudy && study.templateConfiguration?.lockEnrollmentType == true) {
+      enrollmentTypeControl.markAsDisabled();
+    }
+
     setQuestionnaireControlsFrom(data.questionnaireFormData);
 
     if (data.consentItemsFormData != null) {
@@ -99,6 +112,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   EnrollmentFormData buildFormData() {
     return EnrollmentFormData(
       enrollmentType: enrollmentTypeControl.value!,
+      lockEnrollmentType: lockEnrollmentTypeControl.value ?? false,
       questionnaireFormData: buildQuestionnaireFormData(),
       consentItemsFormData: consentItemFormViewModels.formData,
     );
@@ -146,28 +160,28 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   ScreenerQuestionFormRouteArgs buildNewScreenerQuestionFormRouteArgs() {
     return ScreenerQuestionFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       questionId: Config.newModelId,
     );
   }
 
   ScreenerQuestionFormRouteArgs buildScreenerQuestionFormRouteArgs(QuestionFormViewModel model) {
     return ScreenerQuestionFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       questionId: model.questionId,
     );
   }
 
   ConsentItemFormRouteArgs buildNewConsentItemFormRouteArgs() {
     return ConsentItemFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       consentId: Config.newModelId,
     );
   }
 
   ConsentItemFormRouteArgs buildConsentItemFormRouteArgs(ConsentItemFormViewModel model) {
     return ConsentItemFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       consentId: model.consentId,
     );
   }

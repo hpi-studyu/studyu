@@ -181,7 +181,7 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
   }
 
   @override
-  StudyInvite createNewInstance() {
+  StudyInvite createNewInstance({ModelInstanceCreationArgs args = const NoArgs()}) {
     throw UnimplementedError(); // not available
   }
 }

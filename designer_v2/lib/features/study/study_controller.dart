@@ -18,7 +18,7 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 
 class StudyController extends StudyBaseController<StudyControllerState> {
   StudyController({
-    required super.studyId,
+    required super.studyCreationArgs,
     required super.studyRepository,
     required super.currentUser,
     required super.router,
@@ -76,6 +76,8 @@ class StudyController extends StudyBaseController<StudyControllerState> {
         studyActionIcons);
   }
 
+  StudyType get studyType => state.study.value?.type ?? StudyType.standalone;
+
   Future publishStudy({toRegistry = false}) {
     final study = state.study.value!;
     study.registryPublished = toRegistry;
@@ -94,6 +96,10 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     router.dispatch(RoutingIntents.studySettings(studyId));
   }
 
+  void onCreateNewSubstudy() {
+    router.dispatch(RoutingIntents.substudyNew(state.study.value! as Template));
+  }
+
   @override
   dispose() {
     studyEventsSubscription?.cancel();
@@ -102,11 +108,12 @@ class StudyController extends StudyBaseController<StudyControllerState> {
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
-final studyControllerProvider =
-    StateNotifierProvider.autoDispose.family<StudyController, StudyControllerState, StudyID>((ref, studyId) {
+final studyControllerProvider = StateNotifierProvider.autoDispose
+    .family<StudyController, StudyControllerState, StudyCreationArgs>((ref, studyCreationArgs) {
+  final studyId = studyCreationArgs.studyID;
   print("studyControllerProvider($studyId)");
   final controller = StudyController(
-    studyId: studyId,
+    studyCreationArgs: studyCreationArgs,
     studyRepository: ref.watch(studyRepositoryProvider),
     currentUser: ref.watch(authRepositoryProvider).currentUser,
     router: ref.watch(routerProvider),

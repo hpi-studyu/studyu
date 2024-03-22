@@ -59,12 +59,16 @@ extension ParticipationFormatted on Participation {
     }
   }
 
-  String get launchDescription {
+  String launchDescription(bool isTemplate) {
     switch (this) {
       case Participation.open:
-        return tr.participation_open_launch_description;
+        return isTemplate
+            ? tr.participation_open_launch_description_template
+            : tr.participation_open_launch_description;
       case Participation.invite:
-        return tr.participation_invite_launch_description;
+        return isTemplate
+            ? tr.participation_invite_launch_description_template
+            : tr.participation_invite_launch_description;
       default:
         return "[Invalid Participation]";
     }

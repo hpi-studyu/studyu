@@ -1,7 +1,8 @@
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+
+import '../../domain/study.dart';
 
 abstract class IStudyNavViewModel {
   bool get isEditTabEnabled;
@@ -21,31 +22,31 @@ class StudyNav {
         analyze(studyId, enabled: viewModel.isAnalyzeTabEnabled)
       ];
 
-  static edit(studyId, {enabled = true}) => NavbarTab(
+  static edit(StudyID studyId, {enabled = true}) => NavbarTab(
         index: 0,
         title: tr.navlink_study_design,
         intent: RoutingIntents.studyEdit(studyId),
         enabled: enabled,
       );
-  static test(studyId, {enabled = true}) => NavbarTab(
+  static test(StudyID studyId, {enabled = true}) => NavbarTab(
         index: 1,
         title: tr.navlink_study_test,
         intent: RoutingIntents.studyTest(studyId),
         enabled: enabled,
       );
-  static recruit(studyId, {enabled = true}) => NavbarTab(
+  static recruit(StudyID studyId, {enabled = true}) => NavbarTab(
         index: 2,
         title: tr.navlink_study_recruit,
         intent: RoutingIntents.studyRecruit(studyId),
         enabled: enabled,
       );
-  static monitor(studyId, {enabled = true}) => NavbarTab(
+  static monitor(StudyID studyId, {enabled = true}) => NavbarTab(
         index: 3,
         title: tr.navlink_study_monitor,
         intent: RoutingIntents.studyMonitor(studyId),
         enabled: enabled,
       );
-  static analyze(studyId, {enabled = true}) => NavbarTab(
+  static analyze(StudyID studyId, {enabled = true}) => NavbarTab(
         index: 4,
         title: tr.navlink_study_analyze,
         intent: RoutingIntents.studyAnalyze(studyId),
@@ -54,7 +55,7 @@ class StudyNav {
 }
 
 class StudyDesignNav {
-  static tabs(studyId) => <NavbarTab>[
+  static tabs(StudyID studyId) => <NavbarTab>[
         info(studyId),
         enrollment(studyId),
         interventions(studyId),
@@ -62,13 +63,14 @@ class StudyDesignNav {
         reports(studyId),
       ];
 
-  static info(studyId) =>
+  static info(StudyID studyId) =>
       NavbarTab(index: 0, title: tr.navlink_study_design_info, intent: RoutingIntents.studyEditInfo(studyId));
-  static enrollment(studyId) => NavbarTab(
+  static enrollment(StudyID studyId) => NavbarTab(
       index: 1, title: tr.navlink_study_design_enrollment, intent: RoutingIntents.studyEditEnrollment(studyId));
-  static interventions(studyId) => NavbarTab(
+  static interventions(StudyID studyId) => NavbarTab(
       index: 2, title: tr.navlink_study_design_interventions, intent: RoutingIntents.studyEditInterventions(studyId));
-  static measurements(studyId) => NavbarTab(
+  static measurements(StudyID studyId) => NavbarTab(
       index: 3, title: tr.navlink_study_design_measurements, intent: RoutingIntents.studyEditMeasurements(studyId));
-  static reports(studyId) => NavbarTab(index: 4, title: "Reports", intent: RoutingIntents.studyEditReports(studyId));
+  static reports(StudyID studyId) =>
+      NavbarTab(index: 4, title: "Reports", intent: RoutingIntents.studyEditReports(studyId));
 }

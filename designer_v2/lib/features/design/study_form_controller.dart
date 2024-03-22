@@ -21,6 +21,7 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 
@@ -45,6 +46,8 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
   final GoRouter router;
 
   bool get isStudyReadonly => formData?.isReadonly(authRepository.currentUser!) ?? false;
+
+  StudyType get studyType => formData?.type ?? StudyType.standalone;
 
   late final StudyInfoFormViewModel studyInfoFormViewModel = StudyInfoFormViewModel(
     formData: StudyInfoFormData.fromStudy(formData!),
@@ -162,9 +165,10 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-final studyFormViewModelProvider = Provider.autoDispose.family<StudyFormViewModel, StudyID>((ref, studyId) {
+final studyFormViewModelProvider =
+    Provider.autoDispose.family<StudyFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
   print("studyFormViewModelProvider");
-  final state = ref.watch(studyControllerProvider(studyId));
+  final state = ref.watch(studyControllerProvider(studyCreationArgs));
   final formViewModel = StudyFormViewModel(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),

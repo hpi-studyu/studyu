@@ -76,12 +76,20 @@ mixin StudyScheduleControls {
         ValidationMessage.required: (error) => 'Custom sequence needs to be specified.',
       });
 
-  void setStudyScheduleControlsFrom(StudyScheduleFormData data) {
+  void setStudyScheduleControlsFrom(StudyScheduleFormData data, bool locked) {
     sequenceTypeControl.value = data.sequenceType;
     sequenceTypeCustomControl.value = data.sequenceTypeCustom;
     numCyclesControl.value = data.numCycles;
     phaseDurationControl.value = data.phaseDuration;
     includeBaselineControl.value = data.includeBaseline;
+
+    if (locked) {
+      sequenceTypeControl.markAsDisabled();
+      sequenceTypeCustomControl.markAsDisabled();
+      numCyclesControl.markAsDisabled();
+      phaseDurationControl.markAsDisabled();
+      includeBaselineControl.markAsDisabled();
+    }
   }
 
   StudyScheduleFormData buildStudyScheduleFormData() {

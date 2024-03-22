@@ -6,7 +6,9 @@
 
 | Name | Type | Default | Nullable | Children | Parents | Comment |
 | ---- | ---- | ------- | -------- | -------- | ------- | ------- |
-| id | uuid | gen_random_uuid() | false | [public.study_subject](public.study_subject.md) [public.repo](public.repo.md) [public.study_invite](public.study_invite.md) |  |  |
+| id | uuid | gen_random_uuid() | false | [public.study](public.study.md) [public.study_subject](public.study_subject.md) [public.repo](public.repo.md) [public.study_invite](public.study_invite.md) |  |  |
+| parent_template_id | uuid |  | true |  | [public.study](public.study.md) |  |
+| template_configuration | jsonb |  | true |  |  |  |
 | contact | jsonb |  | false |  |  |  |
 | title | text |  | false |  |  |  |
 | description | text |  | false |  |  |  |
@@ -33,6 +35,7 @@
 | Name | Type | Definition |
 | ---- | ---- | ---------- |
 | study_id_key | UNIQUE | UNIQUE (id) |
+| study_parent_template_id_fkey | FOREIGN KEY | FOREIGN KEY (parent_template_id) REFERENCES study(id) |
 | study_pkey | PRIMARY KEY | PRIMARY KEY (id) |
 | study_userId_fkey | FOREIGN KEY | FOREIGN KEY (user_id) REFERENCES "user"(id) |
 

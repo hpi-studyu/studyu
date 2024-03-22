@@ -16,6 +16,7 @@ import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
+import '../../../repositories/model_repository.dart';
 import 'reports_form_data.dart';
 import 'section/report_item_form_controller.dart';
 
@@ -88,14 +89,14 @@ class ReportsFormViewModel extends FormViewModel<ReportsFormData>
 
   ReportItemFormRouteArgs buildNewReportItemFormRouteArgs() {
     return ReportItemFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       sectionId: Config.newModelId,
     );
   }
 
   ReportItemFormRouteArgs buildReportItemFormRouteArgs(ReportItemFormViewModel model) {
     return ReportItemFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       sectionId: model.sectionId,
     );
   }

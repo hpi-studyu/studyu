@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/icons.dart';
 
@@ -147,6 +148,10 @@ class FormSectionHeader extends StatelessWidget {
     this.helpText,
     this.helpTextDisabled = false,
     this.titleTextStyle,
+    this.right,
+    this.showLock = false,
+    this.lockControl,
+    this.lockHelpText,
     this.divider = true,
     super.key,
   });
@@ -156,25 +161,47 @@ class FormSectionHeader extends StatelessWidget {
   final String? helpText;
   final bool divider;
   final bool helpTextDisabled;
+  final Widget? right;
+  final bool showLock;
+  final FormControl<bool>? lockControl;
+  final String? lockHelpText;
 
   @override
   Widget build(BuildContext context) {
     final titleStyle = Theme.of(context).textTheme.titleLarge!;
-
     return Column(
       children: [
-        FormTableLayout(
-          rows: [
-            FormTableRow(
-              label: title,
-              labelHelpText: helpText,
-              labelStyle: titleStyle.merge(titleTextStyle),
-              input: Container(),
-            ),
+        Row(
+          children: [
+            Expanded(
+                child: FormTableLayout(
+              rows: [
+                FormTableRow(
+                  label: title,
+                  labelHelpText: helpText,
+                  labelStyle: titleStyle.merge(titleTextStyle),
+                  input: const SizedBox.shrink(),
+                ),
+              ],
+              columnWidths: const {
+                0: IntrinsicColumnWidth(),
+              },
+            )),
+            (right != null)
+                ? Row(
+                    children: [
+                      right!,
+                      const SizedBox(width: 12.0),
+                    ],
+                  )
+                : const SizedBox.shrink(),
+            showLock
+                ? ReactiveFormLock(
+                    formControl: lockControl,
+                    helpText: lockHelpText,
+                  )
+                : const SizedBox.shrink(),
           ],
-          columnWidths: const {
-            0: IntrinsicColumnWidth(),
-          },
         ),
         (divider) ? const Divider() : const SizedBox.shrink(),
       ],
@@ -219,4 +246,80 @@ class FormLabel extends StatelessWidget {
       ],
     );
   }
+}
+
+class FormLock extends StatefulWidget {
+  const FormLock({super.key, required this.locked, this.onLockChanged, this.readOnly = false, this.helpText});
+
+  final bool locked;
+  final bool readOnly;
+  final ValueChanged<bool>? onLockChanged;
+  final String? helpText;
+
+  @override
+  State<FormLock> createState() => _FormLockState();
+}
+
+class _FormLockState extends State<FormLock> {
+  bool _locked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _locked = widget.locked;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final lockView = Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: widget.readOnly
+            ? null
+            : () {
+                setState(() {
+                  _locked = !_locked;
+                  widget.onLockChanged?.call(_locked);
+                });
+              },
+        child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Icon(_locked ? MdiIcons.lock : MdiIcons.lockOpen, size: 24.0),
+            )),
+      ),
+    );
+
+    if (widget.helpText != null) {
+      return Tooltip(
+        message: widget.helpText!,
+        child: lockView,
+      );
+    }
+
+    return lockView;
+  }
+}
+
+class ReactiveFormLock<T> extends ReactiveFormField<bool, bool> {
+  ReactiveFormLock({
+    super.key,
+    super.formControlName,
+    super.formControl,
+    ReactiveFormFieldCallback<bool>? onChanged,
+    String? helpText,
+  }) : super(builder: (field) {
+          return FormLock(
+            locked: field.value ?? false,
+            readOnly: field.control.disabled,
+            helpText: helpText,
+            onLockChanged: field.control.enabled
+                ? (value) {
+                    field.didChange(value);
+                    onChanged?.call(field.control);
+                  }
+                : null,
+          );
+        });
 }

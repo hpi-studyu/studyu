@@ -14,9 +14,7 @@ class StudyAnalyzeControllerState extends StudyControllerBaseState {
   String get exportDisabledReason => study.value?.exportDisabledReason(currentUser!) ?? '';
 
   @override
-  StudyAnalyzeControllerState copyWith({
-    WrappedModel<Study>? studyWithMetadata,
-  }) {
+  StudyAnalyzeControllerState copyWith({WrappedModel<Study>? studyWithMetadata}) {
     return StudyAnalyzeControllerState(
       studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
       currentUser: currentUser,

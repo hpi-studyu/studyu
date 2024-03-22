@@ -1,10 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/repositories/model_repository_events.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
+
+import '../domain/study.dart';
+import '../routing/router_config.dart';
 
 typedef ModelID = String;
 
@@ -54,6 +61,51 @@ class WrappedModel<T> {
   }
 }
 
+sealed class ModelInstanceCreationArgs extends Equatable {
+  const ModelInstanceCreationArgs();
+}
+
+class NoArgs extends ModelInstanceCreationArgs {
+  const NoArgs();
+
+  @override
+  List<Object> get props => [];
+}
+
+class StudyCreationArgs extends ModelInstanceCreationArgs {
+  final StudyID studyID;
+  final Template? parentTemplate;
+  final bool isTemplate;
+  final bool validForCreation;
+
+  StudyCreationArgs(
+      {required this.studyID, this.parentTemplate, required this.isTemplate, this.validForCreation = true}) {
+    if (parentTemplate != null && isTemplate) {
+      throw ArgumentError("A sub-study cannot be a template");
+    }
+  }
+
+  /// This method should only be used to create StudyCreationArgs for an en already created study.
+  /// That means the StudyCreationArgs will not be used to create a new instance, instead it
+  /// will be used for the equality check in the ref.watch method of riverpod.
+  /// That is why we use dummy data for [isTemplate] and [parentTemplate] as only the [studyID]
+  /// will be used for the equality check. In addition the [validForCreation] flag is set to false.
+  factory StudyCreationArgs.fromStudy(Study study) =>
+      StudyCreationArgs(studyID: study.id, isTemplate: false, parentTemplate: null, validForCreation: false);
+
+  factory StudyCreationArgs.fromRoute(GoRouterState routerState) {
+    final studyId = routerState.pathParameters[RouteParams.studyId]!;
+    final isTemplate = routerState.uri.queryParameters[RouteParams.isTemplate] == true.toString();
+    final parentTemplateEncoded = routerState.uri.queryParameters[RouteParams.parentTemplate];
+    final parentTemplate =
+        parentTemplateEncoded != null ? Study.fromJson(jsonDecode(Uri.decodeFull(parentTemplateEncoded))) : null;
+    return StudyCreationArgs(studyID: studyId, isTemplate: isTemplate, parentTemplate: parentTemplate as Template?);
+  }
+
+  @override
+  List<Object> get props => [studyID];
+}
+
 class ModelRepositoryException implements Exception {}
 
 class ModelNotFoundException implements ModelRepositoryException {}
@@ -67,7 +119,8 @@ abstract class IModelRepository<T> implements IModelActionProvider<T> {
   Future<void> delete(ModelID modelId);
   Future<void> duplicateAndSave(T model);
   Future<void> duplicateAndSaveFromRemote(ModelID modelId);
-  Stream<WrappedModel<T>> watch(ModelID modelId, {fetchOnSubscribe = true});
+  Stream<WrappedModel<T>> watch(ModelID modelId,
+      {fetchOnSubscribe = true, ModelInstanceCreationArgs args = const NoArgs()});
   Stream<List<WrappedModel<T>>> watchAll({fetchOnSubscribe = true});
   Stream<ModelEvent<T>> watchChanges(ModelID modelId);
   Stream<ModelEvent<T>> watchAllChanges();
@@ -82,7 +135,7 @@ abstract class IModelRepositoryDelegate<T> {
   // todo saveAll(List<T> models);
   Future<void> delete(T model);
   // todo deleteAll(List<T> models);
-  T createNewInstance();
+  T createNewInstance({ModelInstanceCreationArgs args = const NoArgs()});
   T createDuplicate(T model);
   onError(Object error, StackTrace? stackTrace);
 }
@@ -276,12 +329,13 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   /// If the requested [ModelId] is not available, the stream will be created
   /// anyway, but emit a [ModelNotFoundException] error event.
   @override
-  Stream<WrappedModel<T>> watch(ModelID modelId, {fetchOnSubscribe = true, emitLastEvent = true}) {
+  Stream<WrappedModel<T>> watch(ModelID modelId,
+      {fetchOnSubscribe = true, emitLastEvent = true, ModelInstanceCreationArgs args = const NoArgs()}) {
     WrappedModel<T>? wrappedModel;
 
     if (modelId == Config.newModelId) {
       // Create new model to subscribe to
-      final newModel = delegate.createNewInstance();
+      final newModel = delegate.createNewInstance(args: args);
       wrappedModel = upsertLocally(newModel, emitUpdate: true);
       modelId = getKey(newModel); // subscribe to the newly created study
     } else {
