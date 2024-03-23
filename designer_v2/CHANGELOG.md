@@ -1,3 +1,9 @@
+## 1.6.2-dev.6
+
+ - **FIX**: upgrade deps. ([b491c9c4](https://github.com/hpi-studyu/studyu/commit/b491c9c469ee808fe1aaa50b7a50759be2378552))
+ - **FIX**: enable color emoji. ([e7f9ddcb](https://github.com/hpi-studyu/studyu/commit/e7f9ddcb7dfbb11e9fdd05e3791b55d2a1fe52b9))
+ - **FIX**: temporarily disable free text for the designer. ([00e0b1e6](https://github.com/hpi-studyu/studyu/commit/00e0b1e60e368d1e3620eec61924ff17a098f386))
+
 ## 1.6.2-dev.5
 
  - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))
