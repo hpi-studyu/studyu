@@ -1,17 +1,14 @@
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/domain/study_schedule.dart';
-import 'package:studyu_designer_v2/features/design/interventions/mp23_study_schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/design/interventions/mp23_study_schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 mixin MP23StudyScheduleControls {
   final FormArray segmentsControl = FormArray([]);
   final List<StudyScheduleSegment> segments = [];
   final List<Intervention> interventions = [];
+  final List<Observation> observations = [];
 
   late final studyScheduleControls = {
     'segments': segmentsControl,
@@ -112,6 +109,7 @@ mixin MP23StudyScheduleControls {
   void setStudyScheduleControlsFrom(MP23StudyScheduleFormData data) {
     segmentsControl.clear();
     interventions.clear();
+    observations.clear();
     for (var element in data.segments) {
       if (element is BaselineScheduleSegment) {
         addFormGroupToSegments(
@@ -129,6 +127,7 @@ mixin MP23StudyScheduleControls {
       }
     }
     interventions.addAll(data.interventions);
+    observations.addAll(data.observations);
     updateSegmentsFromSegmentsControl();
   }
 
@@ -154,6 +153,7 @@ mixin MP23StudyScheduleControls {
         }
       }).toList(),
       interventions: interventions,
+      observations: observations,
     );
   }
 }

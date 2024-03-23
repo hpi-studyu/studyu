@@ -9,10 +9,13 @@ class MP23StudySchedule {
   @JsonKey(includeToJson: false, defaultValue: [])
   List<Intervention> interventions;
 
+  @JsonKey(includeToJson: false, defaultValue: [])
+  List<Observation> observations;
+
   @StudyScheduleSegmentConverter()
   List<StudyScheduleSegment> segments = [];
 
-  MP23StudySchedule(this.interventions);
+  MP23StudySchedule(this.interventions, this.observations);
 
   factory MP23StudySchedule.fromJson(Map<String, dynamic> json) =>
       _$MP23StudyScheduleFromJson(json);

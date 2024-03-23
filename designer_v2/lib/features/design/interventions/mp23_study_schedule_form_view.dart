@@ -48,6 +48,7 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(widget.formViewModel.observations.toString()),
       Text(
         "Total Duration: ${widget.formViewModel.getTotalDuration()} days",
         textAlign: TextAlign.center,

@@ -64,7 +64,8 @@ class Study extends SupabaseObjectFunctions<Study>
   late List<Observation> observations = [];
   late StudySchedule schedule = StudySchedule();
   @JsonKey(includeToJson: true, includeFromJson: false)
-  late MP23StudySchedule mp23Schedule = MP23StudySchedule(interventions);
+  late MP23StudySchedule mp23Schedule =
+      MP23StudySchedule(interventions, observations);
   @JsonKey(name: 'report_specification')
   late ReportSpecification reportSpecification = ReportSpecification();
   late List<StudyResult> results = [];
@@ -108,6 +109,7 @@ class Study extends SupabaseObjectFunctions<Study>
         json['mp23Schedule'] as Map<String, dynamic>);
 
     mp23Schedule.interventions = study.interventions;
+    mp23Schedule.observations = study.observations;
     study.mp23Schedule = mp23Schedule;
 
     final List? repo = json['repo'] as List?;

@@ -12,6 +12,10 @@ MP23StudySchedule _$MP23StudyScheduleFromJson(Map<String, dynamic> json) =>
               ?.map((e) => Intervention.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      (json['observations'] as List<dynamic>?)
+              ?.map((e) => Observation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     )..segments = (json['segments'] as List<dynamic>)
         .map((e) => const StudyScheduleSegmentConverter()
             .fromJson(e as Map<String, dynamic>))
