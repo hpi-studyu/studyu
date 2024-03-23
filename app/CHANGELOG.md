@@ -1,3 +1,7 @@
+## 2.6.5-dev.8
+
+ - **FIX**: pod update. ([a289069e](https://github.com/hpi-studyu/studyu/commit/a289069ef8eeab8ee996f9a9b6d26f98535a25e3))
+
 ## 2.6.5-dev.7
 
  - **REFACTOR**: login process and offline mode. ([aab64a42](https://github.com/hpi-studyu/studyu/commit/aab64a429df81037eb6cd9c06b7eb89b282a1a05))
