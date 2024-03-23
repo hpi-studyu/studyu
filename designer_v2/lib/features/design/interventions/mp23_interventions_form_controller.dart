@@ -96,7 +96,6 @@ class MP23InterventionsFormViewModel
 
   @override
   MP23InterventionsFormData buildFormData() {
-    print("Build MP23InterventionsFormData");
     return MP23InterventionsFormData(
       interventionsData: interventionsCollection.formData,
       studyScheduleData: buildStudyScheduleFormData(),

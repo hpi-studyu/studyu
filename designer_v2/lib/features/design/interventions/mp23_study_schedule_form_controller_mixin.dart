@@ -2,7 +2,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study_schedule.dart';
 import 'package:studyu_designer_v2/features/design/interventions/mp23_study_schedule_form_data.dart';
-import 'package:studyu_designer_v2/features/design/interventions/schedule_creator/schedule_creator.dart';
 import 'package:studyu_designer_v2/features/design/interventions/mp23_study_schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
@@ -11,9 +10,8 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 mixin MP23StudyScheduleControls {
   final FormArray segmentsControl = FormArray([]);
-
-  // List<FormControlOption<PhaseSequence>> get sequenceTypeControlOptions =>
-  //     PhaseSequence.values.map((v) => FormControlOption(v, v.string)).toList();
+  final List<StudyScheduleSegment> segments = [];
+  final List<Intervention> interventions = [];
 
   late final studyScheduleControls = {
     'segments': segmentsControl,
@@ -25,60 +23,34 @@ mixin MP23StudyScheduleControls {
         StudyFormValidationSet.test: [],
       };
 
-  // static int kNumCyclesMin = 1;
-  // static int kNumCyclesMax = 9;
-  // get numCyclesRange => FormControlValidation(
-  //       control: numCyclesControl,
-  //       validators: [
-  //         Validators.required,
-  //         Validators.min(kNumCyclesMin),
-  //         Validators.max(kNumCyclesMax),
-  //       ],
-  //       validationMessages: {
-  //         ValidationMessage.required: (error) =>
-  //             tr.form_field_crossover_schedule_num_cycles_range(
-  //                 kNumCyclesMin, kNumCyclesMax),
-  //         ValidationMessage.min: (error) =>
-  //             tr.form_field_crossover_schedule_num_cycles_range(
-  //                 kNumCyclesMin, kNumCyclesMax),
-  //         ValidationMessage.max: (error) =>
-  //             tr.form_field_crossover_schedule_num_cycles_range(
-  //                 kNumCyclesMin, kNumCyclesMax),
-  //       },
-  //     );
+  int getTotalDuration() {
+    int totalDuration = 0;
+    for (var segment in segments) {
+      totalDuration += segment.getDuration(interventions);
+    }
+    return totalDuration;
+  }
 
-  // static int kPhaseDurationMin = 1;
-  // static int kPhaseDurationMax = 365;
-  // get phaseDurationRange => FormControlValidation(
-  //       control: phaseDurationControl,
-  //       validators: [
-  //         Validators.required,
-  //         Validators.min(kPhaseDurationMin),
-  //         Validators.max(kPhaseDurationMax)
-  //       ],
-  //       validationMessages: {
-  //         ValidationMessage.required: (error) =>
-  //             tr.form_field_crossover_schedule_phase_length_range(
-  //                 kPhaseDurationMin, kPhaseDurationMax),
-  //         ValidationMessage.min: (error) =>
-  //             tr.form_field_crossover_schedule_phase_length_range(
-  //                 kPhaseDurationMin, kPhaseDurationMax),
-  //         ValidationMessage.max: (error) =>
-  //             tr.form_field_crossover_schedule_phase_length_range(
-  //                 kPhaseDurationMin, kPhaseDurationMax),
-  //       },
-  //     );
-
-  // get customSequenceRequired =>
-  //     FormControlValidation(control: sequenceTypeCustomControl, validators: [
-  //       Validators.required
-  //     ], validationMessages: {
-  //       ValidationMessage.required: (error) =>
-  //           'Custom sequence needs to be specified.',
-  //     });
+  void deleteSegment(int index) {
+    segmentsControl.removeAt(index);
+    updateSegmentsFromSegmentsControl();
+  }
 
   void addFormGroupToSegments(FormGroup formGroup) {
     segmentsControl.add(formGroup);
+  }
+
+  FormGroup createFormGroup(StudyScheduleSegmentType segmentType) {
+    switch (segmentType) {
+      case StudyScheduleSegmentType.baseline:
+        return createBaselineFormGroup();
+      case StudyScheduleSegmentType.alternating:
+        return createAlternatingFormGroup();
+      case StudyScheduleSegmentType.thompsonSampling:
+        return createThompsonSamplingFormGroup();
+      default:
+        throw UnimplementedError();
+    }
   }
 
   FormGroup createBaselineFormGroup({int duration = 0}) {
@@ -110,8 +82,36 @@ mixin MP23StudyScheduleControls {
     });
   }
 
+  void updateSegmentsFromSegmentsControl() {
+    segments.clear();
+    for (var segmentControl in segmentsControl.controls) {
+      final segment = segmentControl as FormGroup;
+      switch (segment.control('type').value) {
+        case "baseline":
+          segments
+              .add(BaselineScheduleSegment(segment.control('duration').value));
+          break;
+        case "alternating":
+          segments.add(AlternatingScheduleSegment(
+            segment.control('interventionDuration').value,
+            segment.control('cycleAmount').value,
+          ));
+          break;
+        case "thompsonSampling":
+          segments.add(ThompsonSamplingScheduleSegment(
+            segment.control('interventionDuration').value,
+            segment.control('interventionDrawAmount').value,
+          ));
+          break;
+        default:
+          throw UnimplementedError();
+      }
+    }
+  }
+
   void setStudyScheduleControlsFrom(MP23StudyScheduleFormData data) {
     segmentsControl.clear();
+    interventions.clear();
     for (var element in data.segments) {
       if (element is BaselineScheduleSegment) {
         addFormGroupToSegments(
@@ -128,6 +128,8 @@ mixin MP23StudyScheduleControls {
         ));
       }
     }
+    interventions.addAll(data.interventions);
+    updateSegmentsFromSegmentsControl();
   }
 
   MP23StudyScheduleFormData buildStudyScheduleFormData() {
@@ -151,6 +153,7 @@ mixin MP23StudyScheduleControls {
             throw UnimplementedError();
         }
       }).toList(),
+      interventions: interventions,
     );
   }
 }

@@ -5,15 +5,16 @@ import 'package:studyu_designer_v2/features/forms/form_data.dart';
 class MP23StudyScheduleFormData implements IStudyFormData {
   MP23StudyScheduleFormData({
     required this.segments,
+    required this.interventions,
   });
 
   final List<StudyScheduleSegment> segments;
+  final List<Intervention> interventions;
 
   factory MP23StudyScheduleFormData.fromDomainModel(
-      MP23StudySchedule schedule) {
+      MP23StudySchedule schedule, List<Intervention> interventions) {
     return MP23StudyScheduleFormData(
-      segments: schedule.segments,
-    );
+        segments: schedule.segments, interventions: schedule.interventions);
   }
 
   MP23StudySchedule toMP23StudySchedule() {
@@ -24,7 +25,6 @@ class MP23StudyScheduleFormData implements IStudyFormData {
 
   @override
   Study apply(Study study) {
-    print("Apply MP23StudyScheduleFormData");
     study.mp23Schedule = toMP23StudySchedule();
     return study;
   }

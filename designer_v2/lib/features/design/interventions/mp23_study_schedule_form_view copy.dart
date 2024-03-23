@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/features/design/interventions/mp23_study_schedule_form_controller_mixin.dart';
-import 'package:studyu_designer_v2/features/design/interventions/schedule_creator/schedule_creator.dart';
+import 'package:studyu_designer_v2/features/design/schedule_creator.dart';
 
 class MP23StudyScheduleFormView extends FormConsumerWidget {
   const MP23StudyScheduleFormView({required this.formViewModel, super.key});

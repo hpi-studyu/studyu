@@ -20,7 +20,7 @@ class MP23InterventionsFormData implements IStudyFormData {
           .map((intervention) =>
               InterventionFormData.fromDomainModel(intervention))
           .toList(),
-      studyScheduleData: MP23StudyScheduleFormData.fromDomainModel(study.mp23Schedule),
+      studyScheduleData: MP23StudyScheduleFormData.fromDomainModel(study.mp23Schedule, study.interventions),
     );
   }
 

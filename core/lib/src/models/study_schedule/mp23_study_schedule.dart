@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/src/models/interventions/intervention.dart';
-import 'package:studyu_core/src/models/tables/subject_progress.dart';
-import 'package:studyu_core/src/util/thompson_sampling.dart';
+import 'package:studyu_core/src/models/observations/observation.dart';
 
 part 'mp23_study_schedule.g.dart';
 
@@ -221,5 +220,18 @@ enum StudyScheduleSegmentType {
 
   static String toJson(StudyScheduleSegmentType type) {
     return type.toString().split('.')[1];
+  }
+
+  String get name {
+    switch (this) {
+      case StudyScheduleSegmentType.baseline:
+        return 'Baseline';
+      case StudyScheduleSegmentType.alternating:
+        return 'Alternating';
+      case StudyScheduleSegmentType.counterBalanced:
+        return 'Counter Balanced';
+      case StudyScheduleSegmentType.thompsonSampling:
+        return 'Thompson Sampling';
+    }
   }
 }
