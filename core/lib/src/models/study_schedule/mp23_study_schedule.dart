@@ -184,9 +184,11 @@ class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
 
   int interventionDuration;
   int interventionDrawAmount;
+  String observationId;
+  String questionId;
 
-  ThompsonSamplingScheduleSegment(
-      this.interventionDuration, this.interventionDrawAmount);
+  ThompsonSamplingScheduleSegment(this.interventionDuration,
+      this.interventionDrawAmount, this.observationId, this.questionId);
 
   factory ThompsonSamplingScheduleSegment.fromJson(Map<String, dynamic> json) =>
       _$ThompsonSamplingScheduleSegmentFromJson(json);

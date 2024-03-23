@@ -61,6 +61,8 @@ ThompsonSamplingScheduleSegment _$ThompsonSamplingScheduleSegmentFromJson(
     ThompsonSamplingScheduleSegment(
       json['interventionDuration'] as int,
       json['interventionDrawAmount'] as int,
+      json['observationId'] as String,
+      json['questionId'] as String,
     );
 
 Map<String, dynamic> _$ThompsonSamplingScheduleSegmentToJson(
@@ -69,4 +71,6 @@ Map<String, dynamic> _$ThompsonSamplingScheduleSegmentToJson(
       'type': StudyScheduleSegmentType.toJson(instance.type),
       'interventionDuration': instance.interventionDuration,
       'interventionDrawAmount': instance.interventionDrawAmount,
+      'observationId': instance.observationId,
+      'questionId': instance.questionId,
     };
