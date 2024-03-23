@@ -401,6 +401,7 @@
 	  |
 	  +segments: List&lt;StudyScheduleSegment&gt;;
 	  +interventions: List&lt;Intervention&gt;;
+	  +observations: List&lt;Observation&gt;;
 	  +id: String
 	  |
 	  +MP23StudySchedule toMP23StudySchedule();
@@ -546,6 +547,7 @@
 	  +segmentsControl: FormArray&lt;dynamic&gt;;
 	  +segments: List&lt;StudyScheduleSegment&gt;;
 	  +interventions: List&lt;Intervention&gt;;
+	  +observations: List&lt;Observation&gt;;
 	  +studyScheduleControls: Map&lt;String, FormArray&lt;dynamic&gt;&gt;;
 	  +studyScheduleValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;
 	  |
@@ -1441,7 +1443,7 @@
 					<path d="M17918.8 133.2 L17916.2 128.6 L17913.5 124.0 L17927.8 122.0 Z"></path>
 					<path d="M2796.9 1076.9 L2906 1519 L2906 1704 L2906.0 1704.0 " fill="none"></path>
 					<path d="M2802.1 1075.7 L2796.9 1076.9 L2791.7 1078.2 L2793.7 1064.0 Z"></path>
-					<path d="M4061.5 1875.7 L4061.5 2057 L4159.550373134329 2114.5 L4159.6 2114.5 " fill="none"></path>
+					<path d="M4061.5 1875.7 L4061.5 2057 L4146.761194029851 2107 L4146.8 2107.0 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M4066.8 1866.3 L4061.5 1875.7 L4056.2 1866.3 L4061.5 1857.0 Z"></path>
 					</g>
@@ -1454,7 +1456,7 @@
 						<path d="M6710.8 1020.3 L6705.5 1029.7 L6700.2 1020.3 L6705.5 1011.0 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M5042.1 1018.6 L4317 1519 L4317 1788 L4317 1788 L4317 2057 L4317 2057 L4305.414179104478 2114.5 L4305.4 2114.5 " fill="none"></path>
+						<path d="M5042.1 1018.6 L4317 1519 L4317 1788 L4317 1788 L4317 2057 L4317 2057 L4306.925373134329 2107 L4306.9 2107.0 " fill="none"></path>
 					</g>
 					<path d="M5045.1 1023.0 L5042.1 1018.6 L5039.1 1014.2 L5053.1 1011.0 Z"></path>
 					<path d="M10579.6 1940.2 L10504 2057 L14090.25 2188.9216251458374 L14090.3 2188.9 " fill="none"></path>
@@ -1473,7 +1475,7 @@
 					<path d="M3259.0 364.9 L3255.7 360.7 L3252.4 356.5 L3266.2 352.5 Z"></path>
 					<path d="M22422.1 372.0 L22204.75 441 L21184.74443413729 949 L21184.7 949.0 " fill="none"></path>
 					<path d="M22423.7 377.1 L22422.1 372.0 L22420.5 366.9 L22434.8 368.0 Z"></path>
-					<path d="M24513.9 392.0 L24417.5 441 L23559.712430426716 836 L23559.7 836.0 " fill="none"></path>
+					<path d="M24513.9 392.0 L24417.5 441 L23575.999536178108 828.5 L23576.0 828.5 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M24524.7 392.5 L24513.9 392.0 L24519.8 383.0 L24530.6 383.5 Z"></path>
 					</g>
@@ -1491,7 +1493,7 @@
 					<g fill="#eee8d5">
 						<path d="M21245.6 381.6 L21235.4 378.1 L21243.6 371.1 L21253.8 374.5 Z"></path>
 					</g>
-					<path d="M21658.2 367.6 L22164.75 441 L22957.86456400742 836 L22957.9 836.0 " fill="none"></path>
+					<path d="M21658.2 367.6 L22164.75 441 L22942.805426716142 828.5 L22942.8 828.5 " fill="none"></path>
 					<g fill="#eee8d5">
 						<path d="M21649.8 361.0 L21658.2 367.6 L21648.2 371.6 L21639.8 365.0 Z"></path>
 					</g>
@@ -1525,8 +1527,8 @@
 					</g>
 					<path d="M23741.9 362.1 L23666 441 L23666 980 L23666 980 L23666 1519 L23666 1519 L17013.75 1772.0427758334217 L17013.8 1772.0 " fill="none"></path>
 					<path d="M23745.7 365.8 L23741.9 362.1 L23738.0 358.4 L23751.1 352.5 Z"></path>
-					<path d="M22928.4 1129.7 L22099.5 1519 L17013.75 1767.5022024431225 L17013.8 1767.5 " fill="none"></path>
-					<path d="M22930.6 1134.5 L22928.4 1129.7 L22926.1 1124.8 L22940.4 1124.0 Z"></path>
+					<path d="M22912.4 1137.2 L22099.5 1519 L17013.75 1767.5022024431225 L17013.8 1767.5 " fill="none"></path>
+					<path d="M22914.7 1142.0 L22912.4 1137.2 L22910.1 1132.3 L22924.5 1131.5 Z"></path>
 					<g stroke-dasharray="6 6">
 						<path d="M12240.7 344.9 L10758 441 L10758 980 L10758 980 L10758 1519 L10758 1519 L16174.75 1768.664724780467 L16174.8 1768.7 " fill="none"></path>
 					</g>
@@ -1539,9 +1541,9 @@
 						<path d="M15207.8 350.5 L14471.75 441 L14471.75 980 L14471.75 980 L14471.75 1519 L14471.75 1519 L16174.75 1734.8336866902239 L16174.8 1734.8 " fill="none"></path>
 					</g>
 					<path d="M15208.4 355.8 L15207.8 350.5 L15207.1 345.2 L15221.0 348.9 Z"></path>
-					<path d="M23303.8 1141.6 L23436.5 1519 L23436.5 1788 L23436.5 1788 L23436.5 2057 L23436.5 2057 L14380 2190.2788973697216 L14380.0 2190.3 " fill="none"></path>
+					<path d="M23306.5 1149.1 L23436.5 1519 L23436.5 1788 L23436.5 1788 L23436.5 2057 L23436.5 2057 L14380 2190.2788973697216 L14380.0 2190.3 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M23305.8 1131.0 L23303.8 1141.6 L23295.7 1134.6 L23297.6 1124.0 Z"></path>
+						<path d="M23308.4 1138.5 L23306.5 1149.1 L23298.3 1142.1 L23300.3 1131.5 Z"></path>
 					</g>
 					<path d="M4543.6 1889.3 L4476.75 2057 L4773.663246268657 2175.5 L4773.7 2175.5 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -2920,25 +2922,26 @@
 					</g>
 					<g data-name="MP23StudyScheduleFormData">
 						<g fill="#eee8d5" stroke="#33322E" data-name="MP23StudyScheduleFormData">
-							<rect x="4097.0" y="2114.5" height="153.0" width="386.0" data-name="MP23StudyScheduleFormData"></rect>
-							<path d="M4097.0 2145.5 L4483.0 2145.5" fill="none" data-name="MP23StudyScheduleFormData"></path>
-							<path d="M4097.0 2206.5 L4483.0 2206.5" fill="none" data-name="MP23StudyScheduleFormData"></path>
+							<rect x="4097.0" y="2107.0" height="168.0" width="386.0" data-name="MP23StudyScheduleFormData"></rect>
+							<path d="M4097.0 2138.0 L4483.0 2138.0" fill="none" data-name="MP23StudyScheduleFormData"></path>
+							<path d="M4097.0 2214.0 L4483.0 2214.0" fill="none" data-name="MP23StudyScheduleFormData"></path>
 						</g>
-						<g transform="translate(4097, 2114.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MP23StudyScheduleFormData">
+						<g transform="translate(4097, 2107)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MP23StudyScheduleFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MP23StudyScheduleFormData">
 								<text x="185.0" y="13.5" stroke="none" text-anchor="middle" data-name="MP23StudyScheduleFormData">MP23StudyScheduleFormData</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4097, 2145.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleFormData">
+						<g transform="translate(4097, 2138)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23StudyScheduleFormData">
 								<text x="0.0" y="13.5" stroke="none" data-name="MP23StudyScheduleFormData">+segments: List&lt;StudyScheduleSegment&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="MP23StudyScheduleFormData">+interventions: List&lt;Intervention&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="MP23StudyScheduleFormData">+id: String</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="MP23StudyScheduleFormData">+observations: List&lt;Observation&gt;</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="MP23StudyScheduleFormData">+id: String</text>
 								
 							</g>
 						</g>
-						<g transform="translate(4097, 2206.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleFormData">
+						<g transform="translate(4097, 2214)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleFormData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23StudyScheduleFormData">
 								<text x="0.0" y="13.5" stroke="none" data-name="MP23StudyScheduleFormData">+MP23StudySchedule toMP23StudySchedule()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="MP23StudyScheduleFormData">+Study apply()</text>
@@ -3078,27 +3081,28 @@
 					</g>
 					<g data-name="MP23StudyScheduleControls">
 						<g fill="#eee8d5" stroke="#33322E" data-name="MP23StudyScheduleControls">
-							<rect x="22868.0" y="836.0" height="288.0" width="758.0" data-name="MP23StudyScheduleControls"></rect>
-							<path d="M22868.0 867.0 L23626.0 867.0" fill="none" data-name="MP23StudyScheduleControls"></path>
-							<path d="M22868.0 958.0 L23626.0 958.0" fill="none" data-name="MP23StudyScheduleControls"></path>
+							<rect x="22868.0" y="828.5" height="303.0" width="758.0" data-name="MP23StudyScheduleControls"></rect>
+							<path d="M22868.0 859.5 L23626.0 859.5" fill="none" data-name="MP23StudyScheduleControls"></path>
+							<path d="M22868.0 965.5 L23626.0 965.5" fill="none" data-name="MP23StudyScheduleControls"></path>
 						</g>
-						<g transform="translate(22868, 836)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="MP23StudyScheduleControls">
+						<g transform="translate(22868, 828.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="MP23StudyScheduleControls">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MP23StudyScheduleControls">
 								<text x="371.0" y="13.5" stroke="none" text-anchor="middle" data-name="MP23StudyScheduleControls">MP23StudyScheduleControls</text>
 								
 							</g>
 						</g>
-						<g transform="translate(22868, 867)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleControls">
+						<g transform="translate(22868, 859.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleControls">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23StudyScheduleControls">
 								<text x="0.0" y="13.5" stroke="none" data-name="MP23StudyScheduleControls">+segmentsControl: FormArray&lt;dynamic&gt;</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="MP23StudyScheduleControls">+segments: List&lt;StudyScheduleSegment&gt;</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="MP23StudyScheduleControls">+interventions: List&lt;Intervention&gt;</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="MP23StudyScheduleControls">+studyScheduleControls: Map&lt;String, FormArray&lt;dynamic&gt;&gt;</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="MP23StudyScheduleControls">+studyScheduleValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="MP23StudyScheduleControls">+observations: List&lt;Observation&gt;</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="MP23StudyScheduleControls">+studyScheduleControls: Map&lt;String, FormArray&lt;dynamic&gt;&gt;</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="MP23StudyScheduleControls">+studyScheduleValidationConfig: Map&lt;FormValidationSetEnum, List&lt;FormControlValidation&gt;&gt;</text>
 								
 							</g>
 						</g>
-						<g transform="translate(22868, 958)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleControls">
+						<g transform="translate(22868, 965.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MP23StudyScheduleControls">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MP23StudyScheduleControls">
 								<text x="0.0" y="13.5" stroke="none" data-name="MP23StudyScheduleControls">+int getTotalDuration()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="MP23StudyScheduleControls">+void deleteSegment()</text>
