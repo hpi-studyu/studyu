@@ -11,10 +11,12 @@ class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
   final CompletionPeriod completionPeriod;
 
-  const QuestionnaireTaskWidget({required this.task, required this.completionPeriod, super.key});
+  const QuestionnaireTaskWidget(
+      {required this.task, required this.completionPeriod, super.key});
 
   @override
-  State<QuestionnaireTaskWidget> createState() => _QuestionnaireTaskWidgetState();
+  State<QuestionnaireTaskWidget> createState() =>
+      _QuestionnaireTaskWidgetState();
 }
 
 class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
@@ -23,13 +25,20 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   DateTime? loginClickTime;
   bool _isLoading = false;
 
-  Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
+  Future<void> _addQuestionnaireResult<T>(
+      T response, BuildContext context) async {
     await handleTaskCompletion(context, (StudySubject? subject) async {
       try {
-        await subject!.addResult<T>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response);
+        await subject!.addResult<T>(
+            taskId: widget.task.id,
+            periodId: widget.completionPeriod.id,
+            result: response);
       } on SocketException catch (_) {
         await subject!.addResult<T>(
-            taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response, offline: true);
+            taskId: widget.task.id,
+            periodId: widget.completionPeriod.id,
+            result: response,
+            offline: true);
         rethrow;
       }
     });
@@ -56,7 +65,9 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
           ),
           if (response != null && responseValidator)
             ElevatedButton.icon(
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.green)),
               onPressed: () async {
                 if (isRedundantClick(loginClickTime)) {
                   return;
@@ -64,16 +75,19 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
                 setState(() {
                   _isLoading = true;
                 });
-                switch (response.runtimeType) {
-                  case QuestionnaireState _:
-                    await _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
-                    break;
+
+                if (response.runtimeType == QuestionnaireState) {
+                  await _addQuestionnaireResult<QuestionnaireState>(
+                      response as QuestionnaireState, context);
                 }
+
                 setState(() {
                   _isLoading = false;
                 });
               },
-              icon: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Icon(Icons.check),
+              icon: _isLoading
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : const Icon(Icons.check),
               label: Text(AppLocalizations.of(context)!.complete),
             ),
         ],

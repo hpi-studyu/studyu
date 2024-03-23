@@ -11,30 +11,35 @@ typedef SurveyQuestionFormDataFactory = QuestionFormData Function(
     Question question, List<EligibilityCriterion> eligibilityCriteria);
 
 abstract class QuestionFormData implements IFormData {
-  static Map<SurveyQuestionType, SurveyQuestionFormDataFactory> questionTypeFormDataFactories = {
+  static Map<SurveyQuestionType, SurveyQuestionFormDataFactory>
+      questionTypeFormDataFactories = {
     SurveyQuestionType.scale: (question, eligibilityCriteria) {
-      switch (question.runtimeType) {
-        // First check for general scale which implements the other interfaces
-        case ScaleQuestion:
-          return ScaleQuestionFormData.fromDomainModel(question as ScaleQuestion, eligibilityCriteria);
-        // Remain backward compatible with specialized scale types
-        case AnnotatedScaleQuestion:
-          return ScaleQuestionFormData.fromDomainModel(
-            ScaleQuestion.fromAnnotatedScaleQuestion(question as AnnotatedScaleQuestion),
-            eligibilityCriteria,
-          );
-        case VisualAnalogueQuestion:
-          return ScaleQuestionFormData.fromDomainModel(
-            ScaleQuestion.fromVisualAnalogueQuestion(question as VisualAnalogueQuestion),
-            eligibilityCriteria,
-          );
+      if (question.runtimeType == ScaleQuestion) {
+        return ScaleQuestionFormData.fromDomainModel(
+            question as ScaleQuestion, eligibilityCriteria);
+      } else if (question.runtimeType == AnnotatedScaleQuestion) {
+        return ScaleQuestionFormData.fromDomainModel(
+          ScaleQuestion.fromAnnotatedScaleQuestion(
+              question as AnnotatedScaleQuestion),
+          eligibilityCriteria,
+        );
+      } else if (question.runtimeType == VisualAnalogueQuestion) {
+        return ScaleQuestionFormData.fromDomainModel(
+          ScaleQuestion.fromVisualAnalogueQuestion(
+              question as VisualAnalogueQuestion),
+          eligibilityCriteria,
+        );
       }
-      return ScaleQuestionFormData.fromDomainModel(question as ScaleQuestion, eligibilityCriteria);
+
+      return ScaleQuestionFormData.fromDomainModel(
+          question as ScaleQuestion, eligibilityCriteria);
     },
     SurveyQuestionType.bool: (question, eligibilityCriteria) =>
-        BoolQuestionFormData.fromDomainModel(question as BooleanQuestion, eligibilityCriteria),
+        BoolQuestionFormData.fromDomainModel(
+            question as BooleanQuestion, eligibilityCriteria),
     SurveyQuestionType.choice: (question, eligibilityCriteria) =>
-        ChoiceQuestionFormData.fromDomainModel(question as ChoiceQuestion, eligibilityCriteria),
+        ChoiceQuestionFormData.fromDomainModel(
+            question as ChoiceQuestion, eligibilityCriteria),
   };
 
   QuestionFormData({
@@ -66,7 +71,8 @@ abstract class QuestionFormData implements IFormData {
       throw Exception("Failed to create SurveyQuestionFormData for unknown "
           "SurveyQuestionType: $surveyQuestionType");
     }
-    return questionTypeFormDataFactories[surveyQuestionType]!(question, eligibilityCriteria);
+    return questionTypeFormDataFactories[surveyQuestionType]!(
+        question, eligibilityCriteria);
   }
 
   Question toQuestion(); // subclass responsibility
@@ -98,7 +104,8 @@ abstract class QuestionFormData implements IFormData {
   /// Determines the [responseOptionsValidity] in terms of qualify/disqualify
   /// by evaluating the given criteria for each response option on a new
   /// [QuestionnaireState] where the option is selected
-  setResponseOptionsValidityFrom(List<EligibilityCriterion> eligibilityCriteria) {
+  setResponseOptionsValidityFrom(
+      List<EligibilityCriterion> eligibilityCriteria) {
     final Map<dynamic, bool> result = {};
 
     for (final responseOption in responseOptions) {
@@ -110,7 +117,8 @@ abstract class QuestionFormData implements IFormData {
       // (as of now) if no criterion evaluates to true
       bool responseOptionValidity = false;
       for (final criterion in eligibilityCriteria) {
-        responseOptionValidity = responseOptionValidity || (criterion.condition.evaluate(questionnaireState) ?? false);
+        responseOptionValidity = responseOptionValidity ||
+            (criterion.condition.evaluate(questionnaireState) ?? false);
       }
       result[responseOption] = responseOptionValidity;
     }
@@ -270,7 +278,8 @@ class ScaleQuestionFormData extends QuestionFormData {
     this.stepSize = 0,
     this.minColor,
     this.maxColor,
-  }) : assert(midValues.length == midLabels.length, "midValues.length and midLabels.length must be equal");
+  }) : assert(midValues.length == midLabels.length,
+            "midValues.length and midLabels.length must be equal");
 
   final double minValue;
   final double maxValue;
