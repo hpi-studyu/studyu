@@ -290,10 +290,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_local_notifications
-      sha256: "55b9b229307a10974b26296ff29f2e132256ba4bd74266939118eaefa941cb00"
+      sha256: f9a05409385b77b06c18f200a41c7c2711ebf7415669350bb0f8474c07bd40d1
       url: "https://pub.dev"
     source: hosted
-    version: "16.3.3"
+    version: "17.0.0"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -737,10 +737,10 @@ packages:
     dependency: transitive
     description:
       name: permission_handler_apple
-      sha256: bdafc6db74253abb63907f4e357302e6bb786ab41465e8635f362ee71fd8707b
+      sha256: "92861b0f0c2443dd8898398c2baa4f1ae925109b5909ae4a17d0108a6a788932"
       url: "https://pub.dev"
     source: hosted
-    version: "9.4.0"
+    version: "9.4.2"
   permission_handler_html:
     dependency: transitive
     description:
@@ -873,26 +873,26 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: d2ee9c850d876d285f22e2e662f400ec2438df9939fe4acd5d780df9841794ce
+      sha256: a460aa48568d47140dd0557410b624d344ffb8c05555107ac65035c1097cf1ad
       url: "https://pub.dev"
     source: hosted
-    version: "7.16.1"
+    version: "7.18.0"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: "5b428c189c825f16fb14e9166529043f06b965d5b59bfc3a1415e39c082398c0"
+      sha256: "3d0d1d4e0e407d276ae8128d123263ccbc37e988bae906765efd6f37d544f4c6"
       url: "https://pub.dev"
     source: hosted
-    version: "7.16.1"
+    version: "7.18.0"
   sentry_logging:
     dependency: "direct main"
     description:
       name: sentry_logging
-      sha256: "276e3535ac0f030410326aac0cee26713e34c499361db5dccf7a8ea1bf01d980"
+      sha256: f24b72cadc72f0fe9dcca6cde9c28e032807060b3ecc8f950f7c7a95595e7ac2
       url: "https://pub.dev"
     source: hosted
-    version: "7.16.1"
+    version: "7.18.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -982,10 +982,10 @@ packages:
     dependency: transitive
     description:
       name: sqflite_common
-      sha256: "28d8c66baee4968519fb8bd6cdbedad982d6e53359091f0b74544a9f32ec72d5"
+      sha256: "3da423ce7baf868be70e2c0976c28a1bb2f73644268b7ffa7d2e08eab71f16a4"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.3"
+    version: "2.5.4"
   stack_trace:
     dependency: transitive
     description:
@@ -1024,14 +1024,14 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "4.3.3-dev.3"
+    version: "4.3.3-dev.4"
   studyu_flutter_common:
     dependency: "direct main"
     description:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.7.0-dev.4"
+    version: "1.7.0-dev.5"
   supabase:
     dependency: "direct main"
     description:
@@ -1308,10 +1308,10 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter_android
-      sha256: "3e5f4e9d818086b0d01a66fb1ff9cc72ab0cc58c71980e3d3661c5685ea0efb0"
+      sha256: f038ee2fae73b509dde1bc9d2c5a50ca92054282de17631a9a3d515883740934
       url: "https://pub.dev"
     source: hosted
-    version: "3.15.0"
+    version: "3.16.0"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
@@ -1324,18 +1324,18 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter_wkwebview
-      sha256: "9bf168bccdf179ce90450b5f37e36fe263f591c9338828d6bf09b6f8d0f57f86"
+      sha256: f12f8d8a99784b863e8b85e4a9a5e3cf1839d6803d2c0c3e0533a8f3c5a992a7
       url: "https://pub.dev"
     source: hosted
-    version: "3.12.0"
+    version: "3.13.0"
   win32:
     dependency: transitive
     description:
       name: win32
-      sha256: "464f5674532865248444b4c3daca12bd9bf2d7c47f759ce2617986e7229494a8"
+      sha256: "8cb58b45c47dcb42ab3651533626161d6b67a2921917d8d429791f76972b3480"
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.0"
+    version: "5.3.0"
   xdg_directories:
     dependency: transitive
     description:
