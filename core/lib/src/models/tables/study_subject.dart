@@ -39,7 +39,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @JsonKey(includeToJson: false, includeFromJson: false)
   late List<SubjectProgress> progress = [];
 
-  StudySubject(this.id, this.studyId, this.userId, this.selectedInterventionIds);
+  StudySubject(
+      this.id, this.studyId, this.userId, this.selectedInterventionIds);
 
   factory StudySubject.fromJson(Map<String, dynamic> json) {
     final subject = _$StudySubjectFromJson(json);
@@ -51,7 +52,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
     final List? progress = json['subject_progress'] as List?;
     if (progress != null) {
-      subject.progress = progress.map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>)).toList();
+      subject.progress = progress
+          .map((json) => SubjectProgress.fromJson(json as Map<String, dynamic>))
+          .toList();
     }
 
     return subject;
@@ -60,20 +63,23 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @override
   Map<String, dynamic> toJson() => _$StudySubjectToJson(this);
 
-  StudySubject.fromStudy(this.study, this.userId, this.selectedInterventionIds, this.inviteCode)
+  StudySubject.fromStudy(
+      this.study, this.userId, this.selectedInterventionIds, this.inviteCode)
       : id = const Uuid().v4(),
         studyId = study.id;
 
   List<String> get interventionOrder => [
         if (study.schedule.includeBaseline) Study.baselineID,
-        ...study.schedule.generateWith(0).map<String>((int index) => selectedInterventionIds[index]),
+        ...study.schedule
+            .generateWith(0)
+            .map<String>((int index) => selectedInterventionIds[index]),
       ];
 
   List<Intervention> get selectedInterventions {
     final selectedInterventions = selectedInterventionIds
         .map(
-          (selectedInterventionId) =>
-              study.interventions.singleWhere((intervention) => intervention.id == selectedInterventionId),
+          (selectedInterventionId) => study.interventions.singleWhere(
+              (intervention) => intervention.id == selectedInterventionId),
         )
         .toList();
     if (study.schedule.includeBaseline) {
@@ -86,7 +92,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return selectedInterventions;
   }
 
-  int get daysPerIntervention => study.schedule.numberOfCycles * study.schedule.phaseDuration;
+  int get daysPerIntervention =>
+      study.schedule.numberOfCycles * study.schedule.phaseDuration;
 
   Future<void> addResult<T>({
     required String taskId,
@@ -97,14 +104,17 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     late final Result<T> resultObject;
     switch (T) {
       case QuestionnaireState:
-        resultObject = Result<T>.app(type: 'QuestionnaireState', periodId: periodId, result: result);
+        resultObject = Result<T>.app(
+            type: 'QuestionnaireState', periodId: periodId, result: result);
         break;
       case bool:
-        resultObject = Result<T>.app(type: 'bool', periodId: periodId, result: result);
+        resultObject =
+            Result<T>.app(type: 'bool', periodId: periodId, result: result);
         break;
       default:
         print('Unsupported question type: $T');
-        resultObject = Result<T>.app(type: 'unknown', periodId: periodId, result: result);
+        resultObject =
+            Result<T>.app(type: 'unknown', periodId: periodId, result: result);
     }
     SubjectProgress p = SubjectProgress(
       subjectId: id,
@@ -123,10 +133,12 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     }
   }
 
-  Map<DateTime, List<SubjectProgress>> getResultsByDate({required String interventionId}) {
+  Map<DateTime, List<SubjectProgress>> getResultsByDate(
+      {required String interventionId}) {
     final resultsByDate = <DateTime, List<SubjectProgress>>{};
     progress.where((p) => p.interventionId == interventionId).forEach((p) {
-      final date = DateTime(p.completedAt!.year, p.completedAt!.month, p.completedAt!.day);
+      final date = DateTime(
+          p.completedAt!.year, p.completedAt!.month, p.completedAt!.day);
       resultsByDate.putIfAbsent(date, () => []);
       resultsByDate[date]!.add(p);
     });
@@ -134,38 +146,51 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   // Day after last intervention
-  DateTime endDate(DateTime dt) => dt.add(Duration(days: interventionOrder.length * study.schedule.phaseDuration));
+  DateTime endDate(DateTime dt) => dt.add(
+      Duration(days: interventionOrder.length * study.schedule.phaseDuration));
 
   int getDayOfStudyFor(DateTime date) {
     return date.differenceInDays(startedAt!);
   }
 
   int getInterventionIndexForDate(DateTime date) {
+    print("getting intervention index, but this is deprecated.");
+    // print who called this
+    print(StackTrace.current);
+
     final test = date.differenceInDays(startedAt!);
     return test ~/ study.schedule.phaseDuration;
   }
 
   Intervention? getInterventionForDate(DateTime date) {
-    final index = getInterventionIndexForDate(date);
-    if (date.isBefore(startedAt!) || index >= interventionOrder.length) {
-      print('Study is over or has not begun.');
+    final dayOfStudy = getDayOfStudyFor(date);
+    if (dayOfStudy < 0) return null;
+
+    // TODO_NOW: do we need to check bounds
+
+    try {
+      final intervention = study.mp23Schedule.getInterventionForDay(dayOfStudy);
+      return intervention;
+    } catch (e) {
       return null;
     }
-    final interventionId = interventionOrder[index];
-    return selectedInterventions.firstWhereOrNull((intervention) => intervention.id == interventionId);
   }
 
   List<Intervention> getInterventionsInOrder() {
     return interventionOrder
-        .map((key) => selectedInterventions.firstWhere((intervention) => intervention.id == key))
+        .map((key) => selectedInterventions
+            .firstWhere((intervention) => intervention.id == key))
         .toList();
   }
 
-  DateTime startOfPhase(int index) => startedAt!.add(Duration(days: study.schedule.phaseDuration * index));
+  DateTime startOfPhase(int index) =>
+      startedAt!.add(Duration(days: study.schedule.phaseDuration * index));
 
-  DateTime dayAfterEndOfPhase(int index) => startOfPhase(index).add(Duration(days: study.schedule.phaseDuration));
+  DateTime dayAfterEndOfPhase(int index) =>
+      startOfPhase(index).add(Duration(days: study.schedule.phaseDuration));
 
-  List<SubjectProgress> resultsFor(String taskId) => progress.where((p) => p.taskId == taskId).toList();
+  List<SubjectProgress> resultsFor(String taskId) =>
+      progress.where((p) => p.taskId == taskId).toList();
 
   int completedForPhase(int index) {
     final start = startOfPhase(index);
@@ -180,7 +205,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   int daysLeftForPhase(int index) {
     final start = startOfPhase(index);
-    return study.schedule.phaseDuration - DateTime.now().differenceInDays(start);
+    return study.schedule.phaseDuration -
+        DateTime.now().differenceInDays(start);
   }
 
   double percentCompletedForPhase(int index) {
@@ -190,12 +216,14 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   double percentMissedForPhase(int index, DateTime date) {
     if (startOfPhase(index).isAfter(date)) return 0;
 
-    final missedInPhase =
-        min(date.differenceInDays(startOfPhase(index)), study.schedule.phaseDuration) - completedForPhase(index);
+    final missedInPhase = min(date.differenceInDays(startOfPhase(index)),
+            study.schedule.phaseDuration) -
+        completedForPhase(index);
     return missedInPhase / study.schedule.phaseDuration;
   }
 
-  List<SubjectProgress> getTaskProgressForDay(String taskId, DateTime dateTime) {
+  List<SubjectProgress> getTaskProgressForDay(
+      String taskId, DateTime dateTime) {
     final List<SubjectProgress> thisTaskProgressToday = [];
     for (final SubjectProgress sp in resultsFor(taskId)) {
       if (sp.subjectId == id && sp.completedAt!.isSameDate(dateTime)) {
@@ -208,7 +236,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   /// Check if a task instance is completed
   /// returns true if a given task has been completed for a specific
   /// completionPeriod on a given day
-  bool completedTaskInstanceForDay(String taskId, CompletionPeriod completionPeriod, DateTime dateTime) {
+  bool completedTaskInstanceForDay(
+      String taskId, CompletionPeriod completionPeriod, DateTime dateTime) {
     return getTaskProgressForDay(taskId, dateTime).any(
       (progress) {
         if (progress.result.periodId == null) {
@@ -224,12 +253,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   /// returns true if a given task has been completed for all of its
   /// completionPeriods on a given day
   bool completedTaskForDay(String taskId, DateTime dateTime) {
-    return [...selectedInterventions.expand((e) => e.tasks), ...study.observations]
-        .where((task) => task.id == taskId)
-        .single
-        .schedule
-        .completionPeriods
-        .any(
+    return [
+      ...selectedInterventions.expand((e) => e.tasks),
+      ...study.observations
+    ].where((task) => task.id == taskId).single.schedule.completionPeriods.any(
           (period) => completedTaskInstanceForDay(taskId, period, dateTime),
         );
   }
@@ -256,7 +283,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   int totalTaskCountFor(Task task) {
     var daysCount = daysPerIntervention;
     if (task is Observation) {
-      daysCount = 2 * daysCount + (study.schedule.includeBaseline ? study.schedule.phaseDuration : 0);
+      daysCount = 2 * daysCount +
+          (study.schedule.includeBaseline ? study.schedule.phaseDuration : 0);
     }
     return daysCount * task.schedule.completionPeriods.length;
   }
@@ -282,7 +310,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   Future<void> setStartDateBackBy({required int days}) async {
     await deleteProgress();
-    progress = await SupabaseQuery.batchUpsert(progress.map((p) => p.setStartDateBackBy(days: days).toJson()).toList());
+    progress = await SupabaseQuery.batchUpsert(progress
+        .map((p) => p.setStartDateBackBy(days: days).toJson())
+        .toList());
     startedAt = startedAt!.subtract(Duration(days: days));
     save();
   }
@@ -290,8 +320,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @override
   Future<StudySubject> save() async {
     try {
-      final response = await env.client.from(tableName).upsert(toJson()).select();
-      final json = toFullJson(partialJson: List<Map<String, dynamic>>.from(response).single);
+      final response =
+          await env.client.from(tableName).upsert(toJson()).select();
+      final json = toFullJson(
+          partialJson: List<Map<String, dynamic>>.from(response).single);
       final newSubject = StudySubject.fromJson(json);
       _controller.add(newSubject);
       Analytics.logger.info("Saving study subject");
@@ -313,7 +345,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   Future<void> deleteProgress() async {
     try {
-      await env.client.from(SubjectProgress.tableName).delete().eq('subject_id', id);
+      await env.client
+          .from(SubjectProgress.tableName)
+          .delete()
+          .eq('subject_id', id);
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
       rethrow;
@@ -324,7 +359,12 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   Future<StudySubject> delete() async {
     await deleteProgress();
     try {
-      final response = await env.client.from(tableName).delete().eq('id', id).select().single();
+      final response = await env.client
+          .from(tableName)
+          .delete()
+          .eq('id', id)
+          .select()
+          .single();
       response['study'] = study.toJson();
       return StudySubject.fromJson(response);
     } catch (error, stacktrace) {
@@ -340,7 +380,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   static Future<List<StudySubject>> getStudyHistory(String userId) async {
     return SupabaseQuery.extractSupabaseList<StudySubject>(
-      await env.client.from(tableName).select('*,study!study_subject_studyId_fkey(*),subject_progress(*)'),
+      await env.client
+          .from(tableName)
+          .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)'),
     );
   }
 

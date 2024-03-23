@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/screens/study/onboarding/calendar_overview.dart';
 import 'package:studyu_core/core.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -34,7 +35,8 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.user_did_not_give_consent),
+          content:
+              Text(AppLocalizations.of(context)!.user_did_not_give_consent),
           duration: const Duration(seconds: 30),
         ),
       );
@@ -49,6 +51,8 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("subject");
+    print(subject);
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.your_journey),
@@ -61,7 +65,8 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
             child: Column(
               children: [
                 //StudyTile.fromUserStudy(study: study),
-                Timeline(subject: subject),
+                // Timeline(subject: subject),
+                CalendarOverview(subject: subject)
               ],
             ),
           ),
@@ -94,8 +99,11 @@ class Timeline extends StatelessWidget {
           return InterventionTile(
             title: intervention.name,
             iconName: intervention.icon,
-            color: intervention.isBaseline() ? Colors.grey : theme.colorScheme.secondary,
-            date: now.add(Duration(days: index * subject!.study.schedule.phaseDuration)),
+            color: intervention.isBaseline()
+                ? Colors.grey
+                : theme.colorScheme.secondary,
+            date: now.add(
+                Duration(days: index * subject!.study.schedule.phaseDuration)),
             isFirst: index == 0,
           );
         }),
@@ -146,10 +154,13 @@ class InterventionTile extends StatelessWidget {
       beforeLineStyle: LineStyle(color: theme.primaryColor),
       afterLineStyle: LineStyle(color: theme.primaryColor),
       endChild: TimelineChild(
-        child: Text(title!, style: theme.textTheme.titleLarge!.copyWith(color: theme.primaryColor)),
+        child: Text(title!,
+            style: theme.textTheme.titleLarge!
+                .copyWith(color: theme.primaryColor)),
       ),
       startChild: TimelineChild(
-        child: Text(DateFormat('dd-MM-yyyy').format(date), style: const TextStyle(fontWeight: FontWeight.bold)),
+        child: Text(DateFormat('dd-MM-yyyy').format(date),
+            style: const TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -164,7 +175,9 @@ class IconIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(shape: BoxShape.circle, color: color ?? Theme.of(context).colorScheme.secondary),
+      decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: color ?? Theme.of(context).colorScheme.secondary),
       child: Center(
         child: Icon(MdiIcons.fromString(iconName), color: Colors.white),
       ),

@@ -35,8 +35,10 @@ class InterventionCard extends StatelessWidget {
           onTap: onTap,
           selected: selected,
         ),
-        if (showDescription) InterventionCardDescription(intervention: intervention),
-        if (showTasks && intervention.tasks.isNotEmpty) _TaskList(tasks: intervention.tasks)
+        if (showDescription)
+          InterventionCardDescription(intervention: intervention),
+        if (showTasks && intervention.tasks.isNotEmpty)
+          _TaskList(tasks: intervention.tasks)
       ],
     );
   }
@@ -50,7 +52,7 @@ class InterventionCardTitle extends StatelessWidget {
   final Function()? onTap;
 
   const InterventionCardTitle({
-    required this.intervention,
+    this.intervention,
     this.selected = false,
     this.showCheckbox = false,
     this.showDescriptionButton = true,
@@ -61,33 +63,50 @@ class InterventionCardTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final iconData = MdiIcons.fromString(intervention?.icon ?? 'e') ??
+        MdiIcons.clipboardOutline;
+
     return ListTile(
       onTap: onTap,
-      leading: Icon(MdiIcons.fromString(intervention!.icon), color: theme.colorScheme.secondary),
+      leading: Icon(
+        iconData,
+        color: Colors.grey,
+        // size: 20,
+        // fill: 1,
+      ),
       trailing: showCheckbox
           ? Checkbox(
               value: selected,
-              onChanged: (_) => onTap!(), // Needed so Checkbox can be clicked and has color
+              onChanged: (_) =>
+                  onTap!(), // Needed so Checkbox can be clicked and has color
             )
           : null,
       dense: true,
       title: Row(
         children: [
-          Expanded(child: Text(intervention!.name!, style: theme.textTheme.titleLarge)),
+          Expanded(
+              child: Text(
+                  intervention?.name ?? AppLocalizations.of(context)!.baseline,
+                  style: theme.textTheme.titleLarge)),
           if (showDescriptionButton)
             IconButton(
               icon: const Icon(Icons.info_outline),
               onPressed: () => showDialog(
                 context: context,
                 builder: (context) {
-                  final description = intervention!.isBaseline()
+                  final description = (intervention == null)
                       ? AppLocalizations.of(context)!.baseline_description
                       : intervention!.description;
                   return AlertDialog(
                     title: ListTile(
-                      leading: Icon(MdiIcons.fromString(intervention!.icon), color: theme.colorScheme.secondary),
+                      leading: Icon(
+                          MdiIcons.fromString(
+                              intervention?.icon ?? 'help-circle'),
+                          color: theme.colorScheme.secondary),
                       dense: true,
-                      title: Text(intervention!.name!, style: theme.textTheme.titleLarge),
+                      title: Text(intervention!.name!,
+                          style: theme.textTheme.titleLarge),
                     ),
                     content: HtmlText(description),
                   );
@@ -109,15 +128,17 @@ class InterventionCardDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final description =
-        intervention.isBaseline() ? AppLocalizations.of(context)!.baseline_description : intervention.description;
+    final description = intervention == null
+        ? AppLocalizations.of(context)!.baseline_description
+        : intervention.description;
     if (description == null) return Container();
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Text(
         description,
-        style: theme.textTheme.bodyMedium!.copyWith(color: theme.textTheme.bodySmall!.color),
+        style: theme.textTheme.bodyMedium!
+            .copyWith(color: theme.textTheme.bodySmall!.color),
       ),
     );
   }
@@ -130,7 +151,8 @@ class _TaskList extends StatelessWidget {
 
   String scheduleString(List<CompletionPeriod> schedules) {
     return schedules
-        .map((completionPeriod) => '${completionPeriod.unlockTime} - ${completionPeriod.lockTime}')
+        .map((completionPeriod) =>
+            '${completionPeriod.unlockTime} - ${completionPeriod.lockTime}')
         .join(',');
   }
 
@@ -144,7 +166,8 @@ class _TaskList extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AppLocalizations.of(context)!.tasks_daily, style: theme.textTheme.bodyMedium),
+              Text(AppLocalizations.of(context)!.tasks_daily,
+                  style: theme.textTheme.bodyMedium),
             ],
           ),
         ),
@@ -156,18 +179,24 @@ class _TaskList extends StatelessWidget {
           children: tasks
               .map(
                 (task) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Row(
                     children: [
-                      Expanded(child: Text(task.title!, style: theme.textTheme.bodyMedium)),
+                      Expanded(
+                          child: Text(task.title!,
+                              style: theme.textTheme.bodyMedium)),
                       Row(
                         children: [
-                          Icon(Icons.access_time, size: 16, color: theme.textTheme.bodySmall!.color),
+                          Icon(Icons.access_time,
+                              size: 16,
+                              color: theme.textTheme.bodySmall!.color),
                           const SizedBox(width: 4),
                           Text(
                             scheduleString(task.schedule.completionPeriods),
-                            style: theme.textTheme.bodyMedium!
-                                .copyWith(fontSize: 12, color: theme.textTheme.bodySmall!.color),
+                            style: theme.textTheme.bodyMedium!.copyWith(
+                                fontSize: 12,
+                                color: theme.textTheme.bodySmall!.color),
                           ),
                         ],
                       ),

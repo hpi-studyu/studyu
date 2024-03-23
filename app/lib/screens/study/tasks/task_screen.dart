@@ -13,7 +13,9 @@ import 'observation/questionnaire_task_widget.dart';
 class TaskScreen extends StatefulWidget {
   final TaskInstance taskInstance;
 
-  static MaterialPageRoute<bool> routeFor({required TaskInstance taskInstance}) => MaterialPageRoute(
+  static MaterialPageRoute<bool> routeFor(
+          {required TaskInstance taskInstance}) =>
+      MaterialPageRoute(
         builder: (_) => TaskScreen(taskInstance: taskInstance),
       );
 
@@ -31,10 +33,21 @@ class _TaskScreenState extends State<TaskScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     subject = context.watch<AppState>().activeSubject;
-    taskInstance = TaskInstance.fromInstanceId(widget.taskInstance.id, study: subject!.study);
+    taskInstance = TaskInstance.fromInstanceId(widget.taskInstance.id,
+        study: subject!.study);
   }
 
   Widget? _buildTask() {
+    if (taskInstance.task is! CheckmarkTask) print("IS CHECKMARK TASK");
+
+    if (taskInstance.task.runtimeType.toString() == "QuestionnaireTask") {
+      return QuestionnaireTaskWidget(
+        task: taskInstance.task as QuestionnaireTask,
+        key: UniqueKey(),
+        completionPeriod: taskInstance.completionPeriod,
+      );
+    }
+
     switch (taskInstance.task.runtimeType) {
       case CheckmarkTask _:
         return CheckmarkTaskWidget(
@@ -49,8 +62,8 @@ class _TaskScreenState extends State<TaskScreen> {
           completionPeriod: taskInstance.completionPeriod,
         );
       default:
-        print('${taskInstance.task.runtimeType} is not a supported Task!');
-        return null;
+        return Text(
+            "error rendering task widget: ${taskInstance.task.runtimeType} is not a supported Task.");
     }
   }
 
@@ -71,7 +84,8 @@ class _TaskScreenState extends State<TaskScreen> {
                 Flexible(
                   child: Text(
                     taskInstance.task.title ?? '',
-                    style: theme.textTheme.headlineMedium!.copyWith(fontSize: 24),
+                    style:
+                        theme.textTheme.headlineMedium!.copyWith(fontSize: 24),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 3,
                   ),
@@ -84,7 +98,8 @@ class _TaskScreenState extends State<TaskScreen> {
                       return AlertDialog(
                         title: ListTile(
                           dense: true,
-                          title: Text(taskInstance.task.title!, style: theme.textTheme.titleLarge),
+                          title: Text(taskInstance.task.title!,
+                              style: theme.textTheme.titleLarge),
                         ),
                         content: HtmlText(taskInstance.task.header),
                       );
@@ -102,7 +117,8 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 }
 
-handleTaskCompletion(BuildContext context, Function(StudySubject?) completionCallback) async {
+handleTaskCompletion(
+    BuildContext context, Function(StudySubject?) completionCallback) async {
   final state = context.read<AppState>();
   final activeSubject = state.activeSubject;
   try {
@@ -122,7 +138,9 @@ handleTaskCompletion(BuildContext context, Function(StudySubject?) completionCal
       SnackBar(
         content: Text(AppLocalizations.of(context)!.could_not_save_results),
         duration: const Duration(seconds: 10),
-        action: SnackBarAction(label: 'Retry', onPressed: () => handleTaskCompletion(context, completionCallback)),
+        action: SnackBarAction(
+            label: 'Retry',
+            onPressed: () => handleTaskCompletion(context, completionCallback)),
       ),
     );
     rethrow;

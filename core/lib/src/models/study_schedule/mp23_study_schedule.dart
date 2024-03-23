@@ -154,7 +154,9 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
         "Day must be between 0 and ${getDuration(interventions)}",
       );
     }
-    final interventionIndex = day % interventions.length; //TODO: FIX
+
+    final interventionIndex =
+        (day ~/ interventionDuration) % interventions.length;
     return interventions[interventionIndex];
   }
 
@@ -194,27 +196,6 @@ class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
   int getDuration(List<Intervention> interventions) {
     return interventionDuration * interventionDrawAmount;
   }
-
-  // @override
-  // Intervention? getInterventionOnDay(int day, List<Intervention> interventions, List<SubjectProgress> progress) {
-  //   if (day < 0 || day > getDuration(interventions)) {
-  //     throw ArgumentError(
-  //         "Day must be between 0 and ${getDuration(interventions)}");
-  //   }
-
-  //   final List<double> initialMeans = interventions.map((e) => 1.0).toList();
-  //   final List<double> initialVariances = interventions.map((e) => 2.0).toList();
-
-  //   ThompsonSamplingAlgo thompsonSamplingAlgo = ThompsonSamplingAlgo(initialMeans, initialVariances);
-
-  //   for (final p in progress) {
-  //     int interventionIndex = interventions.indexWhere((element) => element.id == p.interventionId);
-  //     thompsonSamplingAlgo.updateObservations(interventionIndex, p.result.value);
-  //   }
-
-  //   final interventionIndex = //sample from progress
-  //   return interventions[interventionIndex];
-  // }
 
   @override
   Intervention? getInterventionOnDay(
