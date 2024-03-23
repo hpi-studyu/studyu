@@ -60,11 +60,15 @@ mixin MP23StudyScheduleControls {
   FormGroup createThompsonSamplingFormGroup({
     int interventionDuration = 0,
     int interventionDrawAmount = 0,
+    String observationId = '',
+    String questionId = '',
   }) {
     return FormGroup({
       'type': FormControl<String>(value: "thompsonSampling"),
       'interventionDuration': FormControl<int>(value: interventionDuration),
       'interventionDrawAmount': FormControl<int>(value: interventionDrawAmount),
+      'observationId': FormControl<String>(value: observationId),
+      'questionId': FormControl<String>(value: questionId),
     });
   }
 
@@ -98,6 +102,8 @@ mixin MP23StudyScheduleControls {
           segments.add(ThompsonSamplingScheduleSegment(
             segment.control('interventionDuration').value,
             segment.control('interventionDrawAmount').value,
+            segment.control('observationId').value,
+            segment.control('questionId').value,
           ));
           break;
         default:
@@ -123,6 +129,8 @@ mixin MP23StudyScheduleControls {
         addFormGroupToSegments(createThompsonSamplingFormGroup(
           interventionDuration: element.interventionDuration,
           interventionDrawAmount: element.interventionDrawAmount,
+          observationId: element.observationId,
+          questionId: element.questionId,
         ));
       }
     }
@@ -147,6 +155,8 @@ mixin MP23StudyScheduleControls {
             return ThompsonSamplingScheduleSegment(
               segment.control('interventionDuration').value,
               segment.control('interventionDrawAmount').value,
+              segment.control('observationId').value,
+              segment.control('questionId').value,
             );
           default:
             throw UnimplementedError();

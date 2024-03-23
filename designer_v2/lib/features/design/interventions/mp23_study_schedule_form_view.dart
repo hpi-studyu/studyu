@@ -48,7 +48,6 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(widget.formViewModel.observations.toString()),
       Text(
         "Total Duration: ${widget.formViewModel.getTotalDuration()} days",
         textAlign: TextAlign.center,
@@ -164,20 +163,21 @@ class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
       children: [
         Wrap(
             runSpacing: 24.0,
-            children: _getChildrenBasedOnType(type, widget.segmentControl))
+            children: _getChildrenBasedOnType(
+                type, widget.segmentControl, widget.formViewModel))
       ],
     );
   }
 
-  List<Widget> _getChildrenBasedOnType(
-      StudyScheduleSegmentType type, FormGroup segmentControl) {
+  List<Widget> _getChildrenBasedOnType(StudyScheduleSegmentType type,
+      FormGroup segmentControl, MP23StudyScheduleControls formViewModel) {
     switch (type) {
       case StudyScheduleSegmentType.baseline:
         return _getBaselineControls(segmentControl);
       case StudyScheduleSegmentType.alternating:
         return _getAlternatingControls(segmentControl);
       case StudyScheduleSegmentType.thompsonSampling:
-        return _getThompsonSamplingControls(segmentControl);
+        return _getThompsonSamplingControls(segmentControl, formViewModel);
       default:
         return [];
     }
@@ -234,7 +234,8 @@ class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
   }
 }
 
-List<Widget> _getThompsonSamplingControls(FormGroup segmentControl) {
+List<Widget> _getThompsonSamplingControls(
+    FormGroup segmentControl, MP23StudyScheduleControls formViewModel) {
   return [
     const SizedBox(height: 1, width: 20),
     ReactiveTextField(
@@ -260,6 +261,51 @@ List<Widget> _getThompsonSamplingControls(FormGroup segmentControl) {
         labelText: 'Intervention Draw Amount',
       ),
       controller: ZeroValueController(),
+    ),
+    const Text("Deciding metric"),
+    DropdownButtonFormField<String>(
+      value: segmentControl.control('observationId').value.isEmpty
+          ? null
+          : segmentControl.control('observationId').value,
+      items: formViewModel.observations
+          .map((observation) => DropdownMenuItem(
+                value: observation.id,
+                child: Text(observation.title ?? observation.id),
+              ))
+          .toList(),
+      onChanged: (String? observationId) {
+        segmentControl.control('observationId').updateValue(observationId)
+            as FormControl<dynamic>?;
+      },
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: 'Survey',
+      ),
+    ),
+    // for the observation list all questions
+    DropdownButtonFormField<String>(
+      value: segmentControl.control('questionId').value.isEmpty
+          ? null
+          : segmentControl.control('questionId').value,
+      items: (formViewModel.observations
+          .whereType<QuestionnaireTask>()
+          .where((observation) =>
+              observation.id == segmentControl.control('observationId').value)
+          .expand((observation) => (observation)
+              .questions
+              .questions
+              .map((question) => DropdownMenuItem<String>(
+                    value: question.id,
+                    child: Text(question.prompt ?? question.id),
+                  )))).toList(),
+      onChanged: (String? questionId) {
+        segmentControl.control('questionId').updateValue(questionId)
+            as FormControl<dynamic>?;
+      },
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: 'Question',
+      ),
     ),
     const SizedBox(height: 1, width: 20),
   ];
