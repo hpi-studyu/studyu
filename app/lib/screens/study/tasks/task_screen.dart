@@ -38,9 +38,13 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   Widget? _buildTask() {
-    if (taskInstance.task is! CheckmarkTask) print("IS CHECKMARK TASK");
-
-    if (taskInstance.task.runtimeType.toString() == "QuestionnaireTask") {
+    if (taskInstance.task.runtimeType == CheckmarkTask) {
+      return CheckmarkTaskWidget(
+        task: taskInstance.task as CheckmarkTask,
+        key: UniqueKey(),
+        completionPeriod: taskInstance.completionPeriod,
+      );
+    } else if (taskInstance.task.runtimeType == QuestionnaireTask) {
       return QuestionnaireTaskWidget(
         task: taskInstance.task as QuestionnaireTask,
         key: UniqueKey(),
@@ -48,23 +52,8 @@ class _TaskScreenState extends State<TaskScreen> {
       );
     }
 
-    switch (taskInstance.task.runtimeType) {
-      case CheckmarkTask _:
-        return CheckmarkTaskWidget(
-          task: taskInstance.task as CheckmarkTask,
-          key: UniqueKey(),
-          completionPeriod: taskInstance.completionPeriod,
-        );
-      case QuestionnaireTask _:
-        return QuestionnaireTaskWidget(
-          task: taskInstance.task as QuestionnaireTask,
-          key: UniqueKey(),
-          completionPeriod: taskInstance.completionPeriod,
-        );
-      default:
-        return Text(
-            "error rendering task widget: ${taskInstance.task.runtimeType} is not a supported Task.");
-    }
+    return Text(
+        "error rendering task widget: ${taskInstance.task.runtimeType} is not a supported Task. ${taskInstance.task.runtimeType == CheckmarkTask}");
   }
 
   @override

@@ -72,8 +72,9 @@ class _CalendarOverviewState extends State<CalendarOverview> {
         [bool today = false]) {
       final text = DateFormat.d().format(day);
 
-      DateTime studyStartDay = widget.subject!.startedAt ??
-          DateTime.now().add(const Duration(days: 1));
+      DateTime studyStartDay = widget.subject!.startedAt ?? DateTime.now();
+
+      studyStartDay = studyStartDay.add(const Duration(days: 1));
 
       final nthDay = _dayOfYear(day) - _dayOfYear(studyStartDay);
 

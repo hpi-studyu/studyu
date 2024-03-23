@@ -29,7 +29,7 @@ class MP23StudySchedule {
 
   /// Returns the segment for the given day and the nth day of the segment
   (StudyScheduleSegment?, int) getSegmentForDay(int day) {
-    if (day > duration || day < 0) {
+    if (day >= duration || day < 0) {
       throw ArgumentError("Day must be between 0 and $duration");
     }
 

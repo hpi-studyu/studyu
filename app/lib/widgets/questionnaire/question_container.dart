@@ -15,50 +15,55 @@ class QuestionContainer extends StatefulWidget {
   final Question question;
   final int index;
 
-  const QuestionContainer({required this.onDone, required this.question, required this.index, super.key});
+  const QuestionContainer(
+      {required this.onDone,
+      required this.question,
+      required this.index,
+      super.key});
 
   @override
   State<StatefulWidget> createState() => _QuestionContainerState();
 }
 
-class _QuestionContainerState extends State<QuestionContainer> with AutomaticKeepAliveClientMixin {
+class _QuestionContainerState extends State<QuestionContainer>
+    with AutomaticKeepAliveClientMixin {
   void _onDone(Answer answer) {
     widget.onDone(answer, widget.index);
   }
 
   QuestionWidget? getQuestionBody(BuildContext context) {
-    switch (widget.question.runtimeType) {
-      case ChoiceQuestion _:
-        return ChoiceQuestionWidget(
-          question: widget.question as ChoiceQuestion,
-          onDone: _onDone,
-          multiSelectionText: AppLocalizations.of(context)!.eligible_choice_multi_selection,
-        );
-      case BooleanQuestion _:
-        return BooleanQuestionWidget(
-          question: widget.question as BooleanQuestion,
-          onDone: _onDone,
-        );
-      case ScaleQuestion _:
-        return ScaleQuestionWidget(
-          question: widget.question as ScaleQuestion,
-          onDone: _onDone,
-        );
-      case VisualAnalogueQuestion _:
-        // todo remove this when older studies are finished
-        // ignore: deprecated_member_use_from_same_package
-        return VisualAnalogueQuestionWidget(
-          question: widget.question as VisualAnalogueQuestion,
-          onDone: _onDone,
-        );
-      case AnnotatedScaleQuestion _:
-        return AnnotatedScaleQuestionWidget(
-          question: widget.question as AnnotatedScaleQuestion,
-          onDone: _onDone,
-        );
-      default:
-        print('Question not supported!');
-        return null;
+    if (widget.question.runtimeType == ChoiceQuestion) {
+      return ChoiceQuestionWidget(
+        question: widget.question as ChoiceQuestion,
+        onDone: _onDone,
+        multiSelectionText:
+            AppLocalizations.of(context)!.eligible_choice_multi_selection,
+      );
+    } else if (widget.question.runtimeType == BooleanQuestion) {
+      return BooleanQuestionWidget(
+        question: widget.question as BooleanQuestion,
+        onDone: _onDone,
+      );
+    } else if (widget.question.runtimeType == ScaleQuestion) {
+      return ScaleQuestionWidget(
+        question: widget.question as ScaleQuestion,
+        onDone: _onDone,
+      );
+    } else if (widget.question.runtimeType == VisualAnalogueQuestion) {
+      // todo remove this when older studies are finished
+      // ignore: deprecated_member_use_from_same_package
+      return VisualAnalogueQuestionWidget(
+        question: widget.question as VisualAnalogueQuestion,
+        onDone: _onDone,
+      );
+    } else if (widget.question.runtimeType == AnnotatedScaleQuestion) {
+      return AnnotatedScaleQuestionWidget(
+        question: widget.question as AnnotatedScaleQuestion,
+        onDone: _onDone,
+      );
+    } else {
+      print('Question not supported!');
+      throw Exception('Question not supported!');
     }
   }
 
