@@ -143,6 +143,8 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
 
   @override
   int getDuration(List<Intervention> interventions) {
+    print("alternating duration");
+    print(cycleAmount);
     return interventionDuration * cycleAmount * interventions.length;
   }
 

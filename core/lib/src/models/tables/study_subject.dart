@@ -273,7 +273,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   // Currently the end of the study, as there is no real minimum, just a set study length
   bool get minimumStudyLengthCompleted {
     final diff = DateTime.now().differenceInDays(startedAt!);
-    return diff >= interventionOrder.length * study.schedule.phaseDuration - 1;
+    return diff >= study.mp23Schedule.duration - 1;
   }
 
   bool get completedStudy {

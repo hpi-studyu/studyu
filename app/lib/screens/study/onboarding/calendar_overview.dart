@@ -72,14 +72,15 @@ class _CalendarOverviewState extends State<CalendarOverview> {
         [bool today = false]) {
       final text = DateFormat.d().format(day);
 
-      DateTime studyStartDay = widget.subject!.startedAt ?? DateTime.now();
+      DateTime studyStartDay = widget.subject!.startedAt ??
+          DateTime.now().add(const Duration(days: 1));
 
-      final nthDay = day.difference(studyStartDay).inDays - 1;
+      final nthDay = _dayOfYear(day) - _dayOfYear(studyStartDay);
 
       StudyScheduleSegment? segment;
 
       try {
-        segment = nthDay < 0 ? null : schedule.getSegmentForDay(nthDay).$1;
+        segment = schedule.getSegmentForDay(nthDay).$1;
       } catch (e) {
         print(e);
       }
