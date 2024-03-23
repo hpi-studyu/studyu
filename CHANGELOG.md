@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`studyu_app` - `v2.6.5-dev.8`](#studyu_app---v265-dev8)
+
+---
+
+#### `studyu_app` - `v2.6.5-dev.8`
+
+ - **FIX**: pod update. ([a289069e](https://github.com/hpi-studyu/studyu/commit/a289069ef8eeab8ee996f9a9b6d26f98535a25e3))
+
+
+## 2024-03-23
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`studyu_app` - `v2.6.5-dev.7`](#studyu_app---v265-dev7)
  - [`studyu_core` - `v4.3.3-dev.5`](#studyu_core---v433-dev5)
  - [`studyu_designer_v2` - `v1.6.2-dev.7`](#studyu_designer_v2---v162-dev7)
