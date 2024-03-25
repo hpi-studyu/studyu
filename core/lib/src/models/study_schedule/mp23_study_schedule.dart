@@ -1,6 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_core/src/models/interventions/intervention.dart';
 import 'package:studyu_core/src/models/observations/observation.dart';
+import 'package:studyu_core/src/util/thompson_sampling.dart';
 
 part 'mp23_study_schedule.g.dart';
 
@@ -47,9 +49,9 @@ class MP23StudySchedule {
     throw StateError("This should never happen");
   }
 
-  Intervention? getInterventionForDay(int day) {
+  Intervention? getInterventionForDay(int day, List<SubjectProgress> progress) {
     final (segment, dayInSegment) = getSegmentForDay(day);
-    return segment?.getInterventionOnDay(dayInSegment, interventions);
+    return segment?.getInterventionOnDay(dayInSegment, interventions, progress);
   }
 }
 
@@ -59,7 +61,8 @@ abstract class StudyScheduleSegment {
 
   int getDuration(List<Intervention> interventions);
 
-  Intervention? getInterventionOnDay(int day, List<Intervention> interventions);
+  Intervention? getInterventionOnDay(int day, List<Intervention> interventions,
+      List<SubjectProgress> progress);
 
   StudyScheduleSegmentType get type =>
       throw UnimplementedError("Subclasses should return String type");
@@ -89,7 +92,10 @@ class BaselineScheduleSegment extends StudyScheduleSegment {
 
   @override
   Intervention? getInterventionOnDay(
-      int day, List<Intervention> interventions) {
+    int day,
+    List<Intervention> interventions,
+    List<SubjectProgress> progress,
+  ) {
     return null;
   }
 
@@ -143,14 +149,15 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
 
   @override
   int getDuration(List<Intervention> interventions) {
-    print("alternating duration");
-    print(cycleAmount);
     return interventionDuration * cycleAmount * interventions.length;
   }
 
   @override
   Intervention? getInterventionOnDay(
-      int day, List<Intervention> interventions) {
+    int day,
+    List<Intervention> interventions,
+    List<SubjectProgress> progress,
+  ) {
     if (day < 0 || day > getDuration(interventions)) {
       throw ArgumentError(
         "Day must be between 0 and ${getDuration(interventions)}",
@@ -172,10 +179,11 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
 class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
   @override
   @JsonKey(
-      fromJson: StudyScheduleSegmentType.fromJson,
-      toJson: StudyScheduleSegmentType.toJson,
-      includeFromJson: true,
-      includeToJson: true)
+    fromJson: StudyScheduleSegmentType.fromJson,
+    toJson: StudyScheduleSegmentType.toJson,
+    includeFromJson: true,
+    includeToJson: true,
+  )
   final StudyScheduleSegmentType type =
       StudyScheduleSegmentType.thompsonSampling;
 
@@ -187,8 +195,12 @@ class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
   String observationId;
   String questionId;
 
-  ThompsonSamplingScheduleSegment(this.interventionDuration,
-      this.interventionDrawAmount, this.observationId, this.questionId);
+  ThompsonSamplingScheduleSegment(
+    this.interventionDuration,
+    this.interventionDrawAmount,
+    this.observationId,
+    this.questionId,
+  );
 
   factory ThompsonSamplingScheduleSegment.fromJson(Map<String, dynamic> json) =>
       _$ThompsonSamplingScheduleSegmentFromJson(json);
@@ -203,14 +215,49 @@ class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
 
   @override
   Intervention? getInterventionOnDay(
-      int day, List<Intervention> interventions) {
+    int day,
+    List<Intervention> interventions,
+    List<SubjectProgress> progress,
+  ) {
     if (day < 0 || day > getDuration(interventions)) {
       throw ArgumentError(
         "Day must be between 0 and ${getDuration(interventions)}",
       );
     }
-    final interventionIndex = day % interventions.length; //TODO: FIX
-    return interventions[interventionIndex];
+
+    final ThompsonSampling ts = ThompsonSampling(interventions.length);
+
+    print("_________ analyzing progress:________");
+
+    // for each progress update, e.g. if a user did the intervention that day, or other questionnaires
+    for (final progress in progress) {
+      if (progress.result.runtimeType == Result<QuestionnaireState>) {
+        final interventionId = progress.interventionId;
+
+        if (progress.result.result is QuestionnaireState) {
+          final r = progress.result.result as QuestionnaireState;
+//
+          for (final answer in r.answers.values) {
+            if (questionId == answer.question) {
+              print(answer.runtimeType);
+              if (answer.runtimeType == Answer<num>) {
+                final response = answer.response as int;
+                final interventionIndex = interventions.indexWhere(
+                  (element) => element.id == interventionId,
+                );
+                print("updaing observation: $interventionIndex $response");
+                ts.updateObservations(interventionIndex, response.toDouble());
+              }
+            }
+          }
+        }
+      }
+    }
+
+    final index = ts.selectArm();
+    print("selected arm: $index");
+
+    return interventions[index];
   }
 }
 

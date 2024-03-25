@@ -43,56 +43,92 @@ class UnknownMeanUnknownVariance {
     return sum / values.length;
   }
 
-  double sample() {
-    double precision = GammaDistribution(_alpha, 1 / _beta).sample();
+  double sample(Random? random) {
+    double precision =
+        GammaDistribution(_alpha, 1 / _beta).sample(random: random);
 
     if (precision == 0 || _n == 0) {
       precision = 0.001;
     }
 
     final double estimatedVariance = 1 / precision;
-    return NormalDistribution(_mu0, sqrt(estimatedVariance)).sample();
+    return NormalDistribution(_mu0, sqrt(estimatedVariance))
+        .sample(random: random);
   }
 }
 
-class ThompsonSamplingAlgo {
-  final List<double> means;
-  final List<double> variances;
+class ThompsonSampling {
+  final List<UnknownMeanUnknownVariance> _arms;
+  int _updates = 0;
 
-  ThompsonSamplingAlgo(List<double> initialMeans, List<double> initialVariances)
-      : means = List.from(initialMeans),
-        variances = List.from(initialVariances);
+  ThompsonSampling(int arms)
+      : _arms = List.generate(
+          arms,
+          (index) => UnknownMeanUnknownVariance(),
+        );
 
   void updateObservations(int armIndex, double newObservation) {
-    // Update mean and variance based on new observation
-    final double oldMean = means[armIndex];
-    final double oldVariance = variances[armIndex];
-
-    // Update mean and variance using online update formulas
-    final double newMean = (oldMean + newObservation) / 2;
-    final double newVariance =
-        (oldVariance + pow(newObservation - oldMean, 2)) / 2;
-
-    means[armIndex] = newMean;
-    variances[armIndex] = newVariance;
+    _arms[armIndex].update(newObservation);
+    _updates++;
   }
 
   int selectArm() {
-    // Number of arms (options)
-    final int numArms = means.length;
+    final random = Random(42);
+    for (int i = 0; i < _updates; i++) {
+      random.nextDouble();
+    }
 
-    // Perform Thompson Sampling for each arm
-    final List<double> samples = List.generate(numArms, (index) {
-      // Generate a random sample for each arm using the Normal distribution
-      final double sample = Random().nextDouble();
+    final List<double> samples = List.generate(
+      _arms.length,
+      (index) => _arms[index].sample(random),
+    );
 
-      // Calculate the sampled value from the Normal distribution
-      return means[index] + sqrt(variances[index]) * cos(2 * pi * sample);
-    });
+    final List<double> means = _arms.map((e) => e._mu0).toList();
+    print("means $means");
+    print("samples $samples");
 
-    // Choose the arm with the highest sampled value
-    final int selectedArm = samples.indexOf(samples.reduce(max));
-
-    return selectedArm;
+    return samples.indexOf(samples.reduce(max));
   }
 }
+
+// class ThompsonSamplingAlgo {
+//   final List<double> means;
+//   final List<double> variances;
+
+//   ThompsonSamplingAlgo(List<double> initialMeans, List<double> initialVariances)
+//       : means = List.from(initialMeans),
+//         variances = List.from(initialVariances);
+
+//   void updateObservations(int armIndex, double newObservation) {
+//     // Update mean and variance based on new observation
+//     final double oldMean = means[armIndex];
+//     final double oldVariance = variances[armIndex];
+
+//     // Update mean and variance using online update formulas
+//     final double newMean = (oldMean + newObservation) / 2;
+//     final double newVariance =
+//         (oldVariance + pow(newObservation - oldMean, 2)) / 2;
+
+//     means[armIndex] = newMean;
+//     variances[armIndex] = newVariance;
+//   }
+
+//   int selectArm() {
+//     // Number of arms (options)
+//     final int numArms = means.length;
+
+//     // Perform Thompson Sampling for each arm
+//     final List<double> samples = List.generate(numArms, (index) {
+//       // Generate a random sample for each arm using the Normal distribution
+//       final double sample = Random().nextDouble();
+
+//       // Calculate the sampled value from the Normal distribution
+//       return means[index] + sqrt(variances[index]) * cos(2 * pi * sample);
+//     });
+
+//     // Choose the arm with the highest sampled value
+//     final int selectedArm = samples.indexOf(samples.reduce(max));
+
+//     return selectedArm;
+//   }
+// }

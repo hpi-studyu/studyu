@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_app/screens/study/onboarding/calendar_overview.dart';
-import 'package:studyu_app/theme.dart';
 import 'package:studyu_core/core.dart';
 
 import '../../../../routes.dart';
 import '../../../../widgets/intervention_card.dart';
-import 'progress_row.dart';
 import 'task_box.dart';
 
 class TaskOverview extends StatefulWidget {

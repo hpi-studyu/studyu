@@ -166,10 +166,13 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     final dayOfStudy = getDayOfStudyFor(date);
     if (dayOfStudy < 0) return null;
 
+    // print(progress);
+
     // TODO_NOW: do we need to check bounds
 
     try {
-      final intervention = study.mp23Schedule.getInterventionForDay(dayOfStudy);
+      final intervention =
+          study.mp23Schedule.getInterventionForDay(dayOfStudy, progress);
       return intervention;
     } catch (e) {
       return null;

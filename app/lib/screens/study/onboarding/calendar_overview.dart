@@ -97,6 +97,8 @@ class _CalendarOverviewState extends State<CalendarOverview> {
       if (segment is BaselineScheduleSegment) {
         colors = [Color.fromARGB(255, 228, 228, 228), Colors.black];
       } else if (segment is ThompsonSamplingScheduleSegment) {
+        // TODO_NOW if day is in past, show the actual intervention
+
         colors = [Colors.white, Colors.white];
         List<Color> gradientColors = [];
 
@@ -108,7 +110,7 @@ class _CalendarOverviewState extends State<CalendarOverview> {
             colors: gradientColors, transform: const GradientRotation(1));
       } else if (segment is AlternatingScheduleSegment) {
         colors = colorScheme[0];
-        final interventionOnDay = schedule.getInterventionForDay(nthDay);
+        final interventionOnDay = schedule.getInterventionForDay(nthDay, []);
 
         if (interventionOnDay != null) {
           final index = schedule.interventions.indexOf(interventionOnDay);
