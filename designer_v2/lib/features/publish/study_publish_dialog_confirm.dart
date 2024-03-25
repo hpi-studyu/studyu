@@ -13,7 +13,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class PublishConfirmationDialog extends StudyPageWidget {
-  const PublishConfirmationDialog(super.studyId, {Key? key}) : super(key: key);
+  const PublishConfirmationDialog(super.studyId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

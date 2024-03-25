@@ -10,7 +10,7 @@ import '../../../models/app_state.dart';
 import '../../../routes.dart';
 
 class KickoffScreen extends StatefulWidget {
-  const KickoffScreen({Key? key}) : super(key: key);
+  const KickoffScreen({super.key});
 
   @override
   State<KickoffScreen> createState() => _KickoffScreen();
@@ -26,16 +26,16 @@ class _KickoffScreen extends State<KickoffScreen> {
       final now = DateTime.now();
       subject!.startedAt = DateTime(now.year, now.month, now.day + 1).toUtc();
       subject = await subject!.save();
-      if (!mounted) return;
+      if (!context.mounted) return;
       context.read<AppState>().activeSubject = subject;
       context.read<AppState>().init(context);
       await Cache.storeSubject(context.read<AppState>().activeSubject);
       await storeActiveSubjectId(subject!.id);
-      if (!mounted) return;
+      if (!context.mounted) return;
       setState(() => ready = true);
       Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
     } catch (e) {
-      print('Failed creating subject: $e');
+      StudyULogger.fatal('Failed creating subject: $e');
     }
   }
 
@@ -83,10 +83,10 @@ class _KickoffScreen extends State<KickoffScreen> {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16),
-                    OutlinedButton(
+                    /*OutlinedButton(
                       onPressed: () => _storeUserStudy(context),
                       child: Text(AppLocalizations.of(context)!.start_study),
-                    ),
+                    ),*/
                   ],
                 ),
               ),

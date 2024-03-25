@@ -1,0 +1,21 @@
+version: '3.8'
+name: 'studyu_proxy'
+
+networks:
+  default:
+    name: studyu_network
+    external: true
+
+services:
+  nginx:
+    container_name: studyu-proxy
+    image: nginx:stable-alpine
+    restart: unless-stopped
+    ports:
+      - "${STUDYU_APP_PORT}:8080"
+      - "${STUDYU_DESIGNER_PORT}:8081"
+      - "${STUDYU_SUPABASE_PORT}:8082"
+    volumes:
+      - ../nginx/proxy:/etc/nginx/templates:ro
+    env_file:
+      - .env

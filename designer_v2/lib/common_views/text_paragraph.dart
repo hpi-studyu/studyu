@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextParagraph extends StatelessWidget {
-  TextParagraph({this.text, this.style, this.selectable = true, this.span, Key? key}) : super(key: key) {
+  TextParagraph({this.text, this.style, this.selectable = true, this.span, super.key}) {
     if (text == null && span == null) {
       throw Exception("Either text or TextSpan has to be provided");
     }

@@ -22,7 +22,7 @@ import 'task_overview_tab/task_overview.dart';
 class DashboardScreen extends StatefulWidget {
   final String? error;
 
-  const DashboardScreen({Key? key, this.error}) : super(key: key);
+  const DashboardScreen({super.key, this.error});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -151,7 +151,7 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                   onTap: () async {
                     final iconAuthors = ['Kiranshastry'];
                     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-                    if (!mounted) return;
+                    if (!context.mounted) return;
                     showAboutDialog(
                       context: context,
                       applicationIcon: GestureDetector(
@@ -194,7 +194,7 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                                   ));
                           testNotifications(context);
                         },
-                        child: const Image(image: AssetImage('assets/images/icon.png'), height: 32),
+                        child: const Image(image: AssetImage('assets/icon/icon.png'), height: 32),
                       ),
                       applicationVersion: '${packageInfo.version} - ${packageInfo.buildNumber}',
                       children: [
@@ -269,6 +269,9 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                   } on SocketException catch (_) {}
                 },
                 label: Text(AppLocalizations.of(context)!.next_day),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.primary,
+                ),
               ),
             )
           : null,
@@ -302,7 +305,7 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
 class StudyFinishedPlaceholder extends StatelessWidget {
   static const space = SizedBox(height: 80);
 
-  const StudyFinishedPlaceholder({Key? key}) : super(key: key);
+  const StudyFinishedPlaceholder({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -327,7 +330,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             ),
             space,
             OutlinedButton.icon(
-              onPressed: () => Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false),
+              onPressed: () => Navigator.pushNamed(context, Routes.studySelection),
               icon: Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
               label: Text(AppLocalizations.of(context)!.study_selection, style: textStyle),
             ),

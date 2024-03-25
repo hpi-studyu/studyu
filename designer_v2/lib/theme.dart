@@ -88,8 +88,7 @@ class ThemeSettingChange extends Notification {
 
 class ThemeProvider extends InheritedWidget {
   ThemeProvider(
-      {Key? key, required this.settings, required this.lightDynamic, required this.darkDynamic, required Widget child})
-      : super(key: key, child: child);
+      {super.key, required this.settings, required this.lightDynamic, required this.darkDynamic, required super.child});
 
   final ValueNotifier<ThemeSettings> settings;
   final ColorScheme? lightDynamic;
@@ -420,7 +419,6 @@ class ThemeProvider extends InheritedWidget {
       tooltipTheme: tooltipTheme(colorScheme),
       disabledColor: colorScheme.onSurface.withOpacity(0.5),
       shadowColor: colorScheme.primaryContainer.withOpacity(0.4),
-      useMaterial3: true,
     );
   }
 
@@ -448,7 +446,6 @@ class ThemeProvider extends InheritedWidget {
       tooltipTheme: tooltipTheme(colorScheme),
       disabledColor: colorScheme.onSurface.withOpacity(0.5),
       shadowColor: colorScheme.primaryContainer.withOpacity(0.4),
-      useMaterial3: true,
     );
   }
 

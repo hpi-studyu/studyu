@@ -17,7 +17,7 @@ class TaskScreen extends StatefulWidget {
         builder: (_) => TaskScreen(taskInstance: taskInstance),
       );
 
-  const TaskScreen({required this.taskInstance, Key? key}) : super(key: key);
+  const TaskScreen({required this.taskInstance, super.key});
 
   @override
   State<TaskScreen> createState() => _TaskScreenState();
@@ -34,23 +34,22 @@ class _TaskScreenState extends State<TaskScreen> {
     taskInstance = TaskInstance.fromInstanceId(widget.taskInstance.id, study: subject!.study);
   }
 
-  Widget? _buildTask() {
-    switch (taskInstance.task.runtimeType) {
-      case CheckmarkTask:
+  Widget _buildTask() {
+    switch (taskInstance.task) {
+      case CheckmarkTask checkmarkTask:
         return CheckmarkTaskWidget(
-          task: taskInstance.task as CheckmarkTask,
+          task: checkmarkTask,
           key: UniqueKey(),
           completionPeriod: taskInstance.completionPeriod,
         );
-      case QuestionnaireTask:
+      case QuestionnaireTask questionnaireTask:
         return QuestionnaireTaskWidget(
-          task: taskInstance.task as QuestionnaireTask,
+          task: questionnaireTask,
           key: UniqueKey(),
           completionPeriod: taskInstance.completionPeriod,
         );
       default:
-        print('${taskInstance.task.runtimeType} is not a supported Task!');
-        return null;
+        throw ArgumentError('Task ${taskInstance.task.type} not supported');
     }
   }
 
@@ -93,7 +92,7 @@ class _TaskScreenState extends State<TaskScreen> {
                 ),
               ]),
               const SizedBox(height: 20),
-              _buildTask()!,
+              _buildTask(),
             ],
           ),
         ),
@@ -108,15 +107,11 @@ handleTaskCompletion(BuildContext context, Function(StudySubject?) completionCal
   try {
     if (state.trackParticipantProgress) {
       await completionCallback(activeSubject);
-      Analytics.logger.info("Saved results in online mode");
     }
-  } on SocketException catch (exception, stackTrace) {
-    Analytics.logger.info("Saving results in offline mode");
-    Analytics.captureEvent(exception, stackTrace: stackTrace);
+  } on SocketException {
     await Cache.storeSubject(activeSubject);
-  } catch (exception, stackTrace) {
-    Analytics.logger.severe("Could not save results");
-    Analytics.captureException(exception, stackTrace: stackTrace);
+  } catch (exception) {
+    debugPrint("Could not save results");
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

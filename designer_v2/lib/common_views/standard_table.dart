@@ -62,8 +62,8 @@ class StandardTable<T> extends StatefulWidget {
     this.rowStyle = StandardTableStyle.material,
     this.disableRowInteractions = false,
     this.hideLeadingTrailingWhenEmpty = true,
-    Key? key,
-  }) : super(key: key) {
+    super.key,
+  }) {
     if (trailingActionsColumn == null) {
       this.inputTrailingActionsColumn = StandardTableColumn(
           label: '', columnWidth: const MaxColumnWidth(IntrinsicColumnWidth(), FixedColumnWidth(65)));
@@ -74,6 +74,8 @@ class StandardTable<T> extends StatefulWidget {
     if (trailingActionsAt != null) {
       this.inputColumns = [...?columns];
       this.inputColumns.add(this.inputTrailingActionsColumn);
+    } else {
+      this.inputColumns = columns ?? [];
     }
   }
 

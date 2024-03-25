@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -23,8 +24,7 @@ class FormScaffold<T extends FormViewModel> extends ConsumerStatefulWidget {
       this.drawer,
       this.actionsSpacing = 8.0,
       this.actionsPadding = 24.0,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final T formViewModel;
   final List<Widget>? actions;
@@ -37,7 +37,7 @@ class FormScaffold<T extends FormViewModel> extends ConsumerStatefulWidget {
   ConsumerState<FormScaffold<T>> createState() => _FormScaffoldState();
 }
 
-class _FormScaffoldState<T extends FormViewModel> extends ConsumerState<FormScaffold<T>> {
+class _FormScaffoldState<T extends FormViewModel> extends ConsumerState<FormScaffold<T>> implements PopEntry {
   T get formViewModel => widget.formViewModel;
 
   ModalRoute<dynamic>? _route;
@@ -45,16 +45,29 @@ class _FormScaffoldState<T extends FormViewModel> extends ConsumerState<FormScaf
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _route?.removeScopedWillPopCallback(_promptBackNavigationConfirmation);
+    _route?.unregisterPopEntry(this);
     _route = ModalRoute.of(context);
-    _route?.addScopedWillPopCallback(_promptBackNavigationConfirmation);
+    _route?.registerPopEntry(this);
   }
 
   @override
   void dispose() {
-    _route?.removeScopedWillPopCallback(_promptBackNavigationConfirmation);
+    _route?.unregisterPopEntry(this);
     _route = null;
     super.dispose();
+  }
+
+  @override
+  ValueListenable<bool> get canPopNotifier => ValueNotifier(false);
+
+  @override
+  PopInvokedCallback? get onPopInvoked {
+    return (bool value) async {
+      final backNavigationAllowed = await _promptBackNavigationConfirmation();
+      if (backNavigationAllowed) {
+        if (mounted) Navigator.of(context).pop();
+      }
+    };
   }
 
   Future<bool> _promptBackNavigationConfirmation() async {

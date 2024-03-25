@@ -11,6 +11,10 @@ on:
       - 'flutter_common/**'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.ref }}-deploy-apps
+  cancel-in-progress: true
+
 jobs:
   play-store-release:
     name: Create Play Store Release
@@ -19,66 +23,89 @@ jobs:
       - name: Await potential publishing on Pub.dev
         uses: johannesvedder/await-workflow@v1
         with:
-          workflowId: 'publish_pubdev.yml'
-      - name: Get the tag name
-        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+          workflowId: publish_pubdev.yml
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up ruby env
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.1
+          ruby-version: 3.3 # do not use head
           bundler-cache: true
-          working-directory: './app/android'
-      - name: Decrypt files
-        id: decrypt_files
-        run: |
-          echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
-          gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
-          echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
+          working-directory: ./app/android
+        # run: |
+          # sudo apt-get update
+          # sudo snap install ruby --classic
+          # bundle install
+        # working-directory: ./app/android
       - name: Set up flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
+      - name: Prepare upload key
+        run: |
+          echo "$STUDYU_ANDROID_KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
+          echo "$STUDYU_KEY_PROPERTIES" > key.properties
+        working-directory: app/android
+        env:
+          STUDYU_ANDROID_KEYSTORE_BASE64: ${{ secrets.STUDYU_ANDROID_KEYSTORE_BASE64 }}
+          STUDYU_KEY_PROPERTIES: ${{ secrets.STUDYU_KEY_PROPERTIES }}
       - name: Build StudyU app bundle
-        run: flutter build appbundle --no-tree-shake-icons --build-number ${{ github.run_number }}
+        run: flutter build appbundle --release --build-number ${{ github.run_number }}
         working-directory: ./app
       - name: Fastlane upload
-        uses: maierj/fastlane-action@v3.0.0
-        with:
-          lane: 'internal'
-          subdirectory: './app/android'
+        run: bundle exec fastlane deploy_internal
+        working-directory: ./app/android
         env:
           PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
 
   app-store-release:
     name: Create App Store Release
-    runs-on: macos-latest
+    runs-on: macos-14 # macos-latest
     steps:
       - name: Await potential publishing on Pub.dev
         uses: johannesvedder/await-workflow@v1
         with:
-          workflowId: 'publish_pubdev.yml'
+          workflowId: publish_pubdev.yml
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up ruby env
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.1
+          ruby-version: 3.3 # do not use head
           bundler-cache: true
-          working-directory: './app/ios'
+          working-directory: ./app/ios
       - name: Set up flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
+      - name: Get StudyU app version
+        run: |
+          # Read the version of study_app from pubspec.yaml and make it CFBundleShortVersionString compatible
+          # Flutter command needs to be run to clear the initial welcome message
+          flutter config --no-analytics
+          regex="([0-9]+)\.([0-9]+)\.([0-9]+)"
+          app_version=$(flutter pub deps --json | jq -r '.packages[] | select(.name == "studyu_app").version')
+          if [[ $app_version =~ $regex ]]; then
+            short_version_string="STUDYU_APP_VERSION=${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.${BASH_REMATCH[3]}"
+            echo "$short_version_string"
+            echo "$short_version_string" >> "$GITHUB_ENV"
+          else
+            echo "Version $app_version is not a valid semantic version"
+            exit 1
+          fi
+        working-directory: ./app
       - name: Build StudyU ios without codesign
-        run: flutter build ios --no-codesign --no-tree-shake-icons --build-number ${{ github.run_number }}
+        run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }} --build-name ${{ env.STUDYU_APP_VERSION }}
         working-directory: ./app
       - name: Fastlane upload
-        uses: maierj/fastlane-action@v3.0.0
-        with:
-          lane: 'upload_testflight'
-          subdirectory: './app/ios'
+        run: bundle exec fastlane upload_testflight
+        working-directory: ./app/ios
         env:
           FASTLANE_APP_IOS_KEY_ID: ${{ secrets.FASTLANE_APP_IOS_KEY_ID }}
           FASTLANE_APP_IOS_ISSUER_ID: ${{ secrets.FASTLANE_APP_IOS_ISSUER_ID }}

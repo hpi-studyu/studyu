@@ -1,5 +1,15 @@
 <svg version="1.1" baseProfile="full" width="782.0" height="562.0" viewbox="0 0 782 562" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[AverageSectionWidget
+	<desc >[LinearRegressionSectionWidget
+	  |
+	  +section: LinearRegressionSection
+	  |
+	  +Widget build()
+	]
+	
+	[LinearRegressionSectionWidget]o-[LinearRegressionSection]
+	[&lt;abstract&gt;ReportSectionWidget]&lt;:-[LinearRegressionSectionWidget]
+	
+	[AverageSectionWidget
 	  |
 	  +section: AverageSection;
 	  +titlePos: List&lt;int&gt;;
@@ -30,49 +40,86 @@
 	  +intervention: String
 	]
 	
-	[LinearRegressionSectionWidget
-	  |
-	  +section: LinearRegressionSection
-	  |
-	  +Widget build()
-	]
-	
-	[LinearRegressionSectionWidget]o-[LinearRegressionSection]
-	[&lt;abstract&gt;ReportSectionWidget]&lt;:-[LinearRegressionSectionWidget]
-	
 	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
 				<rect x="0.0" y="0.0" height="562.0" width="782.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M197.0 453.7 L197 455 L197 475 L197.0 475.0 " fill="none"></path>
+					<path d="M146.0 356.2 L146 455 L146 475 L146.0 475.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M202.3 444.3 L197.0 453.7 L191.7 444.3 L197.0 435.0 Z"></path>
+						<path d="M151.3 346.8 L146.0 356.2 L140.7 346.8 L146.0 337.5 Z"></path>
 					</g>
-					<path d="M335.7 73.8 L197 127 L197 147 L197.0 147.0 " fill="none"></path>
-					<path d="M337.6 78.8 L335.7 73.8 L333.8 68.8 L348.1 69.0 Z"></path>
-					<path d="M580.0 356.2 L580 455 L580 475 L580.0 475.0 " fill="none"></path>
+					<path d="M284.7 73.8 L146 127 L146 244.5 L146.0 244.5 " fill="none"></path>
+					<path d="M286.6 78.8 L284.7 73.8 L282.8 68.8 L297.1 69.0 Z"></path>
+					<path d="M529.0 453.7 L529 455 L529 475 L529.0 475.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M585.3 346.8 L580.0 356.2 L574.7 346.8 L580.0 337.5 Z"></path>
+						<path d="M534.3 444.3 L529.0 453.7 L523.7 444.3 L529.0 435.0 Z"></path>
 					</g>
-					<path d="M441.3 73.8 L580 127 L580 244.5 L580.0 244.5 " fill="none"></path>
-					<path d="M443.2 68.8 L441.3 73.8 L439.4 78.8 L428.9 69.0 Z"></path>
+					<path d="M390.3 73.8 L529 127 L529 147 L529.0 147.0 " fill="none"></path>
+					<path d="M392.2 68.8 L390.3 73.8 L388.4 78.8 L377.9 69.0 Z"></path>
+					<g data-name="LinearRegressionSectionWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="LinearRegressionSectionWidget">
+							<rect x="0.0" y="244.5" height="93.0" width="292.0" data-name="LinearRegressionSectionWidget"></rect>
+							<path d="M0.0 275.5 L292.0 275.5" fill="none" data-name="LinearRegressionSectionWidget"></path>
+							<path d="M0.0 306.5 L292.0 306.5" fill="none" data-name="LinearRegressionSectionWidget"></path>
+						</g>
+						<g transform="translate(0, 244.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearRegressionSectionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LinearRegressionSectionWidget">
+								<text x="138.0" y="13.5" stroke="none" text-anchor="middle" data-name="LinearRegressionSectionWidget">LinearRegressionSectionWidget</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 275.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearRegressionSectionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LinearRegressionSectionWidget">
+								<text x="0.0" y="13.5" stroke="none" data-name="LinearRegressionSectionWidget">+section: LinearRegressionSection</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 306.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearRegressionSectionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LinearRegressionSectionWidget">
+								<text x="0.0" y="13.5" stroke="none" data-name="LinearRegressionSectionWidget">+Widget build()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="LinearRegressionSection">
+						<g fill="#eee8d5" stroke="#33322E" data-name="LinearRegressionSection">
+							<rect x="38.5" y="475.0" height="31.0" width="215.0" data-name="LinearRegressionSection"></rect>
+						</g>
+						<g transform="translate(38.5, 475)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearRegressionSection">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LinearRegressionSection">
+								<text x="99.5" y="13.5" stroke="none" text-anchor="middle" data-name="LinearRegressionSection">LinearRegressionSection</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ReportSectionWidget">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ReportSectionWidget">
+							<rect x="246.0" y="38.0" height="31.0" width="183.0" data-name="ReportSectionWidget"></rect>
+						</g>
+						<g transform="translate(246, 38)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ReportSectionWidget">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportSectionWidget">
+								<text x="83.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportSectionWidget">ReportSectionWidget</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="AverageSectionWidget">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AverageSectionWidget">
-							<rect x="0.0" y="147.0" height="288.0" width="394.0" data-name="AverageSectionWidget"></rect>
-							<path d="M0.0 178.0 L394.0 178.0" fill="none" data-name="AverageSectionWidget"></path>
-							<path d="M0.0 239.0 L394.0 239.0" fill="none" data-name="AverageSectionWidget"></path>
+							<rect x="332.0" y="147.0" height="288.0" width="394.0" data-name="AverageSectionWidget"></rect>
+							<path d="M332.0 178.0 L726.0 178.0" fill="none" data-name="AverageSectionWidget"></path>
+							<path d="M332.0 239.0 L726.0 239.0" fill="none" data-name="AverageSectionWidget"></path>
 						</g>
-						<g transform="translate(0, 147)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AverageSectionWidget">
+						<g transform="translate(332, 147)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AverageSectionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AverageSectionWidget">
 								<text x="189.0" y="13.5" stroke="none" text-anchor="middle" data-name="AverageSectionWidget">AverageSectionWidget</text>
 								
 							</g>
 						</g>
-						<g transform="translate(0, 178)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AverageSectionWidget">
+						<g transform="translate(332, 178)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AverageSectionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AverageSectionWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="AverageSectionWidget">+section: AverageSection</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="AverageSectionWidget">+titlePos: List&lt;int&gt;</text>
@@ -80,7 +127,7 @@
 								
 							</g>
 						</g>
-						<g transform="translate(0, 239)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AverageSectionWidget">
+						<g transform="translate(332, 239)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AverageSectionWidget">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AverageSectionWidget">
 								<text x="0.0" y="13.5" stroke="none" data-name="AverageSectionWidget">+Widget build()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="AverageSectionWidget">+Widget getLegend()</text>
@@ -100,79 +147,32 @@
 					</g>
 					<g data-name="AverageSection">
 						<g fill="#eee8d5" stroke="#33322E" data-name="AverageSection">
-							<rect x="126.5" y="475.0" height="31.0" width="141.0" data-name="AverageSection"></rect>
+							<rect x="458.5" y="475.0" height="31.0" width="141.0" data-name="AverageSection"></rect>
 						</g>
-						<g transform="translate(126.5, 475)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AverageSection">
+						<g transform="translate(458.5, 475)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AverageSection">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AverageSection">
 								<text x="62.5" y="13.5" stroke="none" text-anchor="middle" data-name="AverageSection">AverageSection</text>
 								
 							</g>
 						</g>
 					</g>
-					<g data-name="ReportSectionWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ReportSectionWidget">
-							<rect x="297.0" y="38.0" height="31.0" width="183.0" data-name="ReportSectionWidget"></rect>
-						</g>
-						<g transform="translate(297, 38)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ReportSectionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ReportSectionWidget">
-								<text x="83.5" y="13.5" stroke="none" text-anchor="middle" data-name="ReportSectionWidget">ReportSectionWidget</text>
-								
-							</g>
-						</g>
-					</g>
 					<g data-name="DiagramDatum">
 						<g fill="#eee8d5" stroke="#33322E" data-name="DiagramDatum">
-							<rect x="520.0" y="0.0" height="107.0" width="202.0" data-name="DiagramDatum"></rect>
-							<path d="M520.0 31.0 L722.0 31.0" fill="none" data-name="DiagramDatum"></path>
+							<rect x="469.0" y="0.0" height="107.0" width="202.0" data-name="DiagramDatum"></rect>
+							<path d="M469.0 31.0 L671.0 31.0" fill="none" data-name="DiagramDatum"></path>
 						</g>
-						<g transform="translate(520, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DiagramDatum">
+						<g transform="translate(469, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DiagramDatum">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DiagramDatum">
 								<text x="93.0" y="13.5" stroke="none" text-anchor="middle" data-name="DiagramDatum">DiagramDatum</text>
 								
 							</g>
 						</g>
-						<g transform="translate(520, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagramDatum">
+						<g transform="translate(469, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagramDatum">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DiagramDatum">
 								<text x="0.0" y="13.5" stroke="none" data-name="DiagramDatum">+x: num</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="DiagramDatum">+value: num</text>
 								<text x="0.0" y="43.5" stroke="none" data-name="DiagramDatum">+timestamp: DateTime?</text>
 								<text x="0.0" y="58.5" stroke="none" data-name="DiagramDatum">+intervention: String</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="LinearRegressionSectionWidget">
-						<g fill="#eee8d5" stroke="#33322E" data-name="LinearRegressionSectionWidget">
-							<rect x="434.0" y="244.5" height="93.0" width="292.0" data-name="LinearRegressionSectionWidget"></rect>
-							<path d="M434.0 275.5 L726.0 275.5" fill="none" data-name="LinearRegressionSectionWidget"></path>
-							<path d="M434.0 306.5 L726.0 306.5" fill="none" data-name="LinearRegressionSectionWidget"></path>
-						</g>
-						<g transform="translate(434, 244.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearRegressionSectionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LinearRegressionSectionWidget">
-								<text x="138.0" y="13.5" stroke="none" text-anchor="middle" data-name="LinearRegressionSectionWidget">LinearRegressionSectionWidget</text>
-								
-							</g>
-						</g>
-						<g transform="translate(434, 275.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearRegressionSectionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LinearRegressionSectionWidget">
-								<text x="0.0" y="13.5" stroke="none" data-name="LinearRegressionSectionWidget">+section: LinearRegressionSection</text>
-								
-							</g>
-						</g>
-						<g transform="translate(434, 306.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="LinearRegressionSectionWidget">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="LinearRegressionSectionWidget">
-								<text x="0.0" y="13.5" stroke="none" data-name="LinearRegressionSectionWidget">+Widget build()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="LinearRegressionSection">
-						<g fill="#eee8d5" stroke="#33322E" data-name="LinearRegressionSection">
-							<rect x="472.5" y="475.0" height="31.0" width="215.0" data-name="LinearRegressionSection"></rect>
-						</g>
-						<g transform="translate(472.5, 475)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="LinearRegressionSection">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LinearRegressionSection">
-								<text x="99.5" y="13.5" stroke="none" text-anchor="middle" data-name="LinearRegressionSection">LinearRegressionSection</text>
 								
 							</g>
 						</g>

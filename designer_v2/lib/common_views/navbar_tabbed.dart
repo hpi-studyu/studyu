@@ -44,8 +44,8 @@ class TabbedNavbar<T extends NavbarTab> extends ConsumerStatefulWidget {
     this.overlayColor,
     this.labelColorHover,
     this.unselectedLabelColorHover,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final List<T> tabs;
   final T? selectedTab;
@@ -190,6 +190,7 @@ class _TabbedNavbarState<T extends NavbarTab> extends ConsumerState<TabbedNavbar
     return Theme(
       data: theme.copyWith(splashColor: Colors.transparent),
       child: TabBar(
+        dividerColor: Colors.transparent,
         isScrollable: widget.isScrollable,
         labelPadding: widget.labelPadding,
         unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.8),

@@ -6,7 +6,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 
 class AboutScreen extends StatelessWidget {
-  const AboutScreen({Key? key}) : super(key: key);
+  const AboutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -327,7 +327,7 @@ class AboutScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
+                const Image(image: AssetImage('assets/icon/logo.png'), height: 200),
                 const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.description_part9,

@@ -13,6 +13,14 @@ class ThemeConfig {
 ThemeData get theme => ThemeData(
       brightness: Brightness.light,
       primaryColor: primaryColor,
-      colorScheme: ThemeData().colorScheme.copyWith(secondary: accentColor),
+      colorScheme: ThemeData().colorScheme.copyWith(
+            secondary: accentColor,
+            primary: primaryColor,
+          ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all(Colors.white),
+        ),
+      ),
       visualDensity: VisualDensity.adaptivePlatformDensity,
     );

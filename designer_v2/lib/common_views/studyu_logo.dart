@@ -3,7 +3,7 @@ import 'package:studyu_designer_v2/assets.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 
 class StudyULogo extends StatelessWidget {
-  const StudyULogo({this.onTap, Key? key}) : super(key: key);
+  const StudyULogo({this.onTap, super.key});
 
   final VoidCallback? onTap;
 

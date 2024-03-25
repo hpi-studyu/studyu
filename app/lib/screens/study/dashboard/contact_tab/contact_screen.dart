@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../models/app_state.dart';
 
 class ContactScreen extends StatefulWidget {
-  const ContactScreen({Key? key}) : super(key: key);
+  const ContactScreen({super.key});
 
   @override
   State<ContactScreen> createState() => _ContactScreenState();
@@ -36,7 +36,7 @@ class _ContactScreenState extends State<ContactScreen> {
           Container(
             alignment: Alignment.topCenter,
             child: const Image(
-              image: AssetImage('assets/images/icon_wide.png'),
+              image: AssetImage('assets/icon/logo.png'),
               height: 80,
             ),
           ),
@@ -68,8 +68,7 @@ class ContactWidget extends StatelessWidget {
   final String? subtitle;
   final Color color;
 
-  const ContactWidget({required this.contact, required this.title, required this.color, this.subtitle, Key? key})
-      : super(key: key);
+  const ContactWidget({required this.contact, required this.title, required this.color, this.subtitle, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -157,8 +156,8 @@ class ContactItem extends StatelessWidget {
     required this.iconData,
     this.type,
     this.iconColor,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   Future<void> launchContact() async {
     {
@@ -183,7 +182,7 @@ class ContactItem extends StatelessWidget {
       if (await canLaunchUrl(uri)) {
         launchUrl(uri);
       } else {
-        Analytics.logger.warning("Cannot launch Url: $uri");
+        StudyULogger.warning("Cannot launch Url: $uri");
       }
     }
   }

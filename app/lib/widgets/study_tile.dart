@@ -17,24 +17,22 @@ class StudyTile extends StatelessWidget {
     required this.iconName,
     this.onTap,
     this.contentPadding = const EdgeInsets.all(16),
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
-  StudyTile.fromStudy({required Study study, this.onTap, this.contentPadding = const EdgeInsets.all(16), Key? key})
+  StudyTile.fromStudy({required Study study, this.onTap, this.contentPadding = const EdgeInsets.all(16), super.key})
       : title = study.title,
         description = study.description,
-        iconName = study.iconName,
-        super(key: key);
+        iconName = study.iconName;
 
   StudyTile.fromUserStudy({
     required StudySubject subject,
     this.onTap,
     this.contentPadding = const EdgeInsets.all(16),
-    Key? key,
+    super.key,
   })  : title = subject.study.title,
         description = subject.study.description,
-        iconName = subject.study.iconName,
-        super(key: key);
+        iconName = subject.study.iconName;
 
   @override
   Widget build(BuildContext context) {

@@ -19,7 +19,7 @@ services:
 
   studio:
     container_name: supabase-studio
-    image: supabase/studio:20230921-d657f29
+    image: supabase/studio:20231023-7e2cd92
     restart: unless-stopped
     healthcheck:
       test:
@@ -32,9 +32,6 @@ services:
       timeout: 5s
       interval: 5s
       retries: 3
-    depends_on:
-      analytics:
-        condition: service_healthy
     environment:
       STUDIO_PG_META_URL: http://meta:8080
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -64,9 +61,6 @@ services:
     # ports:
     #  - ${KONG_HTTP_PORT}:8000/tcp
     #  - ${KONG_HTTPS_PORT}:8443/tcp
-    depends_on:
-      analytics:
-        condition: service_healthy
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /home/kong/kong.yml
@@ -86,12 +80,6 @@ services:
   auth:
     container_name: supabase-auth
     image: supabase/gotrue:v2.99.0
-    depends_on:
-      # db:
-        # Disable this if you are using an external Postgres database
-        # condition: service_healthy
-      analytics:
-        condition: service_healthy
     healthcheck:
       test:
         [
@@ -145,12 +133,6 @@ services:
   rest:
     container_name: supabase-rest
     image: postgrest/postgrest:v11.2.0
-    depends_on:
-      # db:
-        # Disable this if you are using an external Postgres database
-        # condition: service_healthy
-      analytics:
-        condition: service_healthy
     restart: unless-stopped
     environment:
       PGRST_DB_URI: postgres://authenticator:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
@@ -164,13 +146,7 @@ services:
 
   realtime:
     container_name: realtime-dev.supabase-realtime
-    image: supabase/realtime:v2.10.1
-    depends_on:
-      # db:
-        # Disable this if you are using an external Postgres database
-        # condition: service_healthy
-      analytics:
-        condition: service_healthy
+    image: supabase/realtime:v2.25.27
     healthcheck:
       test:
         [
@@ -206,9 +182,6 @@ services:
     container_name: supabase-storage
     image: supabase/storage-api:v0.40.4
     depends_on:
-      # db:
-        # Disable this if you are using an external Postgres database
-        # condition: service_healthy
       rest:
         condition: service_started
       imgproxy:
@@ -264,12 +237,6 @@ services:
   meta:
     container_name: supabase-meta
     image: supabase/postgres-meta:v0.68.0
-    depends_on:
-      # db:
-        # Disable this if you are using an external Postgres database
-        # condition: service_healthy
-      analytics:
-        condition: service_healthy
     restart: unless-stopped
     environment:
       PG_META_PORT: 8080
@@ -281,17 +248,14 @@ services:
 
   functions:
     container_name: supabase-edge-functions
-    image: supabase/edge-runtime:v1.18.1
+    image: supabase/edge-runtime:v1.22.3
     restart: unless-stopped
-    depends_on:
-      analytics:
-        condition: service_healthy
     environment:
       JWT_SECRET: ${JWT_SECRET}
       SUPABASE_URL: http://kong:8000
       SUPABASE_ANON_KEY: ${ANON_KEY}
       SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
-      SUPABASE_DB_URL: postgresql://postgres:${POSTGRES_PASSWORD}@{POSTGRES_DB}:${POSTGRES_PORT}/${POSTGRES_DB}
+      SUPABASE_DB_URL: postgresql://postgres:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
       # TODO: Allow configuring VERIFY_JWT per function. This PR might help: https://github.com/supabase/cli/pull/786
       VERIFY_JWT: "${FUNCTIONS_VERIFY_JWT}"
     volumes:
@@ -301,52 +265,4 @@ services:
       - --main-service
       - /home/deno/functions/main
 
-  analytics:
-    container_name: supabase-analytics
-    image: supabase/logflare:1.4.0
-    healthcheck:
-      test: [ "CMD", "curl", "http://localhost:4000/health" ]
-      timeout: 5s
-      interval: 5s
-      retries: 10
-    restart: unless-stopped
-    # depends_on:
-      # db:
-        # Disable this if you are using an external Postgres database
-        # condition: service_healthy
-    # Uncomment to use Big Query backend for analytics
-    # volumes:
-    #   - type: bind
-    #     source: ${PWD}/gcloud.json
-    #     target: /opt/app/rel/logflare/bin/gcloud.json
-    #     read_only: true
-    environment:
-      LOGFLARE_NODE_HOST:  127.0.0.1
-      DB_USERNAME: supabase_admin
-      DB_DATABASE: ${POSTGRES_DB}
-      DB_HOSTNAME: ${POSTGRES_HOST}
-      DB_PORT: ${POSTGRES_PORT}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
-      DB_SCHEMA: _analytics
-      LOGFLARE_API_KEY: ${LOGFLARE_API_KEY}
-      LOGFLARE_SINGLE_TENANT: true
-      LOGFLARE_SUPABASE_MODE: true
-      LOGFLARE_MIN_CLUSTER_SIZE: 1
-      RELEASE_COOKIE: cookie
-
-      # Comment variables to use Big Query backend for analytics
-      POSTGRES_BACKEND_URL: postgresql://supabase_admin:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
-      POSTGRES_BACKEND_SCHEMA: _analytics
-      LOGFLARE_FEATURE_FLAG_OVERRIDE: multibackend=true
-
-      # Uncomment to use Big Query backend for analytics
-      # GOOGLE_PROJECT_ID: ${GOOGLE_PROJECT_ID}
-      # GOOGLE_PROJECT_NUMBER: ${GOOGLE_PROJECT_NUMBER}
-    ports:
-      - 4000:4000
-    entrypoint: |
-                  sh -c `cat <<'EOF' > run.sh && sh run.sh
-                  ./logflare eval Logflare.Release.migrate
-                  ./logflare start --sname logflare
-                  EOF
-                  `
+  # TODO: For analytics check guidelines at: https://supabase.com/docs/reference/self-hosting-analytics/introduction#production-recommendations

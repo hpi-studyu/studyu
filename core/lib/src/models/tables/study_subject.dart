@@ -16,7 +16,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   final _controller = StreamController<StudySubject>();
 
   @override
-  Map<String, dynamic> get primaryKeys => {'id': id};
+  Map<String, Object> get primaryKeys => {'id': id};
 
   String id;
   @JsonKey(name: 'study_id')
@@ -94,18 +94,16 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     required T result,
     bool? offline,
   }) async {
-    late final Result<T> resultObject;
-    switch (T) {
-      case QuestionnaireState:
-        resultObject = Result<T>.app(type: 'QuestionnaireState', periodId: periodId, result: result);
-        break;
-      case bool:
-        resultObject = Result<T>.app(type: 'bool', periodId: periodId, result: result);
-        break;
-      default:
-        print('Unsupported question type: $T');
-        resultObject = Result<T>.app(type: 'unknown', periodId: periodId, result: result);
+    final Result<T> resultObject = switch (result) {
+      QuestionnaireState() => Result<T>.app(type: 'QuestionnaireState', periodId: periodId, result: result),
+      bool() => Result<T>.app(type: 'bool', periodId: periodId, result: result),
+      _ => Result<T>.app(type: 'unknown', periodId: periodId, result: result),
+    };
+
+    if (resultObject.type == 'unknown') {
+      print('Unsupported question type: $T');
     }
+
     SubjectProgress p = SubjectProgress(
       subjectId: id,
       interventionId: getInterventionForDate(DateTime.now())!.id,
@@ -282,7 +280,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   Future<void> setStartDateBackBy({required int days}) async {
     await deleteProgress();
-    progress = await SupabaseQuery.batchUpsert(progress.map((p) => p.setStartDateBackBy(days: days).toJson()).toList());
+    progress = await SupabaseQuery.batchUpsert<SubjectProgress>(
+      progress.map((p) => p.setStartDateBackBy(days: days).toJson()).toList(),
+    );
     startedAt = startedAt!.subtract(Duration(days: days));
     save();
   }
@@ -290,11 +290,11 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   @override
   Future<StudySubject> save() async {
     try {
-      final response = await env.client.from(tableName).upsert(toJson()).select<List>();
+      final response = await env.client.from(tableName).upsert(toJson()).select();
       final json = toFullJson(partialJson: List<Map<String, dynamic>>.from(response).single);
       final newSubject = StudySubject.fromJson(json);
       _controller.add(newSubject);
-      Analytics.logger.info("Saving study subject");
+      // print("Saving study subject");
       return newSubject;
     } catch (e, stack) {
       SupabaseQuery.catchSupabaseException(e, stack);
@@ -324,7 +324,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   Future<StudySubject> delete() async {
     await deleteProgress();
     try {
-      final response = await env.client.from(tableName).delete().eq('id', id).single().select<Map<String, dynamic>>();
+      final response = await env.client.from(tableName).delete().eq('id', id).select().single();
       response['study'] = study.toJson();
       return StudySubject.fromJson(response);
     } catch (error, stacktrace) {

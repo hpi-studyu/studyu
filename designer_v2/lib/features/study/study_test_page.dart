@@ -19,10 +19,10 @@ import 'package:studyu_designer_v2/theme.dart';
 
 class StudyTestScreen extends StudyPageWidget {
   const StudyTestScreen(
-    studyId, {
+    super.studyId, {
     this.previewRoute,
-    Key? key,
-  }) : super(studyId, key: key);
+    super.key,
+  });
 
   final String? previewRoute;
 

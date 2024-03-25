@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
@@ -17,8 +18,7 @@ class NotificationDispatcher extends ConsumerStatefulWidget {
       this.snackbarInnerPadding = 16.0,
       this.snackbarBehavior = SnackBarBehavior.fixed,
       this.snackbarDefaultDuration = 2500,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   /// Pass-through widget that is rendered as is
   final Widget? child;
@@ -138,7 +138,7 @@ class _NotificationDispatcherState extends ConsumerState<NotificationDispatcher>
       content: ConstrainedBox(
           constraints: BoxConstraints(
             minWidth: 300,
-            maxWidth: MediaQuery.of(context).size.width * 0.33,
+            maxWidth: math.max(300, MediaQuery.of(context).size.width * 0.33),
           ),
           child: Row(children: [
             Flexible(

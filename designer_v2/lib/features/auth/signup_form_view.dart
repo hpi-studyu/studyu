@@ -15,14 +15,13 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SignupForm extends FormConsumerRefWidget {
-  const SignupForm({Key? key}) : super(key: key);
+  const SignupForm({super.key});
 
   final AuthFormKey formKey = AuthFormKey.signup;
 
   @override
   Widget build(BuildContext context, FormGroup form, WidgetRef ref) {
     final theme = Theme.of(context);
-
     final state = ref.watch(authFormControllerProvider(formKey));
     final controller = ref.watch(authFormControllerProvider(formKey).notifier);
 
@@ -43,6 +42,7 @@ class SignupForm extends FormConsumerRefWidget {
           formControl: controller.passwordConfirmationControl,
           labelText: tr.form_field_password_confirm,
           hintText: tr.form_field_password_confirm_hint,
+          onSubmitted: (_) => form.valid ? ref.read(authFormControllerProvider(formKey).notifier).signUp() : null,
         ),
         const SizedBox(height: 16.0),
         Row(

@@ -11,7 +11,7 @@ class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
   final CompletionPeriod completionPeriod;
 
-  const QuestionnaireTaskWidget({required this.task, required this.completionPeriod, Key? key}) : super(key: key);
+  const QuestionnaireTaskWidget({required this.task, required this.completionPeriod, super.key});
 
   @override
   State<QuestionnaireTaskWidget> createState() => _QuestionnaireTaskWidgetState();
@@ -22,6 +22,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   late bool responseValidator;
   DateTime? loginClickTime;
   bool _isLoading = false;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
     await handleTaskCompletion(context, (StudySubject? subject) async {
@@ -33,7 +34,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         rethrow;
       }
     });
-    if (!mounted) return;
+    if (!context.mounted) return;
     Navigator.pop(context, true);
   }
 
@@ -52,7 +53,10 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
       child: Column(
         children: [
           Expanded(
-            child: questionnaireWidget,
+            child: Form(
+              key: formKey,
+              child: questionnaireWidget,
+            ),
           ),
           if (response != null && responseValidator)
             ElevatedButton.icon(
@@ -61,12 +65,15 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
                 if (isRedundantClick(loginClickTime)) {
                   return;
                 }
+                if (!formKey.currentState!.validate()) {
+                  return;
+                }
                 setState(() {
                   _isLoading = true;
                 });
-                switch (response.runtimeType) {
-                  case QuestionnaireState:
-                    await _addQuestionnaireResult<QuestionnaireState>(response as QuestionnaireState, context);
+                switch (response) {
+                  case QuestionnaireState questionnaireState:
+                    await _addQuestionnaireResult<QuestionnaireState>(questionnaireState, context);
                     break;
                 }
                 setState(() {

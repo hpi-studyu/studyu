@@ -16,7 +16,7 @@ import '../../../widgets/bottom_onboarding_navigation.dart';
 import 'onboarding_progress.dart';
 
 class ConsentScreen extends StatefulWidget {
-  const ConsentScreen({Key? key}) : super(key: key);
+  const ConsentScreen({super.key});
 
   @override
   State<ConsentScreen> createState() => _ConsentScreenState();
@@ -80,10 +80,11 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   ),
                 );
               }
-              final savedFilePath =
-                  await savePDF(context, '${subject!.study.title}_consent', await generatePdfContent());
-              if (!mounted) return;
+              final pdfContent = await generatePdfContent();
+              if (!context.mounted) return;
+              final savedFilePath = await savePDF(context, '${subject!.study.title}_consent', pdfContent);
               if (savedFilePath != null) {
+                if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('${AppLocalizations.of(context)!.was_saved_to}$savedFilePath.'),
@@ -171,7 +172,7 @@ class ConsentCard extends StatelessWidget {
   final Function(int) onTapped;
   final bool? isChecked;
 
-  const ConsentCard({Key? key, this.consent, this.index, required this.onTapped, this.isChecked}) : super(key: key);
+  const ConsentCard({super.key, this.consent, this.index, required this.onTapped, this.isChecked});
 
   @override
   Widget build(BuildContext context) {

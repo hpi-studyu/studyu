@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:studyu_app/widgets/questionnaire/scale_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/choice_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/free_text_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/scale_question_widget.dart';
 import 'package:studyu_core/core.dart';
 
-import 'annotated_scale_question_widget.dart';
-import 'boolean_question_widget.dart';
-import 'choice_question_widget.dart';
+import 'questions/annotated_scale_question_widget.dart';
+import 'questions/boolean_question_widget.dart';
 import 'question_header.dart';
-import 'question_widget.dart';
-import 'visual_analogue_question_widget.dart';
+import 'questions/question_widget.dart';
+import 'questions/visual_analogue_question_widget.dart';
 
 class QuestionContainer extends StatefulWidget {
   final Function(Answer, int) onDone;
   final Question question;
   final int index;
 
-  const QuestionContainer({required this.onDone, required this.question, required this.index, Key? key})
-      : super(key: key);
+  const QuestionContainer({required this.onDone, required this.question, required this.index, super.key});
 
   @override
   State<StatefulWidget> createState() => _QuestionContainerState();
@@ -27,46 +27,50 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
     widget.onDone(answer, widget.index);
   }
 
-  QuestionWidget? getQuestionBody(BuildContext context) {
-    switch (widget.question.runtimeType) {
-      case ChoiceQuestion:
+  QuestionWidget getQuestionBody(BuildContext context) {
+    switch (widget.question) {
+      case ChoiceQuestion choiceQuestion:
         return ChoiceQuestionWidget(
-          question: widget.question as ChoiceQuestion,
+          question: choiceQuestion,
           onDone: _onDone,
           multiSelectionText: AppLocalizations.of(context)!.eligible_choice_multi_selection,
         );
-      case BooleanQuestion:
+      case BooleanQuestion booleanQuestion:
         return BooleanQuestionWidget(
-          question: widget.question as BooleanQuestion,
+          question: booleanQuestion,
           onDone: _onDone,
         );
-      case ScaleQuestion:
+      case ScaleQuestion scaleQuestion:
         return ScaleQuestionWidget(
-          question: widget.question as ScaleQuestion,
+          question: scaleQuestion,
           onDone: _onDone,
         );
-      case VisualAnalogueQuestion:
+      case VisualAnalogueQuestion visualAnalogueQuestion:
         // todo remove this when older studies are finished
         // ignore: deprecated_member_use_from_same_package
         return VisualAnalogueQuestionWidget(
-          question: widget.question as VisualAnalogueQuestion,
+          question: visualAnalogueQuestion,
           onDone: _onDone,
         );
-      case AnnotatedScaleQuestion:
+      case AnnotatedScaleQuestion annotatedScaleQuestion:
         return AnnotatedScaleQuestionWidget(
-          question: widget.question as AnnotatedScaleQuestion,
+          question: annotatedScaleQuestion,
+          onDone: _onDone,
+        );
+      case FreeTextQuestion freeTextQuestion:
+        return FreeTextQuestionWidget(
+          question: freeTextQuestion,
           onDone: _onDone,
         );
       default:
-        print('Question not supported!');
-        return null;
+        throw ArgumentError('Question type ${widget.question.type} not supported');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final questionBody = getQuestionBody(context)!;
+    final questionBody = getQuestionBody(context);
 
     return Card(
       child: Padding(

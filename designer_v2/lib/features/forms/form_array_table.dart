@@ -30,9 +30,8 @@ class FormArrayTable<T> extends StatelessWidget {
     this.emptyDescription,
     this.itemsSectionPadding = const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
     this.hideLeadingTrailingWhenEmpty = false,
-    Key? key,
-  })  : assert(sectionTitle == null || leadingWidget == null, "Cannot specify both sectionTitle and leadingWidget"),
-        super(key: key);
+    super.key,
+  }) : assert(sectionTitle == null || leadingWidget == null, "Cannot specify both sectionTitle and leadingWidget");
 
   final AbstractControl control;
 

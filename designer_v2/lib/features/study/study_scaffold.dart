@@ -37,14 +37,14 @@ class StudyScaffold extends ConsumerStatefulWidget {
     this.tabsSubnav,
     this.selectedTab,
     this.selectedTabSubnav,
-    this.drawer = const AppDrawer(title: 'StudyU'),
+    this.drawer = const AppDrawer(),
     this.disableActions = false,
     this.actionsSpacing = 2.0,
     this.actionsPadding = 4.0,
     this.appbarHeight = 56.0,
     this.appbarSubnavHeight = 44.0,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   /// The currently selected [Study.id]
   /// Defaults to [Config.newStudyId] when creating a new study

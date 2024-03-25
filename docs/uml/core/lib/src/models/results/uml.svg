@@ -1,55 +1,11 @@
-<svg version="1.1" baseProfile="full" width="376.0" height="224.0" viewbox="0 0 376 224" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[Result
-	  |
-	  &lt;static&gt;+keyType: String;
-	  +type: String;
-	  +periodId: String?;
-	  &lt;static&gt;+keyResult: String;
-	  +result: T
-	  |
-	  +Map&lt;String, dynamic&gt; toJson();
-	  &lt;static&gt;-Result&lt;dynamic&gt; _fromJson()
-	]
-	
-	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+<svg version="1.1" baseProfile="full" width="0.0" height="8.0" viewbox="0 0 0 8" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="224.0" width="376.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="8.0" width="0.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
-				<g transform="translate(20, 20)">
-					<g data-name="Result">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Result">
-							<rect x="0.0" y="0.0" height="168.0" width="320.0" data-name="Result"></rect>
-							<path d="M0.0 31.0 L320.0 31.0" fill="none" data-name="Result"></path>
-							<path d="M0.0 122.0 L320.0 122.0" fill="none" data-name="Result"></path>
-						</g>
-						<g transform="translate(0, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Result">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Result">
-								<text x="152.0" y="13.5" stroke="none" text-anchor="middle" data-name="Result">Result</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Result">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Result">
-								<text x="0.0" y="13.5" stroke="none" data-name="Result">&lt;static&gt;+keyType: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="Result">+type: String</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="Result">+periodId: String?</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="Result">&lt;static&gt;+keyResult: String</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="Result">+result: T</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 122)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Result">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Result">
-								<text x="0.0" y="13.5" stroke="none" data-name="Result">+Map&lt;String, dynamic&gt; toJson()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="Result">&lt;static&gt;-Result&lt;dynamic&gt; _fromJson()</text>
-								
-							</g>
-						</g>
-					</g>
-				</g>
+				
 			</g>
 		</g>
 	</g>

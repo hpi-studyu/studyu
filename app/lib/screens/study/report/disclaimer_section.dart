@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:studyu_core/core.dart';
 
 import 'generic_section.dart';
 
 class DisclaimerSection extends GenericSection {
-  const DisclaimerSection(StudySubject? subject, {Key? key, GestureTapCallback? onTap})
-      : super(subject, key: key, onTap: onTap);
+  const DisclaimerSection(super.subject, {super.key, super.onTap});
 
   @override
   Widget buildContent(BuildContext context) => Column(

@@ -9,12 +9,11 @@ class EmailTextField extends StatefulWidget {
     this.formControlName,
     this.formControl,
     hintText,
-    Key? key,
+    super.key,
   })  : assert((formControlName != null && formControl == null) || (formControlName == null && formControl != null),
             "Must provide either formControlName or formControl"),
         labelText = labelText ?? tr.form_field_email,
-        hintText = hintText ?? tr.form_field_email_hint,
-        super(key: key);
+        hintText = hintText ?? tr.form_field_email_hint;
 
   final String labelText;
   final String? hintText;
@@ -49,19 +48,20 @@ class _EmailTextFieldState extends State<EmailTextField> {
 
 class PasswordTextField extends StatefulWidget {
   PasswordTextField({
-    labelText,
     this.formControlName,
     this.formControl,
+    this.onSubmitted,
+    labelText,
     hintText,
-    Key? key,
+    super.key,
   })  : assert((formControlName != null && formControl == null) || (formControlName == null && formControl != null),
             "Must provide either formControlName or formControl"),
         labelText = labelText ?? tr.form_field_password,
-        hintText = hintText ?? tr.form_field_password_hint,
-        super(key: key);
+        hintText = hintText ?? tr.form_field_password_hint;
 
   final String labelText;
   final String? hintText;
+  final Function(FormControl control)? onSubmitted;
   final String? formControlName;
   final FormControl? formControl;
 
@@ -82,6 +82,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           formControl: widget.formControl,
           formControlName: widget.formControlName,
           obscureText: !passwordVisibility,
+          onSubmitted: widget.onSubmitted,
           decoration: InputDecoration(
             labelText: widget.labelText,
             hintText: widget.hintText,

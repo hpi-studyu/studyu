@@ -10,7 +10,7 @@ class StudyInvite extends SupabaseObjectFunctions<StudyInvite> {
   static const String tableName = 'study_invite';
 
   @override
-  Map<String, dynamic> get primaryKeys => {'code': code};
+  Map<String, Object> get primaryKeys => {'code': code};
 
   String code;
   @JsonKey(name: 'study_id')

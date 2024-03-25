@@ -25,8 +25,8 @@ class QuestionnaireWidget extends StatefulWidget {
     this.onComplete,
     this.onChange,
     this.shouldContinue,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() => _QuestionnaireWidgetState();
@@ -147,7 +147,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 class HtmlTextBox extends StatelessWidget {
   final String? text;
 
-  const HtmlTextBox(this.text, {Key? key}) : super(key: key);
+  const HtmlTextBox(this.text, {super.key});
 
   @override
   Widget build(BuildContext context) {

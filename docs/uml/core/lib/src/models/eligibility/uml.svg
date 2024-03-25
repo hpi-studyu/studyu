@@ -1,70 +1,11 @@
-<svg version="1.1" baseProfile="full" width="328.0" height="280.0" viewbox="0 0 328 280" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[EligibilityCriterion
-	  |
-	  +id: String;
-	  +reason: String?;
-	  +condition: Expression
-	  |
-	  +Map&lt;String, dynamic&gt; toJson();
-	  +bool isSatisfied();
-	  +bool isViolated()
-	]
-	
-	[EligibilityCriterion]o-[&lt;abstract&gt;Expression]
-	
-	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+<svg version="1.1" baseProfile="full" width="0.0" height="8.0" viewbox="0 0 0 8" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="280.0" width="328.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="8.0" width="0.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
-				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M136.0 171.7 L136 173 L136 193 L136.0 193.0 " fill="none"></path>
-					<g fill="#eee8d5">
-						<path d="M141.3 162.3 L136.0 171.7 L130.7 162.3 L136.0 153.0 Z"></path>
-					</g>
-					<g data-name="EligibilityCriterion">
-						<g fill="#eee8d5" stroke="#33322E" data-name="EligibilityCriterion">
-							<rect x="0.0" y="0.0" height="153.0" width="272.0" data-name="EligibilityCriterion"></rect>
-							<path d="M0.0 31.0 L272.0 31.0" fill="none" data-name="EligibilityCriterion"></path>
-							<path d="M0.0 92.0 L272.0 92.0" fill="none" data-name="EligibilityCriterion"></path>
-						</g>
-						<g transform="translate(0, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="EligibilityCriterion">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="EligibilityCriterion">
-								<text x="128.0" y="13.5" stroke="none" text-anchor="middle" data-name="EligibilityCriterion">EligibilityCriterion</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EligibilityCriterion">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EligibilityCriterion">
-								<text x="0.0" y="13.5" stroke="none" data-name="EligibilityCriterion">+id: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="EligibilityCriterion">+reason: String?</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="EligibilityCriterion">+condition: Expression</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 92)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="EligibilityCriterion">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="EligibilityCriterion">
-								<text x="0.0" y="13.5" stroke="none" data-name="EligibilityCriterion">+Map&lt;String, dynamic&gt; toJson()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="EligibilityCriterion">+bool isSatisfied()</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="EligibilityCriterion">+bool isViolated()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Expression">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Expression">
-							<rect x="84.0" y="193.0" height="31.0" width="104.0" data-name="Expression"></rect>
-						</g>
-						<g transform="translate(84, 193)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Expression">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Expression">
-								<text x="44.0" y="13.5" stroke="none" text-anchor="middle" data-name="Expression">Expression</text>
-								
-							</g>
-						</g>
-					</g>
-				</g>
+				
 			</g>
 		</g>
 	</g>

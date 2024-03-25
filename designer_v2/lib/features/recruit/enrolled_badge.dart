@@ -6,8 +6,8 @@ import 'package:studyu_designer_v2/theme.dart';
 class EnrolledBadge extends StatelessWidget {
   const EnrolledBadge({
     required this.enrolledCount,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final int enrolledCount;
 

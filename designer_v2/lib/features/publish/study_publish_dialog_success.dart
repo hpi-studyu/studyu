@@ -9,7 +9,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class PublishSuccessDialog extends StudyPageWidget {
-  const PublishSuccessDialog(super.studyId, {Key? key}) : super(key: key);
+  const PublishSuccessDialog(super.studyId, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

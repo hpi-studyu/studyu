@@ -1,3 +1,55 @@
+## 1.7.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.7.0-dev.6
+
+ - **FIX**: upgrade deps. ([b491c9c4](https://github.com/hpi-studyu/studyu/commit/b491c9c469ee808fe1aaa50b7a50759be2378552))
+
+## 1.7.0-dev.5
+
+ - **FIX**: upgrade deps. ([b491c9c4](https://github.com/hpi-studyu/studyu/commit/b491c9c469ee808fe1aaa50b7a50759be2378552))
+
+## 1.7.0-dev.4
+
+ - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))
+
+## 1.7.0-dev.3
+
+ - **FIX**: upgrade deps. ([6ad9bea4](https://github.com/hpi-studyu/studyu/commit/6ad9bea42903a25a5be5a84f2af8b70654d05616))
+ - **FIX**: update gitignore files. ([939d6be4](https://github.com/hpi-studyu/studyu/commit/939d6be422ee37f2ea56b39bb3921060fd1844cd))
+ - **FIX**: upgrade deps. ([7ac0d4ca](https://github.com/hpi-studyu/studyu/commit/7ac0d4cab42b1ce27ec200a5241f92d612ade499))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+
+## 1.7.0-dev.2
+
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+
+## 1.7.0-dev.1
+
+ - **FIX**: upgrade deps. ([304430c8](https://github.com/hpi-studyu/studyu/commit/304430c858d4035a279b42114c7ccf86299357a2))
+
+## 1.7.0-dev.0
+
+ - **FIX**: do not rely on hardcoded authcallback. ([e6787fb7](https://github.com/hpi-studyu/studyu/commit/e6787fb7027b50181441bec0a6ee5a47eec1146d))
+ - **FIX**(cli): debug command line arguments. ([e16f5e49](https://github.com/hpi-studyu/studyu/commit/e16f5e4954ce3247073b31479e8b28f0ff1693df))
+ - **FIX**: Use default env urls again. ([ac3c3981](https://github.com/hpi-studyu/studyu/commit/ac3c39819ff23faa99a6812e88700d29184bb9f4))
+ - **FEAT**(docker): Introduce advanced cli functionality. ([a1c749aa](https://github.com/hpi-studyu/studyu/commit/a1c749aa6241d4b3521e53462db116a96c0bf246))
+
+## 1.6.4
+
+ - **FIX**: upgrade deps. ([f37d0a71](https://github.com/hpi-studyu/studyu/commit/f37d0a711ab9a126b7da13b7eb4fbb9b784f3725))
+ - **FIX**: remove old env and add new hpi dev env. ([2ea488fe](https://github.com/hpi-studyu/studyu/commit/2ea488fe0ea169396435903bf7451a58c527058d))
+ - **FIX**: upgrade deps. ([567a3b07](https://github.com/hpi-studyu/studyu/commit/567a3b07c360e55da62898e928a794a756ab0546))
+
+## 1.6.3
+
+ - **FIX**: upgrade deps. ([567a3b07](https://github.com/hpi-studyu/studyu/commit/567a3b07c360e55da62898e928a794a756ab0546))
+
+## 1.6.2
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 1.6.2-dev.11
 
  - **FIX**: upgrade deps. ([6fa0e8b8](https://github.com/hpi-studyu/studyu/commit/6fa0e8b8332c0872b59c7c31042fb845f0708e73))

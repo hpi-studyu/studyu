@@ -2,8 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -12,7 +10,7 @@ import '../../routes.dart';
 import '../../widgets/bottom_onboarding_navigation.dart';
 
 class TermsScreen extends StatefulWidget {
-  const TermsScreen({Key? key}) : super(key: key);
+  const TermsScreen({super.key});
 
   @override
   State<TermsScreen> createState() => _TermsScreenState();
@@ -28,15 +26,12 @@ class _TermsScreenState extends State<TermsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<AppState>();
     return Scaffold(
       body: SafeArea(
         child: Center(
-          child: (state.appConfig != null)
-              ? legalSection(context, state.appConfig)
-              : RetryFutureBuilder<AppConfig>(
-                  tryFunction: AppConfig.getAppConfig,
-                  successBuilder: (BuildContext context, AppConfig? appConfig) => legalSection(context, appConfig)),
+          child: RetryFutureBuilder<AppConfig>(
+              tryFunction: AppConfig.getAppConfig,
+              successBuilder: (BuildContext context, AppConfig? appConfig) => legalSection(context, appConfig)),
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
@@ -44,7 +39,7 @@ class _TermsScreenState extends State<TermsScreen> {
             ? () async {
                 final success = await anonymousSignUp();
                 if (success) {
-                  if (!mounted) return;
+                  if (!context.mounted) return;
                   Navigator.pushNamed(context, Routes.studySelection);
                 }
               }
@@ -111,7 +106,7 @@ class LegalSection extends StatelessWidget {
   final ValueChanged<bool?>? onChange;
 
   const LegalSection({
-    Key? key,
+    super.key,
     this.title,
     this.description,
     this.icon,
@@ -120,7 +115,7 @@ class LegalSection extends StatelessWidget {
     this.acknowledgment,
     this.isChecked,
     this.onChange,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

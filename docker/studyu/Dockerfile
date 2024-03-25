@@ -31,6 +31,11 @@ ARG FLUTTER_APP_FOLDER
 # Copy web builds from the builder image to the webserver
 COPY --from=builder /src/$FLUTTER_APP_FOLDER/build/web /usr/share/nginx/html/$FLUTTER_APP_FOLDER
 
-# Loads all env vars starting with "STUDYU" into the .env file
+# Copy init script from the builder image to the entrypoint
+COPY --from=builder /src/docker/studyu/init_studyu.sh /docker-entrypoint.d/init_studyu.sh
+RUN chmod +x /docker-entrypoint.d/init_studyu.sh
+
+# Set environment variables
 ENV FLUTTER_APP_FOLDER=$FLUTTER_APP_FOLDER
-CMD ["sh", "-c", "printenv | grep STUDYU_ > /usr/share/nginx/html/${FLUTTER_APP_FOLDER}/assets/packages/studyu_flutter_common/envs/.env && nginx -g 'daemon off;'"]
+
+

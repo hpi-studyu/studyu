@@ -20,34 +20,26 @@ command:
 
 scripts:
   analyze:
-    # Exit with success if markdownlint is not installed so it's not a requirement
-    # (stream redirection has to be POSIX compliant for GH runners)
     run: |
       melos exec -c 6 -- \
         "flutter analyze --fatal-infos ."
-      if markdownlint -V >/dev/null 2>&1; then
-        printf "\n\033[1mLinting Markdown files ...\033[0;31m\n\n"
-        markdownlint --ignore-path '.meta/.markdownlintignore' --config '.meta/.mdlrc' './**/*.md' \
-          && printf "\033[0;32mSuccess!\033[0m\n"
-      else
-        printf "\n\033[1mCannot lint markdown files since markdownlint is not installed.\033[0m\n\n"
-      fi
     description: |
-      Run `dart analyze` in all packages, and, if `markdownlint` is installed, lint Markdown files.
+      Run `dart analyze` in all packages.
        - Note: you can also rely on your IDEs Dart Analysis / Issues window.
-
-  format:
-    run: |
-      melos exec -c 6 -- \
-        "dart format -l 120 ."
-      markdownlint --ignore-path '.meta/.markdownlintignore' --config '.meta/.mdlrc' './**/*.md' --fix
-    description: Format all code and markdown files
 
   fix:
     run: |
       melos exec -c 6 -- \
         "dart fix --apply"
     description: Fix auto-fixable lint errors
+
+  # todo exclude *.g.dart files in a platform agnostic way
+  # dart format sadly does not support this yet: https://github.com/dart-lang/dart_style/issues/864
+  format:
+    run: |
+      melos exec -c 6 -- \
+        "dart format -l 120 ."
+    description: Format all code and markdown files
 
   format:ci:
     run: |
@@ -63,6 +55,7 @@ scripts:
 
   upgrade:
     run: |
+      dart pub upgrade
       melos exec -c 6 --fail-fast -- \
         "dart pub upgrade" && melos bootstrap
     description: Check all outdated dependencies
@@ -102,7 +95,7 @@ scripts:
   build:android:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build apk --no-tree-shake-icons --multidex"
+        "flutter build apk --multidex"
     description: Build app for Android.
     packageFilters:
       dir-exists: android
@@ -110,7 +103,7 @@ scripts:
   build:ios:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build ipa --no-codesign --no-tree-shake-icons"
+        "flutter build ipa --no-codesign"
     description: Build app for iOS.
     packageFilters:
       dir-exists: ios
@@ -118,7 +111,7 @@ scripts:
   build:web:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons"
+        "flutter build web"
     description: Build app for Web.
     packageFilters:
       scope: [studyu_app, studyu_designer_v2]
@@ -127,7 +120,7 @@ scripts:
   build:web:app:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons"
+        "flutter build web"
     description: Build app for Web.
     packageFilters:
       scope: studyu_app
@@ -135,7 +128,7 @@ scripts:
   build:web:designer_v2:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons"
+        "flutter build web"
     description: Build designer_v2 for Web.
     packageFilters:
       scope: studyu_designer_v2
@@ -143,7 +136,7 @@ scripts:
   build:web:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.dev"
+        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
     description: Build web dev.
     packageFilters:
       scope: [studyu_app, studyu_designer_v2]
@@ -152,7 +145,7 @@ scripts:
   build:web:app:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.dev"
+        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
     description: Build web app dev.
     packageFilters:
       scope: studyu_app
@@ -161,7 +154,7 @@ scripts:
   build:web:designer_v2:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --no-tree-shake-icons --dart-define=STUDYU_ENV=.env.dev"
+        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
     description: Build web designer_v2 dev.
     packageFilters:
       scope: studyu_designer_v2

@@ -24,7 +24,7 @@ class EligibilityScreen extends StatefulWidget {
         settings: const RouteSettings(name: '/eligibilityCheck'),
       );
 
-  const EligibilityScreen({required this.study, Key? key}) : super(key: key);
+  const EligibilityScreen({required this.study, super.key});
 
   @override
   State<StatefulWidget> createState() => _EligibilityScreenState();
@@ -32,6 +32,7 @@ class EligibilityScreen extends StatefulWidget {
 
 class _EligibilityScreenState extends State<EligibilityScreen> {
   EligibilityResult? activeResult;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -47,8 +48,11 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
 
   bool _checkContinuation(QuestionnaireState qs) {
     final criteria = widget.study!.eligibilityCriteria;
-    final failingResult = criteria.firstWhereOrNull((element) => element.isViolated(qs));
+    EligibilityCriterion? failingResult = criteria.firstWhereOrNull((element) => element.isViolated(qs));
     if (failingResult == null) return true;
+    // freetext quickfix start
+    failingResult = _isFreeTextCriterion(failingResult) ? null : failingResult;
+    // freetext quickfix end
     setState(() {
       activeResult = EligibilityResult(qs, eligible: false, firstFailed: failingResult);
     });
@@ -58,7 +62,14 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   void _evaluateResponse(QuestionnaireState qs) {
     final criteria = widget.study!.eligibilityCriteria;
     setState(() {
-      final conditionResult = criteria.every((criterion) => criterion.isSatisfied(qs));
+      final conditionResult = criteria.every((criterion) {
+        // freetext quickfix start
+        if (_isFreeTextCriterion(criterion)) {
+          return true;
+        }
+        // freetext quickfix end
+        return criterion.isSatisfied(qs);
+      });
       if (conditionResult) {
         activeResult = EligibilityResult(qs, eligible: conditionResult);
       } else {
@@ -66,6 +77,19 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         activeResult = EligibilityResult(qs, eligible: conditionResult, firstFailed: firstFailed);
       }
     });
+  }
+
+  // todo quickfix until other question types are implemented (see DesignerV2's QuestionFormData)
+  // make all free text questions eligible
+  bool _isFreeTextCriterion(EligibilityCriterion criterion) {
+    return widget.study?.questionnaire.questions.any((element) {
+          if (criterion.condition.type == ChoiceExpression.expressionType) {
+            ChoiceExpression choiceExpression = criterion.condition as ChoiceExpression;
+            return element.id == choiceExpression.target!;
+          }
+          return false;
+        }) ??
+        false;
   }
 
   void _finish() {

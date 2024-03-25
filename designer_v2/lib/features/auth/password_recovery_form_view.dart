@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
 class PasswordRecoveryForm extends FormConsumerRefWidget {
-  const PasswordRecoveryForm({Key? key}) : super(key: key);
+  const PasswordRecoveryForm({super.key});
 
   final AuthFormKey formKey = AuthFormKey.passwordRecovery;
 
@@ -33,6 +33,8 @@ class PasswordRecoveryForm extends FormConsumerRefWidget {
           formControl: controller.passwordConfirmationControl,
           labelText: tr.form_field_password_new_confirm,
           hintText: tr.form_field_password_new_confirm_hint,
+          onSubmitted: (_) =>
+              form.valid ? ref.read(authFormControllerProvider(formKey).notifier).recoverPassword() : null,
         ),
         const SizedBox(height: 24.0),
         ReactiveFormConsumer(builder: (context, form, child) {

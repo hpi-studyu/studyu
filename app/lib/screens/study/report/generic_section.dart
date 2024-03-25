@@ -5,7 +5,7 @@ abstract class GenericSection extends StatelessWidget {
   final StudySubject? subject;
   final GestureTapCallback? onTap;
 
-  const GenericSection(this.subject, {Key? key, this.onTap}) : super(key: key);
+  const GenericSection(this.subject, {super.key, this.onTap});
 
   Widget buildContent(BuildContext context);
 

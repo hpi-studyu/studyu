@@ -5,7 +5,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../../routes.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+  const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class WelcomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Spacer(),
-              const Image(image: AssetImage('assets/images/icon_wide.png'), height: 200),
+              const Image(image: AssetImage('assets/icon/logo.png'), height: 200),
               const SizedBox(height: 20),
               OutlinedButton.icon(
                 icon: const Icon(Icons.info),

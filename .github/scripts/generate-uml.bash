@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # repo root at ../.. from this file's directory
-root=$(realpath $(dirname $(realpath $0))/../..)
+root="$(realpath "$(dirname "$(realpath "$0")")/../..")"
 
 docs_dir="$root/docs/uml"
 
@@ -16,13 +16,13 @@ prev_update="$(git log -n 1 --pretty=format:%H -- "$docs_dir")"
 # regenerated
 declare -A dirty
 # get all directories that have changed since prev_update
-for changed in $(git diff --name-only $prev_update \
+for changed in $(git diff --name-only "$prev_update" \
     | grep --extended-regexp '(flutter_common|core|designer_v2|app)/lib/.*\.dart' \
     | xargs dirname \
     | sort --unique \
 ); do
     # set changed dir as dirty for all parents until we reach lib
-    while [[ -n $(grep --extended-regexp '[^/]*/lib' <<< "$changed") ]]; do
+    while grep --extended-regexp -q '[^/]*/lib' <<< "$changed"; do
         dirty[$changed]=1
         changed="$(dirname "$changed")"
     done
@@ -45,10 +45,10 @@ for d in "${!dirty[@]}"; do
     echo "Generating diagram for $d"
 
     # ensure destination dir extists
-    mkdir -p $(dirname "$out")
+    mkdir -p "$(dirname "$out")"
 
     # go to package dir, i.e. first path component
-    cd "$root/$(cut -d/ -f1 <<< "$d")"
+    cd "$root/$(cut -d/ -f1 <<< "$d")" || exit
     # uml generator gets confused with generated files so we have to remove
     # them
     find . -type f -name '*.g.dart' -exec rm {} \;
@@ -58,7 +58,7 @@ for d in "${!dirty[@]}"; do
         --exclude=State --exclude=StatefulWidget --exclude=StatelessWidget \
         -b nomnoml \
         -s "$(cut -d/ -f2- <<< "$d")" \
-        > $tmpf
+        > "$tmpf"
     npx --yes nomnoml "$tmpf" "$out"
 
     # get deleted generated files back from git

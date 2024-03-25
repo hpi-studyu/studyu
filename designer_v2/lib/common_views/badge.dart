@@ -13,8 +13,9 @@ class Badge extends StatelessWidget {
     this.borderRadius = 12.0,
     this.padding = const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
     this.type = BadgeType.plain,
-    Key? key,
-  }) : super(key: key);
+    this.center = true,
+    super.key,
+  });
 
   final IconData? icon;
   final Color? color;
@@ -24,6 +25,7 @@ class Badge extends StatelessWidget {
   final EdgeInsets padding;
   final double? iconSize;
   final TextStyle? labelStyle;
+  final bool center;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,7 @@ class Badge extends StatelessWidget {
         child: Padding(
           padding: padding,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: center ? MainAxisAlignment.center : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               (icon != null)
@@ -55,7 +57,8 @@ class Badge extends StatelessWidget {
                     )
                   : const SizedBox.shrink(),
               (icon != null) ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
-              Text(
+              Expanded(
+                  child: Text(
                 label,
                 softWrap: false,
                 maxLines: 1,
@@ -67,7 +70,7 @@ class Badge extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     )
                     .merge(labelStyle),
-              ),
+              )),
             ],
           ),
         ),
