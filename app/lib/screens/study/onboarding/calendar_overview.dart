@@ -1,6 +1,3 @@
-// Copyright 2019 Aleksander Woźniak
-// SPDX-License-Identifier: Apache-2.0
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:studyu_core/core.dart';
@@ -17,13 +14,11 @@ class CalendarOverview extends StatefulWidget {
 
 class _CalendarOverviewState extends State<CalendarOverview> {
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
 
   // init
   @override
   void initState() {
     super.initState();
-    // _calendarFormat = CalendarFormat.month;
   }
 
   int _dayOfYear(DateTime date) {
@@ -98,16 +93,31 @@ class _CalendarOverviewState extends State<CalendarOverview> {
         colors = [Color.fromARGB(255, 228, 228, 228), Colors.black];
       } else if (segment is ThompsonSamplingScheduleSegment) {
         // TODO_NOW if day is in past, show the actual intervention
+        if (isSameDay(day, DateTime.now()) ||
+            isBeforeDay(day, DateTime.now())) {
+          print(
+            "isSameDay($day, ${DateTime.now()}: ${isSameDay(day, DateTime.now())}",
+          );
+          print(
+            "isBeforeDay($day, ${DateTime.now()}: ${isBeforeDay(day, DateTime.now())}",
+          );
+          final intervention = widget.subject!.getInterventionForDate(day)!;
+          // final intervention = schedule.getInterventionForDay(nthDay, [])!;
+          if (widget.subject != null) {
+            final index = schedule.interventions.indexOf(intervention);
+            colors = colorScheme[index % colorScheme.length];
+          }
+        } else {
+          colors = [Colors.white, Colors.white];
+          List<Color> gradientColors = [];
 
-        colors = [Colors.white, Colors.white];
-        List<Color> gradientColors = [];
+          for (int i = 0; i < schedule.interventions.length; i++) {
+            gradientColors.add(colorScheme[i % colorScheme.length][0]);
+          }
 
-        for (int i = 0; i < schedule.interventions.length; i++) {
-          gradientColors.add(colorScheme[i % colorScheme.length][0]);
+          gradient = LinearGradient(
+              colors: gradientColors, transform: const GradientRotation(1));
         }
-
-        gradient = LinearGradient(
-            colors: gradientColors, transform: const GradientRotation(1));
       } else if (segment is AlternatingScheduleSegment) {
         colors = colorScheme[0];
         final interventionOnDay = schedule.getInterventionForDay(nthDay, []);
@@ -155,15 +165,6 @@ class _CalendarOverviewState extends State<CalendarOverview> {
             lastDay: kLastDay,
             focusedDay: _focusedDay,
             headerStyle: const HeaderStyle(titleCentered: true),
-            // calendarFormat: _calendarFormat,
-            selectedDayPredicate: (day) {
-              // Use `selectedDayPredicate` to determine which day is currently selected.
-              // If this returns true, then `day` will be marked as selected.
-
-              // Using `isSameDay` is recommended to disregard
-              // the time-part of compared DateTime objects.
-              return isSameDay(_selectedDay, day);
-            },
             availableCalendarFormats: const {
               CalendarFormat.month: 'Month',
             },
@@ -184,7 +185,6 @@ class _CalendarOverviewState extends State<CalendarOverview> {
               },
             ),
             onPageChanged: (focusedDay) {
-              // No need to call `setState()` here
               _focusedDay = focusedDay;
             },
           ),
@@ -192,7 +192,6 @@ class _CalendarOverviewState extends State<CalendarOverview> {
             const Label(
               color: Color.fromARGB(255, 228, 228, 228),
               text: "Baseline",
-              // borderColor: Colors.grey,
             ),
           for (int i = 0; i < interventions.length; i++)
             Label(

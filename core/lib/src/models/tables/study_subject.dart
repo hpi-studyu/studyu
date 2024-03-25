@@ -150,6 +150,12 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       Duration(days: interventionOrder.length * study.schedule.phaseDuration));
 
   int getDayOfStudyFor(DateTime date) {
+    print("getting day of study for $date with startedAt $startedAt");
+
+    if (startedAt == null) {
+      return -1;
+    }
+    // TODO: Fix started at
     return date.differenceInDays(startedAt!);
   }
 
@@ -163,16 +169,25 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   Intervention? getInterventionForDate(DateTime date) {
-    final dayOfStudy = getDayOfStudyFor(date);
+    print("getting intervention for date");
+
+    print("date is $date");
+    final dayOfStudy = getDayOfStudyFor(date); //
+    print("day of study is $dayOfStudy");
+
     if (dayOfStudy < 0) return null;
 
     // print(progress);
+    print("getting progres until date");
 
-    // TODO_NOW: do we need to check bounds
+    final progressUntilDate =
+        progress.where((p) => isBeforeDay(p.completedAt!, date)).toList();
+
+    print("getting intervention for the day");
 
     try {
-      final intervention =
-          study.mp23Schedule.getInterventionForDay(dayOfStudy, progress);
+      final intervention = study.mp23Schedule
+          .getInterventionForDay(dayOfStudy, progressUntilDate);
       return intervention;
     } catch (e) {
       return null;
