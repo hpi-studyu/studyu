@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-03-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`studyu_app` - `v2.6.5`](#studyu_app---v265)
+ - [`studyu_core` - `v4.3.3`](#studyu_core---v433)
+ - [`studyu_designer_v2` - `v1.6.2`](#studyu_designer_v2---v162)
+
+Packages with other changes:
+
+ - [`studyu_flutter_common` - `v1.7.0`](#studyu_flutter_common---v170)
+
+Packages graduated to a stable release (see pre-releases prior to the stable version for changelog entries):
+
+ - `studyu_app` - `v2.6.5`
+ - `studyu_core` - `v4.3.3`
+ - `studyu_designer_v2` - `v1.6.2`
+ - `studyu_flutter_common` - `v1.7.0`
+
+---
+
+#### `studyu_app` - `v2.6.5`
+
+#### `studyu_core` - `v4.3.3`
+
+#### `studyu_designer_v2` - `v1.6.2`
+
+#### `studyu_flutter_common` - `v1.7.0`
+
+
 ## 2024-03-23
 
 ### Changes

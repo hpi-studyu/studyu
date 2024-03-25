@@ -1,3 +1,7 @@
+## 4.3.3
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 4.3.3-dev.5
 
  - **REFACTOR**: login process and offline mode. ([aab64a42](https://github.com/hpi-studyu/studyu/commit/aab64a429df81037eb6cd9c06b7eb89b282a1a05))

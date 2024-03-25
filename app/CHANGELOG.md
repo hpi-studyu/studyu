@@ -1,3 +1,7 @@
+## 2.6.5
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 2.6.5-dev.8
 
  - **FIX**: pod update. ([a289069e](https://github.com/hpi-studyu/studyu/commit/a289069ef8eeab8ee996f9a9b6d26f98535a25e3))
