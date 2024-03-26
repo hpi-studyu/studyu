@@ -37,16 +37,33 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget _buildTask() {
     switch (taskInstance.task) {
       case CheckmarkTask checkmarkTask:
-        return CheckmarkTaskWidget(
-          task: checkmarkTask,
-          key: UniqueKey(),
-          completionPeriod: taskInstance.completionPeriod,
+        return SingleChildScrollView(
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                HtmlText(taskInstance.task.header, centered: true),
+                const SizedBox(height: 20),
+                CheckmarkTaskWidget(
+                  task: checkmarkTask,
+                  key: UniqueKey(),
+                  completionPeriod: taskInstance.completionPeriod,
+                )
+              ],
+            ),
+          ),
         );
       case QuestionnaireTask questionnaireTask:
-        return QuestionnaireTaskWidget(
-          task: questionnaireTask,
-          key: UniqueKey(),
-          completionPeriod: taskInstance.completionPeriod,
+        return Flex(
+          direction: Axis.vertical,
+          children: [
+            QuestionnaireTaskWidget(
+              task: questionnaireTask,
+              key: UniqueKey(),
+              completionPeriod: taskInstance.completionPeriod,
+            )
+          ],
         );
       default:
         throw ArgumentError('Task ${taskInstance.task.type} not supported');
@@ -55,47 +72,11 @@ class _TaskScreenState extends State<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(taskInstance.task.title ?? ''),
-      ),
+      appBar: AppBar(title: Text(taskInstance.task.title ?? '')),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Flexible(
-                  child: Text(
-                    taskInstance.task.title ?? '',
-                    style: theme.textTheme.headlineMedium!.copyWith(fontSize: 24),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.info_outline, color: Colors.grey),
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: ListTile(
-                          dense: true,
-                          title: Text(taskInstance.task.title!, style: theme.textTheme.titleLarge),
-                        ),
-                        content: HtmlText(taskInstance.task.header),
-                      );
-                    },
-                  ),
-                ),
-              ]),
-              const SizedBox(height: 20),
-              _buildTask(),
-            ],
-          ),
-        ),
+        child: _buildTask(),
       ),
     );
   }
