@@ -935,7 +935,8 @@
 	[HtmlText
 	  |
 	  +text: String?;
-	  +style: TextStyle?
+	  +style: TextStyle?;
+	  +centered: bool
 	  |
 	  +Widget build()
 	]
@@ -1410,9 +1411,9 @@
 					<g fill="#eee8d5">
 						<path d="M11635.1 638.2 L11642.2 646.3 L11631.6 648.3 L11624.5 640.2 Z"></path>
 					</g>
-					<path d="M22575.5 269.2 L22575.5 413 L22575.5 584 L22575.5 584.0 " fill="none"></path>
+					<path d="M22575.5 276.7 L22575.5 413 L22575.5 584 L22575.5 584.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M22580.8 259.8 L22575.5 269.2 L22570.2 259.8 L22575.5 250.5 Z"></path>
+						<path d="M22580.8 267.3 L22575.5 276.7 L22570.2 267.3 L22575.5 258.0 Z"></path>
 					</g>
 					<path d="M14729.2 663.9 L14996.75 786 L14919.330792682927 934.5 L14919.3 934.5 " fill="none"></path>
 					<g fill="#eee8d5">
@@ -4109,24 +4110,25 @@
 					</g>
 					<g data-name="HtmlText">
 						<g fill="#eee8d5" stroke="#33322E" data-name="HtmlText">
-							<rect x="22497.5" y="142.5" height="108.0" width="156.0" data-name="HtmlText"></rect>
-							<path d="M22497.5 173.5 L22653.5 173.5" fill="none" data-name="HtmlText"></path>
-							<path d="M22497.5 219.5 L22653.5 219.5" fill="none" data-name="HtmlText"></path>
+							<rect x="22497.5" y="135.0" height="123.0" width="156.0" data-name="HtmlText"></rect>
+							<path d="M22497.5 166.0 L22653.5 166.0" fill="none" data-name="HtmlText"></path>
+							<path d="M22497.5 227.0 L22653.5 227.0" fill="none" data-name="HtmlText"></path>
 						</g>
-						<g transform="translate(22497.5, 142.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="HtmlText">
+						<g transform="translate(22497.5, 135)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="HtmlText">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="HtmlText">
 								<text x="70.0" y="13.5" stroke="none" text-anchor="middle" data-name="HtmlText">HtmlText</text>
 								
 							</g>
 						</g>
-						<g transform="translate(22497.5, 173.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HtmlText">
+						<g transform="translate(22497.5, 166)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HtmlText">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="HtmlText">
 								<text x="0.0" y="13.5" stroke="none" data-name="HtmlText">+text: String?</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="HtmlText">+style: TextStyle?</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="HtmlText">+centered: bool</text>
 								
 							</g>
 						</g>
-						<g transform="translate(22497.5, 219.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HtmlText">
+						<g transform="translate(22497.5, 227)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="HtmlText">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="HtmlText">
 								<text x="0.0" y="13.5" stroke="none" data-name="HtmlText">+Widget build()</text>
 								
