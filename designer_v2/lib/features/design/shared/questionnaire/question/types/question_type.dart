@@ -15,7 +15,7 @@ enum SurveyQuestionType {
       ScaleQuestion.questionType: SurveyQuestionType.scale,
       AnnotatedScaleQuestion.questionType: SurveyQuestionType.scale,
       VisualAnalogueQuestion.questionType: SurveyQuestionType.scale,
-      // FreeTextQuestion.questionType: SurveyQuestionType.freeText,
+      FreeTextQuestion.questionType: SurveyQuestionType.freeText,
     };
     if (!typeMapping.containsKey(question.type)) {
       throw UnimplementedError("Missing SurveyQuestionType for question of type: ${question.type}");
