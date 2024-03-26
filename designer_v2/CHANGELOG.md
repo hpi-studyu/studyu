@@ -1,3 +1,7 @@
+## 1.6.3
+
+ - **FIX**: disable freetext for Designer UI surveys. ([7e3988eb](https://github.com/hpi-studyu/studyu/commit/7e3988ebc80620be52636077a6fb13a180c1802a))
+
 ## 1.6.2
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
