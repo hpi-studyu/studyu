@@ -22,6 +22,10 @@ Future<void> loadEnv() async {
   final envAppUrl = getEnv('STUDYU_APP_URL');
   final envDesignerUrl = getEnv('STUDYU_DESIGNER_URL');
   final envProjectGeneratorUrl = getEnv('STUDYU_PROJECT_GENERATOR_URL');
+
+  // TODO Remove this after migration phase is over
+  await SecureStorage.migrateSharedPreferencesToSecureStorage();
+
   await Supabase.initialize(
     url: supabaseUrl!,
     anonKey: supabaseAnonKey!,
