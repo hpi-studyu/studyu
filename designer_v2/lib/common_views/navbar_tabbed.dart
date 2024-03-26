@@ -190,6 +190,7 @@ class _TabbedNavbarState<T extends NavbarTab> extends ConsumerState<TabbedNavbar
     return Theme(
       data: theme.copyWith(splashColor: Colors.transparent),
       child: TabBar(
+        dividerColor: Colors.transparent,
         isScrollable: widget.isScrollable,
         labelPadding: widget.labelPadding,
         unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.8),

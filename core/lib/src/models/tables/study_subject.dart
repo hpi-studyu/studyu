@@ -247,7 +247,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   Future<void> setStartDateBackBy({required int days}) async {
     await deleteProgress();
-    progress = await SupabaseQuery.batchUpsert(progress.map((p) => p.setStartDateBackBy(days: days).toJson()).toList());
+    progress = await SupabaseQuery.batchUpsert<SubjectProgress>(
+      progress.map((p) => p.setStartDateBackBy(days: days).toJson()).toList(),
+    );
     startedAt = startedAt!.subtract(Duration(days: days));
     save();
   }
@@ -259,7 +261,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       final json = toFullJson(partialJson: List<Map<String, dynamic>>.from(response).single);
       final newSubject = StudySubject.fromJson(json);
       _controller.add(newSubject);
-      print("Saving study subject");
+      // print("Saving study subject");
       return newSubject;
     } catch (e, stack) {
       SupabaseQuery.catchSupabaseException(e, stack);

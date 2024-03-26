@@ -429,10 +429,10 @@ packages:
     dependency: "direct main"
     description:
       name: sentry
-      sha256: d2ee9c850d876d285f22e2e662f400ec2438df9939fe4acd5d780df9841794ce
+      sha256: a460aa48568d47140dd0557410b624d344ffb8c05555107ac65035c1097cf1ad
       url: "https://pub.dev"
     source: hosted
-    version: "7.16.1"
+    version: "7.18.0"
   shelf:
     dependency: transitive
     description:
@@ -621,10 +621,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: e7d5ecd604e499358c5fe35ee828c0298a320d54455e791e9dcf73486bc8d9f0
+      sha256: a75f83f14ad81d5fe4b3319710b90dec37da0e22612326b696c9e1b8f34bbf48
       url: "https://pub.dev"
     source: hosted
-    version: "14.1.0"
+    version: "14.2.0"
   watcher:
     dependency: transitive
     description:

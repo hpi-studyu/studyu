@@ -1,3 +1,35 @@
+## 4.3.3
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 4.3.3-dev.5
+
+ - **REFACTOR**: login process and offline mode. ([aab64a42](https://github.com/hpi-studyu/studyu/commit/aab64a429df81037eb6cd9c06b7eb89b282a1a05))
+ - **REFACTOR**: improve return type of publishedPublicStudies(). ([fedec441](https://github.com/hpi-studyu/studyu/commit/fedec441fd4f0f39fe35e7cb89b2922a10ac9ea3))
+ - **REFACTOR**: create abstract exception and rename ExtractedSupabaseListResult. ([5ef1bc43](https://github.com/hpi-studyu/studyu/commit/5ef1bc4378c2ac35e9781a040c4868910291794b))
+ - **REFACTOR**: bind faulty studies to return value. ([e6b4ed70](https://github.com/hpi-studyu/studyu/commit/e6b4ed70d367ddb9e8b1e7fd0015d0f70a179a0c))
+ - **REFACTOR**: remove ExtractedSupabaseListResult. ([0d3f4af9](https://github.com/hpi-studyu/studyu/commit/0d3f4af9d201556ba5ec0884741969e7dfa47b71))
+ - **FIX**: upgrade deps. ([b491c9c4](https://github.com/hpi-studyu/studyu/commit/b491c9c469ee808fe1aaa50b7a50759be2378552))
+ - **FIX**: make offline mode more reliable. ([45370246](https://github.com/hpi-studyu/studyu/commit/45370246253bfdf1a884a7e873ef68d4542e8e55))
+ - **FIX**: remove unnecessary code. ([0634d971](https://github.com/hpi-studyu/studyu/commit/0634d971f9576be4ca663c6cc2f7543bab2374ff))
+ - **FIX**: future-proof deserialization of studies. ([ca7c3145](https://github.com/hpi-studyu/studyu/commit/ca7c3145cd663dda47716ffa4ac5cef3fb25da84))
+ - **FEAT**: rework deserialization of unsupported types to throw exception. ([54956cf1](https://github.com/hpi-studyu/studyu/commit/54956cf17c879dce27821da3a85f2d8d509542e7))
+
+## 4.3.3-dev.4
+
+ - **REFACTOR**: login process and offline mode. ([aab64a42](https://github.com/hpi-studyu/studyu/commit/aab64a429df81037eb6cd9c06b7eb89b282a1a05))
+ - **REFACTOR**: improve return type of publishedPublicStudies(). ([fedec441](https://github.com/hpi-studyu/studyu/commit/fedec441fd4f0f39fe35e7cb89b2922a10ac9ea3))
+ - **REFACTOR**: create abstract exception and rename ExtractedSupabaseListResult. ([5ef1bc43](https://github.com/hpi-studyu/studyu/commit/5ef1bc4378c2ac35e9781a040c4868910291794b))
+ - **REFACTOR**: bind faulty studies to return value. ([e6b4ed70](https://github.com/hpi-studyu/studyu/commit/e6b4ed70d367ddb9e8b1e7fd0015d0f70a179a0c))
+ - **REFACTOR**: remove ExtractedSupabaseListResult. ([0d3f4af9](https://github.com/hpi-studyu/studyu/commit/0d3f4af9d201556ba5ec0884741969e7dfa47b71))
+ - **FIX**: upgrade deps. ([b491c9c4](https://github.com/hpi-studyu/studyu/commit/b491c9c469ee808fe1aaa50b7a50759be2378552))
+ - **FIX**: make offline mode more reliable. ([45370246](https://github.com/hpi-studyu/studyu/commit/45370246253bfdf1a884a7e873ef68d4542e8e55))
+ - **FIX**: remove unnecessary code. ([0634d971](https://github.com/hpi-studyu/studyu/commit/0634d971f9576be4ca663c6cc2f7543bab2374ff))
+ - **FIX**: check min app version improvements. ([8d36dc78](https://github.com/hpi-studyu/studyu/commit/8d36dc78771d748483bbf3ad22794a95e73dad06))
+ - **FIX**: future-proof deserialization of studies. ([ca7c3145](https://github.com/hpi-studyu/studyu/commit/ca7c3145cd663dda47716ffa4ac5cef3fb25da84))
+ - **FEAT**: rework deserialization of unsupported types to throw exception. ([54956cf1](https://github.com/hpi-studyu/studyu/commit/54956cf17c879dce27821da3a85f2d8d509542e7))
+ - **FEAT**: check min app version and force update. ([08f33618](https://github.com/hpi-studyu/studyu/commit/08f3361865aa4b158e9e29e69efd30547db9991a))
+
 ## 4.3.3-dev.3
 
  - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))

@@ -84,6 +84,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
           ),
           elevation: 0.0,
           child: InkWell(
+            splashColor: Colors.transparent,
             onTap: () => widget.onTap?.call(widget.study),
             onHover: (hover) {
               setState(() {

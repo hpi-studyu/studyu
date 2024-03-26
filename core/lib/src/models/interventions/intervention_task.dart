@@ -1,16 +1,16 @@
 import 'package:studyu_core/src/models/interventions/tasks/checkmark_task.dart';
 import 'package:studyu_core/src/models/tasks/task.dart';
+import 'package:studyu_core/src/models/unknown_json_type_error.dart';
 
 typedef InterventionTaskParser = InterventionTask Function(Map<String, dynamic> data);
 
 abstract class InterventionTask extends Task {
-  static Map<String, InterventionTaskParser> taskTypes = {
-    CheckmarkTask.taskType: (json) => CheckmarkTask.fromJson(json),
-  };
-
   InterventionTask(super.type);
 
   InterventionTask.withId(super.type) : super.withId();
 
-  factory InterventionTask.fromJson(Map<String, dynamic> data) => taskTypes[data[Task.keyType]]!(data);
+  factory InterventionTask.fromJson(Map<String, dynamic> data) => switch (data[Task.keyType]) {
+        CheckmarkTask.taskType => CheckmarkTask.fromJson(data),
+        _ => throw UnknownJsonTypeError(data[Task.keyType]),
+      };
 }

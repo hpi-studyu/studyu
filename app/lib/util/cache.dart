@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
@@ -10,20 +9,17 @@ class Cache {
   static bool isSynchronizing = false;
 
   static Future<void> storeSubject(StudySubject? subject) async {
+    debugPrint("Store subject in cache");
     if (subject == null) return;
-    StudySubject newSubject;
-    newSubject = await synchronize(subject);
-    debugPrint("Save to local cache");
-    SecureStorage.write(cacheSubjectKey, jsonEncode(newSubject.toFullJson()));
-    assert(newSubject == (await loadSubject()));
+    SecureStorage.write(cacheSubjectKey, jsonEncode(subject.toFullJson()));
+    assert(subject == (await loadSubject()));
   }
 
   static Future<StudySubject> loadSubject() async {
-    debugPrint("Load subject from cache");
+    // debugPrint("Load subject from cache");
     if (await SecureStorage.containsKey(cacheSubjectKey)) {
       return StudySubject.fromJson(jsonDecode((await SecureStorage.read(cacheSubjectKey))!));
     } else {
-      StudyULogger.warning("No cached subject found");
       throw Exception("No cached subject found");
     }
   }
@@ -60,10 +56,10 @@ class Cache {
     final localSubject = await loadSubject();
     // local and remote subject are equal, nothing to synchronize
     if (localSubject == remoteSubject) return remoteSubject;
-    // remote subject has newer study
+    // remote subject belongs to a different study
     if (!kDebugMode && remoteSubject.startedAt!.isAfter(localSubject.startedAt!)) return remoteSubject;
 
-    debugPrint("Synchronize with cache");
+    debugPrint("Synchronize subject with cache");
     isSynchronizing = true;
 
     try {
@@ -110,8 +106,6 @@ class Cache {
           StudyUDiagnostics.captureException(Exception("CacheSynchronizationException"));
         }
       }
-    } on SocketException catch (_) {
-      StudyULogger.info("SocketException on synchronizing (normal if offline)");
     } catch (exception) {
       StudyULogger.warning(exception);
     }
