@@ -34,6 +34,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
   Future<List<T>> deleteAll<T extends SupabaseObject>(Map<String, dynamic> selectionCriteria) async {
     try {
       final data = await supabaseClient.from(tableName(T)).delete().match(selectionCriteria);
+      if (data == null) return [];
       return deserializeList<T>(data);
     } on PostgrestException catch (error) {
       throw SupabaseQueryError(statusCode: error.code, message: error.message, details: error.details);

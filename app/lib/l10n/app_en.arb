@@ -101,6 +101,22 @@
 
   "could_not_save_results": "Could not save results",
 
+  "take_a_photo": "Take a photo",
+  "start_recording": "Start recording",
+  "stop_recording": "Stop recording",
+  "error_recording": "Error occurred during recording",
+  "photo_captured": "Photo captured",
+  "audio_recorded": "Audio recorded",
+  "multimodal_not_supported": "Multimodal Trials are currently not supported to run in a web browser. Please use the StudyU App for Android or iOS.",
+  "camera_access_denied": "Camera access denied",
+  "no_camera_available": "No camera available",
+  "microphone_access_denied": "Microphone access denied",
+  "camera_error": "Camera error",
+  "recording_error": "Recording error",
+  "storing_photo": "The photo is being stored",
+  "storing_audio": "The audio file is being stored",
+  "upload_error": "The file could not be uploaded",
+
   "language": "Language",
   "en": "English",
   "de": "German",
@@ -154,7 +170,6 @@
   "report_outcome_inconclusive": "The results are inconclusive. There does not seem to be a statistically significant difference between the interventions.",
   "report_outcome_neither": "Both interventions seem to have a negative effect on the outcome for you.",
   "report_outcome_one": "The intervention {intervention} seems to improve the outcome for you.",
-
   "report_axis_phase": "Phase",
 
   "study_not_started": "Your study has not started yet. Please check back tomorrow!",

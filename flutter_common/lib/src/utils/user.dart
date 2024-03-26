@@ -1,7 +1,8 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
+
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 const fakeStudyUEmailDomain = 'fake-studyu-email-domain.com';
 String selectedSubjectIdKey = 'selected_study_object_id';
@@ -10,15 +11,12 @@ const userPasswordKey = 'user_password';
 const cacheSubjectKey = "cache_subject";
 
 Future<void> storeFakeUserEmailAndPassword(String email, String password) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs
-    ..setString(userEmailKey, email)
-    ..setString(userPasswordKey, password);
+  SecureStorage.write(userEmailKey, email);
+  SecureStorage.write(userPasswordKey, password);
 }
 
 Future<bool> signInParticipant() async {
-  final prefs = await SharedPreferences.getInstance();
-  if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
+  if (await SecureStorage.containsKey(userEmailKey) && await SecureStorage.containsKey(userPasswordKey)) {
     try {
       await Supabase.instance.client.auth.signInWithPassword(
         email: await getFakeUserEmail(),
@@ -49,13 +47,11 @@ Future<bool> anonymousSignUp() async {
 }
 
 Future<String?> getFakeUserEmail() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(userEmailKey);
+  return SecureStorage.read(userEmailKey);
 }
 
 Future<String?> getFakeUserPassword() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(userPasswordKey);
+  return SecureStorage.read(userPasswordKey);
 }
 
 bool isUserLoggedIn() {
@@ -63,26 +59,22 @@ bool isUserLoggedIn() {
 }
 
 Future<String?> getActiveSubjectId() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(selectedSubjectIdKey);
+  return SecureStorage.read(selectedSubjectIdKey);
 }
 
 Future<void> storeActiveSubjectId(String studyObjectId) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setString(selectedSubjectIdKey, studyObjectId);
+  SecureStorage.write(selectedSubjectIdKey, studyObjectId);
 }
 
 Future<void> deleteActiveStudyReference() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.remove(selectedSubjectIdKey);
+  await SecureStorage.delete(selectedSubjectIdKey);
 }
 
 Future<void> deleteLocalData() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.remove(userEmailKey);
-  await prefs.remove(userPasswordKey);
-  await prefs.remove(selectedSubjectIdKey);
-  await prefs.remove(cacheSubjectKey);
+  await SecureStorage.delete(userEmailKey);
+  await SecureStorage.delete(userPasswordKey);
+  await SecureStorage.delete(selectedSubjectIdKey);
+  await SecureStorage.delete(cacheSubjectKey);
 }
 
 void previewSubjectIdKey() {

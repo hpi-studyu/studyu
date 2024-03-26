@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sentry_logging/sentry_logging.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_app/app.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_core/core.dart';
@@ -28,8 +27,7 @@ class AppAnalytics /*extends Analytics*/ {
 
   static Future<void> init() async {
     if (_userEnabled == null) {
-      final prefs = await SharedPreferences.getInstance();
-      _userEnabled = prefs.get(keyAnalyticsUserEnable) as bool?;
+      _userEnabled = await SecureStorage.readBool(keyAnalyticsUserEnable);
       // analytics is enabled by default
       _userEnabled ??= true;
     }
@@ -69,8 +67,7 @@ class AppAnalytics /*extends Analytics*/ {
   }
 
   static void setEnabled(bool newEnabled) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(keyAnalyticsUserEnable, newEnabled);
+    await SecureStorage.write(keyAnalyticsUserEnable, newEnabled.toString());
     if (!newEnabled) {
       // a restart of the app will be necessary to enable sentry again
       Sentry.close();
@@ -84,7 +81,7 @@ class AppAnalytics /*extends Analytics*/ {
         final basicContext = {
           'selectedStudyObjectId': await getActiveSubjectId(),
           'isPreview': state.isPreview,
-          'sharedPrefsEmail': await getFakeUserEmail(),
+          'storedEmail': await getFakeUserEmail(),
         };
         scope.setContexts('basicState', basicContext);
       },

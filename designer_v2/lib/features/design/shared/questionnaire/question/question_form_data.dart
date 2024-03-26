@@ -35,6 +35,10 @@ abstract class QuestionFormData implements IFormData {
         BoolQuestionFormData.fromDomainModel(question as BooleanQuestion, eligibilityCriteria),
     SurveyQuestionType.choice: (question, eligibilityCriteria) =>
         ChoiceQuestionFormData.fromDomainModel(question as ChoiceQuestion, eligibilityCriteria),
+    SurveyQuestionType.image: (question, eligibilityCriteria) =>
+        ImageQuestionFormData.fromDomainModel(question as ImageCapturingQuestion, eligibilityCriteria),
+    SurveyQuestionType.audio: (question, eligibilityCriteria) =>
+        AudioQuestionFormData.fromDomainModel(question as AudioRecordingQuestion, eligibilityCriteria),
     SurveyQuestionType.freeText: (question, eligibilityCriteria) =>
         FreeTextQuestionFormData.fromDomainModel(question as FreeTextQuestion, eligibilityCriteria),
   };
@@ -253,6 +257,125 @@ class BoolQuestionFormData extends QuestionFormData {
   Answer constructAnswerFor(responseOption) {
     final question = toQuestion() as BooleanQuestion;
     final value = kResponseOptions[responseOption] as bool;
+    return question.constructAnswer(value);
+  }
+}
+
+class ImageQuestionFormData extends QuestionFormData {
+  ImageQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    super.questionInfoText,
+  });
+
+  static Map<String, FutureBlobFile> get kResponseOptions =>
+      {tr.form_field_response_image: FutureBlobFile("image", "image")};
+
+  @override
+  List<String> get responseOptions => kResponseOptions.keys.toList();
+
+  factory ImageQuestionFormData.fromDomainModel(
+    ImageCapturingQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = ImageQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.image,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question = ImageCapturingQuestion();
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    return question;
+  }
+
+  @override
+  ImageQuestionFormData copy() {
+    final data = ImageQuestionFormData(
+      questionId: const Uuid().v4(), // always regenerate id
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(responseOption) {
+    final question = toQuestion() as ImageCapturingQuestion;
+    final value = kResponseOptions[responseOption] as FutureBlobFile;
+    return question.constructAnswer(value);
+  }
+}
+
+class AudioQuestionFormData extends QuestionFormData {
+  AudioQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    super.questionInfoText,
+    required this.maxRecordingDurationSeconds,
+  });
+
+  final int maxRecordingDurationSeconds;
+
+  static Map<String, FutureBlobFile> get kResponseOptions =>
+      {tr.form_field_response_audio: FutureBlobFile("audio", "audio")};
+
+  @override
+  List<String> get responseOptions => kResponseOptions.keys.toList();
+
+  factory AudioQuestionFormData.fromDomainModel(
+    AudioRecordingQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = AudioQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.audio,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+      maxRecordingDurationSeconds: question.maxRecordingDurationSeconds,
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question = AudioRecordingQuestion(maxRecordingDurationSeconds: maxRecordingDurationSeconds);
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    return question;
+  }
+
+  @override
+  AudioQuestionFormData copy() {
+    final data = AudioQuestionFormData(
+      questionId: const Uuid().v4(), // always regenerate id
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+      maxRecordingDurationSeconds: maxRecordingDurationSeconds,
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(responseOption) {
+    final question = toQuestion() as AudioRecordingQuestion;
+    final value = kResponseOptions[responseOption] as FutureBlobFile;
     return question.constructAnswer(value);
   }
 }

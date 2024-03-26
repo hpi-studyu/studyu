@@ -3,10 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:rxdart/subjects.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/repositories/supabase_client.dart';
-import 'package:studyu_designer_v2/services/shared_prefs.dart';
 import 'package:studyu_designer_v2/utils/behaviour_subject.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -31,9 +29,6 @@ class AuthRepository implements IAuthRepository {
   /// Reference to the Supabase API client injected via Riverpod
   final SupabaseClient supabaseClient;
 
-  /// Reference to shared preferences used for session storage
-  final SharedPreferences sharedPreferences;
-
   /// A stream controller for broadcasting the currently logged in user
   /// Broadcasts null if the user is logged out
   final BehaviorSubject<User?> _authStateStreamController = BehaviorSubject.seeded(null);
@@ -49,7 +44,6 @@ class AuthRepository implements IAuthRepository {
 
   AuthRepository({
     required this.supabaseClient,
-    required this.sharedPreferences,
   }) {
     _registerAuthListener();
   }
@@ -159,7 +153,6 @@ class AuthRepository implements IAuthRepository {
 final authRepositoryProvider = riverpod.Provider<IAuthRepository>((ref) {
   final authRepository = AuthRepository(
     supabaseClient: ref.watch(supabaseClientProvider),
-    sharedPreferences: ref.watch(sharedPreferencesProvider),
   );
   // Bind lifecycle to Riverpod
   ref.onDispose(() {
