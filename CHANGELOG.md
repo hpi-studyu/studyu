@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-03-26
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_designer_v2` - `v1.6.3`](#studyu_designer_v2---v163)
+
+---
+
+#### `studyu_designer_v2` - `v1.6.3`
+
+ - **FIX**: disable freetext for Designer UI surveys. ([7e3988eb](https://github.com/hpi-studyu/studyu/commit/7e3988ebc80620be52636077a6fb13a180c1802a))
+
+
 ## 2024-03-25
 
 ### Changes

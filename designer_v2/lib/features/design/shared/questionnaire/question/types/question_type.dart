@@ -17,7 +17,7 @@ enum SurveyQuestionType {
       ScaleQuestion.questionType: SurveyQuestionType.scale,
       AnnotatedScaleQuestion.questionType: SurveyQuestionType.scale,
       VisualAnalogueQuestion.questionType: SurveyQuestionType.scale,
-      // FreeTextQuestion.questionType: SurveyQuestionType.freeText,
+      FreeTextQuestion.questionType: SurveyQuestionType.freeText,
       ImageCapturingQuestion.questionType: SurveyQuestionType.image,
       AudioRecordingQuestion.questionType: SurveyQuestionType.audio,
     };
