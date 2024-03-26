@@ -92,7 +92,8 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
 
   _buildResponseTypeHeader(BuildContext context) {
     final theme = Theme.of(context);
-
+    final noFreeText = formViewModel.questionTypeControlOptions;
+    noFreeText.removeWhere((element) => element.value == SurveyQuestionType.freeText);
     return Column(
       children: [
         FormTableLayout(
@@ -106,7 +107,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
                 data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<SurveyQuestionType>(
                   formControl: formViewModel.questionTypeControl,
-                  items: formViewModel.questionTypeControlOptions.map((option) {
+                  items: noFreeText.map((option) {
                     final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(theme);
                     final iconTheme = menuItemTheme.iconTheme ?? theme.iconTheme;
                     return DropdownMenuItem(
