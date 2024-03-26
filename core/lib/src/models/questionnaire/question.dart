@@ -27,8 +27,8 @@ abstract class Question<V> {
         ScaleQuestion.questionType => ScaleQuestion.fromJson(data),
         AnnotatedScaleQuestion.questionType => AnnotatedScaleQuestion.fromJson(data),
         VisualAnalogueQuestion.questionType => VisualAnalogueQuestion.fromJson(data),
-        ImageCapturingQuestion.questionType: (json) => ImageCapturingQuestion.fromJson(json),
-        AudioRecordingQuestion.questionType: (json) => AudioRecordingQuestion.fromJson(json),
+        ImageCapturingQuestion.questionType => ImageCapturingQuestion.fromJson(data),
+        AudioRecordingQuestion.questionType => AudioRecordingQuestion.fromJson(data),
         FreeTextQuestion.questionType => FreeTextQuestion.fromJson(data),
         _ => throw UnknownJsonTypeError(data[keyType]),
       } as Question<V>;
