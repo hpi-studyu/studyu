@@ -1,5 +1,27 @@
-<svg version="1.1" baseProfile="full" width="2260.0" height="488.0" viewbox="0 0 2260 488" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[AppLanguage
+<svg version="1.1" baseProfile="full" width="2433.0" height="488.0" viewbox="0 0 2433 488" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[SupabaseStorage
+	  |
+	  +dynamic initialize();
+	  +dynamic hasAccessToken();
+	  +dynamic accessToken();
+	  +dynamic persistSession();
+	  +dynamic removePersistedSession()
+	]
+	
+	[&lt;abstract&gt;LocalStorage]&lt;:-[SupabaseStorage]
+	
+	[SecureStorage
+	  |
+	  &lt;static&gt;+dynamic containsKey();
+	  &lt;static&gt;+dynamic write();
+	  &lt;static&gt;+dynamic read();
+	  &lt;static&gt;+dynamic readBool();
+	  &lt;static&gt;+dynamic delete();
+	  &lt;static&gt;+dynamic deleteAll();
+	  &lt;static&gt;+dynamic migrateSharedPreferencesToSecureStorage()
+	]
+	
+	[AppLanguage
 	  |
 	  &lt;static&gt;+keyLanguageCode: String;
 	  +supportedLocales: List&lt;Locale&gt;;
@@ -30,196 +52,50 @@
 	[RetryFutureBuilder]o-[Widget Function(BuildContext)?]
 	[RetryFutureBuilder]o-[Widget Function(BuildContext, dynamic, void Function())?]
 	
-	[SupabaseStorage
-	  |
-	  +dynamic initialize();
-	  +dynamic hasAccessToken();
-	  +dynamic accessToken();
-	  +dynamic persistSession();
-	  +dynamic removePersistedSession()
-	]
-	
-	[&lt;abstract&gt;LocalStorage]&lt;:-[SupabaseStorage]
-	
-	[SecureStorage
-	  |
-	  &lt;static&gt;+dynamic containsKey();
-	  &lt;static&gt;+dynamic write();
-	  &lt;static&gt;+dynamic read();
-	  &lt;static&gt;+dynamic readBool();
-	  &lt;static&gt;+dynamic delete();
-	  &lt;static&gt;+dynamic deleteAll()
-	]
-	
 	</desc>
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="488.0" width="2260.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="488.0" width="2433.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
-				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M147.0 379.7 L147 381 L147 401 L147.0 401.0 " fill="none"></path>
+				<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+					<path d="M152.5 112.8 L152.5 188 L152.5 223.5 L152.5 223.5 " fill="none"></path>
+					<path d="M157.8 112.8 L152.5 112.8 L147.2 112.8 L152.5 99.5 Z"></path>
+					<path d="M881.0 379.7 L881 381 L881 401 L881.0 401.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M152.3 370.3 L147.0 379.7 L141.7 370.3 L147.0 361.0 Z"></path>
+						<path d="M886.3 370.3 L881.0 379.7 L875.7 370.3 L881.0 361.0 Z"></path>
 					</g>
-					<path d="M147.0 112.8 L147 188 L147 208 L147.0 208.0 " fill="none"></path>
-					<path d="M152.3 112.8 L147.0 112.8 L141.7 112.8 L147.0 99.5 Z"></path>
-					<path d="M504.9 166.6 L417.5 188 L417.5 269 L417.5 269.0 " fill="none"></path>
+					<path d="M881.0 112.8 L881 188 L881 208 L881.0 208.0 " fill="none"></path>
+					<path d="M886.3 112.8 L881.0 112.8 L875.7 112.8 L881.0 99.5 Z"></path>
+					<path d="M1238.9 166.6 L1151.5 188 L1151.5 269 L1151.5 269.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M515.2 169.6 L504.9 166.6 L512.7 159.2 L523.0 162.2 Z"></path>
+						<path d="M1249.2 169.6 L1238.9 166.6 L1246.7 159.2 L1257.0 162.2 Z"></path>
 					</g>
-					<path d="M698.8 178.3 L684 188 L684 269 L684.0 269.0 " fill="none"></path>
+					<path d="M1432.8 178.3 L1418 188 L1418 269 L1418.0 269.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M709.5 177.6 L698.8 178.3 L703.7 168.7 L714.4 168.0 Z"></path>
+						<path d="M1443.5 177.6 L1432.8 178.3 L1437.7 168.7 L1448.4 168.0 Z"></path>
 					</g>
-					<path d="M985.2 178.3 L1000 188 L1000 269 L1000.0 269.0 " fill="none"></path>
+					<path d="M1719.2 178.3 L1734 188 L1734 269 L1734.0 269.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M980.3 168.7 L985.2 178.3 L974.5 177.6 L969.6 168.0 Z"></path>
+						<path d="M1714.3 168.7 L1719.2 178.3 L1708.5 177.6 L1703.6 168.0 Z"></path>
 					</g>
-					<path d="M1179.4 146.0 L1408 188 L1408 269 L1408.0 269.0 " fill="none"></path>
+					<path d="M1913.4 146.0 L2142 188 L2142 269 L2142.0 269.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1171.1 139.1 L1179.4 146.0 L1169.2 149.5 L1161.0 142.6 Z"></path>
-					</g>
-					<path d="M1835.5 112.8 L1835.5 188 L1835.5 223.5 L1835.5 223.5 " fill="none"></path>
-					<path d="M1840.8 112.8 L1835.5 112.8 L1830.2 112.8 L1835.5 99.5 Z"></path>
-					<g data-name="AppLanguage">
-						<g fill="#eee8d5" stroke="#33322E" data-name="AppLanguage">
-							<rect x="0.0" y="208.0" height="153.0" width="294.0" data-name="AppLanguage"></rect>
-							<path d="M0.0 239.0 L294.0 239.0" fill="none" data-name="AppLanguage"></path>
-							<path d="M0.0 315.0 L294.0 315.0" fill="none" data-name="AppLanguage"></path>
-						</g>
-						<g transform="translate(0, 208)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AppLanguage">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AppLanguage">
-								<text x="139.0" y="13.5" stroke="none" text-anchor="middle" data-name="AppLanguage">AppLanguage</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 239)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppLanguage">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppLanguage">
-								<text x="0.0" y="13.5" stroke="none" data-name="AppLanguage">&lt;static&gt;+keyLanguageCode: String</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="AppLanguage">+supportedLocales: List&lt;Locale&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="AppLanguage">-_appLocale: Locale?</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="AppLanguage">+appLocal: Locale?</text>
-								
-							</g>
-						</g>
-						<g transform="translate(0, 315)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppLanguage">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppLanguage">
-								<text x="0.0" y="13.5" stroke="none" data-name="AppLanguage">+dynamic fetchLocale()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="AppLanguage">+dynamic changeLanguage()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Locale">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Locale">
-							<rect x="112.5" y="401.0" height="31.0" width="69.0" data-name="Locale"></rect>
-						</g>
-						<g transform="translate(112.5, 401)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Locale">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Locale">
-								<text x="26.5" y="13.5" stroke="none" text-anchor="middle" data-name="Locale">Locale</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="ChangeNotifier">
-						<g fill="#eee8d5" stroke="#33322E" data-name="ChangeNotifier">
-							<rect x="80.0" y="68.5" height="31.0" width="134.0" data-name="ChangeNotifier"></rect>
-						</g>
-						<g transform="translate(80, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChangeNotifier">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ChangeNotifier">
-								<text x="59.0" y="13.5" stroke="none" text-anchor="middle" data-name="ChangeNotifier">ChangeNotifier</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="RetryFutureBuilder">
-						<g fill="#eee8d5" stroke="#33322E" data-name="RetryFutureBuilder">
-							<rect x="523.0" y="0.0" height="168.0" width="638.0" data-name="RetryFutureBuilder"></rect>
-							<path d="M523.0 31.0 L1161.0 31.0" fill="none" data-name="RetryFutureBuilder"></path>
-							<path d="M523.0 137.0 L1161.0 137.0" fill="none" data-name="RetryFutureBuilder"></path>
-						</g>
-						<g transform="translate(523, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RetryFutureBuilder">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RetryFutureBuilder">
-								<text x="311.0" y="13.5" stroke="none" text-anchor="middle" data-name="RetryFutureBuilder">RetryFutureBuilder</text>
-								
-							</g>
-						</g>
-						<g transform="translate(523, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RetryFutureBuilder">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RetryFutureBuilder">
-								<text x="0.0" y="13.5" stroke="none" data-name="RetryFutureBuilder">+tryFunction: dynamic Function()</text>
-								<text x="0.0" y="28.5" stroke="none" data-name="RetryFutureBuilder">+successBuilder: Widget Function(BuildContext, T?)</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="RetryFutureBuilder">+initialData: T?</text>
-								<text x="0.0" y="58.5" stroke="none" data-name="RetryFutureBuilder">+loadingBuilder: Widget Function(BuildContext)?</text>
-								<text x="0.0" y="73.5" stroke="none" data-name="RetryFutureBuilder">+errorWidgetBuilder: Widget Function(BuildContext, dynamic, void Function())?</text>
-								<text x="0.0" y="88.5" stroke="none" data-name="RetryFutureBuilder">+extraWidgets: List&lt;Widget&gt;</text>
-								
-							</g>
-						</g>
-						<g transform="translate(523, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RetryFutureBuilder">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RetryFutureBuilder">
-								<text x="0.0" y="13.5" stroke="none" data-name="RetryFutureBuilder">&lt;static&gt;+RetryFutureBuilderState&lt;dynamic&gt;? of()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="dynamic Function()">
-						<g fill="#eee8d5" stroke="#33322E" data-name="dynamic Function()">
-							<rect x="334.0" y="269.0" height="31.0" width="167.0" data-name="dynamic Function()"></rect>
-						</g>
-						<g transform="translate(334, 269)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function()">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="dynamic Function()">
-								<text x="75.5" y="13.5" stroke="none" text-anchor="middle" data-name="dynamic Function()">dynamic Function()</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Widget Function(BuildContext, T?)">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Widget Function(BuildContext, T?)">
-							<rect x="541.0" y="269.0" height="31.0" width="286.0" data-name="Widget Function(BuildContext, T?)"></rect>
-						</g>
-						<g transform="translate(541, 269)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Widget Function(BuildContext, T?)">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget Function(BuildContext, T?)">
-								<text x="135.0" y="13.5" stroke="none" text-anchor="middle" data-name="Widget Function(BuildContext, T?)">Widget Function(BuildContext, T?)</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Widget Function(BuildContext)?">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Widget Function(BuildContext)?">
-							<rect x="867.0" y="269.0" height="31.0" width="266.0" data-name="Widget Function(BuildContext)?"></rect>
-						</g>
-						<g transform="translate(867, 269)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Widget Function(BuildContext)?">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget Function(BuildContext)?">
-								<text x="125.0" y="13.5" stroke="none" text-anchor="middle" data-name="Widget Function(BuildContext)?">Widget Function(BuildContext)?</text>
-								
-							</g>
-						</g>
-					</g>
-					<g data-name="Widget Function(BuildContext, dynamic, void Function())?">
-						<g fill="#eee8d5" stroke="#33322E" data-name="Widget Function(BuildContext, dynamic, void Function())?">
-							<rect x="1173.0" y="269.0" height="31.0" width="470.0" data-name="Widget Function(BuildContext, dynamic, void Function())?"></rect>
-						</g>
-						<g transform="translate(1173, 269)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Widget Function(BuildContext, dynamic, void Function())?">
-							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget Function(BuildContext, dynamic, void Function())?">
-								<text x="227.0" y="13.5" stroke="none" text-anchor="middle" data-name="Widget Function(BuildContext, dynamic, void Function())?">Widget Function(BuildContext, dynamic, void Function())?</text>
-								
-							</g>
-						</g>
+						<path d="M1905.1 139.1 L1913.4 146.0 L1903.2 149.5 L1895.0 142.6 Z"></path>
 					</g>
 					<g data-name="SupabaseStorage">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SupabaseStorage">
-							<rect x="1683.0" y="223.5" height="122.0" width="305.0" data-name="SupabaseStorage"></rect>
-							<path d="M1683.0 254.5 L1988.0 254.5" fill="none" data-name="SupabaseStorage"></path>
+							<rect x="0.0" y="223.5" height="122.0" width="305.0" data-name="SupabaseStorage"></rect>
+							<path d="M0.0 254.5 L305.0 254.5" fill="none" data-name="SupabaseStorage"></path>
 						</g>
-						<g transform="translate(1683, 223.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SupabaseStorage">
+						<g transform="translate(0, 223.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SupabaseStorage">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SupabaseStorage">
 								<text x="144.5" y="13.5" stroke="none" text-anchor="middle" data-name="SupabaseStorage">SupabaseStorage</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1683, 254.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseStorage">
+						<g transform="translate(0, 254.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SupabaseStorage">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SupabaseStorage">
 								<text x="0.0" y="13.5" stroke="none" data-name="SupabaseStorage">+dynamic initialize()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="SupabaseStorage">+dynamic hasAccessToken()</text>
@@ -232,9 +108,9 @@
 					</g>
 					<g data-name="LocalStorage">
 						<g fill="#eee8d5" stroke="#33322E" data-name="LocalStorage">
-							<rect x="1775.0" y="68.5" height="31.0" width="121.0" data-name="LocalStorage"></rect>
+							<rect x="92.0" y="68.5" height="31.0" width="121.0" data-name="LocalStorage"></rect>
 						</g>
-						<g transform="translate(1775, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="LocalStorage">
+						<g transform="translate(92, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="LocalStorage">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="LocalStorage">
 								<text x="52.5" y="13.5" stroke="none" text-anchor="middle" data-name="LocalStorage">LocalStorage</text>
 								
@@ -243,16 +119,16 @@
 					</g>
 					<g data-name="SecureStorage">
 						<g fill="#eee8d5" stroke="#33322E" data-name="SecureStorage">
-							<rect x="1936.0" y="15.5" height="137.0" width="268.0" data-name="SecureStorage"></rect>
-							<path d="M1936.0 46.5 L2204.0 46.5" fill="none" data-name="SecureStorage"></path>
+							<rect x="253.0" y="8.0" height="152.0" width="521.0" data-name="SecureStorage"></rect>
+							<path d="M253.0 39.0 L774.0 39.0" fill="none" data-name="SecureStorage"></path>
 						</g>
-						<g transform="translate(1936, 15.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SecureStorage">
+						<g transform="translate(253, 8)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="SecureStorage">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SecureStorage">
-								<text x="126.0" y="13.5" stroke="none" text-anchor="middle" data-name="SecureStorage">SecureStorage</text>
+								<text x="252.5" y="13.5" stroke="none" text-anchor="middle" data-name="SecureStorage">SecureStorage</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1936, 46.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SecureStorage">
+						<g transform="translate(253, 39)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SecureStorage">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SecureStorage">
 								<text x="0.0" y="13.5" stroke="none" data-name="SecureStorage">&lt;static&gt;+dynamic containsKey()</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="SecureStorage">&lt;static&gt;+dynamic write()</text>
@@ -260,6 +136,132 @@
 								<text x="0.0" y="58.5" stroke="none" data-name="SecureStorage">&lt;static&gt;+dynamic readBool()</text>
 								<text x="0.0" y="73.5" stroke="none" data-name="SecureStorage">&lt;static&gt;+dynamic delete()</text>
 								<text x="0.0" y="88.5" stroke="none" data-name="SecureStorage">&lt;static&gt;+dynamic deleteAll()</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="SecureStorage">&lt;static&gt;+dynamic migrateSharedPreferencesToSecureStorage()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="AppLanguage">
+						<g fill="#eee8d5" stroke="#33322E" data-name="AppLanguage">
+							<rect x="734.0" y="208.0" height="153.0" width="294.0" data-name="AppLanguage"></rect>
+							<path d="M734.0 239.0 L1028.0 239.0" fill="none" data-name="AppLanguage"></path>
+							<path d="M734.0 315.0 L1028.0 315.0" fill="none" data-name="AppLanguage"></path>
+						</g>
+						<g transform="translate(734, 208)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="AppLanguage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="AppLanguage">
+								<text x="139.0" y="13.5" stroke="none" text-anchor="middle" data-name="AppLanguage">AppLanguage</text>
+								
+							</g>
+						</g>
+						<g transform="translate(734, 239)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppLanguage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppLanguage">
+								<text x="0.0" y="13.5" stroke="none" data-name="AppLanguage">&lt;static&gt;+keyLanguageCode: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="AppLanguage">+supportedLocales: List&lt;Locale&gt;</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="AppLanguage">-_appLocale: Locale?</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="AppLanguage">+appLocal: Locale?</text>
+								
+							</g>
+						</g>
+						<g transform="translate(734, 315)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="AppLanguage">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="AppLanguage">
+								<text x="0.0" y="13.5" stroke="none" data-name="AppLanguage">+dynamic fetchLocale()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="AppLanguage">+dynamic changeLanguage()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Locale">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Locale">
+							<rect x="846.5" y="401.0" height="31.0" width="69.0" data-name="Locale"></rect>
+						</g>
+						<g transform="translate(846.5, 401)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Locale">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Locale">
+								<text x="26.5" y="13.5" stroke="none" text-anchor="middle" data-name="Locale">Locale</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="ChangeNotifier">
+						<g fill="#eee8d5" stroke="#33322E" data-name="ChangeNotifier">
+							<rect x="814.0" y="68.5" height="31.0" width="134.0" data-name="ChangeNotifier"></rect>
+						</g>
+						<g transform="translate(814, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ChangeNotifier">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ChangeNotifier">
+								<text x="59.0" y="13.5" stroke="none" text-anchor="middle" data-name="ChangeNotifier">ChangeNotifier</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="RetryFutureBuilder">
+						<g fill="#eee8d5" stroke="#33322E" data-name="RetryFutureBuilder">
+							<rect x="1257.0" y="0.0" height="168.0" width="638.0" data-name="RetryFutureBuilder"></rect>
+							<path d="M1257.0 31.0 L1895.0 31.0" fill="none" data-name="RetryFutureBuilder"></path>
+							<path d="M1257.0 137.0 L1895.0 137.0" fill="none" data-name="RetryFutureBuilder"></path>
+						</g>
+						<g transform="translate(1257, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="RetryFutureBuilder">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="RetryFutureBuilder">
+								<text x="311.0" y="13.5" stroke="none" text-anchor="middle" data-name="RetryFutureBuilder">RetryFutureBuilder</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1257, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RetryFutureBuilder">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RetryFutureBuilder">
+								<text x="0.0" y="13.5" stroke="none" data-name="RetryFutureBuilder">+tryFunction: dynamic Function()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="RetryFutureBuilder">+successBuilder: Widget Function(BuildContext, T?)</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="RetryFutureBuilder">+initialData: T?</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="RetryFutureBuilder">+loadingBuilder: Widget Function(BuildContext)?</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="RetryFutureBuilder">+errorWidgetBuilder: Widget Function(BuildContext, dynamic, void Function())?</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="RetryFutureBuilder">+extraWidgets: List&lt;Widget&gt;</text>
+								
+							</g>
+						</g>
+						<g transform="translate(1257, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="RetryFutureBuilder">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="RetryFutureBuilder">
+								<text x="0.0" y="13.5" stroke="none" data-name="RetryFutureBuilder">&lt;static&gt;+RetryFutureBuilderState&lt;dynamic&gt;? of()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="dynamic Function()">
+						<g fill="#eee8d5" stroke="#33322E" data-name="dynamic Function()">
+							<rect x="1068.0" y="269.0" height="31.0" width="167.0" data-name="dynamic Function()"></rect>
+						</g>
+						<g transform="translate(1068, 269)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="dynamic Function()">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="dynamic Function()">
+								<text x="75.5" y="13.5" stroke="none" text-anchor="middle" data-name="dynamic Function()">dynamic Function()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Widget Function(BuildContext, T?)">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Widget Function(BuildContext, T?)">
+							<rect x="1275.0" y="269.0" height="31.0" width="286.0" data-name="Widget Function(BuildContext, T?)"></rect>
+						</g>
+						<g transform="translate(1275, 269)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Widget Function(BuildContext, T?)">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget Function(BuildContext, T?)">
+								<text x="135.0" y="13.5" stroke="none" text-anchor="middle" data-name="Widget Function(BuildContext, T?)">Widget Function(BuildContext, T?)</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Widget Function(BuildContext)?">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Widget Function(BuildContext)?">
+							<rect x="1601.0" y="269.0" height="31.0" width="266.0" data-name="Widget Function(BuildContext)?"></rect>
+						</g>
+						<g transform="translate(1601, 269)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Widget Function(BuildContext)?">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget Function(BuildContext)?">
+								<text x="125.0" y="13.5" stroke="none" text-anchor="middle" data-name="Widget Function(BuildContext)?">Widget Function(BuildContext)?</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Widget Function(BuildContext, dynamic, void Function())?">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Widget Function(BuildContext, dynamic, void Function())?">
+							<rect x="1907.0" y="269.0" height="31.0" width="470.0" data-name="Widget Function(BuildContext, dynamic, void Function())?"></rect>
+						</g>
+						<g transform="translate(1907, 269)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Widget Function(BuildContext, dynamic, void Function())?">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Widget Function(BuildContext, dynamic, void Function())?">
+								<text x="227.0" y="13.5" stroke="none" text-anchor="middle" data-name="Widget Function(BuildContext, dynamic, void Function())?">Widget Function(BuildContext, dynamic, void Function())?</text>
 								
 							</g>
 						</g>
