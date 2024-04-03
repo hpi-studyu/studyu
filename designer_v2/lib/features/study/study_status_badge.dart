@@ -52,7 +52,7 @@ class StudyStatusBadge extends StatelessWidget {
       case StudyStatus.closed:
         return inTooltip(studybadge.Badge(
           label: status!.string,
-          color: colorScheme.primaryContainer,
+          color: Colors.redAccent,
           type: type,
           icon: prefixIcon,
         ));

@@ -82,6 +82,7 @@ CREATE TABLE public.study (
     description text NOT NULL,
     icon_name text NOT NULL,
     published boolean DEFAULT false NOT NULL,
+    is_closed boolean DEFAULT false NOT NULL,
     registry_published boolean DEFAULT false NOT NULL,
     questionnaire jsonb NOT NULL,
     eligibility_criteria jsonb NOT NULL,
@@ -847,7 +848,7 @@ WITH CHECK (NOT EXISTS (
     SELECT 1
     FROM public.study
     WHERE study.id = study_subject.study_id
-    AND study.participation = 'closed'
+    AND study.is_closed
 ));
 
 --
