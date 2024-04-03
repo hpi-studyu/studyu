@@ -9,8 +9,6 @@ extension ParticipationFormatted on Participation {
         return tr.form_enrollment_option_open;
       case Participation.invite:
         return tr.form_enrollment_option_invite;
-      case Participation.closed:
-        return tr.form_enrollment_option_closed;
       default:
         return "[Invalid Participation]";
     }
@@ -33,8 +31,6 @@ extension ParticipationFormatted on Participation {
         return tr.participation_open_who_description;
       case Participation.invite:
         return tr.participation_invite_who_description;
-      case Participation.closed:
-        return tr.participation_closed_who_description;
       default:
         return "[Invalid Participation]";
     }
@@ -46,8 +42,6 @@ extension ParticipationFormatted on Participation {
         return tr.participation_open_who;
       case Participation.invite:
         return tr.participation_invite_who;
-      case Participation.closed:
-        return tr.participation_closed_who;
       default:
         return "[Invalid Participation]";
     }

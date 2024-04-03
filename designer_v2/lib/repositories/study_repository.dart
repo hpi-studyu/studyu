@@ -106,7 +106,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
     }
 
     Future<void> onCloseCallback() {
-      model.participation = Participation.closed;
+      model.isClosed = true;
       return save(model).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies)).then((value) =>
           Future.delayed(const Duration(milliseconds: 200),
               () => ref.read(notificationServiceProvider).show(Notifications.studyClosed)));
@@ -168,7 +168,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
             NotificationAction(label: StudyActionType.close.string, onSelect: onCloseCallback),
           ]);
         },
-        isAvailable: model.canClose(currentUser) && model.participation != Participation.closed,
+        isAvailable: model.canClose(currentUser) && model.status == StudyStatus.running,
       ),
       ModelAction(
         type: StudyActionType.delete,

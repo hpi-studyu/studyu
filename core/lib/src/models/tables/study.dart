@@ -19,8 +19,7 @@ enum StudyStatus {
 
 enum Participation {
   open,
-  invite,
-  closed;
+  invite;
 
   String toJson() => name;
   static Participation fromJson(String json) => values.byName(json);
@@ -55,6 +54,8 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   @JsonKey(name: 'icon_name')
   late String iconName = 'accountHeart';
   late bool published = false;
+  @JsonKey(name: 'is_closed', defaultValue: false)
+  bool isClosed = false;
   late StudyUQuestionnaire questionnaire = StudyUQuestionnaire();
   @JsonKey(name: 'eligibility_criteria')
   late List<EligibilityCriterion> eligibilityCriteria = [];
@@ -171,7 +172,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   static Future<ExtractionResult<Study>> publishedPublicStudies() async {
     ExtractionResult<Study> result;
     try {
-      final response = await env.client.from(tableName).select().eq('participation', 'open');
+      final response = await env.client.from(tableName).select().eq('participation', 'open').eq("is_closed", false);
       final extracted = SupabaseQuery.extractSupabaseList<Study>(List<Map<String, dynamic>>.from(response));
       result = ExtractionSuccess<Study>(extracted);
     } on ExtractionFailedException<Study> catch (error) {
@@ -233,6 +234,9 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   // - Status
 
   StudyStatus get status {
+    if (isClosed) {
+      return StudyStatus.closed;
+    }
     if (published) {
       return StudyStatus.running;
     }
@@ -241,8 +245,6 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
 
   bool get isDraft => status == StudyStatus.draft;
   bool get isRunning => status == StudyStatus.running;
-  // TODO: missing flag to indicate that study is completed & enrollment closed
-  bool get isClosed => false;
 
   bool isReadonly(User user) {
     return status != StudyStatus.draft || !canEdit(user);

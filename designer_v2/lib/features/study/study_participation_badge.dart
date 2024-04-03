@@ -49,15 +49,6 @@ class StudyParticipationBadge extends StatelessWidget {
           icon: showPrefixIcon ? Icons.lock_rounded : null,
           padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
         ));
-      case Participation.closed:
-        return inTooltip(studybadge.Badge(
-          label: participation.whoShort,
-          center: center,
-          color: colorScheme.onPrimaryContainer.withOpacity(0.6),
-          type: type,
-          icon: showPrefixIcon ? Icons.lock_rounded : null,
-          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-        ));
     }
   }
 }

@@ -65,8 +65,6 @@
   "participation_open_who_description": "Jeder kann sich für die Studie in der StudyU App anmelden.",
   "participation_invite_who": "Ausgewählte Teilnehmer",
   "participation_invite_who_description": "Nur ausgewählte Nutzer mit Teilnahme-Code könnten sich für die Studie in der StudyU App anmelden.",
-  "participation_closed_who": "Geschlossen",
-  "participation_closed_who_description": "Die Studie ist nicht mehr für neue Teilnehmer geöffnet.",
   "participation_open_as_adjective": "für jeden offen",
   "participation_invite_as_adjective": "nur für ausgewählte Teilnehmer offen",
   "participation_open_launch_description": "Nach dem Start kann sich jeder in der StudyU App für die Studie anmelden.",
@@ -78,7 +76,6 @@
 
   "form_enrollment_option_open": "Open",
   "form_enrollment_option_invite": "Private (Invite-only)",
-  "form_enrollment_option_closed": "Closed",
   "@__________________NAV_DRAWER__________________": {},
   "navlink_my_studies": "Meine Studien",
   "navlink_shared_studies": "Mit mir geteilt",

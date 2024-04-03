@@ -19,6 +19,7 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
       ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
       ..iconName = json['icon_name'] as String
       ..published = json['published'] as bool
+      ..isClosed = json['is_closed'] as bool? ?? false
       ..questionnaire =
           StudyUQuestionnaire.fromJson(json['questionnaire'] as List<dynamic>)
       ..eligibilityCriteria = (json['eligibility_criteria'] as List<dynamic>)
@@ -64,6 +65,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   val['contact'] = instance.contact.toJson();
   val['icon_name'] = instance.iconName;
   val['published'] = instance.published;
+  val['is_closed'] = instance.isClosed;
   val['questionnaire'] = instance.questionnaire.toJson();
   val['eligibility_criteria'] =
       instance.eligibilityCriteria.map((e) => e.toJson()).toList();
@@ -81,7 +83,6 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
 const _$ParticipationEnumMap = {
   Participation.open: 'open',
   Participation.invite: 'invite',
-  Participation.closed: 'closed',
 };
 
 const _$ResultSharingEnumMap = {

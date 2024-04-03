@@ -159,7 +159,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             child: StudyTile.fromStudy(
                               study: study,
                               onTap: () async {
-                                if (study.participation == Participation.closed) {
+                                if (study.isClosed) {
                                   await showStudyClosedDialog(context);
                                   return;
                                 }
@@ -278,7 +278,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                     return;
                   }
 
-                  if (study.participation == Participation.closed) {
+                  if (study.isClosed) {
                     if (!context.mounted) return;
                     Navigator.pop(context);
                     await showStudyClosedDialog(context);
