@@ -48,7 +48,6 @@ ALTER TYPE public.git_provider OWNER TO postgres;
 CREATE TYPE public.participation AS ENUM (
     'open',
     'invite',
-    'closed'
 );
 
 

@@ -60,7 +60,7 @@
   "study_status_running": "Live",
   "study_status_running_description": "Die Studie wird gerade durchgeführt",
   "study_status_closed": "Abgeschlossen",
-  "study_status_closed_description": "Die Studie wurde bereits abgeschlossen",
+  "study_status_closed_description": "Diese Studie ist abgeschlossen.\nEs können sich keine neuen Teilnehmer mehr einschreiben.",
   "participation_open_who": "Für jeden offen",
   "participation_open_who_description": "Jeder kann sich für die Studie in der StudyU App anmelden.",
   "participation_invite_who": "Ausgewählte Teilnehmer",
