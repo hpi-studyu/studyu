@@ -114,6 +114,7 @@ extension StudyDuplicateX on Study {
     copy.title = (copy.title ?? '').withDuplicateLabel();
     copy.userId = userId;
     copy.published = false;
+    copy.isClosed = false;
     copy.resultSharing = ResultSharing.private;
     copy.registryPublished = false;
     copy.results = [];

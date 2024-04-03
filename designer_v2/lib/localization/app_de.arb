@@ -240,6 +240,8 @@
   "free_text_question_type_custom_explanation": "Die Eingabe muss dem angegebenen regulären Ausdruck entsprechen.",
   "banner_study_readonly_title": "Die Studie kann nicht bearbeitet werden.",
   "banner_study_readonly_description": "Du kannst nur Studien bearbeiten, die du selbst erstellt hast oder die mit dir zur Mitarbeit geteilt wurden. Studien, die bereits gestartet sind, können grundsätzlich nicht mehr verändert werden.",
+  "banner_study_closed_title": "Diese Studie ist geschlossen.",
+  "banner_study_closed_description": "Neue Teilnehmer können sich nicht in diese Studie einschreiben.",
   "form_section_scheduling": "Zeitplan & Einhaltung",
   "form_section_scheduling_description": "Um die Compliance von Teilnehmern zu verbessern, kannst du ein begrenztes Zeitfenster & eine App-Benachrichtigung als Erinnerung definieren.",
   "form_field_has_reminder": "Erinnerung",
