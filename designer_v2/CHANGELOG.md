@@ -1,3 +1,25 @@
+## 1.6.3
+
+ - **FIX**: disable freetext for Designer UI surveys. ([7e3988eb](https://github.com/hpi-studyu/studyu/commit/7e3988ebc80620be52636077a6fb13a180c1802a))
+
+## 1.6.2
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.6.2-dev.7
+
+ - **FIX**: upgrade deps. ([b491c9c4](https://github.com/hpi-studyu/studyu/commit/b491c9c469ee808fe1aaa50b7a50759be2378552))
+ - **FIX**: enable color emoji. ([e7f9ddcb](https://github.com/hpi-studyu/studyu/commit/e7f9ddcb7dfbb11e9fdd05e3791b55d2a1fe52b9))
+ - **FIX**: temporarily disable free text for the designer. ([00e0b1e6](https://github.com/hpi-studyu/studyu/commit/00e0b1e60e368d1e3620eec61924ff17a098f386))
+ - **FIX**: future-proof deserialization of studies. ([ca7c3145](https://github.com/hpi-studyu/studyu/commit/ca7c3145cd663dda47716ffa4ac5cef3fb25da84))
+ - **FEAT**: rework deserialization of unsupported types to throw exception. ([54956cf1](https://github.com/hpi-studyu/studyu/commit/54956cf17c879dce27821da3a85f2d8d509542e7))
+
+## 1.6.2-dev.6
+
+ - **FIX**: upgrade deps. ([b491c9c4](https://github.com/hpi-studyu/studyu/commit/b491c9c469ee808fe1aaa50b7a50759be2378552))
+ - **FIX**: enable color emoji. ([e7f9ddcb](https://github.com/hpi-studyu/studyu/commit/e7f9ddcb7dfbb11e9fdd05e3791b55d2a1fe52b9))
+ - **FIX**: temporarily disable free text for the designer. ([00e0b1e6](https://github.com/hpi-studyu/studyu/commit/00e0b1e60e368d1e3620eec61924ff17a098f386))
+
 ## 1.6.2-dev.5
 
  - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))

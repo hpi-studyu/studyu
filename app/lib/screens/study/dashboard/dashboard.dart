@@ -269,6 +269,9 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                   } on SocketException catch (_) {}
                 },
                 label: Text(AppLocalizations.of(context)!.next_day),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.primary,
+                ),
               ),
             )
           : null,
