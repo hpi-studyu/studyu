@@ -29,7 +29,9 @@ class StudyStatusBadge extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final prefixIcon = showPrefixIcon ? Icons.circle_rounded : null;
 
-    final tooltipMessage = ('${status?.description ?? ''}\n${participation?.description ?? ''}').trim();
+    final tooltipMessage =
+        ('${status?.description ?? ''}\n${(status == StudyStatus.closed ? null : participation?.description) ?? ''}')
+            .trim();
 
     Widget inTooltip(Widget child) {
       if (tooltipMessage.isNotEmpty && showTooltip) {
