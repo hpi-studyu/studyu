@@ -49,43 +49,45 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         response = qs;
       }),
     );
-    return Expanded(
-      child: Column(
-        children: [
-          Expanded(
-            child: Form(
-              key: formKey,
-              child: questionnaireWidget,
+    return Flex(direction: Axis.vertical, children: [
+      Expanded(
+        child: Column(
+          children: [
+            Expanded(
+              child: Form(
+                key: formKey,
+                child: questionnaireWidget,
+              ),
             ),
-          ),
-          if (response != null && responseValidator)
-            ElevatedButton.icon(
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
-              onPressed: () async {
-                if (isRedundantClick(loginClickTime)) {
-                  return;
-                }
-                if (!formKey.currentState!.validate()) {
-                  return;
-                }
-                setState(() {
-                  _isLoading = true;
-                });
-                switch (response) {
-                  case QuestionnaireState questionnaireState:
-                    await _addQuestionnaireResult<QuestionnaireState>(questionnaireState, context);
-                    break;
-                }
-                setState(() {
-                  _isLoading = false;
-                });
-              },
-              icon: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Icon(Icons.check),
-              label: Text(AppLocalizations.of(context)!.complete),
-            ),
-        ],
-      ),
-    );
+            if (response != null && responseValidator)
+              ElevatedButton.icon(
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+                onPressed: () async {
+                  if (isRedundantClick(loginClickTime)) {
+                    return;
+                  }
+                  if (!formKey.currentState!.validate()) {
+                    return;
+                  }
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  switch (response) {
+                    case QuestionnaireState questionnaireState:
+                      await _addQuestionnaireResult<QuestionnaireState>(questionnaireState, context);
+                      break;
+                  }
+                  setState(() {
+                    _isLoading = false;
+                  });
+                },
+                icon: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Icon(Icons.check),
+                label: Text(AppLocalizations.of(context)!.complete),
+              ),
+          ],
+        ),
+      )
+    ]);
   }
 
   void _responseValidator(QuestionnaireState qs) {

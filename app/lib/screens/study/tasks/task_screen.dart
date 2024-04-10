@@ -55,15 +55,10 @@ class _TaskScreenState extends State<TaskScreen> {
           ),
         );
       case QuestionnaireTask questionnaireTask:
-        return Flex(
-          direction: Axis.vertical,
-          children: [
-            QuestionnaireTaskWidget(
-              task: questionnaireTask,
-              key: UniqueKey(),
-              completionPeriod: taskInstance.completionPeriod,
-            )
-          ],
+        return QuestionnaireTaskWidget(
+          task: questionnaireTask,
+          key: UniqueKey(),
+          completionPeriod: taskInstance.completionPeriod,
         );
       default:
         throw ArgumentError('Task ${taskInstance.task.type} not supported');
