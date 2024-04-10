@@ -8,8 +8,7 @@ class BlobStorageHandler {
   static const String _observationsBucketName = 'observations';
 
   Future<void> uploadObservation(String blobPath, File file) async {
-    // we use uploadBinary instead of upload until this is fixed: https://github.com/supabase/supabase-flutter/issues/685
-    await env.client.storage.from(_observationsBucketName).uploadBinary(blobPath, await file.readAsBytes());
+    await env.client.storage.from(_observationsBucketName).upload(blobPath, file);
   }
 
   Future<Uint8List> downloadObservation(String blobPath) async {
