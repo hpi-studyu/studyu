@@ -68,9 +68,9 @@ class SecureStorage {
     final keys = prefs.getKeys();
 
     for (final key in keys) {
-      final value = prefs.getString(key);
-      if (value != null) {
-        await storage.write(key: key, value: value);
+      final Object? value = prefs.get(key);
+      if (value is String || value is bool) {
+        await storage.write(key: key, value: value.toString());
         await prefs.remove(key);
         StudyULogger.info("Migrated key $key from SharedPreferences to FlutterSecureStorage.");
       }
