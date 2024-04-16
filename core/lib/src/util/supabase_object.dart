@@ -37,9 +37,21 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
         await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).select().single(),
       );
 
-  Future<T> save() async {
-    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).select())
-        .single;
+  /// Save the object to the database.
+  /// By default, this will upsert the object, i.e. insert it if it does not exist, or update it if it does.
+  /// If [onlyUpdate] is set to true, the object has to exist in the database, otherwise the result will be empty.
+  Future<T> save({bool onlyUpdate = false}) async {
+    final tableQuery = env.client.from(tableName(T));
+    PostgrestFilterBuilder query;
+    if (onlyUpdate) {
+      query = tableQuery.upsert(this.toJson());
+      for (final entry in primaryKeys.entries) {
+        query = query.eq(entry.key, entry.value);
+      }
+    } else {
+      query = tableQuery.upsert(this.toJson());
+    }
+    return SupabaseQuery.extractSupabaseList<T>(await query.select()).single;
   }
 }
 
