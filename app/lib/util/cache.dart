@@ -95,7 +95,7 @@ class Cache {
         finalProgress.retainWhere((element) => duplicates.add(element.completedAt));
         // replace remote progress with our merge
         remoteSubject.progress = finalProgress;
-        await remoteSubject.save();
+        await remoteSubject.save(onlyUpdate: true);
       } else {
         // Unable to determine what has changed
         // We can either drop local or overwrite remote
