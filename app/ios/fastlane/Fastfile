@@ -59,7 +59,10 @@ platform :ios do
       export_method: "app-store"
     )
 
-    pilot
+    upload_to_testflight(
+        app_identifier: "health.studyu.app",
+        skip_waiting_for_build_processing: false
+    )
 
     delete_temp_keychain(keychain_name)
   end
