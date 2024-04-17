@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -10,7 +9,6 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
-import 'package:studyu_designer_v2/services/shared_prefs.dart';
 import 'package:supabase/supabase.dart';
 
 enum AuthFormKey {
@@ -53,17 +51,14 @@ enum AuthFormKey {
 class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFormGroupController {
   AuthFormController({
     required this.authRepository,
-    required this.sharedPreferences,
     required this.notificationService,
     required this.router,
   }) : super(const AsyncValue.data(null)) {
-    _initRememberMe();
     _readDebugUser();
     _onChangeFormKey(formKey);
   }
 
   final IAuthRepository authRepository;
-  final SharedPreferences sharedPreferences;
   final INotificationService notificationService;
   final GoRouter router;
 
@@ -72,10 +67,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
   final FormControl<String> emailControl = FormControl();
   final FormControl<String> passwordControl = FormControl();
   final FormControl<String> passwordConfirmationControl = FormControl();
-  final FormControl<bool> rememberMeControl = FormControl(value: false);
   final FormControl<bool> termsOfServiceControl = FormControl(value: false);
-
-  bool get shouldRemember => rememberMeControl.value!;
 
   static final authValidationMessages = {
     ValidationMessage.required: (error) => tr.form_field_required,
@@ -87,7 +79,6 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
   late final FormGroup loginForm = FormGroup({
     'email': emailControl,
     'password': passwordControl,
-    'rememberMe': rememberMeControl,
   });
 
   late final FormGroup signupForm = FormGroup({
@@ -228,16 +219,12 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     try {
       state = const AsyncValue.loading();
       final response = await authRepository.signInWith(email: email, password: password);
-      if (shouldRemember) {
-        _setRememberMe();
-      }
       return response;
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     } finally {
       state = const AsyncValue.data(null);
     }
-    _delRememberMe();
     return Future.value(AuthResponse());
   }
 
@@ -276,12 +263,6 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
       return Future.value(null);
     }
     return updateUser(passwordControl.value!)
-        .then((value) {
-          final shouldRemember = sharedPreferences.getBool("remember_me") ?? false;
-          if (shouldRemember) {
-            sharedPreferences.setString('password', passwordControl.value!);
-          }
-        })
         .then((_) => notificationService.show(Notifications.passwordResetSuccess))
         .then((_) => router.dispatch(RoutingIntents.studies));
   }
@@ -309,44 +290,12 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
       if (autoLogin && form.valid) await signIn();
     }
   }
-
-  // - Remember Me
-  // TODO properly implement this to auto-login instead of autofill
-
-  void _setRememberMe() {
-    sharedPreferences.setBool("rememberMe", rememberMeControl.value ?? false);
-    sharedPreferences.setString('email', emailControl.value ?? '');
-    sharedPreferences.setString('password', passwordControl.value ?? '');
-  }
-
-  void _delRememberMe() {
-    sharedPreferences.remove("rememberMe");
-    sharedPreferences.remove("email");
-    sharedPreferences.remove("password");
-  }
-
-  void _initRememberMe() async {
-    try {
-      final email = sharedPreferences.getString("email");
-      final password = sharedPreferences.getString("password");
-      final rememberMe = sharedPreferences.getBool("rememberMe") ?? false;
-      if (rememberMe) {
-        rememberMeControl.value = true;
-        emailControl.value = email ?? '';
-        passwordControl.value = password ?? '';
-      }
-    } catch (e) {
-      emailControl.value = '';
-      passwordControl.value = '';
-    }
-  }
 }
 
 final authFormControllerProvider =
     StateNotifierProvider.autoDispose.family<AuthFormController, AsyncValue<void>, AuthFormKey>((ref, formKey) {
   final authFormController = AuthFormController(
     authRepository: ref.watch(authRepositoryProvider),
-    sharedPreferences: ref.watch(sharedPreferencesProvider),
     notificationService: ref.watch(notificationServiceProvider),
     router: ref.watch(routerProvider),
   );

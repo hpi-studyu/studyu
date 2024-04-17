@@ -1,11 +1,122 @@
-<svg version="1.1" baseProfile="full" width="0.0" height="8.0" viewbox="0 0 0 8" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt">
+<svg version="1.1" baseProfile="full" width="692.0" height="336.0" viewbox="0 0 692 336" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[InterventionResult
+	  |
+	  &lt;static&gt;+studyResultType: String
+	  |
+	  +Map&lt;String, dynamic&gt; toJson();
+	  +List&lt;String&gt; getHeaders();
+	  +List&lt;dynamic&gt; getValues()
+	]
+	
+	[&lt;abstract&gt;StudyResult]&lt;:-[InterventionResult]
+	
+	[NumericResult
+	  |
+	  &lt;static&gt;+studyResultType: String;
+	  +resultProperty: DataReference&lt;num&gt;
+	  |
+	  +Map&lt;String, dynamic&gt; toJson();
+	  +List&lt;String&gt; getHeaders();
+	  +List&lt;dynamic&gt; getValues()
+	]
+	
+	[NumericResult]o-[DataReference]
+	[&lt;abstract&gt;StudyResult]&lt;:-[NumericResult]
+	
+	</desc>
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="8.0" width="0.0" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="336.0" width="692.0" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
-				
+				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+					<path d="M238.5 29.9 L138 51 L138 78.5 L138.0 78.5 " fill="none"></path>
+					<path d="M239.5 35.1 L238.5 29.9 L237.4 24.7 L251.5 27.2 Z"></path>
+					<path d="M476.0 227.7 L476 229 L476 249 L476.0 249.0 " fill="none"></path>
+					<g fill="#eee8d5">
+						<path d="M481.3 218.3 L476.0 227.7 L470.7 218.3 L476.0 209.0 Z"></path>
+					</g>
+					<path d="M375.5 29.9 L476 51 L476 71 L476.0 71.0 " fill="none"></path>
+					<path d="M376.6 24.7 L375.5 29.9 L374.5 35.1 L362.5 27.2 Z"></path>
+					<g data-name="InterventionResult">
+						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionResult">
+							<rect x="0.0" y="78.5" height="123.0" width="276.0" data-name="InterventionResult"></rect>
+							<path d="M0.0 109.5 L276.0 109.5" fill="none" data-name="InterventionResult"></path>
+							<path d="M0.0 140.5 L276.0 140.5" fill="none" data-name="InterventionResult"></path>
+						</g>
+						<g transform="translate(0, 78.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionResult">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionResult">
+								<text x="130.0" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionResult">InterventionResult</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 109.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionResult">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionResult">
+								<text x="0.0" y="13.5" stroke="none" data-name="InterventionResult">&lt;static&gt;+studyResultType: String</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 140.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionResult">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionResult">
+								<text x="0.0" y="13.5" stroke="none" data-name="InterventionResult">+Map&lt;String, dynamic&gt; toJson()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="InterventionResult">+List&lt;String&gt; getHeaders()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="InterventionResult">+List&lt;dynamic&gt; getValues()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyResult">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyResult">
+							<rect x="251.5" y="0.0" height="31.0" width="111.0" data-name="StudyResult"></rect>
+						</g>
+						<g transform="translate(251.5, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="StudyResult">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyResult">
+								<text x="47.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyResult">StudyResult</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="NumericResult">
+						<g fill="#eee8d5" stroke="#33322E" data-name="NumericResult">
+							<rect x="316.0" y="71.0" height="138.0" width="320.0" data-name="NumericResult"></rect>
+							<path d="M316.0 102.0 L636.0 102.0" fill="none" data-name="NumericResult"></path>
+							<path d="M316.0 148.0 L636.0 148.0" fill="none" data-name="NumericResult"></path>
+						</g>
+						<g transform="translate(316, 71)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NumericResult">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NumericResult">
+								<text x="152.0" y="13.5" stroke="none" text-anchor="middle" data-name="NumericResult">NumericResult</text>
+								
+							</g>
+						</g>
+						<g transform="translate(316, 102)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NumericResult">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NumericResult">
+								<text x="0.0" y="13.5" stroke="none" data-name="NumericResult">&lt;static&gt;+studyResultType: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="NumericResult">+resultProperty: DataReference&lt;num&gt;</text>
+								
+							</g>
+						</g>
+						<g transform="translate(316, 148)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NumericResult">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NumericResult">
+								<text x="0.0" y="13.5" stroke="none" data-name="NumericResult">+Map&lt;String, dynamic&gt; toJson()</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="NumericResult">+List&lt;String&gt; getHeaders()</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="NumericResult">+List&lt;dynamic&gt; getValues()</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="DataReference">
+						<g fill="#eee8d5" stroke="#33322E" data-name="DataReference">
+							<rect x="408.5" y="249.0" height="31.0" width="135.0" data-name="DataReference"></rect>
+						</g>
+						<g transform="translate(408.5, 249)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DataReference">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DataReference">
+								<text x="59.5" y="13.5" stroke="none" text-anchor="middle" data-name="DataReference">DataReference</text>
+								
+							</g>
+						</g>
+					</g>
+				</g>
 			</g>
 		</g>
 	</g>

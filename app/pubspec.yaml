@@ -8,7 +8,9 @@ repository: https://github.com/hpi-studyu/studyu
 environment:
   sdk: '>=3.2.0 <4.0.0'
 dependencies:
+  camera: ^0.10.5+9
   collection: ^1.18.0
+  cross_file: ^0.3.3+8
   cupertino_icons: ^1.0.6
   fl_chart: ^0.66.2
   flutter:
@@ -25,11 +27,14 @@ dependencies:
   intl: ^0.18.1 # flutter_localizations
   material_design_icons_flutter: ^7.0.7296
   package_info_plus: ^5.0.1 # wakelock_plus <= 1.1.6
+  path: ^1.8.3
+  path_provider: ^2.1.1
   pdf: ^3.10.8
   permission_handler: ^11.3.0
   provider: ^6.1.2
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
+  record: ^5.0.1
   sentry_flutter: ^7.18.0
   sentry_logging: ^7.18.0
   shared_preferences: ^2.2.2
@@ -42,7 +47,7 @@ dependencies:
   universal_html: ^2.2.4
   url_launcher: ^6.2.5
   uuid: ^4.3.3
-  wakelock_plus: ^1.1.6
+  wakelock_plus: ^1.1.4
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1

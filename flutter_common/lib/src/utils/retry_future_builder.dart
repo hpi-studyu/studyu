@@ -44,14 +44,14 @@ class RetryFutureBuilder<T> extends StatefulWidget {
   final List<Widget> extraWidgets;
 
   const RetryFutureBuilder({
-    Key? key,
+    super.key,
     required this.tryFunction,
     required this.successBuilder,
     this.initialData,
     this.loadingBuilder,
     this.errorWidgetBuilder,
     this.extraWidgets = const [],
-  }) : super(key: key);
+  });
 
   @override
   State<RetryFutureBuilder<T>> createState() => RetryFutureBuilderState<T>();

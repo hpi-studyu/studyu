@@ -46,7 +46,6 @@
       "minLength": {}
     }
   },
-  "form_field_remember_me": "Remember me",
   "form_field_password_new": "New password",
   "form_field_password_new_hint": "Enter new password",
   "form_field_password_new_confirm": "Confirm new password",
@@ -141,9 +140,15 @@
   "question_type_free_text": "Free text",
   "question_type_bool": "Yes/no",
   "question_type_scale": "Scale",
+  "question_type_image": "Image",
+  "question_type_audio": "Audio",
   "form_array_response_options_bool_yes": "Yes",
   "form_array_response_options_bool_no": "No",
+  "form_field_response_image": "Image",
   "form_field_response_choice_multiple": "Select multiple",
+  "form_field_response_image": "Provide directions for capturing image",
+  "form_field_response_audio": "Provide directions for recording audio",
+  "form_field_response_audio_max_duration_label": "Maximum recording duration in seconds",
   "form_field_response_choice_multiple_tooltip": "Allow the participant to select multiple response options. Otherwise only a single option can be selected.",
   "form_array_response_options_choice_new": "Add option",
   "form_array_response_options_choice_hint": "Option",
@@ -178,6 +183,13 @@
   "form_array_response_options_scale_rangevalid_min": "The high value of the scale must be greater than the low value",
   "form_array_response_options_scale_rangevalid_max": "Do not exceed {count} as a maximum difference between the high and low values of the scale",
   "@form_array_response_options_scale_rangevalid_max": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "audio_recording_max_duration_rangevalid_min": "The minimum recording duration is 1 second",
+  "audio_recording_max_duration_rangevalid_max": "The maximum recording duration is {count} seconds",
+  "@audio_recording_max_duration_rangevalid_max": {
     "placeholders": {
       "count": {}
     }
