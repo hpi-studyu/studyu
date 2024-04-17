@@ -61,6 +61,7 @@ platform :ios do
 
     upload_to_testflight(
         app_identifier: "health.studyu.app",
+        team_id: "PG566C9XUK",
         skip_waiting_for_build_processing: false
     )
 
