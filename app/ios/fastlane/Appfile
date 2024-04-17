@@ -1,4 +1,4 @@
-# app_identifier("health.studyu.app")
+app_identifier("health.studyu.app")
 # apple_id("")
 
 
