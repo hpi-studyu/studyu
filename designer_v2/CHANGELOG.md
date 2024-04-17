@@ -1,3 +1,20 @@
+## 1.7.0
+
+ - **FIX**: style of photo capture button. ([7ec85382](https://github.com/hpi-studyu/studyu/commit/7ec853828a51e7aa454563786d782e9c8ffc4e22))
+ - **FIX**: defer upload of multimodal files. ([e8324cab](https://github.com/hpi-studyu/studyu/commit/e8324cabd5dc7b20d1be529ae8ba94d51ab5eb39))
+ - **FIX**: remove insecure remember me. ([9dd34cef](https://github.com/hpi-studyu/studyu/commit/9dd34cefbb90b0b2619875cda6bdf5b550967966))
+ - **FIX**: make sure integration test title is saved. ([7ef22930](https://github.com/hpi-studyu/studyu/commit/7ef229304081c418204f45be32a4f37dac7216b8))
+ - **FIX**: return empty list instead of null as supabase data. ([697cd5f0](https://github.com/hpi-studyu/studyu/commit/697cd5f07f94c6764e3232eb6109946e2c3ae2ca))
+ - **FIX**: add missing audio response entry. ([87ff2805](https://github.com/hpi-studyu/studyu/commit/87ff2805e7d0c1b004d039bc876235208ccfa04e))
+ - **FIX**: upgrade deps, move multimodal from core to app, migrate switch case. ([c4c1bd1e](https://github.com/hpi-studyu/studyu/commit/c4c1bd1e7e234535291b609deda21ea0e12b8506))
+ - **FIX**: convert status code to int. ([2cc363da](https://github.com/hpi-studyu/studyu/commit/2cc363da52e86fe1c8ad28680d16999988bb7be3))
+ - **FIX**: dart fix. ([1ebe9d00](https://github.com/hpi-studyu/studyu/commit/1ebe9d005d4c5d0f9e7ba1d8a0f24fc4e71641c2))
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([1000d89c](https://github.com/hpi-studyu/studyu/commit/1000d89cd4df62bbfedfb5238f0e427c4d2d2c08))
+ - **FEAT**(designer): enable free text UI. ([6c53867e](https://github.com/hpi-studyu/studyu/commit/6c53867e23c4804b4503196441d70e281130e47d))
+ - **FEAT**: add maximum recording duration to designer. ([c601e0ba](https://github.com/hpi-studyu/studyu/commit/c601e0ba1a327c01a2c88f5a323d24bbd558cdf3))
+ - **FEAT**: deprecate SharedPreferences for flutter_secure_storage. ([1ff25946](https://github.com/hpi-studyu/studyu/commit/1ff259469e3c354f57e22a3d42ce0d1c60036f44))
+ - **FEAT**: export media files with study data. ([ca1474a2](https://github.com/hpi-studyu/studyu/commit/ca1474a20595e39fa708c47268e5c6a587bc021f))
+
 ## 1.6.3
 
  - **FIX**: disable freetext for Designer UI surveys. ([7e3988eb](https://github.com/hpi-studyu/studyu/commit/7e3988ebc80620be52636077a6fb13a180c1802a))
