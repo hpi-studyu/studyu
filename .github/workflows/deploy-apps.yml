@@ -77,13 +77,13 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3 # do not use head
-          bundler-cache: true
+          bundler-cache: false
           working-directory: ./app/ios
       - name: Set up flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          cache: true
+          cache: false
       - name: Get StudyU app version
         run: |
           # Read the version of study_app from pubspec.yaml and make it CFBundleShortVersionString compatible
