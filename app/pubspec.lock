@@ -1192,14 +1192,14 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "4.3.3"
+    version: "4.4.0"
   studyu_flutter_common:
     dependency: "direct main"
     description:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.7.0"
+    version: "1.8.0"
   supabase:
     dependency: "direct main"
     description:
