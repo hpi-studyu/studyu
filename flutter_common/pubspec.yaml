@@ -14,11 +14,11 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   shared_preferences: ^2.2.2 # Can be removed after migrating phase
   studyu_core: ^4.3.3
-  supabase_flutter: ^2.3.4
-  uuid: ^4.3.3
+  supabase_flutter: ^2.5.1
+  uuid: ^4.4.0
 
 dev_dependencies:
-  flutter_lints: ^3.0.1
+  flutter_lints: ^3.0.2
   flutter_test:
     sdk: flutter
 
