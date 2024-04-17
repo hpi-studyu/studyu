@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-04-17
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_core` - `v4.4.0`](#studyu_core---v440)
+ - [`studyu_flutter_common` - `v1.8.0`](#studyu_flutter_common---v180)
+
+---
+
+#### `studyu_core` - `v4.4.0`
+
+ - **REFACTOR**: use upload again. ([af9ec38e](https://github.com/hpi-studyu/studyu/commit/af9ec38e99f28688eba63c8037e74213b9762481))
+ - **REFACTOR**: rename path to blobPath. ([8517bd0f](https://github.com/hpi-studyu/studyu/commit/8517bd0f54432677e68b168a644baafe105550f0))
+ - **REFACTOR**: move blob_storage_handler.dart and add download feature. ([9546e7d0](https://github.com/hpi-studyu/studyu/commit/9546e7d094286f28933fab5b7a50b7048b48215e))
+ - **FIX**: defer upload of multimodal files. ([e8324cab](https://github.com/hpi-studyu/studyu/commit/e8324cabd5dc7b20d1be529ae8ba94d51ab5eb39))
+ - **FIX**: delete multimodal data on leaving study. ([bcd3a461](https://github.com/hpi-studyu/studyu/commit/bcd3a4613b7f387585925128362624748f2ba655))
+ - **FIX**: upgrade deps, move multimodal from core to app, migrate switch case. ([c4c1bd1e](https://github.com/hpi-studyu/studyu/commit/c4c1bd1e7e234535291b609deda21ea0e12b8506))
+ - **FIX**: add versions to pub devs. ([6948ca1e](https://github.com/hpi-studyu/studyu/commit/6948ca1e60b6c3d6a740863a05ca6702079c8310))
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([1000d89c](https://github.com/hpi-studyu/studyu/commit/1000d89cd4df62bbfedfb5238f0e427c4d2d2c08))
+ - **FEAT**: add offline handling for multimodal files. ([92e3d3b3](https://github.com/hpi-studyu/studyu/commit/92e3d3b3732543ecf2bcfa855cb20ef3cc3123de))
+ - **FEAT**: add maximum recording duration to designer. ([c601e0ba](https://github.com/hpi-studyu/studyu/commit/c601e0ba1a327c01a2c88f5a323d24bbd558cdf3))
+
+#### `studyu_flutter_common` - `v1.8.0`
+
+ - **FIX**: migrateSharedPreferencesToSecureStorage data type. ([62f41ab8](https://github.com/hpi-studyu/studyu/commit/62f41ab8b0f18035c5405b1b02045ce2b2fe6008))
+ - **FIX**(flutter_common): Add migration for SecureStorage. ([4604537d](https://github.com/hpi-studyu/studyu/commit/4604537d46e5881c91c0df27d9d30e5305cf04b3))
+ - **FIX**: style of photo capture button. ([7ec85382](https://github.com/hpi-studyu/studyu/commit/7ec853828a51e7aa454563786d782e9c8ffc4e22))
+ - **FIX**: storage bug. ([b7e58d09](https://github.com/hpi-studyu/studyu/commit/b7e58d09a80bfb4f62c11859d6065356085255c8))
+ - **FIX**: use local dev in flutter_common assets". ([523ad961](https://github.com/hpi-studyu/studyu/commit/523ad961e3fe82b7137a63e0a3fd62c417513807))
+ - **FIX**: use local dev in flutter_common assets. ([575089c0](https://github.com/hpi-studyu/studyu/commit/575089c0b9f7505fbdf18a8bd0d4d29836793c08))
+ - **FIX**: new HPI dev env. ([5a1a2667](https://github.com/hpi-studyu/studyu/commit/5a1a2667ab92505f57543eb9e62c0c225af70bee))
+ - **FEAT**: deprecate SharedPreferences for flutter_secure_storage. ([1ff25946](https://github.com/hpi-studyu/studyu/commit/1ff259469e3c354f57e22a3d42ce0d1c60036f44))
+
+
 ## 2024-03-26
 
 ### Changes

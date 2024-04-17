@@ -32,8 +32,8 @@ dependencies:
   reactive_multi_select_flutter: ^2.0.0
   reactive_range_slider: ^2.0.0 # reactive_forms <= 16.1.1
   rxdart: ^0.27.7
-  studyu_core: ^4.3.3
-  studyu_flutter_common: ^1.7.0
+  studyu_core: ^4.4.0
+  studyu_flutter_common: ^1.8.0
   supabase: ^2.1.1
   supabase_flutter: ^2.5.1
   url_launcher: ^6.2.6
