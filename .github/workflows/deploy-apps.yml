@@ -32,7 +32,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3 # do not use head
-          bundler-cache: false
+          bundler-cache: true
       - name: Set up java env
         uses: actions/setup-java@v4
         with:
@@ -47,7 +47,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          cache: false
+          cache: true
       - name: Prepare upload key
         run: |
           echo "$STUDYU_ANDROID_KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
@@ -81,7 +81,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3 # do not use head
-          bundler-cache: false
+          bundler-cache: true
       - name: Bundle install for iOS Gemfile
         run: |
           bundle install
@@ -91,7 +91,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          cache: false
+          cache: true
       - name: Get StudyU app version
         run: |
           # Read the version of study_app from pubspec.yaml and make it CFBundleShortVersionString compatible
