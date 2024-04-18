@@ -46,14 +46,24 @@ class StudyMonitorItem extends Equatable {
     for (final participant in participants) {
       final progresses = participantsProgress.where((progress) => progress.subjectId == participant.id).toList();
       progresses.sort((b, a) => a.completedAt!.compareTo(b.completedAt!)); // descending
-      final interventions = participant.selectedInterventionIds;
+      final interventionOrder = study.schedule.generateInterventionIdsInOrder(participant.selectedInterventionIds);
       final lastActivityAt = progresses.isNotEmpty ? progresses.first.completedAt! : participant.startedAt!;
       final studyDurationInDays = study.schedule.length;
       final currentDayOfStudy =
           min(studyDurationInDays, DateTime.now().toUtc().difference(participant.startedAt!).inDays);
       final daysInBaseline = study.schedule.includeBaseline ? study.schedule.phaseDuration : 0;
 
-      final totalInterventions = max(0, currentDayOfStudy - daysInBaseline);
+      int totalInterventions = 0;
+      for (int day = 0; day < currentDayOfStudy; day++) {
+        if (day < daysInBaseline) {
+          continue;
+        }
+
+        final interventionIdForThisPhase = interventionOrder[day ~/ study.schedule.phaseDuration];
+        final interventionForThisPhase = study.interventions.firstWhere((i) => i.id == interventionIdForThisPhase);
+        totalInterventions += interventionForThisPhase.tasks.length;
+      }
+
       final totalSurveys = currentDayOfStudy * study.observations.length;
 
       final completedInterventions = progresses.where((p) => p.resultType == "bool").toList();
