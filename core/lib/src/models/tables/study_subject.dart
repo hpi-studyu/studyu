@@ -291,8 +291,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
         .where((p) => p.result.result is QuestionnaireState)
         .map((p) => (p.result.result as QuestionnaireState).answers.values)
         .expand((answers) => answers)
-        .where((e) =>
-            e.question == AudioRecordingQuestion.questionType || e.question == ImageCapturingQuestion.questionType)
+        .where(
+          (e) => e.question == AudioRecordingQuestion.questionType || e.question == ImageCapturingQuestion.questionType,
+        )
         .map((e) => e.response!.toString())
         .toList();
 
