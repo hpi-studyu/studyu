@@ -26,16 +26,15 @@ Future<void> main() async {
     };
     // Turn off the # in the URLs on the web
     usePathUrlStrategy();
-    // ignore: missing_provider_scope
     runApp(
-        ProviderScope(
         // Make dependencies managed by Riverpod available in Widget.build methods
         // by wrapping the app in a [ProviderScope]
-            child: const Portal(
+        const ProviderScope(
+            child: Portal(
                 child: Portal(
-              labels: [outPortalLabel],
-              child: App(),
-            ))));
+      labels: [outPortalLabel],
+      child: App(),
+    ))));
   }, (error, stackTrace) {
     // TODO: top-level error handling
     print("Exception: ${error.toString()}");
