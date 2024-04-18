@@ -20,11 +20,13 @@ class StudyExportData {
     required this.study,
     required this.measurementsData,
     required this.interventionsData,
+    required this.mediaData,
   });
 
   final Study study;
   final List<Map<String, dynamic>> measurementsData;
   final List<Map<String, dynamic>> interventionsData;
+  final List<String> mediaData;
 
   bool get isEmpty => measurementsData.isEmpty && interventionsData.isEmpty;
 }
@@ -35,6 +37,7 @@ extension StudyExportX on Study {
   StudyExportData get exportData {
     final List<Map<String, dynamic>> measurementsData = [];
     final List<Map<String, dynamic>> interventionsData = [];
+    final List<String> mediaData = [];
 
     List<SubjectProgress> records = participantsProgress ?? [];
     records.sort((b, a) => a.completedAt!.compareTo(b.completedAt!)); // descending
@@ -47,6 +50,7 @@ extension StudyExportX on Study {
     final Map<String, dynamic> surveyColumns = {};
     final responseColumnById = {};
     final surveyAnsweredColumnById = {};
+    final mediaIndices = [];
 
     for (var i = 1; i < observations.length + 1; i++) {
       final surveyMeasurement = observations[i - 1] as QuestionnaireTask;
@@ -62,6 +66,10 @@ extension StudyExportX on Study {
         surveyColumns['survey${i}_question${j}_text'] = question.prompt;
         surveyColumns['survey${i}_question${j}_response'] = '';
         responseColumnById[question.id] = 'survey${i}_question${j}_response';
+        if (question.type == AudioRecordingQuestion.questionType ||
+            question.type == ImageCapturingQuestion.questionType) {
+          mediaIndices.add(question.id);
+        }
       }
     }
 
@@ -110,6 +118,11 @@ extension StudyExportX on Study {
             final responseValue = questionAnswerPair.response.toString();
             row[questionResponseColumn] = responseValue;
             row[surveyAnsweredColumn] = true;
+            for (final mediaIndex in mediaIndices) {
+              if (mediaIndex == questionId) {
+                mediaData.add(responseValue);
+              }
+            }
           }
         }
         measurementsData.add(row);
@@ -129,6 +142,7 @@ extension StudyExportX on Study {
       study: this,
       measurementsData: measurementsData,
       interventionsData: interventionsData,
+      mediaData: mediaData,
     );
   }
 }

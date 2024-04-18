@@ -88,39 +88,6 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   int get daysPerIntervention => study.schedule.numberOfCycles * study.schedule.phaseDuration;
 
-  Future<void> addResult<T>({
-    required String taskId,
-    required String periodId,
-    required T result,
-    bool? offline,
-  }) async {
-    final Result<T> resultObject = switch (result) {
-      QuestionnaireState() => Result<T>.app(type: 'QuestionnaireState', periodId: periodId, result: result),
-      bool() => Result<T>.app(type: 'bool', periodId: periodId, result: result),
-      _ => Result<T>.app(type: 'unknown', periodId: periodId, result: result),
-    };
-
-    if (resultObject.type == 'unknown') {
-      print('Unsupported question type: $T');
-    }
-
-    SubjectProgress p = SubjectProgress(
-      subjectId: id,
-      interventionId: getInterventionForDate(DateTime.now())!.id,
-      taskId: taskId,
-      result: resultObject,
-      resultType: resultObject.type,
-    );
-    if (offline ?? false) {
-      p.completedAt = DateTime.now().toUtc();
-      progress.add(p);
-    } else {
-      p = await p.save();
-      progress.add(p);
-      await save();
-    }
-  }
-
   Map<DateTime, List<SubjectProgress>> getResultsByDate({required String interventionId}) {
     final resultsByDate = <DateTime, List<SubjectProgress>>{};
     progress.where((p) => p.interventionId == interventionId).forEach((p) {
@@ -317,6 +284,22 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
       rethrow;
+    }
+
+    final List<Answer> answers = progress
+        .map((p) => (p.result.result as QuestionnaireState).answers.values)
+        .expand((answers) => answers)
+        .toList();
+
+    final List<String> observationPaths = answers
+        .where(
+          (e) => e.question == AudioRecordingQuestion.questionType || e.question == ImageCapturingQuestion.questionType,
+        )
+        .map((e) => e.response!.toString())
+        .toList();
+
+    if (observationPaths.isNotEmpty) {
+      BlobStorageHandler().removeObservation(observationPaths);
     }
   }
 

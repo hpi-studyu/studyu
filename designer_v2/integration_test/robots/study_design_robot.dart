@@ -16,7 +16,9 @@ class StudyDesignRobot {
     await $(Icons.check_circle_rounded).waitUntilVisible();
   }
 
-  Future<void> validateStudyPublished() async {}
+  Future<void> validateStudyPublished() async {
+    await $(tr.study_status_running).waitUntilVisible();
+  }
 
   Future<void> navigateToInfoScreen() async {
     await $(tr.navlink_study_design_info).tap();

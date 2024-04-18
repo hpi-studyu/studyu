@@ -33,12 +33,16 @@ jobs:
         with:
           ruby-version: 3.3 # do not use head
           bundler-cache: true
-          working-directory: ./app/android
-        # run: |
-          # sudo apt-get update
-          # sudo snap install ruby --classic
-          # bundle install
-        # working-directory: ./app/android
+      - name: Set up java env
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+      - name: Bundle install for Android Gemfile
+        run: |
+          bundle install
+        timeout-minutes: 5
+        working-directory: ./app/android
       - name: Set up flutter
         uses: subosito/flutter-action@v2
         with:
@@ -78,7 +82,11 @@ jobs:
         with:
           ruby-version: 3.3 # do not use head
           bundler-cache: true
-          working-directory: ./app/ios
+      - name: Bundle install for iOS Gemfile
+        run: |
+          bundle install
+        timeout-minutes: 5
+        working-directory: ./app/ios
       - name: Set up flutter
         uses: subosito/flutter-action@v2
         with:

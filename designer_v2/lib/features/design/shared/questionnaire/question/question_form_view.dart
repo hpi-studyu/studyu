@@ -9,9 +9,11 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/bool_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/choice_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/image_capturing_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/free_text_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/scale_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/audio_recording_question_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -43,6 +45,8 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
       SurveyQuestionType.choice: (_) => ChoiceQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.bool: (_) => BoolQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.scale: (_) => ScaleQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.image: (_) => ImageCapturingQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.audio: (_) => AudioRecordingQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.freeText: (_) => FreeTextQuestionFormView(formViewModel: formViewModel),
     };
     final questionType = formViewModel.questionType;
@@ -92,8 +96,6 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
 
   _buildResponseTypeHeader(BuildContext context) {
     final theme = Theme.of(context);
-    final noFreeText = formViewModel.questionTypeControlOptions;
-    noFreeText.removeWhere((element) => element.value == SurveyQuestionType.freeText);
     return Column(
       children: [
         FormTableLayout(
@@ -107,7 +109,7 @@ class _SurveyQuestionFormViewState extends ConsumerState<SurveyQuestionFormView>
                 data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<SurveyQuestionType>(
                   formControl: formViewModel.questionTypeControl,
-                  items: noFreeText.map((option) {
+                  items: formViewModel.questionTypeControlOptions.map((option) {
                     final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(theme);
                     final iconTheme = menuItemTheme.iconTheme ?? theme.iconTheme;
                     return DropdownMenuItem(

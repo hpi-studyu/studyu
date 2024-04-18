@@ -3,6 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/choice_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/free_text_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/scale_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/image_capturing_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/audio_recording_question_widget.dart';
 import 'package:studyu_core/core.dart';
 
 import 'questions/annotated_scale_question_widget.dart';
@@ -43,6 +45,16 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
       case ScaleQuestion scaleQuestion:
         return ScaleQuestionWidget(
           question: scaleQuestion,
+          onDone: _onDone,
+        );
+      case ImageCapturingQuestion imageCapturingQuestion:
+        return ImageCapturingQuestionWidget(
+          question: imageCapturingQuestion,
+          onDone: _onDone,
+        );
+      case AudioRecordingQuestion audioRecordingQuestion:
+        return AudioRecordingQuestionWidget(
+          question: audioRecordingQuestion,
           onDone: _onDone,
         );
       case VisualAnalogueQuestion visualAnalogueQuestion:
