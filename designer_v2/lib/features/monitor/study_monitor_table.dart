@@ -53,7 +53,7 @@ class StudyMonitorItem extends Equatable {
           min(studyDurationInDays, DateTime.now().toUtc().difference(participant.startedAt!).inDays);
       final daysInBaseline = study.schedule.includeBaseline ? study.schedule.phaseDuration : 0;
 
-      final totalInterventions = max(0, currentDayOfStudy - daysInBaseline) * interventions.length;
+      final totalInterventions = max(0, currentDayOfStudy - daysInBaseline);
       final totalSurveys = currentDayOfStudy * study.observations.length;
 
       final completedInterventions = progresses.where((p) => p.resultType == "bool").toList();
