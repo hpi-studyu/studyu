@@ -46,7 +46,7 @@ class StudyControllerState extends StudyControllerBaseState implements IStudyApp
       study.value == null || (study.value != null && study.value!.canEdit(super.currentUser));
 
   @override
-  bool get isMonitorTabEnabled => isRecruitTabEnabled;
+  bool get isMonitorTabEnabled => isAnalyzeTabEnabled;
 
   @override
   bool get isAnalyzeTabEnabled =>
