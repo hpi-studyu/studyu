@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_designer_v2/common_views/banner.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
@@ -16,6 +15,7 @@ import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class StudyTestScreen extends StudyPageWidget {
   const StudyTestScreen(
@@ -156,8 +156,7 @@ class StudyTestScreen extends StudyPageWidget {
 
   Future<bool> load() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      bool? visited = prefs.getBool('testScreenVisited');
+      bool? visited = await SecureStorage.readBool('testScreenVisited');
       if (visited != null) {
         return visited;
       }
@@ -167,12 +166,8 @@ class StudyTestScreen extends StudyPageWidget {
     return false;
   }
 
-  Future<bool> save() async {
-    SharedPreferences.getInstance().then((prefs) {
-      prefs.setBool('testScreenVisited', true);
-      return true;
-    });
-    return false;
+  Future<void> save() async {
+    SecureStorage.write('testScreenVisited', "true");
   }
 
   showHelp(WidgetRef ref, BuildContext context) {

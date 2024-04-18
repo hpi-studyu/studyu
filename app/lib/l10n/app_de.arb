@@ -107,6 +107,23 @@
 
   "could_not_save_results": "Ergebnisse konnten nicht gespeichert werden.",
 
+  "take_a_photo": "Mache ein Foto",
+  "start_recording": "Starte eine Aufnahme",
+  "stop_recording": "Stoppe die Aufnahme",
+  "error_recording": "Fehler bei der Aufnahme",
+  "photo_captured": "Foto aufgenommen",
+  "audio_recorded": "Audio aufgenommen",
+  "data_captured": "Daten aufgenommen",
+  "multimodal_not_supported": "Multimodale Aufgaben werden in der Web-Version zur Zeit nicht unterstützt. Bitte verwenden Sie die App Version für iOS oder Android.",
+  "camera_access_denied": "Zugriff auf Kamera verweigert",
+  "no_camera_available": "Keine Kamera verfügbar",
+  "microphone_access_denied": "Zugriff auf Mikrofon verweigert",
+  "camera_error": "Kamerafehler",
+  "recording_error": "Aufnahme fehlgeschlagen",
+  "storing_photo": "Foto wird gespeichert",
+  "storing_audio": "Audio wird gespeichert",
+  "upload_error": "Die Datei konnte nicht hochgeladen werden",
+
   "language": "Sprache",
   "en": "Englisch",
   "de": "Deutsch",

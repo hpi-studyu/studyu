@@ -46,7 +46,6 @@
       "minLength": {}
     }
   },
-  "form_field_remember_me": "Zugangsdaten speichern",
   "form_field_password_new": "Neues Passwort",
   "form_field_password_new_hint": "Neues Passwort",
   "form_field_password_new_confirm": "Neues Passwort wiederholen",
@@ -151,8 +150,12 @@
   "question_type_free_text": "Freitext",
   "question_type_bool": "Ja/Nein",
   "question_type_scale": "Skala",
+  "question_type_image": "Bild",
+  "question_type_audio": "Audio",
   "form_array_response_options_bool_yes": "Ja",
   "form_array_response_options_bool_no": "No",
+  "form_field_response_image": "Bild",
+  "form_field_response_audio_max_duration_label": "Maximale Aufnahmedauer in Sekunden",
   "form_field_response_choice_multiple": "Mehrfachauswahl",
   "form_field_response_choice_multiple_tooltip": "Erlaubt die Auswahl von mehreren Antwortoptionen gleichzeitig,\nansonsten kann nur eine einzige Option ausgewählt werden",
   "form_array_response_options_choice_new": "Antwortoption hinzufügen",
@@ -188,6 +191,13 @@
   "form_array_response_options_scale_rangevalid_min": "Der Startwert muss kleiner als der Endwert der Skala sein",
   "form_array_response_options_scale_rangevalid_max": "Die Differenz zwischen dem Start- und Endwert der Skala darf maximal {count} betragen",
   "@form_array_response_options_scale_rangevalid_max": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "audio_recording_max_duration_rangevalid_min": "Die minimale Aufnahmedauer beträgt 1 Sekunde",
+  "audio_recording_max_duration_rangevalid_max": "Die maximale Aufnahmedauer beträgt {count} Sekunden",
+  "@audio_recording_max_duration_rangevalid_max": {
     "placeholders": {
       "count": {}
     }
