@@ -9,6 +9,8 @@ class AppControllerState extends Equatable {
 
   final AppStatus status;
 
+  get isInitialized => status == AppStatus.initialized;
+
   @override
   List<Object?> get props => [status];
 }

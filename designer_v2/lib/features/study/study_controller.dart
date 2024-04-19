@@ -34,7 +34,7 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     if (studyEventsSubscription != null) {
       studyEventsSubscription?.cancel();
     }
-    studyEventsSubscription = studyRepository.watchChanges(studyId).listen((event) {
+    studyEventsSubscription = this.studyRepository.watchChanges(studyId).listen((event) {
       if (event is IsSaving) {
         state = state.copyWith(
           syncState: const AsyncValue.loading(),
@@ -61,7 +61,7 @@ class StudyController extends StudyBaseController<StudyControllerState> {
   /// when building subroutes
   _redirectNewToActualStudyID(StudyID actualStudyId) {
     if (studyId == Config.newModelId) {
-      router.dispatch(RoutingIntents.study(actualStudyId));
+      this.router.dispatch(RoutingIntents.study(actualStudyId));
     }
   }
 
@@ -72,26 +72,26 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     }
     // filter out edit action since we are already editing the study
     return withIcons(
-        studyRepository.availableActions(study).where((action) => action.type != StudyActionType.edit).toList(),
+        this.studyRepository.availableActions(study).where((action) => action.type != StudyActionType.edit).toList(),
         studyActionIcons);
   }
 
   Future publishStudy({toRegistry = false}) {
     final study = state.study.value!;
     study.registryPublished = toRegistry;
-    return studyRepository.launch(study);
+    return this.studyRepository.launch(study);
   }
 
   void onChangeStudyParticipation() {
-    router.dispatch(RoutingIntents.studyEditEnrollment(studyId));
+    this.router.dispatch(RoutingIntents.studyEditEnrollment(studyId));
   }
 
   void onAddParticipants() {
-    router.dispatch(RoutingIntents.studyRecruit(studyId));
+    this.router.dispatch(RoutingIntents.studyRecruit(studyId));
   }
 
   void onSettingsPressed() {
-    router.dispatch(RoutingIntents.studySettings(studyId));
+    this.router.dispatch(RoutingIntents.studySettings(studyId));
   }
 
   @override

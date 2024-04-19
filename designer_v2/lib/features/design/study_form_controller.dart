@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_controller.dart';
@@ -23,6 +23,8 @@ import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
+
+part 'study_form_controller.g.dart';
 
 class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelDelegate<FormViewModel> {
   StudyFormViewModel({
@@ -162,20 +164,14 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-final studyFormViewModelProvider = Provider.autoDispose.family<StudyFormViewModel, StudyID>((ref, studyId) {
-  print("studyFormViewModelProvider");
+@riverpod
+StudyFormViewModel studyFormViewModel(StudyFormViewModelRef ref, StudyID studyId) {
+  print("studyFormViewModel");
   final state = ref.watch(studyControllerProvider(studyId));
-  final formViewModel = StudyFormViewModel(
+  return StudyFormViewModel(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
     formData: state.study.value,
   );
-
-  ref.onDispose(() {
-    formViewModel.dispose();
-    print("studyFormViewModelProvider.DISPOSE");
-  });
-
-  return formViewModel;
-});
+}

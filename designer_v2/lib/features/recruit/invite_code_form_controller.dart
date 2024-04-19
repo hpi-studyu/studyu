@@ -1,5 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -9,6 +9,8 @@ import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
 import 'package:uuid/uuid.dart';
+
+part 'invite_code_form_controller.g.dart';
 
 class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   InviteCodeFormViewModel({required this.study, required this.inviteCodeRepository}) : super();
@@ -114,11 +116,12 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   }
 }
 
-/// Use the [family] modifier to provide a controller parametrized by [StudyID]
+/// Provide a controller parametrized by [StudyID]
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-final inviteCodeFormViewModelProvider = Provider.autoDispose.family<InviteCodeFormViewModel, StudyID>((ref, studyId) {
+@riverpod
+InviteCodeFormViewModel inviteCodeFormViewModel(InviteCodeFormViewModelRef ref, StudyID studyId) {
   print("inviteCodeFormViewModelProvider($studyId");
   // Reactively bind to and obtain [StudyController]'s current study
   final study = ref.watch(studyControllerProvider(studyId).select((state) => state.study));
@@ -128,4 +131,4 @@ final inviteCodeFormViewModelProvider = Provider.autoDispose.family<InviteCodeFo
     study: study.value!,
     inviteCodeRepository: inviteCodeRepository,
   );
-});
+}

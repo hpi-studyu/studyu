@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
@@ -9,6 +9,7 @@ import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/utils/combined_stream_notifier.dart';
 
 import 'router_config.dart';
+part 'router.g.dart';
 
 /// How to create a new page & use it for navigation:
 ///
@@ -20,7 +21,8 @@ import 'router_config.dart';
 /// [RoutingIntent]s in router_intent.dart. These intents correspond to
 /// route changes in the app. See router_intent.dart for more details.
 
-final routerProvider = Provider<GoRouter>((ref) {
+@riverpod
+GoRouter router(RouterRef ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final appController = ref.read(appControllerProvider.notifier);
   const defaultLocation = studiesRouteName;
@@ -41,7 +43,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     // Read most recent app state on re-evaluation (see refreshListenable)
     final isLoggedIn = authRepository.isLoggedIn;
     var allowPasswordReset = authRepository.allowPasswordReset;
-    final isInitialized = appController.isInitialized;
+    final isInitialized = ref.watch(appControllerProvider).isInitialized;
 
     // Carry original location through the redirect flow so that we can
     // redirect the user to where they came from after initialization
@@ -120,4 +122,4 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
   RouterConf.router = router;
   return router;
-});
+}

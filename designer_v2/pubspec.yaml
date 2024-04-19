@@ -31,6 +31,7 @@ dependencies:
   reactive_forms: ^17.0.1
   reactive_multi_select_flutter: ^2.0.1
   reactive_range_slider: ^2.1.0
+  riverpod_annotation: ^2.3.5
   rxdart: ^0.27.7
   studyu_core: ^4.4.2
   studyu_flutter_common: ^1.8.3
@@ -40,7 +41,8 @@ dependencies:
   uuid: ^4.4.0
 
 dev_dependencies:
-  custom_lint:
+  build_runner: ^2.4.9
+  custom_lint: ^0.6.4
   flutter_launcher_icons: ^0.13.1
   flutter_lints: ^4.0.0
   flutter_test:
@@ -48,7 +50,8 @@ dev_dependencies:
   integration_test:
     sdk: flutter
   patrol_finders: ^2.0.2
-  riverpod_lint:
+  riverpod_generator: ^2.4.0
+  riverpod_lint: ^2.3.10
   test: ^1.24.9 # integration_test
 
 flutter:
