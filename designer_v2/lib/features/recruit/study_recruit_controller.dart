@@ -79,7 +79,7 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
   }
 }
 
-/// Use the [family] modifier to provide a controller parametrized by [StudyID]
+/// Provide a controller parametrized by [StudyID]
 final studyRecruitControllerProvider = StateNotifierProvider.autoDispose
     .family<StudyRecruitController, StudyRecruitControllerState, StudyID>((ref, studyId) {
   return StudyRecruitController(

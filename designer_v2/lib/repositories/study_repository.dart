@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
@@ -16,6 +16,8 @@ import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
+
+part 'study_repository.g.dart';
 
 abstract class IStudyRepository implements ModelRepository<Study> {
   Future<void> launch(Study study);
@@ -216,15 +218,9 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
   }
 }
 
-final studyRepositoryProvider = Provider<IStudyRepository>((ref) {
-  final studyRepository = StudyRepository(
+@riverpod
+StudyRepository studyRepository(StudyRepositoryRef ref) => StudyRepository(
     apiClient: ref.watch(apiClientProvider),
     authRepository: ref.watch(authRepositoryProvider),
     ref: ref,
   );
-  // Bind lifecycle to Riverpod
-  ref.onDispose(() {
-    studyRepository.dispose();
-  });
-  return studyRepository;
-});

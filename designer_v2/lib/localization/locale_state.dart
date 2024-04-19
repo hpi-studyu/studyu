@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 import 'locale_providers.dart';
+
+part 'locale_state.g.dart';
 
 Locale fallbackLocale = Locale(Config.defaultLocale.first, Config.defaultLocale.last);
 
@@ -18,11 +20,17 @@ class LocaleState {
   }
 }
 
-class LocaleStateNotifier extends StateNotifier<LocaleState> {
-  final Ref ref;
+@riverpod
+class LocaleStateNotifier extends _$LocaleStateNotifier {
+
+  @override
+  LocaleState build() {
+    return LocaleState(fallbackLocale);
+  }
+
   static const _localStorageKey = 'lang';
 
-  LocaleStateNotifier(this.ref) : super(LocaleState(fallbackLocale));
+  //LocaleStateNotifier(this.ref) : super(LocaleState(fallbackLocale));
 
   /// Initialize Locale
   /// Can be run at startup to establish the initial local from storage, or the platform

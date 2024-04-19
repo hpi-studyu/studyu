@@ -1,4 +1,4 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
@@ -12,6 +12,8 @@ import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
+
+part 'invite_code_repository.g.dart';
 
 abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
   Future<bool> isCodeAlreadyUsed(String code);
@@ -186,7 +188,8 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
   }
 }
 
-final inviteCodeRepositoryProvider = Provider.autoDispose.family<IInviteCodeRepository, StudyID>((ref, studyId) {
+@riverpod
+InviteCodeRepository inviteCodeRepository(InviteCodeRepositoryRef ref, StudyID studyId) {
   print("inviteCodeRepositoryProvider($studyId");
   // Initialize repository for a given study
   final repository = InviteCodeRepository(
@@ -202,4 +205,4 @@ final inviteCodeRepositoryProvider = Provider.autoDispose.family<IInviteCodeRepo
     repository.dispose();
   });
   return repository;
-});
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
@@ -9,6 +10,8 @@ import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
+
+part 'study_test_controller.g.dart';
 
 class StudyTestController extends StudyBaseController<StudyTestControllerState> {
   StudyTestController({
@@ -53,9 +56,9 @@ final studyTestControllerProvider =
   return controller;
 });
 
-final studyTestPlatformControllerProvider = Provider.family<PlatformController, StudyID>((ref, studyId) {
+@riverpod
+PlatformController studyTestPlatformController(StudyTestPlatformControllerRef ref, StudyID studyId) {
   final state = ref.watch(studyTestControllerProvider(studyId));
-
   PlatformController platformController;
   if (!kIsWeb) {
     // Mobile could be built with the webview_flutter package
@@ -64,6 +67,5 @@ final studyTestPlatformControllerProvider = Provider.family<PlatformController, 
     // Desktop and Web
     platformController = WebController(state.appUrl, studyId);
   }
-
   return platformController;
-});
+}

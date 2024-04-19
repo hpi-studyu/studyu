@@ -1,7 +1,9 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+
+part 'supabase_client.g.dart';
 
 // TODO: Transfer networking code to core package (+ update app if needed)
 
@@ -33,7 +35,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 
   Future<List<T>> deleteAll<T extends SupabaseObject>(Map<String, dynamic> selectionCriteria) async {
     try {
-      final data = await supabaseClient.from(tableName(T)).delete().match(selectionCriteria);
+      final data = await this.supabaseClient.from(tableName(T)).delete().match(selectionCriteria);
       if (data == null) return [];
       return deserializeList<T>(data);
     } on PostgrestException catch (error) {
@@ -43,7 +45,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 
   Future<List<T>> getAll<T extends SupabaseObject>({List<String> selectedColumns = const ['*']}) async {
     try {
-      final data = await supabaseClient.from(tableName(T)).select(selectedColumns.join(','));
+      final data = await this.supabaseClient.from(tableName(T)).select(selectedColumns.join(','));
       return deserializeList<T>(data);
     } on PostgrestException catch (error) {
       throw SupabaseQueryError(statusCode: error.code, message: error.message, details: error.details);
@@ -58,7 +60,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
       {List<String> selectedColumns = const ['*']}) async {
     try {
       final data =
-          await supabaseClient.from(tableName(T)).select(selectedColumns.join(',')).eq(colName, value).single();
+          await this.supabaseClient.from(tableName(T)).select(selectedColumns.join(',')).eq(colName, value).single();
       return deserializeObject<T>(data);
     } on PostgrestException catch (error) {
       throw SupabaseQueryError(statusCode: error.code, message: error.message, details: error.details);
@@ -78,4 +80,5 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 }
 
 // Re-expose the global client object via Riverpod
-final supabaseClientProvider = riverpod.Provider<SupabaseClient>((ref) => env.client);
+@riverpod
+SupabaseClient supabaseClient(SupabaseClientRef ref) => env.client;

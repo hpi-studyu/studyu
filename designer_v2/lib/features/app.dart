@@ -11,6 +11,8 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/services/notification_dispatcher.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
+import '../localization/locale_state.dart';
+
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey();
 
 /// Entry widget of the app.
@@ -54,7 +56,7 @@ class _AppContentState extends ConsumerState<AppContent> {
     // todo move this into appControllerProvider
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Locale Startup Actions
-      ref.read(localeStateProvider.notifier).initLocale();
+      ref.read(localeStateNotifierProvider.notifier).initLocale();
     });
   }
 
