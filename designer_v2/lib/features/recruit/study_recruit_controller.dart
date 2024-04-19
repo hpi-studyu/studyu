@@ -36,6 +36,8 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
       print("StudyRecruitController.listenUpdate");
       // Update the controller's state when new invites are available in the repository
       final invites = wrappedModels.map((invite) => invite.model).toList();
+      // Sort invites alphabetically by code
+      invites.sort((a, b) => a.code.compareTo(b.code));
       state = state.copyWith(
         invites: AsyncValue.data(invites),
       );
