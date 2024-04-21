@@ -7,7 +7,7 @@ part of 'locale_state.dart';
 // **************************************************************************
 
 String _$localeStateNotifierHash() =>
-    r'726764926faff3bc76af0f45fdd750e75014291f';
+    r'33481e3cb3540bd28ad8ad47668e6f9d1d1c5594';
 
 /// See also [LocaleStateNotifier].
 @ProviderFor(LocaleStateNotifier)

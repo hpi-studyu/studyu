@@ -7,9 +7,9 @@ AppLocalizations get tr => _tr!;
 AppLocalizations? _tr;
 
 class AppTranslation {
-  static init(WidgetRef ref) async {
-    // Loads the currently selected locale from localeProvider and sets the localization
-    _tr = await AppLocalizations.delegate.load(ref.watch(localeProvider));
+  static init(WidgetRef ref) {
+    // Loads the currently selected locale and sets the localization
+    _tr = lookupAppLocalizations(ref.watch(localeProvider));
   }
 }
 
