@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_controller_state.dart';
-import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
@@ -11,28 +10,33 @@ import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
-class StudyRecruitController extends StudyBaseController<StudyRecruitControllerState>
-    implements IModelActionProvider<StudyInvite> {
-  StudyRecruitController({
-    required super.studyId,
-    required super.studyRepository,
-    required super.currentUser,
-    required super.router,
-    required this.inviteCodeRepository,
-  }) : super(StudyRecruitControllerState(currentUser: currentUser)) {
+part 'study_recruit_controller.g.dart';
+
+@riverpod
+class StudyRecruitController extends _$StudyRecruitController implements IModelActionProvider<StudyInvite> {
+
+  /// [inviteCodeRepository] Reference to the repository for invite codes (resolved dynamically via Riverpod when the [state.study] becomes available)
+  @override
+  StudyRecruitControllerState build(StudyID studyId) {
     print("StudyRecruitController.constructor");
     _subscribeInvites();
+    ref.onDispose(() {print("StudyRecruitController.dispose");
+    _invitesSubscription?.cancel();});
+    return StudyRecruitControllerState(
+      studyId: studyId,
+      studyRepository: ref.watch(studyRepositoryProvider),
+      router: ref.watch(routerProvider),
+      currentUser: ref.watch(authRepositoryProvider).currentUser,
+      inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyId)),
+      invites: const AsyncValue.loading(),
+    );
   }
-
-  /// Reference to the repository for invite codes (resolved dynamically via
-  /// Riverpod when the [state.study] becomes available)
-  final IInviteCodeRepository inviteCodeRepository;
 
   StreamSubscription<List<WrappedModel<StudyInvite>>>? _invitesSubscription;
 
   _subscribeInvites() {
     print("StudyRecruitController.subscribe");
-    _invitesSubscription = inviteCodeRepository.watchAll().listen((wrappedModels) {
+    _invitesSubscription = state.inviteCodeRepository.watchAll().listen((wrappedModels) {
       print("StudyRecruitController.listenUpdate");
       // Update the controller's state when new invites are available in the repository
       final invites = wrappedModels.map((invite) => invite.model).toList();
@@ -56,7 +60,7 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
 
   @override
   List<ModelAction> availableActions(StudyInvite model) {
-    final actions = inviteCodeRepository
+    final actions = state.inviteCodeRepository
         .availableActions(model)
         .where((action) => action.type != ModelActionType.clipboard)
         .toList();
@@ -64,29 +68,10 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
   }
 
   List<ModelAction> availableInlineActions(StudyInvite model) {
-    final actions = inviteCodeRepository
+    final actions = state.inviteCodeRepository
         .availableActions(model)
         .where((action) => action.type == ModelActionType.clipboard)
         .toList();
     return withIcons(actions, modelActionIcons);
   }
-
-  @override
-  void dispose() {
-    print("StudyRecruitController.dispose");
-    _invitesSubscription?.cancel();
-    super.dispose();
-  }
 }
-
-/// Provide a controller parametrized by [StudyID]
-final studyRecruitControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyRecruitController, StudyRecruitControllerState, StudyID>((ref, studyId) {
-  return StudyRecruitController(
-    studyId: studyId,
-    studyRepository: ref.watch(studyRepositoryProvider),
-    currentUser: ref.watch(authRepositoryProvider).currentUser,
-    router: ref.watch(routerProvider),
-    inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyId)),
-  );
-});

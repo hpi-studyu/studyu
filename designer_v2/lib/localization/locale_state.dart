@@ -22,41 +22,29 @@ class LocaleState {
 
 @riverpod
 class LocaleStateNotifier extends _$LocaleStateNotifier {
-
   @override
   LocaleState build() {
+    /// Initialize Locale
+    /// Can be run at startup to establish the initial local from storage, or the platform
+    /// 1. Attempts to restore locale from storage
+    /// 2. IF no locale in storage, attempts to set local from the platform settings
+    // Attempt to restore from storage
+    restoreFromStorage();
     return LocaleState(fallbackLocale);
   }
 
   static const _localStorageKey = 'lang';
 
-  //LocaleStateNotifier(this.ref) : super(LocaleState(fallbackLocale));
-
-  /// Initialize Locale
-  /// Can be run at startup to establish the initial local from storage, or the platform
-  /// 1. Attempts to restore locale from storage
-  /// 2. IF no locale in storage, attempts to set local from the platform settings
-  Future<void> initLocale() async {
-    // Attempt to restore from storage
-    bool fromStorageSuccess = await restoreFromStorage();
-
-    // If storage restore did not work, set from platform
-    if (!fromStorageSuccess) {
-      setLocale(ref.read(platformLocaleProvider));
-    }
-  }
-
   /// Set Locale
   /// Attempts to set the locale if it's in our list of supported locales.
   /// IF NOT: get the first locale that matches our language code and set that
   /// ELSE: do nothing.
-  void setLocale(Locale locale) {
-    List<Locale> supportedLocales = ref.read(supportedLocalesProvider);
+  void setLocale(Locale locale) async {
+    List<Locale> supportedLocales = ref.watch(supportedLocalesProvider);
 
     // Set the locale if it's in our list of supported locales
     if (supportedLocales.contains(locale)) {
       state = state.copyWith(locale: locale);
-      save();
     }
 
     // Get the closest language locale and set that instead
@@ -75,15 +63,17 @@ class LocaleStateNotifier extends _$LocaleStateNotifier {
   /// Restore Locale from Storage
   Future<bool> restoreFromStorage() async {
     try {
-      LocaleState? state = await load();
-      if (state == null) {
-        return false;
+      LocaleState? loadedState = await load();
+      if (loadedState != null) {
+        state = loadedState;
+        return true;
       }
-      state = state;
-      return true;
     } catch (e) {
-      return false;
+      rethrow;
     }
+    // If storage restore did not work, set from platform
+    setLocale(ref.watch(platformLocaleProvider));
+    return false;
   }
 
   Future<LocaleState?> load() async {

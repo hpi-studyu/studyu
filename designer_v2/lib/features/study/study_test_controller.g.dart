@@ -30,16 +30,24 @@ class _SystemHash {
   }
 }
 
-/// See also [studyTestPlatformController].
+/// Provide a controller parametrized by [StudyID]
+///
+/// Copied from [studyTestPlatformController].
 @ProviderFor(studyTestPlatformController)
 const studyTestPlatformControllerProvider = StudyTestPlatformControllerFamily();
 
-/// See also [studyTestPlatformController].
+/// Provide a controller parametrized by [StudyID]
+///
+/// Copied from [studyTestPlatformController].
 class StudyTestPlatformControllerFamily extends Family<PlatformController> {
-  /// See also [studyTestPlatformController].
+  /// Provide a controller parametrized by [StudyID]
+  ///
+  /// Copied from [studyTestPlatformController].
   const StudyTestPlatformControllerFamily();
 
-  /// See also [studyTestPlatformController].
+  /// Provide a controller parametrized by [StudyID]
+  ///
+  /// Copied from [studyTestPlatformController].
   StudyTestPlatformControllerProvider call(
     String studyId,
   ) {
@@ -72,10 +80,14 @@ class StudyTestPlatformControllerFamily extends Family<PlatformController> {
   String? get name => r'studyTestPlatformControllerProvider';
 }
 
-/// See also [studyTestPlatformController].
+/// Provide a controller parametrized by [StudyID]
+///
+/// Copied from [studyTestPlatformController].
 class StudyTestPlatformControllerProvider
     extends AutoDisposeProvider<PlatformController> {
-  /// See also [studyTestPlatformController].
+  /// Provide a controller parametrized by [StudyID]
+  ///
+  /// Copied from [studyTestPlatformController].
   StudyTestPlatformControllerProvider(
     String studyId,
   ) : this._internal(
@@ -158,6 +170,152 @@ class _StudyTestPlatformControllerProviderElement
 
   @override
   String get studyId => (origin as StudyTestPlatformControllerProvider).studyId;
+}
+
+String _$studyTestControllerHash() =>
+    r'efc5f63d1d743edd57af6689308075f1c2cf3131';
+
+abstract class _$StudyTestController
+    extends BuildlessAutoDisposeNotifier<StudyTestControllerState> {
+  late final String studyId;
+
+  StudyTestControllerState build(
+    String studyId,
+  );
+}
+
+/// See also [StudyTestController].
+@ProviderFor(StudyTestController)
+const studyTestControllerProvider = StudyTestControllerFamily();
+
+/// See also [StudyTestController].
+class StudyTestControllerFamily extends Family<StudyTestControllerState> {
+  /// See also [StudyTestController].
+  const StudyTestControllerFamily();
+
+  /// See also [StudyTestController].
+  StudyTestControllerProvider call(
+    String studyId,
+  ) {
+    return StudyTestControllerProvider(
+      studyId,
+    );
+  }
+
+  @override
+  StudyTestControllerProvider getProviderOverride(
+    covariant StudyTestControllerProvider provider,
+  ) {
+    return call(
+      provider.studyId,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'studyTestControllerProvider';
+}
+
+/// See also [StudyTestController].
+class StudyTestControllerProvider extends AutoDisposeNotifierProviderImpl<
+    StudyTestController, StudyTestControllerState> {
+  /// See also [StudyTestController].
+  StudyTestControllerProvider(
+    String studyId,
+  ) : this._internal(
+          () => StudyTestController()..studyId = studyId,
+          from: studyTestControllerProvider,
+          name: r'studyTestControllerProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$studyTestControllerHash,
+          dependencies: StudyTestControllerFamily._dependencies,
+          allTransitiveDependencies:
+              StudyTestControllerFamily._allTransitiveDependencies,
+          studyId: studyId,
+        );
+
+  StudyTestControllerProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.studyId,
+  }) : super.internal();
+
+  final String studyId;
+
+  @override
+  StudyTestControllerState runNotifierBuild(
+    covariant StudyTestController notifier,
+  ) {
+    return notifier.build(
+      studyId,
+    );
+  }
+
+  @override
+  Override overrideWith(StudyTestController Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: StudyTestControllerProvider._internal(
+        () => create()..studyId = studyId,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        studyId: studyId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeNotifierProviderElement<StudyTestController,
+      StudyTestControllerState> createElement() {
+    return _StudyTestControllerProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is StudyTestControllerProvider && other.studyId == studyId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, studyId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin StudyTestControllerRef
+    on AutoDisposeNotifierProviderRef<StudyTestControllerState> {
+  /// The parameter `studyId` of this provider.
+  String get studyId;
+}
+
+class _StudyTestControllerProviderElement
+    extends AutoDisposeNotifierProviderElement<StudyTestController,
+        StudyTestControllerState> with StudyTestControllerRef {
+  _StudyTestControllerProviderElement(super.provider);
+
+  @override
+  String get studyId => (origin as StudyTestControllerProvider).studyId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

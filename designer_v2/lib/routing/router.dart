@@ -4,11 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/constants.dart';
-import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/utils/combined_stream_notifier.dart';
 
 import 'router_config.dart';
+
 part 'router.g.dart';
 
 /// How to create a new page & use it for navigation:
@@ -24,7 +24,6 @@ part 'router.g.dart';
 @riverpod
 GoRouter router(RouterRef ref) {
   final authRepository = ref.watch(authRepositoryProvider);
-  final appController = ref.read(appControllerProvider.notifier);
   const defaultLocation = studiesRouteName;
   late final GoRouter router;
 
@@ -43,7 +42,6 @@ GoRouter router(RouterRef ref) {
     // Read most recent app state on re-evaluation (see refreshListenable)
     final isLoggedIn = authRepository.isLoggedIn;
     var allowPasswordReset = authRepository.allowPasswordReset;
-    final isInitialized = ref.watch(appControllerProvider).isInitialized;
 
     // Carry original location through the redirect flow so that we can
     // redirect the user to where they came from after initialization
@@ -65,11 +63,6 @@ GoRouter router(RouterRef ref) {
         qParams["from"] = from;
       }
       return router.namedLocation(name, queryParameters: qParams);
-    }
-
-    if (!isInitialized) {
-      // Redirect to splash screen while app is pending initialization
-      return (isOnSplashPage) ? null : namedLocForwarded(splashRouteName);
     }
 
     // Handle password recovery
@@ -112,7 +105,7 @@ GoRouter router(RouterRef ref) {
   router = GoRouter(
     refreshListenable: CombinedStreamNotifier([
       // Any stream registered here will trigger the router's redirect logic
-      appController.stream, // initialization events
+      // appController.stream, // initialization events
       authRepository.watchAuthStateChanges() // authentication events
     ]),
     routes: RouterConf.routes,

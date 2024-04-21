@@ -1,38 +1,39 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_base_state.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
+import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 
-class StudyBaseController<T extends StudyControllerBaseState> extends StateNotifier<T> {
-  StudyBaseController(
-    super.state, {
-    required this.studyId,
-    required this.studyRepository,
-    required this.router,
-    required currentUser,
-  }) {
+part 'study_base_controller.g.dart';
+
+@riverpod
+class StudyBaseController<T extends StudyControllerBaseState> extends _$StudyBaseController {
+  @override
+  StudyControllerBaseState build(StudyID studyId) {
     subscribeStudy(studyId);
+    return StudyControllerBaseState(
+      studyId: studyId,
+      studyRepository: ref.watch(studyRepositoryProvider),
+      router: ref.watch(routerProvider),
+      currentUser: ref.watch(authRepositoryProvider).currentUser,
+    );
   }
 
-  final StudyID studyId;
-  final IStudyRepository studyRepository;
-  final GoRouter router;
-
-  StreamSubscription<WrappedModel<Study>>? studySubscription;
+  StreamSubscription<WrappedModel<Study>>? _studySubscription;
 
   subscribeStudy(StudyID studyId) {
-    if (studySubscription != null) {
-      studySubscription!.cancel();
+    if (_studySubscription != null) {
+      _studySubscription!.cancel();
     }
-    studySubscription =
-        studyRepository.watch(studyId).listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
+    _studySubscription =
+        state.studyRepository.watch(studyId).listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
   }
 
   onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
@@ -46,13 +47,7 @@ class StudyBaseController<T extends StudyControllerBaseState> extends StateNotif
            during app initialization so that we don't need to render the loading state
            if the study doesn't exist
       */
-      router.dispatch(RoutingIntents.error(error));
+      state.router.dispatch(RoutingIntents.error(error));
     }
-  }
-
-  @override
-  dispose() {
-    studySubscription?.cancel();
-    super.dispose();
   }
 }
