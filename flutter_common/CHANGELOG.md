@@ -1,3 +1,7 @@
+## 1.8.1
+
+ - Update a dependency to the latest release.
+
 ## 1.8.0
 
  - **FIX**: migrateSharedPreferencesToSecureStorage data type. ([62f41ab8](https://github.com/hpi-studyu/studyu/commit/62f41ab8b0f18035c5405b1b02045ce2b2fe6008))
