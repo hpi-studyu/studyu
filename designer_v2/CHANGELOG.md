@@ -1,3 +1,7 @@
+## 1.7.1
+
+ - Update a dependency to the latest release.
+
 ## 1.7.0
 
  - **FIX**: style of photo capture button. ([7ec85382](https://github.com/hpi-studyu/studyu/commit/7ec853828a51e7aa454563786d782e9c8ffc4e22))
