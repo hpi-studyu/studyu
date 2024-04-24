@@ -138,7 +138,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
               participantCount: participantCount,
               activeSubjectCount: activeSubjectCount,
               endedCount: endedCount),
-          height: columnDefinition.key == StudiesTableColumn.pin ? widget.itemHeight : null));
+          height: columnDefinition.key == StudiesTableColumn.expand ? widget.itemHeight : null));
       if (!columnDefinition.value.collapsed) {
         columnRows.add(SizedBox(width: widget.columnSpacing));
       }
@@ -146,11 +146,6 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
 
     final row = InkWell(
       onTap: () {
-        if (study.isTemplate) {
-          widget.onExpandStudy?.call(study);
-          return;
-        }
-
         widget.onTapStudy?.call(study);
       },
       onHover: (hover) {
@@ -181,8 +176,8 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       required int activeSubjectCount,
       required int endedCount}) {
     switch (column) {
-      case StudiesTableColumn.pin:
-        return _buildPin(study);
+      case StudiesTableColumn.expand:
+        return _buildExpand(study);
       case StudiesTableColumn.title:
         return _buildTitle(study);
       case StudiesTableColumn.type:
@@ -204,19 +199,25 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
     }
   }
 
-  Widget _buildPin(Study study) {
+  Widget _buildExpand(Study study) {
     return study.isTemplate
-        ? Align(
-            alignment: Alignment.centerRight,
-            child: AnimatedRotation(
-              turns: widget.isExpanded ? 0.25 : 0,
-              duration: const Duration(milliseconds: 250),
-              child: const Icon(
-                Icons.chevron_right_rounded,
-                color: Colors.grey,
-                size: 24,
-              ),
-            ),
+        ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+                onPressed: () {
+                  if (study.isTemplate) {
+                    widget.onExpandStudy?.call(study);
+                  }
+                },
+                icon: AnimatedRotation(
+                  turns: widget.isExpanded ? 0.25 : 0,
+                  duration: const Duration(milliseconds: 250),
+                  child: const Icon(
+                    Icons.chevron_right_rounded,
+                    color: Colors.grey,
+                    size: 24,
+                  ),
+                )),
           )
         : (study.isSubStudy && hoveredStudy == study
             ? const Align(

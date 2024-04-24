@@ -161,7 +161,7 @@ class DashboardState extends Equatable {
           sortedStudies.sort((study, other) => other.endedCount.compareTo(study.endedCount));
         }
         break;
-      case StudiesTableColumn.pin:
+      case StudiesTableColumn.expand:
       case StudiesTableColumn.action:
         break;
     }

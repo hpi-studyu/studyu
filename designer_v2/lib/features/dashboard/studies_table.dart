@@ -20,7 +20,7 @@ class StudyGroup {
   StudyGroup.template(Template templateStudy, List<Study> subStudies) : this(templateStudy, subStudies);
 }
 
-enum StudiesTableColumn { pin, title, status, participation, createdAt, enrolled, active, completed, action, type }
+enum StudiesTableColumn { expand, title, status, participation, createdAt, enrolled, active, completed, action, type }
 
 class StudiesTableColumnSize {
   final bool collapsed;
@@ -114,7 +114,7 @@ class StudiesTable extends StatelessWidget {
 
         // Set column definitions
         final columnDefinitionsMap = {
-          StudiesTableColumn.pin: StudiesTableColumnSize.fixedWidth(40),
+          StudiesTableColumn.expand: StudiesTableColumnSize.fixedWidth(itemHeight),
           StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(24),
           StudiesTableColumn.type: StudiesTableColumnSize.fixedWidth(typeColumnWidth),
           StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(statusColumnWidth),
@@ -208,14 +208,14 @@ class StudiesTable extends StatelessWidget {
       case StudiesTableColumn.completed:
         title = tr.studies_list_header_participants_completed;
         break;
-      case StudiesTableColumn.pin:
+      case StudiesTableColumn.expand:
       case StudiesTableColumn.action:
         title = '';
         break;
     }
 
     final sortAscending = dashboardController.isSortAscending;
-    final sortable = !(column == StudiesTableColumn.pin || column == StudiesTableColumn.action);
+    final sortable = !(column == StudiesTableColumn.expand || column == StudiesTableColumn.action);
     final sortingActive = dashboardController.isSortingActiveForColumn(column);
 
     return StudiesTableColumnHeader(
