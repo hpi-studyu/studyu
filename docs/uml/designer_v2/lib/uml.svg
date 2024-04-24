@@ -63,8 +63,7 @@
 	  &lt;static&gt;+addCollaborator: StudyActionType;
 	  &lt;static&gt;+export: StudyActionType;
 	  &lt;static&gt;+delete: StudyActionType;
-	  &lt;static&gt;+createSubStudy: StudyActionType;
-	  &lt;static&gt;+view: StudyActionType
+	  &lt;static&gt;+createSubStudy: StudyActionType
 	]
 	
 	[StudyActionType]o-[StudyActionType]
@@ -3928,7 +3927,7 @@
 	  |
 	  +index: int;
 	  &lt;static&gt;+values: List&lt;StudiesTableColumn&gt;;
-	  &lt;static&gt;+pin: StudiesTableColumn;
+	  &lt;static&gt;+expand: StudiesTableColumn;
 	  &lt;static&gt;+title: StudiesTableColumn;
 	  &lt;static&gt;+status: StudiesTableColumn;
 	  &lt;static&gt;+participation: StudiesTableColumn;
@@ -4470,12 +4469,12 @@
 					<g fill="#eee8d5">
 						<path d="M212.3 2710.3 L207.0 2719.7 L201.7 2710.3 L207.0 2701.0 Z"></path>
 					</g>
-					<path d="M442.4 3409.4 L456 3402 L463.5 3402 L463.5 3402 L471 3515.5 L471 3515.5 L463.5 3629 L463.5 3629 L456 3629 L456 3629 L426 3612.7081339712918 L426.0 3612.7 " fill="none"></path>
+					<path d="M442.6 3416.3 L456 3409.5 L463.5 3409.5 L463.5 3409.5 L471 3515.5 L471 3515.5 L463.5 3621.5 L463.5 3621.5 L456 3621.5 L456 3621.5 L426 3606.284688995215 L426.0 3606.3 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M431.7 3409.2 L442.4 3409.4 L436.7 3418.5 L426.0 3418.3 Z"></path>
+						<path d="M431.9 3415.7 L442.6 3416.3 L436.7 3425.3 L426.0 3424.7 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M3106.3 2650.3 L247 3329 L247 3402 L247.0 3402.0 " fill="none"></path>
+						<path d="M3106.3 2650.3 L247 3329 L247 3409.5 L247.0 3409.5 " fill="none"></path>
 					</g>
 					<path d="M3107.5 2655.5 L3106.3 2650.3 L3105.0 2645.1 L3119.3 2647.2 Z"></path>
 					<path d="M3865.7 2741.9 L3766 3329 L3478.3458445040214 3484.5 L3478.3 3484.5 " fill="none"></path>
@@ -6935,16 +6934,16 @@
 					</g>
 					<g data-name="StudyActionType">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyActionType">
-							<rect x="68.0" y="3402.0" height="227.0" width="358.0" data-name="StudyActionType"></rect>
-							<path d="M68.0 3433.0 L426.0 3433.0" fill="none" data-name="StudyActionType"></path>
+							<rect x="68.0" y="3409.5" height="212.0" width="358.0" data-name="StudyActionType"></rect>
+							<path d="M68.0 3440.5 L426.0 3440.5" fill="none" data-name="StudyActionType"></path>
 						</g>
-						<g transform="translate(68, 3402)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyActionType">
+						<g transform="translate(68, 3409.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyActionType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyActionType">
 								<text x="171.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyActionType">StudyActionType</text>
 								
 							</g>
 						</g>
-						<g transform="translate(68, 3433)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyActionType">
+						<g transform="translate(68, 3440.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyActionType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyActionType">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyActionType">+index: int</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+values: List&lt;StudyActionType&gt;</text>
@@ -6957,7 +6956,6 @@
 								<text x="0.0" y="133.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+export: StudyActionType</text>
 								<text x="0.0" y="148.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+delete: StudyActionType</text>
 								<text x="0.0" y="163.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+createSubStudy: StudyActionType</text>
-								<text x="0.0" y="178.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+view: StudyActionType</text>
 								
 							</g>
 						</g>
@@ -15741,7 +15739,7 @@
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudiesTableColumn">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudiesTableColumn">+index: int</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+values: List&lt;StudiesTableColumn&gt;</text>
-								<text x="0.0" y="43.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+pin: StudiesTableColumn</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+expand: StudiesTableColumn</text>
 								<text x="0.0" y="58.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+title: StudiesTableColumn</text>
 								<text x="0.0" y="73.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+status: StudiesTableColumn</text>
 								<text x="0.0" y="88.5" stroke="none" data-name="StudiesTableColumn">&lt;static&gt;+participation: StudiesTableColumn</text>
