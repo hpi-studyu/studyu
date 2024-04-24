@@ -286,12 +286,11 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       rethrow;
     }
 
-    final List<Answer> answers = progress
+    // Filter out all multimodal answers and remove their paths from the blob storage
+    final observationPaths = progress
+        .where((p) => p.result.result is QuestionnaireState)
         .map((p) => (p.result.result as QuestionnaireState).answers.values)
         .expand((answers) => answers)
-        .toList();
-
-    final List<String> observationPaths = answers
         .where(
           (e) => e.question == AudioRecordingQuestion.questionType || e.question == ImageCapturingQuestion.questionType,
         )
