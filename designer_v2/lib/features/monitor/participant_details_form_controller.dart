@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/domain/study_monitoring.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
-import 'package:studyu_designer_v2/features/monitor/study_monitor_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class ParticipantDetailsFormViewModel extends FormViewModel<StudyMonitorItem> {
@@ -34,7 +34,7 @@ class ParticipantDetailsFormViewModel extends FormViewModel<StudyMonitorItem> {
   @override
   void setControlsFrom(StudyMonitorItem data) {
     participantIdControl.value = data.participantId;
-    rawDataControl.value = data.rawData;
+    rawDataControl.value = "";
   }
 }
 

@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
+import 'package:studyu_designer_v2/domain/study_monitoring.dart';
 import 'package:studyu_designer_v2/features/monitor/participant_details_form_controller.dart';
 import 'package:studyu_designer_v2/features/monitor/participant_details_form_view.dart';
 import 'package:studyu_designer_v2/features/monitor/study_monitor_table.dart';
@@ -22,16 +23,16 @@ class StudyMonitorScreen extends StudyPageWidget {
     return AsyncValueWidget<Study>(
         value: state.study,
         data: (study) {
-          final studyMonitorItems = StudyMonitorItem.fromStudy(study);
+          final studyMonitorData = study.monitorData;
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              _monitorSectionHeader(context, study),
+              _monitorSectionHeader(context, studyMonitorData),
               const SizedBox(height: 40.0), // spacing between body elements
-              studyMonitorItems.isNotEmpty
+              studyMonitorData.items.isNotEmpty
                   ? StudyMonitorTable(
-                      studyMonitorItems: studyMonitorItems,
+                      studyMonitorItems: studyMonitorData.items,
                       onSelectItem: (item) => _onSelectParticipant(context, ref, item),
                     )
                   : EmptyBody(
@@ -43,13 +44,9 @@ class StudyMonitorScreen extends StudyPageWidget {
         });
   }
 
-  Widget _monitorSectionHeader(BuildContext context, Study study) {
-    // Using study.participants.length because participantCount does not include soft deleted participants
-    final enrolled = study.participants?.length ?? study.participantCount;
-    // Active participants are those who were active in the last 3 days
-    final active = study.activeSubjectCount;
-    // Ended participants are those with days in study >= study duration
-    final ended = study.endedCount;
+  Widget _monitorSectionHeader(BuildContext context, StudyMonitorData monitorData) {
+    final enrolled =
+        monitorData.activeParticipants + monitorData.dropoutParticipants + monitorData.completedParticipants;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -59,9 +56,16 @@ class StudyMonitorScreen extends StudyPageWidget {
           child: Row(
             children: [
               Expanded(
-                  child: _buildStat(context, tr.monitoring_active, tr.monitoring_active_tooltip, active, enrolled)),
+                  child: _buildStat(context, tr.monitoring_active, tr.monitoring_active_tooltip,
+                      monitorData.activeParticipants, enrolled)),
               const SizedBox(width: 20.0),
-              Expanded(child: _buildStat(context, tr.monitoring_ended, tr.monitoring_ended_tooltip, ended, enrolled)),
+              Expanded(
+                  child: _buildStat(context, tr.monitoring_dropout, tr.monitoring_dropout_tooltip,
+                      monitorData.dropoutParticipants, enrolled)),
+              const SizedBox(width: 20.0),
+              Expanded(
+                  child: _buildStat(context, tr.monitoring_completed, tr.monitoring_completed_tooltip,
+                      monitorData.completedParticipants, enrolled)),
             ],
           ),
         ),
