@@ -4,11 +4,10 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
-import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
+import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/domain/study_monitoring.dart';
-import 'package:studyu_designer_v2/features/monitor/participant_details_form_controller.dart';
-import 'package:studyu_designer_v2/features/monitor/participant_details_form_view.dart';
+import 'package:studyu_designer_v2/features/monitor/participant_details_view.dart';
 import 'package:studyu_designer_v2/features/monitor/study_monitor_table.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
@@ -33,7 +32,7 @@ class StudyMonitorScreen extends StudyPageWidget {
               studyMonitorData.items.isNotEmpty
                   ? StudyMonitorTable(
                       studyMonitorItems: studyMonitorData.items,
-                      onSelectItem: (item) => _onSelectParticipant(context, ref, item),
+                      onSelectItem: (item) => _onSelectParticipant(context, ref, item, study),
                     )
                   : EmptyBody(
                       icon: Icons.person_off_rounded,
@@ -98,16 +97,13 @@ class StudyMonitorScreen extends StudyPageWidget {
     );
   }
 
-  _onSelectParticipant(BuildContext context, WidgetRef ref, StudyMonitorItem item) {
+  _onSelectParticipant(BuildContext context, WidgetRef ref, StudyMonitorItem item, Study study) {
     // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
-    final formViewModel = ref.read(participantDetailsFormViewModelProvider(item));
-    formViewModel.setControlsFrom(item);
-    showFormSideSheet<ParticipantDetailsFormViewModel>(
+    showModalSideSheet(
       context: context,
-      formViewModel: formViewModel,
-      formViewBuilder: (formViewModel) => ParticipantDetailsFormView(
-        formViewModel: formViewModel,
-      ),
+      title: tr.participant_details_title,
+      body: ParticipantDetailsView(
+          monitorItem: item, interventions: study.interventions, observations: study.observations),
       actionButtons: [
         retainSizeInAppBar(DismissButton(
           text: tr.dialog_close,

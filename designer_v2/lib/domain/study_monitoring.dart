@@ -39,8 +39,10 @@ class StudyMonitorItem extends Equatable {
   final int completedSurveys;
   final int missedSurveys;
   final bool droppedOut;
+  final List<Set<String>> missedTasksPerDay;
+  final List<Set<String>> completedTasksPerDay;
 
-  const StudyMonitorItem({
+  StudyMonitorItem({
     required this.participantId,
     required this.inviteCode,
     required this.enrolledAt,
@@ -52,7 +54,12 @@ class StudyMonitorItem extends Equatable {
     required this.completedSurveys,
     required this.missedSurveys,
     required this.droppedOut,
-  });
+    required this.missedTasksPerDay,
+    required this.completedTasksPerDay,
+  }) {
+    assert(missedTasksPerDay.length == currentDayOfStudy);
+    assert(completedTasksPerDay.length == currentDayOfStudy);
+  }
 
   @override
   List<Object?> get props => [participantId];
@@ -77,24 +84,48 @@ extension StudyMonitoringX on Study {
           min(studyDurationInDays, DateTime.now().toUtc().difference(participant.startedAt!).inDays);
       final daysInBaseline = schedule.includeBaseline ? schedule.phaseDuration : 0;
 
-      int totalInterventions = 0;
+      final Set<String> requiredSurveyTaskIds = observations.map((o) => o.id).toSet();
+
+      int completedInterventions = 0;
+      int completedSurveys = 0;
+      final List<Set<String>> missedTasksPerDay = [];
+      final List<Set<String>> completedTasksPerDay = [];
+
       for (int day = 0; day < currentDayOfStudy; day++) {
-        if (day < daysInBaseline) {
-          continue;
+        final Set<String> requiredInterventionTaskIds = {};
+        if (day >= daysInBaseline) {
+          final interventionIdForThisPhase = interventionOrder[day ~/ schedule.phaseDuration];
+          final interventionForThisPhase = interventions.firstWhere((i) => i.id == interventionIdForThisPhase);
+          requiredInterventionTaskIds.addAll(interventionForThisPhase.tasks.map((t) => t.id));
         }
 
-        final interventionIdForThisPhase = interventionOrder[day ~/ schedule.phaseDuration];
-        final interventionForThisPhase = interventions.firstWhere((i) => i.id == interventionIdForThisPhase);
-        totalInterventions += interventionForThisPhase.tasks.length;
+        final requiredTaskIds = requiredInterventionTaskIds.union(requiredSurveyTaskIds);
+
+        final completedTaskIds = progresses
+            .where((p) =>
+                p.completedAt!.isAfter(participant.startedAt!.add(Duration(days: day))) &&
+                p.completedAt!.isBefore(participant.startedAt!.add(Duration(days: day + 1))))
+            .map((p) => p.taskId)
+            .toSet();
+
+        final missedTaskIds = requiredTaskIds.difference(completedTaskIds);
+        missedTasksPerDay.add(missedTaskIds);
+
+        final completedTaskIdsPerDay = requiredTaskIds.intersection(completedTaskIds);
+        completedTasksPerDay.add(completedTaskIdsPerDay);
+
+        final completedSurveysSet = requiredSurveyTaskIds.intersection(completedTaskIds);
+        final completedIntervention = requiredInterventionTaskIds.isNotEmpty &&
+            requiredInterventionTaskIds.intersection(completedTaskIds).length == requiredInterventionTaskIds.length;
+        completedSurveys += completedSurveysSet.length;
+        completedInterventions += completedIntervention ? 1 : 0;
       }
 
       final totalSurveys = currentDayOfStudy * observations.length;
+      final totalInterventions = max(0, currentDayOfStudy - daysInBaseline);
 
-      final completedInterventions = progresses.where((p) => p.resultType == "bool").toList();
-      final completedSurveys = progresses.where((p) => p.resultType != "bool").toList();
-
-      final missedInterventions = totalInterventions - completedInterventions.length;
-      final missedSurveys = totalSurveys - completedSurveys.length;
+      final missedInterventions = totalInterventions - completedInterventions;
+      final missedSurveys = totalSurveys - completedSurveys;
 
       items.add(StudyMonitorItem(
         participantId: participant.id,
@@ -103,11 +134,13 @@ extension StudyMonitoringX on Study {
         lastActivityAt: lastActivityAt,
         currentDayOfStudy: currentDayOfStudy,
         studyDurationInDays: studyDurationInDays,
-        completedInterventions: completedInterventions.length,
+        completedInterventions: completedInterventions,
         missedInterventions: missedInterventions,
-        completedSurveys: completedSurveys.length,
+        completedSurveys: completedSurveys,
         missedSurveys: missedSurveys,
         droppedOut: participant.isDeleted,
+        missedTasksPerDay: missedTasksPerDay,
+        completedTasksPerDay: completedTasksPerDay,
       ));
     }
 
