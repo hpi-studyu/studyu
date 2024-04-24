@@ -1,5 +1,33 @@
-<svg version="1.1" baseProfile="full" width="1594.8" height="415.0" viewbox="0 0 1594.75 415" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
-	<desc >[&lt;abstract&gt;ResultTypes
+<svg version="1.1" baseProfile="full" width="2168.3" height="475.0" viewbox="0 0 2168.25 475" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+	<desc >[StudyMonitorData
+	  |
+	  +activeParticipants: int;
+	  +dropoutParticipants: int;
+	  +completedParticipants: int;
+	  +items: List&lt;StudyMonitorItem&gt;
+	]
+	
+	[StudyMonitorItem
+	  |
+	  +participantId: String;
+	  +inviteCode: String?;
+	  +enrolledAt: DateTime;
+	  +lastActivityAt: DateTime;
+	  +currentDayOfStudy: int;
+	  +studyDurationInDays: int;
+	  +completedInterventions: int;
+	  +missedInterventions: int;
+	  +completedSurveys: int;
+	  +missedSurveys: int;
+	  +droppedOut: bool;
+	  +missedTasksPerDay: List&lt;Set&lt;String&gt;&gt;;
+	  +completedTasksPerDay: List&lt;Set&lt;String&gt;&gt;;
+	  +props: List&lt;Object?&gt;
+	]
+	
+	[&lt;abstract&gt;Equatable]&lt;:-[StudyMonitorItem]
+	
+	[&lt;abstract&gt;ResultTypes
 	]
 	
 	[MeasurementResultTypes
@@ -57,31 +85,96 @@
 	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
 		<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
 			<g stroke="transparent" fill="transparent">
-				<rect x="0.0" y="0.0" height="415.0" width="1594.8" stroke="none"></rect>
+				<rect x="0.0" y="0.0" height="475.0" width="2168.3" stroke="none"></rect>
 			</g>
 			<g transform="translate(8, 8)" fill="#33322E">
 				<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
-					<path d="M235.6 82.8 L126 142 L126 222 L126.0 222.0 " fill="none"></path>
-					<path d="M238.1 87.5 L235.6 82.8 L233.0 78.1 L247.3 76.5 Z"></path>
-					<path d="M316.4 82.8 L426 142 L426 222 L426.0 222.0 " fill="none"></path>
-					<path d="M319.0 78.1 L316.4 82.8 L313.9 87.5 L304.7 76.5 Z"></path>
-					<path d="M680.3 140.7 L680.25 142 L680.25 245 L680.3 245.0 " fill="none"></path>
+					<path d="M352.0 89.8 L352 142 L352 162 L352.0 162.0 " fill="none"></path>
+					<path d="M357.3 89.8 L352.0 89.8 L346.7 89.8 L352.0 76.5 Z"></path>
+					<path d="M809.1 82.8 L699.5 142 L699.5 252 L699.5 252.0 " fill="none"></path>
+					<path d="M811.6 87.5 L809.1 82.8 L806.5 78.1 L820.8 76.5 Z"></path>
+					<path d="M889.9 82.8 L999.5 142 L999.5 252 L999.5 252.0 " fill="none"></path>
+					<path d="M892.5 78.1 L889.9 82.8 L887.4 87.5 L878.2 76.5 Z"></path>
+					<path d="M1253.8 140.7 L1253.75 142 L1253.75 275 L1253.8 275.0 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M685.6 131.3 L680.3 140.7 L674.9 131.3 L680.3 122.0 Z"></path>
+						<path d="M1259.1 131.3 L1253.8 140.7 L1248.4 131.3 L1253.8 122.0 Z"></path>
 					</g>
-					<path d="M1500.6 168.2 L1513.75 162 L1521.25 162 L1521.25 162 L1528.75 260.5 L1528.75 260.5 L1521.25 359 L1521.25 359 L1513.75 359 L1513.75 359 L1483.75 344.8612440191388 L1483.8 344.9 " fill="none"></path>
+					<path d="M2074.1 198.2 L2087.25 192 L2094.75 192 L2094.75 192 L2102.25 290.5 L2102.25 290.5 L2094.75 389 L2094.75 389 L2087.25 389 L2087.25 389 L2057.25 374.8612440191388 L2057.3 374.9 " fill="none"></path>
 					<g fill="#eee8d5">
-						<path d="M1489.9 167.3 L1500.6 168.2 L1494.5 177.0 L1483.8 176.1 Z"></path>
+						<path d="M2063.4 197.3 L2074.1 198.2 L2068.0 207.0 L2057.3 206.1 Z"></path>
 					</g>
 					<g stroke-dasharray="6 6">
-						<path d="M1304.8 89.8 L1304.75 142 L1304.75 162 L1304.8 162.0 " fill="none"></path>
+						<path d="M1878.3 89.8 L1878.25 142 L1878.25 192 L1878.3 192.0 " fill="none"></path>
 					</g>
-					<path d="M1310.1 89.8 L1304.8 89.8 L1299.4 89.8 L1304.8 76.5 Z"></path>
+					<path d="M1883.6 89.8 L1878.3 89.8 L1872.9 89.8 L1878.3 76.5 Z"></path>
+					<g data-name="StudyMonitorData">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyMonitorData">
+							<rect x="0.0" y="7.5" height="107.0" width="264.0" data-name="StudyMonitorData"></rect>
+							<path d="M0.0 38.5 L264.0 38.5" fill="none" data-name="StudyMonitorData"></path>
+						</g>
+						<g transform="translate(0, 7.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyMonitorData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyMonitorData">
+								<text x="124.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyMonitorData">StudyMonitorData</text>
+								
+							</g>
+						</g>
+						<g transform="translate(0, 38.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyMonitorData">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyMonitorData">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyMonitorData">+activeParticipants: int</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudyMonitorData">+dropoutParticipants: int</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudyMonitorData">+completedParticipants: int</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudyMonitorData">+items: List&lt;StudyMonitorItem&gt;</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="StudyMonitorItem">
+						<g fill="#eee8d5" stroke="#33322E" data-name="StudyMonitorItem">
+							<rect x="170.5" y="162.0" height="257.0" width="363.0" data-name="StudyMonitorItem"></rect>
+							<path d="M170.5 193.0 L533.5 193.0" fill="none" data-name="StudyMonitorItem"></path>
+						</g>
+						<g transform="translate(170.5, 162)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyMonitorItem">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyMonitorItem">
+								<text x="173.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyMonitorItem">StudyMonitorItem</text>
+								
+							</g>
+						</g>
+						<g transform="translate(170.5, 193)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyMonitorItem">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyMonitorItem">
+								<text x="0.0" y="13.5" stroke="none" data-name="StudyMonitorItem">+participantId: String</text>
+								<text x="0.0" y="28.5" stroke="none" data-name="StudyMonitorItem">+inviteCode: String?</text>
+								<text x="0.0" y="43.5" stroke="none" data-name="StudyMonitorItem">+enrolledAt: DateTime</text>
+								<text x="0.0" y="58.5" stroke="none" data-name="StudyMonitorItem">+lastActivityAt: DateTime</text>
+								<text x="0.0" y="73.5" stroke="none" data-name="StudyMonitorItem">+currentDayOfStudy: int</text>
+								<text x="0.0" y="88.5" stroke="none" data-name="StudyMonitorItem">+studyDurationInDays: int</text>
+								<text x="0.0" y="103.5" stroke="none" data-name="StudyMonitorItem">+completedInterventions: int</text>
+								<text x="0.0" y="118.5" stroke="none" data-name="StudyMonitorItem">+missedInterventions: int</text>
+								<text x="0.0" y="133.5" stroke="none" data-name="StudyMonitorItem">+completedSurveys: int</text>
+								<text x="0.0" y="148.5" stroke="none" data-name="StudyMonitorItem">+missedSurveys: int</text>
+								<text x="0.0" y="163.5" stroke="none" data-name="StudyMonitorItem">+droppedOut: bool</text>
+								<text x="0.0" y="178.5" stroke="none" data-name="StudyMonitorItem">+missedTasksPerDay: List&lt;Set&lt;String&gt;&gt;</text>
+								<text x="0.0" y="193.5" stroke="none" data-name="StudyMonitorItem">+completedTasksPerDay: List&lt;Set&lt;String&gt;&gt;</text>
+								<text x="0.0" y="208.5" stroke="none" data-name="StudyMonitorItem">+props: List&lt;Object?&gt;</text>
+								
+							</g>
+						</g>
+					</g>
+					<g data-name="Equatable">
+						<g fill="#eee8d5" stroke="#33322E" data-name="Equatable">
+							<rect x="304.0" y="45.5" height="31.0" width="96.0" data-name="Equatable"></rect>
+						</g>
+						<g transform="translate(304, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="Equatable">
+							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Equatable">
+								<text x="40.0" y="13.5" stroke="none" text-anchor="middle" data-name="Equatable">Equatable</text>
+								
+							</g>
+						</g>
+					</g>
 					<g data-name="ResultTypes">
 						<g fill="#eee8d5" stroke="#33322E" data-name="ResultTypes">
-							<rect x="219.0" y="45.5" height="31.0" width="114.0" data-name="ResultTypes"></rect>
+							<rect x="792.5" y="45.5" height="31.0" width="114.0" data-name="ResultTypes"></rect>
 						</g>
-						<g transform="translate(219, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ResultTypes">
+						<g transform="translate(792.5, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="italic" data-name="ResultTypes">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ResultTypes">
 								<text x="49.0" y="13.5" stroke="none" text-anchor="middle" data-name="ResultTypes">ResultTypes</text>
 								
@@ -90,16 +183,16 @@
 					</g>
 					<g data-name="MeasurementResultTypes">
 						<g fill="#eee8d5" stroke="#33322E" data-name="MeasurementResultTypes">
-							<rect x="0.0" y="222.0" height="77.0" width="252.0" data-name="MeasurementResultTypes"></rect>
-							<path d="M0.0 253.0 L252.0 253.0" fill="none" data-name="MeasurementResultTypes"></path>
+							<rect x="573.5" y="252.0" height="77.0" width="252.0" data-name="MeasurementResultTypes"></rect>
+							<path d="M573.5 283.0 L825.5 283.0" fill="none" data-name="MeasurementResultTypes"></path>
 						</g>
-						<g transform="translate(0, 222)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MeasurementResultTypes">
+						<g transform="translate(573.5, 252)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MeasurementResultTypes">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MeasurementResultTypes">
 								<text x="118.0" y="13.5" stroke="none" text-anchor="middle" data-name="MeasurementResultTypes">MeasurementResultTypes</text>
 								
 							</g>
 						</g>
-						<g transform="translate(0, 253)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MeasurementResultTypes">
+						<g transform="translate(573.5, 283)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MeasurementResultTypes">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MeasurementResultTypes">
 								<text x="0.0" y="13.5" stroke="none" data-name="MeasurementResultTypes">&lt;static&gt;+questionnaire: String</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="MeasurementResultTypes">&lt;static&gt;+values: List&lt;String&gt;</text>
@@ -109,16 +202,16 @@
 					</g>
 					<g data-name="InterventionResultTypes">
 						<g fill="#eee8d5" stroke="#33322E" data-name="InterventionResultTypes">
-							<rect x="292.0" y="222.0" height="77.0" width="268.0" data-name="InterventionResultTypes"></rect>
-							<path d="M292.0 253.0 L560.0 253.0" fill="none" data-name="InterventionResultTypes"></path>
+							<rect x="865.5" y="252.0" height="77.0" width="268.0" data-name="InterventionResultTypes"></rect>
+							<path d="M865.5 283.0 L1133.5 283.0" fill="none" data-name="InterventionResultTypes"></path>
 						</g>
-						<g transform="translate(292, 222)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionResultTypes">
+						<g transform="translate(865.5, 252)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="InterventionResultTypes">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="InterventionResultTypes">
 								<text x="126.0" y="13.5" stroke="none" text-anchor="middle" data-name="InterventionResultTypes">InterventionResultTypes</text>
 								
 							</g>
 						</g>
-						<g transform="translate(292, 253)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionResultTypes">
+						<g transform="translate(865.5, 283)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="InterventionResultTypes">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="InterventionResultTypes">
 								<text x="0.0" y="13.5" stroke="none" data-name="InterventionResultTypes">&lt;static&gt;+checkmarkTask: String</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="InterventionResultTypes">&lt;static&gt;+values: List&lt;String&gt;</text>
@@ -128,16 +221,16 @@
 					</g>
 					<g data-name="StudyExportData">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyExportData">
-							<rect x="473.3" y="0.0" height="122.0" width="414.0" data-name="StudyExportData"></rect>
-							<path d="M473.3 31.0 L887.3 31.0" fill="none" data-name="StudyExportData"></path>
+							<rect x="1046.8" y="0.0" height="122.0" width="414.0" data-name="StudyExportData"></rect>
+							<path d="M1046.8 31.0 L1460.8 31.0" fill="none" data-name="StudyExportData"></path>
 						</g>
-						<g transform="translate(473.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyExportData">
+						<g transform="translate(1046.75, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyExportData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyExportData">
 								<text x="199.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyExportData">StudyExportData</text>
 								
 							</g>
 						</g>
-						<g transform="translate(473.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyExportData">
+						<g transform="translate(1046.75, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyExportData">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyExportData">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyExportData">+study: Study</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyExportData">+measurementsData: List&lt;Map&lt;String, dynamic&gt;&gt;</text>
@@ -150,9 +243,9 @@
 					</g>
 					<g data-name="Study">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Study">
-							<rect x="649.8" y="245.0" height="31.0" width="61.0" data-name="Study"></rect>
+							<rect x="1223.3" y="275.0" height="31.0" width="61.0" data-name="Study"></rect>
 						</g>
-						<g transform="translate(649.75, 245)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Study">
+						<g transform="translate(1223.25, 275)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Study">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Study">
 								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Study">Study</text>
 								
@@ -161,23 +254,23 @@
 					</g>
 					<g data-name="StudyTemplates">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyTemplates">
-							<rect x="927.3" y="14.5" height="93.0" width="307.0" data-name="StudyTemplates"></rect>
-							<path d="M927.3 45.5 L1234.3 45.5" fill="none" data-name="StudyTemplates"></path>
-							<path d="M927.3 76.5 L1234.3 76.5" fill="none" data-name="StudyTemplates"></path>
+							<rect x="1500.8" y="14.5" height="93.0" width="307.0" data-name="StudyTemplates"></rect>
+							<path d="M1500.8 45.5 L1807.8 45.5" fill="none" data-name="StudyTemplates"></path>
+							<path d="M1500.8 76.5 L1807.8 76.5" fill="none" data-name="StudyTemplates"></path>
 						</g>
-						<g transform="translate(927.25, 14.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyTemplates">
+						<g transform="translate(1500.75, 14.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyTemplates">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyTemplates">
 								<text x="145.5" y="13.5" stroke="none" text-anchor="middle" data-name="StudyTemplates">StudyTemplates</text>
 								
 							</g>
 						</g>
-						<g transform="translate(927.25, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyTemplates">
+						<g transform="translate(1500.75, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyTemplates">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyTemplates">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyTemplates">&lt;static&gt;+kUnnamedStudyTitle: String</text>
 								
 							</g>
 						</g>
-						<g transform="translate(927.25, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyTemplates">
+						<g transform="translate(1500.75, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyTemplates">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyTemplates">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyTemplates">&lt;static&gt;+Study emptyDraft()</text>
 								
@@ -186,16 +279,16 @@
 					</g>
 					<g data-name="StudyActionType">
 						<g fill="#eee8d5" stroke="#33322E" data-name="StudyActionType">
-							<rect x="1125.8" y="162.0" height="197.0" width="358.0" data-name="StudyActionType"></rect>
-							<path d="M1125.8 193.0 L1483.8 193.0" fill="none" data-name="StudyActionType"></path>
+							<rect x="1699.3" y="192.0" height="197.0" width="358.0" data-name="StudyActionType"></rect>
+							<path d="M1699.3 223.0 L2057.3 223.0" fill="none" data-name="StudyActionType"></path>
 						</g>
-						<g transform="translate(1125.75, 162)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyActionType">
+						<g transform="translate(1699.25, 192)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="StudyActionType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="StudyActionType">
 								<text x="171.0" y="13.5" stroke="none" text-anchor="middle" data-name="StudyActionType">StudyActionType</text>
 								
 							</g>
 						</g>
-						<g transform="translate(1125.75, 193)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyActionType">
+						<g transform="translate(1699.25, 223)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="StudyActionType">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="StudyActionType">
 								<text x="0.0" y="13.5" stroke="none" data-name="StudyActionType">+index: int</text>
 								<text x="0.0" y="28.5" stroke="none" data-name="StudyActionType">&lt;static&gt;+values: List&lt;StudyActionType&gt;</text>
@@ -213,9 +306,9 @@
 					</g>
 					<g data-name="Enum">
 						<g fill="#eee8d5" stroke="#33322E" data-name="Enum">
-							<rect x="1274.3" y="45.5" height="31.0" width="61.0" data-name="Enum"></rect>
+							<rect x="1847.8" y="45.5" height="31.0" width="61.0" data-name="Enum"></rect>
 						</g>
-						<g transform="translate(1274.25, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
+						<g transform="translate(1847.75, 45.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="Enum">
 							<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Enum">
 								<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Enum">Enum</text>
 								
