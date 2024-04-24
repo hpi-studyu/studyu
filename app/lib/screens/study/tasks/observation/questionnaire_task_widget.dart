@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/misc.dart';
+import 'package:studyu_app/util/study_subject_extension.dart';
+import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
 
@@ -39,52 +41,56 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    TemporaryStorageHandler.deleteAllStagingFiles();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final questionnaireWidget = QuestionnaireWidget(
-      widget.task.questions.questions,
-      header: widget.task.header,
-      footer: widget.task.footer,
-      onChange: _responseValidator,
-      onComplete: (qs) => setState(() {
-        response = qs;
-      }),
-    );
-    return Expanded(
-      child: Column(
-        children: [
-          Expanded(
-            child: Form(
-              key: formKey,
-              child: questionnaireWidget,
+    return Column(
+      children: [
+        Expanded(
+          child: Form(
+            key: formKey,
+            child: QuestionnaireWidget(
+              widget.task.questions.questions,
+              header: widget.task.header,
+              footer: widget.task.footer,
+              onChange: _responseValidator,
+              onComplete: (qs) => setState(() {
+                response = qs;
+              }),
             ),
           ),
-          if (response != null && responseValidator)
-            ElevatedButton.icon(
-              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
-              onPressed: () async {
-                if (isRedundantClick(loginClickTime)) {
-                  return;
-                }
-                if (!formKey.currentState!.validate()) {
-                  return;
-                }
-                setState(() {
-                  _isLoading = true;
-                });
-                switch (response) {
-                  case QuestionnaireState questionnaireState:
-                    await _addQuestionnaireResult<QuestionnaireState>(questionnaireState, context);
-                    break;
-                }
-                setState(() {
-                  _isLoading = false;
-                });
-              },
-              icon: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Icon(Icons.check),
-              label: Text(AppLocalizations.of(context)!.complete),
-            ),
-        ],
-      ),
+        ),
+        response != null && responseValidator
+            ? ElevatedButton.icon(
+                style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+                onPressed: () async {
+                  if (isRedundantClick(loginClickTime)) {
+                    return;
+                  }
+                  if (!formKey.currentState!.validate()) {
+                    return;
+                  }
+                  setState(() {
+                    _isLoading = true;
+                  });
+                  switch (response) {
+                    case QuestionnaireState questionnaireState:
+                      await _addQuestionnaireResult<QuestionnaireState>(questionnaireState, context);
+                      break;
+                  }
+                  setState(() {
+                    _isLoading = false;
+                  });
+                },
+                icon: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Icon(Icons.check),
+                label: Text(AppLocalizations.of(context)!.complete),
+              )
+            : const SizedBox.shrink(),
+      ],
     );
   }
 

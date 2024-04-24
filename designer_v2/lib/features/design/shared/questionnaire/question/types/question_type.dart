@@ -6,6 +6,8 @@ enum SurveyQuestionType {
   choice,
   bool,
   scale,
+  image,
+  audio,
   freeText;
 
   static SurveyQuestionType of(Question question) {
@@ -16,6 +18,8 @@ enum SurveyQuestionType {
       AnnotatedScaleQuestion.questionType: SurveyQuestionType.scale,
       VisualAnalogueQuestion.questionType: SurveyQuestionType.scale,
       FreeTextQuestion.questionType: SurveyQuestionType.freeText,
+      ImageCapturingQuestion.questionType: SurveyQuestionType.image,
+      AudioRecordingQuestion.questionType: SurveyQuestionType.audio,
     };
     if (!typeMapping.containsKey(question.type)) {
       throw UnimplementedError("Missing SurveyQuestionType for question of type: ${question.type}");
@@ -31,6 +35,10 @@ enum SurveyQuestionType {
         return tr.question_type_bool;
       case SurveyQuestionType.scale:
         return tr.question_type_scale;
+      case SurveyQuestionType.image:
+        return tr.question_type_image;
+      case SurveyQuestionType.audio:
+        return tr.question_type_audio;
       case SurveyQuestionType.freeText:
         return tr.question_type_free_text;
       default:
@@ -46,6 +54,10 @@ enum SurveyQuestionType {
         return Icons.rule_rounded; // Icons.contrast
       case SurveyQuestionType.scale:
         return Icons.tune_rounded;
+      case SurveyQuestionType.image:
+        return Icons.photo_camera_rounded;
+      case SurveyQuestionType.audio:
+        return Icons.mic;
       case SurveyQuestionType.freeText:
         return Icons.edit_square;
       default:

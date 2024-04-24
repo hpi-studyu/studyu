@@ -32,6 +32,9 @@ jobs:
         run: flutter config --enable-web
       - name: Initialize Supabase
         run: |
+          dart pub global activate melos
+          melos bootstrap
+          dart pub get
           docker network create studyu_network || true
           cp docker/supabase/.env.example docker/supabase/.env
           cp docker/proxy/.env.example docker/proxy/.env

@@ -1,3 +1,45 @@
+## 2.7.1
+
+ - **FIX**: add NSCameraUsageDescription. ([bfdd5a9e](https://github.com/hpi-studyu/studyu/commit/bfdd5a9ea795b83152d8ccdd02dec8e0d30b2e7f))
+
+## 2.7.0
+
+ - **REFACTOR**: move blob_storage_handler.dart and add download feature. ([9546e7d0](https://github.com/hpi-studyu/studyu/commit/9546e7d094286f28933fab5b7a50b7048b48215e))
+ - **REFACTOR**: remove flex. ([6509e85d](https://github.com/hpi-studyu/studyu/commit/6509e85d34971da725dccae7239e5fa17f1fde45))
+ - **REFACTOR**(app): move flex to QuestionnaireTaskWidget. ([1a12ece1](https://github.com/hpi-studyu/studyu/commit/1a12ece137fc2cf2bbc1dae2a9ab2e83a20b2064))
+ - **REFACTOR**: late vars. ([f0b6a15e](https://github.com/hpi-studyu/studyu/commit/f0b6a15e661185c7ab1c50c65ed50006ca2dd1a8))
+ - **REFACTOR**: remove capture_question_widget. ([50ee289c](https://github.com/hpi-studyu/studyu/commit/50ee289cd1aaad21e348a0257db20e4f2c5cb38d))
+ - **REFACTOR**: audio and picture screen. ([61dba8ed](https://github.com/hpi-studyu/studyu/commit/61dba8ed4a624b9408cf6e85c0acedce48ab8b34))
+ - **REFACTOR**: make multimodal stateful widgets private. ([c2bf84f7](https://github.com/hpi-studyu/studyu/commit/c2bf84f79484038dab64b6e5f6e45e66bdc7ec0a))
+ - **FIX**: rework of capture_picture_screen. ([61bac286](https://github.com/hpi-studyu/studyu/commit/61bac286887b15e1d7af33e97a942811ed1e583c))
+ - **FIX**: do not upload image directly. ([9414afcb](https://github.com/hpi-studyu/studyu/commit/9414afcb899e40ab1e72436dfaba337d8052bb64))
+ - **FIX**: style of photo capture button. ([7ec85382](https://github.com/hpi-studyu/studyu/commit/7ec853828a51e7aa454563786d782e9c8ffc4e22))
+ - **FIX**: use Android minSdk >= 21. ([95829c6a](https://github.com/hpi-studyu/studyu/commit/95829c6ace02330ea921c51c0160903fcf94d0b0))
+ - **FIX**: update ios deps. ([2c77103c](https://github.com/hpi-studyu/studyu/commit/2c77103cd047be6fd757f03222778edbfa8caf2a))
+ - **FIX**: storage bug. ([b7e58d09](https://github.com/hpi-studyu/studyu/commit/b7e58d09a80bfb4f62c11859d6065356085255c8))
+ - **FIX**: use 16 as IV length. ([f72a191a](https://github.com/hpi-studyu/studyu/commit/f72a191a1c750c414b98205d6faa512342181b26))
+ - **FIX**: typo. ([51f62bb7](https://github.com/hpi-studyu/studyu/commit/51f62bb7d95ba50a315687027f8e27b36e58522e))
+ - **FIX**: add versions to pub devs. ([6948ca1e](https://github.com/hpi-studyu/studyu/commit/6948ca1e60b6c3d6a740863a05ca6702079c8310))
+ - **FIX**: camera does not need audio. ([54cca2b9](https://github.com/hpi-studyu/studyu/commit/54cca2b9ee6e299548eb0b9ff48c87e04b42c739))
+ - **FIX**: const constructor. ([2a5d4b48](https://github.com/hpi-studyu/studyu/commit/2a5d4b488c090a7b55de3ccf58f3203a2034ff95))
+ - **FIX**: do not support multimodal for web, refactor multimodal questions. ([19f08166](https://github.com/hpi-studyu/studyu/commit/19f08166e3726532d0a6042dafeed3283f58ce5b))
+ - **FIX**: defer upload of multimodal files. ([e8324cab](https://github.com/hpi-studyu/studyu/commit/e8324cabd5dc7b20d1be529ae8ba94d51ab5eb39))
+ - **FIX**: switch to uploadBinary for now. ([b9884dee](https://github.com/hpi-studyu/studyu/commit/b9884deeba14de85f00ebe55703acdeeb1de1422))
+ - **FIX**: switch object equal check. ([200c4643](https://github.com/hpi-studyu/studyu/commit/200c46431d9d44227ad8ff55b284c85358f63e0a))
+ - **FIX**: upgrade deps, move multimodal from core to app, migrate switch case. ([c4c1bd1e](https://github.com/hpi-studyu/studyu/commit/c4c1bd1e7e234535291b609deda21ea0e12b8506))
+ - **FIX**: dart fix. ([1ebe9d00](https://github.com/hpi-studyu/studyu/commit/1ebe9d005d4c5d0f9e7ba1d8a0f24fc4e71641c2))
+ - **FIX**: use dynamic Sdk version, use release env. ([0e4cbe5d](https://github.com/hpi-studyu/studyu/commit/0e4cbe5dc9cbf3109194d001e6439d2a782192b6))
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([1000d89c](https://github.com/hpi-studyu/studyu/commit/1000d89cd4df62bbfedfb5238f0e427c4d2d2c08))
+ - **FIX**: modify xcode version and ios target platform. ([2ca76bf2](https://github.com/hpi-studyu/studyu/commit/2ca76bf2c950934554dee7dabed84a34454cc4a1))
+ - **FIX**: change provisioning profile name. ([d12fa572](https://github.com/hpi-studyu/studyu/commit/d12fa5722e4dfc9cb7200359c971e47a259fe4d8))
+ - **FEAT**: record audio inside question widget. ([aa9cb51d](https://github.com/hpi-studyu/studyu/commit/aa9cb51d9469707e39587dbe9bd6f68ed262f4d9))
+ - **FEAT**: translate. ([8811b543](https://github.com/hpi-studyu/studyu/commit/8811b5434e1657ef91774012445178c19741efbe))
+ - **FEAT**: deprecate SharedPreferences for flutter_secure_storage. ([1ff25946](https://github.com/hpi-studyu/studyu/commit/1ff259469e3c354f57e22a3d42ce0d1c60036f44))
+ - **FEAT**(app): directly show task description in task screen. ([76fd9f65](https://github.com/hpi-studyu/studyu/commit/76fd9f65d7f3685471f3a75fc4a8beaf34739a3a))
+ - **FEAT**: delete local multimodal files. ([319d7c22](https://github.com/hpi-studyu/studyu/commit/319d7c2261e38a42c68324516e9295b36ce8b9f3))
+ - **FEAT**: add localization for multimodal. ([32d15487](https://github.com/hpi-studyu/studyu/commit/32d154879118f57a4a397ffa43c33d86f63a4f0f))
+ - **FEAT**: add offline handling for multimodal files. ([92e3d3b3](https://github.com/hpi-studyu/studyu/commit/92e3d3b3732543ecf2bcfa855cb20ef3cc3123de))
+
 ## 2.6.5
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

@@ -1,3 +1,20 @@
+## 4.4.1
+
+ - **FIX**: check if result is QuestionnaireState. ([c7535804](https://github.com/hpi-studyu/studyu/commit/c7535804281f9bbdf757a2eb11df03940eceeec9))
+
+## 4.4.0
+
+ - **REFACTOR**: use upload again. ([af9ec38e](https://github.com/hpi-studyu/studyu/commit/af9ec38e99f28688eba63c8037e74213b9762481))
+ - **REFACTOR**: rename path to blobPath. ([8517bd0f](https://github.com/hpi-studyu/studyu/commit/8517bd0f54432677e68b168a644baafe105550f0))
+ - **REFACTOR**: move blob_storage_handler.dart and add download feature. ([9546e7d0](https://github.com/hpi-studyu/studyu/commit/9546e7d094286f28933fab5b7a50b7048b48215e))
+ - **FIX**: defer upload of multimodal files. ([e8324cab](https://github.com/hpi-studyu/studyu/commit/e8324cabd5dc7b20d1be529ae8ba94d51ab5eb39))
+ - **FIX**: delete multimodal data on leaving study. ([bcd3a461](https://github.com/hpi-studyu/studyu/commit/bcd3a4613b7f387585925128362624748f2ba655))
+ - **FIX**: upgrade deps, move multimodal from core to app, migrate switch case. ([c4c1bd1e](https://github.com/hpi-studyu/studyu/commit/c4c1bd1e7e234535291b609deda21ea0e12b8506))
+ - **FIX**: add versions to pub devs. ([6948ca1e](https://github.com/hpi-studyu/studyu/commit/6948ca1e60b6c3d6a740863a05ca6702079c8310))
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([1000d89c](https://github.com/hpi-studyu/studyu/commit/1000d89cd4df62bbfedfb5238f0e427c4d2d2c08))
+ - **FEAT**: add offline handling for multimodal files. ([92e3d3b3](https://github.com/hpi-studyu/studyu/commit/92e3d3b3732543ecf2bcfa855cb20ef3cc3123de))
+ - **FEAT**: add maximum recording duration to designer. ([c601e0ba](https://github.com/hpi-studyu/studyu/commit/c601e0ba1a327c01a2c88f5a323d24bbd558cdf3))
+
 ## 4.3.3
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
