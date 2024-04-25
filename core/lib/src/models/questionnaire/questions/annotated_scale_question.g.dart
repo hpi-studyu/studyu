@@ -50,7 +50,7 @@ Map<String, dynamic> _$AnnotatedScaleQuestionToJson(
 }
 
 Annotation _$AnnotationFromJson(Map<String, dynamic> json) => Annotation()
-  ..value = json['value'] as int
+  ..value = (json['value'] as num).toInt()
   ..annotation = json['annotation'] as String;
 
 Map<String, dynamic> _$AnnotationToJson(Annotation instance) =>
