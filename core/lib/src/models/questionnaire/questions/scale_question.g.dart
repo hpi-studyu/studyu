@@ -22,8 +22,8 @@ ScaleQuestion _$ScaleQuestionFromJson(Map<String, dynamic> json) =>
       ..annotations = (json['annotations'] as List<dynamic>)
           .map((e) => Annotation.fromJson(e as Map<String, dynamic>))
           .toList()
-      ..minColor = json['min_color'] as int?
-      ..maxColor = json['max_color'] as int?
+      ..minColor = (json['min_color'] as num?)?.toInt()
+      ..maxColor = (json['max_color'] as num?)?.toInt()
       ..step = (json['step'] as num).toDouble();
 
 Map<String, dynamic> _$ScaleQuestionToJson(ScaleQuestion instance) {
