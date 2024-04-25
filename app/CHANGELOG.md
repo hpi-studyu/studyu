@@ -1,3 +1,7 @@
+## 2.7.2
+
+ - Update a dependency to the latest release.
+
 ## 2.7.1
 
  - **FIX**: add NSCameraUsageDescription. ([bfdd5a9e](https://github.com/hpi-studyu/studyu/commit/bfdd5a9ea795b83152d8ccdd02dec8e0d30b2e7f))

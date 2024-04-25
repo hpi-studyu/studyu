@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-04-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_designer_v2` - `v1.7.2`](#studyu_designer_v2---v172)
+ - [`studyu_flutter_common` - `v1.8.2`](#studyu_flutter_common---v182)
+ - [`studyu_app` - `v2.7.2`](#studyu_app---v272)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `studyu_app` - `v2.7.2`
+
+---
+
+#### `studyu_designer_v2` - `v1.7.2`
+
+ - **FIX**: signup was not possible with flutter_secure_storage. ([26425971](https://github.com/hpi-studyu/studyu/commit/2642597141653aa724a1305456e43840d6fbebe5))
+
+#### `studyu_flutter_common` - `v1.8.2`
+
+ - **FIX**: skip signin after signup if user is already authenticated. ([7e978122](https://github.com/hpi-studyu/studyu/commit/7e97812279b77fb9406fb288341c0fd9e349ad9c))
+ - **FIX**: signup was not possible with flutter_secure_storage. ([26425971](https://github.com/hpi-studyu/studyu/commit/2642597141653aa724a1305456e43840d6fbebe5))
+
+
 ## 2024-04-23
 
 ### Changes

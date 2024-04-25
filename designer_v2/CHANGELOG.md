@@ -1,3 +1,7 @@
+## 1.7.2
+
+ - **FIX**: signup was not possible with flutter_secure_storage. ([26425971](https://github.com/hpi-studyu/studyu/commit/2642597141653aa724a1305456e43840d6fbebe5))
+
 ## 1.7.1
 
  - Update a dependency to the latest release.
