@@ -39,9 +39,9 @@ Future<bool> anonymousSignUp() async {
   final fakeUserEmail = '${const Uuid().v4()}@$fakeStudyUEmailDomain';
   final fakeUserPassword = const Uuid().v4();
   try {
-    await Supabase.instance.client.auth.signUp(email: fakeUserEmail, password: fakeUserPassword);
+    final authResponse = await Supabase.instance.client.auth.signUp(email: fakeUserEmail, password: fakeUserPassword);
     await storeFakeUserEmailAndPassword(fakeUserEmail, fakeUserPassword);
-    return signInParticipant();
+    return authResponse.session != null ? true : await signInParticipant();
   } catch (error, stacktrace) {
     SupabaseQuery.catchSupabaseException(error, stacktrace);
     return false;
