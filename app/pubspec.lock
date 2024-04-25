@@ -338,10 +338,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_local_notifications
-      sha256: a701df4866f9a38bb8e4450a54c143bbeeb0ce2381e7df5a36e1006f3b43bb28
+      sha256: "8cdc719114ab1c86c64bb7a86d3a679674c3637edd229e3a994797d4a1504ce4"
       url: "https://pub.dev"
     source: hosted
-    version: "17.0.1"
+    version: "17.1.0"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -354,10 +354,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_local_notifications_platform_interface
-      sha256: "7cf643d6d5022f3baed0be777b0662cce5919c0a7b86e700299f22dc4ae660ef"
+      sha256: "340abf67df238f7f0ef58f4a26d2a83e1ab74c77ab03cd2b2d5018ac64db30b7"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0+1"
+    version: "7.1.0"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -593,10 +593,10 @@ packages:
     dependency: transitive
     description:
       name: json_annotation
-      sha256: b10a7b2ff83d83c777edba3c6a0f97045ddadd56c944e1a23a3fdf43a1bf4467
+      sha256: "1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1"
       url: "https://pub.dev"
     source: hosted
-    version: "4.8.1"
+    version: "4.9.0"
   just_audio:
     dependency: transitive
     description:
@@ -1033,26 +1033,26 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: "19a267774906ca3a3c4677fc7e9582ea9da79ae9a28f84bbe4885dac2c269b70"
+      sha256: "961630a4dba41cebd692612421fd3805a991ebd8ef4a8d84a6c179e6b89eaf22"
       url: "https://pub.dev"
     source: hosted
-    version: "7.20.0"
+    version: "8.0.0"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: "2d2917f7d795167e33a790db9bc5e1104d2035569ecf83e09a3f491bc6978cfe"
+      sha256: "705da7adfcd1fb23fc8720b6e222f5e03d53f1d020cd635586c319ee323366b4"
       url: "https://pub.dev"
     source: hosted
-    version: "7.20.0"
+    version: "8.0.0"
   sentry_logging:
     dependency: "direct main"
     description:
       name: sentry_logging
-      sha256: "73002a2d4baec71f34e6e775223780279c005644fcd3422127d8802aaed8f86d"
+      sha256: "136751f7d0428b89267fb0c5d20308cb6237148930ce3a5ff9f82c069a9ea793"
       url: "https://pub.dev"
     source: hosted
-    version: "7.20.0"
+    version: "8.0.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -1252,10 +1252,10 @@ packages:
     dependency: "direct main"
     description:
       name: timezone
-      sha256: "1cfd8ddc2d1cfd836bc93e67b9be88c3adaeca6f40a00ca999104c30693cdca0"
+      sha256: a6ccda4a69a442098b602c44e61a1e2b4bf6f5516e875bbf0f427d5df14745d5
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.2"
+    version: "0.9.3"
   typed_data:
     dependency: transitive
     description:
