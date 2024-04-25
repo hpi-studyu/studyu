@@ -2,8 +2,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:synchronized/synchronized.dart';
 
-const FlutterSecureStorage storage = FlutterSecureStorage();
+final storageLock = Lock();
 
 class SupabaseStorage extends LocalStorage {
   @override
@@ -11,50 +12,64 @@ class SupabaseStorage extends LocalStorage {
 
   @override
   Future<bool> hasAccessToken() async {
-    return SecureStorage.containsKey(supabasePersistSessionKey);
+    return await SecureStorage.containsKey(supabasePersistSessionKey);
   }
 
   @override
   Future<String?> accessToken() async {
-    return SecureStorage.read(supabasePersistSessionKey);
+    return await SecureStorage.read(supabasePersistSessionKey);
   }
 
   @override
   Future<void> persistSession(String persistSessionString) async {
-    return SecureStorage.write(supabasePersistSessionKey, persistSessionString);
+    return await SecureStorage.write(supabasePersistSessionKey, persistSessionString);
   }
 
   @override
   Future<void> removePersistedSession() async {
-    return SecureStorage.delete(supabasePersistSessionKey);
+    return await SecureStorage.delete(supabasePersistSessionKey);
   }
 }
 
 class SecureStorage {
+  static const storage = FlutterSecureStorage();
+
   static Future<bool> containsKey(String key) async {
-    return await storage.containsKey(key: key);
+    return await storageLock.synchronized(() async {
+      return await storage.containsKey(key: key);
+    });
   }
 
   static Future<void> write(String key, String value) async {
-    return await storage.write(key: key, value: value);
+    return await storageLock.synchronized(() async {
+      return await storage.write(key: key, value: value);
+    });
   }
 
   static Future<String?> read(String key) async {
-    return await storage.read(key: key);
+    return await storageLock.synchronized(() async {
+      return await storage.read(key: key);
+    });
   }
 
   static Future<bool?> readBool(String key) async {
-    final readValue = await storage.read(key: key);
-    if (readValue == null) return null;
-    return bool.parse(readValue);
+    return await storageLock.synchronized(() async {
+      final readValue = await storage.read(key: key);
+      if (readValue == null) return null;
+      return bool.parse(readValue);
+    });
   }
 
   static Future<void> delete(String key) async {
-    return await storage.delete(key: key);
+    return await storageLock.synchronized(() async {
+      return await storage.delete(key: key);
+    });
   }
 
   static Future<void> deleteAll() async {
-    return storage.deleteAll();
+    return await storageLock.synchronized(() async {
+      return await storage.deleteAll();
+    });
   }
 
   /// Migrates all non-null key-value pairs from SharedPreferences to FlutterSecureStorage.
