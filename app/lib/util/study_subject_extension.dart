@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_core/core.dart';
 
@@ -20,26 +21,28 @@ extension StudySubjectExtension on StudySubject {
       print('Unsupported question type: $T');
     }
 
-    // Move multimodal files to upload directory
-    if (resultObject.result is QuestionnaireState) {
-      final questionnaireState = resultObject.result as QuestionnaireState;
-      for (final answerEntry in questionnaireState.answers.entries.toList()) {
-        final answer = answerEntry.value;
-        if (answer.response is FutureBlobFile) {
-          final futureBlobFile = answer.response as FutureBlobFile;
-          await TemporaryStorageHandler.moveStagingFileToUploadDirectory(
-              futureBlobFile.localFilePath, futureBlobFile.futureBlobId);
+    // Skip multimodal file handling for web
+    if (!kIsWeb) {
+      // Move multimodal files to upload directory
+      if (resultObject.result is QuestionnaireState) {
+        final questionnaireState = resultObject.result as QuestionnaireState;
+        for (final answerEntry in questionnaireState.answers.entries.toList()) {
+          final answer = answerEntry.value;
+          if (answer.response is FutureBlobFile) {
+            final futureBlobFile = answer.response as FutureBlobFile;
+            await TemporaryStorageHandler.moveStagingFileToUploadDirectory(
+                futureBlobFile.localFilePath, futureBlobFile.futureBlobId);
 
-          // Replaces Answer<FutureBlobFile> with Answer<String>
-          questionnaireState.answers[answerEntry.key] = Answer<String>(answer.question, answer.timestamp)
-            ..response = futureBlobFile.futureBlobId;
+            // Replaces Answer<FutureBlobFile> with Answer<String>
+            questionnaireState.answers[answerEntry.key] = Answer<String>(answer.question, answer.timestamp)
+              ..response = futureBlobFile.futureBlobId;
+          }
         }
       }
-    }
-
-    // Upload multimodal files
-    if (!offline) {
-      await Cache.uploadBlobFiles();
+      // Upload multimodal files
+      if (!offline) {
+        await Cache.uploadBlobFiles();
+      }
     }
 
     SubjectProgress p = SubjectProgress(
