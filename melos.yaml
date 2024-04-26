@@ -8,16 +8,6 @@ packages:
   - core
   - flutter_common
 
-command:
-  clean:
-    hooks:
-      # Clean things very deeply, can be used to establish "pristine checkout" status
-      pre: >
-        git clean -x -d -f -q || true
-      # Additional cleanup lifecycle script, executed when `melos clean` is ran.
-      post: >
-        melos exec --flutter --concurrency=3 -- "flutter clean"
-
 scripts:
   analyze:
     run: |
@@ -75,6 +65,14 @@ scripts:
     description: Generate files with build_runner
     packageFilters:
       scope: studyu_core
+
+  reset:
+    run: |
+      git clean -x -d -f -q || true
+      melos clean
+      melos exec --flutter --concurrency=1 -- "flutter clean"
+      melos bootstrap
+    description: Reset the workspace to a "pristine checkout" status.
 
   dev:designer:
     run: |
