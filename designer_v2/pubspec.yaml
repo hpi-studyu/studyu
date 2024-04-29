@@ -1,5 +1,5 @@
 name: studyu_designer_v2
-version: 1.7.1
+version: 1.7.2
 description: Implement digital N-of-1 studies seamlessly with the StudyU Health Designer
 publish_to: none
 homepage: https://studyu.health
@@ -33,7 +33,7 @@ dependencies:
   reactive_range_slider: ^2.0.0 # reactive_forms <= 16.1.1
   rxdart: ^0.27.7
   studyu_core: ^4.4.1
-  studyu_flutter_common: ^1.8.1
+  studyu_flutter_common: ^1.8.2
   supabase: ^2.1.1
   supabase_flutter: ^2.5.1
   url_launcher: ^6.2.6
