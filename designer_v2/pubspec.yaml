@@ -9,7 +9,7 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  archive: ^3.4.10
+  archive: ^3.5.0
   async: ^2.11.0
   csv: ^6.0.0
   cupertino_icons: ^1.0.8
@@ -27,15 +27,15 @@ dependencies:
   material_color_utilities:
   material_design_icons_flutter: ^7.0.7296
   pointer_interceptor: ^0.10.1
-  reactive_color_picker: ^2.0.0
-  reactive_forms: ^16.1.1 # reactive_range_slider <= 2.0.0
-  reactive_multi_select_flutter: ^2.0.0
-  reactive_range_slider: ^2.0.0
+  reactive_color_picker: ^2.0.1
+  reactive_forms: ^17.0.0
+  reactive_multi_select_flutter: ^2.0.1
+  reactive_range_slider: ^2.0.1
   rxdart: ^0.27.7
   studyu_core: ^4.4.1
   studyu_flutter_common: ^1.8.2
-  supabase: ^2.1.1
-  supabase_flutter: ^2.5.1
+  supabase: ^2.1.2
+  supabase_flutter: ^2.5.2
   url_launcher: ^6.2.6
   uuid: ^4.4.0
 

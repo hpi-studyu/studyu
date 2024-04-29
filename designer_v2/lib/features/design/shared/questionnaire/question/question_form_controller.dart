@@ -115,7 +115,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   late final FormArray<String> audioResponseOptionsArray = FormArray(audioOptions);
   final FormControl<int> maxRecordingDurationSecondsControl = FormControl(
       value: kDefaultMaxRecordingDurationSeconds,
-      validators: [Validators.number, Validators.min(1), Validators.max(kMaxRecordingDurationSeconds)]);
+      validators: [Validators.number(allowNegatives: false), Validators.min(1), Validators.max(kMaxRecordingDurationSeconds)]);
 
   // Scale
   static const int kDefaultScaleMinValue = 0;
@@ -234,7 +234,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         validators.add(Validators.pattern(alphanumericPattern));
         break;
       case FreeTextQuestionType.numeric:
-        validators.add(Validators.number);
+        validators.add(Validators.number(allowNegatives: false));
         break;
       case FreeTextQuestionType.custom:
         if (customRegexControl.value != null) {
@@ -362,7 +362,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   get maxRecordingDurationValid {
     return FormControlValidation(control: maxRecordingDurationSecondsControl, validators: [
-      Validators.number,
+      Validators.number(allowNegatives: false),
       Validators.min(1),
       Validators.max(kMaxRecordingDurationSeconds),
     ], validationMessages: {

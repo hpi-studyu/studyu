@@ -14,7 +14,7 @@ dependencies:
   logger: ^2.2.0
   quiver: ^3.2.1
   sentry: ^8.0.0
-  supabase: ^2.1.1
+  supabase: ^2.1.2
   uuid: ^4.4.0
 
 dev_dependencies:
