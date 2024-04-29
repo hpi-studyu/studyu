@@ -1,3 +1,7 @@
+## 1.8.3-dev.0
+
+ - **FIX**: upgrade deps and migrate.
+
 ## 1.8.2
 
  - **FIX**: skip signin after signup if user is already authenticated. ([7e978122](https://github.com/hpi-studyu/studyu/commit/7e97812279b77fb9406fb288341c0fd9e349ad9c))

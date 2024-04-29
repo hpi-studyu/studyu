@@ -1,3 +1,7 @@
+## 2.7.4-dev.0
+
+ - **FIX**: upgrade deps and migrate.
+
 ## 2.7.3
 
  - **FIX**: skip handling multimodal for web. ([27ba5298](https://github.com/hpi-studyu/studyu/commit/27ba5298a1b714e1cc7e21a6d88c286f91e2907a))
