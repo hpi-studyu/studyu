@@ -106,6 +106,8 @@ scripts:
     packageFilters:
       dir-exists: ios
 
+  # The following scripts are used for deployment
+
   build:web:
     run: |
       melos exec -c 2 --fail-fast -- \
@@ -123,10 +125,37 @@ scripts:
     packageFilters:
       scope: studyu_app
 
-  build:web:designer:
+  build:web:designer_v2:
     run: |
       melos exec -c 1 --fail-fast -- \
         "flutter build web"
-    description: Build designer for Web.
+    description: Build designer_v2 for Web.
     packageFilters:
       scope: studyu_designer_v2
+
+  build:web:dev:
+    run: |
+      melos exec -c 2 --fail-fast -- \
+        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
+    description: Build web dev.
+    packageFilters:
+      scope: [studyu_app, studyu_designer_v2]
+      dir-exists: web
+
+  build:web:app:dev:
+    run: |
+      melos exec -c 2 --fail-fast -- \
+        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
+    description: Build web app dev.
+    packageFilters:
+      scope: studyu_app
+      dir-exists: web
+
+  build:web:designer_v2:dev:
+    run: |
+      melos exec -c 2 --fail-fast -- \
+        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
+    description: Build web designer_v2 dev.
+    packageFilters:
+      scope: studyu_designer_v2
+      dir-exists: web
