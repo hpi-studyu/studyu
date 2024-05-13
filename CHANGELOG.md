@@ -11,6 +11,27 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 Packages with breaking changes:
 
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.5`](#studyu_app---v275)
+
+---
+
+#### `studyu_app` - `v2.7.5`
+
+ - **FIX**: update podfile.
+
+
+## 2024-05-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
  - [`studyu_app` - `v2.7.4`](#studyu_app---v274)
  - [`studyu_core` - `v4.4.2`](#studyu_core---v442)
  - [`studyu_flutter_common` - `v1.8.3`](#studyu_flutter_common---v183)
