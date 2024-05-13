@@ -2,10 +2,10 @@
 
 ## Getting Started
 
-1. Clone this repository and `cd` into it.
-2. [Setup Flutter](https://flutter.dev/docs/get-started/install)
-3. Make sure both flutter and dart are in your PATH. Run `dart --version` and
+1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
+2. Make sure both flutter and dart are in your PATH. Run `dart --version` and
    `flutter --version` to check.
+3. Clone this repository and `cd` into it.
 4. Install [Melos](https://melos.invertase.dev/) by running: `dart pub global
    activate melos`. Melos is used to manage the Monorepo structure and links all
    packages.
@@ -58,6 +58,7 @@ STUDYU_SUPABASE_URL=https://efeapuvwaxtxnlkzlajv.supabase.co
 STUDYU_SUPABASE_PUBLIC_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyNTUwODMyOCwiZXhwIjoxOTQxMDg0MzI4fQ.PUirsx5Zzhj3akaStc5Djid0aAVza3ELoZ5XUTqM91A
 STUDYU_PROJECT_GENERATOR_URL=https://studyu-project-generator-2zro3rzera-ew.a.run.app
 STUDYU_APP_URL="https://app.studyu.health/"
+STUDYU_DESIGNER_URL="https://designer.studyu.health/"
 ```
 
 The great advantage of this new approach (compared to the previous approach
@@ -90,6 +91,16 @@ To generate the IO code once, run `melos run generate`.
 Contrary to most recommendations, we commit those generated files to Git. This
 is needed, because core is a dependency by app and designer and dependencies
 need to have all files generated, when being imported.
+
+## Code Style
+
+We use the [Effective Dart](https://dart.dev/guides/language/effective-dart)
+guidelines for Dart and Flutter. Run `melos format` to format your code and
+`melos analyze` to check for any issues. For commit messages, we use the
+[Conventional Commits](https://www.conventionalcommits.org) format. For any new
+features or bug fixes, create a new branch and open a pull request.
+
+Please make sure to follow these guidelines when contributing to the project.
 
 ## Database and Backend
 
