@@ -1,3 +1,7 @@
+## 2.7.5
+
+ - **FIX**: update podfile.
+
 ## 2.7.4
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
