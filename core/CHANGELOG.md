@@ -1,3 +1,7 @@
+## 4.4.2
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 4.4.2-dev.1
 
  - **REFACTOR**: improved app config error handling.
