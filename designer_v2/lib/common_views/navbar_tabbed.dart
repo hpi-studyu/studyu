@@ -59,7 +59,7 @@ class TabbedNavbar<T extends NavbarTab> extends ConsumerStatefulWidget {
   final TabBarIndicatorSize? indicatorSize;
   final bool isScrollable;
   final Color? backgroundColor;
-  final MaterialStateProperty<Color>? overlayColor;
+  final WidgetStateProperty<Color>? overlayColor;
   final Color? labelColorHover;
   final Color? unselectedLabelColorHover;
 
@@ -229,7 +229,7 @@ class _TabbedNavbarState<T extends NavbarTab> extends ConsumerState<TabbedNavbar
           MouseEventsRegion(
             builder: (context, states) {
               final isSelected = t.index == selectedTabIndex;
-              final isHovered = states.contains(MaterialState.hovered);
+              final isHovered = states.contains(WidgetState.hovered);
 
               TextStyle actualTextStyle = (isSelected)
                   ? theme.tabBarTheme.labelStyle ?? TextStyle(color: theme.tabBarTheme.labelColor)
