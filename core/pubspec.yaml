@@ -1,5 +1,5 @@
 name: studyu_core
-version: 4.4.1
+version: 4.4.2
 description: This package contains StudyU models and common functions for the app and designer packages
 homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
@@ -10,15 +10,15 @@ environment:
 dependencies:
   collection: ^1.18.0
   csv: ^6.0.0
-  json_annotation: ^4.8.1
-  logger: ^2.2.0
+  json_annotation: ^4.9.0
+  logger: ^2.3.0
   quiver: ^3.2.1
-  sentry: ^7.20.0
-  supabase: ^2.1.1
+  sentry: ^8.1.0
+  supabase: ^2.1.2
   uuid: ^4.4.0
 
 dev_dependencies:
   build_runner: ^2.4.9
-  json_serializable: ^6.7.1
+  json_serializable: ^6.8.0
   lint: ^2.3.0
-  test: ^1.25.4
+  test: ^1.25.5
