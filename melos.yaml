@@ -76,21 +76,21 @@ scripts:
     packageFilters:
       scope: studyu_core
 
-  dev:designer:
-    run: |
-      melos exec -c 1 -- \
-        "flutter run -d chrome --web-port 3001 --dart-define=STUDYU_ENV=.env.local"
-    packageFilters:
-      scope: studyu_designer_v2
-    description: Runs designer in Chrome on port 3001 with local env for local development
-
   dev:app:
     run: |
       melos exec -c 1 -- \
-        "flutter run --dart-define=STUDYU_ENV=.env.local"
+        "flutter run -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.local"
     packageFilters:
       scope: studyu_app
-    description: Runs app with local env for local development
+    description: Runs app for local development
+
+  dev:designer:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
+    packageFilters:
+      scope: studyu_designer_v2
+    description: Runs designer for local development
 
   build:android:
     run: |
@@ -125,54 +125,10 @@ scripts:
     packageFilters:
       scope: studyu_app
 
-  build:web:designer_v2:
+  build:web:designer:
     run: |
       melos exec -c 1 --fail-fast -- \
         "flutter build web"
-    description: Build designer_v2 for Web.
+    description: Build designer for Web.
     packageFilters:
       scope: studyu_designer_v2
-
-  build:web:dev:
-    run: |
-      melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
-    description: Build web dev.
-    packageFilters:
-      scope: [studyu_app, studyu_designer_v2]
-      dir-exists: web
-
-  build:web:app:dev:
-    run: |
-      melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
-    description: Build web app dev.
-    packageFilters:
-      scope: studyu_app
-      dir-exists: web
-
-  build:web:designer_v2:dev:
-    run: |
-      melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
-    description: Build web designer_v2 dev.
-    packageFilters:
-      scope: studyu_designer_v2
-      dir-exists: web
-
-  # Used to test Designer "Try out study" feature, where the designer opens the App using the user auth token from designer
-  app:web:local:
-    run: |
-      melos exec -c 1 -- \
-        "flutter run lib/main.dart -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.local"
-    packageFilters:
-      scope: studyu_app
-    description: Runs app in chrome on port 8080 with local env
-
-  designer_v2:web:local:
-    run: |
-      melos exec -c 1 -- \
-        "flutter run lib/main.dart -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
-    packageFilters:
-      scope: studyu_designer_v2
-    description: Runs designer in chrome on port 8081 with local env
