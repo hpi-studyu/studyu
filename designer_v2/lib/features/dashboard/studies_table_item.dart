@@ -63,7 +63,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       );
     }
 
-    Widget getRespectivePinIcon(Set<MaterialState> state) {
+    Widget getRespectivePinIcon(Set<WidgetState> state) {
       if (isHoveringPin) {
         return widget.isPinned ? icon(MdiIcons.pinOff) : icon(MdiIcons.pin);
       } else {

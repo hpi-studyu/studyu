@@ -51,7 +51,7 @@ class _HyperlinkState extends State<Hyperlink> {
 
     return MouseEventsRegion(
       builder: (context, states) {
-        final isHovered = states.contains(MaterialState.hovered);
+        final isHovered = states.contains(WidgetState.hovered);
 
         final visitedColor = widget.visitedColor ?? widget.linkColor;
         final visitedHoverColor = widget.hoverColor ?? visitedColor.faded(ThemeConfig.kHoverFadeFactor);

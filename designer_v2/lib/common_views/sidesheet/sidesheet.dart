@@ -172,7 +172,7 @@ class _SidesheetState extends State<Sidesheet> {
                       isScrollable: true,
                       indicatorSize: TabBarIndicatorSize.label,
                       backgroundColor: backgroundColor,
-                      overlayColor: MaterialStateColor.resolveWith(
+                      overlayColor: WidgetStateColor.resolveWith(
                         (states) => Colors.transparent,
                       ),
                       labelColorHover: tabBarLabelHoverColor,
