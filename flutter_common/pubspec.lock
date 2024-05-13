@@ -547,7 +547,7 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "4.4.2-dev.0"
+    version: "4.4.2-dev.1"
   supabase:
     dependency: transitive
     description:
