@@ -3,7 +3,7 @@ import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_flutter_common/src/utils/storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-const envsAssetPath = 'packages/studyu_flutter_common/envs';
+const envsAssetPath = 'packages/studyu_flutter_common/lib/envs';
 
 // load env from envs/.env or from the filename specified in the STUDYU_ENV runtime-variable
 String envFilePath() {
