@@ -78,9 +78,9 @@ class _SyncIndicatorState extends State<SyncIndicator> with SingleTickerProvider
     );
   }
 
-  Widget buildIndicator(BuildContext context, Set<MaterialState> states) {
+  Widget buildIndicator(BuildContext context, Set<WidgetState> states) {
     final theme = Theme.of(context);
-    final isHovered = states.contains(MaterialState.hovered);
+    final isHovered = states.contains(WidgetState.hovered);
     double actualOpacity = (widget.state.isRefreshing) ? 0.5 : 0.2;
     actualOpacity += (isHovered) ? 0.2 : 0.0;
     final iconColor = theme.iconTheme.color!.withOpacity(actualOpacity);

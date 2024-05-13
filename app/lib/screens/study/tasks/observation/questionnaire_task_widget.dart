@@ -66,7 +66,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         ),
         response != null && responseValidator
             ? ElevatedButton.icon(
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+                style: ButtonStyle(backgroundColor: WidgetStateProperty.all<Color>(Colors.green)),
                 onPressed: () async {
                   if (isRedundantClick(loginClickTime)) {
                     return;

@@ -14,7 +14,7 @@ typedef OnSelectHandler<T> = void Function(T item);
 typedef StandardTableRowBuilder = TableRow Function(BuildContext context, List<StandardTableColumn> columns);
 
 typedef StandardTableCellsBuilder<T> = List<Widget> Function(
-    BuildContext context, T item, int rowIdx, Set<MaterialState> states);
+    BuildContext context, T item, int rowIdx, Set<WidgetState> states);
 
 enum StandardTableStyle { plain, material }
 
@@ -124,9 +124,9 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
   /// Cached list of [TableRow]s corresponding to each item in [widget.items]
   final List<TableRow> _cachedRows = [];
 
-  /// Current set of [MaterialState]s for each row in [_cachedRows]
+  /// Current set of [WidgetState]s for each row in [_cachedRows]
   /// Used to keep track of current hover & pressed status
-  final List<Set<MaterialState>> _rowStates = [];
+  final List<Set<WidgetState>> _rowStates = [];
 
   /// Indices to rebuild [TableRow]s for instead of using the cached version
   final Set<int> _dirtyRowIndices = {};
@@ -153,11 +153,11 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
   _initRowStates() {
     _rowStates.clear();
     for (var _ in widget.items) {
-      _rowStates.add(<MaterialState>{});
+      _rowStates.add(<WidgetState>{});
     }
   }
 
-  _onRowStateChanged(int rowIdx, Set<MaterialState> states) {
+  _onRowStateChanged(int rowIdx, Set<WidgetState> states) {
     setState(() {
       _rowStates[rowIdx] = states;
       // flag row for rebuild to reflect its current set of [MaterialStatus]
@@ -402,11 +402,11 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     BuildContext context,
     T item,
     int rowIdx,
-    Set<MaterialState> states,
+    Set<WidgetState> states,
   ) {
     final theme = Theme.of(context);
-    final rowIsHovered = states.contains(MaterialState.hovered);
-    final rowIsPressed = states.contains(MaterialState.pressed);
+    final rowIsHovered = states.contains(WidgetState.hovered);
+    final rowIsPressed = states.contains(WidgetState.pressed);
     final rowColor =
         (widget.rowStyle == StandardTableStyle.material) ? theme.colorScheme.onPrimary : Colors.transparent;
 

@@ -14,7 +14,7 @@ class ActionMenuInline extends StatelessWidget {
       super.key});
 
   final List<ModelAction> actions;
-  final MaterialStateProperty<Color>? iconColor;
+  final WidgetStateProperty<Color>? iconColor;
   final double? iconSize;
   final bool visible;
   final double? splashRadius;
@@ -30,8 +30,8 @@ class ActionMenuInline extends StatelessWidget {
 
     final theme = Theme.of(context);
 
-    defaultIconColor(Set<MaterialState> states) {
-      if (states.contains(MaterialState.hovered)) {
+    defaultIconColor(Set<WidgetState> states) {
+      if (states.contains(WidgetState.hovered)) {
         return theme.colorScheme.secondary.withOpacity(0.8);
       }
       return theme.colorScheme.secondary.withOpacity(0.4);

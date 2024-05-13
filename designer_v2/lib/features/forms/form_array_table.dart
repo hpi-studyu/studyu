@@ -129,7 +129,7 @@ class FormArrayTable<T> extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildRow(BuildContext context, T item, int rowIdx, Set<MaterialState> states) {
+  List<Widget> _buildRow(BuildContext context, T item, int rowIdx, Set<WidgetState> states) {
     final tableTextStyleSecondary = Theme.of(context).textTheme.bodyMedium;
     return [
       CustomScrollView(physics: const NeverScrollableScrollPhysics(), scrollDirection: Axis.horizontal, slivers: [
