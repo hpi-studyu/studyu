@@ -1,3 +1,7 @@
+## 4.4.2-dev.1
+
+ - **REFACTOR**: improved app config error handling.
+
 ## 4.4.2-dev.0
 
  - **FIX**: upgrade deps and migrate.

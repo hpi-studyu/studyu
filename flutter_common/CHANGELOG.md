@@ -1,3 +1,7 @@
+## 1.8.3-dev.1
+
+ - Update a dependency to the latest release.
+
 ## 1.8.3-dev.0
 
  - **FIX**: upgrade deps and migrate.

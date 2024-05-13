@@ -1,3 +1,7 @@
+## 2.7.4-dev.1
+
+ - Update a dependency to the latest release.
+
 ## 2.7.4-dev.0
 
  - **FIX**: upgrade deps and migrate.
