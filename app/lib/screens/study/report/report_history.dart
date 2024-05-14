@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -61,9 +62,12 @@ class ReportHistoryItem extends StatelessWidget {
                   MdiIcons.fromString(subject.study.iconName) ?? MdiIcons.accountHeart,
                   color: isActiveStudy ? Colors.white : Colors.black,
                 ),
-                Text(
-                  subject.study.title!,
-                  style: theme.textTheme.headlineSmall!.copyWith(color: isActiveStudy ? Colors.white : Colors.black),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    subject.study.title!,
+                    style: theme.textTheme.headlineSmall!.copyWith(color: isActiveStudy ? Colors.white : Colors.black),
+                  ),
                 ),
               ],
             ),
