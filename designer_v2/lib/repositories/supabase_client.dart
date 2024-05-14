@@ -31,7 +31,7 @@ typedef PostgrestDataCallback = Object Function(dynamic data);
 mixin SupabaseQueryMixin on SupabaseClientDependant {
   // - Networking
 
-  Future<List<T>> deleteAll<T extends SupabaseObject>(Map<String, dynamic> selectionCriteria) async {
+  Future<List<T>> deleteAll<T extends SupabaseObject>(Map<String, Object> selectionCriteria) async {
     try {
       final data = await supabaseClient.from(tableName(T)).delete().match(selectionCriteria);
       if (data == null) return [];
