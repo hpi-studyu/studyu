@@ -13,8 +13,8 @@ dependencies:
   json_annotation: ^4.9.0
   logger: ^2.3.0
   quiver: ^3.2.1
-  sentry: ^8.1.0
-  supabase: ^2.1.2
+  sentry: ^8.2.0
+  supabase: ^2.1.3
   uuid: ^4.4.0
 
 dev_dependencies:
