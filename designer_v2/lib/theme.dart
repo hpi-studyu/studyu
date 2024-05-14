@@ -131,9 +131,17 @@ class ThemeProvider extends InheritedWidget {
 
   ColorScheme colors(Brightness brightness, Color? targetColor) {
     final dynamicPrimary = brightness == Brightness.light ? lightDynamic?.primary : darkDynamic?.primary;
-    return ColorScheme.fromSeed(
+    final scheme = SchemeFidelity(sourceColorHct: dynamicPrimary != null
+        ? Hct.fromInt(dynamicPrimary.value)
+        : Hct.fromInt(source(targetColor).value), isDark: false, contrastLevel: 0.0);
+    final colorScheme = ColorScheme.fromSeed(
       seedColor: dynamicPrimary ?? source(targetColor),
+      // todo use dynamicSchemeVariant once its in the flutter stable channel
+      // dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
       brightness: brightness,
+    );
+    return colorScheme.copyWith(
+      primary: Color(MaterialDynamicColors.primary.getArgb(scheme)),
     );
   }
 
@@ -255,7 +263,7 @@ class ThemeProvider extends InheritedWidget {
       focusColor: Colors.white,
       isDense: true,
       hintStyle: TextStyle(color: colors.onSurfaceVariant.withOpacity(0.4)),
-      //contentPadding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+      contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
@@ -326,9 +334,7 @@ class ThemeProvider extends InheritedWidget {
   }
 
   DrawerThemeData drawerTheme(ColorScheme colors) {
-    return const DrawerThemeData(
-      backgroundColor: Colors.white,
-    );
+    return const DrawerThemeData();
   }
 
   IconThemeData iconTheme(ColorScheme colors) {
