@@ -50,12 +50,13 @@ jobs:
       - name: Prepare database seed
         run: |
           cat database/studyu-schema.sql > docker/supabase/seed.sql
-          cat database/app_config.sql.example >> docker/supabase/seed.sql
+          mv database/app_config.sql.example docker/supabase/migrations/0000000000001_app_config_mockup.sql
 
       - name: Start Supabase database
         working-directory: docker
         run: |
           supabase db start
+          supabase migration up
 
       - name: Start Chrome Driver
         run: |
