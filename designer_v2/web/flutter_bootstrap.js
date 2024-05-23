@@ -4,6 +4,7 @@
 // Create the loading indicator element
 var loadingDiv = document.createElement('div');
 loadingDiv.id = 'loading';
+
 loadingDiv.innerHTML = `
   <style>
     body {
@@ -16,20 +17,23 @@ loadingDiv.innerHTML = `
 
     #loading {
       align-items: center;
+      background-color: #3088cf;
       display: flex;
       height: 100%;
       justify-content: center;
       width: 100%;
     }
 
-    #loading img {
-      animation: 1s ease-in-out 0s infinite alternate breathe;
-      # opacity: .66;
-      transition: opacity .4s;
+    #loading-box {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
     }
 
-    #loading.main_done img {
-      opacity: 1;
+    #loading img {
+      animation: 1s ease-in-out 0s infinite alternate breathe;
+      opacity: 1.0;
+      transition: opacity .4s;
     }
 
     #loading.init_done img {
@@ -39,17 +43,17 @@ loadingDiv.innerHTML = `
 
     @keyframes breathe {
       from {
-        transform: scale(1);
+        transform: scale(0.9);
       }
 
       to {
-        transform: scale(0.9);
+        transform: scale(0.8);
       }
     }
 
     @keyframes zooooom {
       from {
-        transform: scale(1);
+        transform: scale(0.9);
       }
 
       to {
@@ -57,20 +61,25 @@ loadingDiv.innerHTML = `
       }
     }
   </style>
-  <img src="icons/Icon-192.png" alt="Loading indicator..." />
+  <div id="loading-box">
+    <img src="icons/Icon-192.png" alt="Loading indicator..." />
+  </div>
 `;
 
 // Append the loading indicator to the document body
 document.body.appendChild(loadingDiv);
+
 // Loading entrypoint
 _flutter.loader.load({
   onEntrypointLoaded: async function(engineInitializer) {
-    // Initializing engine
-    loadingDiv.classList.add('main_done');
     const appRunner = await engineInitializer.initializeEngine();
 
-    // Running app
     loadingDiv.classList.add('init_done');
+    // Hide the loading indicator after the animation is done
+    loadingDiv.addEventListener('animationend', function() {
+        document.getElementById('loading').style.visibility = 'hidden';
+    });
+
     await appRunner.runApp();
   }
 });
