@@ -47,9 +47,8 @@ jobs:
         with:
           version: latest
 
-      - name: Prepare database seed
+      - name: Prepare database migrations
         run: |
-          cat database/studyu-schema.sql > docker/supabase/seed.sql
           mkdir -p docker/supabase/migrations
           mv database/studyu-schema.sql docker/supabase/migrations/0000000000001_studyu-schema.sql
           mv database/app_config.sql.example docker/supabase/migrations/0000000000002_app_config_mockup.sql
