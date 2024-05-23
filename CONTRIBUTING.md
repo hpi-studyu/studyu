@@ -21,9 +21,6 @@ executing Melos scripts. Use `melos <script>` to run scripts from the
 [`melos.yaml` file](melos.yaml). You can find more information about Melos in
 the [Melos documentation](https://melos.invertase.dev/)
 
-When developing locally, you might need to host your own Supabase instance. For
-this, follow the instructions [here](docker/README.md).
-
 ## Repository Overview
 
 We have different Flutter/Dart packages all contained in this monorepo. The
