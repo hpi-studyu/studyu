@@ -20,35 +20,50 @@ jobs:
         uses: johannesvedder/await-workflow@v1
         with:
           workflowId: 'publish_pubdev.yml'
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
+
       - name: Setup ChromeDriver
         uses: nanasess/setup-chromedriver@v2
+
       - name: Enable web support
         run: flutter config --enable-web
-      - name: Initialize Supabase
+
+      - name: Prepare environment
         run: |
           dart pub global activate melos
           melos bootstrap
           dart pub get
-          docker network create studyu_network || true
           cp docker/supabase/.env.example docker/supabase/.env
-          cp docker/proxy/.env.example docker/proxy/.env
           cp flutter_common/lib/envs/.env.local.example flutter_common/lib/envs/.env.local
-          docker compose -f docker/supabase/docker-compose-db.yml up -d
-          docker compose -f docker/supabase/docker-compose.yml up -d
-          docker compose -f docker/proxy/docker-compose-proxy.yml up -d
-          while [ "$(docker inspect --format='{{.State.Health.Status}}' supabase-db)" != "healthy" ]; do sleep 1; done
-          docker exec -i supabase-db psql -U postgres -d postgres < ./database/app_config.sql.example
+
+      - name: Set up Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Prepare database seed
+        run: |
+          cat database/studyu-schema.sql > docker/supabase/seed.sql
+          cat database/app_config.sql.example >> docker/supabase/seed.sql
+
+      - name: Start Supabase database
+        working-directory: docker
+        run: |
+          supabase db start
+
       - name: Start Chrome Driver
         run: |
           export DISPLAY=:99
           chromedriver --port=4444 &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+
       - name: Run Flutter E2E tests
         working-directory: ./designer_v2
         run: |
