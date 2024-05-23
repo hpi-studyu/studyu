@@ -34,7 +34,7 @@ dependencies:
   provider: ^6.1.2
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
-  record: ^5.0.5
+  record: ^5.1.0
   sentry_flutter: ^8.2.0
   sentry_logging: ^8.2.0
   shared_preferences: ^2.2.3

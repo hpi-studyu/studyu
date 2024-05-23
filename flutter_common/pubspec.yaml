@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.1.0
-  flutter_secure_storage: ^9.1.1
+  flutter_secure_storage: ^9.2.2
   shared_preferences: ^2.2.3 # Can be removed after migrating phase
   studyu_core: ^4.4.2
   supabase_flutter: ^2.5.3
