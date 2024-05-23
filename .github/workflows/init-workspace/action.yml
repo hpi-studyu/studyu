@@ -10,7 +10,7 @@ runs:
       with:
         channel: stable
         # Increase this version manually when we add support for a new Flutter release
-        version: '3.19.6'
+        flutter-version: '3.19.6'
 
     - name: Install melos
       run: dart pub global activate melos
