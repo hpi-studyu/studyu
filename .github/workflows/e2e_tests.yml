@@ -37,10 +37,9 @@ jobs:
 
       - name: Prepare environment
         run: |
+          dart pub get
           dart pub global activate melos
           melos bootstrap
-          dart pub get
-          cp docker/supabase/.env.example docker/supabase/.env
           cp flutter_common/lib/envs/.env.local.example flutter_common/lib/envs/.env.local
 
       - name: Set up Supabase CLI
