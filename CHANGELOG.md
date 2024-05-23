@@ -3,6 +3,138 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-05-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.5`](#studyu_app---v275)
+
+---
+
+#### `studyu_app` - `v2.7.5`
+
+ - **FIX**: update podfile.
+
+
+## 2024-05-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`studyu_app` - `v2.7.4`](#studyu_app---v274)
+ - [`studyu_core` - `v4.4.2`](#studyu_core---v442)
+ - [`studyu_flutter_common` - `v1.8.3`](#studyu_flutter_common---v183)
+
+Packages with other changes:
+
+ - [`studyu_designer_v2` - `v1.8.0`](#studyu_designer_v2---v180)
+
+Packages graduated to a stable release (see pre-releases prior to the stable version for changelog entries):
+
+ - `studyu_app` - `v2.7.4`
+ - `studyu_core` - `v4.4.2`
+ - `studyu_designer_v2` - `v1.8.0`
+ - `studyu_flutter_common` - `v1.8.3`
+
+---
+
+#### `studyu_app` - `v2.7.4`
+
+#### `studyu_core` - `v4.4.2`
+
+#### `studyu_flutter_common` - `v1.8.3`
+
+#### `studyu_designer_v2` - `v1.8.0`
+
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## 2024-05-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_core` - `v4.4.2-dev.1`](#studyu_core---v442-dev1)
+ - [`studyu_app` - `v2.7.4-dev.1`](#studyu_app---v274-dev1)
+ - [`studyu_designer_v2` - `v1.8.0-dev.1`](#studyu_designer_v2---v180-dev1)
+ - [`studyu_flutter_common` - `v1.8.3-dev.1`](#studyu_flutter_common---v183-dev1)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `studyu_app` - `v2.7.4-dev.1`
+ - `studyu_designer_v2` - `v1.8.0-dev.1`
+ - `studyu_flutter_common` - `v1.8.3-dev.1`
+
+---
+
+#### `studyu_core` - `v4.4.2-dev.1`
+
+ - **REFACTOR**: improved app config error handling.
+
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## 2024-04-29
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.4-dev.0`](#studyu_app---v274-dev0)
+ - [`studyu_core` - `v4.4.2-dev.0`](#studyu_core---v442-dev0)
+ - [`studyu_designer_v2` - `v1.8.0-dev.0`](#studyu_designer_v2---v180-dev0)
+ - [`studyu_flutter_common` - `v1.8.3-dev.0`](#studyu_flutter_common---v183-dev0)
+
+---
+
+#### `studyu_app` - `v2.7.4-dev.0`
+
+ - **FIX**: upgrade deps and migrate.
+
+#### `studyu_core` - `v4.4.2-dev.0`
+
+ - **FIX**: upgrade deps and migrate.
+
+#### `studyu_designer_v2` - `v1.8.0-dev.0`
+
+ - **FIX**: upgrade deps and migrate.
+ - **FEAT**: sort invite codes alphabetically.
+
+#### `studyu_flutter_common` - `v1.8.3-dev.0`
+
+ - **FIX**: upgrade deps and migrate.
+
+
 ## 2024-04-26
 
 ### Changes

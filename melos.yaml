@@ -106,8 +106,6 @@ scripts:
     packageFilters:
       dir-exists: ios
 
-  # The following scripts are used for deployment
-
   build:web:
     run: |
       melos exec -c 2 --fail-fast -- \
