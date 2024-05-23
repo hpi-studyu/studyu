@@ -9,7 +9,7 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  archive: ^3.5.1
+  archive: ^3.6.0
   async: ^2.11.0
   csv: ^6.0.0
   cupertino_icons: ^1.0.8
@@ -17,13 +17,13 @@ dependencies:
   equatable: ^2.0.5
   flutter:
     sdk: flutter
-  flutter_colorpicker: ^1.0.3
+  flutter_colorpicker: ^1.1.0
   flutter_localizations:
     sdk: flutter
   flutter_riverpod: ^2.5.1
   flutter_web_plugins:
     sdk: flutter
-  go_router: ^14.1.1
+  go_router: ^14.1.3
   material_color_utilities: 0.8.0 # integration_test
   material_design_icons_flutter: ^7.0.7296
   pointer_interceptor: ^0.10.1+1
@@ -39,12 +39,6 @@ dependencies:
   url_launcher: ^6.2.6
   uuid: ^4.4.0
 
-dependency_overrides:
-  flutter_colorpicker: # todo this package is outdated and should be replaced, if possible because reactive_color_picker depends on it
-    git:
-      url: https://github.com/mchome/flutter_colorpicker
-      ref: master  # or 786d04363f587b818ce585d25b9c2bb62de95aba
-
 dev_dependencies:
   custom_lint:
   flutter_launcher_icons: ^0.13.1
@@ -53,7 +47,7 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
-  patrol_finders: ^2.0.2
+  patrol_finders: ^2.1.0
   riverpod_lint:
   test: ^1.24.9 # integration_test
 
