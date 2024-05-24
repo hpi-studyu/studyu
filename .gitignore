@@ -144,7 +144,8 @@ app.*.symbols
 pubspec_overrides.yaml
 
 # Selfhost
-flutter_common/lib/envs/.env.local
+backup/
+.cli_config
 
 # generated git project files
 generated/
