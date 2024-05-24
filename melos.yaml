@@ -74,21 +74,37 @@ scripts:
       melos bootstrap
     description: Reset the workspace to a pristine checkout status.
 
+  app:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8080"
+    packageFilters:
+        scope: studyu_app
+    description: Runs StudyU App with default environment
+
+  designer_v2:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8081"
+    packageFilters:
+        scope: studyu_designer_v2
+    description: Runs StudyU Designer with default environment
+
   dev:app:
     run: |
       melos exec -c 1 -- \
         "flutter run -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.local"
     packageFilters:
       scope: studyu_app
-    description: Runs app for local development
+    description: Runs StudyU App with default environment
 
-  dev:designer:
+  dev:designer_v2:
     run: |
       melos exec -c 1 -- \
         "flutter run -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
     packageFilters:
       scope: studyu_designer_v2
-    description: Runs designer for local development
+    description: Runs StudyU Designer for local development
 
   build:android:
     run: |
