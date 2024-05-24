@@ -23,14 +23,14 @@ scripts:
         "dart fix --apply"
     description: Fix auto-fixable lint errors
 
-  # todo exclude *.g.dart files in a platform agnostic way
-  # dart format sadly does not support this yet: https://github.com/dart-lang/dart_style/issues/864
+  # todo revert to default line length
   format:
     run: |
       melos exec -c 6 -- \
         "dart format -l 120 ."
     description: Format all code and markdown files
 
+  # todo do not exclude files anymore when line length is set to default
   format:ci:
     run: |
       melos exec -c 6 -- \
