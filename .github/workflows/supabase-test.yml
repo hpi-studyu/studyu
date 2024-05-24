@@ -25,8 +25,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Seed database
-        run: cp database/studyu-schema.sql supabase/seed.sql
+      - name: Prepare database migrations
+        run: |
+          mkdir -p supabase/migrations
+          mv database/studyu-schema.sql supabase/migrations/0000000000001_studyu-schema.sql
+          mv database/app_config.sql.example supabase/migrations/0000000000002_app_config_mockup.sql
 
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v1
@@ -36,6 +39,7 @@ jobs:
       - name: Initialize Supabase
         run: |
           supabase db start
+          supabase migration up
 
       - name: Run Supabase Tests
         run: |
