@@ -34,11 +34,9 @@ jobs:
           version: latest
 
       - name: Initialize Supabase
-        working-directory: docker
         run: |
           supabase db start
 
       - name: Run Supabase Tests
-        working-directory: docker
         run: |
           supabase test db
