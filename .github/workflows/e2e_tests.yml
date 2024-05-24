@@ -61,6 +61,8 @@ jobs:
           cp flutter_common/lib/envs/.env.local.example flutter_common/lib/envs/.env.local
           LC_ALL=C sed -i.bak '/STUDYU_SUPABASE_PUBLIC_ANON_KEY/d' flutter_common/lib/envs/.env.local
           echo "STUDYU_SUPABASE_PUBLIC_ANON_KEY=$(supabase status -o env | grep ANON_KEY | cut -d'=' -f2)" >> flutter_common/lib/envs/.env.local
+          LC_ALL=C sed -i.bak '/STUDYU_SUPABASE_URL/d' flutter_common/lib/envs/.env.local
+          echo "STUDYU_SUPABASE_URL=http://localhost:54321" >> flutter_common/lib/envs/.env.local
 
       - name: Start Chrome Driver
         run: |
