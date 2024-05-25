@@ -10,15 +10,14 @@ class ModelAction<T> {
   final bool isAvailable;
   final bool isDestructive;
 
-  ModelAction({
-    required this.type,
-    required this.label,
-    required this.onExecute,
-    this.isSeparator = false,
-    this.isAvailable = true,
-    this.isDestructive = false,
-    this.icon
-  });
+  ModelAction(
+      {required this.type,
+      required this.label,
+      required this.onExecute,
+      this.isSeparator = false,
+      this.isAvailable = true,
+      this.isDestructive = false,
+      this.icon});
 
   static ModelAction addSeparator() {
     return ModelAction(
