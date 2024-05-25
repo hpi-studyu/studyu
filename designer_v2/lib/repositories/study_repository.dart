@@ -166,7 +166,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         label: StudyActionType.close.string,
         onExecute: () {
           return ref.read(notificationServiceProvider).show(Notifications.studyCloseConfirmation, actions: [
-            NotificationAction(label: StudyActionType.close.string, onSelect: onCloseCallback),
+            NotificationAction(label: StudyActionType.close.string, onSelect: onCloseCallback, isDestructive: true),
           ]);
         },
         isAvailable: model.canClose(currentUser) && model.status == StudyStatus.running,
