@@ -50,7 +50,6 @@ jobs:
         run: |
           mkdir -p supabase/migrations
           cp database/studyu-schema.sql supabase/migrations/0000000000001_studyu-schema.sql
-          cp database/app_config.sql.example supabase/migrations/0000000000002_app_config_mockup.sql
 
       - name: Start Supabase
         run: |
@@ -61,8 +60,8 @@ jobs:
           cp flutter_common/lib/envs/.env.local.example flutter_common/lib/envs/.env.local
           LC_ALL=C sed -i.bak '/STUDYU_SUPABASE_PUBLIC_ANON_KEY/d' flutter_common/lib/envs/.env.local
           echo "STUDYU_SUPABASE_PUBLIC_ANON_KEY=$(supabase status -o env | grep ANON_KEY | cut -d'=' -f2)" >> flutter_common/lib/envs/.env.local
-          LC_ALL=C sed -i.bak '/STUDYU_SUPABASE_URL/d' flutter_common/lib/envs/.env.local
-          echo "STUDYU_SUPABASE_URL=http://localhost:54321" >> flutter_common/lib/envs/.env.local
+          # LC_ALL=C sed -i.bak '/STUDYU_SUPABASE_URL/d' flutter_common/lib/envs/.env.local
+          # echo "STUDYU_SUPABASE_URL=http://localhost:54321" >> flutter_common/lib/envs/.env.local
 
       - name: Start Chrome Driver
         run: |
