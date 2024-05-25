@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -79,7 +80,7 @@ class _TaskOverviewState extends State<TaskOverview> {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Text(AppLocalizations.of(context)!.intervention_current, style: theme.textTheme.titleLarge),
+                  Expanded(child: Text(AppLocalizations.of(context)!.intervention_current, style: theme.textTheme.titleLarge)),
                   const Spacer(),
                   Text(
                     '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',
