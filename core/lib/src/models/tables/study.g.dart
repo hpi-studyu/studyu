@@ -16,31 +16,30 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
           $enumDecode(_$ParticipationEnumMap, json['participation'])
       ..resultSharing =
           $enumDecode(_$ResultSharingEnumMap, json['result_sharing'])
-      ..contact = Contact.fromJson(json['contact'] as Map<String, dynamic>)
-      ..iconName = json['icon_name'] as String
+      ..contact = json['contact'] == null ? Contact() : Contact.fromJson(json['contact'] as Map<String, dynamic>)
+      ..iconName = json['icon_name'] ?? "" as String
       ..published = json['published'] as bool
-      ..questionnaire =
-          StudyUQuestionnaire.fromJson(json['questionnaire'] as List<dynamic>)
-      ..eligibilityCriteria = (json['eligibility_criteria'] as List<dynamic>)
-          .map((e) => EligibilityCriterion.fromJson(e as Map<String, dynamic>))
+      ..questionnaire = json['questionnaire'] == null ? StudyUQuestionnaire(): StudyUQuestionnaire.fromJson(json['questionnaire'] as List<dynamic>)
+      ..eligibilityCriteria = json['eligibility_criteria'] == null ? [] :
+      (json['eligibility_criteria'] as List<dynamic>).map((e) => EligibilityCriterion.fromJson(e as Map<String, dynamic>))
           .toList()
-      ..consent = (json['consent'] as List<dynamic>)
+      ..consent = json['consent'] == null ? [] : (json['consent'] as List<dynamic>)
           .map((e) => ConsentItem.fromJson(e as Map<String, dynamic>))
           .toList()
-      ..interventions = (json['interventions'] as List<dynamic>)
+      ..interventions = json['interventions'] == null ? [] : (json['interventions'] as List<dynamic>)
           .map((e) => Intervention.fromJson(e as Map<String, dynamic>))
           .toList()
-      ..observations = (json['observations'] as List<dynamic>)
+      ..observations = json['observations'] == null ? [] : (json['observations'] as List<dynamic>)
           .map((e) => Observation.fromJson(e as Map<String, dynamic>))
           .toList()
       ..schedule =
-          StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
-      ..reportSpecification = ReportSpecification.fromJson(
+      json['schedule'] == null ? StudySchedule() : StudySchedule.fromJson(json['schedule'] as Map<String, dynamic>)
+      ..reportSpecification = json['report_specification'] == null ? ReportSpecification() : ReportSpecification.fromJson(
           json['report_specification'] as Map<String, dynamic>)
-      ..results = (json['results'] as List<dynamic>)
+      ..results = json['results'] == null ? [] : (json['results'] as List<dynamic>)
           .map((e) => StudyResult.fromJson(e as Map<String, dynamic>))
           .toList()
-      ..collaboratorEmails = (json['collaborator_emails'] as List<dynamic>)
+      ..collaboratorEmails = json['collaborator_emails'] == null ? [] : (json['collaborator_emails'] as List<dynamic>)
           .map((e) => e as String)
           .toList()
       ..registryPublished = json['registry_published'] as bool;

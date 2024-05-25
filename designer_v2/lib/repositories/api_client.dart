@@ -71,6 +71,21 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
     'study_missed_days',
   ];
 
+  static final studyDisplayColumns = [
+    'id',
+    'title',
+    'description',
+    'user_id',
+    'participation',
+    'result_sharing',
+    'published',
+    'registry_published',
+    'study_participant_count',
+    'study_ended_count',
+    'active_subject_count',
+  ];
+
+
   static final studyWithParticipantActivityColumns = [
     ...studyColumns,
     'study_subject!study_subject_studyId_fkey(*)',
@@ -108,10 +123,10 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
    */
 
   @override
-  Future<List<Study>> getUserStudies({withParticipantActivity = true}) async {
+  Future<List<Study>> getUserStudies({withParticipantActivity = false, forDisplayTable = true}) async {
     await _testDelay();
     // TODO: fix Postgres policy for proper multi-tenancy
-    final columns = (withParticipantActivity) ? studyWithParticipantActivityColumns : studyColumns;
+    final columns = (withParticipantActivity) ? studyWithParticipantActivityColumns : (forDisplayTable) ? studyDisplayColumns : studyColumns;
     final request = getAll<Study>(selectedColumns: columns);
     return _awaitGuarded(request);
   }
