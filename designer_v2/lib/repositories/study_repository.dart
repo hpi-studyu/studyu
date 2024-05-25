@@ -160,6 +160,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         },
         isAvailable: model.canExport(currentUser),
       ),
+      ModelAction.addSeparator(),
       ModelAction(
         type: StudyActionType.close,
         label: StudyActionType.close.string,
