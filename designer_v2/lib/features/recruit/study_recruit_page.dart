@@ -55,7 +55,7 @@ class StudyRecruitScreen extends StudyPageWidget {
   @override
   Widget? banner(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyRecruitControllerProvider(studyId));
-    final isStudyClosed = state.studyWithMetadata?.model.isClosed == true;
+    final isStudyClosed = state.studyWithMetadata!.model.isClosed;
 
     if (isStudyClosed) {
       return BannerBox(
@@ -74,7 +74,6 @@ class StudyRecruitScreen extends StudyPageWidget {
               ]),
           style: BannerStyle.info);
     }
-
     return null;
   }
 

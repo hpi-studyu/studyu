@@ -113,8 +113,7 @@ extension StudyDuplicateX on Study {
     copy.resetJsonIgnoredAttributes();
     copy.title = (copy.title ?? '').withDuplicateLabel();
     copy.userId = userId;
-    copy.published = false;
-    copy.isClosed = false;
+    copy.status = StudyStatus.draft;
     copy.resultSharing = ResultSharing.private;
     copy.registryPublished = false;
     copy.results = [];
@@ -141,7 +140,7 @@ extension StudyDuplicateX on Study {
     final copy = Study.fromJson(toJson());
     copy.copyJsonIgnoredAttributes(from: this, createdAt: true);
     copy.resetParticipantData();
-    copy.published = true;
+    copy.status = StudyStatus.running;
     return copy;
   }
 

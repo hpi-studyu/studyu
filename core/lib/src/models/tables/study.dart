@@ -54,10 +54,10 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   late Contact contact = Contact();
   @JsonKey(name: 'icon_name', defaultValue: 'accountHeart')
   late String iconName = 'accountHeart';
+  @Deprecated('Use status instead')
   @JsonKey(defaultValue: false)
   late bool published = false;
-  @JsonKey(name: 'is_closed', defaultValue: false)
-  bool isClosed = false;
+  late StudyStatus status = StudyStatus.draft;
   @JsonKey(fromJson: _questionnaireFromJson)
   late StudyUQuestionnaire questionnaire = StudyUQuestionnaire();
   @JsonKey(name: 'eligibility_criteria', fromJson: _eligibilityCriteriaFromJson)
@@ -231,7 +231,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   static Future<ExtractionResult<Study>> publishedPublicStudies() async {
     ExtractionResult<Study> result;
     try {
-      final response = await env.client.from(tableName).select().eq('participation', 'open').eq("is_closed", false);
+      final response = await env.client.from(tableName).select().eq('participation', 'open').eq("closed", false);
       final extracted = SupabaseQuery.extractSupabaseList<Study>(List<Map<String, dynamic>>.from(response));
       result = ExtractionSuccess<Study>(extracted);
     } on ExtractionFailedException<Study> catch (error) {
@@ -292,18 +292,9 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
 
   // - Status
 
-  StudyStatus get status {
-    if (isClosed) {
-      return StudyStatus.closed;
-    }
-    if (published) {
-      return StudyStatus.running;
-    }
-    return StudyStatus.draft;
-  }
-
   bool get isDraft => status == StudyStatus.draft;
   bool get isRunning => status == StudyStatus.running;
+  bool get isClosed => status == StudyStatus.closed;
 
   bool isReadonly(User user) {
     return status != StudyStatus.draft || !canEdit(user);
@@ -311,7 +302,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
 
   @override
   String toString() {
-    return 'Study{id: $id, title: $title, description: $description, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: $published, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
+    return 'Study{id: $id, title: $title, description: $description, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: <deprecated>, status: $status, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
   }
 
   @override

@@ -15,7 +15,7 @@ class StudyControllerState extends StudyControllerBaseState implements IStudyApp
     this.lastSynced,
   });
 
-  bool get isPublished => study.value != null && study.value!.published;
+  bool get isPublished => study.value != null && study.value!.status == StudyStatus.running;
 
   // - ISyncIndicatorViewModel
 

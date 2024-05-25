@@ -106,7 +106,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
     }
 
     Future<void> onCloseCallback() {
-      model.isClosed = true;
+      model.status = StudyStatus.closed;
       return save(model).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies)).then((value) =>
           Future.delayed(const Duration(milliseconds: 200),
               () => ref.read(notificationServiceProvider).show(Notifications.studyClosed)));
