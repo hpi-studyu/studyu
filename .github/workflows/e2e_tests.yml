@@ -46,11 +46,6 @@ jobs:
         with:
           version: latest
 
-      - name: Prepare database migrations
-        run: |
-          mkdir -p supabase/migrations
-          cp database/studyu-schema.sql supabase/migrations/0000000000001_studyu-schema.sql
-
       - name: Start Supabase
         run: |
           supabase start -x studio,imgproxy
