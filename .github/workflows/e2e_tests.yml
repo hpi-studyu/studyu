@@ -3,6 +3,7 @@ name: E2E tests
 on:
   push:
     paths:
+      - ".github/workflows/e2e_tests.yml"
       - 'designer_v2/**'
       - 'core/**'
       - 'flutter_common/**'

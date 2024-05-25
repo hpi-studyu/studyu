@@ -2,6 +2,7 @@ name: Test Supabase
 on:
   push:
     paths:
+      - ".github/workflows/supabase-test.yml"
       - "database/**"
   workflow_dispatch:
 
