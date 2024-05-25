@@ -48,7 +48,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
             data: Theme.of(context).copyWith(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
-              hoverColor: Colors.transparent,
+              // hoverColor: Colors.transparent,
             ),
             child: popupMenu);
       }
@@ -70,26 +70,37 @@ class ActionPopUpMenuButton extends StatelessWidget {
         elevation: elevation,
         splashRadius: splashRadius,
         position: position,
-        onSelected: (ModelAction action) => action.onExecute(),
+        onSelected: (action) => action is ModelAction ? action.onExecute() : null,
         itemBuilder: (BuildContext context) {
           final textTheme = theme.textTheme.labelMedium!;
-          return actions.map((action) {
-            return PopupMenuItem(
+          final List<PopupMenuEntry> popupList = [];
+          for (final action in actions) {
+            if (action.isSeparator) {
+              popupList.add(const PopupMenuDivider());
+              continue;
+            }
+            popupList.add(PopupMenuItem(
               value: action,
               child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 8.0, vertical: 0),
                 horizontalTitleGap: 4.0,
                 leading: (action.icon == null)
                     ? const SizedBox.shrink()
                     : Icon(action.icon,
-                        size: theme.iconTheme.size ?? 14.0,
-                        color: action.isDestructive ? Colors.red : iconColorDefault),
+                    size: theme.iconTheme.size ?? 14.0,
+                    color: action.isDestructive
+                        ? Colors.red
+                        : iconColorDefault),
                 title: action.isDestructive
-                    ? Text(action.label, style: textTheme.copyWith(color: Colors.red))
+                    ? Text(
+                    action.label, style: textTheme.copyWith(color: Colors.red))
                     : Text(action.label, style: textTheme),
               ),
-            );
-          }).toList();
+            ));
+            continue;
+          }
+          return popupList;
         });
   }
 }
