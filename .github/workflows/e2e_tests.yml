@@ -9,10 +9,6 @@ on:
       - 'flutter_common/**'
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.ref }}-e2e-tests
-  cancel-in-progress: true
-
 jobs:
   drive_web:
     runs-on: ubuntu-latest
@@ -41,6 +37,10 @@ jobs:
           dart pub get
           dart pub global activate melos
           melos bootstrap
+
+      - name: Prepare Supabase CI Seed
+        run: |
+          cp supabase/seed-ci.sql supabase/seed.sql
 
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v1

@@ -26,6 +26,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Prepare Supabase CI Seed
+        run: |
+          cp supabase/seed-ci.sql supabase/seed.sql
+
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v1
         with:
