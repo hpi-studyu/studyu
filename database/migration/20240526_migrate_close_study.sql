@@ -22,7 +22,8 @@ DROP POLICY "Editors can do everything with their studies" ON public.study;
 CREATE POLICY "Editors can view their studies" ON public.study FOR SELECT USING (auth.uid() = user_id);
 
 CREATE POLICY "Editor can control their draft studies" ON public.study
-    USING (public.can_edit(auth.uid(), study.*) AND status = 'draft'::public.study_status);
+    --USING (public.can_edit(auth.uid(), study.*) AND status = 'draft'::public.study_status);
+    USING (public.can_edit(auth.uid(), study.*));
 
 -- Editors can only update registry_published and resultSharing
 --grant update (registry_published, result_sharing) on public.study USING (public.can_edit(auth.uid(), study.*);
@@ -36,6 +37,8 @@ CREATE POLICY "Editor can control their draft studies" ON public.study
 -- https://stackoverflow.com/questions/72756376/supabase-solutions-for-column-level-security
 
 -- https://github.com/orgs/supabase/discussions/656#discussioncomment-5594653
+
+-- todo document this function
 CREATE OR REPLACE FUNCTION public.allow_updating_only()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -48,6 +51,27 @@ DECLARE
   new_value TEXT;
   old_value TEXT;
 BEGIN
+
+  -- If the current user is 'postgres', return NEW without making any changes
+  IF CURRENT_USER = 'postgres' THEN
+    RETURN NEW;
+  END IF;
+
+  -- If the status is draft, return NEW without making any changes
+  IF OLD.status = 'draft'::public.study_status THEN
+    RETURN NEW;
+  END IF;
+
+  -- Don't allow invalid status transitions
+  IF OLD.status != NEW.status THEN
+    IF NOT (
+        (OLD.status = 'draft'::public.study_status AND NEW.status = 'running'::public.study_status)
+        OR (OLD.status = 'running'::public.study_status AND NEW.status = 'closed'::public.study_status)
+    ) THEN
+      RAISE EXCEPTION 'Invalid status transition';
+    END IF;
+  END IF;
+
   schema_table := concat(TG_TABLE_SCHEMA, '.', TG_TABLE_NAME);
 
   -- If RLS is not active on current table for function invoker, early return
@@ -84,56 +108,33 @@ BEGIN
 END;
 $function$;
 
-CREATE OR REPLACE FUNCTION public.check_study_update_permissions()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
-BEGIN
-  -- todo check if this is needed, because the policy should already prevent modification of foreign studies
-  --IF study_param.user_id != auth.uid() THEN
-  --  RAISE EXCEPTION 'Only the owner can update the status';
-  --END IF;
-
-  -- check if old.status is not draft and if yes check if allow_updating_only includes registry_published and result_sharing otherwise raise exception
-  IF OLD.status != 'draft'::public.study_status THEN
-    PERFORM public.allow_updating_only(ARRAY['registry_published', 'result_sharing']);
-    -- dont allow to update status directly
-    IF NEW.status != OLD.status THEN
-      RAISE EXCEPTION 'Study.status can only be updated using the `public.update_study_status` function';
-    END IF;
-  END IF;
-
-  RETURN NEW;
-END;
-$function$;
-
 CREATE OR REPLACE TRIGGER study_status_update_permissions
   BEFORE UPDATE
   ON public.study
   FOR EACH ROW
-  EXECUTE FUNCTION public.check_study_update_permissions();
+  EXECUTE FUNCTION public.allow_updating_only('updated_at', 'status', 'registry_published', 'result_sharing');
+  -- todo also add participation?
 
--- todo use this function to update status in designer
 -- Owners can update status
-CREATE FUNCTION public.update_study_status(study_param public.study) RETURNS VOID
-    LANGUAGE plpgsql -- SECURITY DEFINER
-    AS $$
-BEGIN
+--CREATE FUNCTION public.update_study_status(study_param public.study) RETURNS VOID
+--    LANGUAGE plpgsql -- SECURITY DEFINER
+--    AS $$
+--BEGIN
     --IF study_param.user_id != auth.uid() THEN
     --    RAISE EXCEPTION 'Only the owner can update the status';
     --END IF;
     -- Increment the study.status
-    UPDATE public.study
-    SET status = CASE
-        WHEN study_param.status = 'draft'::public.study_status THEN 'running'::public.study_status
-        WHEN study_param.status = 'running'::public.study_status THEN 'closed'::public.study_status
-        ELSE study_param.status
-    END
-    WHERE id = study_param.id;
-END;
-$$;
+--    UPDATE public.study
+--    SET status = CASE
+--        WHEN study_param.status = 'draft'::public.study_status THEN 'running'::public.study_status
+--        WHEN study_param.status = 'running'::public.study_status THEN 'closed'::public.study_status
+--        ELSE study_param.status
+--    END
+--    WHERE id = study_param.id;
+--END;
+--$$;
 
-ALTER FUNCTION public.update_study_status(public.study) OWNER TO postgres;
+--ALTER FUNCTION public.update_study_status(public.study) OWNER TO postgres;
 
 CREATE POLICY "Joining a closed study should not be possible" ON public.study_subject
     AS RESTRICTIVE
