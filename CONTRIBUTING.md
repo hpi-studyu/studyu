@@ -58,36 +58,27 @@ STUDYU_APP_URL="https://app.studyu.health/"
 STUDYU_DESIGNER_URL="https://designer.studyu.health/"
 ```
 
-The great advantage of this new approach (compared to the previous approach
-with different entrypoint `main.dart` files) is that we can set the
-configuration of already compiled web apps. Previously, once built, a Flutter
-web app and its container would be hardcoded to whatever variable was given at
-the build time. In the docker-compose setup, we leverage this by copying the
-config (`.env`) to the right place in the container, without needing to rebuild.
-Now we can publish a docker image and the same image can be used in multiple
-environments.
-
 Additionally, we have the following environment files:
 
 - `.env`: Production database used by default
 - `.env.dev`: Development database used by dev branch
 - `.env.local`: Local database for a custom Supabase instance (used by the
-StudyU CLI)
+Supabase CLI)
 
-Ideally we should only use the development database or a local one for all our
+Ideally, we should only use the development database or a local one for all our
 development work.
 
 ## Coding on `core`
 
-When developing models in the `core` package you need to make sure the JSON IO
-code is generated correctly. To do this we use `build_runner` together with
-`json_serializable`.
+Changes to the models in the `core` package requires to perform a re-generation
+of the JSON IO code. The toolchain we use for this consists of [build_runner](https://pub.dev/packages/build_runner)
+and [json_serializable](https://pub.dev/packages/json_serializable).
 
-To generate the IO code once, run `melos run generate`.
+After you made changes to the models, update the generated IO code by running `melos run generate`.
 
-Contrary to most recommendations, we commit those generated files to Git. This
-is needed, because core is a dependency by app and designer and dependencies
-need to have all files generated, when being imported.
+Contrary to most recommendations, we commit those generated files (`*.g.dart`) to Git. This
+is needed, because `core` is a dependency of the StudyU App and the StudyU Designer
+and dependencies need to have all files generated, when being imported.
 
 ## Code Style
 
@@ -105,4 +96,7 @@ We are using a self-hosted instance of [Supabase](https://supabase.com/) as a
 Backend-as-a-Service provider. Supabase provides different backend services
 such as a database, API, authentication, storage service all based around
 PostgreSQL and other FOSS. Since Supabase is open-source, we are hosting our
-own instance to ensure data privacy and security.
+own instance to ensure data privacy and security. For development purposes,
+Supabase can be self-hosted by using the [Supabase CLI](https://supabase.com/docs/guides/cli).
+Have a look into the [/supabase/README.md](./supabase/README.md) file for a
+guide on how to run the Supabase CLI for StudyU.
