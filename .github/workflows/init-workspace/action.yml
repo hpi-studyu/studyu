@@ -9,12 +9,17 @@ runs:
       uses: subosito/flutter-action@v2
       with:
         channel: stable
+        # Increase this version manually when we add support for a new Flutter release
+        flutter-version: '3.19.6'
+
     - name: Install melos
       run: dart pub global activate melos
       shell: bash
+
     - name: Bootstrap workspace
       run: melos bootstrap
       shell: bash
+
     - name: Dart pub root project
       run: dart pub get
       shell: bash

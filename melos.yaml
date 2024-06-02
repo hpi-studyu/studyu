@@ -23,14 +23,14 @@ scripts:
         "dart fix --apply"
     description: Fix auto-fixable lint errors
 
-  # todo exclude *.g.dart files in a platform agnostic way
-  # dart format sadly does not support this yet: https://github.com/dart-lang/dart_style/issues/864
+  # todo revert to default line length
   format:
     run: |
       melos exec -c 6 -- \
         "dart format -l 120 ."
     description: Format all code and markdown files
 
+  # todo do not exclude files anymore when line length is set to default
   format:ci:
     run: |
       melos exec -c 6 -- \
@@ -72,23 +72,55 @@ scripts:
       melos clean
       melos exec --flutter --concurrency=1 -- "flutter clean"
       melos bootstrap
-    description: Reset the workspace to a "pristine checkout" status.
+    description: Reset the workspace to a pristine checkout status.
 
-  dev:designer:
+  app:
     run: |
       melos exec -c 1 -- \
-        "flutter run -d chrome --web-port 3001 --dart-define=STUDYU_ENV=.env.local"
+        "flutter run -d chrome --web-port 8080"
     packageFilters:
-      scope: studyu_designer_v2
-    description: Runs designer in Chrome on port 3001 with local env for local development
+        scope: studyu_app
+    description: Runs StudyU App with default environment
+
+  designer_v2:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8081"
+    packageFilters:
+        scope: studyu_designer_v2
+    description: Runs StudyU Designer with default environment
 
   dev:app:
     run: |
       melos exec -c 1 -- \
-        "flutter run --dart-define=STUDYU_ENV=.env.local"
+        "flutter run -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.dev"
     packageFilters:
       scope: studyu_app
-    description: Runs app with local env for local development
+    description: Runs StudyU App with the development environment
+
+  dev:designer_v2:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
+    packageFilters:
+      scope: studyu_designer_v2
+    description: Runs StudyU Designer with the development environment
+
+  local:app:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.local"
+    packageFilters:
+      scope: studyu_app
+    description: Runs StudyU App with local environment
+
+  local:designer_v2:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
+    packageFilters:
+      scope: studyu_designer_v2
+    description: Runs StudyU Designer with local environment
 
   build:android:
     run: |
@@ -157,20 +189,3 @@ scripts:
     packageFilters:
       scope: studyu_designer_v2
       dir-exists: web
-
-  # Used to test Designer "Try out study" feature, where the designer opens the App using the user auth token from designer
-  app:web:local:
-    run: |
-      melos exec -c 1 -- \
-        "flutter run lib/main.dart -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.local"
-    packageFilters:
-      scope: studyu_app
-    description: Runs app in chrome on port 8080 with local env
-
-  designer_v2:web:local:
-    run: |
-      melos exec -c 1 -- \
-        "flutter run lib/main.dart -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
-    packageFilters:
-      scope: studyu_designer_v2
-    description: Runs designer in chrome on port 8081 with local env
