@@ -126,6 +126,13 @@ class StudyUApiClient extends SupabaseClientDependant
   }
    */
 
+  /// This function fetches all studies for the current user.
+  /// [withParticipantActivity] includes additional participant activity with all columns of Study table => [studyWithParticipantActivityColumns]
+  /// [forDashboardDisplay] includes only columns required for the Dashboard page display => [studyDisplayColumns]
+  /// otherwise, all columns are fetched => [studyColumns]
+  ///
+  ///
+  /// @return List<Study>
   @override
   Future<List<Study>> getUserStudies(
       {withParticipantActivity = false, forDashboardDisplay = true}) async {
