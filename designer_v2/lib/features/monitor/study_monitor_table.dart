@@ -53,6 +53,7 @@ class StudyMonitorTable extends StatelessWidget {
         StandardTableColumn(
           sortable: true,
           label: tr.monitoring_table_column_completed_interventions,
+          tooltip: tr.monitoring_table_completed_interventions_header_tooltip,
           columnWidth: const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.6)),
         ),
         StandardTableColumn(
@@ -100,11 +101,7 @@ class StudyMonitorTable extends StatelessWidget {
         ),
       ),
       _buildProgressCell(context, item.currentDayOfStudy, item.studyDurationInDays),
-      _buildProgressCell(context, item.completedInterventions, item.completedInterventions + item.missedInterventions,
-          tooltipMessage: tr.monitoring_table_completed_interventions_tooltip(
-            item.completedInterventions,
-            item.completedInterventions + item.missedInterventions,
-          )),
+      _buildProgressCell(context, item.completedInterventions, item.completedInterventions + item.missedInterventions),
       _buildProgressCell(context, item.completedSurveys, item.completedSurveys + item.missedSurveys),
     ];
   }
@@ -120,7 +117,7 @@ class StudyMonitorTable extends StatelessWidget {
     return "${formattedDate.format(localTime)}, ${formattedTime.format(localTime)} $timeZoneString";
   }
 
-  Widget _buildProgressCell(BuildContext context, int progress, int total, {String tooltipMessage = ''}) {
+  Widget _buildProgressCell(BuildContext context, int progress, int total) {
     final theme = Theme.of(context);
     return Stack(
       children: [
@@ -133,19 +130,8 @@ class StudyMonitorTable extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.center,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("$progress/$total",
-                  style: TextStyle(color: theme.colorScheme.onPrimary, fontWeight: FontWeight.bold)),
-              const SizedBox(width: 4.0),
-              if (tooltipMessage.isNotEmpty)
-                Tooltip(
-                  message: tooltipMessage,
-                  child: const Icon(Icons.info_outline, color: Colors.white, size: 16.0),
-                ),
-            ],
-          ),
+          child: Text("$progress/$total",
+              style: TextStyle(color: theme.colorScheme.onPrimary, fontWeight: FontWeight.bold)),
         ),
       ],
     );
