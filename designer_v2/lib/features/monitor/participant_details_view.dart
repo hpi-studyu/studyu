@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:reactive_forms/reactive_forms.dart';
+import 'package:intl/intl.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/domain/study_monitoring.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+
 
 class ParticipantDetailsView extends StatelessWidget {
   const ParticipantDetailsView(
@@ -17,26 +17,54 @@ class ParticipantDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FormTableLayout(rows: [
-          FormTableRow(
-            label: tr.monitoring_table_column_participant_id,
-            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-            input: ReactiveTextField(
-              formControl: FormControl<String>(value: monitorItem.participantId),
-              readOnly: true,
-            ),
-          ),
-        ]),
-        const SizedBox(height: 16.0),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: FormSectionHeader(
-            title: tr.participant_details_study_days_overview,
-          ),
+        Text(
+          tr.participant_details_study_days_overview,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8.0),
+        _buildParticipantInfo(context),
+        const SizedBox(height: 8.0),
+        const Divider(),
+        Text(
+          tr.participant_details_study_days_description,
+          style: const TextStyle(fontSize: 16.0, color: Colors.black54),
+        ),
+        const SizedBox(height: 16.0),
         _buildPerDayStatus(context),
+        const SizedBox(height: 16.0),
+        _buildColorLegend(),
+      ],
+    );
+  }
+
+  Widget _buildParticipantInfo(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildInfoRow(tr.monitoring_table_column_participant_id, monitorItem.participantId),
+        _buildInfoRow(tr.monitoring_table_column_invite_code, monitorItem.inviteCode ?? '-'),
+        _buildInfoRow(
+          tr.monitoring_table_column_enrolled,
+         _formatTime(monitorItem.enrolledAt,true),
+        ),
+        _buildInfoRow(
+          tr.monitoring_table_column_last_activity,
+          _formatTime(monitorItem.enrolledAt,true),
+        ),
+      ],
+    );
+  }
+
+    Widget _buildInfoRow(String label, String value) {
+    return Row(
+      children: [
+        Text(
+          label + ': ',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        Text(value),
       ],
     );
   }
@@ -88,5 +116,52 @@ class ParticipantDetailsView extends StatelessWidget {
       }
     }
     return sb.toString();
+  }
+
+  Widget _buildColorLegend() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          tr.participant_details_color_legend_title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8.0),
+        Row(
+          children: [
+            _buildLegendItem(Colors.green, tr.participant_details_color_legend_completed),
+            const SizedBox(width: 16.0),
+            _buildLegendItem(Colors.orange, tr.participant_details_color_legend_partially_completed),
+            const SizedBox(width: 16.0),
+            _buildLegendItem(Colors.red, tr.participant_details_color_legend_missed),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLegendItem(Color color, String text) {
+    return Row(
+      children: [
+        Container(
+          width: 20.0,
+          height: 20.0,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(3), color: color,),
+        ),
+        const SizedBox(width: 8.0),
+        Text(text),
+      ],
+    );
+  }
+
+  String _formatTime(DateTime time, bool showTime) {
+    final localTime = time.toLocal();
+    final timeZoneOffsetInHours = localTime.timeZoneOffset.inHours;
+    final timeZoneString = timeZoneOffsetInHours >= 0 ? "GMT +$timeZoneOffsetInHours" : "GMT $timeZoneOffsetInHours";
+    final locale = tr.localeName == "de" ? "de_DE" : "en_US";
+    final formattedDate = DateFormat("MMM d, yyyy", locale);
+    if (!showTime) return formattedDate.format(localTime);
+    final formattedTime = DateFormat.jm(locale);
+    return "${formattedDate.format(localTime)}, ${formattedTime.format(localTime)} $timeZoneString";
   }
 }

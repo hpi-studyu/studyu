@@ -486,6 +486,11 @@
   "@__________________STUDYPAGE_MONITOR__________________": {},
   "participant_details_title": "Teilnehmerdetails",
   "participant_details_study_days_overview": "Übersicht über Studientage",
+  "participant_details_study_days_description": "Dieser Abschnitt bietet einen Überblick über die Studientage des Teilnehmers.",
+  "participant_details_color_legend_title": "Farblegende:",
+  "participant_details_color_legend_completed": "Abgeschlossen",
+  "participant_details_color_legend_partially_completed": "Teilweise Abgeschlossen",
+  "participant_details_color_legend_missed": "Verpasst",
   "monitoring_no_participants_title": "Es gibt noch keine Teilnehmer in dieser Studie",
   "monitoring_no_participants_description": "Sobald Teilnehmer in Ihrer Studie eingeschrieben sind, können Sie hier deren Fortschritt überwachen und ihre Daten einsehen.",
   "monitoring_participants_title": "Teilnehmer",
@@ -502,6 +507,14 @@
   "monitoring_table_column_day_in_study": "Studientag",
   "monitoring_table_column_completed_interventions": "Abgeschlossene\nInterventionen",
   "monitoring_table_column_completed_surveys": "Abgeschlossene\nFragebögen",
+  "monitoring_table_row_tooltip_dropout": "Dieser Teilnehmer ist ausgeschieden und es wird keine neue Aktivität hinzugefügt",
+  "monitoring_table_completed_interventions_tooltip": "{progress} von {total} Interventionen abgeschlossen",
+  "@monitoring_table_completed_interventions_tooltip": {
+    "placeholders":{
+      "progress":{},
+      "total":{}
+    }
+  },
   "@__________________STUDYPAGE_ANALYZE__________________": {},
   "banner_text_study_analyze_draft": "Solange die Studie noch nicht live ist, basieren die Ergebnisse hier auf dem letzten Testlauf der Studie (siehe Testmodus).\nDie Ergebnisdaten werden automatisch zurückgesetzt sobald die Studie mit echten Teilnehmern startet.",
   "action_button_study_export": "Daten exportieren",

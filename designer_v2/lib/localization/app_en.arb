@@ -533,6 +533,11 @@
   "@__________________STUDYPAGE_MONITOR__________________": {},
   "participant_details_title": "Participant Details",
   "participant_details_study_days_overview": "Study days overview",
+  "participant_details_study_days_description": "This section provides an overview of the participant's study days.",
+  "participant_details_color_legend_title": "Color Legend:",
+  "participant_details_color_legend_completed": "Completed",
+  "participant_details_color_legend_partially_completed": "Partially Completed",
+  "participant_details_color_legend_missed": "Missed",
   "monitoring_no_participants_title": "There are no participants in this study yet",
   "monitoring_no_participants_description": "Once participants have enrolled in your study, you can monitor their progress and view their data here.",
   "monitoring_participants_title": "Participants",
@@ -549,6 +554,14 @@
   "monitoring_table_column_day_in_study": "Day in Study",
   "monitoring_table_column_completed_interventions": "Completed\nInterventions",
   "monitoring_table_column_completed_surveys": "Completed\nSurveys",
+  "monitoring_table_row_tooltip_dropout": "This participant has dropped out and no new activity will be added",
+  "monitoring_table_completed_interventions_tooltip": "{progress} out of {total} interventions completed",
+  "@monitoring_table_completed_interventions_tooltip": {
+    "placeholders":{
+      "progress":{},
+      "total":{}
+    }
+  },
   "@__________________STUDYPAGE_ANALYZE__________________": {},
   "banner_text_study_analyze_draft": "Because this study has not been launched yet, this page is currently based on the data generated during study testing (only the latest test session).\nThe data on this page will be reset once you launch the study with real participants.",
   "action_button_study_export": "Export data",
