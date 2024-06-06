@@ -15,33 +15,51 @@ class StudyMonitorTable extends StatelessWidget {
   Widget build(BuildContext context) {
     return StandardTable<StudyMonitorItem>(
       items: studyMonitorItems,
+      sortColumnPredicates: [
+        (a, b) => a.participantId.compareTo(b.participantId),
+        (a, b) => a.inviteCode != null ? a.inviteCode!.compareTo(b.inviteCode!) : 0,
+        (a, b) => a.enrolledAt.compareTo(b.enrolledAt),
+        (a, b) => a.lastActivityAt.compareTo(b.lastActivityAt),
+        (a, b) => a.currentDayOfStudy.compareTo(b.currentDayOfStudy),
+        (a, b) => a.completedInterventions.compareTo(b.completedInterventions),
+        (a, b) => a.completedSurveys.compareTo(b.completedSurveys),
+      ],
       columns: [
         StandardTableColumn(
-            label: tr.monitoring_table_column_participant_id,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1.6))),
+          sortable: true,
+          label: tr.monitoring_table_column_participant_id,
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1.6)),
+        ),
         StandardTableColumn(
-            label: tr.monitoring_table_column_invite_code,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6))),
+          sortable: true,
+          label: tr.monitoring_table_column_invite_code,
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6)),
+        ),
         StandardTableColumn(
-            sortable: true,
-            label: tr.monitoring_table_column_enrolled,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1.6))),
+          sortable: true,
+          label: tr.monitoring_table_column_enrolled,
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1.6)),
+        ),
         StandardTableColumn(
-            sortable: true,
-            label: tr.monitoring_table_column_last_activity,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1.6))),
+          sortable: true,
+          label: tr.monitoring_table_column_last_activity,
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1.6)),
+        ),
         StandardTableColumn(
-            sortable: true,
-            label: tr.monitoring_table_column_day_in_study,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.6))),
+          sortable: true,
+          label: tr.monitoring_table_column_day_in_study,
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.6)),
+        ),
         StandardTableColumn(
-            sortable: true,
-            label: tr.monitoring_table_column_completed_interventions,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.6))),
+          sortable: true,
+          label: tr.monitoring_table_column_completed_interventions,
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.6)),
+        ),
         StandardTableColumn(
-            sortable: true,
-            label: tr.monitoring_table_column_completed_surveys,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.6))),
+          sortable: true,
+          label: tr.monitoring_table_column_completed_surveys,
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.6)),
+        ),
       ],
       buildCellsAt: _buildRow,
       cellSpacing: 10.0,
@@ -64,28 +82,29 @@ class StudyMonitorTable extends StatelessWidget {
         child: Text(item.enrolledAt.toTimeAgoString()),
       ),
       Tooltip(
-      message: _formatTime(item.lastActivityAt, true),
-      child: Row(
-        children: [
-          Flexible(child: Text(item.lastActivityAt.toTimeAgoString())),
-          if (item.droppedOut) 
-             Row(
-              children: [
-                const SizedBox(width: 5.0),
-                Tooltip(
-                  message: tr.monitoring_table_row_tooltip_dropout,
-                  child: const Icon(Icons.close, color: Colors.red, size: 16.0),
-                ),
-              ],
-            ),
-        ],
+        message: _formatTime(item.lastActivityAt, true),
+        child: Row(
+          children: [
+            Flexible(child: Text(item.lastActivityAt.toTimeAgoString())),
+            if (item.droppedOut)
+              Row(
+                children: [
+                  const SizedBox(width: 5.0),
+                  Tooltip(
+                    message: tr.monitoring_table_row_tooltip_dropout,
+                    child: const Icon(Icons.close, color: Colors.red, size: 16.0),
+                  ),
+                ],
+              ),
+          ],
+        ),
       ),
-    ),
       _buildProgressCell(context, item.currentDayOfStudy, item.studyDurationInDays),
-      _buildProgressCell(context, item.completedInterventions, item.completedInterventions + item.missedInterventions,tooltipMessage: tr.monitoring_table_completed_interventions_tooltip(
-          item.completedInterventions,
-          item.completedInterventions + item.missedInterventions,
-        )),
+      _buildProgressCell(context, item.completedInterventions, item.completedInterventions + item.missedInterventions,
+          tooltipMessage: tr.monitoring_table_completed_interventions_tooltip(
+            item.completedInterventions,
+            item.completedInterventions + item.missedInterventions,
+          )),
       _buildProgressCell(context, item.completedSurveys, item.completedSurveys + item.missedSurveys),
     ];
   }
@@ -101,7 +120,7 @@ class StudyMonitorTable extends StatelessWidget {
     return "${formattedDate.format(localTime)}, ${formattedTime.format(localTime)} $timeZoneString";
   }
 
-  Widget _buildProgressCell(BuildContext context, int progress, int total, {String tooltipMessage = ''} ) {
+  Widget _buildProgressCell(BuildContext context, int progress, int total, {String tooltipMessage = ''}) {
     final theme = Theme.of(context);
     return Stack(
       children: [
@@ -127,7 +146,6 @@ class StudyMonitorTable extends StatelessWidget {
                 ),
             ],
           ),
-          
         ),
       ],
     );

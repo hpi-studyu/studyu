@@ -5,7 +5,6 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study_monitoring.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
-
 class ParticipantDetailsView extends StatelessWidget {
   const ParticipantDetailsView(
       {required this.monitorItem, required this.interventions, required this.observations, super.key});
@@ -47,17 +46,17 @@ class ParticipantDetailsView extends StatelessWidget {
         _buildInfoRow(tr.monitoring_table_column_invite_code, monitorItem.inviteCode ?? '-'),
         _buildInfoRow(
           tr.monitoring_table_column_enrolled,
-         _formatTime(monitorItem.enrolledAt,true),
+          _formatTime(monitorItem.enrolledAt, true),
         ),
         _buildInfoRow(
           tr.monitoring_table_column_last_activity,
-          _formatTime(monitorItem.enrolledAt,true),
+          _formatTime(monitorItem.enrolledAt, true),
         ),
       ],
     );
   }
 
-    Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(String label, String value) {
     return Row(
       children: [
         Text(
@@ -146,7 +145,10 @@ class ParticipantDetailsView extends StatelessWidget {
         Container(
           width: 20.0,
           height: 20.0,
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(3), color: color,),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(3),
+            color: color,
+          ),
         ),
         const SizedBox(width: 8.0),
         Text(text),

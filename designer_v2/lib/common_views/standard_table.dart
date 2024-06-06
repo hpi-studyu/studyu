@@ -42,7 +42,6 @@ class StandardTable<T> extends StatefulWidget {
     required List<StandardTableColumn>? columns,
     required this.onSelectItem,
     required this.buildCellsAt,
-    this.pinnedPredicates,
     this.sortColumnPredicates,
     this.trailingActionsAt,
     StandardTableColumn? trailingActionsColumn,
@@ -88,7 +87,6 @@ class StandardTable<T> extends StatefulWidget {
 
   final StandardTableCellsBuilder<T> buildCellsAt;
   final List<int Function(T a, T b)?>? sortColumnPredicates;
-  final int Function(T a, T b)? pinnedPredicates;
   final StandardTableRowBuilder? headerRowBuilder;
   final StandardTableRowBuilder? dataRowBuilder;
   late final StandardTableColumn inputTrailingActionsColumn;
@@ -229,40 +227,20 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       widget.items.sort((a, b) {
         return _sortLogic(a, b, columnIndex: columnIndex, sortAscending: sortAscending);
       });
-      _sortPinnedStudies(widget.items, columnIndex: columnIndex, sortAscending: sortAscending);
     } else {
       widget.items.clear();
       widget.items.addAll(sortDefaultOrder!);
-      _sortPinnedStudies(widget.items, columnIndex: columnIndex);
     }
     _cachedRows.clear();
   }
 
-  void _sortPinnedStudies(List<T> items, {required int columnIndex, bool? sortAscending}) {
-    // Extract and insert pinned items at the top
-    if (widget.pinnedPredicates != null) {
-      items.sort((a, b) {
-        int ret = widget.pinnedPredicates!(a, b);
-        // Fallback to default sorting algorithm
-        return ret == 0 ? _sortLogic(a, b, columnIndex: columnIndex, sortAscending: sortAscending) : ret;
-      });
-    }
-  }
-
-  int _sortLogic(T a, T b, {required int columnIndex, required bool? sortAscending, bool? useSortPredicate}) {
+  int _sortLogic(T a, T b, {required int columnIndex, required bool? sortAscending}) {
     final sortPredicate = widget.sortColumnPredicates;
-    if (useSortPredicate != null && useSortPredicate && sortPredicate != null && sortPredicate[columnIndex] != null) {
-      final int res;
+    if (sortPredicate != null && sortPredicate[columnIndex] != null) {
       if (sortAscending ?? true) {
-        res = sortPredicate[columnIndex]!(a, b);
-      } else {
-        res = sortPredicate[columnIndex]!(b, a);
+        return sortPredicate[columnIndex]!(a, b);
       }
-      if (res == 0) {
-        // Fallback to default sorting algorithm
-        return _sortLogic(a, b, columnIndex: columnIndex, sortAscending: sortAscending, useSortPredicate: false);
-      }
-      return res;
+      return sortPredicate[columnIndex]!(b, a);
     } else if (a is Comparable && b is Comparable) {
       // If sortPredicate is not provided, use default comparison logic
       return sortAscending ?? true ? Comparable.compare(a, b) : Comparable.compare(b, a);
