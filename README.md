@@ -13,6 +13,14 @@ research methods.
 Find out more about StudyU and start your first digital N-of-1 trial now at:
 **[StudyU.health](https://www.studyu.health)**
 
+Are you a researcher or clinician interested in conducting large-scale N-of-1
+trials on a digital basis? Then the StudyU platform is the right choice for you.
+[Contact us](https://www.studyu.health/contact) to learn more about how we can
+support your research.
+
+Are you a developer interested in contributing to the StudyU platform? Then
+check out our [contributing guidelines](CONTRIBUTING.md) to get started.
+
 ## The StudyU Platform
 
 The StudyU platform incorporates the [StudyU App](https://app.studyu.health)

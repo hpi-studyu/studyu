@@ -9,8 +9,9 @@ part of 'free_text_question.dart';
 FreeTextQuestion _$FreeTextQuestionFromJson(Map<String, dynamic> json) =>
     FreeTextQuestion(
       textType: $enumDecode(_$FreeTextQuestionTypeEnumMap, json['textType']),
-      lengthRange:
-          (json['lengthRange'] as List<dynamic>).map((e) => e as int).toList(),
+      lengthRange: (json['lengthRange'] as List<dynamic>)
+          .map((e) => (e as num).toInt())
+          .toList(),
       customTypeExpression: json['customTypeExpression'] as String?,
     )
       ..type = json['type'] as String

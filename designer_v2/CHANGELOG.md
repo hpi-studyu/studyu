@@ -1,3 +1,20 @@
+## 1.8.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.8.0-dev.1
+
+ - Update a dependency to the latest release.
+
+## 1.8.0-dev.0
+
+ - **FIX**: upgrade deps and migrate.
+ - **FEAT**: sort invite codes alphabetically.
+
+## 1.7.2
+
+ - **FIX**: signup was not possible with flutter_secure_storage. ([26425971](https://github.com/hpi-studyu/studyu/commit/2642597141653aa724a1305456e43840d6fbebe5))
+
 ## 1.7.1
 
  - Update a dependency to the latest release.

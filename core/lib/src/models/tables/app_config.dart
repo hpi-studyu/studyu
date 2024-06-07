@@ -43,7 +43,14 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
   @override
   Map<String, dynamic> toJson() => _$AppConfigToJson(this);
 
-  static Future<AppConfig> getAppConfig() async => SupabaseQuery.getById<AppConfig>('prod');
+  static Future<AppConfig> getAppConfig() async {
+    try {
+      return await SupabaseQuery.getById<AppConfig>('prod');
+    } catch (error) {
+      throw Exception("Could not load app config. Check if the database is "
+          "running and app_config table is properly set up.");
+    }
+  }
 
   static Future<Contact> getAppContact() async {
     return (await getAppConfig()).contact;

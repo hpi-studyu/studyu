@@ -79,7 +79,9 @@ class _TaskOverviewState extends State<TaskOverview> {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Text(AppLocalizations.of(context)!.intervention_current, style: theme.textTheme.titleLarge),
+                  Expanded(
+                      child:
+                          Text(AppLocalizations.of(context)!.intervention_current, style: theme.textTheme.titleLarge)),
                   const Spacer(),
                   Text(
                     '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',

@@ -312,7 +312,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
     const fontSize = 30.0;
     const textStyle = TextStyle(fontSize: fontSize);
     final theme = Theme.of(context);
-    return Center(
+    return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
         child: Column(

@@ -1,3 +1,15 @@
+## 4.4.2
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 4.4.2-dev.1
+
+ - **REFACTOR**: improved app config error handling.
+
+## 4.4.2-dev.0
+
+ - **FIX**: upgrade deps and migrate.
+
 ## 4.4.1
 
  - **FIX**: check if result is QuestionnaireState. ([c7535804](https://github.com/hpi-studyu/studyu/commit/c7535804281f9bbdf757a2eb11df03940eceeec9))

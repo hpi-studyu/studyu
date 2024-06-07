@@ -1,3 +1,27 @@
+## 2.7.5
+
+ - **FIX**: update podfile.
+
+## 2.7.4
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 2.7.4-dev.1
+
+ - Update a dependency to the latest release.
+
+## 2.7.4-dev.0
+
+ - **FIX**: upgrade deps and migrate.
+
+## 2.7.3
+
+ - **FIX**: skip handling multimodal for web. ([27ba5298](https://github.com/hpi-studyu/studyu/commit/27ba5298a1b714e1cc7e21a6d88c286f91e2907a))
+
+## 2.7.2
+
+ - Update a dependency to the latest release.
+
 ## 2.7.1
 
  - **FIX**: add NSCameraUsageDescription. ([bfdd5a9e](https://github.com/hpi-studyu/studyu/commit/bfdd5a9ea795b83152d8ccdd02dec8e0d30b2e7f))

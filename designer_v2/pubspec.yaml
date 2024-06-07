@@ -1,15 +1,15 @@
 name: studyu_designer_v2
-version: 1.7.1
+version: 1.8.0
 description: Implement digital N-of-1 studies seamlessly with the StudyU Health Designer
 publish_to: none
 homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
-  archive: ^3.4.10
+  archive: ^3.5.1
   async: ^2.11.0
   collection:
   csv: ^6.0.0
@@ -24,27 +24,26 @@ dependencies:
   flutter_riverpod: ^2.5.1
   flutter_web_plugins:
     sdk: flutter
-  go_router: ^13.2.4
-  intl:
+  go_router: ^14.1.0
   material_color_utilities:
   material_design_icons_flutter: ^7.0.7296
-  pointer_interceptor: ^0.10.1
-  reactive_color_picker: ^2.0.0
-  reactive_forms: ^16.1.1
-  reactive_multi_select_flutter: ^2.0.0
-  reactive_range_slider: ^2.0.0 # reactive_forms <= 16.1.1
+  pointer_interceptor: ^0.10.1+1
+  reactive_color_picker: ^2.0.1
+  reactive_forms: ^17.0.1
+  reactive_multi_select_flutter: ^2.0.1
+  reactive_range_slider: ^2.1.0
   rxdart: ^0.27.7
-  studyu_core: ^4.4.1
-  studyu_flutter_common: ^1.8.1
-  supabase: ^2.1.1
-  supabase_flutter: ^2.5.1
+  studyu_core: ^4.4.2
+  studyu_flutter_common: ^1.8.3
+  supabase: ^2.1.2
+  supabase_flutter: ^2.5.2
   url_launcher: ^6.2.6
   uuid: ^4.4.0
 
 dev_dependencies:
   custom_lint:
   flutter_launcher_icons: ^0.13.1
-  flutter_lints: ^3.0.2
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
   integration_test:

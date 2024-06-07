@@ -61,9 +61,12 @@ class ReportHistoryItem extends StatelessWidget {
                   MdiIcons.fromString(subject.study.iconName) ?? MdiIcons.accountHeart,
                   color: isActiveStudy ? Colors.white : Colors.black,
                 ),
-                Text(
-                  subject.study.title!,
-                  style: theme.textTheme.headlineSmall!.copyWith(color: isActiveStudy ? Colors.white : Colors.black),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    subject.study.title!,
+                    style: theme.textTheme.headlineSmall!.copyWith(color: isActiveStudy ? Colors.white : Colors.black),
+                  ),
                 ),
               ],
             ),

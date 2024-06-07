@@ -10,8 +10,8 @@ StudySchedule _$StudyScheduleFromJson(Map<String, dynamic> json) =>
     StudySchedule(
       sequenceCustom: json['sequenceCustom'] as String? ?? 'ABAB',
     )
-      ..numberOfCycles = json['numberOfCycles'] as int
-      ..phaseDuration = json['phaseDuration'] as int
+      ..numberOfCycles = (json['numberOfCycles'] as num).toInt()
+      ..phaseDuration = (json['phaseDuration'] as num).toInt()
       ..includeBaseline = json['includeBaseline'] as bool
       ..sequence = $enumDecode(_$PhaseSequenceEnumMap, json['sequence']);
 
