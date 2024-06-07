@@ -144,10 +144,15 @@ extension StudyMonitoringX on Study {
       ));
     }
 
-    final activeParticipants =
-        items.where((item) => !item.droppedOut && item.currentDayOfStudy < item.studyDurationInDays).length;
-    final dropoutParticipants =
-        items.where((item) => item.droppedOut && item.currentDayOfStudy < item.studyDurationInDays).length;
+    final now = DateTime.now();
+    final sevenDaysAgo = now.subtract(const Duration(days: 7)); //dropout time
+
+    final activeParticipants = items.where((item) {
+      return !item.droppedOut && item.currentDayOfStudy < item.studyDurationInDays && item.lastActivityAt.isAfter(sevenDaysAgo);
+    }).length;
+    final dropoutParticipants = items.where((item) {
+      return item.droppedOut && item.lastActivityAt.isBefore(sevenDaysAgo);
+    }).length;
     final completedParticipants = items.where((item) => item.currentDayOfStudy >= item.studyDurationInDays).length;
 
     assert(activeParticipants + dropoutParticipants + completedParticipants == items.length);
