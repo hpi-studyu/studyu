@@ -15,8 +15,7 @@ class CloseConfirmationDialog extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(studyControllerProvider(studyId).notifier);
-    final formViewModel =
-        ref.watch(studySettingsFormViewModelProvider(studyId));
+    final formViewModel = ref.watch(studySettingsFormViewModelProvider(studyId));
 
     return ReactiveForm(
       formGroup: formViewModel.form,
@@ -31,12 +30,12 @@ class CloseConfirmationDialog extends StudyPageWidget {
               children: [
                 Flexible(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            text: tr.dialog_study_close_description,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        text: tr.dialog_study_close_description,
                       ),
                     ),
                   ],

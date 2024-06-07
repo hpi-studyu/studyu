@@ -20,7 +20,7 @@ class StudyDialog extends StudyPageWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyControllerProvider(studyId));
 
-    switch(dialogType) {
+    switch (dialogType) {
       case StudyDialogType.publish:
         return state.isPublished ? PublishSuccessDialog(studyId) : PublishConfirmationDialog(studyId);
       case StudyDialogType.close:
