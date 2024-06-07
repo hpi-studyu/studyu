@@ -19,9 +19,6 @@ class Notifications {
   static final studyDeleted = SnackbarIntent(
     message: tr.notification_study_deleted,
   );
-  static final studyClosed = SnackbarIntent(
-    message: tr.notification_study_closed,
-  );
   static final inviteCodeDeleted = SnackbarIntent(
     message: tr.notification_code_deleted,
   );

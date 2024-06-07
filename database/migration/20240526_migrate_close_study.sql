@@ -31,7 +31,7 @@ CREATE POLICY "Editor can control their draft studies" ON public.study
 --    FOR UPDATE
 --    USING (public.can_edit(auth.uid(), study.*))
 --    WITH CHECK ((new.*) IS NOT DISTINCT FROM (old.* EXCEPT registry_published, result_sharing));
--- todo solve with trigger or function
+-- t odo solve with trigger or function
 -- or create view with only updatable columns and provide permission on view see https://dba.stackexchange.com/questions/298931/allow-users-to-modify-only-some-but-not-all-fields-in-a-postgresql-table-with
 
 -- https://stackoverflow.com/questions/72756376/supabase-solutions-for-column-level-security
