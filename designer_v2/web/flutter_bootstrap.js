@@ -72,7 +72,9 @@ document.body.appendChild(loadingDiv);
 // Loading entrypoint
 _flutter.loader.load({
   onEntrypointLoaded: async function(engineInitializer) {
-    const appRunner = await engineInitializer.initializeEngine();
+    const appRunner = await engineInitializer.initializeEngine({
+        useColorEmoji: true,
+    });
 
     loadingDiv.classList.add('init_done');
     // Hide the loading indicator after the animation is done
