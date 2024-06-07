@@ -1,5 +1,5 @@
 name: studyu_app
-version: 2.7.5
+version: 2.7.6-dev.0
 description: Partake in digital N-of-1 trials with the innovative StudyU Health App
 publish_to: none
 homepage: https://studyu.health
@@ -38,8 +38,8 @@ dependencies:
   sentry_flutter: ^8.2.0
   sentry_logging: ^8.2.0
   shared_preferences: ^2.2.3
-  studyu_core: ^4.4.2
-  studyu_flutter_common: ^1.8.3
+  studyu_core: ^4.4.3-dev.0
+  studyu_flutter_common: ^1.8.4-dev.0
   supabase: ^2.2.0
   supabase_flutter: ^2.5.4
   timeline_tile: ^2.0.0

@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-06-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.6-dev.0`](#studyu_app---v276-dev0)
+ - [`studyu_core` - `v4.4.3-dev.0`](#studyu_core---v443-dev0)
+ - [`studyu_designer_v2` - `v1.8.1-dev.0`](#studyu_designer_v2---v181-dev0)
+ - [`studyu_flutter_common` - `v1.8.4-dev.0`](#studyu_flutter_common---v184-dev0)
+
+---
+
+#### `studyu_app` - `v2.7.6-dev.0`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: UI overflows.
+
+#### `studyu_core` - `v4.4.3-dev.0`
+
+ - **FIX**: upgrade deps.
+
+#### `studyu_designer_v2` - `v1.8.1-dev.0`
+
+ - **FIX**: integration test sign out.
+ - **FIX**: check if canPop.
+ - **FIX**: upgrade deps.
+ - **FIX**: add compatibility for emoji font with flutter >= 3.22.
+ - **FIX**: Flutter 3.22 arg error.
+
+#### `studyu_flutter_common` - `v1.8.4-dev.0`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: put supabase cli default anon key in env.local.example.
+
+
 ## 2024-05-13
 
 ### Changes

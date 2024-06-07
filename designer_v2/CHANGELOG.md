@@ -1,3 +1,11 @@
+## 1.8.1-dev.0
+
+ - **FIX**: integration test sign out.
+ - **FIX**: check if canPop.
+ - **FIX**: upgrade deps.
+ - **FIX**: add compatibility for emoji font with flutter >= 3.22.
+ - **FIX**: Flutter 3.22 arg error.
+
 ## 1.8.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
