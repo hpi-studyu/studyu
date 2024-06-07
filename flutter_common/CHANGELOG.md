@@ -1,3 +1,8 @@
+## 1.8.4-dev.0
+
+ - **FIX**: upgrade deps.
+ - **FIX**: put supabase cli default anon key in env.local.example.
+
 ## 1.8.3
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

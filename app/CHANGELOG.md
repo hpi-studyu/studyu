@@ -1,3 +1,8 @@
+## 2.7.6-dev.0
+
+ - **FIX**: upgrade deps.
+ - **FIX**: UI overflows.
+
 ## 2.7.5
 
  - **FIX**: update podfile.
