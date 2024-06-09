@@ -17,11 +17,20 @@ BooleanQuestion _$BooleanQuestionFromJson(Map<String, dynamic> json) =>
           : QuestionConditional<bool>.fromJson(
               json['conditional'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$BooleanQuestionToJson(BooleanQuestion instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'id': instance.id,
-      'prompt': instance.prompt,
-      'rationale': instance.rationale,
-      'conditional': instance.conditional,
-    };
+Map<String, dynamic> _$BooleanQuestionToJson(BooleanQuestion instance) {
+  final val = <String, dynamic>{
+    'type': instance.type,
+    'id': instance.id,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('prompt', instance.prompt);
+  writeNotNull('rationale', instance.rationale);
+  writeNotNull('conditional', instance.conditional?.toJson());
+  return val;
+}

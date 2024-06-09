@@ -19,11 +19,20 @@ ImageCapturingQuestion _$ImageCapturingQuestionFromJson(
               json['conditional'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$ImageCapturingQuestionToJson(
-        ImageCapturingQuestion instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'id': instance.id,
-      'prompt': instance.prompt,
-      'rationale': instance.rationale,
-      'conditional': instance.conditional,
-    };
+    ImageCapturingQuestion instance) {
+  final val = <String, dynamic>{
+    'type': instance.type,
+    'id': instance.id,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('prompt', instance.prompt);
+  writeNotNull('rationale', instance.rationale);
+  writeNotNull('conditional', instance.conditional?.toJson());
+  return val;
+}

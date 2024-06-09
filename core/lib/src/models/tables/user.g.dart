@@ -18,7 +18,7 @@ Map<String, dynamic> _$StudyUUserToJson(StudyUUser instance) =>
     <String, dynamic>{
       'id': instance.id,
       'email': instance.email,
-      'preferences': instance.preferences,
+      'preferences': instance.preferences.toJson(),
     };
 
 Preferences _$PreferencesFromJson(Map<String, dynamic> json) => Preferences(

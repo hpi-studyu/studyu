@@ -17,12 +17,20 @@ SubjectProgress _$SubjectProgressFromJson(Map<String, dynamic> json) =>
         ? null
         : DateTime.parse(json['completed_at'] as String);
 
-Map<String, dynamic> _$SubjectProgressToJson(SubjectProgress instance) =>
-    <String, dynamic>{
-      'completed_at': instance.completedAt?.toIso8601String(),
-      'subject_id': instance.subjectId,
-      'intervention_id': instance.interventionId,
-      'task_id': instance.taskId,
-      'result_type': instance.resultType,
-      'result': instance.result,
-    };
+Map<String, dynamic> _$SubjectProgressToJson(SubjectProgress instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('completed_at', instance.completedAt?.toIso8601String());
+  val['subject_id'] = instance.subjectId;
+  val['intervention_id'] = instance.interventionId;
+  val['task_id'] = instance.taskId;
+  val['result_type'] = instance.resultType;
+  val['result'] = instance.result.toJson();
+  return val;
+}
