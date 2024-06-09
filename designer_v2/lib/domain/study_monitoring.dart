@@ -148,7 +148,9 @@ extension StudyMonitoringX on Study {
     final sevenDaysAgo = now.subtract(const Duration(days: 7)); //dropout time
 
     final activeParticipants = items.where((item) {
-      return !item.droppedOut && item.currentDayOfStudy < item.studyDurationInDays && item.lastActivityAt.isAfter(sevenDaysAgo);
+      return !item.droppedOut &&
+          item.currentDayOfStudy < item.studyDurationInDays &&
+          item.lastActivityAt.isAfter(sevenDaysAgo);
     }).length;
     final dropoutParticipants = items.where((item) {
       return item.droppedOut && item.lastActivityAt.isBefore(sevenDaysAgo);
