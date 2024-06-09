@@ -26,19 +26,28 @@ AnnotatedScaleQuestion _$AnnotatedScaleQuestionFromJson(
           .toList();
 
 Map<String, dynamic> _$AnnotatedScaleQuestionToJson(
-        AnnotatedScaleQuestion instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'id': instance.id,
-      'prompt': instance.prompt,
-      'rationale': instance.rationale,
-      'conditional': instance.conditional,
-      'minimum': instance.minimum,
-      'maximum': instance.maximum,
-      'step': instance.step,
-      'initial': instance.initial,
-      'annotations': instance.annotations,
-    };
+    AnnotatedScaleQuestion instance) {
+  final val = <String, dynamic>{
+    'type': instance.type,
+    'id': instance.id,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('prompt', instance.prompt);
+  writeNotNull('rationale', instance.rationale);
+  writeNotNull('conditional', instance.conditional?.toJson());
+  val['minimum'] = instance.minimum;
+  val['maximum'] = instance.maximum;
+  val['step'] = instance.step;
+  val['initial'] = instance.initial;
+  val['annotations'] = instance.annotations.map((e) => e.toJson()).toList();
+  return val;
+}
 
 Annotation _$AnnotationFromJson(Map<String, dynamic> json) => Annotation()
   ..value = (json['value'] as num).toInt()

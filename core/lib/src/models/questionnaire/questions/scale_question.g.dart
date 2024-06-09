@@ -26,18 +26,27 @@ ScaleQuestion _$ScaleQuestionFromJson(Map<String, dynamic> json) =>
       ..maxColor = (json['max_color'] as num?)?.toInt()
       ..step = (json['step'] as num).toDouble();
 
-Map<String, dynamic> _$ScaleQuestionToJson(ScaleQuestion instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'id': instance.id,
-      'prompt': instance.prompt,
-      'rationale': instance.rationale,
-      'conditional': instance.conditional,
-      'minimum': instance.minimum,
-      'maximum': instance.maximum,
-      'initial': instance.initial,
-      'annotations': instance.annotations,
-      'min_color': instance.minColor,
-      'max_color': instance.maxColor,
-      'step': instance.step,
-    };
+Map<String, dynamic> _$ScaleQuestionToJson(ScaleQuestion instance) {
+  final val = <String, dynamic>{
+    'type': instance.type,
+    'id': instance.id,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('prompt', instance.prompt);
+  writeNotNull('rationale', instance.rationale);
+  writeNotNull('conditional', instance.conditional?.toJson());
+  val['minimum'] = instance.minimum;
+  val['maximum'] = instance.maximum;
+  val['initial'] = instance.initial;
+  val['annotations'] = instance.annotations.map((e) => e.toJson()).toList();
+  writeNotNull('min_color', instance.minColor);
+  writeNotNull('max_color', instance.maxColor);
+  val['step'] = instance.step;
+  return val;
+}

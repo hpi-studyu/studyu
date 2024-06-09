@@ -45,27 +45,38 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
           .toList()
       ..registryPublished = json['registry_published'] as bool;
 
-Map<String, dynamic> _$StudyToJson(Study instance) => <String, dynamic>{
-      'id': instance.id,
-      'title': instance.title,
-      'description': instance.description,
-      'user_id': instance.userId,
-      'participation': instance.participation,
-      'result_sharing': instance.resultSharing,
-      'contact': instance.contact,
-      'icon_name': instance.iconName,
-      'published': instance.published,
-      'questionnaire': instance.questionnaire,
-      'eligibility_criteria': instance.eligibilityCriteria,
-      'consent': instance.consent,
-      'interventions': instance.interventions,
-      'observations': instance.observations,
-      'schedule': instance.schedule,
-      'report_specification': instance.reportSpecification,
-      'results': instance.results,
-      'collaborator_emails': instance.collaboratorEmails,
-      'registry_published': instance.registryPublished,
-    };
+Map<String, dynamic> _$StudyToJson(Study instance) {
+  final val = <String, dynamic>{
+    'id': instance.id,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('title', instance.title);
+  writeNotNull('description', instance.description);
+  val['user_id'] = instance.userId;
+  val['participation'] = instance.participation.toJson();
+  val['result_sharing'] = instance.resultSharing.toJson();
+  val['contact'] = instance.contact.toJson();
+  val['icon_name'] = instance.iconName;
+  val['published'] = instance.published;
+  val['questionnaire'] = instance.questionnaire.toJson();
+  val['eligibility_criteria'] =
+      instance.eligibilityCriteria.map((e) => e.toJson()).toList();
+  val['consent'] = instance.consent.map((e) => e.toJson()).toList();
+  val['interventions'] = instance.interventions.map((e) => e.toJson()).toList();
+  val['observations'] = instance.observations.map((e) => e.toJson()).toList();
+  val['schedule'] = instance.schedule.toJson();
+  val['report_specification'] = instance.reportSpecification.toJson();
+  val['results'] = instance.results.map((e) => e.toJson()).toList();
+  val['collaborator_emails'] = instance.collaboratorEmails;
+  val['registry_published'] = instance.registryPublished;
+  return val;
+}
 
 const _$ParticipationEnumMap = {
   Participation.open: 'open',

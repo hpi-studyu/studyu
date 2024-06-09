@@ -15,9 +15,16 @@ ReportSpecification _$ReportSpecificationFromJson(Map<String, dynamic> json) =>
           .map((e) => ReportSection.fromJson(e as Map<String, dynamic>))
           .toList();
 
-Map<String, dynamic> _$ReportSpecificationToJson(
-        ReportSpecification instance) =>
-    <String, dynamic>{
-      'primary': instance.primary,
-      'secondary': instance.secondary,
-    };
+Map<String, dynamic> _$ReportSpecificationToJson(ReportSpecification instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('primary', instance.primary?.toJson());
+  val['secondary'] = instance.secondary.map((e) => e.toJson()).toList();
+  return val;
+}
