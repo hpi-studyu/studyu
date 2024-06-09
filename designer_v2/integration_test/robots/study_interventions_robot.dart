@@ -37,7 +37,7 @@ class StudyInterventionsRobot {
   }
 
   Future<void> enterInterventionDesciption(
-      String interventionDescription) async {
+      String interventionDescription,) async {
     await $(TextField)
         .which<TextField>(
           (widget) =>

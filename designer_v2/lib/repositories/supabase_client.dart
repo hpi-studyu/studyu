@@ -14,7 +14,7 @@ abstract class SupabaseClientDependant {
 /// with an associated [PostgrestError]
 class SupabaseQueryError implements Exception {
   SupabaseQueryError(
-      {required this.statusCode, required this.message, this.details});
+      {required this.statusCode, required this.message, this.details,});
 
   /// Status code of the erroneous [PostgrestResponse]
   final String? statusCode;
@@ -33,7 +33,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
   // - Networking
 
   Future<List<T>> deleteAll<T extends SupabaseObject>(
-      Map<String, Object> selectionCriteria) async {
+      Map<String, Object> selectionCriteria,) async {
     try {
       final data = await supabaseClient
           .from(tableName(T))
@@ -45,12 +45,12 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
       throw SupabaseQueryError(
           statusCode: error.code,
           message: error.message,
-          details: error.details);
+          details: error.details,);
     }
   }
 
   Future<List<T>> getAll<T extends SupabaseObject>(
-      {List<String> selectedColumns = const ['*']}) async {
+      {List<String> selectedColumns = const ['*'],}) async {
     try {
       final data = await supabaseClient
           .from(tableName(T))
@@ -60,12 +60,12 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
       throw SupabaseQueryError(
           statusCode: error.code,
           message: error.message,
-          details: error.details);
+          details: error.details,);
     }
   }
 
   Future<T> getById<T extends SupabaseObject>(String id,
-      {List<String> selectedColumns = const ['*']}) async {
+      {List<String> selectedColumns = const ['*'],}) async {
     return getByColumn('id', id, selectedColumns: selectedColumns);
   }
 
@@ -85,7 +85,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
       throw SupabaseQueryError(
           statusCode: error.code,
           message: error.message,
-          details: error.details);
+          details: error.details,);
     }
   }
 

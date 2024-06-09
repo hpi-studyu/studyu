@@ -35,7 +35,7 @@ class StudyInvitesTable extends StatelessWidget {
       items: invites,
       columns: [
         StandardTableColumn(
-            label: '#', columnWidth: const FixedColumnWidth(60)),
+            label: '#', columnWidth: const FixedColumnWidth(60),),
         StandardTableColumn(
           label: tr.code_list_header_code,
           columnWidth:
@@ -66,7 +66,7 @@ class StudyInvitesTable extends StatelessWidget {
   }
 
   List<Widget> _buildRow(BuildContext context, StudyInvite item, int rowIdx,
-      Set<WidgetState> states) {
+      Set<WidgetState> states,) {
     final theme = Theme.of(context);
     final mutedTextStyle = ThemeConfig.bodyTextBackground(theme);
 

@@ -26,7 +26,7 @@ class StudyTestController
           ),
         ) {
     state = state.copyWith(
-        serializedSession: authRepository.serializedSession ?? '');
+        serializedSession: authRepository.serializedSession ?? '',);
   }
 
   final IAuthRepository authRepository;
@@ -65,7 +65,7 @@ final studyTestPlatformControllerProvider =
   if (!kIsWeb) {
     // Mobile could be built with the webview_flutter package
     throw Exception(
-        "The StudyU designer only support the web platform".hardcoded);
+        "The StudyU designer only support the web platform".hardcoded,);
   } else {
     // Desktop and Web
     platformController = WebController(state.appUrl, studyId);

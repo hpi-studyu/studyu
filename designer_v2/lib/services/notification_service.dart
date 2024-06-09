@@ -5,9 +5,9 @@ import 'package:studyu_designer_v2/services/notification_types.dart';
 
 abstract class INotificationService {
   void showMessage(String notificationText,
-      {List<NotificationAction>? actions});
+      {List<NotificationAction>? actions,});
   void show(NotificationIntent notification,
-      {List<NotificationAction>? actions});
+      {List<NotificationAction>? actions,});
   Stream<NotificationIntent> watchNotifications();
   // - Lifecycle
   void dispose();
@@ -34,7 +34,7 @@ class NotificationService implements INotificationService {
 
   @override
   void show(NotificationIntent notification,
-      {List<NotificationAction>? actions}) {
+      {List<NotificationAction>? actions,}) {
     // Register any additional actions passed as callbacks by the calling code
     if (actions != null) {
       for (final action in actions) {

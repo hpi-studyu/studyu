@@ -25,7 +25,7 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
       FormArray(_copyFormControls(answerOptionsArray.controls), disabled: true);
   late final FormArray<bool> responseOptionsLogicControls = FormArray(
     List.generate(answerOptionsArray.controls.length,
-        (index) => FormControl(value: defaultResponseOptionValidity)),
+        (index) => FormControl(value: defaultResponseOptionValidity),),
   );
   late final FormArray<String> responseOptionsLogicDescriptionControls =
       FormArray(

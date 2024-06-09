@@ -15,7 +15,7 @@ class ReportItemFormData extends IFormData {
   String get id => section.id;
 
   static List<ReportItemFormData> fromDomainModel(
-      ReportSpecification reportSpecification) {
+      ReportSpecification reportSpecification,) {
     final List<ReportItemFormData> reportsFormData = [];
     if (reportSpecification.primary != null) {
       reportsFormData.add(

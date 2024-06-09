@@ -20,14 +20,14 @@ class Result<T> {
   Result(this.type);
 
   Result.app(
-      {required this.type, required this.periodId, required this.result});
+      {required this.type, required this.periodId, required this.result,});
 
   factory Result.parseJson(Map<String, dynamic> json) => _$ResultFromJson(json);
 
   factory Result.fromJson(Map<String, dynamic> json) => switch (json[keyType]) {
         'QuestionnaireState' => Result<QuestionnaireState>.parseJson(json)
           ..result = QuestionnaireState.fromJson(
-              List<Map<String, dynamic>>.from(json[keyResult] as List)),
+              List<Map<String, dynamic>>.from(json[keyResult] as List),),
         'bool' => Result<bool>.parseJson(json)
           ..result = json[keyResult] as bool,
         _ => throw UnknownJsonTypeError(json[keyType]),
@@ -36,7 +36,7 @@ class Result<T> {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> resultMap = switch (type) {
       'QuestionnaireState' => {
-          keyResult: (result as QuestionnaireState).toJson()
+          keyResult: (result as QuestionnaireState).toJson(),
         },
       'bool' => {keyResult: result},
       _ => throw ArgumentError('Unknown result type $type'),

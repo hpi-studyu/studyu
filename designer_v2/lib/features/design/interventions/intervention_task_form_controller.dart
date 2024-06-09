@@ -21,7 +21,7 @@ class InterventionTaskFormViewModel
     super.validationSet = StudyFormValidationSet.draft,
   }) {
     runAsync(() =>
-        markAsCompletedControl.markAsDisabled()); // TODO not yet supported
+        markAsCompletedControl.markAsDisabled(),); // TODO not yet supported
   }
 
   // - Form fields
@@ -102,6 +102,6 @@ class InterventionTaskFormViewModel
     return InterventionTaskFormViewModel(
         delegate: delegate,
         formData: formData?.copy(),
-        validationSet: validationSet);
+        validationSet: validationSet,);
   }
 }

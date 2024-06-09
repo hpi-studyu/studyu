@@ -6,7 +6,7 @@ import 'package:studyu_designer_v2/theme.dart';
 
 class HtmlStylingBanner extends StatelessWidget {
   const HtmlStylingBanner(
-      {this.isDismissed = false, this.onDismissed, super.key});
+      {this.isDismissed = false, this.onDismissed, super.key,});
 
   final bool isDismissed;
   final Function()? onDismissed;
@@ -45,7 +45,7 @@ class HtmlStylingBanner extends StatelessWidget {
                     children: [
                       const Text('Make your text bold'),
                       Text('<b>Bold text</b>',
-                          style: ThemeConfig.bodyTextMuted(theme)),
+                          style: ThemeConfig.bodyTextMuted(theme),),
                     ],
                   ),
                   TableRow(

@@ -75,7 +75,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
         PopupMenuItem(
           value: locale,
           child: Text(
-              '${getEmojiFlag(countryCode)}  ${translateLocaleName(locale: locale)}'),
+              '${getEmojiFlag(countryCode)}  ${translateLocaleName(locale: locale)}',),
         ),
       );
     });
@@ -83,7 +83,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
   }
 
   List<DropdownMenuItem<Locale>> _buildLanguageOptionsField(
-      BuildContext context) {
+      BuildContext context,) {
     final List<DropdownMenuItem<Locale>> options = [];
     Config.supportedLocales.forEach((languageCode, countryCode) {
       final locale = Locale(languageCode, countryCode);
@@ -91,7 +91,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
         DropdownMenuItem(
           value: locale,
           child: Text(
-              '${getEmojiFlag(countryCode)} ${translateLocaleName(locale: locale)}'),
+              '${getEmojiFlag(countryCode)} ${translateLocaleName(locale: locale)}',),
         ),
       );
     });
