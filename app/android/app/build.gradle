@@ -63,8 +63,7 @@ android {
         applicationId "health.studyu.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration
-        // camera_android requires at least sdk 21
-        minSdkVersion Math.max(flutter.minSdkVersion, 21)
+        minSdkVersion Math.max(flutter.minSdkVersion, 23)
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
