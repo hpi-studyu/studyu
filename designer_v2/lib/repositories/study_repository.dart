@@ -30,8 +30,12 @@ class StudyRepository extends ModelRepository<Study>
     required this.apiClient,
     required this.authRepository,
     required this.ref,
-  }) : super(StudyRepositoryDelegate(
-            apiClient: apiClient, authRepository: authRepository,),);
+  }) : super(
+          StudyRepositoryDelegate(
+            apiClient: apiClient,
+            authRepository: authRepository,
+          ),
+        );
 
   /// Reference to the StudyU API injected via Riverpod
   final StudyUApi apiClient;
@@ -103,8 +107,10 @@ class StudyRepository extends ModelRepository<Study>
   List<ModelAction> availableActions(Study model) {
     Future<void> onDeleteCallback() {
       return delete(model.id)
-          .then((value) =>
-              ref.read(routerProvider).dispatch(RoutingIntents.studies),)
+          .then(
+            (value) =>
+                ref.read(routerProvider).dispatch(RoutingIntents.studies),
+          )
           .then(
             (value) => Future.delayed(
               const Duration(milliseconds: 200),
@@ -132,8 +138,10 @@ class StudyRepository extends ModelRepository<Study>
         type: StudyActionType.duplicateDraft,
         label: StudyActionType.duplicateDraft.string,
         onExecute: () {
-          return duplicateAndSave(model).then((value) =>
-              ref.read(routerProvider).dispatch(RoutingIntents.studies),);
+          return duplicateAndSave(model).then(
+            (value) =>
+                ref.read(routerProvider).dispatch(RoutingIntents.studies),
+          );
         },
         isAvailable:
             model.status != StudyStatus.draft && model.canCopy(currentUser),
@@ -142,8 +150,10 @@ class StudyRepository extends ModelRepository<Study>
         type: StudyActionType.duplicate,
         label: StudyActionType.duplicate.string,
         onExecute: () {
-          return duplicateAndSave(model).then((value) =>
-              ref.read(routerProvider).dispatch(RoutingIntents.studies),);
+          return duplicateAndSave(model).then(
+            (value) =>
+                ref.read(routerProvider).dispatch(RoutingIntents.studies),
+          );
         },
         isAvailable:
             model.status == StudyStatus.draft && model.canCopy(currentUser),
@@ -193,8 +203,10 @@ class StudyRepository extends ModelRepository<Study>
 }
 
 class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
-  StudyRepositoryDelegate(
-      {required this.apiClient, required this.authRepository,});
+  StudyRepositoryDelegate({
+    required this.apiClient,
+    required this.authRepository,
+  });
 
   final StudyUApi apiClient;
   final IAuthRepository authRepository;

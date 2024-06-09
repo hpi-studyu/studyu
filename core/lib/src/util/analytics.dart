@@ -39,8 +39,10 @@ class StudyUDiagnostics {
     await Sentry.captureMessage(message);
   }
 
-  static void addBreadcrumb(
-      {required String message, required String category,}) {
+  static void addBreadcrumb({
+    required String message,
+    required String category,
+  }) {
     print("[Breadcrumb] $category: $message");
     Sentry.addBreadcrumb(Breadcrumb(message: message, category: category));
   }

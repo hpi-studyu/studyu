@@ -16,10 +16,14 @@ abstract class IAuthRepository extends IAppDelegate {
   String? get serializedSession;
   late bool allowPasswordReset = false;
   Stream<User?> watchAuthStateChanges({bool emitLastEvent});
-  Future<AuthResponse> signUp(
-      {required String email, required String password,});
-  Future<AuthResponse> signInWith(
-      {required String email, required String password,});
+  Future<AuthResponse> signUp({
+    required String email,
+    required String password,
+  });
+  Future<AuthResponse> signInWith({
+    required String email,
+    required String password,
+  });
   Future<void> signOut();
   Future<void> resetPasswordForEmail({required String email});
   Future<UserResponse> updateUser({required String newPassword});
@@ -109,16 +113,22 @@ class AuthRepository implements IAuthRepository {
           : _authStateSuppressedController.subject;
 
   @override
-  Future<AuthResponse> signUp(
-      {required String email, required String password,}) async {
+  Future<AuthResponse> signUp({
+    required String email,
+    required String password,
+  }) async {
     return await authClient.signUp(email: email, password: password);
   }
 
   @override
-  Future<AuthResponse> signInWith(
-      {required String email, required String password,}) async {
+  Future<AuthResponse> signInWith({
+    required String email,
+    required String password,
+  }) async {
     return await authClient.signInWithPassword(
-        email: email, password: password,);
+      email: email,
+      password: password,
+    );
   }
 
   @override

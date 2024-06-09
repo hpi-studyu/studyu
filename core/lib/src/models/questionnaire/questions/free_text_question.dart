@@ -19,17 +19,17 @@ class FreeTextQuestion extends Question<String> {
   @JsonKey(name: 'customTypeExpression')
   String? customTypeExpression;
 
-  FreeTextQuestion(
-      {required this.textType,
-      required this.lengthRange,
-      this.customTypeExpression,})
-      : super(questionType);
+  FreeTextQuestion({
+    required this.textType,
+    required this.lengthRange,
+    this.customTypeExpression,
+  }) : super(questionType);
 
-  FreeTextQuestion.withId(
-      {required this.textType,
-      required this.lengthRange,
-      this.customTypeExpression,})
-      : super.withId(questionType);
+  FreeTextQuestion.withId({
+    required this.textType,
+    required this.lengthRange,
+    this.customTypeExpression,
+  }) : super.withId(questionType);
 
   factory FreeTextQuestion.fromJson(Map<String, dynamic> json) =>
       _$FreeTextQuestionFromJson(json);

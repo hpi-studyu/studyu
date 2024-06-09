@@ -2,8 +2,12 @@ import 'package:flutter/widgets.dart';
 
 typedef WidgetDecorator = Widget Function(Widget widget);
 
-List<Widget> withSpacing(List<Widget> widgets,
-    {required double spacing, double? paddingStart, double? paddingEnd,}) {
+List<Widget> withSpacing(
+  List<Widget> widgets, {
+  required double spacing,
+  double? paddingStart,
+  double? paddingEnd,
+}) {
   final List<Widget> results = [];
   if (paddingStart != null) {
     results.add(SizedBox(height: paddingStart, width: paddingStart));

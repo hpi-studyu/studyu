@@ -23,12 +23,14 @@ class ScheduleControls extends FormConsumerWidget {
 
     formViewModel.restrictedTimeStartPickerControl.valueChanges.listen((event) {
       formViewModel.restrictedTimeStartControl.value = Time.fromTimeOfDay(
-          formViewModel.restrictedTimeStartPickerControl.value!,);
+        formViewModel.restrictedTimeStartPickerControl.value!,
+      );
     });
 
     formViewModel.restrictedTimeEndPickerControl.valueChanges.listen((event) {
       formViewModel.restrictedTimeEndControl.value = Time.fromTimeOfDay(
-          formViewModel.restrictedTimeEndPickerControl.value!,);
+        formViewModel.restrictedTimeEndPickerControl.value!,
+      );
     });
 
     return Column(
@@ -69,9 +71,11 @@ class ScheduleControls extends FormConsumerWidget {
                               formControl:
                                   formViewModel.reminderTimePickerControl,
                               initialEntryMode: TimePickerEntryMode.input,
-                              builder: (BuildContext context,
-                                  ReactiveTimePickerDelegate picker,
-                                  Widget? child,) {
+                              builder: (
+                                BuildContext context,
+                                ReactiveTimePickerDelegate picker,
+                                Widget? child,
+                              ) {
                                 return ReactiveTextField<Time>(
                                   formControl:
                                       formViewModel.reminderTimeControl,
@@ -128,8 +132,11 @@ class ScheduleControls extends FormConsumerWidget {
                 child: ReactiveTimePicker(
                   formControl: formViewModel.restrictedTimeStartPickerControl,
                   initialEntryMode: TimePickerEntryMode.input,
-                  builder: (BuildContext context,
-                      ReactiveTimePickerDelegate picker, Widget? child,) {
+                  builder: (
+                    BuildContext context,
+                    ReactiveTimePickerDelegate picker,
+                    Widget? child,
+                  ) {
                     return ReactiveTextField<Time>(
                       formControl: formViewModel.restrictedTimeStartControl,
                       valueAccessor: TimeValueAccessor(),
@@ -161,8 +168,11 @@ class ScheduleControls extends FormConsumerWidget {
                 child: ReactiveTimePicker(
                   formControl: formViewModel.restrictedTimeEndPickerControl,
                   initialEntryMode: TimePickerEntryMode.input,
-                  builder: (BuildContext context,
-                      ReactiveTimePickerDelegate picker, Widget? child,) {
+                  builder: (
+                    BuildContext context,
+                    ReactiveTimePickerDelegate picker,
+                    Widget? child,
+                  ) {
                     return ReactiveTextField<Time>(
                       formControl: formViewModel.restrictedTimeEndControl,
                       valueAccessor: TimeValueAccessor(),

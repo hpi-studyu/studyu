@@ -82,9 +82,11 @@ class _HyperlinkState extends State<Hyperlink> {
         if (widget.icon != null) {
           return Row(
             children: [
-              Icon(widget.icon,
-                  color: actualColor,
-                  size: widget.iconSize ?? (textTheme?.fontSize ?? 14.0) + 4.0,),
+              Icon(
+                widget.icon,
+                color: actualColor,
+                size: widget.iconSize ?? (textTheme?.fontSize ?? 14.0) + 4.0,
+              ),
               const SizedBox(width: 2.0),
               textWidget,
             ],

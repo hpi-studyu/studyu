@@ -73,9 +73,11 @@ class ActionPopUpMenuButton extends StatelessWidget {
         : Icons.more_horiz_rounded;
 
     return PopupMenuButton(
-      icon: Icon(triggerIcon,
-          size: triggerIconSize,
-          color: isHovered ? iconColorHover : iconColorDefault,),
+      icon: Icon(
+        triggerIcon,
+        size: triggerIconSize,
+        color: isHovered ? iconColorHover : iconColorDefault,
+      ),
       enabled: enabled,
       elevation: elevation,
       splashRadius: splashRadius,
@@ -98,8 +100,10 @@ class ActionPopUpMenuButton extends StatelessWidget {
                           action.isDestructive ? Colors.red : iconColorDefault,
                     ),
               title: action.isDestructive
-                  ? Text(action.label,
-                      style: textTheme.copyWith(color: Colors.red),)
+                  ? Text(
+                      action.label,
+                      style: textTheme.copyWith(color: Colors.red),
+                    )
                   : Text(action.label, style: textTheme),
             ),
           );

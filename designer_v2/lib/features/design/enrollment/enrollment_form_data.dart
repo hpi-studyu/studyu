@@ -20,10 +20,13 @@ class EnrollmentFormData implements IStudyFormData {
     return EnrollmentFormData(
       enrollmentType: study.participation,
       questionnaireFormData: QuestionnaireFormData.fromDomainModel(
-          study.questionnaire, study.eligibilityCriteria,),
+        study.questionnaire,
+        study.eligibilityCriteria,
+      ),
       consentItemsFormData: study.consent
           .map(
-              (consentItem) => ConsentItemFormData.fromDomainModel(consentItem),)
+            (consentItem) => ConsentItemFormData.fromDomainModel(consentItem),
+          )
           .toList(),
     );
   }

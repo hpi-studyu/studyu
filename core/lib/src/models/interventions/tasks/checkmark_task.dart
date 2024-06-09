@@ -21,9 +21,12 @@ class CheckmarkTask extends InterventionTask {
 
   @override
   Map<DateTime, T> extractPropertyResults<T>(
-      String property, List<SubjectProgress> sourceResults,) {
+    String property,
+    List<SubjectProgress> sourceResults,
+  ) {
     throw ArgumentError(
-        "$runtimeType does not have a property named '$property'.",);
+      "$runtimeType does not have a property named '$property'.",
+    );
   }
 
   @override
