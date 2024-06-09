@@ -27,7 +27,7 @@ scripts:
     run: |
       melos exec -c 6 -- \
         "dart format ."
-    description: Format all code and markdown files
+    description: Format all code files
 
   format:ci:
     run: |
