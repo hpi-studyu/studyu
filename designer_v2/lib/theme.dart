@@ -138,8 +138,6 @@ class ThemeProvider extends InheritedWidget {
         contrastLevel: 0.0);
     final colorScheme = ColorScheme.fromSeed(
       seedColor: dynamicPrimary ?? source(targetColor),
-      // todo use dynamicSchemeVariant once its in the flutter stable channel
-      // dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
       brightness: brightness,
     );
     return colorScheme.copyWith(
