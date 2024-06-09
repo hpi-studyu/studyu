@@ -3,7 +3,8 @@ import 'package:studyu_core/src/models/tasks/task.dart';
 import 'package:studyu_core/src/models/unknown_json_type_error.dart';
 
 typedef InterventionTaskParser = InterventionTask Function(
-    Map<String, dynamic> data,);
+  Map<String, dynamic> data,
+);
 
 abstract class InterventionTask extends Task {
   InterventionTask(super.type);

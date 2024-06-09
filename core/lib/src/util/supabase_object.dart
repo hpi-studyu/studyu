@@ -46,8 +46,8 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject>
 
   Future<T> save() async {
     return SupabaseQuery.extractSupabaseList<T>(
-            await env.client.from(tableName(T)).upsert(this.toJson()).select(),)
-        .single;
+      await env.client.from(tableName(T)).upsert(this.toJson()).select(),
+    ).single;
   }
 }
 
@@ -57,17 +57,19 @@ class SupabaseQuery {
     List<String> selectedColumns = const ['*'],
   }) async {
     try {
-      return extractSupabaseList(await env.client
-          .from(tableName(T))
-          .select(selectedColumns.join(',')),);
+      return extractSupabaseList(
+        await env.client.from(tableName(T)).select(selectedColumns.join(',')),
+      );
     } catch (error, stacktrace) {
       catchSupabaseException(error, stacktrace);
       rethrow;
     }
   }
 
-  static Future<T> getById<T extends SupabaseObject>(String id,
-      {List<String> selectedColumns = const ['*'],}) async {
+  static Future<T> getById<T extends SupabaseObject>(
+    String id, {
+    List<String> selectedColumns = const ['*'],
+  }) async {
     try {
       return extractSupabaseSingleRow(
         await env.client
@@ -87,7 +89,8 @@ class SupabaseQuery {
   ) async {
     try {
       return SupabaseQuery.extractSupabaseList<T>(
-          await env.client.from(tableName(T)).upsert(batchJson).select(),);
+        await env.client.from(tableName(T)).upsert(batchJson).select(),
+      );
     } catch (error, stacktrace) {
       catchSupabaseException(error, stacktrace);
       rethrow;
@@ -121,7 +124,8 @@ class SupabaseQuery {
   }
 
   static T extractSupabaseSingleRow<T extends SupabaseObject>(
-      Map<String, dynamic> response,) {
+    Map<String, dynamic> response,
+  ) {
     return SupabaseObjectFunctions.fromJson<T>(response);
   }
 
@@ -129,7 +133,8 @@ class SupabaseQuery {
     StudyUDiagnostics.captureException(error, stackTrace: stacktrace);
     if (error is PostgrestException) {
       StudyULogger.fatal(
-          'Caught Postgrest Error: $error\nStacktrace: $stacktrace',);
+        'Caught Postgrest Error: $error\nStacktrace: $stacktrace',
+      );
       throw error;
     } else if (error is SocketException) {
       // StudyULogger.info("App is suspected to be offline");

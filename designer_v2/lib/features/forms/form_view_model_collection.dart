@@ -4,8 +4,12 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 
 /// Parent class for [FormViewModel]s that are managed in a [FormViewModelCollection]
 abstract class ManagedFormViewModel<T> extends FormViewModel<T> {
-  ManagedFormViewModel(
-      {super.delegate, super.formData, super.autosave, super.validationSet,});
+  ManagedFormViewModel({
+    super.delegate,
+    super.formData,
+    super.autosave,
+    super.validationSet,
+  });
   ManagedFormViewModel<T> createDuplicate();
 }
 

@@ -252,7 +252,9 @@ class ScaleQuestion extends SliderQuestion
     int numValuesGenerated = 10,
   }) {
     final int midValueStepSize = getAutostepSize(
-        scaleMaxValue: scaleMinValue, numValuesGenerated: numValuesGenerated,);
+      scaleMaxValue: scaleMinValue,
+      numValuesGenerated: numValuesGenerated,
+    );
     final List<int> midValues = [];
 
     for (int midValue = scaleMinValue + midValueStepSize;

@@ -57,8 +57,10 @@ class StudyRecruitScreen extends StudyPageWidget {
   Widget _inviteCodesSectionHeader(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        SelectableText(tr.code_list_section_title,
-            style: Theme.of(context).textTheme.headlineSmall,),
+        SelectableText(
+          tr.code_list_section_title,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         Container(width: 32.0),
         _newInviteCodeButton(context, ref),
         Container(width: 32.0),
@@ -83,7 +85,9 @@ class StudyRecruitScreen extends StudyPageWidget {
   }
 
   Null Function(StudyInvite invite) _onSelectInvite(
-      BuildContext context, WidgetRef ref,) {
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
     return (StudyInvite invite) {
       final formViewModel = ref.read(inviteCodeFormViewModelProvider(studyId));

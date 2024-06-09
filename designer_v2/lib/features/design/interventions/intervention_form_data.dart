@@ -32,8 +32,10 @@ class InterventionFormData extends IFormData {
       title: intervention.name ?? '',
       description: intervention.description,
       tasksData: intervention.tasks
-          .map((task) =>
-              InterventionTaskFormData.fromDomainModel(task as CheckmarkTask),)
+          .map(
+            (task) =>
+                InterventionTaskFormData.fromDomainModel(task as CheckmarkTask),
+          )
           .toList(),
       iconName: intervention.icon,
     );

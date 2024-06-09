@@ -36,14 +36,17 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
   FormDataID get id => measurementId;
 
   factory MeasurementSurveyFormData.fromDomainModel(
-      QuestionnaireTask questionnaireTask,) {
+    QuestionnaireTask questionnaireTask,
+  ) {
     return MeasurementSurveyFormData(
       measurementId: questionnaireTask.id,
       title: questionnaireTask.title ?? '',
       introText: questionnaireTask.header,
       outroText: questionnaireTask.footer,
       questionnaireFormData: QuestionnaireFormData.fromDomainModel(
-          questionnaireTask.questions, [],),
+        questionnaireTask.questions,
+        [],
+      ),
       isTimeLocked: questionnaireTask.schedule.isTimeRestricted,
       timeLockStart: questionnaireTask.schedule.restrictedTimeStart,
       timeLockEnd: questionnaireTask.schedule.restrictedTimeEnd,

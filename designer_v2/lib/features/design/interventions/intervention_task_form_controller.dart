@@ -20,8 +20,9 @@ class InterventionTaskFormViewModel
     super.delegate,
     super.validationSet = StudyFormValidationSet.draft,
   }) {
-    runAsync(() =>
-        markAsCompletedControl.markAsDisabled(),); // TODO not yet supported
+    runAsync(
+      () => markAsCompletedControl.markAsDisabled(),
+    ); // TODO not yet supported
   }
 
   // - Form fields
@@ -100,8 +101,9 @@ class InterventionTaskFormViewModel
   @override
   InterventionTaskFormViewModel createDuplicate() {
     return InterventionTaskFormViewModel(
-        delegate: delegate,
-        formData: formData?.copy(),
-        validationSet: validationSet,);
+      delegate: delegate,
+      formData: formData?.copy(),
+      validationSet: validationSet,
+    );
   }
 }

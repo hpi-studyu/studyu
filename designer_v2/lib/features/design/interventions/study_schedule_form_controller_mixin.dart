@@ -60,13 +60,19 @@ mixin StudyScheduleControls {
         validationMessages: {
           ValidationMessage.required: (error) =>
               tr.form_field_crossover_schedule_num_cycles_range(
-                  kNumCyclesMin, kNumCyclesMax,),
+                kNumCyclesMin,
+                kNumCyclesMax,
+              ),
           ValidationMessage.min: (error) =>
               tr.form_field_crossover_schedule_num_cycles_range(
-                  kNumCyclesMin, kNumCyclesMax,),
+                kNumCyclesMin,
+                kNumCyclesMax,
+              ),
           ValidationMessage.max: (error) =>
               tr.form_field_crossover_schedule_num_cycles_range(
-                  kNumCyclesMin, kNumCyclesMax,),
+                kNumCyclesMin,
+                kNumCyclesMax,
+              ),
         },
       );
 
@@ -82,13 +88,19 @@ mixin StudyScheduleControls {
         validationMessages: {
           ValidationMessage.required: (error) =>
               tr.form_field_crossover_schedule_phase_length_range(
-                  kPhaseDurationMin, kPhaseDurationMax,),
+                kPhaseDurationMin,
+                kPhaseDurationMax,
+              ),
           ValidationMessage.min: (error) =>
               tr.form_field_crossover_schedule_phase_length_range(
-                  kPhaseDurationMin, kPhaseDurationMax,),
+                kPhaseDurationMin,
+                kPhaseDurationMax,
+              ),
           ValidationMessage.max: (error) =>
               tr.form_field_crossover_schedule_phase_length_range(
-                  kPhaseDurationMin, kPhaseDurationMax,),
+                kPhaseDurationMin,
+                kPhaseDurationMax,
+              ),
         },
       );
 

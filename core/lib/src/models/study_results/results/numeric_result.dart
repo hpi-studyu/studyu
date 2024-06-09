@@ -34,7 +34,8 @@ class NumericResult extends StudyResult {
   @override
   List getValues(StudySubject subject) {
     final resultSet = resultProperty.retrieveFromResults(subject).map<int, num>(
-        (key, value) => MapEntry(subject.getDayOfStudyFor(key), value),);
+          (key, value) => MapEntry(subject.getDayOfStudyFor(key), value),
+        );
     final numberOfDays = subject.study.schedule.getNumberOfPhases() *
         subject.study.schedule.phaseDuration;
     return Iterable<int>.generate(numberOfDays)
