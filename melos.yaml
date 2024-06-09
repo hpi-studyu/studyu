@@ -23,18 +23,16 @@ scripts:
         "dart fix --apply"
     description: Fix auto-fixable lint errors
 
-  # todo revert to default line length
   format:
     run: |
       melos exec -c 6 -- \
-        "dart format -l 120 ."
+        "dart format ."
     description: Format all code and markdown files
 
-  # todo do not exclude files anymore when line length is set to default
   format:ci:
     run: |
       melos exec -c 6 -- \
-        "find . -type f -name '*.dart' ! -name '*.g.dart' ! -path '**/.dart_tool/**' | tr '\n' ' ' | xargs dart format -l 120 --set-exit-if-changed"
+        "dart format . --set-exit-if-changed"
     description: Format all code without generated files
 
   outdated:
