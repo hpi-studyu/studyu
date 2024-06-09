@@ -45,14 +45,14 @@ class InterventionTaskFormViewModel extends ManagedFormViewModel<InterventionTas
     'taskTitle': taskTitleControl,
     'taskDescription': taskDescriptionControl,
     'markAsCompleted': markAsCompletedControl,
-    ...scheduleFormControls
+    ...scheduleFormControls,
   });
 
-  get titleRequired => FormControlValidation(control: taskTitleControl, validators: [
-        Validators.required
+  FormControlValidation get titleRequired => FormControlValidation(control: taskTitleControl, validators: [
+        Validators.required,
       ], validationMessages: {
         ValidationMessage.required: (error) => tr.form_field_intervention_task_title_required,
-      });
+      },);
 
   @override
   void setControlsFrom(InterventionTaskFormData data) {

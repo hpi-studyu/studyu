@@ -49,7 +49,6 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
           labelControlLabel: tr.form_field_response_scale_min_label,
           labelControlHelpText: tr.form_field_response_scale_min_label_tooltip,
           valueControlLabel: tr.form_field_response_scale_min_value,
-          valueControlHelpText: null,
         ),
         const SizedBox(height: 16.0),
         Collapsible(
@@ -64,19 +63,16 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
           labelControlLabel: tr.form_field_response_scale_max_label,
           labelControlHelpText: tr.form_field_response_scale_max_label_tooltip,
           valueControlLabel: tr.form_field_response_scale_max_value,
-          valueControlHelpText: null,
         ),
         const SizedBox(height: 16.0),
         const SizedBox(height: 8.0),
-        isMinMaxColorsVisible
-            ? Column(
+        if (isMinMaxColorsVisible) Column(
                 children: [
                   _buildVisualizationHeader(context),
                   const SizedBox(height: 12.0),
                   _buildMinMaxColorPickers(context),
                 ],
-              )
-            : (!formViewModel.isReadonly)
+              ) else (!formViewModel.isReadonly)
                 ? Opacity(
                     opacity: ThemeConfig.kMuteFadeFactor,
                     child: Hyperlink(
@@ -104,7 +100,7 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
         TextParagraph(
           text: tr.navlink_question_visuals_description,
           style: ThemeConfig.bodyTextMuted(theme),
-        )
+        ),
       ],
     );
   }
@@ -154,16 +150,14 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
             helpText: tr.form_field_response_scale_color_tooltip,
           ),
           const SizedBox(width: 24.0),
-          (control.value == null && !formViewModel.isReadonly)
-              ? Opacity(
+          if (control.value == null && !formViewModel.isReadonly) Opacity(
                   opacity: ThemeConfig.kMuteFadeFactor,
                   child: Hyperlink(
                     text: "+ ${tr.form_field_response_scale_color_add}",
                     onClick: () => control.value = SerializableColor(ThemeConfig.colorPickerInitialColor(theme).value),
                     visitedColor: null,
                   ),
-                )
-              : const SizedBox.shrink(),
+                ) else const SizedBox.shrink(),
         ],
       ),
       input: (control.value != null)
@@ -212,7 +206,6 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
               return const SizedBox.shrink();
             }
             return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(formArray.controls.length, (i) {
                 final valueControl = formViewModel.scaleMidValueControls.controls[i] as FormControl;

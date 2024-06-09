@@ -8,7 +8,7 @@ class ReportBadge extends StatelessWidget {
       this.type = study_badge.BadgeType.outlineFill,
       this.showPrefixIcon = true,
       this.showTooltip = true,
-      super.key});
+      super.key,});
 
   final ReportStatus? status;
   final study_badge.BadgeType type;
@@ -39,14 +39,14 @@ class ReportBadge extends StatelessWidget {
           color: colorScheme.primary,
           type: study_badge.BadgeType.outlineFill,
           icon: prefixIcon,
-        ));
+        ),);
       case ReportStatus.secondary:
         return inTooltip(study_badge.Badge(
           label: status!.string,
           color: colorScheme.secondary.withOpacity(0.75),
           type: study_badge.BadgeType.outlineFill,
           icon: prefixIcon,
-        ));
+        ),);
       default:
         return const SizedBox.shrink();
     }

@@ -50,7 +50,7 @@ class WebController extends PlatformController {
   }
 
   @override
-  activate() {
+  void activate() {
     if (baseSrc == '') return;
     final key = UniqueKey();
     // print("Register view with: $previewSrc");
@@ -69,7 +69,7 @@ class WebController extends PlatformController {
   }
 
   @override
-  generateUrl({String? route, String? extra, String? cmd, String? data}) {
+  void generateUrl({String? route, String? extra, String? cmd, String? data}) {
     routeInformation = RouteInformation(route, extra, cmd, data);
     if (baseSrc == '') {
       previewSrc = '';
@@ -129,7 +129,7 @@ class WebController extends PlatformController {
   @override
   void listen() {
     html.window.onMessage.listen((event) {
-      var data = event.data;
+      final data = event.data;
       if (data == 'routeFinished') {
         print("Designer: Route finished");
         refresh();

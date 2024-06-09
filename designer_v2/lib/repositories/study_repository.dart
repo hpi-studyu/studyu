@@ -54,7 +54,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
       throw ModelNotFoundException();
     }
 
-    final List<StudySubject> participants = [...(study.participants ?? [])];
+    final List<StudySubject> participants = [...study.participants ?? []];
 
     final deleteParticipantsOperation = OptimisticUpdate(
       applyOptimistic: () => study.participants = [],
@@ -102,7 +102,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
     Future<void> onDeleteCallback() {
       return delete(model.id).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies)).then((value) =>
           Future.delayed(const Duration(milliseconds: 200),
-              () => ref.read(notificationServiceProvider).show(Notifications.studyDeleted)));
+              () => ref.read(notificationServiceProvider).show(Notifications.studyDeleted),),);
     }
 
     final currentUser = authRepository.currentUser!;
@@ -162,8 +162,8 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
               .show(Notifications.studyDeleteConfirmation, // TODO: more severe confirmation for running studies
                   actions: [
                 NotificationAction(
-                    label: StudyActionType.delete.string, onSelect: onDeleteCallback, isDestructive: true),
-              ]);
+                    label: StudyActionType.delete.string, onSelect: onDeleteCallback, isDestructive: true,),
+              ],);
         },
         isAvailable: model.canDelete(currentUser),
         isDestructive: true,
@@ -201,7 +201,7 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
   }
 
   @override
-  onError(Object error, StackTrace? stackTrace) {
+  void onError(Object error, StackTrace? stackTrace) {
     return; // TODO
   }
 

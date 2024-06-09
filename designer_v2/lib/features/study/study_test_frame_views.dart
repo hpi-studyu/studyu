@@ -62,7 +62,7 @@ class PhoneContainer extends StatelessWidget {
       this.borderWidth = 8.0,
       this.borderRadius = 25.0,
       this.innerContentBackgroundColor = Colors.white,
-      super.key});
+      super.key,});
 
   final double width;
   final double height;
@@ -103,8 +103,7 @@ class PhoneContainer extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-                      border: Border.all(width: borderWidth, color: Colors.white),
-                      shape: BoxShape.rectangle),
+                      border: Border.all(width: borderWidth, color: Colors.white),),
                 ),
               ),
             ],
@@ -112,8 +111,7 @@ class PhoneContainer extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-                border: Border.all(width: borderWidth, color: borderColor),
-                shape: BoxShape.rectangle),
+                border: Border.all(width: borderWidth, color: borderColor),),
           ),
         ],
       ),
@@ -156,7 +154,7 @@ Widget? previewBanner(WidgetRef ref, String studyId) {
     return null;
   }
   return BannerBox(
-    body: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+    body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       TextParagraph(
         text: tr.banner_study_preview_unavailable,
         style: const TextStyle(fontWeight: FontWeight.bold),
@@ -167,8 +165,8 @@ Widget? previewBanner(WidgetRef ref, String studyId) {
             return TextParagraph(
               text: form.validationErrorSummary,
             );
-          })),
-    ]),
+          },),),
+    ],),
     style: BannerStyle.warning,
   );
 }

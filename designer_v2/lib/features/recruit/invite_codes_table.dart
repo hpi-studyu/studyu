@@ -37,21 +37,20 @@ class StudyInvitesTable extends StatelessWidget {
         StandardTableColumn(label: '#', columnWidth: const FixedColumnWidth(60)),
         StandardTableColumn(
             label: tr.code_list_header_code,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6))),
+            columnWidth: const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6)),),
         StandardTableColumn(
-            label: tr.studies_list_header_participants_enrolled, columnWidth: const FixedColumnWidth(100)),
+            label: tr.studies_list_header_participants_enrolled, columnWidth: const FixedColumnWidth(100),),
         StandardTableColumn(
             label: tr.form_field_preconfigured_schedule_intervention_a,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1))),
+            columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth()),),
         StandardTableColumn(
             label: tr.form_field_preconfigured_schedule_intervention_b,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1))),
+            columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth()),),
         //StandardTableColumn(label: '', columnWidth: const FixedColumnWidth(60)),
       ],
       onSelectItem: onSelect,
       buildCellsAt: _buildRow,
       trailingActionsAt: (item, _) => getActions(item),
-      cellSpacing: 10.0,
       rowSpacing: 5.0,
       minRowHeight: 30.0,
     );
@@ -103,7 +102,7 @@ class StudyInvitesTable extends StatelessWidget {
               maxLines: 1,
             ),
             // TODO: support inline actions in standard table widget
-            ActionMenuInline(actions: getInlineActions(item))
+            ActionMenuInline(actions: getInlineActions(item)),
           ],
         ),
       ),

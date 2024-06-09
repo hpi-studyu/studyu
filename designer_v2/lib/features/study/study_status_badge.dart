@@ -16,7 +16,7 @@ class StudyStatusBadge extends StatelessWidget {
       this.type = studybadge.BadgeType.outlineFill,
       this.showPrefixIcon = true,
       this.showTooltip = true,
-      super.key});
+      super.key,});
 
   final Participation? participation;
   final StudyStatus? status;
@@ -29,7 +29,7 @@ class StudyStatusBadge extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final prefixIcon = showPrefixIcon ? Icons.circle_rounded : null;
 
-    final tooltipMessage = ('${status?.description ?? ''}\n${participation?.description ?? ''}').trim();
+    final tooltipMessage = '${status?.description ?? ''}\n${participation?.description ?? ''}'.trim();
 
     Widget inTooltip(Widget child) {
       if (tooltipMessage.isNotEmpty && showTooltip) {
@@ -48,21 +48,21 @@ class StudyStatusBadge extends StatelessWidget {
           color: colorScheme.secondary.withOpacity(0.75),
           type: type,
           icon: prefixIcon,
-        ));
+        ),);
       case StudyStatus.closed:
         return inTooltip(studybadge.Badge(
           label: status!.string,
           color: colorScheme.primaryContainer,
           type: type,
           icon: prefixIcon,
-        ));
+        ),);
       case StudyStatus.running:
         return inTooltip(studybadge.Badge(
           label: status!.string,
           color: Colors.green,
           type: type,
           icon: prefixIcon,
-        ));
+        ),);
       default:
         return const SizedBox.shrink();
     }

@@ -19,7 +19,7 @@ class ReportsFormData implements IStudyFormData {
   @override
   Study apply(Study study) {
     study.reportSpecification.secondary = [];
-    for (ReportItemFormData itemFormData in reportItems) {
+    for (final ReportItemFormData itemFormData in reportItems) {
       if (itemFormData.isPrimary) {
         study.reportSpecification.primary = itemFormData.section;
       } else {

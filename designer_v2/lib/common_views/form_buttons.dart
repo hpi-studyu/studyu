@@ -46,7 +46,7 @@ class DismissButton extends StatelessWidget {
               Navigator.maybePop(context);
             }
           },
-        ));
+        ),);
   }
 }
 
@@ -56,8 +56,8 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
         builder: (context, form, child) {
       return retainSizeInAppBar(DismissButton(
         onPressed: () => formViewModel.cancel().then((_) => Navigator.maybePop(context)),
-      ));
-    }),
+      ),);
+    },),
     ReactiveFormConsumer(// enable re-rendering based on form validation status
         builder: (context, form, child) {
       return retainSizeInAppBar(PrimaryButton(
@@ -68,9 +68,9 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
         onPressedFuture: (formViewModel.isValid) ? () => formViewModel.save().then(
             // Close the form (side sheet or scaffold route) if future
             // completed successfully
-            (value) => Navigator.maybePop(context)) : null,
-      ));
-    }),
+            (value) => Navigator.maybePop(context),) : null,
+      ),);
+    },),
   ];
   final readonlyActionButtons = [
     ReactiveFormConsumer(// enable re-rendering based on form validation status
@@ -78,8 +78,8 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
       return retainSizeInAppBar(DismissButton(
         text: tr.dialog_close,
         onPressed: () => Navigator.maybePop(context),
-      ));
-    }),
+      ),);
+    },),
   ];
 
   final defaultActionButtons = {

@@ -29,7 +29,7 @@ class StudyInterventionsRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_intervention_title)
+            widget.decoration!.hintText! == tr.form_field_intervention_title,)
         .scrollTo()
         .enterText(interventionName);
   }
@@ -39,7 +39,7 @@ class StudyInterventionsRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_intervention_description_hint)
+            widget.decoration!.hintText! == tr.form_field_intervention_description_hint,)
         .scrollTo()
         .enterText(interventionDescription);
   }
@@ -49,7 +49,7 @@ class StudyInterventionsRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_intervention_task_title)
+            widget.decoration!.hintText! == tr.form_field_intervention_task_title,)
         .scrollTo()
         .enterText(taskName);
   }
@@ -59,7 +59,7 @@ class StudyInterventionsRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_intervention_task_description_hint)
+            widget.decoration!.hintText! == tr.form_field_intervention_task_description_hint,)
         .scrollTo()
         .enterText(taskDescription);
   }

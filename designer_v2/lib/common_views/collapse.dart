@@ -3,7 +3,7 @@ import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 
-import '../theme.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
 typedef CollapsibleSectionBuilder = Widget Function(BuildContext context, bool isCollapsed);
 
@@ -22,7 +22,7 @@ class Collapsible extends StatefulWidget {
     this.maintainState = true,
     super.key,
   }) : assert((headerBuilder != null && title == null) || (headerBuilder == null && title != null),
-            "Must provide either headerBuilder or title");
+            "Must provide either headerBuilder or title",);
 
   final CollapsibleSectionBuilder contentBuilder;
   final CollapsibleSectionBuilder? headerBuilder;
@@ -57,7 +57,7 @@ class _CollapsibleState extends State<Collapsible> {
               child: Row(
                 children: [
                   FormLabel(
-                    labelText: widget.title!,
+                    labelText: widget.title,
                     //labelTextStyle: TextStyle(color: actualColor),
                   ),
                   const SizedBox(width: 4.0),
@@ -80,7 +80,7 @@ class _CollapsibleState extends State<Collapsible> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         headerWidget,
-        !isCollapsed ? contentWidget : const SizedBox.shrink(),
+        if (!isCollapsed) contentWidget else const SizedBox.shrink(),
       ],
     );
   }

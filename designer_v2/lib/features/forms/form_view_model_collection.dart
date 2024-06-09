@@ -45,7 +45,7 @@ class FormViewModelCollection<T extends ManagedFormViewModel<D>, D extends IForm
 
   T remove(T formViewModel) {
     // Remove by index since we cannot rely on object identity of [formViewModel.form]
-    int idx = formViewModels.indexOf(formViewModel);
+    final int idx = formViewModels.indexOf(formViewModel);
     if (idx == -1) {
       throw FormViewModelNotFoundException();
     }

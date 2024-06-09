@@ -6,9 +6,8 @@ import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/combined_stream_notifier.dart';
-
-import 'router_config.dart';
 
 /// How to create a new page & use it for navigation:
 ///
@@ -40,7 +39,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
     // Read most recent app state on re-evaluation (see refreshListenable)
     final isLoggedIn = authRepository.isLoggedIn;
-    var allowPasswordReset = authRepository.allowPasswordReset;
+    final allowPasswordReset = authRepository.allowPasswordReset;
     final isInitialized = appController.isInitialized;
 
     // Carry original location through the redirect flow so that we can
@@ -56,7 +55,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
     }
     // Helper to generate routes carrying the 'from' param (if any)
-    namedLocForwarded(String name) {
+    String namedLocForwarded(String name) {
       final Map<String, String> qParams = {};
       if (from != null && from != '/') {
         // if (from != null && from != '/' && from != defaultLocation) {
@@ -67,7 +66,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
     if (!isInitialized) {
       // Redirect to splash screen while app is pending initialization
-      return (isOnSplashPage) ? null : namedLocForwarded(splashRouteName);
+      return isOnSplashPage ? null : namedLocForwarded(splashRouteName);
     }
 
     // Handle password recovery
@@ -92,7 +91,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         }
       }
       // Redirect to login page as default
-      return (isOnLoginPage) ? null : namedLocForwarded(loginRouteName);
+      return isOnLoginPage ? null : namedLocForwarded(loginRouteName);
     } else {
       // If the user is authenticated, forward to where they were going initially...
       if (from != null && from != state.matchedLocation) {
@@ -111,7 +110,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     refreshListenable: CombinedStreamNotifier([
       // Any stream registered here will trigger the router's redirect logic
       appController.stream, // initialization events
-      authRepository.watchAuthStateChanges() // authentication events
+      authRepository.watchAuthStateChanges(), // authentication events
     ]),
     routes: RouterConf.routes,
     errorBuilder: (context, state) => ErrorPage(error: state.error),

@@ -35,7 +35,7 @@ class _FormConsumerWidgetState extends State<FormConsumerWidget> {
   Widget build(BuildContext context) {
     return ReactiveFormConsumer(builder: (context, form, _) {
       return widget.build(context, form);
-    });
+    },);
   }
 }
 
@@ -55,6 +55,6 @@ class _FormConsumerRefWidgetState extends ConsumerState<FormConsumerRefWidget> {
   Widget build(BuildContext context) {
     return ReactiveFormConsumer(builder: (context, form, _) {
       return widget.build(context, form, ref);
-    });
+    },);
   }
 }

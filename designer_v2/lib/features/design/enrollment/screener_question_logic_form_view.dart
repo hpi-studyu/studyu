@@ -44,7 +44,7 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
     );
   }
 
-  _buildInfoBanner(BuildContext context) {
+  SingleChildRenderObjectWidget _buildInfoBanner(BuildContext context) {
     return (!formViewModel.isReadonly && formViewModel.isDirtyOptionsBannerVisible)
         ? Padding(
             padding: const EdgeInsets.only(top: 12.0),
@@ -60,12 +60,12 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
         : const SizedBox.shrink();
   }
 
-  _buildAnswerOptionsLogicControls() {
+  Widget _buildAnswerOptionsLogicControls() {
     if (formViewModel.questionType.name == FreeTextQuestion.questionType) {
       // todo logic might check if field has content
       // todo logic might need that field is equal to a certain value
       return Text(tr.free_text_question_logic_not_supported,
-          style: const TextStyle(color: Colors.red), textAlign: TextAlign.center);
+          style: const TextStyle(color: Colors.red), textAlign: TextAlign.center,);
     }
 
     return ReactiveFormArray(
@@ -80,10 +80,10 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
             ),
             StandardTableColumn(
                 label: '', // don't care (showTableHeader=false)
-                columnWidth: const FlexColumnWidth(5)),
+                columnWidth: const FlexColumnWidth(5),),
             StandardTableColumn(
                 label: '', // don't care (showTableHeader=false)
-                columnWidth: const FlexColumnWidth(4)),
+                columnWidth: const FlexColumnWidth(4),),
           ],
           onSelectItem: (_) => {}, // no-op
           buildCellsAt: (context, item, rowIdx, __) {
@@ -103,7 +103,7 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
   }
 
   List<Widget> _buildOptionLogicRow(
-      BuildContext context, FormControl<dynamic> optionControl, FormControl<bool> logicControl) {
+      BuildContext context, FormControl<dynamic> optionControl, FormControl<bool> logicControl,) {
     final theme = Theme.of(context);
 
     // Use a UniqueKey to prevent carry-over of control states to other

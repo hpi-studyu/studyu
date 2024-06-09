@@ -19,7 +19,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
       this.disableSplashEffect = false,
       this.hideOnEmpty = true,
       this.enabled = true,
-      super.key});
+      super.key,});
 
   final List<ModelAction> actions;
   final Color? triggerIconColor;
@@ -50,11 +50,11 @@ class ActionPopUpMenuButton extends StatelessWidget {
               highlightColor: Colors.transparent,
               hoverColor: Colors.transparent,
             ),
-            child: popupMenu);
+            child: popupMenu,);
       }
 
       return widget;
-    });
+    },);
   }
 
   Widget _buildPopupMenu(BuildContext context, Set<WidgetState> state) {
@@ -65,7 +65,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
     final triggerIcon = (orientation == Axis.vertical) ? Icons.more_vert_rounded : Icons.more_horiz_rounded;
 
     return PopupMenuButton(
-        icon: Icon(triggerIcon, size: triggerIconSize, color: (isHovered) ? iconColorHover : iconColorDefault),
+        icon: Icon(triggerIcon, size: triggerIconSize, color: isHovered ? iconColorHover : iconColorDefault),
         enabled: enabled,
         elevation: elevation,
         splashRadius: splashRadius,
@@ -77,19 +77,19 @@ class ActionPopUpMenuButton extends StatelessWidget {
             return PopupMenuItem(
               value: action,
               child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
                 horizontalTitleGap: 4.0,
                 leading: (action.icon == null)
                     ? const SizedBox.shrink()
                     : Icon(action.icon,
                         size: theme.iconTheme.size ?? 14.0,
-                        color: action.isDestructive ? Colors.red : iconColorDefault),
+                        color: action.isDestructive ? Colors.red : iconColorDefault,),
                 title: action.isDestructive
                     ? Text(action.label, style: textTheme.copyWith(color: Colors.red))
                     : Text(action.label, style: textTheme),
               ),
             );
           }).toList();
-        });
+        },);
   }
 }

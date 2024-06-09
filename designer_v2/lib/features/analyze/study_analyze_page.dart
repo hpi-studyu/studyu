@@ -20,14 +20,13 @@ class StudyAnalyzeScreen extends StudyPageWidget {
       return BannerBox(
           noPrefix: true,
           body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextParagraph(
                   text: tr.banner_text_study_analyze_draft,
                 ),
-              ]),
-          style: BannerStyle.info);
+              ],),
+          style: BannerStyle.info,);
     }
 
     return null;
@@ -73,7 +72,7 @@ class StudyAnalyzeScreen extends StudyPageWidget {
             height: 300,
             child: const Center(
               child: UnderConstruction(),
-            ))
+            ),),
       ],
     );
   }

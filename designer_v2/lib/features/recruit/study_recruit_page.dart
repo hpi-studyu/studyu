@@ -25,7 +25,6 @@ class StudyRecruitScreen extends StudyPageWidget {
     return AsyncValueWidget<List<StudyInvite>?>(
         value: state.invites,
         data: (studyInvites) => Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 _inviteCodesSectionHeader(context, ref),
@@ -46,8 +45,8 @@ class StudyRecruitScreen extends StudyPageWidget {
                   icon: Icons.link_off_rounded,
                   title: tr.code_list_empty_title,
                   description: tr.code_list_empty_description,
-                  button: _newInviteCodeButton(context, ref)),
-            ));
+                  button: _newInviteCodeButton(context, ref),),
+            ),);
   }
 
   Widget _inviteCodesSectionHeader(BuildContext context, WidgetRef ref) {
@@ -63,7 +62,6 @@ class StudyRecruitScreen extends StudyPageWidget {
 
   Widget _newInviteCodeButton(BuildContext context, WidgetRef ref) {
     return PrimaryButton(
-      icon: Icons.add,
       text: tr.action_button_code_new,
       onPressed: () {
         final formViewModel = ref.read(inviteCodeFormViewModelProvider(studyId));
@@ -76,7 +74,7 @@ class StudyRecruitScreen extends StudyPageWidget {
     );
   }
 
-  _onSelectInvite(BuildContext context, WidgetRef ref) {
+  Null Function(StudyInvite invite) _onSelectInvite(BuildContext context, WidgetRef ref) {
     // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
     return (StudyInvite invite) {
       final formViewModel = ref.read(inviteCodeFormViewModelProvider(studyId));

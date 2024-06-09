@@ -34,7 +34,7 @@ class InviteCodeFormView extends FormConsumerWidget {
                             splashRadius: 18.0,
                             onPressed: formViewModel.regenerateCode,
                             icon: const Icon(Icons.refresh_rounded),
-                          )))
+                          ),),)
                   : const InputDecoration(),
             ),
           ),
@@ -45,13 +45,13 @@ class InviteCodeFormView extends FormConsumerWidget {
               formControl: formViewModel.isPreconfiguredScheduleControl,
             ),
           ),
-        ]),
+        ],),
         const SizedBox(height: 4.0),
         TextParagraph(text: tr.form_field_is_preconfigured_schedule_description),
         const SizedBox(height: 24.0),
         FormTableLayout(rows: [
           ..._conditionalInterventionRows(context),
-        ]),
+        ],),
       ],
     );
   }
@@ -72,7 +72,7 @@ class InviteCodeFormView extends FormConsumerWidget {
               .map((option) => DropdownMenuItem(
                     value: option.value,
                     child: Text(option.label),
-                  ))
+                  ),)
               .toList(),
         ),
       ),
@@ -86,7 +86,7 @@ class InviteCodeFormView extends FormConsumerWidget {
               .map((option) => DropdownMenuItem(
                     value: option.value,
                     child: Text(option.label),
-                  ))
+                  ),)
               .toList(),
         ),
       ),
@@ -100,10 +100,10 @@ class InviteCodeFormView extends FormConsumerWidget {
               .map((option) => DropdownMenuItem(
                     value: option.value,
                     child: Text(option.label),
-                  ))
+                  ),)
               .toList(),
         ),
-      )
+      ),
     ];
   }
 }

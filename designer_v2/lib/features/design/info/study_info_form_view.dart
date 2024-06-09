@@ -27,7 +27,6 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextParagraph(text: tr.form_study_design_info_description),
@@ -50,19 +49,19 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                           LengthLimitingTextInputFormatter(100),
                         ],
                         validationMessages: formViewModel.titleControl.validationMessages,
-                      )),
+                      ),),
                       ReactiveFormConsumer(builder: (context, form, child) {
                         return (formViewModel.iconControl.value != null)
                             ? const SizedBox(width: 4.0)
                             : const SizedBox(width: 8.0);
-                      }),
+                      },),
                       IntrinsicWidth(
                         child: ReactiveIconPicker(
                           formControl: formViewModel.iconControl,
                           iconOptions: IconPack.material,
                           validationMessages: formViewModel.iconControl.validationMessages,
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -87,7 +86,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
               ], columnWidths: const {
                 0: FixedColumnWidth(185.0),
                 1: FlexColumnWidth(),
-              }),
+              },),
               const SizedBox(height: 32.0),
               FormSectionHeader(title: tr.form_section_publisher),
               const SizedBox(height: 12.0),
@@ -209,7 +208,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
               ], columnWidths: const {
                 0: FixedColumnWidth(180.0),
                 1: FlexColumnWidth(),
-              }),
+              },),
             ],
           ),
         );

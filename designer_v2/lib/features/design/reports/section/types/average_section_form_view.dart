@@ -55,12 +55,10 @@ class AverageSectionFormView extends ConsumerWidget {
                       value: option.value,
                       child: Row(
                         children: [
-                          (option.value.icon != null)
-                              ? Icon(option.value.icon,
-                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
-                              : const SizedBox.shrink(),
+                          if (option.value.icon != null) Icon(option.value.icon,
+                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows,) else const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
-                          Text(option.label)
+                          Text(option.label),
                         ],
                       ),
                     );

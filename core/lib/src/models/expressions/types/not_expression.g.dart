@@ -12,16 +12,8 @@ NotExpression _$NotExpressionFromJson(Map<String, dynamic> json) =>
       ..expression =
           Expression.fromJson(json['expression'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$NotExpressionToJson(NotExpression instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('type', instance.type);
-  val['expression'] = instance.expression.toJson();
-  return val;
-}
+Map<String, dynamic> _$NotExpressionToJson(NotExpression instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'expression': instance.expression,
+    };

@@ -18,7 +18,7 @@ class ReportItemFormView extends StatelessWidget {
   final ReportItemFormViewModel formViewModel;
   final StudyID studyId;
 
-  get reportSectionColumnWidth => const {
+  Map<int, TableColumnWidth> get reportSectionColumnWidth => const {
         0: FixedColumnWidth(180.0),
         1: FlexColumnWidth(),
       };
@@ -26,9 +26,9 @@ class ReportItemFormView extends StatelessWidget {
   WidgetBuilder get sectionTypeBodyBuilder {
     final Map<ReportSectionType, WidgetBuilder> sectionTypeWidgets = {
       ReportSectionType.average: (_) => AverageSectionFormView(
-          formViewModel: formViewModel, studyId: studyId, reportSectionColumnWidth: reportSectionColumnWidth),
+          formViewModel: formViewModel, studyId: studyId, reportSectionColumnWidth: reportSectionColumnWidth,),
       ReportSectionType.linearRegression: (_) => LinearRegressionSectionFormView(
-          formViewModel: formViewModel, studyId: studyId, reportSectionColumnWidth: reportSectionColumnWidth),
+          formViewModel: formViewModel, studyId: studyId, reportSectionColumnWidth: reportSectionColumnWidth,),
     };
     final sectionType = formViewModel.sectionType;
 
@@ -49,9 +49,9 @@ class ReportItemFormView extends StatelessWidget {
               _buildSectionTypeHeader(context),
               sectionTypeBodyBuilder(context),
             ],
-          ));
+          ),);
 
-  _buildSectionText(BuildContext context) {
+  FormTableLayout _buildSectionText(BuildContext context) {
     return FormTableLayout(
       rowLayout: FormTableRowLayout.vertical,
       rows: [
@@ -92,7 +92,7 @@ class ReportItemFormView extends StatelessWidget {
     );
   }
 
-  _buildSectionTypeHeader(BuildContext context) {
+  Column _buildSectionTypeHeader(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       children: [
@@ -116,12 +116,10 @@ class ReportItemFormView extends StatelessWidget {
                       value: option.value,
                       child: Row(
                         children: [
-                          (option.value.icon != null)
-                              ? Icon(option.value.icon,
-                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
-                              : const SizedBox.shrink(),
+                          if (option.value.icon != null) Icon(option.value.icon,
+                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows,) else const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
-                          Text(option.label)
+                          Text(option.label),
                         ],
                       ),
                     );

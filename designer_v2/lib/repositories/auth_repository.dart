@@ -59,37 +59,29 @@ class AuthRepository implements IAuthRepository {
         case AuthChangeEvent.initialSession:
           print("authRepo initialSession");
           _authStateStreamController.add(authClient.currentUser);
-          break;
         case AuthChangeEvent.signedIn:
           print("authRepo signedIn");
           // Update stream with logged in user
           _authStateStreamController.add(authClient.currentUser);
-          break;
         case AuthChangeEvent.signedOut:
           print("authRepo signedOut");
           // Send null to indicate that no user is available (logged out)
           _authStateStreamController.add(null);
-          break;
         case AuthChangeEvent.userUpdated:
           print("authRepo userUpdated");
           // Update stream with new user object
           _authStateStreamController.add(authClient.currentUser);
-          break;
         case AuthChangeEvent.passwordRecovery:
           print("authRepo passwordRecovery");
           //router.dispatch(RoutingIntents.passwordRecovery);
           allowPasswordReset = true;
-          break;
         case AuthChangeEvent.tokenRefreshed:
           print("authRepo tokenRefreshed");
-          break;
         case AuthChangeEvent.userDeleted:
           print("authRepo userDeleted");
           _authStateStreamController.add(null);
-          break;
         case AuthChangeEvent.mfaChallengeVerified:
           print("authRepo mfaChallengeVerified");
-          break;
       }
     });
   }
@@ -107,8 +99,8 @@ class AuthRepository implements IAuthRepository {
   bool get isLoggedIn => currentUser != null;
 
   @override
-  BehaviorSubject<User?> watchAuthStateChanges({emitLastEvent = true}) =>
-      (emitLastEvent) ? _authStateStreamController : _authStateSuppressedController.subject;
+  BehaviorSubject<User?> watchAuthStateChanges({bool emitLastEvent = true}) =>
+      emitLastEvent ? _authStateStreamController : _authStateSuppressedController.subject;
 
   @override
   Future<AuthResponse> signUp({required String email, required String password}) async {

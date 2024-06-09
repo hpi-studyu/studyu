@@ -7,6 +7,7 @@ repository: https://github.com/hpi-studyu/studyu
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
+
 dependencies:
   camera: ^0.11.0+1
   collection: ^1.18.0

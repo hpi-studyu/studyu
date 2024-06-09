@@ -33,7 +33,7 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel implements ISc
 
   List<FormControlOption<bool>> get logicControlOptions => [
         FormControlOption(true, tr.form_screener_question_logic_qualify),
-        FormControlOption(false, tr.form_screener_question_logic_disqualify)
+        FormControlOption(false, tr.form_screener_question_logic_disqualify),
       ];
 
   late final _questionBaseControls = {
@@ -49,7 +49,7 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel implements ISc
   late List<dynamic> prevResponseOptionValues = [];
 
   @override
-  onResponseOptionsChanged(List<AbstractControl> responseOptionControls) {
+  void onResponseOptionsChanged(List<AbstractControl> responseOptionControls) {
     if (formMode == FormMode.readonly) {
       return;
     }
@@ -120,7 +120,7 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel implements ISc
         .map((control) => FormControl<String>(
               value: control.value?.toString() ?? '',
               disabled: control.disabled,
-            ))
+            ),)
         .toList();
   }
 
