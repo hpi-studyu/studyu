@@ -1,3 +1,7 @@
+## 1.8.1-dev.1
+
+ - **FIX**: add emojis again.
+
 ## 1.8.1-dev.0
 
  - **FIX**: integration test sign out.
