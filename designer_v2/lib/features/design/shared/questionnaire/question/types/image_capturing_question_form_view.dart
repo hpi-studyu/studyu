@@ -4,7 +4,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 
 class ImageCapturingQuestionFormView extends ConsumerWidget {
   const ImageCapturingQuestionFormView(
-      {required this.formViewModel, super.key});
+      {required this.formViewModel, super.key,});
 
   final QuestionFormViewModel formViewModel;
 

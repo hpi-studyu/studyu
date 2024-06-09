@@ -140,7 +140,7 @@ class RouterConf {
           router.namedLocation(
         'studyEdit',
         pathParameters: {
-          RouteParams.studyId: state.pathParameters[RouteParams.studyId]!
+          RouteParams.studyId: state.pathParameters[RouteParams.studyId]!,
         },
       ),
     ),
@@ -151,7 +151,7 @@ class RouterConf {
           router.namedLocation(
         'studyEditInfo',
         pathParameters: {
-          RouteParams.studyId: state.pathParameters[RouteParams.studyId]!
+          RouteParams.studyId: state.pathParameters[RouteParams.studyId]!,
         },
       ),
     ),

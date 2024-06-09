@@ -14,7 +14,7 @@ import 'package:studyu_designer_v2/theme.dart';
 
 class ReportItemFormView extends StatelessWidget {
   const ReportItemFormView(
-      {required this.formViewModel, required this.studyId, super.key});
+      {required this.formViewModel, required this.studyId, super.key,});
 
   final ReportItemFormViewModel formViewModel;
   final StudyID studyId;
@@ -119,7 +119,7 @@ class ReportItemFormView extends StatelessWidget {
               input: Theme(
                 data: theme.copyWith(
                     inputDecorationTheme:
-                        ThemeConfig.dropdownInputDecorationTheme(theme)),
+                        ThemeConfig.dropdownInputDecorationTheme(theme),),
                 child: ReactiveDropdownField<ReportSectionType>(
                   formControl: formViewModel.sectionTypeControl,
                   items: ReportItemFormViewModel.sectionTypeControlOptions

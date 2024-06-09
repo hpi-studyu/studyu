@@ -5,7 +5,7 @@ import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 
 class InterventionsFormData implements IStudyFormData {
   InterventionsFormData(
-      {required this.interventionsData, required this.studyScheduleData});
+      {required this.interventionsData, required this.studyScheduleData,});
 
   final List<InterventionFormData> interventionsData;
   final StudyScheduleFormData studyScheduleData;
@@ -18,7 +18,7 @@ class InterventionsFormData implements IStudyFormData {
     return InterventionsFormData(
       interventionsData: study.interventions
           .map((intervention) =>
-              InterventionFormData.fromDomainModel(intervention))
+              InterventionFormData.fromDomainModel(intervention),)
           .toList(),
       studyScheduleData: StudyScheduleFormData.fromDomainModel(study.schedule),
     );

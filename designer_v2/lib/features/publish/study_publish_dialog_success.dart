@@ -49,7 +49,7 @@ class PublishSuccessDialog extends StudyPageWidget {
                 child: TextButton(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 4.0, horizontal: 8.0),
+                        vertical: 4.0, horizontal: 8.0,),
                     child: Text(tr.action_button_post_launch_followup_skip),
                   ),
                   onPressed: () => Navigator.maybePop(context),

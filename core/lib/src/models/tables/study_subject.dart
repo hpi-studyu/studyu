@@ -40,7 +40,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   late List<SubjectProgress> progress = [];
 
   StudySubject(
-      this.id, this.studyId, this.userId, this.selectedInterventionIds);
+      this.id, this.studyId, this.userId, this.selectedInterventionIds,);
 
   factory StudySubject.fromJson(Map<String, dynamic> json) {
     final subject = _$StudySubjectFromJson(json);
@@ -64,7 +64,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   Map<String, dynamic> toJson() => _$StudySubjectToJson(this);
 
   StudySubject.fromStudy(
-      this.study, this.userId, this.selectedInterventionIds, this.inviteCode)
+      this.study, this.userId, this.selectedInterventionIds, this.inviteCode,)
       : id = const Uuid().v4(),
         studyId = study.id;
 
@@ -79,7 +79,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     final selectedInterventions = selectedInterventionIds
         .map(
           (selectedInterventionId) => study.interventions.singleWhere(
-              (intervention) => intervention.id == selectedInterventionId),
+              (intervention) => intervention.id == selectedInterventionId,),
         )
         .toList();
     if (study.schedule.includeBaseline) {
@@ -96,11 +96,11 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       study.schedule.numberOfCycles * study.schedule.phaseDuration;
 
   Map<DateTime, List<SubjectProgress>> getResultsByDate(
-      {required String interventionId}) {
+      {required String interventionId,}) {
     final resultsByDate = <DateTime, List<SubjectProgress>>{};
     progress.where((p) => p.interventionId == interventionId).forEach((p) {
       final date = DateTime(
-          p.completedAt!.year, p.completedAt!.month, p.completedAt!.day);
+          p.completedAt!.year, p.completedAt!.month, p.completedAt!.day,);
       resultsByDate.putIfAbsent(date, () => []);
       resultsByDate[date]!.add(p);
     });
@@ -109,7 +109,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   // Day after last intervention
   DateTime endDate(DateTime dt) => dt.add(
-      Duration(days: interventionOrder.length * study.schedule.phaseDuration));
+      Duration(days: interventionOrder.length * study.schedule.phaseDuration),);
 
   int getDayOfStudyFor(DateTime date) {
     return date.differenceInDays(startedAt!);
@@ -134,7 +134,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   List<Intervention> getInterventionsInOrder() {
     return interventionOrder
         .map((key) => selectedInterventions
-            .firstWhere((intervention) => intervention.id == key))
+            .firstWhere((intervention) => intervention.id == key),)
         .toList();
   }
 
@@ -172,13 +172,13 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     if (startOfPhase(index).isAfter(date)) return 0;
 
     final missedInPhase = min(date.differenceInDays(startOfPhase(index)),
-            study.schedule.phaseDuration) -
+            study.schedule.phaseDuration,) -
         completedForPhase(index);
     return missedInPhase / study.schedule.phaseDuration;
   }
 
   List<SubjectProgress> getTaskProgressForDay(
-      String taskId, DateTime dateTime) {
+      String taskId, DateTime dateTime,) {
     final List<SubjectProgress> thisTaskProgressToday = [];
     for (final SubjectProgress sp in resultsFor(taskId)) {
       if (sp.subjectId == id && sp.completedAt!.isSameDate(dateTime)) {
@@ -192,7 +192,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   /// returns true if a given task has been completed for a specific
   /// completionPeriod on a given day
   bool completedTaskInstanceForDay(
-      String taskId, CompletionPeriod completionPeriod, DateTime dateTime) {
+      String taskId, CompletionPeriod completionPeriod, DateTime dateTime,) {
     return getTaskProgressForDay(taskId, dateTime).any(
       (progress) {
         if (progress.result.periodId == null) {
@@ -210,7 +210,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   bool completedTaskForDay(String taskId, DateTime dateTime) {
     return [
       ...selectedInterventions.expand((e) => e.tasks),
-      ...study.observations
+      ...study.observations,
     ].where((task) => task.id == taskId).single.schedule.completionPeriods.any(
           (period) => completedTaskInstanceForDay(taskId, period, dateTime),
         );
@@ -278,7 +278,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       final response =
           await env.client.from(tableName).upsert(toJson()).select();
       final json = toFullJson(
-          partialJson: List<Map<String, dynamic>>.from(response).single);
+          partialJson: List<Map<String, dynamic>>.from(response).single,);
       final newSubject = StudySubject.fromJson(json);
       _controller.add(newSubject);
       // print("Saving study subject");

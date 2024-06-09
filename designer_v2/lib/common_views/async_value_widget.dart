@@ -10,7 +10,7 @@ class AsyncValueWidget<T> extends StatelessWidget {
       required this.data,
       this.error,
       this.loading,
-      this.empty});
+      this.empty,});
 
   final AsyncValue<T> value;
   final Widget Function(T) data;

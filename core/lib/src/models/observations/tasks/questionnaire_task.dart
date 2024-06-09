@@ -23,19 +23,19 @@ class QuestionnaireTask extends Observation {
 
   @override
   Map<DateTime, T> extractPropertyResults<T>(
-      String property, List<SubjectProgress> sourceResults) {
+      String property, List<SubjectProgress> sourceResults,) {
     final Question? targetQuestion =
         questions.questions.firstWhereOrNull((q) => q.id == property);
     if (targetQuestion == null) {
       throw ArgumentError(
-          "Questionnaire '$id' does not have a question with '$property'.");
+          "Questionnaire '$id' does not have a question with '$property'.",);
     }
     return Map.fromEntries(
       sourceResults.map((e) => MapEntry(
           e.completedAt!,
           (e.result as Result<QuestionnaireState>)
               .result
-              .getAnswer<T>(property))),
+              .getAnswer<T>(property),),),
     );
   }
 

@@ -25,7 +25,7 @@ abstract class Task {
   }
 
   Map<DateTime, T> extractPropertyResults<T>(
-      String property, List<SubjectProgress> sourceResults);
+      String property, List<SubjectProgress> sourceResults,);
 
   Map<String, Type> getAvailableProperties();
 

@@ -24,7 +24,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
     final maxLength = formViewModel.freeTextLengthControl.value!.end.toInt();
     final type = formViewModel.freeTextTypeControl.value!.string;
     formViewModel.freeTextLengthControl.onChanged((_) =>
-        formViewModel.freeTextExampleTextControl.updateValueAndValidity());
+        formViewModel.freeTextExampleTextControl.updateValueAndValidity(),);
 
     return Column(
       children: [
@@ -35,7 +35,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
             child: SliderTheme(
               data: Theme.of(context).sliderTheme.copyWith(
                     rangeThumbShape: IndicatorRangeSliderThumbShape(
-                        context, minLength, maxLength),
+                        context, minLength, maxLength,),
                     showValueIndicator: ShowValueIndicator.never,
                   ),
               child: ReactiveRangeSlider<RangeValues>(
@@ -162,7 +162,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
               builder: (context, formGroup, child) {
                 return TextParagraph(
                     text: tr.free_text_example_explanation(
-                        type, minLength, maxLength));
+                        type, minLength, maxLength,),);
               },
             ),
           ],
@@ -194,7 +194,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
   Widget generateRow(
       {required String label,
       required String labelHelpText,
-      required Widget input}) {
+      required Widget input,}) {
     return Row(
       children: [
         Flexible(

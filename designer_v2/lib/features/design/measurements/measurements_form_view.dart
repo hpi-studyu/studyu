@@ -29,7 +29,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextParagraph(
-                  text: tr.form_study_design_measurements_description),
+                  text: tr.form_study_design_measurements_description,),
               const SizedBox(height: 32.0),
               ReactiveFormConsumer(
                 // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated

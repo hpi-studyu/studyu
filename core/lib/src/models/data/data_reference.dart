@@ -26,8 +26,9 @@ class DataReference<T> {
         subject.selectedInterventions
             .expand((i) => i.tasks)
             .firstWhereOrNull((task) => task.id == this.task);
-    if (sourceTask == null)
+    if (sourceTask == null) {
       throw ArgumentError("Could not find a task with the id '$task'.");
+    }
 
     final List<SubjectProgress> sourceResults = subject.resultsFor(task);
 

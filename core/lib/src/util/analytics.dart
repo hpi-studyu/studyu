@@ -40,7 +40,7 @@ class StudyUDiagnostics {
   }
 
   static void addBreadcrumb(
-      {required String message, required String category}) {
+      {required String message, required String category,}) {
     print("[Breadcrumb] $category: $message");
     Sentry.addBreadcrumb(Breadcrumb(message: message, category: category));
   }
