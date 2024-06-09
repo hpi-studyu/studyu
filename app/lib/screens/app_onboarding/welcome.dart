@@ -16,30 +16,35 @@ class WelcomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Spacer(),
-              const Image(image: AssetImage('assets/icon/logo.png'), height: 200),
+              const Image(
+                  image: AssetImage('assets/icon/logo.png'), height: 200),
               const SizedBox(height: 20),
               OutlinedButton.icon(
                 icon: const Icon(Icons.info),
                 onPressed: () => Navigator.pushNamed(context, Routes.about),
-                label: Text(AppLocalizations.of(context)!.what_is_studyu, style: const TextStyle(fontSize: 20)),
+                label: Text(AppLocalizations.of(context)!.what_is_studyu,
+                    style: const TextStyle(fontSize: 20)),
               ),
               const SizedBox(height: 20),
               OutlinedButton.icon(
                 icon: Icon(MdiIcons.accountBox),
                 onPressed: () => Navigator.pushNamed(context, Routes.contact),
-                label: Text(AppLocalizations.of(context)!.contact, style: const TextStyle(fontSize: 20)),
+                label: Text(AppLocalizations.of(context)!.contact,
+                    style: const TextStyle(fontSize: 20)),
               ),
               const SizedBox(height: 20),
               OutlinedButton.icon(
                 icon: Icon(MdiIcons.frequentlyAskedQuestions),
                 onPressed: () => Navigator.pushNamed(context, Routes.faq),
-                label: Text(AppLocalizations.of(context)!.faq, style: const TextStyle(fontSize: 20)),
+                label: Text(AppLocalizations.of(context)!.faq,
+                    style: const TextStyle(fontSize: 20)),
               ),
               const Spacer(),
               OutlinedButton.icon(
                 icon: Icon(MdiIcons.rocket, size: 30),
                 onPressed: () => Navigator.pushNamed(context, Routes.terms),
-                label: Text(AppLocalizations.of(context)!.get_started, style: const TextStyle(fontSize: 20)),
+                label: Text(AppLocalizations.of(context)!.get_started,
+                    style: const TextStyle(fontSize: 20)),
               ),
               const Spacer()
             ],

@@ -91,7 +91,8 @@ class _MeasurementSurveyFormViewState
               input: ReactiveTextField(
                 formControl: widget.formViewModel.surveyIntroTextControl,
                 decoration: InputDecoration(
-                    hintText: tr.form_field_measurement_survey_intro_text_hint,),
+                  hintText: tr.form_field_measurement_survey_intro_text_hint,
+                ),
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(2000),
                 ],
@@ -135,7 +136,8 @@ class _MeasurementSurveyFormViewState
               input: ReactiveTextField(
                 formControl: widget.formViewModel.surveyOutroTextControl,
                 decoration: InputDecoration(
-                    hintText: tr.form_field_measurement_survey_outro_text_hint,),
+                  hintText: tr.form_field_measurement_survey_outro_text_hint,
+                ),
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(2000),
                 ],
@@ -215,14 +217,20 @@ class _MeasurementSurveyFormViewState
   }
 
   void _onSelectItem(
-      QuestionFormViewModel item, BuildContext context, WidgetRef ref,) {
+    QuestionFormViewModel item,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     final routeArgs = widget.formViewModel.buildFormRouteArgs(item);
     _showSidesheetWithArgs(routeArgs, context, ref);
   }
 
   // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
-  void _showSidesheetWithArgs(SurveyQuestionFormRouteArgs routeArgs,
-      BuildContext context, WidgetRef ref,) {
+  void _showSidesheetWithArgs(
+    SurveyQuestionFormRouteArgs routeArgs,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     final surveyQuestionFormViewModel =
         ref.read(surveyQuestionFormViewModelProvider(routeArgs));
     showFormSideSheet<QuestionFormViewModel>(

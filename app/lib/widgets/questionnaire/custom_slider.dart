@@ -47,11 +47,13 @@ class CustomSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final allocatedHeight = MediaQuery.of(context).size.height;
-    final allocatedWidth = MediaQuery.of(context).size.width - 32; // -32 horizontal padding
+    final allocatedWidth =
+        MediaQuery.of(context).size.width - 32; // -32 horizontal padding
     final divisions = (steps!.maximum - steps!.minimum) ~/ steps!.step;
     //final divisions = steps.annotations.length; // (majorTick - 1) * minorTick + majorTick;
     // final double valueHeight = allocatedHeight * 0.05 < 41 ? 41 : allocatedHeight * 0.05;
-    final double tickHeight = allocatedHeight * 0.0125 < 20 ? 20 : allocatedHeight * 0.0125;
+    final double tickHeight =
+        allocatedHeight * 0.0125 < 20 ? 20 : allocatedHeight * 0.0125;
     // todo finetune label positions
     final labelOffset = (allocatedWidth / (divisions + 2)) * 0.5;
 
@@ -83,7 +85,8 @@ class CustomSlider extends StatelessWidget {
     }
 
     String annotation(index) => annotations
-        .firstWhere((annotation) => annotation.value == index + minValue!, orElse: () => Annotation())
+        .firstWhere((annotation) => annotation.value == index + minValue!,
+            orElse: () => Annotation())
         .annotation;
 
     return Column(
@@ -101,7 +104,8 @@ class CustomSlider extends StatelessWidget {
                 },
                 child: Column(
                   children: [
-                    index % (minorTick! + 1) == 0 && annotation(index).isNotEmpty
+                    index % (minorTick! + 1) == 0 &&
+                            annotation(index).isNotEmpty
                         ? Container(
                             alignment: Alignment.bottomCenter,
                             //height: valueHeight,
@@ -110,8 +114,10 @@ class CustomSlider extends StatelessWidget {
                               //  ? (index / (divisions - 1) * maxValue).toStringAsFixed(tickValuePrecision)
                               /*:*/
                               annotation(index),
-                              style: labelTextStyle!
-                                  .copyWith(fontWeight: isValueSelected(index) ? FontWeight.bold : FontWeight.normal),
+                              style: labelTextStyle!.copyWith(
+                                  fontWeight: isValueSelected(index)
+                                      ? FontWeight.bold
+                                      : FontWeight.normal),
                               textAlign: TextAlign.center,
                             ))
                         : const SizedBox.shrink(),
@@ -121,7 +127,9 @@ class CustomSlider extends StatelessWidget {
                       child: VerticalDivider(
                         indent: index % (minorTick! + 1) == 0 ? 2 : 6,
                         thickness: 1.8,
-                        color: isValueSelected(index) ? thumbColor ?? primaryColor : Colors.grey.shade300,
+                        color: isValueSelected(index)
+                            ? thumbColor ?? primaryColor
+                            : Colors.grey.shade300,
                       ),
                     ),
                   ],
@@ -134,7 +142,8 @@ class CustomSlider extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: labelOffset),
           child: SliderTheme(
             data: SliderThemeData(
-              trackHeight: allocatedHeight * 0.0125 < 9 ? 9 : allocatedHeight * 0.0125,
+              trackHeight:
+                  allocatedHeight * 0.0125 < 9 ? 9 : allocatedHeight * 0.0125,
               inactiveTickMarkColor: isColored ? activeColor : null,
               activeTrackColor: activeColor,
               inactiveTrackColor: inactiveColor,
@@ -152,7 +161,9 @@ class CustomSlider extends StatelessWidget {
               children: [
                 if (isColored)
                   Container(
-                    height: allocatedHeight * 0.0125 < 9 ? 9 : allocatedHeight * 0.0125,
+                    height: allocatedHeight * 0.0125 < 9
+                        ? 9
+                        : allocatedHeight * 0.0125,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
                       gradient: LinearGradient(
@@ -191,7 +202,8 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
   }) {
     final double trackHeight = sliderTheme.trackHeight!;
     final double trackLeft = offset.dx;
-    final double trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final double trackTop =
+        offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }

@@ -21,10 +21,13 @@ class PublishSuccessDialog extends StudyPageWidget {
         children: [
           const SizedBox(height: 24.0),
           EmptyBody(
-            leading: Text("\u{1f389}".hardcoded,
-                style: theme.textTheme.displayLarge?.copyWith(
-                  fontSize: (theme.textTheme.displayLarge?.fontSize ?? 48.0) * 1.5,
-                ),),
+            leading: Text(
+              "\u{1f389}".hardcoded,
+              style: theme.textTheme.displayLarge?.copyWith(
+                fontSize:
+                    (theme.textTheme.displayLarge?.fontSize ?? 48.0) * 1.5,
+              ),
+            ),
             title: tr.study_launch_success_title,
             description: tr.study_launch_success_description,
           ),
@@ -33,25 +36,28 @@ class PublishSuccessDialog extends StudyPageWidget {
       ),
       actionButtons: [
         Expanded(
-            child: Column(
-          children: [
-            PrimaryButton(
-              text: tr.action_button_post_launch_followup,
-              onPressed: () => Navigator.maybePop(context).whenComplete(() => controller.onAddParticipants()),
-            ),
-            const SizedBox(height: 8.0),
-            Opacity(
-              opacity: 0.75,
-              child: TextButton(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                  child: Text(tr.action_button_post_launch_followup_skip),
-                ),
-                onPressed: () => Navigator.maybePop(context),
+          child: Column(
+            children: [
+              PrimaryButton(
+                text: tr.action_button_post_launch_followup,
+                onPressed: () => Navigator.maybePop(context)
+                    .whenComplete(() => controller.onAddParticipants()),
               ),
-            ),
-          ],
-        ),),
+              const SizedBox(height: 8.0),
+              Opacity(
+                opacity: 0.75,
+                child: TextButton(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 8.0),
+                    child: Text(tr.action_button_post_launch_followup_skip),
+                  ),
+                  onPressed: () => Navigator.maybePop(context),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
       maxWidth: 450,
     );

@@ -8,11 +8,12 @@ class UnderConstruction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Opacity(
-        opacity: 0.7,
-        child: EmptyBody(
-          icon: Icons.construction_rounded,
-          title: tr.under_construction,
-          description: tr.under_construction_description,
-        ),);
+      opacity: 0.7,
+      child: EmptyBody(
+        icon: Icons.construction_rounded,
+        title: tr.under_construction,
+        description: tr.under_construction_description,
+      ),
+    );
   }
 }

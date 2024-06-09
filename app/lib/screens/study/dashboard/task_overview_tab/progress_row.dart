@@ -21,7 +21,8 @@ class _ProgressRowState extends State<ProgressRow> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final currentPhase = widget.subject!.getInterventionIndexForDate(DateTime.now());
+    final currentPhase =
+        widget.subject!.getInterventionIndexForDate(DateTime.now());
 
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -39,17 +40,25 @@ class _ProgressRowState extends State<ProgressRow> {
                     indent: 5,
                     endIndent: 5,
                     thickness: 3,
-                    color: currentPhase > index ? theme.primaryColor : theme.disabledColor,
+                    color: currentPhase > index
+                        ? theme.primaryColor
+                        : theme.disabledColor,
                   ),
                 ),
-                widget.subject!.getInterventionsInOrder().asMap().entries.map((entry) {
+                widget.subject!
+                    .getInterventionsInOrder()
+                    .asMap()
+                    .entries
+                    .map((entry) {
                   return InterventionSegment(
                     intervention: entry.value,
                     isCurrent: currentPhase == entry.key,
                     isFuture: currentPhase < entry.key,
                     phaseDuration: widget.subject!.study.schedule.phaseDuration,
-                    percentCompleted: widget.subject!.percentCompletedForPhase(entry.key),
-                    percentMissed: widget.subject!.percentMissedForPhase(entry.key, DateTime.now()),
+                    percentCompleted:
+                        widget.subject!.percentCompletedForPhase(entry.key),
+                    percentMissed: widget.subject!
+                        .percentMissedForPhase(entry.key, DateTime.now()),
                   );
                 }),
               ),
@@ -109,10 +118,13 @@ class InterventionSegment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final color = isFuture ? Colors.grey : (isCurrent ? theme.colorScheme.secondary : theme.primaryColor);
+    final color = isFuture
+        ? Colors.grey
+        : (isCurrent ? theme.colorScheme.secondary : theme.primaryColor);
 
     final emptyColor = Color.alphaBlend(theme.dividerColor, Colors.white);
-    final activeColor = Color.alphaBlend(theme.colorScheme.secondary, Colors.white);
+    final activeColor =
+        Color.alphaBlend(theme.colorScheme.secondary, Colors.white);
     final completedColor = Color.alphaBlend(theme.primaryColor, Colors.white);
 
     return Expanded(
@@ -163,7 +175,8 @@ class InterventionSegment extends StatelessWidget {
             },
             elevation: 0,
             fillColor: color,
-            shape: const CircleBorder(side: BorderSide(color: Colors.white, width: 2)),
+            shape: const CircleBorder(
+                side: BorderSide(color: Colors.white, width: 2)),
             child: interventionIcon(intervention),
           ),
         ],
@@ -172,7 +185,8 @@ class InterventionSegment extends StatelessWidget {
   }
 }
 
-Iterable<T> intersperseIndexed<T>(T Function(int) generator, Iterable<T> iterable) sync* {
+Iterable<T> intersperseIndexed<T>(
+    T Function(int) generator, Iterable<T> iterable) sync* {
   final iterator = iterable.iterator;
   var index = 0;
   if (iterator.moveNext()) {

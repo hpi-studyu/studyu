@@ -84,7 +84,8 @@ class InterventionFormViewModel
         validationMessages: {
           ValidationMessage.minLength: (error) =>
               tr.form_array_intervention_tasks_minlength(
-                  (error as Map)['requiredLength'] as num,),
+                (error as Map)['requiredLength'] as num,
+              ),
         },
       );
 
@@ -149,8 +150,11 @@ class InterventionFormViewModel
 
   @override
   List<ModelAction> availableActions(InterventionTaskFormViewModel model) {
-    final actions = tasksCollection.availableActions(model,
-        onEdit: onSelectItem, isReadOnly: isReadonly,);
+    final actions = tasksCollection.availableActions(
+      model,
+      onEdit: onSelectItem,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
@@ -161,7 +165,8 @@ class InterventionFormViewModel
   }
 
   List<ModelAction> availableInlineActions(
-      InterventionTaskFormViewModel model,) {
+    InterventionTaskFormViewModel model,
+  ) {
     final actions =
         tasksCollection.availableInlineActions(model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
@@ -183,13 +188,17 @@ class InterventionFormViewModel
 
   @override
   void onCancel(
-      InterventionTaskFormViewModel formViewModel, FormMode prevFormMode,) {
+    InterventionTaskFormViewModel formViewModel,
+    FormMode prevFormMode,
+  ) {
     return; // no-op
   }
 
   @override
-  Future onSave(InterventionTaskFormViewModel formViewModel,
-      FormMode prevFormMode,) async {
+  Future onSave(
+    InterventionTaskFormViewModel formViewModel,
+    FormMode prevFormMode,
+  ) async {
     if (prevFormMode == FormMode.create) {
       // Save the managed viewmodel that was eagerly added in [provide]
       tasksCollection.commit(formViewModel);
@@ -232,7 +241,8 @@ class InterventionFormViewModel
   }
 
   InterventionTaskFormRouteArgs buildFormRouteArgs(
-      InterventionTaskFormViewModel model,) {
+    InterventionTaskFormViewModel model,
+  ) {
     final args = InterventionTaskFormRouteArgs(
       studyId: study.id,
       interventionId: interventionId,

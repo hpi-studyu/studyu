@@ -16,7 +16,9 @@ final platformLocaleProvider = Provider<Locale>((_) {
 
 /// Supported Locales Provider
 final supportedLocalesProvider = Provider<List<Locale>>((_) {
-  return Config.supportedLocales.entries.map((e) => Locale(e.key, e.value)).toList();
+  return Config.supportedLocales.entries
+      .map((e) => Locale(e.key, e.value))
+      .toList();
 });
 
 /// Locale Provider
@@ -25,4 +27,6 @@ final localeProvider = Provider<Locale>((ref) {
   return ref.watch(localeStateProvider).locale;
 });
 
-final localeStateProvider = StateNotifierProvider<LocaleStateNotifier, LocaleState>((ref) => LocaleStateNotifier(ref));
+final localeStateProvider =
+    StateNotifierProvider<LocaleStateNotifier, LocaleState>(
+        (ref) => LocaleStateNotifier(ref));

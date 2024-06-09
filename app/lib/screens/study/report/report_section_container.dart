@@ -6,7 +6,8 @@ import 'package:studyu_core/core.dart';
 
 import 'report_section_widget.dart';
 
-typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, StudySubject subject);
+typedef SectionBuilder = ReportSectionWidget Function(
+    ReportSection section, StudySubject subject);
 
 class ReportSectionContainer extends StatelessWidget {
   final ReportSection section;
@@ -14,10 +15,12 @@ class ReportSectionContainer extends StatelessWidget {
   final bool primary;
   final GestureTapCallback? onTap;
 
-  const ReportSectionContainer(this.section, {super.key, required this.subject, this.onTap, this.primary = false});
+  const ReportSectionContainer(this.section,
+      {super.key, required this.subject, this.onTap, this.primary = false});
 
   ReportSectionWidget buildContents(BuildContext context) => switch (section) {
-        AverageSection averageSection => AverageSectionWidget(subject, averageSection),
+        AverageSection averageSection =>
+          AverageSectionWidget(subject, averageSection),
         LinearRegressionSection linearRegressionSection =>
           LinearRegressionSectionWidget(subject, linearRegressionSection),
         _ => throw ArgumentError('Section type ${section.type} not supported.'),
@@ -26,7 +29,8 @@ class ReportSectionContainer extends StatelessWidget {
   List<Widget> buildPrimaryHeader(BuildContext context, ThemeData theme) => [
         Text(
           AppLocalizations.of(context)!.report_primary_result.toUpperCase(),
-          style: theme.textTheme.labelSmall!.copyWith(color: theme.colorScheme.secondary),
+          style: theme.textTheme.labelSmall!
+              .copyWith(color: theme.colorScheme.secondary),
         ),
         const SizedBox(height: 4),
       ];

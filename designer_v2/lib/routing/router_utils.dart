@@ -30,7 +30,8 @@ RouteSettings readCurrentRouteSettingsFrom(BuildContext context) {
   return currentRouteSettings;
 }
 
-CustomTransitionPage<void> buildModalTransitionPage(BuildContext context, GoRouterState state, Widget body) {
+CustomTransitionPage<void> buildModalTransitionPage(
+    BuildContext context, GoRouterState state, Widget body) {
   final theme = Theme.of(context);
 
   return CustomTransitionPage<void>(

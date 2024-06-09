@@ -54,7 +54,8 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 
   Future<void> navigateToEligibilityCheck(BuildContext context) async {
     final study = context.read<AppState>().selectedStudy;
-    final result = await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: study));
+    final result = await Navigator.push<EligibilityResult>(
+        context, EligibilityScreen.routeFor(study: study));
     if (result == null) return;
 
     if (!context.mounted) return;
@@ -103,20 +104,27 @@ class StudyDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final baselineLength = study!.schedule.includeBaseline ? study!.schedule.phaseDuration : 0;
+    final baselineLength =
+        study!.schedule.includeBaseline ? study!.schedule.phaseDuration : 0;
     final studyLength = baselineLength +
-        study!.schedule.phaseDuration * study!.schedule.numberOfCycles * StudySchedule.numberOfInterventions;
+        study!.schedule.phaseDuration *
+            study!.schedule.numberOfCycles *
+            StudySchedule.numberOfInterventions;
     return Column(
       children: [
         ListTile(
-          title: Text(AppLocalizations.of(context)!.intervention_phase_duration),
-          subtitle: Text('${study!.schedule.phaseDuration} ${AppLocalizations.of(context)!.days}'),
-          leading: Icon(MdiIcons.clock, color: theme.primaryColor, size: iconSize),
+          title:
+              Text(AppLocalizations.of(context)!.intervention_phase_duration),
+          subtitle: Text(
+              '${study!.schedule.phaseDuration} ${AppLocalizations.of(context)!.days}'),
+          leading:
+              Icon(MdiIcons.clock, color: theme.primaryColor, size: iconSize),
         ),
         ListTile(
           title: Text(AppLocalizations.of(context)!.study_length),
           subtitle: Text('$studyLength ${AppLocalizations.of(context)!.days}'),
-          leading: Icon(MdiIcons.calendar, color: theme.primaryColor, size: iconSize),
+          leading: Icon(MdiIcons.calendar,
+              color: theme.primaryColor, size: iconSize),
         ),
         const SizedBox(height: 16),
         ContactWidget(

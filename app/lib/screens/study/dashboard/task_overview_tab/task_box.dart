@@ -29,7 +29,8 @@ class _TaskBoxState extends State<TaskBox> {
   Future<void> _navigateToTaskScreen() async {
     await Navigator.push<bool>(
       context,
-      MaterialPageRoute(builder: (context) => TaskScreen(taskInstance: widget.taskInstance)),
+      MaterialPageRoute(
+          builder: (context) => TaskScreen(taskInstance: widget.taskInstance)),
     );
     widget.onCompleted();
     // Rebuild widget
@@ -42,9 +43,11 @@ class _TaskBoxState extends State<TaskBox> {
     final completed = context
         .watch<AppState>()
         .activeSubject!
-        .completedTaskInstanceForDay(widget.taskInstance.task.id, widget.taskInstance.completionPeriod, DateTime.now());
+        .completedTaskInstanceForDay(widget.taskInstance.task.id,
+            widget.taskInstance.completionPeriod, DateTime.now());
     final isPreview = context.read<AppState>().isPreview;
-    final isInsidePeriod = widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now());
+    final isInsidePeriod =
+        widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now());
     final isTaskOpen = !completed && isInsidePeriod || isPreview || kDebugMode;
     return Card(
       elevation: 2,
@@ -62,7 +65,8 @@ class _TaskBoxState extends State<TaskBox> {
             if (isInsidePeriod || isPreview || completed)
               RoundCheckbox(
                 value: completed, //_isCompleted,
-                onChanged: (value) => isTaskOpen ? _navigateToTaskScreen() : () {},
+                onChanged: (value) =>
+                    isTaskOpen ? _navigateToTaskScreen() : () {},
               )
             else
               Padding(

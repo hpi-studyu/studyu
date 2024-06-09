@@ -30,7 +30,8 @@ Future<void> showAppOutdatedDialog(BuildContext context) async {
   await showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: Text(AppLocalizations.of(context)!.study_selection_unsupported_title),
+      title:
+          Text(AppLocalizations.of(context)!.study_selection_unsupported_title),
       content: Text(AppLocalizations.of(context)!.study_selection_unsupported),
       actions: [
         TextButton(
@@ -74,7 +75,8 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: AppLocalizations.of(context)!.study_selection_single,
+                            text: AppLocalizations.of(context)!
+                                .study_selection_single,
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
@@ -82,13 +84,17 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
-                            text: AppLocalizations.of(context)!.study_selection_single_why,
-                            style: theme.textTheme.titleSmall!.copyWith(color: theme.primaryColor),
+                            text: AppLocalizations.of(context)!
+                                .study_selection_single_why,
+                            style: theme.textTheme.titleSmall!
+                                .copyWith(color: theme.primaryColor),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
-                                      content: Text(AppLocalizations.of(context)!.study_selection_single_reason),
+                                      content: Text(
+                                          AppLocalizations.of(context)!
+                                              .study_selection_single_reason),
                                     ),
                                   ),
                           )
@@ -109,7 +115,8 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             size: 32,
                           ),
                           content: Text(
-                            AppLocalizations.of(context)!.study_selection_hidden_studies,
+                            AppLocalizations.of(context)!
+                                .study_selection_hidden_studies,
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
                           actions: const [SizedBox.shrink()],
@@ -122,12 +129,14 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
               Expanded(
                 child: RetryFutureBuilder<ExtractionResult<Study>>(
                   tryFunction: () async => publishedStudies,
-                  successBuilder: (BuildContext context, ExtractionResult<Study>? extractionResult) {
+                  successBuilder: (BuildContext context,
+                      ExtractionResult<Study>? extractionResult) {
                     final studies = extractionResult!.extracted;
                     if (extractionResult is ExtractionFailedException<Study>) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         if (_hiddenStudies) return;
-                        debugPrint('${extractionResult.notExtracted.length} studies could not be extracted.');
+                        debugPrint(
+                            '${extractionResult.notExtracted.length} studies could not be extracted.');
                         setState(() {
                           _hiddenStudies = true;
                         });
@@ -158,7 +167,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                 child: OutlinedButton.icon(
                   icon: Icon(MdiIcons.key),
                   onPressed: () async {
-                    await showDialog(context: context, builder: (_) => const InviteCodeDialog());
+                    await showDialog(
+                        context: context,
+                        builder: (_) => const InviteCodeDialog());
                   },
                   label: Text(AppLocalizations.of(context)!.invite_code_button),
                 ),
@@ -198,7 +209,8 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
           controller: _controller,
           validator: (_) => _errorMessage,
           autovalidateMode: AutovalidateMode.always,
-          decoration: InputDecoration(labelText: AppLocalizations.of(context)!.invite_code),
+          decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.invite_code),
         ),
         actions: [
           OutlinedButton.icon(
@@ -223,7 +235,8 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
               if (result == null) {
                 setState(() {
-                  _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
+                  _errorMessage =
+                      AppLocalizations.of(context)!.invalid_invite_code;
                 });
               } else {
                 setState(() {

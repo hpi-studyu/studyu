@@ -7,7 +7,8 @@ class FreeTextQuestionWidget extends QuestionWidget {
   final FreeTextQuestion question;
   final Function(Answer)? onDone;
 
-  const FreeTextQuestionWidget({super.key, required this.question, this.onDone});
+  const FreeTextQuestionWidget(
+      {super.key, required this.question, this.onDone});
 
   @override
   State<FreeTextQuestionWidget> createState() => _FreeTextQuestionWidgetState();
@@ -44,9 +45,11 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
       },
       validator: (value) {
         if (value!.length < question.lengthRange.first) {
-          return AppLocalizations.of(context)!.free_text_min_length_error(question.lengthRange.first);
+          return AppLocalizations.of(context)!
+              .free_text_min_length_error(question.lengthRange.first);
         } else if (value.length > question.lengthRange.last) {
-          return AppLocalizations.of(context)!.free_text_max_length_error(question.lengthRange.last);
+          return AppLocalizations.of(context)!
+              .free_text_max_length_error(question.lengthRange.last);
         }
         switch (question.textType) {
           case FreeTextQuestionType.any:
@@ -67,7 +70,8 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             if (RegExp(question.customTypeExpression!).hasMatch(value)) {
               return null;
             } else {
-              return AppLocalizations.of(context)!.free_text_custom_error(question.customTypeExpression!);
+              return AppLocalizations.of(context)!
+                  .free_text_custom_error(question.customTypeExpression!);
             }
         }
       },

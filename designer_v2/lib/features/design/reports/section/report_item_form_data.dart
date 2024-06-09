@@ -14,19 +14,24 @@ class ReportItemFormData extends IFormData {
   @override
   String get id => section.id;
 
-  static List<ReportItemFormData> fromDomainModel(ReportSpecification reportSpecification) {
+  static List<ReportItemFormData> fromDomainModel(
+      ReportSpecification reportSpecification) {
     final List<ReportItemFormData> reportsFormData = [];
     if (reportSpecification.primary != null) {
-      reportsFormData.add(ReportItemFormData(
-        isPrimary: true,
-        section: reportSpecification.primary!,
-      ),);
+      reportsFormData.add(
+        ReportItemFormData(
+          isPrimary: true,
+          section: reportSpecification.primary!,
+        ),
+      );
     }
     for (final ReportSection reportSection in reportSpecification.secondary) {
-      reportsFormData.add(ReportItemFormData(
-        isPrimary: false,
-        section: reportSection,
-      ),);
+      reportsFormData.add(
+        ReportItemFormData(
+          isPrimary: false,
+          section: reportSection,
+        ),
+      );
     }
     return reportsFormData;
   }

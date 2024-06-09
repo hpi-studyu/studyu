@@ -175,9 +175,11 @@ void main() {
       await studyInfoRobot.validateOnStudyInfoScreen();
       await studyInfoRobot.enterStudyDescription('Test study description');
       await studyInfoRobot.enterResponsibleOrg('Test Organization, Inc.');
-      await studyInfoRobot.enterInstitutionalReviewBoard('IRB of Test Organization, Inc.');
+      await studyInfoRobot
+          .enterInstitutionalReviewBoard('IRB of Test Organization, Inc.');
       await studyInfoRobot.enterIRBProtocolNumber('456-112-324');
-      await studyInfoRobot.enterResponsiblePerson('Test First Name, Test Last Name');
+      await studyInfoRobot
+          .enterResponsiblePerson('Test First Name, Test Last Name');
       await studyInfoRobot.enterWebsite('test-study.org');
       await studyInfoRobot.enterContactEmail('test@email.com');
       await studyInfoRobot.enterContactPhone('+491112221122');
@@ -189,21 +191,27 @@ void main() {
       await studyDesignRobot.navigateToInterventionsScreen();
       // Repeat twice for two interventions
       await studyInterventionsRobot.tapAddInterventionButton();
-      await studyInterventionsRobot.enterInterventionName('Test Intervention A');
-      await studyInterventionsRobot.enterInterventionDesciption('Test Intervention Description A');
+      await studyInterventionsRobot
+          .enterInterventionName('Test Intervention A');
+      await studyInterventionsRobot
+          .enterInterventionDesciption('Test Intervention Description A');
       await studyInterventionsRobot.tapAddInterventionTaskButton();
       await studyInterventionsRobot.enterInterventionTaskName('Task 1A');
-      await studyInterventionsRobot.enterInterventionTaskDescription('Task 1A Description');
+      await studyInterventionsRobot
+          .enterInterventionTaskDescription('Task 1A Description');
       await studyInterventionsRobot.tapSaveInterventionTaskButton();
       await studyInterventionsRobot.tapSaveInterventionButton();
       await studyDesignRobot.validateChangesSaved();
 
       await studyInterventionsRobot.tapAddInterventionButton();
-      await studyInterventionsRobot.enterInterventionName('Test Intervention B');
-      await studyInterventionsRobot.enterInterventionDesciption('Test Intervention Description B');
+      await studyInterventionsRobot
+          .enterInterventionName('Test Intervention B');
+      await studyInterventionsRobot
+          .enterInterventionDesciption('Test Intervention Description B');
       await studyInterventionsRobot.tapAddInterventionTaskButton();
       await studyInterventionsRobot.enterInterventionTaskName('Task 1B');
-      await studyInterventionsRobot.enterInterventionTaskDescription('Task 1B Description');
+      await studyInterventionsRobot
+          .enterInterventionTaskDescription('Task 1B Description');
       await studyInterventionsRobot.tapSaveInterventionTaskButton();
       await studyInterventionsRobot.tapSaveInterventionButton();
       await studyDesignRobot.validateChangesSaved();

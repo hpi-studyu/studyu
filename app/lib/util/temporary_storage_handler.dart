@@ -23,19 +23,22 @@ class TemporaryStorageHandler {
 
   static Future<Directory> _getMultimodalTempDirectory() async {
     final tempAppData = await getTemporaryDirectory();
-    final multimodalTempDirectory = Directory("${tempAppData.path}/multimodal-temp");
+    final multimodalTempDirectory =
+        Directory("${tempAppData.path}/multimodal-temp");
     await multimodalTempDirectory.create(recursive: true);
     return multimodalTempDirectory;
   }
 
   static Future<Directory> _getMultimodalUploadDirectory() async {
     final appData = await getApplicationDocumentsDirectory();
-    final multimodalUploadDirectory = Directory("${appData.path}/multimodal-upload");
+    final multimodalUploadDirectory =
+        Directory("${appData.path}/multimodal-upload");
     await multimodalUploadDirectory.create(recursive: true);
     return multimodalUploadDirectory;
   }
 
-  static Future<void> moveStagingFileToUploadDirectory(String stagingFilePath, String blobId) async {
+  static Future<void> moveStagingFileToUploadDirectory(
+      String stagingFilePath, String blobId) async {
     final stagingFile = File(stagingFilePath);
     final uploadDirectory = await _getMultimodalUploadDirectory();
     final uploadFile = File(path.join(
@@ -67,7 +70,8 @@ class TemporaryStorageHandler {
         TemporaryStorageHandler._audioFileType,
       ].join(),
     );
-    final futureBlobId = [fileName, TemporaryStorageHandler._audioFileType].join();
+    final futureBlobId =
+        [fileName, TemporaryStorageHandler._audioFileType].join();
     return FutureBlobFile(localFilePath, futureBlobId);
   }
 
@@ -82,7 +86,8 @@ class TemporaryStorageHandler {
         TemporaryStorageHandler._imageFileType,
       ].join(),
     );
-    final futureBlobId = [fileName, TemporaryStorageHandler._imageFileType].join();
+    final futureBlobId =
+        [fileName, TemporaryStorageHandler._imageFileType].join();
     return FutureBlobFile(localFilePath, futureBlobId);
   }
 
@@ -90,7 +95,9 @@ class TemporaryStorageHandler {
     final temporaryMultimodalDirectory = await _getMultimodalTempDirectory();
     for (final file in await temporaryMultimodalDirectory
         .list()
-        .where((f) => path.basename(f.path).startsWith(TemporaryStorageHandler._stagingBaseNamePrefix))
+        .where((f) => path
+            .basename(f.path)
+            .startsWith(TemporaryStorageHandler._stagingBaseNamePrefix))
         .toList()) {
       await file.delete();
     }

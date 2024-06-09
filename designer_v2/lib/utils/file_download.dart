@@ -16,11 +16,13 @@ dynamic downloadFile({required String fileContent, required String filename}) {
 void downloadBytes({required List<int> bytes, required String filename}) {
   if (!kIsWeb) {
     throw Exception(
-        "The StudyU designer only support the web platform".hardcoded,);
+      "The StudyU designer only support the web platform".hardcoded,
+    );
   }
   final content = base64Encode(bytes);
   final anchor = AnchorElement(
-      href: "data:application/octet-stream;charset=utf-16le;base64,$content",)
+    href: "data:application/octet-stream;charset=utf-16le;base64,$content",
+  )
     ..style.display = 'none'
     ..download = filename;
   document.body?.append(anchor);

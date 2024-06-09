@@ -30,7 +30,8 @@ class SyncIndicator<T> extends StatefulWidget {
   State<SyncIndicator> createState() => _SyncIndicatorState();
 }
 
-class _SyncIndicatorState extends State<SyncIndicator> with SingleTickerProviderStateMixin {
+class _SyncIndicatorState extends State<SyncIndicator>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _animationController;
   late final Animation<double> _animation;
 
@@ -88,7 +89,8 @@ class _SyncIndicatorState extends State<SyncIndicator> with SingleTickerProvider
 
     if (!widget.isDirty && widget.lastSynced != null) {
       dataWidget = Tooltip(
-        message: "${tr.sync_done}\n\n${tr.sync_last_saved}: ${widget.lastSynced!.toTimeAgoStringPrecise()}",
+        message:
+            "${tr.sync_done}\n\n${tr.sync_last_saved}: ${widget.lastSynced!.toTimeAgoStringPrecise()}",
         child: Icon(
           Icons.check_circle_rounded,
           size: widget.iconSize,

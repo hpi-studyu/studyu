@@ -29,13 +29,17 @@ final routerProvider = Provider<GoRouter>((ref) {
     final loginLocation = router.namedLocation(loginRouteName);
     final signupLocation = router.namedLocation(signupRouteName);
     final splashLocation = router.namedLocation(splashRouteName);
-    final passwordRecoveryLocation = router.namedLocation(recoverPasswordRouteName);
-    final isOnDefaultPage = state.matchedLocation == router.namedLocation(defaultLocation);
+    final passwordRecoveryLocation =
+        router.namedLocation(recoverPasswordRouteName);
+    final isOnDefaultPage =
+        state.matchedLocation == router.namedLocation(defaultLocation);
     final isOnLoginPage = state.matchedLocation == loginLocation;
     final isOnSignupPage = state.matchedLocation == signupLocation;
     final isOnSplashPage = state.matchedLocation == splashLocation;
-    final isOnPasswordRecoveryPage = state.matchedLocation == passwordRecoveryLocation;
-    final isOnPublicPage = RouterConf.publicRoutes.any((element) => element.path == state.matchedLocation);
+    final isOnPasswordRecoveryPage =
+        state.matchedLocation == passwordRecoveryLocation;
+    final isOnPublicPage = RouterConf.publicRoutes
+        .any((element) => element.path == state.matchedLocation);
 
     // Read most recent app state on re-evaluation (see refreshListenable)
     final isLoggedIn = authRepository.isLoggedIn;
@@ -48,7 +52,8 @@ final routerProvider = Provider<GoRouter>((ref) {
     if (state.uri.queryParameters.containsKey('from')) {
       from = state.uri.queryParameters['from'];
     } else {
-      if (state.matchedLocation.isNotEmpty && !(isOnDefaultPage | isOnSplashPage)) {
+      if (state.matchedLocation.isNotEmpty &&
+          !(isOnDefaultPage | isOnSplashPage)) {
         from = state.matchedLocation;
       } else {
         from = null;

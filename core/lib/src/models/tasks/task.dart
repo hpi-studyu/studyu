@@ -24,7 +24,8 @@ abstract class Task {
     return toJson().toString();
   }
 
-  Map<DateTime, T> extractPropertyResults<T>(String property, List<SubjectProgress> sourceResults);
+  Map<DateTime, T> extractPropertyResults<T>(
+      String property, List<SubjectProgress> sourceResults);
 
   Map<String, Type> getAvailableProperties();
 

@@ -13,14 +13,17 @@ class CheckmarkTask extends InterventionTask {
 
   CheckmarkTask.withId() : super.withId(taskType);
 
-  factory CheckmarkTask.fromJson(Map<String, dynamic> json) => _$CheckmarkTaskFromJson(json);
+  factory CheckmarkTask.fromJson(Map<String, dynamic> json) =>
+      _$CheckmarkTaskFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$CheckmarkTaskToJson(this);
 
   @override
-  Map<DateTime, T> extractPropertyResults<T>(String property, List<SubjectProgress> sourceResults) {
-    throw ArgumentError("$runtimeType does not have a property named '$property'.");
+  Map<DateTime, T> extractPropertyResults<T>(
+      String property, List<SubjectProgress> sourceResults) {
+    throw ArgumentError(
+        "$runtimeType does not have a property named '$property'.");
   }
 
   @override
