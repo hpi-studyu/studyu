@@ -39,12 +39,12 @@ mixin StudyScheduleControls {
         StudyFormValidationSet.publish: [
           customSequenceRequired,
           numCyclesRange,
-          phaseDurationRange
+          phaseDurationRange,
         ],
         StudyFormValidationSet.test: [
           customSequenceRequired,
           numCyclesRange,
-          phaseDurationRange
+          phaseDurationRange,
         ],
       };
 
@@ -60,13 +60,13 @@ mixin StudyScheduleControls {
         validationMessages: {
           ValidationMessage.required: (error) =>
               tr.form_field_crossover_schedule_num_cycles_range(
-                  kNumCyclesMin, kNumCyclesMax),
+                  kNumCyclesMin, kNumCyclesMax,),
           ValidationMessage.min: (error) =>
               tr.form_field_crossover_schedule_num_cycles_range(
-                  kNumCyclesMin, kNumCyclesMax),
+                  kNumCyclesMin, kNumCyclesMax,),
           ValidationMessage.max: (error) =>
               tr.form_field_crossover_schedule_num_cycles_range(
-                  kNumCyclesMin, kNumCyclesMax),
+                  kNumCyclesMin, kNumCyclesMax,),
         },
       );
 
@@ -77,18 +77,18 @@ mixin StudyScheduleControls {
         validators: [
           Validators.required,
           Validators.min(kPhaseDurationMin),
-          Validators.max(kPhaseDurationMax)
+          Validators.max(kPhaseDurationMax),
         ],
         validationMessages: {
           ValidationMessage.required: (error) =>
               tr.form_field_crossover_schedule_phase_length_range(
-                  kPhaseDurationMin, kPhaseDurationMax),
+                  kPhaseDurationMin, kPhaseDurationMax,),
           ValidationMessage.min: (error) =>
               tr.form_field_crossover_schedule_phase_length_range(
-                  kPhaseDurationMin, kPhaseDurationMax),
+                  kPhaseDurationMin, kPhaseDurationMax,),
           ValidationMessage.max: (error) =>
               tr.form_field_crossover_schedule_phase_length_range(
-                  kPhaseDurationMin, kPhaseDurationMax),
+                  kPhaseDurationMin, kPhaseDurationMax,),
         },
       );
 

@@ -7,7 +7,7 @@ class TaskInstance {
   TaskInstance(this.task, this.id) : assert(task.id != id);
 
   factory TaskInstance.fromInstanceId(String taskInstanceId,
-      {StudySubject? subject, Study? study, DateTime? date}) {
+      {StudySubject? subject, Study? study, DateTime? date,}) {
     date ??= DateTime.now();
     final Task tempTask;
     if (subject != null) {
@@ -22,7 +22,7 @@ class TaskInstance {
   }
 
   static Task _taskFromStudy(
-      String taskInstanceId, Study study, DateTime date) {
+      String taskInstanceId, Study study, DateTime date,) {
     final tasks = <Task>[
       ...study.observations,
       ...study.interventions
@@ -39,7 +39,7 @@ class TaskInstance {
   }
 
   static Task _taskFromSubject(
-      String taskInstanceId, StudySubject subject, DateTime now) {
+      String taskInstanceId, StudySubject subject, DateTime now,) {
     return subject
         .scheduleFor(now)
         .firstWhere((element) => element.id == taskInstanceId)

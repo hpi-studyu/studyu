@@ -32,7 +32,7 @@ class InterventionResult extends StudyResult {
   List getValues(StudySubject subject) {
     return subject.interventionOrder
         .expand((intervention) => List<String>.filled(
-            subject.study.schedule.phaseDuration, intervention))
+            subject.study.schedule.phaseDuration, intervention,),)
         .toList();
   }
 }

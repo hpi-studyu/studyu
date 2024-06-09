@@ -52,7 +52,7 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
             child: BannerBox(
               style: BannerStyle.info,
               body: TextParagraph(
-                  text: tr.form_array_screener_question_logic_dirty_banner),
+                  text: tr.form_array_screener_question_logic_dirty_banner,),
               padding:
                   const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
               noPrefix: true,
@@ -126,7 +126,7 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
     final logicWidget = Theme(
       data: theme.copyWith(
           inputDecorationTheme:
-              ThemeConfig.dropdownInputDecorationTheme(theme)),
+              ThemeConfig.dropdownInputDecorationTheme(theme),),
       child: ReactiveDropdownField<bool>(
         formControl: logicControl,
         items: formViewModel.logicControlOptions.map((option) {

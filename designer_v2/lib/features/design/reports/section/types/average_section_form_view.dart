@@ -47,7 +47,7 @@ class AverageSectionFormView extends ConsumerWidget {
               input: Theme(
                 data: theme.copyWith(
                     inputDecorationTheme:
-                        ThemeConfig.dropdownInputDecorationTheme(theme)),
+                        ThemeConfig.dropdownInputDecorationTheme(theme),),
                 child: ReactiveDropdownField<TemporalAggregationFormatted>(
                   formControl: formViewModel.temporalAggregationControl,
                   hint: const Text("Select an aggregation value"),

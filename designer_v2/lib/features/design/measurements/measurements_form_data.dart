@@ -15,7 +15,7 @@ class MeasurementsFormData implements IStudyFormData {
     return MeasurementsFormData(
       surveyMeasurements: study.observations
           .map((observation) => MeasurementSurveyFormData.fromDomainModel(
-              observation as QuestionnaireTask))
+              observation as QuestionnaireTask,),)
           .toList(),
     );
   }

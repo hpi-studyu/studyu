@@ -38,7 +38,7 @@ class ThemeConfig {
   static TextStyle bodyTextBackground(ThemeData theme) => TextStyle(
       fontSize: 14.0,
       height: 1.35,
-      color: theme.colorScheme.onSurface.withOpacity(0.25));
+      color: theme.colorScheme.onSurface.withOpacity(0.25),);
 
   static double iconSplashRadius(ThemeData theme) => 24.0;
 
@@ -93,7 +93,7 @@ class WebTransitionBuilder extends PageTransitionsBuilder {
     return FadeTransition(
       opacity: opacityOldTween.animate(secondaryAnimation),
       child: FadeTransition(
-          opacity: opacityNewTween.animate(animation), child: child),
+          opacity: opacityNewTween.animate(animation), child: child,),
     );
   }
 }
@@ -142,7 +142,7 @@ class ThemeProvider extends InheritedWidget {
 
   Color blend(Color targetColor) {
     return Color(
-        Blend.harmonize(targetColor.value, settings.value.sourceColor.value));
+        Blend.harmonize(targetColor.value, settings.value.sourceColor.value),);
   }
 
   Color source(Color? target) {
@@ -336,31 +336,31 @@ class ThemeProvider extends InheritedWidget {
       bodySmall: TextStyle(
           fontSize: 14.0,
           height: 1.35,
-          color: colors.onSurface.withOpacity(0.9)), // Form Labels
+          color: colors.onSurface.withOpacity(0.9),), // Form Labels
       titleMedium: TextStyle(
           fontSize: 14.0,
           height: 1.35,
-          color: colors.onSurface.withOpacity(0.9)), // TextInput
+          color: colors.onSurface.withOpacity(0.9),), // TextInput
       bodyLarge: TextStyle(
           fontSize: 14.0,
           height: 1.35,
-          color: colors.onSurface.withOpacity(0.9)),
+          color: colors.onSurface.withOpacity(0.9),),
       bodyMedium: TextStyle(
           fontSize: 14.0,
           height: 1.35,
-          color: colors.onSurface.withOpacity(0.8)),
+          color: colors.onSurface.withOpacity(0.8),),
       titleLarge: TextStyle(
-          fontSize: 15.0, color: headlineColor, fontWeight: FontWeight.bold),
+          fontSize: 15.0, color: headlineColor, fontWeight: FontWeight.bold,),
       headlineSmall: TextStyle(
-          fontSize: 18.0, color: headlineColor, fontWeight: FontWeight.bold),
+          fontSize: 18.0, color: headlineColor, fontWeight: FontWeight.bold,),
       headlineMedium: TextStyle(
-          fontSize: 22.0, color: headlineColor, fontWeight: FontWeight.bold),
+          fontSize: 22.0, color: headlineColor, fontWeight: FontWeight.bold,),
       displaySmall: TextStyle(
-          fontSize: 26.0, color: headlineColor, fontWeight: FontWeight.bold),
+          fontSize: 26.0, color: headlineColor, fontWeight: FontWeight.bold,),
       displayMedium: TextStyle(
-          fontSize: 36.0, color: headlineColor, fontWeight: FontWeight.bold),
+          fontSize: 36.0, color: headlineColor, fontWeight: FontWeight.bold,),
       displayLarge: TextStyle(
-          fontSize: 48.0, color: headlineColor, fontWeight: FontWeight.bold),
+          fontSize: 48.0, color: headlineColor, fontWeight: FontWeight.bold,),
     );
   }
 

@@ -23,7 +23,7 @@ enum SurveyQuestionType {
     };
     if (!typeMapping.containsKey(question.type)) {
       throw UnimplementedError(
-          "Missing SurveyQuestionType for question of type: ${question.type}");
+          "Missing SurveyQuestionType for question of type: ${question.type}",);
     }
     return typeMapping[question.type]!;
   }

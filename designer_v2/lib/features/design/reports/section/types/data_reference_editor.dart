@@ -34,7 +34,7 @@ class DataReferenceEditor<T> {
         input: Theme(
           data: theme.copyWith(
               inputDecorationTheme:
-                  ThemeConfig.dropdownInputDecorationTheme(theme)),
+                  ThemeConfig.dropdownInputDecorationTheme(theme),),
           child: buildReactiveDropdownField,
         ),
       );

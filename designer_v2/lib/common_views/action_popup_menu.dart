@@ -75,7 +75,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
     return PopupMenuButton(
       icon: Icon(triggerIcon,
           size: triggerIconSize,
-          color: isHovered ? iconColorHover : iconColorDefault),
+          color: isHovered ? iconColorHover : iconColorDefault,),
       enabled: enabled,
       elevation: elevation,
       splashRadius: splashRadius,
@@ -99,7 +99,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
                     ),
               title: action.isDestructive
                   ? Text(action.label,
-                      style: textTheme.copyWith(color: Colors.red))
+                      style: textTheme.copyWith(color: Colors.red),)
                   : Text(action.label, style: textTheme),
             ),
           );

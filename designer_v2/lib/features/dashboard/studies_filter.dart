@@ -6,7 +6,7 @@ enum StudiesFilter with GoRouteParamEnum { all, owned, shared, public }
 
 extension StudiesFilterByUser on StudiesFilter {
   Iterable<Study> apply(
-      {required Iterable<Study> studies, required User user}) {
+      {required Iterable<Study> studies, required User user,}) {
     switch (this) {
       case StudiesFilter.all:
         return studies;
@@ -17,7 +17,7 @@ extension StudiesFilterByUser on StudiesFilter {
       case StudiesFilter.public:
         // show studies published to registry irrespective of their status
         return studies.where((s) =>
-            s.registryPublished || s.resultSharing == ResultSharing.public);
+            s.registryPublished || s.resultSharing == ResultSharing.public,);
     }
   }
 }

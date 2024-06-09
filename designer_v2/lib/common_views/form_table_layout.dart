@@ -88,7 +88,7 @@ class FormTableLayout extends StatelessWidget {
         child: Theme(
           data: theme.copyWith(
               textTheme: TextTheme(
-                  titleMedium: inputTextTheme.merge(stateColorStyle))),
+                  titleMedium: inputTextTheme.merge(stateColorStyle),),),
           child: row.input,
         ),
       );

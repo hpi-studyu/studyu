@@ -23,7 +23,7 @@ class QuestionnaireState {
       return answer.response;
     } else {
       throw ArgumentError(
-          "'Answer<$T>' requested but found '${answer.runtimeType}'.");
+          "'Answer<$T>' requested but found '${answer.runtimeType}'.",);
     }
   }
 }

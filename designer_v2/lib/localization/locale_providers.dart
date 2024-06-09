@@ -29,4 +29,4 @@ final localeProvider = Provider<Locale>((ref) {
 
 final localeStateProvider =
     StateNotifierProvider<LocaleStateNotifier, LocaleState>(
-        (ref) => LocaleStateNotifier(ref));
+        (ref) => LocaleStateNotifier(ref),);

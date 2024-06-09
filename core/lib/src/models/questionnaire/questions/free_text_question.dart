@@ -22,13 +22,13 @@ class FreeTextQuestion extends Question<String> {
   FreeTextQuestion(
       {required this.textType,
       required this.lengthRange,
-      this.customTypeExpression})
+      this.customTypeExpression,})
       : super(questionType);
 
   FreeTextQuestion.withId(
       {required this.textType,
       required this.lengthRange,
-      this.customTypeExpression})
+      this.customTypeExpression,})
       : super.withId(questionType);
 
   factory FreeTextQuestion.fromJson(Map<String, dynamic> json) =>

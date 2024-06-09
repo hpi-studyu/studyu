@@ -26,7 +26,7 @@ class AccountSettingsDialog extends ConsumerWidget {
                   label: tr.language,
                   input: const Align(
                       alignment: Alignment.centerRight,
-                      child: LanguagePicker()),
+                      child: LanguagePicker(),),
                 ),
               ],
             ),

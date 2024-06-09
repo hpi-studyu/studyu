@@ -31,7 +31,7 @@ class StudyRepository extends ModelRepository<Study>
     required this.authRepository,
     required this.ref,
   }) : super(StudyRepositoryDelegate(
-            apiClient: apiClient, authRepository: authRepository));
+            apiClient: apiClient, authRepository: authRepository,),);
 
   /// Reference to the StudyU API injected via Riverpod
   final StudyUApi apiClient;
@@ -104,7 +104,7 @@ class StudyRepository extends ModelRepository<Study>
     Future<void> onDeleteCallback() {
       return delete(model.id)
           .then((value) =>
-              ref.read(routerProvider).dispatch(RoutingIntents.studies))
+              ref.read(routerProvider).dispatch(RoutingIntents.studies),)
           .then(
             (value) => Future.delayed(
               const Duration(milliseconds: 200),
@@ -133,7 +133,7 @@ class StudyRepository extends ModelRepository<Study>
         label: StudyActionType.duplicateDraft.string,
         onExecute: () {
           return duplicateAndSave(model).then((value) =>
-              ref.read(routerProvider).dispatch(RoutingIntents.studies));
+              ref.read(routerProvider).dispatch(RoutingIntents.studies),);
         },
         isAvailable:
             model.status != StudyStatus.draft && model.canCopy(currentUser),
@@ -143,7 +143,7 @@ class StudyRepository extends ModelRepository<Study>
         label: StudyActionType.duplicate.string,
         onExecute: () {
           return duplicateAndSave(model).then((value) =>
-              ref.read(routerProvider).dispatch(RoutingIntents.studies));
+              ref.read(routerProvider).dispatch(RoutingIntents.studies),);
         },
         isAvailable:
             model.status == StudyStatus.draft && model.canCopy(currentUser),
@@ -194,7 +194,7 @@ class StudyRepository extends ModelRepository<Study>
 
 class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
   StudyRepositoryDelegate(
-      {required this.apiClient, required this.authRepository});
+      {required this.apiClient, required this.authRepository,});
 
   final StudyUApi apiClient;
   final IAuthRepository authRepository;

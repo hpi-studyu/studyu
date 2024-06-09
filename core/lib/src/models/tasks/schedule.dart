@@ -35,7 +35,7 @@ class CompletionPeriod {
   final StudyUTimeOfDay lockTime;
 
   CompletionPeriod(
-      {required this.id, required this.unlockTime, required this.lockTime});
+      {required this.id, required this.unlockTime, required this.lockTime,});
 
   CompletionPeriod.noId({required this.unlockTime, required this.lockTime})
       : id = const Uuid().v4();

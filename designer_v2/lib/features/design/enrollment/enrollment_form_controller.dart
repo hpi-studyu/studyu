@@ -62,7 +62,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
       Participation.values
           .map(
             (v) => FormControlOption(v, v.string,
-                description: v.designDescription),
+                description: v.designDescription,),
           )
           .toList();
 
