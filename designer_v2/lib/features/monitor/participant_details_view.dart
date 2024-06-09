@@ -60,7 +60,7 @@ class ParticipantDetailsView extends StatelessWidget {
     return Row(
       children: [
         Text(
-          label + ': ',
+          '$label: ',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         Text(value),
