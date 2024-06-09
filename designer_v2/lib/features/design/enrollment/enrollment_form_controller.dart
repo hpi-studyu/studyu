@@ -60,8 +60,10 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   List<FormControlOption<Participation>> get enrollmentTypeControlOptions =>
       Participation.values
-          .map((v) =>
-              FormControlOption(v, v.string, description: v.designDescription),)
+          .map(
+            (v) => FormControlOption(v, v.string,
+                description: v.designDescription),
+          )
           .toList();
 
   late final FormArray consentItemArray = FormArray([]);
@@ -128,21 +130,29 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   @override
   List<ModelAction> availableActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableActions(model,
-        onEdit: onSelectItem, isReadOnly: isReadonly,);
+    final actions = questionFormViewModels.availableActions(
+      model,
+      onEdit: onSelectItem,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availablePopupActions(model,
-        isReadOnly: isReadonly,);
+    final actions = questionFormViewModels.availablePopupActions(
+      model,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(
-      ScreenerQuestionFormViewModel model,) {
-    final actions = questionFormViewModels.availableInlineActions(model,
-        isReadOnly: isReadonly,);
+    ScreenerQuestionFormViewModel model,
+  ) {
+    final actions = questionFormViewModels.availableInlineActions(
+      model,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
@@ -166,7 +176,8 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   }
 
   ScreenerQuestionFormRouteArgs buildScreenerQuestionFormRouteArgs(
-      QuestionFormViewModel model,) {
+    QuestionFormViewModel model,
+  ) {
     return ScreenerQuestionFormRouteArgs(
       studyId: study.id,
       questionId: model.questionId,
@@ -181,7 +192,8 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   }
 
   ConsentItemFormRouteArgs buildConsentItemFormRouteArgs(
-      ConsentItemFormViewModel model,) {
+    ConsentItemFormViewModel model,
+  ) {
     return ConsentItemFormRouteArgs(
       studyId: study.id,
       consentId: model.consentId,
@@ -189,13 +201,18 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   }
 
   void testScreener() {
-    router.dispatch(RoutingIntents.studyTest(study.id,
-        appRoute: TestAppRoutes.eligibility,),);
+    router.dispatch(
+      RoutingIntents.studyTest(
+        study.id,
+        appRoute: TestAppRoutes.eligibility,
+      ),
+    );
   }
 
   void testConsent() {
     router.dispatch(
-        RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.consent),);
+      RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.consent),
+    );
   }
 
   bool get canTestScreener =>
@@ -213,7 +230,8 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   @override
   ScreenerQuestionFormViewModel provideQuestionFormViewModel(
-      QuestionFormData? formData,) {
+    QuestionFormData? formData,
+  ) {
     return ScreenerQuestionFormViewModel(
       formData: formData,
       delegate: this,
@@ -249,7 +267,9 @@ class EnrollmentFormConsentItemDelegate
 
   @override
   Future onSave(
-      ConsentItemFormViewModel formViewModel, FormMode prevFormMode,) async {
+    ConsentItemFormViewModel formViewModel,
+    FormMode prevFormMode,
+  ) async {
     if (prevFormMode == FormMode.create) {
       // Save the managed viewmodel that was eagerly added in [provide]
       formViewModels.commit(formViewModel);

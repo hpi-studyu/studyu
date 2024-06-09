@@ -26,40 +26,52 @@ class StudyInterventionsRobot {
 
   Future<void> enterInterventionName(String interventionName) async {
     await $(TextField)
-        .which<TextField>((widget) =>
-            widget.decoration is InputDecoration &&
-            widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_intervention_title,)
+        .which<TextField>(
+          (widget) =>
+              widget.decoration is InputDecoration &&
+              widget.decoration!.hintText != null &&
+              widget.decoration!.hintText! == tr.form_field_intervention_title,
+        )
         .scrollTo()
         .enterText(interventionName);
   }
 
-  Future<void> enterInterventionDesciption(String interventionDescription) async {
+  Future<void> enterInterventionDesciption(
+      String interventionDescription) async {
     await $(TextField)
-        .which<TextField>((widget) =>
-            widget.decoration is InputDecoration &&
-            widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_intervention_description_hint,)
+        .which<TextField>(
+          (widget) =>
+              widget.decoration is InputDecoration &&
+              widget.decoration!.hintText != null &&
+              widget.decoration!.hintText! ==
+                  tr.form_field_intervention_description_hint,
+        )
         .scrollTo()
         .enterText(interventionDescription);
   }
 
   Future<void> enterInterventionTaskName(String taskName) async {
     await $(TextField)
-        .which<TextField>((widget) =>
-            widget.decoration is InputDecoration &&
-            widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_intervention_task_title,)
+        .which<TextField>(
+          (widget) =>
+              widget.decoration is InputDecoration &&
+              widget.decoration!.hintText != null &&
+              widget.decoration!.hintText! ==
+                  tr.form_field_intervention_task_title,
+        )
         .scrollTo()
         .enterText(taskName);
   }
 
   Future<void> enterInterventionTaskDescription(String taskDescription) async {
     await $(TextField)
-        .which<TextField>((widget) =>
-            widget.decoration is InputDecoration &&
-            widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_intervention_task_description_hint,)
+        .which<TextField>(
+          (widget) =>
+              widget.decoration is InputDecoration &&
+              widget.decoration!.hintText != null &&
+              widget.decoration!.hintText! ==
+                  tr.form_field_intervention_task_description_hint,
+        )
         .scrollTo()
         .enterText(taskDescription);
   }

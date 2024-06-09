@@ -13,4 +13,5 @@ class ClipboardService implements IClipboardService {
   }
 }
 
-final clipboardServiceProvider = Provider<IClipboardService>((ref) => ClipboardService());
+final clipboardServiceProvider =
+    Provider<IClipboardService>((ref) => ClipboardService());

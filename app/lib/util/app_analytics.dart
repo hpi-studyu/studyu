@@ -35,7 +35,8 @@ class AppAnalytics /*extends Analytics*/ {
 
   static Future<void> start(AppConfig? appConfig, MyApp myApp) async {
     StudyUAnalytics? studyUAnalytics;
-    if (appConfig == null || appConfig.analytics != null && appConfig.analytics!.dsn.isEmpty) {
+    if (appConfig == null ||
+        appConfig.analytics != null && appConfig.analytics!.dsn.isEmpty) {
       final cachedAnalytics = (await Cache.loadAnalytics());
       if (cachedAnalytics != null) {
         studyUAnalytics = cachedAnalytics;

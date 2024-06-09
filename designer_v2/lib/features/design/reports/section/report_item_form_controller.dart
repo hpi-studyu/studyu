@@ -138,7 +138,8 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
       };
 
   List<FormControlValidation> _getValidationConfig(
-      StudyFormValidationSet validationSet,) {
+    StudyFormValidationSet validationSet,
+  ) {
     return [
       ..._sharedValidationConfig[validationSet] ?? [],
       ..._validationConfigsBySectionType[sectionType]?[validationSet] ?? [],
@@ -308,8 +309,9 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
         temporalAggregationControl.value =
             TemporalAggregationFormatted(averageSection.aggregate!);
         dataReferenceControl.value = DataReferenceIdentifier(
-            averageSection.resultProperty!.task,
-            averageSection.resultProperty!.property,);
+          averageSection.resultProperty!.task,
+          averageSection.resultProperty!.property,
+        );
       case ReportSectionType.linearRegression:
         final LinearRegressionSection linearRegressionSection =
             data.section as LinearRegressionSection;

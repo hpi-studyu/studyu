@@ -26,50 +26,64 @@ class StudyMeasurementsRobot {
 
   Future<void> enterSurveyName(String surveyName) async {
     await $(TextField)
-        .which<TextField>((widget) =>
-            widget.decoration is InputDecoration &&
-            widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_measurement_survey_title,)
+        .which<TextField>(
+          (widget) =>
+              widget.decoration is InputDecoration &&
+              widget.decoration!.hintText != null &&
+              widget.decoration!.hintText! ==
+                  tr.form_field_measurement_survey_title,
+        )
         .scrollTo()
         .enterText(surveyName);
   }
 
   Future<void> enterSurveyIntroText(String introText) async {
     await $(TextField)
-        .which<TextField>((widget) =>
-            widget.decoration is InputDecoration &&
-            widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_measurement_survey_intro_text_hint,)
+        .which<TextField>(
+          (widget) =>
+              widget.decoration is InputDecoration &&
+              widget.decoration!.hintText != null &&
+              widget.decoration!.hintText! ==
+                  tr.form_field_measurement_survey_intro_text_hint,
+        )
         .scrollTo()
         .enterText(introText);
   }
 
   Future<void> enterSurveyOutroText(String outroText) async {
     await $(TextField)
-        .which<TextField>((widget) =>
-            widget.decoration is InputDecoration &&
-            widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_measurement_survey_outro_text_hint,)
+        .which<TextField>(
+          (widget) =>
+              widget.decoration is InputDecoration &&
+              widget.decoration!.hintText != null &&
+              widget.decoration!.hintText! ==
+                  tr.form_field_measurement_survey_outro_text_hint,
+        )
         .scrollTo()
         .enterText(outroText);
   }
 
   Future<void> enterSurveyQuestionText(String questionText) async {
     await $(TextField)
-        .which<TextField>((widget) =>
-            widget.decoration is InputDecoration &&
-            widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_question,)
+        .which<TextField>(
+          (widget) =>
+              widget.decoration is InputDecoration &&
+              widget.decoration!.hintText != null &&
+              widget.decoration!.hintText! == tr.form_field_question,
+        )
         .scrollTo()
         .enterText(questionText);
   }
 
   Future<void> enterSurveyQuestionOption1(String optionText) async {
     await $(TextField)
-        .which<TextField>((widget) =>
-            widget.decoration is InputDecoration &&
-            widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_array_response_options_choice_hint,)
+        .which<TextField>(
+          (widget) =>
+              widget.decoration is InputDecoration &&
+              widget.decoration!.hintText != null &&
+              widget.decoration!.hintText! ==
+                  tr.form_array_response_options_choice_hint,
+        )
         .at(0)
         .scrollTo()
         .enterText(optionText);
@@ -77,10 +91,13 @@ class StudyMeasurementsRobot {
 
   Future<void> enterSurveyQuestionOption2(String optionText) async {
     await $(TextField)
-        .which<TextField>((widget) =>
-            widget.decoration is InputDecoration &&
-            widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_array_response_options_choice_hint,)
+        .which<TextField>(
+          (widget) =>
+              widget.decoration is InputDecoration &&
+              widget.decoration!.hintText != null &&
+              widget.decoration!.hintText! ==
+                  tr.form_array_response_options_choice_hint,
+        )
         .at(1)
         .scrollTo()
         .enterText(optionText);

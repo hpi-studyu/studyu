@@ -107,20 +107,27 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   @override
   List<ModelAction> availableActions(MeasurementSurveyFormViewModel model) {
-    final actions = surveyMeasurementFormViewModels.availableActions(model,
-        onEdit: onSelectItem, isReadOnly: isReadonly,);
+    final actions = surveyMeasurementFormViewModels.availableActions(
+      model,
+      onEdit: onSelectItem,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(
-      MeasurementSurveyFormViewModel model,) {
-    final actions = surveyMeasurementFormViewModels.availablePopupActions(model,
-        isReadOnly: isReadonly,);
+    MeasurementSurveyFormViewModel model,
+  ) {
+    final actions = surveyMeasurementFormViewModels.availablePopupActions(
+      model,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(
-      MeasurementSurveyFormViewModel model,) {
+    MeasurementSurveyFormViewModel model,
+  ) {
     final actions = surveyMeasurementFormViewModels
         .availableInlineActions(model, isReadOnly: isReadonly);
     return withIcons(actions, modelActionIcons);
@@ -138,7 +145,8 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   void onNewItem() {
     final studyId = study.id;
     router.dispatch(
-        RoutingIntents.studyEditMeasurement(studyId, Config.newModelId),);
+      RoutingIntents.studyEditMeasurement(studyId, Config.newModelId),
+    );
   }
 
   // - IProviderArgsResolver
@@ -169,13 +177,17 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   @override
   void onCancel(
-      MeasurementSurveyFormViewModel formViewModel, FormMode formMode,) {
+    MeasurementSurveyFormViewModel formViewModel,
+    FormMode formMode,
+  ) {
     return; // no-op
   }
 
   @override
-  Future onSave(MeasurementSurveyFormViewModel formViewModel,
-      FormMode prevFormMode,) async {
+  Future onSave(
+    MeasurementSurveyFormViewModel formViewModel,
+    FormMode prevFormMode,
+  ) async {
     if (prevFormMode == FormMode.create) {
       // Commit the managed viewmodel that was eagerly added in [provide]
       surveyMeasurementFormViewModels.commit(formViewModel);

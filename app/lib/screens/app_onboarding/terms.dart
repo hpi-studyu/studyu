@@ -31,7 +31,8 @@ class _TermsScreenState extends State<TermsScreen> {
         child: Center(
           child: RetryFutureBuilder<AppConfig>(
               tryFunction: AppConfig.getAppConfig,
-              successBuilder: (BuildContext context, AppConfig? appConfig) => legalSection(context, appConfig)),
+              successBuilder: (BuildContext context, AppConfig? appConfig) =>
+                  legalSection(context, appConfig)),
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
@@ -81,7 +82,8 @@ class _TermsScreenState extends State<TermsScreen> {
             OutlinedButton.icon(
               icon: Icon(MdiIcons.scaleBalance),
               onPressed: () async {
-                final uri = Uri.parse(appConfig.imprint[appLocale.languageCode.toString()]!);
+                final uri = Uri.parse(
+                    appConfig.imprint[appLocale.languageCode.toString()]!);
                 if (await canLaunchUrl(uri)) {
                   launchUrl(uri, mode: LaunchMode.externalApplication);
                 }
@@ -122,7 +124,9 @@ class LegalSection extends StatelessWidget {
     final theme = Theme.of(context);
     return Column(
       children: [
-        Text(title!, style: theme.textTheme.headlineMedium!.copyWith(color: theme.primaryColor)),
+        Text(title!,
+            style: theme.textTheme.headlineMedium!
+                .copyWith(color: theme.primaryColor)),
         const SizedBox(height: 20),
         Text(description!),
         const SizedBox(height: 20),
@@ -136,7 +140,10 @@ class LegalSection extends StatelessWidget {
           },
           label: Text(pdfUrlLabel!),
         ),
-        CheckboxListTile(title: Text(acknowledgment!), value: isChecked, onChanged: onChange),
+        CheckboxListTile(
+            title: Text(acknowledgment!),
+            value: isChecked,
+            onChanged: onChange),
       ],
     );
   }

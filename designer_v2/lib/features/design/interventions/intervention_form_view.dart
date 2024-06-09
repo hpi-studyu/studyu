@@ -179,8 +179,11 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
   }
 
   // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
-  void _showSidesheetWithArgs(InterventionTaskFormRouteArgs routeArgs,
-      BuildContext context, WidgetRef ref,) {
+  void _showSidesheetWithArgs(
+    InterventionTaskFormRouteArgs routeArgs,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     final interventionTaskFormViewModel =
         ref.read(interventionTaskFormViewModelProvider(routeArgs));
     showFormSideSheet<InterventionTaskFormViewModel>(

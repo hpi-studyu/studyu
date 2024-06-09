@@ -17,7 +17,8 @@ class InterventionTaskFormView extends StatefulWidget {
 
   final InterventionTaskFormViewModel formViewModel;
   @override
-  State<InterventionTaskFormView> createState() => _InterventionTaskFormViewState();
+  State<InterventionTaskFormView> createState() =>
+      _InterventionTaskFormViewState();
 }
 
 class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
@@ -33,81 +34,94 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FormTableLayout(rowLayout: FormTableRowLayout.vertical, rows: [
-            FormTableRow(
-              control: widget.formViewModel.taskTitleControl,
-              label: tr.form_field_intervention_task_title,
-              labelHelpText: tr.form_field_intervention_task_title_tooltip,
-              input: ReactiveTextField(
-                formControl: widget.formViewModel.taskTitleControl,
-                decoration: InputDecoration(
-                  hintText: tr.form_field_intervention_task_title,
-                ),
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(200),
-                ],
-                validationMessages: widget.formViewModel.taskTitleControl.validationMessages,
-              ),
-            ),
-            FormTableRow(
-              control: widget.formViewModel.taskDescriptionControl,
-              labelBuilder: (context) => Row(
-                children: [
-                  FormLabel(
-                    labelText: tr.form_field_intervention_task_description,
-                    helpText: tr.form_field_intervention_task_description_tooltip,
+          FormTableLayout(
+            rowLayout: FormTableRowLayout.vertical,
+            rows: [
+              FormTableRow(
+                control: widget.formViewModel.taskTitleControl,
+                label: tr.form_field_intervention_task_title,
+                labelHelpText: tr.form_field_intervention_task_title_tooltip,
+                input: ReactiveTextField(
+                  formControl: widget.formViewModel.taskTitleControl,
+                  decoration: InputDecoration(
+                    hintText: tr.form_field_intervention_task_title,
                   ),
-                  const SizedBox(height: 8),
-                  Container(
-                    margin: const EdgeInsets.only(left: 3.0),
-                    child: Opacity(
-                      opacity: ThemeConfig.kMuteFadeFactor,
-                      child: Tooltip(
-                        message: "Use html to style your content",
-                        child: Hyperlink(
-                          text: "styleable",
-                          onClick: () => setState(() {
-                            isStylingInformationDismissed = !isStylingInformationDismissed;
-                          }),
-                          visitedColor: null,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(200),
+                  ],
+                  validationMessages:
+                      widget.formViewModel.taskTitleControl.validationMessages,
+                ),
+              ),
+              FormTableRow(
+                control: widget.formViewModel.taskDescriptionControl,
+                labelBuilder: (context) => Row(
+                  children: [
+                    FormLabel(
+                      labelText: tr.form_field_intervention_task_description,
+                      helpText:
+                          tr.form_field_intervention_task_description_tooltip,
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      margin: const EdgeInsets.only(left: 3.0),
+                      child: Opacity(
+                        opacity: ThemeConfig.kMuteFadeFactor,
+                        child: Tooltip(
+                          message: "Use html to style your content",
+                          child: Hyperlink(
+                            text: "styleable",
+                            onClick: () => setState(() {
+                              isStylingInformationDismissed =
+                                  !isStylingInformationDismissed;
+                            }),
+                            visitedColor: null,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              input: ReactiveTextField(
-                formControl: widget.formViewModel.taskDescriptionControl,
-                decoration: InputDecoration(
-                  hintText: tr.form_field_intervention_task_description_hint,
+                  ],
                 ),
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(2000),
-                ],
-                validationMessages: widget.formViewModel.taskDescriptionControl.validationMessages,
-                keyboardType: TextInputType.multiline,
-                minLines: 5,
-                maxLines: 5,
+                input: ReactiveTextField(
+                  formControl: widget.formViewModel.taskDescriptionControl,
+                  decoration: InputDecoration(
+                    hintText: tr.form_field_intervention_task_description_hint,
+                  ),
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(2000),
+                  ],
+                  validationMessages: widget
+                      .formViewModel.taskDescriptionControl.validationMessages,
+                  keyboardType: TextInputType.multiline,
+                  minLines: 5,
+                  maxLines: 5,
+                ),
               ),
-            ),
-          ],),
+            ],
+          ),
           HtmlStylingBanner(
             isDismissed: isStylingInformationDismissed,
             onDismissed: onDismissedCallback,
           ),
           const SizedBox(height: 12.0),
-          ReactiveFormConsumer(builder: (context, form, child) {
-            return Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
-              ReactiveCheckbox(
-                formControl: widget.formViewModel.markAsCompletedControl,
-              ),
-              const SizedBox(width: 3.0),
-              FormControlLabel(
-                formControl: widget.formViewModel.markAsCompletedControl,
-                text: tr.form_field_intervention_task_mark_as_completed_label,
-              ),
-            ],);
-          },),
+          ReactiveFormConsumer(
+            builder: (context, form, child) {
+              return Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  ReactiveCheckbox(
+                    formControl: widget.formViewModel.markAsCompletedControl,
+                  ),
+                  const SizedBox(width: 3.0),
+                  FormControlLabel(
+                    formControl: widget.formViewModel.markAsCompletedControl,
+                    text:
+                        tr.form_field_intervention_task_mark_as_completed_label,
+                  ),
+                ],
+              );
+            },
+          ),
           const SizedBox(height: 24.0),
           ScheduleControls(formViewModel: widget.formViewModel),
         ],

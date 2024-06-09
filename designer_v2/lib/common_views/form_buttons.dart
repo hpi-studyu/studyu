@@ -28,58 +28,76 @@ class DismissButton extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterialLocalizations(context));
     return KeyboardListener(
-        focusNode: FocusNode(),
-        autofocus: true,
-        onKeyEvent: (key) {
-          if (key.logicalKey.keyLabel == "Escape") {
+      focusNode: FocusNode(),
+      autofocus: true,
+      onKeyEvent: (key) {
+        if (key.logicalKey.keyLabel == "Escape") {
+          Navigator.maybePop(context);
+        }
+      },
+      child: SecondaryButton(
+        text: text ?? tr.dialog_cancel,
+        icon: null,
+        //tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+        onPressed: () {
+          if (onPressed != null) {
+            onPressed!();
+          } else {
             Navigator.maybePop(context);
           }
         },
-        child: SecondaryButton(
-          text: text ?? tr.dialog_cancel,
-          icon: null,
-          //tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-          onPressed: () {
-            if (onPressed != null) {
-              onPressed!();
-            } else {
-              Navigator.maybePop(context);
-            }
-          },
-        ),);
+      ),
+    );
   }
 }
 
 List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
   final modifyActionButtons = [
-    ReactiveFormConsumer(// enable re-rendering based on form validation status
-        builder: (context, form, child) {
-      return retainSizeInAppBar(DismissButton(
-        onPressed: () => formViewModel.cancel().then((_) => Navigator.maybePop(context)),
-      ),);
-    },),
-    ReactiveFormConsumer(// enable re-rendering based on form validation status
-        builder: (context, form, child) {
-      return retainSizeInAppBar(PrimaryButton(
-        text: tr.dialog_save,
-        tooltipDisabled: "${tr.form_invalid_prompt}\n\n${formViewModel.form.validationErrorSummary}",
-        icon: null,
-        enabled: formViewModel.isValid,
-        onPressedFuture: (formViewModel.isValid) ? () => formViewModel.save().then(
-            // Close the form (side sheet or scaffold route) if future
-            // completed successfully
-            (value) => Navigator.maybePop(context),) : null,
-      ),);
-    },),
+    ReactiveFormConsumer(
+      // enable re-rendering based on form validation status
+      builder: (context, form, child) {
+        return retainSizeInAppBar(
+          DismissButton(
+            onPressed: () =>
+                formViewModel.cancel().then((_) => Navigator.maybePop(context)),
+          ),
+        );
+      },
+    ),
+    ReactiveFormConsumer(
+      // enable re-rendering based on form validation status
+      builder: (context, form, child) {
+        return retainSizeInAppBar(
+          PrimaryButton(
+            text: tr.dialog_save,
+            tooltipDisabled:
+                "${tr.form_invalid_prompt}\n\n${formViewModel.form.validationErrorSummary}",
+            icon: null,
+            enabled: formViewModel.isValid,
+            onPressedFuture: (formViewModel.isValid)
+                ? () => formViewModel.save().then(
+                      // Close the form (side sheet or scaffold route) if future
+                      // completed successfully
+                      (value) => Navigator.maybePop(context),
+                    )
+                : null,
+          ),
+        );
+      },
+    ),
   ];
   final readonlyActionButtons = [
-    ReactiveFormConsumer(// enable re-rendering based on form validation status
-        builder: (context, form, child) {
-      return retainSizeInAppBar(DismissButton(
-        text: tr.dialog_close,
-        onPressed: () => Navigator.maybePop(context),
-      ),);
-    },),
+    ReactiveFormConsumer(
+      // enable re-rendering based on form validation status
+      builder: (context, form, child) {
+        return retainSizeInAppBar(
+          DismissButton(
+            text: tr.dialog_close,
+            onPressed: () => Navigator.maybePop(context),
+          ),
+        );
+      },
+    ),
   ];
 
   final defaultActionButtons = {

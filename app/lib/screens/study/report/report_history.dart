@@ -21,8 +21,10 @@ class ReportHistoryScreen extends StatelessWidget {
         ),
       ),
       body: RetryFutureBuilder<List<StudySubject>>(
-        tryFunction: () => StudySubject.getStudyHistory(Supabase.instance.client.auth.currentUser!.id),
-        successBuilder: (BuildContext context, List<StudySubject>? pastStudies) {
+        tryFunction: () => StudySubject.getStudyHistory(
+            Supabase.instance.client.auth.currentUser!.id),
+        successBuilder:
+            (BuildContext context, List<StudySubject>? pastStudies) {
           return ListView.builder(
             itemCount: pastStudies!.length,
             itemBuilder: (context, index) {
@@ -49,7 +51,8 @@ class ReportHistoryItem extends StatelessWidget {
       color: isActiveStudy ? Colors.green[600] : theme.cardColor,
       child: InkWell(
         onTap: () {
-          Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject));
+          Navigator.push(
+              context, ReportDetailsScreen.routeFor(subject: subject));
         },
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -58,14 +61,16 @@ class ReportHistoryItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Icon(
-                  MdiIcons.fromString(subject.study.iconName) ?? MdiIcons.accountHeart,
+                  MdiIcons.fromString(subject.study.iconName) ??
+                      MdiIcons.accountHeart,
                   color: isActiveStudy ? Colors.white : Colors.black,
                 ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Text(
                     subject.study.title!,
-                    style: theme.textTheme.headlineSmall!.copyWith(color: isActiveStudy ? Colors.white : Colors.black),
+                    style: theme.textTheme.headlineSmall!.copyWith(
+                        color: isActiveStudy ? Colors.white : Colors.black),
                   ),
                 ),
               ],

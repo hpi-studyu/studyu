@@ -7,7 +7,11 @@ class StudyUQuestionnaire {
   StudyUQuestionnaire();
 
   factory StudyUQuestionnaire.fromJson(List<dynamic> data) =>
-      StudyUQuestionnaire()..questions = data.map((entry) => Question.fromJson(entry as Map<String, dynamic>)).toList();
+      StudyUQuestionnaire()
+        ..questions = data
+            .map((entry) => Question.fromJson(entry as Map<String, dynamic>))
+            .toList();
 
-  List<dynamic> toJson() => questions.map((question) => question.toJson()).toList();
+  List<dynamic> toJson() =>
+      questions.map((question) => question.toJson()).toList();
 }

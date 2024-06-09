@@ -21,8 +21,10 @@ String tableName(Type cls) => switch (cls) {
       _ => throw ArgumentError('$cls is not a supported Supabase type'),
     };
 
-abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements SupabaseObject {
-  static T fromJson<T extends SupabaseObject>(Map<String, dynamic> json) => switch (T) {
+abstract class SupabaseObjectFunctions<T extends SupabaseObject>
+    implements SupabaseObject {
+  static T fromJson<T extends SupabaseObject>(Map<String, dynamic> json) =>
+      switch (T) {
         == Study => Study.fromJson(json) as T,
         == StudySubject => StudySubject.fromJson(json) as T,
         == SubjectProgress => SubjectProgress.fromJson(json) as T,
@@ -34,11 +36,17 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject> implements Supa
       };
 
   Future<T> delete() async => SupabaseQuery.extractSupabaseSingleRow<T>(
-        await env.client.from(tableName(T)).delete().primaryKeys(primaryKeys).select().single(),
+        await env.client
+            .from(tableName(T))
+            .delete()
+            .primaryKeys(primaryKeys)
+            .select()
+            .single(),
       );
 
   Future<T> save() async {
-    return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(this.toJson()).select())
+    return SupabaseQuery.extractSupabaseList<T>(
+            await env.client.from(tableName(T)).upsert(this.toJson()).select())
         .single;
   }
 }
@@ -49,17 +57,24 @@ class SupabaseQuery {
     List<String> selectedColumns = const ['*'],
   }) async {
     try {
-      return extractSupabaseList(await env.client.from(tableName(T)).select(selectedColumns.join(',')));
+      return extractSupabaseList(await env.client
+          .from(tableName(T))
+          .select(selectedColumns.join(',')));
     } catch (error, stacktrace) {
       catchSupabaseException(error, stacktrace);
       rethrow;
     }
   }
 
-  static Future<T> getById<T extends SupabaseObject>(String id, {List<String> selectedColumns = const ['*']}) async {
+  static Future<T> getById<T extends SupabaseObject>(String id,
+      {List<String> selectedColumns = const ['*']}) async {
     try {
       return extractSupabaseSingleRow(
-        await env.client.from(tableName(T)).select(selectedColumns.join(',')).eq('id', id).single(),
+        await env.client
+            .from(tableName(T))
+            .select(selectedColumns.join(','))
+            .eq('id', id)
+            .single(),
       );
     } catch (error, stacktrace) {
       catchSupabaseException(error, stacktrace);
@@ -71,7 +86,8 @@ class SupabaseQuery {
     List<Map<String, dynamic>> batchJson,
   ) async {
     try {
-      return SupabaseQuery.extractSupabaseList<T>(await env.client.from(tableName(T)).upsert(batchJson).select());
+      return SupabaseQuery.extractSupabaseList<T>(
+          await env.client.from(tableName(T)).upsert(batchJson).select());
     } catch (error, stacktrace) {
       catchSupabaseException(error, stacktrace);
       rethrow;
@@ -104,14 +120,16 @@ class SupabaseQuery {
     return extracted;
   }
 
-  static T extractSupabaseSingleRow<T extends SupabaseObject>(Map<String, dynamic> response) {
+  static T extractSupabaseSingleRow<T extends SupabaseObject>(
+      Map<String, dynamic> response) {
     return SupabaseObjectFunctions.fromJson<T>(response);
   }
 
   static void catchSupabaseException(Object error, StackTrace stacktrace) {
     StudyUDiagnostics.captureException(error, stackTrace: stacktrace);
     if (error is PostgrestException) {
-      StudyULogger.fatal('Caught Postgrest Error: $error\nStacktrace: $stacktrace');
+      StudyULogger.fatal(
+          'Caught Postgrest Error: $error\nStacktrace: $stacktrace');
       throw error;
     } else if (error is SocketException) {
       // StudyULogger.info("App is suspected to be offline");
@@ -143,7 +161,8 @@ class ExtractionSuccess<T> extends ExtractionResult<T> {
   ExtractionSuccess(super.extracted);
 }
 
-class ExtractionFailedException<T> extends ExtractionResult<T> implements Exception {
+class ExtractionFailedException<T> extends ExtractionResult<T>
+    implements Exception {
   final List<JsonWithError> notExtracted;
 
   ExtractionFailedException(super.extracted, this.notExtracted);

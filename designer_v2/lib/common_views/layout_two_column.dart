@@ -139,7 +139,9 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
             thumbVisibility: true,
             controller: _scrollControllerLeft,
             child: SingleChildScrollView(
-                controller: _scrollControllerLeft, child: leftWidget,),
+              controller: _scrollControllerLeft,
+              child: leftWidget,
+            ),
           );
         }
         if (widget.scrollRight) {
@@ -147,14 +149,18 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
             thumbVisibility: true,
             controller: _scrollControllerRight,
             child: SingleChildScrollView(
-                controller: _scrollControllerRight, child: rightWidget,),
+              controller: _scrollControllerRight,
+              child: rightWidget,
+            ),
           );
         }
 
         if (!(widget.constraintsLeft != null && widget.flexLeft != null)) {
           if (widget.constraintsLeft != null) {
             leftWidget = Container(
-                constraints: widget.constraintsLeft, child: leftWidget,);
+              constraints: widget.constraintsLeft,
+              child: leftWidget,
+            );
           }
           if (widget.flexLeft != null) {
             leftWidget = Flexible(flex: widget.flexLeft!, child: leftWidget);
@@ -164,7 +170,9 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
         if (!(widget.constraintsRight != null && widget.flexRight != null)) {
           if (widget.constraintsRight != null) {
             rightWidget = Container(
-                constraints: widget.constraintsRight, child: rightWidget,);
+              constraints: widget.constraintsRight,
+              child: rightWidget,
+            );
           }
           if (widget.flexRight != null) {
             rightWidget = Flexible(flex: widget.flexRight!, child: rightWidget);

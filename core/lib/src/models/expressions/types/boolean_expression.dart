@@ -10,7 +10,8 @@ class BooleanExpression extends ValueExpression<bool> {
 
   BooleanExpression() : super(expressionType);
 
-  factory BooleanExpression.fromJson(Map<String, dynamic> json) => _$BooleanExpressionFromJson(json);
+  factory BooleanExpression.fromJson(Map<String, dynamic> json) =>
+      _$BooleanExpressionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$BooleanExpressionToJson(this);
 

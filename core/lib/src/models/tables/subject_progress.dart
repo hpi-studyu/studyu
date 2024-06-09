@@ -11,7 +11,8 @@ class SubjectProgress extends SupabaseObjectFunctions<SubjectProgress> {
   static const String tableName = 'subject_progress';
 
   @override
-  Map<String, Object> get primaryKeys => {'completed_at': completedAt!, 'subject_id': subjectId};
+  Map<String, Object> get primaryKeys =>
+      {'completed_at': completedAt!, 'subject_id': subjectId};
 
   // stored in UTC format, be careful when comparing dates
   @JsonKey(name: 'completed_at')

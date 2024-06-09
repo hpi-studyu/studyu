@@ -13,7 +13,8 @@ import 'report_section_container.dart';
 class ReportDetailsScreen extends StatelessWidget {
   final StudySubject subject;
 
-  static MaterialPageRoute routeFor({required StudySubject subject}) => MaterialPageRoute(
+  static MaterialPageRoute routeFor({required StudySubject subject}) =>
+      MaterialPageRoute(
         builder: (_) => ReportDetailsScreen(subject),
         settings: const RouteSettings(name: Routes.reportDetails),
       );
@@ -43,17 +44,20 @@ class ReportDetailsScreen extends StatelessWidget {
             DisclaimerSection(subject),
             PerformanceSection(
               subject,
-              onTap: () => Navigator.push(context, PerformanceDetailsScreen.routeFor(subject: subject)),
+              onTap: () => Navigator.push(
+                  context, PerformanceDetailsScreen.routeFor(subject: subject)),
             ),
-            if (subject.study.reportSpecification.primary != null && (subject.completedStudy || kDebugMode))
+            if (subject.study.reportSpecification.primary != null &&
+                (subject.completedStudy || kDebugMode))
               ReportSectionContainer(
                 subject.study.reportSpecification.primary!,
                 subject: subject,
                 primary: true,
               ),
-            if (subject.study.reportSpecification.secondary.isNotEmpty && (subject.completedStudy || kDebugMode))
-              ...subject.study.reportSpecification.secondary
-                  .map((section) => ReportSectionContainer(section, subject: subject))
+            if (subject.study.reportSpecification.secondary.isNotEmpty &&
+                (subject.completedStudy || kDebugMode))
+              ...subject.study.reportSpecification.secondary.map((section) =>
+                  ReportSectionContainer(section, subject: subject))
           ],
         ),
       ),

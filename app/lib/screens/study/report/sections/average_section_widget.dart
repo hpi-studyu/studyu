@@ -17,13 +17,18 @@ class AverageSectionWidget extends ReportSectionWidget {
   @override
   Widget build(BuildContext context) {
     final data = getAggregatedData().toList();
-    final taskTitle =
-        subject.study.observations.firstWhereOrNull((element) => element.id == section.resultProperty!.task)?.title;
+    final taskTitle = subject.study.observations
+        .firstWhereOrNull(
+            (element) => element.id == section.resultProperty!.task)
+        ?.title;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (taskTitle != null) Text(taskTitle, style: theme.textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold)),
+        if (taskTitle != null)
+          Text(taskTitle,
+              style: theme.textTheme.bodyLarge!
+                  .copyWith(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         getLegend(context, data),
         const SizedBox(height: 8),
@@ -36,21 +41,25 @@ class AverageSectionWidget extends ReportSectionWidget {
     final numberOfPhases = subject.interventionOrder.length;
     final phaseDuration = subject.study.schedule.phaseDuration;
     return Iterable<int>.generate(numberOfPhases)
-        .map((i) => (((i + 1) * phaseDuration - ((phaseDuration / 2) - 1)) - 1).floor())
+        .map((i) =>
+            (((i + 1) * phaseDuration - ((phaseDuration / 2) - 1)) - 1).floor())
         .toList();
   }
 
   List<int> get phasePos {
     final numberOfPhases = subject.interventionOrder.length;
     final phaseDuration = subject.study.schedule.phaseDuration;
-    return Iterable<int>.generate(numberOfPhases).map((i) => (i + 1) * phaseDuration).toList();
+    return Iterable<int>.generate(numberOfPhases)
+        .map((i) => (i + 1) * phaseDuration)
+        .toList();
   }
 
   Widget getLegend(BuildContext context, List<DiagramDatum> data) {
     final interventionNames = getInterventionNames(context);
     final legends = {
       for (var entry in data)
-        interventionNames[entry.intervention]!: Legend(interventionNames[entry.intervention]!, getColor(entry))
+        interventionNames[entry.intervention]!:
+            Legend(interventionNames[entry.intervention]!, getColor(entry))
     };
     return LegendsListWidget(legends: legends.values.toList());
   }
@@ -65,12 +74,18 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   BarChartData getChartData(BuildContext context, List<DiagramDatum> data) {
     final barGroups = getBarGroups(context, data);
-    final maxY = ((data.sortedBy((entry) => entry.value).toList().lastOrNull?.value ?? 0) * 1.1).ceilToDouble();
+    final maxY =
+        ((data.sortedBy((entry) => entry.value).toList().lastOrNull?.value ??
+                    0) *
+                1.1)
+            .ceilToDouble();
     return BarChartData(
       titlesData: FlTitlesData(
           bottomTitles: AxisTitles(
               axisNameWidget:
-                  (section.aggregate != TemporalAggregation.intervention) ? const Text("Phase") : const Text(""),
+                  (section.aggregate != TemporalAggregation.intervention)
+                      ? const Text("Phase")
+                      : const Text(""),
               sideTitles: SideTitles(
                 showTitles: true,
                 getTitlesWidget: getTitles,
@@ -112,7 +127,8 @@ class AverageSectionWidget extends ReportSectionWidget {
     }
   }
 
-  List<BarChartGroupData> getBarGroups(BuildContext context, List<DiagramDatum> data) {
+  List<BarChartGroupData> getBarGroups(
+      BuildContext context, List<DiagramDatum> data) {
     if (data.isEmpty) return [BarChartGroupData(x: 0)];
 
     int barCount = 0;
@@ -122,7 +138,8 @@ class AverageSectionWidget extends ReportSectionWidget {
       case TemporalAggregation.phase:
         barCount = subject.interventionOrder.length;
       case TemporalAggregation.intervention:
-        barCount = subject.selectedInterventionIds.length + (subject.study.schedule.includeBaseline ? 1 : 0);
+        barCount = subject.selectedInterventionIds.length +
+            (subject.study.schedule.includeBaseline ? 1 : 0);
       default:
     }
 
@@ -144,7 +161,8 @@ class AverageSectionWidget extends ReportSectionWidget {
 
     var starter = List<BarChartGroupData>.generate(barCount, barGenerator);
     for (var entry in data) {
-      starter[entry.x.round()] = barGenerator(entry.x.round(), y: entry.value.toDouble(), color: getColor(entry));
+      starter[entry.x.round()] = barGenerator(entry.x.round(),
+          y: entry.value.toDouble(), color: getColor(entry));
     }
     return starter;
   }
@@ -164,7 +182,9 @@ class AverageSectionWidget extends ReportSectionWidget {
     final lineCount = barGroups.length * 2;
     bool drawLine(double val) {
       // draw when we are at the border between two phases
-      return (val * lineCount % (2 * subject.study.schedule.phaseDuration)).toInt() == 0;
+      return (val * lineCount % (2 * subject.study.schedule.phaseDuration))
+              .toInt() ==
+          0;
     }
 
     return FlGridData(
@@ -183,23 +203,31 @@ class AverageSectionWidget extends ReportSectionWidget {
     switch (section.aggregate) {
       case TemporalAggregation.day:
         //c = colors[subject.interventionOrder.indexOf(diagram.intervention)];
-        if (subject.study.schedule.includeBaseline && diagram.x < subject.study.schedule.phaseDuration) {
+        if (subject.study.schedule.includeBaseline &&
+            diagram.x < subject.study.schedule.phaseDuration) {
           // if id == "_baseline"
           c = baselineColor;
         } else {
-          c = colors[subject.selectedInterventions.map((e) => e.id).toList().indexOf(diagram.intervention)];
+          c = colors[subject.selectedInterventions
+              .map((e) => e.id)
+              .toList()
+              .indexOf(diagram.intervention)];
         }
       case TemporalAggregation.phase:
         if (subject.study.schedule.includeBaseline && diagram.x == 0) {
           c = baselineColor;
         } else {
-          c = colors[subject.selectedInterventions.map((e) => e.id).toList().indexOf(diagram.intervention)];
+          c = colors[subject.selectedInterventions
+              .map((e) => e.id)
+              .toList()
+              .indexOf(diagram.intervention)];
         }
       case TemporalAggregation.intervention:
         if (subject.study.schedule.includeBaseline && diagram.x == 0) {
           c = baselineColor;
         } else {
-          c = colors[diagram.x.round() - (subject.study.schedule.includeBaseline ? 1 : 0)];
+          c = colors[diagram.x.round() -
+              (subject.study.schedule.includeBaseline ? 1 : 0)];
         }
       default:
     }
@@ -207,7 +235,8 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   int getDayIndex(DateTime key) {
-    if (subject.study.schedule.includeBaseline) return subject.getDayOfStudyFor(key);
+    if (subject.study.schedule.includeBaseline)
+      return subject.getDayOfStudyFor(key);
     final schedule = subject.scheduleFor(subject.startedAt!);
     // this always has to be found because studies have to have at least 2
     // interventions
@@ -267,7 +296,10 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   Map<String, String?> getInterventionNames(BuildContext context) {
-    final names = {for (var intervention in subject.study.interventions) intervention.id: intervention.name};
+    final names = {
+      for (var intervention in subject.study.interventions)
+        intervention.id: intervention.name
+    };
     names[Study.baselineID] = AppLocalizations.of(context)!.baseline;
     return names;
   }

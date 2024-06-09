@@ -12,7 +12,8 @@ class ReportsFormData implements IStudyFormData {
 
   factory ReportsFormData.fromStudy(Study study) {
     return ReportsFormData(
-      reportItems: ReportItemFormData.fromDomainModel(study.reportSpecification),
+      reportItems:
+          ReportItemFormData.fromDomainModel(study.reportSpecification),
     );
   }
 
@@ -35,7 +36,8 @@ class ReportsFormData implements IStudyFormData {
   }
 
   @override
-  String get id => throw UnimplementedError(); // not needed for top-level form data
+  String get id =>
+      throw UnimplementedError(); // not needed for top-level form data
 
   @override
   ReportsFormData copy() {

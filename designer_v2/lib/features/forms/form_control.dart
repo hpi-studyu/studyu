@@ -29,7 +29,8 @@ class CustomFormControl<T> extends FormControl<T> {
     if (onStatusChanged != null) {
       final callback = (_onStatusChangedDebouncer != null)
           ? (ControlStatus value) => _onStatusChangedDebouncer!(
-              callback: () => onStatusChanged!(value),)
+                callback: () => onStatusChanged!(value),
+              )
           : onStatusChanged;
 
       statusChanged.listen(callback);
@@ -43,7 +44,9 @@ class CustomFormControl<T> extends FormControl<T> {
   late final Debouncer? _onStatusChangedDebouncer =
       (onStatusChangedDebounceTime != null)
           ? Debouncer(
-              milliseconds: onStatusChangedDebounceTime!, leading: false,)
+              milliseconds: onStatusChangedDebounceTime!,
+              leading: false,
+            )
           : null;
 
   @override

@@ -25,7 +25,8 @@ class FormControlValidation {
     }
     if (control != other.control) {
       throw Exception(
-          "Cannot merge FormControlValidationConfig for different controls.",);
+        "Cannot merge FormControlValidationConfig for different controls.",
+      );
     }
     return FormControlValidation(
       control: control,
@@ -57,12 +58,14 @@ extension AbstractControlX on AbstractControl {
   Map<String, ValidationMessageFunction> get validationMessages =>
       _controlValidationMessages[this] ?? {};
   set validationMessages(
-          Map<String, ValidationMessageFunction> validationMessages,) =>
+    Map<String, ValidationMessageFunction> validationMessages,
+  ) =>
       _controlValidationMessages[this] = validationMessages;
 }
 
 List<Tuple<AbstractControl, String>> _collectValidationErrorMessages(
-    AbstractControl control,) {
+  AbstractControl control,
+) {
   final List<Tuple<AbstractControl, String>> allValidationErrorMessages = [];
 
   if (!control.enabled || !control.hasErrors) {
@@ -96,7 +99,8 @@ List<Tuple<AbstractControl, String>> _collectValidationErrorMessages(
 }
 
 List<Tuple<AbstractControl, String>>? _getControlErrorMessages(
-    AbstractControl control,) {
+  AbstractControl control,
+) {
   List<Tuple<AbstractControl, String>>? errorMessages;
   // Typecasting needed as a workaround because dynamic dispatch
   // is not working properly with extension methods

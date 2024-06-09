@@ -45,13 +45,16 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
   }
 
   SingleChildRenderObjectWidget _buildInfoBanner(BuildContext context) {
-    return (!formViewModel.isReadonly && formViewModel.isDirtyOptionsBannerVisible)
+    return (!formViewModel.isReadonly &&
+            formViewModel.isDirtyOptionsBannerVisible)
         ? Padding(
             padding: const EdgeInsets.only(top: 12.0),
             child: BannerBox(
               style: BannerStyle.info,
-              body: TextParagraph(text: tr.form_array_screener_question_logic_dirty_banner),
-              padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
+              body: TextParagraph(
+                  text: tr.form_array_screener_question_logic_dirty_banner),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
               noPrefix: true,
               isDismissed: !formViewModel.isMidValuesClearedInfoVisible,
               dismissIconSize: Theme.of(context).iconTheme.size ?? 14.0,
@@ -64,8 +67,11 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
     if (formViewModel.questionType.name == FreeTextQuestion.questionType) {
       // todo logic might check if field has content
       // todo logic might need that field is equal to a certain value
-      return Text(tr.free_text_question_logic_not_supported,
-          style: const TextStyle(color: Colors.red), textAlign: TextAlign.center,);
+      return Text(
+        tr.free_text_question_logic_not_supported,
+        style: const TextStyle(color: Colors.red),
+        textAlign: TextAlign.center,
+      );
     }
 
     return ReactiveFormArray(
@@ -79,16 +85,19 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
               columnWidth: const FixedColumnWidth(32.0),
             ),
             StandardTableColumn(
-                label: '', // don't care (showTableHeader=false)
-                columnWidth: const FlexColumnWidth(5),),
+              label: '', // don't care (showTableHeader=false)
+              columnWidth: const FlexColumnWidth(5),
+            ),
             StandardTableColumn(
-                label: '', // don't care (showTableHeader=false)
-                columnWidth: const FlexColumnWidth(4),),
+              label: '', // don't care (showTableHeader=false)
+              columnWidth: const FlexColumnWidth(4),
+            ),
           ],
           onSelectItem: (_) => {}, // no-op
           buildCellsAt: (context, item, rowIdx, __) {
             final optionControl = item as FormControl<dynamic>;
-            final logicControl = formViewModel.responseOptionsLogicControls.controls[rowIdx] as FormControl<bool>;
+            final logicControl = formViewModel.responseOptionsLogicControls
+                .controls[rowIdx] as FormControl<bool>;
             return _buildOptionLogicRow(context, optionControl, logicControl);
           },
           cellSpacing: 4.0,
@@ -103,7 +112,10 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
   }
 
   List<Widget> _buildOptionLogicRow(
-      BuildContext context, FormControl<dynamic> optionControl, FormControl<bool> logicControl,) {
+    BuildContext context,
+    FormControl<dynamic> optionControl,
+    FormControl<bool> logicControl,
+  ) {
     final theme = Theme.of(context);
 
     // Use a UniqueKey to prevent carry-over of control states to other
@@ -112,7 +124,9 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
     final iconWidget = optionCells[0];
     final optionWidget = optionCells[1];
     final logicWidget = Theme(
-      data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+      data: theme.copyWith(
+          inputDecorationTheme:
+              ThemeConfig.dropdownInputDecorationTheme(theme)),
       child: ReactiveDropdownField<bool>(
         formControl: logicControl,
         items: formViewModel.logicControlOptions.map((option) {

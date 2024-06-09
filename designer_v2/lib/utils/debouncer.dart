@@ -36,7 +36,8 @@ class Debouncer extends ExecutionLimiter {
     if ((callback == null && futureBuilder == null) ||
         (callback != null && futureBuilder != null)) {
       throw Exception(
-          "Must call Debouncer with either callback or futureBuilder",);
+        "Must call Debouncer with either callback or futureBuilder",
+      );
     }
 
     // Wrap the given callback so we can work with a future-based interface

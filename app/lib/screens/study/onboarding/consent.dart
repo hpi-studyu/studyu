@@ -43,15 +43,19 @@ class _ConsentScreenState extends State<ConsentScreen> {
   }
 
   Future<List<pw.Widget>> generatePdfContent() async {
-    final ttf = pw.Font.ttf(await rootBundle.load('assets/fonts/Roboto-Regular.ttf'));
+    final ttf =
+        pw.Font.ttf(await rootBundle.load('assets/fonts/Roboto-Regular.ttf'));
     return consentList
         .map(
           (consentItem) => [
             pw.Header(
               level: 0,
-              child: pw.Text(consentItem.title ?? '', textScaleFactor: 2, style: pw.TextStyle(font: ttf)),
+              child: pw.Text(consentItem.title ?? '',
+                  textScaleFactor: 2, style: pw.TextStyle(font: ttf)),
             ),
-            pw.Paragraph(text: consentItem.description ?? '', style: pw.TextStyle(font: ttf)),
+            pw.Paragraph(
+                text: consentItem.description ?? '',
+                style: pw.TextStyle(font: ttf)),
           ],
         )
         .expand((element) => element)
@@ -75,19 +79,23 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   context: context,
                   builder: (context) => AlertDialog(
                     elevation: 24,
-                    title: Text(AppLocalizations.of(context)!.save_not_supported),
-                    content: Text(AppLocalizations.of(context)!.save_not_supported_description),
+                    title:
+                        Text(AppLocalizations.of(context)!.save_not_supported),
+                    content: Text(AppLocalizations.of(context)!
+                        .save_not_supported_description),
                   ),
                 );
               }
               final pdfContent = await generatePdfContent();
               if (!context.mounted) return;
-              final savedFilePath = await savePDF(context, '${subject!.study.title}_consent', pdfContent);
+              final savedFilePath = await savePDF(
+                  context, '${subject!.study.title}_consent', pdfContent);
               if (savedFilePath != null) {
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('${AppLocalizations.of(context)!.was_saved_to}$savedFilePath.'),
+                    content: Text(
+                        '${AppLocalizations.of(context)!.was_saved_to}$savedFilePath.'),
                   ),
                 );
               }
@@ -114,13 +122,16 @@ class _ConsentScreenState extends State<ConsentScreen> {
                         style: theme.textTheme.titleMedium,
                       ),
                       TextSpan(
-                        text: AppLocalizations.of(context)!.please_give_consent_why,
-                        style: theme.textTheme.titleSmall!.copyWith(color: theme.primaryColor),
+                        text: AppLocalizations.of(context)!
+                            .please_give_consent_why,
+                        style: theme.textTheme.titleSmall!
+                            .copyWith(color: theme.primaryColor),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                  content: Text(AppLocalizations.of(context)!.please_give_consent_reason),
+                                  content: Text(AppLocalizations.of(context)!
+                                      .please_give_consent_reason),
                                 ),
                               ),
                       )
@@ -130,7 +141,8 @@ class _ConsentScreenState extends State<ConsentScreen> {
                 Flexible(
                   child: GridView.builder(
                     shrinkWrap: true,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
@@ -156,10 +168,13 @@ class _ConsentScreenState extends State<ConsentScreen> {
       bottomNavigationBar: BottomOnboardingNavigation(
         backLabel: AppLocalizations.of(context)!.decline,
         backIcon: const Icon(Icons.close),
-        onBack: () => Navigator.popUntil(context, ModalRoute.withName(Routes.studySelection)),
+        onBack: () => Navigator.popUntil(
+            context, ModalRoute.withName(Routes.studySelection)),
         nextLabel: AppLocalizations.of(context)!.accept,
         nextIcon: const Icon(Icons.check),
-        onNext: boxLogic.every((element) => element) || kDebugMode ? () => Navigator.pop(context, true) : null,
+        onNext: boxLogic.every((element) => element) || kDebugMode
+            ? () => Navigator.pop(context, true)
+            : null,
         progress: const OnboardingProgress(stage: 2, progress: 2.5),
       ),
     );
@@ -172,7 +187,12 @@ class ConsentCard extends StatelessWidget {
   final Function(int) onTapped;
   final bool? isChecked;
 
-  const ConsentCard({super.key, this.consent, this.index, required this.onTapped, this.isChecked});
+  const ConsentCard(
+      {super.key,
+      this.consent,
+      this.index,
+      required this.onTapped,
+      this.isChecked});
 
   @override
   Widget build(BuildContext context) {
@@ -195,9 +215,12 @@ class ConsentCard extends StatelessWidget {
               title: Row(
                 children: [
                   consent!.iconName.isNotEmpty
-                      ? Icon(MdiIcons.fromString(consent!.iconName), color: theme.primaryColor)
+                      ? Icon(MdiIcons.fromString(consent!.iconName),
+                          color: theme.primaryColor)
                       : const SizedBox.shrink(),
-                  consent!.iconName.isNotEmpty ? const SizedBox(width: 8) : const SizedBox.shrink(),
+                  consent!.iconName.isNotEmpty
+                      ? const SizedBox(width: 8)
+                      : const SizedBox.shrink(),
                   Expanded(child: Text(consent!.title!)),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -217,9 +240,12 @@ class ConsentCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               consent!.iconName.isNotEmpty
-                  ? Icon(MdiIcons.fromString(consent!.iconName), size: 60, color: Colors.blue)
+                  ? Icon(MdiIcons.fromString(consent!.iconName),
+                      size: 60, color: Colors.blue)
                   : const SizedBox.shrink(),
-              consent!.iconName.isNotEmpty ? const SizedBox(height: 10) : const SizedBox.shrink(),
+              consent!.iconName.isNotEmpty
+                  ? const SizedBox(height: 10)
+                  : const SizedBox.shrink(),
               Flexible(
                 child: Text(
                   consent!.title!,
@@ -242,5 +268,6 @@ class ConsentElement {
   final String acknowledgmentText;
   final IconData icon;
 
-  ConsentElement(this.title, this.descriptionText, this.acknowledgmentText, this.icon);
+  ConsentElement(
+      this.title, this.descriptionText, this.acknowledgmentText, this.icon);
 }

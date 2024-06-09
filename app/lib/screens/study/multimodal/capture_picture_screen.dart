@@ -10,13 +10,15 @@ class CapturePictureScreen extends StatefulWidget {
   final String userId;
   final String studyId;
 
-  const CapturePictureScreen({super.key, required this.userId, required this.studyId});
+  const CapturePictureScreen(
+      {super.key, required this.userId, required this.studyId});
 
   @override
   State<CapturePictureScreen> createState() => _CapturePictureScreenState();
 }
 
-class _CapturePictureScreenState extends State<CapturePictureScreen> with WidgetsBindingObserver {
+class _CapturePictureScreenState extends State<CapturePictureScreen>
+    with WidgetsBindingObserver {
   CameraController? _cameraController;
   List<CameraDescription>? _cameras;
   int _jumpToNextCameraTaps = 0;
@@ -116,7 +118,9 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
 
   Future<void> _tryCapturePicture() async {
     final cameraController = _cameraController;
-    if (cameraController == null || !cameraController.value.isInitialized || cameraController.value.isTakingPicture) {
+    if (cameraController == null ||
+        !cameraController.value.isInitialized ||
+        cameraController.value.isTakingPicture) {
       return;
     }
 
@@ -176,7 +180,8 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
                               children: [
                                 const CircularProgressIndicator(),
                                 const SizedBox(height: 16),
-                                Text(AppLocalizations.of(context)!.take_a_photo),
+                                Text(
+                                    AppLocalizations.of(context)!.take_a_photo),
                               ],
                             ),
                           ),
@@ -203,7 +208,9 @@ class _CapturePictureScreenState extends State<CapturePictureScreen> with Widget
               margin: const EdgeInsets.all(10),
               child: FloatingActionButton(
                 heroTag: "jumpToNextCamera",
-                onPressed: cameraController != null && !_isTakingPicture ? () async => await _jumpToNextCamera() : null,
+                onPressed: cameraController != null && !_isTakingPicture
+                    ? () async => await _jumpToNextCamera()
+                    : null,
                 child: const Icon(Icons.autorenew),
               ),
             )

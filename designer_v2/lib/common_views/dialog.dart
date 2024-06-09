@@ -93,8 +93,14 @@ class StandardDialog extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (titleWidget != null) titleWidget else const SizedBox.shrink(),
-                    if (titleWidget != null) SizedBox(height: padding.top * 2 / 3) else const SizedBox.shrink(),
+                    if (titleWidget != null)
+                      titleWidget
+                    else
+                      const SizedBox.shrink(),
+                    if (titleWidget != null)
+                      SizedBox(height: padding.top * 2 / 3)
+                    else
+                      const SizedBox.shrink(),
                     Expanded(
                       child: SingleChildScrollView(child: body),
                     ),

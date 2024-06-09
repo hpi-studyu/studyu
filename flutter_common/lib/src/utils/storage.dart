@@ -22,7 +22,8 @@ class SupabaseStorage extends LocalStorage {
 
   @override
   Future<void> persistSession(String persistSessionString) async {
-    return await SecureStorage.write(supabasePersistSessionKey, persistSessionString);
+    return await SecureStorage.write(
+        supabasePersistSessionKey, persistSessionString);
   }
 
   @override
@@ -87,7 +88,8 @@ class SecureStorage {
       if (value is String || value is bool) {
         await storage.write(key: key, value: value.toString());
         await prefs.remove(key);
-        StudyULogger.info("Migrated key $key from SharedPreferences to FlutterSecureStorage.");
+        StudyULogger.info(
+            "Migrated key $key from SharedPreferences to FlutterSecureStorage.");
       }
     }
   }

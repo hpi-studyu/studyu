@@ -9,7 +9,8 @@ import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
 class MeasurementSurveyFormData extends IFormDataWithSchedule {
-  static String get kDefaultTitle => tr.form_field_measurement_survey_title_default;
+  static String get kDefaultTitle =>
+      tr.form_field_measurement_survey_title_default;
 
   MeasurementSurveyFormData({
     required this.measurementId,
@@ -34,13 +35,15 @@ class MeasurementSurveyFormData extends IFormDataWithSchedule {
   @override
   FormDataID get id => measurementId;
 
-  factory MeasurementSurveyFormData.fromDomainModel(QuestionnaireTask questionnaireTask) {
+  factory MeasurementSurveyFormData.fromDomainModel(
+      QuestionnaireTask questionnaireTask) {
     return MeasurementSurveyFormData(
       measurementId: questionnaireTask.id,
       title: questionnaireTask.title ?? '',
       introText: questionnaireTask.header,
       outroText: questionnaireTask.footer,
-      questionnaireFormData: QuestionnaireFormData.fromDomainModel(questionnaireTask.questions, []),
+      questionnaireFormData: QuestionnaireFormData.fromDomainModel(
+          questionnaireTask.questions, []),
       isTimeLocked: questionnaireTask.schedule.isTimeRestricted,
       timeLockStart: questionnaireTask.schedule.restrictedTimeStart,
       timeLockEnd: questionnaireTask.schedule.restrictedTimeEnd,

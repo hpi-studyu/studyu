@@ -103,7 +103,8 @@ class _NotificationDispatcherState
       case NotificationType.snackbar:
         final messengerState = _getMessengerState();
         messengerState.showSnackBar(
-            _buildSnackbar(notification as SnackbarIntent, messengerState));
+          _buildSnackbar(notification as SnackbarIntent, messengerState),
+        );
       case NotificationType.alert:
         final navigatorState = _getNavigatorState()!;
         showDialog(
@@ -113,12 +114,15 @@ class _NotificationDispatcherState
         );
       default:
         throw UnimplementedError(
-            "Failed to handle NotificationIntent of unexpected type.");
+          "Failed to handle NotificationIntent of unexpected type.",
+        );
     }
   }
 
   AlertDialog _buildAlertDialog(
-      AlertIntent notification, NavigatorState navigatorState) {
+    AlertIntent notification,
+    NavigatorState navigatorState,
+  ) {
     final textTheme = Theme.of(context).textTheme;
 
     final List<Widget> actions = [];
@@ -161,7 +165,9 @@ class _NotificationDispatcherState
           children: [
             Flexible(
               child: notificationContent(
-                  notification.message, notification.customContent),
+                notification.message,
+                notification.customContent,
+              ),
             ),
           ],
         ),
@@ -179,7 +185,9 @@ class _NotificationDispatcherState
   }
 
   SnackBar _buildSnackbar(
-      SnackbarIntent notification, ScaffoldMessengerState messengerState) {
+    SnackbarIntent notification,
+    ScaffoldMessengerState messengerState,
+  ) {
     final theme = Theme.of(context);
 
     return SnackBar(
@@ -199,14 +207,16 @@ class _NotificationDispatcherState
             )
           else
             const SizedBox.shrink(),
-          Text(notification.message!,
-              style: theme.textTheme.titleMedium!
-                  .copyWith(color: theme.colorScheme.onPrimary)),
+          Text(
+            notification.message!,
+            style: theme.textTheme.titleMedium!
+                .copyWith(color: theme.colorScheme.onPrimary),
+          ),
         ],
       ),
       duration: Duration(
-          milliseconds:
-              notification.duration ?? widget.snackbarDefaultDuration),
+        milliseconds: notification.duration ?? widget.snackbarDefaultDuration,
+      ),
       padding: EdgeInsets.fromLTRB(
         2.5 * widget.snackbarInnerPadding,
         widget.snackbarInnerPadding,

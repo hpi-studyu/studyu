@@ -13,11 +13,15 @@ class AuthRobot {
   }
 
   Future<void> enterPassword(String password) async {
-    await $(ReactiveTextField).containing(tr.form_field_password).enterText(password);
+    await $(ReactiveTextField)
+        .containing(tr.form_field_password)
+        .enterText(password);
   }
 
   Future<void> enterPasswordConfirmation(String confirmPassword) async {
-    await $(ReactiveTextField).containing(tr.form_field_password_confirm).enterText(confirmPassword);
+    await $(ReactiveTextField)
+        .containing(tr.form_field_password_confirm)
+        .enterText(confirmPassword);
   }
 
   Future<void> tapTermsCheckbox() async {

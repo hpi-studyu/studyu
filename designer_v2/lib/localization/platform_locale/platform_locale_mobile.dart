@@ -15,8 +15,10 @@ class PlatformLocaleMobile implements PlatformLocale {
     }
 
     // Language and country codes
-    final String languageCode = platformLocaleName.substring(0, platformLocaleName.indexOf('_'));
-    final String countryCode = platformLocaleName.substring(platformLocaleName.indexOf('_') + 1);
+    final String languageCode =
+        platformLocaleName.substring(0, platformLocaleName.indexOf('_'));
+    final String countryCode =
+        platformLocaleName.substring(platformLocaleName.indexOf('_') + 1);
 
     return Locale.fromSubtags(
       languageCode: languageCode,

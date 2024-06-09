@@ -13,8 +13,12 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class LinearRegressionSectionFormView extends ConsumerWidget {
-  const LinearRegressionSectionFormView(
-      {required this.formViewModel, required this.studyId, required this.reportSectionColumnWidth, super.key,});
+  const LinearRegressionSectionFormView({
+    required this.formViewModel,
+    required this.studyId,
+    required this.reportSectionColumnWidth,
+    super.key,
+  });
 
   final ReportItemFormViewModel formViewModel;
   final StudyID studyId;
@@ -38,19 +42,32 @@ class LinearRegressionSectionFormView extends ConsumerWidget {
               labelHelpText: tr.form_field_report_improvementDirection_tooltip,
               // TODO: extract custom dropdown component with theme + focus fix
               input: Theme(
-                data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+                data: theme.copyWith(
+                    inputDecorationTheme:
+                        ThemeConfig.dropdownInputDecorationTheme(theme)),
                 child: ReactiveDropdownField<ImprovementDirectionFormatted>(
                   formControl: formViewModel.improvementDirectionControl,
                   hint: const Text("Select an improvement direction"),
-                  items: ReportItemFormViewModel.improvementDirectionControlOptions.map((option) {
-                    final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(theme);
-                    final iconTheme = menuItemTheme.iconTheme ?? theme.iconTheme;
+                  items: ReportItemFormViewModel
+                      .improvementDirectionControlOptions
+                      .map((option) {
+                    final menuItemTheme =
+                        ThemeConfig.dropdownMenuItemTheme(theme);
+                    final iconTheme =
+                        menuItemTheme.iconTheme ?? theme.iconTheme;
                     return DropdownMenuItem(
                       value: option.value,
                       child: Row(
                         children: [
-                          if (option.value.icon != null) Icon(option.value.icon,
-                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows,) else const SizedBox.shrink(),
+                          if (option.value.icon != null)
+                            Icon(
+                              option.value.icon,
+                              size: iconTheme.size,
+                              color: iconTheme.color,
+                              shadows: iconTheme.shadows,
+                            )
+                          else
+                            const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
                           Text(option.label),
                         ],
@@ -63,10 +80,12 @@ class LinearRegressionSectionFormView extends ConsumerWidget {
             FormTableRow(
               control: formViewModel.alphaControl,
               label: tr.form_field_report_linearRegression_alpha_title,
-              labelHelpText: tr.form_field_report_linearRegression_alpha_tooltip,
+              labelHelpText:
+                  tr.form_field_report_linearRegression_alpha_tooltip,
               input: ReactiveTextField(
                 formControl: formViewModel.alphaControl,
-                validationMessages: formViewModel.alphaControl.validationMessages,
+                validationMessages:
+                    formViewModel.alphaControl.validationMessages,
                 decoration: InputDecoration(
                   hintText: tr.form_field_report_linearRegression_alpha_hint,
                 ),
