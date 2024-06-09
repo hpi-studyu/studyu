@@ -34,7 +34,8 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.user_did_not_give_consent),
+          content:
+              Text(AppLocalizations.of(context)!.user_did_not_give_consent),
           duration: const Duration(seconds: 30),
         ),
       );
@@ -94,8 +95,11 @@ class Timeline extends StatelessWidget {
           return InterventionTile(
             title: intervention.name,
             iconName: intervention.icon,
-            color: intervention.isBaseline() ? Colors.grey : theme.colorScheme.secondary,
-            date: now.add(Duration(days: index * subject!.study.schedule.phaseDuration)),
+            color: intervention.isBaseline()
+                ? Colors.grey
+                : theme.colorScheme.secondary,
+            date: now.add(
+                Duration(days: index * subject!.study.schedule.phaseDuration)),
             isFirst: index == 0,
           );
         }),
@@ -146,10 +150,13 @@ class InterventionTile extends StatelessWidget {
       beforeLineStyle: LineStyle(color: theme.primaryColor),
       afterLineStyle: LineStyle(color: theme.primaryColor),
       endChild: TimelineChild(
-        child: Text(title!, style: theme.textTheme.titleLarge!.copyWith(color: theme.primaryColor)),
+        child: Text(title!,
+            style: theme.textTheme.titleLarge!
+                .copyWith(color: theme.primaryColor)),
       ),
       startChild: TimelineChild(
-        child: Text(DateFormat('dd-MM-yyyy').format(date), style: const TextStyle(fontWeight: FontWeight.bold)),
+        child: Text(DateFormat('dd-MM-yyyy').format(date),
+            style: const TextStyle(fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -164,7 +171,9 @@ class IconIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(shape: BoxShape.circle, color: color ?? Theme.of(context).colorScheme.secondary),
+      decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: color ?? Theme.of(context).colorScheme.secondary),
       child: Center(
         child: Icon(MdiIcons.fromString(iconName), color: Colors.white),
       ),

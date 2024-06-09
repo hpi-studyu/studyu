@@ -79,8 +79,9 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
             shape: RoundedRectangleBorder(
               borderRadius: const BorderRadius.all(Radius.circular(4)),
               side: BorderSide(
-                  color: theme.colorScheme.primaryContainer.withOpacity(0.9),
-                  width: isHovering ? 1.5 : 0.75,),
+                color: theme.colorScheme.primaryContainer.withOpacity(0.9),
+                width: isHovering ? 1.5 : 0.75,
+              ),
             ),
             child: InkWell(
               splashColor: Colors.transparent,
@@ -108,9 +109,10 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                       ),
                     ),
                     SizedBox(
-                        width: widget.columnSizes[0].collapsed
-                            ? 0
-                            : widget.columnSpacing,),
+                      width: widget.columnSizes[0].collapsed
+                          ? 0
+                          : widget.columnSpacing,
+                    ),
                     widget.columnSizes[1].createContainer(
                       child: Text(
                         widget.study.title ?? '[Missing study title]',
@@ -119,9 +121,10 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                       ),
                     ),
                     SizedBox(
-                        width: widget.columnSizes[1].collapsed
-                            ? 0
-                            : widget.columnSpacing,),
+                      width: widget.columnSizes[1].collapsed
+                          ? 0
+                          : widget.columnSpacing,
+                    ),
                     widget.columnSizes[2].createContainer(
                       child: StudyStatusBadge(
                         status: widget.study.status,
@@ -130,9 +133,10 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                       ),
                     ),
                     SizedBox(
-                        width: widget.columnSizes[2].collapsed
-                            ? 0
-                            : widget.columnSpacing,),
+                      width: widget.columnSizes[2].collapsed
+                          ? 0
+                          : widget.columnSpacing,
+                    ),
                     widget.columnSizes[3].createContainer(
                       child: StudyParticipationBadge(
                         participation: widget.study.participation,
@@ -140,9 +144,10 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                       ),
                     ),
                     SizedBox(
-                        width: widget.columnSizes[3].collapsed
-                            ? 0
-                            : widget.columnSpacing,),
+                      width: widget.columnSizes[3].collapsed
+                          ? 0
+                          : widget.columnSpacing,
+                    ),
                     widget.columnSizes[4].createContainer(
                       child: Text(
                         widget.study.createdAt?.toTimeAgoString() ?? '',
@@ -151,9 +156,10 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                       ),
                     ),
                     SizedBox(
-                        width: widget.columnSizes[4].collapsed
-                            ? 0
-                            : widget.columnSpacing,),
+                      width: widget.columnSizes[4].collapsed
+                          ? 0
+                          : widget.columnSpacing,
+                    ),
                     widget.columnSizes[5].createContainer(
                       child: Text(
                         widget.study.participantCount.toString(),
@@ -162,28 +168,34 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                       ),
                     ),
                     SizedBox(
-                        width: widget.columnSizes[5].collapsed
-                            ? 0
-                            : widget.columnSpacing,),
+                      width: widget.columnSizes[5].collapsed
+                          ? 0
+                          : widget.columnSpacing,
+                    ),
                     widget.columnSizes[6].createContainer(
                       child: Text(
                         widget.study.activeSubjectCount.toString(),
                         style: mutedTextStyleIfZero(
-                            widget.study.activeSubjectCount,),
+                          widget.study.activeSubjectCount,
+                        ),
                       ),
                     ),
                     SizedBox(
-                        width: widget.columnSizes[6].collapsed
-                            ? 0
-                            : widget.columnSpacing,),
+                      width: widget.columnSizes[6].collapsed
+                          ? 0
+                          : widget.columnSpacing,
+                    ),
                     widget.columnSizes[7].createContainer(
-                      child: Text(widget.study.endedCount.toString(),
-                          style: mutedTextStyleIfZero(widget.study.endedCount),),
+                      child: Text(
+                        widget.study.endedCount.toString(),
+                        style: mutedTextStyleIfZero(widget.study.endedCount),
+                      ),
                     ),
                     SizedBox(
-                        width: widget.columnSizes[7].collapsed
-                            ? 0
-                            : widget.columnSpacing,),
+                      width: widget.columnSizes[7].collapsed
+                          ? 0
+                          : widget.columnSpacing,
+                    ),
                     widget.columnSizes[8].createContainer(
                       child: _buildActionMenu(context, widget.actions),
                     ),

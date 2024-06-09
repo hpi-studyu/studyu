@@ -13,7 +13,9 @@ import 'observation/questionnaire_task_widget.dart';
 class TaskScreen extends StatefulWidget {
   final TaskInstance taskInstance;
 
-  static MaterialPageRoute<bool> routeFor({required TaskInstance taskInstance}) => MaterialPageRoute(
+  static MaterialPageRoute<bool> routeFor(
+          {required TaskInstance taskInstance}) =>
+      MaterialPageRoute(
         builder: (_) => TaskScreen(taskInstance: taskInstance),
       );
 
@@ -31,7 +33,8 @@ class _TaskScreenState extends State<TaskScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     subject = context.watch<AppState>().activeSubject;
-    taskInstance = TaskInstance.fromInstanceId(widget.taskInstance.id, study: subject!.study);
+    taskInstance = TaskInstance.fromInstanceId(widget.taskInstance.id,
+        study: subject!.study);
   }
 
   Widget _buildTask() {
@@ -77,7 +80,8 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 }
 
-handleTaskCompletion(BuildContext context, Function(StudySubject?) completionCallback) async {
+handleTaskCompletion(
+    BuildContext context, Function(StudySubject?) completionCallback) async {
   final state = context.read<AppState>();
   final activeSubject = state.activeSubject;
   try {
@@ -93,7 +97,9 @@ handleTaskCompletion(BuildContext context, Function(StudySubject?) completionCal
       SnackBar(
         content: Text(AppLocalizations.of(context)!.could_not_save_results),
         duration: const Duration(seconds: 10),
-        action: SnackBarAction(label: 'Retry', onPressed: () => handleTaskCompletion(context, completionCallback)),
+        action: SnackBarAction(
+            label: 'Retry',
+            onPressed: () => handleTaskCompletion(context, completionCallback)),
       ),
     );
     rethrow;

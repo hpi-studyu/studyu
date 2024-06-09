@@ -24,11 +24,13 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
       ' payload: ${notificationResponse.payload}');
   if (notificationResponse.input?.isNotEmpty ?? false) {
     // ignore: avoid_print
-    print('notification action tapped with input: ${notificationResponse.input}');
+    print(
+        'notification action tapped with input: ${notificationResponse.input}');
   }
 }
 
-GlobalKey<NavigatorState> navigatorKey = GlobalKey(debugLabel: 'Main Navigator');
+GlobalKey<NavigatorState> navigatorKey =
+    GlobalKey(debugLabel: 'Main Navigator');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,7 +54,8 @@ Future<void> main() async {
 
   await AppAnalytics.init();
   if (!kDebugMode && AppAnalytics.isUserEnabled) {
-    AppAnalytics.start(appConfig, MyApp(queryParameters, appConfig, initialRoute: initialRoute));
+    AppAnalytics.start(appConfig,
+        MyApp(queryParameters, appConfig, initialRoute: initialRoute));
   } else {
     runApp(MyApp(queryParameters, appConfig, initialRoute: initialRoute));
   }
@@ -69,7 +72,8 @@ Future<void> main() async {
       if (currentRoute == Routes.appOutdated) return;
       final appConfig = await AppConfig.getAppConfig();
       if (await isAppOutdated(appConfig)) {
-        await navigatorState.pushNamedAndRemoveUntil(Routes.appOutdated, (route) => false);
+        await navigatorState.pushNamedAndRemoveUntil(
+            Routes.appOutdated, (route) => false);
       }
     } catch (error) {
       // device could be offline
@@ -92,7 +96,8 @@ Future<bool> isAppOutdated(AppConfig appConfig) async {
   final minVersionMajor = int.parse(minVersionParts[0]);
   final minVersionMinor = int.parse(minVersionParts[1]);
 
-  return appVersionMajor < minVersionMajor || (appVersionMajor == minVersionMajor && appVersionMinor < minVersionMinor);
+  return appVersionMajor < minVersionMajor ||
+      (appVersionMajor == minVersionMajor && appVersionMinor < minVersionMinor);
 }
 
 /// This is needed for flutter_local_notifications

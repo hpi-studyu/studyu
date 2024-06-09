@@ -11,7 +11,9 @@ abstract class IUserRepository {
   Future<StudyUUser> fetchUser();
   Future<StudyUUser> saveUser();
   Future<StudyUUser> updatePreferences(
-      PreferenceAction pinAction, String modelId,);
+    PreferenceAction pinAction,
+    String modelId,
+  );
 }
 
 enum PreferenceAction { pin, pinOff }
@@ -44,7 +46,9 @@ class UserRepository implements IUserRepository {
 
   @override
   Future<StudyUUser> updatePreferences(
-      PreferenceAction pinAction, String modelId,) async {
+    PreferenceAction pinAction,
+    String modelId,
+  ) async {
     final newPinnedStudies = Set<String>.from(user.preferences.pinnedStudies);
     switch (pinAction) {
       case PreferenceAction.pin:
@@ -62,5 +66,8 @@ final userRepositoryProvider = Provider.autoDispose((ref) {
   final apiClient = ref.watch(apiClientProvider);
   final authRepository = ref.watch(authRepositoryProvider);
   return UserRepository(
-      apiClient: apiClient, ref: ref, authRepository: authRepository,);
+    apiClient: apiClient,
+    ref: ref,
+    authRepository: authRepository,
+  );
 });

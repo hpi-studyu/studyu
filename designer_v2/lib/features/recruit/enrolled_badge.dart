@@ -28,13 +28,14 @@ class EnrolledBadge extends StatelessWidget {
     }
 
     return Tooltip(
-        message: tr.enrolled_count_tooltip(enrolledCount),
-        child: studybadge.Badge(
-          icon: Icons.check_circle_rounded,
-          iconSize: theme.iconTheme.size,
-          label: (enrolledCount > 1) ? enrolledCount.toString() : "",
-          color: Colors.green,
-          labelStyle: TextStyle(fontSize: mutedTextStyle.fontSize! - 2),
-        ),);
+      message: tr.enrolled_count_tooltip(enrolledCount),
+      child: studybadge.Badge(
+        icon: Icons.check_circle_rounded,
+        iconSize: theme.iconTheme.size,
+        label: (enrolledCount > 1) ? enrolledCount.toString() : "",
+        color: Colors.green,
+        labelStyle: TextStyle(fontSize: mutedTextStyle.fontSize! - 2),
+      ),
+    );
   }
 }

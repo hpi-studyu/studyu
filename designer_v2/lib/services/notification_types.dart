@@ -10,12 +10,13 @@ enum NotificationType { snackbar, alert, custom }
 ///   [SnackbarIntent] - renders the notification as a snackbar
 ///   [AlertIntent] - renders the notification as an alert dialog
 abstract class NotificationIntent {
-  NotificationIntent(
-      {this.message,
-      this.customContent,
-      this.icon,
-      this.actions,
-      required this.type,}) {
+  NotificationIntent({
+    this.message,
+    this.customContent,
+    this.icon,
+    this.actions,
+    required this.type,
+  }) {
     if (message == null && customContent == null) {
       throw Exception("Invalid AlertIntent");
     }
@@ -47,10 +48,11 @@ class NotificationAction {
   final FutureActionHandler onSelect;
   final bool isDestructive;
 
-  NotificationAction(
-      {required this.label,
-      required this.onSelect,
-      this.isDestructive = false,});
+  NotificationAction({
+    required this.label,
+    required this.onSelect,
+    this.isDestructive = false,
+  });
 }
 
 /// Encapsulates a call to [showSnackbar]

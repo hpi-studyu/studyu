@@ -15,7 +15,8 @@ class GroupedIterable<K, V> extends Iterable<MapEntry<K, Iterable<V>>> {
   Iterable<MapEntry<K, R>> aggregate<R>(FoldAggregator<V, R> aggregator) =>
       map((entry) => MapEntry(entry.key, aggregator(entry.value)));
 
-  Iterable<MapEntry<K, R>> aggregateWithKey<R>(KeyedAggregator<K, V, R> aggregator) =>
+  Iterable<MapEntry<K, R>> aggregateWithKey<R>(
+          KeyedAggregator<K, V, R> aggregator) =>
       map((entry) => MapEntry(entry.key, aggregator(entry.value, entry.key)));
 }
 
@@ -30,14 +31,17 @@ FoldAggregator<V, V> foldAggregateMedian<V extends Comparable>() => (values) {
 FoldAggregator<V, V> foldAggregateMax<V extends Comparable>() =>
     (values) => values.reduce((a, b) => a.compareTo(b) > 0 ? a : b);
 
-FoldAggregator<num, num> foldAggregateSum() => (values) => values.reduce((value, element) => value + element);
+FoldAggregator<num, num> foldAggregateSum() =>
+    (values) => values.reduce((value, element) => value + element);
 
-FoldAggregator<num, num> foldAggregateMean() => (values) => foldAggregateSum()(values) / values.length;
+FoldAggregator<num, num> foldAggregateMean() =>
+    (values) => foldAggregateSum()(values) / values.length;
 
 extension GroupByIterable<V> on Iterable<V> {
   GroupedIterable<K, V> groupBy<K>(KeyAccessor<K, V> key) {
     final result = <K, List<V>>{};
-    forEach((element) => result.putIfAbsent(key(element), () => []).add(element));
+    forEach(
+        (element) => result.putIfAbsent(key(element), () => []).add(element));
     return GroupedIterable.from(result);
   }
 }

@@ -19,5 +19,6 @@ abstract class SliderQuestion extends Question<num> {
 
   SliderQuestion.withId(super.type) : super.withId();
 
-  Answer<num> constructAnswer(double response) => Answer.forQuestion(this, response);
+  Answer<num> constructAnswer(double response) =>
+      Answer.forQuestion(this, response);
 }

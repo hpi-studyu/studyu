@@ -12,7 +12,8 @@ String envFilePath() {
 }
 
 String? getEnv(String name) {
-  return dotenv.env[name] ?? (bool.hasEnvironment(name) ? String.fromEnvironment(name) : null);
+  return dotenv.env[name] ??
+      (bool.hasEnvironment(name) ? String.fromEnvironment(name) : null);
 }
 
 Future<void> loadEnv() async {

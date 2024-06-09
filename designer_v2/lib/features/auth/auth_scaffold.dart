@@ -71,7 +71,8 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                     padding: const EdgeInsets.only(left: 12.0),
                     child: Container(
                       constraints: BoxConstraints(
-                          maxWidth: widget.leftContentMinWidth - 24.0,),
+                        maxWidth: widget.leftContentMinWidth - 24.0,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -107,7 +108,8 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                   padding: const EdgeInsets.only(left: 12.0),
                   child: Container(
                     constraints: BoxConstraints(
-                        maxWidth: widget.leftPanelMinWidth - 12 * 2,),
+                      maxWidth: widget.leftPanelMinWidth - 12 * 2,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

@@ -18,13 +18,18 @@ class QuestionContainer extends StatefulWidget {
   final Question question;
   final int index;
 
-  const QuestionContainer({required this.onDone, required this.question, required this.index, super.key});
+  const QuestionContainer(
+      {required this.onDone,
+      required this.question,
+      required this.index,
+      super.key});
 
   @override
   State<StatefulWidget> createState() => _QuestionContainerState();
 }
 
-class _QuestionContainerState extends State<QuestionContainer> with AutomaticKeepAliveClientMixin {
+class _QuestionContainerState extends State<QuestionContainer>
+    with AutomaticKeepAliveClientMixin {
   void _onDone(Answer answer) {
     widget.onDone(answer, widget.index);
   }
@@ -35,7 +40,8 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
         return ChoiceQuestionWidget(
           question: choiceQuestion,
           onDone: _onDone,
-          multiSelectionText: AppLocalizations.of(context)!.eligible_choice_multi_selection,
+          multiSelectionText:
+              AppLocalizations.of(context)!.eligible_choice_multi_selection,
         );
       case BooleanQuestion booleanQuestion:
         return BooleanQuestionWidget(
@@ -75,7 +81,8 @@ class _QuestionContainerState extends State<QuestionContainer> with AutomaticKee
           onDone: _onDone,
         );
       default:
-        throw ArgumentError('Question type ${widget.question.type} not supported');
+        throw ArgumentError(
+            'Question type ${widget.question.type} not supported');
     }
   }
 

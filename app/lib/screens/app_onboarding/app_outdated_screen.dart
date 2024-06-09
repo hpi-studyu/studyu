@@ -29,21 +29,25 @@ class AppOutdatedScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Spacer(),
-              const Image(image: AssetImage('assets/icon/logo.png'), height: 200),
+              const Image(
+                  image: AssetImage('assets/icon/logo.png'), height: 200),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.all(20),
-                child:
-                    Text(loc.app_outdated_message, textAlign: TextAlign.center, style: const TextStyle(fontSize: 20)),
+                child: Text(loc.app_outdated_message,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 20)),
               ),
               const Spacer(),
               storeUrl != null && storeIcon != null
                   ? OutlinedButton.icon(
                       icon: Icon(storeIcon),
                       onPressed: () async {
-                        await launchUrl(Uri.parse(storeUrl!), mode: LaunchMode.externalNonBrowserApplication);
+                        await launchUrl(Uri.parse(storeUrl!),
+                            mode: LaunchMode.externalNonBrowserApplication);
                       },
-                      label: Text(loc.update_now, style: const TextStyle(fontSize: 20)),
+                      label: Text(loc.update_now,
+                          style: const TextStyle(fontSize: 20)),
                     )
                   : const SizedBox.shrink(),
               const Spacer(),

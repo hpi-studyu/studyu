@@ -65,7 +65,8 @@ class WebController extends PlatformController {
       ..src = previewSrc
       ..style.border = 'none';
 
-    ui_web.platformViewRegistry.registerViewFactory('$studyId$key', (int viewId) => iFrameElement);
+    ui_web.platformViewRegistry
+        .registerViewFactory('$studyId$key', (int viewId) => iFrameElement);
   }
 
   @override
@@ -111,7 +112,10 @@ class WebController extends PlatformController {
   void refresh({String? cmd}) {
     if (routeInformation.route != null) {
       if (routeInformation.extra != null) {
-        navigate(route: routeInformation.route, extra: routeInformation.extra, cmd: cmd);
+        navigate(
+            route: routeInformation.route,
+            extra: routeInformation.extra,
+            cmd: cmd);
         return;
       }
       navigate(route: routeInformation.route, cmd: cmd);

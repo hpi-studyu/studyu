@@ -71,7 +71,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
     try {
       subject = await _fetchRemoteSubject(selectedStudyObjectId);
     } catch (exception) {
-      StudyULogger.warning("Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
+      StudyULogger.warning(
+          "Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
       try {
         // Try signing in again. Needed if JWT is expired
         if (await signInParticipant()) {
@@ -102,9 +103,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   _initPreview(AppState state) async {
     if (state.isPreview) previewSubjectIdKey();
-    if (widget.queryParameters == null || widget.queryParameters!.isEmpty) return;
+    if (widget.queryParameters == null || widget.queryParameters!.isEmpty)
+      return;
 
-    StudyULogger.info("Preview: Found query parameters ${widget.queryParameters}");
+    StudyULogger.info(
+        "Preview: Found query parameters ${widget.queryParameters}");
     var lang = context.watch<AppLanguage>();
     final preview = Preview(
       widget.queryParameters,
@@ -131,7 +134,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
       if (preview.selectedRoute == '/eligibilityCheck') {
         if (!mounted) return;
         // if we remove the await, we can push multiple times. warning: do not run in while(true)
-        await Navigator.push<EligibilityResult>(context, EligibilityScreen.routeFor(study: preview.study));
+        await Navigator.push<EligibilityResult>(
+            context, EligibilityScreen.routeFor(study: preview.study));
         // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
         iFrameHelper.postRouteFinished();
         return;
@@ -145,7 +149,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return;
       }
 
-      state.activeSubject = await preview.getStudySubject(state, createSubject: true);
+      state.activeSubject =
+          await preview.getStudySubject(state, createSubject: true);
 
       // CONSENT
       if (preview.selectedRoute == Routes.consent) {
@@ -188,13 +193,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
       if (preview.selectedRoute == '/observation') {
         print(state.selectedStudy!.observations.first.id);
         final tasks = <Task>[
-          ...state.selectedStudy!.observations.where((observation) => observation.id == preview.extra),
+          ...state.selectedStudy!.observations
+              .where((observation) => observation.id == preview.extra),
         ];
         if (!mounted) return;
         await Navigator.push<bool>(
             context,
             TaskScreen.routeFor(
-                taskInstance: TaskInstance(tasks.first, tasks.first.schedule.completionPeriods.first.id)));
+                taskInstance: TaskInstance(tasks.first,
+                    tasks.first.schedule.completionPeriods.first.id)));
         iFrameHelper.postRouteFinished();
         return;
       }

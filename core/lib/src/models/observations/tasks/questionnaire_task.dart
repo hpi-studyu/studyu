@@ -15,25 +15,33 @@ class QuestionnaireTask extends Observation {
 
   QuestionnaireTask.withId() : super.withId(taskType);
 
-  factory QuestionnaireTask.fromJson(Map<String, dynamic> json) => _$QuestionnaireTaskFromJson(json);
+  factory QuestionnaireTask.fromJson(Map<String, dynamic> json) =>
+      _$QuestionnaireTaskFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$QuestionnaireTaskToJson(this);
 
   @override
-  Map<DateTime, T> extractPropertyResults<T>(String property, List<SubjectProgress> sourceResults) {
-    final Question? targetQuestion = questions.questions.firstWhereOrNull((q) => q.id == property);
+  Map<DateTime, T> extractPropertyResults<T>(
+      String property, List<SubjectProgress> sourceResults) {
+    final Question? targetQuestion =
+        questions.questions.firstWhereOrNull((q) => q.id == property);
     if (targetQuestion == null) {
-      throw ArgumentError("Questionnaire '$id' does not have a question with '$property'.");
+      throw ArgumentError(
+          "Questionnaire '$id' does not have a question with '$property'.");
     }
     return Map.fromEntries(
-      sourceResults
-          .map((e) => MapEntry(e.completedAt!, (e.result as Result<QuestionnaireState>).result.getAnswer<T>(property))),
+      sourceResults.map((e) => MapEntry(
+          e.completedAt!,
+          (e.result as Result<QuestionnaireState>)
+              .result
+              .getAnswer<T>(property))),
     );
   }
 
   @override
-  Map<String, Type> getAvailableProperties() => {for (final q in questions.questions) q.id: q.getAnswerType()};
+  Map<String, Type> getAvailableProperties() =>
+      {for (final q in questions.questions) q.id: q.getAnswerType()};
 
   @override
   String? getHumanReadablePropertyName(String property) =>

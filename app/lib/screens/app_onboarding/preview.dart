@@ -50,7 +50,8 @@ class Preview {
     }
 
     if (containsQuery('data')) {
-      final data = jsonDecode(queryParameters!['data']!) as Map<String, dynamic>;
+      final data =
+          jsonDecode(queryParameters!['data']!) as Map<String, dynamic>;
       study = Study.fromJson(data);
     } else {
       study = await SupabaseQuery.getById<Study>(queryParameters!['studyid']!);
@@ -108,7 +109,8 @@ class Preview {
   }
 
   bool containsQuery(String key) {
-    return queryParameters!.containsKey(key) && queryParameters![key]!.isNotEmpty;
+    return queryParameters!.containsKey(key) &&
+        queryParameters![key]!.isNotEmpty;
   }
 
   bool containsQueryPair(String key, String value) {
@@ -116,7 +118,8 @@ class Preview {
   }
 
   /// createSubject: If true, the method will return a new StudySubject if none can be found. Otherwise, null is returned
-  Future<StudySubject?> getStudySubject(AppState state, {bool createSubject = false}) async {
+  Future<StudySubject?> getStudySubject(AppState state,
+      {bool createSubject = false}) async {
     if (selectedStudyObjectId != null) {
       try {
         if (selectedRoute == '/intervention') {
@@ -134,10 +137,13 @@ class Preview {
             (foundSubject) {
               // todo baseline
               foundSubject.study.schedule.includeBaseline = false;
-              return foundSubject.userId == Supabase.instance.client.auth.currentUser!.id &&
+              return foundSubject.userId ==
+                      Supabase.instance.client.auth.currentUser!.id &&
                   foundSubject.studyId == study!.id &&
                   listEquals(
-                    foundSubject.selectedInterventions.map((i) => i.id).toList(),
+                    foundSubject.selectedInterventions
+                        .map((i) => i.id)
+                        .toList(),
                     getInterventionIds(),
                   );
             },

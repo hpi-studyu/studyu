@@ -64,9 +64,10 @@ class StudyDesignNav {
       ];
 
   static NavbarTab info(StudyID studyId) => NavbarTab(
-      index: 0,
-      title: tr.navlink_study_design_info,
-      intent: RoutingIntents.studyEditInfo(studyId),);
+        index: 0,
+        title: tr.navlink_study_design_info,
+        intent: RoutingIntents.studyEditInfo(studyId),
+      );
   static NavbarTab enrollment(StudyID studyId) => NavbarTab(
         index: 1,
         title: tr.navlink_study_design_enrollment,
@@ -83,7 +84,8 @@ class StudyDesignNav {
         intent: RoutingIntents.studyEditMeasurements(studyId),
       );
   static NavbarTab reports(StudyID studyId) => NavbarTab(
-      index: 4,
-      title: "Reports",
-      intent: RoutingIntents.studyEditReports(studyId),);
+        index: 4,
+        title: "Reports",
+        intent: RoutingIntents.studyEditReports(studyId),
+      );
 }

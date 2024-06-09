@@ -33,7 +33,8 @@ class _KickoffScreen extends State<KickoffScreen> {
       await storeActiveSubjectId(subject!.id);
       if (!context.mounted) return;
       setState(() => ready = true);
-      Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, Routes.dashboard, (_) => false);
     } catch (e) {
       StudyULogger.fatal('Failed creating subject: $e');
     }
@@ -58,8 +59,9 @@ class _KickoffScreen extends State<KickoffScreen> {
           size: 64,
         );
 
-  String _getStatusText(BuildContext context) =>
-      !ready ? AppLocalizations.of(context)!.setting_up_study : AppLocalizations.of(context)!.good_to_go;
+  String _getStatusText(BuildContext context) => !ready
+      ? AppLocalizations.of(context)!.setting_up_study
+      : AppLocalizations.of(context)!.good_to_go;
 
   @override
   Widget build(BuildContext context) {

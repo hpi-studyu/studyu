@@ -12,7 +12,8 @@ import 'routes.dart';
 import 'theme.dart';
 
 class MyApp extends StatefulWidget {
-  const MyApp(this.queryParameters, this.appConfig, {super.key, required this.initialRoute});
+  const MyApp(this.queryParameters, this.appConfig,
+      {super.key, required this.initialRoute});
   final Map<String, String> queryParameters;
   final AppConfig? appConfig;
   final String initialRoute;
@@ -31,7 +32,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AppLanguage>(create: (context) => AppLanguage(AppLocalizations.supportedLocales)),
+        ChangeNotifierProvider<AppLanguage>(
+            create: (context) =>
+                AppLanguage(AppLocalizations.supportedLocales)),
         ChangeNotifierProvider<AppState>(create: (context) => AppState()),
       ],
       child: Consumer<AppLanguage>(
@@ -50,7 +53,8 @@ class _MyAppState extends State<MyApp> {
             ],
             localeListResolutionCallback: (locales, supportedLocales) {
               // print('device locales=$locales supported locales=$supportedLocales');
-              final supportedLanguageCodes = supportedLocales.map((e) => e.languageCode);
+              final supportedLanguageCodes =
+                  supportedLocales.map((e) => e.languageCode);
               if (locales != null) {
                 for (final locale in locales) {
                   if (supportedLanguageCodes.contains(locale.languageCode)) {

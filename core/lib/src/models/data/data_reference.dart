@@ -12,7 +12,8 @@ class DataReference<T> {
 
   DataReference(this.task, this.property);
 
-  factory DataReference.fromJson(Map<String, dynamic> json) => _$DataReferenceFromJson(json);
+  factory DataReference.fromJson(Map<String, dynamic> json) =>
+      _$DataReferenceFromJson(json);
 
   Map<String, dynamic> toJson() => _$DataReferenceToJson(this);
 
@@ -20,9 +21,13 @@ class DataReference<T> {
   String toString() => toJson().toString();
 
   Map<DateTime, T> retrieveFromResults(StudySubject subject) {
-    final Task? sourceTask = subject.study.observations.firstWhereOrNull((task) => task.id == this.task) ??
-        subject.selectedInterventions.expand((i) => i.tasks).firstWhereOrNull((task) => task.id == this.task);
-    if (sourceTask == null) throw ArgumentError("Could not find a task with the id '$task'.");
+    final Task? sourceTask = subject.study.observations
+            .firstWhereOrNull((task) => task.id == this.task) ??
+        subject.selectedInterventions
+            .expand((i) => i.tasks)
+            .firstWhereOrNull((task) => task.id == this.task);
+    if (sourceTask == null)
+      throw ArgumentError("Could not find a task with the id '$task'.");
 
     final List<SubjectProgress> sourceResults = subject.resultsFor(task);
 

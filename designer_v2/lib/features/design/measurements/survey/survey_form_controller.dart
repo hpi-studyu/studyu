@@ -74,7 +74,8 @@ class MeasurementSurveyFormViewModel
         validationMessages: {
           ValidationMessage.minLength: (error) =>
               tr.form_array_measurement_survey_questions_minlength(
-                  (error as Map)['requiredLength'] as num,),
+                (error as Map)['requiredLength'] as num,
+              ),
         },
       );
 
@@ -137,20 +138,27 @@ class MeasurementSurveyFormViewModel
 
   @override
   List<ModelAction> availableActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableActions(model,
-        onEdit: onSelectItem, isReadOnly: isReadonly,);
+    final actions = questionFormViewModels.availableActions(
+      model,
+      onEdit: onSelectItem,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availablePopupActions(model,
-        isReadOnly: isReadonly,);
+    final actions = questionFormViewModels.availablePopupActions(
+      model,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(QuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableInlineActions(model,
-        isReadOnly: isReadonly,);
+    final actions = questionFormViewModels.availableInlineActions(
+      model,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 

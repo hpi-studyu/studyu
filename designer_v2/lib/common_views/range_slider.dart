@@ -31,7 +31,8 @@ class IndicatorRangeSliderThumbShape<T> extends RangeSliderThumbShape {
     if (thumb == null) return;
 
     final Canvas canvas = context.canvas;
-    canvas.drawCircle(center, 9, Paint()..color = Theme.of(buildContext).colorScheme.primary);
+    canvas.drawCircle(
+        center, 9, Paint()..color = Theme.of(buildContext).colorScheme.primary);
     final value = thumb == Thumb.start ? start : end;
 
     // Customize the box style
@@ -48,8 +49,10 @@ class IndicatorRangeSliderThumbShape<T> extends RangeSliderThumbShape {
 
     // Calculate text size and position
     final text = value.toString();
-    final textSpan = TextSpan(text: text, style: const TextStyle(color: Colors.white));
-    final textPainter = TextPainter(text: textSpan, textDirection: textDirection ?? TextDirection.ltr);
+    final textSpan =
+        TextSpan(text: text, style: const TextStyle(color: Colors.white));
+    final textPainter = TextPainter(
+        text: textSpan, textDirection: textDirection ?? TextDirection.ltr);
     textPainter.layout();
 
     // Calculate the box size with padding
@@ -60,10 +63,14 @@ class IndicatorRangeSliderThumbShape<T> extends RangeSliderThumbShape {
     final textOffset = center + Offset(-textPainter.width / 2, 15);
 
     // Draw the rounded rectangle box with border centered around the text
-    final boxOffset = textOffset + Offset(textPainter.width / 2 - boxWidth / 2, textPainter.height / 2 - boxHeight / 2);
-    final boxRect = Rect.fromLTWH(boxOffset.dx, boxOffset.dy, boxWidth, boxHeight);
+    final boxOffset = textOffset +
+        Offset(textPainter.width / 2 - boxWidth / 2,
+            textPainter.height / 2 - boxHeight / 2);
+    final boxRect =
+        Rect.fromLTWH(boxOffset.dx, boxOffset.dy, boxWidth, boxHeight);
     canvas.drawRRect(RRect.fromRectAndRadius(boxRect, borderRadius), boxPaint);
-    canvas.drawRRect(RRect.fromRectAndRadius(boxRect, borderRadius), borderPaint);
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(boxRect, borderRadius), borderPaint);
 
     // Draw the text inside the box
     textPainter.paint(canvas, textOffset);

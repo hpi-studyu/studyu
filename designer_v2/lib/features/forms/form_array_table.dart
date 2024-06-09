@@ -9,7 +9,10 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 
 typedef FormArrayTableRowLabelProvider<T> = String Function(T item);
 typedef WidgetBuilderAt<T> = Widget Function(
-    BuildContext context, T item, int rowIdx,);
+  BuildContext context,
+  T item,
+  int rowIdx,
+);
 
 class FormArrayTable<T> extends StatelessWidget {
   const FormArrayTable({
@@ -32,8 +35,10 @@ class FormArrayTable<T> extends StatelessWidget {
     this.itemsSectionPadding = const EdgeInsets.symmetric(vertical: 8.0),
     this.hideLeadingTrailingWhenEmpty = false,
     super.key,
-  }) : assert(sectionTitle == null || leadingWidget == null,
-            "Cannot specify both sectionTitle and leadingWidget",);
+  }) : assert(
+          sectionTitle == null || leadingWidget == null,
+          "Cannot specify both sectionTitle and leadingWidget",
+        );
 
   final AbstractControl control;
 
@@ -149,7 +154,11 @@ class FormArrayTable<T> extends StatelessWidget {
   }
 
   List<Widget> _buildRow(
-      BuildContext context, T item, int rowIdx, Set<WidgetState> states,) {
+    BuildContext context,
+    T item,
+    int rowIdx,
+    Set<WidgetState> states,
+  ) {
     final tableTextStyleSecondary = Theme.of(context).textTheme.bodyMedium;
     return [
       CustomScrollView(

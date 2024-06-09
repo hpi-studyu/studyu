@@ -66,10 +66,11 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
         type: ModelActionType.clipboard,
         label: ModelActionType.clipboard.string,
         onExecute: () => {
-          ref.read(clipboardServiceProvider).copy(model.code).then((value) =>
-              ref
-                  .read(notificationServiceProvider)
-                  .show(Notifications.inviteCodeClipped),),
+          ref.read(clipboardServiceProvider).copy(model.code).then(
+                (value) => ref
+                    .read(notificationServiceProvider)
+                    .show(Notifications.inviteCodeClipped),
+              ),
         },
       ),
       ModelAction(
@@ -77,9 +78,11 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
         label: ModelActionType.delete.string,
         onExecute: () {
           return delete(getKey(model))
-              .then((value) => ref
-                  .read(routerProvider)
-                  .dispatch(RoutingIntents.studyRecruit(model.studyId)),)
+              .then(
+                (value) => ref
+                    .read(routerProvider)
+                    .dispatch(RoutingIntents.studyRecruit(model.studyId)),
+              )
               .then(
                 (value) => Future.delayed(
                   const Duration(milliseconds: 200),

@@ -8,19 +8,23 @@ class MeasurementsFormData implements IStudyFormData {
   final List<MeasurementSurveyFormData> surveyMeasurements;
 
   @override
-  String get id => throw UnimplementedError(); // not needed for top-level form data
+  String get id =>
+      throw UnimplementedError(); // not needed for top-level form data
 
   factory MeasurementsFormData.fromStudy(Study study) {
     return MeasurementsFormData(
-        surveyMeasurements: study.observations
-            .map((observation) => MeasurementSurveyFormData.fromDomainModel(observation as QuestionnaireTask))
-            .toList(),);
+      surveyMeasurements: study.observations
+          .map((observation) => MeasurementSurveyFormData.fromDomainModel(
+              observation as QuestionnaireTask))
+          .toList(),
+    );
   }
 
   @override
   Study apply(Study study) {
-    final List<QuestionnaireTask> surveys =
-        surveyMeasurements.map((formData) => formData.toQuestionnaireTask()).toList();
+    final List<QuestionnaireTask> surveys = surveyMeasurements
+        .map((formData) => formData.toQuestionnaireTask())
+        .toList();
     study.observations = surveys;
     return study;
   }

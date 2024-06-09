@@ -8,7 +8,8 @@ import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dar
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:uuid/uuid.dart';
 
-class ConsentItemFormViewModel extends ManagedFormViewModel<ConsentItemFormData> {
+class ConsentItemFormViewModel
+    extends ManagedFormViewModel<ConsentItemFormData> {
   ConsentItemFormViewModel({
     super.formData,
     super.delegate,
@@ -17,7 +18,8 @@ class ConsentItemFormViewModel extends ManagedFormViewModel<ConsentItemFormData>
 
   // - Form fields
 
-  final FormControl<String> consentIdControl = FormControl(value: const Uuid().v4()); // hidden
+  final FormControl<String> consentIdControl =
+      FormControl(value: const Uuid().v4()); // hidden
   final FormControl<String> titleControl = FormControl();
   final FormControl<String> descriptionControl = FormControl();
   final FormControl<IconOption> iconControl = FormControl();
@@ -31,16 +33,26 @@ class ConsentItemFormViewModel extends ManagedFormViewModel<ConsentItemFormData>
         StudyFormValidationSet.test: [titleRequired, descriptionRequired],
       };
 
-  FormControlValidation get titleRequired => FormControlValidation(control: titleControl, validators: [
-        Validators.required,
-      ], validationMessages: {
-        ValidationMessage.required: (error) => tr.form_field_consent_title_required,
-      },);
-  FormControlValidation get descriptionRequired => FormControlValidation(control: descriptionControl, validators: [
-        Validators.required,
-      ], validationMessages: {
-        ValidationMessage.required: (error) => tr.form_field_consent_text_required,
-      },);
+  FormControlValidation get titleRequired => FormControlValidation(
+        control: titleControl,
+        validators: [
+          Validators.required,
+        ],
+        validationMessages: {
+          ValidationMessage.required: (error) =>
+              tr.form_field_consent_title_required,
+        },
+      );
+  FormControlValidation get descriptionRequired => FormControlValidation(
+        control: descriptionControl,
+        validators: [
+          Validators.required,
+        ],
+        validationMessages: {
+          ValidationMessage.required: (error) =>
+              tr.form_field_consent_text_required,
+        },
+      );
 
   @override
   late final FormGroup form = FormGroup({

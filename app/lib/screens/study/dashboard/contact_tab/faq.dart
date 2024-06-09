@@ -7,7 +7,8 @@ class FAQ extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO(Manisha): Transfer strings to translation files
-    if (AppLocalizations.of(context)!.faq_full == 'Frequently Asked Questions') {
+    if (AppLocalizations.of(context)!.faq_full ==
+        'Frequently Asked Questions') {
       return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.faq_full),
@@ -68,7 +69,8 @@ final List<Entry> data_en = <Entry>[
       Entry(
         'How long will the study take to finish?',
         <Entry>[
-          Entry('The duration of each study is mentioned during initial study selection.'),
+          Entry(
+              'The duration of each study is mentioned during initial study selection.'),
         ],
       ),
       Entry(
@@ -93,7 +95,8 @@ final List<Entry> data_en = <Entry>[
       Entry(
         'How can I Opt out from the current study?',
         <Entry>[
-          Entry('You can do so by going to the Settings tab located on the Dashboard and clicking on "Opt-out" '),
+          Entry(
+              'You can do so by going to the Settings tab located on the Dashboard and clicking on "Opt-out" '),
         ],
       ),
     ],
@@ -120,7 +123,8 @@ final List<Entry> data_en = <Entry>[
       Entry(
         'How can I keep track of my activities?',
         <Entry>[
-          Entry('You can get an overview of your daily tasks and health status in the "Reports History section"'),
+          Entry(
+              'You can get an overview of your daily tasks and health status in the "Reports History section"'),
         ],
       ),
       Entry(
@@ -159,7 +163,8 @@ final data_de = <Entry>[
       Entry(
         'Welche persönlichen Daten sammelt die App?',
         <Entry>[
-          Entry('Die App sammelt keine persönlichen Daten des Benutzers, muss jedoch auf Zeit und Ort zugreifen.'),
+          Entry(
+              'Die App sammelt keine persönlichen Daten des Benutzers, muss jedoch auf Zeit und Ort zugreifen.'),
         ],
       ),
     ],
@@ -170,7 +175,8 @@ final data_de = <Entry>[
       Entry(
         'Wie lange dauert es, bis die Studie abgeschlossen ist?',
         <Entry>[
-          Entry('Die Dauer jeder Studie wird bei der ersten Studienauswahl angegeben.'),
+          Entry(
+              'Die Dauer jeder Studie wird bei der ersten Studienauswahl angegeben.'),
         ],
       ),
       Entry(

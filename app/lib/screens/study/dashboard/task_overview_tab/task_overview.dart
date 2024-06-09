@@ -14,7 +14,11 @@ class TaskOverview extends StatefulWidget {
   final List<TaskInstance>? scheduleToday;
   final String? interventionIcon;
 
-  const TaskOverview({required this.subject, required this.scheduleToday, super.key, this.interventionIcon});
+  const TaskOverview(
+      {required this.subject,
+      required this.scheduleToday,
+      super.key,
+      this.interventionIcon});
 
   @override
   State<TaskOverview> createState() => _TaskOverviewState();
@@ -24,7 +28,8 @@ class _TaskOverviewState extends State<TaskOverview> {
   void _navigateToReportIfStudyCompleted(BuildContext context) {
     if (widget.subject!.completedStudy) {
       // Workaround to reload dashboard
-      Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, Routes.dashboard, (_) => false);
     }
   }
 
@@ -42,7 +47,8 @@ class _TaskOverviewState extends State<TaskOverview> {
                 const SizedBox(width: 8),
                 Text(
                   taskInstance.completionPeriod.formatted(),
-                  style: theme.textTheme.titleSmall!.copyWith(fontSize: 16, color: theme.primaryColor),
+                  style: theme.textTheme.titleSmall!
+                      .copyWith(fontSize: 16, color: theme.primaryColor),
                 ),
               ],
             ),
@@ -80,8 +86,9 @@ class _TaskOverviewState extends State<TaskOverview> {
               Row(
                 children: [
                   Expanded(
-                      child:
-                          Text(AppLocalizations.of(context)!.intervention_current, style: theme.textTheme.titleLarge)),
+                      child: Text(
+                          AppLocalizations.of(context)!.intervention_current,
+                          style: theme.textTheme.titleLarge)),
                   const Spacer(),
                   Text(
                     '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',
@@ -90,9 +97,12 @@ class _TaskOverviewState extends State<TaskOverview> {
                 ],
               ),
               const SizedBox(height: 8),
-              InterventionCardTitle(intervention: widget.subject!.getInterventionForDate(DateTime.now())),
+              InterventionCardTitle(
+                  intervention:
+                      widget.subject!.getInterventionForDate(DateTime.now())),
               const SizedBox(height: 8),
-              Text(AppLocalizations.of(context)!.today_tasks, style: theme.textTheme.titleLarge)
+              Text(AppLocalizations.of(context)!.today_tasks,
+                  style: theme.textTheme.titleLarge)
             ],
           ),
         ),

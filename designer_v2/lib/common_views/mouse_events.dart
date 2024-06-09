@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 typedef MouseEventsRegionBuilder = Widget Function(
-    BuildContext context, Set<WidgetState> state);
+  BuildContext context,
+  Set<WidgetState> state,
+);
 
 typedef MaterialStatesChangedCallback = void Function(Set<WidgetState> state);
 

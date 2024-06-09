@@ -21,7 +21,9 @@ class DataReferenceEditor<T> {
       formControl: formControl,
       items: items,
       isExpanded: true,
-      hint: items.isNotEmpty ? const Text("Select a data source") : const Text("No scale survey question defined"),
+      hint: items.isNotEmpty
+          ? const Text("Select a data source")
+          : const Text("No scale survey question defined"),
     );
   }
 
@@ -30,7 +32,9 @@ class DataReferenceEditor<T> {
         labelHelpText: tr.form_field_report_data_source_tooltip,
         // TODO: extract custom dropdown component with theme + focus fix
         input: Theme(
-          data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+          data: theme.copyWith(
+              inputDecorationTheme:
+                  ThemeConfig.dropdownInputDecorationTheme(theme)),
           child: buildReactiveDropdownField,
         ),
       );

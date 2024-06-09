@@ -144,8 +144,10 @@ extension StudyDuplicateX on Study {
     return copy;
   }
 
-  Study copyJsonIgnoredAttributes(
-      {required Study from, bool createdAt = false,}) {
+  Study copyJsonIgnoredAttributes({
+    required Study from,
+    bool createdAt = false,
+  }) {
     participantCount = from.participantCount;
     activeSubjectCount = from.activeSubjectCount;
     endedCount = from.endedCount;

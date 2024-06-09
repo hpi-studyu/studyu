@@ -10,7 +10,8 @@ abstract class Expression {
 
   Expression(this.type);
 
-  factory Expression.fromJson(Map<String, dynamic> data) => switch (data[keyType]) {
+  factory Expression.fromJson(Map<String, dynamic> data) =>
+      switch (data[keyType]) {
         BooleanExpression.expressionType => BooleanExpression.fromJson(data),
         ChoiceExpression.expressionType => ChoiceExpression.fromJson(data),
         NotExpression.expressionType => NotExpression.fromJson(data),

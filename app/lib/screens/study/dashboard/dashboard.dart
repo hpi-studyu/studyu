@@ -37,11 +37,14 @@ class OverflowMenuItem {
   OverflowMenuItem(this.name, this.icon, {this.routeName, this.onTap});
 }
 
-class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingObserver {
+class _DashboardScreenState extends State<DashboardScreen>
+    with WidgetsBindingObserver {
   StudySubject? subject;
   List<TaskInstance>? scheduleToday;
 
-  get showNextDay => (kDebugMode || context.read<AppState>().isPreview) && !subject!.completedStudy;
+  get showNextDay =>
+      (kDebugMode || context.read<AppState>().isPreview) &&
+      !subject!.completedStudy;
 
   @override
   void initState() {
@@ -76,7 +79,8 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
       scheduleToday = subject!.scheduleFor(DateTime.now());
       if (widget.error != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(widget.error!)));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(widget.error!)));
         });
       }
     }
@@ -96,7 +100,8 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
   Widget build(BuildContext context) {
     if (subject == null) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamedAndRemoveUntil(context, Routes.loading, (_) => false);
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.loading, (_) => false);
       });
       return const SizedBox.shrink();
     }
@@ -117,7 +122,8 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
           IconButton(
             tooltip: 'Current report', // todo tr
             icon: Icon(MdiIcons.chartBar),
-            onPressed: () => Navigator.push(context, ReportDetailsScreen.routeFor(subject: subject!)),
+            onPressed: () => Navigator.push(
+                context, ReportDetailsScreen.routeFor(subject: subject!)),
           ),
           PopupMenuButton<OverflowMenuItem>(
             onSelected: (value) {
@@ -139,7 +145,9 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                   MdiIcons.frequentlyAskedQuestions,
                   routeName: Routes.faq,
                 ),
-                OverflowMenuItem(AppLocalizations.of(context)!.settings, Icons.settings, routeName: Routes.appSettings),
+                OverflowMenuItem(
+                    AppLocalizations.of(context)!.settings, Icons.settings,
+                    routeName: Routes.appSettings),
                 OverflowMenuItem(
                   AppLocalizations.of(context)!.what_is_studyu,
                   MdiIcons.helpCircleOutline,
@@ -150,7 +158,8 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                   MdiIcons.informationOutline,
                   onTap: () async {
                     final iconAuthors = ['Kiranshastry'];
-                    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+                    final PackageInfo packageInfo =
+                        await PackageInfo.fromPlatform();
                     if (!context.mounted) return;
                     showAboutDialog(
                       context: context,
@@ -159,17 +168,21 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                           showDialog(
                               context: context,
                               builder: (_) => AlertDialog(
-                                    title: const SelectableText('Notification Log'),
+                                    title: const SelectableText(
+                                        'Notification Log'),
                                     content: Column(
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
                                             final Uri emailLaunchUri = Uri(
                                                 scheme: 'mailto',
-                                                path: subject!.study.contact.email,
+                                                path: subject!
+                                                    .study.contact.email,
                                                 queryParameters: {
-                                                  'subject': '[StudyU] Debug Information',
-                                                  'body': StudyNotifications.scheduledNotificationsDebug,
+                                                  'subject':
+                                                      '[StudyU] Debug Information',
+                                                  'body': StudyNotifications
+                                                      .scheduledNotificationsDebug,
                                                 });
                                             launchUrl(emailLaunchUri);
                                           },
@@ -177,26 +190,33 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                                         ),
                                         FutureBuilder<bool>(
                                             future: receivePermission(),
-                                            builder: (context, AsyncSnapshot<bool> snapshot) {
+                                            builder: (context,
+                                                AsyncSnapshot<bool> snapshot) {
                                               if (snapshot.hasData) {
-                                                String data = "ignoreBatteryOptimizations: ${snapshot.data.toString()}";
-                                                StudyNotifications.scheduledNotificationsDebug =
+                                                String data =
+                                                    "ignoreBatteryOptimizations: ${snapshot.data.toString()}";
+                                                StudyNotifications
+                                                        .scheduledNotificationsDebug =
                                                     "${StudyNotifications.scheduledNotificationsDebug}\n\n$data\n";
                                                 return Text(data);
                                               } else {
                                                 return const CircularProgressIndicator();
                                               }
                                             }),
-                                        SelectableText(StudyNotifications.scheduledNotificationsDebug!),
+                                        SelectableText(StudyNotifications
+                                            .scheduledNotificationsDebug!),
                                       ],
                                     ),
                                     scrollable: true,
                                   ));
                           testNotifications(context);
                         },
-                        child: const Image(image: AssetImage('assets/icon/icon.png'), height: 32),
+                        child: const Image(
+                            image: AssetImage('assets/icon/icon.png'),
+                            height: 32),
                       ),
-                      applicationVersion: '${packageInfo.version} - ${packageInfo.buildNumber}',
+                      applicationVersion:
+                          '${packageInfo.version} - ${packageInfo.buildNumber}',
                       children: [
                         RichText(
                           text: TextSpan(
@@ -208,7 +228,8 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                                 text: 'www.flaticon.com',
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    launchUrl(Uri.parse('https://www.flaticon.com/'));
+                                    launchUrl(
+                                        Uri.parse('https://www.flaticon.com/'));
                                   },
                               ),
                               const TextSpan(text: ' made by'),
@@ -243,7 +264,11 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
                 return PopupMenuItem<OverflowMenuItem>(
                   value: choice,
                   child: Row(
-                    children: [Icon(choice.icon, color: Colors.black), const SizedBox(width: 8), Text(choice.name)],
+                    children: [
+                      Icon(choice.icon, color: Colors.black),
+                      const SizedBox(width: 8),
+                      Text(choice.name)
+                    ],
                   ),
                 );
               }).toList();
@@ -252,7 +277,9 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
         ],
       ),
       body: Padding(
-        padding: showNextDay ? EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 10) : EdgeInsets.zero,
+        padding: showNextDay
+            ? EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 10)
+            : EdgeInsets.zero,
         child: _buildBody(),
       ),
       bottomSheet: showNextDay
@@ -286,12 +313,17 @@ class _DashboardScreenState extends State<DashboardScreen> with WidgetsBindingOb
       return Center(
           child: Padding(
               padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
-              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text(
-                  AppLocalizations.of(context)!.study_not_started,
-                  style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold),
-                )
-              ])));
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.study_not_started,
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: theme.primaryColor,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ])));
     } else {
       return TaskOverview(
         subject: subject,
@@ -320,19 +352,26 @@ class StudyFinishedPlaceholder extends StatelessWidget {
           children: [
             Text(
               AppLocalizations.of(context)!.completed_study,
-              style: TextStyle(fontSize: 20, color: theme.primaryColor, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 20,
+                  color: theme.primaryColor,
+                  fontWeight: FontWeight.bold),
             ),
             space,
             OutlinedButton.icon(
-              onPressed: () => Navigator.pushNamed(context, Routes.reportHistory),
+              onPressed: () =>
+                  Navigator.pushNamed(context, Routes.reportHistory),
               icon: Icon(MdiIcons.history, size: fontSize),
-              label: Text(AppLocalizations.of(context)!.report_history, style: textStyle),
+              label: Text(AppLocalizations.of(context)!.report_history,
+                  style: textStyle),
             ),
             space,
             OutlinedButton.icon(
-              onPressed: () => Navigator.pushNamed(context, Routes.studySelection),
+              onPressed: () =>
+                  Navigator.pushNamed(context, Routes.studySelection),
               icon: Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
-              label: Text(AppLocalizations.of(context)!.study_selection, style: textStyle),
+              label: Text(AppLocalizations.of(context)!.study_selection,
+                  style: textStyle),
             ),
           ],
         ),
