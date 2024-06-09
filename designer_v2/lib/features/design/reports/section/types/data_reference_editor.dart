@@ -33,8 +33,9 @@ class DataReferenceEditor<T> {
         // TODO: extract custom dropdown component with theme + focus fix
         input: Theme(
           data: theme.copyWith(
-              inputDecorationTheme:
-                  ThemeConfig.dropdownInputDecorationTheme(theme),),
+            inputDecorationTheme:
+                ThemeConfig.dropdownInputDecorationTheme(theme),
+          ),
           child: buildReactiveDropdownField,
         ),
       );

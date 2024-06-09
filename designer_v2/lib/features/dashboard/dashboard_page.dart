@@ -64,8 +64,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ),
               const SizedBox(width: 28.0),
-              SelectableText(state.visibleListTitle,
-                  style: theme.textTheme.headlineMedium,),
+              SelectableText(
+                state.visibleListTitle,
+                style: theme.textTheme.headlineMedium,
+              ),
               const SizedBox(width: 28.0),
               Expanded(
                 child: Align(
@@ -91,7 +93,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               if (snapshot.hasData) {
                 return AsyncValueWidget<List<Study>>(
                   value: state.displayedStudies(
-                      snapshot.data!.preferences.pinnedStudies, state.query,),
+                    snapshot.data!.preferences.pinnedStudies,
+                    state.query,
+                  ),
                   data: (visibleStudies) => StudiesTable(
                     studies: visibleStudies,
                     pinnedStudies: snapshot.data!.preferences.pinnedStudies,

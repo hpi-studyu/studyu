@@ -31,8 +31,12 @@ class InterventionResult extends StudyResult {
   @override
   List getValues(StudySubject subject) {
     return subject.interventionOrder
-        .expand((intervention) => List<String>.filled(
-            subject.study.schedule.phaseDuration, intervention,),)
+        .expand(
+          (intervention) => List<String>.filled(
+            subject.study.schedule.phaseDuration,
+            intervention,
+          ),
+        )
         .toList();
   }
 }

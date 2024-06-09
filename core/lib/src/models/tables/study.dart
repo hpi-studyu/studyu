@@ -181,7 +181,8 @@ class Study extends SupabaseObjectFunctions<Study>
       final response =
           await env.client.from(tableName).select().eq('participation', 'open');
       final extracted = SupabaseQuery.extractSupabaseList<Study>(
-          List<Map<String, dynamic>>.from(response),);
+        List<Map<String, dynamic>>.from(response),
+      );
       result = ExtractionSuccess<Study>(extracted);
     } on ExtractionFailedException<Study> catch (error) {
       result = error;

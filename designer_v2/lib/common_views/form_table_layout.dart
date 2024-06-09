@@ -87,8 +87,10 @@ class FormTableLayout extends StatelessWidget {
         // change the text color for disabled controls
         child: Theme(
           data: theme.copyWith(
-              textTheme: TextTheme(
-                  titleMedium: inputTextTheme.merge(stateColorStyle),),),
+            textTheme: TextTheme(
+              titleMedium: inputTextTheme.merge(stateColorStyle),
+            ),
+          ),
           child: row.input,
         ),
       );

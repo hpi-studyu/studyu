@@ -15,10 +15,16 @@ void main() {
 
         final result = schedule.generateWith(0);
 
-        expect(result.sublist(0).take(2).toSet().length, 2,
-            reason: 'A cycle was not complete',);
-        expect(result.sublist(2).take(2).toSet().length, 2,
-            reason: 'A cycle was not complete',);
+        expect(
+          result.sublist(0).take(2).toSet().length,
+          2,
+          reason: 'A cycle was not complete',
+        );
+        expect(
+          result.sublist(2).take(2).toSet().length,
+          2,
+          reason: 'A cycle was not complete',
+        );
       });
 
       test('respects the first intervention', () {
@@ -27,10 +33,16 @@ void main() {
           ..phaseDuration = 7
           ..includeBaseline = false;
 
-        expect(schedule.generateWith(0).first, 0,
-            reason: 'Did not respect first intervention',);
-        expect(schedule.generateWith(1).first, 1,
-            reason: 'Did not respect first intervention',);
+        expect(
+          schedule.generateWith(0).first,
+          0,
+          reason: 'Did not respect first intervention',
+        );
+        expect(
+          schedule.generateWith(1).first,
+          1,
+          reason: 'Did not respect first intervention',
+        );
       });
     }
 
@@ -47,8 +59,11 @@ void main() {
         void checkAlternating(int first) {
           final result = schedule.generateWith(first);
           for (var i = 0; i < result.length - 1; i++) {
-            expect(result[i], isNot(equals(result[i + 1])),
-                reason: 'Phase $i and ${i + 1} have the same intervention',);
+            expect(
+              result[i],
+              isNot(equals(result[i + 1])),
+              reason: 'Phase $i and ${i + 1} have the same intervention',
+            );
           }
         }
 

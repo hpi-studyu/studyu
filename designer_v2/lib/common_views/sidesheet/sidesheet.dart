@@ -35,8 +35,10 @@ class Sidesheet extends StatefulWidget {
           (body != null && tabs == null) || (body == null && tabs != null),
           "Must provide either body or tabs to build sidesheet content",
         ),
-        assert(tabs == null || tabs.length >= 1,
-            "Must provide at least one tab to build sidesheet content",);
+        assert(
+          tabs == null || tabs.length >= 1,
+          "Must provide at least one tab to build sidesheet content",
+        );
 
   final String titleText;
   final Widget? body;
@@ -113,7 +115,10 @@ class _SidesheetState extends State<Sidesheet> {
   }
 
   Container _build(
-      BuildContext context, Widget? body, List<SidesheetTab>? tabs,) {
+    BuildContext context,
+    Widget? body,
+    List<SidesheetTab>? tabs,
+  ) {
     final theme = Theme.of(context);
     final backgroundColor =
         ThemeConfig.sidesheetBackgroundColor(Theme.of(context));
@@ -173,7 +178,8 @@ class _SidesheetState extends State<Sidesheet> {
             if (hasTabs && !isCollapsed)
               Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: (widget.bodyPadding?.horizontal ?? 0) * 0.5,),
+                  horizontal: (widget.bodyPadding?.horizontal ?? 0) * 0.5,
+                ),
                 child: TabbedNavbar<SidesheetTab>(
                   tabs: tabs,
                   height: 38.0,

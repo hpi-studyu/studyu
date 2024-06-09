@@ -6,7 +6,9 @@ import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 typedef CollapsibleSectionBuilder = Widget Function(
-    BuildContext context, bool isCollapsed,);
+  BuildContext context,
+  bool isCollapsed,
+);
 
 /// Simple non-animated & more customizable alternative to [ExpansionPanel]
 /// and [ExpansionTile]

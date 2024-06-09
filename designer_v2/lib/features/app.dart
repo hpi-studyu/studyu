@@ -63,7 +63,8 @@ class _AppContentState extends ConsumerState<AppContent> {
   @override
   Widget build(BuildContext context) {
     AppTranslation.init(
-        ref,); // todo Refactor this into initState locale delegate if possible
+      ref,
+    ); // todo Refactor this into initState locale delegate if possible
     final router = ref.watch(routerProvider);
 
     return DynamicColorBuilder(

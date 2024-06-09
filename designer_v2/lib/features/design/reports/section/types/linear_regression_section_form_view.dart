@@ -43,8 +43,9 @@ class LinearRegressionSectionFormView extends ConsumerWidget {
               // TODO: extract custom dropdown component with theme + focus fix
               input: Theme(
                 data: theme.copyWith(
-                    inputDecorationTheme:
-                        ThemeConfig.dropdownInputDecorationTheme(theme),),
+                  inputDecorationTheme:
+                      ThemeConfig.dropdownInputDecorationTheme(theme),
+                ),
                 child: ReactiveDropdownField<ImprovementDirectionFormatted>(
                   formControl: formViewModel.improvementDirectionControl,
                   hint: const Text("Select an improvement direction"),
