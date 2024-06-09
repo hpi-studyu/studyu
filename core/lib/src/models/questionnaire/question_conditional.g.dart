@@ -15,5 +15,5 @@ QuestionConditional<V> _$QuestionConditionalFromJson<V>(
 Map<String, dynamic> _$QuestionConditionalToJson<V>(
         QuestionConditional<V> instance) =>
     <String, dynamic>{
-      'condition': instance.condition,
+      'condition': instance.condition.toJson(),
     };
