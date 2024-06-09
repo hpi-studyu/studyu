@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-06-09
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.6-dev.1`](#studyu_app---v276-dev1)
+ - [`studyu_designer_v2` - `v1.8.1-dev.1`](#studyu_designer_v2---v181-dev1)
+
+---
+
+#### `studyu_app` - `v2.7.6-dev.1`
+
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+
+#### `studyu_designer_v2` - `v1.8.1-dev.1`
+
+ - **FIX**: add emojis again.
+
+
 ## 2024-06-07
 
 ### Changes
