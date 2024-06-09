@@ -71,7 +71,9 @@ class _FormScaffoldState<T extends FormViewModel>
     return (bool value) async {
       final backNavigationAllowed = await _promptBackNavigationConfirmation();
       if (backNavigationAllowed) {
-        if (mounted && Navigator.of(context).canPop()) Navigator.of(context).pop();
+        if (mounted && Navigator.of(context).canPop()) {
+          Navigator.of(context).pop();
+        }
       }
     };
   }
