@@ -121,7 +121,8 @@ class StudyRepository extends ModelRepository<Study>
           );
     }
 
-    final currentUser = authRepository.currentUser!;
+    final currentUser = authRepository.currentUser;
+    if (currentUser == null) return [];
 
     // TODO: review Postgres policies to match [ModelAction.isAvailable]
     final actions = [
