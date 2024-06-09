@@ -47,6 +47,7 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
+  lint: ^2.3.0
   patrol_finders: ^2.1.2
   riverpod_lint:
   test: ^1.24.9 # integration_test
