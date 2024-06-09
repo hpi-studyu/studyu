@@ -22,7 +22,7 @@ class ConsentItemFormView extends StatefulWidget {
 class _ConsentItemFormViewState extends State<ConsentItemFormView> {
   bool isStylingInformationDismissed = true;
 
-  onDismissedCallback() => setState(() {
+  void onDismissedCallback() => setState(() {
         isStylingInformationDismissed = !isStylingInformationDismissed;
       });
 
@@ -65,14 +65,13 @@ class _ConsentItemFormViewState extends State<ConsentItemFormView> {
                         formControl: widget.formViewModel.iconControl,
                         iconOptions: IconPack.material,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
               FormTableRow(
                 control: widget.formViewModel.descriptionControl,
                 labelBuilder: (context) => Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     FormLabel(
                       labelText: tr.form_field_consent_text,
@@ -116,6 +115,6 @@ class _ConsentItemFormViewState extends State<ConsentItemFormView> {
           ),
         ],
       );
-    });
+    },);
   }
 }

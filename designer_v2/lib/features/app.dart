@@ -44,7 +44,7 @@ class _AppContentState extends ConsumerState<AppContent> {
     sourceColor: const Color(0xff4845e5),
     //sourceColor: const Color(0xff2962ff),
     themeMode: ThemeMode.system,
-  ));
+  ),);
 
   @override
   void initState() {

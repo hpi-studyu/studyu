@@ -8,7 +8,8 @@ import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 
 typedef FormArrayTableRowLabelProvider<T> = String Function(T item);
-typedef WidgetBuilderAt<T> = Widget Function(BuildContext context, T item, int rowIdx);
+typedef WidgetBuilderAt<T> = Widget Function(
+    BuildContext context, T item, int rowIdx,);
 
 class FormArrayTable<T> extends StatelessWidget {
   const FormArrayTable({
@@ -28,10 +29,11 @@ class FormArrayTable<T> extends StatelessWidget {
     this.emptyIcon,
     this.emptyTitle,
     this.emptyDescription,
-    this.itemsSectionPadding = const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+    this.itemsSectionPadding = const EdgeInsets.symmetric(vertical: 8.0),
     this.hideLeadingTrailingWhenEmpty = false,
     super.key,
-  }) : assert(sectionTitle == null || leadingWidget == null, "Cannot specify both sectionTitle and leadingWidget");
+  }) : assert(sectionTitle == null || leadingWidget == null,
+            "Cannot specify both sectionTitle and leadingWidget",);
 
   final AbstractControl control;
 
@@ -62,31 +64,45 @@ class FormArrayTable<T> extends StatelessWidget {
 
   static final List<StandardTableColumn> columns = [
     StandardTableColumn(
-        label: '', // don't care (showTableHeader=false)
-        columnWidth: const FlexColumnWidth()),
+      label: '', // don't care (showTableHeader=false),),
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final hasEmptyWidget = emptyIcon != null || emptyTitle != null || emptyDescription != null;
-    final isSection = sectionTitle != null || sectionTitleDivider != null || sectionDescription != null;
+    final hasEmptyWidget =
+        emptyIcon != null || emptyTitle != null || emptyDescription != null;
+    final isSection = sectionTitle != null ||
+        sectionTitleDivider != null ||
+        sectionDescription != null;
 
     const leadingWidgetsSpacing = 4.0;
 
     final Widget leading = Column(
       children: [
-        (leadingWidget != null) ? leadingWidget! : const SizedBox.shrink(),
-        (sectionTitle != null && leadingWidget != null)
-            ? const SizedBox(height: leadingWidgetsSpacing)
-            : const SizedBox.shrink(),
-        (sectionTitle != null) ? FormSectionHeader(title: sectionTitle!, divider: false) : const SizedBox.shrink(),
-        (sectionTitleDivider == true && (sectionTitle != null || leadingWidget != null))
-            ? const Divider()
-            : const SizedBox.shrink(),
-        (sectionDescription != null && (sectionTitle != null || leadingWidget != null))
-            ? const SizedBox(height: leadingWidgetsSpacing)
-            : const SizedBox.shrink(),
-        (sectionDescription != null) ? TextParagraph(text: sectionDescription!) : const SizedBox.shrink(),
+        if (leadingWidget != null) leadingWidget! else const SizedBox.shrink(),
+        if (sectionTitle != null && leadingWidget != null)
+          const SizedBox(height: leadingWidgetsSpacing)
+        else
+          const SizedBox.shrink(),
+        if (sectionTitle != null)
+          FormSectionHeader(title: sectionTitle!, divider: false)
+        else
+          const SizedBox.shrink(),
+        if (sectionTitleDivider == true &&
+            (sectionTitle != null || leadingWidget != null))
+          const Divider()
+        else
+          const SizedBox.shrink(),
+        if (sectionDescription != null &&
+            (sectionTitle != null || leadingWidget != null))
+          const SizedBox(height: leadingWidgetsSpacing)
+        else
+          const SizedBox.shrink(),
+        if (sectionDescription != null)
+          TextParagraph(text: sectionDescription)
+        else
+          const SizedBox.shrink(),
       ],
     );
 
@@ -96,12 +112,13 @@ class FormArrayTable<T> extends StatelessWidget {
       onSelectItem: onSelectItem,
       buildCellsAt: _buildRow,
       trailingActionsAt: getActionsAt,
-      cellSpacing: 10.0,
       rowSpacing: 5.0,
       minRowHeight: 40.0,
       showTableHeader: false,
       tableWrapper: (table) => Padding(
-        padding: (items.isNotEmpty && itemsSectionPadding != null) ? itemsSectionPadding! : EdgeInsets.zero,
+        padding: (items.isNotEmpty && itemsSectionPadding != null)
+            ? itemsSectionPadding!
+            : EdgeInsets.zero,
         child: table,
       ),
       leadingWidget: leading,
@@ -114,9 +131,11 @@ class FormArrayTable<T> extends StatelessWidget {
           return _newItemButton();
         },
       ),
-      emptyWidget: (hasEmptyWidget)
+      emptyWidget: hasEmptyWidget
           ? Padding(
-              padding: (itemsSectionPadding != null && isSection) ? itemsSectionPadding! : EdgeInsets.zero,
+              padding: (itemsSectionPadding != null && isSection)
+                  ? itemsSectionPadding!
+                  : EdgeInsets.zero,
               child: EmptyBody(
                 icon: emptyIcon,
                 title: emptyTitle,
@@ -129,28 +148,39 @@ class FormArrayTable<T> extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildRow(BuildContext context, T item, int rowIdx, Set<WidgetState> states) {
+  List<Widget> _buildRow(
+      BuildContext context, T item, int rowIdx, Set<WidgetState> states,) {
     final tableTextStyleSecondary = Theme.of(context).textTheme.bodyMedium;
     return [
-      CustomScrollView(physics: const NeverScrollableScrollPhysics(), scrollDirection: Axis.horizontal, slivers: [
-        SliverFillRemaining(
-          hasScrollBody: false,
-          child: Row(
-            children: [
-              (rowPrefix != null) ? rowPrefix!(context, item, rowIdx) : const SizedBox.shrink(),
-              Text(
-                rowTitle(item),
-                style: tableTextStyleSecondary?.copyWith(
-                  overflow: TextOverflow.ellipsis,
+      CustomScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        slivers: [
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Row(
+              children: [
+                if (rowPrefix != null)
+                  rowPrefix!(context, item, rowIdx)
+                else
+                  const SizedBox.shrink(),
+                Text(
+                  rowTitle(item),
+                  style: tableTextStyleSecondary?.copyWith(
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  maxLines: 1,
                 ),
-                maxLines: 1,
-              ),
-              const Spacer(),
-              (rowSuffix != null) ? rowSuffix!(context, item, rowIdx) : const SizedBox.shrink(),
-            ],
+                const Spacer(),
+                if (rowSuffix != null)
+                  rowSuffix!(context, item, rowIdx)
+                else
+                  const SizedBox.shrink(),
+              ],
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     ];
   }
 
@@ -159,7 +189,6 @@ class FormArrayTable<T> extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return PrimaryButton(
-      icon: Icons.add,
       text: onNewItemLabel,
       onPressed: onNewItem,
     );

@@ -16,18 +16,9 @@ EligibilityCriterion _$EligibilityCriterionFromJson(
           Expression.fromJson(json['condition'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$EligibilityCriterionToJson(
-    EligibilityCriterion instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('reason', instance.reason);
-  val['condition'] = instance.condition.toJson();
-  return val;
-}
+        EligibilityCriterion instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'reason': instance.reason,
+      'condition': instance.condition,
+    };

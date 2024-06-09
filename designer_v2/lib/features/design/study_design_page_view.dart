@@ -17,7 +17,6 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
       return BannerBox(
           noPrefix: true,
           body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextParagraph(
@@ -27,8 +26,8 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
                 TextParagraph(
                   text: tr.banner_study_readonly_description,
                 ),
-              ]),
-          style: BannerStyle.info);
+              ],),
+          style: BannerStyle.info,);
     }
 
     return null;

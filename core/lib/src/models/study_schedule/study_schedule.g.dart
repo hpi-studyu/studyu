@@ -20,7 +20,7 @@ Map<String, dynamic> _$StudyScheduleToJson(StudySchedule instance) =>
       'numberOfCycles': instance.numberOfCycles,
       'phaseDuration': instance.phaseDuration,
       'includeBaseline': instance.includeBaseline,
-      'sequence': instance.sequence.toJson(),
+      'sequence': instance.sequence,
       'sequenceCustom': instance.sequenceCustom,
     };
 

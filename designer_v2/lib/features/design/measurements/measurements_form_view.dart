@@ -4,10 +4,10 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
@@ -25,7 +25,6 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextParagraph(text: tr.form_study_design_measurements_description),
@@ -54,7 +53,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                     );
                   },
                 );
-              }),
+              },),
             ],
           ),
         );

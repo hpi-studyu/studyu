@@ -19,5 +19,5 @@ Map<String, dynamic> _$NumericResultToJson(NumericResult instance) =>
       'type': instance.type,
       'id': instance.id,
       'filename': instance.filename,
-      'resultProperty': instance.resultProperty.toJson(),
+      'resultProperty': instance.resultProperty,
     };

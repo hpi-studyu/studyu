@@ -27,28 +27,19 @@ VisualAnalogueQuestion _$VisualAnalogueQuestionFromJson(
       ..maximumAnnotation = json['maximumAnnotation'] as String;
 
 Map<String, dynamic> _$VisualAnalogueQuestionToJson(
-    VisualAnalogueQuestion instance) {
-  final val = <String, dynamic>{
-    'type': instance.type,
-    'id': instance.id,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('prompt', instance.prompt);
-  writeNotNull('rationale', instance.rationale);
-  writeNotNull('conditional', instance.conditional?.toJson());
-  val['minimum'] = instance.minimum;
-  val['maximum'] = instance.maximum;
-  val['step'] = instance.step;
-  val['initial'] = instance.initial;
-  val['minimumColor'] = instance.minimumColor;
-  val['maximumColor'] = instance.maximumColor;
-  val['minimumAnnotation'] = instance.minimumAnnotation;
-  val['maximumAnnotation'] = instance.maximumAnnotation;
-  return val;
-}
+        VisualAnalogueQuestion instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'id': instance.id,
+      'prompt': instance.prompt,
+      'rationale': instance.rationale,
+      'conditional': instance.conditional,
+      'minimum': instance.minimum,
+      'maximum': instance.maximum,
+      'step': instance.step,
+      'initial': instance.initial,
+      'minimumColor': instance.minimumColor,
+      'maximumColor': instance.maximumColor,
+      'minimumAnnotation': instance.minimumAnnotation,
+      'maximumAnnotation': instance.maximumAnnotation,
+    };

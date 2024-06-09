@@ -21,7 +21,7 @@ class Hyperlink extends StatefulWidget {
     this.iconSize,
     super.key,
   }) : assert((url != null && onClick == null) || (url == null && onClick != null),
-            "Must provide either url or onClick handler");
+            "Must provide either url or onClick handler",);
 
   final String text;
   final String? url;
@@ -74,11 +74,10 @@ class _HyperlinkState extends State<Hyperlink> {
 
         if (widget.icon != null) {
           return Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(widget.icon, color: actualColor, size: widget.iconSize ?? (textTheme?.fontSize ?? 14.0) + 4.0),
               const SizedBox(width: 2.0),
-              textWidget
+              textWidget,
             ],
           );
         }

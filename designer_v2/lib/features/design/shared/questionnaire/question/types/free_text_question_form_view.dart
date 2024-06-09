@@ -34,20 +34,20 @@ class FreeTextQuestionFormView extends ConsumerWidget {
             input: disableOnReadonly(
               child: SliderTheme(
                   data: Theme.of(context).sliderTheme.copyWith(
-                      rangeThumbShape: IndicatorRangeSliderThumbShape(context, minLength.toInt(), maxLength.toInt()),
-                      showValueIndicator: ShowValueIndicator.never),
+                      rangeThumbShape: IndicatorRangeSliderThumbShape(context, minLength, maxLength),
+                      showValueIndicator: ShowValueIndicator.never,),
                   child: ReactiveRangeSlider<RangeValues>(
                     formControl: formViewModel.freeTextLengthControl,
                     min: QuestionFormViewModel.kDefaultFreeTextMinLength.toDouble(),
                     max: QuestionFormViewModel.kDefaultFreeTextMaxLength.toDouble(),
-                    divisions: QuestionFormViewModel.kDefaultFreeTextMaxLength.toInt() -
-                        QuestionFormViewModel.kDefaultFreeTextMinLength.toInt(),
+                    divisions: QuestionFormViewModel.kDefaultFreeTextMaxLength -
+                        QuestionFormViewModel.kDefaultFreeTextMinLength,
                     labelBuilder: (values) => RangeLabels(
                       values.start.round().toString(),
                       values.end.round().toString(),
                     ),
-                  )),
-            )),
+                  ),),
+            ),),
         const SizedBox(height: 16.0),
         generateRow(
           label: tr.free_text_type_label,
@@ -87,7 +87,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
               TextParagraph(
                 text: tr.free_text_type_custom_explanation,
                 style: ThemeConfig.bodyTextMuted(theme),
-              )
+              ),
             ],
           ),
         const SizedBox(height: 16.0),
@@ -131,8 +131,8 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                               ValidationMessage.maxLength: (error) => tr.free_text_validation_max_length(maxLength),
                               ValidationMessage.pattern: (error) => tr.free_text_validation_pattern,
                               ValidationMessage.number: (error) => tr.free_text_validation_number,
-                            });
-                      }),
+                            },);
+                      },),
                 ),
               ],
             ),
@@ -143,7 +143,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
               return TextParagraph(text: tr.free_text_example_explanation(type, minLength, maxLength));
             },
           ),
-        ]),
+        ],),
       ],
     );
   }
@@ -156,7 +156,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
     }
   }
 
-  get generateLabelHelpTextMap {
+  Map<FreeTextQuestionType, String> get generateLabelHelpTextMap {
     return {
       FreeTextQuestionType.any: tr.free_text_question_type_any_explanation,
       FreeTextQuestionType.alphanumeric: tr.free_text_question_type_alphanumeric_explanation,
@@ -180,6 +180,6 @@ class FreeTextQuestionFormView extends ConsumerWidget {
           ],
         ),
       ),
-    ]);
+    ],);
   }
 }

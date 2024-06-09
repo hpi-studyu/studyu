@@ -1,7 +1,7 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 
 // TODO: Transfer networking code to core package (+ update app if needed)
 
@@ -55,7 +55,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
   }
 
   Future<T> getByColumn<T extends SupabaseObject>(String colName, String value,
-      {List<String> selectedColumns = const ['*']}) async {
+      {List<String> selectedColumns = const ['*'],}) async {
     try {
       final data =
           await supabaseClient.from(tableName(T)).select(selectedColumns.join(',')).eq(colName, value).single();
@@ -69,7 +69,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 
   List<T> deserializeList<T extends SupabaseObject>(dynamic data) {
     return List<T>.from(
-        List<Map<String, dynamic>>.from(data as List).map((json) => SupabaseObjectFunctions.fromJson<T>(json)));
+        List<Map<String, dynamic>>.from(data as List).map((json) => SupabaseObjectFunctions.fromJson<T>(json)),);
   }
 
   T deserializeObject<T extends SupabaseObject>(dynamic data) {

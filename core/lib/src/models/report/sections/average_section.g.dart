@@ -19,24 +19,15 @@ AverageSection _$AverageSectionFromJson(Map<String, dynamic> json) =>
           : DataReference<num>.fromJson(
               json['resultProperty'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$AverageSectionToJson(AverageSection instance) {
-  final val = <String, dynamic>{
-    'type': instance.type,
-    'id': instance.id,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('title', instance.title);
-  writeNotNull('description', instance.description);
-  writeNotNull('aggregate', _$TemporalAggregationEnumMap[instance.aggregate]);
-  writeNotNull('resultProperty', instance.resultProperty?.toJson());
-  return val;
-}
+Map<String, dynamic> _$AverageSectionToJson(AverageSection instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'id': instance.id,
+      'title': instance.title,
+      'description': instance.description,
+      'aggregate': _$TemporalAggregationEnumMap[instance.aggregate],
+      'resultProperty': instance.resultProperty,
+    };
 
 const _$TemporalAggregationEnumMap = {
   TemporalAggregation.day: 'day',

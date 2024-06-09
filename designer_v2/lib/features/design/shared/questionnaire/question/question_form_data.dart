@@ -8,39 +8,63 @@ import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
 typedef SurveyQuestionFormDataFactory = QuestionFormData Function(
-    Question question, List<EligibilityCriterion> eligibilityCriteria);
+  Question question,
+  List<EligibilityCriterion> eligibilityCriteria,
+);
 
 abstract class QuestionFormData implements IFormData {
-  static Map<SurveyQuestionType, SurveyQuestionFormDataFactory> questionTypeFormDataFactories = {
+  static Map<SurveyQuestionType, SurveyQuestionFormDataFactory>
+      questionTypeFormDataFactories = {
     SurveyQuestionType.scale: (question, eligibilityCriteria) {
       switch (question) {
         // First check for general scale which implements the other interfaces
-        case ScaleQuestion scaleQuestion:
-          return ScaleQuestionFormData.fromDomainModel(scaleQuestion, eligibilityCriteria);
+        case final ScaleQuestion scaleQuestion:
+          return ScaleQuestionFormData.fromDomainModel(
+            scaleQuestion,
+            eligibilityCriteria,
+          );
         // Remain backward compatible with specialized scale types
-        case AnnotatedScaleQuestion annotatedScaleQuestion:
+        case final AnnotatedScaleQuestion annotatedScaleQuestion:
           return ScaleQuestionFormData.fromDomainModel(
             ScaleQuestion.fromAnnotatedScaleQuestion(annotatedScaleQuestion),
             eligibilityCriteria,
           );
-        case VisualAnalogueQuestion visualAnalogueQuestion:
+        case final VisualAnalogueQuestion visualAnalogueQuestion:
           return ScaleQuestionFormData.fromDomainModel(
             ScaleQuestion.fromVisualAnalogueQuestion(visualAnalogueQuestion),
             eligibilityCriteria,
           );
       }
-      return ScaleQuestionFormData.fromDomainModel(question as ScaleQuestion, eligibilityCriteria);
+      return ScaleQuestionFormData.fromDomainModel(
+        question as ScaleQuestion,
+        eligibilityCriteria,
+      );
     },
     SurveyQuestionType.bool: (question, eligibilityCriteria) =>
-        BoolQuestionFormData.fromDomainModel(question as BooleanQuestion, eligibilityCriteria),
+        BoolQuestionFormData.fromDomainModel(
+          question as BooleanQuestion,
+          eligibilityCriteria,
+        ),
     SurveyQuestionType.choice: (question, eligibilityCriteria) =>
-        ChoiceQuestionFormData.fromDomainModel(question as ChoiceQuestion, eligibilityCriteria),
+        ChoiceQuestionFormData.fromDomainModel(
+          question as ChoiceQuestion,
+          eligibilityCriteria,
+        ),
     SurveyQuestionType.image: (question, eligibilityCriteria) =>
-        ImageQuestionFormData.fromDomainModel(question as ImageCapturingQuestion, eligibilityCriteria),
+        ImageQuestionFormData.fromDomainModel(
+          question as ImageCapturingQuestion,
+          eligibilityCriteria,
+        ),
     SurveyQuestionType.audio: (question, eligibilityCriteria) =>
-        AudioQuestionFormData.fromDomainModel(question as AudioRecordingQuestion, eligibilityCriteria),
+        AudioQuestionFormData.fromDomainModel(
+          question as AudioRecordingQuestion,
+          eligibilityCriteria,
+        ),
     SurveyQuestionType.freeText: (question, eligibilityCriteria) =>
-        FreeTextQuestionFormData.fromDomainModel(question as FreeTextQuestion, eligibilityCriteria),
+        FreeTextQuestionFormData.fromDomainModel(
+          question as FreeTextQuestion,
+          eligibilityCriteria,
+        ),
   };
 
   QuestionFormData({
@@ -72,7 +96,10 @@ abstract class QuestionFormData implements IFormData {
       throw Exception("Failed to create SurveyQuestionFormData for unknown "
           "SurveyQuestionType: $surveyQuestionType");
     }
-    return questionTypeFormDataFactories[surveyQuestionType]!(question, eligibilityCriteria);
+    return questionTypeFormDataFactories[surveyQuestionType]!(
+      question,
+      eligibilityCriteria,
+    );
   }
 
   Question toQuestion(); // subclass responsibility
@@ -105,7 +132,9 @@ abstract class QuestionFormData implements IFormData {
   /// Determines the [responseOptionsValidity] in terms of qualify/disqualify
   /// by evaluating the given criteria for each response option on a new
   /// [QuestionnaireState] where the option is selected
-  setResponseOptionsValidityFrom(List<EligibilityCriterion> eligibilityCriteria) {
+  void setResponseOptionsValidityFrom(
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
     final Map<dynamic, bool> result = {};
 
     for (final responseOption in responseOptions) {
@@ -117,7 +146,8 @@ abstract class QuestionFormData implements IFormData {
       // (as of now) if no criterion evaluates to true
       bool responseOptionValidity = false;
       for (final criterion in eligibilityCriteria) {
-        responseOptionValidity = responseOptionValidity || (criterion.condition.evaluate(questionnaireState) ?? false);
+        responseOptionValidity = responseOptionValidity ||
+            (criterion.condition.evaluate(questionnaireState) ?? false);
       }
       result[responseOption] = responseOptionValidity;
     }
@@ -195,9 +225,9 @@ class ChoiceQuestionFormData extends QuestionFormData {
   }
 
   @override
-  Answer constructAnswerFor(responseOption) {
+  Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as ChoiceQuestion;
-    final choice = _buildChoiceForValue(responseOption);
+    final choice = _buildChoiceForValue(responseOption as String);
     return question.constructAnswer([choice]);
   }
 }
@@ -254,9 +284,9 @@ class BoolQuestionFormData extends QuestionFormData {
   }
 
   @override
-  Answer constructAnswerFor(responseOption) {
+  Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as BooleanQuestion;
-    final value = kResponseOptions[responseOption] as bool;
+    final value = kResponseOptions[responseOption]!;
     return question.constructAnswer(value);
   }
 }
@@ -311,9 +341,9 @@ class ImageQuestionFormData extends QuestionFormData {
   }
 
   @override
-  Answer constructAnswerFor(responseOption) {
+  Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as ImageCapturingQuestion;
-    final value = kResponseOptions[responseOption] as FutureBlobFile;
+    final value = kResponseOptions[responseOption]!;
     return question.constructAnswer(value);
   }
 }
@@ -352,7 +382,9 @@ class AudioQuestionFormData extends QuestionFormData {
 
   @override
   Question toQuestion() {
-    final question = AudioRecordingQuestion(maxRecordingDurationSeconds: maxRecordingDurationSeconds);
+    final question = AudioRecordingQuestion(
+      maxRecordingDurationSeconds: maxRecordingDurationSeconds,
+    );
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
@@ -373,9 +405,9 @@ class AudioQuestionFormData extends QuestionFormData {
   }
 
   @override
-  Answer constructAnswerFor(responseOption) {
+  Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as AudioRecordingQuestion;
-    final value = kResponseOptions[responseOption] as FutureBlobFile;
+    final value = kResponseOptions[responseOption]!;
     return question.constructAnswer(value);
   }
 }
@@ -396,7 +428,10 @@ class ScaleQuestionFormData extends QuestionFormData {
     this.stepSize = 0,
     this.minColor,
     this.maxColor,
-  }) : assert(midValues.length == midLabels.length, "midValues.length and midLabels.length must be equal");
+  }) : assert(
+          midValues.length == midLabels.length,
+          "midValues.length and midLabels.length must be equal",
+        );
 
   final double minValue;
   final double maxValue;
@@ -466,10 +501,10 @@ class ScaleQuestionFormData extends QuestionFormData {
       ..midAnnotations = midAnnotations;
 
     if (minLabel != null) {
-      question.minLabel = minLabel!;
+      question.minLabel = minLabel;
     }
     if (maxLabel != null) {
-      question.maxLabel = maxLabel!;
+      question.maxLabel = maxLabel;
     }
     return question;
   }
@@ -498,7 +533,7 @@ class ScaleQuestionFormData extends QuestionFormData {
   }
 
   @override
-  Answer constructAnswerFor(responseOption) {
+  Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion();
     return question.constructAnswer(responseOption as double);
   }
@@ -541,8 +576,11 @@ class FreeTextQuestionFormData extends QuestionFormData {
 
   @override
   Question toQuestion() {
-    final question =
-        FreeTextQuestion(textType: textType, lengthRange: textLengthRange, customTypeExpression: textTypeExpression);
+    final question = FreeTextQuestion(
+      textType: textType,
+      lengthRange: textLengthRange,
+      customTypeExpression: textTypeExpression,
+    );
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
@@ -565,7 +603,7 @@ class FreeTextQuestionFormData extends QuestionFormData {
   }
 
   @override
-  Answer constructAnswerFor(responseOption) {
+  Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as FreeTextQuestion;
     final value = responseOption as String;
     return question.constructAnswer(value);

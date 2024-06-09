@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
+import 'package:studyu_designer_v2/utils/performance.dart';
 import 'package:studyu_designer_v2/utils/typings.dart';
-
-import 'performance.dart';
 
 abstract class ExecutionLimiter {
   ExecutionLimiter({this.milliseconds = 300});
@@ -33,15 +32,17 @@ class Debouncer extends ExecutionLimiter {
 
   CancelableOperation? _uncompletedFutureOperation;
 
-  call({VoidCallback? callback, FutureFactory? futureBuilder}) {
-    if ((callback == null && futureBuilder == null) || (callback != null && futureBuilder != null)) {
-      throw Exception("Must call Debouncer with either callback or futureBuilder");
+  void call({VoidCallback? callback, FutureFactory? futureBuilder}) {
+    if ((callback == null && futureBuilder == null) ||
+        (callback != null && futureBuilder != null)) {
+      throw Exception(
+          "Must call Debouncer with either callback or futureBuilder",);
     }
 
     // Wrap the given callback so we can work with a future-based interface
     futureBuilder ??= () => runAsync(callback);
 
-    startFutureOperation() {
+    void startFutureOperation() {
       print("startFutureOperation");
       _uncompletedFutureOperation = CancelableOperation.fromFuture(
         futureBuilder!().then((_) => _uncompletedFutureOperation = null),
@@ -67,10 +68,11 @@ class Debouncer extends ExecutionLimiter {
 class Throttler extends ExecutionLimiter {
   Throttler({super.milliseconds = 300});
 
-  call(VoidCallback callback) {
+  void call(VoidCallback callback) {
     if (ExecutionLimiter._timer?.isActive ?? false) return;
     ExecutionLimiter._timer?.cancel();
     callback();
-    ExecutionLimiter._timer = Timer(Duration(milliseconds: milliseconds), () {});
+    ExecutionLimiter._timer =
+        Timer(Duration(milliseconds: milliseconds), () {});
   }
 }

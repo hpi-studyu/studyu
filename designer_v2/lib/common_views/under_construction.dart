@@ -13,6 +13,6 @@ class UnderConstruction extends StatelessWidget {
           icon: Icons.construction_rounded,
           title: tr.under_construction,
           description: tr.under_construction_description,
-        ));
+        ),);
   }
 }

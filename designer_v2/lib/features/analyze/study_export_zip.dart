@@ -38,7 +38,7 @@ extension StudyExportZipX on StudyExportData {
 
   String get defaultFilename => '${study.title?.toKey() ?? ''}_${DateTime.now()}';
 
-  downloadAsZip({String? filename}) async {
+  Future downloadAsZip({String? filename}) async {
     filename ??= defaultFilename;
     return downloadBytes(
       bytes: (await encodedZip)!,

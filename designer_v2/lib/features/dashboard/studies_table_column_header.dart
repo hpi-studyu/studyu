@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../common_views/mouse_events.dart';
+import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 
 class StudiesTableColumnHeader extends StatefulWidget {
   final String title;
@@ -11,7 +11,7 @@ class StudiesTableColumnHeader extends StatefulWidget {
   final void Function()? onSort;
 
   const StudiesTableColumnHeader(this.title,
-      {super.key, required this.sortable, required this.sortingActive, required this.sortAscending, this.onSort});
+      {super.key, required this.sortable, required this.sortingActive, required this.sortAscending, this.onSort,});
 
   @override
   State<StudiesTableColumnHeader> createState() => _StudiesTableColumnHeaderState();
@@ -37,8 +37,8 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
               style: theme.textTheme.bodySmall!.copyWith(
                 color: theme.colorScheme.onSurface.withOpacity(0.8),
               ),
-            )),
-            widget.sortable ? _getIcon() ?? const SizedBox(width: 17) : const SizedBox.shrink(),
+            ),),
+            if (widget.sortable) _getIcon() ?? const SizedBox(width: 17) else const SizedBox.shrink(),
           ],
         );
       },

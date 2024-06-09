@@ -10,8 +10,15 @@ enum NotificationType { snackbar, alert, custom }
 ///   [SnackbarIntent] - renders the notification as a snackbar
 ///   [AlertIntent] - renders the notification as an alert dialog
 abstract class NotificationIntent {
-  NotificationIntent({this.message, this.customContent, this.icon, this.actions, required this.type}) {
-    if (message == null && customContent == null) throw Exception("Invalid AlertIntent");
+  NotificationIntent(
+      {this.message,
+      this.customContent,
+      this.icon,
+      this.actions,
+      required this.type,}) {
+    if (message == null && customContent == null) {
+      throw Exception("Invalid AlertIntent");
+    }
   }
 
   final String? message;
@@ -23,7 +30,8 @@ abstract class NotificationIntent {
   void register(NotificationAction action) {
     actions ??= [];
     // upsert action by its label
-    final existingIdx = actions!.map((action) => action.label).toList().indexOf(action.label);
+    final existingIdx =
+        actions!.map((action) => action.label).toList().indexOf(action.label);
     if (existingIdx != -1) {
       actions![existingIdx] = action;
     } else {
@@ -39,7 +47,10 @@ class NotificationAction {
   final FutureActionHandler onSelect;
   final bool isDestructive;
 
-  NotificationAction({required this.label, required this.onSelect, this.isDestructive = false});
+  NotificationAction(
+      {required this.label,
+      required this.onSelect,
+      this.isDestructive = false,});
 }
 
 /// Encapsulates a call to [showSnackbar]
@@ -68,5 +79,6 @@ class AlertIntent extends NotificationIntent {
   final String title;
   final bool dismissOnAction;
 
-  get isDestructive => (actions == null) ? false : actions!.any((action) => action.isDestructive);
+  bool get isDestructive =>
+      actions != null && actions!.any((action) => action.isDestructive);
 }

@@ -17,7 +17,7 @@ class QuestionnaireFormData implements IFormData {
                 question,
                 // Collect all eligibility criteria for this question
                 eligibilityCriteria.where((c) => (c.condition as ValueExpression).target == question.id).toList(),
-              ))
+              ),)
           .toList(),
     );
   }

@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 extension RouterConvencienceX on GoRouter {
-  get currentPath => routerDelegate.currentConfiguration.fullPath;
+  String get currentPath => routerDelegate.currentConfiguration.fullPath;
 
   bool isOn(String routeName) {
     return namedLocation(routeName) == currentPath;

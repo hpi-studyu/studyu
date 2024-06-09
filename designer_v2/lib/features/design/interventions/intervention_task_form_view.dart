@@ -23,7 +23,7 @@ class InterventionTaskFormView extends StatefulWidget {
 class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
   bool isStylingInformationDismissed = true;
 
-  onDismissedCallback() => setState(() {
+  void onDismissedCallback() => setState(() {
         isStylingInformationDismissed = !isStylingInformationDismissed;
       });
 
@@ -52,7 +52,6 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
             FormTableRow(
               control: widget.formViewModel.taskDescriptionControl,
               labelBuilder: (context) => Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   FormLabel(
                     labelText: tr.form_field_intervention_task_description,
@@ -91,7 +90,7 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
                 maxLines: 5,
               ),
             ),
-          ]),
+          ],),
           HtmlStylingBanner(
             isDismissed: isStylingInformationDismissed,
             onDismissed: onDismissedCallback,
@@ -107,8 +106,8 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
                 formControl: widget.formViewModel.markAsCompletedControl,
                 text: tr.form_field_intervention_task_mark_as_completed_label,
               ),
-            ]);
-          }),
+            ],);
+          },),
           const SizedBox(height: 24.0),
           ScheduleControls(formViewModel: widget.formViewModel),
         ],

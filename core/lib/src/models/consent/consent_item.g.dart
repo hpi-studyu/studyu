@@ -13,19 +13,10 @@ ConsentItem _$ConsentItemFromJson(Map<String, dynamic> json) => ConsentItem(
       ..description = json['description'] as String?
       ..iconName = json['iconName'] as String;
 
-Map<String, dynamic> _$ConsentItemToJson(ConsentItem instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('title', instance.title);
-  writeNotNull('description', instance.description);
-  val['iconName'] = instance.iconName;
-  return val;
-}
+Map<String, dynamic> _$ConsentItemToJson(ConsentItem instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'title': instance.title,
+      'description': instance.description,
+      'iconName': instance.iconName,
+    };

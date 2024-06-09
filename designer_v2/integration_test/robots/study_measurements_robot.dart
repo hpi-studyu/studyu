@@ -29,7 +29,7 @@ class StudyMeasurementsRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_measurement_survey_title)
+            widget.decoration!.hintText! == tr.form_field_measurement_survey_title,)
         .scrollTo()
         .enterText(surveyName);
   }
@@ -39,7 +39,7 @@ class StudyMeasurementsRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_measurement_survey_intro_text_hint)
+            widget.decoration!.hintText! == tr.form_field_measurement_survey_intro_text_hint,)
         .scrollTo()
         .enterText(introText);
   }
@@ -49,7 +49,7 @@ class StudyMeasurementsRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_measurement_survey_outro_text_hint)
+            widget.decoration!.hintText! == tr.form_field_measurement_survey_outro_text_hint,)
         .scrollTo()
         .enterText(outroText);
   }
@@ -59,7 +59,7 @@ class StudyMeasurementsRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_question)
+            widget.decoration!.hintText! == tr.form_field_question,)
         .scrollTo()
         .enterText(questionText);
   }
@@ -69,7 +69,7 @@ class StudyMeasurementsRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_array_response_options_choice_hint)
+            widget.decoration!.hintText! == tr.form_array_response_options_choice_hint,)
         .at(0)
         .scrollTo()
         .enterText(optionText);
@@ -80,7 +80,7 @@ class StudyMeasurementsRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_array_response_options_choice_hint)
+            widget.decoration!.hintText! == tr.form_array_response_options_choice_hint,)
         .at(1)
         .scrollTo()
         .enterText(optionText);

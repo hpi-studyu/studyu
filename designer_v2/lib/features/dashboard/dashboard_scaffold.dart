@@ -33,8 +33,7 @@ class DashboardScaffold extends StatelessWidget {
             thickness: 0.3,
           ),
           scrollLeft: false,
-          scrollRight: true,
           paddingLeft: null,
-        ));
+        ),);
   }
 }

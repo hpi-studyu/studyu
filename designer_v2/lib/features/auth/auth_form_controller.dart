@@ -48,7 +48,8 @@ enum AuthFormKey {
   }
 }
 
-class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFormGroupController {
+class AuthFormController extends StateNotifier<AsyncValue<void>>
+    implements IFormGroupController {
   AuthFormController({
     required this.authRepository,
     required this.notificationService,
@@ -70,10 +71,12 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
   final FormControl<bool> termsOfServiceControl = FormControl(value: false);
 
   static final authValidationMessages = {
-    ValidationMessage.required: (error) => tr.form_field_required,
-    ValidationMessage.email: (error) => tr.form_field_email_invalid,
-    ValidationMessage.mustMatch: (error) => tr.form_field_password_mustmatch,
-    ValidationMessage.minLength: (error) => tr.form_field_password_minlength(error['requiredLength']),
+    ValidationMessage.required: (_) => tr.form_field_required,
+    ValidationMessage.email: (_) => tr.form_field_email_invalid,
+    ValidationMessage.mustMatch: (_) => tr.form_field_password_mustmatch,
+    ValidationMessage.minLength: (error) => tr.form_field_password_minlength(
+          (error as Map)['requiredLength'] as String,
+        ),
   };
 
   late final FormGroup loginForm = FormGroup({
@@ -81,27 +84,34 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     'password': passwordControl,
   });
 
-  late final FormGroup signupForm = FormGroup({
-    'email': emailControl,
-    'password': passwordControl,
-    'passwordConfirmation': passwordConfirmationControl,
-    'termsOfService': termsOfServiceControl,
-  }, validators: [
-    Validators.mustMatch('password', 'passwordConfirmation'),
-  ]);
+  late final FormGroup signupForm = FormGroup(
+    {
+      'email': emailControl,
+      'password': passwordControl,
+      'passwordConfirmation': passwordConfirmationControl,
+      'termsOfService': termsOfServiceControl,
+    },
+    validators: [
+      Validators.mustMatch('password', 'passwordConfirmation'),
+    ],
+  );
 
   late final FormGroup passwordForgotForm = FormGroup({
     'email': emailControl,
   });
 
-  late final FormGroup passwordRecoveryForm = FormGroup({
-    'password': passwordControl,
-    'passwordConfirmation': passwordConfirmationControl,
-  }, validators: [
-    Validators.mustMatch('password', 'passwordConfirmation'),
-  ]);
+  late final FormGroup passwordRecoveryForm = FormGroup(
+    {
+      'password': passwordControl,
+      'passwordConfirmation': passwordConfirmationControl,
+    },
+    validators: [
+      Validators.mustMatch('password', 'passwordConfirmation'),
+    ],
+  );
 
-  late final Map<AuthFormKey, Map<FormControl, List<Validator<dynamic>>>> controlValidatorsByForm = {
+  late final Map<AuthFormKey, Map<FormControl, List<Validator<dynamic>>>>
+      controlValidatorsByForm = {
     AuthFormKey.signup: {
       emailControl: [Validators.required, Validators.email],
       passwordControl: [Validators.minLength(8)],
@@ -138,9 +148,9 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
   }
 
   @override
-  FormGroup get form => _getFormFor(formKey);
+  FormGroup get form => _getFormFor(formKey)!;
 
-  _getFormFor(AuthFormKey key) {
+  FormGroup? _getFormFor(AuthFormKey key) {
     switch (key) {
       case AuthFormKey.login:
         return loginForm;
@@ -155,11 +165,11 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     }
   }
 
-  _onChangeFormKey(AuthFormKey key) {
+  void _onChangeFormKey(AuthFormKey key) {
     resetControlsFor(key);
   }
 
-  resetControlsFor(AuthFormKey key) {
+  void resetControlsFor(AuthFormKey key) {
     final formControlValidators = controlValidatorsByForm[key];
     if (formControlValidators != null) {
       for (final entry in formControlValidators.entries) {
@@ -173,7 +183,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     form.updateValueAndValidity();
   }
 
-  _forceValidationMessages(AuthFormKey key) {
+  void _forceValidationMessages(AuthFormKey key) {
     _onChangeFormKey(key);
     for (final control in form.controls.values) {
       control.markAsTouched();
@@ -209,7 +219,9 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
 
   Future<AuthResponse> signIn() async {
     _forceValidationMessages(AuthFormKey._loginSubmit);
-    if (!form.valid || emailControl.isNullOrEmpty || passwordControl.isNullOrEmpty) {
+    if (!form.valid ||
+        emailControl.isNullOrEmpty ||
+        passwordControl.isNullOrEmpty) {
       return Future.value(AuthResponse());
     }
     return await _signInWith(emailControl.value!, passwordControl.value!);
@@ -218,7 +230,8 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
   Future<AuthResponse> _signInWith(String email, String password) async {
     try {
       state = const AsyncValue.loading();
-      final response = await authRepository.signInWith(email: email, password: password);
+      final response =
+          await authRepository.signInWith(email: email, password: password);
       return response;
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -252,7 +265,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
 
   Future<void> sendPasswordResetLink() {
     if (!form.valid) {
-      return Future.value(null);
+      return Future.value();
     }
     return resetPasswordForEmail(emailControl.value!)
         .then((_) => notificationService.show(Notifications.passwordReset));
@@ -260,17 +273,20 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
 
   Future<void> recoverPassword() async {
     if (!form.valid) {
-      return Future.value(null);
+      return Future.value();
     }
     return updateUser(passwordControl.value!)
-        .then((_) => notificationService.show(Notifications.passwordResetSuccess))
+        .then(
+          (_) => notificationService.show(Notifications.passwordResetSuccess),
+        )
         .then((_) => router.dispatch(RoutingIntents.studies));
   }
 
   Future<bool> updateUser(String newPassword) async {
     try {
       state = const AsyncValue.loading();
-      return (await authRepository.updateUser(newPassword: newPassword)).user != null;
+      return (await authRepository.updateUser(newPassword: newPassword)).user !=
+          null;
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     } finally {
@@ -292,8 +308,8 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
   }
 }
 
-final authFormControllerProvider =
-    StateNotifierProvider.autoDispose.family<AuthFormController, AsyncValue<void>, AuthFormKey>((ref, formKey) {
+final authFormControllerProvider = StateNotifierProvider.autoDispose
+    .family<AuthFormController, AsyncValue<void>, AuthFormKey>((ref, formKey) {
   final authFormController = AuthFormController(
     authRepository: ref.watch(authRepositoryProvider),
     notificationService: ref.watch(notificationServiceProvider),
@@ -304,14 +320,14 @@ final authFormControllerProvider =
   authFormController.addListener((state) {
     print("authFormController.state updated");
     if (state.hasError) {
-      final AuthException error = state.error as AuthException;
+      final AuthException error = state.error! as AuthException;
       switch (error.message) {
         case "Invalid login credentials":
-          authFormController.notificationService.show(Notifications.credentialsInvalid);
-          break;
+          authFormController.notificationService
+              .show(Notifications.credentialsInvalid);
         case "User already registered":
-          authFormController.notificationService.show(Notifications.userAlreadyRegistered);
-          break;
+          authFormController.notificationService
+              .show(Notifications.userAlreadyRegistered);
         default:
           authFormController.notificationService.showMessage(error.message);
       }

@@ -20,7 +20,7 @@ class FormSideSheetTab<T extends FormViewModel> extends NavbarTab {
   FormViewBuilder<T> formViewBuilder;
 }
 
-showFormSideSheet<T extends FormViewModel>({
+Future<Object?> showFormSideSheet<T extends FormViewModel>({
   required BuildContext context,
   required T formViewModel,
   FormViewBuilder<T>? formViewBuilder,
@@ -35,7 +35,7 @@ showFormSideSheet<T extends FormViewModel>({
   barrierColor ??= ThemeConfig.modalBarrierColor(Theme.of(context));
 
   // Wraps the whole side sheet in a [ReactiveForm] widget
-  Widget wrapInForm(widget) {
+  Widget wrapInForm(Widget widget) {
     return ReactiveForm(
       formGroup: formViewModel.form,
       child: widget,
@@ -44,12 +44,14 @@ showFormSideSheet<T extends FormViewModel>({
 
   // Bind the [formViewModel] to the [SidesheetTab]s' widget builder
   final List<SidesheetTab>? boundTabs = tabs
-      ?.map((t) => SidesheetTab(
-            title: t.title,
-            index: t.index,
-            enabled: t.enabled,
-            builder: (BuildContext context) => t.formViewBuilder(formViewModel),
-          ))
+      ?.map(
+        (t) => SidesheetTab(
+          title: t.title,
+          index: t.index,
+          enabled: t.enabled,
+          builder: (BuildContext context) => t.formViewBuilder(formViewModel),
+        ),
+      )
       .toList();
 
   return showModalSideSheet(

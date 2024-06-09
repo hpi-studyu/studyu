@@ -47,16 +47,13 @@ class Badge extends StatelessWidget {
           padding: padding,
           child: Row(
             mainAxisAlignment: center ? MainAxisAlignment.center : MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              (icon != null)
-                  ? Icon(
+              if (icon != null) Icon(
                       icon,
                       size: iconSize ?? ((theme.iconTheme.size ?? 14.0) * 0.8),
                       color: _getLabelColor(theme)?.faded(0.65),
-                    )
-                  : const SizedBox.shrink(),
-              (icon != null) ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
+                    ) else const SizedBox.shrink(),
+              if (icon != null) const SizedBox(width: 8.0) else const SizedBox.shrink(),
               Expanded(
                   child: Text(
                 label,
@@ -70,12 +67,12 @@ class Badge extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     )
                     .merge(labelStyle),
-              )),
+              ),),
             ],
           ),
         ),
       ),
-    ));
+    ),);
   }
 
   Color? _getBackgroundColor(ThemeData theme) {
