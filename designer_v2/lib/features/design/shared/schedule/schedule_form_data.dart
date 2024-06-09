@@ -9,7 +9,7 @@ abstract class IFormDataWithSchedule implements IFormData {
       this.timeLockStart,
       this.timeLockEnd,
       required this.hasReminder,
-      this.reminderTime});
+      this.reminderTime,});
 
   final String instanceId;
   final bool isTimeLocked;
@@ -27,14 +27,14 @@ abstract class IFormDataWithSchedule implements IFormData {
                 id: instanceId,
                 // default unrestricted period
                 unlockTime: ScheduleX.unrestrictedTime[0],
-                lockTime: ScheduleX.unrestrictedTime[1])
+                lockTime: ScheduleX.unrestrictedTime[1],),
           ]
         : [
             CompletionPeriod(
                 id: instanceId,
                 // user-defined period
                 unlockTime: timeLockStart ?? ScheduleX.unrestrictedTime[0],
-                lockTime: timeLockEnd ?? ScheduleX.unrestrictedTime[1])
+                lockTime: timeLockEnd ?? ScheduleX.unrestrictedTime[1],),
           ];
     return schedule;
   }

@@ -21,7 +21,7 @@ class StudyTestController extends StudyBaseController<StudyTestControllerState> 
   }) : super(StudyTestControllerState(
           currentUser: currentUser,
           languageCode: languageCode,
-        )) {
+        ),) {
     state = state.copyWith(serializedSession: authRepository.serializedSession ?? '');
   }
 

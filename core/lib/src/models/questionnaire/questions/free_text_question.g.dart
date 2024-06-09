@@ -23,26 +23,17 @@ FreeTextQuestion _$FreeTextQuestionFromJson(Map<String, dynamic> json) =>
           : QuestionConditional<String>.fromJson(
               json['conditional'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$FreeTextQuestionToJson(FreeTextQuestion instance) {
-  final val = <String, dynamic>{
-    'type': instance.type,
-    'id': instance.id,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('prompt', instance.prompt);
-  writeNotNull('rationale', instance.rationale);
-  writeNotNull('conditional', instance.conditional?.toJson());
-  val['lengthRange'] = instance.lengthRange;
-  val['textType'] = instance.textType.toJson();
-  writeNotNull('customTypeExpression', instance.customTypeExpression);
-  return val;
-}
+Map<String, dynamic> _$FreeTextQuestionToJson(FreeTextQuestion instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'id': instance.id,
+      'prompt': instance.prompt,
+      'rationale': instance.rationale,
+      'conditional': instance.conditional,
+      'lengthRange': instance.lengthRange,
+      'textType': instance.textType,
+      'customTypeExpression': instance.customTypeExpression,
+    };
 
 const _$FreeTextQuestionTypeEnumMap = {
   FreeTextQuestionType.any: 'any',

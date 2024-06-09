@@ -33,7 +33,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
               StudySequenceFormatter(),
             ],
             validationMessages: formViewModel.sequenceTypeCustomControl.validationMessages,
-          ));
+          ),);
     }
   }
 
@@ -58,7 +58,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
                     .map((option) => DropdownMenuItem(
                           value: option.value,
                           child: Text(option.label),
-                        ))
+                        ),)
                     .toList(),
                 validationMessages: formViewModel.sequenceTypeControl.validationMessages,
               ),

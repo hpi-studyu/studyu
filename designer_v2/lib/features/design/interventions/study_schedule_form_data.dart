@@ -8,7 +8,7 @@ class StudyScheduleFormData implements IStudyFormData {
       required this.sequenceTypeCustom,
       required this.numCycles,
       required this.phaseDuration,
-      required this.includeBaseline});
+      required this.includeBaseline,});
 
   final PhaseSequence sequenceType;
   final String sequenceTypeCustom;

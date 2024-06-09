@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-typedef MouseEventsRegionBuilder = Widget Function(BuildContext context, Set<WidgetState> state);
+typedef MouseEventsRegionBuilder = Widget Function(
+    BuildContext context, Set<WidgetState> state);
 
 typedef MaterialStatesChangedCallback = void Function(Set<WidgetState> state);
 
@@ -9,16 +10,17 @@ typedef MaterialStatesChangedCallback = void Function(Set<WidgetState> state);
 /// for the widget it contains while exposing the current interaction state
 /// as a [WidgetInteractionState] to the child widget [builder]
 class MouseEventsRegion extends StatefulWidget {
-  const MouseEventsRegion(
-      {required this.builder,
-      this.onStateChanged,
-      this.onHover,
-      this.onTap,
-      this.onEnter,
-      this.onExit,
-      this.cursor = defaultCursor,
-      this.autoselectCursor = true,
-      super.key});
+  const MouseEventsRegion({
+    required this.builder,
+    this.onStateChanged,
+    this.onHover,
+    this.onTap,
+    this.onEnter,
+    this.onExit,
+    this.cursor = defaultCursor,
+    this.autoselectCursor = true,
+    super.key,
+  });
 
   final MouseEventsRegionBuilder builder;
   final MaterialStatesChangedCallback? onStateChanged;
@@ -50,9 +52,7 @@ class _MouseEventsRegionState extends State<MouseEventsRegion> {
   late final WidgetStatesController statesController;
 
   void handleStatesControllerChange() {
-    if (widget.onStateChanged != null) {
-      widget.onStateChanged!(statesController.value);
-    }
+    widget.onStateChanged?.call(statesController.value);
     // Force a rebuild to resolve MaterialStateProperty properties
     setState(() {});
   }
@@ -72,25 +72,20 @@ class _MouseEventsRegionState extends State<MouseEventsRegion> {
       onTapUp: (_) => statesController.update(WidgetState.pressed, false),
       onTapCancel: () => statesController.update(WidgetState.pressed, false),
       child: MouseRegion(
-          cursor: widget.autoCursor,
-          onHover: (e) {
-            if (widget.onHover != null) {
-              widget.onHover!(e);
-            }
-          },
-          onEnter: (e) {
-            statesController.update(WidgetState.hovered, true);
-            if (widget.onExit != null) {
-              widget.onEnter!(e);
-            }
-          },
-          onExit: (e) {
-            statesController.update(WidgetState.hovered, false);
-            if (widget.onExit != null) {
-              widget.onExit!(e);
-            }
-          },
-          child: widget.builder(context, statesController.value)),
+        cursor: widget.autoCursor,
+        onHover: (e) {
+          widget.onHover?.call(e);
+        },
+        onEnter: (e) {
+          statesController.update(WidgetState.hovered, true);
+          widget.onEnter?.call(e);
+        },
+        onExit: (e) {
+          statesController.update(WidgetState.hovered, false);
+          widget.onExit?.call(e);
+        },
+        child: widget.builder(context, statesController.value),
+      ),
     );
   }
 

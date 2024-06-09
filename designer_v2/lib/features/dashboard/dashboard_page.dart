@@ -52,7 +52,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     return DashboardScaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
@@ -60,7 +59,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               SizedBox(
                 height: 36.0,
                 child: PrimaryButton(
-                  icon: Icons.add,
                   text: tr.action_button_new_study,
                   onPressed: controller.onClickNewStudy,
                 ),
@@ -76,8 +74,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         child: Search(
                             searchController: controller.searchController,
                             hintText: tr.search,
-                            onQueryChanged: (query) => controller.filterStudies(query)),
-                      ))),
+                            onQueryChanged: (query) => controller.filterStudies(query),),
+                      ),),),
             ],
           ),
           const SizedBox(height: 24.0), // spacing between body elements
@@ -114,10 +112,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                         ),
                                       )
                                 : const SizedBox.shrink(),
-                          ));
+                          ),);
                 }
                 return const SizedBox.shrink();
-              }),
+              },),
         ],
       ),
     );

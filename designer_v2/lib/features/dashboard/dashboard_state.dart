@@ -74,49 +74,42 @@ class DashboardState extends Equatable {
         } else {
           sortedStudies.sort((study, other) => other.title!.compareTo(study.title!));
         }
-        break;
       case StudiesTableColumn.status:
         if (sortAscending) {
           sortedStudies.sort((study, other) => study.status.index.compareTo(other.status.index));
         } else {
           sortedStudies.sort((study, other) => other.status.index.compareTo(study.status.index));
         }
-        break;
       case StudiesTableColumn.participation:
         if (sortAscending) {
           sortedStudies.sort((study, other) => study.participation.index.compareTo(other.participation.index));
         } else {
           sortedStudies.sort((study, other) => other.participation.index.compareTo(study.participation.index));
         }
-        break;
       case StudiesTableColumn.createdAt:
         if (sortAscending) {
           sortedStudies.sort((study, other) => study.createdAt!.compareTo(other.createdAt!));
         } else {
           sortedStudies.sort((study, other) => other.createdAt!.compareTo(study.createdAt!));
         }
-        break;
       case StudiesTableColumn.enrolled:
         if (sortAscending) {
           sortedStudies.sort((study, other) => study.participantCount.compareTo(other.participantCount));
         } else {
           sortedStudies.sort((study, other) => other.participantCount.compareTo(study.participantCount));
         }
-        break;
       case StudiesTableColumn.active:
         if (sortAscending) {
           sortedStudies.sort((study, other) => study.activeSubjectCount.compareTo(other.activeSubjectCount));
         } else {
           sortedStudies.sort((study, other) => other.activeSubjectCount.compareTo(study.activeSubjectCount));
         }
-        break;
       case StudiesTableColumn.completed:
         if (sortAscending) {
           sortedStudies.sort((study, other) => study.endedCount.compareTo(other.endedCount));
         } else {
           sortedStudies.sort((study, other) => other.endedCount.compareTo(study.endedCount));
         }
-        break;
       case StudiesTableColumn.pin:
       case StudiesTableColumn.action:
         break;
@@ -153,7 +146,7 @@ class DashboardState extends Equatable {
         currentUser: currentUser != null ? currentUser() : this.currentUser,
         query: query ?? this.query,
         sortByColumn: sortByColumn ?? this.sortByColumn,
-        sortAscending: sortAscending ?? this.sortAscending);
+        sortAscending: sortAscending ?? this.sortAscending,);
   }
 
   // - Equatable

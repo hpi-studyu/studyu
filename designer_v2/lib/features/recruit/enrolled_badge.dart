@@ -35,6 +35,6 @@ class EnrolledBadge extends StatelessWidget {
           label: (enrolledCount > 1) ? enrolledCount.toString() : "",
           color: Colors.green,
           labelStyle: TextStyle(fontSize: mutedTextStyle.fontSize! - 2),
-        ));
+        ),);
   }
 }

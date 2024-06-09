@@ -50,7 +50,6 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
     return Scaffold(
       key: RouterKeys.authKey,
       backgroundColor: Colors.white,
-      appBar: null,
       body: TwoColumnLayout(
         flexLeft: 6,
         flexRight: 7,
@@ -59,7 +58,6 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
           child: ReactiveForm(
             formGroup: controller.form,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
@@ -72,30 +70,32 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                     // adjust for whitespace in logo
                     padding: const EdgeInsets.only(left: 12.0),
                     child: Container(
-                      constraints: BoxConstraints(maxWidth: widget.leftContentMinWidth - 24.0),
+                      constraints: BoxConstraints(
+                          maxWidth: widget.leftContentMinWidth - 24.0,),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SelectableText(
                             formKey.title,
-                            style: theme.textTheme.displaySmall!,
+                            style: theme.textTheme.displaySmall,
                           ),
                           const SizedBox(height: 8.0),
-                          (formKey.description != null)
-                              ? TextParagraph(
-                                  text: formKey.description,
-                                  style: ThemeConfig.bodyTextMuted(theme),
-                                )
-                              : const SizedBox.shrink(),
+                          if (formKey.description != null)
+                            TextParagraph(
+                              text: formKey.description,
+                              style: ThemeConfig.bodyTextMuted(theme),
+                            )
+                          else
+                            const SizedBox.shrink(),
                           const SizedBox(height: 24.0),
                           Flexible(
                             child: SingleChildScrollView(
-                                child: Padding(
-                              padding: const EdgeInsets.only(right: 24.0),
-                              child: widget.body,
-                            )),
-                          )
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 24.0),
+                                child: widget.body,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -106,10 +106,10 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                   // adjust for whitespace in logo
                   padding: const EdgeInsets.only(left: 12.0),
                   child: Container(
-                    constraints: BoxConstraints(maxWidth: widget.leftPanelMinWidth - 12 * 2),
+                    constraints: BoxConstraints(
+                        maxWidth: widget.leftPanelMinWidth - 12 * 2,),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SelectableText(
                           "© HPI Digital Health Cluster ${DateTime.now().year}",
@@ -119,17 +119,19 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                           children: [
                             LanguagePicker(
                               languagePickerType: LanguagePickerType.icon,
-                              iconColor: ThemeConfig.bodyTextBackground(theme).color!,
+                              iconColor:
+                                  ThemeConfig.bodyTextBackground(theme).color,
                               offset: const Offset(0, -60),
                             ),
                             const SizedBox(width: 12.0),
                             Hyperlink(
                               text: tr.imprint,
                               onClick: () => _onClickImprint(appConfig),
-                              linkColor: ThemeConfig.bodyTextBackground(theme).color!,
+                              linkColor:
+                                  ThemeConfig.bodyTextBackground(theme).color!,
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -149,7 +151,6 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
             ),
           ],
         ),
-        headerWidget: null,
         backgroundColorLeft: ThemeConfig.bodyBackgroundColor(theme),
         backgroundColorRight: theme.colorScheme.primary,
         constraintsLeft: BoxConstraints(minWidth: widget.leftPanelMinWidth),
@@ -161,7 +162,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
     );
   }
 
-  _onClickImprint(AppConfig? appConfig) {
+  Future<bool?> _onClickImprint(AppConfig? appConfig) {
     final locale = ref.watch(localeProvider);
     if (appConfig != null) {
       final imprintUri = appConfig.imprint[locale.languageCode];
@@ -169,5 +170,6 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
         return launchUrl(Uri.parse(imprintUri));
       }
     }
+    return Future.value(false);
   }
 }

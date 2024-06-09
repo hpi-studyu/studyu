@@ -13,18 +13,9 @@ StudyUAnalytics _$StudyUAnalyticsFromJson(Map<String, dynamic> json) =>
       (json['samplingRate'] as num?)?.toDouble(),
     );
 
-Map<String, dynamic> _$StudyUAnalyticsToJson(StudyUAnalytics instance) {
-  final val = <String, dynamic>{
-    'enabled': instance.enabled,
-    'dsn': instance.dsn,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('samplingRate', instance.samplingRate);
-  return val;
-}
+Map<String, dynamic> _$StudyUAnalyticsToJson(StudyUAnalytics instance) =>
+    <String, dynamic>{
+      'enabled': instance.enabled,
+      'dsn': instance.dsn,
+      'samplingRate': instance.samplingRate,
+    };

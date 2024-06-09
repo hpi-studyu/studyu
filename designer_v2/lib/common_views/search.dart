@@ -35,7 +35,7 @@ class SearchState extends State<Search> {
   }
 
   void _onSearchPressed() {
-    String query = _searchController.text.toLowerCase();
+    final String query = _searchController.text.toLowerCase();
     widget.onQueryChanged(query);
   }
 

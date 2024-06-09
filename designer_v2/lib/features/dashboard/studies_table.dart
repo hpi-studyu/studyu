@@ -29,7 +29,7 @@ class StudiesTableColumnSize {
       return Expanded(flex: flex!, child: child);
     }
 
-    return SizedBox(width: width!, height: height, child: child);
+    return SizedBox(width: width, height: height, child: child);
   }
 }
 
@@ -105,7 +105,7 @@ class StudiesTable extends StatelessWidget {
               isCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
           StudiesTableColumn.completed:
               isCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
-          StudiesTableColumn.action: StudiesTableColumnSize.fixedWidth(itemHeight)
+          StudiesTableColumn.action: StudiesTableColumnSize.fixedWidth(itemHeight),
         };
         final columnDefinitions = columnDefinitionsMap.entries.toList();
 
@@ -177,7 +177,7 @@ class StudiesTable extends StatelessWidget {
                   onTap: (study) => onSelect.call(study),
                 );
               },
-            )
+            ),
           ],
         );
       },
@@ -189,29 +189,21 @@ class StudiesTable extends StatelessWidget {
     switch (column) {
       case StudiesTableColumn.title:
         title = tr.studies_list_header_title;
-        break;
       case StudiesTableColumn.status:
         title = tr.studies_list_header_status;
-        break;
       case StudiesTableColumn.participation:
         title = tr.studies_list_header_participation;
-        break;
       case StudiesTableColumn.createdAt:
         title = tr.studies_list_header_created_at;
-        break;
       case StudiesTableColumn.enrolled:
         title = tr.studies_list_header_participants_enrolled;
-        break;
       case StudiesTableColumn.active:
         title = tr.studies_list_header_participants_active;
-        break;
       case StudiesTableColumn.completed:
         title = tr.studies_list_header_participants_completed;
-        break;
       case StudiesTableColumn.pin:
       case StudiesTableColumn.action:
         title = '';
-        break;
     }
 
     final sortAscending = dashboardController.isSortAscending;

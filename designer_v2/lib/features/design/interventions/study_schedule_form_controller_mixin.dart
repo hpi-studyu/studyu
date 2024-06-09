@@ -38,7 +38,7 @@ mixin StudyScheduleControls {
 
   static int kNumCyclesMin = 1;
   static int kNumCyclesMax = 9;
-  get numCyclesRange => FormControlValidation(
+  FormControlValidation get numCyclesRange => FormControlValidation(
         control: numCyclesControl,
         validators: [
           Validators.required,
@@ -57,7 +57,7 @@ mixin StudyScheduleControls {
 
   static int kPhaseDurationMin = 1;
   static int kPhaseDurationMax = 365;
-  get phaseDurationRange => FormControlValidation(
+  FormControlValidation get phaseDurationRange => FormControlValidation(
         control: phaseDurationControl,
         validators: [Validators.required, Validators.min(kPhaseDurationMin), Validators.max(kPhaseDurationMax)],
         validationMessages: {
@@ -70,11 +70,11 @@ mixin StudyScheduleControls {
         },
       );
 
-  get customSequenceRequired => FormControlValidation(control: sequenceTypeCustomControl, validators: [
-        Validators.required
+  FormControlValidation get customSequenceRequired => FormControlValidation(control: sequenceTypeCustomControl, validators: [
+        Validators.required,
       ], validationMessages: {
         ValidationMessage.required: (error) => 'Custom sequence needs to be specified.',
-      });
+      },);
 
   void setStudyScheduleControlsFrom(StudyScheduleFormData data) {
     sequenceTypeControl.value = data.sequenceType;

@@ -50,7 +50,7 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
                 icon: Icon(Icons.language, color: widget.iconColor),
                 onChanged: (locale) => controller.setLocale(locale.value!),
               ),
-            ));
+            ),);
       case LanguagePickerType.icon:
         return PopupMenuButton<Locale>(
           tooltip: tr.language_select_tooltip,
@@ -65,26 +65,26 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
     }
   }
 
-  _buildLanguageOptionsIcon(BuildContext context) {
-    List<PopupMenuItem<Locale>> options = [];
+  List<PopupMenuItem<Locale>> _buildLanguageOptionsIcon(BuildContext context) {
+    final List<PopupMenuItem<Locale>> options = [];
     Config.supportedLocales.forEach((languageCode, countryCode) {
       final locale = Locale(languageCode, countryCode);
       options.add(PopupMenuItem(
         value: locale,
         child: Text('${getEmojiFlag(countryCode)}  ${translateLocaleName(locale: locale)}'),
-      ));
+      ),);
     });
     return options;
   }
 
-  _buildLanguageOptionsField(BuildContext context) {
-    List<DropdownMenuItem<Locale>> options = [];
+  List<DropdownMenuItem<Locale>> _buildLanguageOptionsField(BuildContext context) {
+    final List<DropdownMenuItem<Locale>> options = [];
     Config.supportedLocales.forEach((languageCode, countryCode) {
       final locale = Locale(languageCode, countryCode);
       options.add(DropdownMenuItem(
         value: locale,
         child: Text('${getEmojiFlag(countryCode)} ${translateLocaleName(locale: locale)}'),
-      ));
+      ),);
     });
     return options;
   }

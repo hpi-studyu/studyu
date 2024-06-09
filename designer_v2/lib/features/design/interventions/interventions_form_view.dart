@@ -5,11 +5,11 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
-import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
-import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
+import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -30,7 +30,6 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextParagraph(
@@ -80,7 +79,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                     );
                   },
                 );
-              }),
+              },),
               const SizedBox(height: 24.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,16 +88,14 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                     tr.form_section_crossover_schedule,
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  (formViewModel.canTestStudySchedule)
-                      ? Opacity(
+                  if (formViewModel.canTestStudySchedule) Opacity(
                           opacity: ThemeConfig.kMuteFadeFactor,
                           child: TextButton.icon(
                             onPressed: formViewModel.testStudySchedule,
                             icon: const Icon(Icons.play_circle_outline_rounded),
                             label: Text(tr.navlink_crossover_schedule_test),
                           ),
-                        )
-                      : const SizedBox.shrink(),
+                        ) else const SizedBox.shrink(),
                 ],
               ),
               const Divider(),

@@ -21,25 +21,16 @@ ChoiceQuestion _$ChoiceQuestionFromJson(Map<String, dynamic> json) =>
           .map((e) => Choice.fromJson(e as Map<String, dynamic>))
           .toList();
 
-Map<String, dynamic> _$ChoiceQuestionToJson(ChoiceQuestion instance) {
-  final val = <String, dynamic>{
-    'type': instance.type,
-    'id': instance.id,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('prompt', instance.prompt);
-  writeNotNull('rationale', instance.rationale);
-  writeNotNull('conditional', instance.conditional?.toJson());
-  val['multiple'] = instance.multiple;
-  val['choices'] = instance.choices.map((e) => e.toJson()).toList();
-  return val;
-}
+Map<String, dynamic> _$ChoiceQuestionToJson(ChoiceQuestion instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'id': instance.id,
+      'prompt': instance.prompt,
+      'rationale': instance.rationale,
+      'conditional': instance.conditional,
+      'multiple': instance.multiple,
+      'choices': instance.choices,
+    };
 
 Choice _$ChoiceFromJson(Map<String, dynamic> json) => Choice(
       json['id'] as String,

@@ -3,15 +3,16 @@ import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 class ActionMenuInline extends StatelessWidget {
-  const ActionMenuInline(
-      {required this.actions,
-      this.splashRadius = 18.0,
-      this.iconSize,
-      this.iconColor,
-      this.visible = true,
-      this.paddingHorizontal = 2.0,
-      this.paddingVertical = 0.0,
-      super.key});
+  const ActionMenuInline({
+    required this.actions,
+    this.splashRadius = 18.0,
+    this.iconSize,
+    this.iconColor,
+    this.visible = true,
+    this.paddingHorizontal = 2.0,
+    this.paddingVertical = 0.0,
+    super.key,
+  });
 
   final List<ModelAction> actions;
   final WidgetStateProperty<Color>? iconColor;
@@ -30,31 +31,42 @@ class ActionMenuInline extends StatelessWidget {
 
     final theme = Theme.of(context);
 
-    defaultIconColor(Set<WidgetState> states) {
+    Color defaultIconColor(Set<WidgetState> states) {
       if (states.contains(WidgetState.hovered)) {
         return theme.colorScheme.secondary.withOpacity(0.8);
       }
       return theme.colorScheme.secondary.withOpacity(0.4);
     }
 
-    final actionButtons = actions.map((action) {
+    final actionButtons = actions.map((ModelAction action) {
       return Tooltip(
-          message: action.label,
-          child: MouseEventsRegion(builder: (context, state) {
+        message: action.label,
+        child: MouseEventsRegion(
+          builder: (context, state) {
             return IconButton(
-                padding: EdgeInsets.zero,
-                splashRadius: splashRadius,
-                onPressed: () => action.onExecute(),
-                iconSize: iconSize ?? theme.iconTheme.size ?? 16.0,
-                icon: Icon(action.icon,
-                    color: iconColor?.resolve(state) ?? (action.isDestructive ? Colors.red : defaultIconColor(state))));
-          }));
+              padding: EdgeInsets.zero,
+              splashRadius: splashRadius,
+              onPressed: () => action.onExecute(),
+              iconSize: iconSize ?? theme.iconTheme.size ?? 16.0,
+              icon: Icon(
+                action.icon,
+                color: iconColor?.resolve(state) ??
+                    (action.isDestructive
+                        ? Colors.red
+                        : defaultIconColor(state)),
+              ),
+            );
+          },
+        ),
+      );
     }).toList();
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: paddingHorizontal ?? 0, vertical: paddingVertical ?? 0),
+      padding: EdgeInsets.symmetric(
+        horizontal: paddingHorizontal ?? 0,
+        vertical: paddingVertical ?? 0,
+      ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: actionButtons,
       ),
     );

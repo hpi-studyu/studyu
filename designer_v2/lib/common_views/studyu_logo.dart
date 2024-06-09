@@ -25,6 +25,6 @@ class StudyULogo extends StatelessWidget {
             ),
           );
         },
-        onTap: onTap);
+        onTap: onTap,);
   }
 }

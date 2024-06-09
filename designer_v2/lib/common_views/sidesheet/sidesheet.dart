@@ -31,7 +31,7 @@ class Sidesheet extends StatefulWidget {
     this.wrapContent,
     super.key,
   })  : assert((body != null && tabs == null) || (body == null && tabs != null),
-            "Must provide either body or tabs to build sidesheet content"),
+            "Must provide either body or tabs to build sidesheet content",),
         assert(tabs == null || tabs.length >= 1, "Must provide at least one tab to build sidesheet content");
 
   final String titleText;
@@ -83,13 +83,11 @@ class _SidesheetState extends State<Sidesheet> {
     return Align(
       alignment: Alignment.bottomLeft,
       child: Material(
-        elevation: 0,
         color: Colors.white,
         child: SizedBox(
           width: actualWidth,
           height: actualHeight,
           child: Scaffold(
-            appBar: null,
             backgroundColor: backgroundColor,
             body: widget.withCloseButton
                 ? Stack(
@@ -99,7 +97,7 @@ class _SidesheetState extends State<Sidesheet> {
                         top: 5,
                         right: 5,
                         child: CloseButton(),
-                      )
+                      ),
                     ],
                   )
                 : _build(context, widget.body, widget.tabs),
@@ -109,7 +107,7 @@ class _SidesheetState extends State<Sidesheet> {
     );
   }
 
-  _build(BuildContext context, Widget? body, List<SidesheetTab>? tabs) {
+  Container _build(BuildContext context, Widget? body, List<SidesheetTab>? tabs) {
     final theme = Theme.of(context);
     final backgroundColor = ThemeConfig.sidesheetBackgroundColor(Theme.of(context));
 
@@ -137,7 +135,6 @@ class _SidesheetState extends State<Sidesheet> {
       ),
       child: actualWrapContent(
         Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
@@ -154,14 +151,11 @@ class _SidesheetState extends State<Sidesheet> {
                     widget.titleText,
                     style: theme.textTheme.headlineSmall!.copyWith(fontWeight: FontWeight.normal),
                   ),
-                  (widget.actionButtons != null)
-                      ? Wrap(spacing: 8.0, children: widget.actionButtons!)
-                      : const SizedBox.shrink(),
+                  if (widget.actionButtons != null) Wrap(spacing: 8.0, children: widget.actionButtons!) else const SizedBox.shrink(),
                 ],
               ),
             ),
-            (hasTabs && !isCollapsed)
-                ? Padding(
+            if (hasTabs && !isCollapsed) Padding(
                     padding: EdgeInsets.symmetric(horizontal: (widget.bodyPadding?.horizontal ?? 0) * 0.5),
                     child: TabbedNavbar<SidesheetTab>(
                       tabs: tabs,
@@ -178,16 +172,13 @@ class _SidesheetState extends State<Sidesheet> {
                       labelColorHover: tabBarLabelHoverColor,
                       unselectedLabelColorHover: tabBarLabelHoverColor,
                     ),
-                  )
-                : const SizedBox.shrink(),
-            (hasTabs && !isCollapsed) ? const Divider(height: 1) : const Divider(),
+                  ) else const SizedBox.shrink(),
+            if (hasTabs && !isCollapsed) const Divider(height: 1) else const Divider(),
             Flexible(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    (hasTabs && !isCollapsed) // compensate for divider height loss
-                        ? const SizedBox(height: 12.0)
-                        : const SizedBox.shrink(),
+                    if (hasTabs && !isCollapsed) const SizedBox(height: 12.0) else const SizedBox.shrink(),
                     Padding(
                       padding: EdgeInsets.fromLTRB(
                         (widget.bodyPadding?.horizontal ?? 0) * 0.5,
@@ -196,7 +187,7 @@ class _SidesheetState extends State<Sidesheet> {
                         (widget.bodyPadding?.vertical ?? 0) * 0.5,
                       ),
                       child: innerBody,
-                    )
+                    ),
                   ],
                 ),
               ),

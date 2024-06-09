@@ -17,12 +17,10 @@ class AccountSettingsDialog extends ConsumerWidget {
         child: StandardDialog(
       titleText: tr.navlink_account_settings,
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16.0),
           FormTableLayout(
-            rowLayout: FormTableRowLayout.horizontal,
             rows: [
               FormTableRow(
                 label: tr.language,
@@ -36,6 +34,6 @@ class AccountSettingsDialog extends ConsumerWidget {
       minWidth: 650,
       maxWidth: 750,
       minHeight: 450,
-    ));
+    ),);
   }
 }

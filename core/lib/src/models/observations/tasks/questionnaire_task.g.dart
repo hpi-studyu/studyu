@@ -17,22 +17,13 @@ QuestionnaireTask _$QuestionnaireTaskFromJson(Map<String, dynamic> json) =>
       ..questions =
           StudyUQuestionnaire.fromJson(json['questions'] as List<dynamic>);
 
-Map<String, dynamic> _$QuestionnaireTaskToJson(QuestionnaireTask instance) {
-  final val = <String, dynamic>{
-    'type': instance.type,
-    'id': instance.id,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('title', instance.title);
-  writeNotNull('header', instance.header);
-  writeNotNull('footer', instance.footer);
-  val['schedule'] = instance.schedule.toJson();
-  val['questions'] = instance.questions.toJson();
-  return val;
-}
+Map<String, dynamic> _$QuestionnaireTaskToJson(QuestionnaireTask instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'id': instance.id,
+      'title': instance.title,
+      'header': instance.header,
+      'footer': instance.footer,
+      'schedule': instance.schedule,
+      'questions': instance.questions,
+    };

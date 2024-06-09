@@ -2,15 +2,14 @@ import 'dart:ui';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/localization/locale_state.dart';
 import 'package:studyu_designer_v2/localization/platform_locale/platform_locale_interface.dart';
-
-import 'locale_state.dart';
 
 /// Platform Locale Provider
 /// Returns the locale of the Platform.localeName
 final platformLocaleProvider = Provider<Locale>((_) {
   // Get the platform language using platform specific implementations
-  Locale platformLocale = PlatformLocale().getPlatformLocale();
+  final Locale platformLocale = PlatformLocale().getPlatformLocale();
 
   return platformLocale;
 });

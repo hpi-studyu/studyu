@@ -10,7 +10,7 @@ class ConstrainedWidthFlexible extends StatelessWidget {
       required this.flexSum,
       required this.outerConstraints,
       required this.child,
-      super.key});
+      super.key,});
 
   final double minWidth;
   final double maxWidth;

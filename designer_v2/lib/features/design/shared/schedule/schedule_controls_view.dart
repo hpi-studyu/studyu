@@ -78,13 +78,13 @@ class ScheduleControls extends FormConsumerWidget {
                                       splashRadius: 18.0,
                                       onPressed: picker.showPicker,
                                       icon: const Icon(Icons.access_time),
-                                    ))),
+                                    ),),),
                           );
                         },
-                      ))),
+                      ),),),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -97,7 +97,7 @@ class ScheduleControls extends FormConsumerWidget {
             ),
           ),
           ..._conditionalTimeRestrictions(context),
-        ]),
+        ],),
       ],
     );
   }
@@ -132,11 +132,11 @@ class ScheduleControls extends FormConsumerWidget {
                                     splashRadius: 18.0,
                                     onPressed: picker.showPicker,
                                     icon: const Icon(Icons.access_time),
-                                  )))
+                                  ),),)
                           : const InputDecoration(),
                     );
                   },
-                )),
+                ),),
               ),
               const SizedBox(width: 10.0),
               Flexible(
@@ -159,14 +159,14 @@ class ScheduleControls extends FormConsumerWidget {
                                     splashRadius: 18.0,
                                     onPressed: picker.showPicker,
                                     icon: const Icon(Icons.access_time),
-                                  )))
+                                  ),),)
                           : const InputDecoration(),
                     );
                   },
-                )),
-              )
+                ),),
+              ),
             ],
-          )),
+          ),),
     ];
   }
 }

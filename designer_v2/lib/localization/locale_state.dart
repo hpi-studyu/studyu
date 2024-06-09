@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-import 'locale_providers.dart';
-
-Locale fallbackLocale = Locale(Config.defaultLocale.first, Config.defaultLocale.last);
+Locale fallbackLocale =
+    Locale(Config.defaultLocale.first, Config.defaultLocale.last);
 
 @immutable
 class LocaleState {
@@ -30,7 +30,7 @@ class LocaleStateNotifier extends StateNotifier<LocaleState> {
   /// 2. IF no locale in storage, attempts to set local from the platform settings
   Future<void> initLocale() async {
     // Attempt to restore from storage
-    bool fromStorageSuccess = await restoreFromStorage();
+    final bool fromStorageSuccess = await restoreFromStorage();
 
     // If storage restore did not work, set from platform
     if (!fromStorageSuccess) {
@@ -43,7 +43,7 @@ class LocaleStateNotifier extends StateNotifier<LocaleState> {
   /// IF NOT: get the first locale that matches our language code and set that
   /// ELSE: do nothing.
   void setLocale(Locale locale) {
-    List<Locale> supportedLocales = ref.read(supportedLocalesProvider);
+    final List<Locale> supportedLocales = ref.read(supportedLocalesProvider);
 
     // Set the locale if it's in our list of supported locales
     if (supportedLocales.contains(locale)) {
@@ -53,7 +53,7 @@ class LocaleStateNotifier extends StateNotifier<LocaleState> {
 
     // Get the closest language locale and set that instead
     Locale? closestLocale;
-    for (Locale supportedLocale in supportedLocales) {
+    for (final Locale supportedLocale in supportedLocales) {
       if (supportedLocale.languageCode == locale.languageCode) {
         closestLocale = supportedLocale;
       }
@@ -66,21 +66,12 @@ class LocaleStateNotifier extends StateNotifier<LocaleState> {
 
   /// Restore Locale from Storage
   Future<bool> restoreFromStorage() async {
-    try {
-      LocaleState? state = await load();
-      if (state == null) {
-        return false;
-      }
-      state = state;
-      return true;
-    } catch (e) {
-      return false;
-    }
+    return (await load()) != null;
   }
 
   Future<LocaleState?> load() async {
     try {
-      String? locString = await SecureStorage.read(_localStorageKey);
+      final String? locString = await SecureStorage.read(_localStorageKey);
       if (locString != null) {
         final locale = locString.split('-');
         return LocaleState(Locale(locale.first, locale.last));

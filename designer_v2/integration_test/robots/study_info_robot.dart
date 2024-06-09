@@ -17,7 +17,7 @@ class StudyInfoRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_study_title)
+            widget.decoration!.hintText! == tr.form_field_study_title,)
         .scrollTo()
         .enterText(studyName);
   }
@@ -27,7 +27,7 @@ class StudyInfoRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_study_description_hint)
+            widget.decoration!.hintText! == tr.form_field_study_description_hint,)
         .scrollTo()
         .enterText(studyDescription);
   }
@@ -37,7 +37,7 @@ class StudyInfoRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_organization)
+            widget.decoration!.hintText! == tr.form_field_organization,)
         .scrollTo()
         .enterText(orgName);
   }
@@ -47,7 +47,7 @@ class StudyInfoRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_review_board)
+            widget.decoration!.hintText! == tr.form_field_review_board,)
         .scrollTo()
         .enterText(irbName);
   }
@@ -57,7 +57,7 @@ class StudyInfoRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_review_board_number)
+            widget.decoration!.hintText! == tr.form_field_review_board_number,)
         .scrollTo()
         .enterText(irbNumber);
   }
@@ -67,7 +67,7 @@ class StudyInfoRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_researchers)
+            widget.decoration!.hintText! == tr.form_field_researchers,)
         .scrollTo()
         .enterText(personName);
   }
@@ -77,7 +77,7 @@ class StudyInfoRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_website)
+            widget.decoration!.hintText! == tr.form_field_website,)
         .scrollTo()
         .enterText(website);
   }
@@ -87,7 +87,7 @@ class StudyInfoRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_contact_email)
+            widget.decoration!.hintText! == tr.form_field_contact_email,)
         .scrollTo()
         .enterText(emailAddress);
   }
@@ -97,7 +97,7 @@ class StudyInfoRobot {
         .which<TextField>((widget) =>
             widget.decoration is InputDecoration &&
             widget.decoration!.hintText != null &&
-            widget.decoration!.hintText! == tr.form_field_contact_phone)
+            widget.decoration!.hintText! == tr.form_field_contact_phone,)
         .scrollTo()
         .enterText(phoneNumber);
   }

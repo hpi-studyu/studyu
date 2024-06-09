@@ -42,7 +42,6 @@ class _SyncIndicatorState extends State<SyncIndicator> with SingleTickerProvider
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: widget.animationDuration),
-      upperBound: 1,
     );
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
 
@@ -82,7 +81,7 @@ class _SyncIndicatorState extends State<SyncIndicator> with SingleTickerProvider
     final theme = Theme.of(context);
     final isHovered = states.contains(WidgetState.hovered);
     double actualOpacity = (widget.state.isRefreshing) ? 0.5 : 0.2;
-    actualOpacity += (isHovered) ? 0.2 : 0.0;
+    actualOpacity += isHovered ? 0.2 : 0.0;
     final iconColor = theme.iconTheme.color!.withOpacity(actualOpacity);
 
     Widget dataWidget;
@@ -129,6 +128,6 @@ class _SyncIndicatorState extends State<SyncIndicator> with SingleTickerProvider
       ),
     );
 
-    return (shouldAnimate) ? refreshingWidget : dataWidget;
+    return shouldAnimate ? refreshingWidget : dataWidget;
   }
 }

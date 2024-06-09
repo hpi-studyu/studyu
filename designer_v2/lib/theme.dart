@@ -17,7 +17,7 @@ class ThemeConfig {
   static const double kHoverFadeFactor = 0.7;
   static const double kMuteFadeFactor = 0.8;
 
-  static bodyBackgroundColor(ThemeData theme) => theme.scaffoldBackgroundColor.faded(0.5);
+  static Color bodyBackgroundColor(ThemeData theme) => theme.scaffoldBackgroundColor.faded(0.5);
 
   static Color modalBarrierColor(ThemeData theme) => theme.colorScheme.secondary.withOpacity(0.4);
 
@@ -70,7 +70,7 @@ class WebTransitionBuilder extends PageTransitionsBuilder {
   const WebTransitionBuilder();
   @override
   Widget buildTransitions<T>(PageRoute<T> route, BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+      Animation<double> secondaryAnimation, Widget child,) {
     final opacityOldTween = Tween(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn));
     final opacityNewTween = Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: Curves.easeIn));
 
@@ -88,7 +88,7 @@ class ThemeSettingChange extends Notification {
 
 class ThemeProvider extends InheritedWidget {
   ThemeProvider(
-      {super.key, required this.settings, required this.lightDynamic, required this.darkDynamic, required super.child});
+      {super.key, required this.settings, required this.lightDynamic, required this.darkDynamic, required super.child,});
 
   final ValueNotifier<ThemeSettings> settings;
   final ColorScheme? lightDynamic;
@@ -135,7 +135,7 @@ class ThemeProvider extends InheritedWidget {
         sourceColorHct:
             dynamicPrimary != null ? Hct.fromInt(dynamicPrimary.value) : Hct.fromInt(source(targetColor).value),
         isDark: false,
-        contrastLevel: 0.0);
+        contrastLevel: 0.0,);
     final colorScheme = ColorScheme.fromSeed(
       seedColor: dynamicPrimary ?? source(targetColor),
       brightness: brightness,
@@ -268,35 +268,30 @@ class ThemeProvider extends InheritedWidget {
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
           color: colors.surfaceContainerHighest.withOpacity(0.6),
-          width: 1.0,
         ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
           color: colors.surfaceContainerHighest.withOpacity(0.8),
-          width: 1.0,
         ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
           color: colors.primary,
-          width: 1.0,
         ),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
           color: colors.error,
-          width: 1.0,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
           color: colors.error,
-          width: 1.0,
         ),
       ),
     );
@@ -392,9 +387,8 @@ class ThemeProvider extends InheritedWidget {
         BoxShadow(
           color: colors.secondary.withOpacity(0.3),
           blurRadius: 3,
-          spreadRadius: 0,
-        )
-      ]),
+        ),
+      ],),
     );
   }
 

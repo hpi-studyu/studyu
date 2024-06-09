@@ -21,7 +21,6 @@ class StudySettingsDialog extends StudyPageWidget {
       child: StandardDialog(
         titleText: tr.study_settings,
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 12.0),
@@ -40,7 +39,7 @@ class StudySettingsDialog extends StudyPageWidget {
                         child: ReactiveSwitch(
                           formControl: formViewModel.isPublishedToRegistryControl,
                         ),
-                      )),
+                      ),),
                   FormTableRow(
                       label: tr.study_settings_publish_results,
                       labelHelpText: tr.study_settings_publish_results_tooltip,
@@ -49,14 +48,14 @@ class StudySettingsDialog extends StudyPageWidget {
                         child: ReactiveSwitch(
                           formControl: formViewModel.isPublishedToRegistryResultsControl,
                         ),
-                      )),
+                      ),),
                 ],
                 columnWidths: const {
                   0: IntrinsicColumnWidth(),
                   1: FlexColumnWidth(),
                 },
               );
-            }),
+            },),
             const SizedBox(height: 12.0),
           ],
         ),

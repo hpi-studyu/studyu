@@ -65,7 +65,7 @@ class FormTableLayout extends StatelessWidget {
           ? row.labelBuilder!(context)
           : Wrap(
               children: [
-                (actualRowLayout == FormTableRowLayout.vertical) ? const SizedBox(width: 2.0) : const SizedBox.shrink(),
+                if (actualRowLayout == FormTableRowLayout.vertical) const SizedBox(width: 2.0) else const SizedBox.shrink(),
                 FormLabel(
                   labelText: row.label,
                   helpText: row.labelHelpText,
@@ -117,7 +117,7 @@ class FormTableLayout extends StatelessWidget {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         );
       }
@@ -176,7 +176,7 @@ class FormSectionHeader extends StatelessWidget {
             0: IntrinsicColumnWidth(),
           },
         ),
-        (divider) ? const Divider() : const SizedBox.shrink(),
+        if (divider) const Divider() else const SizedBox.shrink(),
       ],
     );
   }
@@ -200,22 +200,16 @@ class FormLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Wrap(
       children: [
-        (labelText != null && layout == FormTableRowLayout.vertical)
-            ? const SizedBox(width: 2.0)
-            : const SizedBox.shrink(),
-        (labelText != null)
-            ? Text(
+        if (labelText != null && layout == FormTableRowLayout.vertical) const SizedBox(width: 2.0) else const SizedBox.shrink(),
+        if (labelText != null) Text(
                 labelText!,
                 style: Theme.of(context).textTheme.bodySmall?.merge(labelTextStyle),
-              )
-            : const SizedBox.shrink(),
-        (helpText != null) ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
-        (helpText != null)
-            ? Padding(
+              ) else const SizedBox.shrink(),
+        if (helpText != null) const SizedBox(width: 8.0) else const SizedBox.shrink(),
+        if (helpText != null) Padding(
                 padding: const EdgeInsets.only(top: 2.0),
                 child: HelpIcon(tooltipText: helpText),
-              )
-            : const SizedBox.shrink(),
+              ) else const SizedBox.shrink(),
       ],
     );
   }

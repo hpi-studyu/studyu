@@ -79,7 +79,7 @@ class RouterConf {
                 formKey: AuthFormKey.login,
                 body: LoginForm(),
               ),
-            )),
+            ),),
     GoRoute(
         path: "/signup",
         name: signupRouteName,
@@ -89,7 +89,7 @@ class RouterConf {
                 formKey: AuthFormKey.signup,
                 body: SignupForm(),
               ),
-            )),
+            ),),
     GoRoute(
         path: "/forgot_password",
         name: forgotPasswordRouteName,
@@ -99,11 +99,11 @@ class RouterConf {
                 formKey: AuthFormKey.passwordForgot,
                 body: PasswordForgotForm(),
               ),
-            )),
+            ),),
     GoRoute(
       path: "/error",
       name: errorRouteName,
-      builder: (context, state) => ErrorPage(error: state.extra as Exception),
+      builder: (context, state) => ErrorPage(error: state.extra! as Exception),
     ),
   ];
 
@@ -125,20 +125,20 @@ class RouterConf {
             .toList()
             .indexOf(state.uri.queryParameters[RouteParams.studiesFilter]!);
         return (idx != -1) ? StudiesFilter.values[idx] : null;
-      }() // call anonymous closure to resolve param to enum
+      }(), // call anonymous closure to resolve param to enum
           ),
     ),
     GoRoute(
       path: "/studies/:${RouteParams.studyId}",
       name: studyRouteName,
       redirect: (BuildContext context, GoRouterState state) => router.namedLocation('studyEdit',
-          pathParameters: {RouteParams.studyId: state.pathParameters[RouteParams.studyId]!}),
+          pathParameters: {RouteParams.studyId: state.pathParameters[RouteParams.studyId]!},),
     ),
     GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit",
       name: studyEditRouteName,
       redirect: (BuildContext context, GoRouterState state) => router.namedLocation('studyEditInfo',
-          pathParameters: {RouteParams.studyId: state.pathParameters[RouteParams.studyId]!}),
+          pathParameters: {RouteParams.studyId: state.pathParameters[RouteParams.studyId]!},),
     ),
     GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit/info",
@@ -154,7 +154,7 @@ class RouterConf {
               selectedTabSubnav: StudyDesignNav.info(studyId),
               body: StudyDesignInfoFormView(studyId),
               layoutType: SingleColumnLayoutType.boundedNarrow,
-            ));
+            ),);
       },
     ),
     GoRoute(
@@ -171,8 +171,8 @@ class RouterConf {
                 selectedTabSubnav: StudyDesignNav.enrollment(studyId),
                 body: StudyDesignEnrollmentFormView(studyId),
                 layoutType: SingleColumnLayoutType.boundedNarrow,
-              ));
-        }),
+              ),);
+        },),
     GoRoute(
         path: "/studies/:${RouteParams.studyId}/edit/interventions",
         name: studyEditInterventionsRouteName,
@@ -187,7 +187,7 @@ class RouterConf {
                 selectedTabSubnav: StudyDesignNav.interventions(studyId),
                 body: StudyDesignInterventionsFormView(studyId),
                 layoutType: SingleColumnLayoutType.boundedNarrow,
-              ));
+              ),);
         },
         routes: [
           GoRoute(
@@ -196,7 +196,7 @@ class RouterConf {
               pageBuilder: (context, state) {
                 final routeArgs = InterventionFormRouteArgs(
                     studyId: state.pathParameters[RouteParams.studyId]!,
-                    interventionId: state.pathParameters[RouteParams.interventionId]!);
+                    interventionId: state.pathParameters[RouteParams.interventionId]!,);
                 return MaterialPage(
                     child: StudyFormScaffold<InterventionFormViewModel>(
                   studyId: routeArgs.studyId,
@@ -205,15 +205,13 @@ class RouterConf {
                     leftWidget: InterventionFormView(formViewModel: formViewModel),
                     rightWidget: InterventionPreview(routeArgs: routeArgs),
                     flexLeft: 7,
-                    flexRight: 8,
                     constraintsLeft: const BoxConstraints(minWidth: 500.0),
-                    scrollLeft: true,
                     scrollRight: false,
                     paddingRight: null,
                   ),
-                ));
-              }),
-        ]),
+                ),);
+              },),
+        ],),
     GoRoute(
         path: "/studies/:${RouteParams.studyId}/edit/measurements",
         name: studyEditMeasurementsRouteName,
@@ -228,7 +226,7 @@ class RouterConf {
                 selectedTabSubnav: StudyDesignNav.measurements(studyId),
                 body: StudyDesignMeasurementsFormView(studyId),
                 layoutType: SingleColumnLayoutType.boundedNarrow,
-              ));
+              ),);
         },
         routes: [
           GoRoute(
@@ -237,7 +235,7 @@ class RouterConf {
               pageBuilder: (context, state) {
                 final routeArgs = MeasurementFormRouteArgs(
                     studyId: state.pathParameters[RouteParams.studyId]!,
-                    measurementId: state.pathParameters[RouteParams.measurementId]!);
+                    measurementId: state.pathParameters[RouteParams.measurementId]!,);
                 return MaterialPage(
                     child: StudyFormScaffold<MeasurementSurveyFormViewModel>(
                   studyId: routeArgs.studyId,
@@ -246,15 +244,13 @@ class RouterConf {
                     leftWidget: MeasurementSurveyFormView(formViewModel: formViewModel),
                     rightWidget: SurveyPreview(routeArgs: routeArgs),
                     flexLeft: 7,
-                    flexRight: 8,
                     constraintsLeft: const BoxConstraints(minWidth: 500.0),
-                    scrollLeft: true,
                     scrollRight: false,
                     paddingRight: null,
                   ),
-                ));
-              }),
-        ]),
+                ),);
+              },),
+        ],),
     GoRoute(
         path: "/studies/:${RouteParams.studyId}/edit/reports",
         name: studyEditReportsRouteName,
@@ -269,8 +265,8 @@ class RouterConf {
                 selectedTabSubnav: StudyDesignNav.reports(studyId),
                 body: StudyDesignReportsFormView(studyId),
                 layoutType: SingleColumnLayoutType.boundedNarrow,
-              ));
-        }),
+              ),);
+        },),
     GoRoute(
         path: "/studies/:${RouteParams.studyId}/test",
         name: studyTestRouteName,
@@ -284,8 +280,8 @@ class RouterConf {
                 selectedTab: StudyNav.test(studyId),
                 body: StudyTestScreen(studyId, previewRoute: appRoute),
                 layoutType: SingleColumnLayoutType.stretched,
-              ));
-        }),
+              ),);
+        },),
     GoRoute(
         path: "/studies/:${RouteParams.studyId}/recruit",
         name: studyRecruitRouteName,
@@ -298,8 +294,8 @@ class RouterConf {
                 selectedTab: StudyNav.recruit(studyId),
                 body: StudyRecruitScreen(studyId),
                 layoutType: SingleColumnLayoutType.boundedWide,
-              ));
-        }),
+              ),);
+        },),
     GoRoute(
         path: "/studies/:${RouteParams.studyId}/monitor",
         name: studyMonitorRouteName,
@@ -312,8 +308,8 @@ class RouterConf {
                 selectedTab: StudyNav.monitor(studyId),
                 body: StudyMonitorScreen(studyId),
                 layoutType: SingleColumnLayoutType.boundedWide,
-              ));
-        }),
+              ),);
+        },),
     GoRoute(
         path: "/studies/:${RouteParams.studyId}/analyze",
         name: studyAnalyzeRouteName,
@@ -326,8 +322,8 @@ class RouterConf {
                 selectedTab: StudyNav.analyze(studyId),
                 body: StudyAnalyzeScreen(studyId),
                 layoutType: SingleColumnLayoutType.boundedWide,
-              ));
-        }),
+              ),);
+        },),
     GoRoute(
         path: "/studies/:${RouteParams.studyId}/settings",
         name: studySettingsRouteName,
@@ -338,7 +334,7 @@ class RouterConf {
             state,
             StudySettingsDialog(studyId),
           );
-        }),
+        },),
     GoRoute(
         path: "/settings",
         name: accountSettingsRouteName,
@@ -348,7 +344,7 @@ class RouterConf {
             state,
             const AccountSettingsDialog(),
           );
-        }),
+        },),
     GoRoute(
         path: "/password_recovery",
         name: recoverPasswordRouteName,
@@ -358,17 +354,18 @@ class RouterConf {
                 formKey: AuthFormKey.passwordRecovery,
                 body: PasswordRecoveryForm(),
               ),
-            )),
+            ),),
   ];
 
   static GoRoute route(String name) {
-    searchRouteNames(List<GoRoute> subRoutes) {
+    GoRoute? searchRouteNames(List<GoRoute> subRoutes) {
       if (subRoutes.isEmpty) return null;
-      for (GoRoute route in subRoutes) {
+      for (final GoRoute route in subRoutes) {
         if (route.name == name) return route;
-        GoRoute? newRoute = searchRouteNames(List<GoRoute>.from(route.routes));
+        final GoRoute? newRoute = searchRouteNames(List<GoRoute>.from(route.routes));
         if (newRoute != null) return newRoute;
       }
+      return null;
     }
 
     return searchRouteNames(routes)!;

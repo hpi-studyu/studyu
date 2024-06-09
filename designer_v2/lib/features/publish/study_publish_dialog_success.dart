@@ -24,7 +24,7 @@ class PublishSuccessDialog extends StudyPageWidget {
             leading: Text("\u{1f389}".hardcoded,
                 style: theme.textTheme.displayLarge?.copyWith(
                   fontSize: (theme.textTheme.displayLarge?.fontSize ?? 48.0) * 1.5,
-                )),
+                ),),
             title: tr.study_launch_success_title,
             description: tr.study_launch_success_description,
           ),
@@ -34,7 +34,6 @@ class PublishSuccessDialog extends StudyPageWidget {
       actionButtons: [
         Expanded(
             child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             PrimaryButton(
               text: tr.action_button_post_launch_followup,
@@ -50,9 +49,9 @@ class PublishSuccessDialog extends StudyPageWidget {
                 ),
                 onPressed: () => Navigator.maybePop(context),
               ),
-            )
+            ),
           ],
-        ))
+        ),),
       ],
       maxWidth: 450,
     );
