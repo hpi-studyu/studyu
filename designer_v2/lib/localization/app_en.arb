@@ -549,7 +549,7 @@
   "monitoring_completed_tooltip": "Number of participants who reached the end of the study",
   "monitoring_table_column_participant_id": "Participant ID",
   "monitoring_table_column_invite_code": "Invite Code",
-  "monitoring_table_column_enrolled": "Enrolled",
+  "monitoring_table_column_enrolled": "Started At",
   "monitoring_table_column_last_activity": "Last Activity",
   "monitoring_table_column_day_in_study": "Day in Study",
   "monitoring_table_column_completed_interventions": "Completed\nInterventions",

@@ -80,7 +80,7 @@ class StudyMonitorTable extends ConsumerWidget {
   }
 
   List<Widget> _buildRow(BuildContext context, StudyMonitorItem item,
-      int rowIdx, Set<WidgetState> states) {
+      int rowIdx, Set<MaterialState> states) {
     final languageCode = ref.watch(localeProvider).languageCode;
     return [
       Tooltip(
