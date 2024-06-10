@@ -93,10 +93,10 @@ scripts:
   dev:app:
     run: |
       melos exec -c 1 -- \
-        "flutter run -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.local"
+        "flutter run -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.dev"
     packageFilters:
       scope: studyu_app
-    description: Runs StudyU App with default environment
+    description: Runs StudyU App with the development environment
 
   dev:designer_v2:
     run: |
@@ -104,7 +104,23 @@ scripts:
         "flutter run -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
     packageFilters:
       scope: studyu_designer_v2
-    description: Runs StudyU Designer for local development
+    description: Runs StudyU Designer with the development environment
+
+  local:app:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.local"
+    packageFilters:
+      scope: studyu_app
+    description: Runs StudyU App with local environment
+
+  local:designer_v2:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
+    packageFilters:
+      scope: studyu_designer_v2
+    description: Runs StudyU Designer with local environment
 
   build:android:
     run: |
