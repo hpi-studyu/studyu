@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -10,6 +13,8 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:supabase/supabase.dart';
+
+part 'auth_form_controller.g.dart';
 
 enum AuthFormKey {
   login,
@@ -48,19 +53,49 @@ enum AuthFormKey {
   }
 }
 
-class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFormGroupController {
-  AuthFormController({
-    required this.authRepository,
-    required this.notificationService,
-    required this.router,
-  }) : super(const AsyncValue.data(null)) {
+@riverpod
+class AuthFormController extends _$AuthFormController implements IFormGroupController {
+
+  @override
+  AsyncValue<void> build(AuthFormKey formKey) {
+    authRepository = ref.watch(authRepositoryProvider);
+    notificationService = ref.watch(notificationServiceProvider);
+    router = ref.watch(routerProvider);
+
+    formKey = formKey;
+    resetControlsFor(formKey);
+
+    ref.listenSelf((previous, next) {
+      print("authFormController.state updated");
+      if (state.hasError) {
+        final AuthException error = state.error as AuthException;
+        switch (error.message) {
+          case "Invalid login credentials":
+            notificationService.show(Notifications.credentialsInvalid);
+            break;
+          case "User already registered":
+            notificationService.show(Notifications.userAlreadyRegistered);
+            break;
+          default:
+            notificationService.showMessage(error.message);
+        }
+      }
+    });
+
+    ref.onDispose(() {
+      print("authFormControllerProvider.DISPOSE");
+    });
+
     _readDebugUser();
     _onChangeFormKey(formKey);
+
+    return AsyncValue.data(null);
   }
 
-  final IAuthRepository authRepository;
-  final INotificationService notificationService;
-  final GoRouter router;
+
+  late final IAuthRepository authRepository;
+  late final INotificationService notificationService;
+  late final GoRouter router;
 
   // - Form controls
 
@@ -198,6 +233,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     }
     try {
       state = const AsyncValue.loading();
+      print("authRepository.signUp");
       return await authRepository.signUp(email: email, password: password);
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -223,7 +259,7 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     } finally {
-      state = const AsyncValue.data(null);
+      state =  const AsyncValue.data(null);
     }
     return Future.value(AuthResponse());
   }
@@ -291,35 +327,3 @@ class AuthFormController extends StateNotifier<AsyncValue<void>> implements IFor
     }
   }
 }
-
-final authFormControllerProvider =
-    StateNotifierProvider.autoDispose.family<AuthFormController, AsyncValue<void>, AuthFormKey>((ref, formKey) {
-  final authFormController = AuthFormController(
-    authRepository: ref.watch(authRepositoryProvider),
-    notificationService: ref.watch(notificationServiceProvider),
-    router: ref.watch(routerProvider),
-  );
-  authFormController.formKey = formKey;
-  authFormController.resetControlsFor(formKey);
-  authFormController.addListener((state) {
-    print("authFormController.state updated");
-    if (state.hasError) {
-      final AuthException error = state.error as AuthException;
-      switch (error.message) {
-        case "Invalid login credentials":
-          authFormController.notificationService.show(Notifications.credentialsInvalid);
-          break;
-        case "User already registered":
-          authFormController.notificationService.show(Notifications.userAlreadyRegistered);
-          break;
-        default:
-          authFormController.notificationService.showMessage(error.message);
-      }
-    }
-  });
-  ref.onDispose(() {
-    print("authFormControllerProvider.DISPOSE");
-  });
-  print("authFormControllerProvider");
-  return authFormController;
-});
