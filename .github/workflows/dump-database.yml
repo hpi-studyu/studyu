@@ -1,9 +1,10 @@
-name: Test Supabase
+name: Dumps database schema
 on:
   push:
     paths:
-      - ".github/workflows/supabase-test.yml"
+      - ".github/workflows/dump-database.yml"
       - "database/**"
+      - "supabase/**"
   workflow_dispatch:
 
 jobs:
@@ -39,6 +40,6 @@ jobs:
         run: |
           supabase db start
 
-      - name: Run Supabase Tests
+      - name: Export public database schema into database/studyu-schema.sql
         run: |
-          supabase test db
+            supabase db dump --local --keep-comments --schema public --file database/studyu-schema.sql
