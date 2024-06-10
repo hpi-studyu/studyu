@@ -66,6 +66,14 @@ CREATE TYPE public.result_sharing AS ENUM (
 
 ALTER TYPE public.result_sharing OWNER TO postgres;
 
+CREATE TYPE public.study_status AS ENUM (
+    'draft',
+    'running',
+    'closed'
+);
+
+ALTER TYPE public.study_status OWNER TO postgres;
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -82,6 +90,7 @@ CREATE TABLE public.study (
     icon_name text NOT NULL,
     -- published is deprecated, use status instead
     published boolean DEFAULT false NOT NULL,
+    status public.study_status DEFAULT 'draft'::public.study_status NOT NULL,
     registry_published boolean DEFAULT false NOT NULL,
     questionnaire jsonb NOT NULL,
     eligibility_criteria jsonb NOT NULL,
@@ -486,6 +495,78 @@ $$;
 
 ALTER FUNCTION public.user_email(user_id uuid) OWNER TO postgres;
 
+
+CREATE OR REPLACE FUNCTION public.allow_updating_only_study()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+  whitelist TEXT[] := TG_ARGV::TEXT[];
+  schema_table TEXT;
+  column_name TEXT;
+  rec RECORD;
+  new_value TEXT;
+  old_value TEXT;
+BEGIN
+
+  -- The user 'postgres' should be able to update any record, e.g. when using Supabase Studio
+  IF CURRENT_USER = 'postgres' THEN
+    RETURN NEW;
+  END IF;
+
+  -- In draft status allow update of all columns
+  IF OLD.status = 'draft'::public.study_status THEN
+    RETURN NEW;
+  END IF;
+
+  -- Only allow status to be updated from draft to running and from running to closed
+  IF OLD.status != NEW.status THEN
+    IF NOT (
+        (OLD.status = 'draft'::public.study_status AND NEW.status = 'running'::public.study_status)
+        OR (OLD.status = 'running'::public.study_status AND NEW.status = 'closed'::public.study_status)
+    ) THEN
+      RAISE EXCEPTION 'Invalid status transition';
+    END IF;
+  END IF;
+
+  schema_table := concat(TG_TABLE_SCHEMA, '.', TG_TABLE_NAME);
+
+  -- If RLS is not active on current table for function invoker, early return
+  IF NOT row_security_active(schema_table) THEN
+    RETURN NEW;
+  END IF;
+
+  -- Otherwise, loop on all columns of the table schema
+  FOR rec IN (
+    SELECT col.column_name
+    FROM information_schema.columns as col
+    WHERE table_schema = TG_TABLE_SCHEMA
+    AND table_name = TG_TABLE_NAME
+  ) LOOP
+    -- If the current column is whitelisted, early continue
+    column_name := rec.column_name;
+    IF column_name = ANY(whitelist) THEN
+      CONTINUE;
+    END IF;
+
+    -- If not whitelisted, execute dynamic SQL to get column value from OLD and NEW records
+    EXECUTE format('SELECT ($1).%I, ($2).%I', column_name, column_name)
+    INTO new_value, old_value
+    USING NEW, OLD;
+
+    -- Raise exception if column value changed
+    IF new_value IS DISTINCT FROM old_value THEN
+      RAISE EXCEPTION 'Unauthorized change to "%"', column_name;
+    END IF;
+  END LOOP;
+
+  -- RLS active, but no exception encountered, clear to proceed.
+  RETURN NEW;
+END;
+$function$;
+
+ALTER FUNCTION public.allow_updating_only_study() OWNER TO postgres;
+
 --
 -- Name: app_config; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -686,6 +767,12 @@ CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXEC
 
 CREATE TRIGGER handle_updated_at BEFORE UPDATE ON public.study FOR EACH ROW EXECUTE FUNCTION extensions.moddatetime('updated_at');
 
+-- Only allow updating status, registry_published and result_sharing of the study table when in draft mode
+CREATE OR REPLACE TRIGGER study_status_update_permissions
+  BEFORE UPDATE
+  ON public.study
+  FOR EACH ROW
+  EXECUTE FUNCTION public.allow_updating_only_study('updated_at', 'status', 'registry_published', 'result_sharing');
 
 --
 -- Name: subject_progress participant_progress_subjectId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
@@ -780,6 +867,8 @@ CREATE POLICY "Study creators can do everything with repos from their studies" O
 
 CREATE POLICY "Study subjects can view their joined study" ON public.study FOR SELECT USING (public.is_study_subject_of(auth.uid(), id));
 
+
+CREATE POLICY "Editors can view their studies" ON public.study FOR SELECT USING (auth.uid() = user_id);
 
 --
 -- Name: study Editors can do everything with their studies; Type: POLICY; Schema: public; Owner: postgres
@@ -876,6 +965,57 @@ USING (public.has_results_public(id));
 CREATE POLICY "Allow users to manage their own user" ON public."user" FOR ALL USING (auth.uid() = id);
 
 --
+-- Name: create blob storage bucket for observations; Type: value; Schema: storage; Owner: postgres
+--
+
+INSERT INTO storage.buckets (id, name) VALUES ('observations', 'observations');
+
+--
+-- Name: authenticated Users can view their uploaded data; Type: POLICY, Schema: storage
+--
+
+CREATE POLICY "Allow authenticated Users to view own observations" ON storage.objects FOR
+SELECT
+TO authenticated USING (((bucket_id = 'observations'::text) AND (owner = auth.uid())));
+
+--
+-- Name: authenticated Users can upload observations to storage; Type: POLICY, Schema: storage
+--
+
+CREATE POLICY "Allow authenticated Users to upload observations" ON storage.objects FOR
+INSERT
+TO authenticated WITH CHECK ((bucket_id = 'observations'::text));
+
+--
+-- Name: authenticated Users can delete own observations; Type: POLICY, Schema: storage
+--
+
+CREATE POLICY "Allow authenticated Users to delete own observations" ON storage.objects FOR
+DELETE
+TO authenticated USING (((bucket_id = 'observations'::text) AND (owner = auth.uid())));
+
+--
+-- Name: Researchers can view observations of studies which they created; Type: POLICY, Schema: storage
+--
+
+CREATE POLICY "Allow Researchers to view observations of own studies" ON storage.objects FOR
+SELECT
+TO public USING (((bucket_id = 'observations'::text) AND
+    (name ~~ ANY (SELECT ('%'::text || ((public.study.id)::text || '%'::text)) AS study_id
+    FROM public.study
+    WHERE ((public.study.user_id)::text = (auth.uid())::text)))));
+
+CREATE POLICY "Joining a closed study should not be possible" ON public.study_subject
+    AS RESTRICTIVE
+    FOR INSERT
+    WITH CHECK (NOT EXISTS (
+    SELECT 1
+    FROM public.study
+    WHERE study.id = study_subject.study_id
+      AND study.status = 'closed'::public.study_status
+));
+
+--
 -- Name: app_config; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
@@ -922,46 +1062,5 @@ ALTER TABLE public."user" ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER VIEW public.study_progress_export SET (security_invoker = on);
-
---
--- Name: create blob storage bucket for observations; Type: value; Schema: storage; Owner: postgres
---
-
-INSERT INTO storage.buckets (id, name) VALUES ('observations', 'observations');
-
---
--- Name: authenticated Users can view their uploaded data; Type: POLICY, Schema: storage
---
-
-CREATE POLICY "Allow authenticated Users to view own observations" ON storage.objects FOR
-SELECT
-TO authenticated USING (((bucket_id = 'observations'::text) AND (owner = auth.uid())));
-
---
--- Name: authenticated Users can upload observations to storage; Type: POLICY, Schema: storage
---
-
-CREATE POLICY "Allow authenticated Users to upload observations" ON storage.objects FOR
-INSERT
-TO authenticated WITH CHECK ((bucket_id = 'observations'::text));
-
---
--- Name: authenticated Users can delete own observations; Type: POLICY, Schema: storage
---
-
-CREATE POLICY "Allow authenticated Users to delete own observations" ON storage.objects FOR
-DELETE
-TO authenticated USING (((bucket_id = 'observations'::text) AND (owner = auth.uid())));
-
---
--- Name: Researchers can view observations of studies which they created; Type: POLICY, Schema: storage
---
-
-CREATE POLICY "Allow Researchers to view observations of own studies" ON storage.objects FOR
-SELECT
-TO public USING (((bucket_id = 'observations'::text) AND
-    (name ~~ ANY (SELECT ('%'::text || ((public.study.id)::text || '%'::text)) AS study_id
-    FROM public.study
-    WHERE ((public.study.user_id)::text = (auth.uid())::text)))));
 
 COMMIT;
