@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/domain/study_monitoring.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
+import 'package:studyu_designer_v2/localization/locale_providers.dart';
 
-class StudyMonitorTable extends StatelessWidget {
+class StudyMonitorTable extends ConsumerWidget {
+  final WidgetRef ref;
   final List<StudyMonitorItem> studyMonitorItems;
   final OnSelectHandler<StudyMonitorItem> onSelectItem;
 
-  const StudyMonitorTable({required this.studyMonitorItems, required this.onSelectItem, super.key});
+  const StudyMonitorTable({
+    required this.ref,
+    required this.studyMonitorItems,
+    required this.onSelectItem,
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return StandardTable<StudyMonitorItem>(
       items: studyMonitorItems,
       sortColumnPredicates: [
         (a, b) => a.participantId.compareTo(b.participantId),
-        (a, b) => a.inviteCode != null ? a.inviteCode!.compareTo(b.inviteCode!) : 0,
-        (a, b) => a.enrolledAt.compareTo(b.enrolledAt),
+        (a, b) =>
+            a.inviteCode != null ? a.inviteCode!.compareTo(b.inviteCode!) : 0,
+        (a, b) => a.startedAt.compareTo(b.startedAt),
         (a, b) => a.lastActivityAt.compareTo(b.lastActivityAt),
         (a, b) => a.currentDayOfStudy.compareTo(b.currentDayOfStudy),
         (a, b) => a.completedInterventions.compareTo(b.completedInterventions),
@@ -59,7 +67,7 @@ class StudyMonitorTable extends StatelessWidget {
         StandardTableColumn(
           sortable: true,
           label: tr.monitoring_table_column_completed_surveys,
-          columnWidth: const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.6)),
+          columnWidth: const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.7)),
         ),
       ],
       buildCellsAt: _buildRow,
@@ -71,7 +79,9 @@ class StudyMonitorTable extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildRow(BuildContext context, StudyMonitorItem item, int rowIdx, Set<MaterialState> states) {
+  List<Widget> _buildRow(BuildContext context, StudyMonitorItem item,
+      int rowIdx, Set<WidgetState> states) {
+    final languageCode = ref.watch(localeProvider).languageCode;
     return [
       Tooltip(
         message: item.participantId,
@@ -79,11 +89,12 @@ class StudyMonitorTable extends StatelessWidget {
       ),
       Text(item.inviteCode ?? "-"),
       Tooltip(
-        message: _formatTime(item.enrolledAt, true),
-        child: Text(item.enrolledAt.toTimeAgoString()),
+        message: item.startedAt
+            .toLocalizedString(locale: languageCode, showTime: false),
+        child: Text(item.startedAt.toTimeAgoString()),
       ),
       Tooltip(
-        message: _formatTime(item.lastActivityAt, true),
+        message: item.lastActivityAt.toLocalizedString(locale: languageCode),
         child: Row(
           children: [
             Flexible(child: Text(item.lastActivityAt.toTimeAgoString())),
@@ -93,7 +104,8 @@ class StudyMonitorTable extends StatelessWidget {
                   const SizedBox(width: 5.0),
                   Tooltip(
                     message: tr.monitoring_table_row_tooltip_dropout,
-                    child: const Icon(Icons.close, color: Colors.red, size: 16.0),
+                    child:
+                        const Icon(Icons.close, color: Colors.red, size: 16.0),
                   ),
                 ],
               ),
@@ -104,17 +116,6 @@ class StudyMonitorTable extends StatelessWidget {
       _buildProgressCell(context, item.completedInterventions, item.completedInterventions + item.missedInterventions),
       _buildProgressCell(context, item.completedSurveys, item.completedSurveys + item.missedSurveys),
     ];
-  }
-
-  String _formatTime(DateTime time, bool showTime) {
-    final localTime = time.toLocal();
-    final timeZoneOffsetInHours = localTime.timeZoneOffset.inHours;
-    final timeZoneString = timeZoneOffsetInHours >= 0 ? "GMT +$timeZoneOffsetInHours" : "GMT $timeZoneOffsetInHours";
-    final locale = tr.localeName == "de" ? "de_DE" : "en_US";
-    final formattedDate = DateFormat("MMM d, yyyy", locale);
-    if (!showTime) return formattedDate.format(localTime);
-    final formattedTime = DateFormat.jm(locale);
-    return "${formattedDate.format(localTime)}, ${formattedTime.format(localTime)} $timeZoneString";
   }
 
   Widget _buildProgressCell(BuildContext context, int progress, int total) {
