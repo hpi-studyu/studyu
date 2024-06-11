@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/constants.dart';
 
 class StudyMonitorData {
   /// Number of participants who are currently active in the study
@@ -163,16 +164,13 @@ extension StudyMonitoringX on Study {
       ));
     }
 
-    final now = DateTime.now();
-    final sevenDaysAgo = now.subtract(const Duration(days: 7)); //dropout time
-
     final activeParticipants = items.where((item) {
       return !item.droppedOut &&
           item.currentDayOfStudy < item.studyDurationInDays &&
-          item.lastActivityAt.isAfter(sevenDaysAgo);
+          item.lastActivityAt.isAfter(participantDropoutDuration);
     }).length;
     final dropoutParticipants = items.where((item) {
-      return item.droppedOut && item.lastActivityAt.isBefore(sevenDaysAgo);
+      return item.droppedOut && item.lastActivityAt.isBefore(participantDropoutDuration);
     }).length;
     final completedParticipants = items
         .where((item) => item.currentDayOfStudy >= item.studyDurationInDays)
