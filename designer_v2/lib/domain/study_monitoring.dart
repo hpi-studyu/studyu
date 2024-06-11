@@ -10,6 +10,7 @@ class StudyMonitorData {
 
   /// Number of participants who dropped out of the study before the study ended
   /// Hint: The is_deleted flag in the study_subject database table marks a participant as dropped out
+  /// Note: If the participant's last activity exceeds 7 days, they will also be counted as a dropout
   final int dropoutParticipants;
 
   /// Number of participants who completed the study
