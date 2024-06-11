@@ -878,10 +878,12 @@ CREATE POLICY "Editors can do everything with their studies" ON public.study USI
 
 
 --
--- Name: study Everybody can view (published and registry_published) studies; Type: POLICY; Schema: public; Owner: postgres
+-- Name: study Study visibility; Type: POLICY; Schema: public; Owner: postgres
 --
 
-CREATE POLICY "Everybody can view designated published studies" ON public.study FOR SELECT USING (((published = true) AND (registry_published = true OR participation = 'open'::public.participation OR result_sharing = 'public'::public.result_sharing)));
+CREATE POLICY "Study visibility" ON public.study FOR SELECT
+USING ((status = 'running'::public.study_status OR status = 'closed'::public.study_status)
+AND (registry_published = true OR participation = 'open'::public.participation OR result_sharing = 'public'::public.result_sharing));
 
 
 --

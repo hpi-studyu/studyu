@@ -21,6 +21,13 @@ END;
 -- Migrate policy
 --DROP POLICY "Editors can do everything with their studies" ON public.study;
 
+DROP POLICY "Everybody can view designated published studies" ON public.study;
+
+CREATE POLICY "Study visibility" ON public.study FOR SELECT
+USING ((status = 'running'::public.study_status OR status = 'closed'::public.study_status)
+AND (registry_published = true OR participation = 'open'::public.participation OR result_sharing = 'public'::public.result_sharing));
+-- todo should we allow draft studies in registry if they have been published?
+
 CREATE POLICY "Editors can view their studies" ON public.study FOR SELECT USING (auth.uid() = user_id);
 
 --CREATE POLICY "Editor can control their draft studies" ON public.study
