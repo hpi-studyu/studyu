@@ -304,7 +304,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     if (fetchOnSubscribe) {
       if (!(wrappedModel != null && wrappedModel.isLocalOnly)) {
         fetch(modelId).catchError((e) {
-          if (!modelController.closed) {
+          if (!modelController.isClosed) {
             modelController.addError(e);
           }
           return e;
