@@ -231,7 +231,7 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   static Future<ExtractionResult<Study>> publishedPublicStudies() async {
     ExtractionResult<Study> result;
     try {
-      final response = await env.client.from(tableName).select().eq('participation', 'open').eq("closed", false);
+      final response = await env.client.from(tableName).select().eq('participation', 'open').neq('status', StudyStatus.closed.name);
       final extracted = SupabaseQuery.extractSupabaseList<Study>(List<Map<String, dynamic>>.from(response));
       result = ExtractionSuccess<Study>(extracted);
     } on ExtractionFailedException<Study> catch (error) {
