@@ -116,17 +116,17 @@ class ParticipantDetailsView extends ConsumerWidget {
     for (final intervention in interventions) {
       for (final task in intervention.tasks) {
         if (missedTaskIds.contains(task.id)) {
-          sb.writeln('❌ ${intervention.name} - ${task.title}');
+          sb.writeln('\u{274C} ${intervention.name} - ${task.title}');
         } else if (completedTaskIds.contains(task.id)) {
-          sb.writeln('✅ ${intervention.name} - ${task.title}');
+          sb.writeln('\u{2705} ${intervention.name} - ${task.title}');
         }
       }
     }
     for (final observation in observations) {
       if (missedTaskIds.contains(observation.id)) {
-        sb.writeln('❌ ${observation.title}');
+        sb.writeln('\u{274C} ${observation.title}');
       } else if (completedTaskIds.contains(observation.id)) {
-        sb.writeln('✅ ${observation.title}');
+        sb.writeln('\u{2705} ${observation.title}');
       }
     }
     return sb.toString();
