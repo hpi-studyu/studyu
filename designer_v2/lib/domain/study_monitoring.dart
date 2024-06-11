@@ -30,7 +30,7 @@ class StudyMonitorData {
 class StudyMonitorItem extends Equatable {
   final String participantId;
   final String? inviteCode;
-  final DateTime enrolledAt;
+  final DateTime startedAt;
   final DateTime lastActivityAt;
   final int currentDayOfStudy;
   final int studyDurationInDays;
@@ -45,7 +45,7 @@ class StudyMonitorItem extends Equatable {
   StudyMonitorItem({
     required this.participantId,
     required this.inviteCode,
-    required this.enrolledAt,
+    required this.startedAt,
     required this.lastActivityAt,
     required this.currentDayOfStudy,
     required this.studyDurationInDays,
@@ -72,19 +72,28 @@ extension StudyMonitoringX on Study {
     final participants = this.participants ?? [];
     final participantsProgress = this.participantsProgress ?? [];
 
-    participants.sort((a, b) => a.startedAt!.compareTo(b.startedAt!)); // ascending
+    participants
+        .sort((a, b) => a.startedAt!.compareTo(b.startedAt!)); // ascending
 
     for (final participant in participants) {
-      final progresses = participantsProgress.where((progress) => progress.subjectId == participant.id).toList();
-      progresses.sort((b, a) => a.completedAt!.compareTo(b.completedAt!)); // descending
-      final interventionOrder = schedule.generateInterventionIdsInOrder(participant.selectedInterventionIds);
-      final lastActivityAt = progresses.isNotEmpty ? progresses.first.completedAt! : participant.startedAt!;
+      final progresses = participantsProgress
+          .where((progress) => progress.subjectId == participant.id)
+          .toList();
+      progresses.sort(
+          (b, a) => a.completedAt!.compareTo(b.completedAt!)); // descending
+      final interventionOrder = schedule
+          .generateInterventionIdsInOrder(participant.selectedInterventionIds);
+      final lastActivityAt = progresses.isNotEmpty
+          ? progresses.first.completedAt!
+          : participant.startedAt!;
       final studyDurationInDays = schedule.length;
-      final currentDayOfStudy =
-          min(studyDurationInDays, DateTime.now().toUtc().difference(participant.startedAt!).inDays);
-      final daysInBaseline = schedule.includeBaseline ? schedule.phaseDuration : 0;
+      final currentDayOfStudy = min(studyDurationInDays,
+          DateTime.now().toUtc().difference(participant.startedAt!).inDays);
+      final daysInBaseline =
+          schedule.includeBaseline ? schedule.phaseDuration : 0;
 
-      final Set<String> requiredSurveyTaskIds = observations.map((o) => o.id).toSet();
+      final Set<String> requiredSurveyTaskIds =
+          observations.map((o) => o.id).toSet();
 
       int completedInterventions = 0;
       int completedSurveys = 0;
@@ -94,29 +103,38 @@ extension StudyMonitoringX on Study {
       for (int day = 0; day < currentDayOfStudy; day++) {
         final Set<String> requiredInterventionTaskIds = {};
         if (day >= daysInBaseline) {
-          final interventionIdForThisPhase = interventionOrder[day ~/ schedule.phaseDuration];
-          final interventionForThisPhase = interventions.firstWhere((i) => i.id == interventionIdForThisPhase);
-          requiredInterventionTaskIds.addAll(interventionForThisPhase.tasks.map((t) => t.id));
+          final interventionIdForThisPhase =
+              interventionOrder[day ~/ schedule.phaseDuration];
+          final interventionForThisPhase = interventions
+              .firstWhere((i) => i.id == interventionIdForThisPhase);
+          requiredInterventionTaskIds
+              .addAll(interventionForThisPhase.tasks.map((t) => t.id));
         }
 
-        final requiredTaskIds = requiredInterventionTaskIds.union(requiredSurveyTaskIds);
+        final requiredTaskIds =
+            requiredInterventionTaskIds.union(requiredSurveyTaskIds);
 
         final completedTaskIds = progresses
             .where((p) =>
-                p.completedAt!.isAfter(participant.startedAt!.add(Duration(days: day))) &&
-                p.completedAt!.isBefore(participant.startedAt!.add(Duration(days: day + 1))))
+                p.completedAt!
+                    .isAfter(participant.startedAt!.add(Duration(days: day))) &&
+                p.completedAt!.isBefore(
+                    participant.startedAt!.add(Duration(days: day + 1))))
             .map((p) => p.taskId)
             .toSet();
 
         final missedTaskIds = requiredTaskIds.difference(completedTaskIds);
         missedTasksPerDay.add(missedTaskIds);
 
-        final completedTaskIdsPerDay = requiredTaskIds.intersection(completedTaskIds);
+        final completedTaskIdsPerDay =
+            requiredTaskIds.intersection(completedTaskIds);
         completedTasksPerDay.add(completedTaskIdsPerDay);
 
-        final completedSurveysSet = requiredSurveyTaskIds.intersection(completedTaskIds);
+        final completedSurveysSet =
+            requiredSurveyTaskIds.intersection(completedTaskIds);
         final completedIntervention = requiredInterventionTaskIds.isNotEmpty &&
-            requiredInterventionTaskIds.intersection(completedTaskIds).length == requiredInterventionTaskIds.length;
+            requiredInterventionTaskIds.intersection(completedTaskIds).length ==
+                requiredInterventionTaskIds.length;
         completedSurveys += completedSurveysSet.length;
         completedInterventions += completedIntervention ? 1 : 0;
       }
@@ -130,7 +148,7 @@ extension StudyMonitoringX on Study {
       items.add(StudyMonitorItem(
         participantId: participant.id,
         inviteCode: participant.inviteCode,
-        enrolledAt: participant.startedAt!,
+        startedAt: participant.startedAt!,
         lastActivityAt: lastActivityAt,
         currentDayOfStudy: currentDayOfStudy,
         studyDurationInDays: studyDurationInDays,
@@ -155,9 +173,12 @@ extension StudyMonitoringX on Study {
     final dropoutParticipants = items.where((item) {
       return item.droppedOut && item.lastActivityAt.isBefore(sevenDaysAgo);
     }).length;
-    final completedParticipants = items.where((item) => item.currentDayOfStudy >= item.studyDurationInDays).length;
+    final completedParticipants = items
+        .where((item) => item.currentDayOfStudy >= item.studyDurationInDays)
+        .length;
 
-    assert(activeParticipants + dropoutParticipants + completedParticipants == items.length);
+    assert(activeParticipants + dropoutParticipants + completedParticipants ==
+        items.length);
 
     return StudyMonitorData(
       activeParticipants: activeParticipants,

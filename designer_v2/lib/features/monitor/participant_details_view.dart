@@ -1,20 +1,26 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study_monitoring.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/locale_providers.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
 
-class ParticipantDetailsView extends StatelessWidget {
+class ParticipantDetailsView extends ConsumerWidget {
   const ParticipantDetailsView(
-      {required this.monitorItem, required this.interventions, required this.observations, super.key});
+      {required this.monitorItem,
+      required this.interventions,
+      required this.observations,
+      super.key});
 
   final StudyMonitorItem monitorItem;
   final List<Intervention> interventions;
   final List<Observation> observations;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final languageCode = ref.watch(localeProvider).languageCode;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -23,7 +29,7 @@ class ParticipantDetailsView extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8.0),
-        _buildParticipantInfo(context),
+        _buildParticipantInfo(languageCode),
         const SizedBox(height: 8.0),
         const Divider(),
         Text(
@@ -31,26 +37,29 @@ class ParticipantDetailsView extends StatelessWidget {
           style: const TextStyle(fontSize: 16.0, color: Colors.black54),
         ),
         const SizedBox(height: 16.0),
-        _buildPerDayStatus(context),
+        _buildPerDayStatus(),
         const SizedBox(height: 16.0),
         _buildColorLegend(),
       ],
     );
   }
 
-  Widget _buildParticipantInfo(BuildContext context) {
+  Widget _buildParticipantInfo(String languageCode) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildInfoRow(tr.monitoring_table_column_participant_id, monitorItem.participantId),
-        _buildInfoRow(tr.monitoring_table_column_invite_code, monitorItem.inviteCode ?? '-'),
+        _buildInfoRow(tr.monitoring_table_column_participant_id,
+            monitorItem.participantId),
+        _buildInfoRow(tr.monitoring_table_column_invite_code,
+            monitorItem.inviteCode ?? '-'),
         _buildInfoRow(
           tr.monitoring_table_column_enrolled,
-          _formatTime(monitorItem.enrolledAt, true),
+          monitorItem.startedAt
+              .toLocalizedString(locale: languageCode, showTime: false),
         ),
         _buildInfoRow(
           tr.monitoring_table_column_last_activity,
-          _formatTime(monitorItem.enrolledAt, true),
+          monitorItem.lastActivityAt.toLocalizedString(locale: languageCode),
         ),
       ],
     );
@@ -68,12 +77,14 @@ class ParticipantDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildPerDayStatus(BuildContext context) {
-    assert(monitorItem.missedTasksPerDay.length == monitorItem.completedTasksPerDay.length);
+  Widget _buildPerDayStatus() {
+    assert(monitorItem.missedTasksPerDay.length ==
+        monitorItem.completedTasksPerDay.length);
     return Wrap(
       children: monitorItem.missedTasksPerDay
           .mapIndexed((index, missed) => Tooltip(
-                message: _getTooltipText(missed, monitorItem.completedTasksPerDay[index]),
+                message: _getTooltipText(
+                    missed, monitorItem.completedTasksPerDay[index]),
                 child: Container(
                   height: 50,
                   width: 50,
@@ -81,13 +92,16 @@ class ParticipantDetailsView extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: missed.isEmpty
                         ? Colors.green
-                        : (monitorItem.completedTasksPerDay[index].isEmpty ? Colors.red : Colors.orange),
+                        : (monitorItem.completedTasksPerDay[index].isEmpty
+                            ? Colors.red
+                            : Colors.orange),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Center(
                     child: Text(
                       (index + 1).toString(),
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -96,7 +110,8 @@ class ParticipantDetailsView extends StatelessWidget {
     );
   }
 
-  String _getTooltipText(Set<String> missedTaskIds, Set<String> completedTaskIds) {
+  String _getTooltipText(
+      Set<String> missedTaskIds, Set<String> completedTaskIds) {
     final sb = StringBuffer();
     for (final intervention in interventions) {
       for (final task in intervention.tasks) {
@@ -128,11 +143,14 @@ class ParticipantDetailsView extends StatelessWidget {
         const SizedBox(height: 8.0),
         Row(
           children: [
-            _buildLegendItem(Colors.green, tr.participant_details_color_legend_completed),
+            _buildLegendItem(
+                Colors.green, tr.participant_details_color_legend_completed),
             const SizedBox(width: 16.0),
-            _buildLegendItem(Colors.orange, tr.participant_details_color_legend_partially_completed),
+            _buildLegendItem(Colors.orange,
+                tr.participant_details_color_legend_partially_completed),
             const SizedBox(width: 16.0),
-            _buildLegendItem(Colors.red, tr.participant_details_color_legend_missed),
+            _buildLegendItem(
+                Colors.red, tr.participant_details_color_legend_missed),
           ],
         ),
       ],
@@ -154,16 +172,5 @@ class ParticipantDetailsView extends StatelessWidget {
         Text(text),
       ],
     );
-  }
-
-  String _formatTime(DateTime time, bool showTime) {
-    final localTime = time.toLocal();
-    final timeZoneOffsetInHours = localTime.timeZoneOffset.inHours;
-    final timeZoneString = timeZoneOffsetInHours >= 0 ? "GMT +$timeZoneOffsetInHours" : "GMT $timeZoneOffsetInHours";
-    final locale = tr.localeName == "de" ? "de_DE" : "en_US";
-    final formattedDate = DateFormat("MMM d, yyyy", locale);
-    if (!showTime) return formattedDate.format(localTime);
-    final formattedTime = DateFormat.jm(locale);
-    return "${formattedDate.format(localTime)}, ${formattedTime.format(localTime)} $timeZoneString";
   }
 }

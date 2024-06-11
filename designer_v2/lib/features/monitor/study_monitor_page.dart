@@ -31,6 +31,7 @@ class StudyMonitorScreen extends StudyPageWidget {
               const SizedBox(height: 40.0), // spacing between body elements
               studyMonitorData.items.isNotEmpty
                   ? StudyMonitorTable(
+                      ref: ref,
                       studyMonitorItems: studyMonitorData.items,
                       onSelectItem: (item) => _onSelectParticipant(context, ref, item, study),
                     )
