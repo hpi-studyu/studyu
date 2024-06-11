@@ -26,6 +26,7 @@ abstract class IStudyAppBarViewModel implements IStudyStatusBadgeViewModel, IStu
   bool get isSyncIndicatorVisible;
   bool get isStatusBadgeVisible;
   bool get isPublishVisible;
+  bool get isClosedVisible;
 }
 
 /// Custom scaffold shared between all pages for an individual [Study]
@@ -237,7 +238,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
       actionButtons.add(const SizedBox(width: 12.0)); // padding
     }
 
-    if (state.isPublished) {
+    if (state.isClosedVisible) {
       final formViewModel = ref.watch(studyPublishValidatorProvider(widget.studyId));
       final closeButton = ReactiveForm(
         formGroup: formViewModel.form,

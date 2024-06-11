@@ -70,6 +70,9 @@ class StudyControllerState extends StudyControllerBaseState implements IStudyApp
   bool get isPublishVisible => studyWithMetadata?.model.status == StudyStatus.draft;
 
   @override
+  bool get isClosedVisible => studyWithMetadata?.model.status == StudyStatus.running && studyWithMetadata!.model.canEdit(super.currentUser);
+
+  @override
   StudyStatus? get studyStatus => study.value?.status;
 
   @override
