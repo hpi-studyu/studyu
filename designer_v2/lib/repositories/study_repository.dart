@@ -175,7 +175,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         },
         isAvailable: model.canExport(currentUser),
       ),
-      ModelAction.addSeparator(),
+      if (model.canDelete(currentUser)) ModelAction.addSeparator(),
       ModelAction(
         type: StudyActionType.delete,
         label: StudyActionType.delete.string,
