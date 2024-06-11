@@ -78,7 +78,7 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
     'user_id',
     'participation',
     'result_sharing',
-    'published',
+    'status',
     'registry_published',
     'study_participant_count',
     'study_ended_count',
