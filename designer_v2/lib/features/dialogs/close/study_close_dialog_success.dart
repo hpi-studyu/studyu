@@ -24,7 +24,7 @@ class CloseSuccessDialog extends StudyPageWidget {
                   fontSize: (theme.textTheme.displayLarge?.fontSize ?? 48.0) * 1.5,
                 )),
             title: tr.notification_study_closed,
-            description: '',
+            description: tr.notification_study_closed_description,
           ),
           const SizedBox(height: 8.0),
         ],
