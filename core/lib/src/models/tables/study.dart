@@ -50,25 +50,33 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   Participation participation = Participation.invite;
   @JsonKey(name: 'result_sharing')
   ResultSharing resultSharing = ResultSharing.private;
+  @JsonKey(fromJson: _contactFromJson)
   late Contact contact = Contact();
-  @JsonKey(name: 'icon_name')
+  @JsonKey(name: 'icon_name', defaultValue: 'accountHeart')
   late String iconName = 'accountHeart';
+  @JsonKey(defaultValue: false)
   late bool published = false;
   @JsonKey(name: 'is_closed', defaultValue: false)
   bool isClosed = false;
+  @JsonKey(fromJson: _questionnaireFromJson)
   late StudyUQuestionnaire questionnaire = StudyUQuestionnaire();
-  @JsonKey(name: 'eligibility_criteria')
+  @JsonKey(name: 'eligibility_criteria', fromJson: _eligibilityCriteriaFromJson)
   late List<EligibilityCriterion> eligibilityCriteria = [];
+  @JsonKey(defaultValue: [])
   late List<ConsentItem> consent = [];
+  @JsonKey(defaultValue: [])
   late List<Intervention> interventions = [];
+  @JsonKey(defaultValue: [])
   late List<Observation> observations = [];
+  @JsonKey(fromJson: _studyScheduleFromJson)
   late StudySchedule schedule = StudySchedule();
-  @JsonKey(name: 'report_specification')
+  @JsonKey(name: 'report_specification', fromJson: _reportSpecificationFromJson)
   late ReportSpecification reportSpecification = ReportSpecification();
+  @JsonKey(defaultValue: [])
   late List<StudyResult> results = [];
-  @JsonKey(name: 'collaborator_emails')
+  @JsonKey(name: 'collaborator_emails', defaultValue: [])
   late List<String> collaboratorEmails = [];
-  @JsonKey(name: 'registry_published')
+  @JsonKey(name: 'registry_published', defaultValue: false)
   late bool registryPublished = false;
 
   @JsonKey(includeToJson: false, includeFromJson: false)
@@ -98,6 +106,41 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
   Study(this.id, this.userId);
 
   Study.withId(this.userId) : id = const Uuid().v4();
+
+  static List<EligibilityCriterion> _eligibilityCriteriaFromJson(dynamic json) {
+    if (json == null) {
+      return [];
+    }
+    return (json as List).map((e) => EligibilityCriterion.fromJson(e as Map<String, dynamic>)).toList();
+  }
+
+  static Contact _contactFromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      return Contact.fromJson(json);
+    }
+    return Contact();
+  }
+
+  static StudySchedule _studyScheduleFromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      return StudySchedule.fromJson(json);
+    }
+    return StudySchedule();
+  }
+
+  static StudyUQuestionnaire _questionnaireFromJson(dynamic json) {
+    if (json is List<dynamic>) {
+      return StudyUQuestionnaire.fromJson(json);
+    }
+    return StudyUQuestionnaire();
+  }
+
+  static ReportSpecification _reportSpecificationFromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      return ReportSpecification.fromJson(json);
+    }
+    return ReportSpecification();
+  }
 
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
@@ -167,6 +210,22 @@ class Study extends SupabaseObjectFunctions<Study> implements Comparable<Study> 
           'study_missed_days',
         ],
       );
+
+  /*static Future<List<Study>> getDashboardDisplayStudies() async => SupabaseQuery.getAll<Study>(
+    selectedColumns: [
+      'id',
+      'title',
+      'description',
+      'user_id',
+      'participation',
+      'result_sharing',
+      'published',
+      'registry_published',
+      'study_participant_count',
+      'study_ended_count',
+      'active_subject_count',
+    ],
+  );*/
 
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
   static Future<ExtractionResult<Study>> publishedPublicStudies() async {
