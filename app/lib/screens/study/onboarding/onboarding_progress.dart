@@ -4,8 +4,11 @@ class OnboardingProgress extends StatelessWidget {
   final int stage;
   final double progress;
 
-  const OnboardingProgress(
-      {required this.stage, required this.progress, super.key,});
+  const OnboardingProgress({
+    required this.stage,
+    required this.progress,
+    super.key,
+  });
 
   double _getProgressForStage(int stage) {
     if (stage < this.stage) return 1;

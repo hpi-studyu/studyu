@@ -48,18 +48,23 @@ class AppAnalytics /*extends Analytics*/ {
       runApp(myApp);
       return;
     }
-    await SentryFlutter.init((options) {
-      options.dsn = studyUAnalytics!.dsn;
-      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-      // We recommend adjusting this value in production.
-      options.tracesSampleRate = studyUAnalytics.samplingRate ?? 1.0;
-      options.addIntegration(LoggingIntegration());
-    }, appRunner: () => runApp(myApp),);
-    Cache.storeAnalytics(StudyUAnalytics(
-      studyUAnalytics.enabled,
-      studyUAnalytics.dsn,
-      studyUAnalytics.samplingRate,
-    ),);
+    await SentryFlutter.init(
+      (options) {
+        options.dsn = studyUAnalytics!.dsn;
+        // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+        // We recommend adjusting this value in production.
+        options.tracesSampleRate = studyUAnalytics.samplingRate ?? 1.0;
+        options.addIntegration(LoggingIntegration());
+      },
+      appRunner: () => runApp(myApp),
+    );
+    Cache.storeAnalytics(
+      StudyUAnalytics(
+        studyUAnalytics.enabled,
+        studyUAnalytics.dsn,
+        studyUAnalytics.samplingRate,
+      ),
+    );
   }
 
   static bool? get isUserEnabled {
@@ -90,9 +95,11 @@ class AppAnalytics /*extends Analytics*/ {
 
   void initAdvanced() {
     Sentry.configureScope((scope) {
-      scope.setUser(SentryUser(
-        id: subject!.userId,
-      ),);
+      scope.setUser(
+        SentryUser(
+          id: subject!.userId,
+        ),
+      );
       final advancedContext = {
         'subjectId': subject!.id,
         'studyId': state.selectedStudy!.id,

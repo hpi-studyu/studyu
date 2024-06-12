@@ -5,10 +5,14 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 Future<String?> savePDF(
-    BuildContext context, String title, List<pw.Widget> content,) async {
+  BuildContext context,
+  String title,
+  List<pw.Widget> content,
+) async {
   final doc = pw.Document();
   final logo = pw.MemoryImage(
-      (await rootBundle.load('assets/icon/logo.png')).buffer.asUint8List(),);
+    (await rootBundle.load('assets/icon/logo.png')).buffer.asUint8List(),
+  );
   doc.addPage(
     pw.MultiPage(
       pageFormat: PdfPageFormat.a4,

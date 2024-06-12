@@ -23,8 +23,9 @@ class PerformanceSection extends GenericSection {
       final countableInterventions =
           getCountableObservationAmount(intervention);
       return min<double>(
-          countableInterventions == 0 ? 0 : countableInterventions / maximum,
-          1,);
+        countableInterventions == 0 ? 0 : countableInterventions / maximum,
+        1,
+      );
     }).toList();
     return interventions.length != 2 ||
             subject!.study.reportSpecification.primary == null
@@ -69,7 +70,9 @@ class PerformanceSection extends GenericSection {
   }
 
   String getPowerLevelDescription(
-      BuildContext context, List<num> interventionProgress,) {
+    BuildContext context,
+    List<num> interventionProgress,
+  ) {
     if (interventionProgress.any((progress) => progress < minimumRatio)) {
       return AppLocalizations.of(context)!.not_enough_data;
     } else if (interventionProgress.any((progress) => progress < 1)) {
@@ -91,13 +94,18 @@ class PerformanceSection extends GenericSection {
         .values
         .forEach((progress) {
       if (progress
-              .where((result) => intervention.tasks.any(
-                  (interventionTask) => interventionTask.id == result.taskId,),)
+              .where(
+                (result) => intervention.tasks.any(
+                  (interventionTask) => interventionTask.id == result.taskId,
+                ),
+              )
               .length ==
           interventionsPerDay) {
         countable += progress
-            .where((result) => subject!.study.observations
-                .any((observation) => observation.id == result.taskId),)
+            .where(
+              (result) => subject!.study.observations
+                  .any((observation) => observation.id == result.taskId),
+            )
             .length;
       }
     });
@@ -137,9 +145,10 @@ class PerformanceBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rainbow = Rainbow(
-        spectrum: [Colors.red, Colors.yellow, Colors.green],
-        rangeStart: 0,
-        rangeEnd: 1,);
+      spectrum: [Colors.red, Colors.yellow, Colors.green],
+      rangeStart: 0,
+      rangeEnd: 1,
+    );
     final fullSpectrum = List<double>.generate(3, (index) => index * 0.5)
         .map<Color>((index) => rainbow[index].withOpacity(0.4))
         .toList();

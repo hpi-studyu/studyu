@@ -8,11 +8,15 @@ Widget interventionIcon(Intervention intervention, {Color? color}) {
   }
 
   return intervention.icon.isNotEmpty
-      ? Icon(MdiIcons.fromString(intervention.icon),
-          color: color ?? Colors.white,)
+      ? Icon(
+          MdiIcons.fromString(intervention.icon),
+          color: color ?? Colors.white,
+        )
       : Text(
           intervention.name![0].toUpperCase(),
           style: TextStyle(
-              fontWeight: FontWeight.bold, color: color ?? Colors.white,),
+            fontWeight: FontWeight.bold,
+            color: color ?? Colors.white,
+          ),
         );
 }

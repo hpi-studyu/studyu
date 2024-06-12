@@ -11,8 +11,12 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class MyApp extends StatefulWidget {
-  const MyApp(this.queryParameters, this.appConfig,
-      {super.key, required this.initialRoute,});
+  const MyApp(
+    this.queryParameters,
+    this.appConfig, {
+    super.key,
+    required this.initialRoute,
+  });
   final Map<String, String> queryParameters;
   final AppConfig? appConfig;
   final String initialRoute;
@@ -32,8 +36,8 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AppLanguage>(
-            create: (context) =>
-                AppLanguage(AppLocalizations.supportedLocales),),
+          create: (context) => AppLanguage(AppLocalizations.supportedLocales),
+        ),
         ChangeNotifierProvider<AppState>(create: (context) => AppState()),
       ],
       child: Consumer<AppLanguage>(

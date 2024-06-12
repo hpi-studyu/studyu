@@ -175,7 +175,8 @@ class InterventionSegment extends StatelessWidget {
             elevation: 0,
             fillColor: color,
             shape: const CircleBorder(
-                side: BorderSide(color: Colors.white, width: 2),),
+              side: BorderSide(color: Colors.white, width: 2),
+            ),
             child: interventionIcon(intervention),
           ),
         ],
@@ -185,7 +186,9 @@ class InterventionSegment extends StatelessWidget {
 }
 
 Iterable<T> intersperseIndexed<T>(
-    T Function(int) generator, Iterable<T> iterable,) sync* {
+  T Function(int) generator,
+  Iterable<T> iterable,
+) sync* {
   final iterator = iterable.iterator;
   var index = 0;
   if (iterator.moveNext()) {

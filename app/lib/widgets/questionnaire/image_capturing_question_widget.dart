@@ -12,8 +12,11 @@ class ImageCapturingQuestionWidget extends QuestionWidget {
   final ImageCapturingQuestion question;
   final Function(Answer<FutureBlobFile>)? onDone;
 
-  const ImageCapturingQuestionWidget(
-      {super.key, required this.question, this.onDone,});
+  const ImageCapturingQuestionWidget({
+    super.key,
+    required this.question,
+    this.onDone,
+  });
 
   @override
   State<ImageCapturingQuestionWidget> createState() =>
@@ -37,7 +40,8 @@ class _ImageCapturingQuestionWidgetState
       style: OutlinedButton.styleFrom(
         foregroundColor: theme.colorScheme.primary,
         side: BorderSide(
-            color: _hasCaptured ? Colors.black38 : theme.colorScheme.primary,),
+          color: _hasCaptured ? Colors.black38 : theme.colorScheme.primary,
+        ),
       ),
       onPressed: !_hasCaptured
           ? () async {
@@ -74,20 +78,25 @@ class _ImageCapturingQuestionWidgetState
 
   Future<void> _captureImage() async {
     if (kIsWeb) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!.multimodal_not_supported),
-      ),);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.multimodal_not_supported),
+        ),
+      );
       return;
     }
     final appState = context.read<AppState>();
-    final FutureBlobFile? imageFile = await Navigator.push(context, MaterialPageRoute(
-      builder: (context) {
-        return CapturePictureScreen(
-          studyId: appState.activeSubject!.studyId,
-          userId: appState.activeSubject!.userId,
-        );
-      },
-    ),);
+    final FutureBlobFile? imageFile = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return CapturePictureScreen(
+            studyId: appState.activeSubject!.studyId,
+            userId: appState.activeSubject!.userId,
+          );
+        },
+      ),
+    );
     if (imageFile != null) {
       setState(() {
         _hasCaptured = true;

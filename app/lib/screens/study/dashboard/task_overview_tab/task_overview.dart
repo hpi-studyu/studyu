@@ -13,11 +13,12 @@ class TaskOverview extends StatefulWidget {
   final List<TaskInstance>? scheduleToday;
   final String? interventionIcon;
 
-  const TaskOverview(
-      {required this.subject,
-      required this.scheduleToday,
-      super.key,
-      this.interventionIcon,});
+  const TaskOverview({
+    required this.subject,
+    required this.scheduleToday,
+    super.key,
+    this.interventionIcon,
+  });
 
   @override
   State<TaskOverview> createState() => _TaskOverviewState();
@@ -28,7 +29,10 @@ class _TaskOverviewState extends State<TaskOverview> {
     if (widget.subject!.completedStudy) {
       // Workaround to reload dashboard
       Navigator.pushNamedAndRemoveUntil(
-          context, Routes.dashboard, (_) => false,);
+        context,
+        Routes.dashboard,
+        (_) => false,
+      );
     }
   }
 
@@ -85,9 +89,11 @@ class _TaskOverviewState extends State<TaskOverview> {
               Row(
                 children: [
                   Expanded(
-                      child: Text(
-                          AppLocalizations.of(context)!.intervention_current,
-                          style: theme.textTheme.titleLarge,),),
+                    child: Text(
+                      AppLocalizations.of(context)!.intervention_current,
+                      style: theme.textTheme.titleLarge,
+                    ),
+                  ),
                   const Spacer(),
                   Text(
                     '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',
@@ -97,11 +103,14 @@ class _TaskOverviewState extends State<TaskOverview> {
               ),
               const SizedBox(height: 8),
               InterventionCardTitle(
-                  intervention:
-                      widget.subject!.getInterventionForDate(DateTime.now()),),
+                intervention:
+                    widget.subject!.getInterventionForDate(DateTime.now()),
+              ),
               const SizedBox(height: 8),
-              Text(AppLocalizations.of(context)!.today_tasks,
-                  style: theme.textTheme.titleLarge,),
+              Text(
+                AppLocalizations.of(context)!.today_tasks,
+                style: theme.textTheme.titleLarge,
+              ),
             ],
           ),
         ),

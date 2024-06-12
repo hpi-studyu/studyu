@@ -10,8 +10,11 @@ class CapturePictureScreen extends StatefulWidget {
   final String userId;
   final String studyId;
 
-  const CapturePictureScreen(
-      {super.key, required this.userId, required this.studyId,});
+  const CapturePictureScreen({
+    super.key,
+    required this.userId,
+    required this.studyId,
+  });
 
   @override
   State<CapturePictureScreen> createState() => _CapturePictureScreenState();
@@ -103,9 +106,11 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
 
   Future<List<CameraDescription>> _getAvailableCameras() async {
     return (await availableCameras())
-        .where((CameraDescription aCameraDescription) =>
-            aCameraDescription.lensDirection == CameraLensDirection.back ||
-            aCameraDescription.lensDirection == CameraLensDirection.front,)
+        .where(
+          (CameraDescription aCameraDescription) =>
+              aCameraDescription.lensDirection == CameraLensDirection.back ||
+              aCameraDescription.lensDirection == CameraLensDirection.front,
+        )
         .toList();
   }
 
@@ -157,59 +162,64 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
   Widget build(BuildContext context) {
     final cameraController = _cameraController;
     return Scaffold(
-        appBar: AppBar(title: Text(AppLocalizations.of(context)!.take_a_photo)),
-        body: cameraController == null
-            ? const Center(child: CircularProgressIndicator())
-            : Stack(
-                children: [
-                  CameraPreview(cameraController),
-                  if (_isTakingPicture) Container(
-                          color: Colors.black.withOpacity(0.5),
-                          alignment: Alignment.center,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).dialogBackgroundColor,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const CircularProgressIndicator(),
-                                const SizedBox(height: 16),
-                                Text(
-                                    AppLocalizations.of(context)!.take_a_photo,),
-                              ],
-                            ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.take_a_photo)),
+      body: cameraController == null
+          ? const Center(child: CircularProgressIndicator())
+          : Stack(
+              children: [
+                CameraPreview(cameraController),
+                if (_isTakingPicture)
+                  Container(
+                    color: Colors.black.withOpacity(0.5),
+                    alignment: Alignment.center,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).dialogBackgroundColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const CircularProgressIndicator(),
+                          const SizedBox(height: 16),
+                          Text(
+                            AppLocalizations.of(context)!.take_a_photo,
                           ),
-                        ) else const SizedBox.shrink(),
-                ],
-              ),
-        floatingActionButton: Wrap(
-          children: [
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: FloatingActionButton(
-                heroTag: "captureImage",
-                onPressed: cameraController != null && !_isTakingPicture
-                    ? () async {
-                        await _tryCapturePicture();
-                      }
-                    : null,
-                child: const Icon(Icons.camera_alt),
-              ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  const SizedBox.shrink(),
+              ],
             ),
-            Container(
-              margin: const EdgeInsets.all(10),
-              child: FloatingActionButton(
-                heroTag: "jumpToNextCamera",
-                onPressed: cameraController != null && !_isTakingPicture
-                    ? () async => await _jumpToNextCamera()
-                    : null,
-                child: const Icon(Icons.autorenew),
-              ),
+      floatingActionButton: Wrap(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: FloatingActionButton(
+              heroTag: "captureImage",
+              onPressed: cameraController != null && !_isTakingPicture
+                  ? () async {
+                      await _tryCapturePicture();
+                    }
+                  : null,
+              child: const Icon(Icons.camera_alt),
             ),
-          ],
-        ),);
+          ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: FloatingActionButton(
+              heroTag: "jumpToNextCamera",
+              onPressed: cameraController != null && !_isTakingPicture
+                  ? () async => await _jumpToNextCamera()
+                  : null,
+              child: const Icon(Icons.autorenew),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

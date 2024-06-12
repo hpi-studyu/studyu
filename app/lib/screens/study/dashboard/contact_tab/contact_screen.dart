@@ -69,12 +69,13 @@ class ContactWidget extends StatelessWidget {
   final String? subtitle;
   final Color color;
 
-  const ContactWidget(
-      {required this.contact,
-      required this.title,
-      required this.color,
-      this.subtitle,
-      super.key,});
+  const ContactWidget({
+    required this.contact,
+    required this.title,
+    required this.color,
+    this.subtitle,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +88,12 @@ class ContactWidget extends StatelessWidget {
       Text(title, style: theme.textTheme.titleLarge!.copyWith(color: color)),
     ];
     if (subtitle != null && subtitle!.isNotEmpty) {
-      titles.add(Text(subtitle!,
-          style: theme.textTheme.titleMedium!.copyWith(fontSize: 14),),);
+      titles.add(
+        Text(
+          subtitle!,
+          style: theme.textTheme.titleMedium!.copyWith(fontSize: 14),
+        ),
+      );
     }
 
     return Column(
@@ -204,8 +209,11 @@ class ContactItem extends StatelessWidget {
     return ListTile(
       title: Text(itemName),
       subtitle: SelectableText(itemValue!),
-      leading: Icon(iconData,
-          color: iconColor ?? Theme.of(context).primaryColor, size: iconSize,),
+      leading: Icon(
+        iconData,
+        color: iconColor ?? Theme.of(context).primaryColor,
+        size: iconSize,
+      ),
       onTap: type != null ? launchContact : null,
     );
   }

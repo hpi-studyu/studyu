@@ -34,8 +34,11 @@ class AboutScreen extends StatelessWidget {
                           Icon(MdiIcons.equal, size: 80, color: Colors.black),
                     ),
                     Expanded(
-                      child: Icon(MdiIcons.sleepOff,
-                          size: 80, color: Colors.black,),
+                      child: Icon(
+                        MdiIcons.sleepOff,
+                        size: 80,
+                        color: Colors.black,
+                      ),
                     ),
                   ],
                 ),
@@ -108,8 +111,11 @@ class AboutScreen extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Icon(MdiIcons.accountQuestion,
-                          size: 80, color: Colors.blue,),
+                      child: Icon(
+                        MdiIcons.accountQuestion,
+                        size: 80,
+                        color: Colors.blue,
+                      ),
                     ),
                   ],
                 ),
@@ -145,8 +151,11 @@ class AboutScreen extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Icon(MdiIcons.exclamationThick,
-                          size: 80, color: Colors.blue,),
+                      child: Icon(
+                        MdiIcons.exclamationThick,
+                        size: 80,
+                        color: Colors.blue,
+                      ),
                     ),
                   ],
                 ),
@@ -182,8 +191,11 @@ class AboutScreen extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Icon(MdiIcons.alphaNBoxOutline,
-                          size: 80, color: Colors.blue,),
+                      child: Icon(
+                        MdiIcons.alphaNBoxOutline,
+                        size: 80,
+                        color: Colors.blue,
+                      ),
                     ),
                     const Expanded(
                       child: Text(
@@ -193,8 +205,11 @@ class AboutScreen extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: Icon(MdiIcons.numeric1BoxOutline,
-                          size: 80, color: Colors.blue,),
+                      child: Icon(
+                        MdiIcons.numeric1BoxOutline,
+                        size: 80,
+                        color: Colors.blue,
+                      ),
                     ),
                   ],
                 ),
@@ -230,8 +245,11 @@ class AboutScreen extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Icon(MdiIcons.notebookOutline,
-                          size: 80, color: Colors.blue,),
+                      child: Icon(
+                        MdiIcons.notebookOutline,
+                        size: 80,
+                        color: Colors.blue,
+                      ),
                     ),
                   ],
                 ),
@@ -267,8 +285,11 @@ class AboutScreen extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Icon(MdiIcons.alignVerticalBottom,
-                          size: 80, color: Colors.blue,),
+                      child: Icon(
+                        MdiIcons.alignVerticalBottom,
+                        size: 80,
+                        color: Colors.blue,
+                      ),
                     ),
                   ],
                 ),
@@ -304,8 +325,11 @@ class AboutScreen extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Icon(MdiIcons.progressCheck,
-                          size: 80, color: Colors.blue,),
+                      child: Icon(
+                        MdiIcons.progressCheck,
+                        size: 80,
+                        color: Colors.blue,
+                      ),
                     ),
                   ],
                 ),
@@ -338,7 +362,9 @@ class AboutScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 const Image(
-                    image: AssetImage('assets/icon/logo.png'), height: 200,),
+                  image: AssetImage('assets/icon/logo.png'),
+                  height: 200,
+                ),
                 const SizedBox(height: 50),
                 Text(
                   AppLocalizations.of(context)!.description_part9,
@@ -350,8 +376,10 @@ class AboutScreen extends StatelessWidget {
                   OutlinedButton.icon(
                     icon: Icon(MdiIcons.rocket),
                     onPressed: () => Navigator.pushNamed(context, Routes.terms),
-                    label: Text(AppLocalizations.of(context)!.get_started,
-                        style: const TextStyle(fontSize: 20),),
+                    label: Text(
+                      AppLocalizations.of(context)!.get_started,
+                      style: const TextStyle(fontSize: 20),
+                    ),
                   ),
               ],
             ),

@@ -18,8 +18,11 @@ class NotificationValidators {
   bool wasNotificationActionHandled = false;
   bool wasNotificationActionCompleted = false;
 
-  NotificationValidators(this.didNotificationLaunchApp,
-      this.wasNotificationActionHandled, this.wasNotificationActionCompleted,);
+  NotificationValidators(
+    this.didNotificationLaunchApp,
+    this.wasNotificationActionHandled,
+    this.wasNotificationActionCompleted,
+  );
 }
 
 class StudyNotifications {

@@ -70,7 +70,8 @@ final List<Entry> data_en = <Entry>[
         'How long will the study take to finish?',
         <Entry>[
           Entry(
-              'The duration of each study is mentioned during initial study selection.',),
+            'The duration of each study is mentioned during initial study selection.',
+          ),
         ],
       ),
       Entry(
@@ -96,7 +97,8 @@ final List<Entry> data_en = <Entry>[
         'How can I Opt out from the current study?',
         <Entry>[
           Entry(
-              'You can do so by going to the Settings tab located on the Dashboard and clicking on "Opt-out" ',),
+            'You can do so by going to the Settings tab located on the Dashboard and clicking on "Opt-out" ',
+          ),
         ],
       ),
     ],
@@ -124,7 +126,8 @@ final List<Entry> data_en = <Entry>[
         'How can I keep track of my activities?',
         <Entry>[
           Entry(
-              'You can get an overview of your daily tasks and health status in the "Reports History section"',),
+            'You can get an overview of your daily tasks and health status in the "Reports History section"',
+          ),
         ],
       ),
       Entry(
@@ -164,7 +167,8 @@ final data_de = <Entry>[
         'Welche persönlichen Daten sammelt die App?',
         <Entry>[
           Entry(
-              'Die App sammelt keine persönlichen Daten des Benutzers, muss jedoch auf Zeit und Ort zugreifen.',),
+            'Die App sammelt keine persönlichen Daten des Benutzers, muss jedoch auf Zeit und Ort zugreifen.',
+          ),
         ],
       ),
     ],
@@ -176,7 +180,8 @@ final data_de = <Entry>[
         'Wie lange dauert es, bis die Studie abgeschlossen ist?',
         <Entry>[
           Entry(
-              'Die Dauer jeder Studie wird bei der ersten Studienauswahl angegeben.',),
+            'Die Dauer jeder Studie wird bei der ersten Studienauswahl angegeben.',
+          ),
         ],
       ),
       Entry(
