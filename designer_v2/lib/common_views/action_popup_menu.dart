@@ -91,27 +91,30 @@ class ActionPopUpMenuButton extends StatelessWidget {
             popupList.add(const PopupMenuDivider());
             continue;
           }
-          popupList.add(PopupMenuItem(
-            value: action,
-            child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-              horizontalTitleGap: 4.0,
-              leading: (action.icon == null)
-                  ? const SizedBox.shrink()
-                  : Icon(
-                      action.icon,
-                      size: theme.iconTheme.size ?? 14.0,
-                      color:
-                          action.isDestructive ? Colors.red : iconColorDefault,
-                    ),
-              title: action.isDestructive
-                  ? Text(
-                      action.label,
-                      style: textTheme.copyWith(color: Colors.red),
-                    )
-                  : Text(action.label, style: textTheme),
+          popupList.add(
+            PopupMenuItem(
+              value: action,
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+                horizontalTitleGap: 4.0,
+                leading: (action.icon == null)
+                    ? const SizedBox.shrink()
+                    : Icon(
+                        action.icon,
+                        size: theme.iconTheme.size ?? 14.0,
+                        color: action.isDestructive
+                            ? Colors.red
+                            : iconColorDefault,
+                      ),
+                title: action.isDestructive
+                    ? Text(
+                        action.label,
+                        style: textTheme.copyWith(color: Colors.red),
+                      )
+                    : Text(action.label, style: textTheme),
+              ),
             ),
-          ));
+          );
           continue;
         }
         return popupList;

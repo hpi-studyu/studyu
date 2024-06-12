@@ -33,8 +33,11 @@ class StudyDialog extends StudyPageWidget {
   }
 }
 
-showStudyDialog(
-    BuildContext context, StudyID studyId, StudyDialogType dialogType) {
+Future showStudyDialog(
+  BuildContext context,
+  StudyID studyId,
+  StudyDialogType dialogType,
+) {
   final theme = Theme.of(context);
   return showDialog(
     context: context,

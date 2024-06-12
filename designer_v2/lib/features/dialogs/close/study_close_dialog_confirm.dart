@@ -23,37 +23,38 @@ class CloseConfirmationDialog extends StudyPageWidget {
       child: StandardDialog(
         titleText: tr.dialog_study_close_title,
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Flexible(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        text: tr.dialog_study_close_description,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: tr.dialog_study_close_description,
+                        ),
                       ),
-                    ),
-                  ],
-                )),
+                    ],
+                  ),
+                ),
               ],
             ),
           ],
         ),
         actionButtons: [
           const DismissButton(),
-          ReactiveFormConsumer(builder: (context, form, child) {
-            return PrimaryButton(
-              text: tr.dialog_close,
-              icon: null,
-              onPressedFuture: () => controller.closeStudy(),
-            );
-          }),
+          ReactiveFormConsumer(
+            builder: (context, form, child) {
+              return PrimaryButton(
+                text: tr.dialog_close,
+                icon: null,
+                onPressedFuture: () => controller.closeStudy(),
+              );
+            },
+          ),
         ],
         maxWidth: 650,
         minWidth: 610,

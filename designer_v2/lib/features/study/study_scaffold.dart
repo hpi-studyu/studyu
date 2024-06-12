@@ -244,7 +244,10 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
               icon: null,
               enabled: formViewModel.isValid,
               onPressed: () => showStudyDialog(
-                  context, widget.studyId, StudyDialogType.publish),
+                context,
+                widget.studyId,
+                StudyDialogType.publish,
+              ),
             );
           },
         ),
@@ -259,15 +262,16 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
       final closeButton = ReactiveForm(
         formGroup: formViewModel.form,
         child: ReactiveFormConsumer(
-            // enable re-rendering based on form validation status
-            builder: (context, form, child) {
-          return SecondaryButton(
-            text: tr.action_button_study_close,
-            icon: null,
-            onPressed: () =>
-                showStudyDialog(context, widget.studyId, StudyDialogType.close),
-          );
-        }),
+          // enable re-rendering based on form validation status
+          builder: (context, form, child) {
+            return SecondaryButton(
+              text: tr.action_button_study_close,
+              icon: null,
+              onPressed: () => showStudyDialog(
+                  context, widget.studyId, StudyDialogType.close),
+            );
+          },
+        ),
       );
       actionButtons.add(closeButton);
       actionButtons.add(const SizedBox(width: 12.0)); // padding

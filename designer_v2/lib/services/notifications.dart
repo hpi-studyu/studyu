@@ -32,10 +32,11 @@ class Notifications {
     actions: [NotificationDefaultActions.cancel],
   );
   static final studyCloseConfirmation = AlertIntent(
-      title: tr.dialog_study_close_title,
-      message: tr.dialog_study_close_description,
-      icon: MdiIcons.accountLock,
-      actions: [NotificationDefaultActions.cancel]);
+    title: tr.dialog_study_close_title,
+    message: tr.dialog_study_close_description,
+    icon: MdiIcons.accountLock,
+    actions: [NotificationDefaultActions.cancel],
+  );
 }
 
 class NotificationDefaultActions {
