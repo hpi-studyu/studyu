@@ -9,31 +9,11 @@ packages:
   - flutter_common
 
 scripts:
-  analyze:
-    run: |
-      melos exec -c 6 -- \
-        "flutter analyze --fatal-infos ."
-    description: |
-      Run `dart analyze` in all packages.
-       - Note: you can also rely on your IDEs Dart Analysis / Issues window.
-
   fix:
     run: |
       melos exec -c 6 -- \
         "dart fix --apply"
     description: Fix auto-fixable lint errors
-
-  format:
-    run: |
-      melos exec -c 6 -- \
-        "dart format ."
-    description: Format all code files
-
-  format:ci:
-    run: |
-      melos exec -c 6 -- \
-        "dart format . --set-exit-if-changed"
-    description: Format all code without generated files
 
   outdated:
     run: |
@@ -77,7 +57,7 @@ scripts:
       melos exec -c 1 -- \
         "flutter run -d chrome --web-port 8080"
     packageFilters:
-        scope: studyu_app
+      scope: studyu_app
     description: Runs StudyU App with default environment
 
   designer_v2:
@@ -85,7 +65,7 @@ scripts:
       melos exec -c 1 -- \
         "flutter run -d chrome --web-port 8081"
     packageFilters:
-        scope: studyu_designer_v2
+      scope: studyu_designer_v2
     description: Runs StudyU Designer with default environment
 
   dev:app:
@@ -142,7 +122,7 @@ scripts:
         "flutter build web"
     description: Build app for Web.
     packageFilters:
-      scope: [studyu_app, studyu_designer_v2]
+      scope: [ studyu_app, studyu_designer_v2 ]
       dirExists: web
 
   build:web:app:
@@ -167,7 +147,7 @@ scripts:
         "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
     description: Build web dev.
     packageFilters:
-      scope: [studyu_app, studyu_designer_v2]
+      scope: [ studyu_app, studyu_designer_v2 ]
       dirExists: web
 
   build:web:app:dev:
