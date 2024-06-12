@@ -24,11 +24,6 @@ class ParticipantDetailsView extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          tr.participant_details_study_days_overview,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 8.0),
         _buildParticipantInfo(languageCode),
         const SizedBox(height: 8.0),
         const Divider(),
