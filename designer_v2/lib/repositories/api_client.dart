@@ -140,13 +140,13 @@ class StudyUApiClient extends SupabaseClientDependant
   @override
   Future<List<Study>> getUserStudies({
     bool withParticipantActivity = false,
-    forDashboardDisplay = true,
+    bool forDashboardDisplay = true,
   }) async {
     await _testDelay();
     // TODO: fix Postgres policy for proper multi-tenancy
     final columns = withParticipantActivity
         ? studyWithParticipantActivityColumns
-        : (forDashboardDisplay)
+        : forDashboardDisplay
             ? studyDisplayColumns
             : studyColumns;
     final request = getAll<Study>(selectedColumns: columns);
