@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
+import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
+import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../../models/app_state.dart';
-import '../../../routes.dart';
-import '../../../widgets/bottom_onboarding_navigation.dart';
-import '../../../widgets/intervention_card.dart';
-import 'onboarding_progress.dart';
 
 class InterventionSelectionScreen extends StatefulWidget {
   const InterventionSelectionScreen({super.key});
@@ -67,7 +66,7 @@ class _InterventionSelectionScreenState
           showCheckbox: true,
           showDescription: false,
           selected: selectedInterventionIds.any(
-              (interventionId) => interventionId == interventions[index].id),
+              (interventionId) => interventionId == interventions[index].id,),
           onTap: () => onSelect(interventions[index].id),
         ),
       ),
@@ -78,8 +77,9 @@ class _InterventionSelectionScreenState
     setState(() {
       if (!selectedInterventionIds.contains(interventionId)) {
         selectedInterventionIds.add(interventionId);
-        if (selectedInterventionIds.length > 2)
+        if (selectedInterventionIds.length > 2) {
           selectedInterventionIds.removeAt(0);
+        }
       } else {
         selectedInterventionIds.removeWhere((id) => id == interventionId);
       }
@@ -123,7 +123,7 @@ class _InterventionSelectionScreenState
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: selectedInterventionIds.length == 2 ? onFinished : null,
         progress: OnboardingProgress(
-            stage: 1, progress: selectedInterventionIds.length / 2),
+            stage: 1, progress: selectedInterventionIds.length / 2,),
       ),
     );
   }

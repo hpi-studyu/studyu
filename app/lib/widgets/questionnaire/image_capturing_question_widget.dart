@@ -13,7 +13,7 @@ class ImageCapturingQuestionWidget extends QuestionWidget {
   final Function(Answer<FutureBlobFile>)? onDone;
 
   const ImageCapturingQuestionWidget(
-      {super.key, required this.question, this.onDone});
+      {super.key, required this.question, this.onDone,});
 
   @override
   State<ImageCapturingQuestionWidget> createState() =>
@@ -35,11 +35,9 @@ class _ImageCapturingQuestionWidgetState
     final theme = Theme.of(context);
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        backgroundColor: null,
         foregroundColor: theme.colorScheme.primary,
         side: BorderSide(
-            width: 1.0,
-            color: _hasCaptured ? Colors.black38 : theme.colorScheme.primary),
+            color: _hasCaptured ? Colors.black38 : theme.colorScheme.primary,),
       ),
       onPressed: !_hasCaptured
           ? () async {
@@ -78,18 +76,18 @@ class _ImageCapturingQuestionWidgetState
     if (kIsWeb) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(AppLocalizations.of(context)!.multimodal_not_supported),
-      ));
+      ),);
       return;
     }
     final appState = context.read<AppState>();
-    FutureBlobFile? imageFile = await Navigator.push(context, MaterialPageRoute(
+    final FutureBlobFile? imageFile = await Navigator.push(context, MaterialPageRoute(
       builder: (context) {
         return CapturePictureScreen(
           studyId: appState.activeSubject!.studyId,
           userId: appState.activeSubject!.userId,
         );
       },
-    ));
+    ),);
     if (imageFile != null) {
       setState(() {
         _hasCaptured = true;

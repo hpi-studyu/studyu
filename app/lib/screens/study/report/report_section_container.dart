@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/screens/study/report/report_section_widget.dart';
 import 'package:studyu_app/screens/study/report/sections/average_section_widget.dart';
 import 'package:studyu_app/screens/study/report/sections/linear_regression_section_widget.dart';
 import 'package:studyu_core/core.dart';
 
-import 'report_section_widget.dart';
-
 typedef SectionBuilder = ReportSectionWidget Function(
-    ReportSection section, StudySubject subject);
+    ReportSection section, StudySubject subject,);
 
 class ReportSectionContainer extends StatelessWidget {
   final ReportSection section;
@@ -16,12 +15,12 @@ class ReportSectionContainer extends StatelessWidget {
   final GestureTapCallback? onTap;
 
   const ReportSectionContainer(this.section,
-      {super.key, required this.subject, this.onTap, this.primary = false});
+      {super.key, required this.subject, this.onTap, this.primary = false,});
 
   ReportSectionWidget buildContents(BuildContext context) => switch (section) {
-        AverageSection averageSection =>
+        final AverageSection averageSection =>
           AverageSectionWidget(subject, averageSection),
-        LinearRegressionSection linearRegressionSection =>
+        final LinearRegressionSection linearRegressionSection =>
           LinearRegressionSectionWidget(subject, linearRegressionSection),
         _ => throw ArgumentError('Section type ${section.type} not supported.'),
       };

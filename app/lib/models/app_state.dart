@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/util/app_analytics.dart';
-import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 

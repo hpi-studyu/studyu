@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/widgets/questionnaire/audio_recording_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/image_capturing_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/question_header.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/annotated_scale_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/boolean_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/choice_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/free_text_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/scale_question_widget.dart';
-import 'package:studyu_app/widgets/questionnaire/image_capturing_question_widget.dart';
-import 'package:studyu_app/widgets/questionnaire/audio_recording_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/visual_analogue_question_widget.dart';
 import 'package:studyu_core/core.dart';
-
-import 'questions/annotated_scale_question_widget.dart';
-import 'questions/boolean_question_widget.dart';
-import 'question_header.dart';
-import 'questions/question_widget.dart';
-import 'questions/visual_analogue_question_widget.dart';
 
 class QuestionContainer extends StatefulWidget {
   final Function(Answer, int) onDone;
@@ -22,7 +21,7 @@ class QuestionContainer extends StatefulWidget {
       {required this.onDone,
       required this.question,
       required this.index,
-      super.key});
+      super.key,});
 
   @override
   State<StatefulWidget> createState() => _QuestionContainerState();
@@ -36,53 +35,53 @@ class _QuestionContainerState extends State<QuestionContainer>
 
   QuestionWidget getQuestionBody(BuildContext context) {
     switch (widget.question) {
-      case ChoiceQuestion choiceQuestion:
+      case final ChoiceQuestion choiceQuestion:
         return ChoiceQuestionWidget(
           question: choiceQuestion,
           onDone: _onDone,
           multiSelectionText:
               AppLocalizations.of(context)!.eligible_choice_multi_selection,
         );
-      case BooleanQuestion booleanQuestion:
+      case final BooleanQuestion booleanQuestion:
         return BooleanQuestionWidget(
           question: booleanQuestion,
           onDone: _onDone,
         );
-      case ScaleQuestion scaleQuestion:
+      case final ScaleQuestion scaleQuestion:
         return ScaleQuestionWidget(
           question: scaleQuestion,
           onDone: _onDone,
         );
-      case ImageCapturingQuestion imageCapturingQuestion:
+      case final ImageCapturingQuestion imageCapturingQuestion:
         return ImageCapturingQuestionWidget(
           question: imageCapturingQuestion,
           onDone: _onDone,
         );
-      case AudioRecordingQuestion audioRecordingQuestion:
+      case final AudioRecordingQuestion audioRecordingQuestion:
         return AudioRecordingQuestionWidget(
           question: audioRecordingQuestion,
           onDone: _onDone,
         );
-      case VisualAnalogueQuestion visualAnalogueQuestion:
+      case final VisualAnalogueQuestion visualAnalogueQuestion:
         // todo remove this when older studies are finished
         // ignore: deprecated_member_use_from_same_package
         return VisualAnalogueQuestionWidget(
           question: visualAnalogueQuestion,
           onDone: _onDone,
         );
-      case AnnotatedScaleQuestion annotatedScaleQuestion:
+      case final AnnotatedScaleQuestion annotatedScaleQuestion:
         return AnnotatedScaleQuestionWidget(
           question: annotatedScaleQuestion,
           onDone: _onDone,
         );
-      case FreeTextQuestion freeTextQuestion:
+      case final FreeTextQuestion freeTextQuestion:
         return FreeTextQuestionWidget(
           question: freeTextQuestion,
           onDone: _onDone,
         );
       default:
         throw ArgumentError(
-            'Question type ${widget.question.type} not supported');
+            'Question type ${widget.question.type} not supported',);
     }
   }
 

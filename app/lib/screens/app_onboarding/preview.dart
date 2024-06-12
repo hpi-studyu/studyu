@@ -119,7 +119,7 @@ class Preview {
 
   /// createSubject: If true, the method will return a new StudySubject if none can be found. Otherwise, null is returned
   Future<StudySubject?> getStudySubject(AppState state,
-      {bool createSubject = false}) async {
+      {bool createSubject = false,}) async {
     if (selectedStudyObjectId != null) {
       try {
         if (selectedRoute == '/intervention') {

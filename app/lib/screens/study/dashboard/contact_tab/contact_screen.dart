@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../../models/app_state.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({super.key});
@@ -75,7 +74,7 @@ class ContactWidget extends StatelessWidget {
       required this.title,
       required this.color,
       this.subtitle,
-      super.key});
+      super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -85,11 +84,11 @@ class ContactWidget extends StatelessWidget {
     }
 
     final titles = [
-      Text(title, style: theme.textTheme.titleLarge!.copyWith(color: color))
+      Text(title, style: theme.textTheme.titleLarge!.copyWith(color: color)),
     ];
     if (subtitle != null && subtitle!.isNotEmpty) {
       titles.add(Text(subtitle!,
-          style: theme.textTheme.titleMedium!.copyWith(fontSize: 14)));
+          style: theme.textTheme.titleMedium!.copyWith(fontSize: 14),),);
     }
 
     return Column(
@@ -182,13 +181,10 @@ class ContactItem extends StatelessWidget {
           } else {
             uri = Uri.parse(itemValue!);
           }
-          break;
         case ContactItemType.email:
           uri = Uri.parse('mailto:$itemValue');
-          break;
         case ContactItemType.phone:
           uri = Uri.parse('tel:$itemValue');
-          break;
         default:
           uri = Uri.parse(itemValue!);
       }
@@ -209,7 +205,7 @@ class ContactItem extends StatelessWidget {
       title: Text(itemName),
       subtitle: SelectableText(itemValue!),
       leading: Icon(iconData,
-          color: iconColor ?? Theme.of(context).primaryColor, size: iconSize),
+          color: iconColor ?? Theme.of(context).primaryColor, size: iconSize,),
       onTap: type != null ? launchContact : null,
     );
   }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
+import 'package:studyu_app/widgets/selectable_button.dart';
 import 'package:studyu_core/core.dart';
-
-import '../../selectable_button.dart';
-import 'question_widget.dart';
 
 class BooleanQuestionWidget extends QuestionWidget {
   final BooleanQuestion question;

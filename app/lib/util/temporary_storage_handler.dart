@@ -38,14 +38,14 @@ class TemporaryStorageHandler {
   }
 
   static Future<void> moveStagingFileToUploadDirectory(
-      String stagingFilePath, String blobId) async {
+      String stagingFilePath, String blobId,) async {
     final stagingFile = File(stagingFilePath);
     final uploadDirectory = await _getMultimodalUploadDirectory();
     final uploadFile = File(path.join(
         uploadDirectory.path,
         [
           blobId,
-        ].join()));
+        ].join(),),);
     await stagingFile.rename(uploadFile.path);
   }
 
@@ -97,7 +97,7 @@ class TemporaryStorageHandler {
         .list()
         .where((f) => path
             .basename(f.path)
-            .startsWith(TemporaryStorageHandler._stagingBaseNamePrefix))
+            .startsWith(TemporaryStorageHandler._stagingBaseNamePrefix),)
         .toList()) {
       await file.delete();
     }

@@ -3,15 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
+import 'package:studyu_app/screens/app_onboarding/preview.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
-import 'preview.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
@@ -72,7 +72,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
       subject = await _fetchRemoteSubject(selectedStudyObjectId);
     } catch (exception) {
       StudyULogger.warning(
-          "Could not retrieve subject, maybe JWT is expired, try logging in: ${exception.toString()}");
+        "Could not retrieve subject, maybe JWT is expired, try logging in: $exception",
+      );
       try {
         // Try signing in again. Needed if JWT is expired
         if (await signInParticipant()) {
@@ -91,7 +92,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           // 4. Open the app but do not join a study
           // 5. Restart the app. Either only this error shows up, worst case is
           // app hangs and is unresponsive
-          StudyULogger.fatal('Could not login and retrieve the study subject.'
+          StudyULogger.fatal('Could not login and retrieve the study subject. '
               'One reason for this might be that the study subject is no '
               'longer available and only resides in app backup');
           throw Exception("Remote subject not found");
@@ -101,14 +102,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
     return subject;
   }
 
-  _initPreview(AppState state) async {
+  Future<void> _initPreview(AppState state) async {
     if (state.isPreview) previewSubjectIdKey();
-    if (widget.queryParameters == null || widget.queryParameters!.isEmpty)
+    if (widget.queryParameters == null || widget.queryParameters!.isEmpty) {
       return;
+    }
 
     StudyULogger.info(
-        "Preview: Found query parameters ${widget.queryParameters}");
-    var lang = context.watch<AppLanguage>();
+      "Preview: Found query parameters ${widget.queryParameters}",
+    );
+    final lang = context.watch<AppLanguage>();
     final preview = Preview(
       widget.queryParameters,
       lang,
@@ -135,7 +138,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (!mounted) return;
         // if we remove the await, we can push multiple times. warning: do not run in while(true)
         await Navigator.push<EligibilityResult>(
-            context, EligibilityScreen.routeFor(study: preview.study));
+          context,
+          EligibilityScreen.routeFor(study: preview.study),
+        );
         // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
         iFrameHelper.postRouteFinished();
         return;
@@ -198,10 +203,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ];
         if (!mounted) return;
         await Navigator.push<bool>(
-            context,
-            TaskScreen.routeFor(
-                taskInstance: TaskInstance(tasks.first,
-                    tasks.first.schedule.completionPeriods.first.id)));
+          context,
+          TaskScreen.routeFor(
+            taskInstance: TaskInstance(
+              tasks.first,
+              tasks.first.schedule.completionPeriods.first.id,
+            ),
+          ),
+        );
         iFrameHelper.postRouteFinished();
         return;
       }

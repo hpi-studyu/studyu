@@ -6,12 +6,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:studyu_app/main.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
+import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_core/core.dart';
-
-import '../main.dart';
-import '../screens/study/tasks/task_screen.dart';
 
 class NotificationValidators {
   bool didNotificationLaunchApp = false;
@@ -20,7 +19,7 @@ class NotificationValidators {
   bool wasNotificationActionCompleted = false;
 
   NotificationValidators(this.didNotificationLaunchApp,
-      this.wasNotificationActionHandled, this.wasNotificationActionCompleted);
+      this.wasNotificationActionHandled, this.wasNotificationActionCompleted,);
 }
 
 class StudyNotifications {
@@ -110,7 +109,7 @@ class StudyNotifications {
       /*final bool granted =*/ await androidImplementation
           ?.requestNotificationsPermission();
 
-      var status = await Permission.ignoreBatteryOptimizations.status;
+      final status = await Permission.ignoreBatteryOptimizations.status;
       if (status.isDenied) {
         if (await Permission.ignoreBatteryOptimizations.request().isGranted) {
           // print("Ignore battery optimization Permission is granted");
@@ -145,7 +144,7 @@ class StudyNotifications {
                 );
               },
               child: const Text('Ok'),
-            )
+            ),
           ],
         ),
       );
@@ -198,7 +197,6 @@ class StudyNotifications {
         switch (notificationResponse.notificationResponseType) {
           case NotificationResponseType.selectedNotification:
             selectNotificationStream.add(notificationResponse.payload);
-            break;
           case NotificationResponseType.selectedNotificationAction:
             /*if (notificationResponse.actionId == navigationActionId) {
               selectNotificationStream.add(notificationResponse.payload);

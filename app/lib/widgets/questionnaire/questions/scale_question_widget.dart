@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/theme.dart';
+import 'package:studyu_app/widgets/questionnaire/custom_slider.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
-
-import '../custom_slider.dart';
-import 'question_widget.dart';
 
 class ScaleQuestionWidget extends QuestionWidget {
   final ScaleQuestion question;
@@ -50,7 +49,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
     final coloredSliderTheme = ThemeConfig.coloredSliderTheme(theme);
     final thumbColor = isColored
         ? Color.lerp(minColor, maxColor,
-                (value! - widget.question.minimum) / sliderRange)!
+                (value! - widget.question.minimum) / sliderRange,)!
             .withOpacity(1)
         : null;
     final activeTrackColor =
@@ -94,7 +93,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
                   isColored: isColored,
                   linearStep: false,
                   steps: widget.question,
-                )),
+                ),),
           ],
         ),
         if (!sliderTouched)
@@ -109,7 +108,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
               },
               child: Text(AppLocalizations.of(context)!.done),
             ),
-          )
+          ),
       ],
     );
   }

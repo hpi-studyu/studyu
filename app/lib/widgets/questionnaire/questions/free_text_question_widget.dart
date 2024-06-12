@@ -8,7 +8,7 @@ class FreeTextQuestionWidget extends QuestionWidget {
   final Function(Answer)? onDone;
 
   const FreeTextQuestionWidget(
-      {super.key, required this.question, this.onDone});
+      {super.key, required this.question, this.onDone,});
 
   @override
   State<FreeTextQuestionWidget> createState() => _FreeTextQuestionWidgetState();

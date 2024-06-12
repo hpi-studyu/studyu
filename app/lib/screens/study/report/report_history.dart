@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/study/report/report_details.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../../models/app_state.dart';
-import 'report_details.dart';
 
 class ReportHistoryScreen extends StatelessWidget {
   const ReportHistoryScreen({super.key});
@@ -22,7 +21,7 @@ class ReportHistoryScreen extends StatelessWidget {
       ),
       body: RetryFutureBuilder<List<StudySubject>>(
         tryFunction: () => StudySubject.getStudyHistory(
-            Supabase.instance.client.auth.currentUser!.id),
+            Supabase.instance.client.auth.currentUser!.id,),
         successBuilder:
             (BuildContext context, List<StudySubject>? pastStudies) {
           return ListView.builder(
@@ -52,7 +51,7 @@ class ReportHistoryItem extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.push(
-              context, ReportDetailsScreen.routeFor(subject: subject));
+              context, ReportDetailsScreen.routeFor(subject: subject),);
         },
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -70,7 +69,7 @@ class ReportHistoryItem extends StatelessWidget {
                   child: Text(
                     subject.study.title!,
                     style: theme.textTheme.headlineSmall!.copyWith(
-                        color: isActiveStudy ? Colors.white : Colors.black),
+                        color: isActiveStudy ? Colors.white : Colors.black,),
                   ),
                 ),
               ],

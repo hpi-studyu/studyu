@@ -3,13 +3,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
+import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:timeline_tile/timeline_tile.dart';
-
-import '../../../models/app_state.dart';
-import '../../../routes.dart';
-import '../../../widgets/bottom_onboarding_navigation.dart';
-import 'onboarding_progress.dart';
 
 class JourneyOverviewScreen extends StatefulWidget {
   const JourneyOverviewScreen({super.key});
@@ -99,7 +98,7 @@ class Timeline extends StatelessWidget {
                 ? Colors.grey
                 : theme.colorScheme.secondary,
             date: now.add(
-                Duration(days: index * subject!.study.schedule.phaseDuration)),
+                Duration(days: index * subject!.study.schedule.phaseDuration),),
             isFirst: index == 0,
           );
         }),
@@ -109,7 +108,7 @@ class Timeline extends StatelessWidget {
           color: Colors.green,
           isLast: true,
           date: subject!.endDate(now),
-        )
+        ),
       ],
     );
   }
@@ -152,11 +151,11 @@ class InterventionTile extends StatelessWidget {
       endChild: TimelineChild(
         child: Text(title!,
             style: theme.textTheme.titleLarge!
-                .copyWith(color: theme.primaryColor)),
+                .copyWith(color: theme.primaryColor),),
       ),
       startChild: TimelineChild(
         child: Text(DateFormat('dd-MM-yyyy').format(date),
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+            style: const TextStyle(fontWeight: FontWeight.bold),),
       ),
     );
   }
@@ -173,7 +172,7 @@ class IconIndicator extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: color ?? Theme.of(context).colorScheme.secondary),
+          color: color ?? Theme.of(context).colorScheme.secondary,),
       child: Center(
         child: Icon(MdiIcons.fromString(iconName), color: Colors.white),
       ),

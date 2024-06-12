@@ -3,9 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rainbow_color/rainbow_color.dart';
+import 'package:studyu_app/screens/study/report/generic_section.dart';
 import 'package:studyu_core/core.dart';
-
-import '../generic_section.dart';
 
 class PerformanceSection extends GenericSection {
   const PerformanceSection(super.subject, {super.key, super.onTap});
@@ -25,7 +24,7 @@ class PerformanceSection extends GenericSection {
           getCountableObservationAmount(intervention);
       return min<double>(
           countableInterventions == 0 ? 0 : countableInterventions / maximum,
-          1);
+          1,);
     }).toList();
     return interventions.length != 2 ||
             subject!.study.reportSpecification.primary == null
@@ -70,7 +69,7 @@ class PerformanceSection extends GenericSection {
   }
 
   String getPowerLevelDescription(
-      BuildContext context, List<num> interventionProgress) {
+      BuildContext context, List<num> interventionProgress,) {
     if (interventionProgress.any((progress) => progress < minimumRatio)) {
       return AppLocalizations.of(context)!.not_enough_data;
     } else if (interventionProgress.any((progress) => progress < 1)) {
@@ -93,12 +92,12 @@ class PerformanceSection extends GenericSection {
         .forEach((progress) {
       if (progress
               .where((result) => intervention.tasks.any(
-                  (interventionTask) => interventionTask.id == result.taskId))
+                  (interventionTask) => interventionTask.id == result.taskId,),)
               .length ==
           interventionsPerDay) {
         countable += progress
             .where((result) => subject!.study.observations
-                .any((observation) => observation.id == result.taskId))
+                .any((observation) => observation.id == result.taskId),)
             .length;
       }
     });
@@ -140,7 +139,7 @@ class PerformanceBar extends StatelessWidget {
     final rainbow = Rainbow(
         spectrum: [Colors.red, Colors.yellow, Colors.green],
         rangeStart: 0,
-        rangeEnd: 1);
+        rangeEnd: 1,);
     final fullSpectrum = List<double>.generate(3, (index) => index * 0.5)
         .map<Color>((index) => rainbow[index].withOpacity(0.4))
         .toList();
@@ -188,7 +187,7 @@ class PerformanceBar extends StatelessWidget {
                     Container(
                       width: 2,
                       color: Colors.grey[600],
-                    )
+                    ),
                   ],
                 ),
               ],
