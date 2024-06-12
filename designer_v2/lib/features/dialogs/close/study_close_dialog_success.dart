@@ -21,7 +21,8 @@ class CloseSuccessDialog extends StudyPageWidget {
           EmptyBody(
             leading: Text("\u{1f512}".hardcoded,
                 style: theme.textTheme.displayLarge?.copyWith(
-                  fontSize: (theme.textTheme.displayLarge?.fontSize ?? 48.0) * 1.5,
+                  fontSize:
+                      (theme.textTheme.displayLarge?.fontSize ?? 48.0) * 1.5,
                 )),
             title: tr.notification_study_closed,
             description: tr.notification_study_closed_description,

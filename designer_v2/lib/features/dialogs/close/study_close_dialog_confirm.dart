@@ -15,7 +15,8 @@ class CloseConfirmationDialog extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(studyControllerProvider(studyId).notifier);
-    final formViewModel = ref.watch(studySettingsFormViewModelProvider(studyId));
+    final formViewModel =
+        ref.watch(studySettingsFormViewModelProvider(studyId));
 
     return ReactiveForm(
       formGroup: formViewModel.form,

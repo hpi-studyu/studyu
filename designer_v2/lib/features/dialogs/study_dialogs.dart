@@ -22,14 +22,19 @@ class StudyDialog extends StudyPageWidget {
 
     switch (dialogType) {
       case StudyDialogType.publish:
-        return state.isPublished ? PublishSuccessDialog(studyId) : PublishConfirmationDialog(studyId);
+        return state.isPublished
+            ? PublishSuccessDialog(studyId)
+            : PublishConfirmationDialog(studyId);
       case StudyDialogType.close:
-        return state.isClosed ? CloseSuccessDialog(studyId) : CloseConfirmationDialog(studyId);
+        return state.isClosed
+            ? CloseSuccessDialog(studyId)
+            : CloseConfirmationDialog(studyId);
     }
   }
 }
 
-showStudyDialog(BuildContext context, StudyID studyId, StudyDialogType dialogType) {
+showStudyDialog(
+    BuildContext context, StudyID studyId, StudyDialogType dialogType) {
   final theme = Theme.of(context);
   return showDialog(
     context: context,

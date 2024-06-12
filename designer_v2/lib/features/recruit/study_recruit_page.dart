@@ -105,12 +105,12 @@ class StudyRecruitScreen extends StudyPageWidget {
           ? null
           : () {
               final formViewModel =
-            ref.read(inviteCodeFormViewModelProvider(studyId));
+                  ref.read(inviteCodeFormViewModelProvider(studyId));
               showFormSideSheet<InviteCodeFormViewModel>(
                 context: context,
                 formViewModel: formViewModel,
                 formViewBuilder: (formViewModel) =>
-              InviteCodeFormView(formViewModel: formViewModel),
+                    InviteCodeFormView(formViewModel: formViewModel),
               );
             },
     );

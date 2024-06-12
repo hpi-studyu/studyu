@@ -16,9 +16,11 @@ class StudyControllerState extends StudyControllerBaseState
     this.lastSynced,
   });
 
-  bool get isPublished => study.value != null && study.value!.status == StudyStatus.running;
+  bool get isPublished =>
+      study.value != null && study.value!.status == StudyStatus.running;
 
-  bool get isClosed => study.value != null && study.value!.status == StudyStatus.closed;
+  bool get isClosed =>
+      study.value != null && study.value!.status == StudyStatus.closed;
 
   // - ISyncIndicatorViewModel
 
@@ -79,7 +81,8 @@ class StudyControllerState extends StudyControllerBaseState
 
   @override
   bool get isClosedVisible =>
-      studyWithMetadata?.model.status == StudyStatus.running && studyWithMetadata!.model.canEdit(super.currentUser);
+      studyWithMetadata?.model.status == StudyStatus.running &&
+      studyWithMetadata!.model.canEdit(super.currentUser);
 
   @override
   StudyStatus? get studyStatus => study.value?.status;
