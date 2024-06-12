@@ -1,4 +1,4 @@
 # Supabase
-.branches
-.temp
+.branches/
+.temp/
 .env

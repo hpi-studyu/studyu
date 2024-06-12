@@ -22,7 +22,9 @@ enum SurveyQuestionType {
       AudioRecordingQuestion.questionType: SurveyQuestionType.audio,
     };
     if (!typeMapping.containsKey(question.type)) {
-      throw UnimplementedError("Missing SurveyQuestionType for question of type: ${question.type}");
+      throw UnimplementedError(
+        "Missing SurveyQuestionType for question of type: ${question.type}",
+      );
     }
     return typeMapping[question.type]!;
   }

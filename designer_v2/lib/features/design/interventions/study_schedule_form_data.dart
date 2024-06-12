@@ -3,12 +3,13 @@ import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 
 class StudyScheduleFormData implements IStudyFormData {
-  StudyScheduleFormData(
-      {required this.sequenceType,
-      required this.sequenceTypeCustom,
-      required this.numCycles,
-      required this.phaseDuration,
-      required this.includeBaseline});
+  StudyScheduleFormData({
+    required this.sequenceType,
+    required this.sequenceTypeCustom,
+    required this.numCycles,
+    required this.phaseDuration,
+    required this.includeBaseline,
+  });
 
   final PhaseSequence sequenceType;
   final String sequenceTypeCustom;
@@ -48,5 +49,6 @@ class StudyScheduleFormData implements IStudyFormData {
   }
 
   @override
-  FormDataID get id => throw UnimplementedError(); // not needed for top-level form data
+  FormDataID get id =>
+      throw UnimplementedError(); // not needed for top-level form data
 }

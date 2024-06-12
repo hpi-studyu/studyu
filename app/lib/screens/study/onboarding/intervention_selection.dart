@@ -2,23 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
+import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
+import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../../models/app_state.dart';
-import '../../../routes.dart';
-import '../../../widgets/bottom_onboarding_navigation.dart';
-import '../../../widgets/intervention_card.dart';
-import 'onboarding_progress.dart';
 
 class InterventionSelectionScreen extends StatefulWidget {
   const InterventionSelectionScreen({super.key});
 
   @override
-  State<InterventionSelectionScreen> createState() => _InterventionSelectionScreenState();
+  State<InterventionSelectionScreen> createState() =>
+      _InterventionSelectionScreenState();
 }
 
-class _InterventionSelectionScreenState extends State<InterventionSelectionScreen> {
+class _InterventionSelectionScreenState
+    extends State<InterventionSelectionScreen> {
   final List<String> selectedInterventionIds = [];
   Study? selectedStudy;
 
@@ -39,8 +40,10 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
           ),
           const SizedBox(height: 8),
           Text(
-            AppLocalizations.of(context)!.please_select_interventions_description,
-            style: theme.textTheme.bodyMedium!.copyWith(color: theme.textTheme.bodySmall!.color),
+            AppLocalizations.of(context)!
+                .please_select_interventions_description,
+            style: theme.textTheme.bodyMedium!
+                .copyWith(color: theme.textTheme.bodySmall!.color),
           ),
         ],
       ),
@@ -62,7 +65,9 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
           interventions[index],
           showCheckbox: true,
           showDescription: false,
-          selected: selectedInterventionIds.any((interventionId) => interventionId == interventions[index].id),
+          selected: selectedInterventionIds.any(
+            (interventionId) => interventionId == interventions[index].id,
+          ),
           onTap: () => onSelect(interventions[index].id),
         ),
       ),
@@ -73,7 +78,9 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
     setState(() {
       if (!selectedInterventionIds.contains(interventionId)) {
         selectedInterventionIds.add(interventionId);
-        if (selectedInterventionIds.length > 2) selectedInterventionIds.removeAt(0);
+        if (selectedInterventionIds.length > 2) {
+          selectedInterventionIds.removeAt(0);
+        }
       } else {
         selectedInterventionIds.removeWhere((id) => id == interventionId);
       }
@@ -116,7 +123,10 @@ class _InterventionSelectionScreenState extends State<InterventionSelectionScree
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: selectedInterventionIds.length == 2 ? onFinished : null,
-        progress: OnboardingProgress(stage: 1, progress: selectedInterventionIds.length / 2),
+        progress: OnboardingProgress(
+          stage: 1,
+          progress: selectedInterventionIds.length / 2,
+        ),
       ),
     );
   }

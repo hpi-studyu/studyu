@@ -38,7 +38,8 @@ class AppConfig extends SupabaseObjectFunctions<AppConfig> {
     required this.analytics,
   });
 
-  factory AppConfig.fromJson(Map<String, dynamic> json) => _$AppConfigFromJson(json);
+  factory AppConfig.fromJson(Map<String, dynamic> json) =>
+      _$AppConfigFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$AppConfigToJson(this);

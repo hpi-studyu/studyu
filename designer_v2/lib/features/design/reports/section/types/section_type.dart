@@ -12,7 +12,9 @@ enum ReportSectionType {
       LinearRegressionSection.sectionType: ReportSectionType.linearRegression,
     };
     if (!typeMapping.containsKey(reportSection.type)) {
-      throw UnimplementedError("Missing ReportSectionType for reportSection of type: ${reportSection.type}");
+      throw UnimplementedError(
+        "Missing ReportSectionType for reportSection of type: ${reportSection.type}",
+      );
     }
     return typeMapping[reportSection.type]!;
   }
@@ -51,7 +53,9 @@ class TemporalAggregationFormatted {
   const TemporalAggregationFormatted(this._value);
 
   static List<TemporalAggregationFormatted> get values =>
-      TemporalAggregation.values.map((e) => TemporalAggregationFormatted(e)).toList();
+      TemporalAggregation.values
+          .map((e) => TemporalAggregationFormatted(e))
+          .toList();
   TemporalAggregation get value => TemporalAggregation.values.byName(toJson());
 
   String get string {
@@ -82,16 +86,17 @@ class TemporalAggregationFormatted {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is TemporalAggregationFormatted && _value == other._value;
+      identical(this, other) ||
+      other is TemporalAggregationFormatted && _value == other._value;
 
   @override
   int get hashCode => _value.hashCode;
 
   @override
-  toString() => toJson();
+  String toString() => toJson();
 
   String toJson() => _value.name;
-  static TemporalAggregationFormatted fromJson(String json) =>
+  TemporalAggregationFormatted fromJson(String json) =>
       TemporalAggregationFormatted(TemporalAggregation.values.byName(json));
 }
 
@@ -100,8 +105,11 @@ class ImprovementDirectionFormatted {
   const ImprovementDirectionFormatted(this._value);
 
   static List<ImprovementDirectionFormatted> get values =>
-      ImprovementDirection.values.map((e) => ImprovementDirectionFormatted(e)).toList();
-  ImprovementDirection get value => ImprovementDirection.values.byName(toJson());
+      ImprovementDirection.values
+          .map((e) => ImprovementDirectionFormatted(e))
+          .toList();
+  ImprovementDirection get value =>
+      ImprovementDirection.values.byName(toJson());
 
   String get string {
     switch (value) {
@@ -127,15 +135,16 @@ class ImprovementDirectionFormatted {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is ImprovementDirectionFormatted && _value == other._value;
+      identical(this, other) ||
+      other is ImprovementDirectionFormatted && _value == other._value;
 
   @override
   int get hashCode => _value.hashCode;
 
   @override
-  toString() => toJson();
+  String toString() => toJson();
 
   String toJson() => _value.name;
-  static ImprovementDirectionFormatted fromJson(String json) =>
+  ImprovementDirectionFormatted fromJson(String json) =>
       ImprovementDirectionFormatted(ImprovementDirection.values.byName(json));
 }
