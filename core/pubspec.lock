@@ -218,10 +218,10 @@ packages:
     dependency: transitive
     description:
       name: gotrue
-      sha256: aaefc58b168723f8b5ca2a70ee8c0a051cba16f112be50f41c1ff8fb96b6a6df
+      sha256: b7324a9113bb21c354fd52531d9a9dba6570a9c37b2fc6b424865feb19974476
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.0"
+    version: "2.8.0"
   graphs:
     dependency: transitive
     description:
@@ -570,10 +570,10 @@ packages:
     dependency: "direct main"
     description:
       name: supabase
-      sha256: "4555658031af0a8b38c7375f28e4b35312291f4aab0ca504dd76661381ce134f"
+      sha256: "1133466d2ec9441e7cff6bf73943f0a6e17cbb5044f6327ca93e3dddc567c882"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.2.1"
   term_glyph:
     dependency: transitive
     description:
