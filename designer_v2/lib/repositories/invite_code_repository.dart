@@ -17,15 +17,21 @@ abstract class IInviteCodeRepository implements ModelRepository<StudyInvite> {
   Future<bool> isCodeAlreadyUsed(String code);
 }
 
-class InviteCodeRepository extends ModelRepository<StudyInvite> implements IInviteCodeRepository {
+class InviteCodeRepository extends ModelRepository<StudyInvite>
+    implements IInviteCodeRepository {
   InviteCodeRepository({
     required this.studyId,
     required this.apiClient,
     required this.authRepository,
     required this.studyRepository,
     required this.ref,
-  }) : super(InviteCodeRepositoryDelegate(
-            study: studyRepository.get(studyId)!.model, apiClient: apiClient, studyRepository: studyRepository));
+  }) : super(
+          InviteCodeRepositoryDelegate(
+            study: studyRepository.get(studyId)!.model,
+            apiClient: apiClient,
+            studyRepository: studyRepository,
+          ),
+        );
 
   /// The [Study] this repository operates on
   final StudyID studyId;
@@ -60,36 +66,49 @@ class InviteCodeRepository extends ModelRepository<StudyInvite> implements IInvi
         type: ModelActionType.clipboard,
         label: ModelActionType.clipboard.string,
         onExecute: () => {
-          ref
-              .read(clipboardServiceProvider)
-              .copy(model.code)
-              .then((value) => ref.read(notificationServiceProvider).show(Notifications.inviteCodeClipped))
+          ref.read(clipboardServiceProvider).copy(model.code).then(
+                (value) => ref
+                    .read(notificationServiceProvider)
+                    .show(Notifications.inviteCodeClipped),
+              ),
         },
       ),
       ModelAction(
-          type: ModelActionType.delete,
-          label: ModelActionType.delete.string,
-          onExecute: () {
-            return delete(getKey(model))
-                .then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studyRecruit(model.studyId)))
-                .then((value) => Future.delayed(const Duration(milliseconds: 200),
-                    () => ref.read(notificationServiceProvider).show(Notifications.inviteCodeDeleted)));
-          },
-          isAvailable: study.isOwner(authRepository.currentUser!),
-          isDestructive: true),
+        type: ModelActionType.delete,
+        label: ModelActionType.delete.string,
+        onExecute: () {
+          return delete(getKey(model))
+              .then(
+                (value) => ref
+                    .read(routerProvider)
+                    .dispatch(RoutingIntents.studyRecruit(model.studyId)),
+              )
+              .then(
+                (value) => Future.delayed(
+                  const Duration(milliseconds: 200),
+                  () => ref
+                      .read(notificationServiceProvider)
+                      .show(Notifications.inviteCodeDeleted),
+                ),
+              );
+        },
+        isAvailable: study.isOwner(authRepository.currentUser),
+        isDestructive: true,
+      ),
     ];
 
     return actions.where((action) => action.isAvailable).toList();
   }
 
   @override
-  emitUpdate() {
+  void emitUpdate() {
     print("InviteCodeRepository.emitUpdate");
     super.emitUpdate();
   }
 }
 
-class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite> {
+class InviteCodeRepositoryDelegate
+    extends IModelRepositoryDelegate<StudyInvite> {
   InviteCodeRepositoryDelegate({
     required this.study,
     required this.apiClient,
@@ -119,7 +138,8 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
 
     final saveOperation = OptimisticUpdate(
       applyOptimistic: () {
-        final inviteIdx = study.invites!.indexWhere((i) => i.code == model.code);
+        final inviteIdx =
+            study.invites!.indexWhere((i) => i.code == model.code);
         if (inviteIdx == -1) {
           // add new code
           study.invites!.add(model);
@@ -171,7 +191,7 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
   }
 
   @override
-  onError(Object error, StackTrace? stackTrace) {
+  void onError(Object error, StackTrace? stackTrace) {
     return; // TODO
   }
 
@@ -186,7 +206,8 @@ class InviteCodeRepositoryDelegate extends IModelRepositoryDelegate<StudyInvite>
   }
 }
 
-final inviteCodeRepositoryProvider = Provider.autoDispose.family<IInviteCodeRepository, StudyID>((ref, studyId) {
+final inviteCodeRepositoryProvider =
+    Provider.autoDispose.family<IInviteCodeRepository, StudyID>((ref, studyId) {
   print("inviteCodeRepositoryProvider($studyId");
   // Initialize repository for a given study
   final repository = InviteCodeRepository(

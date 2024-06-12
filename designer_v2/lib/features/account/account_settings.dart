@@ -14,28 +14,30 @@ class AccountSettingsDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PointerInterceptor(
-        child: StandardDialog(
-      titleText: tr.navlink_account_settings,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 16.0),
-          FormTableLayout(
-            rowLayout: FormTableRowLayout.horizontal,
-            rows: [
-              FormTableRow(
-                label: tr.language,
-                input: const Align(alignment: Alignment.centerRight, child: LanguagePicker()),
-              ),
-            ],
-          ),
-        ],
+      child: StandardDialog(
+        titleText: tr.navlink_account_settings,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 16.0),
+            FormTableLayout(
+              rows: [
+                FormTableRow(
+                  label: tr.language,
+                  input: const Align(
+                    alignment: Alignment.centerRight,
+                    child: LanguagePicker(),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        actionButtons: [DismissButton(text: tr.dialog_close)],
+        minWidth: 650,
+        maxWidth: 750,
+        minHeight: 450,
       ),
-      actionButtons: [DismissButton(text: tr.dialog_close)],
-      minWidth: 650,
-      maxWidth: 750,
-      minHeight: 450,
-    ));
+    );
   }
 }

@@ -30,7 +30,8 @@ class SyncIndicator<T> extends StatefulWidget {
   State<SyncIndicator> createState() => _SyncIndicatorState();
 }
 
-class _SyncIndicatorState extends State<SyncIndicator> with SingleTickerProviderStateMixin {
+class _SyncIndicatorState extends State<SyncIndicator>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _animationController;
   late final Animation<double> _animation;
 
@@ -42,7 +43,6 @@ class _SyncIndicatorState extends State<SyncIndicator> with SingleTickerProvider
     _animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: widget.animationDuration),
-      upperBound: 1,
     );
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
 
@@ -82,14 +82,15 @@ class _SyncIndicatorState extends State<SyncIndicator> with SingleTickerProvider
     final theme = Theme.of(context);
     final isHovered = states.contains(WidgetState.hovered);
     double actualOpacity = (widget.state.isRefreshing) ? 0.5 : 0.2;
-    actualOpacity += (isHovered) ? 0.2 : 0.0;
+    actualOpacity += isHovered ? 0.2 : 0.0;
     final iconColor = theme.iconTheme.color!.withOpacity(actualOpacity);
 
     Widget dataWidget;
 
     if (!widget.isDirty && widget.lastSynced != null) {
       dataWidget = Tooltip(
-        message: "${tr.sync_done}\n\n${tr.sync_last_saved}: ${widget.lastSynced!.toTimeAgoStringPrecise()}",
+        message:
+            "${tr.sync_done}\n\n${tr.sync_last_saved}: ${widget.lastSynced!.toTimeAgoStringPrecise()}",
         child: Icon(
           Icons.check_circle_rounded,
           size: widget.iconSize,
@@ -129,6 +130,6 @@ class _SyncIndicatorState extends State<SyncIndicator> with SingleTickerProvider
       ),
     );
 
-    return (shouldAnimate) ? refreshingWidget : dataWidget;
+    return shouldAnimate ? refreshingWidget : dataWidget;
   }
 }

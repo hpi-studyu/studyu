@@ -13,10 +13,10 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 class PasswordRecoveryForm extends FormConsumerRefWidget {
   const PasswordRecoveryForm({super.key});
 
-  final AuthFormKey formKey = AuthFormKey.passwordRecovery;
-
   @override
   Widget build(BuildContext context, FormGroup form, WidgetRef ref) {
+    const formKey = AuthFormKey.passwordRecovery;
+
     final state = ref.watch(authFormControllerProvider(formKey));
     final controller = ref.watch(authFormControllerProvider(formKey).notifier);
 
@@ -33,23 +33,33 @@ class PasswordRecoveryForm extends FormConsumerRefWidget {
           formControl: controller.passwordConfirmationControl,
           labelText: tr.form_field_password_new_confirm,
           hintText: tr.form_field_password_new_confirm_hint,
-          onSubmitted: (_) =>
-              form.valid ? ref.read(authFormControllerProvider(formKey).notifier).recoverPassword() : null,
+          onSubmitted: (_) => form.valid
+              ? ref
+                  .read(authFormControllerProvider(formKey).notifier)
+                  .recoverPassword()
+              : null,
         ),
         const SizedBox(height: 24.0),
-        ReactiveFormConsumer(builder: (context, form, child) {
-          return Center(
-            child: PrimaryButton(
-              icon: null,
-              text: tr.action_button_password_reset,
-              isLoading: state.isLoading,
-              enabled: form.valid,
-              onPressedFuture: () => ref.read(authFormControllerProvider(formKey).notifier).recoverPassword(),
-              tooltipDisabled: tr.form_invalid_prompt,
-              innerPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
-            ),
-          );
-        }),
+        ReactiveFormConsumer(
+          builder: (context, form, child) {
+            return Center(
+              child: PrimaryButton(
+                icon: null,
+                text: tr.action_button_password_reset,
+                isLoading: state.isLoading,
+                enabled: form.valid,
+                onPressedFuture: () => ref
+                    .read(authFormControllerProvider(formKey).notifier)
+                    .recoverPassword(),
+                tooltipDisabled: tr.form_invalid_prompt,
+                innerPadding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 10.0,
+                ),
+              ),
+            );
+          },
+        ),
         const SizedBox(height: 24.0),
         const Divider(height: 1),
         const SizedBox(height: 12.0),
@@ -60,10 +70,11 @@ class PasswordRecoveryForm extends FormConsumerRefWidget {
             const SizedBox(width: 4.0),
             Hyperlink(
               text: tr.link_login,
-              onClick: () => ref.read(routerProvider).dispatch(RoutingIntents.login),
+              onClick: () =>
+                  ref.read(routerProvider).dispatch(RoutingIntents.login),
             ),
           ],
-        )
+        ),
       ],
     );
   }

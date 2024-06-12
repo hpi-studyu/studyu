@@ -17,7 +17,8 @@ class AverageSection extends ReportSection {
 
   AverageSection.withId() : super.withId(sectionType);
 
-  factory AverageSection.fromJson(Map<String, dynamic> json) => _$AverageSectionFromJson(json);
+  factory AverageSection.fromJson(Map<String, dynamic> json) =>
+      _$AverageSectionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$AverageSectionToJson(this);
 }

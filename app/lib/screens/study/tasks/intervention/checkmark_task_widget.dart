@@ -18,27 +18,38 @@ class CheckmarkTaskWidget extends StatefulWidget {
 }
 
 class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
-  DateTime? loginClickTime;
+  DateTime _lastClickTime = DateTime.now();
   bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
-          textStyle: WidgetStateProperty.all<TextStyle>(const TextStyle(color: Colors.white))),
+        backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
+        textStyle: WidgetStateProperty.all<TextStyle>(
+          const TextStyle(color: Colors.white),
+        ),
+      ),
       onPressed: () async {
-        if (isRedundantClick(loginClickTime)) return;
+        if (isRedundantClick(_lastClickTime)) return;
         setState(() {
           _isLoading = true;
+          _lastClickTime = DateTime.now();
         });
         await handleTaskCompletion(context, (StudySubject? subject) async {
           try {
-            await subject!
-                .addResult<bool>(taskId: widget.task!.id, periodId: widget.completionPeriod!.id, result: true);
+            await subject!.addResult<bool>(
+              taskId: widget.task!.id,
+              periodId: widget.completionPeriod!.id,
+              result: true,
+            );
           } on SocketException catch (_) {
             await subject!.addResult<bool>(
-                taskId: widget.task!.id, periodId: widget.completionPeriod!.id, result: true, offline: true);
+              taskId: widget.task!.id,
+              periodId: widget.completionPeriod!.id,
+              result: true,
+              offline: true,
+            );
             rethrow;
           }
         });
@@ -48,7 +59,9 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
         if (!context.mounted) return;
         Navigator.pop(context, true);
       },
-      icon: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Icon(Icons.check),
+      icon: _isLoading
+          ? const CircularProgressIndicator(color: Colors.white)
+          : const Icon(Icons.check),
       label: Text(AppLocalizations.of(context)!.complete),
     );
   }

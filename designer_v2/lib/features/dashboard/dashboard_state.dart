@@ -44,12 +44,17 @@ class DashboardState extends Equatable {
   ///
   /// Wrapped in an [AsyncValue] that mirrors the [studies]' async states,
   /// but resolves to a different subset of studies based on the [studiesFilter]
-  AsyncValue<List<Study>> displayedStudies(Set<String> pinnedStudies, String query) {
+  AsyncValue<List<Study>> displayedStudies(
+    Set<String> pinnedStudies,
+    String query,
+  ) {
     return studies.when(
       data: (studies) {
-        List<Study> updatedStudies = studiesFilter.apply(studies: studies, user: currentUser).toList();
+        List<Study> updatedStudies =
+            studiesFilter.apply(studies: studies, user: currentUser).toList();
         updatedStudies = filter(studiesToFilter: updatedStudies);
-        updatedStudies = sort(pinnedStudies: pinnedStudies, studiesToSort: updatedStudies);
+        updatedStudies =
+            sort(pinnedStudies: pinnedStudies, studiesToSort: updatedStudies);
         return AsyncValue.data(updatedStudies);
       },
       error: (error, _) => AsyncValue.error(error, StackTrace.current),
@@ -60,63 +65,93 @@ class DashboardState extends Equatable {
   List<Study> filter({List<Study>? studiesToFilter}) {
     final filteredStudies = studiesToFilter ?? studies.value!;
     if (query.isNotEmpty) {
-      return filteredStudies.where((s) => s.title!.toLowerCase().contains(query)).toList();
+      return filteredStudies
+          .where((s) => s.title!.toLowerCase().contains(query))
+          .toList();
     }
     return filteredStudies;
   }
 
-  List<Study> sort({required Set<String> pinnedStudies, List<Study>? studiesToSort}) {
+  List<Study> sort({
+    required Set<String> pinnedStudies,
+    List<Study>? studiesToSort,
+  }) {
     final sortedStudies = studiesToSort ?? studies.value!;
     switch (sortByColumn) {
       case StudiesTableColumn.title:
         if (sortAscending) {
-          sortedStudies.sort((study, other) => study.title!.compareTo(other.title!));
+          sortedStudies
+              .sort((study, other) => study.title!.compareTo(other.title!));
         } else {
-          sortedStudies.sort((study, other) => other.title!.compareTo(study.title!));
+          sortedStudies
+              .sort((study, other) => other.title!.compareTo(study.title!));
         }
-        break;
       case StudiesTableColumn.status:
         if (sortAscending) {
-          sortedStudies.sort((study, other) => study.status.index.compareTo(other.status.index));
+          sortedStudies.sort(
+            (study, other) => study.status.index.compareTo(other.status.index),
+          );
         } else {
-          sortedStudies.sort((study, other) => other.status.index.compareTo(study.status.index));
+          sortedStudies.sort(
+            (study, other) => other.status.index.compareTo(study.status.index),
+          );
         }
-        break;
       case StudiesTableColumn.participation:
         if (sortAscending) {
-          sortedStudies.sort((study, other) => study.participation.index.compareTo(other.participation.index));
+          sortedStudies.sort(
+            (study, other) =>
+                study.participation.index.compareTo(other.participation.index),
+          );
         } else {
-          sortedStudies.sort((study, other) => other.participation.index.compareTo(study.participation.index));
+          sortedStudies.sort(
+            (study, other) =>
+                other.participation.index.compareTo(study.participation.index),
+          );
         }
-        break;
       case StudiesTableColumn.createdAt:
         if (sortAscending) {
-          sortedStudies.sort((study, other) => study.createdAt!.compareTo(other.createdAt!));
+          sortedStudies.sort(
+            (study, other) => study.createdAt!.compareTo(other.createdAt!),
+          );
         } else {
-          sortedStudies.sort((study, other) => other.createdAt!.compareTo(study.createdAt!));
+          sortedStudies.sort(
+            (study, other) => other.createdAt!.compareTo(study.createdAt!),
+          );
         }
-        break;
       case StudiesTableColumn.enrolled:
         if (sortAscending) {
-          sortedStudies.sort((study, other) => study.participantCount.compareTo(other.participantCount));
+          sortedStudies.sort(
+            (study, other) =>
+                study.participantCount.compareTo(other.participantCount),
+          );
         } else {
-          sortedStudies.sort((study, other) => other.participantCount.compareTo(study.participantCount));
+          sortedStudies.sort(
+            (study, other) =>
+                other.participantCount.compareTo(study.participantCount),
+          );
         }
-        break;
       case StudiesTableColumn.active:
         if (sortAscending) {
-          sortedStudies.sort((study, other) => study.activeSubjectCount.compareTo(other.activeSubjectCount));
+          sortedStudies.sort(
+            (study, other) =>
+                study.activeSubjectCount.compareTo(other.activeSubjectCount),
+          );
         } else {
-          sortedStudies.sort((study, other) => other.activeSubjectCount.compareTo(study.activeSubjectCount));
+          sortedStudies.sort(
+            (study, other) =>
+                other.activeSubjectCount.compareTo(study.activeSubjectCount),
+          );
         }
-        break;
       case StudiesTableColumn.completed:
         if (sortAscending) {
-          sortedStudies.sort((study, other) => study.endedCount.compareTo(other.endedCount));
+          sortedStudies.sort(
+            (study, other) => study.endedCount.compareTo(other.endedCount),
+          );
         } else {
-          sortedStudies.sort((study, other) => other.endedCount.compareTo(study.endedCount));
+          sortedStudies.sort(
+            (study, other) => other.endedCount.compareTo(study.endedCount),
+          );
         }
-        break;
       case StudiesTableColumn.pin:
       case StudiesTableColumn.action:
         break;
@@ -148,12 +183,14 @@ class DashboardState extends Equatable {
     bool? sortAscending,
   }) {
     return DashboardState(
-        studies: studies != null ? studies() : this.studies,
-        studiesFilter: studiesFilter != null ? studiesFilter() : this.studiesFilter,
-        currentUser: currentUser != null ? currentUser() : this.currentUser,
-        query: query ?? this.query,
-        sortByColumn: sortByColumn ?? this.sortByColumn,
-        sortAscending: sortAscending ?? this.sortAscending);
+      studies: studies != null ? studies() : this.studies,
+      studiesFilter:
+          studiesFilter != null ? studiesFilter() : this.studiesFilter,
+      currentUser: currentUser != null ? currentUser() : this.currentUser,
+      query: query ?? this.query,
+      sortByColumn: sortByColumn ?? this.sortByColumn,
+      sortAscending: sortAscending ?? this.sortAscending,
+    );
   }
 
   // - Equatable

@@ -27,7 +27,10 @@ class IconPack {
     return iconOptions;
   }();
 
-  static IconOption? resolveIconByName(String? name, {List<IconOption>? iconPack}) {
+  static IconOption? resolveIconByName(
+    String? name, {
+    List<IconOption>? iconPack,
+  }) {
     iconPack ??= IconPack.defaultPack;
     if (name == null || name.isEmpty) {
       return null;
@@ -48,14 +51,15 @@ class IconOption extends Equatable {
   List<Object?> get props => [name];
 
   String toJson() => name;
-  static IconOption fromJson(String json) => IconOption(json);
+  IconOption fromJson(String json) => IconOption(json);
 }
 
-class ReactiveIconPicker extends ReactiveFocusableFormField<IconOption, IconOption> {
+class ReactiveIconPicker
+    extends ReactiveFocusableFormField<IconOption, IconOption> {
   ReactiveIconPicker({
-    required iconOptions,
-    selectedIconSize = 20.0,
-    galleryIconSize = 28.0,
+    required List<IconOption> iconOptions,
+    double? selectedIconSize = 20.0,
+    double? galleryIconSize = 28.0,
     bool readOnly = false,
     ReactiveFormFieldCallback<IconOption>? onSelect,
     super.formControl,
@@ -64,11 +68,12 @@ class ReactiveIconPicker extends ReactiveFocusableFormField<IconOption, IconOpti
     super.validationMessages,
     super.focusNode,
     super.key,
-  }) : super(builder: (ReactiveFormFieldState<IconOption, IconOption> field) {
-          // Unsupported: showErrors, validationMessages
-          final isDisabled = readOnly || field.control.disabled;
+  }) : super(
+          builder: (ReactiveFormFieldState<IconOption, IconOption> field) {
+            // Unsupported: showErrors, validationMessages
+            final isDisabled = readOnly || field.control.disabled;
 
-          return IconPicker(
+            return IconPicker(
               iconOptions: iconOptions,
               isDisabled: isDisabled,
               focusNode: focusNode,
@@ -79,8 +84,10 @@ class ReactiveIconPicker extends ReactiveFocusableFormField<IconOption, IconOpti
                 if (isDisabled) return;
                 field.didChange(iconOption);
                 onSelect?.call(field.control);
-              });
-        });
+              },
+            );
+          },
+        );
 }
 
 class IconPicker extends StatelessWidget {
@@ -121,15 +128,16 @@ class IconPicker extends StatelessWidget {
 }
 
 class IconPickerField extends StatelessWidget {
-  const IconPickerField(
-      {required this.iconOptions,
-      this.selectedOption,
-      this.selectedIconSize,
-      this.galleryIconSize,
-      this.onSelect,
-      this.isDisabled = false,
-      this.focusNode,
-      super.key});
+  const IconPickerField({
+    required this.iconOptions,
+    this.selectedOption,
+    this.selectedIconSize,
+    this.galleryIconSize,
+    this.onSelect,
+    this.isDisabled = false,
+    this.focusNode,
+    super.key,
+  });
 
   final List<IconOption> iconOptions;
 
@@ -144,25 +152,36 @@ class IconPickerField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final actualGalleryIconSize = galleryIconSize ?? Theme.of(context).iconTheme.size ?? 24.0;
-    final actualSelectedIconSize = selectedIconSize ?? Theme.of(context).iconTheme.size ?? 16.0;
+    final actualGalleryIconSize =
+        galleryIconSize ?? Theme.of(context).iconTheme.size ?? 24.0;
+    final actualSelectedIconSize =
+        selectedIconSize ?? Theme.of(context).iconTheme.size ?? 16.0;
 
-    openIconPicker() => showIconPickerDialog(context,
-        iconOptions: iconOptions, galleryIconSize: actualGalleryIconSize, onSelect: onSelect);
+    Future<void> openIconPicker() => showIconPickerDialog(
+          context,
+          iconOptions: iconOptions,
+          galleryIconSize: actualGalleryIconSize,
+          onSelect: onSelect,
+        );
 
     if (selectedOption != null && !selectedOption!.isEmpty) {
-      final selectedIcon =
-          selectedOption?.icon ?? IconPack.resolveIconByName(selectedOption!.name, iconPack: iconOptions)!.icon;
+      final selectedIcon = selectedOption?.icon ??
+          IconPack.resolveIconByName(
+            selectedOption!.name,
+            iconPack: iconOptions,
+          )!
+              .icon;
       return IconButton(
-          tooltip: tr.iconpicker_nonempty_prompt,
-          splashRadius: actualSelectedIconSize,
-          onPressed: (isDisabled) ? null : openIconPicker,
-          focusNode: focusNode,
-          icon: Icon(selectedIcon, size: actualSelectedIconSize));
+        tooltip: tr.iconpicker_nonempty_prompt,
+        splashRadius: actualSelectedIconSize,
+        onPressed: isDisabled ? null : openIconPicker,
+        focusNode: focusNode,
+        icon: Icon(selectedIcon, size: actualSelectedIconSize),
+      );
     }
 
     return TextButton(
-      onPressed: (isDisabled) ? null : openIconPicker,
+      onPressed: isDisabled ? null : openIconPicker,
       focusNode: focusNode,
       child: Text(tr.iconpicker_empty_prompt),
     );
@@ -170,7 +189,12 @@ class IconPickerField extends StatelessWidget {
 }
 
 class IconPickerGallery extends StatelessWidget {
-  const IconPickerGallery({required this.iconOptions, required this.iconSize, this.onSelect, super.key});
+  const IconPickerGallery({
+    required this.iconOptions,
+    required this.iconSize,
+    this.onSelect,
+    super.key,
+  });
 
   final List<IconOption> iconOptions;
   final VoidCallbackOn<IconOption>? onSelect;
@@ -181,24 +205,28 @@ class IconPickerGallery extends StatelessWidget {
     final List<Widget> iconWidgets = [];
     for (final iconOption in iconOptions) {
       final iconWidget = MouseEventsRegion(
-          builder: (context, state) {
-            final isHovered = state.contains(WidgetState.hovered);
-            return Container(
-              color: isHovered ? Theme.of(context).colorScheme.primary.withOpacity(0.2) : null,
-              child: Icon(iconOption.icon!, size: iconSize),
-            );
-          },
-          onTap: () => Navigator.pop(context, iconOption));
+        builder: (context, state) {
+          final isHovered = state.contains(WidgetState.hovered);
+          return Container(
+            color: isHovered
+                ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
+                : null,
+            child: Icon(iconOption.icon, size: iconSize),
+          );
+        },
+        onTap: () => Navigator.pop(context, iconOption),
+      );
       iconWidgets.add(iconWidget);
     }
 
     return GridView.extent(
-        primary: false,
-        maxCrossAxisExtent: iconSize * 2,
-        crossAxisSpacing: 4.0,
-        mainAxisSpacing: 4.0,
-        //padding: const EdgeInsets.all(12.0),
-        children: iconWidgets);
+      primary: false,
+      maxCrossAxisExtent: iconSize * 2,
+      crossAxisSpacing: 4.0,
+      mainAxisSpacing: 4.0,
+      //padding: const EdgeInsets.all(12.0),
+      children: iconWidgets,
+    );
   }
 }
 
@@ -207,10 +235,10 @@ Future<void> showIconPickerDialog(
   required List<IconOption> iconOptions,
   double? galleryIconSize,
   VoidCallbackOn<IconOption>? onSelect,
-  minWidth = 300,
-  minHeight = 300,
+  double minWidth = 300,
+  double minHeight = 300,
 }) async {
-  IconOption? iconPicked = await showDialog(
+  final IconOption? iconPicked = await showDialog(
     context: context,
     builder: (BuildContext context) {
       final theme = Theme.of(context);
@@ -218,18 +246,22 @@ Future<void> showIconPickerDialog(
       final dialogHeight = MediaQuery.of(context).size.height * 0.4;
 
       return StandardDialog(
-          body: SizedBox(
-            width: max(dialogWidth, minWidth),
-            height: max(dialogHeight, minHeight),
-            child: IconPickerGallery(iconOptions: iconOptions, iconSize: galleryIconSize ?? 48.0),
+        body: SizedBox(
+          width: max(dialogWidth, minWidth),
+          height: max(dialogHeight, minHeight),
+          child: IconPickerGallery(
+            iconOptions: iconOptions,
+            iconSize: galleryIconSize ?? 48.0,
           ),
-          title: SelectableText(
-            tr.iconpicker_dialog_title,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.normal,
-              color: theme.colorScheme.onPrimaryContainer,
-            ),
-          ));
+        ),
+        title: SelectableText(
+          tr.iconpicker_dialog_title,
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.normal,
+            color: theme.colorScheme.onPrimaryContainer,
+          ),
+        ),
+      );
     },
   );
 

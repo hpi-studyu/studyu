@@ -1,5 +1,5 @@
 name: studyu_app
-version: 2.7.6-dev.0
+version: 2.7.6-dev.2
 description: Partake in digital N-of-1 trials with the innovative StudyU Health App
 publish_to: none
 homepage: https://studyu.health
@@ -7,6 +7,7 @@ repository: https://github.com/hpi-studyu/studyu
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
+
 dependencies:
   camera: ^0.11.0+1
   collection: ^1.18.0
@@ -22,7 +23,7 @@ dependencies:
   flutter_timezone: ^1.0.8
   flutter_web_plugins:
     sdk: flutter
-  flutter_widget_from_html: ^0.15.0
+  flutter_widget_from_html: ^0.15.1
   intersperse: ^2.0.0
   intl: ^0.19.0
   material_design_icons_flutter: ^7.0.7296
@@ -38,10 +39,10 @@ dependencies:
   sentry_flutter: ^8.2.0
   sentry_logging: ^8.2.0
   shared_preferences: ^2.2.3
-  studyu_core: ^4.4.3-dev.0
-  studyu_flutter_common: ^1.8.4-dev.0
-  supabase: ^2.2.0
-  supabase_flutter: ^2.5.4
+  studyu_core: ^4.4.3-dev.1
+  studyu_flutter_common: ^1.8.4-dev.1
+  supabase: ^2.2.1
+  supabase_flutter: ^2.5.5
   timeline_tile: ^2.0.0
   timezone: ^0.9.3
   universal_html: ^2.2.4
@@ -54,6 +55,7 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
+  lint: ^2.3.0
 
 dependency_overrides:
   intl: ^0.19.0

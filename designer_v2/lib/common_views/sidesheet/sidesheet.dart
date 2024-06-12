@@ -27,12 +27,18 @@ class Sidesheet extends StatefulWidget {
     this.withCloseButton = false,
     this.ignoreAppBar = true,
     this.collapseSingleTab = false,
-    this.bodyPadding = const EdgeInsets.symmetric(vertical: 32.0, horizontal: 48.0),
+    this.bodyPadding =
+        const EdgeInsets.symmetric(vertical: 32.0, horizontal: 48.0),
     this.wrapContent,
     super.key,
-  })  : assert((body != null && tabs == null) || (body == null && tabs != null),
-            "Must provide either body or tabs to build sidesheet content"),
-        assert(tabs == null || tabs.length >= 1, "Must provide at least one tab to build sidesheet content");
+  })  : assert(
+          (body != null && tabs == null) || (body == null && tabs != null),
+          "Must provide either body or tabs to build sidesheet content",
+        ),
+        assert(
+          tabs == null || tabs.length >= 1,
+          "Must provide at least one tab to build sidesheet content",
+        );
 
   final String titleText;
   final Widget? body;
@@ -78,18 +84,17 @@ class _SidesheetState extends State<Sidesheet> {
         : 0;
     final actualHeight = screen.size.height - exceptionalHeight;
 
-    final backgroundColor = ThemeConfig.sidesheetBackgroundColor(Theme.of(context));
+    final backgroundColor =
+        ThemeConfig.sidesheetBackgroundColor(Theme.of(context));
 
     return Align(
       alignment: Alignment.bottomLeft,
       child: Material(
-        elevation: 0,
         color: Colors.white,
         child: SizedBox(
           width: actualWidth,
           height: actualHeight,
           child: Scaffold(
-            appBar: null,
             backgroundColor: backgroundColor,
             body: widget.withCloseButton
                 ? Stack(
@@ -99,7 +104,7 @@ class _SidesheetState extends State<Sidesheet> {
                         top: 5,
                         right: 5,
                         child: CloseButton(),
-                      )
+                      ),
                     ],
                   )
                 : _build(context, widget.body, widget.tabs),
@@ -109,12 +114,18 @@ class _SidesheetState extends State<Sidesheet> {
     );
   }
 
-  _build(BuildContext context, Widget? body, List<SidesheetTab>? tabs) {
+  Container _build(
+    BuildContext context,
+    Widget? body,
+    List<SidesheetTab>? tabs,
+  ) {
     final theme = Theme.of(context);
-    final backgroundColor = ThemeConfig.sidesheetBackgroundColor(Theme.of(context));
+    final backgroundColor =
+        ThemeConfig.sidesheetBackgroundColor(Theme.of(context));
 
     final hasTabs = tabs != null;
-    final isCollapsed = tabs != null && tabs.length == 1 && widget.collapseSingleTab;
+    final isCollapsed =
+        tabs != null && tabs.length == 1 && widget.collapseSingleTab;
 
     final innerBody = (body != null)
         ? body
@@ -122,22 +133,24 @@ class _SidesheetState extends State<Sidesheet> {
             ? selectedTab!.builder(context)
             : const SizedBox.shrink();
 
-    final actualWrapContent = widget.wrapContent ?? (widget) => widget; // default to identity no-op
+    final actualWrapContent =
+        widget.wrapContent ?? (widget) => widget; // default to identity no-op
 
     final tabBarLabelHoverColor =
-        (theme.tabBarTheme.labelColor ?? theme.tabBarTheme.labelStyle?.color)?.faded(ThemeConfig.kHoverFadeFactor);
+        (theme.tabBarTheme.labelColor ?? theme.tabBarTheme.labelStyle?.color)
+            ?.faded(ThemeConfig.kHoverFadeFactor);
 
     return Container(
       decoration: BoxDecoration(
         border: Border(
           left: BorderSide(
-            color: (theme.dividerTheme.color ?? theme.dividerColor).withOpacity(0.1),
+            color: (theme.dividerTheme.color ?? theme.dividerColor)
+                .withOpacity(0.1),
           ),
         ),
       ),
       child: actualWrapContent(
         Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
@@ -152,42 +165,51 @@ class _SidesheetState extends State<Sidesheet> {
                 children: [
                   SelectableText(
                     widget.titleText,
-                    style: theme.textTheme.headlineSmall!.copyWith(fontWeight: FontWeight.normal),
+                    style: theme.textTheme.headlineSmall!
+                        .copyWith(fontWeight: FontWeight.normal),
                   ),
-                  (widget.actionButtons != null)
-                      ? Wrap(spacing: 8.0, children: widget.actionButtons!)
-                      : const SizedBox.shrink(),
+                  if (widget.actionButtons != null)
+                    Wrap(spacing: 8.0, children: widget.actionButtons!)
+                  else
+                    const SizedBox.shrink(),
                 ],
               ),
             ),
-            (hasTabs && !isCollapsed)
-                ? Padding(
-                    padding: EdgeInsets.symmetric(horizontal: (widget.bodyPadding?.horizontal ?? 0) * 0.5),
-                    child: TabbedNavbar<SidesheetTab>(
-                      tabs: tabs,
-                      height: 38.0,
-                      onSelect: _onTabChange,
-                      labelPadding: EdgeInsets.zero,
-                      labelSpacing: 24.0,
-                      isScrollable: true,
-                      indicatorSize: TabBarIndicatorSize.label,
-                      backgroundColor: backgroundColor,
-                      overlayColor: WidgetStateColor.resolveWith(
-                        (states) => Colors.transparent,
-                      ),
-                      labelColorHover: tabBarLabelHoverColor,
-                      unselectedLabelColorHover: tabBarLabelHoverColor,
-                    ),
-                  )
-                : const SizedBox.shrink(),
-            (hasTabs && !isCollapsed) ? const Divider(height: 1) : const Divider(),
+            if (hasTabs && !isCollapsed)
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: (widget.bodyPadding?.horizontal ?? 0) * 0.5,
+                ),
+                child: TabbedNavbar<SidesheetTab>(
+                  tabs: tabs,
+                  height: 38.0,
+                  onSelect: _onTabChange,
+                  labelPadding: EdgeInsets.zero,
+                  labelSpacing: 24.0,
+                  isScrollable: true,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  backgroundColor: backgroundColor,
+                  overlayColor: WidgetStateColor.resolveWith(
+                    (states) => Colors.transparent,
+                  ),
+                  labelColorHover: tabBarLabelHoverColor,
+                  unselectedLabelColorHover: tabBarLabelHoverColor,
+                ),
+              )
+            else
+              const SizedBox.shrink(),
+            if (hasTabs && !isCollapsed)
+              const Divider(height: 1)
+            else
+              const Divider(),
             Flexible(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    (hasTabs && !isCollapsed) // compensate for divider height loss
-                        ? const SizedBox(height: 12.0)
-                        : const SizedBox.shrink(),
+                    if (hasTabs && !isCollapsed)
+                      const SizedBox(height: 12.0)
+                    else
+                      const SizedBox.shrink(),
                     Padding(
                       padding: EdgeInsets.fromLTRB(
                         (widget.bodyPadding?.horizontal ?? 0) * 0.5,
@@ -196,7 +218,7 @@ class _SidesheetState extends State<Sidesheet> {
                         (widget.bodyPadding?.vertical ?? 0) * 0.5,
                       ),
                       child: innerBody,
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -228,7 +250,8 @@ Future<T?> showModalSideSheet<T extends Object?>({
   assert(!barrierDismissible || barrierLabel != null);
   return showGeneralDialog(
     barrierDismissible: barrierDismissible,
-    barrierColor: barrierColor ?? ThemeConfig.modalBarrierColor(Theme.of(context)),
+    barrierColor:
+        barrierColor ?? ThemeConfig.modalBarrierColor(Theme.of(context)),
     transitionDuration: transitionDuration,
     barrierLabel: barrierLabel,
     useRootNavigator: useRootNavigator,
@@ -246,7 +269,8 @@ Future<T?> showModalSideSheet<T extends Object?>({
     ),
     transitionBuilder: (_, animation, __, child) {
       return SlideTransition(
-        position: Tween<Offset>(begin: const Offset(-1, 0), end: Offset.zero).animate(animation),
+        position: Tween<Offset>(begin: const Offset(-1, 0), end: Offset.zero)
+            .animate(animation),
         child: child,
       );
     },

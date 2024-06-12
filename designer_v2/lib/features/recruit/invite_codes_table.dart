@@ -34,37 +34,53 @@ class StudyInvitesTable extends StatelessWidget {
     return StandardTable<StudyInvite>(
       items: invites,
       columns: [
-        StandardTableColumn(label: '#', columnWidth: const FixedColumnWidth(60)),
         StandardTableColumn(
-            label: tr.code_list_header_code,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6))),
+          label: '#',
+          columnWidth: const FixedColumnWidth(60),
+        ),
         StandardTableColumn(
-            label: tr.studies_list_header_participants_enrolled, columnWidth: const FixedColumnWidth(100)),
+          label: tr.code_list_header_code,
+          columnWidth:
+              const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6)),
+        ),
         StandardTableColumn(
-            label: tr.form_field_preconfigured_schedule_intervention_a,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1))),
+          label: tr.studies_list_header_participants_enrolled,
+          columnWidth: const FixedColumnWidth(100),
+        ),
         StandardTableColumn(
-            label: tr.form_field_preconfigured_schedule_intervention_b,
-            columnWidth: const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1))),
+          label: tr.form_field_preconfigured_schedule_intervention_a,
+          columnWidth:
+              const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth()),
+        ),
+        StandardTableColumn(
+          label: tr.form_field_preconfigured_schedule_intervention_b,
+          columnWidth:
+              const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth()),
+        ),
         //StandardTableColumn(label: '', columnWidth: const FixedColumnWidth(60)),
       ],
       onSelectItem: onSelect,
       buildCellsAt: _buildRow,
       trailingActionsAt: (item, _) => getActions(item),
-      cellSpacing: 10.0,
       rowSpacing: 5.0,
       minRowHeight: 30.0,
     );
   }
 
-  List<Widget> _buildRow(BuildContext context, StudyInvite item, int rowIdx, Set<WidgetState> states) {
+  List<Widget> _buildRow(
+    BuildContext context,
+    StudyInvite item,
+    int rowIdx,
+    Set<WidgetState> states,
+  ) {
     final theme = Theme.of(context);
     final mutedTextStyle = ThemeConfig.bodyTextBackground(theme);
 
     Intervention? interventionA;
     Intervention? interventionB;
 
-    if (item.preselectedInterventionIds != null && item.preselectedInterventionIds!.isNotEmpty) {
+    if (item.preselectedInterventionIds != null &&
+        item.preselectedInterventionIds!.isNotEmpty) {
       interventionA = getIntervention(item.preselectedInterventionIds![0]);
       interventionB = getIntervention(item.preselectedInterventionIds![1]);
     }
@@ -103,7 +119,7 @@ class StudyInvitesTable extends StatelessWidget {
               maxLines: 1,
             ),
             // TODO: support inline actions in standard table widget
-            ActionMenuInline(actions: getInlineActions(item))
+            ActionMenuInline(actions: getInlineActions(item)),
           ],
         ),
       ),

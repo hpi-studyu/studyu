@@ -1,8 +1,7 @@
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
-
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 const fakeStudyUEmailDomain = 'fake-studyu-email-domain.com';
 String selectedSubjectIdKey = 'selected_study_object_id';
@@ -10,7 +9,10 @@ const userEmailKey = 'user_email';
 const userPasswordKey = 'user_password';
 const cacheSubjectKey = "cache_subject";
 
-Future<void> storeFakeUserEmailAndPassword(String email, String password) async {
+Future<void> storeFakeUserEmailAndPassword(
+  String email,
+  String password,
+) async {
   await SecureStorage.write(userEmailKey, email);
   await SecureStorage.write(userPasswordKey, password);
 }
@@ -22,8 +24,9 @@ Future<bool> signInParticipant() async {
     try {
       final fakeEmail = await getFakeUserEmail();
       final fakePassword = await getFakeUserPassword();
-      final authResponse = await Supabase.instance.client.auth.signInWithPassword(
-        email: fakeEmail!,
+      final authResponse =
+          await Supabase.instance.client.auth.signInWithPassword(
+        email: fakeEmail,
         password: fakePassword!,
       );
       return authResponse.session != null;
@@ -39,9 +42,10 @@ Future<bool> anonymousSignUp() async {
   final fakeUserEmail = '${const Uuid().v4()}@$fakeStudyUEmailDomain';
   final fakeUserPassword = const Uuid().v4();
   try {
-    final authResponse = await Supabase.instance.client.auth.signUp(email: fakeUserEmail, password: fakeUserPassword);
+    final authResponse = await Supabase.instance.client.auth
+        .signUp(email: fakeUserEmail, password: fakeUserPassword);
     await storeFakeUserEmailAndPassword(fakeUserEmail, fakeUserPassword);
-    return authResponse.session != null ? true : await signInParticipant();
+    return authResponse.session != null || await signInParticipant();
   } catch (error, stacktrace) {
     SupabaseQuery.catchSupabaseException(error, stacktrace);
     return false;

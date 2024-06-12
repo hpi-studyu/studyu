@@ -9,8 +9,12 @@ class ChoiceQuestionWidget extends QuestionWidget {
   final Function(Answer) onDone;
   final String multiSelectionText;
 
-  const ChoiceQuestionWidget(
-      {super.key, required this.question, required this.onDone, required this.multiSelectionText});
+  const ChoiceQuestionWidget({
+    super.key,
+    required this.question,
+    required this.onDone,
+    required this.multiSelectionText,
+  });
 
   @override
   State<ChoiceQuestionWidget> createState() => _ChoiceQuestionWidgetState();
@@ -61,7 +65,9 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
         OutlinedButton(
           onPressed: confirm,
           style: ButtonStyle(
-            backgroundColor: WidgetStateProperty.all<Color>(Theme.of(context).colorScheme.secondary),
+            backgroundColor: WidgetStateProperty.all<Color>(
+              Theme.of(context).colorScheme.secondary,
+            ),
             foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
           ),
           child: Text(AppLocalizations.of(context)!.confirm),

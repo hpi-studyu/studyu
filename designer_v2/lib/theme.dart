@@ -17,13 +17,17 @@ class ThemeConfig {
   static const double kHoverFadeFactor = 0.7;
   static const double kMuteFadeFactor = 0.8;
 
-  static bodyBackgroundColor(ThemeData theme) => theme.scaffoldBackgroundColor.faded(0.5);
+  static Color bodyBackgroundColor(ThemeData theme) =>
+      theme.scaffoldBackgroundColor.faded(0.5);
 
-  static Color modalBarrierColor(ThemeData theme) => theme.colorScheme.secondary.withOpacity(0.4);
+  static Color modalBarrierColor(ThemeData theme) =>
+      theme.colorScheme.secondary.withOpacity(0.4);
 
-  static Color containerColor(ThemeData theme) => theme.colorScheme.secondaryContainer.withOpacity(0.3);
+  static Color containerColor(ThemeData theme) =>
+      theme.colorScheme.secondaryContainer.withOpacity(0.3);
 
-  static Color colorPickerInitialColor(ThemeData theme) => theme.colorScheme.primary;
+  static Color colorPickerInitialColor(ThemeData theme) =>
+      theme.colorScheme.primary;
 
   static TextStyle bodyTextMuted(ThemeData theme) => TextStyle(
         fontSize: 14.0,
@@ -31,18 +35,24 @@ class ThemeConfig {
         color: theme.textTheme.bodyLarge?.color?.faded(0.65),
       );
 
-  static TextStyle bodyTextBackground(ThemeData theme) =>
-      TextStyle(fontSize: 14.0, height: 1.35, color: theme.colorScheme.onSurface.withOpacity(0.25));
+  static TextStyle bodyTextBackground(ThemeData theme) => TextStyle(
+        fontSize: 14.0,
+        height: 1.35,
+        color: theme.colorScheme.onSurface.withOpacity(0.25),
+      );
 
   static double iconSplashRadius(ThemeData theme) => 24.0;
 
-  static Color sidesheetBackgroundColor(ThemeData theme) => theme.scaffoldBackgroundColor.withOpacity(0.15);
+  static Color sidesheetBackgroundColor(ThemeData theme) =>
+      theme.scaffoldBackgroundColor.withOpacity(0.15);
 
-  static InputDecorationTheme dropdownInputDecorationTheme(ThemeData theme) => theme.inputDecorationTheme.copyWith(
+  static InputDecorationTheme dropdownInputDecorationTheme(ThemeData theme) =>
+      theme.inputDecorationTheme.copyWith(
         contentPadding: const EdgeInsets.fromLTRB(14.0, 14.0, 14.0, 14.0),
       );
 
-  static DropdownMenuItemTheme dropdownMenuItemTheme(ThemeData theme) => DropdownMenuItemTheme(
+  static DropdownMenuItemTheme dropdownMenuItemTheme(ThemeData theme) =>
+      DropdownMenuItemTheme(
         iconTheme: IconThemeData(
           color: theme.textTheme.bodyLarge?.color?.faded(0.4),
           // theme.iconTheme.color?.faded(0.75)
@@ -69,14 +79,24 @@ class NoAnimationPageTransitionsBuilder extends PageTransitionsBuilder {
 class WebTransitionBuilder extends PageTransitionsBuilder {
   const WebTransitionBuilder();
   @override
-  Widget buildTransitions<T>(PageRoute<T> route, BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
-    final opacityOldTween = Tween(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn));
-    final opacityNewTween = Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: Curves.easeIn));
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    final opacityOldTween =
+        Tween(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn));
+    final opacityNewTween =
+        Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: Curves.easeIn));
 
     return FadeTransition(
       opacity: opacityOldTween.animate(secondaryAnimation),
-      child: FadeTransition(opacity: opacityNewTween.animate(animation), child: child),
+      child: FadeTransition(
+        opacity: opacityNewTween.animate(animation),
+        child: child,
+      ),
     );
   }
 }
@@ -87,8 +107,13 @@ class ThemeSettingChange extends Notification {
 }
 
 class ThemeProvider extends InheritedWidget {
-  ThemeProvider(
-      {super.key, required this.settings, required this.lightDynamic, required this.darkDynamic, required super.child});
+  ThemeProvider({
+    super.key,
+    required this.settings,
+    required this.lightDynamic,
+    required this.darkDynamic,
+    required super.child,
+  });
 
   final ValueNotifier<ThemeSettings> settings;
   final ColorScheme? lightDynamic;
@@ -98,7 +123,8 @@ class ThemeProvider extends InheritedWidget {
     builders: kIsWeb
         ? <TargetPlatform, PageTransitionsBuilder>{
             // Animation when running on Web
-            for (final platform in TargetPlatform.values) platform: const WebTransitionBuilder(),
+            for (final platform in TargetPlatform.values)
+              platform: const WebTransitionBuilder(),
           }
         : const <TargetPlatform, PageTransitionsBuilder>{
             TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
@@ -118,7 +144,9 @@ class ThemeProvider extends InheritedWidget {
   }
 
   Color blend(Color targetColor) {
-    return Color(Blend.harmonize(targetColor.value, settings.value.sourceColor.value));
+    return Color(
+      Blend.harmonize(targetColor.value, settings.value.sourceColor.value),
+    );
   }
 
   Color source(Color? target) {
@@ -130,12 +158,16 @@ class ThemeProvider extends InheritedWidget {
   }
 
   ColorScheme colors(Brightness brightness, Color? targetColor) {
-    final dynamicPrimary = brightness == Brightness.light ? lightDynamic?.primary : darkDynamic?.primary;
+    final dynamicPrimary = brightness == Brightness.light
+        ? lightDynamic?.primary
+        : darkDynamic?.primary;
     final scheme = SchemeFidelity(
-        sourceColorHct:
-            dynamicPrimary != null ? Hct.fromInt(dynamicPrimary.value) : Hct.fromInt(source(targetColor).value),
-        isDark: false,
-        contrastLevel: 0.0);
+      sourceColorHct: dynamicPrimary != null
+          ? Hct.fromInt(dynamicPrimary.value)
+          : Hct.fromInt(source(targetColor).value),
+      isDark: false,
+      contrastLevel: 0.0,
+    );
     final colorScheme = ColorScheme.fromSeed(
       seedColor: dynamicPrimary ?? source(targetColor),
       brightness: brightness,
@@ -268,35 +300,30 @@ class ThemeProvider extends InheritedWidget {
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
           color: colors.surfaceContainerHighest.withOpacity(0.6),
-          width: 1.0,
         ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
           color: colors.surfaceContainerHighest.withOpacity(0.8),
-          width: 1.0,
         ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
           color: colors.primary,
-          width: 1.0,
         ),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
           color: colors.error,
-          width: 1.0,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
           color: colors.error,
-          width: 1.0,
         ),
       ),
     );
@@ -308,17 +335,58 @@ class ThemeProvider extends InheritedWidget {
     final headlineColor = colors.onSurfaceVariant;
 
     return TextTheme(
-      labelLarge: TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)),
-      bodySmall: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.9)), // Form Labels
-      titleMedium: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.9)), // TextInput
-      bodyLarge: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.9)),
-      bodyMedium: TextStyle(fontSize: 14.0, height: 1.35, color: colors.onSurface.withOpacity(0.8)),
-      titleLarge: TextStyle(fontSize: 15.0, color: headlineColor, fontWeight: FontWeight.bold),
-      headlineSmall: TextStyle(fontSize: 18.0, color: headlineColor, fontWeight: FontWeight.bold),
-      headlineMedium: TextStyle(fontSize: 22.0, color: headlineColor, fontWeight: FontWeight.bold),
-      displaySmall: TextStyle(fontSize: 26.0, color: headlineColor, fontWeight: FontWeight.bold),
-      displayMedium: TextStyle(fontSize: 36.0, color: headlineColor, fontWeight: FontWeight.bold),
-      displayLarge: TextStyle(fontSize: 48.0, color: headlineColor, fontWeight: FontWeight.bold),
+      labelLarge:
+          TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)),
+      bodySmall: TextStyle(
+        fontSize: 14.0,
+        height: 1.35,
+        color: colors.onSurface.withOpacity(0.9),
+      ), // Form Labels
+      titleMedium: TextStyle(
+        fontSize: 14.0,
+        height: 1.35,
+        color: colors.onSurface.withOpacity(0.9),
+      ), // TextInput
+      bodyLarge: TextStyle(
+        fontSize: 14.0,
+        height: 1.35,
+        color: colors.onSurface.withOpacity(0.9),
+      ),
+      bodyMedium: TextStyle(
+        fontSize: 14.0,
+        height: 1.35,
+        color: colors.onSurface.withOpacity(0.8),
+      ),
+      titleLarge: TextStyle(
+        fontSize: 15.0,
+        color: headlineColor,
+        fontWeight: FontWeight.bold,
+      ),
+      headlineSmall: TextStyle(
+        fontSize: 18.0,
+        color: headlineColor,
+        fontWeight: FontWeight.bold,
+      ),
+      headlineMedium: TextStyle(
+        fontSize: 22.0,
+        color: headlineColor,
+        fontWeight: FontWeight.bold,
+      ),
+      displaySmall: TextStyle(
+        fontSize: 26.0,
+        color: headlineColor,
+        fontWeight: FontWeight.bold,
+      ),
+      displayMedium: TextStyle(
+        fontSize: 36.0,
+        color: headlineColor,
+        fontWeight: FontWeight.bold,
+      ),
+      displayLarge: TextStyle(
+        fontSize: 48.0,
+        color: headlineColor,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 
@@ -366,7 +434,8 @@ class ThemeProvider extends InheritedWidget {
   RadioThemeData radioTheme(ColorScheme colors) {
     return RadioThemeData(
       splashRadius: 18.0,
-      fillColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+      fillColor:
+          WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
         if (states.contains(WidgetState.disabled)) {
           return null;
         }
@@ -382,19 +451,21 @@ class ThemeProvider extends InheritedWidget {
     return TooltipThemeData(
       padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 11.0),
       textStyle: textTheme(colors).bodySmall!.copyWith(color: colors.onPrimary),
-      decoration:
-          BoxDecoration(color: colors.secondary.withOpacity(0.9), borderRadius: BorderRadius.circular(2.0), boxShadow: [
-        BoxShadow(
-          color: colors.primaryContainer.withOpacity(0.1),
-          blurRadius: 1,
-          spreadRadius: 2,
-        ),
-        BoxShadow(
-          color: colors.secondary.withOpacity(0.3),
-          blurRadius: 3,
-          spreadRadius: 0,
-        )
-      ]),
+      decoration: BoxDecoration(
+        color: colors.secondary.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(2.0),
+        boxShadow: [
+          BoxShadow(
+            color: colors.primaryContainer.withOpacity(0.1),
+            blurRadius: 1,
+            spreadRadius: 2,
+          ),
+          BoxShadow(
+            color: colors.secondary.withOpacity(0.3),
+            blurRadius: 3,
+          ),
+        ],
+      ),
     );
   }
 
@@ -461,7 +532,9 @@ class ThemeProvider extends InheritedWidget {
 
   ThemeData theme(BuildContext context, [Color? targetColor]) {
     final brightness = MediaQuery.of(context).platformBrightness;
-    return brightness == Brightness.light ? light(targetColor) : dark(targetColor);
+    return brightness == Brightness.light
+        ? light(targetColor)
+        : dark(targetColor);
   }
 
   static ThemeProvider of(BuildContext context) {

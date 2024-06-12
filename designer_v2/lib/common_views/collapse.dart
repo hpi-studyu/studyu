@@ -3,9 +3,12 @@ import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 
-import '../theme.dart';
+import 'package:studyu_designer_v2/theme.dart';
 
-typedef CollapsibleSectionBuilder = Widget Function(BuildContext context, bool isCollapsed);
+typedef CollapsibleSectionBuilder = Widget Function(
+  BuildContext context,
+  bool isCollapsed,
+);
 
 /// Simple non-animated & more customizable alternative to [ExpansionPanel]
 /// and [ExpansionTile]
@@ -21,8 +24,11 @@ class Collapsible extends StatefulWidget {
     this.isCollapsed = true,
     this.maintainState = true,
     super.key,
-  }) : assert((headerBuilder != null && title == null) || (headerBuilder == null && title != null),
-            "Must provide either headerBuilder or title");
+  }) : assert(
+          (headerBuilder != null && title == null) ||
+              (headerBuilder == null && title != null),
+          "Must provide either headerBuilder or title",
+        );
 
   final CollapsibleSectionBuilder contentBuilder;
   final CollapsibleSectionBuilder? headerBuilder;
@@ -57,13 +63,16 @@ class _CollapsibleState extends State<Collapsible> {
               child: Row(
                 children: [
                   FormLabel(
-                    labelText: widget.title!,
+                    labelText: widget.title,
                     //labelTextStyle: TextStyle(color: actualColor),
                   ),
                   const SizedBox(width: 4.0),
                   Icon(
-                    isCollapsed ? Icons.keyboard_arrow_right_rounded : Icons.keyboard_arrow_down_rounded,
-                    color: theme.tabBarTheme.labelColor?.faded(ThemeConfig.kMuteFadeFactor),
+                    isCollapsed
+                        ? Icons.keyboard_arrow_right_rounded
+                        : Icons.keyboard_arrow_down_rounded,
+                    color: theme.tabBarTheme.labelColor
+                        ?.faded(ThemeConfig.kMuteFadeFactor),
                   ),
                 ],
               ),
@@ -80,7 +89,7 @@ class _CollapsibleState extends State<Collapsible> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         headerWidget,
-        !isCollapsed ? contentWidget : const SizedBox.shrink(),
+        if (!isCollapsed) contentWidget else const SizedBox.shrink(),
       ],
     );
   }

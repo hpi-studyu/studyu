@@ -19,7 +19,8 @@ class PublishConfirmationDialog extends StudyPageWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(studyControllerProvider(studyId).notifier);
     final state = ref.watch(studyControllerProvider(studyId));
-    final formViewModel = ref.watch(studySettingsFormViewModelProvider(studyId));
+    final formViewModel =
+        ref.watch(studySettingsFormViewModelProvider(studyId));
     formViewModel.setLaunchDefaults();
 
     final theme = Theme.of(context);
@@ -29,53 +30,57 @@ class PublishConfirmationDialog extends StudyPageWidget {
       child: StandardDialog(
         titleText: tr.study_launch_title,
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Flexible(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        text: tr.study_launch_participation_intro,
-                        children: [
-                          const TextSpan(text: ' '),
-                          TextSpan(
-                            text: state.studyParticipation!.asAdjective,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const TextSpan(text: '.'),
-                          TextSpan(text: tr.study_launch_participation_outro),
-                        ],
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: tr.study_launch_participation_intro,
+                          children: [
+                            const TextSpan(text: ' '),
+                            TextSpan(
+                              text: state.studyParticipation!.asAdjective,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const TextSpan(text: '.'),
+                            TextSpan(text: tr.study_launch_participation_outro),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4.0),
-                    SelectableText(
-                      state.studyParticipation!.launchDescription,
-                      style: ThemeConfig.bodyTextMuted(theme).copyWith(
-                        fontStyle: FontStyle.italic,
+                      const SizedBox(height: 4.0),
+                      SelectableText(
+                        state.studyParticipation!.launchDescription,
+                        style: ThemeConfig.bodyTextMuted(theme).copyWith(
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
-                    ),
-                  ],
-                )),
+                    ],
+                  ),
+                ),
                 const SizedBox(width: 4.0),
                 Opacity(
                   opacity: ThemeConfig.kMuteFadeFactor,
                   child: TextButton(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 8.0,
+                      ),
                       child: Text(
                         tr.action_button_study_participation_change,
                         textAlign: TextAlign.center,
                       ),
                     ),
                     onPressed: () {
-                      Navigator.maybePop(context).then((_) => controller.onChangeStudyParticipation());
+                      Navigator.maybePop(context)
+                          .then((_) => controller.onChangeStudyParticipation());
                     },
                   ),
                 ),
@@ -84,43 +89,58 @@ class PublishConfirmationDialog extends StudyPageWidget {
             const SizedBox(height: 24.0),
             SelectableText(tr.study_launch_post_launch_intro),
             const SizedBox(height: 4.0),
-            SelectableText(tr.study_launch_post_launch_summary, style: const TextStyle(fontWeight: FontWeight.bold)),
+            SelectableText(
+              tr.study_launch_post_launch_summary,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 32.0),
-            ReactiveFormConsumer(builder: (context, form, child) {
-              return Container(
-                color: ThemeConfig.containerColor(theme),
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+            ReactiveFormConsumer(
+              builder: (context, form, child) {
+                return ColoredBox(
+                  color: ThemeConfig.containerColor(theme),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12.0,
+                      horizontal: 8.0,
+                    ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ReactiveCheckbox(
-                          formControl: formViewModel.isPublishedToRegistryControl,
+                          formControl:
+                              formViewModel.isPublishedToRegistryControl,
                         ),
                         const SizedBox(width: 8.0),
                         Flexible(
-                            child: FormControlLabel(
-                          formControl: formViewModel.isPublishedToRegistryControl,
-                          text: tr.study_settings_publish_study_launch_description,
-                        ))
+                          child: FormControlLabel(
+                            formControl:
+                                formViewModel.isPublishedToRegistryControl,
+                            text: tr
+                                .study_settings_publish_study_launch_description,
+                          ),
+                        ),
                       ],
-                    )),
-              );
-            }),
+                    ),
+                  ),
+                );
+              },
+            ),
           ],
         ),
         actionButtons: [
           const DismissButton(),
-          ReactiveFormConsumer(builder: (context, form, child) {
-            return PrimaryButton(
+          ReactiveFormConsumer(
+            builder: (context, form, child) {
+              return PrimaryButton(
                 text: tr.action_button_study_launch,
                 icon: null,
-                onPressedFuture: () =>
-                    controller.publishStudy(toRegistry: formViewModel.isPublishedToRegistryControl.value)
+                onPressedFuture: () => controller.publishStudy(
+                  toRegistry: formViewModel.isPublishedToRegistryControl.value!,
+                ),
                 //.whenComplete(() => Navigator.maybePop(context)),
-                );
-          }),
+              );
+            },
+          ),
         ],
         maxWidth: 650,
         minWidth: 610,
