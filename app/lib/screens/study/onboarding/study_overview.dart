@@ -54,7 +54,9 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
   Future<void> navigateToEligibilityCheck(BuildContext context) async {
     final study = context.read<AppState>().selectedStudy;
     final result = await Navigator.push<EligibilityResult>(
-        context, EligibilityScreen.routeFor(study: study),);
+      context,
+      EligibilityScreen.routeFor(study: study),
+    );
     if (result == null) return;
 
     if (!context.mounted) return;
@@ -115,15 +117,19 @@ class StudyDetailsView extends StatelessWidget {
           title:
               Text(AppLocalizations.of(context)!.intervention_phase_duration),
           subtitle: Text(
-              '${study!.schedule.phaseDuration} ${AppLocalizations.of(context)!.days}',),
+            '${study!.schedule.phaseDuration} ${AppLocalizations.of(context)!.days}',
+          ),
           leading:
               Icon(MdiIcons.clock, color: theme.primaryColor, size: iconSize),
         ),
         ListTile(
           title: Text(AppLocalizations.of(context)!.study_length),
           subtitle: Text('$studyLength ${AppLocalizations.of(context)!.days}'),
-          leading: Icon(MdiIcons.calendar,
-              color: theme.primaryColor, size: iconSize,),
+          leading: Icon(
+            MdiIcons.calendar,
+            color: theme.primaryColor,
+            size: iconSize,
+          ),
         ),
         const SizedBox(height: 16),
         ContactWidget(

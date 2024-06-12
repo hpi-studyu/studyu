@@ -29,7 +29,8 @@ class _TaskBoxState extends State<TaskBox> {
     await Navigator.push<bool>(
       context,
       MaterialPageRoute(
-          builder: (context) => TaskScreen(taskInstance: widget.taskInstance),),
+        builder: (context) => TaskScreen(taskInstance: widget.taskInstance),
+      ),
     );
     widget.onCompleted();
     // Rebuild widget
@@ -39,11 +40,12 @@ class _TaskBoxState extends State<TaskBox> {
 
   @override
   Widget build(BuildContext context) {
-    final completed = context
-        .watch<AppState>()
-        .activeSubject!
-        .completedTaskInstanceForDay(widget.taskInstance.task.id,
-            widget.taskInstance.completionPeriod, DateTime.now(),);
+    final completed =
+        context.watch<AppState>().activeSubject!.completedTaskInstanceForDay(
+              widget.taskInstance.task.id,
+              widget.taskInstance.completionPeriod,
+              DateTime.now(),
+            );
     final isPreview = context.read<AppState>().isPreview;
     final isInsidePeriod =
         widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now());

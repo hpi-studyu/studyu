@@ -18,8 +18,9 @@ class EligibilityResult {
 class EligibilityScreen extends StatefulWidget {
   final Study? study;
 
-  static MaterialPageRoute<EligibilityResult> routeFor(
-          {required Study? study,}) =>
+  static MaterialPageRoute<EligibilityResult> routeFor({
+    required Study? study,
+  }) =>
       MaterialPageRoute(
         builder: (_) => EligibilityScreen(study: study),
         settings: const RouteSettings(name: '/eligibilityCheck'),
@@ -78,8 +79,11 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       } else {
         final firstFailed =
             criteria.firstWhere((criterion) => criterion.isViolated(qs));
-        activeResult = EligibilityResult(qs,
-            eligible: conditionResult, firstFailed: firstFailed,);
+        activeResult = EligibilityResult(
+          qs,
+          eligible: conditionResult,
+          firstFailed: firstFailed,
+        );
       }
     });
   }
@@ -108,8 +112,10 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           color: Colors.green,
           size: 32,
         ),
-        content: Text(AppLocalizations.of(context)!.eligible_yes,
-            style: Theme.of(context).textTheme.titleMedium,),
+        content: Text(
+          AppLocalizations.of(context)!.eligible_yes,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
         actions: [Container()],
         forceActionsBelow: true,
         backgroundColor: Colors.green[50],
@@ -124,8 +130,10 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context)!.eligible_no,
-                style: Theme.of(context).textTheme.titleMedium,),
+            Text(
+              AppLocalizations.of(context)!.eligible_no,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 4),
             if (activeResult?.firstFailed?.reason != null)
               Text(activeResult!.firstFailed!.reason!)

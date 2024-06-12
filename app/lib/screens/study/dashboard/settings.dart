@@ -70,29 +70,33 @@ class _SettingsState extends State<Settings> {
             ),
           ],
         ),
-        Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          Text('${AppLocalizations.of(context)!.allow_analytics}: '),
-          Tooltip(
-            triggerMode: TooltipTriggerMode.tap,
-            showDuration: const Duration(milliseconds: 10000),
-            margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-            message: AppLocalizations.of(context)!.allow_analytics_desc,
-            child: const Icon(
-              Icons.info,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text('${AppLocalizations.of(context)!.allow_analytics}: '),
+            Tooltip(
+              triggerMode: TooltipTriggerMode.tap,
+              showDuration: const Duration(milliseconds: 10000),
+              margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+              message: AppLocalizations.of(context)!.allow_analytics_desc,
+              child: const Icon(
+                Icons.info,
+              ),
             ),
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          Switch(
+            const SizedBox(
+              width: 5,
+            ),
+            Switch(
               value: _analyticsValue!,
               onChanged: (value) {
                 setState(() {
                   _analyticsValue = value;
                 });
                 AppAnalytics.setEnabled(value);
-              },),
-        ],),
+              },
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -124,8 +128,9 @@ class _SettingsState extends State<Settings> {
               ),
               onPressed: () {
                 showDialog(
-                    context: context,
-                    builder: (_) => OptOutAlertDialog(subject: subject),);
+                  context: context,
+                  builder: (_) => OptOutAlertDialog(subject: subject),
+                );
               },
             ),
             const SizedBox(height: 24),
@@ -135,8 +140,9 @@ class _SettingsState extends State<Settings> {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               onPressed: () {
                 showDialog(
-                    context: context,
-                    builder: (_) => DeleteAlertDialog(subject: subject),);
+                  context: context,
+                  builder: (_) => DeleteAlertDialog(subject: subject),
+                );
               },
             ),
           ],
@@ -165,9 +171,10 @@ class OptOutAlertDialog extends StatelessWidget {
             TextSpan(
               text: subject!.study.title,
               style: TextStyle(
-                  color: theme.primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,),
+                color: theme.primaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
             const TextSpan(
               text: " and won't be able to recover it. Previously completed "
@@ -194,7 +201,10 @@ class OptOutAlertDialog extends StatelessWidget {
             }
             if (context.mounted) {
               Navigator.pushNamedAndRemoveUntil(
-                  context, Routes.studySelection, (_) => false,);
+                context,
+                Routes.studySelection,
+                (_) => false,
+              );
             }
           },
         ),
@@ -235,7 +245,10 @@ class DeleteAlertDialog extends StatelessWidget {
                 }
                 if (context.mounted) {
                   Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.welcome, (_) => false,);
+                    context,
+                    Routes.welcome,
+                    (_) => false,
+                  );
                 }
               } on SocketException catch (_) {}
             },

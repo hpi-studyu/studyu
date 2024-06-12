@@ -65,8 +65,10 @@ class InterventionCardTitle extends StatelessWidget {
     final theme = Theme.of(context);
     return ListTile(
       onTap: onTap,
-      leading: Icon(MdiIcons.fromString(intervention!.icon),
-          color: theme.colorScheme.secondary,),
+      leading: Icon(
+        MdiIcons.fromString(intervention!.icon),
+        color: theme.colorScheme.secondary,
+      ),
       trailing: showCheckbox
           ? Checkbox(
               value: selected,
@@ -78,8 +80,8 @@ class InterventionCardTitle extends StatelessWidget {
       title: Row(
         children: [
           Expanded(
-              child:
-                  Text(intervention!.name!, style: theme.textTheme.titleLarge),),
+            child: Text(intervention!.name!, style: theme.textTheme.titleLarge),
+          ),
           if (showDescriptionButton)
             IconButton(
               icon: const Icon(Icons.info_outline),
@@ -91,11 +93,15 @@ class InterventionCardTitle extends StatelessWidget {
                       : intervention!.description;
                   return AlertDialog(
                     title: ListTile(
-                      leading: Icon(MdiIcons.fromString(intervention!.icon),
-                          color: theme.colorScheme.secondary,),
+                      leading: Icon(
+                        MdiIcons.fromString(intervention!.icon),
+                        color: theme.colorScheme.secondary,
+                      ),
                       dense: true,
-                      title: Text(intervention!.name!,
-                          style: theme.textTheme.titleLarge,),
+                      title: Text(
+                        intervention!.name!,
+                        style: theme.textTheme.titleLarge,
+                      ),
                     ),
                     content: HtmlText(description),
                   );
@@ -140,8 +146,10 @@ class _TaskList extends StatelessWidget {
 
   String scheduleString(List<CompletionPeriod> schedules) {
     return schedules
-        .map((completionPeriod) =>
-            '${completionPeriod.unlockTime} - ${completionPeriod.lockTime}',)
+        .map(
+          (completionPeriod) =>
+              '${completionPeriod.unlockTime} - ${completionPeriod.lockTime}',
+        )
         .join(',');
   }
 
@@ -155,8 +163,10 @@ class _TaskList extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(AppLocalizations.of(context)!.tasks_daily,
-                  style: theme.textTheme.bodyMedium,),
+              Text(
+                AppLocalizations.of(context)!.tasks_daily,
+                style: theme.textTheme.bodyMedium,
+              ),
             ],
           ),
         ),
@@ -173,19 +183,25 @@ class _TaskList extends StatelessWidget {
                   child: Row(
                     children: [
                       Expanded(
-                          child: Text(task.title!,
-                              style: theme.textTheme.bodyMedium,),),
+                        child: Text(
+                          task.title!,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
                       Row(
                         children: [
-                          Icon(Icons.access_time,
-                              size: 16,
-                              color: theme.textTheme.bodySmall!.color,),
+                          Icon(
+                            Icons.access_time,
+                            size: 16,
+                            color: theme.textTheme.bodySmall!.color,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             scheduleString(task.schedule.completionPeriods),
                             style: theme.textTheme.bodyMedium!.copyWith(
-                                fontSize: 12,
-                                color: theme.textTheme.bodySmall!.color,),
+                              fontSize: 12,
+                              color: theme.textTheme.bodySmall!.color,
+                            ),
                           ),
                         ],
                       ),

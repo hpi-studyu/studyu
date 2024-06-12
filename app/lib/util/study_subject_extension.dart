@@ -12,7 +12,10 @@ extension StudySubjectExtension on StudySubject {
   }) async {
     final Result<T> resultObject = switch (result) {
       QuestionnaireState() => Result<T>.app(
-          type: 'QuestionnaireState', periodId: periodId, result: result,),
+          type: 'QuestionnaireState',
+          periodId: periodId,
+          result: result,
+        ),
       bool() => Result<T>.app(type: 'bool', periodId: periodId, result: result),
       _ => Result<T>.app(type: 'unknown', periodId: periodId, result: result),
     };
@@ -31,7 +34,9 @@ extension StudySubjectExtension on StudySubject {
           if (answer.response is FutureBlobFile) {
             final futureBlobFile = answer.response as FutureBlobFile;
             await TemporaryStorageHandler.moveStagingFileToUploadDirectory(
-                futureBlobFile.localFilePath, futureBlobFile.futureBlobId,);
+              futureBlobFile.localFilePath,
+              futureBlobFile.futureBlobId,
+            );
 
             // Replaces Answer<FutureBlobFile> with Answer<String>
             questionnaireState.answers[answerEntry.key] =

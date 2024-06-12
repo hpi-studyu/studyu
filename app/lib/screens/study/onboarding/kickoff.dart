@@ -33,7 +33,10 @@ class _KickoffScreen extends State<KickoffScreen> {
       if (!context.mounted) return;
       setState(() => ready = true);
       Navigator.pushNamedAndRemoveUntil(
-          context, Routes.dashboard, (_) => false,);
+        context,
+        Routes.dashboard,
+        (_) => false,
+      );
     } catch (e) {
       StudyULogger.fatal('Failed creating subject: $e');
     }

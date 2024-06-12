@@ -66,7 +66,8 @@ class _InterventionSelectionScreenState
           showCheckbox: true,
           showDescription: false,
           selected: selectedInterventionIds.any(
-              (interventionId) => interventionId == interventions[index].id,),
+            (interventionId) => interventionId == interventions[index].id,
+          ),
           onTap: () => onSelect(interventions[index].id),
         ),
       ),
@@ -123,7 +124,9 @@ class _InterventionSelectionScreenState
       bottomNavigationBar: BottomOnboardingNavigation(
         onNext: selectedInterventionIds.length == 2 ? onFinished : null,
         progress: OnboardingProgress(
-            stage: 1, progress: selectedInterventionIds.length / 2,),
+          stage: 1,
+          progress: selectedInterventionIds.length / 2,
+        ),
       ),
     );
   }

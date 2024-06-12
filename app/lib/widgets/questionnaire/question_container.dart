@@ -17,11 +17,12 @@ class QuestionContainer extends StatefulWidget {
   final Question question;
   final int index;
 
-  const QuestionContainer(
-      {required this.onDone,
-      required this.question,
-      required this.index,
-      super.key,});
+  const QuestionContainer({
+    required this.onDone,
+    required this.question,
+    required this.index,
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() => _QuestionContainerState();
@@ -81,7 +82,8 @@ class _QuestionContainerState extends State<QuestionContainer>
         );
       default:
         throw ArgumentError(
-            'Question type ${widget.question.type} not supported',);
+          'Question type ${widget.question.type} not supported',
+        );
     }
   }
 

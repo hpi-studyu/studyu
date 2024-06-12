@@ -48,8 +48,11 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
     final theme = Theme.of(context);
     final coloredSliderTheme = ThemeConfig.coloredSliderTheme(theme);
     final thumbColor = isColored
-        ? Color.lerp(minColor, maxColor,
-                (value! - widget.question.minimum) / sliderRange,)!
+        ? Color.lerp(
+            minColor,
+            maxColor,
+            (value! - widget.question.minimum) / sliderRange,
+          )!
             .withOpacity(1)
         : null;
     final activeTrackColor =
@@ -62,38 +65,39 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
         Stack(
           children: [
             Theme(
-                data: isColored
-                    ? theme.copyWith(
-                        sliderTheme: SliderThemeData(
-                          overlayColor: thumbColor!.withOpacity(0.5),
-                        ),
-                      )
-                    : theme,
-                child: CustomSlider(
-                  minValue: widget.question.minimum,
-                  maxValue: widget.question.maximum,
-                  value: value,
-                  minorTick: 0,
-                  labelValuePrecision: 0,
-                  tickValuePrecision: 0,
-                  onChanged: (val) => setState(() {
-                    value = val;
-                    //print('Slider value (linear): $value');
-                  }),
-                  onChangeEnd: (val) => setState(() {
-                    value = val;
-                    sliderTouched = true;
-                    widget.onDone!(widget.question.constructAnswer(value!));
-                  }),
-                  activeColor: activeTrackColor,
-                  inactiveColor: inactiveTrackColor,
-                  thumbColor: thumbColor,
-                  minColor: minColor,
-                  maxColor: maxColor,
-                  isColored: isColored,
-                  linearStep: false,
-                  steps: widget.question,
-                ),),
+              data: isColored
+                  ? theme.copyWith(
+                      sliderTheme: SliderThemeData(
+                        overlayColor: thumbColor!.withOpacity(0.5),
+                      ),
+                    )
+                  : theme,
+              child: CustomSlider(
+                minValue: widget.question.minimum,
+                maxValue: widget.question.maximum,
+                value: value,
+                minorTick: 0,
+                labelValuePrecision: 0,
+                tickValuePrecision: 0,
+                onChanged: (val) => setState(() {
+                  value = val;
+                  //print('Slider value (linear): $value');
+                }),
+                onChangeEnd: (val) => setState(() {
+                  value = val;
+                  sliderTouched = true;
+                  widget.onDone!(widget.question.constructAnswer(value!));
+                }),
+                activeColor: activeTrackColor,
+                inactiveColor: inactiveTrackColor,
+                thumbColor: thumbColor,
+                minColor: minColor,
+                maxColor: maxColor,
+                isColored: isColored,
+                linearStep: false,
+                steps: widget.question,
+              ),
+            ),
           ],
         ),
         if (!sliderTouched)

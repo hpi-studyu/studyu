@@ -37,8 +37,9 @@ class PerformanceDetailsScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Text(
-                      AppLocalizations.of(context)!.performance_overview,
-                      style: theme.textTheme.titleMedium,),
+                    AppLocalizations.of(context)!.performance_overview,
+                    style: theme.textTheme.titleMedium,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
@@ -57,8 +58,9 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: interventions.length,
                   itemBuilder: (context, index) => InterventionPerformanceBar(
-                      subject: reportSubject,
-                      intervention: interventions[index],),
+                    subject: reportSubject,
+                    intervention: interventions[index],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
@@ -94,8 +96,11 @@ class InterventionPerformanceBar extends StatelessWidget {
   final Intervention intervention;
   final StudySubject? subject;
 
-  const InterventionPerformanceBar(
-      {required this.intervention, required this.subject, super.key,});
+  const InterventionPerformanceBar({
+    required this.intervention,
+    required this.subject,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +109,11 @@ class InterventionPerformanceBar extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            InterventionCard(intervention,
-                showTasks: false, showDescription: false,),
+            InterventionCard(
+              intervention,
+              showTasks: false,
+              showDescription: false,
+            ),
             const SizedBox(height: 8),
             ...intervention.tasks.map(
               (task) => PerformanceBar(
@@ -125,8 +133,11 @@ class ObservationPerformanceBar extends StatelessWidget {
   final Observation observation;
   final StudySubject? subject;
 
-  const ObservationPerformanceBar(
-      {required this.observation, required this.subject, super.key,});
+  const ObservationPerformanceBar({
+    required this.observation,
+    required this.subject,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -148,11 +159,12 @@ class PerformanceBar extends StatelessWidget {
   final int completed;
   final int total;
 
-  const PerformanceBar(
-      {required this.task,
-      required this.completed,
-      required this.total,
-      super.key,});
+  const PerformanceBar({
+    required this.task,
+    required this.completed,
+    required this.total,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,9 @@ import 'package:studyu_app/screens/study/report/sections/linear_regression_secti
 import 'package:studyu_core/core.dart';
 
 typedef SectionBuilder = ReportSectionWidget Function(
-    ReportSection section, StudySubject subject,);
+  ReportSection section,
+  StudySubject subject,
+);
 
 class ReportSectionContainer extends StatelessWidget {
   final ReportSection section;
@@ -14,8 +16,13 @@ class ReportSectionContainer extends StatelessWidget {
   final bool primary;
   final GestureTapCallback? onTap;
 
-  const ReportSectionContainer(this.section,
-      {super.key, required this.subject, this.onTap, this.primary = false,});
+  const ReportSectionContainer(
+    this.section, {
+    super.key,
+    required this.subject,
+    this.onTap,
+    this.primary = false,
+  });
 
   ReportSectionWidget buildContents(BuildContext context) => switch (section) {
         final AverageSection averageSection =>

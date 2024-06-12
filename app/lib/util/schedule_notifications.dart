@@ -9,18 +9,25 @@ import 'package:studyu_core/core.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 Future<int> scheduleReminderForDate(
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
-    int id,
-    String body,
-    StudyNotification studyNotification,
-    NotificationDetails notificationDetails,) async {
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
+  int id,
+  String body,
+  StudyNotification studyNotification,
+  NotificationDetails notificationDetails,
+) async {
   var currentId = id;
   final task = studyNotification.taskInstance.task;
   final date = studyNotification.date;
   for (final reminder in task.schedule.reminders) {
     // unlock time:  ${task.schedule.completionPeriods.firstWhere((cp) => cp.unlockTime.earlierThan(reminder)).lockTime}
-    final reminderTime = tz.TZDateTime(tz.local, date.year, date.month,
-        date.day, reminder.hour, reminder.minute,);
+    final reminderTime = tz.TZDateTime(
+      tz.local,
+      date.year,
+      date.month,
+      date.day,
+      reminder.hour,
+      reminder.minute,
+    );
     if (date.isSameDate(DateTime.now()) &&
         !StudyUTimeOfDay(hour: date.hour, minute: date.minute)
             .earlierThan(reminder, exact: true)) {
@@ -114,20 +121,31 @@ Future<void> scheduleNotifications(BuildContext context) async {
   var id = 0;
   for (final StudyNotification notification in studyNotificationList) {
     final currentId = await scheduleReminderForDate(
-        notificationsPlugin, id, body, notification, notificationDetails,);
+      notificationsPlugin,
+      id,
+      body,
+      notification,
+      notificationDetails,
+    );
     id = currentId;
   }
 }
 
 List<StudyNotification> _buildNotificationList(
-    StudySubject subject, DateTime date, List<TaskInstance> tasks,) {
+  StudySubject subject,
+  DateTime date,
+  List<TaskInstance> tasks,
+) {
   final List<StudyNotification> taskNotifications = [];
   for (final TaskInstance taskInstance in tasks) {
     if (taskInstance.task.title == null || taskInstance.task.title!.isEmpty) {
       return [];
     }
     if (!subject.completedTaskInstanceForDay(
-        taskInstance.task.id, taskInstance.completionPeriod, date,)) {
+      taskInstance.task.id,
+      taskInstance.completionPeriod,
+      date,
+    )) {
       taskNotifications.add(StudyNotification(taskInstance, date));
     } else {
       final String debugStr =

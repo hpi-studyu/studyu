@@ -92,8 +92,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                                     context: context,
                                     builder: (context) => AlertDialog(
                                       content: Text(
-                                          AppLocalizations.of(context)!
-                                              .study_selection_single_reason,),
+                                        AppLocalizations.of(context)!
+                                            .study_selection_single_reason,
+                                      ),
                                     ),
                                   ),
                           ),
@@ -103,37 +104,43 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   ],
                 ),
               ),
-              if (_hiddenStudies) Column(
-                      children: [
-                        MaterialBanner(
-                          padding: const EdgeInsets.all(8),
-                          leading: Icon(
-                            MdiIcons.exclamationThick,
-                            color: Colors.orange,
-                            size: 32,
-                          ),
-                          content: Text(
-                            AppLocalizations.of(context)!
-                                .study_selection_hidden_studies,
-                            style: Theme.of(context).textTheme.titleSmall,
-                          ),
-                          actions: const [SizedBox.shrink()],
-                          backgroundColor: Colors.yellow[100],
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    ) else const SizedBox.shrink(),
+              if (_hiddenStudies)
+                Column(
+                  children: [
+                    MaterialBanner(
+                      padding: const EdgeInsets.all(8),
+                      leading: Icon(
+                        MdiIcons.exclamationThick,
+                        color: Colors.orange,
+                        size: 32,
+                      ),
+                      content: Text(
+                        AppLocalizations.of(context)!
+                            .study_selection_hidden_studies,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      actions: const [SizedBox.shrink()],
+                      backgroundColor: Colors.yellow[100],
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                )
+              else
+                const SizedBox.shrink(),
               Expanded(
                 child: RetryFutureBuilder<ExtractionResult<Study>>(
                   tryFunction: () async => publishedStudies,
-                  successBuilder: (BuildContext context,
-                      ExtractionResult<Study>? extractionResult,) {
+                  successBuilder: (
+                    BuildContext context,
+                    ExtractionResult<Study>? extractionResult,
+                  ) {
                     final studies = extractionResult!.extracted;
                     if (extractionResult is ExtractionFailedException<Study>) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         if (_hiddenStudies) return;
                         debugPrint(
-                            '${extractionResult.notExtracted.length} studies could not be extracted.',);
+                          '${extractionResult.notExtracted.length} studies could not be extracted.',
+                        );
                         setState(() {
                           _hiddenStudies = true;
                         });
@@ -165,8 +172,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   icon: Icon(MdiIcons.key),
                   onPressed: () async {
                     await showDialog(
-                        context: context,
-                        builder: (_) => const InviteCodeDialog(),);
+                      context: context,
+                      builder: (_) => const InviteCodeDialog(),
+                    );
                   },
                   label: Text(AppLocalizations.of(context)!.invite_code_button),
                 ),
@@ -207,7 +215,8 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
           validator: (_) => _errorMessage,
           autovalidateMode: AutovalidateMode.always,
           decoration: InputDecoration(
-              labelText: AppLocalizations.of(context)!.invite_code,),
+            labelText: AppLocalizations.of(context)!.invite_code,
+          ),
         ),
         actions: [
           OutlinedButton.icon(

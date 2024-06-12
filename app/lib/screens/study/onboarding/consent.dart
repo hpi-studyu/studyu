@@ -49,12 +49,16 @@ class _ConsentScreenState extends State<ConsentScreen> {
           (consentItem) => [
             pw.Header(
               level: 0,
-              child: pw.Text(consentItem.title ?? '',
-                  textScaleFactor: 2, style: pw.TextStyle(font: ttf),),
+              child: pw.Text(
+                consentItem.title ?? '',
+                textScaleFactor: 2,
+                style: pw.TextStyle(font: ttf),
+              ),
             ),
             pw.Paragraph(
-                text: consentItem.description ?? '',
-                style: pw.TextStyle(font: ttf),),
+              text: consentItem.description ?? '',
+              style: pw.TextStyle(font: ttf),
+            ),
           ],
         )
         .expand((element) => element)
@@ -80,21 +84,27 @@ class _ConsentScreenState extends State<ConsentScreen> {
                     elevation: 24,
                     title:
                         Text(AppLocalizations.of(context)!.save_not_supported),
-                    content: Text(AppLocalizations.of(context)!
-                        .save_not_supported_description,),
+                    content: Text(
+                      AppLocalizations.of(context)!
+                          .save_not_supported_description,
+                    ),
                   ),
                 );
               }
               final pdfContent = await generatePdfContent();
               if (!context.mounted) return;
               final savedFilePath = await savePDF(
-                  context, '${subject!.study.title}_consent', pdfContent,);
+                context,
+                '${subject!.study.title}_consent',
+                pdfContent,
+              );
               if (savedFilePath != null) {
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                        '${AppLocalizations.of(context)!.was_saved_to}$savedFilePath.',),
+                      '${AppLocalizations.of(context)!.was_saved_to}$savedFilePath.',
+                    ),
                   ),
                 );
               }
@@ -129,8 +139,10 @@ class _ConsentScreenState extends State<ConsentScreen> {
                           ..onTap = () => showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                  content: Text(AppLocalizations.of(context)!
-                                      .please_give_consent_reason,),
+                                  content: Text(
+                                    AppLocalizations.of(context)!
+                                        .please_give_consent_reason,
+                                  ),
                                 ),
                               ),
                       ),
@@ -168,7 +180,9 @@ class _ConsentScreenState extends State<ConsentScreen> {
         backLabel: AppLocalizations.of(context)!.decline,
         backIcon: const Icon(Icons.close),
         onBack: () => Navigator.popUntil(
-            context, ModalRoute.withName(Routes.studySelection),),
+          context,
+          ModalRoute.withName(Routes.studySelection),
+        ),
         nextLabel: AppLocalizations.of(context)!.accept,
         nextIcon: const Icon(Icons.check),
         onNext: boxLogic.every((element) => element) || kDebugMode
@@ -186,12 +200,13 @@ class ConsentCard extends StatelessWidget {
   final Function(int) onTapped;
   final bool? isChecked;
 
-  const ConsentCard(
-      {super.key,
-      this.consent,
-      this.index,
-      required this.onTapped,
-      this.isChecked,});
+  const ConsentCard({
+    super.key,
+    this.consent,
+    this.index,
+    required this.onTapped,
+    this.isChecked,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -213,9 +228,17 @@ class ConsentCard extends StatelessWidget {
             builder: (context) => AlertDialog(
               title: Row(
                 children: [
-                  if (consent!.iconName.isNotEmpty) Icon(MdiIcons.fromString(consent!.iconName),
-                          color: theme.primaryColor,) else const SizedBox.shrink(),
-                  if (consent!.iconName.isNotEmpty) const SizedBox(width: 8) else const SizedBox.shrink(),
+                  if (consent!.iconName.isNotEmpty)
+                    Icon(
+                      MdiIcons.fromString(consent!.iconName),
+                      color: theme.primaryColor,
+                    )
+                  else
+                    const SizedBox.shrink(),
+                  if (consent!.iconName.isNotEmpty)
+                    const SizedBox(width: 8)
+                  else
+                    const SizedBox.shrink(),
                   Expanded(child: Text(consent!.title!)),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -234,9 +257,18 @@ class ConsentCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (consent!.iconName.isNotEmpty) Icon(MdiIcons.fromString(consent!.iconName),
-                      size: 60, color: Colors.blue,) else const SizedBox.shrink(),
-              if (consent!.iconName.isNotEmpty) const SizedBox(height: 10) else const SizedBox.shrink(),
+              if (consent!.iconName.isNotEmpty)
+                Icon(
+                  MdiIcons.fromString(consent!.iconName),
+                  size: 60,
+                  color: Colors.blue,
+                )
+              else
+                const SizedBox.shrink(),
+              if (consent!.iconName.isNotEmpty)
+                const SizedBox(height: 10)
+              else
+                const SizedBox.shrink(),
               Flexible(
                 child: Text(
                   consent!.title!,
@@ -260,5 +292,9 @@ class ConsentElement {
   final IconData icon;
 
   ConsentElement(
-      this.title, this.descriptionText, this.acknowledgmentText, this.icon,);
+    this.title,
+    this.descriptionText,
+    this.acknowledgmentText,
+    this.icon,
+  );
 }

@@ -21,7 +21,8 @@ class ReportHistoryScreen extends StatelessWidget {
       ),
       body: RetryFutureBuilder<List<StudySubject>>(
         tryFunction: () => StudySubject.getStudyHistory(
-            Supabase.instance.client.auth.currentUser!.id,),
+          Supabase.instance.client.auth.currentUser!.id,
+        ),
         successBuilder:
             (BuildContext context, List<StudySubject>? pastStudies) {
           return ListView.builder(
@@ -51,7 +52,9 @@ class ReportHistoryItem extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.push(
-              context, ReportDetailsScreen.routeFor(subject: subject),);
+            context,
+            ReportDetailsScreen.routeFor(subject: subject),
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -69,7 +72,8 @@ class ReportHistoryItem extends StatelessWidget {
                   child: Text(
                     subject.study.title!,
                     style: theme.textTheme.headlineSmall!.copyWith(
-                        color: isActiveStudy ? Colors.white : Colors.black,),
+                      color: isActiveStudy ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
               ],
