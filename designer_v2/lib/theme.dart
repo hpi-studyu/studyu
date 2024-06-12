@@ -131,9 +131,17 @@ class ThemeProvider extends InheritedWidget {
 
   ColorScheme colors(Brightness brightness, Color? targetColor) {
     final dynamicPrimary = brightness == Brightness.light ? lightDynamic?.primary : darkDynamic?.primary;
-    return ColorScheme.fromSeed(
+    final scheme = SchemeFidelity(
+        sourceColorHct:
+            dynamicPrimary != null ? Hct.fromInt(dynamicPrimary.value) : Hct.fromInt(source(targetColor).value),
+        isDark: false,
+        contrastLevel: 0.0);
+    final colorScheme = ColorScheme.fromSeed(
       seedColor: dynamicPrimary ?? source(targetColor),
       brightness: brightness,
+    );
+    return colorScheme.copyWith(
+      primary: Color(MaterialDynamicColors.primary.getArgb(scheme)),
     );
   }
 
@@ -210,7 +218,7 @@ class ThemeProvider extends InheritedWidget {
   BottomNavigationBarThemeData bottomNavigationBarTheme(ColorScheme colors) {
     return BottomNavigationBarThemeData(
       type: BottomNavigationBarType.fixed,
-      backgroundColor: colors.surfaceVariant,
+      backgroundColor: colors.surfaceContainerHighest,
       selectedItemColor: colors.onSurface,
       unselectedItemColor: colors.onSurfaceVariant,
       elevation: 0,
@@ -220,26 +228,26 @@ class ThemeProvider extends InheritedWidget {
 
   SwitchThemeData switchTheme(ColorScheme colors) {
     return SwitchThemeData(
-      thumbColor: MaterialStateColor.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
-          if (states.contains(MaterialState.disabled)) {
+      thumbColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          if (states.contains(WidgetState.disabled)) {
             return colors.primary.withOpacity(0.6);
           }
           return colors.primary;
         }
-        if (states.contains(MaterialState.disabled)) {
+        if (states.contains(WidgetState.disabled)) {
           return Colors.white.withOpacity(0.6);
         }
         return Colors.white;
       }),
-      trackColor: MaterialStateColor.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
-          if (states.contains(MaterialState.disabled)) {
+      trackColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          if (states.contains(WidgetState.disabled)) {
             return colors.primary.withOpacity(0.5 * 0.6);
           }
           return colors.primary.withOpacity(0.5);
         }
-        if (states.contains(MaterialState.disabled)) {
+        if (states.contains(WidgetState.disabled)) {
           return colors.onSurface.withOpacity(0.3 * 0.6);
         }
         return colors.onSurface.withOpacity(0.3);
@@ -255,18 +263,18 @@ class ThemeProvider extends InheritedWidget {
       focusColor: Colors.white,
       isDense: true,
       hintStyle: TextStyle(color: colors.onSurfaceVariant.withOpacity(0.4)),
-      //contentPadding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+      contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
-          color: colors.surfaceVariant.withOpacity(0.6),
+          color: colors.surfaceContainerHighest.withOpacity(0.6),
           width: 1.0,
         ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
-          color: colors.surfaceVariant.withOpacity(0.8),
+          color: colors.surfaceContainerHighest.withOpacity(0.8),
           width: 1.0,
         ),
       ),
@@ -326,9 +334,7 @@ class ThemeProvider extends InheritedWidget {
   }
 
   DrawerThemeData drawerTheme(ColorScheme colors) {
-    return const DrawerThemeData(
-      backgroundColor: Colors.white,
-    );
+    return const DrawerThemeData();
   }
 
   IconThemeData iconTheme(ColorScheme colors) {
@@ -341,9 +347,9 @@ class ThemeProvider extends InheritedWidget {
   CheckboxThemeData checkboxTheme(ColorScheme colors) {
     return CheckboxThemeData(
       splashRadius: 18.0,
-      fillColor: MaterialStateColor.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
-          if (states.contains(MaterialState.disabled)) {
+      fillColor: WidgetStateColor.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          if (states.contains(WidgetState.disabled)) {
             return colors.primary.withOpacity(0.5 * 1.0);
           }
           return colors.primary.withOpacity(1.0);
@@ -360,11 +366,11 @@ class ThemeProvider extends InheritedWidget {
   RadioThemeData radioTheme(ColorScheme colors) {
     return RadioThemeData(
       splashRadius: 18.0,
-      fillColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
-        if (states.contains(MaterialState.disabled)) {
+      fillColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+        if (states.contains(WidgetState.disabled)) {
           return null;
         }
-        if (states.contains(MaterialState.selected)) {
+        if (states.contains(WidgetState.selected)) {
           return colors.primary.withOpacity(0.9);
         }
         return null;
@@ -436,7 +442,7 @@ class ThemeProvider extends InheritedWidget {
       tabBarTheme: tabBarTheme(colorScheme),
       drawerTheme: drawerTheme(colorScheme),
       snackBarTheme: snackBarThemeData(colorScheme),
-      scaffoldBackgroundColor: colorScheme.background,
+      scaffoldBackgroundColor: colorScheme.surface,
       inputDecorationTheme: inputDecorationTheme(colorScheme),
       switchTheme: switchTheme(colorScheme),
       textTheme: textTheme(colorScheme),

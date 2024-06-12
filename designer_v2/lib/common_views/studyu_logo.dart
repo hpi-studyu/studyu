@@ -11,7 +11,7 @@ class StudyULogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return MouseEventsRegion(
         builder: (context, states) {
-          final isHovered = states.contains(MaterialState.hovered);
+          final isHovered = states.contains(WidgetState.hovered);
           final colorBlendFactor = isHovered ? 0.5 : 0.6;
 
           return Container(

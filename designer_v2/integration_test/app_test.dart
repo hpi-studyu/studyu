@@ -120,7 +120,7 @@ void main() {
     */
     // We start with a new account and study here, since tests run asynchronously and
     // previous tests might not have been completed when running this one
-    patrolWidgetTest('Publish a study', semanticsEnabled: false, ($) async {
+    patrolWidgetTest('Publish a study', (PatrolTester $) async {
       final appRobot = AppRobot($); // RM
       final authRobot = AuthRobot($); // RM
       final studiesRobot = StudiesRobot($);
@@ -231,7 +231,7 @@ void main() {
       await studyDesignRobot.tapMyStudiesButton();
       await studiesRobot.validateOnStudiesScreen();
 
-      // await studiesRobot.tapSignOutButton(); // does not work
+      await studiesRobot.tapSignOutButton();
 
       // todo dump database data and validate its state
     });

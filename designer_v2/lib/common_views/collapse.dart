@@ -45,7 +45,7 @@ class _CollapsibleState extends State<Collapsible> {
     final headerWidget = widget.headerBuilder?.call(context, isCollapsed) ??
         MouseEventsRegion(
           builder: (context, states) {
-            final isHovered = states.contains(MaterialState.hovered);
+            final isHovered = states.contains(WidgetState.hovered);
 
             // Use [TabBarThemeData] colors for default header styling
             /*Color? actualColor = isHovered

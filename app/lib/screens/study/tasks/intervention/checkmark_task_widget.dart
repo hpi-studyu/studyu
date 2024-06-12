@@ -25,8 +25,8 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-          textStyle: MaterialStateProperty.all<TextStyle>(const TextStyle(color: Colors.white))),
+          backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
+          textStyle: WidgetStateProperty.all<TextStyle>(const TextStyle(color: Colors.white))),
       onPressed: () async {
         if (isRedundantClick(loginClickTime)) return;
         setState(() {

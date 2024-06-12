@@ -182,7 +182,7 @@ class IconPickerGallery extends StatelessWidget {
     for (final iconOption in iconOptions) {
       final iconWidget = MouseEventsRegion(
           builder: (context, state) {
-            final isHovered = state.contains(MaterialState.hovered);
+            final isHovered = state.contains(WidgetState.hovered);
             return Container(
               color: isHovered ? Theme.of(context).colorScheme.primary.withOpacity(0.2) : null,
               child: Icon(iconOption.icon!, size: iconSize),

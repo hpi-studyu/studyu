@@ -57,7 +57,7 @@ class StudyInvitesTable extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildRow(BuildContext context, StudyInvite item, int rowIdx, Set<MaterialState> states) {
+  List<Widget> _buildRow(BuildContext context, StudyInvite item, int rowIdx, Set<WidgetState> states) {
     final theme = Theme.of(context);
     final mutedTextStyle = ThemeConfig.bodyTextBackground(theme);
 

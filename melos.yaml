@@ -1,4 +1,4 @@
-name: studyu-packages
+name: studyu
 
 repository: https://github.com/hpi-studyu/studyu
 
@@ -56,7 +56,7 @@ scripts:
         "flutter test"
     description: Run `flutter test` for a specific package.
     packageFilters:
-      dir-exists: test
+      dirExists: test
 
   generate:
     run: |
@@ -125,10 +125,10 @@ scripts:
   build:android:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build apk --multidex"
+        "flutter build apk"
     description: Build app for Android.
     packageFilters:
-      dir-exists: android
+      dirExists: android
 
   build:ios:
     run: |
@@ -136,7 +136,7 @@ scripts:
         "flutter build ipa --no-codesign"
     description: Build app for iOS.
     packageFilters:
-      dir-exists: ios
+      dirExists: ios
 
   build:web:
     run: |
@@ -145,7 +145,7 @@ scripts:
     description: Build app for Web.
     packageFilters:
       scope: [studyu_app, studyu_designer_v2]
-      dir-exists: web
+      dirExists: web
 
   build:web:app:
     run: |
@@ -170,7 +170,7 @@ scripts:
     description: Build web dev.
     packageFilters:
       scope: [studyu_app, studyu_designer_v2]
-      dir-exists: web
+      dirExists: web
 
   build:web:app:dev:
     run: |
@@ -179,7 +179,7 @@ scripts:
     description: Build web app dev.
     packageFilters:
       scope: studyu_app
-      dir-exists: web
+      dirExists: web
 
   build:web:designer_v2:dev:
     run: |
@@ -188,4 +188,4 @@ scripts:
     description: Build web designer_v2 dev.
     packageFilters:
       scope: studyu_designer_v2
-      dir-exists: web
+      dirExists: web
