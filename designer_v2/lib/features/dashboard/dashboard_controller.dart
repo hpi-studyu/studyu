@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -17,28 +18,43 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 
 import 'dashboard_state.dart';
 
-class DashboardController extends StateNotifier<DashboardState> implements IModelActionProvider<Study> {
+part 'dashboard_controller.g.dart';
+
+@riverpod
+class DashboardController extends _$DashboardController implements IModelActionProvider<Study> {
+
+  @override
+  DashboardState build(){
+    studyRepository = ref.watch(studyRepositoryProvider);
+    authRepository = ref.watch(authRepositoryProvider);
+    userRepository = ref.watch(userRepositoryProvider);
+    router = ref.watch(routerProvider);
+
+    ref.onDispose(() {
+      print("dashboardControllerProvider.DISPOSE");
+      _studiesSubscription?.cancel();
+    });
+
+    ref.listenSelf((previous, next) {
+      print("dashboardController.state updated");
+    });
+
+    _subscribeStudies();
+    return DashboardState(currentUser: authRepository.currentUser!);
+  }
+
   /// References to the data repositories injected by Riverpod
-  final IStudyRepository studyRepository;
-  final IAuthRepository authRepository;
-  final IUserRepository userRepository;
+  late final IStudyRepository studyRepository;
+  late final IAuthRepository authRepository;
+  late final IUserRepository userRepository;
 
   /// Reference to services injected via Riverpod
-  final GoRouter router;
+  late final GoRouter router;
 
   /// A subscription for synchronizing state between the repository and the controller
   StreamSubscription<List<WrappedModel<Study>>>? _studiesSubscription;
 
   final SearchController searchController = SearchController();
-
-  DashboardController({
-    required this.studyRepository,
-    required this.authRepository,
-    required this.userRepository,
-    required this.router,
-  }) : super(DashboardState(currentUser: authRepository.currentUser!)) {
-    _subscribeStudies();
-  }
 
   _subscribeStudies() {
     _studiesSubscription = studyRepository.watchAll().listen((wrappedModels) {
@@ -135,25 +151,5 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     );
   }
 
-  @override
-  dispose() {
-    _studiesSubscription?.cancel();
-    super.dispose();
-  }
-}
 
-final dashboardControllerProvider = StateNotifierProvider.autoDispose<DashboardController, DashboardState>((ref) {
-  final dashboardController = DashboardController(
-    studyRepository: ref.watch(studyRepositoryProvider),
-    authRepository: ref.watch(authRepositoryProvider),
-    userRepository: ref.watch(userRepositoryProvider),
-    router: ref.watch(routerProvider),
-  );
-  dashboardController.addListener((state) {
-    print("dashboardController.state updated");
-  });
-  ref.onDispose(() {
-    print("dashboardControllerProvider.DISPOSE");
-  });
-  return dashboardController;
-});
+}
