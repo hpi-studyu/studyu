@@ -162,12 +162,11 @@ class ThemeProvider extends InheritedWidget {
         ? lightDynamic?.primary
         : darkDynamic?.primary;
     final scheme = SchemeFidelity(
-      sourceColorHct: dynamicPrimary != null
-          ? Hct.fromInt(dynamicPrimary.value)
-          : Hct.fromInt(source(targetColor).value),
-      isDark: false,
-      contrastLevel: 0.0,
-    );
+        sourceColorHct: dynamicPrimary != null
+            ? Hct.fromInt(dynamicPrimary.value)
+            : Hct.fromInt(source(targetColor).value),
+        isDark: false,
+        contrastLevel: 0.0);
     final colorScheme = ColorScheme.fromSeed(
       seedColor: dynamicPrimary ?? source(targetColor),
       brightness: brightness,

@@ -491,4 +491,3 @@
  - **FEAT**: refactor my_app, auth_store, router to use Riverpod, add login_page with Supabase connection. ([edec5c7c](https://github.com/hpi-studyu/studyu/commit/edec5c7c227dd521daa04742ebb42b5ed6922099))
  - **FEAT**: add new test login page imported from flutterflow. ([869f7372](https://github.com/hpi-studyu/studyu/commit/869f7372b250486b06de79113b2c5733a49e93ef))
  - **FEAT**: consistent theme & cleanup for auth widgets. ([200cd129](https://github.com/hpi-studyu/studyu/commit/200cd1290fe9d6de0110da18c76c19d15ea99aee))
-

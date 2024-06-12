@@ -76,6 +76,21 @@ class StudyUApiClient extends SupabaseClientDependant
     'study_missed_days',
   ];
 
+  static final studyDisplayColumns = [
+    'id',
+    'title',
+    'description',
+    'user_id',
+    'participation',
+    'result_sharing',
+    'published',
+    'registry_published',
+    'study_participant_count',
+    'study_ended_count',
+    'active_subject_count',
+    'contact',
+  ];
+
   static final studyWithParticipantActivityColumns = [
     ...studyColumns,
     'study_subject!study_subject_studyId_fkey(*)',
@@ -115,15 +130,25 @@ class StudyUApiClient extends SupabaseClientDependant
   }
    */
 
+  /// This function fetches all studies for the current user.
+  /// [withParticipantActivity] includes additional participant activity with all columns of Study table => [studyWithParticipantActivityColumns]
+  /// [forDashboardDisplay] includes only columns required for the Dashboard page display => [studyDisplayColumns]
+  /// otherwise, all columns are fetched => [studyColumns]
+  ///
+  ///
+  /// @return List<Study>
   @override
   Future<List<Study>> getUserStudies({
-    bool withParticipantActivity = true,
+    bool withParticipantActivity = false,
+    forDashboardDisplay = true,
   }) async {
     await _testDelay();
     // TODO: fix Postgres policy for proper multi-tenancy
     final columns = withParticipantActivity
         ? studyWithParticipantActivityColumns
-        : studyColumns;
+        : (forDashboardDisplay)
+            ? studyDisplayColumns
+            : studyColumns;
     final request = getAll<Study>(selectedColumns: columns);
     return _awaitGuarded(request);
   }

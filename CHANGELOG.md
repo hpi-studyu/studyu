@@ -8194,6 +8194,3 @@ Packages graduated to a stable release (see pre-releases prior to the stable ver
 
 * Revert "Adjust study designer build process" ([f3e18ea](https://github.com/hpi-studyu/studyu/commit/f3e18eaab4cf36db501c7039434ff76117a4281d))
 * Revert "update flutter-form-builder" ([bd4cb52](https://github.com/hpi-studyu/studyu/commit/bd4cb52097f460f0729e18185b40ad3b8f577a4c))
-
-
-
