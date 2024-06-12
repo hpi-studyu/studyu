@@ -34,8 +34,8 @@ dependencies:
   rxdart: ^0.27.7
   studyu_core: ^4.4.3-dev.0
   studyu_flutter_common: ^1.8.4-dev.0
-  supabase: ^2.2.0
-  supabase_flutter: ^2.5.4
+  supabase: ^2.2.1
+  supabase_flutter: ^2.5.5
   url_launcher: ^6.3.0
   uuid: ^4.4.0
 

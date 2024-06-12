@@ -23,7 +23,7 @@ dependencies:
   flutter_timezone: ^1.0.8
   flutter_web_plugins:
     sdk: flutter
-  flutter_widget_from_html: ^0.15.0
+  flutter_widget_from_html: ^0.15.1
   intersperse: ^2.0.0
   intl: ^0.19.0
   material_design_icons_flutter: ^7.0.7296
@@ -41,8 +41,8 @@ dependencies:
   shared_preferences: ^2.2.3
   studyu_core: ^4.4.3-dev.0
   studyu_flutter_common: ^1.8.4-dev.0
-  supabase: ^2.2.0
-  supabase_flutter: ^2.5.4
+  supabase: ^2.2.1
+  supabase_flutter: ^2.5.5
   timeline_tile: ^2.0.0
   timezone: ^0.9.3
   universal_html: ^2.2.4
