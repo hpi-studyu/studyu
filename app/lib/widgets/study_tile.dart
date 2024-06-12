@@ -24,7 +24,7 @@ class StudyTile extends StatelessWidget {
       {required Study study,
       this.onTap,
       this.contentPadding = const EdgeInsets.all(16),
-      super.key})
+      super.key,})
       : title = study.title,
         description = study.description,
         iconName = study.iconName;
@@ -50,7 +50,7 @@ class StudyTile extends StatelessWidget {
           title: Center(
               child: Text(title!,
                   style: theme.textTheme.titleLarge!
-                      .copyWith(color: theme.primaryColor))),
+                      .copyWith(color: theme.primaryColor),),),
           subtitle: Center(child: Text(description ?? '')),
           leading:
               Icon(MdiIcons.fromString(iconName), color: theme.primaryColor),

@@ -16,7 +16,7 @@ class GroupedIterable<K, V> extends Iterable<MapEntry<K, Iterable<V>>> {
       map((entry) => MapEntry(entry.key, aggregator(entry.value)));
 
   Iterable<MapEntry<K, R>> aggregateWithKey<R>(
-          KeyedAggregator<K, V, R> aggregator) =>
+          KeyedAggregator<K, V, R> aggregator,) =>
       map((entry) => MapEntry(entry.key, aggregator(entry.value, entry.key)));
 }
 
@@ -41,7 +41,7 @@ extension GroupByIterable<V> on Iterable<V> {
   GroupedIterable<K, V> groupBy<K>(KeyAccessor<K, V> key) {
     final result = <K, List<V>>{};
     forEach(
-        (element) => result.putIfAbsent(key(element), () => []).add(element));
+        (element) => result.putIfAbsent(key(element), () => []).add(element),);
     return GroupedIterable.from(result);
   }
 }

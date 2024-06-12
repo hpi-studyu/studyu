@@ -15,7 +15,7 @@ class HtmlText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget htmlWidget = HtmlWidget(
+    final Widget htmlWidget = HtmlWidget(
       text ?? '',
       textStyle: style,
       // these callbacks are called when a complicated element is loading

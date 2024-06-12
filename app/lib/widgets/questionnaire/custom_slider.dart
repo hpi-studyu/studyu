@@ -22,27 +22,28 @@ class CustomSlider extends StatelessWidget {
   final bool linearStep;
   final AnnotatedScaleQuestion? steps; // nullable
 
-  const CustomSlider(
-      {super.key,
-      // required
-      this.value,
-      this.minValue,
-      this.maxValue,
-      //this.majorTick,
-      this.minorTick,
-      this.onChanged,
-      this.onChangeEnd,
-      // not required
-      this.activeColor,
-      this.inactiveColor,
-      this.minColor,
-      this.maxColor,
-      this.thumbColor,
-      this.isColored = false,
-      this.labelValuePrecision = 2,
-      this.tickValuePrecision = 1,
-      this.linearStep = true,
-      this.steps});
+  const CustomSlider({
+    super.key,
+    // required
+    this.value,
+    this.minValue,
+    this.maxValue,
+    //this.majorTick,
+    this.minorTick,
+    this.onChanged,
+    this.onChangeEnd,
+    // not required
+    this.activeColor,
+    this.inactiveColor,
+    this.minColor,
+    this.maxColor,
+    this.thumbColor,
+    this.isColored = false,
+    this.labelValuePrecision = 2,
+    this.tickValuePrecision = 1,
+    this.linearStep = true,
+    this.steps,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +85,11 @@ class CustomSlider extends StatelessWidget {
       return index + minValue! == value;
     }
 
-    String annotation(index) => annotations
-        .firstWhere((annotation) => annotation.value == index + minValue!,
-            orElse: () => Annotation())
+    String annotation(int index) => annotations
+        .firstWhere(
+          (annotation) => annotation.value == index + minValue!,
+          orElse: () => Annotation(),
+        )
         .annotation;
 
     return Column(
@@ -104,23 +107,26 @@ class CustomSlider extends StatelessWidget {
                 },
                 child: Column(
                   children: [
-                    index % (minorTick! + 1) == 0 &&
-                            annotation(index).isNotEmpty
-                        ? Container(
-                            alignment: Alignment.bottomCenter,
-                            //height: valueHeight,
-                            child: Text(
-                              //linearStep
-                              //  ? (index / (divisions - 1) * maxValue).toStringAsFixed(tickValuePrecision)
-                              /*:*/
-                              annotation(index),
-                              style: labelTextStyle!.copyWith(
-                                  fontWeight: isValueSelected(index)
-                                      ? FontWeight.bold
-                                      : FontWeight.normal),
-                              textAlign: TextAlign.center,
-                            ))
-                        : const SizedBox.shrink(),
+                    if (index % (minorTick! + 1) == 0 &&
+                        annotation(index).isNotEmpty)
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        //height: valueHeight,
+                        child: Text(
+                          //linearStep
+                          //  ? (index / (divisions - 1) * maxValue).toStringAsFixed(tickValuePrecision)
+                          /*:*/
+                          annotation(index),
+                          style: labelTextStyle!.copyWith(
+                            fontWeight: isValueSelected(index)
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    else
+                      const SizedBox.shrink(),
                     Container(
                       alignment: Alignment.bottomCenter,
                       height: tickHeight,

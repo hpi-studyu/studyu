@@ -2,10 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:studyu_app/util/intervention.dart';
+import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
-
-import '../../../../util/intervention.dart';
-import '../../../../widgets/intervention_card.dart';
 
 class ProgressRow extends StatefulWidget {
   final StudySubject? subject;
@@ -105,7 +104,7 @@ class InterventionSegment extends StatelessWidget {
                   width: 8,
                   height: 10,
                   color: Colors.white,
-                )
+                ),
               ],
             ),
           ),
@@ -176,7 +175,7 @@ class InterventionSegment extends StatelessWidget {
             elevation: 0,
             fillColor: color,
             shape: const CircleBorder(
-                side: BorderSide(color: Colors.white, width: 2)),
+                side: BorderSide(color: Colors.white, width: 2),),
             child: interventionIcon(intervention),
           ),
         ],
@@ -186,7 +185,7 @@ class InterventionSegment extends StatelessWidget {
 }
 
 Iterable<T> intersperseIndexed<T>(
-    T Function(int) generator, Iterable<T> iterable) sync* {
+    T Function(int) generator, Iterable<T> iterable,) sync* {
   final iterator = iterable.iterator;
   var index = 0;
   if (iterator.moveNext()) {

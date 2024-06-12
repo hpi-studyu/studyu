@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
-
-import 'question_widget.dart';
 
 @Deprecated('Use [AnnotatedScaleQuestionWidget]')
 class VisualAnalogueQuestionWidget extends QuestionWidget {
   final VisualAnalogueQuestion question;
   final Function(Answer)? onDone;
 
-  const VisualAnalogueQuestionWidget(
-      {super.key, required this.question, this.onDone});
+  @Deprecated('Use [AnnotatedScaleQuestionWidget]')
+  const VisualAnalogueQuestionWidget({
+    super.key,
+    required this.question,
+    this.onDone,
+  });
 
   @override
   State<VisualAnalogueQuestionWidget> createState() =>
@@ -51,7 +54,7 @@ class _VisualAnalogueQuestionWidgetState
                 gradient: LinearGradient(
                   colors: [
                     Color(widget.question.minimumColor),
-                    Color(widget.question.maximumColor)
+                    Color(widget.question.maximumColor),
                   ],
                 ),
               ),
@@ -74,7 +77,7 @@ class _VisualAnalogueQuestionWidgetState
                 widget.onDone!(widget.question.constructAnswer(value)),
             child: Text(AppLocalizations.of(context)!.done),
           ),
-        )
+        ),
       ],
     );
   }

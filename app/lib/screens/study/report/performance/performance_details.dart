@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
-
-import '../../../../routes.dart';
-import '../../../../widgets/intervention_card.dart';
 
 class PerformanceDetailsScreen extends StatelessWidget {
   final StudySubject? reportSubject;
@@ -39,7 +38,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   child: Text(
                       AppLocalizations.of(context)!.performance_overview,
-                      style: theme.textTheme.titleMedium),
+                      style: theme.textTheme.titleMedium,),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
@@ -59,7 +58,7 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   itemCount: interventions.length,
                   itemBuilder: (context, index) => InterventionPerformanceBar(
                       subject: reportSubject,
-                      intervention: interventions[index]),
+                      intervention: interventions[index],),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
@@ -96,7 +95,7 @@ class InterventionPerformanceBar extends StatelessWidget {
   final StudySubject? subject;
 
   const InterventionPerformanceBar(
-      {required this.intervention, required this.subject, super.key});
+      {required this.intervention, required this.subject, super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +105,7 @@ class InterventionPerformanceBar extends StatelessWidget {
         child: Column(
           children: [
             InterventionCard(intervention,
-                showTasks: false, showDescription: false),
+                showTasks: false, showDescription: false,),
             const SizedBox(height: 8),
             ...intervention.tasks.map(
               (task) => PerformanceBar(
@@ -114,7 +113,7 @@ class InterventionPerformanceBar extends StatelessWidget {
                 completed: subject!.completedTasksFor(task),
                 total: subject!.totalTaskCountFor(task),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -127,7 +126,7 @@ class ObservationPerformanceBar extends StatelessWidget {
   final StudySubject? subject;
 
   const ObservationPerformanceBar(
-      {required this.observation, required this.subject, super.key});
+      {required this.observation, required this.subject, super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +152,7 @@ class PerformanceBar extends StatelessWidget {
       {required this.task,
       required this.completed,
       required this.total,
-      super.key});
+      super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -179,9 +178,9 @@ class PerformanceBar extends StatelessWidget {
                 '${(completed / total * 100).toStringAsFixed(2).replaceAll('.00', '')} %',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-            )
+            ),
           ],
-        )
+        ),
       ],
     );
   }

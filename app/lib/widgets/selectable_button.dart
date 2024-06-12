@@ -6,7 +6,7 @@ class SelectableButton extends StatelessWidget {
   final Function()? onTap;
 
   const SelectableButton(
-      {super.key, required this.child, this.selected = false, this.onTap});
+      {super.key, required this.child, this.selected = false, this.onTap,});
 
   Color _getFillColor(ThemeData theme) =>
       selected ? theme.primaryColor : theme.cardColor;

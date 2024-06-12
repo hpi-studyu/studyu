@@ -9,15 +9,14 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overview.dart';
+import 'package:studyu_app/screens/study/report/report_details.dart';
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../models/app_state.dart';
-import '../../../routes.dart';
-import '../report/report_details.dart';
-import 'task_overview_tab/task_overview.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String? error;
@@ -42,7 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   StudySubject? subject;
   List<TaskInstance>? scheduleToday;
 
-  get showNextDay =>
+  bool get showNextDay =>
       (kDebugMode || context.read<AppState>().isPreview) &&
       !subject!.completedStudy;
 
@@ -59,7 +58,6 @@ class _DashboardScreenState extends State<DashboardScreen>
         setState(() {
           scheduleToday = subject!.scheduleFor(DateTime.now());
         });
-        break;
       case AppLifecycleState.inactive:
         break;
       case AppLifecycleState.paused:
@@ -101,7 +99,10 @@ class _DashboardScreenState extends State<DashboardScreen>
     if (subject == null) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamedAndRemoveUntil(
-            context, Routes.loading, (_) => false);
+          context,
+          Routes.loading,
+          (_) => false,
+        );
       });
       return const SizedBox.shrink();
     }
@@ -123,14 +124,16 @@ class _DashboardScreenState extends State<DashboardScreen>
             tooltip: 'Current report', // todo tr
             icon: Icon(MdiIcons.chartBar),
             onPressed: () => Navigator.push(
-                context, ReportDetailsScreen.routeFor(subject: subject!)),
+              context,
+              ReportDetailsScreen.routeFor(subject: subject!),
+            ),
           ),
           PopupMenuButton<OverflowMenuItem>(
             onSelected: (value) {
               if (value.routeName != null) {
                 Navigator.pushNamed(context, value.routeName!);
-              } else if (value.onTap != null) {
-                value.onTap!();
+              } else {
+                value.onTap?.call();
               }
             },
             itemBuilder: (context) {
@@ -146,8 +149,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                   routeName: Routes.faq,
                 ),
                 OverflowMenuItem(
-                    AppLocalizations.of(context)!.settings, Icons.settings,
-                    routeName: Routes.appSettings),
+                  AppLocalizations.of(context)!.settings,
+                  Icons.settings,
+                  routeName: Routes.appSettings,
+                ),
                 OverflowMenuItem(
                   AppLocalizations.of(context)!.what_is_studyu,
                   MdiIcons.helpCircleOutline,
@@ -166,54 +171,62 @@ class _DashboardScreenState extends State<DashboardScreen>
                       applicationIcon: GestureDetector(
                         onDoubleTap: () {
                           showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                    title: const SelectableText(
-                                        'Notification Log'),
-                                    content: Column(
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            final Uri emailLaunchUri = Uri(
-                                                scheme: 'mailto',
-                                                path: subject!
-                                                    .study.contact.email,
-                                                queryParameters: {
-                                                  'subject':
-                                                      '[StudyU] Debug Information',
-                                                  'body': StudyNotifications
-                                                      .scheduledNotificationsDebug,
-                                                });
-                                            launchUrl(emailLaunchUri);
-                                          },
-                                          child: const Text('Send via email'),
-                                        ),
-                                        FutureBuilder<bool>(
-                                            future: receivePermission(),
-                                            builder: (context,
-                                                AsyncSnapshot<bool> snapshot) {
-                                              if (snapshot.hasData) {
-                                                String data =
-                                                    "ignoreBatteryOptimizations: ${snapshot.data.toString()}";
-                                                StudyNotifications
-                                                        .scheduledNotificationsDebug =
-                                                    "${StudyNotifications.scheduledNotificationsDebug}\n\n$data\n";
-                                                return Text(data);
-                                              } else {
-                                                return const CircularProgressIndicator();
-                                              }
-                                            }),
-                                        SelectableText(StudyNotifications
-                                            .scheduledNotificationsDebug!),
-                                      ],
-                                    ),
-                                    scrollable: true,
-                                  ));
+                            context: context,
+                            builder: (_) => AlertDialog(
+                              title: const SelectableText(
+                                'Notification Log',
+                              ),
+                              content: Column(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      final Uri emailLaunchUri = Uri(
+                                        scheme: 'mailto',
+                                        path: subject!.study.contact.email,
+                                        queryParameters: {
+                                          'subject':
+                                              '[StudyU] Debug Information',
+                                          'body': StudyNotifications
+                                              .scheduledNotificationsDebug,
+                                        },
+                                      );
+                                      launchUrl(emailLaunchUri);
+                                    },
+                                    child: const Text('Send via email'),
+                                  ),
+                                  FutureBuilder<bool>(
+                                    future: receivePermission(),
+                                    builder: (
+                                      context,
+                                      AsyncSnapshot<bool> snapshot,
+                                    ) {
+                                      if (snapshot.hasData) {
+                                        final String data =
+                                            "ignoreBatteryOptimizations: ${snapshot.data}";
+                                        StudyNotifications
+                                                .scheduledNotificationsDebug =
+                                            "${StudyNotifications.scheduledNotificationsDebug}\n\n$data\n";
+                                        return Text(data);
+                                      } else {
+                                        return const CircularProgressIndicator();
+                                      }
+                                    },
+                                  ),
+                                  SelectableText(
+                                    StudyNotifications
+                                        .scheduledNotificationsDebug!,
+                                  ),
+                                ],
+                              ),
+                              scrollable: true,
+                            ),
+                          );
                           testNotifications(context);
                         },
                         child: const Image(
-                            image: AssetImage('assets/icon/icon.png'),
-                            height: 32),
+                          image: AssetImage('assets/icon/icon.png'),
+                          height: 32,
+                        ),
                       ),
                       applicationVersion:
                           '${packageInfo.version} - ${packageInfo.buildNumber}',
@@ -229,7 +242,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     launchUrl(
-                                        Uri.parse('https://www.flaticon.com/'));
+                                      Uri.parse('https://www.flaticon.com/'),
+                                    );
                                   },
                               ),
                               const TextSpan(text: ' made by'),
@@ -255,11 +269,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                                 ),
                               )
                               .toList(),
-                        )
+                        ),
                       ],
                     );
                   },
-                )
+                ),
               ].map((choice) {
                 return PopupMenuItem<OverflowMenuItem>(
                   value: choice,
@@ -267,7 +281,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     children: [
                       Icon(choice.icon, color: Colors.black),
                       const SizedBox(width: 8),
-                      Text(choice.name)
+                      Text(choice.name),
                     ],
                   ),
                 );
@@ -311,19 +325,23 @@ class _DashboardScreenState extends State<DashboardScreen>
     } else if (subject!.startedAt!.isAfter(DateTime.now())) {
       final theme = Theme.of(context);
       return Center(
-          child: Padding(
-              padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.study_not_started,
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: theme.primaryColor,
-                          fontWeight: FontWeight.bold),
-                    )
-                  ])));
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.study_not_started,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: theme.primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     } else {
       return TaskOverview(
         subject: subject,
@@ -353,25 +371,30 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             Text(
               AppLocalizations.of(context)!.completed_study,
               style: TextStyle(
-                  fontSize: 20,
-                  color: theme.primaryColor,
-                  fontWeight: FontWeight.bold),
+                fontSize: 20,
+                color: theme.primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             space,
             OutlinedButton.icon(
               onPressed: () =>
                   Navigator.pushNamed(context, Routes.reportHistory),
               icon: Icon(MdiIcons.history, size: fontSize),
-              label: Text(AppLocalizations.of(context)!.report_history,
-                  style: textStyle),
+              label: Text(
+                AppLocalizations.of(context)!.report_history,
+                style: textStyle,
+              ),
             ),
             space,
             OutlinedButton.icon(
               onPressed: () =>
                   Navigator.pushNamed(context, Routes.studySelection),
               icon: Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
-              label: Text(AppLocalizations.of(context)!.study_selection,
-                  style: textStyle),
+              label: Text(
+                AppLocalizations.of(context)!.study_selection,
+                style: textStyle,
+              ),
             ),
           ],
         ),

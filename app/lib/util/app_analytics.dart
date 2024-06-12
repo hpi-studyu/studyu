@@ -4,10 +4,9 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sentry_logging/sentry_logging.dart';
 import 'package:studyu_app/app.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-
-import 'cache.dart';
 
 class AppAnalytics /*extends Analytics*/ {
   static bool? _userEnabled;
@@ -37,7 +36,7 @@ class AppAnalytics /*extends Analytics*/ {
     StudyUAnalytics? studyUAnalytics;
     if (appConfig == null ||
         appConfig.analytics != null && appConfig.analytics!.dsn.isEmpty) {
-      final cachedAnalytics = (await Cache.loadAnalytics());
+      final cachedAnalytics = await Cache.loadAnalytics();
       if (cachedAnalytics != null) {
         studyUAnalytics = cachedAnalytics;
       }
@@ -55,19 +54,19 @@ class AppAnalytics /*extends Analytics*/ {
       // We recommend adjusting this value in production.
       options.tracesSampleRate = studyUAnalytics.samplingRate ?? 1.0;
       options.addIntegration(LoggingIntegration());
-    }, appRunner: () => runApp(myApp));
+    }, appRunner: () => runApp(myApp),);
     Cache.storeAnalytics(StudyUAnalytics(
       studyUAnalytics.enabled,
       studyUAnalytics.dsn,
       studyUAnalytics.samplingRate,
-    ));
+    ),);
   }
 
-  static get isUserEnabled {
+  static bool? get isUserEnabled {
     return _userEnabled;
   }
 
-  static void setEnabled(bool newEnabled) async {
+  static Future<void> setEnabled(bool newEnabled) async {
     await SecureStorage.write(keyAnalyticsUserEnable, newEnabled.toString());
     if (!newEnabled) {
       // a restart of the app will be necessary to enable sentry again
@@ -93,7 +92,7 @@ class AppAnalytics /*extends Analytics*/ {
     Sentry.configureScope((scope) {
       scope.setUser(SentryUser(
         id: subject!.userId,
-      ));
+      ),);
       final advancedContext = {
         'subjectId': subject!.id,
         'studyId': state.selectedStudy!.id,

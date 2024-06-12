@@ -25,7 +25,7 @@ SOFTWARE.
 import 'package:flutter/material.dart';
 
 typedef CustomErrorWidgetBuilder = Widget Function(
-    BuildContext context, dynamic error, void Function() reload);
+    BuildContext context, dynamic error, void Function() reload,);
 
 class RetryFutureBuilder<T> extends StatefulWidget {
   static RetryFutureBuilderState? of(BuildContext context) =>
@@ -95,7 +95,7 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
               // ignore: only_throw_errors
               if (widget.errorWidgetBuilder != null) {
                 return widget.errorWidgetBuilder!(
-                    context, snapshot.error, reload);
+                    context, snapshot.error, reload,);
               }
               return buildErrorView(context, snapshot.error);
             }
@@ -127,9 +127,9 @@ class RetryFutureBuilderState<T> extends State<RetryFutureBuilder<T>> {
               // todo translate
               label: const Text('Retry'),
               style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.secondary),
+                  backgroundColor: theme.colorScheme.secondary,),
             ),
-            ...widget.extraWidgets
+            ...widget.extraWidgets,
           ],
         ),
       ),

@@ -91,8 +91,8 @@ class _SettingsState extends State<Settings> {
                   _analyticsValue = value;
                 });
                 AppAnalytics.setEnabled(value);
-              }),
-        ])
+              },),
+        ],),
       ],
     );
   }
@@ -125,7 +125,7 @@ class _SettingsState extends State<Settings> {
               onPressed: () {
                 showDialog(
                     context: context,
-                    builder: (_) => OptOutAlertDialog(subject: subject));
+                    builder: (_) => OptOutAlertDialog(subject: subject),);
               },
             ),
             const SizedBox(height: 24),
@@ -136,9 +136,9 @@ class _SettingsState extends State<Settings> {
               onPressed: () {
                 showDialog(
                     context: context,
-                    builder: (_) => DeleteAlertDialog(subject: subject));
+                    builder: (_) => DeleteAlertDialog(subject: subject),);
               },
-            )
+            ),
           ],
         ),
       ),
@@ -167,7 +167,7 @@ class OptOutAlertDialog extends StatelessWidget {
               style: TextStyle(
                   color: theme.primaryColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16),
+                  fontSize: 16,),
             ),
             const TextSpan(
               text: " and won't be able to recover it. Previously completed "
@@ -194,10 +194,10 @@ class OptOutAlertDialog extends StatelessWidget {
             }
             if (context.mounted) {
               Navigator.pushNamedAndRemoveUntil(
-                  context, Routes.studySelection, (_) => false);
+                  context, Routes.studySelection, (_) => false,);
             }
           },
-        )
+        ),
       ],
     );
   }
@@ -235,11 +235,11 @@ class DeleteAlertDialog extends StatelessWidget {
                 }
                 if (context.mounted) {
                   Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.welcome, (_) => false);
+                      context, Routes.welcome, (_) => false,);
                 }
               } on SocketException catch (_) {}
             },
-          )
+          ),
         ],
       );
 }

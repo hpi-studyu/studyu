@@ -11,7 +11,7 @@ class CapturePictureScreen extends StatefulWidget {
   final String studyId;
 
   const CapturePictureScreen(
-      {super.key, required this.userId, required this.studyId});
+      {super.key, required this.userId, required this.studyId,});
 
   @override
   State<CapturePictureScreen> createState() => _CapturePictureScreenState();
@@ -41,7 +41,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     final CameraController? cameraController = _cameraController;
 
     // App state changed before we got the chance to initialize.
@@ -87,10 +87,8 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
           case 'CameraAccessDeniedWithoutPrompt':
           case 'CameraAccessRestricted':
             errorText = AppLocalizations.of(context)!.camera_access_denied;
-            break;
           case 'NoCameraAvailable':
             errorText = AppLocalizations.of(context)!.no_camera_available;
-            break;
         }
       }
 
@@ -107,7 +105,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
     return (await availableCameras())
         .where((CameraDescription aCameraDescription) =>
             aCameraDescription.lensDirection == CameraLensDirection.back ||
-            aCameraDescription.lensDirection == CameraLensDirection.front)
+            aCameraDescription.lensDirection == CameraLensDirection.front,)
         .toList();
   }
 
@@ -165,8 +163,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
             : Stack(
                 children: [
                   CameraPreview(cameraController),
-                  _isTakingPicture
-                      ? Container(
+                  if (_isTakingPicture) Container(
                           color: Colors.black.withOpacity(0.5),
                           alignment: Alignment.center,
                           child: Container(
@@ -181,16 +178,14 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
                                 const CircularProgressIndicator(),
                                 const SizedBox(height: 16),
                                 Text(
-                                    AppLocalizations.of(context)!.take_a_photo),
+                                    AppLocalizations.of(context)!.take_a_photo,),
                               ],
                             ),
                           ),
-                        )
-                      : const SizedBox.shrink(),
+                        ) else const SizedBox.shrink(),
                 ],
               ),
         floatingActionButton: Wrap(
-          direction: Axis.horizontal,
           children: [
             Container(
               margin: const EdgeInsets.all(10),
@@ -213,8 +208,8 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
                     : null,
                 child: const Icon(Icons.autorenew),
               ),
-            )
+            ),
           ],
-        ));
+        ),);
   }
 }

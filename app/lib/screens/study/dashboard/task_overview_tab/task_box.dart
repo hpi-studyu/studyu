@@ -1,13 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/study/tasks/task_screen.dart';
+import 'package:studyu_app/theme.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
+import 'package:studyu_app/widgets/round_checkbox.dart';
 import 'package:studyu_core/core.dart';
-
-import '../../../../models/app_state.dart';
-import '../../../../theme.dart';
-import '../../../../widgets/round_checkbox.dart';
-import '../../tasks/task_screen.dart';
 
 class TaskBox extends StatefulWidget {
   final TaskInstance taskInstance;
@@ -30,7 +29,7 @@ class _TaskBoxState extends State<TaskBox> {
     await Navigator.push<bool>(
       context,
       MaterialPageRoute(
-          builder: (context) => TaskScreen(taskInstance: widget.taskInstance)),
+          builder: (context) => TaskScreen(taskInstance: widget.taskInstance),),
     );
     widget.onCompleted();
     // Rebuild widget
@@ -44,7 +43,7 @@ class _TaskBoxState extends State<TaskBox> {
         .watch<AppState>()
         .activeSubject!
         .completedTaskInstanceForDay(widget.taskInstance.task.id,
-            widget.taskInstance.completionPeriod, DateTime.now());
+            widget.taskInstance.completionPeriod, DateTime.now(),);
     final isPreview = context.read<AppState>().isPreview;
     final isInsidePeriod =
         widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now());
@@ -52,7 +51,7 @@ class _TaskBoxState extends State<TaskBox> {
     return Card(
       elevation: 2,
       child: InkWell(
-        onTap: (isTaskOpen) ? _navigateToTaskScreen : () {},
+        onTap: isTaskOpen ? _navigateToTaskScreen : () {},
         child: Row(
           children: [
             Expanded(
@@ -72,7 +71,7 @@ class _TaskBoxState extends State<TaskBox> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                 child: Icon(Icons.lock, color: theme.colorScheme.secondary),
-              )
+              ),
           ],
         ),
       ),

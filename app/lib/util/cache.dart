@@ -20,7 +20,9 @@ class Cache {
     // debugPrint("Load subject from cache");
     if (await SecureStorage.containsKey(cacheSubjectKey)) {
       return StudySubject.fromJson(
-          jsonDecode((await SecureStorage.read(cacheSubjectKey))!));
+        jsonDecode((await SecureStorage.read(cacheSubjectKey))!)
+            as Map<String, dynamic>,
+      );
     } else {
       throw Exception("No cached subject found");
     }
@@ -28,13 +30,18 @@ class Cache {
 
   static Future<void> storeAnalytics(StudyUAnalytics analytics) async {
     SecureStorage.write(
-        StudyUAnalytics.keyStudyUAnalytics, jsonEncode(analytics.toJson()));
+      StudyUAnalytics.keyStudyUAnalytics,
+      jsonEncode(analytics.toJson()),
+    );
   }
 
   static Future<StudyUAnalytics?> loadAnalytics() async {
     if (await SecureStorage.containsKey(cacheSubjectKey)) {
-      return StudyUAnalytics.fromJson(jsonDecode(
-          (await SecureStorage.read(StudyUAnalytics.keyStudyUAnalytics))!));
+      return StudyUAnalytics.fromJson(
+        jsonDecode(
+          (await SecureStorage.read(StudyUAnalytics.keyStudyUAnalytics))!,
+        ) as Map<String, dynamic>,
+      );
     }
     return null;
   }
@@ -49,7 +56,9 @@ class Cache {
     final futureBlobFiles = await TemporaryStorageHandler.getFutureBlobFiles();
     for (final futureBlobFile in futureBlobFiles) {
       await blobStorageHandler.uploadObservation(
-          futureBlobFile.futureBlobId, File(futureBlobFile.localFilePath));
+        futureBlobFile.futureBlobId,
+        File(futureBlobFile.localFilePath),
+      );
       await File(futureBlobFile.localFilePath).delete();
     }
   }
@@ -57,15 +66,17 @@ class Cache {
   static Future<StudySubject> synchronize(StudySubject remoteSubject) async {
     if (isSynchronizing) return remoteSubject;
     // No local subject found
-    if (!(await SecureStorage.containsKey(cacheSubjectKey)))
+    if (!(await SecureStorage.containsKey(cacheSubjectKey))) {
       return remoteSubject;
+    }
     final localSubject = await loadSubject();
     // local and remote subject are equal, nothing to synchronize
     if (localSubject == remoteSubject) return remoteSubject;
     // remote subject belongs to a different study
     if (!kDebugMode &&
-        remoteSubject.startedAt!.isAfter(localSubject.startedAt!))
+        remoteSubject.startedAt!.isAfter(localSubject.startedAt!)) {
       return remoteSubject;
+    }
 
     debugPrint("Synchronize subject with cache");
     isSynchronizing = true;
@@ -91,19 +102,21 @@ class Cache {
         // save new progress
         final List<SubjectProgress> newProgress = [
           ...localSubject.progress,
-          ...remoteSubject.progress
+          ...remoteSubject.progress,
         ];
-        newProgress.removeWhere((element) =>
-            localSubject.progress.contains(element) &&
-            remoteSubject.progress.contains(element));
-        for (var p in newProgress) {
+        newProgress.removeWhere(
+          (element) =>
+              localSubject.progress.contains(element) &&
+              remoteSubject.progress.contains(element),
+        );
+        for (final p in newProgress) {
           await p.save();
         }
 
         // merge local and remote progress and remove duplicates
         final List<SubjectProgress> finalProgress = [
           ...localSubject.progress,
-          ...remoteSubject.progress
+          ...remoteSubject.progress,
         ];
         final duplicates = <DateTime?>{};
         finalProgress
@@ -117,11 +130,14 @@ class Cache {
         // ... for now do nothing
         if (!kDebugMode && localSubject.startedAt == remoteSubject.startedAt) {
           StudyULogger.fatal(
-              "Cache synchronization found local changes that cannot be merged");
+            "Cache synchronization found local changes that cannot be merged",
+          );
           StudyUDiagnostics.captureMessage(
-              "localSubject: ${localSubject.toFullJson()} \nremoteSubject: ${remoteSubject.toFullJson()}");
+            "localSubject: ${localSubject.toFullJson()} \nremoteSubject: ${remoteSubject.toFullJson()}",
+          );
           StudyUDiagnostics.captureException(
-              Exception("CacheSynchronizationException"));
+            Exception("CacheSynchronizationException"),
+          );
         }
       }
     } catch (exception) {

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:studyu_app/widgets/html_text.dart';
+import 'package:studyu_app/widgets/questionnaire/question_container.dart';
 import 'package:studyu_core/core.dart';
-
-import 'question_container.dart';
 
 typedef StateHandler = void Function(QuestionnaireState);
 typedef ContinuationPredicate = bool Function(QuestionnaireState);
@@ -47,7 +46,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   void _invalidateDownstreamAnswers(int index) {
     if (index < shownQuestions.length - 1) {
       final startIndex = widget.questions.indexWhere(
-          (question) => question.id == shownQuestions[index].question.id);
+          (question) => question.id == shownQuestions[index].question.id,);
       widget.questions
           .skip(startIndex + 1)
           .forEach((question) => qs.answers.remove(question.id));
@@ -103,12 +102,11 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       if (!widget.questions[_nextQuestionIndex].shouldBeShown(qs)) {
         _onQuestionDone(
             widget.questions[_nextQuestionIndex].getDefaultAnswer()!,
-            shownQuestions.length);
+            shownQuestions.length,);
         return;
       }
       _insertQuestion(widget.questions[_nextQuestionIndex]);
-      _listKey.currentState!.insertItem(shownQuestions.length - 1,
-          duration: const Duration(milliseconds: 300));
+      _listKey.currentState!.insertItem(shownQuestions.length - 1,);
       _nextQuestionIndex++;
     } else {
       // we ran out of questions
