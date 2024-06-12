@@ -487,7 +487,7 @@
   "participant_details_title": "Teilnehmerdetails",
   "participant_details_study_days_overview": "Übersicht über Studientage",
   "participant_details_study_days_description": "Dieser Abschnitt bietet einen Überblick über die Studientage des Teilnehmers.",
-  "participant_details_color_legend_title": "Farblegende:",
+  "participant_details_color_legend_title": "Farblegende",
   "participant_details_color_legend_completed": "Abgeschlossen",
   "participant_details_color_legend_partially_completed": "Teilweise abgeschlossen",
   "participant_details_color_legend_missed": "Verpasst",

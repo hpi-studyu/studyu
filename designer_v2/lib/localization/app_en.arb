@@ -534,7 +534,7 @@
   "participant_details_title": "Participant Details",
   "participant_details_study_days_overview": "Study days overview",
   "participant_details_study_days_description": "This section provides an overview of the participant's study days.",
-  "participant_details_color_legend_title": "Color Legend:",
+  "participant_details_color_legend_title": "Color Legend",
   "participant_details_color_legend_completed": "Completed",
   "participant_details_color_legend_partially_completed": "Partially Completed",
   "participant_details_color_legend_missed": "Missed",
