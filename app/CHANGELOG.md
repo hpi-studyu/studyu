@@ -1,3 +1,15 @@
+## 2.7.6-dev.2
+
+ - **FIX**: formatting issues.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**: upgrade deps.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+
 ## 2.7.6-dev.1
 
  - **FIX**(app): update android deployment.

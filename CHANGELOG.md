@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-06-12
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.6-dev.2`](#studyu_app---v276-dev2)
+ - [`studyu_core` - `v4.4.3-dev.1`](#studyu_core---v443-dev1)
+ - [`studyu_designer_v2` - `v1.8.1-dev.2`](#studyu_designer_v2---v181-dev2)
+ - [`studyu_flutter_common` - `v1.8.4-dev.1`](#studyu_flutter_common---v184-dev1)
+
+---
+
+#### `studyu_app` - `v2.7.6-dev.2`
+
+ - **FIX**: formatting issues.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**: upgrade deps.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+
+#### `studyu_core` - `v4.4.3-dev.1`
+
+ - **PERF**: improve dashboard study fetching.
+ - **FIX**: formatting issues.
+ - **FIX**: upgrade deps.
+
+#### `studyu_designer_v2` - `v1.8.1-dev.2`
+
+ - **PERF**: added comments to the getUserStudies function.
+ - **PERF**: improve dashboard study fetching.
+ - **FIX**: add emojis again.
+ - **FIX**: integration test sign out.
+ - **FIX**: check if canPop.
+ - **FIX**: upgrade deps.
+ - **FIX**: add compatibility for emoji font with flutter >= 3.22.
+ - **FIX**: Flutter 3.22 arg error.
+
+#### `studyu_flutter_common` - `v1.8.4-dev.1`
+
+ - **FIX**: formatting issues.
+
+
 ## 2024-06-09
 
 ### Changes
