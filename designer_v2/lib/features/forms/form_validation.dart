@@ -24,12 +24,17 @@ class FormControlValidation {
       return this;
     }
     if (control != other.control) {
-      throw Exception("Cannot merge FormControlValidationConfig for different controls.");
+      throw Exception(
+        "Cannot merge FormControlValidationConfig for different controls.",
+      );
     }
     return FormControlValidation(
       control: control,
       validators: [...validators, ...other.validators],
-      asyncValidators: [...(asyncValidators ?? []), ...(other.asyncValidators ?? [])],
+      asyncValidators: [
+        ...asyncValidators ?? [],
+        ...other.asyncValidators ?? [],
+      ],
       validationMessages: {...validationMessages, ...other.validationMessages},
     );
   }
@@ -41,19 +46,26 @@ typedef FormValidationConfig = List<FormControlValidation>;
 /// [FormValidationSetEnum] which is used to look up the validator configuration
 /// to be applied based on the [FormViewModel]'s current
 /// [FormViewModel.validationSet].
-typedef FormValidationConfigSet = Map<FormValidationSetEnum, List<FormControlValidation>>;
+typedef FormValidationConfigSet
+    = Map<FormValidationSetEnum, List<FormControlValidation>>;
 
 /// Extension to get/set control-specific validation messages from the
 /// [AbstractControl] object itself
 extension AbstractControlX on AbstractControl {
-  static final Map<AbstractControl, Map<String, ValidationMessageFunction>> _controlValidationMessages = {};
+  static final Map<AbstractControl, Map<String, ValidationMessageFunction>>
+      _controlValidationMessages = {};
 
-  Map<String, ValidationMessageFunction> get validationMessages => _controlValidationMessages[this] ?? {};
-  set validationMessages(Map<String, ValidationMessageFunction> validationMessages) =>
+  Map<String, ValidationMessageFunction> get validationMessages =>
+      _controlValidationMessages[this] ?? {};
+  set validationMessages(
+    Map<String, ValidationMessageFunction> validationMessages,
+  ) =>
       _controlValidationMessages[this] = validationMessages;
 }
 
-List<Tuple<AbstractControl, String>> _collectValidationErrorMessages(AbstractControl control) {
+List<Tuple<AbstractControl, String>> _collectValidationErrorMessages(
+  AbstractControl control,
+) {
   final List<Tuple<AbstractControl, String>> allValidationErrorMessages = [];
 
   if (!control.enabled || !control.hasErrors) {
@@ -78,25 +90,28 @@ List<Tuple<AbstractControl, String>> _collectValidationErrorMessages(AbstractCon
     }
 
     final validationMessageFunc = control.validationMessages[error.key];
-    final String validationMessage = validationMessageFunc?.call(error.value) ?? '[${error.key}]';
+    final String validationMessage =
+        validationMessageFunc?.call(error.value) ?? '[${error.key}]';
     allValidationErrorMessages.add(Tuple(control, validationMessage));
   }
 
   return allValidationErrorMessages;
 }
 
-List<Tuple<AbstractControl, String>>? _getControlErrorMessages(AbstractControl control) {
+List<Tuple<AbstractControl, String>>? _getControlErrorMessages(
+  AbstractControl control,
+) {
   List<Tuple<AbstractControl, String>>? errorMessages;
   // Typecasting needed as a workaround because dynamic dispatch
   // is not working properly with extension methods
   if (control is FormControl) {
-    errorMessages = (control).validationErrorMessages;
+    errorMessages = control.validationErrorMessages;
   }
   if (control is FormArray) {
-    errorMessages = (control).validationErrorMessages;
+    errorMessages = control.validationErrorMessages;
   }
   if (control is FormGroup) {
-    errorMessages = (control).validationErrorMessages;
+    errorMessages = control.validationErrorMessages;
   }
   return errorMessages;
 }
@@ -109,7 +124,8 @@ extension FormControlXX on FormControl {
 
 extension FormArrayX on FormArray {
   List<Tuple<AbstractControl, String>> get validationErrorMessages {
-    final List<Tuple<AbstractControl, String>> allValidationErrorMessages = _collectValidationErrorMessages(this);
+    final List<Tuple<AbstractControl, String>> allValidationErrorMessages =
+        _collectValidationErrorMessages(this);
 
     for (final control in controls) {
       if (control.enabled && control.hasErrors) {
@@ -126,7 +142,8 @@ extension FormArrayX on FormArray {
 
 extension FormGroupX on FormGroup {
   List<Tuple<AbstractControl, String>> get validationErrorMessages {
-    final List<Tuple<AbstractControl, String>> allValidationErrorMessages = _collectValidationErrorMessages(this);
+    final List<Tuple<AbstractControl, String>> allValidationErrorMessages =
+        _collectValidationErrorMessages(this);
 
     controls.forEach((_, control) {
       if (control.enabled && control.hasErrors) {
@@ -140,12 +157,15 @@ extension FormGroupX on FormGroup {
     return allValidationErrorMessages;
   }
 
-  List<String> get formattedErrorMessages => validationErrorMessages.map((t) => t.second).toList();
+  List<String> get formattedErrorMessages =>
+      validationErrorMessages.map((t) => t.second).toList();
 
   String get validationErrorSummary => getValidationErrorSummary();
 
-  String getValidationErrorSummary({uniqueErrors = true}) {
-    final errorMessages = (uniqueErrors) ? {...formattedErrorMessages}.toList() : formattedErrorMessages;
+  String getValidationErrorSummary({bool uniqueErrors = true}) {
+    final errorMessages = uniqueErrors
+        ? {...formattedErrorMessages}.toList()
+        : formattedErrorMessages;
     return "- ${errorMessages.join("\n- ")}";
   }
 }

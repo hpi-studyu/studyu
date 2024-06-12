@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:studyu_app/widgets/html_text.dart';
+import 'package:studyu_app/widgets/questionnaire/question_container.dart';
 import 'package:studyu_core/core.dart';
-
-import 'question_container.dart';
 
 typedef StateHandler = void Function(QuestionnaireState);
 typedef ContinuationPredicate = bool Function(QuestionnaireState);
@@ -40,13 +39,18 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   final QuestionnaireState qs = QuestionnaireState();
   int _nextQuestionIndex = 1;
 
-  void _finishQuestionnaire(QuestionnaireState result) => widget.onComplete?.call(result);
+  void _finishQuestionnaire(QuestionnaireState result) =>
+      widget.onComplete?.call(result);
 
   // if question with lower index than current question is answered, remove all downstream answers
   void _invalidateDownstreamAnswers(int index) {
     if (index < shownQuestions.length - 1) {
-      final startIndex = widget.questions.indexWhere((question) => question.id == shownQuestions[index].question.id);
-      widget.questions.skip(startIndex + 1).forEach((question) => qs.answers.remove(question.id));
+      final startIndex = widget.questions.indexWhere(
+        (question) => question.id == shownQuestions[index].question.id,
+      );
+      widget.questions
+          .skip(startIndex + 1)
+          .forEach((question) => qs.answers.remove(question.id));
       while (index + 1 < shownQuestions.length) {
         final end = shownQuestions.length;
         final lastQuestion = shownQuestions.removeLast();
@@ -73,13 +77,16 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _onQuestionDone(Answer answer, int index) {
-    _nextQuestionIndex = widget.questions.indexWhere((question) => question.id == answer.question) + 1;
+    _nextQuestionIndex = widget.questions
+            .indexWhere((question) => question.id == answer.question) +
+        1;
     qs.answers[answer.question] = answer;
     widget.onChange?.call(qs);
 
     final shouldContinue = widget.shouldContinue?.call(qs);
     // only invalidate if there is a conditional question or if answers do not allow to continue
-    if (shownQuestions.any((element) => element.question.conditional != null) || shouldContinue == false) {
+    if (shownQuestions.any((element) => element.question.conditional != null) ||
+        shouldContinue == false) {
       _invalidateDownstreamAnswers(index);
     }
 
@@ -94,11 +101,16 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
       // check for conditional questions
       if (!widget.questions[_nextQuestionIndex].shouldBeShown(qs)) {
-        _onQuestionDone(widget.questions[_nextQuestionIndex].getDefaultAnswer()!, shownQuestions.length);
+        _onQuestionDone(
+          widget.questions[_nextQuestionIndex].getDefaultAnswer()!,
+          shownQuestions.length,
+        );
         return;
       }
       _insertQuestion(widget.questions[_nextQuestionIndex]);
-      _listKey.currentState!.insertItem(shownQuestions.length - 1, duration: const Duration(milliseconds: 300));
+      _listKey.currentState!.insertItem(
+        shownQuestions.length - 1,
+      );
       _nextQuestionIndex++;
     } else {
       // we ran out of questions
@@ -129,11 +141,16 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       initialItemCount: shownQuestions.length + 2,
       itemBuilder: (context, index, animation) {
         if (index == 0) {
-          return widget.header != null && widget.header!.isNotEmpty ? HtmlTextBox(widget.header) : Container();
+          return widget.header != null && widget.header!.isNotEmpty
+              ? HtmlTextBox(widget.header)
+              : Container();
         }
         index -= 1;
-        if (index == widget.questions.length && qs.answers.length == widget.questions.length) {
-          return widget.footer != null && widget.footer!.isNotEmpty ? HtmlTextBox(widget.footer) : Container();
+        if (index == widget.questions.length &&
+            qs.answers.length == widget.questions.length) {
+          return widget.footer != null && widget.footer!.isNotEmpty
+              ? HtmlTextBox(widget.footer)
+              : Container();
         }
         if (index > shownQuestions.length - 1) {
           return Container();

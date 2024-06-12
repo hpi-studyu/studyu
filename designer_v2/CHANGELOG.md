@@ -1,3 +1,26 @@
+## 1.8.1-dev.2
+
+ - **PERF**: added comments to the getUserStudies function.
+ - **PERF**: improve dashboard study fetching.
+ - **FIX**: add emojis again.
+ - **FIX**: integration test sign out.
+ - **FIX**: check if canPop.
+ - **FIX**: upgrade deps.
+ - **FIX**: add compatibility for emoji font with flutter >= 3.22.
+ - **FIX**: Flutter 3.22 arg error.
+
+## 1.8.1-dev.1
+
+ - **FIX**: add emojis again.
+
+## 1.8.1-dev.0
+
+ - **FIX**: integration test sign out.
+ - **FIX**: check if canPop.
+ - **FIX**: upgrade deps.
+ - **FIX**: add compatibility for emoji font with flutter >= 3.22.
+ - **FIX**: Flutter 3.22 arg error.
+
 ## 1.8.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

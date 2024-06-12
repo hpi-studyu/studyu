@@ -2,12 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../routes.dart';
-import '../../widgets/bottom_onboarding_navigation.dart';
 
 class TermsScreen extends StatefulWidget {
   const TermsScreen({super.key});
@@ -30,8 +29,10 @@ class _TermsScreenState extends State<TermsScreen> {
       body: SafeArea(
         child: Center(
           child: RetryFutureBuilder<AppConfig>(
-              tryFunction: AppConfig.getAppConfig,
-              successBuilder: (BuildContext context, AppConfig? appConfig) => legalSection(context, appConfig)),
+            tryFunction: AppConfig.getAppConfig,
+            successBuilder: (BuildContext context, AppConfig? appConfig) =>
+                legalSection(context, appConfig),
+          ),
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
@@ -63,7 +64,7 @@ class _TermsScreenState extends State<TermsScreen> {
               onChange: (val) => setState(() => _acceptedTerms = val!),
               isChecked: _acceptedTerms,
               icon: Icon(MdiIcons.fileDocumentEdit),
-              pdfUrl: appConfig!.appTerms[appLocale.languageCode.toString()],
+              pdfUrl: appConfig!.appTerms[appLocale.languageCode],
               pdfUrlLabel: AppLocalizations.of(context)!.terms_read,
             ),
             const SizedBox(height: 20),
@@ -74,14 +75,16 @@ class _TermsScreenState extends State<TermsScreen> {
               onChange: (val) => setState(() => _acceptedPrivacy = val!),
               isChecked: _acceptedPrivacy,
               icon: Icon(MdiIcons.shieldLock),
-              pdfUrl: appConfig.appPrivacy[appLocale.languageCode.toString()],
+              pdfUrl: appConfig.appPrivacy[appLocale.languageCode],
               pdfUrlLabel: AppLocalizations.of(context)!.privacy_read,
             ),
             const SizedBox(height: 30),
             OutlinedButton.icon(
               icon: Icon(MdiIcons.scaleBalance),
               onPressed: () async {
-                final uri = Uri.parse(appConfig.imprint[appLocale.languageCode.toString()]!);
+                final uri = Uri.parse(
+                  appConfig.imprint[appLocale.languageCode]!,
+                );
                 if (await canLaunchUrl(uri)) {
                   launchUrl(uri, mode: LaunchMode.externalApplication);
                 }
@@ -122,12 +125,16 @@ class LegalSection extends StatelessWidget {
     final theme = Theme.of(context);
     return Column(
       children: [
-        Text(title!, style: theme.textTheme.headlineMedium!.copyWith(color: theme.primaryColor)),
+        Text(
+          title!,
+          style: theme.textTheme.headlineMedium!
+              .copyWith(color: theme.primaryColor),
+        ),
         const SizedBox(height: 20),
         Text(description!),
         const SizedBox(height: 20),
         OutlinedButton.icon(
-          icon: icon!,
+          icon: icon,
           onPressed: () async {
             final uri = Uri.parse(pdfUrl!);
             if (await canLaunchUrl(uri)) {
@@ -136,7 +143,11 @@ class LegalSection extends StatelessWidget {
           },
           label: Text(pdfUrlLabel!),
         ),
-        CheckboxListTile(title: Text(acknowledgment!), value: isChecked, onChanged: onChange),
+        CheckboxListTile(
+          title: Text(acknowledgment!),
+          value: isChecked,
+          onChanged: onChange,
+        ),
       ],
     );
   }

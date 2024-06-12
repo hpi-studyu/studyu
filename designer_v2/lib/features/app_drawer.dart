@@ -3,13 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/assets.dart';
 import 'package:studyu_designer_v2/common_views/icons.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
+import 'package:studyu_designer_v2/features/account/account_settings.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
-
-import 'account/account_settings.dart';
 
 typedef OnEntrySelectedCallback = void Function(BuildContext, WidgetRef);
 
@@ -36,9 +35,7 @@ class DrawerEntry {
     if (autoCloseDrawer) {
       Navigator.pop(context);
     }
-    if (onSelected != null) {
-      onSelected!(context, ref);
-    }
+    onSelected?.call(context, ref);
   }
 }
 
@@ -56,7 +53,7 @@ class GoRouterDrawerEntry extends DrawerEntry {
   final void Function()? onNavigated;
 
   @override
-  onClick(BuildContext context, WidgetRef ref) {
+  void onClick(BuildContext context, WidgetRef ref) {
     super.onClick(context, ref);
     ref.read(routerProvider).dispatch(intent);
     onNavigated?.call();
@@ -96,7 +93,8 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   /// List of sections with their corresponding menu entries
   late final List<List<DrawerEntry>> bottomEntries;
 
-  List<DrawerEntry> get allEntries => [...topEntries, ...bottomEntries].expand((e) => e).toList();
+  List<DrawerEntry> get allEntries =>
+      [...topEntries, ...bottomEntries].expand((e) => e).toList();
 
   /// Index of the currently selected [[NavigationGoRouterEntry]]
   /// Defaults to -1 if none of the entries is currently selected
@@ -137,12 +135,16 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     bottomEntries = [
       [
         DrawerEntry(
-            localizedTitle: () => tr.navlink_account_settings,
-            autoCloseDrawer: widget.autoCloseDrawer,
-            icon: Icons.settings_rounded,
-            onSelected: (context, ref) {
-              showDialog(context: context, builder: (context) => const AccountSettingsDialog());
-            }),
+          localizedTitle: () => tr.navlink_account_settings,
+          autoCloseDrawer: widget.autoCloseDrawer,
+          icon: Icons.settings_rounded,
+          onSelected: (context, ref) {
+            showDialog(
+              context: context,
+              builder: (context) => const AccountSettingsDialog(),
+            );
+          },
+        ),
         DrawerEntry(
           localizedTitle: () => tr.navlink_logout,
           autoCloseDrawer: widget.autoCloseDrawer,
@@ -192,7 +194,6 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       child: Drawer(
         width: widget.width.toDouble(),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Expanded(
@@ -202,7 +203,6 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 child: ListView(
                   // Important: Remove any padding from the ListView.
                   padding: EdgeInsets.zero,
-                  shrinkWrap: false,
                   children: [
                     _buildLogo(context),
                     ..._buildTopMenuItems(context),
@@ -213,7 +213,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
             Padding(
               padding: const EdgeInsets.only(bottom: 24.0),
               child: Column(children: _buildBottomMenuItems(context)),
-            )
+            ),
           ],
         ),
       ),
@@ -224,11 +224,17 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     // final textTheme = Theme.of(context).textTheme;
 
     return Container(
-      constraints: BoxConstraints(minHeight: widget.logoSectionMinHeight, maxHeight: widget.logoSectionMaxHeight),
+      constraints: BoxConstraints(
+        minHeight: widget.logoSectionMinHeight,
+        maxHeight: widget.logoSectionMaxHeight,
+      ),
       child: Container(
         constraints: BoxConstraints(maxHeight: widget.logoMaxHeight),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: widget.logoPaddingHorizontal, vertical: widget.logoPaddingVertical),
+          padding: EdgeInsets.symmetric(
+            horizontal: widget.logoPaddingHorizontal,
+            vertical: widget.logoPaddingVertical,
+          ),
           child: GestureDetector(
             onTap: () => ref.read(routerProvider).dispatch(RoutingIntents.root),
             child: Container(
@@ -255,7 +261,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     ); */
   }
 
-  _buildSections(List<List<DrawerEntry>> sections) {
+  List<Widget> _buildSections(List<List<DrawerEntry>> sections) {
     final List<Widget> widgets = [];
     for (final section in sections) {
       for (final entry in section) {
@@ -297,7 +303,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       leading: Icon(
         entry.icon,
         size: theme.iconTheme.size! * 1.2,
-        color: (isSelected)
+        color: isSelected
             ? null
             : (entry.enabled)
                 ? theme.iconTheme.color!.faded(0.75)

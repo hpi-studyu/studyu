@@ -6,7 +6,8 @@ import 'package:studyu_designer_v2/features/study/study_base_state.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
-class StudyControllerState extends StudyControllerBaseState implements IStudyAppBarViewModel, ISyncIndicatorViewModel {
+class StudyControllerState extends StudyControllerBaseState
+    implements IStudyAppBarViewModel, ISyncIndicatorViewModel {
   const StudyControllerState({
     required super.currentUser,
     super.studyWithMetadata,
@@ -43,7 +44,8 @@ class StudyControllerState extends StudyControllerBaseState implements IStudyApp
 
   @override
   bool get isRecruitTabEnabled =>
-      study.value == null || (study.value != null && study.value!.canEdit(super.currentUser));
+      study.value == null ||
+      (study.value != null && study.value!.canEdit(super.currentUser));
 
   @override
   bool get isMonitorTabEnabled => isAnalyzeTabEnabled;
@@ -51,21 +53,27 @@ class StudyControllerState extends StudyControllerBaseState implements IStudyApp
   @override
   bool get isAnalyzeTabEnabled =>
       study.value == null ||
-      (study.value != null && (study.value!.canEdit(super.currentUser) || study.value!.publishedToRegistryResults));
+      (study.value != null &&
+          (study.value!.canEdit(super.currentUser) ||
+              study.value!.publishedToRegistryResults));
 
   @override
-  get isSettingsEnabled => study.value != null && study.value!.canChangeSettings(super.currentUser!);
+  bool get isSettingsEnabled =>
+      study.value != null && study.value!.canChangeSettings(super.currentUser!);
 
   // - IStudyAppBarViewModel
 
   @override
-  bool get isStatusBadgeVisible => studyStatus != null && studyStatus != StudyStatus.draft;
+  bool get isStatusBadgeVisible =>
+      studyStatus != null && studyStatus != StudyStatus.draft;
 
   @override
-  bool get isSyncIndicatorVisible => studyStatus != null && studyStatus == StudyStatus.draft;
+  bool get isSyncIndicatorVisible =>
+      studyStatus != null && studyStatus == StudyStatus.draft;
 
   @override
-  bool get isPublishVisible => studyWithMetadata?.model.status == StudyStatus.draft;
+  bool get isPublishVisible =>
+      studyWithMetadata?.model.status == StudyStatus.draft;
 
   @override
   StudyStatus? get studyStatus => study.value?.status;

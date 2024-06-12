@@ -11,7 +11,8 @@ class ReportSpecification {
 
   ReportSpecification();
 
-  factory ReportSpecification.fromJson(Map<String, dynamic> json) => _$ReportSpecificationFromJson(json);
+  factory ReportSpecification.fromJson(Map<String, dynamic> json) =>
+      _$ReportSpecificationFromJson(json);
   Map<String, dynamic> toJson() => _$ReportSpecificationToJson(this);
 
   @override

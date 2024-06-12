@@ -13,10 +13,13 @@ class QuestionConditional<V> {
 
   QuestionConditional();
 
-  factory QuestionConditional.fromJson(Map<String, dynamic> json) => _fromJson(json);
+  factory QuestionConditional.fromJson(Map<String, dynamic> json) =>
+      _fromJson(json);
 
   static QuestionConditional<V> _fromJson<K, V>(Map<String, dynamic> json) =>
-      _$QuestionConditionalFromJson<V>(json)..defaultValue = json[keyDefaultValue] as V?;
+      _$QuestionConditionalFromJson<V>(json)
+        ..defaultValue = json[keyDefaultValue] as V?;
 
-  Map<String, dynamic> toJson() => _$QuestionConditionalToJson<V>(this)..[keyDefaultValue] = defaultValue;
+  Map<String, dynamic> toJson() =>
+      _$QuestionConditionalToJson<V>(this)..[keyDefaultValue] = defaultValue;
 }

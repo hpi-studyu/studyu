@@ -25,10 +25,11 @@ class Notifications {
     message: tr.notification_code_clipboard,
   );
   static final studyDeleteConfirmation = AlertIntent(
-      title: tr.dialog_study_delete_title,
-      message: tr.dialog_study_delete_description,
-      icon: Icons.delete_rounded,
-      actions: [NotificationDefaultActions.cancel]);
+    title: tr.dialog_study_delete_title,
+    message: tr.dialog_study_delete_description,
+    icon: Icons.delete_rounded,
+    actions: [NotificationDefaultActions.cancel],
+  );
 }
 
 class NotificationDefaultActions {
