@@ -110,7 +110,9 @@ class Study extends SupabaseObjectFunctions<Study>
     if (json == null) {
       return [];
     }
-    return (json as List).map((e) => EligibilityCriterion.fromJson(e as Map<String, dynamic>)).toList();
+    return (json as List)
+        .map((e) => EligibilityCriterion.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   static Contact _contactFromJson(dynamic json) {
