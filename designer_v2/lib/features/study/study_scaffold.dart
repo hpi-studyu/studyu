@@ -25,8 +25,11 @@ import 'package:studyu_designer_v2/theme.dart';
 abstract class IStudyAppBarViewModel
     implements IStudyStatusBadgeViewModel, IStudyNavViewModel {
   bool get isSyncIndicatorVisible;
+
   bool get isStatusBadgeVisible;
+
   bool get isPublishVisible;
+
   bool get isClosedVisible;
 }
 
@@ -268,7 +271,10 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
               text: tr.action_button_study_close,
               icon: null,
               onPressed: () => showStudyDialog(
-                  context, widget.studyId, StudyDialogType.close),
+                context,
+                widget.studyId,
+                StudyDialogType.close,
+              ),
             );
           },
         ),

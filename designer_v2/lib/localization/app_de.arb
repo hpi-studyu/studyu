@@ -73,7 +73,6 @@
   "phase_sequence_counterbalanced": "Ausgeglichen (AB BA)",
   "phase_sequence_random": "Zufällig",
   "phase_sequence_custom": "Benutzerdefiniert",
-
   "form_enrollment_option_open": "Open",
   "form_enrollment_option_invite": "Private (Invite-only)",
   "@__________________NAV_DRAWER__________________": {},
@@ -123,7 +122,7 @@
   "notification_study_closed": "Die Studie wurde geschlossen",
   "notification_study_closed_description": "Neue Teilnehmer können sich nicht mehr einschreiben",
   "dialog_study_close_title": "Teilnahme schließen?",
-  "dialog_study_close_description": "Bist du sicher, dass die Teilnahme an der Studie geschlossen werden soll? Es können keine neuen Teilnehmer mehr eingeschrieben werden, aber bereits angemeldete Teilnehmer können die Studie weiterhin durchführen.",
+  "dialog_study_close_description": "Bist du sicher, dass die Teilnahme an der Studie geschlossen werden soll? Dadurch können keine neuen Teilnehmer mehr aufgenommen werden. Bereits eingeschriebene Teilnehmer werden die Studie weiterhin durchführen können. Das Schließen einer Studie kann nicht rückgängig gemacht werden.",
   "dialog_study_delete_title": "Dauerhaft löschen?",
   "dialog_study_delete_description": "Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.",
   "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},

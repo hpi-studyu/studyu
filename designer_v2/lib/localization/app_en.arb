@@ -124,7 +124,7 @@
   "notification_study_closed": "Study was closed",
   "notification_study_closed_description": "New participants can no longer enroll in this study.",
   "dialog_study_close_title": "Close participation?",
-  "dialog_study_close_description": "Are you sure that you want to stop new enrollments for this study? New participants can no longer join, but those who are already enrolled can still continue.",
+  "dialog_study_close_description": "Are you sure that you want to stop new enrollments for this study? New participants can no longer join, but those who are already enrolled can still continue. This action cannot be undone.",
   "dialog_study_delete_title": "Permanently delete?",
   "dialog_study_delete_description": "Are you sure you want to delete this study? You will permanently lose the study and all data that has been collected.",
   "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},

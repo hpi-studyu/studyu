@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
-import 'package:studyu_designer_v2/features/study/settings/study_settings_form_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -15,51 +15,62 @@ class CloseConfirmationDialog extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(studyControllerProvider(studyId).notifier);
-    final formViewModel =
-        ref.watch(studySettingsFormViewModelProvider(studyId));
+    final state = ref.watch(studyControllerProvider(studyId));
+    final formKey = GlobalKey<FormState>();
+    String? inputStudyName;
 
-    return ReactiveForm(
-      formGroup: formViewModel.form,
-      child: StandardDialog(
-        titleText: tr.dialog_study_close_title,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return AsyncValueWidget<Study>(
+      value: state.study,
+      data: (Study study) {
+        return StandardDialog(
+          titleText: tr.dialog_study_close_title,
+          body: Form(
+            key: formKey,
+            child: Column(
               children: [
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          text: tr.dialog_study_close_description,
-                        ),
-                      ),
-                    ],
+                Text(tr.dialog_study_close_description),
+                const SizedBox(height: 16.0),
+                SelectableText(
+                  'Enter the title of the study "${study.title}" to confirm that you want to close it:',
+                ),
+                const SizedBox(height: 16.0),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Title of the study to close',
                   ),
+                  validator: (value) {
+                    if (value == null || value != study.title) {
+                      return 'Study title does not match';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) {
+                    inputStudyName = value;
+                  },
                 ),
               ],
             ),
-          ],
-        ),
-        actionButtons: [
-          const DismissButton(),
-          ReactiveFormConsumer(
-            builder: (context, form, child) {
-              return PrimaryButton(
-                text: tr.dialog_close,
-                icon: null,
-                onPressedFuture: () => controller.closeStudy(),
-              );
-            },
           ),
-        ],
-        maxWidth: 650,
-        minWidth: 610,
-        minHeight: 200,
-      ),
+          actionButtons: [
+            const DismissButton(),
+            PrimaryButton(
+              text: tr.dialog_close,
+              icon: null,
+              onPressedFuture: () async {
+                if (formKey.currentState!.validate()) {
+                  formKey.currentState!.save();
+                  if (inputStudyName == study.title) {
+                    await controller.closeStudy();
+                  }
+                }
+              },
+            ),
+          ],
+          maxWidth: 650,
+          minWidth: 610,
+          minHeight: 200,
+        );
+      },
     );
   }
 }

@@ -13,7 +13,6 @@ class CloseSuccessDialog extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-
     return StandardDialog(
       body: Column(
         children: [
@@ -34,7 +33,7 @@ class CloseSuccessDialog extends StudyPageWidget {
       ),
       actionButtons: [
         PrimaryButton(
-          text: tr.action_button_study_close,
+          text: tr.dialog_close,
           icon: null,
           onPressedFuture: () => Navigator.maybePop(context),
         ),
