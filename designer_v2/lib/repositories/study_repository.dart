@@ -123,9 +123,14 @@ class StudyRepository extends ModelRepository<Study>
 
     Future<void> onCloseCallback() {
       model.isClosed = true;
-      return save(model).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies)).then((value) =>
-          Future.delayed(const Duration(milliseconds: 200),
-              () => ref.read(notificationServiceProvider).show(Notifications.studyClosed)));
+      return save(model)
+          .then((value) =>
+              ref.read(routerProvider).dispatch(RoutingIntents.studies),)
+          .then((value) => Future.delayed(
+              const Duration(milliseconds: 200),
+              () => ref
+                  .read(notificationServiceProvider)
+                  .show(Notifications.studyClosed),),);
     }
 
     final currentUser = authRepository.currentUser;
@@ -190,11 +195,17 @@ class StudyRepository extends ModelRepository<Study>
         type: StudyActionType.close,
         label: StudyActionType.close.string,
         onExecute: () {
-          return ref.read(notificationServiceProvider).show(Notifications.studyCloseConfirmation, actions: [
-            NotificationAction(label: StudyActionType.close.string, onSelect: onCloseCallback, isDestructive: true),
-          ]);
+          return ref
+              .read(notificationServiceProvider)
+              .show(Notifications.studyCloseConfirmation, actions: [
+            NotificationAction(
+                label: StudyActionType.close.string,
+                onSelect: onCloseCallback,
+                isDestructive: true,),
+          ],);
         },
-        isAvailable: model.canClose(currentUser) && model.status == StudyStatus.running,
+        isAvailable:
+            model.canClose(currentUser) && model.status == StudyStatus.running,
       ),
       ModelAction(
         type: StudyActionType.delete,

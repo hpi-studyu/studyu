@@ -38,7 +38,7 @@ class Notifications {
       title: tr.dialog_study_close_title,
       message: tr.dialog_study_close_description,
       icon: MdiIcons.accountLock,
-      actions: [NotificationDefaultActions.cancel]);
+      actions: [NotificationDefaultActions.cancel],);
 }
 
 class NotificationDefaultActions {

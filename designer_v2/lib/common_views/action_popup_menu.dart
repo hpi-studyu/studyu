@@ -86,15 +86,15 @@ class ActionPopUpMenuButton extends StatelessWidget {
       itemBuilder: (BuildContext context) {
         final textTheme = theme.textTheme.labelMedium!;
         final List<PopupMenuEntry> popupList = [];
-          for (final action in actions) {
-            if (action.isSeparator) {
-              popupList.add(const PopupMenuDivider());
-              continue;
-            }
-            popupList.add(PopupMenuItem(
-              value: action,
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+        for (final action in actions) {
+          if (action.isSeparator) {
+            popupList.add(const PopupMenuDivider());
+            continue;
+          }
+          popupList.add(PopupMenuItem(
+            value: action,
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
               horizontalTitleGap: 4.0,
               leading: (action.icon == null)
                   ? const SizedBox.shrink()
@@ -111,10 +111,10 @@ class ActionPopUpMenuButton extends StatelessWidget {
                     )
                   : Text(action.label, style: textTheme),
             ),
-          ));
-            continue;
-          }
-          return popupList;
+          ),);
+          continue;
+        }
+        return popupList;
       },
     );
   }

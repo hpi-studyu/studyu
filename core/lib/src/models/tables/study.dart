@@ -241,8 +241,11 @@ class Study extends SupabaseObjectFunctions<Study>
   static Future<ExtractionResult<Study>> publishedPublicStudies() async {
     ExtractionResult<Study> result;
     try {
-      final response =
-          await env.client.from(tableName).select().eq('participation', 'open').eq("is_closed", false);
+      final response = await env.client
+          .from(tableName)
+          .select()
+          .eq('participation', 'open')
+          .eq("is_closed", false);
       final extracted = SupabaseQuery.extractSupabaseList<Study>(
         List<Map<String, dynamic>>.from(response),
       );

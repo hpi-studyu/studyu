@@ -298,7 +298,9 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   Future<StudySubject> save({bool onlyUpdate = false}) async {
     try {
       final tableQuery = env.client.from(tableName);
-      final query = onlyUpdate ? tableQuery.update(toJson()).eq("id", id) : tableQuery.upsert(toJson());
+      final query = onlyUpdate
+          ? tableQuery.update(toJson()).eq("id", id)
+          : tableQuery.upsert(toJson());
       final response = await query.select();
       final json = toFullJson(
         partialJson: List<Map<String, dynamic>>.from(response).single,

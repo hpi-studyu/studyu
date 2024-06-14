@@ -32,7 +32,6 @@ class StudyStatusBadge extends StatelessWidget {
 
     final tooltipMessage =
         '${status?.description ?? ''}\n${(status == StudyStatus.closed ? null : participation?.description) ?? ''}'
-
             .trim();
 
     Widget inTooltip(Widget child) {

@@ -65,7 +65,6 @@ class StudyRecruitScreen extends StudyPageWidget {
       return BannerBox(
           noPrefix: true,
           body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextParagraph(
@@ -75,8 +74,8 @@ class StudyRecruitScreen extends StudyPageWidget {
                 TextParagraph(
                   text: tr.banner_study_closed_description,
                 ),
-              ]),
-          style: BannerStyle.info);
+              ],),
+          style: BannerStyle.info,);
     }
 
     return null;
@@ -106,12 +105,12 @@ class StudyRecruitScreen extends StudyPageWidget {
           ? null
           : () {
               final formViewModel =
-            ref.read(inviteCodeFormViewModelProvider(studyId));
+                  ref.read(inviteCodeFormViewModelProvider(studyId));
               showFormSideSheet<InviteCodeFormViewModel>(
                 context: context,
                 formViewModel: formViewModel,
                 formViewBuilder: (formViewModel) =>
-              InviteCodeFormView(formViewModel: formViewModel),
+                    InviteCodeFormView(formViewModel: formViewModel),
               );
             },
     );
