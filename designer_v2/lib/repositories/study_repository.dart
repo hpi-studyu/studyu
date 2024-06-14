@@ -110,7 +110,7 @@ class StudyRepository extends ModelRepository<Study>
   Future<void> duplicateAndSave(Study model) async {
     final Study completeModel = await apiClient.fetchStudy(model.id);
     final duplicate =
-    completeModel.duplicateAsDraft(authRepository.currentUser!.id);
+        completeModel.duplicateAsDraft(authRepository.currentUser!.id);
     await save(duplicate);
   }
 
