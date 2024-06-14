@@ -19,21 +19,23 @@ class StudyScheduleFormView extends FormConsumerWidget {
       return FormTableRow(input: const SizedBox.shrink());
     } else {
       return FormTableRow(
-          control: formViewModel.sequenceTypeCustomControl,
-          label: "Custom Sequence",
-          // todo translate
-          labelHelpText: "Enter a custom sequence by using the letters A and B",
-          // todo translate
-          input: ReactiveTextField(
-            formControl: formViewModel.sequenceTypeCustomControl,
-            keyboardType: TextInputType.text,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.singleLineFormatter,
-              LengthLimitingTextInputFormatter(10),
-              StudySequenceFormatter(),
-            ],
-            validationMessages: formViewModel.sequenceTypeCustomControl.validationMessages,
-          ));
+        control: formViewModel.sequenceTypeCustomControl,
+        label: "Custom Sequence",
+        // todo translate
+        labelHelpText: "Enter a custom sequence by using the letters A and B",
+        // todo translate
+        input: ReactiveTextField(
+          formControl: formViewModel.sequenceTypeCustomControl,
+          keyboardType: TextInputType.text,
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.singleLineFormatter,
+            LengthLimitingTextInputFormatter(10),
+            StudySequenceFormatter(),
+          ],
+          validationMessages:
+              formViewModel.sequenceTypeCustomControl.validationMessages,
+        ),
+      );
     }
   }
 
@@ -51,23 +53,28 @@ class StudyScheduleFormView extends FormConsumerWidget {
               input: ReactiveDropdownField(
                 formControl: formViewModel.sequenceTypeControl,
                 decoration: InputDecoration(
-                  helperText: tr.form_field_crossover_schedule_sequence_description,
+                  helperText:
+                      tr.form_field_crossover_schedule_sequence_description,
                   helperMaxLines: 5,
                 ),
                 items: formViewModel.sequenceTypeControlOptions
-                    .map((option) => DropdownMenuItem(
-                          value: option.value,
-                          child: Text(option.label),
-                        ))
+                    .map(
+                      (option) => DropdownMenuItem(
+                        value: option.value,
+                        child: Text(option.label),
+                      ),
+                    )
                     .toList(),
-                validationMessages: formViewModel.sequenceTypeControl.validationMessages,
+                validationMessages:
+                    formViewModel.sequenceTypeControl.validationMessages,
               ),
             ),
             _renderCustomSequence(),
             FormTableRow(
               control: formViewModel.phaseDurationControl,
               label: tr.form_field_crossover_schedule_phase_length,
-              labelHelpText: tr.form_field_crossover_schedule_phase_length_tooltip,
+              labelHelpText:
+                  tr.form_field_crossover_schedule_phase_length_tooltip,
               input: Row(
                 children: [
                   Container(
@@ -83,7 +90,8 @@ class StudyScheduleFormView extends FormConsumerWidget {
                           max: StudyScheduleControls.kPhaseDurationMax,
                         ),
                       ],
-                      validationMessages: formViewModel.phaseDurationControl.validationMessages,
+                      validationMessages:
+                          formViewModel.phaseDurationControl.validationMessages,
                     ),
                   ),
                   const SizedBox(width: 8.0),
@@ -97,7 +105,8 @@ class StudyScheduleFormView extends FormConsumerWidget {
             FormTableRow(
               control: formViewModel.numCyclesControl,
               label: tr.form_field_crossover_schedule_num_cycles,
-              labelHelpText: tr.form_field_crossover_schedule_num_cycles_tooltip,
+              labelHelpText:
+                  tr.form_field_crossover_schedule_num_cycles_tooltip,
               input: Row(
                 children: [
                   Container(
@@ -113,7 +122,8 @@ class StudyScheduleFormView extends FormConsumerWidget {
                           max: StudyScheduleControls.kNumCyclesMax,
                         ),
                       ],
-                      validationMessages: formViewModel.numCyclesControl.validationMessages,
+                      validationMessages:
+                          formViewModel.numCyclesControl.validationMessages,
                     ),
                   ),
                   const SizedBox(width: 8.0),
@@ -127,7 +137,8 @@ class StudyScheduleFormView extends FormConsumerWidget {
             FormTableRow(
               control: formViewModel.includeBaselineControl,
               label: tr.form_field_crossover_schedule_include_baseline,
-              labelHelpText: tr.form_field_crossover_schedule_include_baseline_tooltip,
+              labelHelpText:
+                  tr.form_field_crossover_schedule_include_baseline_tooltip,
               input: Row(
                 children: [
                   Container(
@@ -139,7 +150,8 @@ class StudyScheduleFormView extends FormConsumerWidget {
                   const SizedBox(width: 8.0),
                   FormControlLabel(
                     formControl: formViewModel.includeBaselineControl,
-                    text: tr.form_field_crossover_schedule_include_baseline_label,
+                    text:
+                        tr.form_field_crossover_schedule_include_baseline_label,
                   ),
                 ],
               ),

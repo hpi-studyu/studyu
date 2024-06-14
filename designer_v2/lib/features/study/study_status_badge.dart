@@ -10,13 +10,14 @@ abstract class IStudyStatusBadgeViewModel {
 }
 
 class StudyStatusBadge extends StatelessWidget {
-  const StudyStatusBadge(
-      {required this.status,
-      this.participation,
-      this.type = studybadge.BadgeType.outlineFill,
-      this.showPrefixIcon = true,
-      this.showTooltip = true,
-      super.key});
+  const StudyStatusBadge({
+    required this.status,
+    this.participation,
+    this.type = studybadge.BadgeType.outlineFill,
+    this.showPrefixIcon = true,
+    this.showTooltip = true,
+    super.key,
+  });
 
   final Participation? participation;
   final StudyStatus? status;
@@ -30,7 +31,8 @@ class StudyStatusBadge extends StatelessWidget {
     final prefixIcon = showPrefixIcon ? Icons.circle_rounded : null;
 
     final tooltipMessage =
-        ('${status?.description ?? ''}\n${(status == StudyStatus.closed ? null : participation?.description) ?? ''}')
+        '${status?.description ?? ''}\n${(status == StudyStatus.closed ? null : participation?.description) ?? ''}'
+
             .trim();
 
     Widget inTooltip(Widget child) {
@@ -45,26 +47,32 @@ class StudyStatusBadge extends StatelessWidget {
 
     switch (status) {
       case StudyStatus.draft:
-        return inTooltip(studybadge.Badge(
-          label: status!.string,
-          color: colorScheme.secondary.withOpacity(0.75),
-          type: type,
-          icon: prefixIcon,
-        ));
+        return inTooltip(
+          studybadge.Badge(
+            label: status!.string,
+            color: colorScheme.secondary.withOpacity(0.75),
+            type: type,
+            icon: prefixIcon,
+          ),
+        );
       case StudyStatus.closed:
-        return inTooltip(studybadge.Badge(
-          label: status!.string,
-          color: Colors.redAccent,
-          type: type,
-          icon: prefixIcon,
-        ));
+        return inTooltip(
+          studybadge.Badge(
+            label: status!.string,
+            color: Colors.redAccent,
+            type: type,
+            icon: prefixIcon,
+          ),
+        );
       case StudyStatus.running:
-        return inTooltip(studybadge.Badge(
-          label: status!.string,
-          color: Colors.green,
-          type: type,
-          icon: prefixIcon,
-        ));
+        return inTooltip(
+          studybadge.Badge(
+            label: status!.string,
+            color: Colors.green,
+            type: type,
+            icon: prefixIcon,
+          ),
+        );
       default:
         return const SizedBox.shrink();
     }

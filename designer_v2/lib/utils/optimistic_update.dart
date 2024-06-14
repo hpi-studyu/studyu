@@ -47,9 +47,7 @@ class OptimisticUpdate {
       }
       _runUpdateHandlerIfAny();
     } catch (e, stackTrace) {
-      if (onError != null) {
-        onError!(e, stackTrace);
-      }
+      onError?.call(e, stackTrace);
       rollback();
       _runUpdateHandlerIfAny();
       if (rethrowErrors) {
@@ -59,8 +57,6 @@ class OptimisticUpdate {
   }
 
   void _runUpdateHandlerIfAny() {
-    if (onUpdate != null) {
-      onUpdate!();
-    }
+    onUpdate?.call();
   }
 }

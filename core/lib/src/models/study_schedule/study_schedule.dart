@@ -16,16 +16,20 @@ class StudySchedule {
     this.sequenceCustom = 'ABAB',
   });
 
-  factory StudySchedule.fromJson(Map<String, dynamic> json) => _$StudyScheduleFromJson(json);
+  factory StudySchedule.fromJson(Map<String, dynamic> json) =>
+      _$StudyScheduleFromJson(json);
   Map<String, dynamic> toJson() => _$StudyScheduleToJson(this);
 
-  int getNumberOfPhases() => numberOfCycles * numberOfInterventions + (includeBaseline ? 1 : 0);
+  int getNumberOfPhases() =>
+      numberOfCycles * numberOfInterventions + (includeBaseline ? 1 : 0);
 
   int get length => getNumberOfPhases() * phaseDuration;
 
   List<int> generateWith(int firstIntervention) {
     final cycles = Iterable<int>.generate(numberOfCycles);
-    final phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
+    final phases = cycles
+        .expand((cycle) => _generateCycle(firstIntervention, cycle))
+        .toList();
     return phases;
   }
 
@@ -46,7 +50,8 @@ class StudySchedule {
     }
   }
 
-  List<int> _generateAlternatingCycle(int first, int cycle) => [first, _nextIntervention(first)];
+  List<int> _generateAlternatingCycle(int first, int cycle) =>
+      [first, _nextIntervention(first)];
 
   List<int> _generateCounterBalancedCycle(int first, int cycle) {
     final shift = ((cycle + 1) ~/ 2) % 2;

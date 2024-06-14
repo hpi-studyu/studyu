@@ -10,17 +10,18 @@ abstract class IWithBanner {
 enum BannerStyle { warning, info, error }
 
 class BannerBox extends StatefulWidget {
-  const BannerBox(
-      {required this.body,
-      required this.style,
-      this.padding = const EdgeInsets.symmetric(vertical: 18.0, horizontal: 48.0),
-      this.prefixIcon,
-      this.noPrefix = false,
-      this.isDismissed,
-      this.dismissable = true,
-      this.onDismissed,
-      this.dismissIconSize = 24.0,
-      super.key});
+  const BannerBox({
+    required this.body,
+    required this.style,
+    this.padding = const EdgeInsets.symmetric(vertical: 18.0, horizontal: 48.0),
+    this.prefixIcon,
+    this.noPrefix = false,
+    this.isDismissed,
+    this.dismissable = true,
+    this.onDismissed,
+    this.dismissIconSize = 24.0,
+    super.key,
+  });
 
   final Widget? prefixIcon;
   final Widget body;
@@ -73,26 +74,31 @@ class _BannerBoxState extends State<BannerBox> {
           child: Row(
             children: [
               Expanded(
-                  child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  (widget.noPrefix) ? const SizedBox.shrink() : icon,
-                  (widget.noPrefix) ? const SizedBox.shrink() : const SizedBox(width: 24.0),
-                  Opacity(
-                    opacity: 0.85,
-                    child: widget.body,
-                  ),
-                ],
-              )),
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    if (widget.noPrefix) const SizedBox.shrink() else icon,
+                    if (widget.noPrefix)
+                      const SizedBox.shrink()
+                    else
+                      const SizedBox(width: 24.0),
+                    Opacity(
+                      opacity: 0.85,
+                      child: widget.body,
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(
                 height: double.infinity,
                 child: Opacity(
                   opacity: 0.5,
                   child: IconButton(
-                    icon: Icon(Icons.close_rounded, size: widget.dismissIconSize),
+                    icon:
+                        Icon(Icons.close_rounded, size: widget.dismissIconSize),
                     splashRadius: widget.dismissIconSize,
                     onPressed: () => setState(() {
-                      if (widget.onDismissed != null) widget.onDismissed!();
+                      widget.onDismissed?.call();
                       isDismissed = true;
                     }),
                   ),

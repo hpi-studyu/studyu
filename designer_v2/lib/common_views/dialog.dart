@@ -63,10 +63,9 @@ class StandardDialog extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: theme.shadowColor,
-              spreadRadius: 0,
               blurRadius: 3,
               offset: const Offset(1, 1),
-            )
+            ),
           ],
         ),
         child: Container(
@@ -94,8 +93,14 @@ class StandardDialog extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    (titleWidget != null) ? titleWidget : const SizedBox.shrink(),
-                    (titleWidget != null) ? SizedBox(height: padding.top * 2 / 3) : const SizedBox.shrink(),
+                    if (titleWidget != null)
+                      titleWidget
+                    else
+                      const SizedBox.shrink(),
+                    if (titleWidget != null)
+                      SizedBox(height: padding.top * 2 / 3)
+                    else
+                      const SizedBox.shrink(),
                     Expanded(
                       child: SingleChildScrollView(child: body),
                     ),

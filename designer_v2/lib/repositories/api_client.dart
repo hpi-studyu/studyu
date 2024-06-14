@@ -16,7 +16,10 @@ abstract class StudyUApi {
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
   Future<StudyInvite> fetchStudyInvite(String code);
   Future<void> deleteStudyInvite(StudyInvite invite);
-  Future<List<StudySubject>> deleteParticipants(Study study, List<StudySubject> participants);
+  Future<List<StudySubject>> deleteParticipants(
+    Study study,
+    List<StudySubject> participants,
+  );
   /*
   Future<List<SubjectProgress>> deleteStudyProgress(
       Study study, List<SubjectProgress> records);
@@ -51,7 +54,9 @@ class StudyInviteNotFoundException extends APIException {}
 
 class UserNotFoundException extends APIException {}
 
-class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin implements StudyUApi {
+class StudyUApiClient extends SupabaseClientDependant
+    with SupabaseQueryMixin
+    implements StudyUApi {
   StudyUApiClient({
     required this.supabaseClient,
     this.testDelayMilliseconds = 0,
@@ -95,7 +100,10 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
   final int testDelayMilliseconds;
 
   @override
-  Future<List<StudySubject>> deleteParticipants(Study study, List<StudySubject> participants) async {
+  Future<List<StudySubject>> deleteParticipants(
+    Study study,
+    List<StudySubject> participants,
+  ) async {
     await _testDelay();
     if (participants.isEmpty) {
       return Future.value([]);
@@ -130,28 +138,38 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
   ///
   /// @return List<Study>
   @override
-  Future<List<Study>> getUserStudies({withParticipantActivity = false, forDashboardDisplay = true}) async {
+  Future<List<Study>> getUserStudies({
+    bool withParticipantActivity = false,
+    bool forDashboardDisplay = true,
+  }) async {
     await _testDelay();
     // TODO: fix Postgres policy for proper multi-tenancy
-    final columns = (withParticipantActivity)
+    final columns = withParticipantActivity
         ? studyWithParticipantActivityColumns
-        : (forDashboardDisplay)
+        : forDashboardDisplay
             ? studyDisplayColumns
             : studyColumns;
-
     final request = getAll<Study>(selectedColumns: columns);
     return _awaitGuarded(request);
   }
 
   @override
-  Future<Study> fetchStudy(StudyID studyId, {withParticipantActivity = true}) async {
+  Future<Study> fetchStudy(
+    StudyID studyId, {
+    bool withParticipantActivity = true,
+  }) async {
     await _testDelay();
-    final columns = (withParticipantActivity) ? studyWithParticipantActivityColumns : studyColumns;
+    final columns = withParticipantActivity
+        ? studyWithParticipantActivityColumns
+        : studyColumns;
     final request = getById<Study>(studyId, selectedColumns: columns);
-    return _awaitGuarded(request, onError: {
-      HttpStatus.notAcceptable: (e) => throw StudyNotFoundException(),
-      HttpStatus.notFound: (e) => throw StudyNotFoundException(),
-    });
+    return _awaitGuarded(
+      request,
+      onError: {
+        HttpStatus.notAcceptable: (e) => throw StudyNotFoundException(),
+        HttpStatus.notFound: (e) => throw StudyNotFoundException(),
+      },
+    );
   }
 
   @override
@@ -174,10 +192,13 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
   Future<StudyInvite> fetchStudyInvite(String code) async {
     await _testDelay();
     final request = getByColumn<StudyInvite>('code', code);
-    return _awaitGuarded(request, onError: {
-      HttpStatus.notAcceptable: (e) => throw StudyInviteNotFoundException(),
-      HttpStatus.notFound: (e) => throw StudyInviteNotFoundException(),
-    });
+    return _awaitGuarded(
+      request,
+      onError: {
+        HttpStatus.notAcceptable: (e) => throw StudyInviteNotFoundException(),
+        HttpStatus.notFound: (e) => throw StudyInviteNotFoundException(),
+      },
+    );
   }
 
   @override
@@ -205,10 +226,13 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
   Future<StudyUUser> fetchUser(String userId) async {
     await _testDelay();
     final request = getById<StudyUUser>(userId);
-    return _awaitGuarded(request, onError: {
-      HttpStatus.notAcceptable: (e) => throw UserNotFoundException(),
-      HttpStatus.notFound: (e) => throw UserNotFoundException(),
-    });
+    return _awaitGuarded(
+      request,
+      onError: {
+        HttpStatus.notAcceptable: (e) => throw UserNotFoundException(),
+        HttpStatus.notFound: (e) => throw UserNotFoundException(),
+      },
+    );
   }
 
   @override
@@ -225,7 +249,10 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
   /// domain-specific exception that bubbles up to the data layer.
   ///
   /// Raises a generic [APIException] for errors that cannot be handled.
-  Future<T> _awaitGuarded<T>(Future<T> future, {Map<int, SupabaseQueryExceptionHandler>? onError}) async {
+  Future<T> _awaitGuarded<T>(
+    Future<T> future, {
+    Map<int, SupabaseQueryExceptionHandler>? onError,
+  }) async {
     try {
       final result = await future;
       return result;
@@ -233,7 +260,8 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
       if (onError == null) {
         throw _apiException(error: e);
       }
-      if (e.statusCode == null || !onError.containsKey(int.parse(e.statusCode!))) {
+      if (e.statusCode == null ||
+          !onError.containsKey(int.parse(e.statusCode!))) {
         throw _apiException(error: e);
       }
       final errorHandler = onError[int.parse(e.statusCode!)]!;
@@ -242,11 +270,11 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
     throw _apiException();
   }
 
-  _apiException({SupabaseQueryError? error}) {
+  APIException _apiException({SupabaseQueryError? error}) {
     if (error != null) {
       debugLog("Supabase Exception encountered");
       debugLog(error.statusCode.toString());
-      debugLog(error.details);
+      debugLog(error.details.toString());
       debugLog(error.message);
     } else {
       debugLog("Unknown exception encountered");
@@ -254,11 +282,16 @@ class StudyUApiClient extends SupabaseClientDependant with SupabaseQueryMixin im
     return APIException();
   }
 
-  _testDelay() async {
-    await Future.delayed(Duration(milliseconds: testDelayMilliseconds), () => null);
+  Future<void> _testDelay() async {
+    await Future.delayed(
+      Duration(milliseconds: testDelayMilliseconds),
+      () => null,
+    );
   }
 }
 
-final apiClientProvider = riverpod.Provider<StudyUApi>((ref) => StudyUApiClient(
-      supabaseClient: ref.watch(supabaseClientProvider),
-    ));
+final apiClientProvider = riverpod.Provider<StudyUApi>(
+  (ref) => StudyUApiClient(
+    supabaseClient: ref.watch(supabaseClientProvider),
+  ),
+);

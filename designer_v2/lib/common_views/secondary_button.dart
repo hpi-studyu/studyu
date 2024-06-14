@@ -41,7 +41,9 @@ class SecondaryButton extends StatelessWidget {
     return OutlinedButton(
       style: secondaryStyle,
       onPressed: onPressed,
-      child: isLoading ? const CircularProgressIndicator() : Text(text, textAlign: TextAlign.center),
+      child: isLoading
+          ? const CircularProgressIndicator()
+          : Text(text, textAlign: TextAlign.center),
     );
   }
 }

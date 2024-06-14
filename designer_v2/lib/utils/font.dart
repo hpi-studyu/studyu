@@ -1,11 +1,11 @@
 String getEmojiFlag(String country) {
-  country = country.toUpperCase();
+  final countryUpper = country.toUpperCase();
 
-  int flagOffset = 0x1F1E6;
-  int asciiOffset = 0x41;
+  const int flagOffset = 0x1F1E6;
+  const int asciiOffset = 0x41;
 
-  int firstChar = country.codeUnitAt(0) - asciiOffset + flagOffset;
-  int secondChar = country.codeUnitAt(1) - asciiOffset + flagOffset;
+  final int firstChar = countryUpper.codeUnitAt(0) - asciiOffset + flagOffset;
+  final int secondChar = countryUpper.codeUnitAt(1) - asciiOffset + flagOffset;
 
   return String.fromCharCode(firstChar) + String.fromCharCode(secondChar);
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../../widgets/study_tile.dart';
-import 'generic_section.dart';
+import 'package:studyu_app/screens/study/report/generic_section.dart';
+import 'package:studyu_app/widgets/study_tile.dart';
 
 class GeneralDetailsSection extends GenericSection {
   const GeneralDetailsSection(super.subject, {super.key, super.onTap});

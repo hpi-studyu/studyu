@@ -39,7 +39,10 @@ class StudyUDiagnostics {
     await Sentry.captureMessage(message);
   }
 
-  static void addBreadcrumb({required String message, required String category}) {
+  static void addBreadcrumb({
+    required String message,
+    required String category,
+  }) {
     print("[Breadcrumb] $category: $message");
     Sentry.addBreadcrumb(Breadcrumb(message: message, category: category));
   }
@@ -118,7 +121,8 @@ class StudyUAnalytics {
 
   StudyUAnalytics(this.enabled, this.dsn, this.samplingRate);
 
-  factory StudyUAnalytics.fromJson(Map<String, dynamic> json) => _$StudyUAnalyticsFromJson(json);
+  factory StudyUAnalytics.fromJson(Map<String, dynamic> json) =>
+      _$StudyUAnalyticsFromJson(json);
 
   Map<String, dynamic> toJson() => _$StudyUAnalyticsToJson(this);
 }
