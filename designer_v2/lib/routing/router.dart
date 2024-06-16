@@ -69,7 +69,7 @@ GoRouter router(RouterRef ref) {
       return router.namedLocation(name, queryParameters: qParams);
     }
 
-    // TODO MERGE
+    // Todo can we implement splash screen as part of the Flutter initialization process?
     /*if (!isInitialized) {
       // Redirect to splash screen while app is pending initialization
       return isOnSplashPage ? null : namedLocForwarded(splashRouteName);
