@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/combined_stream_notifier.dart';
 
 import 'router_config.dart';
@@ -31,17 +32,21 @@ GoRouter router(RouterRef ref) {
     final loginLocation = router.namedLocation(loginRouteName);
     final signupLocation = router.namedLocation(signupRouteName);
     final splashLocation = router.namedLocation(splashRouteName);
-    final passwordRecoveryLocation = router.namedLocation(recoverPasswordRouteName);
-    final isOnDefaultPage = state.matchedLocation == router.namedLocation(defaultLocation);
+    final passwordRecoveryLocation =
+        router.namedLocation(recoverPasswordRouteName);
+    final isOnDefaultPage =
+        state.matchedLocation == router.namedLocation(defaultLocation);
     final isOnLoginPage = state.matchedLocation == loginLocation;
     final isOnSignupPage = state.matchedLocation == signupLocation;
     final isOnSplashPage = state.matchedLocation == splashLocation;
-    final isOnPasswordRecoveryPage = state.matchedLocation == passwordRecoveryLocation;
-    final isOnPublicPage = RouterConf.publicRoutes.any((element) => element.path == state.matchedLocation);
+    final isOnPasswordRecoveryPage =
+        state.matchedLocation == passwordRecoveryLocation;
+    final isOnPublicPage = RouterConf.publicRoutes
+        .any((element) => element.path == state.matchedLocation);
 
     // Read most recent app state on re-evaluation (see refreshListenable)
     final isLoggedIn = authRepository.isLoggedIn;
-    var allowPasswordReset = authRepository.allowPasswordReset;
+    final allowPasswordReset = authRepository.allowPasswordReset;
 
     // Carry original location through the redirect flow so that we can
     // redirect the user to where they came from after initialization
@@ -49,14 +54,15 @@ GoRouter router(RouterRef ref) {
     if (state.uri.queryParameters.containsKey('from')) {
       from = state.uri.queryParameters['from'];
     } else {
-      if (state.matchedLocation.isNotEmpty && !(isOnDefaultPage | isOnSplashPage)) {
+      if (state.matchedLocation.isNotEmpty &&
+          !(isOnDefaultPage | isOnSplashPage)) {
         from = state.matchedLocation;
       } else {
         from = null;
       }
     }
     // Helper to generate routes carrying the 'from' param (if any)
-    namedLocForwarded(String name) {
+    String namedLocForwarded(String name) {
       final Map<String, String> qParams = {};
       if (from != null && from != '/') {
         // if (from != null && from != '/' && from != defaultLocation) {
@@ -64,6 +70,12 @@ GoRouter router(RouterRef ref) {
       }
       return router.namedLocation(name, queryParameters: qParams);
     }
+
+    // TODO MERGE
+    /*if (!isInitialized) {
+      // Redirect to splash screen while app is pending initialization
+      return isOnSplashPage ? null : namedLocForwarded(splashRouteName);
+    }*/
 
     // Handle password recovery
     if (allowPasswordReset) {
@@ -87,7 +99,7 @@ GoRouter router(RouterRef ref) {
         }
       }
       // Redirect to login page as default
-      return (isOnLoginPage) ? null : namedLocForwarded(loginRouteName);
+      return isOnLoginPage ? null : namedLocForwarded(loginRouteName);
     } else {
       // If the user is authenticated, forward to where they were going initially...
       if (from != null && from != state.matchedLocation) {
@@ -106,7 +118,7 @@ GoRouter router(RouterRef ref) {
     refreshListenable: CombinedStreamNotifier([
       // Any stream registered here will trigger the router's redirect logic
       // appController.stream, // initialization events
-      authRepository.watchAuthStateChanges() // authentication events
+      authRepository.watchAuthStateChanges(), // authentication events
     ]),
     routes: RouterConf.routes,
     errorBuilder: (context, state) => ErrorPage(error: state.error),

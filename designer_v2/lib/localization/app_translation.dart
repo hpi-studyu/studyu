@@ -4,10 +4,10 @@ import 'package:studyu_designer_v2/localization/locale_providers.dart';
 
 // Use global variable tr for translation
 AppLocalizations get tr => _tr!;
-AppLocalizations? _tr;
+late AppLocalizations? _tr;
 
 class AppTranslation {
-  static init(WidgetRef ref) {
+  static Future<void> init(WidgetRef ref) {
     // Loads the currently selected locale and sets the localization
     _tr = lookupAppLocalizations(ref.watch(localeProvider));
   }

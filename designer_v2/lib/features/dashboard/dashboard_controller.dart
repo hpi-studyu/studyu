@@ -1,10 +1,12 @@
 import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
@@ -71,19 +73,21 @@ class DashboardController extends _$DashboardController implements IModelActionP
     });
   }
 
-  setSearchText(String? text) {
+  void setSearchText(String? text) {
     searchController.setText(text ?? state.query);
   }
 
-  setStudiesFilter(StudiesFilter? filter) {
-    state = state.copyWith(studiesFilter: () => filter ?? DashboardState.defaultFilter);
+  void setStudiesFilter(StudiesFilter? filter) {
+    state = state.copyWith(
+      studiesFilter: () => filter ?? DashboardState.defaultFilter,
+    );
   }
 
-  onSelectStudy(Study study) {
+  void onSelectStudy(Study study) {
     router.dispatch(RoutingIntents.studyEdit(study.id));
   }
 
-  onClickNewStudy() {
+  void onClickNewStudy() {
     router.dispatch(RoutingIntents.studyNew);
   }
 
@@ -98,17 +102,20 @@ class DashboardController extends _$DashboardController implements IModelActionP
   }
 
   void setSorting(StudiesTableColumn sortByColumn, bool ascending) {
-    state = state.copyWith(sortByColumn: sortByColumn, sortAscending: ascending);
+    state =
+        state.copyWith(sortByColumn: sortByColumn, sortAscending: ascending);
   }
 
-  void filterStudies(String? query) async {
+  Future<void> filterStudies(String? query) async {
     state = state.copyWith(
       query: query,
     );
   }
 
-  void sortStudies() async {
-    final studies = state.sort(pinnedStudies: userRepository.user.preferences.pinnedStudies);
+  Future<void> sortStudies() async {
+    final studies = state.sort(
+      pinnedStudies: userRepository.user.preferences.pinnedStudies,
+    );
     state = state.copyWith(
       studies: () => AsyncValue.data(studies),
     );
@@ -142,7 +149,7 @@ class DashboardController extends _$DashboardController implements IModelActionP
           await pinOffStudy(model.id);
         },
         isAvailable: isPinned(model),
-      )
+      ),
     ].where((action) => action.isAvailable).toList();
 
     return withIcons(

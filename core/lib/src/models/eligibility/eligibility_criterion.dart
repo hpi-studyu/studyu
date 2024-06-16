@@ -18,7 +18,8 @@ class EligibilityCriterion {
       : id = const Uuid().v4(),
         condition = BooleanExpression();
 
-  factory EligibilityCriterion.fromJson(Map<String, dynamic> data) => _$EligibilityCriterionFromJson(data);
+  factory EligibilityCriterion.fromJson(Map<String, dynamic> data) =>
+      _$EligibilityCriterionFromJson(data);
   Map<String, dynamic> toJson() => _$EligibilityCriterionToJson(this);
 
   bool isSatisfied(QuestionnaireState qs) => condition.evaluate(qs) == true;

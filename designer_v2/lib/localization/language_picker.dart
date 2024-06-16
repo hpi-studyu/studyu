@@ -31,7 +31,8 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
   @override
   Widget build(BuildContext context) {
     final controller = ref.watch(localeStateNotifierProvider.notifier);
-    final currentLocalization = ref.watch(localeProvider.select((value) => value));
+    final currentLocalization =
+        ref.watch(localeProvider.select((value) => value));
     switch (widget.languagePickerType) {
       case LanguagePickerType.field:
         final FormGroup localeForm = FormGroup({
@@ -41,18 +42,19 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
           ),
         });
         return SizedBox(
-            width: 250,
-            child: ReactiveForm(
-              formGroup: localeForm,
-              child: ReactiveDropdownField<Locale>(
-                formControlName: 'localization',
-                //isExpanded: false,
-                //isDense: true,
-                items: _buildLanguageOptionsField(context),
-                icon: Icon(Icons.language, color: widget.iconColor),
-                onChanged: (locale) => controller.setLocale(locale.value!),
-              ),
-            ));
+          width: 250,
+          child: ReactiveForm(
+            formGroup: localeForm,
+            child: ReactiveDropdownField<Locale>(
+              formControlName: 'localization',
+              //isExpanded: false,
+              //isDense: true,
+              items: _buildLanguageOptionsField(context),
+              icon: Icon(Icons.language, color: widget.iconColor),
+              onChanged: (locale) => controller.setLocale(locale.value!),
+            ),
+          ),
+        );
       case LanguagePickerType.icon:
         return PopupMenuButton<Locale>(
           tooltip: tr.language_select_tooltip,
@@ -67,26 +69,36 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
     }
   }
 
-  _buildLanguageOptionsIcon(BuildContext context) {
-    List<PopupMenuItem<Locale>> options = [];
+  List<PopupMenuItem<Locale>> _buildLanguageOptionsIcon(BuildContext context) {
+    final List<PopupMenuItem<Locale>> options = [];
     Config.supportedLocales.forEach((languageCode, countryCode) {
       final locale = Locale(languageCode, countryCode);
-      options.add(PopupMenuItem(
-        value: locale,
-        child: Text('${getEmojiFlag(countryCode)}  ${translateLocaleName(locale: locale)}'),
-      ));
+      options.add(
+        PopupMenuItem(
+          value: locale,
+          child: Text(
+            '${getEmojiFlag(countryCode)}  ${translateLocaleName(locale: locale)}',
+          ),
+        ),
+      );
     });
     return options;
   }
 
-  _buildLanguageOptionsField(BuildContext context) {
-    List<DropdownMenuItem<Locale>> options = [];
+  List<DropdownMenuItem<Locale>> _buildLanguageOptionsField(
+    BuildContext context,
+  ) {
+    final List<DropdownMenuItem<Locale>> options = [];
     Config.supportedLocales.forEach((languageCode, countryCode) {
       final locale = Locale(languageCode, countryCode);
-      options.add(DropdownMenuItem(
-        value: locale,
-        child: Text('${getEmojiFlag(countryCode)} ${translateLocaleName(locale: locale)}'),
-      ));
+      options.add(
+        DropdownMenuItem(
+          value: locale,
+          child: Text(
+            '${getEmojiFlag(countryCode)} ${translateLocaleName(locale: locale)}',
+          ),
+        ),
+      );
     });
     return options;
   }

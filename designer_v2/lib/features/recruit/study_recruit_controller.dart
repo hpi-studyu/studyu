@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -13,7 +14,8 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 part 'study_recruit_controller.g.dart';
 
 @riverpod
-class StudyRecruitController extends _$StudyRecruitController implements IModelActionProvider<StudyInvite> {
+class StudyRecruitController
+    extends _$StudyRecruitController implements IModelActionProvider<StudyInvite> {
 
   /// [inviteCodeRepository] Reference to the repository for invite codes (resolved dynamically via Riverpod when the [state.study] becomes available)
   @override
@@ -34,9 +36,10 @@ class StudyRecruitController extends _$StudyRecruitController implements IModelA
 
   StreamSubscription<List<WrappedModel<StudyInvite>>>? _invitesSubscription;
 
-  _subscribeInvites() {
+  void _subscribeInvites() {
     print("StudyRecruitController.subscribe");
-    _invitesSubscription = state.inviteCodeRepository.watchAll().listen((wrappedModels) {
+    _invitesSubscription =
+        state.inviteCodeRepository.watchAll().listen((wrappedModels) {
       print("StudyRecruitController.listenUpdate");
       // Update the controller's state when new invites are available in the repository
       final invites = wrappedModels.map((invite) => invite.model).toList();

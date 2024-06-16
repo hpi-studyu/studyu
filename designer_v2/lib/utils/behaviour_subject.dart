@@ -28,7 +28,7 @@ class SuppressedBehaviorSubject<T> {
     return controller;
   }
 
-  close() {
+  void close() {
     _controller.close();
   }
 }

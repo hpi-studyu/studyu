@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../common_views/mouse_events.dart';
+import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 
 class StudiesTableColumnHeader extends StatefulWidget {
   final String title;
@@ -10,11 +10,18 @@ class StudiesTableColumnHeader extends StatefulWidget {
   final bool sortingActive;
   final void Function()? onSort;
 
-  const StudiesTableColumnHeader(this.title,
-      {super.key, required this.sortable, required this.sortingActive, required this.sortAscending, this.onSort});
+  const StudiesTableColumnHeader(
+    this.title, {
+    super.key,
+    required this.sortable,
+    required this.sortingActive,
+    required this.sortAscending,
+    this.onSort,
+  });
 
   @override
-  State<StudiesTableColumnHeader> createState() => _StudiesTableColumnHeaderState();
+  State<StudiesTableColumnHeader> createState() =>
+      _StudiesTableColumnHeaderState();
 }
 
 class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
@@ -29,16 +36,20 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
         return Row(
           children: [
             Flexible(
-                child: Text(
-              widget.title,
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-              softWrap: false,
-              style: theme.textTheme.bodySmall!.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.8),
+              child: Text(
+                widget.title,
+                maxLines: 1,
+                overflow: TextOverflow.fade,
+                softWrap: false,
+                style: theme.textTheme.bodySmall!.copyWith(
+                  color: theme.colorScheme.onSurface.withOpacity(0.8),
+                ),
               ),
-            )),
-            widget.sortable ? _getIcon() ?? const SizedBox(width: 17) : const SizedBox.shrink(),
+            ),
+            if (widget.sortable)
+              _getIcon() ?? const SizedBox(width: 17)
+            else
+              const SizedBox.shrink(),
           ],
         );
       },
@@ -59,7 +70,11 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
     }
 
     if (!widget.sortingActive) {
-      return isHovering ? (widget.sortAscending ? hoveredAscendingIcon : hoveredDescendingIcon) : null;
+      return isHovering
+          ? (widget.sortAscending
+              ? hoveredAscendingIcon
+              : hoveredDescendingIcon)
+          : null;
     }
 
     return widget.sortAscending ? ascendingIcon : descendingIcon;

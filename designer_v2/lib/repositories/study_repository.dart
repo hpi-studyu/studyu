@@ -25,13 +25,19 @@ abstract class IStudyRepository implements ModelRepository<Study> {
   // Future<void> deleteProgress(Study study);
 }
 
-class StudyRepository extends ModelRepository<Study> implements IStudyRepository {
+class StudyRepository extends ModelRepository<Study>
+    implements IStudyRepository {
   StudyRepository({
     this.sortCallback,
     required this.apiClient,
     required this.authRepository,
     required this.ref,
-  }) : super(StudyRepositoryDelegate(apiClient: apiClient, authRepository: authRepository));
+  }) : super(
+          StudyRepositoryDelegate(
+            apiClient: apiClient,
+            authRepository: authRepository,
+          ),
+        );
 
   /// Reference to the StudyU API injected via Riverpod
   final StudyUApi apiClient;
@@ -56,7 +62,7 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
       throw ModelNotFoundException();
     }
 
-    final List<StudySubject> participants = [...(study.participants ?? [])];
+    final List<StudySubject> participants = [...study.participants ?? []];
 
     final deleteParticipantsOperation = OptimisticUpdate(
       applyOptimistic: () => study.participants = [],
@@ -99,15 +105,37 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
     return publishOperation.execute();
   }
 
+  /// This method fetches the full study object, duplicates it and saves it as a draft.
+  /// Since the Study object in the dashboard is fetched with limited columns (no intervention or measurement data),
+  /// we need to fetch the full columns in order to duplicate it correctly.
+  @override
+  Future<void> duplicateAndSave(Study model) async {
+    final Study completeModel = await apiClient.fetchStudy(model.id);
+    final duplicate =
+        completeModel.duplicateAsDraft(authRepository.currentUser!.id);
+    await save(duplicate);
+  }
+
   @override
   List<ModelAction> availableActions(Study model) {
     Future<void> onDeleteCallback() {
-      return delete(model.id).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies)).then((value) =>
-          Future.delayed(const Duration(milliseconds: 200),
-              () => ref.read(notificationServiceProvider).show(Notifications.studyDeleted)));
+      return delete(model.id)
+          .then(
+            (value) =>
+                ref.read(routerProvider).dispatch(RoutingIntents.studies),
+          )
+          .then(
+            (value) => Future.delayed(
+              const Duration(milliseconds: 200),
+              () => ref
+                  .read(notificationServiceProvider)
+                  .show(Notifications.studyDeleted),
+            ),
+          );
     }
 
-    final currentUser = authRepository.currentUser!;
+    final currentUser = authRepository.currentUser;
+    if (currentUser == null) return [];
 
     // TODO: review Postgres policies to match [ModelAction.isAvailable]
     final actions = [
@@ -124,17 +152,25 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         type: StudyActionType.duplicateDraft,
         label: StudyActionType.duplicateDraft.string,
         onExecute: () {
-          return duplicateAndSave(model).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies));
+          return duplicateAndSave(model).then(
+            (value) =>
+                ref.read(routerProvider).dispatch(RoutingIntents.studies),
+          );
         },
-        isAvailable: model.status != StudyStatus.draft && model.canCopy(currentUser),
+        isAvailable:
+            model.status != StudyStatus.draft && model.canCopy(currentUser),
       ),
       ModelAction(
         type: StudyActionType.duplicate,
         label: StudyActionType.duplicate.string,
         onExecute: () {
-          return duplicateAndSave(model).then((value) => ref.read(routerProvider).dispatch(RoutingIntents.studies));
+          return duplicateAndSave(model).then(
+            (value) =>
+                ref.read(routerProvider).dispatch(RoutingIntents.studies),
+          );
         },
-        isAvailable: model.status == StudyStatus.draft && model.canCopy(currentUser),
+        isAvailable:
+            model.status == StudyStatus.draft && model.canCopy(currentUser),
       ),
       /*
       TODO re-implement this properly
@@ -159,13 +195,17 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
         type: StudyActionType.delete,
         label: StudyActionType.delete.string,
         onExecute: () {
-          return ref
-              .read(notificationServiceProvider)
-              .show(Notifications.studyDeleteConfirmation, // TODO: more severe confirmation for running studies
-                  actions: [
-                NotificationAction(
-                    label: StudyActionType.delete.string, onSelect: onDeleteCallback, isDestructive: true),
-              ]);
+          return ref.read(notificationServiceProvider).show(
+            Notifications
+                .studyDeleteConfirmation, // TODO: more severe confirmation for running studies
+            actions: [
+              NotificationAction(
+                label: StudyActionType.delete.string,
+                onSelect: onDeleteCallback,
+                isDestructive: true,
+              ),
+            ],
+          );
         },
         isAvailable: model.canDelete(currentUser),
         isDestructive: true,
@@ -177,7 +217,10 @@ class StudyRepository extends ModelRepository<Study> implements IStudyRepository
 }
 
 class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
-  StudyRepositoryDelegate({required this.apiClient, required this.authRepository});
+  StudyRepositoryDelegate({
+    required this.apiClient,
+    required this.authRepository,
+  });
 
   final StudyUApi apiClient;
   final IAuthRepository authRepository;
@@ -203,7 +246,7 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
   }
 
   @override
-  onError(Object error, StackTrace? stackTrace) {
+  void onError(Object error, StackTrace? stackTrace) {
     return; // TODO
   }
 

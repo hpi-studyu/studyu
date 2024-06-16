@@ -1,5 +1,5 @@
 name: studyu_designer_v2
-version: 1.8.0
+version: 1.8.1-dev.2
 description: Implement digital N-of-1 studies seamlessly with the StudyU Health Designer
 publish_to: none
 homepage: https://studyu.health
@@ -9,22 +9,22 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  archive: ^3.5.1
+  archive: ^3.6.1
   async: ^2.11.0
   csv: ^6.0.0
   cupertino_icons: ^1.0.8
-  dynamic_color:
+  dynamic_color: ^1.7.0
   equatable: ^2.0.5
   flutter:
     sdk: flutter
-  flutter_colorpicker: ^1.0.3
+  flutter_colorpicker: ^1.1.0
   flutter_localizations:
     sdk: flutter
   flutter_riverpod: ^2.5.1
   flutter_web_plugins:
     sdk: flutter
-  go_router: ^14.1.0
-  material_color_utilities:
+  go_router: ^14.1.4
+  material_color_utilities: 0.8.0 # integration_test
   material_design_icons_flutter: ^7.0.7296
   pointer_interceptor: ^0.10.1+1
   reactive_color_picker: ^2.0.1
@@ -33,11 +33,11 @@ dependencies:
   reactive_range_slider: ^2.1.0
   riverpod_annotation: ^2.3.5
   rxdart: ^0.27.7
-  studyu_core: ^4.4.2
-  studyu_flutter_common: ^1.8.3
-  supabase: ^2.1.2
-  supabase_flutter: ^2.5.2
-  url_launcher: ^6.2.6
+  studyu_core: ^4.4.3-dev.1
+  studyu_flutter_common: ^1.8.4-dev.1
+  supabase: ^2.2.1
+  supabase_flutter: ^2.5.5
+  url_launcher: ^6.3.0
   uuid: ^4.4.0
 
 dev_dependencies:
@@ -49,7 +49,8 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
-  patrol_finders: ^2.0.2
+  lint: ^2.3.0
+  patrol_finders: ^2.1.2
   riverpod_generator: ^2.4.0
   riverpod_lint: ^2.3.10
   test: ^1.24.9 # integration_test

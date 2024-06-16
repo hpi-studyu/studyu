@@ -44,7 +44,9 @@ PlatformController studyTestPlatformController(StudyTestPlatformControllerRef re
   PlatformController platformController;
   if (!kIsWeb) {
     // Mobile could be built with the webview_flutter package
-    throw Exception("The StudyU designer only support the web platform".hardcoded);
+    throw Exception(
+      "The StudyU designer only support the web platform".hardcoded,
+    );
   } else {
     // Desktop and Web
     platformController = WebController(state.appUrl, studyId);

@@ -14,7 +14,8 @@ class StudyAnalyzeControllerState extends StudyControllerBaseState {
 
   bool get canExport => study.value?.canExport(currentUser!) ?? false;
 
-  String get exportDisabledReason => study.value?.exportDisabledReason(currentUser!) ?? '';
+  String get exportDisabledReason =>
+      study.value?.exportDisabledReason(currentUser!) ?? '';
 
   @override
   StudyAnalyzeControllerState copyWith({

@@ -32,7 +32,7 @@ class StudyController extends _$StudyController {
 
   StreamSubscription<ModelEvent<Study>>? _studyEventsSubscription;
 
-  syncStudyStatus() {
+  void syncStudyStatus() {
     if (_studyEventsSubscription != null) {
       _studyEventsSubscription?.cancel();
     }
@@ -60,13 +60,13 @@ class StudyController extends _$StudyController {
 
   /// Redirect to the study-specific URL to avoid disposing a dirty controller
   /// when building subroutes
-  _redirectNewToActualStudyID(StudyID actualStudyId) {
+  void _redirectNewToActualStudyID(StudyID actualStudyId) {
     if (state.studyId == Config.newModelId) {
       state.router.dispatch(RoutingIntents.study(actualStudyId));
     }
   }
 
-  Future publishStudy({toRegistry = false}) {
+  Future publishStudy({bool toRegistry = false}) {
     final study = state.study.value!;
     study.registryPublished = toRegistry;
     return state.studyRepository.launch(study);
@@ -86,8 +86,8 @@ class StudyController extends _$StudyController {
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
-/*final studyControllerProvider =
-    StateNotifierProvider.autoDispose.family<StudyController, StudyControllerState, StudyID>((ref, studyId) {
+/*final studyControllerProvider = StateNotifierProvider.autoDispose
+    .family<StudyController, StudyControllerState, StudyID>((ref, studyId) {
   print("studyControllerProvider($studyId)");
   final controller = StudyController(
     studyId: studyId,

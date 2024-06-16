@@ -70,29 +70,33 @@ class _SettingsState extends State<Settings> {
             ),
           ],
         ),
-        Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          Text('${AppLocalizations.of(context)!.allow_analytics}: '),
-          Tooltip(
-            triggerMode: TooltipTriggerMode.tap,
-            showDuration: const Duration(milliseconds: 10000),
-            margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-            message: AppLocalizations.of(context)!.allow_analytics_desc,
-            child: const Icon(
-              Icons.info,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text('${AppLocalizations.of(context)!.allow_analytics}: '),
+            Tooltip(
+              triggerMode: TooltipTriggerMode.tap,
+              showDuration: const Duration(milliseconds: 10000),
+              margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+              message: AppLocalizations.of(context)!.allow_analytics_desc,
+              child: const Icon(
+                Icons.info,
+              ),
             ),
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          Switch(
+            const SizedBox(
+              width: 5,
+            ),
+            Switch(
               value: _analyticsValue!,
               onChanged: (value) {
                 setState(() {
                   _analyticsValue = value;
                 });
                 AppAnalytics.setEnabled(value);
-              }),
-        ])
+              },
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -123,7 +127,10 @@ class _SettingsState extends State<Settings> {
                 backgroundColor: Colors.orange[800],
               ),
               onPressed: () {
-                showDialog(context: context, builder: (_) => OptOutAlertDialog(subject: subject));
+                showDialog(
+                  context: context,
+                  builder: (_) => OptOutAlertDialog(subject: subject),
+                );
               },
             ),
             const SizedBox(height: 24),
@@ -132,9 +139,12 @@ class _SettingsState extends State<Settings> {
               label: Text(AppLocalizations.of(context)!.delete_data),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               onPressed: () {
-                showDialog(context: context, builder: (_) => DeleteAlertDialog(subject: subject));
+                showDialog(
+                  context: context,
+                  builder: (_) => DeleteAlertDialog(subject: subject),
+                );
               },
-            )
+            ),
           ],
         ),
       ),
@@ -160,7 +170,11 @@ class OptOutAlertDialog extends StatelessWidget {
             const TextSpan(text: 'You will lose your progress in '),
             TextSpan(
               text: subject!.study.title,
-              style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontSize: 16),
+              style: TextStyle(
+                color: theme.primaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
             const TextSpan(
               text: " and won't be able to recover it. Previously completed "
@@ -179,14 +193,21 @@ class OptOutAlertDialog extends StatelessWidget {
             await subject!.softDelete();
             await deleteActiveStudyReference();
             if (context.mounted) {
-              final studyNotifications = context.read<AppState>().studyNotifications?.flutterLocalNotificationsPlugin;
+              final studyNotifications = context
+                  .read<AppState>()
+                  .studyNotifications
+                  ?.flutterLocalNotificationsPlugin;
               await studyNotifications?.cancelAll();
             }
             if (context.mounted) {
-              Navigator.pushNamedAndRemoveUntil(context, Routes.studySelection, (_) => false);
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Routes.studySelection,
+                (_) => false,
+              );
             }
           },
-        )
+        ),
       ],
     );
   }
@@ -216,16 +237,22 @@ class DeleteAlertDialog extends StatelessWidget {
                 await subject!.delete(); // hard-delete
                 await deleteLocalData();
                 if (context.mounted) {
-                  final studyNotifications =
-                      context.read<AppState>().studyNotifications?.flutterLocalNotificationsPlugin;
+                  final studyNotifications = context
+                      .read<AppState>()
+                      .studyNotifications
+                      ?.flutterLocalNotificationsPlugin;
                   await studyNotifications?.cancelAll();
                 }
                 if (context.mounted) {
-                  Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    Routes.welcome,
+                    (_) => false,
+                  );
                 }
               } on SocketException catch (_) {}
             },
-          )
+          ),
         ],
       );
 }

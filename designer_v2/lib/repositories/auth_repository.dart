@@ -18,8 +18,14 @@ abstract class IAuthRepository extends IAppDelegate {
   String? get serializedSession;
   late bool allowPasswordReset = false;
   Stream<User?> watchAuthStateChanges({bool emitLastEvent});
-  Future<AuthResponse> signUp({required String email, required String password});
-  Future<AuthResponse> signInWith({required String email, required String password});
+  Future<AuthResponse> signUp({
+    required String email,
+    required String password,
+  });
+  Future<AuthResponse> signInWith({
+    required String email,
+    required String password,
+  });
   Future<void> signOut();
   Future<void> resetPasswordForEmail({required String email});
   Future<UserResponse> updateUser({required String newPassword});
@@ -33,8 +39,10 @@ class AuthRepository implements IAuthRepository {
 
   /// A stream controller for broadcasting the currently logged in user
   /// Broadcasts null if the user is logged out
-  final BehaviorSubject<User?> _authStateStreamController = BehaviorSubject.seeded(null);
-  late final _authStateSuppressedController = SuppressedBehaviorSubject(_authStateStreamController);
+  final BehaviorSubject<User?> _authStateStreamController =
+      BehaviorSubject.seeded(null);
+  late final _authStateSuppressedController =
+      SuppressedBehaviorSubject(_authStateStreamController);
 
   /// Private subscription for synchronizing with [SupabaseClient] auth state
   late final StreamSubscription<AuthState> _authSubscription;
@@ -61,37 +69,29 @@ class AuthRepository implements IAuthRepository {
         case AuthChangeEvent.initialSession:
           print("authRepo initialSession");
           _authStateStreamController.add(authClient.currentUser);
-          break;
         case AuthChangeEvent.signedIn:
           print("authRepo signedIn");
           // Update stream with logged in user
           _authStateStreamController.add(authClient.currentUser);
-          break;
         case AuthChangeEvent.signedOut:
           print("authRepo signedOut");
           // Send null to indicate that no user is available (logged out)
           _authStateStreamController.add(null);
-          break;
         case AuthChangeEvent.userUpdated:
           print("authRepo userUpdated");
           // Update stream with new user object
           _authStateStreamController.add(authClient.currentUser);
-          break;
         case AuthChangeEvent.passwordRecovery:
           print("authRepo passwordRecovery");
           //router.dispatch(RoutingIntents.passwordRecovery);
           allowPasswordReset = true;
-          break;
         case AuthChangeEvent.tokenRefreshed:
           print("authRepo tokenRefreshed");
-          break;
         case AuthChangeEvent.userDeleted:
           print("authRepo userDeleted");
           _authStateStreamController.add(null);
-          break;
         case AuthChangeEvent.mfaChallengeVerified:
           print("authRepo mfaChallengeVerified");
-          break;
       }
     });
   }
@@ -109,17 +109,28 @@ class AuthRepository implements IAuthRepository {
   bool get isLoggedIn => currentUser != null;
 
   @override
-  BehaviorSubject<User?> watchAuthStateChanges({emitLastEvent = true}) =>
-      (emitLastEvent) ? _authStateStreamController : _authStateSuppressedController.subject;
+  BehaviorSubject<User?> watchAuthStateChanges({bool emitLastEvent = true}) =>
+      emitLastEvent
+          ? _authStateStreamController
+          : _authStateSuppressedController.subject;
 
   @override
-  Future<AuthResponse> signUp({required String email, required String password}) async {
+  Future<AuthResponse> signUp({
+    required String email,
+    required String password,
+  }) async {
     return await authClient.signUp(email: email, password: password);
   }
 
   @override
-  Future<AuthResponse> signInWith({required String email, required String password}) async {
-    return await authClient.signInWithPassword(email: email, password: password);
+  Future<AuthResponse> signInWith({
+    required String email,
+    required String password,
+  }) async {
+    return await authClient.signInWithPassword(
+      email: email,
+      password: password,
+    );
   }
 
   @override

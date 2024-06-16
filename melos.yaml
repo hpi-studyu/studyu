@@ -1,4 +1,4 @@
-name: studyu-packages
+name: studyu
 
 repository: https://github.com/hpi-studyu/studyu
 
@@ -9,33 +9,11 @@ packages:
   - flutter_common
 
 scripts:
-  analyze:
-    run: |
-      melos exec -c 6 -- \
-        "flutter analyze --fatal-infos ."
-    description: |
-      Run `dart analyze` in all packages.
-       - Note: you can also rely on your IDEs Dart Analysis / Issues window.
-
   fix:
     run: |
       melos exec -c 6 -- \
         "dart fix --apply"
     description: Fix auto-fixable lint errors
-
-  # todo revert to default line length
-  format:
-    run: |
-      melos exec -c 6 -- \
-        "dart format -l 120 ."
-    description: Format all code and markdown files
-
-  # todo do not exclude files anymore when line length is set to default
-  format:ci:
-    run: |
-      melos exec -c 6 -- \
-        "find . -type f -name '*.dart' ! -name '*.g.dart' ! -path '**/.dart_tool/**' | tr '\n' ' ' | xargs dart format -l 120 --set-exit-if-changed"
-    description: Format all code without generated files
 
   outdated:
     run: |
@@ -56,7 +34,7 @@ scripts:
         "flutter test"
     description: Run `flutter test` for a specific package.
     packageFilters:
-      dir-exists: test
+      dirExists: test
 
   generate:
     run: |
@@ -81,7 +59,7 @@ scripts:
       melos exec -c 1 -- \
         "flutter run -d chrome --web-port 8080"
     packageFilters:
-        scope: studyu_app
+      scope: studyu_app
     description: Runs StudyU App with default environment
 
   designer_v2:
@@ -89,7 +67,7 @@ scripts:
       melos exec -c 1 -- \
         "flutter run -d chrome --web-port 8081"
     packageFilters:
-        scope: studyu_designer_v2
+      scope: studyu_designer_v2
     description: Runs StudyU Designer with default environment
 
   dev:app:
@@ -127,10 +105,10 @@ scripts:
   build:android:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build apk --multidex"
+        "flutter build apk"
     description: Build app for Android.
     packageFilters:
-      dir-exists: android
+      dirExists: android
 
   build:ios:
     run: |
@@ -138,7 +116,7 @@ scripts:
         "flutter build ipa --no-codesign"
     description: Build app for iOS.
     packageFilters:
-      dir-exists: ios
+      dirExists: ios
 
   build:web:
     run: |
@@ -146,8 +124,8 @@ scripts:
         "flutter build web"
     description: Build app for Web.
     packageFilters:
-      scope: [studyu_app, studyu_designer_v2]
-      dir-exists: web
+      scope: [ studyu_app, studyu_designer_v2 ]
+      dirExists: web
 
   build:web:app:
     run: |
@@ -171,8 +149,8 @@ scripts:
         "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
     description: Build web dev.
     packageFilters:
-      scope: [studyu_app, studyu_designer_v2]
-      dir-exists: web
+      scope: [ studyu_app, studyu_designer_v2 ]
+      dirExists: web
 
   build:web:app:dev:
     run: |
@@ -181,7 +159,7 @@ scripts:
     description: Build web app dev.
     packageFilters:
       scope: studyu_app
-      dir-exists: web
+      dirExists: web
 
   build:web:designer_v2:dev:
     run: |
@@ -190,4 +168,4 @@ scripts:
     description: Build web designer_v2 dev.
     packageFilters:
       scope: studyu_designer_v2
-      dir-exists: web
+      dirExists: web

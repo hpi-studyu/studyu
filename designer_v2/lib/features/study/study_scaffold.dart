@@ -21,7 +21,8 @@ import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-abstract class IStudyAppBarViewModel implements IStudyStatusBadgeViewModel, IStudyNavViewModel {
+abstract class IStudyAppBarViewModel
+    implements IStudyStatusBadgeViewModel, IStudyNavViewModel {
   bool get isSyncIndicatorVisible;
   bool get isStatusBadgeVisible;
   bool get isPublishVisible;
@@ -87,24 +88,26 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
         bottom: (widget.tabsSubnav != null)
             ? PreferredSize(
                 preferredSize: Size(double.infinity, widget.appbarSubnavHeight),
-                child: Container(
-                    //color: theme.colorScheme.primary.withOpacity(0.05),
-                    color: theme.scaffoldBackgroundColor.withOpacity(0.15),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 35.0),
-                        Container(
-                          constraints: const BoxConstraints(maxWidth: 750),
-                          child: TabbedNavbar(
-                            tabs: widget.tabsSubnav!,
-                            selectedTab: widget.selectedTabSubnav,
-                            height: widget.appbarSubnavHeight,
-                            indicator: const BoxDecoration(),
-                            isScrollable: true,
-                          ),
-                        )
-                      ],
-                    )))
+                child: ColoredBox(
+                  //color: theme.colorScheme.primary.withOpacity(0.05),
+                  color: theme.scaffoldBackgroundColor.withOpacity(0.15),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 35.0),
+                      Container(
+                        constraints: const BoxConstraints(maxWidth: 750),
+                        child: TabbedNavbar(
+                          tabs: widget.tabsSubnav!,
+                          selectedTab: widget.selectedTabSubnav,
+                          height: widget.appbarSubnavHeight,
+                          indicator: const BoxDecoration(),
+                          isScrollable: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
             : null,
         toolbarHeight: widget.appbarHeight,
         title: Row(
@@ -133,16 +136,20 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                         softWrap: false,
                       ),
                     ),
-                    (state.isSyncIndicatorVisible) ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
-                    (state.isSyncIndicatorVisible)
-                        ? IntrinsicWidth(
-                            child: SyncIndicator(
-                              state: state.syncState,
-                              isDirty: state.isDirty,
-                              lastSynced: state.lastSynced,
-                            ),
-                          )
-                        : const SizedBox.shrink(),
+                    if (state.isSyncIndicatorVisible)
+                      const SizedBox(width: 8.0)
+                    else
+                      const SizedBox.shrink(),
+                    if (state.isSyncIndicatorVisible)
+                      IntrinsicWidth(
+                        child: SyncIndicator(
+                          state: state.syncState,
+                          isDirty: state.isDirty,
+                          lastSynced: state.lastSynced,
+                        ),
+                      )
+                    else
+                      const SizedBox.shrink(),
                   ],
                 ),
                 loading: () => Container(),
@@ -172,14 +179,17 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                     children: [
                       ...withSpacing(
                         [
-                          (state.isStatusBadgeVisible)
-                              ? StudyStatusBadge(
-                                  status: state.studyStatus,
-                                  participation: state.studyParticipation,
-                                  showPrefixIcon: true,
-                                )
-                              : const SizedBox.shrink(),
-                          (state.isStatusBadgeVisible) ? const SizedBox(width: 12.0) : const SizedBox.shrink(),
+                          if (state.isStatusBadgeVisible)
+                            StudyStatusBadge(
+                              status: state.studyStatus,
+                              participation: state.studyParticipation,
+                            )
+                          else
+                            const SizedBox.shrink(),
+                          if (state.isStatusBadgeVisible)
+                            const SizedBox(width: 12.0)
+                          else
+                            const SizedBox.shrink(),
                           ...actionButtons(context),
                         ],
                         spacing: widget.actionsSpacing,
@@ -210,40 +220,46 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
   /// Note: This is not save to call until [StudyControllerState.study] is
   /// fully loaded (i.e. use inside of [AsyncValueWidget])
   List<Widget> actionButtons(BuildContext context) {
-    List<Widget> actionButtons = [];
+    final List<Widget> actionButtons = [];
 
     final theme = Theme.of(context);
-    final controller = ref.watch(studyControllerProvider(widget.studyId).notifier);
+    final controller =
+        ref.watch(studyControllerProvider(widget.studyId).notifier);
     final state = ref.watch(studyControllerProvider(widget.studyId));
 
     if (state.isPublishVisible) {
-      final formViewModel = ref.watch(studyPublishValidatorProvider(widget.studyId));
+      final formViewModel =
+          ref.watch(studyPublishValidatorProvider(widget.studyId));
       final publishButton = ReactiveForm(
         formGroup: formViewModel.form,
         child: ReactiveFormConsumer(
-            // enable re-rendering based on form validation status
-            builder: (context, form, child) {
-          return PrimaryButton(
-            text: tr.action_button_study_launch,
-            tooltipDisabled: "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
-            icon: null,
-            enabled: formViewModel.isValid,
-            onPressed: () => showPublishDialog(context, widget.studyId),
-          );
-        }),
+          // enable re-rendering based on form validation status
+          builder: (context, form, child) {
+            return PrimaryButton(
+              text: tr.action_button_study_launch,
+              tooltipDisabled:
+                  "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
+              icon: null,
+              enabled: formViewModel.isValid,
+              onPressed: () => showPublishDialog(context, widget.studyId),
+            );
+          },
+        ),
       );
       actionButtons.add(publishButton);
       actionButtons.add(const SizedBox(width: 12.0)); // padding
     }
 
     if (state.isSettingsEnabled) {
-      actionButtons.add(IconButton(
-        onPressed: controller.onSettingsPressed,
-        icon: Icon(Icons.settings_rounded, size: theme.iconTheme.size),
-        tooltip: tr.study_settings,
-        color: theme.iconTheme.color?.faded(0.8),
-        splashRadius: ThemeConfig.iconSplashRadius(theme),
-      ));
+      actionButtons.add(
+        IconButton(
+          onPressed: controller.onSettingsPressed,
+          icon: Icon(Icons.settings_rounded, size: theme.iconTheme.size),
+          tooltip: tr.study_settings,
+          color: theme.iconTheme.color?.faded(0.8),
+          splashRadius: ThemeConfig.iconSplashRadius(theme),
+        ),
+      );
     }
 
     actionButtons.add(

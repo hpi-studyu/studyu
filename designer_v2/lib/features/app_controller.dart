@@ -1,6 +1,6 @@
 import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_controller_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 
@@ -38,10 +38,15 @@ class AppController extends _$AppController {
 
   /// A dummy [Future] used for setting a lower bound on app initialization
   /// (so that the splash screen is shown during this time)
+  // TODO MERGE
   late final _delayedFuture = Future.delayed(const Duration(milliseconds: Config.minSplashTime), () => true);
 
   /// Executes the given callback for all registered delegates concurrently
-  Future<bool> _callDelegates(_DelegateCallback function, {withMinDelay = false}) async {
+  // TODO merge where to call this?
+  Future<bool> _callDelegates(
+    Future<bool> Function(IAppDelegate) function, {
+    bool withMinDelay = false,
+  }) async {
     final List<Future<bool>> delegateFutures = [];
     // Collect all delegated futures
     for (final delegate in _appDelegates) {
@@ -53,7 +58,7 @@ class AppController extends _$AppController {
       delegateFutures.add(_delayedFuture);
     }
     // Wait for all futures to be completed while executing concurrently
-    List<bool> results = await Future.wait(delegateFutures);
+    final List<bool> results = await Future.wait(delegateFutures);
     return !results.contains(false);
   }
 }

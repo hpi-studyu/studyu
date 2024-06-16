@@ -37,13 +37,15 @@ class AppContent extends ConsumerStatefulWidget {
 
 class _AppContentState extends ConsumerState<AppContent> {
 
-  final settings = ValueNotifier(ThemeSettings(
-    //sourceColor: Color(0xff2a4fda),
-    //sourceColor: Color(0xff583aee),
-    sourceColor: const Color(0xff4845e5),
-    //sourceColor: const Color(0xff2962ff),
-    themeMode: ThemeMode.system,
-  ));
+  final settings = ValueNotifier(
+    ThemeSettings(
+      //sourceColor: Color(0xff2a4fda),
+      //sourceColor: Color(0xff583aee),
+      sourceColor: const Color(0xff4845e5),
+      //sourceColor: const Color(0xff2962ff),
+      themeMode: ThemeMode.system,
+    ),
+  );
 
   @override
   void initState() {
@@ -52,7 +54,9 @@ class _AppContentState extends ConsumerState<AppContent> {
 
   @override
   Widget build(BuildContext context) {
-    AppTranslation.init(ref);
+    AppTranslation.init(
+      ref,
+    );
     final router = ref.watch(routerProvider);
 
     return DynamicColorBuilder(

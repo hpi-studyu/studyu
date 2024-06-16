@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'study_base_controller.g.dart';
 
@@ -26,21 +27,28 @@ class StudyBaseController<T extends StudyControllerBaseState> extends _$StudyBas
     );
   }
 
-  StreamSubscription<WrappedModel<Study>>? _studySubscription;
+  // TODO MERGE
+  /*final StudyID studyId;
+  final IStudyRepository studyRepository;
+  final User? currentUser;
+  final GoRouter router;*/
 
-  subscribeStudy(StudyID studyId) {
-    if (_studySubscription != null) {
-      _studySubscription!.cancel();
+  StreamSubscription<WrappedModel<Study>>? studySubscription;
+
+  void subscribeStudy(StudyID studyId) {
+    if (studySubscription != null) {
+      studySubscription!.cancel();
     }
-    _studySubscription =
-        state.studyRepository.watch(studyId).listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
+    studySubscription = state.studyRepository
+        .watch(studyId)
+        .listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
   }
 
-  onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
+  void onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
     state = state.copyWith(studyWithMetadata: wrappedModel) as T;
   }
 
-  onStudySubscriptionError(Object error) {
+  void onStudySubscriptionError(Object error) {
     // TODO: improve error handling
     if (error is StudyNotFoundException) {
       /* TODO: figure out a way to resolve data dependencies for the current page
