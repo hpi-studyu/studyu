@@ -40,7 +40,9 @@ class StudyTestController extends _$StudyTestController {
 
 @riverpod
 PlatformController studyTestPlatformController(
-    StudyTestPlatformControllerRef ref, StudyID studyId,) {
+  StudyTestPlatformControllerRef ref,
+  StudyID studyId,
+) {
   final state = ref.watch(studyTestControllerProvider(studyId));
   PlatformController platformController;
   if (!kIsWeb) {

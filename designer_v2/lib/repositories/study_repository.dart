@@ -263,7 +263,7 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
 
 @riverpod
 StudyRepository studyRepository(StudyRepositoryRef ref) => StudyRepository(
-    apiClient: ref.watch(apiClientProvider),
-    authRepository: ref.watch(authRepositoryProvider),
-    ref: ref,
-  );
+      apiClient: ref.watch(apiClientProvider),
+      authRepository: ref.watch(authRepositoryProvider),
+      ref: ref,
+    );

@@ -56,18 +56,21 @@ class DashboardController extends _$DashboardController
   final SearchController searchController = SearchController();
 
   void _subscribeStudies() {
-    _studiesSubscription = studyRepository.watchAll().listen((wrappedModels) {
-      print("studyRepository.update");
-      // Update the controller's state when new studies are available in the repository
-      final studies = wrappedModels.map((study) => study.model).toList();
-      state = state.copyWith(
-        studies: () => AsyncValue.data(studies),
-      );
-    }, onError: (Object error) {
-      state = state.copyWith(
-        studies: () => AsyncValue.error(error, StackTrace.current),
-      );
-    },);
+    _studiesSubscription = studyRepository.watchAll().listen(
+      (wrappedModels) {
+        print("studyRepository.update");
+        // Update the controller's state when new studies are available in the repository
+        final studies = wrappedModels.map((study) => study.model).toList();
+        state = state.copyWith(
+          studies: () => AsyncValue.data(studies),
+        );
+      },
+      onError: (Object error) {
+        state = state.copyWith(
+          studies: () => AsyncValue.error(error, StackTrace.current),
+        );
+      },
+    );
   }
 
   void setSearchText(String? text) {

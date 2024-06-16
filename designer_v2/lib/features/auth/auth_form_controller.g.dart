@@ -7,7 +7,7 @@ part of 'auth_form_controller.dart';
 // **************************************************************************
 
 String _$authFormControllerHash() =>
-    r'd2cbe152c9e265eee89031208b3df027beb183be';
+    r'57c06256128a6e7e04aacf180f5f8dbcbfd0413b';
 
 /// Copied from Dart SDK
 class _SystemHash {
