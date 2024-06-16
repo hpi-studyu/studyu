@@ -4,10 +4,9 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
+import 'package:studyu_designer_v2/localization/locale_state.dart';
 import 'package:studyu_designer_v2/localization/locale_translate_name.dart';
 import 'package:studyu_designer_v2/utils/font.dart';
-
-import 'locale_state.dart';
 
 enum LanguagePickerType { field, icon }
 

@@ -10,7 +10,6 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 part 'study_base_controller.g.dart';
 
@@ -27,12 +26,6 @@ class StudyBaseController<T extends StudyControllerBaseState>
       currentUser: ref.watch(authRepositoryProvider).currentUser,
     );
   }
-
-  // TODO MERGE
-  /*final StudyID studyId;
-  final IStudyRepository studyRepository;
-  final User? currentUser;
-  final GoRouter router;*/
 
   StreamSubscription<WrappedModel<Study>>? studySubscription;
 

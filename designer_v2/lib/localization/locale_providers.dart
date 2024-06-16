@@ -5,8 +5,6 @@ import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/localization/locale_state.dart';
 import 'package:studyu_designer_v2/localization/platform_locale/platform_locale_interface.dart';
 
-import 'locale_state.dart';
-
 part 'locale_providers.g.dart';
 
 /// Platform Locale Provider

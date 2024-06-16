@@ -7,7 +7,7 @@ import 'package:studyu_designer_v2/features/study/study_base_state.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
-import '../../utils/model_action.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
 
 class StudyControllerState extends StudyControllerBaseState
     implements IStudyAppBarViewModel, ISyncIndicatorViewModel {
@@ -19,7 +19,7 @@ class StudyControllerState extends StudyControllerBaseState
       super.studyWithMetadata,
       this.isDirty = false,
       this.syncState = const AsyncValue<void>.data(null),
-      this.lastSynced});
+      this.lastSynced,});
 
   bool get isPublished => study.value != null && study.value!.published;
 
@@ -34,7 +34,7 @@ class StudyControllerState extends StudyControllerBaseState
             .availableActions(studyVal)
             .where((action) => action.type != StudyActionType.edit)
             .toList(),
-        studyActionIcons);
+        studyActionIcons,);
   }
 
   // - ISyncIndicatorViewModel

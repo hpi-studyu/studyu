@@ -4,8 +4,6 @@ import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-import 'locale_providers.dart';
-
 part 'locale_state.g.dart';
 
 Locale fallbackLocale =
@@ -31,13 +29,7 @@ class LocaleStateNotifier extends _$LocaleStateNotifier {
     /// 1. Attempts to restore locale from storage
     /// 2. IF no locale in storage, attempts to set local from the platform settings
     // Attempt to restore from storage
-    final bool fromStorageSuccess = restoreFromStorage();
-
-    // TODO MERGE
-    // If storage restore did not work, set from platform
-    if (!fromStorageSuccess) {
-      setLocale(ref.read(platformLocaleProvider));
-    }
+    restoreFromStorage();
     return LocaleState(fallbackLocale);
   }
 
@@ -47,14 +39,12 @@ class LocaleStateNotifier extends _$LocaleStateNotifier {
   /// Attempts to set the locale if it's in our list of supported locales.
   /// IF NOT: get the first locale that matches our language code and set that
   /// ELSE: do nothing.
-  void setLocale(Locale locale) async {
+  Future<void> setLocale(Locale locale) async {
     final List<Locale> supportedLocales = ref.watch(supportedLocalesProvider);
 
     // Set the locale if it's in our list of supported locales
     if (supportedLocales.contains(locale)) {
       state = state.copyWith(locale: locale);
-      // TODO MERGE
-      // save();
     }
 
     // Get the closest language locale and set that instead
@@ -72,10 +62,8 @@ class LocaleStateNotifier extends _$LocaleStateNotifier {
 
   /// Restore Locale from Storage
   Future<bool> restoreFromStorage() async {
-    // TODO MERGE
-    return (await load()) != null;
-    /*try {
-      LocaleState? loadedState = await load();
+    try {
+      final LocaleState? loadedState = await load();
       if (loadedState != null) {
         state = loadedState;
         return true;
@@ -85,7 +73,7 @@ class LocaleStateNotifier extends _$LocaleStateNotifier {
     }
     // If storage restore did not work, set from platform
     setLocale(ref.watch(platformLocaleProvider));
-    return false;*/
+    return false;
   }
 
   Future<LocaleState?> load() async {

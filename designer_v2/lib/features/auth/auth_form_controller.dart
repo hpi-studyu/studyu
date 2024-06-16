@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -57,25 +56,23 @@ enum AuthFormKey {
 class AuthFormController extends _$AuthFormController
     implements IFormGroupController {
   @override
-  AsyncValue<void> build(AuthFormKey formKey) {
+  AsyncValue<void> build(AuthFormKey formKeyArg) {
     authRepository = ref.watch(authRepositoryProvider);
     notificationService = ref.watch(notificationServiceProvider);
     router = ref.watch(routerProvider);
 
-    formKey = formKey;
+    formKey = formKeyArg;
     resetControlsFor(formKey);
 
     ref.listenSelf((previous, next) {
       print("authFormController.state updated");
       if (state.hasError) {
-        final AuthException error = state.error as AuthException;
+        final AuthException error = state.error! as AuthException;
         switch (error.message) {
           case "Invalid login credentials":
             notificationService.show(Notifications.credentialsInvalid);
-            break;
           case "User already registered":
             notificationService.show(Notifications.userAlreadyRegistered);
-            break;
           default:
             notificationService.showMessage(error.message);
         }
@@ -88,7 +85,7 @@ class AuthFormController extends _$AuthFormController
     _readDebugUser();
     _onChangeFormKey(formKey);
 
-    return AsyncValue.data(null);
+    return const AsyncValue.data(null);
   }
 
   late final IAuthRepository authRepository;

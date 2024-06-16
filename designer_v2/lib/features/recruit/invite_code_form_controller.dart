@@ -154,7 +154,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 @riverpod
 InviteCodeFormViewModel inviteCodeFormViewModel(
-    InviteCodeFormViewModelRef ref, StudyID studyId) {
+    InviteCodeFormViewModelRef ref, StudyID studyId,) {
   print("inviteCodeFormViewModelProvider($studyId");
   // Reactively bind to and obtain [StudyController]'s current study
   final study = ref

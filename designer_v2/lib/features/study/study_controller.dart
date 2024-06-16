@@ -9,10 +9,9 @@ import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository_events.dart';
+import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
-
-import '../../repositories/study_repository.dart';
-import '../../routing/router.dart';
 
 part 'study_controller.g.dart';
 
@@ -23,10 +22,11 @@ class StudyController extends _$StudyController {
     syncStudyStatus();
     ref.onDispose(() => _studyEventsSubscription?.cancel());
     return StudyControllerState(
-        studyId: studyId,
-        studyRepository: ref.watch(studyRepositoryProvider),
-        router: ref.watch(routerProvider),
-        currentUser: ref.watch(authRepositoryProvider).currentUser);
+      studyId: studyId,
+      studyRepository: ref.watch(studyRepositoryProvider),
+      router: ref.watch(routerProvider),
+      currentUser: ref.watch(authRepositoryProvider).currentUser,
+    );
   }
 
   StreamSubscription<ModelEvent<Study>>? _studyEventsSubscription;
@@ -52,7 +52,7 @@ class StudyController extends _$StudyController {
     });
   }
 
-  onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
+  void onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
     ref
         .watch(studyBaseControllerProvider(state.studyId).notifier)
         .onStudySubscriptionUpdate(wrappedModel);

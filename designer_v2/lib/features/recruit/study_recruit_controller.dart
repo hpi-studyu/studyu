@@ -31,7 +31,6 @@ class StudyRecruitController extends _$StudyRecruitController
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
       inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyId)),
-      invites: const AsyncValue.loading(),
     );
   }
 

@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
@@ -121,4 +120,5 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 
 // Re-expose the global client object via Riverpod
 @riverpod
-SupabaseClient supabaseClient(SupabaseClientRef ref) => env.client;
+SupabaseClient supabaseClient(AutoDisposeProviderRef<SupabaseClient> ref) =>
+    env.client;

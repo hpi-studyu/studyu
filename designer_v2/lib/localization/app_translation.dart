@@ -7,7 +7,7 @@ AppLocalizations get tr => _tr!;
 late AppLocalizations? _tr;
 
 class AppTranslation {
-  static Future<void> init(WidgetRef ref) {
+  static Future<void> init(WidgetRef ref) async {
     // Loads the currently selected locale and sets the localization
     _tr = lookupAppLocalizations(ref.watch(localeProvider));
   }

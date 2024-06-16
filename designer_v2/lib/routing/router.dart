@@ -8,8 +8,6 @@ import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/combined_stream_notifier.dart';
 
-import 'router_config.dart';
-
 part 'router.g.dart';
 
 /// How to create a new page & use it for navigation:

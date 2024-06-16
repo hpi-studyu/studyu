@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
@@ -17,8 +16,6 @@ import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
-
-import 'dashboard_state.dart';
 
 part 'dashboard_controller.g.dart';
 
@@ -58,7 +55,7 @@ class DashboardController extends _$DashboardController
 
   final SearchController searchController = SearchController();
 
-  _subscribeStudies() {
+  void _subscribeStudies() {
     _studiesSubscription = studyRepository.watchAll().listen((wrappedModels) {
       print("studyRepository.update");
       // Update the controller's state when new studies are available in the repository
@@ -66,11 +63,11 @@ class DashboardController extends _$DashboardController
       state = state.copyWith(
         studies: () => AsyncValue.data(studies),
       );
-    }, onError: (error) {
+    }, onError: (Object error) {
       state = state.copyWith(
         studies: () => AsyncValue.error(error, StackTrace.current),
       );
-    });
+    },);
   }
 
   void setSearchText(String? text) {

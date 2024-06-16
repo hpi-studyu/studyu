@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_controller_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 
@@ -11,8 +12,6 @@ part 'app_controller.g.dart';
 abstract class IAppDelegate {
   Future<bool> onAppStart();
 }
-
-typedef _DelegateCallback = Future<bool> Function(IAppDelegate delegate);
 
 /// Main controller that's bound to the top-level application widget's state
 @riverpod
@@ -26,10 +25,12 @@ class AppController extends _$AppController {
     ref.listenSelf((previous, next) {
       print("APP CONTROLLER STATE CHANGED: $next");
     });
-    //ref.read(routerProvider).refresh();
     // Forward onAppStart to all registered delegates so that they can
     // e.g. read some data from local storage for initialization
-    //await _callDelegates((delegate) => delegate.onAppStart(), withMinDelay: true);
+    await _callDelegates(
+      (delegate) => delegate.onAppStart(),
+      withMinDelay: true,
+    );
     return const AppControllerState(status: AppStatus.initialized);
   }
 
@@ -38,12 +39,13 @@ class AppController extends _$AppController {
 
   /// A dummy [Future] used for setting a lower bound on app initialization
   /// (so that the splash screen is shown during this time)
-  // TODO MERGE
   late final _delayedFuture = Future.delayed(
-      const Duration(milliseconds: Config.minSplashTime), () => true);
+    // ignore: avoid_redundant_argument_values, use_named_constants
+    const Duration(milliseconds: Config.minSplashTime),
+    () => true,
+  );
 
   /// Executes the given callback for all registered delegates concurrently
-  // TODO merge where to call this?
   Future<bool> _callDelegates(
     Future<bool> Function(IAppDelegate) function, {
     bool withMinDelay = false,

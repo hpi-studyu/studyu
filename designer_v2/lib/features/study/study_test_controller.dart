@@ -3,12 +3,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
+import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
-
-import '../../localization/locale_providers.dart';
-import '../../repositories/study_repository.dart';
-import '../../routing/router.dart';
+import 'package:studyu_designer_v2/repositories/study_repository.dart';
+import 'package:studyu_designer_v2/routing/router.dart';
 
 part 'study_test_controller.g.dart';
 
@@ -41,7 +40,7 @@ class StudyTestController extends _$StudyTestController {
 
 @riverpod
 PlatformController studyTestPlatformController(
-    StudyTestPlatformControllerRef ref, StudyID studyId) {
+    StudyTestPlatformControllerRef ref, StudyID studyId,) {
   final state = ref.watch(studyTestControllerProvider(studyId));
   PlatformController platformController;
   if (!kIsWeb) {
