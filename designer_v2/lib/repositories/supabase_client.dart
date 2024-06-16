@@ -1,5 +1,5 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -42,7 +42,8 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
     Map<String, Object> selectionCriteria,
   ) async {
     try {
-      final data = await this.supabaseClient
+      final data = await this
+          .supabaseClient
           .from(tableName(T))
           .delete()
           .match(selectionCriteria);
@@ -61,7 +62,8 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
     List<String> selectedColumns = const ['*'],
   }) async {
     try {
-      final data = await this.supabaseClient
+      final data = await this
+          .supabaseClient
           .from(tableName(T))
           .select(selectedColumns.join(','));
       return deserializeList<T>(data);
@@ -87,7 +89,8 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
     List<String> selectedColumns = const ['*'],
   }) async {
     try {
-      final data = await this.supabaseClient
+      final data = await this
+          .supabaseClient
           .from(tableName(T))
           .select(selectedColumns.join(','))
           .eq(colName, value)

@@ -15,7 +15,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 part 'study_base_controller.g.dart';
 
 @riverpod
-class StudyBaseController<T extends StudyControllerBaseState> extends _$StudyBaseController {
+class StudyBaseController<T extends StudyControllerBaseState>
+    extends _$StudyBaseController {
   @override
   StudyControllerBaseState build(StudyID studyId) {
     subscribeStudy(studyId);

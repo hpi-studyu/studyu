@@ -11,16 +11,15 @@ import '../../utils/model_action.dart';
 
 class StudyControllerState extends StudyControllerBaseState
     implements IStudyAppBarViewModel, ISyncIndicatorViewModel {
-  const StudyControllerState({
-    required super.studyId,
-    required super.studyRepository,
-    required super.router,
-    required super.currentUser,
-    super.studyWithMetadata,
-    this.isDirty = false,
-    this.syncState = const AsyncValue<void>.data(null),
-    this.lastSynced
-  });
+  const StudyControllerState(
+      {required super.studyId,
+      required super.studyRepository,
+      required super.router,
+      required super.currentUser,
+      super.studyWithMetadata,
+      this.isDirty = false,
+      this.syncState = const AsyncValue<void>.data(null),
+      this.lastSynced});
 
   bool get isPublished => study.value != null && study.value!.published;
 
@@ -31,9 +30,11 @@ class StudyControllerState extends StudyControllerBaseState
     }
     // filter out edit action since we are already editing the study
     return withIcons(
-        studyRepository.availableActions(studyVal).where((action) => action.type != StudyActionType.edit).toList(),
-        studyActionIcons
-    );
+        studyRepository
+            .availableActions(studyVal)
+            .where((action) => action.type != StudyActionType.edit)
+            .toList(),
+        studyActionIcons);
   }
 
   // - ISyncIndicatorViewModel

@@ -23,10 +23,10 @@ import 'dashboard_state.dart';
 part 'dashboard_controller.g.dart';
 
 @riverpod
-class DashboardController extends _$DashboardController implements IModelActionProvider<Study> {
-
+class DashboardController extends _$DashboardController
+    implements IModelActionProvider<Study> {
   @override
-  DashboardState build(){
+  DashboardState build() {
     studyRepository = ref.watch(studyRepositoryProvider);
     authRepository = ref.watch(authRepositoryProvider);
     userRepository = ref.watch(userRepositoryProvider);
@@ -157,6 +157,4 @@ class DashboardController extends _$DashboardController implements IModelActionP
       studyActionIcons,
     );
   }
-
-
 }

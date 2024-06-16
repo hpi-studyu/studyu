@@ -23,11 +23,10 @@ class StudyController extends _$StudyController {
     syncStudyStatus();
     ref.onDispose(() => _studyEventsSubscription?.cancel());
     return StudyControllerState(
-      studyId: studyId,
-      studyRepository: ref.watch(studyRepositoryProvider),
-      router: ref.watch(routerProvider),
-      currentUser: ref.watch(authRepositoryProvider).currentUser
-    );
+        studyId: studyId,
+        studyRepository: ref.watch(studyRepositoryProvider),
+        router: ref.watch(routerProvider),
+        currentUser: ref.watch(authRepositoryProvider).currentUser);
   }
 
   StreamSubscription<ModelEvent<Study>>? _studyEventsSubscription;
@@ -36,7 +35,8 @@ class StudyController extends _$StudyController {
     if (_studyEventsSubscription != null) {
       _studyEventsSubscription?.cancel();
     }
-    _studyEventsSubscription = state.studyRepository.watchChanges(state.studyId).listen((event) {
+    _studyEventsSubscription =
+        state.studyRepository.watchChanges(state.studyId).listen((event) {
       if (event is IsSaving) {
         state = state.copyWith(
           syncState: const AsyncValue.loading(),
@@ -53,7 +53,9 @@ class StudyController extends _$StudyController {
   }
 
   onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
-    ref.watch(studyBaseControllerProvider(state.studyId).notifier).onStudySubscriptionUpdate(wrappedModel);
+    ref
+        .watch(studyBaseControllerProvider(state.studyId).notifier)
+        .onStudySubscriptionUpdate(wrappedModel);
     final studyId = wrappedModel.model.id;
     _redirectNewToActualStudyID(studyId);
   }

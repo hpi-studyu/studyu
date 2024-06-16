@@ -14,16 +14,17 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 part 'study_recruit_controller.g.dart';
 
 @riverpod
-class StudyRecruitController
-    extends _$StudyRecruitController implements IModelActionProvider<StudyInvite> {
-
+class StudyRecruitController extends _$StudyRecruitController
+    implements IModelActionProvider<StudyInvite> {
   /// [inviteCodeRepository] Reference to the repository for invite codes (resolved dynamically via Riverpod when the [state.study] becomes available)
   @override
   StudyRecruitControllerState build(StudyID studyId) {
     print("StudyRecruitController.constructor");
     _subscribeInvites();
-    ref.onDispose(() {print("StudyRecruitController.dispose");
-    _invitesSubscription?.cancel();});
+    ref.onDispose(() {
+      print("StudyRecruitController.dispose");
+      _invitesSubscription?.cancel();
+    });
     return StudyRecruitControllerState(
       studyId: studyId,
       studyRepository: ref.watch(studyRepositoryProvider),

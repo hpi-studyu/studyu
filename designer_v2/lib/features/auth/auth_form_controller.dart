@@ -54,8 +54,8 @@ enum AuthFormKey {
 }
 
 @riverpod
-class AuthFormController extends _$AuthFormController implements IFormGroupController {
-
+class AuthFormController extends _$AuthFormController
+    implements IFormGroupController {
   @override
   AsyncValue<void> build(AuthFormKey formKey) {
     authRepository = ref.watch(authRepositoryProvider);
@@ -90,7 +90,6 @@ class AuthFormController extends _$AuthFormController implements IFormGroupContr
 
     return AsyncValue.data(null);
   }
-
 
   late final IAuthRepository authRepository;
   late final INotificationService notificationService;
@@ -270,7 +269,7 @@ class AuthFormController extends _$AuthFormController implements IFormGroupContr
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     } finally {
-      state =  const AsyncValue.data(null);
+      state = const AsyncValue.data(null);
     }
     return Future.value(AuthResponse());
   }

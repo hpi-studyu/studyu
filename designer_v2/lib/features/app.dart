@@ -36,7 +36,6 @@ class AppContent extends ConsumerStatefulWidget {
 }
 
 class _AppContentState extends ConsumerState<AppContent> {
-
   final settings = ValueNotifier(
     ThemeSettings(
       //sourceColor: Color(0xff2a4fda),

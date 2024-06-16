@@ -173,7 +173,8 @@ class StudyFormViewModel extends FormViewModel<Study>
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 @riverpod
-StudyFormViewModel studyFormViewModel(StudyFormViewModelRef ref, StudyID studyId) {
+StudyFormViewModel studyFormViewModel(
+    StudyFormViewModelRef ref, StudyID studyId) {
   print("studyFormViewModel");
   final state = ref.watch(studyControllerProvider(studyId));
   return StudyFormViewModel(

@@ -39,7 +39,8 @@ class AppController extends _$AppController {
   /// A dummy [Future] used for setting a lower bound on app initialization
   /// (so that the splash screen is shown during this time)
   // TODO MERGE
-  late final _delayedFuture = Future.delayed(const Duration(milliseconds: Config.minSplashTime), () => true);
+  late final _delayedFuture = Future.delayed(
+      const Duration(milliseconds: Config.minSplashTime), () => true);
 
   /// Executes the given callback for all registered delegates concurrently
   // TODO merge where to call this?

@@ -30,7 +30,8 @@ class StudyTestController extends _$StudyTestController {
       studyRepository: ref.watch(studyRepositoryProvider),
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
-      serializedSession: ref.watch(authRepositoryProvider).serializedSession ?? '',
+      serializedSession:
+          ref.watch(authRepositoryProvider).serializedSession ?? '',
       languageCode: ref.watch(localeProvider).languageCode,
     );
   }
@@ -39,7 +40,8 @@ class StudyTestController extends _$StudyTestController {
 /// Provide a controller parametrized by [StudyID]
 
 @riverpod
-PlatformController studyTestPlatformController(StudyTestPlatformControllerRef ref, StudyID studyId) {
+PlatformController studyTestPlatformController(
+    StudyTestPlatformControllerRef ref, StudyID studyId) {
   final state = ref.watch(studyTestControllerProvider(studyId));
   PlatformController platformController;
   if (!kIsWeb) {

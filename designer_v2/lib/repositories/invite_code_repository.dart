@@ -209,7 +209,8 @@ class InviteCodeRepositoryDelegate
 }
 
 @riverpod
-InviteCodeRepository inviteCodeRepository(InviteCodeRepositoryRef ref, StudyID studyId) {
+InviteCodeRepository inviteCodeRepository(
+    InviteCodeRepositoryRef ref, StudyID studyId) {
   print("inviteCodeRepositoryProvider($studyId");
   // Initialize repository for a given study
   final repository = InviteCodeRepository(
