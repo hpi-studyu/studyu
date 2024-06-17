@@ -9,7 +9,7 @@ class StudyAnalyzeControllerState extends StudyControllerBaseState {
     required super.studyRepository,
     required super.router,
     required super.currentUser,
-    super.studyWithMetadata,
+    required super.studyWithMetadata,
   });
 
   bool get canExport => study.value?.canExport(currentUser!) ?? false;

@@ -10,7 +10,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     required super.studyRepository,
     required super.router,
     required super.currentUser,
-    super.studyWithMetadata,
+    required super.studyWithMetadata,
     required this.inviteCodeRepository,
     this.invites = const AsyncValue.loading(),
   });

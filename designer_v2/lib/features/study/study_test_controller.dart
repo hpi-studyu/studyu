@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
@@ -27,6 +28,8 @@ class StudyTestController extends _$StudyTestController {
     return StudyTestControllerState(
       studyId: studyId,
       studyRepository: ref.watch(studyRepositoryProvider),
+      studyWithMetadata:
+          ref.watch(studyControllerProvider(studyId)).studyWithMetadata,
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
       serializedSession:

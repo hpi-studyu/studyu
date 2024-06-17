@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
-import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository_events.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
@@ -19,14 +17,17 @@ part 'study_controller.g.dart';
 class StudyController extends _$StudyController {
   @override
   StudyControllerState build(StudyID studyId) {
-    syncStudyStatus();
-    ref.onDispose(() => _studyEventsSubscription?.cancel());
-    return StudyControllerState(
+    state = StudyControllerState(
       studyId: studyId,
       studyRepository: ref.watch(studyRepositoryProvider),
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
+      studyWithMetadata:
+          ref.watch(studyBaseControllerProvider(studyId)).studyWithMetadata,
     );
+    ref.onDispose(() => _studyEventsSubscription?.cancel());
+    syncStudyStatus();
+    return state;
   }
 
   StreamSubscription<ModelEvent<Study>>? _studyEventsSubscription;
@@ -52,22 +53,6 @@ class StudyController extends _$StudyController {
     });
   }
 
-  void onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
-    ref
-        .watch(studyBaseControllerProvider(state.studyId).notifier)
-        .onStudySubscriptionUpdate(wrappedModel);
-    final studyId = wrappedModel.model.id;
-    _redirectNewToActualStudyID(studyId);
-  }
-
-  /// Redirect to the study-specific URL to avoid disposing a dirty controller
-  /// when building subroutes
-  void _redirectNewToActualStudyID(StudyID actualStudyId) {
-    if (state.studyId == Config.newModelId) {
-      state.router.dispatch(RoutingIntents.study(actualStudyId));
-    }
-  }
-
   Future publishStudy({bool toRegistry = false}) {
     final study = state.study.value!;
     study.registryPublished = toRegistry;
@@ -86,24 +71,3 @@ class StudyController extends _$StudyController {
     state.router.dispatch(RoutingIntents.studySettings(state.studyId));
   }
 }
-
-/// Use the [family] modifier to provide a controller parametrized by [StudyID]
-/*final studyControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyController, StudyControllerState, StudyID>((ref, studyId) {
-  print("studyControllerProvider($studyId)");
-  final controller = StudyController(
-    studyId: studyId,
-    studyRepository: ref.watch(studyRepositoryProvider),
-    currentUser: ref.watch(authRepositoryProvider).currentUser,
-    router: ref.watch(routerProvider),
-    notificationService: ref.watch(notificationServiceProvider),
-    //ref: ref,
-  );
-  controller.addListener((state) {
-    print("studyController.state updated");
-  });
-  ref.onDispose(() {
-    print("studyControllerProvider($studyId).DISPOSE");
-  });
-  return controller;
-});*/

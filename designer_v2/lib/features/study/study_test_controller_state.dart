@@ -9,7 +9,7 @@ class StudyTestControllerState extends StudyControllerBaseState {
     required super.studyRepository,
     required super.router,
     required super.currentUser,
-    super.studyWithMetadata,
+    required super.studyWithMetadata,
     this.serializedSession = '',
     this.languageCode = 'en',
   });

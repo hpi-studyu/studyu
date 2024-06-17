@@ -13,7 +13,7 @@ class StudyControllerBaseState extends Equatable {
     required this.studyRepository,
     required this.router,
     required this.currentUser,
-    this.studyWithMetadata,
+    required this.studyWithMetadata,
   });
 
   final StudyID studyId;

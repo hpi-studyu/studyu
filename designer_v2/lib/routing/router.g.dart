@@ -6,7 +6,7 @@ part of 'router.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$routerHash() => r'd7ad1119514bbeb51e6fb6dcc24b7df70485827d';
+String _$routerHash() => r'4823ca87e814f1c807b04a0e6bdfbd55462ee325';
 
 /// How to create a new page & use it for navigation:
 ///

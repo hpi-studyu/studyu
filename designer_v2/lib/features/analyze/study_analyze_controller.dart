@@ -3,6 +3,7 @@ import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/features/analyze/study_analyze_controller_state.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
@@ -17,6 +18,8 @@ class StudyAnalyzeController extends _$StudyAnalyzeController {
     return StudyAnalyzeControllerState(
       studyId: studyId,
       studyRepository: ref.watch(studyRepositoryProvider),
+      studyWithMetadata:
+          ref.watch(studyControllerProvider(studyId)).studyWithMetadata,
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
     );
