@@ -17,7 +17,7 @@ abstract class IAppDelegate {
 @riverpod
 class AppController extends _$AppController {
   @override
-  Future<AppControllerState> build() async {
+  Stream<AppControllerState> build() {
     _appDelegates = [
       /// Register [IAppDelegate]s here for invocation of app lifecycle methods
       ref.watch(authRepositoryProvider),
@@ -25,14 +25,31 @@ class AppController extends _$AppController {
     ref.listenSelf((previous, next) {
       print("APP CONTROLLER STATE CHANGED: $next");
     });
+    ref.onDispose(() {
+      _stateController.close();
+    });
+    _initDeleagates();
+    return _stateController.stream;
+  }
+
+  Future<void> _initDeleagates() async {
     // Forward onAppStart to all registered delegates so that they can
     // e.g. read some data from local storage for initialization
     await _callDelegates(
       (delegate) => delegate.onAppStart(),
       withMinDelay: true,
     );
-    return const AppControllerState(status: AppStatus.initialized);
+    //if (!state.hasValue || state.hasValue && !state.value!.isInitialized) {
+    _stateController
+        .add(const AppControllerState(status: AppStatus.initialized));
+    //}
   }
+
+  Stream get stream => _stateController.stream;
+  final StreamController<AppControllerState> _stateController =
+      StreamController<AppControllerState>.broadcast();
+
+  bool get isInitialized => state.value?.status == AppStatus.initialized;
 
   /// List of listeners for app lifecycle events registered via Riverpod
   late final List<IAppDelegate> _appDelegates;
