@@ -18,31 +18,30 @@ abstract class IAppDelegate {
 class AppController extends _$AppController {
   @override
   Stream<AppControllerState> build() {
+    state = const AsyncValue<AppControllerState>.data(AppControllerState());
     _appDelegates = [
       /// Register [IAppDelegate]s here for invocation of app lifecycle methods
       ref.watch(authRepositoryProvider),
     ];
     ref.listenSelf((previous, next) {
-      print("APP CONTROLLER STATE CHANGED: $next");
+      print('AppController changed: $next');
     });
     ref.onDispose(() {
       _stateController.close();
     });
-    _initDeleagates();
+    _initDelegates();
     return _stateController.stream;
   }
 
-  Future<void> _initDeleagates() async {
+  Future<void> _initDelegates() async {
     // Forward onAppStart to all registered delegates so that they can
     // e.g. read some data from local storage for initialization
     await _callDelegates(
       (delegate) => delegate.onAppStart(),
       withMinDelay: true,
     );
-    //if (!state.hasValue || state.hasValue && !state.value!.isInitialized) {
     _stateController
         .add(const AppControllerState(status: AppStatus.initialized));
-    //}
   }
 
   Stream get stream => _stateController.stream;
