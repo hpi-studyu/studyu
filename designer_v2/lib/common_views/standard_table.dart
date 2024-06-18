@@ -49,6 +49,7 @@ class StandardTable<T> extends StatefulWidget {
     required List<StandardTableColumn>? columns,
     required this.onSelectItem,
     required this.buildCellsAt,
+    this.pinnedPredicates,
     this.sortColumnPredicates,
     this.trailingActionsAt,
     StandardTableColumn? trailingActionsColumn,
@@ -97,6 +98,7 @@ class StandardTable<T> extends StatefulWidget {
 
   final StandardTableCellsBuilder<T> buildCellsAt;
   final List<int Function(T a, T b)?>? sortColumnPredicates;
+  final int Function(T a, T b)? pinnedPredicates;
   final StandardTableRowBuilder? headerRowBuilder;
   final StandardTableRowBuilder? dataRowBuilder;
   late final StandardTableColumn inputTrailingActionsColumn;
@@ -254,26 +256,19 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
           sortAscending: sortAscending,
         );
       });
-<<<<<<< HEAD
-=======
       _sortPinnedStudies(
         widget.items,
         columnIndex: columnIndex,
         sortAscending: sortAscending,
       );
->>>>>>> dev
     } else {
       widget.items.clear();
       widget.items.addAll(sortDefaultOrder!);
+      _sortPinnedStudies(widget.items, columnIndex: columnIndex);
     }
     _cachedRows.clear();
   }
 
-<<<<<<< HEAD
-  int _sortLogic(T a, T b, {required int columnIndex, required bool? sortAscending}) {
-    final sortPredicate = widget.sortColumnPredicates;
-    if (sortPredicate != null && sortPredicate[columnIndex] != null) {
-=======
   void _sortPinnedStudies(
     List<T> items, {
     required int columnIndex,
@@ -309,13 +304,11 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
         sortPredicate != null &&
         sortPredicate[columnIndex] != null) {
       final int res;
->>>>>>> dev
       if (sortAscending ?? true) {
-        return sortPredicate[columnIndex]!(a, b);
+        res = sortPredicate[columnIndex]!(a, b);
+      } else {
+        res = sortPredicate[columnIndex]!(b, a);
       }
-<<<<<<< HEAD
-      return sortPredicate[columnIndex]!(b, a);
-=======
       if (res == 0) {
         // Fallback to default sorting algorithm
         return _sortLogic(
@@ -327,7 +320,6 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
         );
       }
       return res;
->>>>>>> dev
     } else if (a is Comparable && b is Comparable) {
       // If sortPredicate is not provided, use default comparison logic
       return sortAscending ?? true
@@ -413,7 +405,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
                   Text(
                     columns[i].label,
                     overflow: TextOverflow.visible,
-                    maxLines: widget.headerMaxLines,
+                    maxLines: 1,
                     softWrap: false,
                     style: theme.textTheme.bodySmall!.copyWith(
                       color: theme.colorScheme.onSurface.withOpacity(0.8),

@@ -75,16 +75,12 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   )   : id = const Uuid().v4(),
         studyId = study.id;
 
-<<<<<<< HEAD
-  List<String> get interventionOrder => study.schedule.generateInterventionIdsInOrder(selectedInterventionIds);
-=======
   List<String> get interventionOrder => [
         if (study.schedule.includeBaseline) Study.baselineID,
         ...study.schedule
             .generateWith(0)
             .map<String>((int index) => selectedInterventionIds[index]),
       ];
->>>>>>> dev
 
   List<Intervention> get selectedInterventions {
     final selectedInterventions = selectedInterventionIds
