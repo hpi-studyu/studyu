@@ -33,7 +33,8 @@ class StudyMonitorScreen extends StudyPageWidget {
                   ? StudyMonitorTable(
                       ref: ref,
                       studyMonitorItems: studyMonitorData.items,
-                      onSelectItem: (item) => _onSelectParticipant(context, ref, item, study),
+                      onSelectItem: (item) =>
+                          _onSelectParticipant(context, ref, item, study),
                     )
                   : EmptyBody(
                       icon: Icons.person_off_rounded,
@@ -44,28 +45,43 @@ class StudyMonitorScreen extends StudyPageWidget {
         });
   }
 
-  Widget _monitorSectionHeader(BuildContext context, StudyMonitorData monitorData) {
-    final enrolled =
-        monitorData.activeParticipants + monitorData.dropoutParticipants + monitorData.completedParticipants;
+  Widget _monitorSectionHeader(
+      BuildContext context, StudyMonitorData monitorData) {
+    final enrolled = monitorData.activeParticipants +
+        monitorData.dropoutParticipants +
+        monitorData.completedParticipants;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SelectableText(tr.monitoring_participants_title, style: Theme.of(context).textTheme.headlineSmall),
+        SelectableText(tr.monitoring_participants_title,
+            style: Theme.of(context).textTheme.headlineSmall),
         const Spacer(),
         Expanded(
           child: Row(
             children: [
               Expanded(
-                  child: _buildStat(context, tr.monitoring_active, tr.monitoring_active_tooltip,
-                      monitorData.activeParticipants, enrolled)),
+                  child: _buildStat(
+                      context,
+                      tr.monitoring_active,
+                      tr.monitoring_active_tooltip,
+                      monitorData.activeParticipants,
+                      enrolled)),
               const SizedBox(width: 20.0),
               Expanded(
-                  child: _buildStat(context, tr.monitoring_dropout, tr.monitoring_dropout_tooltip,
-                      monitorData.dropoutParticipants, enrolled)),
+                  child: _buildStat(
+                      context,
+                      tr.monitoring_dropout,
+                      tr.monitoring_dropout_tooltip,
+                      monitorData.dropoutParticipants,
+                      enrolled)),
               const SizedBox(width: 20.0),
               Expanded(
-                  child: _buildStat(context, tr.monitoring_completed, tr.monitoring_completed_tooltip,
-                      monitorData.completedParticipants, enrolled)),
+                  child: _buildStat(
+                      context,
+                      tr.monitoring_completed,
+                      tr.monitoring_completed_tooltip,
+                      monitorData.completedParticipants,
+                      enrolled)),
             ],
           ),
         ),
@@ -73,7 +89,8 @@ class StudyMonitorScreen extends StudyPageWidget {
     );
   }
 
-  Widget _buildStat(BuildContext context, String title, String tooltip, int value, int total) {
+  Widget _buildStat(BuildContext context, String title, String tooltip,
+      int value, int total) {
     final theme = Theme.of(context);
     return Tooltip(
       message: tooltip,
@@ -98,13 +115,16 @@ class StudyMonitorScreen extends StudyPageWidget {
     );
   }
 
-  _onSelectParticipant(BuildContext context, WidgetRef ref, StudyMonitorItem item, Study study) {
+  _onSelectParticipant(
+      BuildContext context, WidgetRef ref, StudyMonitorItem item, Study study) {
     // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
     showModalSideSheet(
       context: context,
       title: tr.participant_details_title,
       body: ParticipantDetailsView(
-          monitorItem: item, interventions: study.interventions, observations: study.observations),
+          monitorItem: item,
+          interventions: study.interventions,
+          observations: study.observations),
       actionButtons: [
         retainSizeInAppBar(DismissButton(
           text: tr.dialog_close,

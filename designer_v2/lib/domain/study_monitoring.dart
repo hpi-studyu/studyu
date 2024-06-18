@@ -170,7 +170,8 @@ extension StudyMonitoringX on Study {
           item.lastActivityAt.isAfter(participantDropoutDuration);
     }).length;
     final dropoutParticipants = items.where((item) {
-      return item.droppedOut && item.lastActivityAt.isBefore(participantDropoutDuration);
+      return item.droppedOut &&
+          item.lastActivityAt.isBefore(participantDropoutDuration);
     }).length;
     final completedParticipants = items
         .where((item) => item.currentDayOfStudy >= item.studyDurationInDays)

@@ -109,7 +109,7 @@ extension DateTimeAgoX on DateTime {
     return _timeAgoFormatted();
   }
 
-  String toLocalizedString({required String locale,bool showTime = true}) {
+  String toLocalizedString({required String locale, bool showTime = true}) {
     final time = toLocal();
     final formatter = DateFormat.yMMMMd(locale);
     if (showTime) {
