@@ -38,21 +38,14 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
   PlatformController? frameController;
 
   @override
-  void initState() {
-    super.initState();
-    runAsync(() => _subscribeStudyChanges());
-  }
-
-  @override
   void didUpdateWidget(PreviewFrame oldWidget) {
-    if (mounted) runAsync(() => _subscribeStudyChanges());
     super.didUpdateWidget(oldWidget);
-  }
-
-  void _subscribeStudyChanges() {
     final formViewModelCurrent =
         ref.read(studyFormViewModelProvider(widget.studyId));
+    runAsync(() => _subscribeStudyChanges(formViewModelCurrent));
+  }
 
+  void _subscribeStudyChanges(StudyFormViewModel formViewModelCurrent) {
     formViewModelCurrent.form.valueChanges.listen((event) {
       if (frameController != null) {
         final formJson =
@@ -92,9 +85,9 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     final state = ref.watch(studyTestControllerProvider(widget.studyId));
     final formViewModel = ref.watch(studyTestValidatorProvider(widget.studyId));
 
-    // Rebuild iframe component & url
+    // Rebuild iframe component and url
     frameController =
-        ref.read(studyTestPlatformControllerProvider(widget.studyId));
+        ref.watch(studyTestPlatformControllerProvider(widget.studyId));
     _updatePreviewRoute();
     frameController!.activate();
     frameController!.listen();

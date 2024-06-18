@@ -16,14 +16,17 @@ part 'study_test_controller.g.dart';
 class StudyTestController extends _$StudyTestController {
   @override
   StudyTestControllerState build(StudyID studyId) {
+    // final studyRepo = ref.read(studyRepositoryProvider);
     ref.onDispose(() {
       // Reload the study after disposing the test controller so that any
       // data changes resulting from testing are reflected in the study for
       // other parts of the app (e.g. test data that was generated)
       //
       // Ideally, we would stream changes from the backend/database directly,
-      // but this is a sufficient workaround for now
-      ref.watch(studyRepositoryProvider).fetch(studyId);
+      // but this is a sufficient workaround for now.
+
+      // TODO test if this is needed or the study gets already updated after closing the test view
+      // studyRepo.fetch(studyId);
     });
     return StudyTestControllerState(
       studyId: studyId,
@@ -40,7 +43,6 @@ class StudyTestController extends _$StudyTestController {
 }
 
 /// Provide a controller parametrized by [StudyID]
-
 @riverpod
 PlatformController studyTestPlatformController(
   StudyTestPlatformControllerRef ref,
