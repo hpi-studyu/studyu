@@ -89,6 +89,7 @@ class StudyUApiClient extends SupabaseClientDependant
     'study_ended_count',
     'active_subject_count',
     'contact',
+    'created_at',
   ];
 
   static final studyWithParticipantActivityColumns = [
