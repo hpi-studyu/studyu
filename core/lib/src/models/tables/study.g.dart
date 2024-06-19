@@ -19,6 +19,7 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
       ..contact = Study._contactFromJson(json['contact'])
       ..iconName = json['icon_name'] as String? ?? 'accountHeart'
       ..published = json['published'] as bool? ?? false
+      ..status = $enumDecode(_$StudyStatusEnumMap, json['status'])
       ..questionnaire = Study._questionnaireFromJson(json['questionnaire'])
       ..eligibilityCriteria =
           Study._eligibilityCriteriaFromJson(json['eligibility_criteria'])
@@ -66,6 +67,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   val['contact'] = instance.contact.toJson();
   val['icon_name'] = instance.iconName;
   val['published'] = instance.published;
+  val['status'] = instance.status.toJson();
   val['questionnaire'] = instance.questionnaire.toJson();
   val['eligibility_criteria'] =
       instance.eligibilityCriteria.map((e) => e.toJson()).toList();
@@ -89,4 +91,10 @@ const _$ResultSharingEnumMap = {
   ResultSharing.public: 'public',
   ResultSharing.private: 'private',
   ResultSharing.organization: 'organization',
+};
+
+const _$StudyStatusEnumMap = {
+  StudyStatus.draft: 'draft',
+  StudyStatus.running: 'running',
+  StudyStatus.closed: 'closed',
 };

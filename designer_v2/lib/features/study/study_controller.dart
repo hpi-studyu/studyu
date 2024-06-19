@@ -59,6 +59,11 @@ class StudyController extends _$StudyController {
     return state.studyRepository.launch(study);
   }
 
+  Future closeStudy() {
+    final study = state.study.value!;
+    return studyRepository.close(study);
+  }
+
   void onChangeStudyParticipation() {
     state.router.dispatch(RoutingIntents.studyEditEnrollment(state.studyId));
   }

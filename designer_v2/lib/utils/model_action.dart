@@ -8,6 +8,7 @@ class ModelAction<T> {
   final String label;
   IconData? icon;
   final FutureOr<void> Function() onExecute;
+  final bool isSeparator;
   final bool isAvailable;
   final bool isDestructive;
 
@@ -15,10 +16,20 @@ class ModelAction<T> {
     required this.type,
     required this.label,
     required this.onExecute,
+    this.isSeparator = false,
     this.isAvailable = true,
     this.isDestructive = false,
     this.icon,
   });
+
+  static ModelAction addSeparator() {
+    return ModelAction(
+      type: null,
+      label: '',
+      onExecute: () {},
+      isSeparator: true,
+    );
+  }
 }
 
 abstract class IModelActionProvider<V> {

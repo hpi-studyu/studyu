@@ -31,7 +31,7 @@ class StudyStatusBadge extends StatelessWidget {
     final prefixIcon = showPrefixIcon ? Icons.circle_rounded : null;
 
     final tooltipMessage =
-        '${status?.description ?? ''}\n${participation?.description ?? ''}'
+        '${status?.description ?? ''}\n${(status == StudyStatus.closed ? null : participation?.description) ?? ''}'
             .trim();
 
     Widget inTooltip(Widget child) {
@@ -58,7 +58,7 @@ class StudyStatusBadge extends StatelessWidget {
         return inTooltip(
           studybadge.Badge(
             label: status!.string,
-            color: colorScheme.primaryContainer,
+            color: Colors.redAccent,
             type: type,
             icon: prefixIcon,
           ),

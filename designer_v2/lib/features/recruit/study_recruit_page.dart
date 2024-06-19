@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
+import 'package:studyu_designer_v2/common_views/banner.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
+import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_view.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_codes_table.dart';
@@ -31,8 +33,8 @@ class StudyRecruitScreen extends StudyPageWidget {
           _inviteCodesSectionHeader(context, ref),
           const SizedBox(height: 24.0), // spacing between body elements
           StudyInvitesTable(
-            invites:
-                studyInvites!, // otherwise falls through to [AsyncValueWidget.empty]
+            invites: studyInvites!,
+            // otherwise falls through to [AsyncValueWidget.empty]
             onSelect: _onSelectInvite(context, ref),
             getActions: controller.availableActions,
             getInlineActions: controller.availableInlineActions,
@@ -54,6 +56,32 @@ class StudyRecruitScreen extends StudyPageWidget {
     );
   }
 
+  @override
+  Widget? banner(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(studyRecruitControllerProvider(studyId));
+    final isStudyClosed = state.studyWithMetadata?.model.isClosed;
+
+    if (isStudyClosed ?? false) {
+      return BannerBox(
+        noPrefix: true,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextParagraph(
+              text: tr.banner_study_closed_title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextParagraph(
+              text: tr.banner_study_closed_description,
+            ),
+          ],
+        ),
+        style: BannerStyle.info,
+      );
+    }
+    return null;
+  }
+
   Widget _inviteCodesSectionHeader(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
@@ -69,18 +97,23 @@ class StudyRecruitScreen extends StudyPageWidget {
   }
 
   Widget _newInviteCodeButton(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(studyRecruitControllerProvider(studyId));
+    final isStudyClosed = state.studyWithMetadata?.model.isClosed == true;
+
     return PrimaryButton(
       text: tr.action_button_code_new,
-      onPressed: () {
-        final formViewModel =
-            ref.read(inviteCodeFormViewModelProvider(studyId));
-        showFormSideSheet<InviteCodeFormViewModel>(
-          context: context,
-          formViewModel: formViewModel,
-          formViewBuilder: (formViewModel) =>
-              InviteCodeFormView(formViewModel: formViewModel),
-        );
-      },
+      onPressed: isStudyClosed
+          ? null
+          : () {
+              final formViewModel =
+                  ref.read(inviteCodeFormViewModelProvider(studyId));
+              showFormSideSheet<InviteCodeFormViewModel>(
+                context: context,
+                formViewModel: formViewModel,
+                formViewBuilder: (formViewModel) =>
+                    InviteCodeFormView(formViewModel: formViewModel),
+              );
+            },
     );
   }
 
