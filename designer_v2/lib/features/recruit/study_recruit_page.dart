@@ -33,8 +33,8 @@ class StudyRecruitScreen extends StudyPageWidget {
           _inviteCodesSectionHeader(context, ref),
           const SizedBox(height: 24.0), // spacing between body elements
           StudyInvitesTable(
-            invites:
-                studyInvites!, // otherwise falls through to [AsyncValueWidget.empty]
+            invites: studyInvites!,
+            // otherwise falls through to [AsyncValueWidget.empty]
             onSelect: _onSelectInvite(context, ref),
             getActions: controller.availableActions,
             getInlineActions: controller.availableInlineActions,
@@ -59,25 +59,26 @@ class StudyRecruitScreen extends StudyPageWidget {
   @override
   Widget? banner(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyRecruitControllerProvider(studyId));
-    final isStudyClosed = state.studyWithMetadata?.model.isClosed == true;
+    final isStudyClosed = state.studyWithMetadata?.model.isClosed;
 
-    if (isStudyClosed) {
+    if (isStudyClosed ?? false) {
       return BannerBox(
-          noPrefix: true,
-          body: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextParagraph(
-                  text: tr.banner_study_closed_title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                TextParagraph(
-                  text: tr.banner_study_closed_description,
-                ),
-              ],),
-          style: BannerStyle.info,);
+        noPrefix: true,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextParagraph(
+              text: tr.banner_study_closed_title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextParagraph(
+              text: tr.banner_study_closed_description,
+            ),
+          ],
+        ),
+        style: BannerStyle.info,
+      );
     }
-
     return null;
   }
 

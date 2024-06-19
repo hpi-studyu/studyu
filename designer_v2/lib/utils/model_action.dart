@@ -17,9 +17,10 @@ class ModelAction<T> {
     required this.label,
     required this.onExecute,
     this.isSeparator = false,
-      this.isAvailable = true,
-      this.isDestructive = false,
-      this.icon,});
+    this.isAvailable = true,
+    this.isDestructive = false,
+    this.icon,
+  });
 
   static ModelAction addSeparator() {
     return ModelAction(

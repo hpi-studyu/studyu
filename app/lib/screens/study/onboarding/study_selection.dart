@@ -172,10 +172,6 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             child: StudyTile.fromStudy(
                               study: study,
                               onTap: () async {
-                                if (study.isClosed) {
-                                  await showStudyClosedDialog(context);
-                                  return;
-                                }
                                 await navigateToStudyOverview(context, study);
                               },
                             ),

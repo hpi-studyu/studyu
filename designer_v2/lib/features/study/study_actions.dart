@@ -11,5 +11,4 @@ Map<StudyActionType, IconData> studyActionIcons = {
   StudyActionType.addCollaborator: Icons.person_add_rounded,
   StudyActionType.export: Icons.download_rounded,
   StudyActionType.delete: Icons.delete_rounded,
-  StudyActionType.close: MdiIcons.accountLock,
 };

@@ -19,9 +19,6 @@ class Notifications {
   static final studyDeleted = SnackbarIntent(
     message: tr.notification_study_deleted,
   );
-  static final studyClosed = SnackbarIntent(
-    message: tr.notification_study_closed,
-  );
   static final inviteCodeDeleted = SnackbarIntent(
     message: tr.notification_code_deleted,
   );
@@ -35,10 +32,11 @@ class Notifications {
     actions: [NotificationDefaultActions.cancel],
   );
   static final studyCloseConfirmation = AlertIntent(
-      title: tr.dialog_study_close_title,
-      message: tr.dialog_study_close_description,
-      icon: MdiIcons.accountLock,
-      actions: [NotificationDefaultActions.cancel],);
+    title: tr.dialog_study_close_title,
+    message: tr.dialog_study_close_description,
+    icon: MdiIcons.accountLock,
+    actions: [NotificationDefaultActions.cancel],
+  );
 }
 
 class NotificationDefaultActions {
