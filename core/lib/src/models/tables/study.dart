@@ -45,7 +45,7 @@ class Study extends SupabaseObjectFunctions<Study>
   static const String baselineID = '__baseline';
   String id;
   String? title;
-  String? description;
+  String? description = '';
   @JsonKey(name: 'user_id')
   String userId;
   Participation participation = Participation.invite;
