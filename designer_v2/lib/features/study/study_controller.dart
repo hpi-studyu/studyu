@@ -61,7 +61,7 @@ class StudyController extends _$StudyController {
 
   Future closeStudy() {
     final study = state.study.value!;
-    return studyRepository.close(study);
+    return ref.read(studyRepositoryProvider).close(study);
   }
 
   void onChangeStudyParticipation() {
