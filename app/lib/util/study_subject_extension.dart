@@ -64,7 +64,7 @@ extension StudySubjectExtension on StudySubject {
     } else {
       p = await p.save();
       progress.add(p);
-      await save();
+      await save(onlyUpdate: true);
     }
   }
 }

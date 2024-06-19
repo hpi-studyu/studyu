@@ -20,6 +20,7 @@ import 'package:studyu_designer_v2/utils/performance.dart';
 abstract class IStudyRepository implements ModelRepository<Study> {
   Future<void> launch(Study study);
   Future<void> deleteParticipants(Study study);
+  Future<void> close(Study study);
   // Future<void> deleteProgress(Study study);
 }
 
@@ -115,6 +116,27 @@ class StudyRepository extends ModelRepository<Study>
   }
 
   @override
+  Future<void> close(Study study) async {
+    final wrappedModel = get(study.id);
+    if (wrappedModel == null) {
+      throw ModelNotFoundException();
+    }
+    study.status = StudyStatus.closed;
+
+    final publishOperation = OptimisticUpdate(
+      applyOptimistic: () => {}, // nothing to do here
+      apply: () => save(study, runOptimistically: false),
+      rollback: () {}, // nothing to do here
+      onUpdate: () => emitUpdate(),
+      onError: (e, stackTrace) {
+        emitError(modelStreamControllers[study.id], e, stackTrace);
+      },
+    );
+
+    return publishOperation.execute();
+  }
+
+  @override
   List<ModelAction> availableActions(Study model) {
     Future<void> onDeleteCallback() {
       return delete(model.id)
@@ -189,6 +211,7 @@ class StudyRepository extends ModelRepository<Study>
         },
         isAvailable: model.canExport(currentUser),
       ),
+      if (model.canDelete(currentUser)) ModelAction.addSeparator(),
       ModelAction(
         type: StudyActionType.delete,
         label: StudyActionType.delete.string,

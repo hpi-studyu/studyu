@@ -87,6 +87,11 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     return studyRepository.launch(study);
   }
 
+  Future closeStudy() {
+    final study = state.study.value!;
+    return studyRepository.close(study);
+  }
+
   void onChangeStudyParticipation() {
     router.dispatch(RoutingIntents.studyEditEnrollment(studyId));
   }
@@ -116,7 +121,6 @@ final studyControllerProvider = StateNotifierProvider.autoDispose
     currentUser: ref.watch(authRepositoryProvider).currentUser,
     router: ref.watch(routerProvider),
     notificationService: ref.watch(notificationServiceProvider),
-    //ref: ref,
   );
   controller.addListener((state) {
     print("studyController.state updated");

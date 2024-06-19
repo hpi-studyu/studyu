@@ -291,14 +291,17 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       progress.map((p) => p.setStartDateBackBy(days: days).toJson()).toList(),
     );
     startedAt = startedAt!.subtract(Duration(days: days));
-    save();
+    save(onlyUpdate: true);
   }
 
   @override
-  Future<StudySubject> save() async {
+  Future<StudySubject> save({bool onlyUpdate = false}) async {
     try {
-      final response =
-          await env.client.from(tableName).upsert(toJson()).select();
+      final tableQuery = env.client.from(tableName);
+      final query = onlyUpdate
+          ? tableQuery.update(toJson()).eq("id", id)
+          : tableQuery.upsert(toJson());
+      final response = await query.select();
       final json = toFullJson(
         partialJson: List<Map<String, dynamic>>.from(response).single,
       );
@@ -370,7 +373,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   Future<StudySubject> softDelete() {
     isDeleted = true;
-    return save();
+    return save(onlyUpdate: true);
   }
 
   static Future<List<StudySubject>> getStudyHistory(String userId) async {

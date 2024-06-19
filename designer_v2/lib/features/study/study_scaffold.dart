@@ -6,13 +6,14 @@ import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
+import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/sync_indicator.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
+import 'package:studyu_designer_v2/features/dialogs/study_dialogs.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/features/publish/study_publish_dialog.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_navbar.dart';
@@ -24,8 +25,12 @@ import 'package:studyu_designer_v2/theme.dart';
 abstract class IStudyAppBarViewModel
     implements IStudyStatusBadgeViewModel, IStudyNavViewModel {
   bool get isSyncIndicatorVisible;
+
   bool get isStatusBadgeVisible;
+
   bool get isPublishVisible;
+
+  bool get isClosedVisible;
 }
 
 /// Custom scaffold shared between all pages for an individual [Study]
@@ -241,12 +246,40 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                   "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
               icon: null,
               enabled: formViewModel.isValid,
-              onPressed: () => showPublishDialog(context, widget.studyId),
+              onPressed: () => showStudyDialog(
+                context,
+                widget.studyId,
+                StudyDialogType.publish,
+              ),
             );
           },
         ),
       );
       actionButtons.add(publishButton);
+      actionButtons.add(const SizedBox(width: 12.0)); // padding
+    }
+
+    if (state.isClosedVisible) {
+      final formViewModel =
+          ref.watch(studyPublishValidatorProvider(widget.studyId));
+      final closeButton = ReactiveForm(
+        formGroup: formViewModel.form,
+        child: ReactiveFormConsumer(
+          // enable re-rendering based on form validation status
+          builder: (context, form, child) {
+            return SecondaryButton(
+              text: tr.action_button_study_close,
+              icon: null,
+              onPressed: () => showStudyDialog(
+                context,
+                widget.studyId,
+                StudyDialogType.close,
+              ),
+            );
+          },
+        ),
+      );
+      actionButtons.add(closeButton);
       actionButtons.add(const SizedBox(width: 12.0)); // padding
     }
 
