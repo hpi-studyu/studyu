@@ -1,5 +1,3 @@
--- todo move to studyu-schema.sql
-
 CREATE TYPE public.study_status AS ENUM (
     'draft',
     'running',
@@ -26,26 +24,8 @@ DROP POLICY "Everybody can view designated published studies" ON public.study;
 CREATE POLICY "Study visibility" ON public.study FOR SELECT
 USING ((status = 'running'::public.study_status OR status = 'closed'::public.study_status)
 AND (registry_published = true OR participation = 'open'::public.participation OR result_sharing = 'public'::public.result_sharing));
--- todo should we allow draft studies in registry if they have been published?
 
 CREATE POLICY "Editors can view their studies" ON public.study FOR SELECT USING (auth.uid() = user_id);
-
---CREATE POLICY "Editor can control their draft studies" ON public.study
-    -- old --USING (public.can_edit(auth.uid(), study.*) AND status = 'draft'::public.study_status);
---    USING (public.can_edit(auth.uid(), study.*));
-
--- Editors can only update registry_published and resultSharing
---grant update (registry_published, result_sharing) on public.study USING (public.can_edit(auth.uid(), study.*);
---CREATE POLICY "Editors can only update registry_published and resultSharing" ON public.study
---    FOR UPDATE
---    USING (public.can_edit(auth.uid(), study.*))
---    WITH CHECK ((new.*) IS NOT DISTINCT FROM (old.* EXCEPT registry_published, result_sharing));
--- t odo solve with trigger or function
--- or create view with only updatable columns and provide permission on view see https://dba.stackexchange.com/questions/298931/allow-users-to-modify-only-some-but-not-all-fields-in-a-postgresql-table-with
-
--- https://stackoverflow.com/questions/72756376/supabase-solutions-for-column-level-security
-
--- https://github.com/orgs/supabase/discussions/656#discussioncomment-5594653
 
 CREATE OR REPLACE FUNCTION public.allow_updating_only_study()
  RETURNS trigger
@@ -124,28 +104,6 @@ CREATE OR REPLACE TRIGGER study_status_update_permissions
   ON public.study
   FOR EACH ROW
   EXECUTE FUNCTION public.allow_updating_only_study('updated_at', 'status', 'registry_published', 'result_sharing');
-  -- todo also add participation?
-
--- Owners can update status
---CREATE FUNCTION public.update_study_status(study_param public.study) RETURNS VOID
---    LANGUAGE plpgsql -- SECURITY DEFINER
---    AS $$
---BEGIN
-    --IF study_param.user_id != auth.uid() THEN
-    --    RAISE EXCEPTION 'Only the owner can update the status';
-    --END IF;
-    -- Increment the study.status
---    UPDATE public.study
---    SET status = CASE
---        WHEN study_param.status = 'draft'::public.study_status THEN 'running'::public.study_status
---        WHEN study_param.status = 'running'::public.study_status THEN 'closed'::public.study_status
---        ELSE study_param.status
---    END
---    WHERE id = study_param.id;
---END;
---$$;
-
---ALTER FUNCTION public.update_study_status(public.study) OWNER TO postgres;
 
 CREATE POLICY "Joining a closed study should not be possible" ON public.study_subject
     AS RESTRICTIVE
