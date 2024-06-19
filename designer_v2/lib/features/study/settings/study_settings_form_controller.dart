@@ -102,7 +102,9 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
 });*/
 @riverpod
 StudySettingsFormViewModel studySettingsFormViewModel(
-    StudySettingsFormViewModelRef ref, String studyId) {
+  StudySettingsFormViewModelRef ref,
+  String studyId,
+) {
   final state = ref.watch(studyControllerProvider(studyId));
   final formViewModel = StudySettingsFormViewModel(
     studyRepository: ref.watch(studyRepositoryProvider),
