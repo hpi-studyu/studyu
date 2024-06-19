@@ -43,10 +43,10 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   );
   final codeControlValidationMessages = {
     ValidationMessage.required: (_) => tr.form_field_code_required,
-    ValidationMessage.minLength: (error) => tr
-        .form_field_code_minlength((error as Map)['requiredLength'] as String),
-    ValidationMessage.maxLength: (error) => tr
-        .form_field_code_maxlength((error as Map)['requiredLength'] as String),
+    ValidationMessage.minLength: (error) =>
+        tr.form_field_code_minlength((error as Map)['requiredLength'] as int),
+    ValidationMessage.maxLength: (error) =>
+        tr.form_field_code_maxlength((error as Map)['requiredLength'] as int),
     'inviteCodeAlreadyUsed': (_) => tr.form_field_code_alreadyused,
   };
 
