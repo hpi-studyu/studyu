@@ -11,7 +11,6 @@ import 'package:studyu_designer_v2/features/study/study_test_controls.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
-import 'package:studyu_designer_v2/utils/debug_print.dart';
 
 class PreviewFrame extends ConsumerStatefulWidget {
   const PreviewFrame(
@@ -44,7 +43,7 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
   }
 
   void _subscribeStudyChanges() {
-    debugLog('Subscribing to form changes in test frame');
+    // debugLog('Subscribing to form changes in test frame');
     final formViewModelCurrent =
         ref.read(studyFormViewModelProvider(widget.studyId));
     formViewModelCurrent.form.valueChanges.listen((event) {

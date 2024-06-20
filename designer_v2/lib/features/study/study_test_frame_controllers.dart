@@ -7,7 +7,6 @@ import 'dart:ui_web' as ui_web;
 import 'package:flutter/material.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
-import 'package:studyu_designer_v2/utils/debug_print.dart';
 
 class RouteInformation {
   String? route;
@@ -54,7 +53,7 @@ class WebController extends PlatformController {
   void activate() {
     if (baseSrc == '') return;
     final key = UniqueKey();
-    debugLog("Register view with: $previewSrc");
+    // debugLog("Register view with: $previewSrc");
     registerViews(key);
     frameWidget = WebFrame(previewSrc, studyId, key: key);
   }
@@ -100,7 +99,7 @@ class WebController extends PlatformController {
     //if (frame != null) {
     // iFrameElement = frame;
     if (iFrameElement.src != previewSrc) {
-      debugLog("*********NAVIGATE TO: $previewSrc");
+      // debugLog("*********NAVIGATE TO: $previewSrc");
       iFrameElement.src = previewSrc;
       //iFrameElement.src = newPrev;
     } /* else {
@@ -137,7 +136,7 @@ class WebController extends PlatformController {
     html.window.onMessage.listen((event) {
       final data = event.data;
       if (data == 'routeFinished') {
-        debugLog("Preview route finished");
+        // debugLog("Preview route finished");
         refresh();
       }
     });
@@ -145,7 +144,7 @@ class WebController extends PlatformController {
 
   @override
   void send(String message) {
-    debugLog("Send updated study to client");
+    // debugLog("Send updated study to client");
     // Send to all windows for debugging
     // iFrameElement.contentWindow?.postMessage(message, '*');
     iFrameElement.contentWindow?.postMessage(message, env.appUrl ?? '');
