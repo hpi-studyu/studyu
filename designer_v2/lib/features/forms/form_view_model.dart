@@ -48,6 +48,14 @@ typedef FormControlUpdateFutureBuilder = Future Function(
   AbstractControl control,
 );
 
+/// This class represents a form view model.
+///
+/// It provides methods and properties to manage the state of a form,
+/// including validation, autosave, and form mode (create, edit, readonly).
+/// It also provides methods to save and cancel changes to the form.
+///
+/// This class is designed to be extended by other classes that provide
+/// specific implementations for different types of forms.
 abstract class FormViewModel<T> implements IFormGroupController {
   FormViewModel({
     T? formData,
@@ -151,6 +159,18 @@ abstract class FormViewModel<T> implements IFormGroupController {
   /// Key used internally for storing properties of the [form] itself
   static const _formKey = '__form';
 
+  /// Sets the form data and updates the form controls.
+  ///
+  /// This method is used to set the form data (`_formData`) and then update the form controls
+  /// to reflect the new data. It does this by calling the `setControlsFrom` method, which
+  /// is responsible for updating the form controls based on the provided data.
+  ///
+  /// After updating the form controls, it also updates the `prevFormValue` property to store
+  /// the current state of the form. This is used later to determine if the form is dirty
+  /// (i.e., if the form data has changed since it was last set).
+  ///
+  /// Finally, it calls the `form.updateValueAndValidity` method to ensure that the form's
+  /// value and validity state are correctly updated after the form controls have been changed.
   void _setFormData(T? formData) {
     _formData = formData;
     if (formData != null) {
@@ -198,6 +218,24 @@ abstract class FormViewModel<T> implements IFormGroupController {
     assert(form.allControlsDisabled());
   }
 
+  /// Restores the enabled/disabled state of each form control.
+  ///
+  /// This method is used to restore the enabled/disabled state of each form control
+  /// to its default state. It does this by iterating over each control in the form
+  /// and checking the `_defaultControlStates` map, which stores the default state
+  /// for each control.
+  ///
+  /// If a control's default state is enabled, it calls `control.markAsEnabled`.
+  /// If a control's default state is disabled, it calls `control.markAsDisabled`.
+  ///
+  /// This method is typically called when the form mode changes. For example, when
+  /// switching from edit mode to read-only mode, all controls are disabled. When
+  /// switching back to edit mode, this method is used to restore the controls to
+  /// their original states.
+  ///
+  /// The `emitEvent` and `updateParent` parameters are used to control whether
+  /// changing the state of a control should emit an event and whether it should
+  /// update the state of its parent control.
   void _restoreControlStates({
     bool emitEvent = true,
     bool updateParent = true,
@@ -371,6 +409,22 @@ abstract class FormViewModel<T> implements IFormGroupController {
     return Future.value();
   }
 
+  /// Enables the autosave functionality for the form.
+  ///
+  /// This method sets up the form to automatically save its data whenever any changes are made to the form controls.
+  /// It does this by setting up a listener for each form control's `valueChanges` stream and initiating a save operation
+  /// whenever a form control's value changes.
+  ///
+  /// The `debounce` parameter is used to specify the delay (in milliseconds) before the save operation is triggered
+  /// after the last change to the form controls. This is useful to prevent excessive save operations if the form controls
+  /// are being updated frequently.
+  ///
+  /// The `onlyValid` parameter is not used in the current implementation.
+  ///
+  /// If there are any existing subscriptions to the form control's value changes (i.e., if autosave has already been enabled),
+  /// this method returns immediately to avoid setting up autosave multiple times.
+  ///
+  /// The save operation is wrapped in a `CancelableOperation` to allow it to be cancelled if necessary.
   void enableAutosave({
     int debounce = Config.formAutosaveDebounce,
     bool onlyValid = true,

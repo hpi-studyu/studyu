@@ -168,7 +168,7 @@ class StudyFormViewModel extends FormViewModel<Study>
 }
 
 /// Provides the [FormViewModel] that is responsible for displaying and
-/// editing the survey design form.
+/// editing the study design form.
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
