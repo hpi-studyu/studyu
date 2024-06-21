@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/domain/study_monitoring.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class StudyMonitorTable extends ConsumerWidget {
   final WidgetRef ref;
