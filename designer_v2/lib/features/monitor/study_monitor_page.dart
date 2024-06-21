@@ -20,49 +20,147 @@ class StudyMonitorScreen extends StudyPageWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyControllerProvider(studyId));
     return AsyncValueWidget<Study>(
-        value: state.study,
-        data: (study) {
-          final studyMonitorData = study.monitorData;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _monitorSectionHeader(context, studyMonitorData),
-              const SizedBox(height: 40.0), // spacing between body elements
-              if (studyMonitorData.items.isNotEmpty) StudyMonitorTable(
-                      ref: ref,
-                      studyMonitorItems: studyMonitorData.items,
-                      onSelectItem: (item) => _onSelectParticipant(context, ref, item, study),
-                    ) else EmptyBody(
-                      icon: Icons.person_off_rounded,
-                      title: tr.monitoring_no_participants_title,
-                      description: tr.monitoring_no_participants_description,),
-            ],
-          );
-        },);
+      value: state.study,
+      data: (study) {
+        final studyMonitorData = study.monitorData;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _monitorSectionHeader(context, studyMonitorData),
+            const SizedBox(height: 40.0), // spacing between body elements
+            if (studyMonitorData.items.isNotEmpty)
+              StudyMonitorTable(
+                ref: ref,
+                studyMonitorItems: studyMonitorData.items,
+                onSelectItem: (item) =>
+                    _onSelectParticipant(context, ref, item, study),
+              )
+            else
+              EmptyBody(
+                icon: Icons.person_off_rounded,
+                title: tr.monitoring_no_participants_title,
+                description: tr.monitoring_no_participants_description,
+              ),
+          ],
+        );
+      },
+    );
   }
 
-  Widget _monitorSectionHeader(BuildContext context, StudyMonitorData monitorData) {
-    final enrolled =
-        monitorData.activeParticipants + monitorData.dropoutParticipants + monitorData.completedParticipants;
+  Widget _monitorSectionHeader(
+      BuildContext context, StudyMonitorData monitorData) {
+    final int total = monitorData.items.length;
+    const double minPercentage = 0.05; // Minimum percentage for visibility
+
+    double activePercentage = monitorData.activeParticipants / total;
+    double inactivePercentage = monitorData.inactiveParticipants / total;
+    double dropoutPercentage = monitorData.dropoutParticipants / total;
+    double completedPercentage = monitorData.completedParticipants / total;
+
+    // Adjust for minimum percentage visibility
+    if (monitorData.activeParticipants == 0) activePercentage = minPercentage;
+    if (monitorData.inactiveParticipants == 0) {
+      inactivePercentage = minPercentage;
+    }
+    if (monitorData.dropoutParticipants == 0) dropoutPercentage = minPercentage;
+    if (monitorData.completedParticipants == 0) {
+      completedPercentage = minPercentage;
+    }
+
+    // Normalize the percentages so they add up to 1.0
+    final double sumOfPercentages = activePercentage +
+        inactivePercentage +
+        dropoutPercentage +
+        completedPercentage;
+
+    activePercentage /= sumOfPercentages;
+    inactivePercentage /= sumOfPercentages;
+    dropoutPercentage /= sumOfPercentages;
+    completedPercentage /= sumOfPercentages;
+
+    const Color activeColor = Color(0xFF2ECC71);
+    const Color inactiveColor = Color(0xFFE74C3C);
+    const Color dropoutColor = Color(0xFFF39C12);
+    const Color completedColor = Color(0xFFF1C40F);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SelectableText(tr.monitoring_participants_title, style: Theme.of(context).textTheme.headlineSmall),
+        SelectableText(tr.monitoring_participants_title,
+            style: Theme.of(context).textTheme.headlineSmall),
         const Spacer(),
-        Expanded(
-          child: Row(
+        SizedBox(
+          width: 420,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Expanded(
-                  child: _buildStat(context, tr.monitoring_active, tr.monitoring_active_tooltip,
-                      monitorData.activeParticipants, enrolled,),),
-              const SizedBox(width: 20.0),
-              Expanded(
-                  child: _buildStat(context, tr.monitoring_dropout, tr.monitoring_dropout_tooltip,
-                      monitorData.dropoutParticipants, enrolled,),),
-              const SizedBox(width: 20.0),
-              Expanded(
-                  child: _buildStat(context, tr.monitoring_completed, tr.monitoring_completed_tooltip,
-                      monitorData.completedParticipants, enrolled,),),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Positioned(
+                    right: 0,
+                    top: 0,
+                    child: Text('${tr.monitoring_total}: $total'),
+                  ),
+                ],
+              ),
+              Stack(
+                children: [
+                  Row(
+                    children: [
+                      const Spacer(),
+                      _buildStat(
+                        percentage: activePercentage,
+                        color: activeColor,
+                        tooltip: tr.monitoring_active,
+                      ),
+                      _buildStat(
+                        percentage: inactivePercentage,
+                        color: inactiveColor,
+                        tooltip: tr.monitoring_inactive,
+                      ),
+                      _buildStat(
+                        percentage: dropoutPercentage,
+                        color: dropoutColor,
+                        tooltip: tr.monitoring_dropout,
+                      ),
+                      _buildStat(
+                        percentage: completedPercentage,
+                        color: completedColor,
+                        tooltip: tr.monitoring_completed,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildLegend(
+                      color: activeColor,
+                      text:
+                          '${tr.monitoring_active}: ${monitorData.activeParticipants}',
+                      tooltip: tr.monitoring_active_tooltip),
+                  const SizedBox(width: 10),
+                  _buildLegend(
+                      color: inactiveColor,
+                      text:
+                          '${tr.monitoring_inactive}: ${monitorData.inactiveParticipants}',
+                      tooltip: tr.monitoring_inactive_tooltip),
+                  const SizedBox(width: 10),
+                  _buildLegend(
+                      color: dropoutColor,
+                      text:
+                          '${tr.monitoring_dropout}: ${monitorData.dropoutParticipants}',
+                      tooltip: tr.monitoring_dropout_tooltip),
+                  const SizedBox(width: 10),
+                  _buildLegend(
+                      color: completedColor,
+                      text:
+                          '${tr.monitoring_completed}: ${monitorData.completedParticipants}',
+                      tooltip: tr.monitoring_completed_tooltip),
+                ],
+              ),
             ],
           ),
         ),
@@ -70,43 +168,57 @@ class StudyMonitorScreen extends StudyPageWidget {
     );
   }
 
-  Widget _buildStat(BuildContext context, String title, String tooltip, int value, int total) {
-    final theme = Theme.of(context);
+  Widget _buildStat(
+      {required double percentage,
+      required Color color,
+      required String tooltip}) {
+    return Expanded(
+        flex: (percentage * 1000).toInt(),
+        child: Tooltip(
+          message: tooltip,
+          child: Container(
+            height: 20,
+            color: color,
+          ),
+        ));
+  }
+
+  Widget _buildLegend(
+      {required Color color, required String text, required String tooltip}) {
     return Tooltip(
       message: tooltip,
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              Text("$title:"),
-              const SizedBox(width: 8.0),
-              Text("$value/$total", style: theme.textTheme.headlineSmall),
-            ],
+          Container(
+            width: 15,
+            height: 15,
+            color: color,
           ),
-          SizedBox(
-              height: 4.0,
-              child: LinearProgressIndicator(
-                value: total <= 0 ? 0 : value / total,
-                backgroundColor: theme.colorScheme.secondary.withOpacity(0.2),
-                valueColor: AlwaysStoppedAnimation(theme.colorScheme.secondary),
-              ),),
+          const SizedBox(width: 5),
+          Text(text),
         ],
       ),
     );
   }
 
-  _onSelectParticipant(BuildContext context, WidgetRef ref, StudyMonitorItem item, Study study) {
+  _onSelectParticipant(
+      BuildContext context, WidgetRef ref, StudyMonitorItem item, Study study) {
     // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
     showModalSideSheet(
       context: context,
       title: tr.participant_details_title,
       body: ParticipantDetailsView(
-          monitorItem: item, interventions: study.interventions, observations: study.observations,),
+        monitorItem: item,
+        interventions: study.interventions,
+        observations: study.observations,
+      ),
       actionButtons: [
-        retainSizeInAppBar(DismissButton(
-          text: tr.dialog_close,
-          onPressed: () => Navigator.maybePop(context),
-        ),),
+        retainSizeInAppBar(
+          DismissButton(
+            text: tr.dialog_close,
+            onPressed: () => Navigator.maybePop(context),
+          ),
+        ),
       ],
     );
   }

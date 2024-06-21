@@ -46,5 +46,7 @@ const String signupRouteName = 'signup';
 const String forgotPasswordRouteName = 'forgotPassword';
 const String recoverPasswordRouteName = 'recoverPassword';
 const String errorRouteName = 'error';
-final DateTime participantDropoutDuration = DateTime.now().subtract(const Duration(days: 7));
-
+final DateTime participantDropoutDuration =
+    DateTime.now().subtract(const Duration(days: 5));
+final DateTime participantInactiveDuration =
+    DateTime.now().subtract(const Duration(days: 3));

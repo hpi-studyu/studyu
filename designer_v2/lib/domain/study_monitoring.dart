@@ -9,6 +9,9 @@ class StudyMonitorData {
   /// Active means that the the study has not ended yet and the participant did not drop out
   final int activeParticipants;
 
+  // Number of participants who are currently inactive in the study for more than 3 days in a row
+  final int inactiveParticipants;
+
   /// Number of participants who dropped out of the study before the study ended
   /// Hint: The is_deleted flag in the study_subject database table marks a participant as dropped out
   /// Note: If the participant's last activity exceeds 7 days, they will also be counted as a dropout
@@ -23,6 +26,7 @@ class StudyMonitorData {
 
   const StudyMonitorData({
     required this.activeParticipants,
+    required this.inactiveParticipants,
     required this.dropoutParticipants,
     required this.completedParticipants,
     required this.items,
@@ -82,15 +86,18 @@ extension StudyMonitoringX on Study {
           .where((progress) => progress.subjectId == participant.id)
           .toList();
       progresses.sort(
-          (b, a) => a.completedAt!.compareTo(b.completedAt!),); // descending
+        (b, a) => a.completedAt!.compareTo(b.completedAt!),
+      ); // descending
       final interventionOrder = schedule
           .generateInterventionIdsInOrder(participant.selectedInterventionIds);
       final lastActivityAt = progresses.isNotEmpty
           ? progresses.first.completedAt!
           : participant.startedAt!;
       final studyDurationInDays = schedule.length;
-      final currentDayOfStudy = min(studyDurationInDays,
-          DateTime.now().toUtc().difference(participant.startedAt!).inDays,);
+      final currentDayOfStudy = min(
+        studyDurationInDays,
+        DateTime.now().toUtc().difference(participant.startedAt!).inDays,
+      );
       final daysInBaseline =
           schedule.includeBaseline ? schedule.phaseDuration : 0;
 
@@ -117,11 +124,14 @@ extension StudyMonitoringX on Study {
             requiredInterventionTaskIds.union(requiredSurveyTaskIds);
 
         final completedTaskIds = progresses
-            .where((p) =>
-                p.completedAt!
-                    .isAfter(participant.startedAt!.add(Duration(days: day))) &&
-                p.completedAt!.isBefore(
-                    participant.startedAt!.add(Duration(days: day + 1)),),)
+            .where(
+              (p) =>
+                  p.completedAt!.isAfter(
+                      participant.startedAt!.add(Duration(days: day))) &&
+                  p.completedAt!.isBefore(
+                    participant.startedAt!.add(Duration(days: day + 1)),
+                  ),
+            )
             .map((p) => p.taskId)
             .toSet();
 
@@ -147,40 +157,79 @@ extension StudyMonitoringX on Study {
       final missedInterventions = totalInterventions - completedInterventions;
       final missedSurveys = totalSurveys - completedSurveys;
 
-      items.add(StudyMonitorItem(
-        participantId: participant.id,
-        inviteCode: participant.inviteCode,
-        startedAt: participant.startedAt!,
-        lastActivityAt: lastActivityAt,
-        currentDayOfStudy: currentDayOfStudy,
-        studyDurationInDays: studyDurationInDays,
-        completedInterventions: completedInterventions,
-        missedInterventions: missedInterventions,
-        completedSurveys: completedSurveys,
-        missedSurveys: missedSurveys,
-        droppedOut: participant.isDeleted,
-        missedTasksPerDay: missedTasksPerDay,
-        completedTasksPerDay: completedTasksPerDay,
-      ),);
+      items.add(
+        StudyMonitorItem(
+          participantId: participant.id,
+          inviteCode: participant.inviteCode,
+          startedAt: participant.startedAt!,
+          lastActivityAt: lastActivityAt,
+          currentDayOfStudy: currentDayOfStudy,
+          studyDurationInDays: studyDurationInDays,
+          completedInterventions: completedInterventions,
+          missedInterventions: missedInterventions,
+          completedSurveys: completedSurveys,
+          missedSurveys: missedSurveys,
+          droppedOut: participant.isDeleted,
+          missedTasksPerDay: missedTasksPerDay,
+          completedTasksPerDay: completedTasksPerDay,
+        ),
+      );
     }
 
-    final activeParticipants = items.where((item) {
-      return !item.droppedOut &&
-          item.currentDayOfStudy < item.studyDurationInDays &&
-          item.lastActivityAt.isAfter(participantDropoutDuration);
-    }).length;
-    final dropoutParticipants = items.where((item) {
-      return item.droppedOut && item.lastActivityAt.isBefore(participantDropoutDuration);
-    }).length;
-    final completedParticipants = items
-        .where((item) => item.currentDayOfStudy >= item.studyDurationInDays)
-        .length;
+    int activeParticipants = 0;
+    int inactiveParticipants = 0;
+    int dropoutParticipants = 0;
+    int completedParticipants = 0;
 
-    assert(activeParticipants + dropoutParticipants + completedParticipants ==
-        items.length,);
+    items.forEach((item) {
+      if (!item.droppedOut) {
+        if (item.currentDayOfStudy < item.studyDurationInDays) {
+          if (item.lastActivityAt.isAfter(participantInactiveDuration)) {
+            activeParticipants += 1; // Active
+          } else {
+            inactiveParticipants += 1; // Inactive
+          }
+        } else {
+          completedParticipants += 1; // Completed
+        }
+      } else {
+        if (item.currentDayOfStudy < item.studyDurationInDays) {
+          if (item.lastActivityAt.isBefore(participantDropoutDuration)) {
+            dropoutParticipants += 1; // Dropout
+          }
+        } else {
+          dropoutParticipants += 1; // Dropout
+        }
+      }
+    });
+
+    print({'debug', dropoutParticipants});
+    print({
+      'debug',
+      {'active', activeParticipants},
+      {'inactive', inactiveParticipants},
+      {'dropout', dropoutParticipants},
+      {'completed', completedParticipants}
+    });
+    print({'debug:total', items.length});
+    print({
+      'debug:item': items.where((item) {
+        print({'item', item.currentDayOfStudy});
+        return true;
+      })
+    });
+
+    assert(
+      activeParticipants +
+              inactiveParticipants +
+              dropoutParticipants +
+              completedParticipants ==
+          items.length,
+    );
 
     return StudyMonitorData(
       activeParticipants: activeParticipants,
+      inactiveParticipants: inactiveParticipants,
       dropoutParticipants: dropoutParticipants,
       completedParticipants: completedParticipants,
       items: items,
