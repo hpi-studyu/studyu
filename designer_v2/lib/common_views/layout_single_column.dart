@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -38,11 +39,11 @@ class SingleColumnLayout extends StatefulWidget {
   final bool scroll;
   final EdgeInsets? padding;
 
-  static fromType({
+  factory SingleColumnLayout.fromType({
     required SingleColumnLayoutType type,
     required Widget body,
     required BuildContext context,
-    stickyHeader = false,
+    bool stickyHeader = false,
     Widget? header,
   }) {
     switch (type) {
@@ -75,7 +76,6 @@ class SingleColumnLayout extends StatefulWidget {
           body: body,
           header: header,
           stickyHeader: stickyHeader,
-          constraints: defaultConstraints,
         );
       case SingleColumnLayoutType.boundedNarrow:
         return SingleColumnLayout(
@@ -126,7 +126,8 @@ class _SingleColumnLayoutState extends State<SingleColumnLayout> {
       return Scrollbar(
         thumbVisibility: true,
         controller: _scrollController,
-        child: SingleChildScrollView(controller: _scrollController, child: child),
+        child:
+            SingleChildScrollView(controller: _scrollController, child: child),
       );
     }
 
@@ -136,7 +137,6 @@ class _SingleColumnLayoutState extends State<SingleColumnLayout> {
       }
       if (widget.header != null) {
         body = Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             widget.header!,
@@ -150,7 +150,6 @@ class _SingleColumnLayoutState extends State<SingleColumnLayout> {
       // non-sticky header
       if (widget.header != null) {
         body = Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             widget.header!,

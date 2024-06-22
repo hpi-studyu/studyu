@@ -30,11 +30,12 @@ class StudyController extends StudyBaseController<StudyControllerState> {
   final INotificationService notificationService;
   StreamSubscription<ModelEvent<Study>>? studyEventsSubscription;
 
-  syncStudyStatus() {
+  void syncStudyStatus() {
     if (studyEventsSubscription != null) {
       studyEventsSubscription?.cancel();
     }
-    studyEventsSubscription = studyRepository.watchChanges(studyId).listen((event) {
+    studyEventsSubscription =
+        studyRepository.watchChanges(studyId).listen((event) {
       if (event is IsSaving) {
         state = state.copyWith(
           syncState: const AsyncValue.loading(),
@@ -51,7 +52,7 @@ class StudyController extends StudyBaseController<StudyControllerState> {
   }
 
   @override
-  onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
+  void onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
     super.onStudySubscriptionUpdate(wrappedModel);
     final studyId = wrappedModel.model.id;
     _redirectNewToActualStudyID(studyId);
@@ -59,7 +60,7 @@ class StudyController extends StudyBaseController<StudyControllerState> {
 
   /// Redirect to the study-specific URL to avoid disposing a dirty controller
   /// when building subroutes
-  _redirectNewToActualStudyID(StudyID actualStudyId) {
+  void _redirectNewToActualStudyID(StudyID actualStudyId) {
     if (studyId == Config.newModelId) {
       router.dispatch(RoutingIntents.study(actualStudyId));
     }
@@ -72,14 +73,23 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     }
     // filter out edit action since we are already editing the study
     return withIcons(
-        studyRepository.availableActions(study).where((action) => action.type != StudyActionType.edit).toList(),
-        studyActionIcons);
+      studyRepository
+          .availableActions(study)
+          .where((action) => action.type != StudyActionType.edit)
+          .toList(),
+      studyActionIcons,
+    );
   }
 
-  Future publishStudy({toRegistry = false}) {
+  Future publishStudy({bool toRegistry = false}) {
     final study = state.study.value!;
     study.registryPublished = toRegistry;
     return studyRepository.launch(study);
+  }
+
+  Future closeStudy() {
+    final study = state.study.value!;
+    return studyRepository.close(study);
   }
 
   void onChangeStudyParticipation() {
@@ -95,15 +105,15 @@ class StudyController extends StudyBaseController<StudyControllerState> {
   }
 
   @override
-  dispose() {
+  void dispose() {
     studyEventsSubscription?.cancel();
     super.dispose();
   }
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
-final studyControllerProvider =
-    StateNotifierProvider.autoDispose.family<StudyController, StudyControllerState, StudyID>((ref, studyId) {
+final studyControllerProvider = StateNotifierProvider.autoDispose
+    .family<StudyController, StudyControllerState, StudyID>((ref, studyId) {
   print("studyControllerProvider($studyId)");
   final controller = StudyController(
     studyId: studyId,
@@ -111,7 +121,6 @@ final studyControllerProvider =
     currentUser: ref.watch(authRepositoryProvider).currentUser,
     router: ref.watch(routerProvider),
     notificationService: ref.watch(notificationServiceProvider),
-    //ref: ref,
   );
   controller.addListener((state) {
     print("studyController.state updated");

@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/reports/report_badge.dart';
 import 'package:studyu_designer_v2/features/design/reports/reports_form_data.dart';
+import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
@@ -16,8 +17,6 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
-
-import 'section/report_item_form_controller.dart';
 
 class StudyDesignReportsFormView extends StudyDesignPageWidget {
   const StudyDesignReportsFormView(super.studyId, {super.key});
@@ -35,7 +34,6 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
           formGroup: formViewModel.form,
           child: ReactiveFormConsumer(
             builder: (context, formGroup, child) => Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 TextParagraph(text: tr.form_array_report_items_description),
@@ -47,15 +45,28 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                       control: formViewModel.reportItemArray,
                       items: formViewModel.reportItemModels,
                       onSelectItem: (viewModel) {
-                        final routeArgs = formViewModel.buildReportItemFormRouteArgs(viewModel);
-                        _showReportItemSidesheetWithArgs(routeArgs, context, ref);
+                        final routeArgs = formViewModel
+                            .buildReportItemFormRouteArgs(viewModel);
+                        _showReportItemSidesheetWithArgs(
+                          routeArgs,
+                          context,
+                          ref,
+                        );
                       },
-                      getActionsAt: (viewModel, _) => formViewModel.reportItemDelegate.availableActions(viewModel),
+                      getActionsAt: (viewModel, _) => formViewModel
+                          .reportItemDelegate
+                          .availableActions(viewModel),
                       onNewItem: () {
-                        final routeArgs = formViewModel.buildNewReportItemFormRouteArgs();
-                        _showReportItemSidesheetWithArgs(routeArgs, context, ref);
+                        final routeArgs =
+                            formViewModel.buildNewReportItemFormRouteArgs();
+                        _showReportItemSidesheetWithArgs(
+                          routeArgs,
+                          context,
+                          ref,
+                        );
                       },
-                      rowTitle: (viewModel) => viewModel.formData?.section.title ?? '',
+                      rowTitle: (viewModel) =>
+                          viewModel.formData?.section.title ?? '',
                       //rowTitle: (viewModel) => viewModel.formData?.title ?? '',
                       //sectionDescription: tr.form_array_report_items_description,
                       sectionTitleDivider: false,
@@ -70,7 +81,9 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                             Text(
                               ''.alphabetLetterFrom(rowIdx).toUpperCase(),
                               style: TextStyle(
-                                color: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.color,
+                                color: ThemeConfig.dropdownMenuItemTheme(theme)
+                                    .iconTheme!
+                                    .color,
                               ),
                             ),
                             const SizedBox(width: 16.0),
@@ -81,9 +94,10 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                         return Row(
                           children: [
                             ReportBadge(
-                              status: (viewModel.formData!.isPrimary) ? ReportStatus.primary : ReportStatus.secondary,
+                              status: (viewModel.formData!.isPrimary)
+                                  ? ReportStatus.primary
+                                  : ReportStatus.secondary,
                               showPrefixIcon: false,
-                              showTooltip: true,
                             ),
                           ],
                         );
@@ -95,17 +109,20 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                             tr.form_array_report_items_title,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          (formViewModel.canTestConsent) // todo
-                              ? Opacity(
-                                  opacity: ThemeConfig.kMuteFadeFactor,
-                                  child: TextButton.icon(
-                                    //onPressed: formViewModel.testReport,
-                                    onPressed: null,
-                                    icon: const Icon(Icons.play_circle_outline_rounded),
-                                    label: Text(tr.form_array_report_items_test),
-                                  ),
-                                )
-                              : const SizedBox.shrink(),
+                          if (formViewModel.canTestConsent)
+                            Opacity(
+                              opacity: ThemeConfig.kMuteFadeFactor,
+                              child: TextButton.icon(
+                                //onPressed: formViewModel.testReport,
+                                onPressed: null,
+                                icon: const Icon(
+                                  Icons.play_circle_outline_rounded,
+                                ),
+                                label: Text(tr.form_array_report_items_test),
+                              ),
+                            )
+                          else
+                            const SizedBox.shrink(),
                         ],
                       ),
                     );
@@ -120,7 +137,7 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
   }
 
   // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
-  _showReportItemSidesheetWithArgs(
+  void _showReportItemSidesheetWithArgs(
     ReportItemFormRouteArgs routeArgs,
     BuildContext context,
     WidgetRef ref,
@@ -130,7 +147,8 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
     showFormSideSheet<ReportItemFormViewModel>(
       context: context,
       formViewModel: formViewModel,
-      formViewBuilder: (formViewModel) => ReportItemFormView(formViewModel: formViewModel, studyId: studyId),
+      formViewBuilder: (formViewModel) =>
+          ReportItemFormView(formViewModel: formViewModel, studyId: studyId),
     );
   }
 }

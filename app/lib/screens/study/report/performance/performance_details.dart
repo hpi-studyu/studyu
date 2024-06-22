@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
-
-import '../../../../routes.dart';
-import '../../../../widgets/intervention_card.dart';
 
 class PerformanceDetailsScreen extends StatelessWidget {
   final StudySubject? reportSubject;
 
-  static MaterialPageRoute routeFor({required StudySubject? subject}) => MaterialPageRoute(
+  static MaterialPageRoute routeFor({required StudySubject? subject}) =>
+      MaterialPageRoute(
         builder: (_) => PerformanceDetailsScreen(subject),
         settings: const RouteSettings(name: Routes.performanceDetails),
       );
@@ -18,8 +18,9 @@ class PerformanceDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final interventions =
-        reportSubject!.selectedInterventions.where((intervention) => !intervention.isBaseline()).toList();
+    final interventions = reportSubject!.selectedInterventions
+        .where((intervention) => !intervention.isBaseline())
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -35,15 +36,20 @@ class PerformanceDetailsScreen extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Text(AppLocalizations.of(context)!.performance_overview, style: theme.textTheme.titleMedium),
+                  child: Text(
+                    AppLocalizations.of(context)!.performance_overview,
+                    style: theme.textTheme.titleMedium,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      AppLocalizations.of(context)!.performance_overview_interventions,
-                      style: theme.textTheme.titleLarge!.copyWith(color: theme.primaryColor),
+                      AppLocalizations.of(context)!
+                          .performance_overview_interventions,
+                      style: theme.textTheme.titleLarge!
+                          .copyWith(color: theme.primaryColor),
                     ),
                   ),
                 ),
@@ -51,16 +57,20 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: interventions.length,
-                  itemBuilder: (context, index) =>
-                      InterventionPerformanceBar(subject: reportSubject, intervention: interventions[index]),
+                  itemBuilder: (context, index) => InterventionPerformanceBar(
+                    subject: reportSubject,
+                    intervention: interventions[index],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      AppLocalizations.of(context)!.performance_overview_observations,
-                      style: theme.textTheme.titleLarge!.copyWith(color: theme.primaryColor),
+                      AppLocalizations.of(context)!
+                          .performance_overview_observations,
+                      style: theme.textTheme.titleLarge!
+                          .copyWith(color: theme.primaryColor),
                     ),
                   ),
                 ),
@@ -86,7 +96,11 @@ class InterventionPerformanceBar extends StatelessWidget {
   final Intervention intervention;
   final StudySubject? subject;
 
-  const InterventionPerformanceBar({required this.intervention, required this.subject, super.key});
+  const InterventionPerformanceBar({
+    required this.intervention,
+    required this.subject,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +109,11 @@ class InterventionPerformanceBar extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            InterventionCard(intervention, showTasks: false, showDescription: false),
+            InterventionCard(
+              intervention,
+              showTasks: false,
+              showDescription: false,
+            ),
             const SizedBox(height: 8),
             ...intervention.tasks.map(
               (task) => PerformanceBar(
@@ -103,7 +121,7 @@ class InterventionPerformanceBar extends StatelessWidget {
                 completed: subject!.completedTasksFor(task),
                 total: subject!.totalTaskCountFor(task),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -115,7 +133,11 @@ class ObservationPerformanceBar extends StatelessWidget {
   final Observation observation;
   final StudySubject? subject;
 
-  const ObservationPerformanceBar({required this.observation, required this.subject, super.key});
+  const ObservationPerformanceBar({
+    required this.observation,
+    required this.subject,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +159,12 @@ class PerformanceBar extends StatelessWidget {
   final int completed;
   final int total;
 
-  const PerformanceBar({required this.task, required this.completed, required this.total, super.key});
+  const PerformanceBar({
+    required this.task,
+    required this.completed,
+    required this.total,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -163,9 +190,9 @@ class PerformanceBar extends StatelessWidget {
                 '${(completed / total * 100).toStringAsFixed(2).replaceAll('.00', '')} %',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-            )
+            ),
           ],
-        )
+        ),
       ],
     );
   }

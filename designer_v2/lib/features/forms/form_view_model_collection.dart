@@ -4,11 +4,17 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 
 /// Parent class for [FormViewModel]s that are managed in a [FormViewModelCollection]
 abstract class ManagedFormViewModel<T> extends FormViewModel<T> {
-  ManagedFormViewModel({super.delegate, super.formData, super.autosave, super.validationSet});
+  ManagedFormViewModel({
+    super.delegate,
+    super.formData,
+    super.autosave,
+    super.validationSet,
+  });
   ManagedFormViewModel<T> createDuplicate();
 }
 
-typedef FormViewModelCollectionIterablePredicate<T extends FormViewModel> = bool Function(T formViewModel);
+typedef FormViewModelCollectionIterablePredicate<T extends FormViewModel> = bool
+    Function(T formViewModel);
 
 class FormViewModelNotFoundException implements Exception {}
 
@@ -17,7 +23,8 @@ class FormViewModelNotFoundException implements Exception {}
 ///
 /// Enables reactive re-rendering of forms containing a [FormArray] that is
 /// derived from a list of [FormViewModel]s
-class FormViewModelCollection<T extends ManagedFormViewModel<D>, D extends IFormData> {
+class FormViewModelCollection<T extends ManagedFormViewModel<D>,
+    D extends IFormData> {
   FormViewModelCollection(this.formViewModels, this.formArray);
 
   List<T> formViewModels;
@@ -33,7 +40,8 @@ class FormViewModelCollection<T extends ManagedFormViewModel<D>, D extends IForm
 
   List<T> get retrievableViewModels => [...formViewModels, ...stagedViewModels];
 
-  List<D> get formData => formViewModels.map((vm) => vm.buildFormData()).toList();
+  List<D> get formData =>
+      formViewModels.map((vm) => vm.buildFormData()).toList();
 
   void add(T formViewModel) {
     if (formViewModels.contains(formViewModel)) {
@@ -45,7 +53,7 @@ class FormViewModelCollection<T extends ManagedFormViewModel<D>, D extends IForm
 
   T remove(T formViewModel) {
     // Remove by index since we cannot rely on object identity of [formViewModel.form]
-    int idx = formViewModels.indexOf(formViewModel);
+    final int idx = formViewModels.indexOf(formViewModel);
     if (idx == -1) {
       throw FormViewModelNotFoundException();
     }

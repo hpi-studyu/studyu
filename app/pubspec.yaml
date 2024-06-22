@@ -1,5 +1,5 @@
 name: studyu_app
-version: 2.7.5
+version: 2.7.6-dev.2
 description: Partake in digital N-of-1 trials with the innovative StudyU Health App
 publish_to: none
 homepage: https://studyu.health
@@ -7,8 +7,9 @@ repository: https://github.com/hpi-studyu/studyu
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
+
 dependencies:
-  camera: ^0.10.6
+  camera: ^0.11.0+1
   collection: ^1.18.0
   cross_file: ^0.3.4+1
   cupertino_icons: ^1.0.8
@@ -22,7 +23,7 @@ dependencies:
   flutter_timezone: ^1.0.8
   flutter_web_plugins:
     sdk: flutter
-  flutter_widget_from_html: ^0.15.0
+  flutter_widget_from_html: ^0.15.1
   intersperse: ^2.0.0
   intl: ^0.19.0
   material_design_icons_flutter: ^7.0.7296
@@ -34,18 +35,18 @@ dependencies:
   provider: ^6.1.2
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
-  record: ^5.0.5
-  sentry_flutter: ^8.1.0
-  sentry_logging: ^8.1.0
+  record: ^5.1.1
+  sentry_flutter: ^8.2.0
+  sentry_logging: ^8.2.0
   shared_preferences: ^2.2.3
-  studyu_core: ^4.4.2
-  studyu_flutter_common: ^1.8.3
-  supabase: ^2.1.2
-  supabase_flutter: ^2.5.2
+  studyu_core: ^4.4.3-dev.1
+  studyu_flutter_common: ^1.8.4-dev.1
+  supabase: ^2.2.1
+  supabase_flutter: ^2.5.5
   timeline_tile: ^2.0.0
   timezone: ^0.9.3
   universal_html: ^2.2.4
-  url_launcher: ^6.2.6
+  url_launcher: ^6.3.0
   uuid: ^4.4.0
   wakelock_plus: ^1.2.5
 
@@ -54,6 +55,7 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
+  lint: ^2.3.0
 
 dependency_overrides:
   intl: ^0.19.0
