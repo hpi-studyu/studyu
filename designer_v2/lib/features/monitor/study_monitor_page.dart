@@ -78,10 +78,10 @@ class StudyMonitorScreen extends StudyPageWidget {
     dropoutPercentage /= sumOfPercentages;
     completedPercentage /= sumOfPercentages;
 
-    const Color activeColor = Color(0xFF2ECC71);
-    const Color inactiveColor = Color(0xFFE74C3C);
-    const Color dropoutColor = Color(0xFFF39C12);
-    const Color completedColor = Color(0xFFF1C40F);
+    const Color activeColor = Color(0xFF0072B2);
+    const Color inactiveColor = Color(0xFFD55E00);
+    const Color dropoutColor = Color(0xFFCC79A7);
+    const Color completedColor = Color(0xFF009E73);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
