@@ -24,24 +24,21 @@ class StudyMonitorScreen extends StudyPageWidget {
         data: (study) {
           final studyMonitorData = study.monitorData;
           return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _monitorSectionHeader(context, studyMonitorData),
               const SizedBox(height: 40.0), // spacing between body elements
-              studyMonitorData.items.isNotEmpty
-                  ? StudyMonitorTable(
+              if (studyMonitorData.items.isNotEmpty) StudyMonitorTable(
                       ref: ref,
                       studyMonitorItems: studyMonitorData.items,
                       onSelectItem: (item) => _onSelectParticipant(context, ref, item, study),
-                    )
-                  : EmptyBody(
+                    ) else EmptyBody(
                       icon: Icons.person_off_rounded,
                       title: tr.monitoring_no_participants_title,
-                      description: tr.monitoring_no_participants_description),
+                      description: tr.monitoring_no_participants_description,),
             ],
           );
-        });
+        },);
   }
 
   Widget _monitorSectionHeader(BuildContext context, StudyMonitorData monitorData) {
@@ -57,15 +54,15 @@ class StudyMonitorScreen extends StudyPageWidget {
             children: [
               Expanded(
                   child: _buildStat(context, tr.monitoring_active, tr.monitoring_active_tooltip,
-                      monitorData.activeParticipants, enrolled)),
+                      monitorData.activeParticipants, enrolled,),),
               const SizedBox(width: 20.0),
               Expanded(
                   child: _buildStat(context, tr.monitoring_dropout, tr.monitoring_dropout_tooltip,
-                      monitorData.dropoutParticipants, enrolled)),
+                      monitorData.dropoutParticipants, enrolled,),),
               const SizedBox(width: 20.0),
               Expanded(
                   child: _buildStat(context, tr.monitoring_completed, tr.monitoring_completed_tooltip,
-                      monitorData.completedParticipants, enrolled)),
+                      monitorData.completedParticipants, enrolled,),),
             ],
           ),
         ),
@@ -92,7 +89,7 @@ class StudyMonitorScreen extends StudyPageWidget {
                 value: total <= 0 ? 0 : value / total,
                 backgroundColor: theme.colorScheme.secondary.withOpacity(0.2),
                 valueColor: AlwaysStoppedAnimation(theme.colorScheme.secondary),
-              )),
+              ),),
         ],
       ),
     );
@@ -104,12 +101,12 @@ class StudyMonitorScreen extends StudyPageWidget {
       context: context,
       title: tr.participant_details_title,
       body: ParticipantDetailsView(
-          monitorItem: item, interventions: study.interventions, observations: study.observations),
+          monitorItem: item, interventions: study.interventions, observations: study.observations,),
       actionButtons: [
         retainSizeInAppBar(DismissButton(
           text: tr.dialog_close,
           onPressed: () => Navigator.maybePop(context),
-        ))
+        ),),
       ],
     );
   }

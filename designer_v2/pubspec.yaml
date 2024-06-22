@@ -25,7 +25,7 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   go_router: ^14.1.4
-  intl: ^0.18.1
+  intl: ^0.19.0
   material_color_utilities: 0.8.0 # integration_test
   material_design_icons_flutter: ^7.0.7296
   pointer_interceptor: ^0.10.1+1

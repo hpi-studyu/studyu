@@ -82,7 +82,7 @@ extension StudyMonitoringX on Study {
           .where((progress) => progress.subjectId == participant.id)
           .toList();
       progresses.sort(
-          (b, a) => a.completedAt!.compareTo(b.completedAt!)); // descending
+          (b, a) => a.completedAt!.compareTo(b.completedAt!),); // descending
       final interventionOrder = schedule
           .generateInterventionIdsInOrder(participant.selectedInterventionIds);
       final lastActivityAt = progresses.isNotEmpty
@@ -90,7 +90,7 @@ extension StudyMonitoringX on Study {
           : participant.startedAt!;
       final studyDurationInDays = schedule.length;
       final currentDayOfStudy = min(studyDurationInDays,
-          DateTime.now().toUtc().difference(participant.startedAt!).inDays);
+          DateTime.now().toUtc().difference(participant.startedAt!).inDays,);
       final daysInBaseline =
           schedule.includeBaseline ? schedule.phaseDuration : 0;
 
@@ -121,7 +121,7 @@ extension StudyMonitoringX on Study {
                 p.completedAt!
                     .isAfter(participant.startedAt!.add(Duration(days: day))) &&
                 p.completedAt!.isBefore(
-                    participant.startedAt!.add(Duration(days: day + 1))))
+                    participant.startedAt!.add(Duration(days: day + 1)),),)
             .map((p) => p.taskId)
             .toSet();
 
@@ -161,7 +161,7 @@ extension StudyMonitoringX on Study {
         droppedOut: participant.isDeleted,
         missedTasksPerDay: missedTasksPerDay,
         completedTasksPerDay: completedTasksPerDay,
-      ));
+      ),);
     }
 
     final activeParticipants = items.where((item) {
@@ -177,7 +177,7 @@ extension StudyMonitoringX on Study {
         .length;
 
     assert(activeParticipants + dropoutParticipants + completedParticipants ==
-        items.length);
+        items.length,);
 
     return StudyMonitorData(
       activeParticipants: activeParticipants,

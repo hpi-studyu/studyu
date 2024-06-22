@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/domain/study_monitoring.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class StudyMonitorTable extends ConsumerWidget {
   final WidgetRef ref;
@@ -71,7 +71,6 @@ class StudyMonitorTable extends ConsumerWidget {
         ),
       ],
       buildCellsAt: _buildRow,
-      cellSpacing: 10.0,
       rowSpacing: 5.0,
       minRowHeight: 30.0,
       headerMaxLines: 2,
@@ -80,7 +79,7 @@ class StudyMonitorTable extends ConsumerWidget {
   }
 
   List<Widget> _buildRow(BuildContext context, StudyMonitorItem item,
-      int rowIdx, Set<MaterialState> states) {
+      int rowIdx, Set<WidgetState> states,) {
     final languageCode = ref.watch(localeProvider).languageCode;
     return [
       Tooltip(
@@ -130,9 +129,8 @@ class StudyMonitorTable extends ConsumerWidget {
           ),
         ),
         Align(
-          alignment: Alignment.center,
           child: Text("$progress/$total",
-              style: TextStyle(color: theme.colorScheme.onPrimary, fontWeight: FontWeight.bold)),
+              style: TextStyle(color: theme.colorScheme.onPrimary, fontWeight: FontWeight.bold),),
         ),
       ],
     );

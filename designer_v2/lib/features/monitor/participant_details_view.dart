@@ -12,7 +12,7 @@ class ParticipantDetailsView extends ConsumerWidget {
       {required this.monitorItem,
       required this.interventions,
       required this.observations,
-      super.key});
+      super.key,});
 
   final StudyMonitorItem monitorItem;
   final List<Intervention> interventions;
@@ -44,9 +44,9 @@ class ParticipantDetailsView extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildInfoRow(tr.monitoring_table_column_participant_id,
-            monitorItem.participantId),
+            monitorItem.participantId,),
         _buildInfoRow(tr.monitoring_table_column_invite_code,
-            monitorItem.inviteCode ?? '-'),
+            monitorItem.inviteCode ?? '-',),
         _buildInfoRow(
           tr.monitoring_table_column_enrolled,
           monitorItem.startedAt
@@ -74,12 +74,12 @@ class ParticipantDetailsView extends ConsumerWidget {
 
   Widget _buildPerDayStatus() {
     assert(monitorItem.missedTasksPerDay.length ==
-        monitorItem.completedTasksPerDay.length);
+        monitorItem.completedTasksPerDay.length,);
     return Wrap(
       children: monitorItem.missedTasksPerDay
           .mapIndexed((index, missed) => Tooltip(
                 message: _getTooltipText(
-                    missed, monitorItem.completedTasksPerDay[index]),
+                    missed, monitorItem.completedTasksPerDay[index],),
                 child: Container(
                   height: 50,
                   width: 50,
@@ -96,17 +96,17 @@ class ParticipantDetailsView extends ConsumerWidget {
                     child: Text(
                       (index + 1).toString(),
                       style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                          color: Colors.white, fontWeight: FontWeight.bold,),
                     ),
                   ),
                 ),
-              ))
+              ),)
           .toList(),
     );
   }
 
   String _getTooltipText(
-      Set<String> missedTaskIds, Set<String> completedTaskIds) {
+      Set<String> missedTaskIds, Set<String> completedTaskIds,) {
     final sb = StringBuffer();
     for (final intervention in interventions) {
       for (final task in intervention.tasks) {
@@ -139,13 +139,13 @@ class ParticipantDetailsView extends ConsumerWidget {
         Row(
           children: [
             _buildLegendItem(
-                Colors.green, tr.participant_details_color_legend_completed),
+                Colors.green, tr.participant_details_color_legend_completed,),
             const SizedBox(width: 16.0),
             _buildLegendItem(Colors.orange,
-                tr.participant_details_color_legend_partially_completed),
+                tr.participant_details_color_legend_partially_completed,),
             const SizedBox(width: 16.0),
             _buildLegendItem(
-                Colors.red, tr.participant_details_color_legend_missed),
+                Colors.red, tr.participant_details_color_legend_missed,),
           ],
         ),
       ],
