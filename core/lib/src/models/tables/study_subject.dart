@@ -75,8 +75,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   )   : id = const Uuid().v4(),
         studyId = study.id;
 
-  List<String> get interventionOrder => study.schedule
-            .generateInterventionIdsInOrder(selectedInterventionIds);
+  List<String> get interventionOrder =>
+      study.schedule.generateInterventionIdsInOrder(selectedInterventionIds);
 
   List<Intervention> get selectedInterventions {
     final selectedInterventions = selectedInterventionIds

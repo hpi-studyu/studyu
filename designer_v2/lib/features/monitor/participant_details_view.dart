@@ -8,11 +8,12 @@ import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class ParticipantDetailsView extends ConsumerWidget {
-  const ParticipantDetailsView(
-      {required this.monitorItem,
-      required this.interventions,
-      required this.observations,
-      super.key,});
+  const ParticipantDetailsView({
+    required this.monitorItem,
+    required this.interventions,
+    required this.observations,
+    super.key,
+  });
 
   final StudyMonitorItem monitorItem;
   final List<Intervention> interventions;
@@ -43,10 +44,14 @@ class ParticipantDetailsView extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildInfoRow(tr.monitoring_table_column_participant_id,
-            monitorItem.participantId,),
-        _buildInfoRow(tr.monitoring_table_column_invite_code,
-            monitorItem.inviteCode ?? '-',),
+        _buildInfoRow(
+          tr.monitoring_table_column_participant_id,
+          monitorItem.participantId,
+        ),
+        _buildInfoRow(
+          tr.monitoring_table_column_invite_code,
+          monitorItem.inviteCode ?? '-',
+        ),
         _buildInfoRow(
           tr.monitoring_table_column_enrolled,
           monitorItem.startedAt
@@ -73,40 +78,50 @@ class ParticipantDetailsView extends ConsumerWidget {
   }
 
   Widget _buildPerDayStatus() {
-    assert(monitorItem.missedTasksPerDay.length ==
-        monitorItem.completedTasksPerDay.length,);
+    assert(
+      monitorItem.missedTasksPerDay.length ==
+          monitorItem.completedTasksPerDay.length,
+    );
     return Wrap(
       children: monitorItem.missedTasksPerDay
-          .mapIndexed((index, missed) => Tooltip(
-                message: _getTooltipText(
-                    missed, monitorItem.completedTasksPerDay[index],),
-                child: Container(
-                  height: 50,
-                  width: 50,
-                  margin: const EdgeInsets.fromLTRB(0, 0, 8, 8),
-                  decoration: BoxDecoration(
-                    color: missed.isEmpty
-                        ? Colors.green
-                        : (monitorItem.completedTasksPerDay[index].isEmpty
-                            ? Colors.red
-                            : Colors.orange),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Center(
-                    child: Text(
-                      (index + 1).toString(),
-                      style: const TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold,),
+          .mapIndexed(
+            (index, missed) => Tooltip(
+              message: _getTooltipText(
+                missed,
+                monitorItem.completedTasksPerDay[index],
+              ),
+              child: Container(
+                height: 50,
+                width: 50,
+                margin: const EdgeInsets.fromLTRB(0, 0, 8, 8),
+                decoration: BoxDecoration(
+                  color: missed.isEmpty
+                      ? Colors.green
+                      : (monitorItem.completedTasksPerDay[index].isEmpty
+                          ? Colors.red
+                          : Colors.orange),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(
+                  child: Text(
+                    (index + 1).toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              ),)
+              ),
+            ),
+          )
           .toList(),
     );
   }
 
   String _getTooltipText(
-      Set<String> missedTaskIds, Set<String> completedTaskIds,) {
+    Set<String> missedTaskIds,
+    Set<String> completedTaskIds,
+  ) {
     final sb = StringBuffer();
     for (final intervention in interventions) {
       for (final task in intervention.tasks) {
@@ -139,13 +154,19 @@ class ParticipantDetailsView extends ConsumerWidget {
         Row(
           children: [
             _buildLegendItem(
-                Colors.green, tr.participant_details_color_legend_completed,),
-            const SizedBox(width: 16.0),
-            _buildLegendItem(Colors.orange,
-                tr.participant_details_color_legend_partially_completed,),
+              Colors.green,
+              tr.participant_details_color_legend_completed,
+            ),
             const SizedBox(width: 16.0),
             _buildLegendItem(
-                Colors.red, tr.participant_details_color_legend_missed,),
+              Colors.orange,
+              tr.participant_details_color_legend_partially_completed,
+            ),
+            const SizedBox(width: 16.0),
+            _buildLegendItem(
+              Colors.red,
+              tr.participant_details_color_legend_missed,
+            ),
           ],
         ),
       ],

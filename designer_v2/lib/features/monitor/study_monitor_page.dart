@@ -48,7 +48,9 @@ class StudyMonitorScreen extends StudyPageWidget {
   }
 
   Widget _monitorSectionHeader(
-      BuildContext context, StudyMonitorData monitorData) {
+    BuildContext context,
+    StudyMonitorData monitorData,
+  ) {
     final int total = monitorData.items.length;
     const double minPercentage = 0.05; // Minimum percentage for visibility
 
@@ -85,8 +87,10 @@ class StudyMonitorScreen extends StudyPageWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SelectableText(tr.monitoring_participants_title,
-            style: Theme.of(context).textTheme.headlineSmall),
+        SelectableText(
+          tr.monitoring_participants_title,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const Spacer(),
         SizedBox(
           width: 420,
@@ -137,28 +141,32 @@ class StudyMonitorScreen extends StudyPageWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _buildLegend(
-                      color: activeColor,
-                      text:
-                          '${tr.monitoring_active}: ${monitorData.activeParticipants}',
-                      tooltip: tr.monitoring_active_tooltip),
+                    color: activeColor,
+                    text:
+                        '${tr.monitoring_active}: ${monitorData.activeParticipants}',
+                    tooltip: tr.monitoring_active_tooltip,
+                  ),
                   const SizedBox(width: 10),
                   _buildLegend(
-                      color: inactiveColor,
-                      text:
-                          '${tr.monitoring_inactive}: ${monitorData.inactiveParticipants}',
-                      tooltip: tr.monitoring_inactive_tooltip),
+                    color: inactiveColor,
+                    text:
+                        '${tr.monitoring_inactive}: ${monitorData.inactiveParticipants}',
+                    tooltip: tr.monitoring_inactive_tooltip,
+                  ),
                   const SizedBox(width: 10),
                   _buildLegend(
-                      color: dropoutColor,
-                      text:
-                          '${tr.monitoring_dropout}: ${monitorData.dropoutParticipants}',
-                      tooltip: tr.monitoring_dropout_tooltip),
+                    color: dropoutColor,
+                    text:
+                        '${tr.monitoring_dropout}: ${monitorData.dropoutParticipants}',
+                    tooltip: tr.monitoring_dropout_tooltip,
+                  ),
                   const SizedBox(width: 10),
                   _buildLegend(
-                      color: completedColor,
-                      text:
-                          '${tr.monitoring_completed}: ${monitorData.completedParticipants}',
-                      tooltip: tr.monitoring_completed_tooltip),
+                    color: completedColor,
+                    text:
+                        '${tr.monitoring_completed}: ${monitorData.completedParticipants}',
+                    tooltip: tr.monitoring_completed_tooltip,
+                  ),
                 ],
               ),
             ],
@@ -168,23 +176,28 @@ class StudyMonitorScreen extends StudyPageWidget {
     );
   }
 
-  Widget _buildStat(
-      {required double percentage,
-      required Color color,
-      required String tooltip}) {
+  Widget _buildStat({
+    required double percentage,
+    required Color color,
+    required String tooltip,
+  }) {
     return Expanded(
-        flex: (percentage * 1000).toInt(),
-        child: Tooltip(
-          message: tooltip,
-          child: Container(
-            height: 20,
-            color: color,
-          ),
-        ));
+      flex: (percentage * 1000).toInt(),
+      child: Tooltip(
+        message: tooltip,
+        child: Container(
+          height: 20,
+          color: color,
+        ),
+      ),
+    );
   }
 
-  Widget _buildLegend(
-      {required Color color, required String text, required String tooltip}) {
+  Widget _buildLegend({
+    required Color color,
+    required String text,
+    required String tooltip,
+  }) {
     return Tooltip(
       message: tooltip,
       child: Row(
@@ -202,7 +215,11 @@ class StudyMonitorScreen extends StudyPageWidget {
   }
 
   _onSelectParticipant(
-      BuildContext context, WidgetRef ref, StudyMonitorItem item, Study study) {
+    BuildContext context,
+    WidgetRef ref,
+    StudyMonitorItem item,
+    Study study,
+  ) {
     // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
     showModalSideSheet(
       context: context,

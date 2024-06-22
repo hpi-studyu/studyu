@@ -127,7 +127,8 @@ extension StudyMonitoringX on Study {
             .where(
               (p) =>
                   p.completedAt!.isAfter(
-                      participant.startedAt!.add(Duration(days: day))) &&
+                    participant.startedAt!.add(Duration(days: day)),
+                  ) &&
                   p.completedAt!.isBefore(
                     participant.startedAt!.add(Duration(days: day + 1)),
                   ),
@@ -181,7 +182,7 @@ extension StudyMonitoringX on Study {
     int dropoutParticipants = 0;
     int completedParticipants = 0;
 
-    items.forEach((item) {
+    for (final item in items) {
       if (!item.droppedOut) {
         if (item.currentDayOfStudy < item.studyDurationInDays) {
           if (item.lastActivityAt.isAfter(participantInactiveDuration)) {
@@ -201,7 +202,7 @@ extension StudyMonitoringX on Study {
           dropoutParticipants += 1; // Dropout
         }
       }
-    });
+    }
 
     print({'debug', dropoutParticipants});
     print({
@@ -209,14 +210,14 @@ extension StudyMonitoringX on Study {
       {'active', activeParticipants},
       {'inactive', inactiveParticipants},
       {'dropout', dropoutParticipants},
-      {'completed', completedParticipants}
+      {'completed', completedParticipants},
     });
     print({'debug:total', items.length});
     print({
       'debug:item': items.where((item) {
         print({'item', item.currentDayOfStudy});
         return true;
-      })
+      }),
     });
 
     assert(

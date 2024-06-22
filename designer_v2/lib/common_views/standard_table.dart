@@ -261,8 +261,12 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     _cachedRows.clear();
   }
 
-  int _sortLogic(T a, T b,
-      {required int columnIndex, required bool? sortAscending,}) {
+  int _sortLogic(
+    T a,
+    T b, {
+    required int columnIndex,
+    required bool? sortAscending,
+  }) {
     final sortPredicate = widget.sortColumnPredicates;
     if (sortPredicate != null && sortPredicate[columnIndex] != null) {
       if (sortAscending ?? true) {
