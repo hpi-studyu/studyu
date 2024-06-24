@@ -31,7 +31,7 @@ class _SystemHash {
 }
 
 /// Provides the [FormViewModel] that is responsible for displaying and
-/// editing the survey design form.
+/// editing the study design form.
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
@@ -41,7 +41,7 @@ class _SystemHash {
 const studyFormViewModelProvider = StudyFormViewModelFamily();
 
 /// Provides the [FormViewModel] that is responsible for displaying and
-/// editing the survey design form.
+/// editing the study design form.
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
@@ -49,7 +49,7 @@ const studyFormViewModelProvider = StudyFormViewModelFamily();
 /// Copied from [studyFormViewModel].
 class StudyFormViewModelFamily extends Family<StudyFormViewModel> {
   /// Provides the [FormViewModel] that is responsible for displaying and
-  /// editing the survey design form.
+  /// editing the study design form.
   ///
   /// Note: This is not safe to use in widgets (or other providers) that are built
   /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
@@ -58,7 +58,7 @@ class StudyFormViewModelFamily extends Family<StudyFormViewModel> {
   const StudyFormViewModelFamily();
 
   /// Provides the [FormViewModel] that is responsible for displaying and
-  /// editing the survey design form.
+  /// editing the study design form.
   ///
   /// Note: This is not safe to use in widgets (or other providers) that are built
   /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
@@ -97,7 +97,7 @@ class StudyFormViewModelFamily extends Family<StudyFormViewModel> {
 }
 
 /// Provides the [FormViewModel] that is responsible for displaying and
-/// editing the survey design form.
+/// editing the study design form.
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
@@ -106,7 +106,7 @@ class StudyFormViewModelFamily extends Family<StudyFormViewModel> {
 class StudyFormViewModelProvider
     extends AutoDisposeProvider<StudyFormViewModel> {
   /// Provides the [FormViewModel] that is responsible for displaying and
-  /// editing the survey design form.
+  /// editing the study design form.
   ///
   /// Note: This is not safe to use in widgets (or other providers) that are built
   /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])

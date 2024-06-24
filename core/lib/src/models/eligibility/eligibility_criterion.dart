@@ -24,4 +24,9 @@ class EligibilityCriterion {
 
   bool isSatisfied(QuestionnaireState qs) => condition.evaluate(qs) == true;
   bool isViolated(QuestionnaireState qs) => condition.evaluate(qs) == false;
+
+  @override
+  String toString() {
+    return 'EligibilityCriterion{id: $id, reason: $reason, condition: $condition}';
+  }
 }
