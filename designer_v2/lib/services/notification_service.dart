@@ -61,7 +61,7 @@ class NotificationService implements INotificationService {
 
 @Riverpod(keepAlive: true)
 NotificationService notificationService(NotificationServiceRef ref) {
-  ref.onDispose((() => print('NotificationService disposed')));
+  ref.onDispose(() => print('NotificationService disposed'));
 
   return NotificationService();
 }
