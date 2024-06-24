@@ -53,9 +53,11 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       input: Column(
                         children: formViewModel.enrollmentTypeControlOptions
                             .map<Widget>(
-                              (option) => ReactiveRadioListTile<Participation>(
-                                formControl:
-                                    formViewModel.enrollmentTypeControl,
+                              (option) => RadioListTile<Participation>(
+                                groupValue:
+                                    formViewModel.enrollmentTypeControl.value,
+                                onChanged: (value) => formViewModel
+                                    .enrollmentTypeControl.value = option.value,
                                 value: option.value,
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
