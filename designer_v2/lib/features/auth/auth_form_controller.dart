@@ -70,6 +70,7 @@ class AuthFormController extends _$AuthFormController
         final AuthException error = state.error! as AuthException;
         switch (error.message) {
           case "Invalid login credentials":
+            print("authFormController.state listen self");
             notificationService.show(Notifications.credentialsInvalid);
           case "User already registered":
             notificationService.show(Notifications.userAlreadyRegistered);

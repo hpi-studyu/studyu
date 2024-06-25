@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
@@ -58,7 +59,9 @@ class NotificationService implements INotificationService {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 NotificationService notificationService(NotificationServiceRef ref) {
+  ref.onDispose((() => print('NotificationService disposed')));
+
   return NotificationService();
 }

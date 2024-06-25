@@ -54,6 +54,7 @@ class _NotificationDispatcherState
   @override
   void initState() {
     super.initState();
+    print("NotificationDispatcher: initState");
     _subscription = ref
         .read(notificationServiceProvider)
         .watchNotifications()
