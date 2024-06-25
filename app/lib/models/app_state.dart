@@ -5,7 +5,6 @@ import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 
-// @riverpod
 class AppState with ChangeNotifier {
   Study? selectedStudy;
   List<Intervention>? selectedInterventions;

@@ -88,18 +88,6 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-/*final studySettingsFormViewModelProvider = Provider.autoDispose
-    .family<StudySettingsFormViewModel, StudyID>((ref, studyId) {
-  final state = ref.watch(studyControllerProvider(studyId));
-  final formViewModel = StudySettingsFormViewModel(
-    studyRepository: ref.watch(studyRepositoryProvider),
-    study: state.study,
-  );
-  ref.onDispose(() {
-    print("studySettingsFormViewModelProvider.DISPOSE");
-  });
-  return formViewModel;
-});*/
 @riverpod
 StudySettingsFormViewModel studySettingsFormViewModel(
   StudySettingsFormViewModelRef ref,

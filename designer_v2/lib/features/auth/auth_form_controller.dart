@@ -238,7 +238,6 @@ class AuthFormController extends _$AuthFormController
     }
     try {
       state = const AsyncValue.loading();
-      print("authRepository.signUp");
       return await authRepository.signUp(email: email, password: password);
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);

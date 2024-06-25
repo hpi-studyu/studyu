@@ -466,8 +466,10 @@ abstract class FormViewModel<T> implements IFormGroupController {
       if (control is FormGroup) {
         continue; // don't listen to nested descendants
       } else if (control is FormArray) {
-        // FormArrays are getting saved directly, because control.collectionChanges
-        // triggers on first load, even though the control has not been changed
+        // We do not listen to FormArray changes. Instead the study is getting
+        // saved directly through the respective menu action.
+        // There seems to be a bug related to control.collectionChanges because
+        // it triggers on first load, even though the length of the array has not changed
         continue;
         /* final collectionChanges =
             control.collectionChanges.listen(boundListener);
