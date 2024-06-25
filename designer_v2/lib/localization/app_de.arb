@@ -73,6 +73,8 @@
   "phase_sequence_counterbalanced": "Ausgeglichen (AB BA)",
   "phase_sequence_random": "Zufällig",
   "phase_sequence_custom": "Benutzerdefiniert",
+  "phase_sequence_custom_label": "Benutzerdefinierte Abfolge",
+  "phase_sequence_custom_label_help": "Gib die Abfolge der Interventionsphasen an, z.B. ABBA",
   "form_enrollment_option_open": "Open",
   "form_enrollment_option_invite": "Private (Invite-only)",
   "@__________________NAV_DRAWER__________________": {},

@@ -20,10 +20,8 @@ class StudyScheduleFormView extends FormConsumerWidget {
     } else {
       return FormTableRow(
         control: formViewModel.sequenceTypeCustomControl,
-        label: "Custom Sequence",
-        // todo translate
-        labelHelpText: "Enter a custom sequence by using the letters A and B",
-        // todo translate
+        label: tr.phase_sequence_custom_label,
+        labelHelpText: tr.phase_sequence_custom_label_help,
         input: ReactiveTextField(
           formControl: formViewModel.sequenceTypeCustomControl,
           keyboardType: TextInputType.text,
