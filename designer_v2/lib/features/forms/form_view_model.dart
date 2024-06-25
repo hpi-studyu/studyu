@@ -466,10 +466,13 @@ abstract class FormViewModel<T> implements IFormGroupController {
       if (control is FormGroup) {
         continue; // don't listen to nested descendants
       } else if (control is FormArray) {
-        final collectionChanges =
+        // FormArrays are getting saved directly, because control.collectionChanges
+        // triggers on first load, even though the control has not been changed
+        continue;
+        /* final collectionChanges =
             control.collectionChanges.listen(boundListener);
         // don't subscribe to control.valueChanges
-        _immediateFormChildrenSubscriptions.add(collectionChanges);
+        _immediateFormChildrenSubscriptions.add(collectionChanges);*/
       } else if (control is FormControl) {
         final valueChanges = control.valueChanges.listen(boundListener);
         _immediateFormChildrenSubscriptions.add(valueChanges);
