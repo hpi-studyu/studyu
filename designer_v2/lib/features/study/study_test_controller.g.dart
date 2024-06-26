@@ -173,7 +173,7 @@ class _StudyTestPlatformControllerProviderElement
 }
 
 String _$studyTestControllerHash() =>
-    r'0ebe19693d34df91af1b7022ed45b26c1d764f3c';
+    r'04c70c8adf5371517cf9d91c02a69efb91c1e037';
 
 abstract class _$StudyTestController
     extends BuildlessAutoDisposeNotifier<StudyTestControllerState> {
