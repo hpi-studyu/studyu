@@ -182,8 +182,10 @@ extension StudyMonitoringX on Study {
     int dropoutParticipants = 0;
     int completedParticipants = 0;
 
-    final participantInactiveDays = DateTime.now().subtract(const Duration(days: participantInactiveDuration));
-    final participantDropoutDays = DateTime.now().subtract(const Duration(days: participantDropoutDuration));
+    final participantInactiveDays = DateTime.now()
+        .subtract(const Duration(days: participantInactiveDuration));
+    final participantDropoutDays = DateTime.now()
+        .subtract(const Duration(days: participantDropoutDuration));
 
     for (final item in items) {
       if (!item.droppedOut) {
