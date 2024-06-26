@@ -8,6 +8,22 @@ class StudyInterventionsRobot {
 
   final PatrolTester $;
 
+  Future<void> createIntervention({
+    required String interventionName,
+    required String interventionDescription,
+    required String taskName,
+    required String taskDescription,
+  }) async {
+    await tapAddInterventionButton();
+    await enterInterventionName(interventionName);
+    await enterInterventionDescription(interventionDescription);
+    await tapAddInterventionTaskButton();
+    await enterInterventionTaskName(taskName);
+    await enterInterventionTaskDescription(taskDescription);
+    await tapSaveInterventionTaskButton();
+    await tapSaveInterventionButton();
+  }
+
   Future<void> tapAddInterventionButton() async {
     await $(tr.form_array_interventions_new).tap();
   }
@@ -36,7 +52,7 @@ class StudyInterventionsRobot {
         .enterText(interventionName);
   }
 
-  Future<void> enterInterventionDesciption(
+  Future<void> enterInterventionDescription(
     String interventionDescription,
   ) async {
     await $(TextField)
