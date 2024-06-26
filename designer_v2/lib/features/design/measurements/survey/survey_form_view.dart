@@ -232,7 +232,7 @@ class _MeasurementSurveyFormViewState
     WidgetRef ref,
   ) {
     final surveyQuestionFormViewModel =
-        ref.read(surveyQuestionFormViewModelProvider(routeArgs));
+        ref.watch(surveyQuestionFormViewModelProvider(routeArgs));
     showFormSideSheet<QuestionFormViewModel>(
       context: context,
       formViewModel: surveyQuestionFormViewModel,

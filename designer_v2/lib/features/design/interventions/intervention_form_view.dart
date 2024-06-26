@@ -185,7 +185,7 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
     WidgetRef ref,
   ) {
     final interventionTaskFormViewModel =
-        ref.read(interventionTaskFormViewModelProvider(routeArgs));
+        ref.watch(interventionTaskFormViewModelProvider(routeArgs));
     showFormSideSheet<InterventionTaskFormViewModel>(
       context: context,
       formViewModel: interventionTaskFormViewModel,

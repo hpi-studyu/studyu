@@ -16,7 +16,7 @@ part 'study_test_controller.g.dart';
 class StudyTestController extends _$StudyTestController {
   @override
   StudyTestControllerState build(StudyID studyId) {
-    final studyRepo = ref.read(studyRepositoryProvider);
+    final studyRepo = ref.watch(studyRepositoryProvider);
     ref.onDispose(() {
       // Reload the study after disposing the test controller so that any
       // data changes resulting from testing are reflected in the study for

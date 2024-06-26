@@ -46,7 +46,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final controller = ref.read(dashboardControllerProvider.notifier);
+    final controller = ref.watch(dashboardControllerProvider.notifier);
     final state = ref.watch(dashboardControllerProvider);
 
     return DashboardScaffold(

@@ -68,8 +68,8 @@ class UserRepository implements IUserRepository {
 @riverpod
 UserRepository userRepository(UserRepositoryRef ref) {
   return UserRepository(
-    authRepository: ref.read(authRepositoryProvider),
-    apiClient: ref.read(apiClientProvider),
+    authRepository: ref.watch(authRepositoryProvider),
+    apiClient: ref.watch(apiClientProvider),
     ref: ref,
   );
 }

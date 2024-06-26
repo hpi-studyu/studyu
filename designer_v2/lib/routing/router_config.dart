@@ -221,7 +221,7 @@ class RouterConf {
               child: StudyFormScaffold<InterventionFormViewModel>(
                 studyId: routeArgs.studyId,
                 formViewModelBuilder: (ref) =>
-                    ref.read(interventionFormViewModelProvider(routeArgs)),
+                    ref.watch(interventionFormViewModelProvider(routeArgs)),
                 formViewBuilder: (formViewModel) => TwoColumnLayout.split(
                   leftWidget:
                       InterventionFormView(formViewModel: formViewModel),
@@ -267,7 +267,7 @@ class RouterConf {
               child: StudyFormScaffold<MeasurementSurveyFormViewModel>(
                 studyId: routeArgs.studyId,
                 formViewModelBuilder: (ref) =>
-                    ref.read(surveyFormViewModelProvider(routeArgs)),
+                    ref.watch(surveyFormViewModelProvider(routeArgs)),
                 formViewBuilder: (formViewModel) => TwoColumnLayout.split(
                   leftWidget:
                       MeasurementSurveyFormView(formViewModel: formViewModel),
