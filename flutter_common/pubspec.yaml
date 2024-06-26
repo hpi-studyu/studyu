@@ -15,7 +15,7 @@ dependencies:
   lint: ^2.3.0
   shared_preferences: ^2.2.3 # Can be removed after migrating phase
   studyu_core: ^4.4.3-dev.1
-  supabase_flutter: ^2.5.5
+  supabase_flutter: ^2.5.6
   synchronized: ^3.1.0+1
   uuid: ^4.4.0
 
