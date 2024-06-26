@@ -65,8 +65,12 @@ class WebController extends PlatformController {
       ..src = previewSrc
       ..style.border = 'none';
 
-    ui_web.platformViewRegistry
-        .registerViewFactory('$studyId$key', (int viewId) => iFrameElement);
+    ui_web.platformViewRegistry.registerViewFactory(
+      '$studyId$key',
+      (int viewId) => iFrameElement
+        ..style.width = '100%'
+        ..style.height = '100%',
+    );
   }
 
   @override
