@@ -346,14 +346,14 @@ abstract class FormViewModel<T> implements IFormGroupController {
       control.updateValueAndValidity(updateParent: false, emitEvent: false);
     }
 
-    // Reset & update the validators of all direct child controls
+    // Reset and update the validators of all direct child controls
     for (final entry in form.controls.entries) {
       final controlName = entry.key;
       final control = entry.value;
       resetAndUpdateControlValidators(controlName, control);
     }
 
-    // Reset & update the validators of the form itself
+    // Reset and update the validators of the form itself
     resetAndUpdateControlValidators(_formKey, form);
   }
 
@@ -388,7 +388,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
       // and [setControlsFrom] internally. Calling [setControlsFrom] may result
       // in update events emitted by the reactive controls as their values are
       // re-initialized, which re-triggers the valueChanges stream subscription
-      // used for autosaving (entering the infinite loop)
+      // used for auto-saving (entering the infinite loop)
     }
     await delegate?.onSave(this, prevFormMode);
 
@@ -409,7 +409,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
     return Future.value();
   }
 
-  /// Enables the autosave functionality for the form.
+  /// Enables the auto-save functionality for the form.
   ///
   /// This method sets up the form to automatically save its data whenever any changes are made to the form controls.
   /// It does this by setting up a listener for each form control's `valueChanges` stream and initiating a save operation
@@ -421,8 +421,8 @@ abstract class FormViewModel<T> implements IFormGroupController {
   ///
   /// The `onlyValid` parameter is not used in the current implementation.
   ///
-  /// If there are any existing subscriptions to the form control's value changes (i.e., if autosave has already been enabled),
-  /// this method returns immediately to avoid setting up autosave multiple times.
+  /// If there are any existing subscriptions to the form control's value changes (i.e., if auto-save has already been enabled),
+  /// this method returns immediately to avoid setting up auto-save multiple times.
   ///
   /// The save operation is wrapped in a `CancelableOperation` to allow it to be cancelled if necessary.
   void enableAutosave({

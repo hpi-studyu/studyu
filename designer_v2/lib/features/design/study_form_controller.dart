@@ -177,7 +177,7 @@ StudyFormViewModel studyFormViewModel(
   StudyFormViewModelRef ref,
   StudyID studyId,
 ) {
-  print("studyFormViewModel");
+  // print("studyFormViewModel");
   final state = ref.watch(studyControllerProvider(studyId));
   return StudyFormViewModel(
     router: ref.watch(routerProvider),
