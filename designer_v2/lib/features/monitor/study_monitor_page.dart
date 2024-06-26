@@ -28,14 +28,18 @@ class StudyMonitorScreen extends StudyPageWidget {
           children: <Widget>[
             _monitorSectionHeader(context, studyMonitorData),
             const SizedBox(height: 40.0), // spacing between body elements
-            if (studyMonitorData.items.isNotEmpty)
+            if (studyMonitorData.items.isNotEmpty) ...[
+              SelectableText(
+                tr.monitoring_participants_title,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
               StudyMonitorTable(
                 ref: ref,
                 studyMonitorItems: studyMonitorData.items,
                 onSelectItem: (item) =>
                     _onSelectParticipant(context, ref, item, study),
-              )
-            else
+              ),
+            ] else
               EmptyBody(
                 icon: Icons.person_off_rounded,
                 title: tr.monitoring_no_participants_title,
@@ -51,8 +55,9 @@ class StudyMonitorScreen extends StudyPageWidget {
     BuildContext context,
     StudyMonitorData monitorData,
   ) {
+    final theme = Theme.of(context);
     final int total = monitorData.items.length;
-    const double minPercentage = 0.05; // Minimum percentage for visibility
+    const double minPercentage = 0.01; // Minimum percentage for visibility
 
     double activePercentage = monitorData.activeParticipants / total;
     double inactivePercentage = monitorData.inactiveParticipants / total;
@@ -80,17 +85,13 @@ class StudyMonitorScreen extends StudyPageWidget {
     dropoutPercentage /= sumOfPercentages;
     completedPercentage /= sumOfPercentages;
 
-    const Color activeColor = Color(0xFF0072B2);
+    final Color activeColor = theme.primaryColor;
     const Color inactiveColor = Color(0xFFD55E00);
-    const Color dropoutColor = Color(0xFFCC79A7);
+    const Color dropoutColor = Color(0xFF0072B2);
     const Color completedColor = Color(0xFF009E73);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SelectableText(
-          tr.monitoring_participants_title,
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
         const Spacer(),
         SizedBox(
           width: 420,

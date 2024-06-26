@@ -182,10 +182,13 @@ extension StudyMonitoringX on Study {
     int dropoutParticipants = 0;
     int completedParticipants = 0;
 
+    final participantInactiveDays = DateTime.now().subtract(const Duration(days: participantInactiveDuration));
+    final participantDropoutDays = DateTime.now().subtract(const Duration(days: participantDropoutDuration));
+
     for (final item in items) {
       if (!item.droppedOut) {
         if (item.currentDayOfStudy < item.studyDurationInDays) {
-          if (item.lastActivityAt.isAfter(participantInactiveDuration)) {
+          if (item.lastActivityAt.isAfter(participantInactiveDays)) {
             activeParticipants += 1; // Active
           } else {
             inactiveParticipants += 1; // Inactive
@@ -195,7 +198,7 @@ extension StudyMonitoringX on Study {
         }
       } else {
         if (item.currentDayOfStudy < item.studyDurationInDays) {
-          if (item.lastActivityAt.isBefore(participantDropoutDuration)) {
+          if (item.lastActivityAt.isBefore(participantDropoutDays)) {
             dropoutParticipants += 1; // Dropout
           }
         } else {
@@ -203,22 +206,6 @@ extension StudyMonitoringX on Study {
         }
       }
     }
-
-    print({'debug', dropoutParticipants});
-    print({
-      'debug',
-      {'active', activeParticipants},
-      {'inactive', inactiveParticipants},
-      {'dropout', dropoutParticipants},
-      {'completed', completedParticipants},
-    });
-    print({'debug:total', items.length});
-    print({
-      'debug:item': items.where((item) {
-        print({'item', item.currentDayOfStudy});
-        return true;
-      }),
-    });
 
     assert(
       activeParticipants +

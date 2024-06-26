@@ -60,6 +60,7 @@ class StudyMonitorTable extends ConsumerWidget {
         StandardTableColumn(
           sortable: true,
           label: tr.monitoring_table_column_day_in_study,
+          tooltip: tr.monitoring_table_days_in_study_header_tooltip,
           columnWidth:
               const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.6)),
         ),
@@ -73,6 +74,7 @@ class StudyMonitorTable extends ConsumerWidget {
         StandardTableColumn(
           sortable: true,
           label: tr.monitoring_table_column_completed_surveys,
+          tooltip: tr.monitoring_table_completed_surveys_header_tooltip,
           columnWidth:
               const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.7)),
         ),
