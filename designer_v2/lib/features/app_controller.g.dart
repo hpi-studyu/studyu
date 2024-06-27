@@ -6,7 +6,7 @@ part of 'app_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appControllerHash() => r'5f5e1353e3c33dd56d2cf83a2451587ec4000ea0';
+String _$appControllerHash() => r'312b721b74a25c04cc5b5c5cdca0bad788994611';
 
 /// Main controller that's bound to the top-level application widget's state
 ///
