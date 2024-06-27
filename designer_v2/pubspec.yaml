@@ -49,6 +49,7 @@ dev_dependencies:
     sdk: flutter
   integration_test:
     sdk: flutter
+  json_diff: ^0.2.1
   lint: ^2.3.0
   patrol_finders: ^2.1.2
   riverpod_generator: ^2.4.0 # flutter_test

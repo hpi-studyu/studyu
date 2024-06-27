@@ -23,9 +23,6 @@ class AppController extends _$AppController {
       /// Register [IAppDelegate]s here for invocation of app lifecycle methods
       ref.watch(authRepositoryProvider),
     ];
-    ref.listenSelf((previous, next) {
-      print('AppController changed: $next');
-    });
     ref.onDispose(() {
       _stateController.close();
     });
