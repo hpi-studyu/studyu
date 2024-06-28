@@ -9,12 +9,13 @@ import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
-class StudyAnalyzeController extends StudyBaseController<StudyAnalyzeControllerState> {
+class StudyAnalyzeController
+    extends StudyBaseController<StudyAnalyzeControllerState> {
   StudyAnalyzeController({
     required super.studyCreationArgs,
+    required super.currentUser,
     required super.studyRepository,
     required super.router,
-    required super.currentUser,
   }) : super(StudyAnalyzeControllerState(currentUser: currentUser)) {
     // Reload the study in case some data was generated meanwhile
     // studyRepository.fetch(studyId);
@@ -27,7 +28,8 @@ class StudyAnalyzeController extends StudyBaseController<StudyAnalyzeControllerS
 }
 
 final studyAnalyzeControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyAnalyzeController, StudyAnalyzeControllerState, StudyCreationArgs>((ref, studyCreationArgs) {
+    .family<StudyAnalyzeController, StudyAnalyzeControllerState, StudyCreationArgs>(
+        (ref, studyCreationArgs) {
   return StudyAnalyzeController(
     studyCreationArgs: studyCreationArgs,
     currentUser: ref.watch(authRepositoryProvider).currentUser,

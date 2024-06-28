@@ -44,13 +44,15 @@ class FormControlOption<T> extends Equatable {
   List<Object?> get props => [value, label, description];
 }
 
-typedef FormControlUpdateFutureBuilder = Future Function(AbstractControl control);
+typedef FormControlUpdateFutureBuilder = Future Function(
+  AbstractControl control,
+);
 
 abstract class FormViewModel<T> implements IFormGroupController {
   FormViewModel({
-    formData,
+    T? formData,
     this.delegate,
-    validationSet,
+    FormValidationSetEnum? validationSet,
     this.autosave = false,
   })  : _validationSet = validationSet,
         _formData = formData,
@@ -110,7 +112,8 @@ abstract class FormViewModel<T> implements IFormGroupController {
 
   /// Map that stores the default [AbstractControl.validators] and
   /// [AbstractControl.asyncValidators] for each control in the [form]
-  final Map<String, Tuple<List<Validator>, List<AsyncValidator>>> _defaultControlValidators = {};
+  final Map<String, Tuple<List<Validator>, List<AsyncValidator>>>
+      _defaultControlValidators = {};
 
   /// Flag indicating whether the current [form] data is different from
   /// the most recently set [formData]
@@ -137,7 +140,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
   /// Key used internally for storing properties of the [form] itself
   static const _formKey = '__form';
 
-  _setFormData(T? formData) {
+  void _setFormData(T? formData) {
     _formData = formData;
     if (formData != null) {
       setControlsFrom(formData); // update [form] controls automatically
@@ -146,7 +149,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
     form.updateValueAndValidity();
   }
 
-  _rememberDefaultControlStates() {
+  void _rememberDefaultControlStates() {
     for (final entry in form.controls.entries) {
       final controlName = entry.key;
       final control = entry.value;
@@ -156,31 +159,38 @@ abstract class FormViewModel<T> implements IFormGroupController {
     }
   }
 
-  _rememberDefaultControlValidators() {
+  void _rememberDefaultControlValidators() {
     for (final entry in form.controls.entries) {
       final controlName = entry.key;
       final control = entry.value;
       if (!_defaultControlValidators.containsKey(controlName)) {
-        _defaultControlValidators[controlName] = Tuple(control.validators, control.asyncValidators);
+        _defaultControlValidators[controlName] =
+            Tuple(control.validators, control.asyncValidators);
       }
     }
     if (!_defaultControlValidators.containsKey(_formKey)) {
-      _defaultControlValidators[_formKey] = Tuple(form.validators, form.asyncValidators);
+      _defaultControlValidators[_formKey] =
+          Tuple(form.validators, form.asyncValidators);
     }
   }
 
-  Tuple<List<Validator>, List<AsyncValidator>>? _getDefaultValidators(String controlName) {
+  Tuple<List<Validator>, List<AsyncValidator>>? _getDefaultValidators(
+    String controlName,
+  ) {
     return _defaultControlValidators[controlName];
   }
 
-  _disableAllControls() {
+  void _disableAllControls() {
     for (final control in form.controls.values) {
       control.markAsDisabled();
     }
     assert(form.allControlsDisabled());
   }
 
-  _restoreControlStates({emitEvent = true, updateParent = true}) {
+  void _restoreControlStates({
+    bool emitEvent = true,
+    bool updateParent = true,
+  }) {
     for (final entry in form.controls.entries) {
       final controlName = entry.key;
       final control = entry.value;
@@ -191,25 +201,26 @@ abstract class FormViewModel<T> implements IFormGroupController {
       if (isEnabledByDefault) {
         control.markAsEnabled(emitEvent: emitEvent, updateParent: updateParent);
       } else {
-        control.markAsDisabled(emitEvent: emitEvent, updateParent: updateParent);
+        control.markAsDisabled(
+          emitEvent: emitEvent,
+          updateParent: updateParent,
+        );
       }
     }
   }
 
-  _formModeUpdated() {
+  void _formModeUpdated() {
     switch (formMode) {
       case FormMode.readonly:
         _rememberDefaultControlStates();
         _disableAllControls();
-        break;
       case FormMode.create:
       case FormMode.edit:
         _restoreControlStates();
-        break;
     }
   }
 
-  _restoreControlsFromFormData() {
+  void _restoreControlsFromFormData() {
     if (formData != null) {
       setControlsFrom(formData as T);
       form.updateValueAndValidity();
@@ -234,7 +245,9 @@ abstract class FormViewModel<T> implements IFormGroupController {
     }
     final formValidationConfig = sharedValidationConfig[validationSet];
     if (formValidationConfig == null) {
-      throw FormConfigException("Failed to lookup FormValidationConfig for key: $validationSet");
+      throw FormConfigException(
+        "Failed to lookup FormValidationConfig for key: $validationSet",
+      );
     }
 
     // Build mapping from control => merged config
@@ -250,14 +263,20 @@ abstract class FormViewModel<T> implements IFormGroupController {
     _rememberDefaultControlValidators();
 
     // Helper function to reset & change the validators on a single control
-    resetAndUpdateControlValidators(String controlName, AbstractControl control) {
+    void resetAndUpdateControlValidators(
+      String controlName,
+      AbstractControl control,
+    ) {
       // Reset the control validators to its cached defaults
       final defaultValidators = _getDefaultValidators(controlName);
       assert(defaultValidators?.first != null);
       assert(defaultValidators?.second != null);
 
       control.setValidators(defaultValidators?.first ?? [], emitEvent: false);
-      control.setAsyncValidators(defaultValidators?.second ?? [], emitEvent: false);
+      control.setAsyncValidators(
+        defaultValidators?.second ?? [],
+        emitEvent: false,
+      );
 
       // Apply control-specific config (if any)
       //
@@ -268,7 +287,10 @@ abstract class FormViewModel<T> implements IFormGroupController {
         final controlConfig = controlConfigs[control]!;
         control.setValidators(controlConfig.validators, emitEvent: false);
         if (controlConfig.asyncValidators != null) {
-          control.setAsyncValidators(controlConfig.asyncValidators!, emitEvent: false);
+          control.setAsyncValidators(
+            controlConfig.asyncValidators!,
+            emitEvent: false,
+          );
         }
         control.validationMessages = controlConfig.validationMessages;
       }
@@ -338,27 +360,34 @@ abstract class FormViewModel<T> implements IFormGroupController {
     }
     delegate?.onCancel(this, formMode);
 
-    return Future.value(null);
+    return Future.value();
   }
 
   void enableAutosave({
     int debounce = Config.formAutosaveDebounce,
-    onlyValid = true,
+    bool onlyValid = true,
   }) {
     if (_immediateFormChildrenSubscriptions.isNotEmpty) {
       return;
     }
-    listenToImmediateFormChildren((control) {
-      final saveFuture = save();
-      _autosaveOperation = CancelableOperation.fromFuture(saveFuture);
-      return saveFuture;
-    }, debounce: debounce);
+    listenToImmediateFormChildren(
+      (control) {
+        final saveFuture = save();
+        _autosaveOperation = CancelableOperation.fromFuture(saveFuture);
+        return saveFuture;
+      },
+      debounce: debounce,
+    );
   }
 
-  void listenToImmediateFormChildren(FormControlUpdateFutureBuilder futureBuilder, {int debounce = 1500}) {
+  void listenToImmediateFormChildren(
+    FormControlUpdateFutureBuilder futureBuilder, {
+    int debounce = 1500,
+  }) {
     // Initialize debounce helper if needed
     if (debounce != 0) {
-      _immediateFormChildrenListenerDebouncer ??= Debouncer(milliseconds: debounce, leading: false);
+      _immediateFormChildrenListenerDebouncer ??=
+          Debouncer(milliseconds: debounce, leading: false);
     }
 
     for (final control in form.controls.values) {
@@ -366,14 +395,17 @@ abstract class FormViewModel<T> implements IFormGroupController {
         if (debounce == 0) {
           futureBuilder(control);
         } else {
-          _immediateFormChildrenListenerDebouncer!(futureBuilder: () => futureBuilder(control));
+          _immediateFormChildrenListenerDebouncer!(
+            futureBuilder: () => futureBuilder(control),
+          );
         }
       }
 
       if (control is FormGroup) {
         continue; // don't listen to nested descendants
       } else if (control is FormArray) {
-        final collectionChanges = control.collectionChanges.listen(boundListener);
+        final collectionChanges =
+            control.collectionChanges.listen(boundListener);
         // don't subscribe to control.valueChanges
         _immediateFormChildrenSubscriptions.add(collectionChanges);
       } else if (control is FormControl) {
@@ -385,7 +417,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
 
   /// Call after changing / adding / removing the child controls in [form]
   /// to perform necessary housekeeping
-  markFormGroupChanged() {
+  void markFormGroupChanged() {
     revalidate();
     _formModeUpdated();
     form.updateValueAndValidity();

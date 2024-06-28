@@ -3,12 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_scaffold.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
 class StudyFormScaffold<T extends FormViewModel> extends ConsumerWidget {
-  const StudyFormScaffold(
-      {required this.studyCreationArgs, required this.formViewModelBuilder, required this.formViewBuilder, super.key});
+  const StudyFormScaffold({
+    required this.studyCreationArgs,
+    required this.formViewModelBuilder,
+    required this.formViewBuilder,
+    super.key,
+  });
 
   final StudyCreationArgs studyCreationArgs;
   final FormViewModelBuilder<T> formViewModelBuilder;

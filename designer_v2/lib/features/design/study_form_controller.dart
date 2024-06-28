@@ -25,7 +25,8 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 
-class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelDelegate<FormViewModel> {
+class StudyFormViewModel extends FormViewModel<Study>
+    implements IFormViewModelDelegate<FormViewModel> {
   StudyFormViewModel({
     required this.router,
     required this.studyRepository,
@@ -45,18 +46,21 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
   final IAuthRepository authRepository;
   final GoRouter router;
 
-  bool get isStudyReadonly => formData?.isReadonly(authRepository.currentUser!) ?? false;
+  bool get isStudyReadonly =>
+      formData?.isReadonly(authRepository.currentUser!) ?? false;
 
   StudyType get studyType => formData?.type ?? StudyType.standalone;
 
-  late final StudyInfoFormViewModel studyInfoFormViewModel = StudyInfoFormViewModel(
+  late final StudyInfoFormViewModel studyInfoFormViewModel =
+      StudyInfoFormViewModel(
     formData: StudyInfoFormData.fromStudy(formData!),
     delegate: this,
     study: formData!,
     validationSet: validationSet,
   );
 
-  late final EnrollmentFormViewModel enrollmentFormViewModel = EnrollmentFormViewModel(
+  late final EnrollmentFormViewModel enrollmentFormViewModel =
+      EnrollmentFormViewModel(
     formData: EnrollmentFormData.fromStudy(formData!),
     delegate: this,
     study: formData!,
@@ -64,7 +68,8 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
     validationSet: validationSet,
   );
 
-  late final MeasurementsFormViewModel measurementsFormViewModel = MeasurementsFormViewModel(
+  late final MeasurementsFormViewModel measurementsFormViewModel =
+      MeasurementsFormViewModel(
     formData: MeasurementsFormData.fromStudy(formData!),
     delegate: this,
     study: formData!,
@@ -80,7 +85,8 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
     validationSet: validationSet,
   );
 
-  late final InterventionsFormViewModel interventionsFormViewModel = InterventionsFormViewModel(
+  late final InterventionsFormViewModel interventionsFormViewModel =
+      InterventionsFormViewModel(
     formData: InterventionsFormData.fromStudy(formData!),
     delegate: this,
     study: formData!,
@@ -121,7 +127,7 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
 
   @override
   Study buildFormData() {
-    final studyCopy = (formData as Study).exactDuplicate();
+    final studyCopy = (formData!).exactDuplicate();
     studyInfoFormViewModel.buildFormData().apply(studyCopy);
     enrollmentFormViewModel.buildFormData().apply(studyCopy);
     measurementsFormViewModel.buildFormData().apply(studyCopy);
@@ -149,14 +155,16 @@ class StudyFormViewModel extends FormViewModel<Study> implements IFormViewModelD
   @override
   Future onSave(FormViewModel formViewModel, FormMode prevFormMode) async {
     assert(prevFormMode == FormMode.edit);
-    await _applyAndSaveSubform(formViewModel.formData!);
+    await _applyAndSaveSubform(formViewModel.formData! as IStudyFormData);
   }
 
   Future _applyAndSaveSubform(IStudyFormData subformData) {
     studyDirtyCopy ??= formData!.exactDuplicate();
     subformData.apply(studyDirtyCopy!);
     // Flush the on-write study copy to the repository and clear it
-    return studyRepository.save(studyDirtyCopy!).then((study) => studyDirtyCopy = null);
+    return studyRepository
+        .save(studyDirtyCopy!)
+        .then((study) => studyDirtyCopy = null);
   }
 }
 

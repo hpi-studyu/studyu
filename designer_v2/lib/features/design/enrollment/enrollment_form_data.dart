@@ -22,9 +22,15 @@ class EnrollmentFormData implements IStudyFormData {
     return EnrollmentFormData(
       enrollmentType: study.participation,
       lockEnrollmentType: study.templateConfiguration?.lockEnrollmentType ?? false,
-      questionnaireFormData: QuestionnaireFormData.fromDomainModel(study.questionnaire, study.eligibilityCriteria),
-      consentItemsFormData:
-          study.consent.map((consentItem) => ConsentItemFormData.fromDomainModel(consentItem)).toList(),
+      questionnaireFormData: QuestionnaireFormData.fromDomainModel(
+        study.questionnaire,
+        study.eligibilityCriteria,
+      ),
+      consentItemsFormData: study.consent
+          .map(
+            (consentItem) => ConsentItemFormData.fromDomainModel(consentItem),
+          )
+          .toList(),
     );
   }
 
@@ -34,14 +40,17 @@ class EnrollmentFormData implements IStudyFormData {
     study.templateConfiguration = study.templateConfiguration?.copyWith(lockEnrollmentType: lockEnrollmentType);
     study.questionnaire = questionnaireFormData.toQuestionnaire();
     study.consent = (consentItemsFormData != null)
-        ? consentItemsFormData!.map((formData) => formData.toConsentItem()).toList()
+        ? consentItemsFormData!
+            .map((formData) => formData.toConsentItem())
+            .toList()
         : [];
     study.eligibilityCriteria = questionnaireFormData.toEligibilityCriteria();
     return study;
   }
 
   @override
-  String get id => throw UnimplementedError(); // not needed for top-level form data
+  String get id =>
+      throw UnimplementedError(); // not needed for top-level form data
 
   @override
   EnrollmentFormData copy() {

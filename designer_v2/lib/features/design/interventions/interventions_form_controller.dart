@@ -21,11 +21,13 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
-    with StudyScheduleControls
+    with
+        StudyScheduleControls
     implements
         IFormViewModelDelegate<InterventionFormViewModel>,
         IListActionProvider<InterventionFormViewModel>,
-        IProviderArgsResolver<InterventionFormViewModel, InterventionFormRouteArgs> {
+        IProviderArgsResolver<InterventionFormViewModel,
+            InterventionFormRouteArgs> {
   InterventionsFormViewModel({
     required this.study,
     required this.router,
@@ -42,7 +44,10 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   final FormControl<bool> lockStudyScheduleControl = FormControl();
   final FormArray interventionsArray = FormArray([]);
   late final interventionsCollection =
-      FormViewModelCollection<InterventionFormViewModel, InterventionFormData>([], interventionsArray);
+      FormViewModelCollection<InterventionFormViewModel, InterventionFormData>(
+    [],
+    interventionsArray,
+  );
 
   @override
   late final FormGroup form = FormGroup({
@@ -68,11 +73,18 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
         ],
       };
 
-  get interventionsRequired => FormControlValidation(control: interventionsArray, validators: [
-        Validators.minLength(study.isTemplate ? 0 : 2)
-      ], validationMessages: {
-        ValidationMessage.minLength: (error) => tr.form_array_interventions_minlength((error as Map)['requiredLength']),
-      });
+  FormControlValidation get interventionsRequired => FormControlValidation(
+        control: interventionsArray,
+        validators: [
+          Validators.minLength(study.isTemplate ? 0 : 2),
+        ],
+        validationMessages: {
+          ValidationMessage.minLength: (error) =>
+              tr.form_array_interventions_minlength(
+                (error as Map)['requiredLength'] as num,
+              ),
+        },
+      );
 
   @override
   void setControlsFrom(InterventionsFormData data) {
@@ -82,12 +94,14 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     }
 
     final viewModels = data.interventionsData
-        .map((data) => InterventionFormViewModel(
-              study: study,
-              formData: data,
-              delegate: this,
-              validationSet: validationSet,
-            ))
+        .map(
+          (data) => InterventionFormViewModel(
+            study: study,
+            formData: data,
+            delegate: this,
+            validationSet: validationSet,
+          ),
+        )
         .toList();
     interventionsCollection.reset(viewModels);
     final studyScheduleLocked = study.isSubStudy && study.templateConfiguration?.lockStudySchedule == true;
@@ -116,17 +130,27 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   @override
   List<ModelAction> availableActions(InterventionFormViewModel model) {
-    final actions = interventionsCollection.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
+    final actions = interventionsCollection.availableActions(
+      model,
+      onEdit: onSelectItem,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(InterventionFormViewModel model) {
-    final actions = interventionsCollection.availablePopupActions(model, isReadOnly: isReadonly);
+    final actions = interventionsCollection.availablePopupActions(
+      model,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(InterventionFormViewModel model) {
-    final actions = interventionsCollection.availableInlineActions(model, isReadOnly: isReadonly);
+    final actions = interventionsCollection.availableInlineActions(
+      model,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
@@ -134,13 +158,17 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   void onSelectItem(InterventionFormViewModel item) {
     final studyId = study.id;
     final interventionId = item.interventionId;
-    router.dispatch(RoutingIntents.studyEditIntervention(studyId, interventionId));
+    router.dispatch(
+      RoutingIntents.studyEditIntervention(studyId, interventionId),
+    );
   }
 
   @override
   void onNewItem() {
     final studyId = study.id;
-    router.dispatch(RoutingIntents.studyEditIntervention(studyId, Config.newModelId));
+    router.dispatch(
+      RoutingIntents.studyEditIntervention(studyId, Config.newModelId),
+    );
   }
 
   // - IProviderArgsResolver
@@ -151,13 +179,17 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     if (args.interventionId.isNewId) {
       // Eagerly add the managed viewmodel in case it needs to be [provide]d
       // to a child controller
-      final viewModel =
-          InterventionFormViewModel(study: study, formData: null, delegate: this, validationSet: validationSet);
+      final viewModel = InterventionFormViewModel(
+        study: study,
+        delegate: this,
+        validationSet: validationSet,
+      );
       interventionsCollection.stage(viewModel);
       return viewModel;
     }
 
-    final viewModel = interventionsCollection.findWhere((vm) => vm.interventionId == args.interventionId);
+    final viewModel = interventionsCollection
+        .findWhere((vm) => vm.interventionId == args.interventionId);
     if (viewModel == null) {
       throw InterventionNotFoundException(); // TODO handle 404 not found
     }
@@ -172,7 +204,10 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   }
 
   @override
-  Future onSave(InterventionFormViewModel formViewModel, FormMode prevFormMode) async {
+  Future onSave(
+    InterventionFormViewModel formViewModel,
+    FormMode prevFormMode,
+  ) async {
     if (prevFormMode == FormMode.create) {
       // Commit the managed viewmodel that was eagerly added in [provide]
       interventionsCollection.commit(formViewModel);
@@ -182,11 +217,12 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     await super.save();
   }
 
-  testStudySchedule() {
-    router.dispatch(RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.journey));
+  void testStudySchedule() {
+    router.dispatch(
+      RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.journey),
+    );
   }
 
   bool get canTestStudySchedule =>
-      !interventionsArray.disabled &&
-      ((interventionsArray.value != null) ? interventionsArray.value!.length >= 2 : false);
+      !interventionsArray.disabled && interventionsArray.value!.length >= 2;
 }

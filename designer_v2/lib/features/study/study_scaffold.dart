@@ -6,13 +6,14 @@ import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
+import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/sync_indicator.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
+import 'package:studyu_designer_v2/features/dialogs/study_dialogs.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
-import 'package:studyu_designer_v2/features/publish/study_publish_dialog.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_navbar.dart';
@@ -22,10 +23,15 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-abstract class IStudyAppBarViewModel implements IStudyStatusBadgeViewModel, IStudyNavViewModel {
+abstract class IStudyAppBarViewModel
+    implements IStudyStatusBadgeViewModel, IStudyNavViewModel {
   bool get isSyncIndicatorVisible;
+
   bool get isStatusBadgeVisible;
+
   bool get isPublishVisible;
+
+  bool get isClosedVisible;
 }
 
 /// Custom scaffold shared between all pages for an individual [Study]
@@ -88,24 +94,26 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
         bottom: (widget.tabsSubnav != null)
             ? PreferredSize(
                 preferredSize: Size(double.infinity, widget.appbarSubnavHeight),
-                child: Container(
-                    //color: theme.colorScheme.primary.withOpacity(0.05),
-                    color: theme.scaffoldBackgroundColor.withOpacity(0.15),
-                    child: Row(
-                      children: [
-                        const SizedBox(width: 35.0),
-                        Container(
-                          constraints: const BoxConstraints(maxWidth: 750),
-                          child: TabbedNavbar(
-                            tabs: widget.tabsSubnav!,
-                            selectedTab: widget.selectedTabSubnav,
-                            height: widget.appbarSubnavHeight,
-                            indicator: const BoxDecoration(),
-                            isScrollable: true,
-                          ),
-                        )
-                      ],
-                    )))
+                child: ColoredBox(
+                  //color: theme.colorScheme.primary.withOpacity(0.05),
+                  color: theme.scaffoldBackgroundColor.withOpacity(0.15),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 35.0),
+                      Container(
+                        constraints: const BoxConstraints(maxWidth: 750),
+                        child: TabbedNavbar(
+                          tabs: widget.tabsSubnav!,
+                          selectedTab: widget.selectedTabSubnav,
+                          height: widget.appbarSubnavHeight,
+                          indicator: const BoxDecoration(),
+                          isScrollable: true,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
             : null,
         toolbarHeight: widget.appbarHeight,
         title: Row(
@@ -134,16 +142,20 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                         softWrap: false,
                       ),
                     ),
-                    (state.isSyncIndicatorVisible) ? const SizedBox(width: 8.0) : const SizedBox.shrink(),
-                    (state.isSyncIndicatorVisible)
-                        ? IntrinsicWidth(
-                            child: SyncIndicator(
-                              state: state.syncState,
-                              isDirty: state.isDirty,
-                              lastSynced: state.lastSynced,
-                            ),
-                          )
-                        : const SizedBox.shrink(),
+                    if (state.isSyncIndicatorVisible)
+                      const SizedBox(width: 8.0)
+                    else
+                      const SizedBox.shrink(),
+                    if (state.isSyncIndicatorVisible)
+                      IntrinsicWidth(
+                        child: SyncIndicator(
+                          state: state.syncState,
+                          isDirty: state.isDirty,
+                          lastSynced: state.lastSynced,
+                        ),
+                      )
+                    else
+                      const SizedBox.shrink(),
                   ],
                 ),
                 loading: () => Container(),
@@ -173,14 +185,17 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                     children: [
                       ...withSpacing(
                         [
-                          (state.isStatusBadgeVisible)
-                              ? StudyStatusBadge(
-                                  status: state.studyStatus,
-                                  participation: state.studyParticipation,
-                                  showPrefixIcon: true,
-                                )
-                              : const SizedBox.shrink(),
-                          (state.isStatusBadgeVisible) ? const SizedBox(width: 12.0) : const SizedBox.shrink(),
+                          if (state.isStatusBadgeVisible)
+                            StudyStatusBadge(
+                              status: state.studyStatus,
+                              participation: state.studyParticipation,
+                            )
+                          else
+                            const SizedBox.shrink(),
+                          if (state.isStatusBadgeVisible)
+                            const SizedBox(width: 12.0)
+                          else
+                            const SizedBox.shrink(),
                           ...actionButtons(context),
                         ],
                         spacing: widget.actionsSpacing,
@@ -211,14 +226,16 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
   /// Note: This is not save to call until [StudyControllerState.study] is
   /// fully loaded (i.e. use inside of [AsyncValueWidget])
   List<Widget> actionButtons(BuildContext context) {
-    List<Widget> actionButtons = [];
+    final List<Widget> actionButtons = [];
 
     final theme = Theme.of(context);
-    final controller = ref.watch(studyControllerProvider(widget.studyCreationArgs).notifier);
+    final controller =
+        ref.watch(studyControllerProvider(widget.studyCreationArgs).notifier);
     final state = ref.watch(studyControllerProvider(widget.studyCreationArgs));
 
     if (state.isPublishVisible) {
-      final formViewModel = ref.watch(studyPublishValidatorProvider(widget.studyCreationArgs));
+      final formViewModel =
+          ref.watch(studyPublishValidatorProvider(widget.studyCreationArgs));
       final publishButton = ReactiveForm(
         formGroup: formViewModel.form,
         child: ReactiveFormConsumer(
@@ -247,14 +264,40 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
       actionButtons.add(const SizedBox(width: 12.0)); // padding
     }
 
+    if (state.isClosedVisible) {
+      final formViewModel =
+      ref.watch(studyPublishValidatorProvider(widget.studyId));
+      final closeButton = ReactiveForm(
+        formGroup: formViewModel.form,
+        child: ReactiveFormConsumer(
+          // enable re-rendering based on form validation status
+          builder: (context, form, child) {
+            return SecondaryButton(
+              text: tr.action_button_study_close,
+              icon: null,
+              onPressed: () => showStudyDialog(
+                context,
+                widget.studyId,
+                StudyDialogType.close,
+              ),
+            );
+          },
+        ),
+      );
+      actionButtons.add(closeButton);
+      actionButtons.add(const SizedBox(width: 12.0)); // padding
+    }
+
     if (state.isSettingsEnabled) {
-      actionButtons.add(IconButton(
-        onPressed: controller.onSettingsPressed,
-        icon: Icon(Icons.settings_rounded, size: theme.iconTheme.size),
-        tooltip: tr.study_settings,
-        color: theme.iconTheme.color?.faded(0.8),
-        splashRadius: ThemeConfig.iconSplashRadius(theme),
-      ));
+      actionButtons.add(
+        IconButton(
+          onPressed: controller.onSettingsPressed,
+          icon: Icon(Icons.settings_rounded, size: theme.iconTheme.size),
+          tooltip: tr.study_settings,
+          color: theme.iconTheme.color?.faded(0.8),
+          splashRadius: ThemeConfig.iconSplashRadius(theme),
+        ),
+      );
     }
 
     actionButtons.add(

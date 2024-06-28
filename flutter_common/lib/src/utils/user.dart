@@ -1,8 +1,7 @@
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
-
-import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 const fakeStudyUEmailDomain = 'fake-studyu-email-domain.com';
 String selectedSubjectIdKey = 'selected_study_object_id';
@@ -10,21 +9,27 @@ const userEmailKey = 'user_email';
 const userPasswordKey = 'user_password';
 const cacheSubjectKey = "cache_subject";
 
-Future<void> storeFakeUserEmailAndPassword(String email, String password) async {
-  SecureStorage.write(userEmailKey, email);
-  SecureStorage.write(userPasswordKey, password);
+Future<void> storeFakeUserEmailAndPassword(
+  String email,
+  String password,
+) async {
+  await SecureStorage.write(userEmailKey, email);
+  await SecureStorage.write(userPasswordKey, password);
 }
 
 Future<bool> signInParticipant() async {
-  if (await SecureStorage.containsKey(userEmailKey) && await SecureStorage.containsKey(userPasswordKey)) {
+  final hasEmail = await SecureStorage.containsKey(userEmailKey);
+  final hasPassword = await SecureStorage.containsKey(userPasswordKey);
+  if (hasEmail && hasPassword) {
     try {
-      await Supabase.instance.client.auth.signInWithPassword(
-        email: await getFakeUserEmail(),
-        password: (await getFakeUserPassword())!,
+      final fakeEmail = await getFakeUserEmail();
+      final fakePassword = await getFakeUserPassword();
+      final authResponse =
+          await Supabase.instance.client.auth.signInWithPassword(
+        email: fakeEmail,
+        password: fakePassword!,
       );
-      if (Supabase.instance.client.auth.currentSession != null) {
-        return true;
-      }
+      return authResponse.session != null;
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
     }
@@ -37,9 +42,10 @@ Future<bool> anonymousSignUp() async {
   final fakeUserEmail = '${const Uuid().v4()}@$fakeStudyUEmailDomain';
   final fakeUserPassword = const Uuid().v4();
   try {
-    await Supabase.instance.client.auth.signUp(email: fakeUserEmail, password: fakeUserPassword);
+    final authResponse = await Supabase.instance.client.auth
+        .signUp(email: fakeUserEmail, password: fakeUserPassword);
     await storeFakeUserEmailAndPassword(fakeUserEmail, fakeUserPassword);
-    return signInParticipant();
+    return authResponse.session != null || await signInParticipant();
   } catch (error, stacktrace) {
     SupabaseQuery.catchSupabaseException(error, stacktrace);
     return false;
@@ -47,11 +53,11 @@ Future<bool> anonymousSignUp() async {
 }
 
 Future<String?> getFakeUserEmail() async {
-  return SecureStorage.read(userEmailKey);
+  return await SecureStorage.read(userEmailKey);
 }
 
 Future<String?> getFakeUserPassword() async {
-  return SecureStorage.read(userPasswordKey);
+  return await SecureStorage.read(userPasswordKey);
 }
 
 bool isUserLoggedIn() {
@@ -59,11 +65,11 @@ bool isUserLoggedIn() {
 }
 
 Future<String?> getActiveSubjectId() async {
-  return SecureStorage.read(selectedSubjectIdKey);
+  return await SecureStorage.read(selectedSubjectIdKey);
 }
 
 Future<void> storeActiveSubjectId(String studyObjectId) async {
-  SecureStorage.write(selectedSubjectIdKey, studyObjectId);
+  await SecureStorage.write(selectedSubjectIdKey, studyObjectId);
 }
 
 Future<void> deleteActiveStudyReference() async {

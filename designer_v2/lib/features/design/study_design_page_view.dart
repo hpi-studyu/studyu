@@ -16,24 +16,25 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
 
     if (viewModel.isStudyReadonly) {
       return BannerBox(
-          noPrefix: true,
-          body: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextParagraph(
-                  text: viewModel.studyType == StudyType.template
+        noPrefix: true,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextParagraph(
+              text: viewModel.studyType == StudyType.template
                       ? tr.banner_template_readonly_title
                       : tr.banner_study_readonly_title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                TextParagraph(
-                  text: viewModel.studyType == StudyType.template
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextParagraph(
+              text: viewModel.studyType == StudyType.template
                       ? tr.banner_template_readonly_description
                       : tr.banner_study_readonly_description,
-                ),
-              ]),
-          style: BannerStyle.info);
+            ),
+          ],
+        ),
+        style: BannerStyle.info,
+      );
     }
 
     return null;

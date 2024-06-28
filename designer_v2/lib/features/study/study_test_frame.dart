@@ -20,10 +20,11 @@ class PreviewFrame extends ConsumerStatefulWidget {
     this.route,
     super.key,
   }) : assert(
-            (routeArgs != null && route == null) ||
-                (routeArgs == null && route != null) ||
-                (routeArgs == null && route == null),
-            "Must not specify both routeArgs and route");
+          (routeArgs != null && route == null) ||
+              (routeArgs == null && route != null) ||
+              (routeArgs == null && route == null),
+          "Must not specify both routeArgs and route",
+        );
 
   final StudyCreationArgs studyCreationArgs;
   final StudyFormRouteArgs? routeArgs;
@@ -48,18 +49,20 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     super.didUpdateWidget(oldWidget);
   }
 
-  _subscribeStudyChanges() {
-    final formViewModelCurrent = ref.read(studyFormViewModelProvider(widget.studyCreationArgs));
+  void _subscribeStudyChanges() {
+    final formViewModelCurrent =
+        ref.read(studyFormViewModelProvider(widget.studyCreationArgs));
 
     formViewModelCurrent.form.valueChanges.listen((event) {
       if (frameController != null) {
-        final formJson = jsonEncode(formViewModelCurrent.buildFormData().toJson());
+        final formJson =
+            jsonEncode(formViewModelCurrent.buildFormData().toJson());
         frameController!.send(formJson);
       }
     });
   }
 
-  _updatePreviewRoute() {
+  void _updatePreviewRoute() {
     if (widget.route != null) {
       frameController!.generateUrl(route: widget.route);
     } else {
@@ -67,11 +70,17 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
       if (widget.routeArgs is InterventionFormRouteArgs) {
         route = 'intervention';
-        frameController!
-            .generateUrl(route: route, extra: (widget.routeArgs as InterventionFormRouteArgs).interventionId);
+        frameController!.generateUrl(
+          route: route,
+          extra:
+              (widget.routeArgs! as InterventionFormRouteArgs).interventionId,
+        );
       } else if (widget.routeArgs is MeasurementFormRouteArgs) {
         route = 'observation';
-        frameController!.generateUrl(route: route, extra: (widget.routeArgs as MeasurementFormRouteArgs).measurementId);
+        frameController!.generateUrl(
+          route: route,
+          extra: (widget.routeArgs! as MeasurementFormRouteArgs).measurementId,
+        );
       } else {
         frameController!.generateUrl();
       }
@@ -84,46 +93,51 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     final formViewModel = ref.watch(studyTestValidatorProvider(widget.studyCreationArgs));
 
     // Rebuild iframe component & url
-    frameController = ref.read(studyTestPlatformControllerProvider(widget.studyCreationArgs));
+    frameController =
+        ref.read(studyTestPlatformControllerProvider(widget.studyCreationArgs));
     _updatePreviewRoute();
     frameController!.activate();
     frameController!.listen();
 
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth < PhoneContainer.defaultWidth) {
-        // Not enough space to render app preview
-        return Container();
-      }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < PhoneContainer.defaultWidth) {
+          // Not enough space to render app preview
+          return Container();
+        }
 
-      return Stack(children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ReactiveForm(
-              formGroup: formViewModel.form,
-              child: ReactiveFormConsumer(
-                builder: (context, form, child) {
-                  if (formViewModel.form.hasErrors) {
-                    return const DisabledFrame();
-                  }
-                  return Column(
-                    children: [
-                      frameController!.frameWidget,
-                      const SizedBox(height: 8.0),
-                      FrameControlsWidget(
-                        onRefresh: () => frameController!.refresh(cmd: "reset"),
-                        onOpenNewTab: () => frameController!.openNewPage(),
-                        enabled: state.canTest,
-                      )
-                    ],
-                  );
-                },
-              ),
+        return Stack(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ReactiveForm(
+                  formGroup: formViewModel.form,
+                  child: ReactiveFormConsumer(
+                    builder: (context, form, child) {
+                      if (formViewModel.form.hasErrors) {
+                        return const DisabledFrame();
+                      }
+                      return Column(
+                        children: [
+                          frameController!.frameWidget,
+                          const SizedBox(height: 8.0),
+                          FrameControlsWidget(
+                            onRefresh: () =>
+                                frameController!.refresh(cmd: "reset"),
+                            onOpenNewTab: () => frameController!.openNewPage(),
+                            enabled: state.canTest,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-      ]);
-    });
+        );
+      },
+    );
   }
 }

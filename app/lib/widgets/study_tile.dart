@@ -24,13 +24,13 @@ class StudyTile extends StatelessWidget {
     super.key,
   });
 
-  StudyTile.fromStudy(
-      {required Study study,
+  StudyTile.fromStudy({
+    required Study study,
       this.numSubtrials = 0,
       this.onTap,
       this.contentPadding = const EdgeInsets.all(16),
-      super.key})
-      : studyType = study.type,
+      super.key,
+  }) : studyType = study.type,
         title = study.title,
         description = study.description,
         iconName = study.iconName;
@@ -55,7 +55,13 @@ class StudyTile extends StatelessWidget {
         ListTile(
           contentPadding: contentPadding,
           onTap: onTap,
-          title: Center(child: Text(title!, style: theme.textTheme.titleLarge!.copyWith(color: theme.primaryColor))),
+          title: Center(
+            child: Text(
+              title!,
+              style: theme.textTheme.titleLarge!
+                  .copyWith(color: theme.primaryColor),
+            ),
+          ),
           subtitle: Center(child: Text(description ?? '')),
           leading: numSubtrials > 0
               ? CircleAvatar(

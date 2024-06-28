@@ -9,27 +9,30 @@ import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class StudyBaseController<T extends StudyControllerBaseState> extends StateNotifier<T> {
+class StudyBaseController<T extends StudyControllerBaseState>
+    extends StateNotifier<T> {
   StudyBaseController(
     super.state, {
     required this.studyCreationArgs,
     required this.studyRepository,
+    required this.currentUser,
     required this.router,
-    required currentUser,
   }) {
     subscribeStudy(studyCreationArgs);
   }
 
   final StudyCreationArgs studyCreationArgs;
   final IStudyRepository studyRepository;
+  final User? currentUser;
   final GoRouter router;
 
   StudyID get studyId => studyCreationArgs.studyID;
 
   StreamSubscription<WrappedModel<Study>>? studySubscription;
 
-  subscribeStudy(StudyCreationArgs studyCreationArgs) {
+  void subscribeStudy(StudyCreationArgs studyCreationArgs) {
     if (studySubscription != null) {
       studySubscription!.cancel();
     }
@@ -38,11 +41,11 @@ class StudyBaseController<T extends StudyControllerBaseState> extends StateNotif
         .listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
   }
 
-  onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
+  void onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
     state = state.copyWith(studyWithMetadata: wrappedModel) as T;
   }
 
-  onStudySubscriptionError(Object error) {
+  void onStudySubscriptionError(Object error) {
     // TODO: improve error handling
     if (error is StudyNotFoundException) {
       /* TODO: figure out a way to resolve data dependencies for the current page
@@ -54,7 +57,7 @@ class StudyBaseController<T extends StudyControllerBaseState> extends StateNotif
   }
 
   @override
-  dispose() {
+  void dispose() {
     studySubscription?.cancel();
     super.dispose();
   }

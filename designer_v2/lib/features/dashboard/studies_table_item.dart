@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
+import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:collection/collection.dart';
-
-import '../../common_views/action_popup_menu.dart';
-import '../../theme.dart';
-import '../../utils/model_action.dart';
-import '../study/study_participation_badge.dart';
-import '../study/study_status_badge.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
+import 'package:studyu_designer_v2/features/study/study_participation_badge.dart';
+import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
+import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
 
 import '../study/study_type_badge.dart';
 
@@ -289,7 +290,6 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       alignment: Alignment.centerRight,
       child: ActionPopUpMenuButton(
         actions: actions,
-        orientation: Axis.horizontal,
         triggerIconColor: ThemeConfig.bodyTextMuted(theme).color?.faded(0.6),
         triggerIconColorHover: theme.colorScheme.primary,
         disableSplashEffect: true,

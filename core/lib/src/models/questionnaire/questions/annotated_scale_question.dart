@@ -15,7 +15,8 @@ class AnnotatedScaleQuestion extends SliderQuestion {
 
   AnnotatedScaleQuestion.withId() : super.withId(questionType);
 
-  factory AnnotatedScaleQuestion.fromJson(Map<String, dynamic> json) => _$AnnotatedScaleQuestionFromJson(json);
+  factory AnnotatedScaleQuestion.fromJson(Map<String, dynamic> json) =>
+      _$AnnotatedScaleQuestionFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$AnnotatedScaleQuestionToJson(this);
@@ -28,7 +29,8 @@ class Annotation {
 
   Annotation();
 
-  factory Annotation.fromJson(Map<String, dynamic> json) => _$AnnotationFromJson(json);
+  factory Annotation.fromJson(Map<String, dynamic> json) =>
+      _$AnnotationFromJson(json);
 
   Map<String, dynamic> toJson() => _$AnnotationToJson(this);
 }

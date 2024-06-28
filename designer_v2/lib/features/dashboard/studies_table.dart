@@ -40,7 +40,7 @@ class StudiesTableColumnSize {
       return Expanded(flex: flex!, child: child);
     }
 
-    return SizedBox(width: width!, height: height, child: child);
+    return SizedBox(width: width, height: height, child: child);
   }
 }
 
@@ -91,16 +91,20 @@ class StudiesTable extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isCompact = constraints.maxWidth < compactWidthThreshold;
-        final isSuperCompact = constraints.maxWidth < superCompactWidthThreshold;
-        final isCompactStatTitle = constraints.maxWidth < compactStatTitleThreshold;
+        final isSuperCompact =
+            constraints.maxWidth < superCompactWidthThreshold;
+        final isCompactStatTitle =
+            constraints.maxWidth < compactStatTitleThreshold;
         // Calculate the minimum stat column width
-        final int maxStatTitleLength =
-            isCompactStatTitle ? "Completed".length : tr.studies_list_header_participants_completed.length;
+        final int maxStatTitleLength = isCompactStatTitle
+            ? "Completed".length
+            : tr.studies_list_header_participants_completed.length;
         final double statsColumnWidth = maxStatTitleLength * 9.9;
 
         // Calculate the minimum status column width
         int maxStatusLength = "Entwurf".length;
-        maxStatusLength = max(maxStatusLength, tr.studies_list_header_status.length);
+        maxStatusLength =
+            max(maxStatusLength, tr.studies_list_header_status.length);
         final double statusColumnWidth = maxStatusLength * 11.5;
 
         // Calculate the minimum type column width
@@ -108,26 +112,37 @@ class StudiesTable extends StatelessWidget {
         final double typeColumnWidth = maxTypeLength * 8.5;
 
         // Calculate the minimum participation column width
-        final int maxParticipationLength = isCompact ? "Invite-only".length : tr.participation_invite_who.length;
-        maxStatusLength = max(maxStatusLength, tr.studies_list_header_participation.length);
-        final double participationColumnWidth = 20 + (maxParticipationLength * 7.5);
+        final int maxParticipationLength = isCompact
+            ? "Invite-only".length
+            : tr.participation_invite_who.length;
+        maxStatusLength =
+            max(maxStatusLength, tr.studies_list_header_participation.length);
+        final double participationColumnWidth =
+            20 + (maxParticipationLength * 7.5);
 
         // Set column definitions
         final columnDefinitionsMap = {
           StudiesTableColumn.expand: StudiesTableColumnSize.fixedWidth(itemHeight),
           StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(24),
           StudiesTableColumn.type: StudiesTableColumnSize.fixedWidth(typeColumnWidth),
-          StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(statusColumnWidth),
-          StudiesTableColumn.participation: StudiesTableColumnSize.fixedWidth(participationColumnWidth),
-          StudiesTableColumn.createdAt:
-              isSuperCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.flexWidth(10),
-          StudiesTableColumn.enrolled:
-              isCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
-          StudiesTableColumn.active:
-              isCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
-          StudiesTableColumn.completed:
-              isCompact ? StudiesTableColumnSize.collapsed() : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
-          StudiesTableColumn.action: StudiesTableColumnSize.fixedWidth(itemHeight)
+          StudiesTableColumn.status:
+              StudiesTableColumnSize.fixedWidth(statusColumnWidth),
+          StudiesTableColumn.participation:
+              StudiesTableColumnSize.fixedWidth(participationColumnWidth),
+          StudiesTableColumn.createdAt: isSuperCompact
+              ? StudiesTableColumnSize.collapsed()
+              : StudiesTableColumnSize.flexWidth(10),
+          StudiesTableColumn.enrolled: isCompact
+              ? StudiesTableColumnSize.collapsed()
+              : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
+          StudiesTableColumn.active: isCompact
+              ? StudiesTableColumnSize.collapsed()
+              : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
+          StudiesTableColumn.completed: isCompact
+              ? StudiesTableColumnSize.collapsed()
+              : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
+          StudiesTableColumn.action:
+              StudiesTableColumnSize.fixedWidth(itemHeight),
         };
         final columnDefinitions = columnDefinitionsMap.entries.toList();
 
@@ -174,7 +189,7 @@ class StudiesTable extends StatelessWidget {
                   onExpandStudy: (study) => onExpand.call(study),
                 );
               },
-            )
+            ),
           ],
         );
       },
@@ -186,36 +201,28 @@ class StudiesTable extends StatelessWidget {
     switch (column) {
       case StudiesTableColumn.title:
         title = tr.studies_list_header_title;
-        break;
       case StudiesTableColumn.type:
         title = tr.studies_list_header_type;
-        break;
       case StudiesTableColumn.status:
         title = tr.studies_list_header_status;
-        break;
       case StudiesTableColumn.participation:
         title = tr.studies_list_header_participation;
-        break;
       case StudiesTableColumn.createdAt:
         title = tr.studies_list_header_created_at;
-        break;
       case StudiesTableColumn.enrolled:
         title = tr.studies_list_header_participants_enrolled;
-        break;
       case StudiesTableColumn.active:
         title = tr.studies_list_header_participants_active;
-        break;
       case StudiesTableColumn.completed:
         title = tr.studies_list_header_participants_completed;
-        break;
       case StudiesTableColumn.expand:
       case StudiesTableColumn.action:
         title = '';
-        break;
     }
 
     final sortAscending = dashboardController.isSortAscending;
-    final sortable = !(column == StudiesTableColumn.expand || column == StudiesTableColumn.action);
+    final sortable = !(column == StudiesTableColumn.expand ||
+        column == StudiesTableColumn.action);
     final sortingActive = dashboardController.isSortingActiveForColumn(column);
 
     return StudiesTableColumnHeader(
@@ -225,7 +232,10 @@ class StudiesTable extends StatelessWidget {
       sortAscending: sortAscending,
       onSort: sortable
           ? () {
-              dashboardController.setSorting(column, sortingActive ? !sortAscending : sortAscending);
+              dashboardController.setSorting(
+                column,
+                sortingActive ? !sortAscending : sortAscending,
+              );
             }
           : null,
     );

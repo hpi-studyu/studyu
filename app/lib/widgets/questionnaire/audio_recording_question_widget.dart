@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -15,13 +15,19 @@ class AudioRecordingQuestionWidget extends QuestionWidget {
   final AudioRecordingQuestion question;
   final Function(Answer<FutureBlobFile>)? onDone;
 
-  const AudioRecordingQuestionWidget({super.key, required this.question, this.onDone});
+  const AudioRecordingQuestionWidget({
+    super.key,
+    required this.question,
+    this.onDone,
+  });
 
   @override
-  State<AudioRecordingQuestionWidget> createState() => _AudioRecordingQuestionWidgetState();
+  State<AudioRecordingQuestionWidget> createState() =>
+      _AudioRecordingQuestionWidgetState();
 }
 
-class _AudioRecordingQuestionWidgetState extends State<AudioRecordingQuestionWidget> {
+class _AudioRecordingQuestionWidgetState
+    extends State<AudioRecordingQuestionWidget> {
   bool _isRecording = false;
   bool _hasRecorded = false;
   late final AudioRecorder _audioRecorder;
@@ -47,90 +53,105 @@ class _AudioRecordingQuestionWidgetState extends State<AudioRecordingQuestionWid
     final theme = Theme.of(context);
     final loc = AppLocalizations.of(context)!;
     final appState = context.read<AppState>();
-    final maxRecordingDurationSeconds = widget.question.maxRecordingDurationSeconds;
-    return Row(children: [
-      Expanded(
+    final maxRecordingDurationSeconds =
+        widget.question.maxRecordingDurationSeconds;
+    return Row(
+      children: [
+        Expanded(
           child: OutlinedButton(
-        style: OutlinedButton.styleFrom(
-          backgroundColor: _isRecording ? Colors.red.shade600 : null,
-          foregroundColor: _isRecording ? Colors.white : theme.colorScheme.primary,
-          side: BorderSide(
-              width: 1.0,
-              color: _hasRecorded
-                  ? Colors.black38
-                  : _isRecording
-                      ? Colors.red.shade600
-                      : theme.colorScheme.primary),
-        ),
-        onPressed: !_hasRecorded
-            ? () async {
-                if (_isRecording) {
-                  await _stopRecording();
-                } else {
-                  await _startRecording(appState.activeSubject!.studyId, appState.activeSubject!.userId);
-                }
-              }
-            : null,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: 8.0,
-            horizontal: 2.0,
-          ),
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Icon(
-                  _hasRecorded
-                      ? MdiIcons.checkCircleOutline
-                      : _isRecording
-                          ? MdiIcons.stop
-                          : MdiIcons.microphone,
-                  color: _hasRecorded
-                      ? Colors.black38
-                      : _isRecording
-                          ? Colors.white
-                          : theme.colorScheme.primary,
-                  size: 24,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                _hasRecorded
-                    ? loc.audio_recorded
+            style: OutlinedButton.styleFrom(
+              backgroundColor: _isRecording ? Colors.red.shade600 : null,
+              foregroundColor:
+                  _isRecording ? Colors.white : theme.colorScheme.primary,
+              side: BorderSide(
+                color: _hasRecorded
+                    ? Colors.black38
                     : _isRecording
-                        ? loc.stop_recording
-                        : loc.start_recording,
-                style: const TextStyle(fontSize: 16),
+                        ? Colors.red.shade600
+                        : theme.colorScheme.primary,
               ),
-              const Spacer(),
-            ],
+            ),
+            onPressed: !_hasRecorded
+                ? () async {
+                    if (_isRecording) {
+                      await _stopRecording();
+                    } else {
+                      await _startRecording(
+                        appState.activeSubject!.studyId,
+                        appState.activeSubject!.userId,
+                      );
+                    }
+                  }
+                : null,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 2.0,
+              ),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Icon(
+                      _hasRecorded
+                          ? MdiIcons.checkCircleOutline
+                          : _isRecording
+                              ? MdiIcons.stop
+                              : MdiIcons.microphone,
+                      color: _hasRecorded
+                          ? Colors.black38
+                          : _isRecording
+                              ? Colors.white
+                              : theme.colorScheme.primary,
+                      size: 24,
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    _hasRecorded
+                        ? loc.audio_recorded
+                        : _isRecording
+                            ? loc.stop_recording
+                            : loc.start_recording,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const Spacer(),
+                ],
+              ),
+            ),
           ),
         ),
-      )),
-      const SizedBox(width: 16.0),
-      Text(
-        '${_formatNumber(_recordDurationSeconds ~/ 60)}:${_formatNumber(_recordDurationSeconds % 60)}',
-        style: const TextStyle(fontSize: 16),
-      ),
-      const SizedBox(width: 8.0),
-      _isRecording && _recordDurationSeconds > 0 && _recordDurationSeconds < maxRecordingDurationSeconds
-          ? SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                value: 1.0 - (_recordDurationSeconds / maxRecordingDurationSeconds),
-                strokeWidth: 2.5,
-              ))
-          : const SizedBox.shrink(),
-    ]);
+        const SizedBox(width: 16.0),
+        Text(
+          '${_formatNumber(_recordDurationSeconds ~/ 60)}:${_formatNumber(_recordDurationSeconds % 60)}',
+          style: const TextStyle(fontSize: 16),
+        ),
+        const SizedBox(width: 8.0),
+        if (_isRecording &&
+            _recordDurationSeconds > 0 &&
+            _recordDurationSeconds < maxRecordingDurationSeconds)
+          SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(
+              value:
+                  1.0 - (_recordDurationSeconds / maxRecordingDurationSeconds),
+              strokeWidth: 2.5,
+            ),
+          )
+        else
+          const SizedBox.shrink(),
+      ],
+    );
   }
 
   Future<void> _startRecording(String studyId, String userId) async {
     if (kIsWeb) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(AppLocalizations.of(context)!.multimodal_not_supported),
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.multimodal_not_supported),
+        ),
+      );
       return;
     }
 
@@ -148,8 +169,7 @@ class _AudioRecordingQuestionWidgetState extends State<AudioRecordingQuestionWid
       }
 
       final storage = TemporaryStorageHandler(studyId, userId);
-      const encoder = AudioEncoder.aacLc;
-      const config = RecordConfig(encoder: encoder, numChannels: 1);
+      const config = RecordConfig(numChannels: 1);
       _recordedFile = await storage.getStagingAudio();
       await _audioRecorder.start(config, path: _recordedFile!.localFilePath);
       _startTimer();
@@ -188,7 +208,8 @@ class _AudioRecordingQuestionWidgetState extends State<AudioRecordingQuestionWid
 
     _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) async {
       setState(() => _recordDurationSeconds++);
-      if (_recordDurationSeconds >= widget.question.maxRecordingDurationSeconds) {
+      if (_recordDurationSeconds >=
+          widget.question.maxRecordingDurationSeconds) {
         await _stopRecording();
       }
     });

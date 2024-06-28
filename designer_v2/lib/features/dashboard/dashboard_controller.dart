@@ -1,9 +1,11 @@
 import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
@@ -15,9 +17,8 @@ import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
-import 'dashboard_state.dart';
-
-class DashboardController extends StateNotifier<DashboardState> implements IModelActionProvider<StudyGroup> {
+class DashboardController extends StateNotifier<DashboardState>
+    implements IModelActionProvider<StudyGroup> {
   /// References to the data repositories injected by Riverpod
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
@@ -40,42 +41,47 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
     _subscribeStudies();
   }
 
-  _subscribeStudies() {
-    _studiesSubscription = studyRepository.watchAll().listen((wrappedModels) {
-      print("studyRepository.update");
-      // Update the controller's state when new studies are available in the repository
-      final studies = wrappedModels.map((study) => study.model).toList();
-      state = state.copyWith(
-        studies: () => AsyncValue.data(studies),
-      );
-    }, onError: (error) {
-      state = state.copyWith(
-        studies: () => AsyncValue.error(error, StackTrace.current),
-      );
-    });
+  void _subscribeStudies() {
+    _studiesSubscription = studyRepository.watchAll().listen(
+      (wrappedModels) {
+        print("studyRepository.update");
+        // Update the controller's state when new studies are available in the repository
+        final studies = wrappedModels.map((study) => study.model).toList();
+        state = state.copyWith(
+          studies: () => AsyncValue.data(studies),
+        );
+      },
+      onError: (Object error) {
+        state = state.copyWith(
+          studies: () => AsyncValue.error(error, StackTrace.current),
+        );
+      },
+    );
   }
 
-  setSearchText(String? text) {
+  void setSearchText(String? text) {
     searchController.setText(text ?? state.query);
   }
 
-  setStudiesFilter(StudiesFilter? filter) {
-    state = state.copyWith(studiesFilter: () => filter ?? DashboardState.defaultFilter);
+  void setStudiesFilter(StudiesFilter? filter) {
+    state = state.copyWith(
+      studiesFilter: () => filter ?? DashboardState.defaultFilter,
+    );
   }
 
-  setPinnedStudies(Set<String> pinnedStudies) {
+  void setPinnedStudies(Set<String> pinnedStudies) {
     state = state.copyWith(pinnedStudies: pinnedStudies);
   }
 
-  setExpandedStudies(Set<String> expandedStudies) {
+  void setExpandedStudies(Set<String> expandedStudies) {
     state = state.copyWith(expandedStudies: expandedStudies);
   }
 
-  onSelectStudy(Study study) {
+  void onSelectStudy(Study study) {
     router.dispatch(RoutingIntents.studyEdit(study.id));
   }
 
-  onClickNewStudy(bool isTemplate) {
+  void onClickNewStudy(bool isTemplate) {
     router.dispatch(RoutingIntents.studyNew(isTemplate));
   }
 
@@ -97,16 +103,26 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
   }
 
   void setSorting(StudiesTableColumn sortByColumn, bool ascending) {
-    state = state.copyWith(sortByColumn: sortByColumn, sortAscending: ascending);
+    state =
+        state.copyWith(sortByColumn: sortByColumn, sortAscending: ascending);
   }
 
   void setCreateNewMenuOpen(bool open) {
     state = state.copyWith(createNewMenuOpen: open);
   }
 
-  void filterStudies(String? query) async {
+  Future<void> filterStudies(String? query) async {
     state = state.copyWith(
       query: query,
+    );
+  }
+
+  Future<void> sortStudies() async {
+    final studies = state.sort(
+      pinnedStudies: userRepository.user.preferences.pinnedStudies,
+    );
+    state = state.copyWith(
+      studies: () => AsyncValue.data(studies),
     );
   }
 
@@ -147,7 +163,7 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
           await pinOffStudy(study.id);
         },
         isAvailable: !study.isSubStudy && isPinned(study),
-      )
+      ),
     ].where((action) => action.isAvailable).toList();
 
     return withIcons(
@@ -157,13 +173,15 @@ class DashboardController extends StateNotifier<DashboardState> implements IMode
   }
 
   @override
-  dispose() {
+  void dispose() {
     _studiesSubscription?.cancel();
     super.dispose();
   }
 }
 
-final dashboardControllerProvider = StateNotifierProvider.autoDispose<DashboardController, DashboardState>((ref) {
+final dashboardControllerProvider =
+    StateNotifierProvider.autoDispose<DashboardController, DashboardState>(
+        (ref) {
   final dashboardController = DashboardController(
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),

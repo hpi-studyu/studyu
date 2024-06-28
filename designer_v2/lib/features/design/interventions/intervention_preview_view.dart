@@ -11,9 +11,10 @@ class InterventionPreview extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-        color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.25),
-        child: Column(children: [
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.25),
+      child: Column(
+        children: [
           Stack(
             children: [
               Column(
@@ -25,6 +26,8 @@ class InterventionPreview extends ConsumerWidget {
               previewBanner(ref, routeArgs.studyCreationArgs) ?? const SizedBox.shrink(),
             ],
           ),
-        ]));
+        ],
+      ),
+    );
   }
 }

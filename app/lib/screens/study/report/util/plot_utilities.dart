@@ -3,7 +3,7 @@ import 'package:studyu_core/core.dart';
 
 Map<String, int> getInterventionPositions(List<Intervention> interventions) {
   final order = <String, int>{};
-  for (var intervention in interventions) {
+  for (final intervention in interventions) {
     if (!order.containsKey(intervention.id)) {
       order[intervention.id] = order.length;
     }

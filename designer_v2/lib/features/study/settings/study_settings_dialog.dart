@@ -14,14 +14,14 @@ class StudySettingsDialog extends StudyPageWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formViewModel = ref.watch(studySettingsFormViewModelProvider(studyCreationArgs));
+    final formViewModel =
+        ref.watch(studySettingsFormViewModelProvider(studyCreationArgs));
 
     return ReactiveForm(
       formGroup: formViewModel.form,
       child: StandardDialog(
         titleText: tr.study_settings,
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 12.0),
@@ -34,34 +34,40 @@ class StudySettingsDialog extends StudyPageWidget {
             const SizedBox(height: 6.0),
             TextParagraph(text: tr.navlink_public_studies_description),
             const SizedBox(height: 24.0),
-            ReactiveFormConsumer(builder: (context, form, child) {
-              return FormTableLayout(
-                rows: [
-                  FormTableRow(
+            ReactiveFormConsumer(
+              builder: (context, form, child) {
+                return FormTableLayout(
+                  rows: [
+                    FormTableRow(
                       label: tr.study_settings_publish_study,
                       labelHelpText: tr.study_settings_publish_study_tooltip,
                       input: Align(
                         alignment: Alignment.centerRight,
                         child: ReactiveSwitch(
-                          formControl: formViewModel.isPublishedToRegistryControl,
+                          formControl:
+                              formViewModel.isPublishedToRegistryControl,
                         ),
-                      )),
-                  FormTableRow(
+                      ),
+                    ),
+                    FormTableRow(
                       label: tr.study_settings_publish_results,
                       labelHelpText: tr.study_settings_publish_results_tooltip,
                       input: Align(
                         alignment: Alignment.centerRight,
                         child: ReactiveSwitch(
-                          formControl: formViewModel.isPublishedToRegistryResultsControl,
+                          formControl:
+                              formViewModel.isPublishedToRegistryResultsControl,
                         ),
-                      )),
-                ],
-                columnWidths: const {
-                  0: IntrinsicColumnWidth(),
-                  1: FlexColumnWidth(),
-                },
-              );
-            }),
+                      ),
+                    ),
+                  ],
+                  columnWidths: const {
+                    0: IntrinsicColumnWidth(),
+                    1: FlexColumnWidth(),
+                  },
+                );
+              },
+            ),
             const SizedBox(height: 12.0),
           ],
         ),

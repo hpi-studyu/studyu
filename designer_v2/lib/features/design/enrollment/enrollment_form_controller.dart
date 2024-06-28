@@ -26,11 +26,14 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
-    with WithQuestionnaireControls<EnrollmentFormData, ScreenerQuestionFormViewModel>
+    with
+        WithQuestionnaireControls<EnrollmentFormData,
+            ScreenerQuestionFormViewModel>
     implements
         IFormViewModelDelegate<ScreenerQuestionFormViewModel>,
         IListActionProvider<ScreenerQuestionFormViewModel>,
-        IProviderArgsResolver<ScreenerQuestionFormViewModel, QuestionFormRouteArgs> {
+        IProviderArgsResolver<ScreenerQuestionFormViewModel,
+            QuestionFormRouteArgs> {
   EnrollmentFormViewModel({
     required this.study,
     required this.router,
@@ -58,13 +61,23 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
   final FormControl<bool> lockEnrollmentTypeControl = FormControl();
 
   List<FormControlOption<Participation>> get enrollmentTypeControlOptions =>
-      Participation.values.map((v) => FormControlOption(v, v.string, description: v.designDescription)).toList();
+      Participation.values
+          .map(
+            (v) => FormControlOption(
+              v,
+              v.string,
+              description: v.designDescription,
+            ),
+          )
+          .toList();
 
   late final FormArray consentItemArray = FormArray([]);
-  late final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData> consentItemFormViewModels =
+  late final FormViewModelCollection<ConsentItemFormViewModel,
+          ConsentItemFormData> consentItemFormViewModels =
       FormViewModelCollection([], consentItemArray);
 
-  List<ConsentItemFormViewModel> get consentItemModels => consentItemFormViewModels.formViewModels;
+  List<ConsentItemFormViewModel> get consentItemModels =>
+      consentItemFormViewModels.formViewModels;
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
@@ -98,11 +111,13 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
     if (data.consentItemsFormData != null) {
       final viewModels = data.consentItemsFormData!
-          .map((data) => ConsentItemFormViewModel(
-                formData: data,
-                delegate: consentItemDelegate,
-                validationSet: validationSet,
-              ))
+          .map(
+            (data) => ConsentItemFormViewModel(
+              formData: data,
+              delegate: consentItemDelegate,
+              validationSet: validationSet,
+            ),
+          )
           .toList();
       consentItemFormViewModels.reset(viewModels);
     }
@@ -132,17 +147,29 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   @override
   List<ModelAction> availableActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableActions(model, onEdit: onSelectItem, isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availableActions(
+      model,
+      onEdit: onSelectItem,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availablePopupActions(model, isReadOnly: isReadonly);
+    final actions = questionFormViewModels.availablePopupActions(
+      model,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availableInlineActions(ScreenerQuestionFormViewModel model) {
-    final actions = questionFormViewModels.availableInlineActions(model, isReadOnly: isReadonly);
+  List<ModelAction> availableInlineActions(
+    ScreenerQuestionFormViewModel model,
+  ) {
+    final actions = questionFormViewModels.availableInlineActions(
+      model,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
@@ -165,7 +192,9 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
     );
   }
 
-  ScreenerQuestionFormRouteArgs buildScreenerQuestionFormRouteArgs(QuestionFormViewModel model) {
+  ScreenerQuestionFormRouteArgs buildScreenerQuestionFormRouteArgs(
+    QuestionFormViewModel model,
+  ) {
     return ScreenerQuestionFormRouteArgs(
       studyCreationArgs: StudyCreationArgs.fromStudy(study),
       questionId: model.questionId,
@@ -179,23 +208,35 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
     );
   }
 
-  ConsentItemFormRouteArgs buildConsentItemFormRouteArgs(ConsentItemFormViewModel model) {
+  ConsentItemFormRouteArgs buildConsentItemFormRouteArgs(
+    ConsentItemFormViewModel model,
+  ) {
     return ConsentItemFormRouteArgs(
       studyCreationArgs: StudyCreationArgs.fromStudy(study),
       consentId: model.consentId,
     );
   }
 
-  testScreener() {
-    router.dispatch(RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.eligibility));
+  void testScreener() {
+    router.dispatch(
+      RoutingIntents.studyTest(
+        study.id,
+        appRoute: TestAppRoutes.eligibility,
+      ),
+    );
   }
 
-  testConsent() {
-    router.dispatch(RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.consent));
+  void testConsent() {
+    router.dispatch(
+      RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.consent),
+    );
   }
 
-  bool get canTestScreener => !questionsArray.disabled && (questionsArray.value?.isNotEmpty ?? false);
-  bool get canTestConsent => !consentItemArray.disabled && (consentItemArray.value?.isNotEmpty ?? false);
+  bool get canTestScreener =>
+      !questionsArray.disabled && (questionsArray.value?.isNotEmpty ?? false);
+  bool get canTestConsent =>
+      !consentItemArray.disabled &&
+      (consentItemArray.value?.isNotEmpty ?? false);
 
   @override
   Map<FormMode, LocalizedStringResolver> get questionTitles => {
@@ -205,7 +246,9 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
       };
 
   @override
-  ScreenerQuestionFormViewModel provideQuestionFormViewModel(QuestionFormData? formData) {
+  ScreenerQuestionFormViewModel provideQuestionFormViewModel(
+    QuestionFormData? formData,
+  ) {
     return ScreenerQuestionFormViewModel(
       formData: formData,
       delegate: this,
@@ -219,7 +262,8 @@ class EnrollmentFormConsentItemDelegate
     implements
         IFormViewModelDelegate<ConsentItemFormViewModel>,
         IListActionProvider<ConsentItemFormViewModel>,
-        IProviderArgsResolver<ConsentItemFormViewModel, ConsentItemFormRouteArgs> {
+        IProviderArgsResolver<ConsentItemFormViewModel,
+            ConsentItemFormRouteArgs> {
   EnrollmentFormConsentItemDelegate({
     required this.formViewModels,
     required this.owner,
@@ -227,7 +271,8 @@ class EnrollmentFormConsentItemDelegate
     this.propagateOnSave = true,
   });
 
-  final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData> formViewModels;
+  final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData>
+      formViewModels;
   final EnrollmentFormViewModel owner;
   final bool propagateOnSave;
   final FormValidationSetEnum? validationSet;
@@ -238,7 +283,10 @@ class EnrollmentFormConsentItemDelegate
   }
 
   @override
-  Future onSave(ConsentItemFormViewModel formViewModel, FormMode prevFormMode) async {
+  Future onSave(
+    ConsentItemFormViewModel formViewModel,
+    FormMode prevFormMode,
+  ) async {
     if (prevFormMode == FormMode.create) {
       // Save the managed viewmodel that was eagerly added in [provide]
       formViewModels.commit(formViewModel);
@@ -256,7 +304,6 @@ class EnrollmentFormConsentItemDelegate
       // Eagerly add the managed viewmodel in case it needs to be [provide]d
       // to a child controller
       final viewModel = ConsentItemFormViewModel(
-        formData: null,
         delegate: this,
         validationSet: validationSet,
       );
@@ -264,7 +311,8 @@ class EnrollmentFormConsentItemDelegate
       return viewModel;
     }
 
-    final viewModel = formViewModels.findWhere((vm) => vm.consentId == args.consentId);
+    final viewModel =
+        formViewModels.findWhere((vm) => vm.consentId == args.consentId);
     if (viewModel == null) {
       throw ConsentItemNotFoundException(); // TODO handle 404 not found
     }

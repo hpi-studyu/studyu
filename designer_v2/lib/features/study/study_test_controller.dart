@@ -11,7 +11,8 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 
-class StudyTestController extends StudyBaseController<StudyTestControllerState> {
+class StudyTestController
+    extends StudyBaseController<StudyTestControllerState> {
   StudyTestController({
     required super.studyCreationArgs,
     required super.studyRepository,
@@ -19,11 +20,15 @@ class StudyTestController extends StudyBaseController<StudyTestControllerState> 
     required super.router,
     required this.authRepository,
     required this.languageCode,
-  }) : super(StudyTestControllerState(
-          currentUser: currentUser,
-          languageCode: languageCode,
-        )) {
-    state = state.copyWith(serializedSession: authRepository.serializedSession ?? '');
+  }) : super(
+          StudyTestControllerState(
+            currentUser: currentUser,
+            languageCode: languageCode,
+          ),
+        ) {
+    state = state.copyWith(
+      serializedSession: authRepository.serializedSession ?? '',
+    );
   }
 
   final IAuthRepository authRepository;
@@ -31,8 +36,8 @@ class StudyTestController extends StudyBaseController<StudyTestControllerState> 
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
-final studyTestControllerProvider =
-    StateNotifierProvider.family<StudyTestController, StudyTestControllerState, StudyCreationArgs>(
+final studyTestControllerProvider = StateNotifierProvider.family<
+    StudyTestController, StudyTestControllerState, StudyCreationArgs>(
         (ref, studyCreationArgs) {
   final studyRepository = ref.watch(studyRepositoryProvider);
   final controller = StudyTestController(
@@ -62,7 +67,9 @@ final studyTestPlatformControllerProvider =
   PlatformController platformController;
   if (!kIsWeb) {
     // Mobile could be built with the webview_flutter package
-    throw Exception("The StudyU designer only support the web platform".hardcoded);
+    throw Exception(
+      "The StudyU designer only support the web platform".hardcoded,
+    );
   } else {
     // Desktop and Web
     platformController = WebController(state.appUrl, studyCreationArgs.studyID);

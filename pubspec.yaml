@@ -4,9 +4,8 @@ publish_to: none
 version: 0.4.0
 
 environment:
-  sdk: ">=2.18.0 <3.0.0"
+  sdk: '>=3.0.0 <4.0.0'
 
 dev_dependencies:
-  flutter_lints: ^3.0.2
   lint: ^2.3.0
-  melos: ^5.3.0
+  melos: ^6.0.0

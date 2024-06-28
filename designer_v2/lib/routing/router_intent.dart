@@ -78,13 +78,14 @@ class RoutingIntents {
           RouteParams.studyId: studyId,
         },
       );
-  static final studyEditIntervention = (StudyID studyId, InterventionID interventionId) => RoutingIntent(
-        route: RouterConf.route(studyEditInterventionRouteName),
-        params: {
-          RouteParams.studyId: studyId,
-          RouteParams.interventionId: interventionId,
-        },
-      );
+  static final studyEditIntervention =
+      (StudyID studyId, InterventionID interventionId) => RoutingIntent(
+            route: RouterConf.route(studyEditInterventionRouteName),
+            params: {
+              RouteParams.studyId: studyId,
+              RouteParams.interventionId: interventionId,
+            },
+          );
   static final studyEditMeasurements = (StudyID studyId) => RoutingIntent(
         route: RouterConf.route(studyEditMeasurementsRouteName),
         params: {
@@ -97,29 +98,36 @@ class RoutingIntents {
           RouteParams.studyId: studyId,
         },
       );
-  static final studyEditMeasurement = (StudyID studyId, MeasurementID measurementId) => RoutingIntent(
-        route: RouterConf.route(studyEditMeasurementRouteName),
-        params: {
-          RouteParams.studyId: studyId,
-          RouteParams.measurementId: measurementId,
-        },
-      );
+  static final studyEditMeasurement =
+      (StudyID studyId, MeasurementID measurementId) => RoutingIntent(
+            route: RouterConf.route(studyEditMeasurementRouteName),
+            params: {
+              RouteParams.studyId: studyId,
+              RouteParams.measurementId: measurementId,
+            },
+          );
   static final studyTest =
-      (StudyID studyId, {String? appRoute}) => RoutingIntent(route: RouterConf.route(studyTestRouteName), params: {
-            RouteParams.studyId: studyId,
-          }, queryParams: {
-            if (appRoute != null) RouteParams.testAppRoute: appRoute,
-          });
+      (StudyID studyId, {String? appRoute}) => RoutingIntent(
+            route: RouterConf.route(studyTestRouteName),
+            params: {
+              RouteParams.studyId: studyId,
+            },
+            queryParams: {
+              if (appRoute != null) RouteParams.testAppRoute: appRoute,
+            },
+          );
   static final studyRecruit = (StudyID studyId) => RoutingIntent(
         route: RouterConf.route(studyRecruitRouteName),
         params: {
           RouteParams.studyId: studyId,
         },
       );
-  static final studyMonitor =
-      (StudyID studyId) => RoutingIntent(route: RouterConf.route(studyMonitorRouteName), params: {
-            RouteParams.studyId: studyId,
-          });
+  static final studyMonitor = (StudyID studyId) => RoutingIntent(
+        route: RouterConf.route(studyMonitorRouteName),
+        params: {
+          RouteParams.studyId: studyId,
+        },
+      );
   static final studyAnalyze = (StudyID studyId) => RoutingIntent(
         route: RouterConf.route(studyAnalyzeRouteName),
         params: {
@@ -156,12 +164,14 @@ class RoutingIntents {
 
   static final login = RoutingIntent(route: RouterConf.route(loginRouteName));
   static final signup = RoutingIntent(route: RouterConf.route(signupRouteName));
-  static final passwordForgot = RoutingIntent(route: RouterConf.route(forgotPasswordRouteName));
+  static final passwordForgot =
+      RoutingIntent(route: RouterConf.route(forgotPasswordRouteName));
   static final passwordForgot2 = (String email) => RoutingIntent(
         route: RouterConf.route(forgotPasswordRouteName),
         extra: email,
       );
-  static final passwordRecovery = RoutingIntent(route: RouterConf.route(recoverPasswordRouteName));
+  static final passwordRecovery =
+      RoutingIntent(route: RouterConf.route(recoverPasswordRouteName));
   static final error = (Exception error) => RoutingIntent(
         route: RouterConf.route(errorRouteName),
         extra: error,
@@ -201,7 +211,7 @@ class RoutingIntent extends Equatable {
   String get routeName => route.name!;
   Map<String, String> get arguments => {...params, ...queryParams};
 
-  _validateRoute() {
+  void _validateRoute() {
     if (route.name == null) {
       throw Exception("Failed to declare RoutingIntent for Route "
           "(path=${route.path}) because Route.name is not defined");
@@ -215,7 +225,7 @@ class RoutingIntent extends Equatable {
     if (settings.arguments is! Map) {
       return false;
     }
-    if (!mapEquals(settings.arguments as Map, arguments)) {
+    if (!mapEquals(settings.arguments! as Map, arguments)) {
       return false;
     }
     return true;
@@ -236,16 +246,26 @@ extension GoRouterX on GoRouter {
   void dispatch(RoutingIntent intent, {bool? push}) {
     const defaultDispatchMethod = RoutingIntentDispatch.go;
 
-    RoutingIntentDispatch dispatchMethod = (push != null)
-        ? ((push) ? RoutingIntentDispatch.push : RoutingIntentDispatch.go)
-        : ((intent.dispatch != null) ? intent.dispatch! : defaultDispatchMethod);
+    final RoutingIntentDispatch dispatchMethod = (push != null)
+        ? (push ? RoutingIntentDispatch.push : RoutingIntentDispatch.go)
+        : ((intent.dispatch != null)
+            ? intent.dispatch!
+            : defaultDispatchMethod);
 
     if (dispatchMethod == RoutingIntentDispatch.push) {
-      pushNamed(intent.route.name!,
-          pathParameters: intent.params, queryParameters: intent.queryParams, extra: intent.extra);
+      pushNamed(
+        intent.route.name!,
+        pathParameters: intent.params,
+        queryParameters: intent.queryParams,
+        extra: intent.extra,
+      );
     } else if (dispatchMethod == RoutingIntentDispatch.go) {
-      goNamed(intent.route.name!,
-          pathParameters: intent.params, queryParameters: intent.queryParams, extra: intent.extra);
+      goNamed(
+        intent.route.name!,
+        pathParameters: intent.params,
+        queryParameters: intent.queryParams,
+        extra: intent.extra,
+      );
     }
   }
 }
