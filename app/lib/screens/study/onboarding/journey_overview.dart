@@ -5,6 +5,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/screens/study/onboarding/calendar_overview.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
@@ -61,7 +62,8 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
             child: Column(
               children: [
                 //StudyTile.fromUserStudy(study: study),
-                Timeline(subject: subject),
+                // Timeline(subject: subject),
+                CalendarOverview(subject: subject),
               ],
             ),
           ),

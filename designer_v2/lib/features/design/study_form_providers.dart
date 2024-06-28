@@ -6,7 +6,7 @@ import 'package:studyu_designer_v2/features/design/enrollment/screener_question_
 import 'package:studyu_designer_v2/features/design/info/study_info_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/interventions/interventions_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/interventions/mp23_interventions_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/reports_form_controller.dart';
@@ -50,7 +50,7 @@ final consentItemFormViewModelProvider = Provider.autoDispose
 // - Interventions
 
 final interventionsFormViewModelProvider = Provider.autoDispose
-    .family<InterventionsFormViewModel, StudyID>((ref, studyId) {
+    .family<MP23InterventionsFormViewModel, StudyID>((ref, studyId) {
   return ref
       .watch(studyFormViewModelProvider(studyId))
       .interventionsFormViewModel;

@@ -26,7 +26,7 @@ import 'package:studyu_designer_v2/features/design/info/study_info_form_view.dar
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_view.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_preview_view.dart';
-import 'package:studyu_designer_v2/features/design/interventions/interventions_form_view.dart';
+import 'package:studyu_designer_v2/features/design/interventions/mp23_interventions_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_view.dart';
@@ -203,7 +203,7 @@ class RouterConf {
             tabsSubnav: StudyDesignNav.tabs(studyId),
             selectedTab: StudyNav.edit(studyId),
             selectedTabSubnav: StudyDesignNav.interventions(studyId),
-            body: StudyDesignInterventionsFormView(studyId),
+            body: MP23StudyDesignInterventionsFormView(studyId),
             layoutType: SingleColumnLayoutType.boundedNarrow,
           ),
         );

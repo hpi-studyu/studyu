@@ -10,6 +10,7 @@ export 'questionnaire/questionnaire_models.dart';
 export 'report/report_models.dart';
 export 'results/result.dart';
 export 'study_results/study_results.dart';
+export 'study_schedule/mp23_study_schedule.dart';
 export 'study_schedule/study_schedule.dart';
 export 'tables/app_config.dart';
 export 'tables/repo.dart';

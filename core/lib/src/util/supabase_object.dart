@@ -129,6 +129,7 @@ class SupabaseQuery {
     if (notExtracted.isNotEmpty) {
       // If some records could not be extracted, we throw an exception
       // with the extracted records and the faulty records
+      print("Failed to extract: $notExtracted");
       throw ExtractionFailedException(extracted, notExtracted);
     }
     return extracted;
