@@ -54,7 +54,7 @@ class _CalendarOverviewState extends State<CalendarOverview> {
       throw Exception('Something went wrong, we need a schedule here');
     }
 
-    final interventions = widget.subject!.study.mp23Schedule.interventions;
+    final interventions = widget.subject!.study.interventions;
     final segments = widget.subject!.study.mp23Schedule.segments;
 
     // function for building
@@ -76,7 +76,7 @@ class _CalendarOverviewState extends State<CalendarOverview> {
       StudyScheduleSegment? segment;
 
       try {
-        segment = schedule.getSegmentForDay(nthDay).$1;
+        segment = widget.subject?.study.getSegmentForDay(nthDay).$1;
       } catch (e) {
         print(e);
       }
@@ -104,14 +104,15 @@ class _CalendarOverviewState extends State<CalendarOverview> {
           final intervention = widget.subject!.getInterventionForDate(day)!;
           // final intervention = schedule.getInterventionForDay(nthDay, [])!;
           if (widget.subject != null) {
-            final index = schedule.interventions.indexOf(intervention);
+            final index =
+                widget.subject!.study.interventions.indexOf(intervention);
             colors = colorScheme[index % colorScheme.length];
           }
         } else {
           colors = [Colors.white, Colors.white];
           final List<Color> gradientColors = [];
 
-          for (int i = 0; i < schedule.interventions.length; i++) {
+          for (int i = 0; i < widget.subject!.study.interventions.length; i++) {
             gradientColors.add(colorScheme[i % colorScheme.length][0]);
           }
 
@@ -122,10 +123,12 @@ class _CalendarOverviewState extends State<CalendarOverview> {
         }
       } else if (segment is AlternatingScheduleSegment) {
         colors = colorScheme[0];
-        final interventionOnDay = schedule.getInterventionForDay(nthDay, []);
+        final interventionOnDay =
+            widget.subject?.study.getInterventionForDay(nthDay, []);
 
         if (interventionOnDay != null) {
-          final index = schedule.interventions.indexOf(interventionOnDay);
+          final index =
+              widget.subject!.study.interventions.indexOf(interventionOnDay);
           colors = colorScheme[index % colorScheme.length];
         }
       }

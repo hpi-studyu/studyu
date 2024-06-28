@@ -7,19 +7,11 @@ part of 'mp23_study_schedule.dart';
 // **************************************************************************
 
 MP23StudySchedule _$MP23StudyScheduleFromJson(Map<String, dynamic> json) =>
-    MP23StudySchedule(
-      (json['interventions'] as List<dynamic>?)
-              ?.map((e) => Intervention.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-      (json['observations'] as List<dynamic>?)
-              ?.map((e) => Observation.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-    )..segments = (json['segments'] as List<dynamic>)
-        .map((e) => const StudyScheduleSegmentConverter()
-            .fromJson(e as Map<String, dynamic>))
-        .toList();
+    MP23StudySchedule()
+      ..segments = (json['segments'] as List<dynamic>)
+          .map((e) => const StudyScheduleSegmentConverter()
+              .fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$MP23StudyScheduleToJson(MP23StudySchedule instance) =>
     <String, dynamic>{

@@ -160,8 +160,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     print("getting intervention for the day");
 
     try {
-      final intervention = study.mp23Schedule
-          .getInterventionForDay(dayOfStudy, progressUntilDate);
+      final intervention =
+          study.getInterventionForDay(dayOfStudy, progressUntilDate);
       return intervention;
     } catch (e) {
       return null;
@@ -274,7 +274,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   // Currently the end of the study, as there is no real minimum, just a set study length
   bool get minimumStudyLengthCompleted {
     final diff = DateTime.now().differenceInDays(startedAt!);
-    return diff >= study.mp23Schedule.duration - 1;
+    return diff >= study.studyDuration - 1;
   }
 
   bool get completedStudy {

@@ -153,9 +153,9 @@ class Study extends SupabaseObjectFunctions<Study>
 
     final mp23ScheduleJson = json['mp23_schedule'] as Map<String, dynamic>?;
 
-    mp23Schedule.interventions = study.interventions;
-    mp23Schedule.observations = study.observations;
-    study.mp23Schedule = mp23Schedule;
+    if (mp23ScheduleJson != null) {
+      study.mp23Schedule = MP23StudySchedule.fromJson(mp23ScheduleJson);
+    }
 
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
@@ -286,6 +286,37 @@ class Study extends SupabaseObjectFunctions<Study>
 
   double get percentageMissedDays =>
       totalMissedDays / (participantCount * schedule.length);
+
+  int get studyDuration => mp23Schedule.segments.isEmpty
+      ? 0
+      : mp23Schedule.segments
+          .map((e) => e.getDuration(interventions))
+          .reduce((a, b) => a + b);
+
+  /// Returns the segment for the given day and the nth day of the segment
+  (StudyScheduleSegment?, int) getSegmentForDay(int day) {
+    if (day >= studyDuration || day < 0) {
+      throw ArgumentError("Day must be between 0 and $studyDuration");
+    }
+
+    int remainingDays = day;
+
+    for (final segment in mp23Schedule.segments) {
+      final int segmentDuration = segment.getDuration(interventions);
+      if (segmentDuration > remainingDays) {
+        return (segment, remainingDays);
+      } else {
+        remainingDays -= segmentDuration;
+      }
+    }
+
+    throw StateError("This should never happen");
+  }
+
+  Intervention? getInterventionForDay(int day, List<SubjectProgress> progress) {
+    final (segment, dayInSegment) = getSegmentForDay(day);
+    return segment?.getInterventionOnDay(dayInSegment, interventions, progress);
+  }
 
   static Future<String> fetchResultsCSVTable(String studyId) async {
     final List res;

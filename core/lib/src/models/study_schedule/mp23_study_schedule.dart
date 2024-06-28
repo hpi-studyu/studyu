@@ -6,52 +6,16 @@ part 'mp23_study_schedule.g.dart';
 
 @JsonSerializable()
 class MP23StudySchedule {
-  // todo why are interventions and observations saved in the schedule?
-  @JsonKey(includeToJson: false, defaultValue: [])
-  List<Intervention> interventions;
-
-  @JsonKey(includeToJson: false, defaultValue: [])
-  List<Observation> observations;
-
   @StudyScheduleSegmentConverter()
   List<StudyScheduleSegment> segments = [];
 
-  MP23StudySchedule(this.interventions, this.observations);
+  MP23StudySchedule();
+
+  MP23StudySchedule.withSegments(this.segments);
 
   factory MP23StudySchedule.fromJson(Map<String, dynamic> json) =>
       _$MP23StudyScheduleFromJson(json);
   Map<String, dynamic> toJson() => _$MP23StudyScheduleToJson(this);
-
-  int get duration => segments.isEmpty
-      ? 0
-      : segments
-          .map((e) => e.getDuration(interventions))
-          .reduce((a, b) => a + b);
-
-  /// Returns the segment for the given day and the nth day of the segment
-  (StudyScheduleSegment?, int) getSegmentForDay(int day) {
-    if (day >= duration || day < 0) {
-      throw ArgumentError("Day must be between 0 and $duration");
-    }
-
-    int remainingDays = day;
-
-    for (final segment in segments) {
-      final int segmentDuration = segment.getDuration(interventions);
-      if (segmentDuration > remainingDays) {
-        return (segment, remainingDays);
-      } else {
-        remainingDays -= segmentDuration;
-      }
-    }
-
-    throw StateError("This should never happen");
-  }
-
-  Intervention? getInterventionForDay(int day, List<SubjectProgress> progress) {
-    final (segment, dayInSegment) = getSegmentForDay(day);
-    return segment?.getInterventionOnDay(dayInSegment, interventions, progress);
-  }
 }
 
 abstract class StudyScheduleSegment {

@@ -26,9 +26,7 @@ class MP23StudyScheduleFormData implements IStudyFormData {
   }
 
   MP23StudySchedule toMP23StudySchedule() {
-    final schedule = MP23StudySchedule([], []);
-    schedule.segments = segments;
-    return schedule;
+    return MP23StudySchedule.withSegments(segments);
   }
 
   @override
