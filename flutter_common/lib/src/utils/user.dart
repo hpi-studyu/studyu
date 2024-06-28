@@ -1,5 +1,5 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
@@ -9,24 +9,27 @@ const userEmailKey = 'user_email';
 const userPasswordKey = 'user_password';
 const cacheSubjectKey = "cache_subject";
 
-Future<void> storeFakeUserEmailAndPassword(String email, String password) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs
-    ..setString(userEmailKey, email)
-    ..setString(userPasswordKey, password);
+Future<void> storeFakeUserEmailAndPassword(
+  String email,
+  String password,
+) async {
+  await SecureStorage.write(userEmailKey, email);
+  await SecureStorage.write(userPasswordKey, password);
 }
 
 Future<bool> signInParticipant() async {
-  final prefs = await SharedPreferences.getInstance();
-  if (prefs.containsKey(userEmailKey) && prefs.containsKey(userPasswordKey)) {
+  final hasEmail = await SecureStorage.containsKey(userEmailKey);
+  final hasPassword = await SecureStorage.containsKey(userPasswordKey);
+  if (hasEmail && hasPassword) {
     try {
-      await Supabase.instance.client.auth.signInWithPassword(
-        email: await getFakeUserEmail(),
-        password: (await getFakeUserPassword())!,
+      final fakeEmail = await getFakeUserEmail();
+      final fakePassword = await getFakeUserPassword();
+      final authResponse =
+          await Supabase.instance.client.auth.signInWithPassword(
+        email: fakeEmail,
+        password: fakePassword!,
       );
-      if (Supabase.instance.client.auth.currentSession != null) {
-        return true;
-      }
+      return authResponse.session != null;
     } catch (error, stacktrace) {
       SupabaseQuery.catchSupabaseException(error, stacktrace);
     }
@@ -39,9 +42,10 @@ Future<bool> anonymousSignUp() async {
   final fakeUserEmail = '${const Uuid().v4()}@$fakeStudyUEmailDomain';
   final fakeUserPassword = const Uuid().v4();
   try {
-    await Supabase.instance.client.auth.signUp(email: fakeUserEmail, password: fakeUserPassword);
+    final authResponse = await Supabase.instance.client.auth
+        .signUp(email: fakeUserEmail, password: fakeUserPassword);
     await storeFakeUserEmailAndPassword(fakeUserEmail, fakeUserPassword);
-    return signInParticipant();
+    return authResponse.session != null || await signInParticipant();
   } catch (error, stacktrace) {
     SupabaseQuery.catchSupabaseException(error, stacktrace);
     return false;
@@ -49,13 +53,11 @@ Future<bool> anonymousSignUp() async {
 }
 
 Future<String?> getFakeUserEmail() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(userEmailKey);
+  return await SecureStorage.read(userEmailKey);
 }
 
 Future<String?> getFakeUserPassword() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(userPasswordKey);
+  return await SecureStorage.read(userPasswordKey);
 }
 
 bool isUserLoggedIn() {
@@ -63,26 +65,22 @@ bool isUserLoggedIn() {
 }
 
 Future<String?> getActiveSubjectId() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString(selectedSubjectIdKey);
+  return await SecureStorage.read(selectedSubjectIdKey);
 }
 
 Future<void> storeActiveSubjectId(String studyObjectId) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setString(selectedSubjectIdKey, studyObjectId);
+  await SecureStorage.write(selectedSubjectIdKey, studyObjectId);
 }
 
 Future<void> deleteActiveStudyReference() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.remove(selectedSubjectIdKey);
+  await SecureStorage.delete(selectedSubjectIdKey);
 }
 
 Future<void> deleteLocalData() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.remove(userEmailKey);
-  await prefs.remove(userPasswordKey);
-  await prefs.remove(selectedSubjectIdKey);
-  await prefs.remove(cacheSubjectKey);
+  await SecureStorage.delete(userEmailKey);
+  await SecureStorage.delete(userPasswordKey);
+  await SecureStorage.delete(selectedSubjectIdKey);
+  await SecureStorage.delete(cacheSubjectKey);
 }
 
 void previewSubjectIdKey() {

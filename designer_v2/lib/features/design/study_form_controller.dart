@@ -125,7 +125,7 @@ class StudyFormViewModel extends FormViewModel<Study>
   @override
   Study buildFormData() {
     print("StudyFormViewModel.buildFormData");
-    final studyCopy = (formData as Study).exactDuplicate();
+    final studyCopy = (formData!).exactDuplicate();
     studyInfoFormViewModel.buildFormData().apply(studyCopy);
     enrollmentFormViewModel.buildFormData().apply(studyCopy);
     measurementsFormViewModel.buildFormData().apply(studyCopy);
@@ -153,7 +153,7 @@ class StudyFormViewModel extends FormViewModel<Study>
   @override
   Future onSave(FormViewModel formViewModel, FormMode prevFormMode) async {
     assert(prevFormMode == FormMode.edit);
-    await _applyAndSaveSubform(formViewModel.formData!);
+    await _applyAndSaveSubform(formViewModel.formData! as IStudyFormData);
   }
 
   Future _applyAndSaveSubform(IStudyFormData subformData) {

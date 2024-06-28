@@ -1,3 +1,191 @@
+## 2.7.6-dev.2
+
+ - **FIX**: formatting issues.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**: upgrade deps.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+
+## 2.7.6-dev.1
+
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+
+## 2.7.6-dev.0
+
+ - **FIX**: upgrade deps.
+ - **FIX**: UI overflows.
+
+## 2.7.5
+
+ - **FIX**: update podfile.
+
+## 2.7.4
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 2.7.4-dev.1
+
+ - Update a dependency to the latest release.
+
+## 2.7.4-dev.0
+
+ - **FIX**: upgrade deps and migrate.
+
+## 2.7.3
+
+ - **FIX**: skip handling multimodal for web. ([27ba5298](https://github.com/hpi-studyu/studyu/commit/27ba5298a1b714e1cc7e21a6d88c286f91e2907a))
+
+## 2.7.2
+
+ - Update a dependency to the latest release.
+
+## 2.7.1
+
+ - **FIX**: add NSCameraUsageDescription. ([bfdd5a9e](https://github.com/hpi-studyu/studyu/commit/bfdd5a9ea795b83152d8ccdd02dec8e0d30b2e7f))
+
+## 2.7.0
+
+ - **REFACTOR**: move blob_storage_handler.dart and add download feature. ([9546e7d0](https://github.com/hpi-studyu/studyu/commit/9546e7d094286f28933fab5b7a50b7048b48215e))
+ - **REFACTOR**: remove flex. ([6509e85d](https://github.com/hpi-studyu/studyu/commit/6509e85d34971da725dccae7239e5fa17f1fde45))
+ - **REFACTOR**(app): move flex to QuestionnaireTaskWidget. ([1a12ece1](https://github.com/hpi-studyu/studyu/commit/1a12ece137fc2cf2bbc1dae2a9ab2e83a20b2064))
+ - **REFACTOR**: late vars. ([f0b6a15e](https://github.com/hpi-studyu/studyu/commit/f0b6a15e661185c7ab1c50c65ed50006ca2dd1a8))
+ - **REFACTOR**: remove capture_question_widget. ([50ee289c](https://github.com/hpi-studyu/studyu/commit/50ee289cd1aaad21e348a0257db20e4f2c5cb38d))
+ - **REFACTOR**: audio and picture screen. ([61dba8ed](https://github.com/hpi-studyu/studyu/commit/61dba8ed4a624b9408cf6e85c0acedce48ab8b34))
+ - **REFACTOR**: make multimodal stateful widgets private. ([c2bf84f7](https://github.com/hpi-studyu/studyu/commit/c2bf84f79484038dab64b6e5f6e45e66bdc7ec0a))
+ - **FIX**: rework of capture_picture_screen. ([61bac286](https://github.com/hpi-studyu/studyu/commit/61bac286887b15e1d7af33e97a942811ed1e583c))
+ - **FIX**: do not upload image directly. ([9414afcb](https://github.com/hpi-studyu/studyu/commit/9414afcb899e40ab1e72436dfaba337d8052bb64))
+ - **FIX**: style of photo capture button. ([7ec85382](https://github.com/hpi-studyu/studyu/commit/7ec853828a51e7aa454563786d782e9c8ffc4e22))
+ - **FIX**: use Android minSdk >= 21. ([95829c6a](https://github.com/hpi-studyu/studyu/commit/95829c6ace02330ea921c51c0160903fcf94d0b0))
+ - **FIX**: update ios deps. ([2c77103c](https://github.com/hpi-studyu/studyu/commit/2c77103cd047be6fd757f03222778edbfa8caf2a))
+ - **FIX**: storage bug. ([b7e58d09](https://github.com/hpi-studyu/studyu/commit/b7e58d09a80bfb4f62c11859d6065356085255c8))
+ - **FIX**: use 16 as IV length. ([f72a191a](https://github.com/hpi-studyu/studyu/commit/f72a191a1c750c414b98205d6faa512342181b26))
+ - **FIX**: typo. ([51f62bb7](https://github.com/hpi-studyu/studyu/commit/51f62bb7d95ba50a315687027f8e27b36e58522e))
+ - **FIX**: add versions to pub devs. ([6948ca1e](https://github.com/hpi-studyu/studyu/commit/6948ca1e60b6c3d6a740863a05ca6702079c8310))
+ - **FIX**: camera does not need audio. ([54cca2b9](https://github.com/hpi-studyu/studyu/commit/54cca2b9ee6e299548eb0b9ff48c87e04b42c739))
+ - **FIX**: const constructor. ([2a5d4b48](https://github.com/hpi-studyu/studyu/commit/2a5d4b488c090a7b55de3ccf58f3203a2034ff95))
+ - **FIX**: do not support multimodal for web, refactor multimodal questions. ([19f08166](https://github.com/hpi-studyu/studyu/commit/19f08166e3726532d0a6042dafeed3283f58ce5b))
+ - **FIX**: defer upload of multimodal files. ([e8324cab](https://github.com/hpi-studyu/studyu/commit/e8324cabd5dc7b20d1be529ae8ba94d51ab5eb39))
+ - **FIX**: switch to uploadBinary for now. ([b9884dee](https://github.com/hpi-studyu/studyu/commit/b9884deeba14de85f00ebe55703acdeeb1de1422))
+ - **FIX**: switch object equal check. ([200c4643](https://github.com/hpi-studyu/studyu/commit/200c46431d9d44227ad8ff55b284c85358f63e0a))
+ - **FIX**: upgrade deps, move multimodal from core to app, migrate switch case. ([c4c1bd1e](https://github.com/hpi-studyu/studyu/commit/c4c1bd1e7e234535291b609deda21ea0e12b8506))
+ - **FIX**: dart fix. ([1ebe9d00](https://github.com/hpi-studyu/studyu/commit/1ebe9d005d4c5d0f9e7ba1d8a0f24fc4e71641c2))
+ - **FIX**: use dynamic Sdk version, use release env. ([0e4cbe5d](https://github.com/hpi-studyu/studyu/commit/0e4cbe5dc9cbf3109194d001e6439d2a782192b6))
+ - **FIX**: upgrade deps (switch to wakelock_plus). ([1000d89c](https://github.com/hpi-studyu/studyu/commit/1000d89cd4df62bbfedfb5238f0e427c4d2d2c08))
+ - **FIX**: modify xcode version and ios target platform. ([2ca76bf2](https://github.com/hpi-studyu/studyu/commit/2ca76bf2c950934554dee7dabed84a34454cc4a1))
+ - **FIX**: change provisioning profile name. ([d12fa572](https://github.com/hpi-studyu/studyu/commit/d12fa5722e4dfc9cb7200359c971e47a259fe4d8))
+ - **FEAT**: record audio inside question widget. ([aa9cb51d](https://github.com/hpi-studyu/studyu/commit/aa9cb51d9469707e39587dbe9bd6f68ed262f4d9))
+ - **FEAT**: translate. ([8811b543](https://github.com/hpi-studyu/studyu/commit/8811b5434e1657ef91774012445178c19741efbe))
+ - **FEAT**: deprecate SharedPreferences for flutter_secure_storage. ([1ff25946](https://github.com/hpi-studyu/studyu/commit/1ff259469e3c354f57e22a3d42ce0d1c60036f44))
+ - **FEAT**(app): directly show task description in task screen. ([76fd9f65](https://github.com/hpi-studyu/studyu/commit/76fd9f65d7f3685471f3a75fc4a8beaf34739a3a))
+ - **FEAT**: delete local multimodal files. ([319d7c22](https://github.com/hpi-studyu/studyu/commit/319d7c2261e38a42c68324516e9295b36ce8b9f3))
+ - **FEAT**: add localization for multimodal. ([32d15487](https://github.com/hpi-studyu/studyu/commit/32d154879118f57a4a397ffa43c33d86f63a4f0f))
+ - **FEAT**: add offline handling for multimodal files. ([92e3d3b3](https://github.com/hpi-studyu/studyu/commit/92e3d3b3732543ecf2bcfa855cb20ef3cc3123de))
+
+## 2.6.5
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 2.6.5-dev.8
+
+ - **FIX**: pod update. ([a289069e](https://github.com/hpi-studyu/studyu/commit/a289069ef8eeab8ee996f9a9b6d26f98535a25e3))
+
+## 2.6.5-dev.7
+
+ - **REFACTOR**: login process and offline mode. ([aab64a42](https://github.com/hpi-studyu/studyu/commit/aab64a429df81037eb6cd9c06b7eb89b282a1a05))
+ - **REFACTOR**: remove unnecessary late. ([f17902e2](https://github.com/hpi-studyu/studyu/commit/f17902e2d22294cc0ddcaa25ed091982da8fc082))
+ - **REFACTOR**: improve return type of publishedPublicStudies(). ([fedec441](https://github.com/hpi-studyu/studyu/commit/fedec441fd4f0f39fe35e7cb89b2922a10ac9ea3))
+ - **REFACTOR**: create abstract exception and rename ExtractedSupabaseListResult. ([5ef1bc43](https://github.com/hpi-studyu/studyu/commit/5ef1bc4378c2ac35e9781a040c4868910291794b))
+ - **REFACTOR**: bind faulty studies to return value. ([e6b4ed70](https://github.com/hpi-studyu/studyu/commit/e6b4ed70d367ddb9e8b1e7fd0015d0f70a179a0c))
+ - **REFACTOR**: remove ExtractedSupabaseListResult. ([0d3f4af9](https://github.com/hpi-studyu/studyu/commit/0d3f4af9d201556ba5ec0884741969e7dfa47b71))
+ - **REFACTOR**: mounted check. ([e1b07e45](https://github.com/hpi-studyu/studyu/commit/e1b07e45093dd77898274e92582ba48b54e762e3))
+ - **FIX**: upgrade deps. ([b491c9c4](https://github.com/hpi-studyu/studyu/commit/b491c9c469ee808fe1aaa50b7a50759be2378552))
+ - **FIX**: make offline mode more reliable. ([45370246](https://github.com/hpi-studyu/studyu/commit/45370246253bfdf1a884a7e873ef68d4542e8e55))
+ - **FIX**: multi-retrieval of public studies. ([4218eb00](https://github.com/hpi-studyu/studyu/commit/4218eb00f9067ea9586eb1a5b76dba202b493e5f))
+ - **FIX**: showSnackBar() method cannot be called during build. ([e835db62](https://github.com/hpi-studyu/studyu/commit/e835db62a6ca61b6e1afd3d0df4d0d9e53153a07))
+ - **FIX**: translation. ([15af570a](https://github.com/hpi-studyu/studyu/commit/15af570ab0cc7d6ab053efac1666b6380c94a692))
+ - **FIX**: future-proof deserialization of studies. ([ca7c3145](https://github.com/hpi-studyu/studyu/commit/ca7c3145cd663dda47716ffa4ac5cef3fb25da84))
+ - **FEAT**: show hidden studies info with MaterialBanner. ([5cac27d5](https://github.com/hpi-studyu/studyu/commit/5cac27d58cb3415c54de5ecc07c1eed4df74ac97))
+ - **FEAT**: rework deserialization of unsupported types to throw exception. ([54956cf1](https://github.com/hpi-studyu/studyu/commit/54956cf17c879dce27821da3a85f2d8d509542e7))
+
+## 2.6.5-dev.6
+
+ - **REFACTOR**: login process and offline mode. ([aab64a42](https://github.com/hpi-studyu/studyu/commit/aab64a429df81037eb6cd9c06b7eb89b282a1a05))
+ - **REFACTOR**: remove unnecessary late. ([f17902e2](https://github.com/hpi-studyu/studyu/commit/f17902e2d22294cc0ddcaa25ed091982da8fc082))
+ - **REFACTOR**: improve return type of publishedPublicStudies(). ([fedec441](https://github.com/hpi-studyu/studyu/commit/fedec441fd4f0f39fe35e7cb89b2922a10ac9ea3))
+ - **REFACTOR**: create abstract exception and rename ExtractedSupabaseListResult. ([5ef1bc43](https://github.com/hpi-studyu/studyu/commit/5ef1bc4378c2ac35e9781a040c4868910291794b))
+ - **REFACTOR**: bind faulty studies to return value. ([e6b4ed70](https://github.com/hpi-studyu/studyu/commit/e6b4ed70d367ddb9e8b1e7fd0015d0f70a179a0c))
+ - **REFACTOR**: remove ExtractedSupabaseListResult. ([0d3f4af9](https://github.com/hpi-studyu/studyu/commit/0d3f4af9d201556ba5ec0884741969e7dfa47b71))
+ - **REFACTOR**: mounted check. ([e1b07e45](https://github.com/hpi-studyu/studyu/commit/e1b07e45093dd77898274e92582ba48b54e762e3))
+ - **REFACTOR**: move constants to separate file. ([b4d3853d](https://github.com/hpi-studyu/studyu/commit/b4d3853d827c3e0f08db16234f5a136094938a0d))
+ - **FIX**: upgrade deps. ([b491c9c4](https://github.com/hpi-studyu/studyu/commit/b491c9c469ee808fe1aaa50b7a50759be2378552))
+ - **FIX**: make offline mode more reliable. ([45370246](https://github.com/hpi-studyu/studyu/commit/45370246253bfdf1a884a7e873ef68d4542e8e55))
+ - **FIX**: web compatibility for app outdated screen. ([40f39afe](https://github.com/hpi-studyu/studyu/commit/40f39afe60293bfd62ea705a55f59012c6aa00e3))
+ - **FIX**: multi-retrieval of public studies. ([4218eb00](https://github.com/hpi-studyu/studyu/commit/4218eb00f9067ea9586eb1a5b76dba202b493e5f))
+ - **FIX**: review comments. ([71896db6](https://github.com/hpi-studyu/studyu/commit/71896db6425a04cbfe644fb73045102287abcd2b))
+ - **FIX**: showSnackBar() method cannot be called during build. ([e835db62](https://github.com/hpi-studyu/studyu/commit/e835db62a6ca61b6e1afd3d0df4d0d9e53153a07))
+ - **FIX**: translation. ([15af570a](https://github.com/hpi-studyu/studyu/commit/15af570ab0cc7d6ab053efac1666b6380c94a692))
+ - **FIX**: check min app version improvements. ([8d36dc78](https://github.com/hpi-studyu/studyu/commit/8d36dc78771d748483bbf3ad22794a95e73dad06))
+ - **FIX**: future-proof deserialization of studies. ([ca7c3145](https://github.com/hpi-studyu/studyu/commit/ca7c3145cd663dda47716ffa4ac5cef3fb25da84))
+ - **FEAT**: show hidden studies info with MaterialBanner. ([5cac27d5](https://github.com/hpi-studyu/studyu/commit/5cac27d58cb3415c54de5ecc07c1eed4df74ac97))
+ - **FEAT**: check app min version on resume. ([e82c3ac6](https://github.com/hpi-studyu/studyu/commit/e82c3ac68beb4adf0662753c551d7cf3d53814b9))
+ - **FEAT**: rework deserialization of unsupported types to throw exception. ([54956cf1](https://github.com/hpi-studyu/studyu/commit/54956cf17c879dce27821da3a85f2d8d509542e7))
+ - **FEAT**: check min app version and force update. ([08f33618](https://github.com/hpi-studyu/studyu/commit/08f3361865aa4b158e9e29e69efd30547db9991a))
+
+## 2.6.5-dev.5
+
+ - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))
+ - **FIX**: missing notification icon. ([679ebc64](https://github.com/hpi-studyu/studyu/commit/679ebc64d779b87589dcec24135c3f8533b7ed62))
+ - **FIX**: correct CFBundleDisplayName. ([eb364558](https://github.com/hpi-studyu/studyu/commit/eb364558133f18d47737e198b585544e2344a03c))
+ - **FIX**: add notification icon again". ([5905e4e4](https://github.com/hpi-studyu/studyu/commit/5905e4e4dda66734d9205e90c0a78a7c999ace18))
+
+## 2.6.5-dev.4
+
+ - **FIX**: breaking deps. ([34896ad3](https://github.com/hpi-studyu/studyu/commit/34896ad381b38a4ad03caf92f57ad527bc1f6706))
+
+## 2.6.5-dev.3
+
+ - **REFACTOR**: rework android release platform and pipeline. ([08f4c97f](https://github.com/hpi-studyu/studyu/commit/08f4c97f07c84491bac4147955ba7f03a5bae65d))
+ - **FIX**: upgrade deps. ([6ad9bea4](https://github.com/hpi-studyu/studyu/commit/6ad9bea42903a25a5be5a84f2af8b70654d05616))
+ - **FIX**: null value. ([3a0e6592](https://github.com/hpi-studyu/studyu/commit/3a0e65928dd74f0b630fd53a15efb3cbbc1ec555))
+ - **FIX**: add notification icon again. ([23656f60](https://github.com/hpi-studyu/studyu/commit/23656f60d3de85d2007e9c88c28656b4503d7e7b))
+ - **FIX**: crash on Android 12L / 13. ([1d8dd104](https://github.com/hpi-studyu/studyu/commit/1d8dd10479aebf490c3941cf5f0493c95de494bc))
+ - **FIX**: wrong notification icon path. ([7b91f55f](https://github.com/hpi-studyu/studyu/commit/7b91f55f06d132739e1066e7df814b92d8470634))
+ - **FIX**: update gitignore files. ([939d6be4](https://github.com/hpi-studyu/studyu/commit/939d6be422ee37f2ea56b39bb3921060fd1844cd))
+ - **FIX**: use icon directory. ([d3d627cd](https://github.com/hpi-studyu/studyu/commit/d3d627cda35c14af026507f4181c232b8c43e22d))
+ - **FIX**: new web deployment with generated icons. ([fd8fcc9f](https://github.com/hpi-studyu/studyu/commit/fd8fcc9f459cc0f46c5185d96cce6586adbfc543))
+ - **FIX**: upgrade deps. ([7ac0d4ca](https://github.com/hpi-studyu/studyu/commit/7ac0d4cab42b1ce27ec200a5241f92d612ade499))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+ - **FEAT**: add other platforms. ([34f5dafa](https://github.com/hpi-studyu/studyu/commit/34f5dafadafda6bc8652639245901620a2a116ab))
+
+## 2.6.5-dev.2
+
+ - **REFACTOR**: rename analytics. ([98386b03](https://github.com/hpi-studyu/studyu/commit/98386b03ada1a47d28469afbd15e3bde411ef6b9))
+ - **REFACTOR**: enable cache again and add new logger. ([e0ad446f](https://github.com/hpi-studyu/studyu/commit/e0ad446fe03c94261782606a186a0364dbe87428))
+ - **REFACTOR**: disable cache addition. ([711da599](https://github.com/hpi-studyu/studyu/commit/711da599025242748700959b2d1e59b34fb44028))
+ - **REFACTOR**: move questions to subdir. ([0a28df5a](https://github.com/hpi-studyu/studyu/commit/0a28df5a2bf39b18dfb642dcdeb3dd1863eba50a))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+ - **FIX**: resolve suggestions. ([e3584b70](https://github.com/hpi-studyu/studyu/commit/e3584b706e3ac44e51257165dcf9e0678205d8a5))
+ - **FIX**: quickfix for free text eligibility. ([5bb2e42b](https://github.com/hpi-studyu/studyu/commit/5bb2e42b89383611fd9cd0882c1cdb6df4c07544))
+ - **FIX**: free text form fields. ([b2badeb0](https://github.com/hpi-studyu/studyu/commit/b2badeb00e43d16518c8af29e4ec0d18f1389b14))
+ - **FIX**: use correct switch case for questions. ([c13e67f6](https://github.com/hpi-studyu/studyu/commit/c13e67f6b05571b9476fe476154bb927108fff1f))
+ - **FIX**: disable cache synchronization for now. ([204157cd](https://github.com/hpi-studyu/studyu/commit/204157cd970cb7228cf4d2d1a804bed1fabb657a))
+ - **FEAT**: increase max free text range. ([5b288caf](https://github.com/hpi-studyu/studyu/commit/5b288cafc67f6f841671afd94b0f5cdaa56d60af))
+ - **FEAT**: improve translation. ([c4b9f1ec](https://github.com/hpi-studyu/studyu/commit/c4b9f1ec4da93eb5ce189c5c001f9884ba34d152))
+ - **FEAT**: implement free text validator for app. ([44c3fa20](https://github.com/hpi-studyu/studyu/commit/44c3fa2070e0073a6ab4352daa4d96d7ee1632fe))
+ - **FEAT**: implement free_text for designer. ([f0ce3512](https://github.com/hpi-studyu/studyu/commit/f0ce3512f28b1eaae1bc69f75701038e42e6936d))
+
+## 2.6.5-dev.1
+
+ - **FIX**: upgrade deps. ([304430c8](https://github.com/hpi-studyu/studyu/commit/304430c858d4035a279b42114c7ccf86299357a2))
+ - **FIX**: type checks and matching. ([92629cb4](https://github.com/hpi-studyu/studyu/commit/92629cb4395d8e456a0531647d6ba1de4a77a92f))
+ - **FIX**: type checks. ([b85e073d](https://github.com/hpi-studyu/studyu/commit/b85e073d7075b8d45d15f32e62d5761416cdad4a))
+
 ## 2.6.5-dev.0
 
  - **FIX**: refresh dashboard on app resume. ([9bcd0e51](https://github.com/hpi-studyu/studyu/commit/9bcd0e5159d80e1f4cd4948f0ee8956705cd8c38))

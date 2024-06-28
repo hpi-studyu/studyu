@@ -6,6 +6,10 @@ on:
       - 'studyu_app-v*'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.ref }}-github-release
+  cancel-in-progress: true
+
 jobs:
   github-release:
     name: Create Github Release
@@ -14,26 +18,31 @@ jobs:
       - name: Await potential publishing on Pub.dev
         uses: johannesvedder/await-workflow@v1
         with:
-          workflowId: 'publish_pubdev.yml'
+          workflowId: publish_pubdev.yml
       - name: Get the tag name
-        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_ENV"
       - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Decrypt files
-        id: decrypt_files
-        run: |
-          echo "${{ secrets.STUDYU_ANDROID_KEYSTORE }}" > keystore.jks.asc
-          gpg -d --passphrase "${{ secrets.STUDYU_ANDROID_KEYSTORE_PASSWORD }}" --batch keystore.jks.asc > app/android/studyu-keystore.jks
-          echo "${{ secrets.STUDYU_KEY_PROPERTIES}}" > app/android/key.properties
-      - uses: actions/setup-java@v3
+        uses: actions/checkout@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          fetch-depth: 0
+      - name: Prepare upload key
+        run: |
+          echo "$STUDYU_ANDROID_KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
+          echo "$STUDYU_KEY_PROPERTIES" > key.properties
+        working-directory: app/android
+        env:
+          STUDYU_ANDROID_KEYSTORE_BASE64: ${{ secrets.STUDYU_ANDROID_KEYSTORE_BASE64 }}
+          STUDYU_KEY_PROPERTIES: ${{ secrets.STUDYU_KEY_PROPERTIES }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
       - name: Build StudyU app apk
-        run: flutter build apk --no-tree-shake-icons --build-number ${{ github.run_number }}
+        run: flutter build apk --release --build-number ${{ github.run_number }}
         working-directory: ./app
       - name: Create Release
         id: create_release

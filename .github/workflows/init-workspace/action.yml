@@ -1,0 +1,25 @@
+#file: noinspection YAMLSchemaValidation
+name: Initialize Workspace
+description: Initialize workspace for all packages
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+        # Increase this version manually when we add support for a new Flutter release
+        flutter-version: '3.22.x'
+
+    - name: Install melos
+      run: dart pub global activate melos
+      shell: bash
+
+    - name: Bootstrap workspace
+      run: melos bootstrap
+      shell: bash
+
+    - name: Dart pub root project
+      run: dart pub get
+      shell: bash

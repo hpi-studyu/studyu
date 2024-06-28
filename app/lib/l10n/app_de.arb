@@ -17,10 +17,15 @@
   "get_started": "Los geht's",
   "test": "test10",
   "study_selection": "Studienauswahl",
-  "study_selection_description": "Bitte wähle eine Studie aus.",
+  "study_selection_description": "Bitte wählen Sie eine Studie aus.",
   "study_selection_single": "Sie können zu jeder Zeit maximal an einer Studie teilnehmen.",
   "study_selection_single_why": "Warum?",
   "study_selection_single_reason": "Wenn Sie zur selben Zeit an mehreren Studien teilnehmen würde, könnten die Kombination der Interventionen die Ergebnisse verfälschen.",
+  "study_selection_unsupported_title": "Veraltete App-Version",
+  "study_selection_unsupported": "Die Studie, an der Sie teilnehmen möchten, ist nicht mit Ihrer App-Version kompatibel. Bitte aktualisieren Sie die App auf die neueste Version.",
+  "study_selection_closed_title": "Studie geschlossen",
+  "study_selection_closed": "Diese Studie ist derzeit für neue Teilnehmer geschlossen.",
+  "study_selection_hidden_studies": "Einige Studien konnten nicht angezeigt werden, da Ihre App-Version veraltet ist. Bitte aktualisieren Sie Ihre App, um alle verfügbaren Studien zu sehen.",
   "study_overview_title": "Übersicht",
   "eligibility_questionnaire_title": "Fragebogen",
   "please_answer_eligibility": "Bitte beantworten Sie ein paar Fragen um sicherzugehen, dass diese Studie für Sie geeignet ist",
@@ -30,7 +35,7 @@
   "no_interventions_available": "Keine Interventionen verfügbar.",
   "loading_interventions": "Interventionen laden",
   "task_cannot_be_completed": "Die Aufgabe kann nicht bearbeitet werden",
-  "study_notification_body": "Eine neue Aufgabe benötigt deine Aufmerksamkeit",
+  "study_notification_body": "Eine neue Aufgabe benötigt Ihre Aufmerksamkeit",
 
   "intervention_phase_duration": "Länge der Interventionphasen",
   "days": "Tage",
@@ -46,7 +51,7 @@
   "intervention_current": "Aktuelle Maßnahme",
   "study_current": "Aktuelle Studie:",
   "opt_out": "Aussteigen",
-  "delete_data": "Aussteigen & Daten löschen",
+  "delete_data": "Aussteigen und Daten löschen",
 
   "summary": "Übersicht",
   "consent": "Einverständnis",
@@ -98,6 +103,23 @@
   "next_day": "Nächster Tag",
 
   "could_not_save_results": "Ergebnisse konnten nicht gespeichert werden.",
+
+  "take_a_photo": "Mache ein Foto",
+  "start_recording": "Starte eine Aufnahme",
+  "stop_recording": "Stoppe die Aufnahme",
+  "error_recording": "Fehler bei der Aufnahme",
+  "photo_captured": "Foto aufgenommen",
+  "audio_recorded": "Audio aufgenommen",
+  "data_captured": "Daten aufgenommen",
+  "multimodal_not_supported": "Multimodale Aufgaben werden in der Web-Version zur Zeit nicht unterstützt. Bitte verwenden Sie die App Version für iOS oder Android.",
+  "camera_access_denied": "Zugriff auf Kamera verweigert",
+  "no_camera_available": "Keine Kamera verfügbar",
+  "microphone_access_denied": "Zugriff auf Mikrofon verweigert",
+  "camera_error": "Kamerafehler",
+  "recording_error": "Aufnahme fehlgeschlagen",
+  "storing_photo": "Foto wird gespeichert",
+  "storing_audio": "Audio wird gespeichert",
+  "upload_error": "Die Datei konnte nicht hochgeladen werden",
 
   "language": "Sprache",
   "en": "Englisch",
@@ -155,8 +177,8 @@
 
   "report_axis_phase": "Phase",
 
-  "study_not_started": "Deine Studie hat noch nicht angefangen. Bitte schaue morgen noch einmal vorbei!",
-  "completed_study": "Du hast deine letzte Studie abgeschlossen. Schaue dir vergangene Ergebnisse an oder starte eine neue Studie.",
+  "study_not_started": "Ihre Studie hat noch nicht angefangen. Bitte schauen Sie morgen noch einmal vorbei!",
+  "completed_study": "Sie haben Ihre letzte Studie abgeschlossen. Schauen Sie vergangene Ergebnisse an oder starten Sie eine neue Studie.",
 
   "app_support": "App Support",
   "app_support_text": "Bei Problemen oder Fragen zur App kontaktieren",
@@ -168,5 +190,28 @@
   "website": "Website",
   "email": "Email",
   "phone": "Telefon",
-  "additionalInfo": "Zusätzliche Informationen"
+  "additionalInfo": "Zusätzliche Informationen",
+
+  "free_text_min_length_error": "Bitte geben Sie mindestens {min} Zeichen ein",
+  "@free_text_min_length_error": {
+    "placeholders": {
+      "min": {}
+    }
+  },
+  "free_text_max_length_error": "Bitte geben Sie maximal {max} Zeichen ein",
+  "@free_text_max_length_error": {
+    "placeholders": {
+      "max": {}
+    }
+  },
+  "free_text_alphanumeric_error": "Bitte geben Sie nur alphanumerische Zeichen ein",
+  "free_text_numeric_error": "Bitte geben Sie nur numerische Zeichen ein",
+  "free_text_custom_error": "Bitte geben Sie nur Zeichen ein, die dem Muster {pattern} entsprechen",
+  "@free_text_custom_error": {
+    "placeholders": {
+      "pattern": {}
+    }
+  },
+  "app_outdated_message": "Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!",
+  "update_now": "Jetzt aktualisieren"
 }

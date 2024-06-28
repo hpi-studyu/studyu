@@ -11,6 +11,8 @@ abstract class ValueExpression<V> extends Expression {
 
   @override
   bool? evaluate(QuestionnaireState state) {
-    return state.hasAnswer<V>(target!) ? checkValue(state.getAnswer<V>(target!)) : null;
+    return state.hasAnswer<V>(target!)
+        ? checkValue(state.getAnswer<V>(target!))
+        : null;
   }
 }

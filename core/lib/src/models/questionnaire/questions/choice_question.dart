@@ -8,7 +8,7 @@ part 'choice_question.g.dart';
 
 @JsonSerializable()
 class ChoiceQuestion extends Question<List<String>> {
-  static String questionType = 'choice';
+  static const String questionType = 'choice';
 
   bool multiple = false;
   List<Choice> choices = [];
@@ -17,7 +17,8 @@ class ChoiceQuestion extends Question<List<String>> {
 
   ChoiceQuestion.withId() : super.withId(questionType);
 
-  factory ChoiceQuestion.fromJson(Map<String, dynamic> json) => _$ChoiceQuestionFromJson(json);
+  factory ChoiceQuestion.fromJson(Map<String, dynamic> json) =>
+      _$ChoiceQuestionFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$ChoiceQuestionToJson(this);

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../../models/app_state.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({super.key});
@@ -36,13 +35,15 @@ class _ContactScreenState extends State<ContactScreen> {
           Container(
             alignment: Alignment.topCenter,
             child: const Image(
-              image: AssetImage('assets/images/icon_wide.png'),
+              image: AssetImage('assets/icon/logo.png'),
               height: 80,
             ),
           ),
           RetryFutureBuilder<Contact>(
             tryFunction: AppConfig.getAppContact,
-            successBuilder: (BuildContext context, Contact? appSupportContact) => ContactWidget(
+            successBuilder:
+                (BuildContext context, Contact? appSupportContact) =>
+                    ContactWidget(
               contact: appSupportContact,
               title: AppLocalizations.of(context)!.app_support,
               subtitle: AppLocalizations.of(context)!.app_support_text,
@@ -68,7 +69,13 @@ class ContactWidget extends StatelessWidget {
   final String? subtitle;
   final Color color;
 
-  const ContactWidget({required this.contact, required this.title, required this.color, this.subtitle, super.key});
+  const ContactWidget({
+    required this.contact,
+    required this.title,
+    required this.color,
+    this.subtitle,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +84,16 @@ class ContactWidget extends StatelessWidget {
       return Container();
     }
 
-    final titles = [Text(title, style: theme.textTheme.titleLarge!.copyWith(color: color))];
+    final titles = [
+      Text(title, style: theme.textTheme.titleLarge!.copyWith(color: color)),
+    ];
     if (subtitle != null && subtitle!.isNotEmpty) {
-      titles.add(Text(subtitle!, style: theme.textTheme.titleMedium!.copyWith(fontSize: 14)));
+      titles.add(
+        Text(
+          subtitle!,
+          style: theme.textTheme.titleMedium!.copyWith(fontSize: 14),
+        ),
+      );
     }
 
     return Column(
@@ -98,7 +112,9 @@ class ContactWidget extends StatelessWidget {
           ContactItem(
             itemName: AppLocalizations.of(context)!.irb,
             itemValue: contact!.institutionalReviewBoard! +
-                (contact?.institutionalReviewBoardNumber != null ? ': ${contact?.institutionalReviewBoardNumber}' : ''),
+                (contact?.institutionalReviewBoardNumber != null
+                    ? ': ${contact?.institutionalReviewBoardNumber}'
+                    : ''),
             iconData: MdiIcons.clipboardCheck,
             iconColor: color,
           ),
@@ -164,25 +180,23 @@ class ContactItem extends StatelessWidget {
       Uri uri;
       switch (type) {
         case ContactItemType.website:
-          if (!itemValue!.startsWith('http://') && !itemValue!.startsWith('https://')) {
+          if (!itemValue!.startsWith('http://') &&
+              !itemValue!.startsWith('https://')) {
             uri = Uri.parse('http://$itemValue');
           } else {
             uri = Uri.parse(itemValue!);
           }
-          break;
         case ContactItemType.email:
           uri = Uri.parse('mailto:$itemValue');
-          break;
         case ContactItemType.phone:
           uri = Uri.parse('tel:$itemValue');
-          break;
         default:
           uri = Uri.parse(itemValue!);
       }
       if (await canLaunchUrl(uri)) {
         launchUrl(uri);
       } else {
-        Analytics.logger.warning("Cannot launch Url: $uri");
+        StudyULogger.warning("Cannot launch Url: $uri");
       }
     }
   }
@@ -195,7 +209,11 @@ class ContactItem extends StatelessWidget {
     return ListTile(
       title: Text(itemName),
       subtitle: SelectableText(itemValue!),
-      leading: Icon(iconData, color: iconColor ?? Theme.of(context).primaryColor, size: iconSize),
+      leading: Icon(
+        iconData,
+        color: iconColor ?? Theme.of(context).primaryColor,
+        size: iconSize,
+      ),
       onTap: type != null ? launchContact : null,
     );
   }

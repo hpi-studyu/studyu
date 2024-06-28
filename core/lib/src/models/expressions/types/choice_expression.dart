@@ -13,7 +13,8 @@ class ChoiceExpression extends ValueExpression<dynamic> {
 
   ChoiceExpression.withId() : super(expressionType);
 
-  factory ChoiceExpression.fromJson(Map<String, dynamic> json) => _$ChoiceExpressionFromJson(json);
+  factory ChoiceExpression.fromJson(Map<String, dynamic> json) =>
+      _$ChoiceExpressionFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$ChoiceExpressionToJson(this);
@@ -22,7 +23,7 @@ class ChoiceExpression extends ValueExpression<dynamic> {
   bool checkValue(dynamic value) {
     if (value is List) {
       if (value.isEmpty) {
-        // workaround until not expression is implemented for V2
+        // todo workaround until not expression is implemented for V2
         return true;
       } else {
         return value.any((element) => choices.contains(element));

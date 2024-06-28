@@ -50,7 +50,7 @@ class WebController extends PlatformController {
   }
 
   @override
-  activate() {
+  void activate() {
     if (baseSrc == '') return;
     final key = UniqueKey();
     // print("Register view with: $previewSrc");
@@ -65,11 +65,12 @@ class WebController extends PlatformController {
       ..src = previewSrc
       ..style.border = 'none';
 
-    ui_web.platformViewRegistry.registerViewFactory('$studyId$key', (int viewId) => iFrameElement);
+    ui_web.platformViewRegistry
+        .registerViewFactory('$studyId$key', (int viewId) => iFrameElement);
   }
 
   @override
-  generateUrl({String? route, String? extra, String? cmd, String? data}) {
+  void generateUrl({String? route, String? extra, String? cmd, String? data}) {
     routeInformation = RouteInformation(route, extra, cmd, data);
     if (baseSrc == '') {
       previewSrc = '';
@@ -111,7 +112,11 @@ class WebController extends PlatformController {
   void refresh({String? cmd}) {
     if (routeInformation.route != null) {
       if (routeInformation.extra != null) {
-        navigate(route: routeInformation.route, extra: routeInformation.extra, cmd: cmd);
+        navigate(
+          route: routeInformation.route,
+          extra: routeInformation.extra,
+          cmd: cmd,
+        );
         return;
       }
       navigate(route: routeInformation.route, cmd: cmd);
@@ -129,7 +134,7 @@ class WebController extends PlatformController {
   @override
   void listen() {
     html.window.onMessage.listen((event) {
-      var data = event.data;
+      final data = event.data;
       if (data == 'routeFinished') {
         print("Designer: Route finished");
         refresh();

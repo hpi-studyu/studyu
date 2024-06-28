@@ -20,11 +20,13 @@ class StudyExportData {
     required this.study,
     required this.measurementsData,
     required this.interventionsData,
+    required this.mediaData,
   });
 
   final Study study;
   final List<Map<String, dynamic>> measurementsData;
   final List<Map<String, dynamic>> interventionsData;
+  final List<String> mediaData;
 
   bool get isEmpty => measurementsData.isEmpty && interventionsData.isEmpty;
 }
@@ -35,9 +37,11 @@ extension StudyExportX on Study {
   StudyExportData get exportData {
     final List<Map<String, dynamic>> measurementsData = [];
     final List<Map<String, dynamic>> interventionsData = [];
+    final List<String> mediaData = [];
 
-    List<SubjectProgress> records = participantsProgress ?? [];
-    records.sort((b, a) => a.completedAt!.compareTo(b.completedAt!)); // descending
+    final List<SubjectProgress> records = participantsProgress ?? [];
+    records
+        .sort((b, a) => a.completedAt!.compareTo(b.completedAt!)); // descending
 
     // Key used as a placeholder for values that cannot be resolved by their
     // id anymore (e.g. because the study design has changed meanwhile)
@@ -45,8 +49,9 @@ extension StudyExportX on Study {
 
     // Build columns dynamically for each question in each survey
     final Map<String, dynamic> surveyColumns = {};
-    final responseColumnById = {};
-    final surveyAnsweredColumnById = {};
+    final Map<String, String> responseColumnById = {};
+    final Map<String, String> surveyAnsweredColumnById = {};
+    final mediaIndices = [];
 
     for (var i = 1; i < observations.length + 1; i++) {
       final surveyMeasurement = observations[i - 1] as QuestionnaireTask;
@@ -62,6 +67,10 @@ extension StudyExportX on Study {
         surveyColumns['survey${i}_question${j}_text'] = question.prompt;
         surveyColumns['survey${i}_question${j}_response'] = '';
         responseColumnById[question.id] = 'survey${i}_question${j}_response';
+        if (question.type == AudioRecordingQuestion.questionType ||
+            question.type == ImageCapturingQuestion.questionType) {
+          mediaIndices.add(question.id);
+        }
       }
     }
 
@@ -75,16 +84,20 @@ extension StudyExportX on Study {
                 .firstWhereOrNull((_) => true)
                 ?.inviteCode ??
             '',
-        'current_day_of_study': record.completedAt!.difference(record.startedAt!).inDays.toString(),
+        'current_day_of_study':
+            record.completedAt!.difference(record.startedAt!).inDays.toString(),
         'current_intervention_id': record.interventionId,
         'current_intervention_name': intervention?.name ?? invalidKey,
       };
 
-      final isMeasurement = MeasurementResultTypes.values.contains(record.resultType);
-      final isIntervention = InterventionResultTypes.values.contains(record.resultType);
+      final isMeasurement =
+          MeasurementResultTypes.values.contains(record.resultType);
+      final isIntervention =
+          InterventionResultTypes.values.contains(record.resultType);
 
       if (isMeasurement) {
-        final measurement = observations.firstWhereOrNull((o) => o.id == record.taskId);
+        final measurement =
+            observations.firstWhereOrNull((o) => o.id == record.taskId);
         final Map<String, dynamic> row = {
           'measurement_time': record.completedAt!.toString(),
           'measurement_id': record.taskId,
@@ -103,18 +116,25 @@ extension StudyExportX on Study {
           for (final questionAnswerPair in submittedQuestionAnswerPairs) {
             final questionId = questionAnswerPair.question;
             final questionResponseColumn = responseColumnById[questionId];
-            final surveyAnsweredColumn = surveyAnsweredColumnById[record.taskId];
+            final surveyAnsweredColumn =
+                surveyAnsweredColumnById[record.taskId]!;
             if (questionResponseColumn == null) {
               continue; // skip unresolvable questions (e.g. because study design has changed)
             }
             final responseValue = questionAnswerPair.response.toString();
             row[questionResponseColumn] = responseValue;
             row[surveyAnsweredColumn] = true;
+            for (final mediaIndex in mediaIndices) {
+              if (mediaIndex == questionId) {
+                mediaData.add(responseValue);
+              }
+            }
           }
         }
         measurementsData.add(row);
       } else if (isIntervention) {
-        final task = intervention?.tasks.firstWhereOrNull((e) => e.id == record.taskId);
+        final task =
+            intervention?.tasks.firstWhereOrNull((e) => e.id == record.taskId);
         final Map<String, dynamic> row = {
           'intervention_task_time': record.completedAt!.toString(),
           'intervention_task_id': record.taskId,
@@ -129,6 +149,7 @@ extension StudyExportX on Study {
       study: this,
       measurementsData: measurementsData,
       interventionsData: interventionsData,
+      mediaData: mediaData,
     );
   }
 }

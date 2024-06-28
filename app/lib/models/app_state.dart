@@ -1,13 +1,11 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:studyu_app/util/app_analytics.dart';
-import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 
 class AppState with ChangeNotifier {
-  AppConfig? appConfig;
   Study? selectedStudy;
   List<Intervention>? selectedInterventions;
   StudySubject? activeSubject;
@@ -24,19 +22,10 @@ class AppState with ChangeNotifier {
   /// mixing results from test users with actual participants)
   bool get trackParticipantProgress => !(isPreview && selectedStudy!.isRunning);
 
-  AppState(this.appConfig) {
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async {
-      try {
-        appConfig = await AppConfig.getAppConfig();
-      } catch (error) {
-        // Still offline
-      }
-    });
-  }
+  AppState();
 
   void init(BuildContext context) {
     scheduleNotifications(context);
-    // Analytics.addBreadcrumb(category: 'waypoint', message: 'Subject retrieved -> dashboard');
     analytics.initAdvanced();
     initCache();
   }

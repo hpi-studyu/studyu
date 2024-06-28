@@ -38,7 +38,7 @@ class InterventionCard extends StatelessWidget {
         if (showDescription)
           InterventionCardDescription(intervention: intervention),
         if (showTasks && intervention.tasks.isNotEmpty)
-          _TaskList(tasks: intervention.tasks)
+          _TaskList(tasks: intervention.tasks),
       ],
     );
   }
@@ -71,7 +71,7 @@ class InterventionCardTitle extends StatelessWidget {
       onTap: onTap,
       leading: Icon(
         iconData,
-        color: Colors.grey,
+        color: Colors.grey, // todo maybe theme.colorScheme.secondary
         // size: 20,
         // fill: 1,
       ),
@@ -88,7 +88,8 @@ class InterventionCardTitle extends StatelessWidget {
           Expanded(
               child: Text(
                   intervention?.name ?? AppLocalizations.of(context)!.baseline,
-                  style: theme.textTheme.titleLarge)),
+                  style: theme.textTheme.titleLarge),
+          ),
           if (showDescriptionButton)
             IconButton(
               icon: const Icon(Icons.info_outline),
@@ -103,10 +104,12 @@ class InterventionCardTitle extends StatelessWidget {
                       leading: Icon(
                           MdiIcons.fromString(
                               intervention?.icon ?? 'help-circle'),
-                          color: theme.colorScheme.secondary),
+                          color: theme.colorScheme.secondary,
+                      ),
                       dense: true,
                       title: Text(intervention!.name!,
-                          style: theme.textTheme.titleLarge),
+                          style: theme.textTheme.titleLarge,
+                      ),
                     ),
                     content: HtmlText(description),
                   );
@@ -152,7 +155,8 @@ class _TaskList extends StatelessWidget {
   String scheduleString(List<CompletionPeriod> schedules) {
     return schedules
         .map((completionPeriod) =>
-            '${completionPeriod.unlockTime} - ${completionPeriod.lockTime}')
+            '${completionPeriod.unlockTime} - ${completionPeriod.lockTime}',
+        )
         .join(',');
   }
 
@@ -167,7 +171,8 @@ class _TaskList extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(AppLocalizations.of(context)!.tasks_daily,
-                  style: theme.textTheme.bodyMedium),
+                  style: theme.textTheme.bodyMedium,
+              ),
             ],
           ),
         ),
@@ -185,18 +190,22 @@ class _TaskList extends StatelessWidget {
                     children: [
                       Expanded(
                           child: Text(task.title!,
-                              style: theme.textTheme.bodyMedium)),
+                              style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
                       Row(
                         children: [
                           Icon(Icons.access_time,
                               size: 16,
-                              color: theme.textTheme.bodySmall!.color),
+                              color: theme.textTheme.bodySmall!.color,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             scheduleString(task.schedule.completionPeriods),
                             style: theme.textTheme.bodyMedium!.copyWith(
                                 fontSize: 12,
-                                color: theme.textTheme.bodySmall!.color),
+                                color: theme.textTheme.bodySmall!.color,
+                            ),
                           ),
                         ],
                       ),

@@ -20,3 +20,4 @@ export 'tables/study_subject.dart';
 export 'tables/subject_progress.dart';
 export 'tables/user.dart';
 export 'tasks/tasks.dart';
+export 'unknown_json_type_error.dart';

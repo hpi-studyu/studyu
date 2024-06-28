@@ -42,7 +42,7 @@ class BottomOnboardingNavigation extends StatelessWidget {
             if (progress != null) ...[
               const SizedBox(width: 8),
               Expanded(child: progress!),
-              const SizedBox(width: 8)
+              const SizedBox(width: 8),
             ] else
               const Spacer(),
             Visibility(

@@ -1,3 +1,75 @@
+## 1.8.4-dev.1
+
+ - **FIX**: formatting issues.
+
+## 1.8.4-dev.0
+
+ - **FIX**: upgrade deps.
+ - **FIX**: put supabase cli default anon key in env.local.example.
+
+## 1.8.3
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.8.3-dev.1
+
+ - Update a dependency to the latest release.
+
+## 1.8.3-dev.0
+
+ - **FIX**: upgrade deps and migrate.
+
+## 1.8.2
+
+ - **FIX**: skip signin after signup if user is already authenticated. ([7e978122](https://github.com/hpi-studyu/studyu/commit/7e97812279b77fb9406fb288341c0fd9e349ad9c))
+ - **FIX**: signup was not possible with flutter_secure_storage. ([26425971](https://github.com/hpi-studyu/studyu/commit/2642597141653aa724a1305456e43840d6fbebe5))
+
+## 1.8.1
+
+ - Update a dependency to the latest release.
+
+## 1.8.0
+
+ - **FIX**: migrateSharedPreferencesToSecureStorage data type. ([62f41ab8](https://github.com/hpi-studyu/studyu/commit/62f41ab8b0f18035c5405b1b02045ce2b2fe6008))
+ - **FIX**(flutter_common): Add migration for SecureStorage. ([4604537d](https://github.com/hpi-studyu/studyu/commit/4604537d46e5881c91c0df27d9d30e5305cf04b3))
+ - **FIX**: style of photo capture button. ([7ec85382](https://github.com/hpi-studyu/studyu/commit/7ec853828a51e7aa454563786d782e9c8ffc4e22))
+ - **FIX**: storage bug. ([b7e58d09](https://github.com/hpi-studyu/studyu/commit/b7e58d09a80bfb4f62c11859d6065356085255c8))
+ - **FIX**: use local dev in flutter_common assets". ([523ad961](https://github.com/hpi-studyu/studyu/commit/523ad961e3fe82b7137a63e0a3fd62c417513807))
+ - **FIX**: use local dev in flutter_common assets. ([575089c0](https://github.com/hpi-studyu/studyu/commit/575089c0b9f7505fbdf18a8bd0d4d29836793c08))
+ - **FIX**: new HPI dev env. ([5a1a2667](https://github.com/hpi-studyu/studyu/commit/5a1a2667ab92505f57543eb9e62c0c225af70bee))
+ - **FEAT**: deprecate SharedPreferences for flutter_secure_storage. ([1ff25946](https://github.com/hpi-studyu/studyu/commit/1ff259469e3c354f57e22a3d42ce0d1c60036f44))
+
+## 1.7.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.7.0-dev.6
+
+ - **FIX**: upgrade deps. ([b491c9c4](https://github.com/hpi-studyu/studyu/commit/b491c9c469ee808fe1aaa50b7a50759be2378552))
+
+## 1.7.0-dev.5
+
+ - **FIX**: upgrade deps. ([b491c9c4](https://github.com/hpi-studyu/studyu/commit/b491c9c469ee808fe1aaa50b7a50759be2378552))
+
+## 1.7.0-dev.4
+
+ - **FIX**: upgrade deps. ([5327eb97](https://github.com/hpi-studyu/studyu/commit/5327eb971e6673847dc09ef56923b6a73ae73654))
+
+## 1.7.0-dev.3
+
+ - **FIX**: upgrade deps. ([6ad9bea4](https://github.com/hpi-studyu/studyu/commit/6ad9bea42903a25a5be5a84f2af8b70654d05616))
+ - **FIX**: update gitignore files. ([939d6be4](https://github.com/hpi-studyu/studyu/commit/939d6be422ee37f2ea56b39bb3921060fd1844cd))
+ - **FIX**: upgrade deps. ([7ac0d4ca](https://github.com/hpi-studyu/studyu/commit/7ac0d4cab42b1ce27ec200a5241f92d612ade499))
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+
+## 1.7.0-dev.2
+
+ - **FIX**: upgrade deps. ([3e186fc4](https://github.com/hpi-studyu/studyu/commit/3e186fc409f038102cc5fd1e6d11b73057dab8d7))
+
+## 1.7.0-dev.1
+
+ - **FIX**: upgrade deps. ([304430c8](https://github.com/hpi-studyu/studyu/commit/304430c858d4035a279b42114c7ccf86299357a2))
+
 ## 1.7.0-dev.0
 
  - **FIX**: do not rely on hardcoded authcallback. ([e6787fb7](https://github.com/hpi-studyu/studyu/commit/e6787fb7027b50181441bec0a6ee5a47eec1146d))

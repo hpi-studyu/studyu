@@ -18,59 +18,27 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta content="Implement digital N-of-1 studies seamlessly with the brand new StudyU Designer" name="description">
+  <meta name="description" content="Implement digital N-of-1 studies seamlessly with the StudyU Health Designer">
 
   <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="designer_v2">
+  <meta name="apple-mobile-web-app-title" content="studyu_designer">
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/Icon-512.png">
 
-  <link href="icons/apple-icon-57x57.png" rel="apple-touch-icon" sizes="57x57">
-  <link href="icons/apple-icon-60x60.png" rel="apple-touch-icon" sizes="60x60">
-  <link href="icons/apple-icon-72x72.png" rel="apple-touch-icon" sizes="72x72">
-  <link href="icons/apple-icon-76x76.png" rel="apple-touch-icon" sizes="76x76">
-  <link href="icons/apple-icon-114x114.png" rel="apple-touch-icon" sizes="114x114">
-  <link href="icons/apple-icon-120x120.png" rel="apple-touch-icon" sizes="120x120">
-  <link href="icons/apple-icon-144x144.png" rel="apple-touch-icon" sizes="144x144">
-  <link href="icons/apple-icon-152x152.png" rel="apple-touch-icon" sizes="152x152">
-  <link href="icons/apple-icon-180x180.png" rel="apple-touch-icon" sizes="180x180">
-  <link href="icons/android-icon-192x192.png" rel="icon" sizes="192x192" type="image/png">
-  <link href="icons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
-  <link href="icons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
-  <link href="icons/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png">
-
-  <!-- Main Favicon -->
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="icons/icon-96x96.png">
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <!-- Alternative Favicon <link rel="icon" type="image/x-icon" href="favicon.ico" /> -->
-
-  <title>designer_v2</title>
+  <title>Designer | StudyU Health</title>
   <link rel="manifest" href="manifest.json">
-
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = null;
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
 </head>
 <body>
   <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        }
-      }).then(function(engineInitializer) {
-        return engineInitializer.initializeEngine({
-          // Enable color emojis again for flutter 3.10
-          useColorEmoji: true,
-        });
-      }).then(function(appRunner) {
-        return appRunner.runApp();
-      });
-    });
+    {{flutter_bootstrap_js}}
   </script>
 </body>
 </html>

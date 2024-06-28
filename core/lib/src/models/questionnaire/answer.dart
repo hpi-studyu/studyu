@@ -28,24 +28,21 @@ class Answer<V> {
 
   static Answer fromJson(Map<String, dynamic> data) {
     final dynamic value = data[keyResponse];
-
-    if (value.runtimeType == bool) {
-      return Answer<bool>.parseJson(data);
-    } else if (value.runtimeType == num) {
-      return Answer<num>.parseJson(data);
-    } else if (value.runtimeType == int) {
-      return Answer<num>.parseJson(data);
-    } else if (value.runtimeType == double) {
-      return Answer<num>.parseJson(data);
-    } else if (value.runtimeType == String) {
-      return Answer<String>.parseJson(data);
-    } else {
-      if (value is List) {
-        data[keyResponse] = value.map((e) => e.toString()).toList();
-        return Answer<List<String>>.parseJson(data);
-      } else {
-        throw ArgumentError('Unknown answer type: ${value.runtimeType}');
-      }
+    switch (value) {
+      case bool():
+        return Answer<bool>.parseJson(data);
+      case num():
+        return Answer<num>.parseJson(data);
+      case String():
+        return Answer<String>.parseJson(data);
+      default:
+        // todo Why does value has a type of List<dynamic> instead of List<String>?
+        if (value is List) {
+          data[keyResponse] = value.map((e) => e.toString()).toList();
+          return Answer<List<String>>.parseJson(data);
+        } else {
+          throw ArgumentError('Unknown answer type: ${value.runtimeType}');
+        }
     }
   }
 

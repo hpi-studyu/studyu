@@ -46,7 +46,6 @@
       "minLength": {}
     }
   },
-  "form_field_remember_me": "Zugangsdaten speichern",
   "form_field_password_new": "Neues Passwort",
   "form_field_password_new_hint": "Neues Passwort",
   "form_field_password_new_confirm": "Neues Passwort wiederholen",
@@ -61,7 +60,7 @@
   "study_status_running": "Live",
   "study_status_running_description": "Die Studie wird gerade durchgeführt",
   "study_status_closed": "Abgeschlossen",
-  "study_status_closed_description": "Die Studie wurde bereits abgeschlossen",
+  "study_status_closed_description": "Diese Studie ist abgeschlossen.\nEs können sich keine neuen Teilnehmer mehr einschreiben.",
   "participation_open_who": "Für jeden offen",
   "participation_open_who_description": "Jeder kann sich für die Studie in der StudyU App anmelden.",
   "participation_invite_who": "Ausgewählte Teilnehmer",
@@ -74,7 +73,6 @@
   "phase_sequence_counterbalanced": "Ausgeglichen (AB BA)",
   "phase_sequence_random": "Zufällig",
   "phase_sequence_custom": "Benutzerdefiniert",
-
   "form_enrollment_option_open": "Open",
   "form_enrollment_option_invite": "Private (Invite-only)",
   "@__________________NAV_DRAWER__________________": {},
@@ -88,7 +86,7 @@
   "@__________________DASHBOARD__________________": {},
   "action_button_new_study": "Neue Studie",
   "search": "Suche",
-  "studies_list_header_title": "Studientitel",
+  "studies_list_header_title": "Titel",
   "studies_list_header_status": "Status",
   "studies_list_header_participation": "Teilnahme",
   "studies_list_header_created_at": "Erstellt",
@@ -119,7 +117,12 @@
   "study_settings_publish_results": "Ergebnisse veröffentlichen",
   "study_settings_publish_results_tooltip": "Andere Forscher und Kliniker können auf die anonymisierten Ergebnisdaten einer Studie zugreifen, \nsie exportieren und analysieren (die Analysieren-Unterseite deiner Studie ist zugänglich). Die Studie \nselbst wird dadurch automatisch auch für andere Forscher und Kliniker im Studienregister veröffentlicht.",
   "action_button_study_launch": "Studie starten",
+  "action_button_study_close": "Studie schließen",
   "notification_study_deleted": "Die Studie wurde gelöscht",
+  "notification_study_closed": "Die Studie wurde geschlossen",
+  "notification_study_closed_description": "Neue Teilnehmer können sich nicht mehr einschreiben",
+  "dialog_study_close_title": "Teilnahme schließen?",
+  "dialog_study_close_description": "Bist du sicher, dass die Teilnahme an der Studie geschlossen werden soll? Dadurch können keine neuen Teilnehmer mehr aufgenommen werden. Bereits eingeschriebene Teilnehmer werden die Studie weiterhin durchführen können. Das Schließen einer Studie kann nicht rückgängig gemacht werden.",
   "dialog_study_delete_title": "Dauerhaft löschen?",
   "dialog_study_delete_description": "Bist du sicher, dass die Studie gelöscht werden soll? Die Studie und alle gesammelten Daten gehen dabei unwiderruflich verloren.",
   "@__________________STUDYPAGE_DESIGN_SHARED__________________": {},
@@ -138,10 +141,15 @@
   "form_field_question_response_options_tooltip": "Definiere welche Optionen zur Beantwortung der Frage in der App verfügbar sind",
   "form_field_question_response_options_description": "Wähle die Antwortoptionen so, dass sie zur Frage passen und die von dir gewünschten Daten erhoben werden.",
   "question_type_choice": "Multiple-Choice",
+  "question_type_free_text": "Freitext",
   "question_type_bool": "Ja/Nein",
   "question_type_scale": "Skala",
+  "question_type_image": "Bild",
+  "question_type_audio": "Audio",
   "form_array_response_options_bool_yes": "Ja",
   "form_array_response_options_bool_no": "No",
+  "form_field_response_image": "Bild",
+  "form_field_response_audio_max_duration_label": "Maximale Aufnahmedauer in Sekunden",
   "form_field_response_choice_multiple": "Mehrfachauswahl",
   "form_field_response_choice_multiple_tooltip": "Erlaubt die Auswahl von mehreren Antwortoptionen gleichzeitig,\nansonsten kann nur eine einzige Option ausgewählt werden",
   "form_array_response_options_choice_new": "Antwortoption hinzufügen",
@@ -181,8 +189,60 @@
       "count": {}
     }
   },
+  "audio_recording_max_duration_rangevalid_min": "Die minimale Aufnahmedauer beträgt 1 Sekunde",
+  "audio_recording_max_duration_rangevalid_max": "Die maximale Aufnahmedauer beträgt {count} Sekunden",
+  "@audio_recording_max_duration_rangevalid_max": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "free_text_question_logic_not_supported": "Logik ist für Freitext-Fragen noch nicht verfügbar",
+  "free_text_question_type_any": "Beliebig",
+  "free_text_question_type_alphanumeric": "Alphanumerisch",
+  "free_text_question_type_numeric": "Numerisch",
+  "free_text_question_type_custom": "Benutzerdefiniert",
+  "free_text_range_label": "Erlaubter Bereich der Textlänge",
+  "free_text_range_label_helper": "Geben Sie die minimale und maximale Anzahl von Zeichen ein, die für die Antwort erlaubt sind",
+  "free_text_type_label": "Erlaubter Texttyp",
+  "free_text_type_label_helper": "Wählen Sie den Typ des Texts aus, der für die Antwort erlaubt ist",
+  "free_text_type_custom_label": "Regulärer Ausdruck",
+  "free_text_type_custom_label_helper": "Geben Sie einen regulären Ausdruck ein, den die Antwort erfüllen muss",
+  "free_text_type_custom_helper": "Beispiel: Geben Sie [a-zA-Z]+ ein, um nur Buchstaben zuzulassen.",
+  "free_text_type_custom_explanation": "Jede Eingabe, die nicht dem Ausdruck entspricht, wird abgelehnt. Die oben angegebenen Einschränkungen zur Zeichenlänge werden weiterhin angewendet. Ein führendes ^ Zeichen und ein abschließendes $ Zeichen werden automatisch hinzugefügt.",
+  "free_text_example_label": "Beispieltextfeld",
+  "free_text_example_label_helper": "Dies ist ein Beispiel für das Textfeld, das dem Teilnehmer angezeigt wird. Die oben angegebenen Einschränkungen zur Länge und zum Eingabetyp werden angewendet.",
+  "free_text_example_valid": "Ihre Beispiel-Eingabe ist gültig",
+  "free_text_example_default_helper": "Führen Sie einen Validierungstest durch, indem Sie hier Text eingeben.",
+  "free_text_validation_min_length": "Die Eingabe muss mindestens {countMin} Zeichen lang sein.",
+  "@free_text_validation_min_length": {
+    "placeholders": {
+      "countMin": {}
+    }
+  },
+  "free_text_validation_max_length": "Die Eingabe darf höchstens {countMax} Zeichen lang sein.",
+  "@free_text_validation_max_length": {
+    "placeholders": {
+      "countMax": {}
+    }
+  },
+  "free_text_validation_pattern": "Die Eingabe muss dem angegebenen Format entsprechen.",
+  "free_text_validation_number": "Die Eingabe muss eine Zahl sein.",
+  "free_text_example_explanation": "Eingaben vom Typ {type} mit einer Zeichenlänge im Bereich von {countMin} bis {countMax} werden akzeptiert.",
+  "@free_text_example_explanation": {
+    "placeholders": {
+      "type": {},
+      "countMin": {},
+      "countMax": {}
+    }
+  },
+  "free_text_question_type_any_explanation": "Jede Eingabe wird akzeptiert.",
+  "free_text_question_type_alphanumeric_explanation": "Alphanumerische Eingabe umfasst nur Buchstaben und Zahlen.",
+  "free_text_question_type_numeric_explanation": "Numerische Eingabe umfasst Zahlen ohne Sonderzeichen.",
+  "free_text_question_type_custom_explanation": "Die Eingabe muss dem angegebenen regulären Ausdruck entsprechen.",
   "banner_study_readonly_title": "Die Studie kann nicht bearbeitet werden.",
   "banner_study_readonly_description": "Du kannst nur Studien bearbeiten, die du selbst erstellt hast oder die mit dir zur Mitarbeit geteilt wurden. Studien, die bereits gestartet sind, können grundsätzlich nicht mehr verändert werden.",
+  "banner_study_closed_title": "Diese Studie ist geschlossen.",
+  "banner_study_closed_description": "Neue Teilnehmer können sich nicht in diese Studie einschreiben.",
   "form_section_scheduling": "Zeitplan & Einhaltung",
   "form_section_scheduling_description": "Um die Compliance von Teilnehmern zu verbessern, kannst du ein begrenztes Zeitfenster & eine App-Benachrichtigung als Erinnerung definieren.",
   "form_field_has_reminder": "Erinnerung",

@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/assets.dart';
 import 'package:studyu_designer_v2/common_views/icons.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
+import 'package:studyu_designer_v2/features/account/account_settings.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
 
-import 'account/account_settings.dart';
-
 typedef OnEntrySelectedCallback = void Function(BuildContext, WidgetRef);
 
 class DrawerEntry {
   const DrawerEntry({
     required this.localizedTitle,
+    required this.autoCloseDrawer,
     this.icon,
     this.onSelected,
     this.localizedHelpText,
@@ -25,38 +26,44 @@ class DrawerEntry {
   final LocalizedStringResolver? localizedHelpText;
   final bool enabled;
   final OnEntrySelectedCallback? onSelected;
+  final bool autoCloseDrawer;
 
   String get title => localizedTitle();
   String? get helpText => localizedHelpText?.call();
 
   void onClick(BuildContext context, WidgetRef ref) {
-    if (onSelected != null) {
-      onSelected!(context, ref);
+    if (autoCloseDrawer) {
+      Navigator.pop(context);
     }
+    onSelected?.call(context, ref);
   }
 }
 
 class GoRouterDrawerEntry extends DrawerEntry {
   const GoRouterDrawerEntry({
     required super.localizedTitle,
+    required super.autoCloseDrawer,
     super.icon,
     super.localizedHelpText,
     super.enabled,
     required this.intent,
+    this.onNavigated,
   });
   final RoutingIntent intent;
+  final void Function()? onNavigated;
 
   @override
-  onClick(BuildContext context, WidgetRef ref) {
+  void onClick(BuildContext context, WidgetRef ref) {
     super.onClick(context, ref);
     ref.read(routerProvider).dispatch(intent);
+    onNavigated?.call();
   }
 }
 
 class AppDrawer extends ConsumerStatefulWidget {
   const AppDrawer({
-    required this.title,
     this.width = 250,
+    this.autoCloseDrawer = true,
     this.leftPaddingEntries = 28.0,
     this.logoPaddingVertical = 24.0,
     this.logoPaddingHorizontal = 48.0,
@@ -66,8 +73,8 @@ class AppDrawer extends ConsumerStatefulWidget {
     super.key,
   });
 
-  final String title;
   final int width;
+  final bool autoCloseDrawer;
   final double leftPaddingEntries;
   final double logoPaddingVertical;
   final double logoPaddingHorizontal;
@@ -81,66 +88,83 @@ class AppDrawer extends ConsumerStatefulWidget {
 
 class _AppDrawerState extends ConsumerState<AppDrawer> {
   /// List of sections with their corresponding menu entries
-  final List<List<GoRouterDrawerEntry>> topEntries = [
-    [
-      GoRouterDrawerEntry(
-        localizedTitle: () => tr.navlink_my_studies,
-        icon: Icons.folder_copy_rounded,
-        intent: RoutingIntents.studies,
-      ),
-      GoRouterDrawerEntry(
-        localizedTitle: () => tr.navlink_shared_studies,
-        icon: Icons.folder_shared_rounded,
-        intent: RoutingIntents.studiesShared,
-        enabled: false,
-      ),
-    ],
-    [
-      GoRouterDrawerEntry(
-        localizedTitle: () => tr.navlink_public_studies,
-        icon: Icons.public,
-        intent: RoutingIntents.publicRegistry,
-        localizedHelpText: () => tr.navlink_public_studies_tooltip,
-      ),
-    ]
-  ];
+  late final List<List<GoRouterDrawerEntry>> topEntries;
 
   /// List of sections with their corresponding menu entries
-  final List<List<DrawerEntry>> bottomEntries = [
-    [
-      DrawerEntry(
-          localizedTitle: () => tr.navlink_account_settings,
-          icon: Icons.settings_rounded,
-          onSelected: (context, ref) {
-            showDialog(context: context, builder: (context) => const AccountSettingsDialog());
-          }),
-      DrawerEntry(
-        localizedTitle: () => tr.navlink_logout,
-        icon: Icons.logout_rounded,
-        onSelected: (context, ref) {
-          ref.read(authRepositoryProvider).signOut();
-        },
-      ),
-    ],
-  ];
+  late final List<List<DrawerEntry>> bottomEntries;
 
-  List<DrawerEntry> get allEntries => [...topEntries, ...bottomEntries].expand((e) => e).toList();
+  List<DrawerEntry> get allEntries =>
+      [...topEntries, ...bottomEntries].expand((e) => e).toList();
 
   /// Index of the currently selected [[NavigationGoRouterEntry]]
   /// Defaults to -1 if none of the entries is currently selected
   int _selectedIdx = -1;
 
   @override
-  void didUpdateWidget(AppDrawer oldWidget) {
-    // Changing routes will rebuilt the widget if it's below the Navigator
-    // (which should almost always be the case for a drawer)
-    // That means we can listen for route changes here
-    _updateSelectedRoute();
-    super.didUpdateWidget(oldWidget);
+  void initState() {
+    super.initState();
+    topEntries = [
+      [
+        GoRouterDrawerEntry(
+          localizedTitle: () => tr.navlink_my_studies,
+          autoCloseDrawer: widget.autoCloseDrawer,
+          icon: Icons.folder_copy_rounded,
+          intent: RoutingIntents.studies,
+          onNavigated: () => _updateSelectedRoute(hintEntryIdx: 0),
+        ),
+        GoRouterDrawerEntry(
+          localizedTitle: () => tr.navlink_shared_studies,
+          autoCloseDrawer: widget.autoCloseDrawer,
+          icon: Icons.folder_shared_rounded,
+          intent: RoutingIntents.studiesShared,
+          enabled: false,
+          onNavigated: () => _updateSelectedRoute(hintEntryIdx: 1),
+        ),
+      ],
+      [
+        GoRouterDrawerEntry(
+          localizedTitle: () => tr.navlink_public_studies,
+          autoCloseDrawer: widget.autoCloseDrawer,
+          icon: Icons.public,
+          intent: RoutingIntents.publicRegistry,
+          localizedHelpText: () => tr.navlink_public_studies_tooltip,
+          onNavigated: () => _updateSelectedRoute(hintEntryIdx: 2),
+        ),
+      ]
+    ];
+    bottomEntries = [
+      [
+        DrawerEntry(
+          localizedTitle: () => tr.navlink_account_settings,
+          autoCloseDrawer: widget.autoCloseDrawer,
+          icon: Icons.settings_rounded,
+          onSelected: (context, ref) {
+            showDialog(
+              context: context,
+              builder: (context) => const AccountSettingsDialog(),
+            );
+          },
+        ),
+        DrawerEntry(
+          localizedTitle: () => tr.navlink_logout,
+          autoCloseDrawer: widget.autoCloseDrawer,
+          icon: Icons.logout_rounded,
+          onSelected: (context, ref) {
+            ref.read(authRepositoryProvider).signOut();
+          },
+        ),
+      ],
+    ];
   }
 
-  void _updateSelectedRoute() {
-    final entryIdx = _getCurrentRouteIndex();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateSelectedRoute();
+  }
+
+  void _updateSelectedRoute({int? hintEntryIdx}) {
+    final entryIdx = hintEntryIdx ?? _getCurrentRouteIndex();
     setSelectedIdx(entryIdx);
   }
 
@@ -170,7 +194,6 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       child: Drawer(
         width: widget.width.toDouble(),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Expanded(
@@ -180,7 +203,6 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 child: ListView(
                   // Important: Remove any padding from the ListView.
                   padding: EdgeInsets.zero,
-                  shrinkWrap: false,
                   children: [
                     _buildLogo(context),
                     ..._buildTopMenuItems(context),
@@ -191,7 +213,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
             Padding(
               padding: const EdgeInsets.only(bottom: 24.0),
               child: Column(children: _buildBottomMenuItems(context)),
-            )
+            ),
           ],
         ),
       ),
@@ -202,11 +224,17 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     // final textTheme = Theme.of(context).textTheme;
 
     return Container(
-      constraints: BoxConstraints(minHeight: widget.logoSectionMinHeight, maxHeight: widget.logoSectionMaxHeight),
+      constraints: BoxConstraints(
+        minHeight: widget.logoSectionMinHeight,
+        maxHeight: widget.logoSectionMaxHeight,
+      ),
       child: Container(
         constraints: BoxConstraints(maxHeight: widget.logoMaxHeight),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: widget.logoPaddingHorizontal, vertical: widget.logoPaddingVertical),
+          padding: EdgeInsets.symmetric(
+            horizontal: widget.logoPaddingHorizontal,
+            vertical: widget.logoPaddingVertical,
+          ),
           child: GestureDetector(
             onTap: () => ref.read(routerProvider).dispatch(RoutingIntents.root),
             child: Container(
@@ -215,8 +243,8 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
                 backgroundBlendMode: BlendMode.color,
               ),
               child: Image.asset(
-                'assets/images/icon_wide.png',
-                fit: BoxFit.scaleDown,
+                Assets.logoWide,
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -233,7 +261,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
     ); */
   }
 
-  _buildSections(List<List<DrawerEntry>> sections) {
+  List<Widget> _buildSections(List<List<DrawerEntry>> sections) {
     final List<Widget> widgets = [];
     for (final section in sections) {
       for (final entry in section) {
@@ -275,7 +303,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       leading: Icon(
         entry.icon,
         size: theme.iconTheme.size! * 1.2,
-        color: (isSelected)
+        color: isSelected
             ? null
             : (entry.enabled)
                 ? theme.iconTheme.color!.faded(0.75)

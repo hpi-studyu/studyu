@@ -8,7 +8,7 @@ import 'package:studyu_designer_v2/utils/file_download.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 extension StudyExportZipX on StudyExportData {
-  Archive get archive {
+  Future<Archive> get archive async {
     final archive = Archive();
     final toCSVString = CSVStringEncoder();
     final toJsonString = JsonStringEncoder();
@@ -25,24 +25,32 @@ extension StudyExportZipX on StudyExportData {
       archive.addFile(archiveFile);
     });
 
+    for (final mediaFile in mediaData) {
+      final content = await BlobStorageHandler().downloadObservation(mediaFile);
+      final archiveFile = ArchiveFile(mediaFile, content.length, content);
+      archive.addFile(archiveFile);
+    }
+
     return archive;
   }
 
-  List<int>? get encodedZip => ZipEncoder().encode(archive);
+  Future<List<int>?> get encodedZip async => ZipEncoder().encode(await archive);
 
-  String get defaultFilename => '${study.title?.toKey() ?? ''}_${DateTime.now()}';
+  String get defaultFilename =>
+      '${study.title?.toKey() ?? ''}_${DateTime.now()}';
 
-  downloadAsZip({String? filename}) {
+  Future downloadAsZip({String? filename}) async {
     filename ??= defaultFilename;
     return downloadBytes(
-      bytes: encodedZip!,
+      bytes: (await encodedZip)!,
       filename: filename.ensureSuffix('.zip'),
     );
   }
 }
 
 extension StudyExportX on Study {
-  bool canExport(User user) => !exportData.isEmpty && (canEdit(user) || publishedToRegistryResults);
+  bool canExport(User user) =>
+      !exportData.isEmpty && (canEdit(user) || publishedToRegistryResults);
 
   String? exportDisabledReason(User user) {
     if (canExport(user)) return null;

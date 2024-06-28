@@ -13,12 +13,16 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ReportItemFormView extends StatelessWidget {
-  const ReportItemFormView({required this.formViewModel, required this.studyId, super.key});
+  const ReportItemFormView({
+    required this.formViewModel,
+    required this.studyId,
+    super.key,
+  });
 
   final ReportItemFormViewModel formViewModel;
   final StudyID studyId;
 
-  get reportSectionColumnWidth => const {
+  Map<int, TableColumnWidth> get reportSectionColumnWidth => const {
         0: FixedColumnWidth(180.0),
         1: FlexColumnWidth(),
       };
@@ -26,14 +30,22 @@ class ReportItemFormView extends StatelessWidget {
   WidgetBuilder get sectionTypeBodyBuilder {
     final Map<ReportSectionType, WidgetBuilder> sectionTypeWidgets = {
       ReportSectionType.average: (_) => AverageSectionFormView(
-          formViewModel: formViewModel, studyId: studyId, reportSectionColumnWidth: reportSectionColumnWidth),
-      ReportSectionType.linearRegression: (_) => LinearRegressionSectionFormView(
-          formViewModel: formViewModel, studyId: studyId, reportSectionColumnWidth: reportSectionColumnWidth),
+            formViewModel: formViewModel,
+            studyId: studyId,
+            reportSectionColumnWidth: reportSectionColumnWidth,
+          ),
+      ReportSectionType.linearRegression: (_) =>
+          LinearRegressionSectionFormView(
+            formViewModel: formViewModel,
+            studyId: studyId,
+            reportSectionColumnWidth: reportSectionColumnWidth,
+          ),
     };
     final sectionType = formViewModel.sectionType;
 
     if (!sectionTypeWidgets.containsKey(sectionType)) {
-      throw Exception("Failed to build widget for ReportSectionType $sectionType "
+      throw Exception(
+          "Failed to build widget for ReportSectionType $sectionType "
           "because there is no registered WidgetBuilder");
     }
     final builder = sectionTypeWidgets[sectionType]!;
@@ -42,16 +54,17 @@ class ReportItemFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ReactiveFormConsumer(
-      builder: (context, formGroup, child) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSectionText(context),
-              _buildSectionTypeHeader(context),
-              sectionTypeBodyBuilder(context),
-            ],
-          ));
+        builder: (context, formGroup, child) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSectionText(context),
+            _buildSectionTypeHeader(context),
+            sectionTypeBodyBuilder(context),
+          ],
+        ),
+      );
 
-  _buildSectionText(BuildContext context) {
+  FormTableLayout _buildSectionText(BuildContext context) {
     return FormTableLayout(
       rowLayout: FormTableRowLayout.vertical,
       rows: [
@@ -79,7 +92,8 @@ class ReportItemFormView extends StatelessWidget {
             inputFormatters: [
               LengthLimitingTextInputFormatter(10000),
             ],
-            validationMessages: formViewModel.descriptionControl.validationMessages,
+            validationMessages:
+                formViewModel.descriptionControl.validationMessages,
             keyboardType: TextInputType.multiline,
             minLines: 10,
             maxLines: 30,
@@ -92,7 +106,7 @@ class ReportItemFormView extends StatelessWidget {
     );
   }
 
-  _buildSectionTypeHeader(BuildContext context) {
+  Column _buildSectionTypeHeader(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       children: [
@@ -106,22 +120,33 @@ class ReportItemFormView extends StatelessWidget {
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
               // TODO: extract custom dropdown component with theme + focus fix
               input: Theme(
-                data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+                data: theme.copyWith(
+                  inputDecorationTheme:
+                      ThemeConfig.dropdownInputDecorationTheme(theme),
+                ),
                 child: ReactiveDropdownField<ReportSectionType>(
                   formControl: formViewModel.sectionTypeControl,
-                  items: ReportItemFormViewModel.sectionTypeControlOptions.map((option) {
-                    final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(theme);
-                    final iconTheme = menuItemTheme.iconTheme ?? theme.iconTheme;
+                  items: ReportItemFormViewModel.sectionTypeControlOptions
+                      .map((option) {
+                    final menuItemTheme =
+                        ThemeConfig.dropdownMenuItemTheme(theme);
+                    final iconTheme =
+                        menuItemTheme.iconTheme ?? theme.iconTheme;
                     return DropdownMenuItem(
                       value: option.value,
                       child: Row(
                         children: [
-                          (option.value.icon != null)
-                              ? Icon(option.value.icon,
-                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
-                              : const SizedBox.shrink(),
+                          if (option.value.icon != null)
+                            Icon(
+                              option.value.icon,
+                              size: iconTheme.size,
+                              color: iconTheme.color,
+                              shadows: iconTheme.shadows,
+                            )
+                          else
+                            const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
-                          Text(option.label)
+                          Text(option.label),
                         ],
                       ),
                     );

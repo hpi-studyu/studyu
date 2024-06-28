@@ -1,4 +1,5 @@
 export 'extensions.dart';
+export 'multimodal/blob_storage_handler.dart';
 export 'supabase_object.dart';
 
 /// Returns true if [a] is before [b] in terms of year, month and day

@@ -17,5 +17,10 @@ ThemeData get theme => ThemeData(
             secondary: accentColor,
             primary: primaryColor,
           ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: WidgetStateProperty.all(Colors.white),
+        ),
+      ),
       visualDensity: VisualDensity.adaptivePlatformDensity,
     );

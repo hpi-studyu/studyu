@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -11,7 +12,8 @@ import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
-class StudyRecruitController extends StudyBaseController<StudyRecruitControllerState>
+class StudyRecruitController
+    extends StudyBaseController<StudyRecruitControllerState>
     implements IModelActionProvider<StudyInvite> {
   StudyRecruitController({
     required super.studyId,
@@ -30,12 +32,15 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
 
   StreamSubscription<List<WrappedModel<StudyInvite>>>? _invitesSubscription;
 
-  _subscribeInvites() {
+  void _subscribeInvites() {
     print("StudyRecruitController.subscribe");
-    _invitesSubscription = inviteCodeRepository.watchAll().listen((wrappedModels) {
+    _invitesSubscription =
+        inviteCodeRepository.watchAll().listen((wrappedModels) {
       print("StudyRecruitController.listenUpdate");
       // Update the controller's state when new invites are available in the repository
       final invites = wrappedModels.map((invite) => invite.model).toList();
+      // Sort invites alphabetically by code
+      invites.sort((a, b) => a.code.compareTo(b.code));
       state = state.copyWith(
         invites: AsyncValue.data(invites),
       );
@@ -79,7 +84,8 @@ class StudyRecruitController extends StudyBaseController<StudyRecruitControllerS
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
 final studyRecruitControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyRecruitController, StudyRecruitControllerState, StudyID>((ref, studyId) {
+    .family<StudyRecruitController, StudyRecruitControllerState, StudyID>(
+        (ref, studyId) {
   return StudyRecruitController(
     studyId: studyId,
     studyRepository: ref.watch(studyRepositoryProvider),

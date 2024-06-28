@@ -1,33 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/screens/study/report/report_section_widget.dart';
 import 'package:studyu_app/screens/study/report/sections/average_section_widget.dart';
 import 'package:studyu_app/screens/study/report/sections/linear_regression_section_widget.dart';
 import 'package:studyu_core/core.dart';
 
-import 'report_section_widget.dart';
-
-typedef SectionBuilder = ReportSectionWidget Function(ReportSection section, StudySubject subject);
+typedef SectionBuilder = ReportSectionWidget Function(
+  ReportSection section,
+  StudySubject subject,
+);
 
 class ReportSectionContainer extends StatelessWidget {
-  static Map<Type, SectionBuilder> sectionTypes = {
-    AverageSection: (section, instance) => AverageSectionWidget(instance, section as AverageSection),
-    LinearRegressionSection: (section, instance) =>
-        LinearRegressionSectionWidget(instance, section as LinearRegressionSection),
-  };
-
   final ReportSection section;
   final StudySubject subject;
   final bool primary;
   final GestureTapCallback? onTap;
 
-  const ReportSectionContainer(this.section, {super.key, required this.subject, this.onTap, this.primary = false});
+  const ReportSectionContainer(
+    this.section, {
+    super.key,
+    required this.subject,
+    this.onTap,
+    this.primary = false,
+  });
 
-  ReportSectionWidget buildContents(BuildContext context) => sectionTypes[section.runtimeType]!(section, subject);
+  ReportSectionWidget buildContents(BuildContext context) => switch (section) {
+        final AverageSection averageSection =>
+          AverageSectionWidget(subject, averageSection),
+        final LinearRegressionSection linearRegressionSection =>
+          LinearRegressionSectionWidget(subject, linearRegressionSection),
+        _ => throw ArgumentError('Section type ${section.type} not supported.'),
+      };
 
   List<Widget> buildPrimaryHeader(BuildContext context, ThemeData theme) => [
         Text(
           AppLocalizations.of(context)!.report_primary_result.toUpperCase(),
-          style: theme.textTheme.labelSmall!.copyWith(color: theme.colorScheme.secondary),
+          style: theme.textTheme.labelSmall!
+              .copyWith(color: theme.colorScheme.secondary),
         ),
         const SizedBox(height: 4),
       ];

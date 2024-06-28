@@ -1,74 +1,53 @@
-name: All packages
+name: All Packages
 
 on:
   push:
-    branches:
-      - main
-      - dev
     paths:
       - "app/**"
       - "core/**"
-      - "designer/**"
+      - "designer_v2/**"
       - "flutter_common/**"
-      - "notebook_uploader/**"
-      - "repo_generator/**"
       - ".github/workflows/all_packages.yml"
-  pull_request:
-    paths:
-      - "app/**"
-      - "core/**"
-      - "designer/**"
-      - "flutter_common/**"
-      - "notebook_uploader/**"
-      - "repo_generator/**"
-      - ".github/workflows/all_packages.yml"
+      - ".github/workflows/init-workspace/**"
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}-all-packages
+  cancel-in-progress: true
 
 jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+        uses: actions/checkout@v4
         with:
-          channel: stable
-      - name: Install melos
-        run: dart pub global activate melos
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
-      - name: "Run Analyze"
-        run: melos run analyze
+          fetch-depth: 0
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
+      - name: Run analyze
+        run: melos analyze
 
   format:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+        uses: actions/checkout@v4
         with:
-          channel: stable
-      - name: Install melos
-        run: dart pub global activate melos
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
-      - name: "Run Format"
-        run: melos run format:ci
+          fetch-depth: 0
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
+      - name: Run format
+        run: melos format --set-exit-if-changed
 
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+        uses: actions/checkout@v4
         with:
-          channel: stable
-      - name: Install melos
-        run: dart pub global activate melos
-      - name: "Bootstrap Workspace"
-        run: melos bootstrap
-      - name: "Run Test"
+          fetch-depth: 0
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
+      - name: Run Test
         run: melos run test --no-select

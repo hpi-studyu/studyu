@@ -1,15 +1,12 @@
 import 'package:studyu_core/src/models/study_results/results/results.dart';
 import 'package:studyu_core/src/models/tables/study.dart';
 import 'package:studyu_core/src/models/tables/study_subject.dart';
+import 'package:studyu_core/src/models/unknown_json_type_error.dart';
 import 'package:uuid/uuid.dart';
 
 typedef StudyResultParser = StudyResult Function(Map<String, dynamic> json);
 
 abstract class StudyResult {
-  static Map<String, StudyResultParser> studyResultTypes = {
-    InterventionResult.studyResultType: (json) => InterventionResult.fromJson(json),
-    NumericResult.studyResultType: (json) => NumericResult.fromJson(json),
-  };
   static const String keyType = 'type';
   String type;
 
@@ -20,9 +17,12 @@ abstract class StudyResult {
 
   StudyResult.withId(this.type) : id = const Uuid().v4();
 
-  factory StudyResult.fromJson(Map<String, dynamic> data) {
-    return studyResultTypes[data[keyType]]!(data);
-  }
+  factory StudyResult.fromJson(Map<String, dynamic> data) =>
+      switch (data[keyType]) {
+        InterventionResult.studyResultType => InterventionResult.fromJson(data),
+        NumericResult.studyResultType => NumericResult.fromJson(data),
+        _ => throw UnknownJsonTypeError(data[keyType]),
+      };
 
   Map<String, dynamic> toJson();
 

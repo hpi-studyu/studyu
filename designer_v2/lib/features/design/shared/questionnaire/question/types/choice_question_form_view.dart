@@ -18,15 +18,17 @@ class ChoiceQuestionFormView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        FormTableLayout(rows: [
-          FormTableRow(
-            label: tr.form_field_response_choice_multiple,
-            labelHelpText: tr.form_field_response_choice_multiple_tooltip,
-            input: ReactiveSwitch(
-              formControl: formViewModel.isMultipleChoiceControl,
+        FormTableLayout(
+          rows: [
+            FormTableRow(
+              label: tr.form_field_response_choice_multiple,
+              labelHelpText: tr.form_field_response_choice_multiple_tooltip,
+              input: ReactiveSwitch(
+                formControl: formViewModel.isMultipleChoiceControl,
+              ),
             ),
-          ),
-        ]),
+          ],
+        ),
         const SizedBox(height: 12.0),
         ReactiveFormArray(
           formArray: formViewModel.answerOptionsArray,
@@ -39,13 +41,15 @@ class ChoiceQuestionFormView extends ConsumerWidget {
                   columnWidth: const FixedColumnWidth(32.0),
                 ),
                 StandardTableColumn(
-                    label: '', // don't care (showTableHeader=false)
-                    columnWidth: const FlexColumnWidth()),
+                  label: '', // don't care (showTableHeader=false),),
+                ),
               ],
               onSelectItem: (_) => {},
               // no-op
-              buildCellsAt: (context, control, _, __) => buildChoiceOptionRow(context, control),
-              trailingActionsAt: (control, _) => formViewModel.availableActions(control),
+              buildCellsAt: (context, control, _, __) =>
+                  buildChoiceOptionRow(context, control),
+              trailingActionsAt: (control, _) =>
+                  formViewModel.availableActions(control),
               cellSpacing: 0.0,
               rowSpacing: 8.0,
               minRowHeight: null,
@@ -53,13 +57,15 @@ class ChoiceQuestionFormView extends ConsumerWidget {
               rowStyle: StandardTableStyle.plain,
               trailingActionsMenuType: ActionMenuType.inline,
               disableRowInteractions: true,
-              trailingWidget: (formViewModel.isAddOptionButtonVisible && !formViewModel.isReadonly)
+              trailingWidget: (formViewModel.isAddOptionButtonVisible &&
+                      !formViewModel.isReadonly)
                   ? Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Opacity(
                         opacity: ThemeConfig.kMuteFadeFactor,
                         child: Hyperlink(
-                          text: "+ ${tr.form_array_response_options_choice_new}",
+                          text:
+                              "+ ${tr.form_array_response_options_choice_new}",
                           visitedColor: null,
                           onClick: formViewModel.onNewItem,
                         ),

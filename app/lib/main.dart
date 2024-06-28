@@ -6,13 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:studyu_app/app.dart';
+import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-
-import 'app.dart';
 
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
@@ -22,11 +23,14 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
       ' payload: ${notificationResponse.payload}');
   if (notificationResponse.input?.isNotEmpty ?? false) {
     // ignore: avoid_print
-    print('notification action tapped with input: ${notificationResponse.input}');
+    print(
+      'notification action tapped with input: ${notificationResponse.input}',
+    );
   }
 }
 
-GlobalKey<NavigatorState> navigatorKey = GlobalKey(debugLabel: 'Main Navigator');
+GlobalKey<NavigatorState> navigatorKey =
+    GlobalKey(debugLabel: 'Main Navigator');
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,18 +40,72 @@ Future<void> main() async {
   // Turn off the # in the URLs on the web
   usePathUrlStrategy();
   AppConfig? appConfig;
+  String initialRoute = Routes.loading;
   try {
     appConfig = await AppConfig.getAppConfig();
   } catch (error) {
     // device could be offline
+    debugPrint('Error fetching app config: $error');
+  }
+
+  if (appConfig != null && await isAppOutdated(appConfig)) {
+    initialRoute = Routes.appOutdated;
   }
 
   await AppAnalytics.init();
-  if (!kDebugMode && AppAnalytics.isUserEnabled) {
-    AppAnalytics.start(appConfig, MyApp(queryParameters, appConfig));
+  if (!kDebugMode &&
+      AppAnalytics.isUserEnabled != null &&
+      AppAnalytics.isUserEnabled!) {
+    AppAnalytics.start(
+      appConfig,
+      MyApp(queryParameters, appConfig, initialRoute: initialRoute),
+    );
   } else {
-    runApp(MyApp(queryParameters, appConfig));
+    runApp(MyApp(queryParameters, appConfig, initialRoute: initialRoute));
   }
+
+  AppLifecycleListener(
+    onResume: () async {
+      try {
+        final navigatorState = navigatorKey.currentState;
+        if (navigatorState == null) return;
+        String? currentRoute;
+        navigatorState.popUntil((route) {
+          currentRoute = route.settings.name;
+          return true;
+        });
+        if (currentRoute == Routes.appOutdated) return;
+        final appConfig = await AppConfig.getAppConfig();
+        if (await isAppOutdated(appConfig)) {
+          await navigatorState.pushNamedAndRemoveUntil(
+            Routes.appOutdated,
+            (route) => false,
+          );
+        }
+      } catch (error) {
+        // device could be offline
+        debugPrint('Error fetching app config: $error');
+      }
+    },
+  );
+}
+
+/// Checks major and minor version of the app against the minimum version required by the backend
+/// Returns true if the app is outdated
+Future<bool> isAppOutdated(AppConfig appConfig) async {
+  final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  final appVersion = packageInfo.version;
+  final appVersionParts = appVersion.split('.');
+  final minVersionParts = appConfig.appMinVersion.split('.');
+
+  final appVersionMajor = int.parse(appVersionParts[0]);
+  final appVersionMinor = int.parse(appVersionParts[1]);
+
+  final minVersionMajor = int.parse(minVersionParts[0]);
+  final minVersionMinor = int.parse(minVersionParts[1]);
+
+  return appVersionMajor < minVersionMajor ||
+      (appVersionMajor == minVersionMajor && appVersionMinor < minVersionMinor);
 }
 
 /// This is needed for flutter_local_notifications

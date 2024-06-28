@@ -35,7 +35,7 @@ class SearchState extends State<Search> {
   }
 
   void _onSearchPressed() {
-    String query = _searchController.text.toLowerCase();
+    final String query = _searchController.text.toLowerCase();
     widget.onQueryChanged(query);
   }
 
@@ -47,16 +47,14 @@ class SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        width: 400.0,
-        child: SearchBar(
-          hintText: widget.hintText ?? "Search",
-          controller: _searchController,
-          leading: const Icon(Icons.search),
-          shadowColor: MaterialStateProperty.resolveWith((states) {
-            return Colors.transparent;
-          }),
-        ));
+    return SearchBar(
+      hintText: widget.hintText ?? "Search",
+      controller: _searchController,
+      leading: const Icon(Icons.search),
+      shadowColor: WidgetStateProperty.resolveWith((states) {
+        return Colors.transparent;
+      }),
+    );
   }
 
   @override

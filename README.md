@@ -1,6 +1,6 @@
 # StudyU: N-of-1 Trials Made Easy
 
-<img src="https://www.studyu.health/img/icon_wide.png" height="130" align="right"
+<img src="https://www.studyu.health/img/logo.png" height="130" align="right"
 alt="StudyU Icon">
 
 StudyU is an [award-winning](https://www.studyu.health/blog/best-idea-award)
@@ -12,6 +12,14 @@ research methods.
 
 Find out more about StudyU and start your first digital N-of-1 trial now at:
 **[StudyU.health](https://www.studyu.health)**
+
+Are you a researcher or clinician interested in conducting large-scale N-of-1
+trials on a digital basis? Then the StudyU platform is the right choice for you.
+[Contact us](https://www.studyu.health/contact) to learn more about how we can
+support your research.
+
+Are you a developer interested in contributing to the StudyU platform? Then
+check out our [contributing guidelines](CONTRIBUTING.md) to get started.
 
 ## The StudyU Platform
 

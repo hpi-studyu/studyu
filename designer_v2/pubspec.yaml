@@ -1,52 +1,54 @@
 name: studyu_designer_v2
-version: 1.6.2-dev.0
-description: Implement digital N-of-1 studies seamlessly with the brand new StudyU Designer
+version: 1.8.1-dev.2
+description: Implement digital N-of-1 studies seamlessly with the StudyU Health Designer
 publish_to: none
 homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
 
 environment:
-  sdk: '>=3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  archive: ^3.4.9
+  archive: ^3.6.1
   async: ^2.11.0
-  csv: ^5.1.1
-  cupertino_icons: ^1.0.6
-  dynamic_color:
+  csv: ^6.0.0
+  cupertino_icons: ^1.0.8
+  dynamic_color: ^1.7.0
   equatable: ^2.0.5
   flutter:
     sdk: flutter
-  flutter_colorpicker: ^1.0.3
+  flutter_colorpicker: ^1.1.0
   flutter_localizations:
     sdk: flutter
-  flutter_riverpod: ^2.4.9
+  flutter_riverpod: ^2.5.1
   flutter_web_plugins:
     sdk: flutter
-  go_router: ^12.1.3
-  material_color_utilities:
+  go_router: ^14.1.4
+  material_color_utilities: 0.8.0 # integration_test
   material_design_icons_flutter: ^7.0.7296
-  pointer_interceptor: ^0.10.0
-  reactive_color_picker: ^2.0.0
-  reactive_forms: ^16.1.1
-  reactive_multi_select_flutter: ^2.0.0
+  pointer_interceptor: ^0.10.1+1
+  reactive_color_picker: ^2.0.1
+  reactive_forms: ^17.0.1
+  reactive_multi_select_flutter: ^2.0.1
+  reactive_range_slider: ^2.1.0
   rxdart: ^0.27.7
-  shared_preferences: ^2.2.2
-  studyu_core: ^4.3.2
-  studyu_flutter_common: ^1.7.0-dev.0
-  supabase: ^2.0.1
-  supabase_flutter: ^2.0.1
-  url_launcher: ^6.2.2
-  uuid: ^4.2.1 # flutter_test
+  studyu_core: ^4.4.3-dev.1
+  studyu_flutter_common: ^1.8.4-dev.1
+  supabase: ^2.2.1
+  supabase_flutter: ^2.5.5
+  url_launcher: ^6.3.0
+  uuid: ^4.4.0
 
 dev_dependencies:
   custom_lint:
-  flutter_lints: ^3.0.1
+  flutter_launcher_icons: ^0.13.1
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
-  patrol_finders: ^2.0.1+1
+  lint: ^2.3.0
+  patrol_finders: ^2.1.2
   riverpod_lint:
   test: ^1.24.9 # integration_test
 
@@ -55,5 +57,11 @@ flutter:
   generate: true
   assets:
     - assets/
-    - assets/images/
+    - assets/icon/
 
+flutter_launcher_icons:
+  web:
+    generate: true
+    image_path: "assets/icon/icon.png"
+    background_color: "#0175C2" # "#dfdfdf"
+    theme_color: "#0175C2" # "#389bea"

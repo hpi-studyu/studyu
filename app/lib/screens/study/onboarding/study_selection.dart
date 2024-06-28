@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
+import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../../models/app_state.dart';
-import '../../../routes.dart';
-import '../../../widgets/bottom_onboarding_navigation.dart';
-import '../../../widgets/study_tile.dart';
 
 Future<void> navigateToStudyOverview(
   BuildContext context,
@@ -26,8 +25,49 @@ Future<void> navigateToStudyOverview(
   Navigator.pushNamed(context, Routes.studyOverview);
 }
 
-class StudySelectionScreen extends StatelessWidget {
+Future<void> showAppOutdatedDialog(BuildContext context) async {
+  await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title:
+          Text(AppLocalizations.of(context)!.study_selection_unsupported_title),
+      content: Text(AppLocalizations.of(context)!.study_selection_unsupported),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("OK"),
+        ),
+      ],
+    ),
+  );
+}
+
+Future<void> showStudyClosedDialog(BuildContext context) async {
+  await showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(AppLocalizations.of(context)!.study_selection_closed_title),
+      content: Text(AppLocalizations.of(context)!.study_selection_closed),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("OK"),
+        ),
+      ],
+    ),
+  );
+}
+
+class StudySelectionScreen extends StatefulWidget {
   const StudySelectionScreen({super.key});
+
+  @override
+  State<StudySelectionScreen> createState() => _StudySelectionScreenState();
+}
+
+class _StudySelectionScreenState extends State<StudySelectionScreen> {
+  bool _hiddenStudies = false;
+  final publishedStudies = Study.publishedPublicStudies();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +90,8 @@ class StudySelectionScreen extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: AppLocalizations.of(context)!.study_selection_single,
+                            text: AppLocalizations.of(context)!
+                                .study_selection_single,
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
@@ -58,35 +99,81 @@ class StudySelectionScreen extends StatelessWidget {
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
-                            text: AppLocalizations.of(context)!.study_selection_single_why,
-                            style: theme.textTheme.titleSmall!.copyWith(color: theme.primaryColor),
+                            text: AppLocalizations.of(context)!
+                                .study_selection_single_why,
+                            style: theme.textTheme.titleSmall!
+                                .copyWith(color: theme.primaryColor),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
-                                      content: Text(AppLocalizations.of(context)!.study_selection_single_reason),
+                                      content: Text(
+                                        AppLocalizations.of(context)!
+                                            .study_selection_single_reason,
+                                      ),
                                     ),
                                   ),
-                          )
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
+              if (_hiddenStudies)
+                Column(
+                  children: [
+                    MaterialBanner(
+                      padding: const EdgeInsets.all(8),
+                      leading: Icon(
+                        MdiIcons.exclamationThick,
+                        color: Colors.orange,
+                        size: 32,
+                      ),
+                      content: Text(
+                        AppLocalizations.of(context)!
+                            .study_selection_hidden_studies,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      actions: const [SizedBox.shrink()],
+                      backgroundColor: Colors.yellow[100],
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                )
+              else
+                const SizedBox.shrink(),
               Expanded(
-                child: RetryFutureBuilder<List<Study>>(
-                  tryFunction: () async => Study.publishedPublicStudies(),
-                  successBuilder: (BuildContext context, List<Study>? studies) {
+                child: RetryFutureBuilder<ExtractionResult<Study>>(
+                  tryFunction: () async => publishedStudies,
+                  successBuilder: (
+                    BuildContext context,
+                    ExtractionResult<Study>? extractionResult,
+                  ) {
+                    final studies = extractionResult!.extracted;
+                    if (extractionResult is ExtractionFailedException<Study>) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (_hiddenStudies) return;
+                        debugPrint(
+                          '${extractionResult.notExtracted.length} studies could not be extracted.',
+                        );
+                        setState(() {
+                          _hiddenStudies = true;
+                        });
+                      });
+                    }
                     return ListView.builder(
-                      itemCount: studies!.length,
+                      itemCount: studies.length,
                       itemBuilder: (context, index) {
+                        final study = studies[index];
                         return Hero(
                           tag: 'study_tile_${studies[index].id}',
                           child: Material(
                             child: StudyTile.fromStudy(
-                              study: studies[index],
-                              onTap: () => navigateToStudyOverview(context, studies[index]),
+                              study: study,
+                              onTap: () async {
+                                await navigateToStudyOverview(context, study);
+                              },
                             ),
                           ),
                         );
@@ -100,7 +187,10 @@ class StudySelectionScreen extends StatelessWidget {
                 child: OutlinedButton.icon(
                   icon: Icon(MdiIcons.key),
                   onPressed: () async {
-                    await showDialog(context: context, builder: (_) => const InviteCodeDialog());
+                    await showDialog(
+                      context: context,
+                      builder: (_) => const InviteCodeDialog(),
+                    );
                   },
                   label: Text(AppLocalizations.of(context)!.invite_code_button),
                 ),
@@ -140,7 +230,9 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
           controller: _controller,
           validator: (_) => _errorMessage,
           autovalidateMode: AutovalidateMode.always,
-          decoration: InputDecoration(labelText: AppLocalizations.of(context)!.invite_code),
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context)!.invite_code,
+          ),
         ),
         actions: [
           OutlinedButton.icon(
@@ -165,7 +257,8 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
               if (result == null) {
                 setState(() {
-                  _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
+                  _errorMessage =
+                      AppLocalizations.of(context)!.invalid_invite_code;
                 });
               } else {
                 setState(() {
@@ -174,10 +267,10 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
                 Map<String, dynamic>? studyResult;
                 try {
-                  studyResult = await (Supabase.instance.client.rpc(
+                  studyResult = await Supabase.instance.client.rpc(
                     'get_study_record_from_invite',
                     params: {'invite_code': _controller.text},
-                  ).single());
+                  ).single();
                 } on PostgrestException catch (error) {
                   print(error.message);
                   setState(() {
@@ -186,9 +279,28 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 }
 
                 if (studyResult != null) {
-                  final study = Study.fromJson(studyResult);
+                  Study study;
+                  try {
+                    study = Study.fromJson(studyResult);
+                    // ignore: avoid_catching_errors
+                  } on ArgumentError catch (error) {
+                    // We are catching ArgumentError because unknown enums throw an ArgumentError
+                    // and UnknownJsonTypeError is a subclass of ArgumentError
+                    debugPrint('Study selection from invite failed: $error');
+                    if (!context.mounted) return;
+                    Navigator.pop(context);
+                    await showAppOutdatedDialog(context);
+                    return;
+                  }
 
-                  if (!mounted) return;
+                  if (study.isClosed) {
+                    if (!context.mounted) return;
+                    Navigator.pop(context);
+                    await showStudyClosedDialog(context);
+                    return;
+                  }
+
+                  if (!context.mounted) return;
                   Navigator.pop(context);
 
                   if (result.containsKey('preselected_intervention_ids') &&
@@ -212,7 +324,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                 }
               }
             },
-          )
+          ),
         ],
       );
 }
