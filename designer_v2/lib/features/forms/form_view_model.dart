@@ -410,21 +410,14 @@ abstract class FormViewModel<T> implements IFormGroupController {
       }
 
       if (control is FormGroup) {
-        // todo
-        /*
-              final valueChanges = control.valueChanges.listen(boundListener);
+        final valueChanges = control.valueChanges.listen(boundListener);
         _immediateFormChildrenSubscriptions.add(valueChanges);
-         */
-        continue; // don't listen to nested descendants
       } else if (control is FormArray) {
         final collectionChanges =
             control.collectionChanges.listen(boundListener);
-        // don't subscribe to control.valueChanges
         _immediateFormChildrenSubscriptions.add(collectionChanges);
-        /*
-         final valueChanges = control.valueChanges.listen(boundListener);
+        final valueChanges = control.valueChanges.listen(boundListener);
         _immediateFormChildrenSubscriptions.add(valueChanges);
-       */
       } else if (control is FormControl) {
         final valueChanges = control.valueChanges.listen(boundListener);
         _immediateFormChildrenSubscriptions.add(valueChanges);
