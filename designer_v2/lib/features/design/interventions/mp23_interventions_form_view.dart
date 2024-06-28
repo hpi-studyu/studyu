@@ -44,48 +44,50 @@ class MP23StudyDesignInterventionsFormView extends StudyDesignPageWidget {
               ),
               const SizedBox(height: 24.0),
               ReactiveFormConsumer(
-                  // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
-                  // By default, ReactiveFormArray only updates when adding/removing controls
-                  builder: (context, form, child) {
-                return ReactiveFormArray(
-                  formArray: formViewModel.interventionsArray,
-                  builder: (context, formArray, child) {
-                    return FormArrayTable<InterventionFormViewModel>(
-                      control: formViewModel.interventionsArray,
-                      items:
-                          formViewModel.interventionsCollection.formViewModels,
-                      onSelectItem: formViewModel.onSelectItem,
-                      getActionsAt: (viewModel, _) =>
-                          formViewModel.availablePopupActions(viewModel),
-                      onNewItem: formViewModel.onNewItem,
-                      onNewItemLabel: tr.form_array_interventions_new,
-                      rowTitle: (viewModel) => viewModel.formData?.title ?? '',
-                      sectionTitle: tr.form_array_interventions,
-                      sectionTitleDivider: false,
-                      emptyIcon: Icons.content_paste_off_rounded,
-                      emptyTitle: tr.form_array_interventions_empty_title,
-                      emptyDescription:
-                          tr.form_array_interventions_empty_description,
-                      hideLeadingTrailingWhenEmpty: true,
-                      rowPrefix: (context, viewModel, rowIdx) {
-                        return Row(
-                          children: [
-                            Text(
-                              ''.alphabetLetterFrom(rowIdx).toUpperCase(),
-                              style: TextStyle(
-                                color: ThemeConfig.dropdownMenuItemTheme(theme)
-                                    .iconTheme!
-                                    .color,
+                // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
+                // By default, ReactiveFormArray only updates when adding/removing controls
+                builder: (context, form, child) {
+                  return ReactiveFormArray(
+                    formArray: formViewModel.interventionsArray,
+                    builder: (context, formArray, child) {
+                      return FormArrayTable<InterventionFormViewModel>(
+                        control: formViewModel.interventionsArray,
+                        items: formViewModel
+                            .interventionsCollection.formViewModels,
+                        onSelectItem: formViewModel.onSelectItem,
+                        getActionsAt: (viewModel, _) =>
+                            formViewModel.availablePopupActions(viewModel),
+                        onNewItem: formViewModel.onNewItem,
+                        onNewItemLabel: tr.form_array_interventions_new,
+                        rowTitle: (viewModel) =>
+                            viewModel.formData?.title ?? '',
+                        sectionTitle: tr.form_array_interventions,
+                        sectionTitleDivider: false,
+                        emptyIcon: Icons.content_paste_off_rounded,
+                        emptyTitle: tr.form_array_interventions_empty_title,
+                        emptyDescription:
+                            tr.form_array_interventions_empty_description,
+                        hideLeadingTrailingWhenEmpty: true,
+                        rowPrefix: (context, viewModel, rowIdx) {
+                          return Row(
+                            children: [
+                              Text(
+                                ''.alphabetLetterFrom(rowIdx).toUpperCase(),
+                                style: TextStyle(
+                                  color:
+                                      ThemeConfig.dropdownMenuItemTheme(theme)
+                                          .iconTheme!
+                                          .color,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 16.0),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                );
-              },
+                              const SizedBox(width: 16.0),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
               ),
               const SizedBox(height: 24.0),
               Row(

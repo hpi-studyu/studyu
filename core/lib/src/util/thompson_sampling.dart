@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:data/data.dart';
 
 // TODO: Implement the Thompson Sampling algorithm form notebook
@@ -8,18 +9,18 @@ class UnknownMeanUnknownVariance {
   double _beta;
 
   int _n;
-  List<double> _x;
+  final List<double> _x;
 
   double _mu0;
-  double _v0;
+  // double _v0;
 
   UnknownMeanUnknownVariance({double alpha = 1, double beta = 1})
       : _alpha = alpha,
         _beta = beta,
         _n = 0,
         _x = [],
-        _mu0 = 1,
-        _v0 = beta / (alpha + 1);
+        _mu0 = 1;
+  // _v0 = beta / (alpha + 1);
 
   void update(double x) {
     const int n = 1;
@@ -28,7 +29,7 @@ class UnknownMeanUnknownVariance {
     _alpha = _alpha + n / 2;
     _beta = _beta + ((n * v / (v + n)) * (pow(x - _mu0, 2) / 2));
 
-    _v0 = _beta / (_alpha + 1);
+    // _v0 = _beta / (_alpha + 1);
 
     _x.add(x);
     _n++;

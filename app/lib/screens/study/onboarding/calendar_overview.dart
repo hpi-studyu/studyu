@@ -22,10 +22,7 @@ class _CalendarOverviewState extends State<CalendarOverview> {
   }
 
   int _dayOfYear(DateTime date) {
-    return normalizeDate(date)
-            .difference(DateTime.utc(date.year, 1, 1))
-            .inDays +
-        1;
+    return normalizeDate(date).difference(DateTime.utc(date.year)).inDays + 1;
   }
 
   @override
@@ -36,19 +33,19 @@ class _CalendarOverviewState extends State<CalendarOverview> {
     final List<List<Color>> colorScheme = [
       [
         const Color.fromRGBO(15, 174, 40, 1),
-        const Color.fromRGBO(176, 255, 189, 1)
+        const Color.fromRGBO(176, 255, 189, 1),
       ],
       [
         const Color.fromRGBO(92, 54, 173, 1),
-        const Color.fromRGBO(211, 191, 255, 1)
+        const Color.fromRGBO(211, 191, 255, 1),
       ],
       [
         const Color.fromRGBO(173, 73, 208, 1),
-        const Color.fromRGBO(237, 186, 255, 1)
+        const Color.fromRGBO(237, 186, 255, 1),
       ],
       [
         const Color.fromRGBO(222, 183, 45, 1),
-        const Color.fromRGBO(255, 239, 181, 1)
+        const Color.fromRGBO(255, 239, 181, 1),
       ]
     ];
 
@@ -63,8 +60,11 @@ class _CalendarOverviewState extends State<CalendarOverview> {
     // function for building
 // BuildContext, DateTime, DateTime
     Widget buildCalendarDay(
-        BuildContext context, DateTime day, DateTime focusedDay,
-        [bool today = false]) {
+      BuildContext context,
+      DateTime day,
+      DateTime focusedDay, [
+      bool today = false,
+    ]) {
       final text = DateFormat.d().format(day);
 
       DateTime studyStartDay = widget.subject!.startedAt ?? DateTime.now();
@@ -83,14 +83,14 @@ class _CalendarOverviewState extends State<CalendarOverview> {
 
       List<Color> colors = [
         const Color.fromARGB(0, 0, 0, 0),
-        today ? Colors.blue[600]! : Colors.grey[400]!
+        if (today) Colors.blue[600]! else Colors.grey[400]!,
       ];
 
       // gradient
       Gradient? gradient;
 
       if (segment is BaselineScheduleSegment) {
-        colors = [Color.fromARGB(255, 228, 228, 228), Colors.black];
+        colors = [const Color.fromARGB(255, 228, 228, 228), Colors.black];
       } else if (segment is ThompsonSamplingScheduleSegment) {
         // TODO_NOW if day is in past, show the actual intervention
         if (isSameDay(day, DateTime.now()) ||
@@ -109,14 +109,16 @@ class _CalendarOverviewState extends State<CalendarOverview> {
           }
         } else {
           colors = [Colors.white, Colors.white];
-          List<Color> gradientColors = [];
+          final List<Color> gradientColors = [];
 
           for (int i = 0; i < schedule.interventions.length; i++) {
             gradientColors.add(colorScheme[i % colorScheme.length][0]);
           }
 
           gradient = LinearGradient(
-              colors: gradientColors, transform: const GradientRotation(1));
+            colors: gradientColors,
+            transform: const GradientRotation(1),
+          );
         }
       } else if (segment is AlternatingScheduleSegment) {
         colors = colorScheme[0];
@@ -139,20 +141,23 @@ class _CalendarOverviewState extends State<CalendarOverview> {
             );
 
       return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
-          child: AspectRatio(
-              aspectRatio: 1.0,
-              child: Container(
-                  decoration: decoration,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 0),
-                    child: Center(
-                      child: Text(
-                        text,
-                        style: TextStyle(color: colors[1]),
-                      ),
-                    ),
-                  ))));
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: AspectRatio(
+          aspectRatio: 1.0,
+          child: Container(
+            decoration: decoration,
+            child: Padding(
+              padding: EdgeInsets.zero,
+              child: Center(
+                child: Text(
+                  text,
+                  style: TextStyle(color: colors[1]),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
     }
 
     // init
@@ -195,8 +200,9 @@ class _CalendarOverviewState extends State<CalendarOverview> {
             ),
           for (int i = 0; i < interventions.length; i++)
             Label(
-                color: colorScheme[i % colorScheme.length][0],
-                text: interventions[i].name ?? ''),
+              color: colorScheme[i % colorScheme.length][0],
+              text: interventions[i].name ?? '',
+            ),
         ],
       ),
     );
@@ -210,8 +216,12 @@ class Label extends StatelessWidget {
   final Color color;
   final Color? borderColor;
 
-  const Label(
-      {required this.text, required this.color, this.borderColor, super.key});
+  const Label({
+    required this.text,
+    required this.color,
+    this.borderColor,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -220,14 +230,15 @@ class Label extends StatelessWidget {
       child: Row(
         children: [
           Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: color,
-                  border: borderColor != null
-                      ? Border.all(color: borderColor!, width: 1)
-                      : null)),
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: color,
+              border:
+                  borderColor != null ? Border.all(color: borderColor!) : null,
+            ),
+          ),
           const SizedBox(width: 8),
           Text(text),
         ],

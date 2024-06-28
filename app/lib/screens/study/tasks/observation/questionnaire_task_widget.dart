@@ -13,8 +13,7 @@ class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
   final CompletionPeriod completionPeriod;
 
-  const QuestionnaireTaskWidget(
-      {
+  const QuestionnaireTaskWidget({
     required this.task,
     required this.completionPeriod,
     super.key,
@@ -33,21 +32,22 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   Future<void> _addQuestionnaireResult<T>(
-      T response, BuildContext context,
+    T response,
+    BuildContext context,
   ) async {
     await handleTaskCompletion(context, (StudySubject? subject) async {
       try {
         await subject!.addResult<T>(
-            taskId: widget.task.id,
-            periodId: widget.completionPeriod.id,
-            result: response,
+          taskId: widget.task.id,
+          periodId: widget.completionPeriod.id,
+          result: response,
         );
       } on SocketException catch (_) {
         await subject!.addResult<T>(
-            taskId: widget.task.id,
-            periodId: widget.completionPeriod.id,
-            result: response,
-            offline: true,
+          taskId: widget.task.id,
+          periodId: widget.completionPeriod.id,
+          result: response,
+          offline: true,
         );
         rethrow;
       }

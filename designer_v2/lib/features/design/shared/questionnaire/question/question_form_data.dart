@@ -42,11 +42,13 @@ abstract class QuestionFormData implements IFormData {
     },
     SurveyQuestionType.bool: (question, eligibilityCriteria) =>
         BoolQuestionFormData.fromDomainModel(
-            question as BooleanQuestion, eligibilityCriteria,
+          question as BooleanQuestion,
+          eligibilityCriteria,
         ),
     SurveyQuestionType.choice: (question, eligibilityCriteria) =>
         ChoiceQuestionFormData.fromDomainModel(
-            question as ChoiceQuestion,eligibilityCriteria,
+          question as ChoiceQuestion,
+          eligibilityCriteria,
         ),
     SurveyQuestionType.image: (question, eligibilityCriteria) =>
         ImageQuestionFormData.fromDomainModel(
@@ -95,7 +97,8 @@ abstract class QuestionFormData implements IFormData {
           "SurveyQuestionType: $surveyQuestionType");
     }
     return questionTypeFormDataFactories[surveyQuestionType]!(
-        question, eligibilityCriteria,
+      question,
+      eligibilityCriteria,
     );
   }
 
@@ -129,8 +132,8 @@ abstract class QuestionFormData implements IFormData {
   /// Determines the [responseOptionsValidity] in terms of qualify/disqualify
   /// by evaluating the given criteria for each response option on a new
   /// [QuestionnaireState] where the option is selected
-  voidsetResponseOptionsValidityFrom(
-      List<EligibilityCriterion> eligibilityCriteria,
+  void setResponseOptionsValidityFrom(
+    List<EligibilityCriterion> eligibilityCriteria,
   ) {
     final Map<dynamic, bool> result = {};
 
@@ -425,8 +428,9 @@ class ScaleQuestionFormData extends QuestionFormData {
     this.stepSize = 0,
     this.minColor,
     this.maxColor,
-  }) : assert(midValues.length == midLabels.length,
-            "midValues.length and midLabels.length must be equal",
+  }) : assert(
+          midValues.length == midLabels.length,
+          "midValues.length and midLabels.length must be equal",
         );
 
   final double minValue;

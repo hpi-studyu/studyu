@@ -14,9 +14,15 @@ class MP23StudyScheduleFormData implements IStudyFormData {
   final List<Observation> observations;
 
   factory MP23StudyScheduleFormData.fromDomainModel(
-      MP23StudySchedule schedule, List<Intervention> interventions, List<Observation> observations) {
+    MP23StudySchedule schedule,
+    List<Intervention> interventions,
+    List<Observation> observations,
+  ) {
     return MP23StudyScheduleFormData(
-        segments: schedule.segments, interventions: schedule.interventions, observations: schedule.observations);
+      // todo or user schedule.interventions, schedule.observations instead?
+      segments: schedule.segments, interventions: interventions,
+      observations: observations,
+    );
   }
 
   MP23StudySchedule toMP23StudySchedule() {

@@ -2,26 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_app/routes.dart';
-import 'package:studyu_app/screens/study/dashboard/task_overview_tab/progress_row.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_box.dart';
 import 'package:studyu_app/screens/study/onboarding/calendar_overview.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
-
-import '../../../../routes.dart';
-import '../../../../widgets/intervention_card.dart';
-import 'task_box.dart';
 
 class TaskOverview extends StatefulWidget {
   final StudySubject? subject;
   final List<TaskInstance>? scheduleToday;
   final String? interventionIcon;
 
-  const TaskOverview(
-      {required this.subject,
-      required this.scheduleToday,
-      super.key,
-      this.interventionIcon,
+  const TaskOverview({
+    required this.subject,
+    required this.scheduleToday,
+    super.key,
+    this.interventionIcon,
   });
 
   @override
@@ -33,7 +28,9 @@ class _TaskOverviewState extends State<TaskOverview> {
     if (widget.subject!.completedStudy) {
       // Workaround to reload dashboard
       Navigator.pushNamedAndRemoveUntil(
-          context, Routes.dashboard, (_) => false,
+        context,
+        Routes.dashboard,
+        (_) => false,
       );
     }
   }
@@ -86,7 +83,7 @@ class _TaskOverviewState extends State<TaskOverview> {
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Center(child: CalendarOverview(subject: widget.subject!)),
+            child: Center(child: CalendarOverview(subject: widget.subject)),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -97,7 +94,7 @@ class _TaskOverviewState extends State<TaskOverview> {
                 Row(
                   children: [
                     Text(AppLocalizations.of(context)!.intervention_current,
-                        style: theme.textTheme.titleLarge),
+                        style: theme.textTheme.titleLarge,),
                     // const Spacer(),
                     // Text(
                     //   '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',
@@ -108,10 +105,10 @@ class _TaskOverviewState extends State<TaskOverview> {
                 const SizedBox(height: 8),
                 InterventionCardTitle(
                     intervention:
-                        widget.subject!.getInterventionForDate(DateTime.now())),
+                        widget.subject!.getInterventionForDate(DateTime.now()),),
                 const SizedBox(height: 8),
                 Text(AppLocalizations.of(context)!.today_tasks,
-                    style: theme.textTheme.titleLarge)
+                    style: theme.textTheme.titleLarge,),
               ],
             ),
           ),

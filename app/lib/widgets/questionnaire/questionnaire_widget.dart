@@ -46,7 +46,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   void _invalidateDownstreamAnswers(int index) {
     if (index < shownQuestions.length - 1) {
       final startIndex = widget.questions.indexWhere(
-          (question) => question.id == shownQuestions[index].question.id,);
+        (question) => question.id == shownQuestions[index].question.id,
+      );
       widget.questions
           .skip(startIndex + 1)
           .forEach((question) => qs.answers.remove(question.id));
@@ -101,14 +102,15 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       // check for conditional questions
       if (!widget.questions[_nextQuestionIndex].shouldBeShown(qs)) {
         _onQuestionDone(
-            widget.questions[_nextQuestionIndex].getDefaultAnswer()!,
-            shownQuestions.length,
+          widget.questions[_nextQuestionIndex].getDefaultAnswer()!,
+          shownQuestions.length,
         );
         return;
       }
       _insertQuestion(widget.questions[_nextQuestionIndex]);
-      _listKey.currentState!.insertItem(shownQuestions.length - 1,
-          );
+      _listKey.currentState!.insertItem(
+        shownQuestions.length - 1,
+      );
       _nextQuestionIndex++;
     } else {
       // we ran out of questions

@@ -1,13 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/src/models/interventions/intervention.dart';
-import 'package:studyu_core/src/models/observations/observation.dart';
 import 'package:studyu_core/src/util/thompson_sampling.dart';
 
 part 'mp23_study_schedule.g.dart';
 
 @JsonSerializable()
 class MP23StudySchedule {
+  // todo why are interventions and observations saved in the schedule?
   @JsonKey(includeToJson: false, defaultValue: [])
   List<Intervention> interventions;
 
@@ -61,8 +60,11 @@ abstract class StudyScheduleSegment {
 
   int getDuration(List<Intervention> interventions);
 
-  Intervention? getInterventionOnDay(int day, List<Intervention> interventions,
-      List<SubjectProgress> progress);
+  Intervention? getInterventionOnDay(
+    int day,
+    List<Intervention> interventions,
+    List<SubjectProgress> progress,
+  );
 
   StudyScheduleSegmentType get type =>
       throw UnimplementedError("Subclasses should return String type");
@@ -76,10 +78,11 @@ class BaselineScheduleSegment extends StudyScheduleSegment {
 
   @override
   @JsonKey(
-      fromJson: StudyScheduleSegmentType.fromJson,
-      toJson: StudyScheduleSegmentType.toJson,
-      includeFromJson: true,
-      includeToJson: true)
+    fromJson: StudyScheduleSegmentType.fromJson,
+    toJson: StudyScheduleSegmentType.toJson,
+    includeFromJson: true,
+    includeToJson: true,
+  )
   final StudyScheduleSegmentType type = StudyScheduleSegmentType.baseline;
 
   @override
@@ -133,10 +136,11 @@ class StudyScheduleSegmentConverter
 class AlternatingScheduleSegment extends StudyScheduleSegment {
   @override
   @JsonKey(
-      fromJson: StudyScheduleSegmentType.fromJson,
-      toJson: StudyScheduleSegmentType.toJson,
-      includeFromJson: true,
-      includeToJson: true)
+    fromJson: StudyScheduleSegmentType.fromJson,
+    toJson: StudyScheduleSegmentType.toJson,
+    includeFromJson: true,
+    includeToJson: true,
+  )
   final StudyScheduleSegmentType type = StudyScheduleSegmentType.alternating;
 
   @override
@@ -245,7 +249,7 @@ class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
                 final interventionIndex = interventions.indexWhere(
                   (element) => element.id == interventionId,
                 );
-                print("updaing observation: $interventionIndex $response");
+                print("updating observation: $interventionIndex $response");
                 ts.updateObservations(interventionIndex, response.toDouble());
               }
             }

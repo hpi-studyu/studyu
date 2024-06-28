@@ -22,7 +22,7 @@ mixin MP23StudyScheduleControls {
 
   int getTotalDuration() {
     int totalDuration = 0;
-    for (var segment in segments) {
+    for (final segment in segments) {
       totalDuration += segment.getDuration(interventions);
     }
     return totalDuration;
@@ -85,27 +85,25 @@ mixin MP23StudyScheduleControls {
 
   void updateSegmentsFromSegmentsControl() {
     segments.clear();
-    for (var segmentControl in segmentsControl.controls) {
+    for (final segmentControl in segmentsControl.controls) {
       final segment = segmentControl as FormGroup;
       switch (segment.control('type').value) {
         case "baseline":
-          segments
-              .add(BaselineScheduleSegment(segment.control('duration').value));
-          break;
+          segments.add(
+            BaselineScheduleSegment(segment.control('duration').value as int),
+          );
         case "alternating":
           segments.add(AlternatingScheduleSegment(
-            segment.control('interventionDuration').value,
-            segment.control('cycleAmount').value,
-          ));
-          break;
+            segment.control('interventionDuration').value as int,
+            segment.control('cycleAmount').value as int,
+          ),);
         case "thompsonSampling":
           segments.add(ThompsonSamplingScheduleSegment(
-            segment.control('interventionDuration').value,
-            segment.control('interventionDrawAmount').value,
-            segment.control('observationId').value,
-            segment.control('questionId').value,
-          ));
-          break;
+            segment.control('interventionDuration').value as int,
+            segment.control('interventionDrawAmount').value as int,
+            segment.control('observationId').value as String,
+            segment.control('questionId').value as String,
+          ),);
         default:
           throw UnimplementedError();
       }
@@ -116,22 +114,22 @@ mixin MP23StudyScheduleControls {
     segmentsControl.clear();
     interventions.clear();
     observations.clear();
-    for (var element in data.segments) {
+    for (final element in data.segments) {
       if (element is BaselineScheduleSegment) {
         addFormGroupToSegments(
-            createBaselineFormGroup(duration: element.duration));
+            createBaselineFormGroup(duration: element.duration),);
       } else if (element is AlternatingScheduleSegment) {
         addFormGroupToSegments(createAlternatingFormGroup(
           interventionDuration: element.interventionDuration,
           cycleAmount: element.cycleAmount,
-        ));
+        ),);
       } else if (element is ThompsonSamplingScheduleSegment) {
         addFormGroupToSegments(createThompsonSamplingFormGroup(
           interventionDuration: element.interventionDuration,
           interventionDrawAmount: element.interventionDrawAmount,
           observationId: element.observationId,
           questionId: element.questionId,
-        ));
+        ),);
       }
     }
     interventions.addAll(data.interventions);
@@ -142,21 +140,24 @@ mixin MP23StudyScheduleControls {
   MP23StudyScheduleFormData buildStudyScheduleFormData() {
     return MP23StudyScheduleFormData(
       segments: segmentsControl.controls.map((absSegment) {
+        // todo fix strong types in this file and in mp23_study_schedule_form_view.dart
         final segment = absSegment as FormGroup;
         switch (segment.control('type').value) {
           case "baseline":
-            return BaselineScheduleSegment(segment.control('duration').value);
+            return BaselineScheduleSegment(
+              segment.control('duration').value as int,
+            );
           case "alternating":
             return AlternatingScheduleSegment(
-              segment.control('interventionDuration').value,
-              segment.control('cycleAmount').value,
+              segment.control('interventionDuration').value as int,
+              segment.control('cycleAmount').value as int,
             );
           case "thompsonSampling":
             return ThompsonSamplingScheduleSegment(
-              segment.control('interventionDuration').value,
-              segment.control('interventionDrawAmount').value,
-              segment.control('observationId').value,
-              segment.control('questionId').value,
+              segment.control('interventionDuration').value as int,
+              segment.control('interventionDrawAmount').value as int,
+              segment.control('observationId').value as String,
+              segment.control('questionId').value as String,
             );
           default:
             throw UnimplementedError();

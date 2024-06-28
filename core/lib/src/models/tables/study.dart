@@ -2,7 +2,6 @@ import 'package:csv/csv.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
 import 'package:studyu_core/src/models/models.dart';
-import 'package:studyu_core/src/models/study_schedule/mp23_study_schedule.dart';
 import 'package:studyu_core/src/util/supabase_object.dart';
 import 'package:supabase/supabase.dart';
 import 'package:uuid/uuid.dart';
@@ -71,6 +70,7 @@ class Study extends SupabaseObjectFunctions<Study>
   @JsonKey(defaultValue: [])
   late List<Observation> observations = [];
   @JsonKey(fromJson: _studyScheduleFromJson)
+  // todo deprecate old schedule
   late StudySchedule schedule = StudySchedule();
   @JsonKey(includeToJson: true, includeFromJson: false)
   late MP23StudySchedule mp23Schedule =
@@ -153,7 +153,8 @@ class Study extends SupabaseObjectFunctions<Study>
     final study = _$StudyFromJson(json);
 
     final MP23StudySchedule mp23Schedule = MP23StudySchedule.fromJson(
-        json['mp23Schedule'] as Map<String, dynamic>);
+      json['mp23Schedule'] as Map<String, dynamic>,
+    );
 
     mp23Schedule.interventions = study.interventions;
     mp23Schedule.observations = study.observations;
@@ -252,11 +253,13 @@ class Study extends SupabaseObjectFunctions<Study>
   static Future<ExtractionResult<Study>> publishedPublicStudies() async {
     ExtractionResult<Study> result;
     try {
-      final response =
-          await env.client.from(tableName).select().eq('participation', 'open')
+      final response = await env.client
+          .from(tableName)
+          .select()
+          .eq('participation', 'open')
           .neq('status', StudyStatus.closed.name);
       final extracted = SupabaseQuery.extractSupabaseList<Study>(
-          List<Map<String, dynamic>>.from(response),
+        List<Map<String, dynamic>>.from(response),
       );
       result = ExtractionSuccess<Study>(extracted);
     } on ExtractionFailedException<Study> catch (error) {

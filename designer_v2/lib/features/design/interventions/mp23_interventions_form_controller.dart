@@ -46,7 +46,8 @@ class MP23InterventionsFormViewModel
   final FormArray interventionsArray = FormArray([]);
   late final interventionsCollection =
       FormViewModelCollection<InterventionFormViewModel, InterventionFormData>(
-          [], interventionsArray,
+    [],
+    interventionsArray,
   );
 
   @override
@@ -72,13 +73,15 @@ class MP23InterventionsFormViewModel
         ],
       };
 
-  FormControlValidationget interventionsRequired =>
-      FormControlValidation(control: interventionsArray, validators: [
-        Validators.minLength(2),
-      ], validationMessages: {
-        ValidationMessage.minLength: (error) =>
-            tr.form_array_interventions_minlength(
-                (error as Map)['requiredLength']as num,
+  FormControlValidation get interventionsRequired => FormControlValidation(
+        control: interventionsArray,
+        validators: [
+          Validators.minLength(2),
+        ],
+        validationMessages: {
+          ValidationMessage.minLength: (error) =>
+              tr.form_array_interventions_minlength(
+                (error as Map)['requiredLength'] as num,
               ),
         },
       );
@@ -120,22 +123,26 @@ class MP23InterventionsFormViewModel
 
   @override
   List<ModelAction> availableActions(InterventionFormViewModel model) {
-    final actions = interventionsCollection.availableActions(model,
-        onEdit: onSelectItem, isReadOnly: isReadonly,
+    final actions = interventionsCollection.availableActions(
+      model,
+      onEdit: onSelectItem,
+      isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availablePopupActions(InterventionFormViewModel model) {
-    final actions = interventionsCollection.availablePopupActions(model,
-        isReadOnly: isReadonly,
+    final actions = interventionsCollection.availablePopupActions(
+      model,
+      isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(InterventionFormViewModel model) {
-    final actions = interventionsCollection.availableInlineActions(model,
-        isReadOnly: isReadonly,
+    final actions = interventionsCollection.availableInlineActions(
+      model,
+      isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
   }
@@ -145,7 +152,7 @@ class MP23InterventionsFormViewModel
     final studyId = study.id;
     final interventionId = item.interventionId;
     router.dispatch(
-        RoutingIntents.studyEditIntervention(studyId, interventionId),
+      RoutingIntents.studyEditIntervention(studyId, interventionId),
     );
   }
 
@@ -153,7 +160,7 @@ class MP23InterventionsFormViewModel
   void onNewItem() {
     final studyId = study.id;
     router.dispatch(
-        RoutingIntents.studyEditIntervention(studyId, Config.newModelId),
+      RoutingIntents.studyEditIntervention(studyId, Config.newModelId),
     );
   }
 
@@ -166,10 +173,9 @@ class MP23InterventionsFormViewModel
       // Eagerly add the managed viewmodel in case it needs to be [provide]d
       // to a child controller
       final viewModel = InterventionFormViewModel(
-          study: study,
-
-          delegate: this,
-          validationSet: validationSet,
+        study: study,
+        delegate: this,
+        validationSet: validationSet,
       );
       interventionsCollection.stage(viewModel);
       return viewModel;
@@ -192,7 +198,8 @@ class MP23InterventionsFormViewModel
 
   @override
   Future onSave(
-      InterventionFormViewModel formViewModel, FormMode prevFormMode,
+    InterventionFormViewModel formViewModel,
+    FormMode prevFormMode,
   ) async {
     if (prevFormMode == FormMode.create) {
       // Commit the managed viewmodel that was eagerly added in [provide]
@@ -203,13 +210,12 @@ class MP23InterventionsFormViewModel
     await super.save();
   }
 
-  voidtestStudySchedule() {
+  void testStudySchedule() {
     router.dispatch(
-        RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.journey),
+      RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.journey),
     );
   }
 
   bool get canTestStudySchedule =>
-      !interventionsArray.disabled && interventionsArray.value!.length >= 2
-          ;
+      !interventionsArray.disabled && interventionsArray.value!.length >= 2;
 }

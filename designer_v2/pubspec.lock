@@ -185,6 +185,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.6"
+  data:
+    dependency: transitive
+    description:
+      name: data
+      sha256: "31df76adc44c6259d11c94d22bab946cbbb02e394972afadd3aa108d92465927"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.12.0"
   dynamic_color:
     dependency: "direct main"
     description:
@@ -588,6 +596,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  more:
+    dependency: transitive
+    description:
+      name: more
+      sha256: b9372ef11909cb88a7a29e221d96fbe17eb04394f022e374a4299a6c72946108
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
   multi_select_flutter:
     dependency: transitive
     description:

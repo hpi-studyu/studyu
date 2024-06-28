@@ -22,8 +22,8 @@ class MP23StudyScheduleFormView extends FormConsumerWidget {
       children: [
         Container(
             constraints: const BoxConstraints(
-                maxWidth: 600, minHeight: 200, minWidth: 560),
-            child: ScheduleFormView(formViewModel: formViewModel)),
+                maxWidth: 600, minHeight: 200, minWidth: 560,),
+            child: ScheduleFormView(formViewModel: formViewModel),),
       ],
     );
   }
@@ -112,12 +112,12 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
                 onPressed: () {
                   widget.formViewModel.addFormGroupToSegments(widget
                       .formViewModel
-                      .createFormGroup(selectedSegmentType));
-                }),
+                      .createFormGroup(selectedSegmentType),);
+                },),
           ],
         ),
       ),
-    ]);
+    ],);
   }
 }
 
@@ -135,7 +135,7 @@ class ExpandableSegementItem extends StatefulWidget {
       required this.index,
       required this.segment,
       required this.segmentControl,
-      required this.interventions});
+      required this.interventions,});
 
   @override
   State<ExpandableSegementItem> createState() => _ExpandableSegementItemState();
@@ -164,13 +164,13 @@ class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
         Wrap(
             runSpacing: 24.0,
             children: _getChildrenBasedOnType(
-                type, widget.segmentControl, widget.formViewModel))
+                type, widget.segmentControl, widget.formViewModel,),),
       ],
     );
   }
 
   List<Widget> _getChildrenBasedOnType(StudyScheduleSegmentType type,
-      FormGroup segmentControl, MP23StudyScheduleControls formViewModel) {
+      FormGroup segmentControl, MP23StudyScheduleControls formViewModel,) {
     switch (type) {
       case StudyScheduleSegmentType.baseline:
         return _getBaselineControls(segmentControl);
@@ -235,7 +235,7 @@ class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
 }
 
 List<Widget> _getThompsonSamplingControls(
-    FormGroup segmentControl, MP23StudyScheduleControls formViewModel) {
+    FormGroup segmentControl, MP23StudyScheduleControls formViewModel,) {
   return [
     const SizedBox(height: 1, width: 20),
     ReactiveTextField(
@@ -264,14 +264,14 @@ List<Widget> _getThompsonSamplingControls(
     ),
     const Text("Deciding metric"),
     DropdownButtonFormField<String>(
-      value: segmentControl.control('observationId').value.isEmpty
+      value: (segmentControl.control('observationId').value as String).isEmpty
           ? null
-          : segmentControl.control('observationId').value,
+          : (segmentControl.control('observationId').value as String),
       items: formViewModel.observations
           .map((observation) => DropdownMenuItem(
                 value: observation.id,
                 child: Text(observation.title ?? observation.id),
-              ))
+              ),)
           .toList(),
       onChanged: (String? observationId) {
         segmentControl.control('observationId').updateValue(observationId)
@@ -284,20 +284,19 @@ List<Widget> _getThompsonSamplingControls(
     ),
     // for the observation list all questions
     DropdownButtonFormField<String>(
-      value: segmentControl.control('questionId').value.isEmpty
+      value: (segmentControl.control('observationId').value as String).isEmpty
           ? null
-          : segmentControl.control('questionId').value,
-      items: (formViewModel.observations
+          : (segmentControl.control('observationId').value as String),
+      items: formViewModel.observations
           .whereType<QuestionnaireTask>()
           .where((observation) =>
-              observation.id == segmentControl.control('observationId').value)
-          .expand((observation) => (observation)
-              .questions
-              .questions
+              observation.id == segmentControl.control('observationId').value,)
+          .expand((observation) => observation.questions.questions
               .map((question) => DropdownMenuItem<String>(
                     value: question.id,
                     child: Text(question.prompt ?? question.id),
-                  )))).toList(),
+                  ),),)
+          .toList(),
       onChanged: (String? questionId) {
         segmentControl.control('questionId').updateValue(questionId)
             as FormControl<dynamic>?;

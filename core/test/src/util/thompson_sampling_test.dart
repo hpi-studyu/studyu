@@ -19,6 +19,6 @@ void main() {
               ts.updateObservations(1, 0);
 
               print(ts.selectArm());
-            })
-          });
+            }),
+          },);
 }

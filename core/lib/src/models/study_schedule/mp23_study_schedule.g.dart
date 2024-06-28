@@ -31,7 +31,7 @@ Map<String, dynamic> _$MP23StudyScheduleToJson(MP23StudySchedule instance) =>
 BaselineScheduleSegment _$BaselineScheduleSegmentFromJson(
         Map<String, dynamic> json) =>
     BaselineScheduleSegment(
-      json['duration'] as int,
+      (json['duration'] as num).toInt(),
     );
 
 Map<String, dynamic> _$BaselineScheduleSegmentToJson(
@@ -44,8 +44,8 @@ Map<String, dynamic> _$BaselineScheduleSegmentToJson(
 AlternatingScheduleSegment _$AlternatingScheduleSegmentFromJson(
         Map<String, dynamic> json) =>
     AlternatingScheduleSegment(
-      json['interventionDuration'] as int,
-      json['cycleAmount'] as int,
+      (json['interventionDuration'] as num).toInt(),
+      (json['cycleAmount'] as num).toInt(),
     );
 
 Map<String, dynamic> _$AlternatingScheduleSegmentToJson(
@@ -59,8 +59,8 @@ Map<String, dynamic> _$AlternatingScheduleSegmentToJson(
 ThompsonSamplingScheduleSegment _$ThompsonSamplingScheduleSegmentFromJson(
         Map<String, dynamic> json) =>
     ThompsonSamplingScheduleSegment(
-      json['interventionDuration'] as int,
-      json['interventionDrawAmount'] as int,
+      (json['interventionDuration'] as num).toInt(),
+      (json['interventionDrawAmount'] as num).toInt(),
       json['observationId'] as String,
       json['questionId'] as String,
     );

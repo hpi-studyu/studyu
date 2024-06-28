@@ -4,8 +4,10 @@ import 'package:studyu_designer_v2/features/design/interventions/mp23_study_sche
 import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 
 class MP23InterventionsFormData implements IStudyFormData {
-  MP23InterventionsFormData(
-      {required this.interventionsData, required this.studyScheduleData});
+  MP23InterventionsFormData({
+    required this.interventionsData,
+    required this.studyScheduleData,
+  });
 
   final List<InterventionFormData> interventionsData;
   final MP23StudyScheduleFormData studyScheduleData;
@@ -17,11 +19,18 @@ class MP23InterventionsFormData implements IStudyFormData {
   factory MP23InterventionsFormData.fromStudy(Study study) {
     return MP23InterventionsFormData(
       interventionsData: study.interventions
-          .map((intervention) =>
-              InterventionFormData.fromDomainModel(intervention))
+          .map(
+            (intervention) =>
+                InterventionFormData.fromDomainModel(intervention),
+          )
           .toList(),
+      // todo which interventions and observations to use?
+      // study.mp23Schedule.interventions, study.mp23Schedule.observations
+      // or study.interventions, study.observations
       studyScheduleData: MP23StudyScheduleFormData.fromDomainModel(
-          study.mp23Schedule, study.interventions, study.observations),
+        //study.mp23Schedule, study.interventions, study.observations,),
+        study.mp23Schedule, study.interventions, study.observations,
+      ),
     );
   }
 
