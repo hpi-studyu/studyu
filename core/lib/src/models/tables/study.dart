@@ -72,9 +72,8 @@ class Study extends SupabaseObjectFunctions<Study>
   @JsonKey(fromJson: _studyScheduleFromJson)
   // todo deprecate old schedule
   late StudySchedule schedule = StudySchedule();
-  @JsonKey(includeToJson: true, includeFromJson: false)
-  late MP23StudySchedule mp23Schedule =
-      MP23StudySchedule(interventions, observations);
+  @JsonKey(name: 'mp23_schedule', includeToJson: true, includeFromJson: false)
+  late MP23StudySchedule mp23Schedule = MP23StudySchedule();
   @JsonKey(name: 'report_specification', fromJson: _reportSpecificationFromJson)
   late ReportSpecification reportSpecification = ReportSpecification();
   @JsonKey(defaultValue: [])
@@ -152,9 +151,7 @@ class Study extends SupabaseObjectFunctions<Study>
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
 
-    final MP23StudySchedule mp23Schedule = MP23StudySchedule.fromJson(
-      json['mp23Schedule'] as Map<String, dynamic>,
-    );
+    final mp23ScheduleJson = json['mp23_schedule'] as Map<String, dynamic>?;
 
     mp23Schedule.interventions = study.interventions;
     mp23Schedule.observations = study.observations;
