@@ -42,15 +42,13 @@ class BaselineScheduleSegment extends StudyScheduleSegment {
 
   @override
   @JsonKey(
-    fromJson: StudyScheduleSegmentType.fromJson,
-    toJson: StudyScheduleSegmentType.toJson,
     includeFromJson: true,
     includeToJson: true,
   )
   final StudyScheduleSegmentType type = StudyScheduleSegmentType.baseline;
 
   @override
-  final String name = StudyScheduleSegmentType.baseline.name;
+  final String name = StudyScheduleSegmentType.baseline.string;
 
   @override
   int getDuration(List<Intervention> interventions) {
@@ -80,7 +78,8 @@ class StudyScheduleSegmentConverter
 
   @override
   StudyScheduleSegment fromJson(Map<String, dynamic> json) {
-    switch (json['type']) {
+    final type = StudyScheduleSegmentType.fromJson(json['type'] as String);
+    switch (type) {
       case StudyScheduleSegmentType.baseline:
         return BaselineScheduleSegment.fromJson(json);
       case StudyScheduleSegmentType.alternating:
@@ -100,15 +99,13 @@ class StudyScheduleSegmentConverter
 class AlternatingScheduleSegment extends StudyScheduleSegment {
   @override
   @JsonKey(
-    fromJson: StudyScheduleSegmentType.fromJson,
-    toJson: StudyScheduleSegmentType.toJson,
     includeFromJson: true,
     includeToJson: true,
   )
   final StudyScheduleSegmentType type = StudyScheduleSegmentType.alternating;
 
   @override
-  final String name = StudyScheduleSegmentType.alternating.name;
+  final String name = StudyScheduleSegmentType.alternating.string;
 
   int interventionDuration;
   int cycleAmount;
@@ -147,8 +144,6 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
 class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
   @override
   @JsonKey(
-    fromJson: StudyScheduleSegmentType.fromJson,
-    toJson: StudyScheduleSegmentType.toJson,
     includeFromJson: true,
     includeToJson: true,
   )
@@ -156,7 +151,7 @@ class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
       StudyScheduleSegmentType.thompsonSampling;
 
   @override
-  final String name = StudyScheduleSegmentType.thompsonSampling.name;
+  final String name = StudyScheduleSegmentType.thompsonSampling.string;
 
   int interventionDuration;
   int interventionDrawAmount;
@@ -229,25 +224,20 @@ enum StudyScheduleSegmentType {
   counterBalanced,
   thompsonSampling;
 
-  static StudyScheduleSegmentType fromJson(String value) {
-    return StudyScheduleSegmentType.values
-        .firstWhere((e) => e.toString().split('.')[1] == value);
-  }
+  String toJson() => name;
+  static StudyScheduleSegmentType fromJson(String json) => values.byName(json);
 
-  static String toJson(StudyScheduleSegmentType type) {
-    return type.toString().split('.')[1];
-  }
-
-  String get name {
+  // todo localize
+  String get string {
     switch (this) {
       case StudyScheduleSegmentType.baseline:
-        return 'Baseline';
+        return 'baseline';
       case StudyScheduleSegmentType.alternating:
-        return 'Alternating';
+        return 'alternating';
       case StudyScheduleSegmentType.counterBalanced:
-        return 'Counter Balanced';
+        return 'counter_balanced';
       case StudyScheduleSegmentType.thompsonSampling:
-        return 'Thompson Sampling';
+        return 'thompson_sampling';
     }
   }
 }

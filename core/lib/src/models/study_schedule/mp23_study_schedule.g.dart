@@ -30,7 +30,7 @@ Map<String, dynamic> _$BaselineScheduleSegmentToJson(
         BaselineScheduleSegment instance) =>
     <String, dynamic>{
       'duration': instance.duration,
-      'type': StudyScheduleSegmentType.toJson(instance.type),
+      'type': instance.type.toJson(),
     };
 
 AlternatingScheduleSegment _$AlternatingScheduleSegmentFromJson(
@@ -43,7 +43,7 @@ AlternatingScheduleSegment _$AlternatingScheduleSegmentFromJson(
 Map<String, dynamic> _$AlternatingScheduleSegmentToJson(
         AlternatingScheduleSegment instance) =>
     <String, dynamic>{
-      'type': StudyScheduleSegmentType.toJson(instance.type),
+      'type': instance.type.toJson(),
       'interventionDuration': instance.interventionDuration,
       'cycleAmount': instance.cycleAmount,
     };
@@ -60,7 +60,7 @@ ThompsonSamplingScheduleSegment _$ThompsonSamplingScheduleSegmentFromJson(
 Map<String, dynamic> _$ThompsonSamplingScheduleSegmentToJson(
         ThompsonSamplingScheduleSegment instance) =>
     <String, dynamic>{
-      'type': StudyScheduleSegmentType.toJson(instance.type),
+      'type': instance.type.toJson(),
       'interventionDuration': instance.interventionDuration,
       'interventionDrawAmount': instance.interventionDrawAmount,
       'observationId': instance.observationId,

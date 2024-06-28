@@ -111,7 +111,7 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
                   (StudyScheduleSegmentType type) {
                     return DropdownMenuItem(
                       value: type,
-                      child: Text(type.name),
+                      child: Text(type.string),
                     );
                   },
                 ).toList(),
