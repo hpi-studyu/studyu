@@ -93,8 +93,10 @@ class _TaskOverviewState extends State<TaskOverview> {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    Text(AppLocalizations.of(context)!.intervention_current,
-                        style: theme.textTheme.titleLarge,),
+                    Text(
+                      AppLocalizations.of(context)!.intervention_current,
+                      style: theme.textTheme.titleLarge,
+                    ),
                     // const Spacer(),
                     // Text(
                     //   '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',
@@ -104,11 +106,14 @@ class _TaskOverviewState extends State<TaskOverview> {
                 ),
                 const SizedBox(height: 8),
                 InterventionCardTitle(
-                    intervention:
-                        widget.subject!.getInterventionForDate(DateTime.now()),),
+                  intervention:
+                      widget.subject!.getInterventionForDate(DateTime.now()),
+                ),
                 const SizedBox(height: 8),
-                Text(AppLocalizations.of(context)!.today_tasks,
-                    style: theme.textTheme.titleLarge,),
+                Text(
+                  AppLocalizations.of(context)!.today_tasks,
+                  style: theme.textTheme.titleLarge,
+                ),
               ],
             ),
           ),

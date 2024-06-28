@@ -61,8 +61,6 @@ class CustomSlider extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final labelTextStyle = textTheme.bodyLarge;
 
-
-    
     List<Annotation> annotations = [...steps!.annotations];
     if (annotations.isEmpty) return const SizedBox.shrink();
 

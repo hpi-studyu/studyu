@@ -50,7 +50,7 @@ class BaselineScheduleSegment extends StudyScheduleSegment {
   final StudyScheduleSegmentType type = StudyScheduleSegmentType.baseline;
 
   @override
-  final String name = "Baseline";
+  final String name = StudyScheduleSegmentType.baseline.name;
 
   @override
   int getDuration(List<Intervention> interventions) {
@@ -80,12 +80,12 @@ class StudyScheduleSegmentConverter
 
   @override
   StudyScheduleSegment fromJson(Map<String, dynamic> json) {
-    switch (json['type'] as String) {
-      case 'baseline':
+    switch (json['type']) {
+      case StudyScheduleSegmentType.baseline:
         return BaselineScheduleSegment.fromJson(json);
-      case 'alternating':
+      case StudyScheduleSegmentType.alternating:
         return AlternatingScheduleSegment.fromJson(json);
-      case 'thompsonSampling':
+      case StudyScheduleSegmentType.thompsonSampling:
         return ThompsonSamplingScheduleSegment.fromJson(json);
       default:
         throw ArgumentError('Invalid type for StudyScheduleSegment');
@@ -108,7 +108,7 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
   final StudyScheduleSegmentType type = StudyScheduleSegmentType.alternating;
 
   @override
-  final String name = "Alternating";
+  final String name = StudyScheduleSegmentType.alternating.name;
 
   int interventionDuration;
   int cycleAmount;
@@ -156,7 +156,7 @@ class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
       StudyScheduleSegmentType.thompsonSampling;
 
   @override
-  final String name = "Thompson Sampling";
+  final String name = StudyScheduleSegmentType.thompsonSampling.name;
 
   int interventionDuration;
   int interventionDrawAmount;
@@ -195,8 +195,6 @@ class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
 
     final ThompsonSampling ts = ThompsonSampling(interventions.length);
 
-    print("_________ analyzing progress:________");
-
     // for each progress update, e.g. if a user did the intervention that day, or other questionnaires
     for (final progress in progress) {
       if (progress.result.runtimeType == Result<QuestionnaireState>) {
@@ -204,7 +202,6 @@ class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
 
         if (progress.result.result is QuestionnaireState) {
           final r = progress.result.result as QuestionnaireState;
-//
           for (final answer in r.answers.values) {
             if (questionId == answer.question) {
               print(answer.runtimeType);
@@ -213,7 +210,6 @@ class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
                 final interventionIndex = interventions.indexWhere(
                   (element) => element.id == interventionId,
                 );
-                print("updating observation: $interventionIndex $response");
                 ts.updateObservations(interventionIndex, response.toDouble());
               }
             }
@@ -223,8 +219,6 @@ class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
     }
 
     final index = ts.selectArm();
-    print("selected arm: $index");
-
     return interventions[index];
   }
 }

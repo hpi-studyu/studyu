@@ -3,22 +3,23 @@ import 'package:test/test.dart';
 
 void main() {
   group(
-      "thompson sampling test",
-      () => {
-            // test
+    "thompson sampling test",
+    () => {
+      // test
 
-            test("test creation", () {
-              final ts = ThompsonSampling(3);
+      test("test creation", () {
+        final ts = ThompsonSampling(3);
 
-              print(ts.selectArm());
+        print(ts.selectArm());
 
-              ts.updateObservations(1, 0);
-              ts.updateObservations(1, 0);
-              ts.updateObservations(1, 0);
-              ts.updateObservations(1, 0);
-              ts.updateObservations(1, 0);
+        ts.updateObservations(1, 0);
+        ts.updateObservations(1, 0);
+        ts.updateObservations(1, 0);
+        ts.updateObservations(1, 0);
+        ts.updateObservations(1, 0);
 
-              print(ts.selectArm());
-            }),
-          },);
+        print(ts.selectArm());
+      }),
+    },
+  );
 }

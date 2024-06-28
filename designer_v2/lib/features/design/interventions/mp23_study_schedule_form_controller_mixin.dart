@@ -93,17 +93,21 @@ mixin MP23StudyScheduleControls {
             BaselineScheduleSegment(segment.control('duration').value as int),
           );
         case "alternating":
-          segments.add(AlternatingScheduleSegment(
-            segment.control('interventionDuration').value as int,
-            segment.control('cycleAmount').value as int,
-          ),);
+          segments.add(
+            AlternatingScheduleSegment(
+              segment.control('interventionDuration').value as int,
+              segment.control('cycleAmount').value as int,
+            ),
+          );
         case "thompsonSampling":
-          segments.add(ThompsonSamplingScheduleSegment(
-            segment.control('interventionDuration').value as int,
-            segment.control('interventionDrawAmount').value as int,
-            segment.control('observationId').value as String,
-            segment.control('questionId').value as String,
-          ),);
+          segments.add(
+            ThompsonSamplingScheduleSegment(
+              segment.control('interventionDuration').value as int,
+              segment.control('interventionDrawAmount').value as int,
+              segment.control('observationId').value as String,
+              segment.control('questionId').value as String,
+            ),
+          );
         default:
           throw UnimplementedError();
       }
@@ -117,19 +121,24 @@ mixin MP23StudyScheduleControls {
     for (final element in data.segments) {
       if (element is BaselineScheduleSegment) {
         addFormGroupToSegments(
-            createBaselineFormGroup(duration: element.duration),);
+          createBaselineFormGroup(duration: element.duration),
+        );
       } else if (element is AlternatingScheduleSegment) {
-        addFormGroupToSegments(createAlternatingFormGroup(
-          interventionDuration: element.interventionDuration,
-          cycleAmount: element.cycleAmount,
-        ),);
+        addFormGroupToSegments(
+          createAlternatingFormGroup(
+            interventionDuration: element.interventionDuration,
+            cycleAmount: element.cycleAmount,
+          ),
+        );
       } else if (element is ThompsonSamplingScheduleSegment) {
-        addFormGroupToSegments(createThompsonSamplingFormGroup(
-          interventionDuration: element.interventionDuration,
-          interventionDrawAmount: element.interventionDrawAmount,
-          observationId: element.observationId,
-          questionId: element.questionId,
-        ),);
+        addFormGroupToSegments(
+          createThompsonSamplingFormGroup(
+            interventionDuration: element.interventionDuration,
+            interventionDrawAmount: element.interventionDrawAmount,
+            observationId: element.observationId,
+            questionId: element.questionId,
+          ),
+        );
       }
     }
     interventions.addAll(data.interventions);
@@ -143,16 +152,16 @@ mixin MP23StudyScheduleControls {
         // todo fix strong types in this file and in mp23_study_schedule_form_view.dart
         final segment = absSegment as FormGroup;
         switch (segment.control('type').value) {
-          case "baseline":
+          case StudyScheduleSegmentType.baseline:
             return BaselineScheduleSegment(
               segment.control('duration').value as int,
             );
-          case "alternating":
+          case StudyScheduleSegmentType.alternating:
             return AlternatingScheduleSegment(
               segment.control('interventionDuration').value as int,
               segment.control('cycleAmount').value as int,
             );
-          case "thompsonSampling":
+          case StudyScheduleSegmentType.thompsonSampling:
             return ThompsonSamplingScheduleSegment(
               segment.control('interventionDuration').value as int,
               segment.control('interventionDrawAmount').value as int,
