@@ -173,8 +173,8 @@ class StudyFormViewModel extends FormViewModel<Study>
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-final studyFormViewModelProvider =
-    Provider.autoDispose.family<StudyFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
+final studyFormViewModelProvider = Provider.autoDispose
+    .family<StudyFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
   print("studyFormViewModelProvider");
   final state = ref.watch(studyControllerProvider(studyCreationArgs));
   final formViewModel = StudyFormViewModel(

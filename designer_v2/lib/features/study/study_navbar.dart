@@ -84,8 +84,7 @@ class StudyDesignNav {
         title: tr.navlink_study_design_measurements,
         intent: RoutingIntents.studyEditMeasurements(studyId),
       );
-  static NavbarTab reports(StudyID studyId) =>
-      NavbarTab(
+  static NavbarTab reports(StudyID studyId) => NavbarTab(
         index: 4,
         title: "Reports",
         intent: RoutingIntents.studyEditReports(studyId),

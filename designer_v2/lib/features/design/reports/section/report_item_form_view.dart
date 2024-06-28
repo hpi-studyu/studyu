@@ -30,13 +30,15 @@ class ReportItemFormView extends StatelessWidget {
   WidgetBuilder get sectionTypeBodyBuilder {
     final Map<ReportSectionType, WidgetBuilder> sectionTypeWidgets = {
       ReportSectionType.average: (_) => AverageSectionFormView(
-          formViewModel: formViewModel,
-          studyCreationArgs: studyCreationArgs,
-          reportSectionColumnWidth: reportSectionColumnWidth,),
-      ReportSectionType.linearRegression: (_) => LinearRegressionSectionFormView(
-          formViewModel: formViewModel,
-          studyCreationArgs: studyCreationArgs,
-          reportSectionColumnWidth: reportSectionColumnWidth,
+            formViewModel: formViewModel,
+            studyCreationArgs: studyCreationArgs,
+            reportSectionColumnWidth: reportSectionColumnWidth,
+          ),
+      ReportSectionType.linearRegression: (_) =>
+          LinearRegressionSectionFormView(
+            formViewModel: formViewModel,
+            studyCreationArgs: studyCreationArgs,
+            reportSectionColumnWidth: reportSectionColumnWidth,
           ),
     };
     final sectionType = formViewModel.sectionType;

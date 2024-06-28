@@ -119,7 +119,8 @@ class StudyController extends StudyBaseController<StudyControllerState> {
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
 final studyControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyController, StudyControllerState, StudyCreationArgs>((ref, studyCreationArgs) {
+    .family<StudyController, StudyControllerState, StudyCreationArgs>(
+        (ref, studyCreationArgs) {
   final studyId = studyCreationArgs.studyID;
   print("studyControllerProvider($studyId)");
   final controller = StudyController(

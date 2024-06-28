@@ -97,7 +97,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                 child: Column(
                   children: [
                     Text(
-                      subStudies.isEmpty ? loc.study_selection_description : loc.sub_study_selection_description,
+                      subStudies.isEmpty
+                          ? loc.study_selection_description
+                          : loc.sub_study_selection_description,
                       style: theme.textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
@@ -105,8 +107,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: loc
-                                .study_selection_single,
+                            text: loc.study_selection_single,
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
@@ -114,8 +115,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
-                            text: loc
-                                .study_selection_single_why,
+                            text: loc.study_selection_single_why,
                             style: theme.textTheme.titleSmall!
                                 .copyWith(color: theme.primaryColor),
                             recognizer: TapGestureRecognizer()
@@ -123,8 +123,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                                     context: context,
                                     builder: (context) => AlertDialog(
                                       content: Text(
-                                        loc
-                                            .study_selection_single_reason,
+                                        loc.study_selection_single_reason,
                                       ),
                                     ),
                                   ),
@@ -146,7 +145,8 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             size: 32,
                           ),
                           content: Text(
-                            AppLocalizations.of(context)!.study_selection_hidden_studies,
+                            AppLocalizations.of(context)!
+                                .study_selection_hidden_studies,
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
                           actions: const [SizedBox.shrink()],
@@ -168,7 +168,8 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(loc.selected_template_trial, style: theme.textTheme.titleMedium),
+                          Text(loc.selected_template_trial,
+                              style: theme.textTheme.titleMedium),
                           const SizedBox(height: 8),
                           Text.rich(TextSpan(children: [
                             TextSpan(
@@ -195,8 +196,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   : const SizedBox.shrink(),
               Expanded(
                 child: RetryFutureBuilder<ExtractionResult<Study>>(
-                  tryFunction: () async =>
-                      subStudies.isEmpty ? publishedStudies : Future.value(ExtractionSuccess(subStudies)),
+                  tryFunction: () async => subStudies.isEmpty
+                      ? publishedStudies
+                      : Future.value(ExtractionSuccess(subStudies)),
                   successBuilder: (
                     BuildContext context,
                     ExtractionResult<Study>? extractionResult,
@@ -218,14 +220,18 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                         ? studies
                             .where((study) =>
                                 !study.isSubStudy &&
-                                (!study.isTemplate || studies.any((s) => s.parentTemplateId == study.id)))
+                                (!study.isTemplate ||
+                                    studies.any(
+                                        (s) => s.parentTemplateId == study.id)))
                             .toList()
                         : studies;
                     return ListView.builder(
                       itemCount: filteredStudies.length,
                       itemBuilder: (context, index) {
                         final study = filteredStudies[index];
-                        final numSubtrials = studies.where((s) => s.parentTemplateId == study.id).length;
+                        final numSubtrials = studies
+                            .where((s) => s.parentTemplateId == study.id)
+                            .length;
                         return Hero(
                           tag: 'study_tile_${study.id}',
                           child: Material(
@@ -233,11 +239,15 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                               study: study,
                               numSubtrials: numSubtrials,
                               onTap: () => study is Template
-                                  ? Navigator.pushNamed(context, Routes.studySelection,
+                                  ? Navigator.pushNamed(
+                                      context, Routes.studySelection,
                                       arguments: StudySelectionScreenArgs(
                                           template: study,
                                           subStudies: studies
-                                              .where((s) => s is TemplateSubStudy && s.parentTemplateId == study.id)
+                                              .where((s) =>
+                                                  s is TemplateSubStudy &&
+                                                  s.parentTemplateId ==
+                                                      study.id)
                                               .map((s) => s as TemplateSubStudy)
                                               .toList()))
                                   : navigateToStudyOverview(context, study),

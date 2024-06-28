@@ -3,7 +3,10 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/badge.dart' as studybadge;
 
 class StudyTypeBadge extends StatelessWidget {
-  const StudyTypeBadge({required this.studyType, this.type = studybadge.BadgeType.plain, super.key});
+  const StudyTypeBadge(
+      {required this.studyType,
+      this.type = studybadge.BadgeType.plain,
+      super.key});
 
   final StudyType? studyType;
   final studybadge.BadgeType type;
@@ -13,6 +16,7 @@ class StudyTypeBadge extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     switch (studyType) {
       case StudyType.standalone:
+        // todo localize
         return studybadge.Badge(
           label: "Standalone",
           padding: const EdgeInsets.all(0),

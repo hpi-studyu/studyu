@@ -8,8 +8,6 @@ import 'package:studyu_designer_v2/features/app.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
-import 'package:flutter_web_plugins/url_strategy.dart';
-
 import 'constants.dart';
 
 Future<void> main() async {
@@ -31,11 +29,11 @@ Future<void> main() async {
       // Make dependencies managed by Riverpod available in Widget.build methods
       // by wrapping the app in a [ProviderScope]
       const ProviderScope(
-            child: Portal(
-                child: Portal(
-      labels: [outPortalLabel],
-      child: App(),
-    ))),
+          child: Portal(
+              child: Portal(
+        labels: [outPortalLabel],
+        child: App(),
+      ))),
     );
   }, (error, stackTrace) {
     // TODO: top-level error handling

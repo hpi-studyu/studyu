@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:studyu_designer_v2/features/publish/study_publish_dialog_confirm.dart';
-import 'package:studyu_designer_v2/features/publish/study_publish_dialog_success.dart';
+import 'package:studyu_designer_v2/features/dialogs/publish/study_publish_dialog_confirm.dart';
+import 'package:studyu_designer_v2/features/dialogs/publish/study_publish_dialog_success.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';

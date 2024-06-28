@@ -34,7 +34,8 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   final FormControl<String> additionalInfoControl = FormControl();
   final FormControl<bool> lockPublisherInfoControl = FormControl();
 
-  bool get publisherInfoLocked => study.templateConfiguration?.lockPublisherInformation == true;
+  bool get publisherInfoLocked =>
+      study.templateConfiguration?.lockPublisherInformation == true;
 
   @override
   late final FormGroup form = FormGroup({
@@ -73,7 +74,8 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
       lockPublisherInfoControl.markAsDisabled();
     }
 
-    if (study.isSubStudy && study.templateConfiguration?.lockPublisherInformation == true) {
+    if (study.isSubStudy &&
+        study.templateConfiguration?.lockPublisherInformation == true) {
       organizationControl.markAsDisabled();
       reviewBoardControl.markAsDisabled();
       reviewBoardNumberControl.markAsDisabled();
@@ -92,16 +94,16 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
       iconName: iconControl.value?.name ?? '',
       description: descriptionControl.value,
       lockPublisherInfo: lockPublisherInfoControl.value ?? false,
-        contactInfoFormData: StudyContactInfoFormData(
-          organization: organizationControl.value,
-          institutionalReviewBoard: reviewBoardControl.value,
-          institutionalReviewBoardNumber: reviewBoardNumberControl.value,
-          researchers: researchersControl.value,
-          email: emailControl.value,
-          website: websiteControl.value,
-          phone: phoneControl.value,
-          additionalInfo: additionalInfoControl.value,
-        ),
+      contactInfoFormData: StudyContactInfoFormData(
+        organization: organizationControl.value,
+        institutionalReviewBoard: reviewBoardControl.value,
+        institutionalReviewBoardNumber: reviewBoardNumberControl.value,
+        researchers: researchersControl.value,
+        email: emailControl.value,
+        website: websiteControl.value,
+        phone: phoneControl.value,
+        additionalInfo: additionalInfoControl.value,
+      ),
     );
   }
 
@@ -140,11 +142,11 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
           Validators.required,
         ],
         validationMessages: {
-        ValidationMessage.required: (error) => switch (study.type) {
-              StudyType.standalone => tr.form_field_study_title_required,
-              StudyType.template => tr.form_field_template_title_required,
-              StudyType.subStudy => tr.form_field_substudy_title_required,
-            }
+          ValidationMessage.required: (error) => switch (study.type) {
+                StudyType.standalone => tr.form_field_study_title_required,
+                StudyType.template => tr.form_field_template_title_required,
+                StudyType.subStudy => tr.form_field_substudy_title_required,
+              }
         },
       );
   FormControlValidation get descriptionRequired => FormControlValidation(
@@ -153,11 +155,14 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
           Validators.required,
         ],
         validationMessages: {
-        ValidationMessage.required: (error) => switch (study.type) {
-              StudyType.standalone => tr.form_field_study_description_required,
-              StudyType.template => tr.form_field_template_description_required,
-              StudyType.subStudy => tr.form_field_substudy_description_required,
-            },
+          ValidationMessage.required: (error) => switch (study.type) {
+                StudyType.standalone =>
+                  tr.form_field_study_description_required,
+                StudyType.template =>
+                  tr.form_field_template_description_required,
+                StudyType.subStudy =>
+                  tr.form_field_substudy_description_required,
+              },
         },
       );
   FormControlValidation get iconRequired => FormControlValidation(

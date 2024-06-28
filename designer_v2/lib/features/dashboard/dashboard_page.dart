@@ -69,7 +69,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   child: const SizedBox.shrink()),
               PortalTarget(
                 visible: state.createNewMenuOpen,
-                anchor: const Aligned(follower: Alignment.topLeft, target: Alignment.bottomLeft),
+                anchor: const Aligned(
+                    follower: Alignment.topLeft, target: Alignment.bottomLeft),
                 portalFollower: GestureDetector(
                   onTap: () => controller.setCreateNewMenuOpen(false),
                   child: Container(
@@ -88,7 +89,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           children: [
                             _buildCreateNewDropdownItem(
                               title: tr.action_button_standalone_study_title,
-                              subtitle: tr.action_button_standalone_study_subtitle,
+                              subtitle:
+                                  tr.action_button_standalone_study_subtitle,
                               onTap: () => controller.onClickNewStudy(false),
                             ),
                             const Divider(
@@ -109,9 +111,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: SizedBox(
                     height: 36.0,
                     child: PrimaryButton(
-
                       text: tr.action_button_create,
-                      onPressed: () => controller.setCreateNewMenuOpen(!state.createNewMenuOpen),
+                      onPressed: () => controller
+                          .setCreateNewMenuOpen(!state.createNewMenuOpen),
                     )),
               ),
               const SizedBox(width: 28.0),
@@ -143,11 +145,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final pinnedStudies = snapshot.data!.preferences.pinnedStudies;
-                return AsyncValueWidget<List<Study>>(
-                  value: state.displayedStudies(
-                    pinnedStudies: pinnedStudies,
-                    state.query,
-                  ),
+                return AsyncValueWidget<List<StudyGroup>>(
+                  value: state.displayedStudies(pinnedStudies: pinnedStudies),
                   data: (visibleStudies) => StudiesTable(
                     studyGroups: visibleStudies,
                     pinnedStudies: pinnedStudies,
@@ -192,7 +191,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _buildCreateNewDropdownItem(
-      {required String title, required String subtitle, String? hint, GestureTapCallback? onTap}) {
+      {required String title,
+      required String subtitle,
+      String? hint,
+      GestureTapCallback? onTap}) {
     final theme = Theme.of(context);
     return Material(
       elevation: 0,
@@ -210,7 +212,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 children: [
                   Text(
                     title,
-                    style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.primary),
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(color: theme.colorScheme.primary),
                   ),
                   Text(subtitle),
                   hint != null

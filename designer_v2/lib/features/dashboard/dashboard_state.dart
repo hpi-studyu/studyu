@@ -53,18 +53,15 @@ class DashboardState extends Equatable {
   ///
   /// Wrapped in an [AsyncValue] that mirrors the [studies]' async states,
   /// but resolves to a different subset of studies based on the [studiesFilter]
-  AsyncValue<List<StudyGroup>> displayedStudies(
-    Set<String> pinnedStudies,
-    String query,
-  ) {
+  AsyncValue<List<StudyGroup>> displayedStudies({Set<String>? pinnedStudies}) {
     final localPinnedStudies = pinnedStudies ?? this.pinnedStudies;
     return studies.when(
       data: (studies) {
         List<Study> updatedStudies =
             studiesFilter.apply(studies: studies, user: currentUser).toList();
         updatedStudies = filter(studiesToFilter: updatedStudies);
-        updatedStudies =
-            sort(pinnedStudies: localPinnedStudies, studiesToSort: updatedStudies);
+        updatedStudies = sort(
+            pinnedStudies: localPinnedStudies, studiesToSort: updatedStudies);
         return AsyncValue.data(group(updatedStudies));
       },
       error: (error, _) => AsyncValue.error(error, StackTrace.current),
@@ -81,7 +78,8 @@ class DashboardState extends Equatable {
           result.add(StudyGroup.standalone(study));
           break;
         case StudyType.template:
-          final List<Study> subStudies = studies.where((s) => s.parentTemplateId == study.id).toList();
+          final List<Study> subStudies =
+              studies.where((s) => s.parentTemplateId == study.id).toList();
           result.add(StudyGroup.template(study as Template, subStudies));
         case StudyType.subStudy:
           break;
@@ -95,11 +93,16 @@ class DashboardState extends Equatable {
     studiesToFilter = studiesToFilter ?? studies.value!;
     if (query.isEmpty) return studiesToFilter;
 
-    final filteredStudies = studiesToFilter.where((s) => s.title!.toLowerCase().contains(query)).toList();
+    final filteredStudies = studiesToFilter
+        .where((s) => s.title!.toLowerCase().contains(query))
+        .toList();
     // Add removed parent templates again
     for (final study in filteredStudies) {
-      if (study.isSubStudy && !filteredStudies.any((s) => s.isTemplate && s.id == study.parentTemplateId)) {
-        final parentTemplate = studiesToFilter.firstWhere((s) => s.isTemplate && s.id == study.parentTemplateId);
+      if (study.isSubStudy &&
+          !filteredStudies
+              .any((s) => s.isTemplate && s.id == study.parentTemplateId)) {
+        final parentTemplate = studiesToFilter
+            .firstWhere((s) => s.isTemplate && s.id == study.parentTemplateId);
         filteredStudies.add(parentTemplate);
       }
     }
@@ -124,9 +127,11 @@ class DashboardState extends Equatable {
         break;
       case StudiesTableColumn.type:
         if (sortAscending) {
-          sortedStudies.sort((study, other) => study.type.index.compareTo(other.type.index));
+          sortedStudies.sort(
+              (study, other) => study.type.index.compareTo(other.type.index));
         } else {
-          sortedStudies.sort((study, other) => other.type.index.compareTo(study.type.index));
+          sortedStudies.sort(
+              (study, other) => other.type.index.compareTo(study.type.index));
         }
         break;
       case StudiesTableColumn.status:
@@ -229,17 +234,16 @@ class DashboardState extends Equatable {
     Set<String>? expandedStudies,
   }) {
     return DashboardState(
-      studies: studies != null ? studies() : this.studies,
-      studiesFilter:
-          studiesFilter != null ? studiesFilter() : this.studiesFilter,
-      currentUser: currentUser != null ? currentUser() : this.currentUser,
-      query: query ?? this.query,
-      sortByColumn: sortByColumn ?? this.sortByColumn,
-      sortAscending: sortAscending ?? this.sortAscending,
+        studies: studies != null ? studies() : this.studies,
+        studiesFilter:
+            studiesFilter != null ? studiesFilter() : this.studiesFilter,
+        currentUser: currentUser != null ? currentUser() : this.currentUser,
+        query: query ?? this.query,
+        sortByColumn: sortByColumn ?? this.sortByColumn,
+        sortAscending: sortAscending ?? this.sortAscending,
         createNewMenuOpen: createNewMenuOpen ?? this.createNewMenuOpen,
         pinnedStudies: pinnedStudies ?? this.pinnedStudies,
-        expandedStudies: expandedStudies ?? this.expandedStudies
-    );
+        expandedStudies: expandedStudies ?? this.expandedStudies);
   }
 
   // - Equatable

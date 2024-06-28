@@ -89,8 +89,10 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(studyTestControllerProvider(widget.studyCreationArgs));
-    final formViewModel = ref.watch(studyTestValidatorProvider(widget.studyCreationArgs));
+    final state =
+        ref.watch(studyTestControllerProvider(widget.studyCreationArgs));
+    final formViewModel =
+        ref.watch(studyTestValidatorProvider(widget.studyCreationArgs));
 
     // Rebuild iframe component & url
     frameController =

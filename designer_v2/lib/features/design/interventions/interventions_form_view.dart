@@ -99,13 +99,13 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                 lockHelpText: tr.form_section_lock_help,
                 right: formViewModel.canTestStudySchedule
                     ? Opacity(
-                  opacity: ThemeConfig.kMuteFadeFactor,
-                  child: TextButton.icon(
-                    onPressed: formViewModel.testStudySchedule,
-                    icon: const Icon(Icons.play_circle_outline_rounded),
-                    label: Text(tr.navlink_crossover_schedule_test),
-                  ),
-                )
+                        opacity: ThemeConfig.kMuteFadeFactor,
+                        child: TextButton.icon(
+                          onPressed: formViewModel.testStudySchedule,
+                          icon: const Icon(Icons.play_circle_outline_rounded),
+                          label: Text(tr.navlink_crossover_schedule_test),
+                        ),
+                      )
                     : null,
               ),
               const SizedBox(height: 12.0),

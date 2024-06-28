@@ -27,7 +27,8 @@ class InterventionsFormData implements IStudyFormData {
           )
           .toList(),
       studyScheduleData: StudyScheduleFormData.fromDomainModel(study.schedule),
-      lockStudySchedule: study.templateConfiguration?.lockStudySchedule ?? false,
+      lockStudySchedule:
+          study.templateConfiguration?.lockStudySchedule ?? false,
     );
   }
 
@@ -36,7 +37,8 @@ class InterventionsFormData implements IStudyFormData {
     final List<Intervention> interventions =
         interventionsData.map((formData) => formData.toIntervention()).toList();
     study.interventions = interventions;
-    study.templateConfiguration = study.templateConfiguration?.copyWith(lockStudySchedule: lockStudySchedule);
+    study.templateConfiguration = study.templateConfiguration
+        ?.copyWith(lockStudySchedule: lockStudySchedule);
     studyScheduleData.apply(study);
 
     return study;

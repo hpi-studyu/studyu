@@ -28,7 +28,8 @@ class StudyTestScreen extends StudyPageWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formViewModel = ref.watch(studyTestValidatorProvider(studyCreationArgs));
+    final formViewModel =
+        ref.watch(studyTestValidatorProvider(studyCreationArgs));
     final canTest = !formViewModel.form.hasErrors;
 
     final frameController =
@@ -140,7 +141,8 @@ class StudyTestScreen extends StudyPageWidget {
 
   @override
   Widget? banner(BuildContext context, WidgetRef ref) {
-    final formViewModel = ref.watch(studyTestValidatorProvider(studyCreationArgs));
+    final formViewModel =
+        ref.watch(studyTestValidatorProvider(studyCreationArgs));
     if (!formViewModel.form.hasErrors) {
       return null;
     }

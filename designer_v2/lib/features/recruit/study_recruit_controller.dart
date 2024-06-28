@@ -83,14 +83,16 @@ class StudyRecruitController
 }
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
-final studyRecruitControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyRecruitController, StudyRecruitControllerState, StudyCreationArgs>(
-        (ref, studyCreationArgs) {
+final studyRecruitControllerProvider = StateNotifierProvider.autoDispose.family<
+    StudyRecruitController,
+    StudyRecruitControllerState,
+    StudyCreationArgs>((ref, studyCreationArgs) {
   return StudyRecruitController(
     studyCreationArgs: studyCreationArgs,
     studyRepository: ref.watch(studyRepositoryProvider),
     currentUser: ref.watch(authRepositoryProvider).currentUser,
     router: ref.watch(routerProvider),
-    inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyCreationArgs.studyID)),
+    inviteCodeRepository:
+        ref.watch(inviteCodeRepositoryProvider(studyCreationArgs.studyID)),
   );
 });

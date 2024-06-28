@@ -26,11 +26,11 @@ class StudyTile extends StatelessWidget {
 
   StudyTile.fromStudy({
     required Study study,
-      this.numSubtrials = 0,
-      this.onTap,
-      this.contentPadding = const EdgeInsets.all(16),
-      super.key,
-  }) : studyType = study.type,
+    this.numSubtrials = 0,
+    this.onTap,
+    this.contentPadding = const EdgeInsets.all(16),
+    super.key,
+  })  : studyType = study.type,
         title = study.title,
         description = study.description,
         iconName = study.iconName;
@@ -69,7 +69,8 @@ class StudyTile extends StatelessWidget {
                   child: Text(numSubtrials.toString()),
                 )
               : const SizedBox.shrink(),
-          trailing: Icon(MdiIcons.fromString(iconName), color: theme.primaryColor),
+          trailing:
+              Icon(MdiIcons.fromString(iconName), color: theme.primaryColor),
         ),
       ],
     );

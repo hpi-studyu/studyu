@@ -27,7 +27,8 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
       FormControl(value: defaultPublishedToRegistry);
   final FormControl<bool> isPublishedToRegistryResultsControl =
       FormControl(value: defaultPublishedToRegistryResults);
-  final FormControl<bool> lockPublishSettingsControl = FormControl(value: true, disabled: true);
+  final FormControl<bool> lockPublishSettingsControl =
+      FormControl(value: true, disabled: true);
 
   @override
   late final FormGroup form = FormGroup({
@@ -94,7 +95,8 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 final studySettingsFormViewModelProvider = Provider.autoDispose
-    .family<StudySettingsFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
+    .family<StudySettingsFormViewModel, StudyCreationArgs>(
+        (ref, studyCreationArgs) {
   final state = ref.watch(studyControllerProvider(studyCreationArgs));
   final formViewModel = StudySettingsFormViewModel(
     studyRepository: ref.watch(studyRepositoryProvider),

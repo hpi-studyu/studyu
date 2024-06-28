@@ -17,10 +17,22 @@ class StudyGroup {
 
   StudyGroup.standalone(Study standaloneStudy) : this(standaloneStudy, []);
 
-  StudyGroup.template(Template templateStudy, List<Study> subStudies) : this(templateStudy, subStudies);
+  StudyGroup.template(Template templateStudy, List<Study> subStudies)
+      : this(templateStudy, subStudies);
 }
 
-enum StudiesTableColumn { expand, title, status, participation, createdAt, enrolled, active, completed, action, type }
+enum StudiesTableColumn {
+  expand,
+  title,
+  status,
+  participation,
+  createdAt,
+  enrolled,
+  active,
+  completed,
+  action,
+  type
+}
 
 class StudiesTableColumnSize {
   final bool collapsed;
@@ -122,9 +134,11 @@ class StudiesTable extends StatelessWidget {
 
         // Set column definitions
         final columnDefinitionsMap = {
-          StudiesTableColumn.expand: StudiesTableColumnSize.fixedWidth(itemHeight),
+          StudiesTableColumn.expand:
+              StudiesTableColumnSize.fixedWidth(itemHeight),
           StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(24),
-          StudiesTableColumn.type: StudiesTableColumnSize.fixedWidth(typeColumnWidth),
+          StudiesTableColumn.type:
+              StudiesTableColumnSize.fixedWidth(typeColumnWidth),
           StudiesTableColumn.status:
               StudiesTableColumnSize.fixedWidth(statusColumnWidth),
           StudiesTableColumn.participation:
@@ -175,15 +189,19 @@ class StudiesTable extends StatelessWidget {
                   columnDefinitions: columnDefinitionsMap,
                   actions: getActions(item),
                   getSubActions: getSubActions,
-                  isPinned: pinnedStudies.contains(item.standaloneOrTemplate.id),
-                  isExpanded: expandedStudies.contains(item.standaloneOrTemplate.id),
+                  isPinned:
+                      pinnedStudies.contains(item.standaloneOrTemplate.id),
+                  isExpanded:
+                      expandedStudies.contains(item.standaloneOrTemplate.id),
                   itemHeight: itemHeight,
                   rowSpacing: rowSpacing,
                   columnSpacing: columnSpacing,
                   onPinnedChanged: (study, pinned) {
                     pinnedStudies.contains(item.standaloneOrTemplate.id)
-                        ? dashboardController.pinOffStudy(item.standaloneOrTemplate.id)
-                        : dashboardController.pinStudy(item.standaloneOrTemplate.id);
+                        ? dashboardController
+                            .pinOffStudy(item.standaloneOrTemplate.id)
+                        : dashboardController
+                            .pinStudy(item.standaloneOrTemplate.id);
                   },
                   onTapStudy: (study) => onSelect.call(study),
                   onExpandStudy: (study) => onExpand.call(study),

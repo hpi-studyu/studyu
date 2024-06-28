@@ -78,7 +78,7 @@ class StudyRecruitScreen extends StudyPageWidget {
 
   @override
   Widget? banner(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyRecruitControllerProvider(studyId));
+    final state = ref.watch(studyRecruitControllerProvider(studyCreationArgs));
     final isStudyClosed = state.studyWithMetadata?.model.isClosed;
 
     if (isStudyClosed ?? false) {
@@ -117,7 +117,7 @@ class StudyRecruitScreen extends StudyPageWidget {
   }
 
   Widget _newInviteCodeButton(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyRecruitControllerProvider(studyId));
+    final state = ref.watch(studyRecruitControllerProvider(studyCreationArgs));
     final isStudyClosed = state.studyWithMetadata?.model.isClosed == true;
 
     return PrimaryButton(
@@ -143,7 +143,8 @@ class StudyRecruitScreen extends StudyPageWidget {
   ) {
     // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
     return (StudyInvite invite) {
-      final formViewModel = ref.read(inviteCodeFormViewModelProvider(studyCreationArgs));
+      final formViewModel =
+          ref.read(inviteCodeFormViewModelProvider(studyCreationArgs));
       formViewModel.read(invite);
       showFormSideSheet<InviteCodeFormViewModel>(
         context: context,

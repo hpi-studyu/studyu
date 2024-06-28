@@ -7,12 +7,11 @@ import 'package:go_router/go_router.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/repositories/model_repository_events.dart';
+import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
-
-import '../domain/study.dart';
-import '../routing/router_config.dart';
 
 typedef ModelID = String;
 
@@ -81,7 +80,10 @@ class StudyCreationArgs extends ModelInstanceCreationArgs {
   final bool validForCreation;
 
   StudyCreationArgs(
-      {required this.studyID, this.parentTemplate, required this.isTemplate, this.validForCreation = true}) {
+      {required this.studyID,
+      this.parentTemplate,
+      required this.isTemplate,
+      this.validForCreation = true}) {
     if (parentTemplate != null && isTemplate) {
       throw ArgumentError("A sub-study cannot be a template");
     }
@@ -92,16 +94,31 @@ class StudyCreationArgs extends ModelInstanceCreationArgs {
   /// will be used for the equality check in the ref.watch method of riverpod.
   /// That is why we use dummy data for [isTemplate] and [parentTemplate] as only the [studyID]
   /// will be used for the equality check. In addition the [validForCreation] flag is set to false.
-  factory StudyCreationArgs.fromStudy(Study study) =>
-      StudyCreationArgs(studyID: study.id, isTemplate: false, parentTemplate: null, validForCreation: false);
+  factory StudyCreationArgs.fromStudy(Study study) => StudyCreationArgs(
+      studyID: study.id,
+      isTemplate: false,
+      parentTemplate: null,
+      validForCreation: false);
 
   factory StudyCreationArgs.fromRoute(GoRouterState routerState) {
     final studyId = routerState.pathParameters[RouteParams.studyId]!;
-    final isTemplate = routerState.uri.queryParameters[RouteParams.isTemplate] == true.toString();
-    final parentTemplateEncoded = routerState.uri.queryParameters[RouteParams.parentTemplate];
-    final parentTemplate =
-        parentTemplateEncoded != null ? Study.fromJson(jsonDecode(Uri.decodeFull(parentTemplateEncoded))) : null;
-    return StudyCreationArgs(studyID: studyId, isTemplate: isTemplate, parentTemplate: parentTemplate as Template?);
+    final isTemplate =
+        routerState.uri.queryParameters[RouteParams.isTemplate] ==
+            true.toString();
+    final parentTemplateEncoded =
+        routerState.uri.queryParameters[RouteParams.parentTemplate];
+    final Study? parentTemplate;
+    if (parentTemplateEncoded != null) {
+      final decodedUri = Uri.decodeFull(parentTemplateEncoded);
+      parentTemplate =
+          Study.fromJson(jsonDecode(decodedUri) as Map<String, dynamic>);
+    } else {
+      parentTemplate = null;
+    }
+    return StudyCreationArgs(
+        studyID: studyId,
+        isTemplate: isTemplate,
+        parentTemplate: parentTemplate as Template?);
   }
 
   @override

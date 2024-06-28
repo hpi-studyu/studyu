@@ -14,7 +14,8 @@ class PublishSuccessDialog extends StudyPageWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.watch(studyControllerProvider(studyCreationArgs).notifier);
+    final controller =
+        ref.watch(studyControllerProvider(studyCreationArgs).notifier);
     final theme = Theme.of(context);
 
     return StandardDialog(
@@ -22,10 +23,13 @@ class PublishSuccessDialog extends StudyPageWidget {
         children: [
           const SizedBox(height: 24.0),
           EmptyBody(
-              leading: Text("\u{1f389}".hardcoded,
-                  style: theme.textTheme.displayLarge?.copyWith(
-                    fontSize: (theme.textTheme.displayLarge?.fontSize ?? 48.0) * 1.5,),
-                  ),
+              leading: Text(
+                "\u{1f389}".hardcoded,
+                style: theme.textTheme.displayLarge?.copyWith(
+                  fontSize:
+                      (theme.textTheme.displayLarge?.fontSize ?? 48.0) * 1.5,
+                ),
+              ),
               title: controller.studyType == StudyType.template
                   ? tr.template_launch_success_title
                   : tr.study_launch_success_title,
@@ -41,12 +45,12 @@ class PublishSuccessDialog extends StudyPageWidget {
             children: [
               PrimaryButton(
                 text: controller.studyType == StudyType.template
-                  ? tr.action_button_post_launch_followup_template
-                  : tr.action_button_post_launch_followup,
-                onPressed: () => Navigator.maybePop(context)
-                    .whenComplete(() => controller.studyType == StudyType.template
-                  ? controller.onCreateNewSubstudy()
-                  : controller.onAddParticipants()),
+                    ? tr.action_button_post_launch_followup_template
+                    : tr.action_button_post_launch_followup,
+                onPressed: () => Navigator.maybePop(context).whenComplete(() =>
+                    controller.studyType == StudyType.template
+                        ? controller.onCreateNewSubstudy()
+                        : controller.onAddParticipants()),
               ),
               const SizedBox(height: 8.0),
               Opacity(

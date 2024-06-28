@@ -1,9 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
-import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
-import 'package:collection/collection.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/features/study/study_participation_badge.dart';
@@ -80,8 +78,10 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
 
   Widget _buildRow(ThemeData theme, StudyGroup studyGroup) {
     if (studyGroup.standaloneOrTemplate is Template) {
-      final participantCount = studyGroup.subStudies.map((s) => s.participantCount).sum;
-      final activeSubjectCount = studyGroup.subStudies.map((s) => s.activeSubjectCount).sum;
+      final participantCount =
+          studyGroup.subStudies.map((s) => s.participantCount).sum;
+      final activeSubjectCount =
+          studyGroup.subStudies.map((s) => s.activeSubjectCount).sum;
       final endedCount = studyGroup.subStudies.map((s) => s.endedCount).sum;
 
       final row = _buildStudyRow(
@@ -101,7 +101,8 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
           height: 0.0,
         ));
         for (final subStudy in studyGroup.subStudies) {
-          final subActions = widget.getSubActions(studyGroup, studyGroup.subStudies.indexOf(subStudy));
+          final subActions = widget.getSubActions(
+              studyGroup, studyGroup.subStudies.indexOf(subStudy));
           subRows.add(_buildStudyRow(theme, subStudy, actions: subActions));
         }
       }
@@ -116,17 +117,22 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       );
     }
 
-    return _buildStudyRow(theme, studyGroup.standaloneOrTemplate, actions: widget.actions);
+    return _buildStudyRow(theme, studyGroup.standaloneOrTemplate,
+        actions: widget.actions);
   }
 
   TextStyle? _mutedTextStyleIfZero(int value) {
     return (value > 0)
         ? widget.normalTextStyle
-        : ThemeConfig.bodyTextBackground(Theme.of(context)).merge(widget.normalTextStyle);
+        : ThemeConfig.bodyTextBackground(Theme.of(context))
+            .merge(widget.normalTextStyle);
   }
 
   Widget _buildStudyRow(ThemeData theme, Study study,
-      {required List<ModelAction> actions, int? participantCount, int? activeSubjectCount, int? endedCount}) {
+      {required List<ModelAction> actions,
+      int? participantCount,
+      int? activeSubjectCount,
+      int? endedCount}) {
     participantCount ??= study.participantCount;
     activeSubjectCount ??= study.activeSubjectCount;
     endedCount ??= study.endedCount;
@@ -139,7 +145,9 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
               participantCount: participantCount,
               activeSubjectCount: activeSubjectCount,
               endedCount: endedCount),
-          height: columnDefinition.key == StudiesTableColumn.expand ? widget.itemHeight : null));
+          height: columnDefinition.key == StudiesTableColumn.expand
+              ? widget.itemHeight
+              : null));
       if (!columnDefinition.value.collapsed) {
         columnRows.add(SizedBox(width: widget.columnSpacing));
       }
@@ -272,15 +280,18 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
   }
 
   Widget _buildEnrolled(int participantCount) {
-    return Text(participantCount.toString(), style: _mutedTextStyleIfZero(participantCount));
+    return Text(participantCount.toString(),
+        style: _mutedTextStyleIfZero(participantCount));
   }
 
   Widget _buildActive(int activeSubjectCount) {
-    return Text(activeSubjectCount.toString(), style: _mutedTextStyleIfZero(activeSubjectCount));
+    return Text(activeSubjectCount.toString(),
+        style: _mutedTextStyleIfZero(activeSubjectCount));
   }
 
   Widget _buildCompleted(int endedCount) {
-    return Text(endedCount.toString(), style: _mutedTextStyleIfZero(endedCount));
+    return Text(endedCount.toString(),
+        style: _mutedTextStyleIfZero(endedCount));
   }
 
   Widget _buildAction(List<ModelAction> actions) {

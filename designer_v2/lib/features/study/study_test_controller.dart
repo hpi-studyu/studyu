@@ -37,8 +37,9 @@ class StudyTestController
 
 /// Use the [family] modifier to provide a controller parametrized by [StudyID]
 final studyTestControllerProvider = StateNotifierProvider.family<
-    StudyTestController, StudyTestControllerState, StudyCreationArgs>(
-        (ref, studyCreationArgs) {
+    StudyTestController,
+    StudyTestControllerState,
+    StudyCreationArgs>((ref, studyCreationArgs) {
   final studyRepository = ref.watch(studyRepositoryProvider);
   final controller = StudyTestController(
     studyCreationArgs: studyCreationArgs,
@@ -61,7 +62,8 @@ final studyTestControllerProvider = StateNotifierProvider.family<
 });
 
 final studyTestPlatformControllerProvider =
-    Provider.family<PlatformController, StudyCreationArgs>((ref, studyCreationArgs) {
+    Provider.family<PlatformController, StudyCreationArgs>(
+        (ref, studyCreationArgs) {
   final state = ref.watch(studyTestControllerProvider(studyCreationArgs));
 
   PlatformController platformController;

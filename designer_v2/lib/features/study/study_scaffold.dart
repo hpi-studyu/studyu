@@ -14,6 +14,7 @@ import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/dialogs/study_dialogs.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
+import 'package:studyu_designer_v2/features/publish/study_publish_dialog.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_navbar.dart';
@@ -86,7 +87,8 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
     final theme = Theme.of(context);
     final state = ref.watch(studyControllerProvider(widget.studyCreationArgs));
 
-    final tabs = widget.tabs ?? StudyNav.tabs(widget.studyCreationArgs.studyID, state);
+    final tabs =
+        widget.tabs ?? StudyNav.tabs(widget.studyCreationArgs.studyID, state);
 
     return Scaffold(
       appBar: AppBar(
@@ -243,10 +245,12 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
             builder: (context, form, child) {
           return PrimaryButton(
             text: tr.action_button_study_launch,
-            tooltipDisabled: "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
+            tooltipDisabled:
+                "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
             icon: null,
             enabled: formViewModel.isValid,
-            onPressed: () => showPublishDialog(context, widget.studyCreationArgs),
+            onPressed: () =>
+                showPublishDialog(context, widget.studyCreationArgs),
           );
         }),
       );
@@ -266,7 +270,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
 
     if (state.isClosedVisible) {
       final formViewModel =
-      ref.watch(studyPublishValidatorProvider(widget.studyId));
+          ref.watch(studyPublishValidatorProvider(widget.studyCreationArgs));
       final closeButton = ReactiveForm(
         formGroup: formViewModel.form,
         child: ReactiveFormConsumer(
@@ -277,7 +281,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
               icon: null,
               onPressed: () => showStudyDialog(
                 context,
-                widget.studyId,
+                widget.studyCreationArgs,
                 StudyDialogType.close,
               ),
             );

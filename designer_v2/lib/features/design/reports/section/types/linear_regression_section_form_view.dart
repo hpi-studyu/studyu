@@ -15,9 +15,9 @@ import 'package:studyu_designer_v2/theme.dart';
 class LinearRegressionSectionFormView extends ConsumerWidget {
   const LinearRegressionSectionFormView({
     required this.formViewModel,
-      required this.studyCreationArgs,
-      required this.reportSectionColumnWidth,
-      super.key,
+    required this.studyCreationArgs,
+    required this.reportSectionColumnWidth,
+    super.key,
   });
 
   final ReportItemFormViewModel formViewModel;
@@ -27,7 +27,8 @@ class LinearRegressionSectionFormView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final study = ref.watch(studyControllerProvider(studyCreationArgs)).study.value!;
+    final study =
+        ref.watch(studyControllerProvider(studyCreationArgs)).study.value!;
     final availableTasks = <Task>[
       ...study.interventions.expand((intervention) => intervention.tasks),
       ...study.observations,

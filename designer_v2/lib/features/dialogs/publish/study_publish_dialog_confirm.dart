@@ -18,7 +18,8 @@ class PublishConfirmationDialog extends StudyPageWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.watch(studyControllerProvider(studyCreationArgs).notifier);
+    final controller =
+        ref.watch(studyControllerProvider(studyCreationArgs).notifier);
     final state = ref.watch(studyControllerProvider(studyCreationArgs));
     final formViewModel =
         ref.watch(studySettingsFormViewModelProvider(studyCreationArgs));
@@ -43,8 +44,8 @@ class PublishConfirmationDialog extends StudyPageWidget {
                       RichText(
                         text: TextSpan(
                           text: state.studyType == StudyType.template
-                            ? tr.template_launch_participation_intro
-                            : tr.study_launch_participation_intro,
+                              ? tr.template_launch_participation_intro
+                              : tr.study_launch_participation_intro,
                           children: [
                             const TextSpan(text: ' '),
                             TextSpan(
@@ -54,15 +55,16 @@ class PublishConfirmationDialog extends StudyPageWidget {
                             ),
                             const TextSpan(text: '.'),
                             TextSpan(
-                              text: state.studyType == StudyType.template
-                                  ? tr.template_launch_participation_outro
-                                  : tr.study_launch_participation_outro),
+                                text: state.studyType == StudyType.template
+                                    ? tr.template_launch_participation_outro
+                                    : tr.study_launch_participation_outro),
                           ],
                         ),
                       ),
                       const SizedBox(height: 4.0),
                       SelectableText(
-                        state.studyParticipation!.launchDescription(state.studyType == StudyType.template),
+                        state.studyParticipation!.launchDescription(
+                            state.studyType == StudyType.template),
                         style: ThemeConfig.bodyTextMuted(theme).copyWith(
                           fontStyle: FontStyle.italic,
                         ),
@@ -98,10 +100,10 @@ class PublishConfirmationDialog extends StudyPageWidget {
                 : tr.study_launch_post_launch_intro),
             const SizedBox(height: 4.0),
             SelectableText(
-                state.studyType == StudyType.template
-                    ? tr.template_launch_post_launch_summary
-                    : tr.study_launch_post_launch_summary,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+              state.studyType == StudyType.template
+                  ? tr.template_launch_post_launch_summary
+                  : tr.study_launch_post_launch_summary,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 32.0),
             ReactiveFormConsumer(

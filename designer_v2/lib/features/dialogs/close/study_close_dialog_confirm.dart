@@ -14,8 +14,9 @@ class CloseConfirmationDialog extends StudyPageWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.watch(studyControllerProvider(studyId).notifier);
-    final state = ref.watch(studyControllerProvider(studyId));
+    final controller =
+        ref.watch(studyControllerProvider(studyCreationArgs).notifier);
+    final state = ref.watch(studyControllerProvider(studyCreationArgs));
     final formKey = GlobalKey<FormState>();
     String? inputStudyName;
 

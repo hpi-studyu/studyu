@@ -22,14 +22,14 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
           children: [
             TextParagraph(
               text: viewModel.studyType == StudyType.template
-                      ? tr.banner_template_readonly_title
-                      : tr.banner_study_readonly_title,
+                  ? tr.banner_template_readonly_title
+                  : tr.banner_study_readonly_title,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             TextParagraph(
               text: viewModel.studyType == StudyType.template
-                      ? tr.banner_template_readonly_description
-                      : tr.banner_study_readonly_description,
+                  ? tr.banner_template_readonly_description
+                  : tr.banner_study_readonly_description,
             ),
           ],
         ),
