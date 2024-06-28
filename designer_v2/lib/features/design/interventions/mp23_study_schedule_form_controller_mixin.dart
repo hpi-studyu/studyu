@@ -52,7 +52,9 @@ mixin MP23StudyScheduleControls {
 
   FormGroup createBaselineFormGroup({int duration = 0}) {
     return FormGroup({
-      'type': FormControl<String>(value: "baseline"),
+      'type': FormControl<StudyScheduleSegmentType>(
+        value: StudyScheduleSegmentType.baseline,
+      ),
       'duration': FormControl<int>(value: duration),
     });
   }
@@ -64,7 +66,9 @@ mixin MP23StudyScheduleControls {
     String questionId = '',
   }) {
     return FormGroup({
-      'type': FormControl<String>(value: "thompsonSampling"),
+      'type': FormControl<StudyScheduleSegmentType>(
+        value: StudyScheduleSegmentType.thompsonSampling,
+      ),
       'interventionDuration': FormControl<int>(value: interventionDuration),
       'interventionDrawAmount': FormControl<int>(value: interventionDrawAmount),
       'observationId': FormControl<String>(value: observationId),
@@ -77,7 +81,9 @@ mixin MP23StudyScheduleControls {
     int cycleAmount = 0,
   }) {
     return FormGroup({
-      'type': FormControl<String>(value: "alternating"),
+      'type': FormControl<StudyScheduleSegmentType>(
+        value: StudyScheduleSegmentType.alternating,
+      ),
       'interventionDuration': FormControl<int>(value: interventionDuration),
       'cycleAmount': FormControl<int>(value: cycleAmount),
     });
@@ -88,18 +94,18 @@ mixin MP23StudyScheduleControls {
     for (final segmentControl in segmentsControl.controls) {
       final segment = segmentControl as FormGroup;
       switch (segment.control('type').value) {
-        case "baseline":
+        case StudyScheduleSegmentType.baseline:
           segments.add(
             BaselineScheduleSegment(segment.control('duration').value as int),
           );
-        case "alternating":
+        case StudyScheduleSegmentType.alternating:
           segments.add(
             AlternatingScheduleSegment(
               segment.control('interventionDuration').value as int,
               segment.control('cycleAmount').value as int,
             ),
           );
-        case "thompsonSampling":
+        case StudyScheduleSegmentType.thompsonSampling:
           segments.add(
             ThompsonSamplingScheduleSegment(
               segment.control('interventionDuration').value as int,
@@ -149,7 +155,6 @@ mixin MP23StudyScheduleControls {
   MP23StudyScheduleFormData buildStudyScheduleFormData() {
     return MP23StudyScheduleFormData(
       segments: segmentsControl.controls.map((absSegment) {
-        // todo fix strong types in this file and in mp23_study_schedule_form_view.dart
         final segment = absSegment as FormGroup;
         switch (segment.control('type').value) {
           case StudyScheduleSegmentType.baseline:

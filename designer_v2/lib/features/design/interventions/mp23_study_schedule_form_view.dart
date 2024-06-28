@@ -91,7 +91,10 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
         ),
         Container(
           constraints: const BoxConstraints(
-              maxWidth: 600, minHeight: 200, minWidth: 560),
+            maxWidth: 600,
+            minHeight: 200,
+            minWidth: 560,
+          ),
           child: Row(
             children: [
               DropdownButton<StudyScheduleSegmentType>(
