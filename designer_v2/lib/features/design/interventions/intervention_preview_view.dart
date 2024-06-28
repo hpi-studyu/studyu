@@ -20,10 +20,14 @@ class InterventionPreview extends ConsumerWidget {
               Column(
                 children: [
                   const SizedBox(height: 50),
-                  PreviewFrame(routeArgs.studyId, routeArgs: routeArgs),
+                  PreviewFrame(
+                    routeArgs.studyCreationArgs,
+                    routeArgs: routeArgs,
+                  ),
                 ],
               ),
-              previewBanner(ref, routeArgs.studyId) ?? const SizedBox.shrink(),
+              previewBanner(ref, routeArgs.studyCreationArgs) ??
+                  const SizedBox.shrink(),
             ],
           ),
         ],

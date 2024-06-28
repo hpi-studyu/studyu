@@ -7,12 +7,14 @@ class StudyInfoFormData implements IStudyFormData {
     this.description,
     required this.contactInfoFormData,
     required this.iconName,
+    required this.lockPublisherInfo,
   });
 
   final String title;
   final String? description;
   final String iconName;
   final StudyContactInfoFormData contactInfoFormData;
+  final bool lockPublisherInfo;
 
   factory StudyInfoFormData.fromStudy(Study study) {
     return StudyInfoFormData(
@@ -20,6 +22,8 @@ class StudyInfoFormData implements IStudyFormData {
       description: study.description ?? '',
       iconName: study.iconName,
       contactInfoFormData: StudyContactInfoFormData.fromStudy(study),
+      lockPublisherInfo:
+          study.templateConfiguration?.lockPublisherInformation == true,
     );
   }
 
@@ -29,6 +33,8 @@ class StudyInfoFormData implements IStudyFormData {
     study.description = description;
     study.iconName = iconName;
     contactInfoFormData.apply(study);
+    study.templateConfiguration = study.templateConfiguration
+        ?.copyWith(lockPublisherInformation: lockPublisherInfo);
     return study;
   }
 

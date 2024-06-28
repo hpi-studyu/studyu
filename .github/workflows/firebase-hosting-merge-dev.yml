@@ -16,6 +16,7 @@ on:
       - 'melos.yaml'
       - 'firebase.json'
       - '.firebaserc'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.ref }}-merge-dev

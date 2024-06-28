@@ -32,6 +32,10 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
   final FormControl<String> websiteControl = FormControl();
   final FormControl<String> phoneControl = FormControl();
   final FormControl<String> additionalInfoControl = FormControl();
+  final FormControl<bool> lockPublisherInfoControl = FormControl();
+
+  bool get publisherInfoLocked =>
+      study.templateConfiguration?.lockPublisherInformation == true;
 
   @override
   late final FormGroup form = FormGroup({
@@ -46,6 +50,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     'website': websiteControl,
     'phone': phoneControl,
     'additionalInfo': additionalInfoControl,
+    'lockPublisherInfo': lockPublisherInfoControl,
   });
 
   @override
@@ -63,6 +68,23 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
     websiteControl.value = data.contactInfoFormData.website;
     phoneControl.value = data.contactInfoFormData.phone;
     additionalInfoControl.value = data.contactInfoFormData.additionalInfo;
+    lockPublisherInfoControl.value = data.lockPublisherInfo;
+
+    if (!study.isTemplate) {
+      lockPublisherInfoControl.markAsDisabled();
+    }
+
+    if (study.isSubStudy &&
+        study.templateConfiguration?.lockPublisherInformation == true) {
+      organizationControl.markAsDisabled();
+      reviewBoardControl.markAsDisabled();
+      reviewBoardNumberControl.markAsDisabled();
+      researchersControl.markAsDisabled();
+      emailControl.markAsDisabled();
+      websiteControl.markAsDisabled();
+      phoneControl.markAsDisabled();
+      additionalInfoControl.markAsDisabled();
+    }
   }
 
   @override
@@ -71,6 +93,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
       title: titleControl.value!, // required
       iconName: iconControl.value?.name ?? '',
       description: descriptionControl.value,
+      lockPublisherInfo: lockPublisherInfoControl.value ?? false,
       contactInfoFormData: StudyContactInfoFormData(
         organization: organizationControl.value,
         institutionalReviewBoard: reviewBoardControl.value,
@@ -119,8 +142,11 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
           Validators.required,
         ],
         validationMessages: {
-          ValidationMessage.required: (error) =>
-              tr.form_field_study_title_required,
+          ValidationMessage.required: (error) => switch (study.type) {
+                StudyType.standalone => tr.form_field_study_title_required,
+                StudyType.template => tr.form_field_template_title_required,
+                StudyType.subStudy => tr.form_field_substudy_title_required,
+              },
         },
       );
   FormControlValidation get descriptionRequired => FormControlValidation(
@@ -129,8 +155,14 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
           Validators.required,
         ],
         validationMessages: {
-          ValidationMessage.required: (error) =>
-              tr.form_field_study_description_required,
+          ValidationMessage.required: (error) => switch (study.type) {
+                StudyType.standalone =>
+                  tr.form_field_study_description_required,
+                StudyType.template =>
+                  tr.form_field_template_description_required,
+                StudyType.subStudy =>
+                  tr.form_field_substudy_description_required,
+              },
         },
       );
   FormControlValidation get iconRequired => FormControlValidation(

@@ -84,6 +84,8 @@ SET default_table_access_method = heap;
 
 CREATE TABLE public.study (
     id uuid DEFAULT gen_random_uuid() NOT NULL UNIQUE,
+    parent_template_id uuid,
+    template_configuration jsonb,
     contact jsonb NOT NULL,
     title text NOT NULL,
     description text NOT NULL,
@@ -790,6 +792,11 @@ ALTER TABLE ONLY public.repo
     ADD CONSTRAINT "repo_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id);
 
 
+
+ALTER TABLE ONLY public.study
+    ADD CONSTRAINT "study_parent_template_id_fkey" FOREIGN KEY (parent_template_id) REFERENCES public.study(id);
+
+
 --
 -- Name: repo repo_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
@@ -936,6 +943,20 @@ CREATE POLICY "Editors can see their study subjects progress" ON public.subject_
     public.study_subject
   WHERE ((study.id = study_subject.study_id) AND (study_subject.id = subject_progress.subject_id))));
 
+--
+-- Name: study_subject Joining a Template Trial should not be possible; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Joining a Template Trial should not be possible" ON public.study_subject
+AS RESTRICTIVE
+FOR INSERT
+WITH CHECK (NOT EXISTS (
+    SELECT 1
+    FROM public.study
+    WHERE study.id = study_subject.study_id
+    AND study.template_configuration IS NOT NULL
+    AND study.parent_template_id IS NULL
+));
 
 --
 -- Name: subject_progress Users can do everything with their progress; Type: POLICY; Schema: public; Owner: postgres

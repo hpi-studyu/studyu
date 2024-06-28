@@ -10,11 +10,11 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class StudyAnalyzeScreen extends StudyPageWidget {
-  const StudyAnalyzeScreen(super.studyId, {super.key});
+  const StudyAnalyzeScreen(super.studyCreationArgs, {super.key});
 
   @override
   Widget? banner(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyAnalyzeControllerProvider(studyId));
+    final state = ref.watch(studyAnalyzeControllerProvider(studyCreationArgs));
 
     if (state.isDraft) {
       return BannerBox(
@@ -38,8 +38,8 @@ class StudyAnalyzeScreen extends StudyPageWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final controller =
-        ref.watch(studyAnalyzeControllerProvider(studyId).notifier);
-    final state = ref.watch(studyAnalyzeControllerProvider(studyId));
+        ref.watch(studyAnalyzeControllerProvider(studyCreationArgs).notifier);
+    final state = ref.watch(studyAnalyzeControllerProvider(studyCreationArgs));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

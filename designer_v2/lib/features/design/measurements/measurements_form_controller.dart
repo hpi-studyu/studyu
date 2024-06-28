@@ -56,7 +56,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   FormControlValidation get measurementRequired => FormControlValidation(
         control: measurementsArray,
         validators: [
-          Validators.minLength(1),
+          Validators.minLength(study.isTemplate ? 0 : 1),
         ],
         validationMessages: {
           ValidationMessage.minLength: (error) =>

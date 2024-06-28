@@ -15,6 +15,7 @@ enum StudyActionType {
   addCollaborator,
   export,
   delete,
+  createSubStudy,
 }
 
 /// Provides a human-readable translation of the model action type
@@ -37,6 +38,8 @@ extension StudyActionTypeFormatted on StudyActionType {
         return "[StudyActionType.addCollaborator]"; // todo not implemented yet
       case StudyActionType.export:
         return tr.action_study_export_results;
+      case StudyActionType.createSubStudy:
+        return tr.action_new_substudy;
       default:
         return "[Invalid ModelActionType]";
     }
@@ -44,6 +47,10 @@ extension StudyActionTypeFormatted on StudyActionType {
 }
 
 typedef StudyID = String;
+typedef StudyAndOptionalTemplateID = ({
+  StudyID studyId,
+  StudyID? parentTemplateId
+});
 typedef MeasurementID = String;
 typedef InstanceID = String;
 
@@ -194,10 +201,31 @@ extension StudyRegistryX on Study {
 
 class StudyTemplates {
   static String get kUnnamedStudyTitle => tr.form_field_study_title_default;
+  static String get kUnnamedTemplateTitle =>
+      tr.form_field_template_title_default;
+  static String get kUnnamedSubStudyTitle =>
+      tr.form_field_substudy_title_default;
 
-  static Study emptyDraft(String userId) {
-    final newDraft = Study.withId(userId);
+  static Study emptyStandaloneDraft(String userId) {
+    final newDraft = Study.create(userId);
     newDraft.title = StudyTemplates.kUnnamedStudyTitle;
+    newDraft.iconName = '';
+    return newDraft;
+  }
+
+  static Template emptyTemplateDraft(String userId) {
+    final newDraft = Template.create(userId);
+    newDraft.title = StudyTemplates.kUnnamedTemplateTitle;
+    newDraft.iconName = '';
+    return newDraft;
+  }
+
+  static TemplateSubStudy emptySubStudyDraft(
+    String userId,
+    Template parentTemplate,
+  ) {
+    final newDraft = TemplateSubStudy.create(userId, parentTemplate);
+    newDraft.title = StudyTemplates.kUnnamedSubStudyTitle;
     newDraft.iconName = '';
     return newDraft;
   }

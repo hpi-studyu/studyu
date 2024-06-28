@@ -15,27 +15,29 @@ class StudyBaseController<T extends StudyControllerBaseState>
     extends StateNotifier<T> {
   StudyBaseController(
     super.state, {
-    required this.studyId,
+    required this.studyCreationArgs,
     required this.studyRepository,
     required this.currentUser,
     required this.router,
   }) {
-    subscribeStudy(studyId);
+    subscribeStudy(studyCreationArgs);
   }
 
-  final StudyID studyId;
+  final StudyCreationArgs studyCreationArgs;
   final IStudyRepository studyRepository;
   final User? currentUser;
   final GoRouter router;
 
+  StudyID get studyId => studyCreationArgs.studyID;
+
   StreamSubscription<WrappedModel<Study>>? studySubscription;
 
-  void subscribeStudy(StudyID studyId) {
+  void subscribeStudy(StudyCreationArgs studyCreationArgs) {
     if (studySubscription != null) {
       studySubscription!.cancel();
     }
     studySubscription = studyRepository
-        .watch(studyId)
+        .watch(studyCreationArgs.studyID, args: studyCreationArgs)
         .listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
   }
 

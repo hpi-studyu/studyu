@@ -41,7 +41,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   final GoRouter router;
 
   // - Form fields
-
+  final FormControl<bool> lockStudyScheduleControl = FormControl();
   final FormArray interventionsArray = FormArray([]);
   late final interventionsCollection =
       FormViewModelCollection<InterventionFormViewModel, InterventionFormData>(
@@ -52,6 +52,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   @override
   late final FormGroup form = FormGroup({
     'interventions': interventionsArray,
+    'lockStudySchedule': lockStudyScheduleControl,
     ...studyScheduleControls,
   });
 
@@ -75,7 +76,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   FormControlValidation get interventionsRequired => FormControlValidation(
         control: interventionsArray,
         validators: [
-          Validators.minLength(2),
+          Validators.minLength(study.isTemplate ? 0 : 2),
         ],
         validationMessages: {
           ValidationMessage.minLength: (error) =>
@@ -87,6 +88,11 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   @override
   void setControlsFrom(InterventionsFormData data) {
+    lockStudyScheduleControl.value = data.lockStudySchedule;
+    if (!study.isTemplate) {
+      lockStudyScheduleControl.markAsDisabled();
+    }
+
     final viewModels = data.interventionsData
         .map(
           (data) => InterventionFormViewModel(
@@ -98,7 +104,9 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
         )
         .toList();
     interventionsCollection.reset(viewModels);
-    setStudyScheduleControlsFrom(data.studyScheduleData);
+    final studyScheduleLocked = study.isSubStudy &&
+        study.templateConfiguration?.lockStudySchedule == true;
+    setStudyScheduleControlsFrom(data.studyScheduleData, studyScheduleLocked);
   }
 
   @override
@@ -106,6 +114,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     return InterventionsFormData(
       interventionsData: interventionsCollection.formData,
       studyScheduleData: buildStudyScheduleFormData(),
+      lockStudySchedule: lockStudyScheduleControl.value ?? false,
     );
   }
 

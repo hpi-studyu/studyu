@@ -3,24 +3,24 @@ import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/average_section_form_view.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/linear_regression_section_form_view.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/section_type.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ReportItemFormView extends StatelessWidget {
   const ReportItemFormView({
     required this.formViewModel,
-    required this.studyId,
+    required this.studyCreationArgs,
     super.key,
   });
 
   final ReportItemFormViewModel formViewModel;
-  final StudyID studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   Map<int, TableColumnWidth> get reportSectionColumnWidth => const {
         0: FixedColumnWidth(180.0),
@@ -31,13 +31,13 @@ class ReportItemFormView extends StatelessWidget {
     final Map<ReportSectionType, WidgetBuilder> sectionTypeWidgets = {
       ReportSectionType.average: (_) => AverageSectionFormView(
             formViewModel: formViewModel,
-            studyId: studyId,
+            studyCreationArgs: studyCreationArgs,
             reportSectionColumnWidth: reportSectionColumnWidth,
           ),
       ReportSectionType.linearRegression: (_) =>
           LinearRegressionSectionFormView(
             formViewModel: formViewModel,
-            studyId: studyId,
+            studyCreationArgs: studyCreationArgs,
             reportSectionColumnWidth: reportSectionColumnWidth,
           ),
     };

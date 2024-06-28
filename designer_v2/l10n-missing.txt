@@ -1,5 +1,6 @@
 {
   "de": [
+    "action_button_study_publish",
     "form_field_response_audio",
     "report_status_primary",
     "report_status_secondary",

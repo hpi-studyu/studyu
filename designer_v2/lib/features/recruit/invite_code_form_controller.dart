@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:uuid/uuid.dart';
 
 class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
@@ -151,12 +152,16 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 final inviteCodeFormViewModelProvider = Provider.autoDispose
-    .family<InviteCodeFormViewModel, StudyID>((ref, studyId) {
+    .family<InviteCodeFormViewModel, StudyCreationArgs>(
+        (ref, studyCreationArgs) {
+  final studyId = studyCreationArgs.studyID;
   print("inviteCodeFormViewModelProvider($studyId");
   // Reactively bind to and obtain [StudyController]'s current study
-  final study = ref
-      .watch(studyControllerProvider(studyId).select((state) => state.study));
-  final inviteCodeRepository = ref.watch(inviteCodeRepositoryProvider(studyId));
+  final study = ref.watch(
+    studyControllerProvider(studyCreationArgs).select((state) => state.study),
+  );
+  final inviteCodeRepository =
+      ref.watch(inviteCodeRepositoryProvider(studyCreationArgs.studyID));
 
   return InviteCodeFormViewModel(
     study: study.value!,

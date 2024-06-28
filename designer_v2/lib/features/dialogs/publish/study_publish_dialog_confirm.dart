@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/form_control_label.dart';
@@ -13,14 +14,15 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class PublishConfirmationDialog extends StudyPageWidget {
-  const PublishConfirmationDialog(super.studyId, {super.key});
+  const PublishConfirmationDialog(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.watch(studyControllerProvider(studyId).notifier);
-    final state = ref.watch(studyControllerProvider(studyId));
+    final controller =
+        ref.watch(studyControllerProvider(studyCreationArgs).notifier);
+    final state = ref.watch(studyControllerProvider(studyCreationArgs));
     final formViewModel =
-        ref.watch(studySettingsFormViewModelProvider(studyId));
+        ref.watch(studySettingsFormViewModelProvider(studyCreationArgs));
     formViewModel.setLaunchDefaults();
 
     final theme = Theme.of(context);
@@ -41,7 +43,9 @@ class PublishConfirmationDialog extends StudyPageWidget {
                     children: [
                       RichText(
                         text: TextSpan(
-                          text: tr.study_launch_participation_intro,
+                          text: state.studyType == StudyType.template
+                              ? tr.template_launch_participation_intro
+                              : tr.study_launch_participation_intro,
                           children: [
                             const TextSpan(text: ' '),
                             TextSpan(
@@ -50,13 +54,19 @@ class PublishConfirmationDialog extends StudyPageWidget {
                                   const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             const TextSpan(text: '.'),
-                            TextSpan(text: tr.study_launch_participation_outro),
+                            TextSpan(
+                              text: state.studyType == StudyType.template
+                                  ? tr.template_launch_participation_outro
+                                  : tr.study_launch_participation_outro,
+                            ),
                           ],
                         ),
                       ),
                       const SizedBox(height: 4.0),
                       SelectableText(
-                        state.studyParticipation!.launchDescription,
+                        state.studyParticipation!.launchDescription(
+                          state.studyType == StudyType.template,
+                        ),
                         style: ThemeConfig.bodyTextMuted(theme).copyWith(
                           fontStyle: FontStyle.italic,
                         ),
@@ -87,10 +97,16 @@ class PublishConfirmationDialog extends StudyPageWidget {
               ],
             ),
             const SizedBox(height: 24.0),
-            SelectableText(tr.study_launch_post_launch_intro),
+            SelectableText(
+              state.studyType == StudyType.template
+                  ? tr.template_launch_post_launch_intro
+                  : tr.study_launch_post_launch_intro,
+            ),
             const SizedBox(height: 4.0),
             SelectableText(
-              tr.study_launch_post_launch_summary,
+              state.studyType == StudyType.template
+                  ? tr.template_launch_post_launch_summary
+                  : tr.study_launch_post_launch_summary,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 32.0),

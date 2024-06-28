@@ -14,12 +14,14 @@ import 'package:studyu_designer_v2/features/app_drawer.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/dialogs/study_dialogs.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
+import 'package:studyu_designer_v2/features/publish/study_publish_dialog.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_navbar.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 abstract class IStudyAppBarViewModel
@@ -36,7 +38,7 @@ abstract class IStudyAppBarViewModel
 /// Custom scaffold shared between all pages for an individual [Study]
 class StudyScaffold extends ConsumerStatefulWidget {
   const StudyScaffold({
-    this.studyId = Config.newStudyId,
+    required this.studyCreationArgs,
     required this.body,
     this.layoutType,
     this.tabs,
@@ -54,7 +56,7 @@ class StudyScaffold extends ConsumerStatefulWidget {
 
   /// The currently selected [Study.id]
   /// Defaults to [Config.newStudyId] when creating a new study
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   final List<NavbarTab>? tabs;
   final List<NavbarTab>? tabsSubnav;
@@ -83,9 +85,10 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final state = ref.watch(studyControllerProvider(widget.studyId));
+    final state = ref.watch(studyControllerProvider(widget.studyCreationArgs));
 
-    final tabs = widget.tabs ?? StudyNav.tabs(widget.studyId, state);
+    final tabs =
+        widget.tabs ?? StudyNav.tabs(widget.studyCreationArgs.studyID, state);
 
     return Scaffold(
       appBar: AppBar(
@@ -229,12 +232,12 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
 
     final theme = Theme.of(context);
     final controller =
-        ref.watch(studyControllerProvider(widget.studyId).notifier);
-    final state = ref.watch(studyControllerProvider(widget.studyId));
+        ref.watch(studyControllerProvider(widget.studyCreationArgs).notifier);
+    final state = ref.watch(studyControllerProvider(widget.studyCreationArgs));
 
     if (state.isPublishVisible) {
       final formViewModel =
-          ref.watch(studyPublishValidatorProvider(widget.studyId));
+          ref.watch(studyPublishValidatorProvider(widget.studyCreationArgs));
       final publishButton = ReactiveForm(
         formGroup: formViewModel.form,
         child: ReactiveFormConsumer(
@@ -246,11 +249,8 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                   "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
               icon: null,
               enabled: formViewModel.isValid,
-              onPressed: () => showStudyDialog(
-                context,
-                widget.studyId,
-                StudyDialogType.publish,
-              ),
+              onPressed: () =>
+                  showPublishDialog(context, widget.studyCreationArgs),
             );
           },
         ),
@@ -259,9 +259,20 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
       actionButtons.add(const SizedBox(width: 12.0)); // padding
     }
 
+    if (state.isCreateNewSubstudyVisible) {
+      actionButtons.add(
+        PrimaryButton(
+          text: tr.action_button_study_create_substudy,
+          icon: null,
+          onPressed: () => controller.onCreateNewSubstudy(),
+        ),
+      );
+      actionButtons.add(const SizedBox(width: 12.0)); // padding
+    }
+
     if (state.isClosedVisible) {
       final formViewModel =
-          ref.watch(studyPublishValidatorProvider(widget.studyId));
+          ref.watch(studyPublishValidatorProvider(widget.studyCreationArgs));
       final closeButton = ReactiveForm(
         formGroup: formViewModel.form,
         child: ReactiveFormConsumer(
@@ -272,7 +283,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
               icon: null,
               onPressed: () => showStudyDialog(
                 context,
-                widget.studyId,
+                widget.studyCreationArgs,
                 StudyDialogType.close,
               ),
             );

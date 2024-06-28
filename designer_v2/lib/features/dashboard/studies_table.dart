@@ -9,8 +9,20 @@ import 'package:studyu_designer_v2/features/dashboard/studies_table_column_heade
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
+class StudyGroup {
+  final Study standaloneOrTemplate;
+  final List<Study> subStudies;
+
+  StudyGroup(this.standaloneOrTemplate, this.subStudies);
+
+  StudyGroup.standalone(Study standaloneStudy) : this(standaloneStudy, []);
+
+  StudyGroup.template(Template templateStudy, List<Study> subStudies)
+      : this(templateStudy, subStudies);
+}
+
 enum StudiesTableColumn {
-  pin,
+  expand,
   title,
   status,
   participation,
@@ -18,7 +30,8 @@ enum StudiesTableColumn {
   enrolled,
   active,
   completed,
-  action
+  action,
+  type
 }
 
 class StudiesTableColumnSize {
@@ -45,11 +58,14 @@ class StudiesTableColumnSize {
 
 class StudiesTable extends StatelessWidget {
   const StudiesTable({
-    required this.studies,
+    required this.studyGroups,
     required this.onSelect,
+    required this.onExpand,
     required this.getActions,
+    required this.getSubActions,
     required this.emptyWidget,
     required this.pinnedStudies,
+    required this.expandedStudies,
     required this.dashboardController,
     this.itemHeight = 60.0,
     this.itemPadding = 10.0,
@@ -68,16 +84,19 @@ class StudiesTable extends StatelessWidget {
   final double compactWidthThreshold;
   final double superCompactWidthThreshold;
   final double compactStatTitleThreshold;
-  final List<Study> studies;
+  final List<StudyGroup> studyGroups;
   final OnSelectHandler<Study> onSelect;
-  final ActionsProviderFor<Study> getActions;
+  final OnSelectHandler<Study> onExpand;
+  final ActionsProviderFor<StudyGroup> getActions;
+  final ActionsProviderAt<StudyGroup> getSubActions;
   final Widget emptyWidget;
   final Iterable<String> pinnedStudies;
+  final Iterable<String> expandedStudies;
   final DashboardController dashboardController;
 
   @override
   Widget build(BuildContext context) {
-    if (studies.isEmpty) {
+    if (studyGroups.isEmpty) {
       return emptyWidget;
     }
 
@@ -100,6 +119,10 @@ class StudiesTable extends StatelessWidget {
             max(maxStatusLength, tr.studies_list_header_status.length);
         final double statusColumnWidth = maxStatusLength * 11.5;
 
+        // Calculate the minimum type column width
+        const int maxTypeLength = "Standalone".length;
+        const double typeColumnWidth = maxTypeLength * 8.5;
+
         // Calculate the minimum participation column width
         final int maxParticipationLength = isCompact
             ? "Invite-only".length
@@ -111,8 +134,11 @@ class StudiesTable extends StatelessWidget {
 
         // Set column definitions
         final columnDefinitionsMap = {
-          StudiesTableColumn.pin: StudiesTableColumnSize.fixedWidth(itemHeight),
+          StudiesTableColumn.expand:
+              StudiesTableColumnSize.fixedWidth(itemHeight),
           StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(24),
+          StudiesTableColumn.type:
+              StudiesTableColumnSize.fixedWidth(typeColumnWidth),
           StudiesTableColumn.status:
               StudiesTableColumnSize.fixedWidth(statusColumnWidth),
           StudiesTableColumn.participation:
@@ -134,108 +160,53 @@ class StudiesTable extends StatelessWidget {
         };
         final columnDefinitions = columnDefinitionsMap.entries.toList();
 
+        final List<Widget> columnRows = [];
+        for (final columnDefinition in columnDefinitions) {
+          columnRows.add(
+            columnDefinition.value.createContainer(
+              child: _buildColumnHeader(columnDefinition.key),
+            ),
+          );
+          if (!columnDefinition.value.collapsed) {
+            columnRows.add(SizedBox(width: columnSpacing));
+          }
+        }
+
         return Column(
           children: [
             SizedBox(
               height: itemHeight,
               child: Row(
-                children: [
-                  columnDefinitions[0].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[0].key),
-                      ),
-                  SizedBox(
-                    width: columnDefinitions[0].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[1].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[1].key),
-                      ),
-                  SizedBox(
-                    width: columnDefinitions[1].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[2].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[2].key),
-                      ),
-                  SizedBox(
-                    width: columnDefinitions[2].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[3].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[3].key),
-                      ),
-                  SizedBox(
-                    width: columnDefinitions[3].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[4].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[4].key),
-                      ),
-                  SizedBox(
-                    width: columnDefinitions[4].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[5].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[5].key),
-                      ),
-                  SizedBox(
-                    width: columnDefinitions[5].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[6].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[6].key),
-                      ),
-                  SizedBox(
-                    width: columnDefinitions[6].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[7].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[7].key),
-                      ),
-                  SizedBox(
-                    width: columnDefinitions[7].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                  columnDefinitions[8].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[8].key),
-                      ),
-                  SizedBox(
-                    width: columnDefinitions[8].value.collapsed
-                        ? 0
-                        : columnSpacing,
-                  ),
-                ],
+                children: columnRows,
               ),
             ),
             SizedBox(height: rowSpacing),
             ListView.builder(
-              itemCount: studies.length,
-              itemExtent: (2 * itemPadding) + itemHeight + rowSpacing,
+              itemCount: studyGroups.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                final item = studies[index];
+                final item = studyGroups[index];
                 return StudiesTableItem(
-                  study: item,
-                  columnSizes: columnDefinitionsMap.values.toList(),
+                  studyGroup: item,
+                  columnDefinitions: columnDefinitionsMap,
                   actions: getActions(item),
-                  isPinned: pinnedStudies.contains(item.id),
+                  getSubActions: getSubActions,
+                  isPinned:
+                      pinnedStudies.contains(item.standaloneOrTemplate.id),
+                  isExpanded:
+                      expandedStudies.contains(item.standaloneOrTemplate.id),
                   itemHeight: itemHeight,
                   rowSpacing: rowSpacing,
                   columnSpacing: columnSpacing,
                   onPinnedChanged: (study, pinned) {
-                    pinnedStudies.contains(item.id)
-                        ? dashboardController.pinOffStudy(item.id)
-                        : dashboardController.pinStudy(item.id);
+                    pinnedStudies.contains(item.standaloneOrTemplate.id)
+                        ? dashboardController
+                            .pinOffStudy(item.standaloneOrTemplate.id)
+                        : dashboardController
+                            .pinStudy(item.standaloneOrTemplate.id);
                   },
-                  onTap: (study) => onSelect.call(study),
+                  onTapStudy: (study) => onSelect.call(study),
+                  onExpandStudy: (study) => onExpand.call(study),
                 );
               },
             ),
@@ -250,6 +221,8 @@ class StudiesTable extends StatelessWidget {
     switch (column) {
       case StudiesTableColumn.title:
         title = tr.studies_list_header_title;
+      case StudiesTableColumn.type:
+        title = tr.studies_list_header_type;
       case StudiesTableColumn.status:
         title = tr.studies_list_header_status;
       case StudiesTableColumn.participation:
@@ -262,13 +235,13 @@ class StudiesTable extends StatelessWidget {
         title = tr.studies_list_header_participants_active;
       case StudiesTableColumn.completed:
         title = tr.studies_list_header_participants_completed;
-      case StudiesTableColumn.pin:
+      case StudiesTableColumn.expand:
       case StudiesTableColumn.action:
         title = '';
     }
 
     final sortAscending = dashboardController.isSortAscending;
-    final sortable = !(column == StudiesTableColumn.pin ||
+    final sortable = !(column == StudiesTableColumn.expand ||
         column == StudiesTableColumn.action);
     final sortingActive = dashboardController.isSortingActiveForColumn(column);
 

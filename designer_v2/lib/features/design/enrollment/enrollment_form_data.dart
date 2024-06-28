@@ -8,17 +8,21 @@ class EnrollmentFormData implements IStudyFormData {
 
   EnrollmentFormData({
     required this.enrollmentType,
+    required this.lockEnrollmentType,
     required this.questionnaireFormData,
     this.consentItemsFormData,
   });
 
   final Participation enrollmentType;
+  final bool lockEnrollmentType;
   final QuestionnaireFormData questionnaireFormData;
   final List<ConsentItemFormData>? consentItemsFormData;
 
   factory EnrollmentFormData.fromStudy(Study study) {
     return EnrollmentFormData(
       enrollmentType: study.participation,
+      lockEnrollmentType:
+          study.templateConfiguration?.lockEnrollmentType ?? false,
       questionnaireFormData: QuestionnaireFormData.fromDomainModel(
         study.questionnaire,
         study.eligibilityCriteria,
@@ -34,6 +38,8 @@ class EnrollmentFormData implements IStudyFormData {
   @override
   Study apply(Study study) {
     study.participation = enrollmentType;
+    study.templateConfiguration = study.templateConfiguration
+        ?.copyWith(lockEnrollmentType: lockEnrollmentType);
     study.questionnaire = questionnaireFormData.toQuestionnaire();
     study.consent = (consentItemsFormData != null)
         ? consentItemsFormData!
