@@ -157,8 +157,9 @@ final inviteCodeFormViewModelProvider = Provider.autoDispose
   final studyId = studyCreationArgs.studyID;
   print("inviteCodeFormViewModelProvider($studyId");
   // Reactively bind to and obtain [StudyController]'s current study
-  final study = ref.watch(studyControllerProvider(studyCreationArgs)
-      .select((state) => state.study));
+  final study = ref.watch(
+    studyControllerProvider(studyCreationArgs).select((state) => state.study),
+  );
   final inviteCodeRepository =
       ref.watch(inviteCodeRepositoryProvider(studyCreationArgs.studyID));
 

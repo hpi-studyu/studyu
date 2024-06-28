@@ -21,7 +21,10 @@ class PublishDialog extends StudyPageWidget {
   }
 }
 
-showPublishDialog(BuildContext context, StudyCreationArgs studyCreationArgs) {
+Future showPublishDialog(
+  BuildContext context,
+  StudyCreationArgs studyCreationArgs,
+) {
   final theme = Theme.of(context);
   return showDialog(
     context: context,

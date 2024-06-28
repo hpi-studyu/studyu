@@ -13,12 +13,11 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 import 'package:uuid/uuid.dart';
-
-import '../../../../repositories/model_repository.dart';
 
 class MeasurementSurveyFormViewModel
     extends ManagedFormViewModel<MeasurementSurveyFormData>

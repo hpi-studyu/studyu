@@ -35,32 +35,41 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
             children: <Widget>[
               TextParagraph(text: tr.form_study_design_info_description),
               const SizedBox(height: 24.0),
-              hasParentTitleAndDescription
-                  ? FormTableLayout(rows: [
-                      FormTableRow(
-                          label: tr.form_field_template_title,
-                          input: TextField(
-                            controller: TextEditingController(
-                                text: study.templateConfiguration!.title),
-                            enabled: false,
-                            readOnly: true,
-                          )),
-                      FormTableRow(
-                          label: tr.form_field_template_description,
-                          input: TextField(
-                            controller: TextEditingController(
-                                text: study.templateConfiguration!.description),
-                            enabled: false,
-                            readOnly: true,
-                          )),
-                    ], columnWidths: const {
-                      0: FixedColumnWidth(185.0),
-                      1: FlexColumnWidth(),
-                    })
-                  : const SizedBox.shrink(),
-              hasParentTitleAndDescription
-                  ? const SizedBox(height: 24.0)
-                  : const SizedBox.shrink(),
+              if (hasParentTitleAndDescription)
+                FormTableLayout(
+                  rows: [
+                    FormTableRow(
+                      label: tr.form_field_template_title,
+                      input: TextField(
+                        controller: TextEditingController(
+                          text: study.templateConfiguration!.title,
+                        ),
+                        enabled: false,
+                        readOnly: true,
+                      ),
+                    ),
+                    FormTableRow(
+                      label: tr.form_field_template_description,
+                      input: TextField(
+                        controller: TextEditingController(
+                          text: study.templateConfiguration!.description,
+                        ),
+                        enabled: false,
+                        readOnly: true,
+                      ),
+                    ),
+                  ],
+                  columnWidths: const {
+                    0: FixedColumnWidth(185.0),
+                    1: FlexColumnWidth(),
+                  },
+                )
+              else
+                const SizedBox.shrink(),
+              if (hasParentTitleAndDescription)
+                const SizedBox(height: 24.0)
+              else
+                const SizedBox.shrink(),
               FormTableLayout(
                 rows: [
                   FormTableRow(
@@ -137,14 +146,15 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                         LengthLimitingTextInputFormatter(500),
                       ],
                       decoration: InputDecoration(
-                          hintText: switch (study.type) {
-                        StudyType.standalone =>
-                          tr.form_field_study_description_hint,
-                        StudyType.template =>
-                          tr.form_field_template_description_hint,
-                        StudyType.subStudy =>
-                          tr.form_field_substudy_description_hint,
-                      }),
+                        hintText: switch (study.type) {
+                          StudyType.standalone =>
+                            tr.form_field_study_description_hint,
+                          StudyType.template =>
+                            tr.form_field_template_description_hint,
+                          StudyType.subStudy =>
+                            tr.form_field_substudy_description_hint,
+                        },
+                      ),
                     ),
                   ),
                 ],

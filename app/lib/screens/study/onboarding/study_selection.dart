@@ -134,44 +134,48 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   ],
                 ),
               ),
-              _hiddenStudies && template == null
-                  ? Column(
-                      children: [
-                        MaterialBanner(
-                          padding: const EdgeInsets.all(8),
-                          leading: Icon(
-                            MdiIcons.exclamationThick,
-                            color: Colors.orange,
-                            size: 32,
-                          ),
-                          content: Text(
-                            AppLocalizations.of(context)!
-                                .study_selection_hidden_studies,
-                            style: Theme.of(context).textTheme.titleSmall,
-                          ),
-                          actions: const [SizedBox.shrink()],
-                          backgroundColor: Colors.yellow[100],
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    )
-                  : const SizedBox.shrink(),
-              template != null
-                  ? Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
+              if (_hiddenStudies && template == null)
+                Column(
+                  children: [
+                    MaterialBanner(
+                      padding: const EdgeInsets.all(8),
+                      leading: Icon(
+                        MdiIcons.exclamationThick,
+                        color: Colors.orange,
+                        size: 32,
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(loc.selected_template_trial,
-                              style: theme.textTheme.titleMedium),
-                          const SizedBox(height: 8),
-                          Text.rich(TextSpan(children: [
+                      content: Text(
+                        AppLocalizations.of(context)!
+                            .study_selection_hidden_studies,
+                        style: Theme.of(context).textTheme.titleSmall,
+                      ),
+                      actions: const [SizedBox.shrink()],
+                      backgroundColor: Colors.yellow[100],
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                )
+              else
+                const SizedBox.shrink(),
+              if (template != null)
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        loc.selected_template_trial,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      Text.rich(
+                        TextSpan(
+                          children: [
                             TextSpan(
                               text: "${loc.title}: ",
                               style: theme.textTheme.titleSmall,
@@ -179,9 +183,13 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             TextSpan(
                               text: template.title,
                             ),
-                          ])),
-                          const SizedBox(height: 2),
-                          Text.rich(TextSpan(children: [
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text.rich(
+                        TextSpan(
+                          children: [
                             TextSpan(
                               text: "${loc.description}: ",
                               style: theme.textTheme.titleSmall,
@@ -189,11 +197,14 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             TextSpan(
                               text: template.description,
                             ),
-                          ])),
-                        ],
+                          ],
+                        ),
                       ),
-                    )
-                  : const SizedBox.shrink(),
+                    ],
+                  ),
+                )
+              else
+                const SizedBox.shrink(),
               Expanded(
                 child: RetryFutureBuilder<ExtractionResult<Study>>(
                   tryFunction: () async => subStudies.isEmpty
@@ -218,11 +229,14 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                     // Filter out sub-studies and templates without sub studies
                     final filteredStudies = subStudies.isEmpty
                         ? studies
-                            .where((study) =>
-                                !study.isSubStudy &&
-                                (!study.isTemplate ||
-                                    studies.any(
-                                        (s) => s.parentTemplateId == study.id)))
+                            .where(
+                              (study) =>
+                                  !study.isSubStudy &&
+                                  (!study.isTemplate ||
+                                      studies.any(
+                                        (s) => s.parentTemplateId == study.id,
+                                      )),
+                            )
                             .toList()
                         : studies;
                     return ListView.builder(
@@ -240,16 +254,21 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                               numSubtrials: numSubtrials,
                               onTap: () => study is Template
                                   ? Navigator.pushNamed(
-                                      context, Routes.studySelection,
+                                      context,
+                                      Routes.studySelection,
                                       arguments: StudySelectionScreenArgs(
-                                          template: study,
-                                          subStudies: studies
-                                              .where((s) =>
+                                        template: study,
+                                        subStudies: studies
+                                            .where(
+                                              (s) =>
                                                   s is TemplateSubStudy &&
                                                   s.parentTemplateId ==
-                                                      study.id)
-                                              .map((s) => s as TemplateSubStudy)
-                                              .toList()))
+                                                      study.id,
+                                            )
+                                            .map((s) => s as TemplateSubStudy)
+                                            .toList(),
+                                      ),
+                                    )
                                   : navigateToStudyOverview(context, study),
                             ),
                           ),

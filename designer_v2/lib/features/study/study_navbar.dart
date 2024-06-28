@@ -1,8 +1,7 @@
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
-
-import '../../domain/study.dart';
 
 abstract class IStudyNavViewModel {
   bool get isEditTabEnabled;

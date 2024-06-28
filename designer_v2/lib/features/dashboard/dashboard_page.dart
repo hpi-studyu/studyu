@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
+import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_scaffold.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
@@ -14,8 +15,6 @@ import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
-
-import '../../constants.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({required this.filter, super.key});
@@ -60,17 +59,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           Row(
             children: [
               PortalTarget(
-                  visible: state.createNewMenuOpen,
-                  portalCandidateLabels: const [outPortalLabel],
-                  portalFollower: GestureDetector(
-                    onTap: () => controller.setCreateNewMenuOpen(false),
-                    child: Container(color: Colors.transparent),
-                  ),
-                  child: const SizedBox.shrink()),
+                visible: state.createNewMenuOpen,
+                portalCandidateLabels: const [outPortalLabel],
+                portalFollower: GestureDetector(
+                  onTap: () => controller.setCreateNewMenuOpen(false),
+                  child: Container(color: Colors.transparent),
+                ),
+                child: const SizedBox.shrink(),
+              ),
               PortalTarget(
                 visible: state.createNewMenuOpen,
                 anchor: const Aligned(
-                    follower: Alignment.topLeft, target: Alignment.bottomLeft),
+                  follower: Alignment.topLeft,
+                  target: Alignment.bottomLeft,
+                ),
                 portalFollower: GestureDetector(
                   onTap: () => controller.setCreateNewMenuOpen(false),
                   child: Container(
@@ -84,7 +86,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         borderRadius: BorderRadius.circular(16),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildCreateNewDropdownItem(
@@ -109,12 +110,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
                 child: SizedBox(
-                    height: 36.0,
-                    child: PrimaryButton(
-                      text: tr.action_button_create,
-                      onPressed: () => controller
-                          .setCreateNewMenuOpen(!state.createNewMenuOpen),
-                    )),
+                  height: 36.0,
+                  child: PrimaryButton(
+                    text: tr.action_button_create,
+                    onPressed: () => controller
+                        .setCreateNewMenuOpen(!state.createNewMenuOpen),
+                  ),
+                ),
               ),
               const SizedBox(width: 28.0),
               SelectableText(
@@ -190,43 +192,44 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildCreateNewDropdownItem(
-      {required String title,
-      required String subtitle,
-      String? hint,
-      GestureTapCallback? onTap}) {
+  Widget _buildCreateNewDropdownItem({
+    required String title,
+    required String subtitle,
+    String? hint,
+    GestureTapCallback? onTap,
+  }) {
     final theme = Theme.of(context);
     return Material(
-      elevation: 0,
       color: theme.colorScheme.onPrimary,
       child: InkWell(
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(20),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(color: theme.colorScheme.primary),
-                  ),
-                  Text(subtitle),
-                  hint != null
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Text(
-                            hint,
-                            style: const TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ],
-              )),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(color: theme.colorScheme.primary),
+                    ),
+                    Text(subtitle),
+                    if (hint != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          hint,
+                          style: const TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      )
+                    else
+                      const SizedBox.shrink(),
+                  ],
+                ),
+              ),
               const SizedBox(
                 width: 20,
               ),

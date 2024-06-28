@@ -186,33 +186,36 @@ class FormSectionHeader extends StatelessWidget {
         Row(
           children: [
             Expanded(
-                child: FormTableLayout(
-              rows: [
-                FormTableRow(
-                  label: title,
-                  labelHelpText: helpText,
-                  labelStyle: titleStyle.merge(titleTextStyle),
-                  input: const SizedBox.shrink(),
-                ),
-              ],
-              columnWidths: const {
-                0: IntrinsicColumnWidth(),
-              },
-            )),
-            (right != null)
-                ? Row(
-                    children: [
-                      right!,
-                      const SizedBox(width: 12.0),
-                    ],
-                  )
-                : const SizedBox.shrink(),
-            showLock
-                ? ReactiveFormLock(
-                    formControl: lockControl,
-                    helpText: lockHelpText,
-                  )
-                : const SizedBox.shrink(),
+              child: FormTableLayout(
+                rows: [
+                  FormTableRow(
+                    label: title,
+                    labelHelpText: helpText,
+                    labelStyle: titleStyle.merge(titleTextStyle),
+                    input: const SizedBox.shrink(),
+                  ),
+                ],
+                columnWidths: const {
+                  0: IntrinsicColumnWidth(),
+                },
+              ),
+            ),
+            if (right != null)
+              Row(
+                children: [
+                  right!,
+                  const SizedBox(width: 12.0),
+                ],
+              )
+            else
+              const SizedBox.shrink(),
+            if (showLock)
+              ReactiveFormLock(
+                formControl: lockControl,
+                helpText: lockHelpText,
+              )
+            else
+              const SizedBox.shrink(),
           ],
         ),
         if (divider) const Divider() else const SizedBox.shrink(),
@@ -267,12 +270,13 @@ class FormLabel extends StatelessWidget {
 }
 
 class FormLock extends StatefulWidget {
-  const FormLock(
-      {super.key,
-      required this.locked,
-      this.onLockChanged,
-      this.readOnly = false,
-      this.helpText});
+  const FormLock({
+    super.key,
+    required this.locked,
+    this.onLockChanged,
+    this.readOnly = false,
+    this.helpText,
+  });
 
   final bool locked;
   final bool readOnly;
@@ -306,18 +310,19 @@ class _FormLockState extends State<FormLock> {
                 });
               },
         child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 250),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child:
-                  Icon(_locked ? MdiIcons.lock : MdiIcons.lockOpen, size: 24.0),
-            )),
+          duration: const Duration(milliseconds: 250),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child:
+                Icon(_locked ? MdiIcons.lock : MdiIcons.lockOpen, size: 24.0),
+          ),
+        ),
       ),
     );
 
     if (widget.helpText != null) {
       return Tooltip(
-        message: widget.helpText!,
+        message: widget.helpText,
         child: lockView,
       );
     }
@@ -333,17 +338,19 @@ class ReactiveFormLock<T> extends ReactiveFormField<bool, bool> {
     super.formControl,
     ReactiveFormFieldCallback<bool>? onChanged,
     String? helpText,
-  }) : super(builder: (field) {
-          return FormLock(
-            locked: field.value ?? false,
-            readOnly: field.control.disabled,
-            helpText: helpText,
-            onLockChanged: field.control.enabled
-                ? (value) {
-                    field.didChange(value);
-                    onChanged?.call(field.control);
-                  }
-                : null,
-          );
-        });
+  }) : super(
+          builder: (field) {
+            return FormLock(
+              locked: field.value ?? false,
+              readOnly: field.control.disabled,
+              helpText: helpText,
+              onLockChanged: field.control.enabled
+                  ? (value) {
+                      field.didChange(value);
+                      onChanged?.call(field.control);
+                    }
+                  : null,
+            );
+          },
+        );
 }

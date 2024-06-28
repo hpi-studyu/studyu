@@ -85,7 +85,7 @@ class DashboardController extends StateNotifier<DashboardState>
     router.dispatch(RoutingIntents.studyNew(isTemplate));
   }
 
-  onExpandStudy(Study study) {
+  void onExpandStudy(Study study) {
     final expandedStudies = state.expandedStudies.contains(study.id)
         ? state.expandedStudies.difference({study.id})
         : state.expandedStudies.union({study.id});

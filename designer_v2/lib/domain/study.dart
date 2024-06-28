@@ -221,7 +221,9 @@ class StudyTemplates {
   }
 
   static TemplateSubStudy emptySubStudyDraft(
-      String userId, Template parentTemplate) {
+    String userId,
+    Template parentTemplate,
+  ) {
     final newDraft = TemplateSubStudy.create(userId, parentTemplate);
     newDraft.title = StudyTemplates.kUnnamedSubStudyTitle;
     newDraft.iconName = '';

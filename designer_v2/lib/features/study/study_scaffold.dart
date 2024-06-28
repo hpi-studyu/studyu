@@ -241,18 +241,19 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
       final publishButton = ReactiveForm(
         formGroup: formViewModel.form,
         child: ReactiveFormConsumer(
-            // enable re-rendering based on form validation status
-            builder: (context, form, child) {
-          return PrimaryButton(
-            text: tr.action_button_study_launch,
-            tooltipDisabled:
-                "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
-            icon: null,
-            enabled: formViewModel.isValid,
-            onPressed: () =>
-                showPublishDialog(context, widget.studyCreationArgs),
-          );
-        }),
+          // enable re-rendering based on form validation status
+          builder: (context, form, child) {
+            return PrimaryButton(
+              text: tr.action_button_study_launch,
+              tooltipDisabled:
+                  "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
+              icon: null,
+              enabled: formViewModel.isValid,
+              onPressed: () =>
+                  showPublishDialog(context, widget.studyCreationArgs),
+            );
+          },
+        ),
       );
       actionButtons.add(publishButton);
       actionButtons.add(const SizedBox(width: 12.0)); // padding
@@ -261,9 +262,10 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
     if (state.isCreateNewSubstudyVisible) {
       actionButtons.add(
         PrimaryButton(
-            text: tr.action_button_study_create_substudy,
-            icon: null,
-            onPressed: () => controller.onCreateNewSubstudy()),
+          text: tr.action_button_study_create_substudy,
+          icon: null,
+          onPressed: () => controller.onCreateNewSubstudy(),
+        ),
       );
       actionButtons.add(const SizedBox(width: 12.0)); // padding
     }

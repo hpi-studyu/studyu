@@ -146,7 +146,7 @@ class StudyInfoFormViewModel extends FormViewModel<StudyInfoFormData> {
                 StudyType.standalone => tr.form_field_study_title_required,
                 StudyType.template => tr.form_field_template_title_required,
                 StudyType.subStudy => tr.form_field_substudy_title_required,
-              }
+              },
         },
       );
   FormControlValidation get descriptionRequired => FormControlValidation(

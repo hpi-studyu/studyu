@@ -55,16 +55,18 @@ class PublishConfirmationDialog extends StudyPageWidget {
                             ),
                             const TextSpan(text: '.'),
                             TextSpan(
-                                text: state.studyType == StudyType.template
-                                    ? tr.template_launch_participation_outro
-                                    : tr.study_launch_participation_outro),
+                              text: state.studyType == StudyType.template
+                                  ? tr.template_launch_participation_outro
+                                  : tr.study_launch_participation_outro,
+                            ),
                           ],
                         ),
                       ),
                       const SizedBox(height: 4.0),
                       SelectableText(
                         state.studyParticipation!.launchDescription(
-                            state.studyType == StudyType.template),
+                          state.studyType == StudyType.template,
+                        ),
                         style: ThemeConfig.bodyTextMuted(theme).copyWith(
                           fontStyle: FontStyle.italic,
                         ),
@@ -95,9 +97,11 @@ class PublishConfirmationDialog extends StudyPageWidget {
               ],
             ),
             const SizedBox(height: 24.0),
-            SelectableText(state.studyType == StudyType.template
-                ? tr.template_launch_post_launch_intro
-                : tr.study_launch_post_launch_intro),
+            SelectableText(
+              state.studyType == StudyType.template
+                  ? tr.template_launch_post_launch_intro
+                  : tr.study_launch_post_launch_intro,
+            ),
             const SizedBox(height: 4.0),
             SelectableText(
               state.studyType == StudyType.template

@@ -18,12 +18,13 @@ class StudyInfoFormData implements IStudyFormData {
 
   factory StudyInfoFormData.fromStudy(Study study) {
     return StudyInfoFormData(
-        title: study.title ?? '',
-        description: study.description ?? '',
-        iconName: study.iconName,
-        contactInfoFormData: StudyContactInfoFormData.fromStudy(study),
-        lockPublisherInfo:
-            study.templateConfiguration?.lockPublisherInformation == true);
+      title: study.title ?? '',
+      description: study.description ?? '',
+      iconName: study.iconName,
+      contactInfoFormData: StudyContactInfoFormData.fromStudy(study),
+      lockPublisherInfo:
+          study.templateConfiguration?.lockPublisherInformation == true,
+    );
   }
 
   @override

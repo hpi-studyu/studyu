@@ -53,26 +53,29 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                 const SizedBox(height: 12.0),
                 Column(
                   children: formViewModel.enrollmentTypeControlOptions
-                      .map<Widget>((option) =>
-                          ReactiveRadioListTile<Participation>(
-                            formControl: formViewModel.enrollmentTypeControl,
-                            value: option.value,
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(option.value.whoShort,
-                                    style: theme.textTheme.bodyLarge),
-                                const SizedBox(height: 2.0),
-                              ],
-                            ),
-                            subtitle: (option.description) != null
-                                ? TextParagraph(
-                                    text: option.description,
-                                    selectable: false,
-                                    style: ThemeConfig.bodyTextMuted(theme),
-                                  )
-                                : null,
-                          ))
+                      .map<Widget>(
+                        (option) => ReactiveRadioListTile<Participation>(
+                          formControl: formViewModel.enrollmentTypeControl,
+                          value: option.value,
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                option.value.whoShort,
+                                style: theme.textTheme.bodyLarge,
+                              ),
+                              const SizedBox(height: 2.0),
+                            ],
+                          ),
+                          subtitle: (option.description) != null
+                              ? TextParagraph(
+                                  text: option.description,
+                                  selectable: false,
+                                  style: ThemeConfig.bodyTextMuted(theme),
+                                )
+                              : null,
+                        ),
+                      )
                       .toList()
                       .separatedBy(() => const SizedBox(height: 8.0)),
                 ),

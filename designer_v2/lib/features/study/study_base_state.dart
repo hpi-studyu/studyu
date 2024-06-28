@@ -6,8 +6,10 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class StudyControllerBaseState extends Equatable {
-  const StudyControllerBaseState(
-      {required this.currentUser, this.studyWithMetadata});
+  const StudyControllerBaseState({
+    required this.currentUser,
+    this.studyWithMetadata,
+  });
 
   final User? currentUser;
 

@@ -120,8 +120,8 @@ class StudiesTable extends StatelessWidget {
         final double statusColumnWidth = maxStatusLength * 11.5;
 
         // Calculate the minimum type column width
-        int maxTypeLength = "Standalone".length;
-        final double typeColumnWidth = maxTypeLength * 8.5;
+        const int maxTypeLength = "Standalone".length;
+        const double typeColumnWidth = maxTypeLength * 8.5;
 
         // Calculate the minimum participation column width
         final int maxParticipationLength = isCompact
@@ -162,9 +162,11 @@ class StudiesTable extends StatelessWidget {
 
         final List<Widget> columnRows = [];
         for (final columnDefinition in columnDefinitions) {
-          columnRows.add(columnDefinition.value.createContainer(
-            child: _buildColumnHeader(columnDefinition.key),
-          ));
+          columnRows.add(
+            columnDefinition.value.createContainer(
+              child: _buildColumnHeader(columnDefinition.key),
+            ),
+          );
           if (!columnDefinition.value.collapsed) {
             columnRows.add(SizedBox(width: columnSpacing));
           }

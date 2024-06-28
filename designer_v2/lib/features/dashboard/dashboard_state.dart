@@ -61,7 +61,9 @@ class DashboardState extends Equatable {
             studiesFilter.apply(studies: studies, user: currentUser).toList();
         updatedStudies = filter(studiesToFilter: updatedStudies);
         updatedStudies = sort(
-            pinnedStudies: localPinnedStudies, studiesToSort: updatedStudies);
+          pinnedStudies: localPinnedStudies,
+          studiesToSort: updatedStudies,
+        );
         return AsyncValue.data(group(updatedStudies));
       },
       error: (error, _) => AsyncValue.error(error, StackTrace.current),
@@ -70,13 +72,12 @@ class DashboardState extends Equatable {
   }
 
   List<StudyGroup> group(List<Study> studies) {
-    List<StudyGroup> result = [];
+    final List<StudyGroup> result = [];
 
     for (final study in studies) {
       switch (study.type) {
         case StudyType.standalone:
           result.add(StudyGroup.standalone(study));
-          break;
         case StudyType.template:
           final List<Study> subStudies =
               studies.where((s) => s.parentTemplateId == study.id).toList();
@@ -124,16 +125,16 @@ class DashboardState extends Equatable {
           sortedStudies
               .sort((study, other) => other.title!.compareTo(study.title!));
         }
-        break;
       case StudiesTableColumn.type:
         if (sortAscending) {
           sortedStudies.sort(
-              (study, other) => study.type.index.compareTo(other.type.index));
+            (study, other) => study.type.index.compareTo(other.type.index),
+          );
         } else {
           sortedStudies.sort(
-              (study, other) => other.type.index.compareTo(study.type.index));
+            (study, other) => other.type.index.compareTo(study.type.index),
+          );
         }
-        break;
       case StudiesTableColumn.status:
         if (sortAscending) {
           sortedStudies.sort(
@@ -234,16 +235,17 @@ class DashboardState extends Equatable {
     Set<String>? expandedStudies,
   }) {
     return DashboardState(
-        studies: studies != null ? studies() : this.studies,
-        studiesFilter:
-            studiesFilter != null ? studiesFilter() : this.studiesFilter,
-        currentUser: currentUser != null ? currentUser() : this.currentUser,
-        query: query ?? this.query,
-        sortByColumn: sortByColumn ?? this.sortByColumn,
-        sortAscending: sortAscending ?? this.sortAscending,
-        createNewMenuOpen: createNewMenuOpen ?? this.createNewMenuOpen,
-        pinnedStudies: pinnedStudies ?? this.pinnedStudies,
-        expandedStudies: expandedStudies ?? this.expandedStudies);
+      studies: studies != null ? studies() : this.studies,
+      studiesFilter:
+          studiesFilter != null ? studiesFilter() : this.studiesFilter,
+      currentUser: currentUser != null ? currentUser() : this.currentUser,
+      query: query ?? this.query,
+      sortByColumn: sortByColumn ?? this.sortByColumn,
+      sortAscending: sortAscending ?? this.sortAscending,
+      createNewMenuOpen: createNewMenuOpen ?? this.createNewMenuOpen,
+      pinnedStudies: pinnedStudies ?? this.pinnedStudies,
+      expandedStudies: expandedStudies ?? this.expandedStudies,
+    );
   }
 
   // - Equatable

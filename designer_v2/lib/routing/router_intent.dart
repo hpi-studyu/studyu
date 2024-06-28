@@ -162,7 +162,7 @@ class RoutingIntents {
         },
         queryParams: {
           RouteParams.parentTemplate:
-              Uri.encodeFull(jsonEncode(parentTemplate.toJson()))
+              Uri.encodeFull(jsonEncode(parentTemplate.toJson())),
         },
       );
 

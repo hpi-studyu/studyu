@@ -79,11 +79,12 @@ class StudyCreationArgs extends ModelInstanceCreationArgs {
   final bool isTemplate;
   final bool validForCreation;
 
-  StudyCreationArgs(
-      {required this.studyID,
-      this.parentTemplate,
-      required this.isTemplate,
-      this.validForCreation = true}) {
+  StudyCreationArgs({
+    required this.studyID,
+    this.parentTemplate,
+    required this.isTemplate,
+    this.validForCreation = true,
+  }) {
     if (parentTemplate != null && isTemplate) {
       throw ArgumentError("A sub-study cannot be a template");
     }
@@ -95,10 +96,10 @@ class StudyCreationArgs extends ModelInstanceCreationArgs {
   /// That is why we use dummy data for [isTemplate] and [parentTemplate] as only the [studyID]
   /// will be used for the equality check. In addition the [validForCreation] flag is set to false.
   factory StudyCreationArgs.fromStudy(Study study) => StudyCreationArgs(
-      studyID: study.id,
-      isTemplate: false,
-      parentTemplate: null,
-      validForCreation: false);
+        studyID: study.id,
+        isTemplate: false,
+        validForCreation: false,
+      );
 
   factory StudyCreationArgs.fromRoute(GoRouterState routerState) {
     final studyId = routerState.pathParameters[RouteParams.studyId]!;
@@ -116,9 +117,10 @@ class StudyCreationArgs extends ModelInstanceCreationArgs {
       parentTemplate = null;
     }
     return StudyCreationArgs(
-        studyID: studyId,
-        isTemplate: isTemplate,
-        parentTemplate: parentTemplate as Template?);
+      studyID: studyId,
+      isTemplate: isTemplate,
+      parentTemplate: parentTemplate as Template?,
+    );
   }
 
   @override

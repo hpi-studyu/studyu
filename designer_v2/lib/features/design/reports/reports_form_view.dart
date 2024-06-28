@@ -149,7 +149,9 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
       context: context,
       formViewModel: formViewModel,
       formViewBuilder: (formViewModel) => ReportItemFormView(
-          formViewModel: formViewModel, studyCreationArgs: studyCreationArgs),
+        formViewModel: formViewModel,
+        studyCreationArgs: studyCreationArgs,
+      ),
     );
   }
 }
