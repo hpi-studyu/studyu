@@ -30,13 +30,15 @@ class TemplateConfiguration {
     String? description,
   }) =>
       TemplateConfiguration(
-        lockPublisherInformation: lockPublisherInformation ?? this.lockPublisherInformation,
+        lockPublisherInformation:
+            lockPublisherInformation ?? this.lockPublisherInformation,
         lockEnrollmentType: lockEnrollmentType ?? this.lockEnrollmentType,
         lockStudySchedule: lockStudySchedule ?? this.lockStudySchedule,
         title: title ?? this.title,
         description: description ?? this.description,
       );
 
-  factory TemplateConfiguration.fromJson(Map<String, dynamic> json) => _$TemplateConfigurationFromJson(json);
+  factory TemplateConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$TemplateConfigurationFromJson(json);
   Map<String, dynamic> toJson() => _$TemplateConfigurationToJson(this);
 }

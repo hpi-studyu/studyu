@@ -163,7 +163,9 @@ class Study extends SupabaseObjectFunctions<Study>
     final templateConfiguration = json['template_configuration'];
     final study = parentTemplateId != null
         ? _$TemplateSubStudyFromJson(json)
-        : (templateConfiguration != null ? _$TemplateFromJson(json) : _$StudyFromJson(json));
+        : (templateConfiguration != null
+            ? _$TemplateFromJson(json)
+            : _$StudyFromJson(json));
 
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
@@ -382,13 +384,14 @@ class Template extends Study {
 class TemplateSubStudy extends Study {
   TemplateSubStudy(super.id, super.userId);
 
-  TemplateSubStudy.create(String userId, Template template) : super(const Uuid().v4(), userId) {
+  TemplateSubStudy.create(String userId, Template template)
+      : super(const Uuid().v4(), userId) {
     if (template.templateConfiguration == null) {
       throw ArgumentError('Template must have a templateConfiguration');
     }
     parentTemplateId = template.id;
-    templateConfiguration =
-        template.templateConfiguration!.copyWith(title: template.title, description: template.description);
+    templateConfiguration = template.templateConfiguration!
+        .copyWith(title: template.title, description: template.description);
     participation = template.participation;
     resultSharing = template.resultSharing;
     contact = template.contact;

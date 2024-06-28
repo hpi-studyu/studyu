@@ -22,7 +22,8 @@ class StudyInfoFormData implements IStudyFormData {
         description: study.description ?? '',
         iconName: study.iconName,
         contactInfoFormData: StudyContactInfoFormData.fromStudy(study),
-        lockPublisherInfo: study.templateConfiguration?.lockPublisherInformation == true);
+        lockPublisherInfo:
+            study.templateConfiguration?.lockPublisherInformation == true);
   }
 
   @override
@@ -31,7 +32,8 @@ class StudyInfoFormData implements IStudyFormData {
     study.description = description;
     study.iconName = iconName;
     contactInfoFormData.apply(study);
-    study.templateConfiguration = study.templateConfiguration?.copyWith(lockPublisherInformation: lockPublisherInfo);
+    study.templateConfiguration = study.templateConfiguration
+        ?.copyWith(lockPublisherInformation: lockPublisherInfo);
     return study;
   }
 

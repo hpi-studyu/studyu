@@ -155,7 +155,8 @@ class DesktopFrame extends StatelessWidget {
 }
 
 Widget? previewBanner(WidgetRef ref, StudyCreationArgs studyCreationArgs) {
-  final formViewModel = ref.watch(studyTestValidatorProvider(studyCreationArgs));
+  final formViewModel =
+      ref.watch(studyTestValidatorProvider(studyCreationArgs));
 
   if (!formViewModel.form.hasErrors) {
     return null;

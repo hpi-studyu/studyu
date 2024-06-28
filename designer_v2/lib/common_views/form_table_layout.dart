@@ -267,7 +267,12 @@ class FormLabel extends StatelessWidget {
 }
 
 class FormLock extends StatefulWidget {
-  const FormLock({super.key, required this.locked, this.onLockChanged, this.readOnly = false, this.helpText});
+  const FormLock(
+      {super.key,
+      required this.locked,
+      this.onLockChanged,
+      this.readOnly = false,
+      this.helpText});
 
   final bool locked;
   final bool readOnly;
@@ -304,7 +309,8 @@ class _FormLockState extends State<FormLock> {
             duration: const Duration(milliseconds: 250),
             child: Padding(
               padding: const EdgeInsets.all(8),
-              child: Icon(_locked ? MdiIcons.lock : MdiIcons.lockOpen, size: 24.0),
+              child:
+                  Icon(_locked ? MdiIcons.lock : MdiIcons.lockOpen, size: 24.0),
             )),
       ),
     );

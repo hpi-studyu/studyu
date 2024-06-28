@@ -151,7 +151,8 @@ class RoutingIntents {
         params: const {
           RouteParams.studyId: Config.newModelId,
         },
-        queryParams: isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
+        queryParams:
+            isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
       );
 
   static final substudyNew = (Template parentTemplate) => RoutingIntent(
@@ -159,7 +160,10 @@ class RoutingIntents {
         params: const {
           RouteParams.studyId: Config.newModelId,
         },
-        queryParams: {RouteParams.parentTemplate: Uri.encodeFull(jsonEncode(parentTemplate.toJson()))},
+        queryParams: {
+          RouteParams.parentTemplate:
+              Uri.encodeFull(jsonEncode(parentTemplate.toJson()))
+        },
       );
 
   static final login = RoutingIntent(route: RouterConf.route(loginRouteName));
