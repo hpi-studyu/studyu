@@ -24,7 +24,10 @@ class StudyTestController extends _$StudyTestController {
       //
       // Ideally, we would stream changes from the backend/database directly,
       // but this is a sufficient workaround for now.
-      studyRepo.fetch(studyId);
+      Future.delayed(
+        const Duration(milliseconds: 100),
+        () => studyRepo.fetch(studyId),
+      );
       print('StudyTestController.dispose');
     });
     return StudyTestControllerState(
