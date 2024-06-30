@@ -193,19 +193,17 @@ extension StudyMonitoringX on Study {
           if (item.lastActivityAt.isAfter(participantInactiveDays)) {
             activeParticipants += 1; // Active
           } else {
-            inactiveParticipants += 1; // Inactive
+            if (item.lastActivityAt.isBefore(participantDropoutDays)) {
+              dropoutParticipants += 1; //dropout
+            } else {
+              inactiveParticipants += 1; // Inactive
+            }
           }
         } else {
           completedParticipants += 1; // Completed
         }
       } else {
-        if (item.currentDayOfStudy < item.studyDurationInDays) {
-          if (item.lastActivityAt.isBefore(participantDropoutDays)) {
-            dropoutParticipants += 1; // Dropout
-          }
-        } else {
-          dropoutParticipants += 1; // Dropout
-        }
+        dropoutParticipants += 1; // Dropout
       }
     }
 
