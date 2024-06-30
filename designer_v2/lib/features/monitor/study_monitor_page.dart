@@ -89,51 +89,39 @@ class StudyMonitorScreen extends StudyPageWidget {
     const Color inactiveColor = Color(0xFFD55E00);
     const Color dropoutColor = Color(0xFF0072B2);
     const Color completedColor = Color(0xFF009E73);
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Spacer(),
         SizedBox(
-          width: 420,
+          width: 400,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              Text('${tr.monitoring_total}: $total', textAlign: TextAlign.end),
+              const SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Positioned(
-                    right: 0,
-                    top: 0,
-                    child: Text('${tr.monitoring_total}: $total'),
+                  _buildStat(
+                    percentage: activePercentage,
+                    color: activeColor,
+                    tooltip: tr.monitoring_active,
                   ),
-                ],
-              ),
-              Stack(
-                children: [
-                  Row(
-                    children: [
-                      const Spacer(),
-                      _buildStat(
-                        percentage: activePercentage,
-                        color: activeColor,
-                        tooltip: tr.monitoring_active,
-                      ),
-                      _buildStat(
-                        percentage: inactivePercentage,
-                        color: inactiveColor,
-                        tooltip: tr.monitoring_inactive,
-                      ),
-                      _buildStat(
-                        percentage: dropoutPercentage,
-                        color: dropoutColor,
-                        tooltip: tr.monitoring_dropout,
-                      ),
-                      _buildStat(
-                        percentage: completedPercentage,
-                        color: completedColor,
-                        tooltip: tr.monitoring_completed,
-                      ),
-                    ],
+                  _buildStat(
+                    percentage: inactivePercentage,
+                    color: inactiveColor,
+                    tooltip: tr.monitoring_inactive,
+                  ),
+                  _buildStat(
+                    percentage: dropoutPercentage,
+                    color: dropoutColor,
+                    tooltip: tr.monitoring_dropout,
+                  ),
+                  _buildStat(
+                    percentage: completedPercentage,
+                    color: completedColor,
+                    tooltip: tr.monitoring_completed,
                   ),
                 ],
               ),
