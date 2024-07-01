@@ -354,10 +354,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_local_notifications
-      sha256: "40e6fbd2da7dcc7ed78432c5cdab1559674b4af035fddbfb2f9a8f9c2112fcef"
+      sha256: ced76d337f54de33d7d9f06092137b4ac2da5079e00cee8a11a1794ffc7c61c6
       url: "https://pub.dev"
     source: hosted
-    version: "17.1.2"
+    version: "17.2.1"
   flutter_local_notifications_linux:
     dependency: transitive
     description:
@@ -370,10 +370,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_local_notifications_platform_interface
-      sha256: "340abf67df238f7f0ef58f4a26d2a83e1ab74c77ab03cd2b2d5018ac64db30b7"
+      sha256: "85f8d07fe708c1bdcf45037f2c0109753b26ae077e9d9e899d55971711a4ea66"
       url: "https://pub.dev"
     source: hosted
-    version: "7.1.0"
+    version: "7.2.0"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -1001,10 +1001,10 @@ packages:
     dependency: transitive
     description:
       name: record_linux
-      sha256: "7d0e70cd51635128fe9d37d89bafd6011d7cbba9af8dc323079ae60f23546aef"
+      sha256: "74d41a9ebb1eb498a38e9a813dd524e8f0b4fdd627270bda9756f437b110a3e3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.1"
+    version: "0.7.2"
   record_platform_interface:
     dependency: transitive
     description:
@@ -1404,18 +1404,18 @@ packages:
     dependency: transitive
     description:
       name: video_player
-      sha256: aced48e701e24c02b0b7f881a8819e4937794e46b5a5821005e2bf3b40a324cc
+      sha256: e30df0d226c4ef82e2c150ebf6834b3522cf3f654d8e2f9419d376cdc071425d
       url: "https://pub.dev"
     source: hosted
-    version: "2.8.7"
+    version: "2.9.1"
   video_player_android:
     dependency: transitive
     description:
       name: video_player_android
-      sha256: "9529001630e42988f755772972d5014d30121610700e8e502278a245939f8fc8"
+      sha256: "3ff2da7e5a9274bef9b5deb9084f73a77920211c463e0e836361b14146e67339"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.0"
+    version: "2.5.1"
   video_player_avfoundation:
     dependency: transitive
     description:
