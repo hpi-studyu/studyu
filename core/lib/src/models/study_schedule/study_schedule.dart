@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyu_core/core.dart';
 
 part 'study_schedule.g.dart';
 
@@ -31,6 +32,13 @@ class StudySchedule {
         .expand((cycle) => _generateCycle(firstIntervention, cycle))
         .toList();
     return phases;
+  }
+
+  List<String> generateInterventionIdsInOrder(List<String> interventionsIds) {
+    return [
+      if (includeBaseline) Study.baselineID,
+      ...generateWith(0).map<String>((int index) => interventionsIds[index]),
+    ];
   }
 
   int _nextIntervention(int index) => (index + 1) % numberOfInterventions;

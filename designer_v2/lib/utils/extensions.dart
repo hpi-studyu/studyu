@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
@@ -106,6 +107,15 @@ extension DateTimeAgoX on DateTime {
 
   String toTimeAgoStringPrecise() {
     return _timeAgoFormatted();
+  }
+
+  String toLocalizedString({required String locale, bool showTime = true}) {
+    final time = toLocal();
+    final formatter = DateFormat.yMMMMd(locale);
+    if (showTime) {
+      return formatter.add_Hm().format(time);
+    }
+    return formatter.format(time);
   }
 }
 

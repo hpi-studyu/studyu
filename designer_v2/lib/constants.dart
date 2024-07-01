@@ -46,3 +46,5 @@ const String signupRouteName = 'signup';
 const String forgotPasswordRouteName = 'forgotPassword';
 const String recoverPasswordRouteName = 'recoverPassword';
 const String errorRouteName = 'error';
+const participantDropoutDuration = 5;
+const participantInactiveDuration = 3;
