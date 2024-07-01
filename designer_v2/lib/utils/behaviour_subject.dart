@@ -2,6 +2,11 @@ import 'dart:async';
 
 import 'package:rxdart/subjects.dart';
 
+/// A BehaviorSubject that suppresses its initial event.
+///
+/// This class wraps a [BehaviorSubject] and suppresses the initial event
+/// that is emitted upon subscription. All subsequent events are emitted
+/// as usual.
 class SuppressedBehaviorSubject<T> {
   SuppressedBehaviorSubject(this.subject);
 
@@ -28,7 +33,7 @@ class SuppressedBehaviorSubject<T> {
     return controller;
   }
 
-  close() {
+  void close() {
     _controller.close();
   }
 }

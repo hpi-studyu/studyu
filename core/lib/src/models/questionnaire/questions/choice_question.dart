@@ -17,7 +17,8 @@ class ChoiceQuestion extends Question<List<String>> {
 
   ChoiceQuestion.withId() : super.withId(questionType);
 
-  factory ChoiceQuestion.fromJson(Map<String, dynamic> json) => _$ChoiceQuestionFromJson(json);
+  factory ChoiceQuestion.fromJson(Map<String, dynamic> json) =>
+      _$ChoiceQuestionFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$ChoiceQuestionToJson(this);

@@ -20,9 +20,11 @@ class Answer<V> {
       : question = question.id,
         timestamp = DateTime.now();
 
-  factory Answer.parseJson(Map<String, dynamic> json) => _$AnswerFromJson(json)..response = json[keyResponse] as V;
+  factory Answer.parseJson(Map<String, dynamic> json) =>
+      _$AnswerFromJson(json)..response = json[keyResponse] as V;
 
-  Map<String, dynamic> toJson() => mergeMaps<String, dynamic>(_$AnswerToJson(this), {keyResponse: response});
+  Map<String, dynamic> toJson() =>
+      mergeMaps<String, dynamic>(_$AnswerToJson(this), {keyResponse: response});
 
   static Answer fromJson(Map<String, dynamic> data) {
     final dynamic value = data[keyResponse];

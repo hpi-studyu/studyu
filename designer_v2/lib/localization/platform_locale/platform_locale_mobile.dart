@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'platform_locale_interface.dart';
+import 'package:studyu_designer_v2/localization/platform_locale/platform_locale_interface.dart';
 
 class PlatformLocaleMobile implements PlatformLocale {
   @override
   Locale getPlatformLocale() {
-    String platformLocaleName = Platform.localeName;
+    final String platformLocaleName = Platform.localeName;
     print("Platform Locale Name (Mobile): $platformLocaleName");
 
     // Language code only
@@ -15,8 +15,10 @@ class PlatformLocaleMobile implements PlatformLocale {
     }
 
     // Language and country codes
-    String languageCode = platformLocaleName.substring(0, platformLocaleName.indexOf('_'));
-    String countryCode = platformLocaleName.substring(platformLocaleName.indexOf('_') + 1);
+    final String languageCode =
+        platformLocaleName.substring(0, platformLocaleName.indexOf('_'));
+    final String countryCode =
+        platformLocaleName.substring(platformLocaleName.indexOf('_') + 1);
 
     return Locale.fromSubtags(
       languageCode: languageCode,

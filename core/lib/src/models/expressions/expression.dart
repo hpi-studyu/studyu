@@ -10,7 +10,8 @@ abstract class Expression {
 
   Expression(this.type);
 
-  factory Expression.fromJson(Map<String, dynamic> data) => switch (data[keyType]) {
+  factory Expression.fromJson(Map<String, dynamic> data) =>
+      switch (data[keyType]) {
         BooleanExpression.expressionType => BooleanExpression.fromJson(data),
         ChoiceExpression.expressionType => ChoiceExpression.fromJson(data),
         NotExpression.expressionType => NotExpression.fromJson(data),
@@ -18,6 +19,16 @@ abstract class Expression {
       };
 
   Map<String, dynamic> toJson();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Expression &&
+          runtimeType == other.runtimeType &&
+          type == other.type;
+
+  @override
+  int get hashCode => type.hashCode;
 
   @override
   String toString() {

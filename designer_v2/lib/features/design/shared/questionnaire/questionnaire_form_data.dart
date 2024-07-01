@@ -13,19 +13,27 @@ class QuestionnaireFormData implements IFormData {
   ) {
     return QuestionnaireFormData(
       questionsData: questionnaire.questions
-          .map((question) => QuestionFormData.fromDomainModel(
-                question,
-                // Collect all eligibility criteria for this question
-                eligibilityCriteria.where((c) => (c.condition as ValueExpression).target == question.id).toList(),
-              ))
+          .map(
+            (question) => QuestionFormData.fromDomainModel(
+              question,
+              // Collect all eligibility criteria for this question
+              eligibilityCriteria
+                  .where(
+                    (c) =>
+                        (c.condition as ValueExpression).target == question.id,
+                  )
+                  .toList(),
+            ),
+          )
           .toList(),
     );
   }
 
   StudyUQuestionnaire toQuestionnaire() {
     final questionnaire = StudyUQuestionnaire();
-    questionnaire.questions =
-        (questionsData != null) ? questionsData!.map((formData) => formData.toQuestion()).toList() : [];
+    questionnaire.questions = (questionsData != null)
+        ? questionsData!.map((formData) => formData.toQuestion()).toList()
+        : [];
     return questionnaire;
   }
 

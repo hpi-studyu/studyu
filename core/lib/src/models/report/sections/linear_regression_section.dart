@@ -19,7 +19,8 @@ class LinearRegressionSection extends ReportSection {
 
   LinearRegressionSection.withId() : super.withId(sectionType);
 
-  factory LinearRegressionSection.fromJson(Map<String, dynamic> json) => _$LinearRegressionSectionFromJson(json);
+  factory LinearRegressionSection.fromJson(Map<String, dynamic> json) =>
+      _$LinearRegressionSectionFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$LinearRegressionSectionToJson(this);

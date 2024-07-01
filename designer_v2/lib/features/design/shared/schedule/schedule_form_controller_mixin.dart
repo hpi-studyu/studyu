@@ -7,24 +7,29 @@ import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form
 import 'package:studyu_designer_v2/utils/time_of_day.dart';
 
 mixin WithScheduleControls {
-  final FormControl<bool> isTimeRestrictedControl = FormControl(validators: [Validators.required], value: false);
+  final FormControl<bool> isTimeRestrictedControl =
+      FormControl(validators: [Validators.required], value: false);
   final FormControl<String> instanceID = FormControl();
-  final FormControl<Time> restrictedTimeStartControl = FormControl(value: const Time(hour: 0, minute: 0));
+  final FormControl<Time> restrictedTimeStartControl =
+      FormControl(value: const Time(hour: 0, minute: 0));
   final FormControl<TimeOfDay> restrictedTimeStartPickerControl = FormControl();
-  final FormControl<Time> restrictedTimeEndControl = FormControl(value: const Time(hour: 23, minute: 59));
+  final FormControl<Time> restrictedTimeEndControl =
+      FormControl(value: const Time(hour: 23, minute: 59));
   final FormControl<TimeOfDay> restrictedTimeEndPickerControl = FormControl();
 
-  final FormControl<bool> hasReminderControl = FormControl(validators: [Validators.required], value: false);
+  final FormControl<bool> hasReminderControl =
+      FormControl(validators: [Validators.required], value: false);
   final FormControl<Time> reminderTimeControl = FormControl();
   final FormControl<TimeOfDay> reminderTimePickerControl = FormControl();
 
   bool get hasReminder => hasReminderControl.value!;
   bool get isTimeRestricted => isTimeRestrictedControl.value!;
 
-  List<Time>? get timeRestriction =>
-      (isTimeRestricted && restrictedTimeStartControl.value != null && restrictedTimeEndControl.value != null)
-          ? [restrictedTimeStartControl.value!, restrictedTimeEndControl.value!]
-          : null;
+  List<Time>? get timeRestriction => (isTimeRestricted &&
+          restrictedTimeStartControl.value != null &&
+          restrictedTimeEndControl.value != null)
+      ? [restrictedTimeStartControl.value!, restrictedTimeEndControl.value!]
+      : null;
 
   StreamSubscription? _reminderControlStream;
 
@@ -45,9 +50,10 @@ mixin WithScheduleControls {
     _initReminderControl();
   }
 
-  _initReminderControl() {
+  void _initReminderControl() {
     _reminderControlStream?.cancel();
-    _reminderControlStream = hasReminderControl.valueChanges.listen((hasReminder) {
+    _reminderControlStream =
+        hasReminderControl.valueChanges.listen((hasReminder) {
       if (hasReminder != null && !hasReminder) {
         reminderTimeControl.markAsDisabled();
       } else {

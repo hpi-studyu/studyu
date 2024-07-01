@@ -1,5 +1,5 @@
-import UIKit
 import Flutter
+import UIKit
 import flutter_local_notifications
 
 @UIApplicationMain

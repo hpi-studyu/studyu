@@ -35,7 +35,7 @@ class SearchState extends State<Search> {
   }
 
   void _onSearchPressed() {
-    String query = _searchController.text.toLowerCase();
+    final String query = _searchController.text.toLowerCase();
     widget.onQueryChanged(query);
   }
 
@@ -51,7 +51,7 @@ class SearchState extends State<Search> {
       hintText: widget.hintText ?? "Search",
       controller: _searchController,
       leading: const Icon(Icons.search),
-      shadowColor: MaterialStateProperty.resolveWith((states) {
+      shadowColor: WidgetStateProperty.resolveWith((states) {
         return Colors.transparent;
       }),
     );

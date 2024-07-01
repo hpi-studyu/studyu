@@ -15,26 +15,28 @@ class DashboardScaffold extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isCompact = size.width < compactWidthThreshold;
     return Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor.faded(0.75),
-        appBar: isCompact
-            ? AppBar(
-                title: Image.asset(
-                  Assets.logoWide,
-                  height: 40,
-                ),
-              )
-            : null,
-        drawer: isCompact ? const AppDrawer() : null,
-        body: TwoColumnLayout(
-          leftWidget: isCompact ? const SizedBox.shrink() : const AppDrawer(autoCloseDrawer: false),
-          rightWidget: body,
-          dividerWidget: const VerticalDivider(
-            width: 1,
-            thickness: 0.3,
-          ),
-          scrollLeft: false,
-          scrollRight: true,
-          paddingLeft: null,
-        ));
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor.faded(0.75),
+      appBar: isCompact
+          ? AppBar(
+              title: Image.asset(
+                Assets.logoWide,
+                height: 40,
+              ),
+            )
+          : null,
+      drawer: isCompact ? const AppDrawer() : null,
+      body: TwoColumnLayout(
+        leftWidget: isCompact
+            ? const SizedBox.shrink()
+            : const AppDrawer(autoCloseDrawer: false),
+        rightWidget: body,
+        dividerWidget: const VerticalDivider(
+          width: 1,
+          thickness: 0.3,
+        ),
+        scrollLeft: false,
+        paddingLeft: null,
+      ),
+    );
   }
 }

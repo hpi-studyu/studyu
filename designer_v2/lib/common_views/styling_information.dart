@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/common_views/banner.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-import 'banner.dart';
-
 class HtmlStylingBanner extends StatelessWidget {
-  const HtmlStylingBanner({this.isDismissed = false, this.onDismissed, super.key});
+  const HtmlStylingBanner({
+    this.isDismissed = false,
+    this.onDismissed,
+    super.key,
+  });
 
   final bool isDismissed;
   final Function()? onDismissed;
@@ -41,45 +44,60 @@ class HtmlStylingBanner extends StatelessWidget {
                 },
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                 children: [
-                  TableRow(children: [
-                    const Text('Make your text bold'),
-                    Text('<b>Bold text</b>', style: ThemeConfig.bodyTextMuted(theme))
-                  ]),
-                  TableRow(children: [
-                    const Text('Add a hyperlink'),
-                    Text(
-                      '<a href="http://example.org">A hyperlink</a>',
-                      style: ThemeConfig.bodyTextMuted(theme),
-                    )
-                  ]),
-                  TableRow(children: [
-                    const Text('Make your text colorful'),
-                    Text(
-                      '<span style="color: red">Red text</span>',
-                      style: ThemeConfig.bodyTextMuted(theme),
-                    ),
-                  ]),
-                  TableRow(children: [
-                    const Text('Add an image'),
-                    Text(
-                      '<img width="100" src="<link>" />',
-                      style: ThemeConfig.bodyTextMuted(theme),
-                    )
-                  ]),
-                  TableRow(children: [
-                    const Text('Add a video'),
-                    Text(
-                      '<video controls width="100" src="<link>" />',
-                      style: ThemeConfig.bodyTextMuted(theme),
-                    ),
-                  ]),
-                  TableRow(children: [
-                    const Text('Add an audio message'),
-                    Text(
-                      '<audio controls src="<link>" />',
-                      style: ThemeConfig.bodyTextMuted(theme),
-                    ),
-                  ]),
+                  TableRow(
+                    children: [
+                      const Text('Make your text bold'),
+                      Text(
+                        '<b>Bold text</b>',
+                        style: ThemeConfig.bodyTextMuted(theme),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      const Text('Add a hyperlink'),
+                      Text(
+                        '<a href="http://example.org">A hyperlink</a>',
+                        style: ThemeConfig.bodyTextMuted(theme),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      const Text('Make your text colorful'),
+                      Text(
+                        '<span style="color: red">Red text</span>',
+                        style: ThemeConfig.bodyTextMuted(theme),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      const Text('Add an image'),
+                      Text(
+                        '<img width="100" src="<link>" />',
+                        style: ThemeConfig.bodyTextMuted(theme),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      const Text('Add a video'),
+                      Text(
+                        '<video controls width="100" src="<link>" />',
+                        style: ThemeConfig.bodyTextMuted(theme),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      const Text('Add an audio message'),
+                      Text(
+                        '<audio controls src="<link>" />',
+                        style: ThemeConfig.bodyTextMuted(theme),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

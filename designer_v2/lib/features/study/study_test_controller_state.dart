@@ -5,8 +5,11 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
 class StudyTestControllerState extends StudyControllerBaseState {
   const StudyTestControllerState({
+    required super.studyId,
+    required super.studyRepository,
+    required super.router,
     required super.currentUser,
-    super.studyWithMetadata,
+    required super.studyWithMetadata,
     this.serializedSession = '',
     this.languageCode = 'en',
   });
@@ -34,10 +37,13 @@ class StudyTestControllerState extends StudyControllerBaseState {
     String? languageCode,
   }) {
     return StudyTestControllerState(
+      studyId: studyId,
+      studyRepository: studyRepository,
+      router: router,
+      currentUser: currentUser,
       studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
       serializedSession: serializedSession ?? this.serializedSession,
       languageCode: languageCode ?? this.languageCode,
-      currentUser: currentUser,
     );
   }
 

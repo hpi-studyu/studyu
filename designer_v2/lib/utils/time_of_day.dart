@@ -6,13 +6,14 @@ import 'package:studyu_designer_v2/utils/typings.dart';
 class Time extends TimeOfDay {
   const Time({required super.hour, required super.minute});
 
-  static fromTimeOfDay(TimeOfDay timeOfDay) => Time(hour: timeOfDay.hour, minute: timeOfDay.minute);
+  Time.fromTimeOfDay(TimeOfDay timeOfDay)
+      : super(hour: timeOfDay.hour, minute: timeOfDay.minute);
 
   JsonMap toJson() => {
         "hour": super.hour,
         "minute": super.minute,
       };
-  static Time fromJson(JsonMap json) => Time(
+  Time fromJson(JsonMap json) => Time(
         hour: int.parse(json["hour"].toString()),
         minute: int.parse(json["minute"].toString()),
       );
@@ -22,7 +23,9 @@ class Time extends TimeOfDay {
 class TimeValueAccessor extends ControlValueAccessor<Time, String> {
   @override
   String modelToViewValue(Time? modelValue) {
-    return modelValue == null ? '' : '${modelValue.hour}:${_addLeadingZeroIfNeeded(modelValue.minute)}';
+    return modelValue == null
+        ? ''
+        : '${modelValue.hour}:${_addLeadingZeroIfNeeded(modelValue.minute)}';
   }
 
   @override
@@ -45,5 +48,6 @@ class TimeValueAccessor extends ControlValueAccessor<Time, String> {
     }
   }
 
-  String _addLeadingZeroIfNeeded(int value) => (value < 10) ? '0$value' : value.toString();
+  String _addLeadingZeroIfNeeded(int value) =>
+      (value < 10) ? '0$value' : value.toString();
 }

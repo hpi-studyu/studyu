@@ -17,10 +17,10 @@ import 'package:url_launcher/url_launcher.dart';
 class SignupForm extends FormConsumerRefWidget {
   const SignupForm({super.key});
 
-  final AuthFormKey formKey = AuthFormKey.signup;
-
   @override
   Widget build(BuildContext context, FormGroup form, WidgetRef ref) {
+    const formKey = AuthFormKey.signup;
+
     final theme = Theme.of(context);
     final state = ref.watch(authFormControllerProvider(formKey));
     final controller = ref.watch(authFormControllerProvider(formKey).notifier);
@@ -42,11 +42,12 @@ class SignupForm extends FormConsumerRefWidget {
           formControl: controller.passwordConfirmationControl,
           labelText: tr.form_field_password_confirm,
           hintText: tr.form_field_password_confirm_hint,
-          onSubmitted: (_) => form.valid ? ref.read(authFormControllerProvider(formKey).notifier).signUp() : null,
+          onSubmitted: (_) => form.valid
+              ? ref.read(authFormControllerProvider(formKey).notifier).signUp()
+              : null,
         ),
         const SizedBox(height: 16.0),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Align(
               alignment: Alignment.topLeft,
@@ -90,22 +91,29 @@ class SignupForm extends FormConsumerRefWidget {
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
         const SizedBox(height: 24.0),
-        ReactiveFormConsumer(builder: (context, form, child) {
-          return Center(
-            child: PrimaryButton(
-              text: tr.action_button_signup,
-              isLoading: state.isLoading,
-              enabled: form.valid,
-              onPressedFuture: () => ref.read(authFormControllerProvider(formKey).notifier).signUp(),
-              tooltipDisabled: tr.form_invalid_prompt,
-              innerPadding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
-            ),
-          );
-        }),
+        ReactiveFormConsumer(
+          builder: (context, form, child) {
+            return Center(
+              child: PrimaryButton(
+                text: tr.action_button_signup,
+                isLoading: state.isLoading,
+                enabled: form.valid,
+                onPressedFuture: () => ref
+                    .read(authFormControllerProvider(formKey).notifier)
+                    .signUp(),
+                tooltipDisabled: tr.form_invalid_prompt,
+                innerPadding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 10.0,
+                ),
+              ),
+            );
+          },
+        ),
         const SizedBox(height: 24.0),
         const Divider(height: 1),
         const SizedBox(height: 12.0),
@@ -116,31 +124,38 @@ class SignupForm extends FormConsumerRefWidget {
             const SizedBox(width: 4.0),
             Hyperlink(
               text: tr.link_login,
-              onClick: () => ref.read(routerProvider).dispatch(RoutingIntents.login),
+              onClick: () =>
+                  ref.read(routerProvider).dispatch(RoutingIntents.login),
             ),
           ],
-        )
+        ),
       ],
     );
   }
 
-  _onClickTermsOfUse(WidgetRef ref) {
+  void _onClickTermsOfUse(WidgetRef ref) {
     final appConfig = ref.watch(appConfigProvider);
     final locale = ref.watch(localeProvider);
 
-    launchUrl(appConfig.maybeWhen(
-      data: (value) => Uri.parse(value.designerTerms[locale.languageCode] ?? ""),
-      orElse: () => Uri.parse(''),
-    ));
+    launchUrl(
+      appConfig.maybeWhen(
+        data: (value) =>
+            Uri.parse(value.designerTerms[locale.languageCode] ?? ""),
+        orElse: () => Uri.parse(''),
+      ),
+    );
   }
 
-  _onClickPrivacyPolicy(WidgetRef ref) {
+  void _onClickPrivacyPolicy(WidgetRef ref) {
     final appConfig = ref.watch(appConfigProvider);
     final locale = ref.watch(localeProvider);
 
-    launchUrl(appConfig.maybeWhen(
-      data: (value) => Uri.parse(value.designerPrivacy[locale.languageCode] ?? ""),
-      orElse: () => Uri.parse(''),
-    ));
+    launchUrl(
+      appConfig.maybeWhen(
+        data: (value) =>
+            Uri.parse(value.designerPrivacy[locale.languageCode] ?? ""),
+        orElse: () => Uri.parse(''),
+      ),
+    );
   }
 }

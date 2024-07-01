@@ -14,7 +14,8 @@ class ConsentItem {
 
   ConsentItem.withId() : id = const Uuid().v4();
 
-  factory ConsentItem.fromJson(Map<String, dynamic> json) => _$ConsentItemFromJson(json);
+  factory ConsentItem.fromJson(Map<String, dynamic> json) =>
+      _$ConsentItemFromJson(json);
   Map<String, dynamic> toJson() => _$ConsentItemToJson(this);
 
   @override

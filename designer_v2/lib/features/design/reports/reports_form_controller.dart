@@ -2,6 +2,8 @@ import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/features/design/reports/reports_form_data.dart';
+import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
@@ -16,13 +18,11 @@ import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
-import 'reports_form_data.dart';
-import 'section/report_item_form_controller.dart';
-
 class ReportsFormViewModel extends FormViewModel<ReportsFormData>
     implements
         IFormViewModelDelegate<ReportItemFormViewModel>,
-        IProviderArgsResolver<ReportItemFormViewModel, ReportItemFormRouteArgs> {
+        IProviderArgsResolver<ReportItemFormViewModel,
+            ReportItemFormRouteArgs> {
   ReportsFormViewModel({
     required this.study,
     required this.router,
@@ -44,10 +44,12 @@ class ReportsFormViewModel extends FormViewModel<ReportsFormData>
   // - Form fields
 
   late final FormArray reportItemArray = FormArray([]);
-  late final FormViewModelCollection<ReportItemFormViewModel, ReportItemFormData> reportItemFormViewModels =
+  late final FormViewModelCollection<ReportItemFormViewModel,
+          ReportItemFormData> reportItemFormViewModels =
       FormViewModelCollection([], reportItemArray);
 
-  List<ReportItemFormViewModel> get reportItemModels => reportItemFormViewModels.formViewModels;
+  List<ReportItemFormViewModel> get reportItemModels =>
+      reportItemFormViewModels.formViewModels;
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
@@ -64,10 +66,12 @@ class ReportsFormViewModel extends FormViewModel<ReportsFormData>
   @override
   void setControlsFrom(ReportsFormData data) {
     final viewModels = data.reportItems
-        .map((data) => ReportItemFormViewModel(
-              formData: data,
-              delegate: reportItemDelegate,
-            ))
+        .map(
+          (data) => ReportItemFormViewModel(
+            formData: data,
+            delegate: reportItemDelegate,
+          ),
+        )
         .toList();
     reportItemFormViewModels.reset(viewModels);
   }
@@ -93,19 +97,24 @@ class ReportsFormViewModel extends FormViewModel<ReportsFormData>
     );
   }
 
-  ReportItemFormRouteArgs buildReportItemFormRouteArgs(ReportItemFormViewModel model) {
+  ReportItemFormRouteArgs buildReportItemFormRouteArgs(
+    ReportItemFormViewModel model,
+  ) {
     return ReportItemFormRouteArgs(
       studyId: study.id,
       sectionId: model.sectionId,
     );
   }
 
-  testReport() {
+  void testReport() {
     // todo
-    router.dispatch(RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.consent));
+    router.dispatch(
+      RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.consent),
+    );
   }
 
-  bool get canTestConsent => !reportItemArray.disabled && (reportItemArray.value?.isNotEmpty ?? false);
+  bool get canTestConsent =>
+      !reportItemArray.disabled && (reportItemArray.value?.isNotEmpty ?? false);
 
   @override
   void onCancel(ReportItemFormViewModel formViewModel, FormMode prevFormMode) {
@@ -121,14 +130,15 @@ class ReportsFormViewModel extends FormViewModel<ReportsFormData>
   ReportItemFormViewModel provide(ReportItemFormRouteArgs args) {
     if (args.sectionId.isNewId) {
       final viewModel = ReportItemFormViewModel(
-        formData: formData,
+        formData: formData as ReportItemFormData?,
         delegate: this,
       );
       reportItemFormViewModels.stage(viewModel);
       return viewModel;
     }
 
-    final viewModel = reportItemFormViewModels.findWhere((vm) => vm.sectionId == args.sectionId);
+    final viewModel = reportItemFormViewModels
+        .findWhere((vm) => vm.sectionId == args.sectionId);
     if (viewModel == null) {
       print("ReportSection not found");
       throw ReportSectionNotFoundException(); // TODO handle 404 not found
@@ -141,7 +151,8 @@ class ReportFormItemDelegate
     implements
         IFormViewModelDelegate<ReportItemFormViewModel>,
         IListActionProvider<ReportItemFormViewModel>,
-        IProviderArgsResolver<ReportItemFormViewModel, ReportItemFormRouteArgs> {
+        IProviderArgsResolver<ReportItemFormViewModel,
+            ReportItemFormRouteArgs> {
   ReportFormItemDelegate({
     required this.formViewModelCollection,
     required this.owner,
@@ -149,7 +160,8 @@ class ReportFormItemDelegate
     this.propagateOnSave = true,
   });
 
-  final FormViewModelCollection<ReportItemFormViewModel, ReportItemFormData> formViewModelCollection;
+  final FormViewModelCollection<ReportItemFormViewModel, ReportItemFormData>
+      formViewModelCollection;
   final ReportsFormViewModel owner;
   final bool propagateOnSave;
   final FormValidationSetEnum? validationSet;
@@ -160,7 +172,10 @@ class ReportFormItemDelegate
   }
 
   @override
-  Future onSave(ReportItemFormViewModel formViewModel, FormMode prevFormMode) async {
+  Future onSave(
+    ReportItemFormViewModel formViewModel,
+    FormMode prevFormMode,
+  ) async {
     if (prevFormMode == FormMode.create) {
       // Save the managed viewmodel that was eagerly added in [provide]
       formViewModelCollection.commit(formViewModel);
@@ -176,7 +191,6 @@ class ReportFormItemDelegate
   ReportItemFormViewModel provide(ReportItemFormRouteArgs args) {
     if (args.sectionId.isNewId) {
       final viewModel = ReportItemFormViewModel(
-        formData: null,
         delegate: this,
         validationSet: validationSet,
       );
@@ -184,7 +198,8 @@ class ReportFormItemDelegate
       return viewModel;
     }
 
-    final viewModel = formViewModelCollection.findWhere((vm) => vm.sectionId == args.sectionId);
+    final viewModel = formViewModelCollection
+        .findWhere((vm) => vm.sectionId == args.sectionId);
     if (viewModel == null) {
       throw ReportSectionNotFoundException(); // TODO handle 404 not found
     }
@@ -204,7 +219,7 @@ class ReportFormItemDelegate
       label: ModelActionType.primary.string,
       isAvailable: !owner.isReadonly,
       onExecute: () async {
-        for (var e in formViewModelCollection.formViewModels) {
+        for (final e in formViewModelCollection.formViewModels) {
           if (e.formData!.isPrimary) {
             e.formData!.isPrimary = false;
             e.buildFormData().isPrimary = false;

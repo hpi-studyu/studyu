@@ -24,11 +24,12 @@ class BoolQuestionFormView extends ConsumerWidget {
                 columnWidth: const FixedColumnWidth(32.0),
               ),
               StandardTableColumn(
-                  label: '', // don't care (showTableHeader=false)
-                  columnWidth: const FlexColumnWidth()),
+                label: '', // don't care (showTableHeader=false)),
+              ),
             ],
             onSelectItem: (_) => {}, // no-op
-            buildCellsAt: (context, control, _, __) => buildChoiceOptionRow(context, control),
+            buildCellsAt: (context, control, _, __) =>
+                buildChoiceOptionRow(context, control),
             trailingActionsAt: (control, _) => [],
             cellSpacing: 0.0,
             rowSpacing: 8.0,
@@ -36,7 +37,6 @@ class BoolQuestionFormView extends ConsumerWidget {
             showTableHeader: false,
             rowStyle: StandardTableStyle.plain,
             disableRowInteractions: true,
-            trailingWidget: null,
             trailingWidgetSpacing: 0,
           ),
         ),

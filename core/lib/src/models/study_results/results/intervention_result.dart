@@ -13,7 +13,8 @@ class InterventionResult extends StudyResult {
 
   InterventionResult.withId() : super.withId(studyResultType);
 
-  factory InterventionResult.fromJson(Map<String, dynamic> json) => _$InterventionResultFromJson(json);
+  factory InterventionResult.fromJson(Map<String, dynamic> json) =>
+      _$InterventionResultFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$InterventionResultToJson(this);
@@ -22,13 +23,20 @@ class InterventionResult extends StudyResult {
   List<String> getHeaders(Study studySpec) {
     final schedule = studySpec.schedule;
     final numberOfDays = schedule.getNumberOfPhases() * schedule.phaseDuration;
-    return Iterable<int>.generate(numberOfDays).map((e) => e.toString()).toList();
+    return Iterable<int>.generate(numberOfDays)
+        .map((e) => e.toString())
+        .toList();
   }
 
   @override
   List getValues(StudySubject subject) {
     return subject.interventionOrder
-        .expand((intervention) => List<String>.filled(subject.study.schedule.phaseDuration, intervention))
+        .expand(
+          (intervention) => List<String>.filled(
+            subject.study.schedule.phaseDuration,
+            intervention,
+          ),
+        )
         .toList();
   }
 }

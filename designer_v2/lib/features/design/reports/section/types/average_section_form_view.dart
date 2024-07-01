@@ -41,26 +41,39 @@ class AverageSectionFormView extends ConsumerWidget {
           rows: [
             FormTableRow(
               label: tr.form_field_report_average_temporalAggregation_title,
-              labelHelpText: tr.form_field_report_average_temporalAggregation_tooltip,
+              labelHelpText:
+                  tr.form_field_report_average_temporalAggregation_tooltip,
               // TODO: extract custom dropdown component with theme + focus fix
               input: Theme(
-                data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+                data: theme.copyWith(
+                  inputDecorationTheme:
+                      ThemeConfig.dropdownInputDecorationTheme(theme),
+                ),
                 child: ReactiveDropdownField<TemporalAggregationFormatted>(
                   formControl: formViewModel.temporalAggregationControl,
                   hint: const Text("Select an aggregation value"),
-                  items: ReportItemFormViewModel.temporalAggregationControlOptions.map((option) {
-                    final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(theme);
-                    final iconTheme = menuItemTheme.iconTheme ?? theme.iconTheme;
+                  items: ReportItemFormViewModel
+                      .temporalAggregationControlOptions
+                      .map((option) {
+                    final menuItemTheme =
+                        ThemeConfig.dropdownMenuItemTheme(theme);
+                    final iconTheme =
+                        menuItemTheme.iconTheme ?? theme.iconTheme;
                     return DropdownMenuItem(
                       value: option.value,
                       child: Row(
                         children: [
-                          (option.value.icon != null)
-                              ? Icon(option.value.icon,
-                                  size: iconTheme.size, color: iconTheme.color, shadows: iconTheme.shadows)
-                              : const SizedBox.shrink(),
+                          if (option.value.icon != null)
+                            Icon(
+                              option.value.icon,
+                              size: iconTheme.size,
+                              color: iconTheme.color,
+                              shadows: iconTheme.shadows,
+                            )
+                          else
+                            const SizedBox.shrink(),
                           const SizedBox(width: 16.0),
-                          Text(option.label)
+                          Text(option.label),
                         ],
                       ),
                     );

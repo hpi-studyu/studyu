@@ -1,16 +1,21 @@
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/intervention.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:uuid/uuid.dart';
-import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
+import 'package:uuid/uuid.dart';
 
 class InterventionFormData extends IFormData {
   static String get kDefaultTitle => tr.form_field_intervention_title_default;
 
-  InterventionFormData(
-      {required this.interventionId, required this.title, this.description, this.tasksData, this.iconName});
+  InterventionFormData({
+    required this.interventionId,
+    required this.title,
+    this.description,
+    this.tasksData,
+    this.iconName,
+  });
 
   final InterventionID interventionId;
   final String title;
@@ -26,8 +31,12 @@ class InterventionFormData extends IFormData {
       interventionId: intervention.id,
       title: intervention.name ?? '',
       description: intervention.description,
-      tasksData:
-          intervention.tasks.map((task) => InterventionTaskFormData.fromDomainModel(task as CheckmarkTask)).toList(),
+      tasksData: intervention.tasks
+          .map(
+            (task) =>
+                InterventionTaskFormData.fromDomainModel(task as CheckmarkTask),
+          )
+          .toList(),
       iconName: intervention.icon,
     );
   }
@@ -35,7 +44,9 @@ class InterventionFormData extends IFormData {
   Intervention toIntervention() {
     final intervention = Intervention(interventionId, title);
     intervention.description = description;
-    intervention.tasks = (tasksData != null) ? tasksData!.map((formData) => formData.toTask()).toList() : [];
+    intervention.tasks = (tasksData != null)
+        ? tasksData!.map((formData) => formData.toTask()).toList()
+        : [];
     intervention.icon = iconName ?? '';
     return intervention;
   }

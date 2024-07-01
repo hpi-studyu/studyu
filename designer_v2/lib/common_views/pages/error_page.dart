@@ -17,7 +17,8 @@ class ErrorPage extends ConsumerWidget {
         children: [
           SelectableText(error.toString()),
           TextButton(
-            onPressed: () => ref.read(routerProvider).dispatch(RoutingIntents.studies),
+            onPressed: () =>
+                ref.read(routerProvider).dispatch(RoutingIntents.studies),
             child: Text(tr.navlink_error_home),
           ),
         ],

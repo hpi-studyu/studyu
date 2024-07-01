@@ -22,7 +22,8 @@ class WebFrame extends StatelessWidget {
     return PhoneContainer(
       innerContent: HtmlElementView(key: key, viewType: '$studyId$key'),
       borderColor: theme.colorScheme.secondary.withOpacity(0.4),
-      innerContentBackgroundColor: theme.colorScheme.secondary.withOpacity(0.025),
+      innerContentBackgroundColor:
+          theme.colorScheme.secondary.withOpacity(0.025),
     );
   }
 }
@@ -45,7 +46,8 @@ class DisabledFrame extends StatelessWidget {
         ),
       ),
       borderColor: theme.colorScheme.secondary.withOpacity(0.3),
-      innerContentBackgroundColor: theme.colorScheme.secondary.withOpacity(0.03),
+      innerContentBackgroundColor:
+          theme.colorScheme.secondary.withOpacity(0.03),
     );
   }
 }
@@ -54,15 +56,16 @@ class PhoneContainer extends StatelessWidget {
   static const double defaultWidth = 300.0;
   static const double defaultHeight = 600.0;
 
-  const PhoneContainer(
-      {required this.innerContent,
-      this.width = PhoneContainer.defaultWidth,
-      this.height = PhoneContainer.defaultHeight,
-      this.borderColor = Colors.black,
-      this.borderWidth = 8.0,
-      this.borderRadius = 25.0,
-      this.innerContentBackgroundColor = Colors.white,
-      super.key});
+  const PhoneContainer({
+    required this.innerContent,
+    this.width = PhoneContainer.defaultWidth,
+    this.height = PhoneContainer.defaultHeight,
+    this.borderColor = Colors.black,
+    this.borderWidth = 8.0,
+    this.borderRadius = 25.0,
+    this.innerContentBackgroundColor = Colors.white,
+    super.key,
+  });
 
   final double width;
   final double height;
@@ -102,18 +105,19 @@ class PhoneContainer extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-                      border: Border.all(width: borderWidth, color: Colors.white),
-                      shape: BoxShape.rectangle),
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(borderRadius)),
+                    border: Border.all(width: borderWidth, color: Colors.white),
+                  ),
                 ),
               ),
             ],
           ),
           Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-                border: Border.all(width: borderWidth, color: borderColor),
-                shape: BoxShape.rectangle),
+              borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
+              border: Border.all(width: borderWidth, color: borderColor),
+            ),
           ),
         ],
       ),
@@ -156,19 +160,25 @@ Widget? previewBanner(WidgetRef ref, String studyId) {
     return null;
   }
   return BannerBox(
-    body: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-      TextParagraph(
-        text: tr.banner_study_preview_unavailable,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      ReactiveForm(
+    body: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextParagraph(
+          text: tr.banner_study_preview_unavailable,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        ReactiveForm(
           formGroup: formViewModel.form,
-          child: ReactiveFormConsumer(builder: (context, form, child) {
-            return TextParagraph(
-              text: form.validationErrorSummary,
-            );
-          })),
-    ]),
+          child: ReactiveFormConsumer(
+            builder: (context, form, child) {
+              return TextParagraph(
+                text: form.validationErrorSummary,
+              );
+            },
+          ),
+        ),
+      ],
+    ),
     style: BannerStyle.warning,
   );
 }

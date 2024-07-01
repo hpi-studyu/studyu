@@ -12,13 +12,17 @@ class AudioRecordingQuestion extends Question<AudioRecordingQuestion> {
   @JsonKey(name: 'maxRecordingDurationSeconds')
   final int maxRecordingDurationSeconds;
 
-  AudioRecordingQuestion({required this.maxRecordingDurationSeconds}) : super(questionType);
+  AudioRecordingQuestion({required this.maxRecordingDurationSeconds})
+      : super(questionType);
 
-  AudioRecordingQuestion.withId(this.maxRecordingDurationSeconds) : super.withId(questionType);
+  AudioRecordingQuestion.withId(this.maxRecordingDurationSeconds)
+      : super.withId(questionType);
 
-  factory AudioRecordingQuestion.fromJson(Map<String, dynamic> json) => _$AudioRecordingQuestionFromJson(json);
+  factory AudioRecordingQuestion.fromJson(Map<String, dynamic> json) =>
+      _$AudioRecordingQuestionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$AudioRecordingQuestionToJson(this);
 
-  Answer<FutureBlobFile> constructAnswer(FutureBlobFile response) => Answer.forQuestion(this, response);
+  Answer<FutureBlobFile> constructAnswer(FutureBlobFile response) =>
+      Answer.forQuestion(this, response);
 }

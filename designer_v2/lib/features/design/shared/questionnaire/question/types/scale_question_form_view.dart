@@ -28,14 +28,16 @@ class ScaleQuestionFormView extends ConsumerStatefulWidget {
   final QuestionFormViewModel formViewModel;
 
   @override
-  ConsumerState<ScaleQuestionFormView> createState() => _ScaleQuestionFormViewState();
+  ConsumerState<ScaleQuestionFormView> createState() =>
+      _ScaleQuestionFormViewState();
 }
 
 class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
   QuestionFormViewModel get formViewModel => widget.formViewModel;
 
   late bool isMinMaxColorsVisible =
-      formViewModel.scaleMinColorControl.value != null || formViewModel.scaleMaxColorControl.value != null;
+      formViewModel.scaleMinColorControl.value != null ||
+          formViewModel.scaleMaxColorControl.value != null;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,6 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
           labelControlLabel: tr.form_field_response_scale_min_label,
           labelControlHelpText: tr.form_field_response_scale_min_label_tooltip,
           valueControlLabel: tr.form_field_response_scale_min_value,
-          valueControlHelpText: null,
         ),
         const SizedBox(height: 16.0),
         Collapsible(
@@ -64,30 +65,30 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
           labelControlLabel: tr.form_field_response_scale_max_label,
           labelControlHelpText: tr.form_field_response_scale_max_label_tooltip,
           valueControlLabel: tr.form_field_response_scale_max_value,
-          valueControlHelpText: null,
         ),
         const SizedBox(height: 16.0),
         const SizedBox(height: 8.0),
-        isMinMaxColorsVisible
-            ? Column(
-                children: [
-                  _buildVisualizationHeader(context),
-                  const SizedBox(height: 12.0),
-                  _buildMinMaxColorPickers(context),
-                ],
-              )
-            : (!formViewModel.isReadonly)
-                ? Opacity(
-                    opacity: ThemeConfig.kMuteFadeFactor,
-                    child: Hyperlink(
-                      text: "+ ${tr.form_field_response_scale_colors_add}",
-                      onClick: () => setState(() {
-                        isMinMaxColorsVisible = true;
-                      }),
-                      visitedColor: null,
-                    ),
-                  )
-                : const SizedBox.shrink(),
+        if (isMinMaxColorsVisible)
+          Column(
+            children: [
+              _buildVisualizationHeader(context),
+              const SizedBox(height: 12.0),
+              _buildMinMaxColorPickers(context),
+            ],
+          )
+        else
+          (!formViewModel.isReadonly)
+              ? Opacity(
+                  opacity: ThemeConfig.kMuteFadeFactor,
+                  child: Hyperlink(
+                    text: "+ ${tr.form_field_response_scale_colors_add}",
+                    onClick: () => setState(() {
+                      isMinMaxColorsVisible = true;
+                    }),
+                    visitedColor: null,
+                  ),
+                )
+              : const SizedBox.shrink(),
       ],
     );
   }
@@ -104,7 +105,7 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
         TextParagraph(
           text: tr.navlink_question_visuals_description,
           style: ThemeConfig.bodyTextMuted(theme),
-        )
+        ),
       ],
     );
   }
@@ -143,7 +144,11 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
     );
   }
 
-  FormTableRow _buildColorControlRow(BuildContext context, FormControl<Color> control, String labelText) {
+  FormTableRow _buildColorControlRow(
+    BuildContext context,
+    FormControl<Color> control,
+    String labelText,
+  ) {
     final theme = Theme.of(context);
     return FormTableRow(
       control: control,
@@ -154,16 +159,19 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
             helpText: tr.form_field_response_scale_color_tooltip,
           ),
           const SizedBox(width: 24.0),
-          (control.value == null && !formViewModel.isReadonly)
-              ? Opacity(
-                  opacity: ThemeConfig.kMuteFadeFactor,
-                  child: Hyperlink(
-                    text: "+ ${tr.form_field_response_scale_color_add}",
-                    onClick: () => control.value = SerializableColor(ThemeConfig.colorPickerInitialColor(theme).value),
-                    visitedColor: null,
-                  ),
-                )
-              : const SizedBox.shrink(),
+          if (control.value == null && !formViewModel.isReadonly)
+            Opacity(
+              opacity: ThemeConfig.kMuteFadeFactor,
+              child: Hyperlink(
+                text: "+ ${tr.form_field_response_scale_color_add}",
+                onClick: () => control.value = SerializableColor(
+                  ThemeConfig.colorPickerInitialColor(theme).value,
+                ),
+                visitedColor: null,
+              ),
+            )
+          else
+            const SizedBox.shrink(),
         ],
       ),
       input: (control.value != null)
@@ -172,7 +180,9 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
               //hexInputBar: true,
               enableAlpha: false,
               labelTypes: const [],
-              pickerHsvColor: HSVColor.fromColor(control.value ?? ThemeConfig.colorPickerInitialColor(theme)),
+              pickerHsvColor: HSVColor.fromColor(
+                control.value ?? ThemeConfig.colorPickerInitialColor(theme),
+              ),
             )
           : Opacity(
               // prevent layout shift with disabled hidden placeholder
@@ -195,8 +205,14 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
                     padding: const EdgeInsets.only(top: 12.0),
                     child: BannerBox(
                       style: BannerStyle.info,
-                      body: TextParagraph(text: tr.form_array_response_scale_mid_values_dirty_banner),
-                      padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
+                      body: TextParagraph(
+                        text: tr
+                            .form_array_response_scale_mid_values_dirty_banner,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 18.0,
+                        vertical: 12.0,
+                      ),
                       noPrefix: true,
                       isDismissed: !formViewModel.isMidValuesClearedInfoVisible,
                       dismissIconSize: Theme.of(context).iconTheme.size ?? 14.0,
@@ -212,11 +228,12 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
               return const SizedBox.shrink();
             }
             return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(formArray.controls.length, (i) {
-                final valueControl = formViewModel.scaleMidValueControls.controls[i] as FormControl;
-                final labelControl = formViewModel.scaleMidLabelControls.controls[i] as FormControl;
+                final valueControl = formViewModel
+                    .scaleMidValueControls.controls[i] as FormControl;
+                final labelControl = formViewModel
+                    .scaleMidLabelControls.controls[i] as FormControl;
 
                 return _buildLabelValueControlsPair(
                   labelControl: labelControl,

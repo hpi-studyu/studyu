@@ -19,7 +19,8 @@ class VisualAnalogueQuestion extends SliderQuestion {
 
   VisualAnalogueQuestion.withId() : super.withId(questionType);
 
-  factory VisualAnalogueQuestion.fromJson(Map<String, dynamic> json) => _$VisualAnalogueQuestionFromJson(json);
+  factory VisualAnalogueQuestion.fromJson(Map<String, dynamic> json) =>
+      _$VisualAnalogueQuestionFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$VisualAnalogueQuestionToJson(this);

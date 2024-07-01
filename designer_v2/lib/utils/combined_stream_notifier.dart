@@ -1,6 +1,9 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
+/// A [ChangeNotifier] that reacts to events from multiple streams.
+///
 /// Inspired by [GoRouterRefreshStream]
 /// This class can be used to make [GoRouter]'s `refreshListenable` react to
 /// to events from multiple source streams.

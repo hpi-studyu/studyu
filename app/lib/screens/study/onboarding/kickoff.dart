@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-
-import '../../../models/app_state.dart';
-import '../../../routes.dart';
 
 class KickoffScreen extends StatefulWidget {
   const KickoffScreen({super.key});
@@ -33,7 +32,11 @@ class _KickoffScreen extends State<KickoffScreen> {
       await storeActiveSubjectId(subject!.id);
       if (!context.mounted) return;
       setState(() => ready = true);
-      Navigator.pushNamedAndRemoveUntil(context, Routes.dashboard, (_) => false);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.dashboard,
+        (_) => false,
+      );
     } catch (e) {
       StudyULogger.fatal('Failed creating subject: $e');
     }
@@ -58,8 +61,9 @@ class _KickoffScreen extends State<KickoffScreen> {
           size: 64,
         );
 
-  String _getStatusText(BuildContext context) =>
-      !ready ? AppLocalizations.of(context)!.setting_up_study : AppLocalizations.of(context)!.good_to_go;
+  String _getStatusText(BuildContext context) => !ready
+      ? AppLocalizations.of(context)!.setting_up_study
+      : AppLocalizations.of(context)!.good_to_go;
 
   @override
   Widget build(BuildContext context) {

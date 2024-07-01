@@ -17,7 +17,8 @@ class Intervention {
 
   Intervention.withId() : id = const Uuid().v4();
 
-  factory Intervention.fromJson(Map<String, dynamic> data) => _$InterventionFromJson(data);
+  factory Intervention.fromJson(Map<String, dynamic> data) =>
+      _$InterventionFromJson(data);
 
   Map<String, dynamic> toJson() => _$InterventionToJson(this);
 

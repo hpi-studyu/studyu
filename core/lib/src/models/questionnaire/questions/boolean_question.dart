@@ -14,10 +14,12 @@ class BooleanQuestion extends Question<bool> {
 
   BooleanQuestion.withId() : super.withId(questionType);
 
-  factory BooleanQuestion.fromJson(Map<String, dynamic> json) => _$BooleanQuestionFromJson(json);
+  factory BooleanQuestion.fromJson(Map<String, dynamic> json) =>
+      _$BooleanQuestionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$BooleanQuestionToJson(this);
 
   // ignore: avoid_positional_boolean_parameters
-  Answer<bool> constructAnswer(bool response) => Answer.forQuestion(this, response);
+  Answer<bool> constructAnswer(bool response) =>
+      Answer.forQuestion(this, response);
 }

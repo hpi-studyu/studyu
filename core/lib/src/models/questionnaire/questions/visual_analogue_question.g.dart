@@ -21,8 +21,8 @@ VisualAnalogueQuestion _$VisualAnalogueQuestionFromJson(
       ..maximum = (json['maximum'] as num).toDouble()
       ..step = (json['step'] as num).toDouble()
       ..initial = (json['initial'] as num).toDouble()
-      ..minimumColor = json['minimumColor'] as int
-      ..maximumColor = json['maximumColor'] as int
+      ..minimumColor = (json['minimumColor'] as num).toInt()
+      ..maximumColor = (json['maximumColor'] as num).toInt()
       ..minimumAnnotation = json['minimumAnnotation'] as String
       ..maximumAnnotation = json['maximumAnnotation'] as String;
 

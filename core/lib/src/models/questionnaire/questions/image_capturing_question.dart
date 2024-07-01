@@ -13,9 +13,11 @@ class ImageCapturingQuestion extends Question<ImageCapturingQuestion> {
 
   ImageCapturingQuestion.withId() : super.withId(questionType);
 
-  factory ImageCapturingQuestion.fromJson(Map<String, dynamic> json) => _$ImageCapturingQuestionFromJson(json);
+  factory ImageCapturingQuestion.fromJson(Map<String, dynamic> json) =>
+      _$ImageCapturingQuestionFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$ImageCapturingQuestionToJson(this);
 
-  Answer<FutureBlobFile> constructAnswer(FutureBlobFile response) => Answer.forQuestion(this, response);
+  Answer<FutureBlobFile> constructAnswer(FutureBlobFile response) =>
+      Answer.forQuestion(this, response);
 }

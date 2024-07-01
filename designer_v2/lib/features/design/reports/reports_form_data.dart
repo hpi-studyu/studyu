@@ -12,14 +12,15 @@ class ReportsFormData implements IStudyFormData {
 
   factory ReportsFormData.fromStudy(Study study) {
     return ReportsFormData(
-      reportItems: ReportItemFormData.fromDomainModel(study.reportSpecification),
+      reportItems:
+          ReportItemFormData.fromDomainModel(study.reportSpecification),
     );
   }
 
   @override
   Study apply(Study study) {
     study.reportSpecification.secondary = [];
-    for (ReportItemFormData itemFormData in reportItems) {
+    for (final ReportItemFormData itemFormData in reportItems) {
       if (itemFormData.isPrimary) {
         study.reportSpecification.primary = itemFormData.section;
       } else {
@@ -35,7 +36,8 @@ class ReportsFormData implements IStudyFormData {
   }
 
   @override
-  String get id => throw UnimplementedError(); // not needed for top-level form data
+  String get id =>
+      throw UnimplementedError(); // not needed for top-level form data
 
   @override
   ReportsFormData copy() {

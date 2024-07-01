@@ -6,7 +6,10 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class AudioRecordingQuestionFormView extends ConsumerWidget {
-  const AudioRecordingQuestionFormView({required this.formViewModel, super.key});
+  const AudioRecordingQuestionFormView({
+    required this.formViewModel,
+    super.key,
+  });
 
   final QuestionFormViewModel formViewModel;
 
@@ -24,10 +27,14 @@ class AudioRecordingQuestionFormView extends ConsumerWidget {
                 formControl: formViewModel.maxRecordingDurationSecondsControl,
                 keyboardType: TextInputType.number,
                 validationMessages: {
-                  ValidationMessage.min: (error) => tr.audio_recording_max_duration_rangevalid_min,
-                  ValidationMessage.max: (error) => tr
-                      .audio_recording_max_duration_rangevalid_max(QuestionFormViewModel.kMaxRecordingDurationSeconds),
-                  ValidationMessage.number: (error) => tr.free_text_validation_number,
+                  ValidationMessage.min: (error) =>
+                      tr.audio_recording_max_duration_rangevalid_min,
+                  ValidationMessage.max: (error) =>
+                      tr.audio_recording_max_duration_rangevalid_max(
+                        QuestionFormViewModel.kMaxRecordingDurationSeconds,
+                      ),
+                  ValidationMessage.number: (error) =>
+                      tr.free_text_validation_number,
                 },
               ),
             ),

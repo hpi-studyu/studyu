@@ -12,5 +12,3 @@
 'documentation':
   - 'docs/**/*'
   - '**/*.md'
-'docker':
-  - 'docker/**/*'

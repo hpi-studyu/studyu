@@ -9,7 +9,8 @@ part of 'audio_recording_question.dart';
 AudioRecordingQuestion _$AudioRecordingQuestionFromJson(
         Map<String, dynamic> json) =>
     AudioRecordingQuestion(
-      maxRecordingDurationSeconds: json['maxRecordingDurationSeconds'] as int,
+      maxRecordingDurationSeconds:
+          (json['maxRecordingDurationSeconds'] as num).toInt(),
     )
       ..type = json['type'] as String
       ..id = json['id'] as String

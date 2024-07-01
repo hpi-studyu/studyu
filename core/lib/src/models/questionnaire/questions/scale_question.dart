@@ -9,7 +9,8 @@ import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 part 'scale_question.g.dart';
 
 @JsonSerializable()
-class ScaleQuestion extends SliderQuestion implements AnnotatedScaleQuestion, VisualAnalogueQuestion {
+class ScaleQuestion extends SliderQuestion
+    implements AnnotatedScaleQuestion, VisualAnalogueQuestion {
   static const String questionType = 'scale';
 
   @override
@@ -40,7 +41,8 @@ class ScaleQuestion extends SliderQuestion implements AnnotatedScaleQuestion, Vi
 
   ScaleQuestion.withId() : super.withId(questionType);
 
-  factory ScaleQuestion.fromJson(Map<String, dynamic> json) => _$ScaleQuestionFromJson(json);
+  factory ScaleQuestion.fromJson(Map<String, dynamic> json) =>
+      _$ScaleQuestionFromJson(json);
 
   factory ScaleQuestion.fromAnnotatedScaleQuestion(
     AnnotatedScaleQuestion question,
@@ -81,7 +83,8 @@ class ScaleQuestion extends SliderQuestion implements AnnotatedScaleQuestion, Vi
   Map<String, dynamic> toJson() => _$ScaleQuestionToJson(this);
 
   @JsonKey(includeToJson: false, includeFromJson: false)
-  List<Annotation> get annotationsSorted => annotations.sorted((a, b) => a.value.compareTo(b.value));
+  List<Annotation> get annotationsSorted =>
+      annotations.sorted((a, b) => a.value.compareTo(b.value));
 
   @JsonKey(includeToJson: false, includeFromJson: false)
   Annotation? get minAnnotation {
@@ -128,8 +131,9 @@ class ScaleQuestion extends SliderQuestion implements AnnotatedScaleQuestion, Vi
   }
 
   @JsonKey(includeToJson: false, includeFromJson: false)
-  List<Annotation> get midAnnotations =>
-      annotationsSorted.where((a) => a.value != minimum && a.value != maximum).toList();
+  List<Annotation> get midAnnotations => annotationsSorted
+      .where((a) => a.value != minimum && a.value != maximum)
+      .toList();
 
   set midAnnotations(List<Annotation> annotations) {
     final prevMinAnnotation = minAnnotation;
@@ -148,10 +152,12 @@ class ScaleQuestion extends SliderQuestion implements AnnotatedScaleQuestion, Vi
   }
 
   @JsonKey(includeToJson: false, includeFromJson: false)
-  List<String> get midLabels => midAnnotations.map((a) => a.annotation).toList();
+  List<String> get midLabels =>
+      midAnnotations.map((a) => a.annotation).toList();
 
   @JsonKey(includeToJson: false, includeFromJson: false)
-  List<double> get midValues => midAnnotations.map((a) => a.value.toDouble()).toList();
+  List<double> get midValues =>
+      midAnnotations.map((a) => a.value.toDouble()).toList();
 
   Annotation addAnnotation({required int value, required String label}) {
     final annotation = Annotation()
@@ -191,11 +197,13 @@ class ScaleQuestion extends SliderQuestion implements AnnotatedScaleQuestion, Vi
 
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
-  String get minimumAnnotation => minAnnotation?.annotation ?? minimum.toString();
+  String get minimumAnnotation =>
+      minAnnotation?.annotation ?? minimum.toString();
 
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
-  String get maximumAnnotation => maxAnnotation?.annotation ?? maximum.toString();
+  String get maximumAnnotation =>
+      maxAnnotation?.annotation ?? maximum.toString();
 
   @override
   @JsonKey(includeToJson: false, includeFromJson: false)
@@ -243,10 +251,15 @@ class ScaleQuestion extends SliderQuestion implements AnnotatedScaleQuestion, Vi
     required int scaleMaxValue,
     int numValuesGenerated = 10,
   }) {
-    final int midValueStepSize = getAutostepSize(scaleMaxValue: scaleMinValue, numValuesGenerated: numValuesGenerated);
+    final int midValueStepSize = getAutostepSize(
+      scaleMaxValue: scaleMinValue,
+      numValuesGenerated: numValuesGenerated,
+    );
     final List<int> midValues = [];
 
-    for (int midValue = scaleMinValue + midValueStepSize; midValue < scaleMaxValue; midValue += midValueStepSize) {
+    for (int midValue = scaleMinValue + midValueStepSize;
+        midValue < scaleMaxValue;
+        midValue += midValueStepSize) {
       midValues.add(midValue);
       if (midValues.length >= numValuesGenerated) {
         break;

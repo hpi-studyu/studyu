@@ -4,7 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Simple wrapper around [AsyncValue] to render standardized
 /// widgets for different states (loading, error, empty)
 class AsyncValueWidget<T> extends StatelessWidget {
-  const AsyncValueWidget({super.key, required this.value, required this.data, this.error, this.loading, this.empty});
+  const AsyncValueWidget({
+    super.key,
+    required this.value,
+    required this.data,
+    this.error,
+    this.loading,
+    this.empty,
+  });
 
   final AsyncValue<T> value;
   final Widget Function(T) data;
@@ -28,7 +35,8 @@ class AsyncValueWidget<T> extends StatelessWidget {
       // Always render data widget if no empty state specified
       return data(unwrappedData);
     }
-    if (unwrappedData == null || (unwrappedData is List && unwrappedData.isEmpty)) {
+    if (unwrappedData == null ||
+        (unwrappedData is List && unwrappedData.isEmpty)) {
       return empty!();
     }
     return data(unwrappedData);

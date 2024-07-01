@@ -8,7 +8,8 @@ class TwoColumnLayout extends StatefulWidget {
     this.headerWidget,
     this.dividerWidget = defaultDivider,
     this.flexLeft,
-    this.flexRight = 1, // expand right column to fill available space by default
+    this.flexRight =
+        1, // expand right column to fill available space by default
     this.constraintsLeft,
     this.constraintsRight,
     this.scrollLeft = true,
@@ -69,8 +70,8 @@ class TwoColumnLayout extends StatefulWidget {
     BoxConstraints? constraintsRight,
     bool scrollLeft = true,
     bool scrollRight = true,
-    final EdgeInsets? paddingLeft = TwoColumnLayout.defaultContentPadding,
-    final EdgeInsets? paddingRight = TwoColumnLayout.defaultContentPadding,
+    EdgeInsets? paddingLeft = TwoColumnLayout.defaultContentPadding,
+    EdgeInsets? paddingRight = TwoColumnLayout.defaultContentPadding,
   }) {
     return TwoColumnLayout(
       leftWidget: leftWidget,
@@ -112,101 +113,115 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
     }
 
     if (widget.backgroundColorLeft != null) {
-      leftWidget = Material(color: widget.backgroundColorLeft, child: leftWidget);
+      leftWidget =
+          Material(color: widget.backgroundColorLeft, child: leftWidget);
     }
     if (widget.backgroundColorRight != null) {
-      rightWidget = Material(color: widget.backgroundColorRight, child: rightWidget);
+      rightWidget =
+          Material(color: widget.backgroundColorRight, child: rightWidget);
     }
 
-    return LayoutBuilder(builder: (context, constraints) {
-      if (widget.stretchHeight) {
-        leftWidget = SizedBox(
-          height: constraints.maxHeight,
-          child: leftWidget,
-        );
-        rightWidget = SizedBox(
-          height: constraints.maxHeight,
-          child: rightWidget,
-        );
-      }
-
-      if (widget.scrollLeft) {
-        leftWidget = Scrollbar(
-          thumbVisibility: true,
-          controller: _scrollControllerLeft,
-          child: SingleChildScrollView(controller: _scrollControllerLeft, child: leftWidget),
-        );
-      }
-      if (widget.scrollRight) {
-        rightWidget = Scrollbar(
-          thumbVisibility: true,
-          controller: _scrollControllerRight,
-          child: SingleChildScrollView(controller: _scrollControllerRight, child: rightWidget),
-        );
-      }
-
-      if (!(widget.constraintsLeft != null && widget.flexLeft != null)) {
-        if (widget.constraintsLeft != null) {
-          leftWidget = Container(constraints: widget.constraintsLeft!, child: leftWidget);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (widget.stretchHeight) {
+          leftWidget = SizedBox(
+            height: constraints.maxHeight,
+            child: leftWidget,
+          );
+          rightWidget = SizedBox(
+            height: constraints.maxHeight,
+            child: rightWidget,
+          );
         }
-        if (widget.flexLeft != null) {
-          leftWidget = Flexible(flex: widget.flexLeft!, child: leftWidget);
+
+        if (widget.scrollLeft) {
+          leftWidget = Scrollbar(
+            thumbVisibility: true,
+            controller: _scrollControllerLeft,
+            child: SingleChildScrollView(
+              controller: _scrollControllerLeft,
+              child: leftWidget,
+            ),
+          );
         }
-      }
-
-      if (!(widget.constraintsRight != null && widget.flexRight != null)) {
-        if (widget.constraintsRight != null) {
-          rightWidget = Container(constraints: widget.constraintsRight!, child: rightWidget);
+        if (widget.scrollRight) {
+          rightWidget = Scrollbar(
+            thumbVisibility: true,
+            controller: _scrollControllerRight,
+            child: SingleChildScrollView(
+              controller: _scrollControllerRight,
+              child: rightWidget,
+            ),
+          );
         }
-        if (widget.flexRight != null) {
-          rightWidget = Flexible(flex: widget.flexRight!, child: rightWidget);
+
+        if (!(widget.constraintsLeft != null && widget.flexLeft != null)) {
+          if (widget.constraintsLeft != null) {
+            leftWidget = Container(
+              constraints: widget.constraintsLeft,
+              child: leftWidget,
+            );
+          }
+          if (widget.flexLeft != null) {
+            leftWidget = Flexible(flex: widget.flexLeft!, child: leftWidget);
+          }
         }
-      }
 
-      if (widget.constraintsLeft != null && widget.flexLeft != null) {
-        leftWidget = ConstrainedWidthFlexible(
-          minWidth: widget.constraintsLeft?.minWidth ?? double.infinity,
-          maxWidth: widget.constraintsLeft?.maxWidth ?? double.infinity,
-          flex: widget.flexLeft!,
-          flexSum: widget.flexLeft! + (widget.flexRight ?? 0),
-          outerConstraints: constraints,
-          child: leftWidget,
-        );
-      }
+        if (!(widget.constraintsRight != null && widget.flexRight != null)) {
+          if (widget.constraintsRight != null) {
+            rightWidget = Container(
+              constraints: widget.constraintsRight,
+              child: rightWidget,
+            );
+          }
+          if (widget.flexRight != null) {
+            rightWidget = Flexible(flex: widget.flexRight!, child: rightWidget);
+          }
+        }
 
-      if (widget.constraintsRight != null && widget.flexRight != null) {
-        rightWidget = ConstrainedWidthFlexible(
-          minWidth: widget.constraintsRight?.minWidth ?? double.infinity,
-          maxWidth: widget.constraintsRight?.maxWidth ?? double.infinity,
-          flex: widget.flexRight!,
-          flexSum: widget.flexRight! + (widget.flexLeft ?? 0),
-          outerConstraints: constraints,
-          child: rightWidget,
-        );
-      }
+        if (widget.constraintsLeft != null && widget.flexLeft != null) {
+          leftWidget = ConstrainedWidthFlexible(
+            minWidth: widget.constraintsLeft?.minWidth ?? double.infinity,
+            maxWidth: widget.constraintsLeft?.maxWidth ?? double.infinity,
+            flex: widget.flexLeft!,
+            flexSum: widget.flexLeft! + (widget.flexRight ?? 0),
+            outerConstraints: constraints,
+            child: leftWidget,
+          );
+        }
 
-      Widget body = Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          leftWidget,
-          widget.dividerWidget ?? const SizedBox.shrink(),
-          rightWidget,
-        ],
-      );
+        if (widget.constraintsRight != null && widget.flexRight != null) {
+          rightWidget = ConstrainedWidthFlexible(
+            minWidth: widget.constraintsRight?.minWidth ?? double.infinity,
+            maxWidth: widget.constraintsRight?.maxWidth ?? double.infinity,
+            flex: widget.flexRight!,
+            flexSum: widget.flexRight! + (widget.flexLeft ?? 0),
+            outerConstraints: constraints,
+            child: rightWidget,
+          );
+        }
 
-      if (widget.headerWidget != null) {
-        body = Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        Widget body = Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            widget.headerWidget!,
-            body,
+            leftWidget,
+            widget.dividerWidget ?? const SizedBox.shrink(),
+            rightWidget,
           ],
         );
-      }
 
-      return body;
-    });
+        if (widget.headerWidget != null) {
+          body = Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              widget.headerWidget!,
+              body,
+            ],
+          );
+        }
+
+        return body;
+      },
+    );
   }
 }

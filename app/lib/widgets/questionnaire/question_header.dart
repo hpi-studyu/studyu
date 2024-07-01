@@ -30,7 +30,7 @@ class QuestionHeader extends StatelessWidget {
             content: HtmlText(rationale),
           ),
         ),
-      )
+      ),
     ];
   }
 

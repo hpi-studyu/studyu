@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
+import 'package:studyu_designer_v2/features/design/reports/section/types/data_reference_identifier.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
-
-import 'data_reference_identifier.dart';
 
 class DataReferenceEditor<T> {
   const DataReferenceEditor({
@@ -22,7 +21,9 @@ class DataReferenceEditor<T> {
       formControl: formControl,
       items: items,
       isExpanded: true,
-      hint: items.isNotEmpty ? const Text("Select a data source") : const Text("No scale survey question defined"),
+      hint: items.isNotEmpty
+          ? const Text("Select a data source")
+          : const Text("No scale survey question defined"),
     );
   }
 
@@ -31,7 +32,10 @@ class DataReferenceEditor<T> {
         labelHelpText: tr.form_field_report_data_source_tooltip,
         // TODO: extract custom dropdown component with theme + focus fix
         input: Theme(
-          data: theme.copyWith(inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme)),
+          data: theme.copyWith(
+            inputDecorationTheme:
+                ThemeConfig.dropdownInputDecorationTheme(theme),
+          ),
           child: buildReactiveDropdownField,
         ),
       );

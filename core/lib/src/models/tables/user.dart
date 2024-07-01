@@ -21,7 +21,8 @@ class StudyUUser extends SupabaseObjectFunctions<StudyUUser> {
   StudyUUser({required this.id, required this.email, Preferences? preferences})
       : preferences = preferences ?? Preferences();
 
-  factory StudyUUser.fromJson(Map<String, dynamic> json) => _$StudyUUserFromJson(json);
+  factory StudyUUser.fromJson(Map<String, dynamic> json) =>
+      _$StudyUUserFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$StudyUUserToJson(this);
@@ -38,13 +39,17 @@ class Preferences {
 
   Preferences({this.language = '', this.pinnedStudies = const {}});
 
-  factory Preferences.fromJson(Map<String, dynamic> json) => _$PreferencesFromJson(json);
+  factory Preferences.fromJson(Map<String, dynamic> json) =>
+      _$PreferencesFromJson(json);
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = _$PreferencesToJson(this);
     // Remove empty fields from the JSON map
     json.removeWhere(
-      (key, value) => value == null || value is String && value.isEmpty || value is Set && value.isEmpty,
+      (key, value) =>
+          value == null ||
+          value is String && value.isEmpty ||
+          value is Set && value.isEmpty,
     );
     return json;
   }

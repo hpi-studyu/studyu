@@ -1,5 +1,5 @@
-import 'package:studyu_core/core.dart';
 import 'package:studyu_core/core.dart' as core;
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
@@ -110,7 +110,7 @@ extension StudyDuplicateX on Study {
     copy.resetJsonIgnoredAttributes();
     copy.title = (copy.title ?? '').withDuplicateLabel();
     copy.userId = userId;
-    copy.published = false;
+    copy.status = StudyStatus.draft;
     copy.resultSharing = ResultSharing.private;
     copy.registryPublished = false;
     copy.results = [];
@@ -120,13 +120,16 @@ extension StudyDuplicateX on Study {
     // Generate a new random UUIDs
     const uuid = Uuid();
     copy.id = uuid.v4();
-    for (var intervention in copy.interventions) {
+    for (final intervention in copy.interventions) {
       intervention.id = uuid.v4();
     }
-    for (var observation in copy.observations) {
+    for (final observation in copy.observations) {
       observation.id = uuid.v4();
     }
-    for (var report in [copy.reportSpecification.primary, ...copy.reportSpecification.secondary]) {
+    for (final report in [
+      copy.reportSpecification.primary,
+      ...copy.reportSpecification.secondary,
+    ]) {
       report?.id = uuid.v4();
     }
 
@@ -137,11 +140,14 @@ extension StudyDuplicateX on Study {
     final copy = Study.fromJson(toJson());
     copy.copyJsonIgnoredAttributes(from: this, createdAt: true);
     copy.resetParticipantData();
-    copy.published = true;
+    copy.status = StudyStatus.running;
     return copy;
   }
 
-  Study copyJsonIgnoredAttributes({required Study from, createdAt = false}) {
+  Study copyJsonIgnoredAttributes({
+    required Study from,
+    bool createdAt = false,
+  }) {
     participantCount = from.participantCount;
     activeSubjectCount = from.activeSubjectCount;
     endedCount = from.endedCount;
@@ -222,6 +228,10 @@ extension StudyPermissionsX on Study {
   }
 
   bool canDelete(sb.User user) {
+    return isOwner(user);
+  }
+
+  bool canClose(sb.User user) {
     return isOwner(user);
   }
 

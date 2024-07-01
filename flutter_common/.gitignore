@@ -140,3 +140,6 @@ app.*.symbols
 # +++ CUSTOM ADDITIONS +++
 
 !*.lock
+
+# Selfhost
+lib/envs/.env.local

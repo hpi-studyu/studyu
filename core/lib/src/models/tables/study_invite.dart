@@ -20,7 +20,8 @@ class StudyInvite extends SupabaseObjectFunctions<StudyInvite> {
 
   StudyInvite(this.code, this.studyId, {this.preselectedInterventionIds});
 
-  factory StudyInvite.fromJson(Map<String, dynamic> json) => _$StudyInviteFromJson(json);
+  factory StudyInvite.fromJson(Map<String, dynamic> json) =>
+      _$StudyInviteFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$StudyInviteToJson(this);

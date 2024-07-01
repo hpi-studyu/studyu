@@ -26,40 +26,50 @@ class EmptyBody extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          (leading != null) ? leading! : const SizedBox.shrink(),
-          (leading != null) ? SizedBox(height: leadingSpacing!) : const SizedBox.shrink(),
-          (icon != null)
-              ? Padding(
-                  padding: const EdgeInsets.only(bottom: 0.0),
-                  child: Icon(
-                    icon,
-                    size: 96.0,
-                    color: theme.colorScheme.secondary,
-                  ))
-              : const SizedBox.shrink(),
-          (title != null)
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6.0),
-                  child: SelectableText(
-                    title!,
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.headlineMedium,
-                  ),
-                )
-              : const SizedBox.shrink(),
-          (description != null)
-              ? SelectableText(description!,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.textTheme.bodyMedium?.color?.faded(0.9),
-                  ))
-              : const SizedBox.shrink(),
-          (button != null)
-              ? Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 20.0, 0, 16.0),
-                  child: button,
-                )
-              : const SizedBox.shrink(),
+          if (leading != null) leading! else const SizedBox.shrink(),
+          if (leading != null)
+            SizedBox(height: leadingSpacing)
+          else
+            const SizedBox.shrink(),
+          if (icon != null)
+            Padding(
+              padding: EdgeInsets.zero,
+              child: Icon(
+                icon,
+                size: 96.0,
+                color: theme.colorScheme.secondary,
+              ),
+            )
+          else
+            const SizedBox.shrink(),
+          if (title != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6.0),
+              child: SelectableText(
+                title!,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headlineMedium,
+              ),
+            )
+          else
+            const SizedBox.shrink(),
+          if (description != null)
+            SelectableText(
+              description!,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.textTheme.bodyMedium?.color?.faded(0.9),
+              ),
+            )
+          else
+            const SizedBox.shrink(),
+          if (button != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 20.0, 0, 16.0),
+              child: button,
+            )
+          else
+            const SizedBox.shrink(),
         ],
       ),
     );

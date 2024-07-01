@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'generic_section.dart';
+import 'package:studyu_app/screens/study/report/generic_section.dart';
 
 class DisclaimerSection extends GenericSection {
   const DisclaimerSection(super.subject, {super.key, super.onTap});

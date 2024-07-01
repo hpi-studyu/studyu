@@ -22,6 +22,8 @@
   "study_selection_single_reason": "If you were to participate in multiple studies at a time, the interventions of these studies might interfere with one another and alter the results.",
   "study_selection_unsupported_title": "Outdated app version",
   "study_selection_unsupported": "The study you are trying to join is not compatible with your app version. Please update the app to the latest version.",
+  "study_selection_closed_title": "Study closed",
+  "study_selection_closed": "This study is currently closed for new participants.",
   "study_selection_hidden_studies": "Some studies couldn't be shown, because your app version is outdated. Please update your app to see all available studies.",
   "study_overview_title": "Overview",
   "eligibility_questionnaire_title": "Questionnaire",
