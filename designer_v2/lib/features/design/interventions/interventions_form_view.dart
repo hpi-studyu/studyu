@@ -27,7 +27,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
       value: state.study,
       data: (study) {
         final formViewModel =
-            ref.read(interventionsFormViewModelProvider(studyId));
+            ref.watch(interventionsFormViewModelProvider(studyId));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(

@@ -90,7 +90,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   final int customOptionsMax = 10;
   final int customOptionsInitial = 2;
 
-  FormArray<dynamic> get answerOptionsArray => {
+  FormArray get answerOptionsArray => {
         SurveyQuestionType.bool: boolResponseOptionsArray,
         SurveyQuestionType.choice: choiceResponseOptionsArray,
         SurveyQuestionType.scale: _scaleResponseOptionsArray,
@@ -645,7 +645,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   @override
   void onNewItem() {
-    answerOptionsArray.add(FormControl());
+    answerOptionsArray.add(FormControl<String>());
   }
 
   @override

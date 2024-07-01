@@ -3,6 +3,118 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-07-01
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.6-dev.3`](#studyu_app---v276-dev3)
+ - [`studyu_core` - `v4.4.3-dev.2`](#studyu_core---v443-dev2)
+ - [`studyu_designer_v2` - `v1.8.1-dev.3`](#studyu_designer_v2---v181-dev3)
+ - [`studyu_flutter_common` - `v1.8.4-dev.2`](#studyu_flutter_common---v184-dev2)
+
+---
+
+#### `studyu_app` - `v2.7.6-dev.3`
+
+ - **REFACTOR**: migrate to riverpod code generation 2.
+ - **FIX**: app preview stuck at AppLanguage.
+ - **FIX**: formatting issues.
+ - **FIX**: formatting issues.
+ - **FIX**: users not able to continue closed study.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**: upgrade deps.
+ - **FEAT**: deprecate published for study_status.
+ - **FEAT**: close study using is_closed column.
+ - **FEAT**: close study.
+
+#### `studyu_core` - `v4.4.3-dev.2`
+
+ - **FIX**: keep eligibility criterion.
+ - **FIX**: empty description init value.
+ - **FIX**: formatting issues.
+ - **FIX**: formatting issues.
+ - **FIX**: migrate app to status.
+ - **FIX**: users not able to continue closed study.
+ - **FIX**: upgrade deps.
+ - **FEAT**: deprecate published for study_status.
+ - **FEAT**: close study using is_closed column.
+ - **FEAT**: close study.
+
+#### `studyu_designer_v2` - `v1.8.1-dev.3`
+
+ - **REFACTOR**: migrated auth_form_controller.dart to riverpod v2.
+ - **REFACTOR**: migrate to riverpod code generation 2.
+ - **REFACTOR**: update designer study data after test controller is disposed.
+ - **REFACTOR**: migrate StudySettingsFormViewModel Provider.
+ - **REFACTOR**: migrate appConfig FutureProvider.
+ - **REFACTOR**: migrated dashboard_controller.dart to riverpod v2.
+ - **REFACTOR**: migrate to riverpod code generation.
+ - **PERF**: remove await for onSave.
+ - **PERF**: replace read with watch.
+ - **FIX**: test frame live preview.
+ - **FIX**: keep eligibility criterion.
+ - **FIX**: disable reactive for enrollment radio tile".
+ - **FIX**: disable reactive for enrollment radio tile.
+ - **FIX**: migrate iFrameElement.
+ - **FIX**: Incorrect type casting occurs when an insufficient number of characters entered to password field on the registration page.
+ - **FIX**: do not autosave on formarray".
+ - **FIX**: do not autosave on formarray.
+ - **FIX**: enable atLeastOneTask for intervention again.
+ - **FIX**: delay fetching studyRepo.
+ - **FIX**: type.
+ - **FIX**: catch invite code not existing and better APIException output.
+ - **FIX**: disable reactive for schedule intervention screen.
+ - **FIX**: disable reactive for enrollment radio tile.
+ - **FIX**: empty description init value.
+ - **FIX**: migrate close study feature.
+ - **FIX**: cannot use ref before provider rebuilt.
+ - **FIX**: explicitly type formcontrol when adding multiple choice field.
+ - **FIX**: dashbaord user load once.
+ - **FIX**: study controller no longer extends study base controller due to riverpod v2.
+ - **FIX**: initialization route and splash page.
+ - **FIX**: merge dev fixes.
+ - **FIX**: missing intervention and measurement data when study is being duplicated.
+ - **FIX**: Flutter 3.22 arg error.
+ - **FIX**: translate study schedule.
+ - **FIX**: add closed success description.
+ - **FIX**: only show close button for editors.
+ - **FIX**: Login/register notifications (wrong password, etc.) are not showing.
+ - **FIX**: potential isClosed error.
+ - **FIX**: merge dashboard refactor pr.
+ - **FIX**: add compatibility for emoji font with flutter >= 3.22.
+ - **FIX**: upgrade deps.
+ - **FIX**: let autosave not listen to formarray anymore.
+ - **FIX**: check if canPop.
+ - **FIX**: typo / grammar.
+ - **FIX**: integration test sign out.
+ - **FIX**: do not show separator if no delete item shown.
+ - **FIX**: add emojis again.
+ - **FEAT**: close study.
+ - **FEAT**: fix duplicate and designer updates for study closing.
+ - **FEAT**: small fixes for study closing.
+ - **FEAT**: add separators to model action popup.
+ - **FEAT**: deprecate published for study_status.
+ - **FEAT**: study close button.
+ - **FEAT**: new severe close confirmation.
+ - **FEAT**: close study using is_closed column.
+ - **DOCS**: add function documentation.
+
+#### `studyu_flutter_common` - `v1.8.4-dev.2`
+
+ - **FIX**: formatting issues.
+ - **FIX**: formatting issues.
+ - **FIX**: upgrade deps.
+
+
 ## 2024-06-12
 
 ### Changes

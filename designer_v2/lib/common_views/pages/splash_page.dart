@@ -5,6 +5,7 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const SizedBox();
+    //return const Center(child: CircularProgressIndicator());
   }
 }

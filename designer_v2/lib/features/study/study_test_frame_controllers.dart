@@ -53,7 +53,7 @@ class WebController extends PlatformController {
   void activate() {
     if (baseSrc == '') return;
     final key = UniqueKey();
-    // print("Register view with: $previewSrc");
+    // debugLog("Register view with: $previewSrc");
     registerViews(key);
     frameWidget = WebFrame(previewSrc, studyId, key: key);
   }
@@ -65,8 +65,12 @@ class WebController extends PlatformController {
       ..src = previewSrc
       ..style.border = 'none';
 
-    ui_web.platformViewRegistry
-        .registerViewFactory('$studyId$key', (int viewId) => iFrameElement);
+    ui_web.platformViewRegistry.registerViewFactory(
+      '$studyId$key',
+      (int viewId) => iFrameElement
+        ..style.width = '100%'
+        ..style.height = '100%',
+    );
   }
 
   @override
@@ -99,7 +103,7 @@ class WebController extends PlatformController {
     //if (frame != null) {
     // iFrameElement = frame;
     if (iFrameElement.src != previewSrc) {
-      print("*********NAVIGATE TO: $previewSrc");
+      // debugLog("*********NAVIGATE TO: $previewSrc");
       iFrameElement.src = previewSrc;
       //iFrameElement.src = newPrev;
     } /* else {
@@ -136,7 +140,7 @@ class WebController extends PlatformController {
     html.window.onMessage.listen((event) {
       final data = event.data;
       if (data == 'routeFinished') {
-        print("Designer: Route finished");
+        // debugLog("Preview route finished");
         refresh();
       }
     });
@@ -144,8 +148,9 @@ class WebController extends PlatformController {
 
   @override
   void send(String message) {
-    // For debug purposes: postMessage(message, '*')
-    // print("[Preview]: Sent message: " + message);
+    // debugLog("Send updated study to client");
+    // Send to all windows for debugging
+    // iFrameElement.contentWindow?.postMessage(message, '*');
     iFrameElement.contentWindow?.postMessage(message, env.appUrl ?? '');
   }
 }
