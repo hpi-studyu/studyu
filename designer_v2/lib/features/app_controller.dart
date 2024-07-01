@@ -1,8 +1,11 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_controller_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+
+part 'app_controller.g.dart';
 
 /// Interface for implementation by any resources that want to bind themselves
 /// to the application lifecycle
@@ -11,29 +14,49 @@ abstract class IAppDelegate {
 }
 
 /// Main controller that's bound to the top-level application widget's state
-class AppController extends StateNotifier<AppControllerState> {
-  /// List of listeners for app lifecycle events registered via Riverpod
-  final List<IAppDelegate> appDelegates;
+@riverpod
+class AppController extends _$AppController {
+  @override
+  Stream<AppControllerState> build() {
+    state = const AsyncValue<AppControllerState>.data(AppControllerState());
+    _appDelegates = [
+      /// Register [IAppDelegate]s here for invocation of app lifecycle methods
+      ref.watch(authRepositoryProvider),
+    ];
+    ref.onDispose(() {
+      _stateController.close();
+    });
+    _initDelegates();
+    return _stateController.stream;
+  }
 
-  /// A dummy [Future] used for setting a lower bound on app initialization
-  /// (so that the splash screen is shown during this time)
-  late final _delayedFuture = Future.delayed(Duration.zero, () => true);
-
-  AppController({required this.appDelegates})
-      : super(const AppControllerState());
-
-  bool get isInitialized => state.status == AppStatus.initialized;
-
-  Future<bool> onAppStart() async {
+  Future<void> _initDelegates() async {
     // Forward onAppStart to all registered delegates so that they can
     // e.g. read some data from local storage for initialization
-    final result = await _callDelegates(
+    await _callDelegates(
       (delegate) => delegate.onAppStart(),
       withMinDelay: true,
     );
-    state = const AppControllerState(status: AppStatus.initialized);
-    return result;
+    _stateController
+        .add(const AppControllerState(status: AppStatus.initialized));
   }
+
+  Stream get stream => _stateController.stream;
+  final StreamController<AppControllerState> _stateController =
+      StreamController<AppControllerState>.broadcast();
+
+  bool get isInitialized => state.value?.status == AppStatus.initialized;
+
+  /// List of listeners for app lifecycle events registered via Riverpod
+  late final List<IAppDelegate> _appDelegates;
+
+  /// A dummy [Future] used for setting a lower bound on app initialization
+  /// (so that the splash screen is shown during this time)
+  late final _delayedFuture = Future.delayed(
+    // ignore: avoid_redundant_argument_values, use_named_constants
+    const Duration(milliseconds: Config.minSplashTime),
+    () => true,
+  );
 
   /// Executes the given callback for all registered delegates concurrently
   Future<bool> _callDelegates(
@@ -42,7 +65,7 @@ class AppController extends StateNotifier<AppControllerState> {
   }) async {
     final List<Future<bool>> delegateFutures = [];
     // Collect all delegated futures
-    for (final delegate in appDelegates) {
+    for (final delegate in _appDelegates) {
       final future = function(delegate);
       delegateFutures.add(future);
     }
@@ -55,21 +78,3 @@ class AppController extends StateNotifier<AppControllerState> {
     return !results.contains(false);
   }
 }
-
-final appControllerProvider =
-    StateNotifierProvider<AppController, AppControllerState>((ref) {
-  final appController = AppController(
-    appDelegates: [
-      /// Register [IAppDelegate]s here for invocation of app lifecycle methods
-      ref.watch(authRepositoryProvider),
-    ],
-  );
-  appController.addListener((state) {
-    print("appController.state updated");
-  });
-  ref.onDispose(() {
-    print("appControllerProvider.DISPOSE");
-  });
-  print("appControllerProvider");
-  return appController;
-});

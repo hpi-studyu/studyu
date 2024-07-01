@@ -22,7 +22,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
       value: state.study,
       data: (study) {
         final formViewModel =
-            ref.read(measurementsFormViewModelProvider(studyId));
+            ref.watch(measurementsFormViewModelProvider(studyId));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(

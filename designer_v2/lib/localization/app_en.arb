@@ -81,6 +81,8 @@
   "phase_sequence_counterbalanced": "Counterbalanced (AB BA)",
   "phase_sequence_random": "Random",
   "phase_sequence_custom": "Custom",
+  "phase_sequence_custom_label": "Custom sequence",
+  "phase_sequence_custom_label_help": "Enter a sequence of interventions by using the letters A and B",
   "form_enrollment_option_open": "Open",
   "form_enrollment_option_invite": "Private (Invite-only)",
   "notification_code_deleted": "Access code deleted",

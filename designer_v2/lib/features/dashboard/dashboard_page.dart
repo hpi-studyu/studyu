@@ -24,21 +24,21 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-  late final DashboardController controller;
-  late final DashboardState state;
+  late Future<StudyUUser> user;
 
   @override
   void initState() {
     super.initState();
-    controller = ref.read(dashboardControllerProvider.notifier);
-    state = ref.read(dashboardControllerProvider);
+    final controller = ref.read(dashboardControllerProvider.notifier);
     runAsync(() => controller.setStudiesFilter(widget.filter));
+    user = runAsync(() => ref.watch(userRepositoryProvider).fetchUser());
   }
 
   @override
   void didUpdateWidget(DashboardScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.filter != widget.filter) {
+      final controller = ref.read(dashboardControllerProvider.notifier);
       runAsync(() => controller.setStudiesFilter(widget.filter));
     }
   }
@@ -46,9 +46,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final controller = ref.read(dashboardControllerProvider.notifier);
+    final controller = ref.watch(dashboardControllerProvider.notifier);
     final state = ref.watch(dashboardControllerProvider);
-    final userRepo = ref.watch(userRepositoryProvider);
 
     return DashboardScaffold(
       body: Column(
@@ -87,11 +86,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
           const SizedBox(height: 24.0), // spacing between body elements
           FutureBuilder<StudyUUser>(
-            future:
-                userRepo.fetchUser(), // todo cache this with ModelRepository
+            future: user,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return AsyncValueWidget<List<Study>>(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
                   value: state.displayedStudies(
                     snapshot.data!.preferences.pinnedStudies,
                     state.query,
@@ -100,7 +100,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     studies: visibleStudies,
                     pinnedStudies: snapshot.data!.preferences.pinnedStudies,
                     dashboardController:
-                        ref.read(dashboardControllerProvider.notifier),
+                        ref.watch(dashboardControllerProvider.notifier),
                     onSelect: controller.onSelectStudy,
                     getActions: controller.availableActions,
                     emptyWidget: (widget.filter == null ||
@@ -128,7 +128,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 );
               }
-              return const SizedBox.shrink();
+              return const Center(child: CircularProgressIndicator());
             },
           ),
         ],

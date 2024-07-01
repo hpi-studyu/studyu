@@ -1,3 +1,16 @@
+## 4.4.3-dev.2
+
+ - **FIX**: keep eligibility criterion.
+ - **FIX**: empty description init value.
+ - **FIX**: formatting issues.
+ - **FIX**: formatting issues.
+ - **FIX**: migrate app to status.
+ - **FIX**: users not able to continue closed study.
+ - **FIX**: upgrade deps.
+ - **FEAT**: deprecate published for study_status.
+ - **FEAT**: close study using is_closed column.
+ - **FEAT**: close study.
+
 ## 4.4.3-dev.1
 
  - **PERF**: improve dashboard study fetching.

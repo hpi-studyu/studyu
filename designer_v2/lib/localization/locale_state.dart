@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+
+part 'locale_state.g.dart';
 
 Locale fallbackLocale =
     Locale(Config.defaultLocale.first, Config.defaultLocale.last);
@@ -18,37 +20,31 @@ class LocaleState {
   }
 }
 
-class LocaleStateNotifier extends StateNotifier<LocaleState> {
-  final Ref ref;
-  static const _localStorageKey = 'lang';
-
-  LocaleStateNotifier(this.ref) : super(LocaleState(fallbackLocale));
-
-  /// Initialize Locale
-  /// Can be run at startup to establish the initial local from storage, or the platform
-  /// 1. Attempts to restore locale from storage
-  /// 2. IF no locale in storage, attempts to set local from the platform settings
-  Future<void> initLocale() async {
+@riverpod
+class LocaleStateNotifier extends _$LocaleStateNotifier {
+  @override
+  LocaleState build() {
+    /// Initialize Locale
+    /// Can be run at startup to establish the initial local from storage, or the platform
+    /// 1. Attempts to restore locale from storage
+    /// 2. IF no locale in storage, attempts to set local from the platform settings
     // Attempt to restore from storage
-    final bool fromStorageSuccess = await restoreFromStorage();
-
-    // If storage restore did not work, set from platform
-    if (!fromStorageSuccess) {
-      setLocale(ref.read(platformLocaleProvider));
-    }
+    restoreFromStorage();
+    return LocaleState(fallbackLocale);
   }
+
+  static const _localStorageKey = 'lang';
 
   /// Set Locale
   /// Attempts to set the locale if it's in our list of supported locales.
   /// IF NOT: get the first locale that matches our language code and set that
   /// ELSE: do nothing.
-  void setLocale(Locale locale) {
-    final List<Locale> supportedLocales = ref.read(supportedLocalesProvider);
+  Future<void> setLocale(Locale locale) async {
+    final List<Locale> supportedLocales = ref.watch(supportedLocalesProvider);
 
     // Set the locale if it's in our list of supported locales
     if (supportedLocales.contains(locale)) {
       state = state.copyWith(locale: locale);
-      save();
     }
 
     // Get the closest language locale and set that instead
@@ -66,7 +62,18 @@ class LocaleStateNotifier extends StateNotifier<LocaleState> {
 
   /// Restore Locale from Storage
   Future<bool> restoreFromStorage() async {
-    return (await load()) != null;
+    try {
+      final LocaleState? loadedState = await load();
+      if (loadedState != null) {
+        state = loadedState;
+        return true;
+      }
+    } catch (e) {
+      rethrow;
+    }
+    // If storage restore did not work, set from platform
+    setLocale(ref.watch(platformLocaleProvider));
+    return false;
   }
 
   Future<LocaleState?> load() async {

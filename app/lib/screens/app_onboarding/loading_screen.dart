@@ -111,7 +111,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     StudyULogger.info(
       "Preview: Found query parameters ${widget.queryParameters}",
     );
-    final lang = context.watch<AppLanguage>();
+    final lang = AppLanguage(AppLocalizations.supportedLocales);
     final preview = Preview(
       widget.queryParameters,
       lang,

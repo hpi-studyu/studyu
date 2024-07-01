@@ -32,6 +32,7 @@ extension FormViewModelCollectionActions<T extends ManagedFormViewModel<D>,
                 final duplicateFormViewModel =
                     formViewModel.createDuplicate() as T;
                 add(duplicateFormViewModel);
+                formViewModel.save();
               },
         isAvailable: !isReadOnly,
       ),
@@ -41,9 +42,12 @@ extension FormViewModelCollectionActions<T extends ManagedFormViewModel<D>,
         isDestructive: true,
         onExecute: (onDelete != null)
             ? () => onDelete(formViewModel)
-            : () => removeWhere((e) {
+            : () {
+                removeWhere((e) {
                   return formViewModel.formData!.id == e.formData?.id;
-                }),
+                });
+                formViewModel.save();
+              },
         isAvailable: !isReadOnly,
       ),
     ].where((action) => action.isAvailable).toList();

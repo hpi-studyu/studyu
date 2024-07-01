@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/repositories/supabase_client.dart';
 import 'package:studyu_designer_v2/utils/behaviour_subject.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+part 'auth_repository.g.dart';
 
 abstract class IAuthRepository extends IAppDelegate {
   // - Authentication
@@ -161,13 +163,10 @@ class AuthRepository implements IAuthRepository {
   }
 }
 
-final authRepositoryProvider = riverpod.Provider<IAuthRepository>((ref) {
+@riverpod
+AuthRepository authRepository(AuthRepositoryRef ref) {
   final authRepository = AuthRepository(
     supabaseClient: ref.watch(supabaseClientProvider),
   );
-  // Bind lifecycle to Riverpod
-  ref.onDispose(() {
-    authRepository.dispose();
-  });
   return authRepository;
-});
+}

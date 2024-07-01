@@ -102,4 +102,26 @@ class StudyMeasurementsRobot {
         .scrollTo()
         .enterText(optionText);
   }
+
+  Future<void> createObservation({
+    required String observationTitle,
+    required String observationHeader,
+    required String observationFooter,
+  }) async {
+    await tapAddSurveyButton();
+    await enterSurveyName(observationTitle);
+    await enterSurveyIntroText(observationHeader);
+    await enterSurveyOutroText(observationFooter);
+  }
+
+  Future<void> createObservationQuestion({
+    required String questionText,
+    required String option1,
+    required String option2,
+  }) async {
+    await tapAddSurveyQuestionButton();
+    await enterSurveyQuestionText(questionText);
+    await enterSurveyQuestionOption1(option1);
+    await enterSurveyQuestionOption2(option2);
+  }
 }

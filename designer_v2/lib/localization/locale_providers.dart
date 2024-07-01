@@ -1,33 +1,31 @@
 import 'dart:ui';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/localization/locale_state.dart';
 import 'package:studyu_designer_v2/localization/platform_locale/platform_locale_interface.dart';
 
+part 'locale_providers.g.dart';
+
 /// Platform Locale Provider
 /// Returns the locale of the Platform.localeName
-final platformLocaleProvider = Provider<Locale>((_) {
+@riverpod
+Locale platformLocale(PlatformLocaleRef ref) {
   // Get the platform language using platform specific implementations
-  final Locale platformLocale = PlatformLocale().getPlatformLocale();
-
-  return platformLocale;
-});
+  return PlatformLocale().getPlatformLocale();
+}
 
 /// Supported Locales Provider
-final supportedLocalesProvider = Provider<List<Locale>>((_) {
+@riverpod
+List<Locale> supportedLocales(SupportedLocalesRef ref) {
   return Config.supportedLocales.entries
       .map((e) => Locale(e.key, e.value))
       .toList();
-});
+}
 
 /// Locale Provider
 /// Provides the current locale, and automatically updates when the locale changes.
-final localeProvider = Provider<Locale>((ref) {
-  return ref.watch(localeStateProvider).locale;
-});
-
-final localeStateProvider =
-    StateNotifierProvider<LocaleStateNotifier, LocaleState>(
-  (ref) => LocaleStateNotifier(ref),
-);
+@riverpod
+Locale locale(LocaleRef ref) {
+  return ref.watch(localeStateNotifierProvider).locale;
+}

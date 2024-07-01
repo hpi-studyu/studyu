@@ -1,5 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_invite.dart';
@@ -9,6 +9,8 @@ import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
 import 'package:uuid/uuid.dart';
+
+part 'invite_code_form_controller.g.dart';
 
 class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   InviteCodeFormViewModel({
@@ -41,10 +43,10 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   );
   final codeControlValidationMessages = {
     ValidationMessage.required: (_) => tr.form_field_code_required,
-    ValidationMessage.minLength: (error) => tr
-        .form_field_code_minlength((error as Map)['requiredLength'] as String),
-    ValidationMessage.maxLength: (error) => tr
-        .form_field_code_maxlength((error as Map)['requiredLength'] as String),
+    ValidationMessage.minLength: (error) =>
+        tr.form_field_code_minlength((error as Map)['requiredLength'] as int),
+    ValidationMessage.maxLength: (error) =>
+        tr.form_field_code_maxlength((error as Map)['requiredLength'] as int),
     'inviteCodeAlreadyUsed': (_) => tr.form_field_code_alreadyused,
   };
 
@@ -146,12 +148,15 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
   }
 }
 
-/// Use the [family] modifier to provide a controller parametrized by [StudyID]
+/// Provide a controller parametrized by [StudyID]
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-final inviteCodeFormViewModelProvider = Provider.autoDispose
-    .family<InviteCodeFormViewModel, StudyID>((ref, studyId) {
+@riverpod
+InviteCodeFormViewModel inviteCodeFormViewModel(
+  InviteCodeFormViewModelRef ref,
+  StudyID studyId,
+) {
   print("inviteCodeFormViewModelProvider($studyId");
   // Reactively bind to and obtain [StudyController]'s current study
   final study = ref
@@ -162,4 +167,4 @@ final inviteCodeFormViewModelProvider = Provider.autoDispose
     study: study.value!,
     inviteCodeRepository: inviteCodeRepository,
   );
-});
+}
