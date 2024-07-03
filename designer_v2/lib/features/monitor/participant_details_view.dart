@@ -78,43 +78,105 @@ class ParticipantDetailsView extends ConsumerWidget {
   }
 
   Widget _buildPerDayStatus() {
+    final studySchedule = StudySchedule();
+    final int totalCompletedDays = monitorItem.missedTasksPerDay.length;
+
+    final phases = <StudyPhase>[];
+
+    if (studySchedule.includeBaseline) {
+      phases.add(StudyPhase(
+          name: 'Baseline',
+          missedTasksPerDay: monitorItem.missedTasksPerDay.sublist(
+              0,
+              totalCompletedDays > studySchedule.baselineLength
+                  ? studySchedule.baselineLength
+                  : totalCompletedDays)));
+    }
+
+    final String sequence = studySchedule.nameOfSequence;
+
+    for (var i = 0; i < studySchedule.numberOfCycles * 2; i++) {
+      final int phaseDuration = studySchedule.phaseDuration;
+      final bool includeBaseline = studySchedule.includeBaseline;
+      final int baselineAdjustmentStart =
+          includeBaseline ? (i + 1) * phaseDuration : i * phaseDuration;
+      final int baselineAdjustmentEnd =
+          includeBaseline ? (i + 2) * phaseDuration : (i + 1) * phaseDuration;
+
+      if (baselineAdjustmentStart >= totalCompletedDays) break;
+
+      final int start = totalCompletedDays > baselineAdjustmentStart
+          ? baselineAdjustmentStart
+          : totalCompletedDays;
+
+      final int end = totalCompletedDays > baselineAdjustmentEnd
+          ? baselineAdjustmentEnd
+          : totalCompletedDays;
+
+      final String interventionName =
+          sequence[i] == "A" ? interventions[0].name! : interventions[1].name!;
+
+      phases.add(StudyPhase(
+          name: interventionName,
+          missedTasksPerDay:
+              monitorItem.missedTasksPerDay.sublist(start, end)));
+    }
+
     assert(
       monitorItem.missedTasksPerDay.length ==
           monitorItem.completedTasksPerDay.length,
     );
-    return Wrap(
-      children: monitorItem.missedTasksPerDay
-          .mapIndexed(
-            (index, missed) => Tooltip(
-              message: _getTooltipText(
-                missed,
-                monitorItem.completedTasksPerDay[index],
-              ),
-              child: Container(
-                height: 50,
-                width: 50,
-                margin: const EdgeInsets.fromLTRB(0, 0, 8, 8),
-                decoration: BoxDecoration(
-                  color: missed.isEmpty
-                      ? Colors.green
-                      : (monitorItem.completedTasksPerDay[index].isEmpty
-                          ? Colors.red
-                          : Colors.orange),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Center(
-                  child: Text(
-                    (index + 1).toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: phases.mapIndexed((phaseIndex, phase) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              phase.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-          )
-          .toList(),
+            Wrap(
+              children: phase.missedTasksPerDay
+                  .mapIndexed((index, missed) => _buildSquare(index, missed,
+                      (phaseIndex * studySchedule.phaseDuration) + index + 1))
+                  .toList(),
+            ),
+            const SizedBox(height: 10),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildSquare(int index, Set<String> missed, int numberOfTheDay) {
+    return Tooltip(
+      message: _getTooltipText(
+        missed,
+        monitorItem.completedTasksPerDay[index],
+      ),
+      child: Container(
+        height: 50,
+        width: 50,
+        margin: const EdgeInsets.fromLTRB(0, 0, 8, 8),
+        decoration: BoxDecoration(
+          color: missed.isEmpty
+              ? Colors.green
+              : (monitorItem.completedTasksPerDay[index].isEmpty
+                  ? Colors.red
+                  : Colors.orange),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Center(
+          child: Text(
+            numberOfTheDay.toString(),
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -189,4 +251,11 @@ class ParticipantDetailsView extends ConsumerWidget {
       ],
     );
   }
+}
+
+class StudyPhase {
+  final String name;
+  final List<Set<String>> missedTasksPerDay;
+
+  StudyPhase({required this.name, required this.missedTasksPerDay});
 }
