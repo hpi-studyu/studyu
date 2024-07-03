@@ -20,8 +20,8 @@ class ParticipantDetailsView extends ConsumerWidget {
   final List<Observation> observations;
 
   static const Color incompleteColor = Color(0xFFD55E00);
-    static const Color partiallyComplete = Color(0xFF0072B2);
-    static const Color completeColor = Color(0xFF009E73);
+  static const Color partiallyComplete = Color(0xFF0072B2);
+  static const Color completeColor = Color(0xFF009E73);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -154,7 +154,6 @@ class ParticipantDetailsView extends ConsumerWidget {
   }
 
   Widget _buildSquare(int index, Set<String> missed, int numberOfTheDay) {
-     
     return Tooltip(
       message: _getTooltipText(
         missed,
