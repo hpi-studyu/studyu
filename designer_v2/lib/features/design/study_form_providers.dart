@@ -64,9 +64,9 @@ ConsentItemFormViewModel consentItemFormViewModel(
 // - Interventions
 
 @riverpod
-InterventionsFormViewModel interventionsFormViewModel(
-    MP23InterventionsFormViewModel ref,
-    StudyID studyId,
+MP23InterventionsFormViewModel interventionsFormViewModel(
+  InterventionsFormViewModelRef ref,
+  StudyID studyId,
 ) {
   return ref
       .watch(studyFormViewModelProvider(studyId))
