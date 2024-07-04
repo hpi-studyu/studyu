@@ -45,7 +45,7 @@ class Study extends SupabaseObjectFunctions<Study>
   static const String baselineID = '__baseline';
   String id;
   String? title;
-  String? description;
+  String? description = '';
   @JsonKey(name: 'user_id')
   String userId;
   Participation participation = Participation.invite;
@@ -365,11 +365,6 @@ class Study extends SupabaseObjectFunctions<Study>
 
   bool isReadonly(User user) {
     return status != StudyStatus.draft || !canEdit(user);
-  }
-
-  @override
-  String toString() {
-    return 'Study{id: $id, title: $title, description: $description, userId: $userId, participation: $participation, resultSharing: $resultSharing, contact: $contact, iconName: $iconName, published: <deprecated>, status: $status, questionnaire: $questionnaire, eligibilityCriteria: $eligibilityCriteria, consent: $consent, interventions: $interventions, observations: $observations, schedule: $schedule, mp23Schedule: $mp23Schedule, reportSpecification: $reportSpecification, results: $results, collaboratorEmails: $collaboratorEmails, registryPublished: $registryPublished, participantCount: $participantCount, endedCount: $endedCount, activeSubjectCount: $activeSubjectCount, missedDays: $missedDays, repo: $repo, invites: $invites, participants: $participants, participantsProgress: $participantsProgress, createdAt: $createdAt}';
   }
 
   @override

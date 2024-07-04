@@ -1,7 +1,10 @@
 import 'dart:async';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
+
+part 'notification_service.g.dart';
 
 abstract class INotificationService {
   void showMessage(
@@ -56,11 +59,9 @@ class NotificationService implements INotificationService {
   }
 }
 
-final notificationServiceProvider = Provider<INotificationService>((ref) {
-  final notificationService = NotificationService();
-  // Bind lifecycle to Riverpod
-  ref.onDispose(() {
-    notificationService.dispose();
-  });
-  return notificationService;
-});
+@Riverpod(keepAlive: true)
+NotificationService notificationService(NotificationServiceRef ref) {
+  ref.onDispose(() => print('NotificationService disposed'));
+
+  return NotificationService();
+}

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/constants.dart';
-import 'package:studyu_designer_v2/features/app_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
@@ -36,8 +35,6 @@ class AppContent extends ConsumerStatefulWidget {
 }
 
 class _AppContentState extends ConsumerState<AppContent> {
-  late final AppController appController;
-
   final settings = ValueNotifier(
     ThemeSettings(
       //sourceColor: Color(0xff2a4fda),
@@ -51,20 +48,13 @@ class _AppContentState extends ConsumerState<AppContent> {
   @override
   void initState() {
     super.initState();
-    appController = ref.read(appControllerProvider.notifier);
-    appController.onAppStart();
-    // todo move this into appControllerProvider
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // Locale Startup Actions
-      ref.read(localeStateProvider.notifier).initLocale();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     AppTranslation.init(
       ref,
-    ); // todo Refactor this into initState locale delegate if possible
+    );
     final router = ref.watch(routerProvider);
 
     return DynamicColorBuilder(
