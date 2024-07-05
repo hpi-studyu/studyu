@@ -140,6 +140,7 @@ class ParticipantDetailsView extends ConsumerWidget {
               phase.name,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 5,),
             Wrap(
               children: phase.missedTasksPerDay
                   .mapIndexed((index, missed) => _buildSquare(index, missed,
