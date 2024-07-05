@@ -19,9 +19,9 @@ class ParticipantDetailsView extends ConsumerWidget {
   final List<Intervention> interventions;
   final List<Observation> observations;
 
-  static const Color incompleteColor = Color(0xFFD55E00);
-  static const Color partiallyComplete = Color(0xFF0072B2);
-  static const Color completeColor = Color(0xFF009E73);
+  static const Color incompleteColor = Color.fromARGB(255, 234, 234, 234);
+  static const Color partiallyComplete = Color.fromARGB(255, 93, 145, 238);
+  static const Color completeColor = Color.fromARGB(255, 10, 153, 255);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -168,15 +168,20 @@ class ParticipantDetailsView extends ConsumerWidget {
               ? completeColor
               : (monitorItem.completedTasksPerDay[index].isEmpty
                   ? incompleteColor
-                  : partiallyComplete),
+                  : null), // Set color to null when using gradient
+          gradient:
+              monitorItem.completedTasksPerDay[index].isEmpty || missed.isEmpty
+                  ? null
+                  : _buildGradient(),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Center(
           child: Text(
             numberOfTheDay.toString(),
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: missed.isEmpty ? Colors.white : Colors.black,
               fontWeight: FontWeight.bold,
+              fontSize: 20
             ),
           ),
         ),
@@ -224,10 +229,9 @@ class ParticipantDetailsView extends ConsumerWidget {
               tr.participant_details_color_legend_completed,
             ),
             const SizedBox(width: 16.0),
-            _buildLegendItem(
-              partiallyComplete,
-              tr.participant_details_color_legend_partially_completed,
-            ),
+            _buildLegendItem(partiallyComplete,
+                tr.participant_details_color_legend_partially_completed,
+                gradient: true),
             const SizedBox(width: 16.0),
             _buildLegendItem(
               incompleteColor,
@@ -239,20 +243,35 @@ class ParticipantDetailsView extends ConsumerWidget {
     );
   }
 
-  Widget _buildLegendItem(Color color, String text) {
+  Widget _buildLegendItem(Color color, String text, {bool gradient = false}) {
     return Row(
       children: [
         Container(
           width: 20.0,
           height: 20.0,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(3),
-            color: color,
-          ),
+              borderRadius: BorderRadius.circular(3),
+              color: color,
+              gradient: gradient ? _buildGradient() :null ),
         ),
         const SizedBox(width: 8.0),
         Text(text),
       ],
+    );
+  }
+
+  LinearGradient _buildGradient() {
+    return const LinearGradient(
+      begin: Alignment.topRight,
+      end: Alignment(0.5, -0.4),
+      stops: [0.0, 0.5, 0.5, 1],
+      colors: [
+        partiallyComplete,
+        partiallyComplete,
+        incompleteColor,
+        incompleteColor,
+      ],
+      tileMode: TileMode.repeated,
     );
   }
 }
