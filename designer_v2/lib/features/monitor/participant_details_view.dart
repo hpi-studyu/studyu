@@ -140,7 +140,9 @@ class ParticipantDetailsView extends ConsumerWidget {
               phase.name,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 5,),
+            const SizedBox(
+              height: 5,
+            ),
             Wrap(
               children: phase.missedTasksPerDay
                   .mapIndexed((index, missed) => _buildSquare(index, missed,
@@ -180,10 +182,9 @@ class ParticipantDetailsView extends ConsumerWidget {
           child: Text(
             numberOfTheDay.toString(),
             style: TextStyle(
-              color: missed.isEmpty ? Colors.white : Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 20
-            ),
+                color: missed.isEmpty ? Colors.white : Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 20),
           ),
         ),
       ),
@@ -226,38 +227,44 @@ class ParticipantDetailsView extends ConsumerWidget {
         Row(
           children: [
             _buildLegendItem(
-              completeColor,
-              tr.participant_details_color_legend_completed,
-            ),
+                completeColor,
+                tr.participant_details_color_legend_completed,
+                tr.participant_details_partially_completed_legend_tooltip),
             const SizedBox(width: 16.0),
-            _buildLegendItem(partiallyComplete,
+            _buildLegendItem(
+                partiallyComplete,
                 tr.participant_details_color_legend_partially_completed,
+                tr.participant_details_partially_completed_legend_tooltip,
                 gradient: true),
             const SizedBox(width: 16.0),
             _buildLegendItem(
-              incompleteColor,
-              tr.participant_details_color_legend_missed,
-            ),
+                incompleteColor,
+                tr.participant_details_color_legend_missed,
+                tr.participant_details_incomplete_legend_tooltip),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildLegendItem(Color color, String text, {bool gradient = false}) {
-    return Row(
-      children: [
-        Container(
-          width: 20.0,
-          height: 20.0,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3),
-              color: color,
-              gradient: gradient ? _buildGradient() :null ),
-        ),
-        const SizedBox(width: 8.0),
-        Text(text),
-      ],
+  Widget _buildLegendItem(Color color, String text, String tooltipMessage,
+      {bool gradient = false}) {
+    return Tooltip(
+      message: tooltipMessage,
+      child: Row(
+        children: [
+          Container(
+            width: 20.0,
+            height: 20.0,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3),
+                color: color,
+                gradient: gradient ? _buildGradient() : null),
+          ),
+          const SizedBox(width: 8.0),
+          Text(text),
+        ],
+      ),
     );
   }
 
