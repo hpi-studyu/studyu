@@ -48,7 +48,7 @@ class StudyMonitorItem extends Equatable {
   final List<Set<String>> missedTasksPerDay;
   final List<Set<String>> completedTasksPerDay;
 
-  StudyMonitorItem({
+  const StudyMonitorItem({
     required this.participantId,
     required this.inviteCode,
     required this.startedAt,
@@ -62,10 +62,8 @@ class StudyMonitorItem extends Equatable {
     required this.droppedOut,
     required this.missedTasksPerDay,
     required this.completedTasksPerDay,
-  }) {
-    assert(missedTasksPerDay.length == currentDayOfStudy);
-    assert(completedTasksPerDay.length == currentDayOfStudy);
-  }
+  })  : assert(missedTasksPerDay.length == currentDayOfStudy),
+        assert(completedTasksPerDay.length == currentDayOfStudy);
 
   @override
   List<Object?> get props => [participantId];

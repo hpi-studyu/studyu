@@ -2,6 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/domain/study_monitoring.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
@@ -20,8 +22,9 @@ class ParticipantDetailsView extends ConsumerWidget {
   final List<Observation> observations;
 
   static const Color incompleteColor = Color.fromARGB(255, 234, 234, 234);
-  static const Color partiallyComplete = Color.fromARGB(255, 93, 145, 238);
-  static const Color completeColor = Color.fromARGB(255, 10, 153, 255);
+  // Add transparency to increase the readability of the text
+  static Color partiallyComplete = Colors.lightBlue.faded(0.75);
+  static const Color completeColor = Colors.lightBlue;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,9 +35,8 @@ class ParticipantDetailsView extends ConsumerWidget {
         _buildParticipantInfo(languageCode),
         const SizedBox(height: 8.0),
         const Divider(),
-        Text(
-          tr.participant_details_study_days_description,
-          style: const TextStyle(fontSize: 16.0, color: Colors.black54),
+        TextParagraph(
+          text: tr.participant_details_study_days_description,
         ),
         const SizedBox(height: 16.0),
         _buildPerDayStatus(),
@@ -45,27 +47,29 @@ class ParticipantDetailsView extends ConsumerWidget {
   }
 
   Widget _buildParticipantInfo(String languageCode) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildInfoRow(
-          tr.monitoring_table_column_participant_id,
-          monitorItem.participantId,
-        ),
-        _buildInfoRow(
-          tr.monitoring_table_column_invite_code,
-          monitorItem.inviteCode ?? '-',
-        ),
-        _buildInfoRow(
-          tr.monitoring_table_column_enrolled,
-          monitorItem.startedAt
-              .toLocalizedString(locale: languageCode, showTime: false),
-        ),
-        _buildInfoRow(
-          tr.monitoring_table_column_last_activity,
-          monitorItem.lastActivityAt.toLocalizedString(locale: languageCode),
-        ),
-      ],
+    return SelectionArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildInfoRow(
+            tr.monitoring_table_column_participant_id,
+            monitorItem.participantId,
+          ),
+          _buildInfoRow(
+            tr.monitoring_table_column_invite_code,
+            monitorItem.inviteCode ?? 'N/A',
+          ),
+          _buildInfoRow(
+            tr.monitoring_table_column_enrolled,
+            monitorItem.startedAt
+                .toLocalizedString(locale: languageCode, showTime: false),
+          ),
+          _buildInfoRow(
+            tr.monitoring_table_column_last_activity,
+            monitorItem.lastActivityAt.toLocalizedString(locale: languageCode),
+          ),
+        ],
+      ),
     );
   }
 
@@ -88,18 +92,22 @@ class ParticipantDetailsView extends ConsumerWidget {
     final phases = <StudyPhase>[];
 
     if (studySchedule.includeBaseline) {
-      phases.add(StudyPhase(
+      phases.add(
+        StudyPhase(
           name: 'Baseline',
           missedTasksPerDay: monitorItem.missedTasksPerDay.sublist(
-              0,
-              totalCompletedDays > studySchedule.baselineLength
-                  ? studySchedule.baselineLength
-                  : totalCompletedDays)));
+            0,
+            totalCompletedDays > studySchedule.baselineLength
+                ? studySchedule.baselineLength
+                : totalCompletedDays,
+          ),
+        ),
+      );
     }
 
     final String sequence = studySchedule.nameOfSequence;
 
-    for (var i = 0; i < studySchedule.numberOfCycles * 2; i++) {
+    for (int i = 0; i < studySchedule.numberOfCycles * 2; i++) {
       final int phaseDuration = studySchedule.phaseDuration;
       final bool includeBaseline = studySchedule.includeBaseline;
       final int baselineAdjustmentStart =
@@ -120,10 +128,12 @@ class ParticipantDetailsView extends ConsumerWidget {
       final String interventionName =
           sequence[i] == "A" ? interventions[0].name! : interventions[1].name!;
 
-      phases.add(StudyPhase(
+      phases.add(
+        StudyPhase(
           name: interventionName,
-          missedTasksPerDay:
-              monitorItem.missedTasksPerDay.sublist(start, end)));
+          missedTasksPerDay: monitorItem.missedTasksPerDay.sublist(start, end),
+        ),
+      );
     }
 
     assert(
@@ -140,13 +150,16 @@ class ParticipantDetailsView extends ConsumerWidget {
               phase.name,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            const SizedBox(
-              height: 5,
-            ),
+            const SizedBox(height: 10),
             Wrap(
               children: phase.missedTasksPerDay
-                  .mapIndexed((index, missed) => _buildSquare(index, missed,
-                      (phaseIndex * studySchedule.phaseDuration) + index + 1))
+                  .mapIndexed(
+                    (index, missed) => _buildSquare(
+                      index,
+                      missed,
+                      (phaseIndex * studySchedule.phaseDuration) + index + 1,
+                    ),
+                  )
                   .toList(),
             ),
             const SizedBox(height: 10),
@@ -182,9 +195,10 @@ class ParticipantDetailsView extends ConsumerWidget {
           child: Text(
             numberOfTheDay.toString(),
             style: TextStyle(
-                color: missed.isEmpty ? Colors.white : Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 20),
+              color: missed.isEmpty ? Colors.white : Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
           ),
         ),
       ),
@@ -207,9 +221,9 @@ class ParticipantDetailsView extends ConsumerWidget {
     }
     for (final observation in observations) {
       if (missedTaskIds.contains(observation.id)) {
-        sb.writeln('\u{274C} ${observation.title}');
+        sb.write('\u{274C} ${observation.title}');
       } else if (completedTaskIds.contains(observation.id)) {
-        sb.writeln('\u{2705} ${observation.title}');
+        sb.write('\u{2705} ${observation.title}');
       }
     }
     return sb.toString();
@@ -227,28 +241,35 @@ class ParticipantDetailsView extends ConsumerWidget {
         Row(
           children: [
             _buildLegendItem(
-                completeColor,
-                tr.participant_details_color_legend_completed,
-                tr.participant_details_partially_completed_legend_tooltip),
+              completeColor,
+              tr.participant_details_color_legend_completed,
+              tr.participant_details_completed_legend_tooltip,
+            ),
             const SizedBox(width: 16.0),
             _buildLegendItem(
-                partiallyComplete,
-                tr.participant_details_color_legend_partially_completed,
-                tr.participant_details_partially_completed_legend_tooltip,
-                gradient: true),
+              partiallyComplete,
+              tr.participant_details_color_legend_partially_completed,
+              tr.participant_details_partially_completed_legend_tooltip,
+              gradient: true,
+            ),
             const SizedBox(width: 16.0),
             _buildLegendItem(
-                incompleteColor,
-                tr.participant_details_color_legend_missed,
-                tr.participant_details_incomplete_legend_tooltip),
+              incompleteColor,
+              tr.participant_details_color_legend_missed,
+              tr.participant_details_incomplete_legend_tooltip,
+            ),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildLegendItem(Color color, String text, String tooltipMessage,
-      {bool gradient = false}) {
+  Widget _buildLegendItem(
+    Color color,
+    String text,
+    String tooltipMessage, {
+    bool gradient = false,
+  }) {
     return Tooltip(
       message: tooltipMessage,
       child: Row(
@@ -257,9 +278,10 @@ class ParticipantDetailsView extends ConsumerWidget {
             width: 20.0,
             height: 20.0,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3),
-                color: color,
-                gradient: gradient ? _buildGradient() : null),
+              borderRadius: BorderRadius.circular(3),
+              color: color,
+              gradient: gradient ? _buildGradient() : null,
+            ),
           ),
           const SizedBox(width: 8.0),
           Text(text),
@@ -269,10 +291,10 @@ class ParticipantDetailsView extends ConsumerWidget {
   }
 
   LinearGradient _buildGradient() {
-    return const LinearGradient(
+    return LinearGradient(
       begin: Alignment.topRight,
-      end: Alignment(0.5, -0.4),
-      stops: [0.0, 0.5, 0.5, 1],
+      end: const Alignment(0.5, -0.4),
+      stops: const [0.0, 0.5, 0.5, 1],
       colors: [
         partiallyComplete,
         partiallyComplete,

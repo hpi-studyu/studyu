@@ -27,12 +27,13 @@ class StudyMonitorScreen extends StudyPageWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             _monitorSectionHeader(context, studyMonitorData),
-            const SizedBox(height: 40.0), // spacing between body elements
+            const SizedBox(height: 32.0),
             if (studyMonitorData.items.isNotEmpty) ...[
               SelectableText(
                 tr.monitoring_participants_title,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
+              Container(width: 32.0),
               StudyMonitorTable(
                 ref: ref,
                 studyMonitorItems: studyMonitorData.items,
@@ -106,22 +107,26 @@ class StudyMonitorScreen extends StudyPageWidget {
                   _buildStat(
                     percentage: activePercentage,
                     color: activeColor,
-                    tooltip: tr.monitoring_active,
+                    tooltip:
+                        '${tr.monitoring_active}: ${monitorData.activeParticipants}',
                   ),
                   _buildStat(
                     percentage: inactivePercentage,
                     color: inactiveColor,
-                    tooltip: tr.monitoring_inactive,
+                    tooltip:
+                        '${tr.monitoring_inactive}: ${monitorData.inactiveParticipants}',
                   ),
                   _buildStat(
                     percentage: dropoutPercentage,
                     color: dropoutColor,
-                    tooltip: tr.monitoring_dropout,
+                    tooltip:
+                        '${tr.monitoring_dropout}: ${monitorData.dropoutParticipants}',
                   ),
                   _buildStat(
                     percentage: completedPercentage,
                     color: completedColor,
-                    tooltip: tr.monitoring_completed,
+                    tooltip:
+                        '${tr.monitoring_completed}: ${monitorData.completedParticipants}',
                   ),
                 ],
               ),
@@ -203,7 +208,7 @@ class StudyMonitorScreen extends StudyPageWidget {
     );
   }
 
-  _onSelectParticipant(
+  void _onSelectParticipant(
     BuildContext context,
     WidgetRef ref,
     StudyMonitorItem item,

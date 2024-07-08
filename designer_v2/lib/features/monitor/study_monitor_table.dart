@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
+import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/domain/study_monitoring.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
+import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class StudyMonitorTable extends ConsumerWidget {
@@ -94,12 +96,19 @@ class StudyMonitorTable extends ConsumerWidget {
     Set<WidgetState> states,
   ) {
     final languageCode = ref.watch(localeProvider).languageCode;
+    final theme = Theme.of(context);
     return [
       Tooltip(
         message: item.participantId,
         child: Text(item.participantId.split("-").first),
       ),
-      Text(item.inviteCode ?? "-"),
+      if (item.inviteCode != null)
+        Text(item.inviteCode!)
+      else
+        TextParagraph(
+          text: item.inviteCode ?? 'N/A',
+          style: ThemeConfig.bodyTextMuted(theme),
+        ),
       Tooltip(
         message: item.startedAt
             .toLocalizedString(locale: languageCode, showTime: false),
@@ -125,11 +134,20 @@ class StudyMonitorTable extends ConsumerWidget {
         ),
       ),
       _buildProgressCell(
-          context, item.currentDayOfStudy, item.studyDurationInDays),
-      _buildProgressCell(context, item.completedInterventions,
-          item.completedInterventions + item.missedInterventions),
-      _buildProgressCell(context, item.completedSurveys,
-          item.completedSurveys + item.missedSurveys),
+        context,
+        item.currentDayOfStudy,
+        item.studyDurationInDays,
+      ),
+      _buildProgressCell(
+        context,
+        item.completedInterventions,
+        item.completedInterventions + item.missedInterventions,
+      ),
+      _buildProgressCell(
+        context,
+        item.completedSurveys,
+        item.completedSurveys + item.missedSurveys,
+      ),
     ];
   }
 
@@ -148,8 +166,9 @@ class StudyMonitorTable extends ConsumerWidget {
           child: Text(
             "$progress/$total",
             style: TextStyle(
-                color: theme.colorScheme.onPrimary,
-                fontWeight: FontWeight.bold),
+              color: theme.colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],
