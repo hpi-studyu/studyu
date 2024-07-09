@@ -33,7 +33,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
       value: state.study,
       data: (study) {
         final formViewModel =
-            ref.read(enrollmentFormViewModelProvider(studyId));
+            ref.watch(enrollmentFormViewModelProvider(studyId));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: ReactiveFormConsumer(
@@ -53,9 +53,11 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       input: Column(
                         children: formViewModel.enrollmentTypeControlOptions
                             .map<Widget>(
-                              (option) => ReactiveRadioListTile<Participation>(
-                                formControl:
-                                    formViewModel.enrollmentTypeControl,
+                              (option) => RadioListTile<Participation>(
+                                groupValue:
+                                    formViewModel.enrollmentTypeControl.value,
+                                onChanged: (value) => formViewModel
+                                    .enrollmentTypeControl.value = option.value,
                                 value: option.value,
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -235,7 +237,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     WidgetRef ref,
   ) {
     final formViewModel =
-        ref.read(screenerQuestionFormViewModelProvider(routeArgs));
+        ref.watch(screenerQuestionFormViewModelProvider(routeArgs));
 
     showFormSideSheet<ScreenerQuestionFormViewModel>(
       context: context,
@@ -265,7 +267,8 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final formViewModel = ref.read(consentItemFormViewModelProvider(routeArgs));
+    final formViewModel =
+        ref.watch(consentItemFormViewModelProvider(routeArgs));
 
     showFormSideSheet<ConsentItemFormViewModel>(
       context: context,

@@ -42,7 +42,9 @@ scripts:
         "dart run build_runner build --delete-conflicting-outputs"
     description: Generate files with build_runner
     packageFilters:
-      scope: studyu_core
+      scope:
+        - 'studyu_core'
+        - 'studyu_designer_v2'
 
   reset:
     run: |

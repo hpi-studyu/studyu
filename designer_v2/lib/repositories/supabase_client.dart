@@ -1,7 +1,9 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+part 'supabase_client.g.dart';
 
 // TODO: Transfer networking code to core package (+ update app if needed)
 
@@ -39,7 +41,8 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
     Map<String, Object> selectionCriteria,
   ) async {
     try {
-      final data = await supabaseClient
+      final data = await this
+          .supabaseClient
           .from(tableName(T))
           .delete()
           .match(selectionCriteria);
@@ -58,7 +61,8 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
     List<String> selectedColumns = const ['*'],
   }) async {
     try {
-      final data = await supabaseClient
+      final data = await this
+          .supabaseClient
           .from(tableName(T))
           .select(selectedColumns.join(','));
       return deserializeList<T>(data);
@@ -84,7 +88,8 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
     List<String> selectedColumns = const ['*'],
   }) async {
     try {
-      final data = await supabaseClient
+      final data = await this
+          .supabaseClient
           .from(tableName(T))
           .select(selectedColumns.join(','))
           .eq(colName, value)
@@ -114,5 +119,6 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 }
 
 // Re-expose the global client object via Riverpod
-final supabaseClientProvider =
-    riverpod.Provider<SupabaseClient>((ref) => env.client);
+@riverpod
+SupabaseClient supabaseClient(AutoDisposeProviderRef<SupabaseClient> ref) =>
+    env.client;

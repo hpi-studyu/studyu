@@ -1,3 +1,9 @@
+## 1.8.4-dev.2
+
+ - **FIX**: formatting issues.
+ - **FIX**: formatting issues.
+ - **FIX**: upgrade deps.
+
 ## 1.8.4-dev.1
 
  - **FIX**: formatting issues.
