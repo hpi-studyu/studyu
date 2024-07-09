@@ -549,6 +549,7 @@
   "participant_details_completed_legend_tooltip": "All intervention and survey tasks have been completed for this day",
   "participant_details_partially_completed_legend_tooltip": "Not all intervention or survey tasks have been completed for this day",
   "participant_details_incomplete_legend_tooltip": "No intervention or survey tasks have been completed for this day",
+  "participant_details_progress_empty_title":"No progress data is available yet",
   "monitoring_no_participants_title": "There are no participants in this study yet",
   "monitoring_no_participants_description": "Once participants have enrolled in your study, you can monitor their progress and view their data here.",
   "monitoring_participants_title": "Participant overview",

@@ -9,6 +9,8 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
+import '../../common_views/empty_body.dart';
+
 class ParticipantDetailsView extends ConsumerWidget {
   const ParticipantDetailsView({
     required this.monitorItem,
@@ -41,7 +43,14 @@ class ParticipantDetailsView extends ConsumerWidget {
           text: tr.participant_details_study_days_description,
         ),
         const SizedBox(height: 16.0),
-        _buildPerDayStatus(),
+        if (monitorItem.missedTasksPerDay.isNotEmpty)
+          _buildPerDayStatus()
+        else
+          EmptyBody(
+            icon: Icons.hourglass_empty,
+            title: tr.participant_details_progress_empty_title,
+            description: "",
+          ),
         const SizedBox(height: 16.0),
         _buildColorLegend(),
       ],
