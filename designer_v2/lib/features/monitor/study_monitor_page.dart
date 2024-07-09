@@ -222,6 +222,7 @@ class StudyMonitorScreen extends StudyPageWidget {
         monitorItem: item,
         interventions: study.interventions,
         observations: study.observations,
+        studySchedule: study.schedule,
       ),
       actionButtons: [
         retainSizeInAppBar(

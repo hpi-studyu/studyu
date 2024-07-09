@@ -14,12 +14,14 @@ class ParticipantDetailsView extends ConsumerWidget {
     required this.monitorItem,
     required this.interventions,
     required this.observations,
+    required this.studySchedule,
     super.key,
   });
 
   final StudyMonitorItem monitorItem;
   final List<Intervention> interventions;
   final List<Observation> observations;
+  final StudySchedule studySchedule;
 
   static const Color incompleteColor = Color.fromARGB(255, 234, 234, 234);
   // Add transparency to increase the readability of the text
@@ -86,7 +88,6 @@ class ParticipantDetailsView extends ConsumerWidget {
   }
 
   Widget _buildPerDayStatus() {
-    final studySchedule = StudySchedule();
     final int totalCompletedDays = monitorItem.missedTasksPerDay.length;
 
     final phases = <StudyPhase>[];
