@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
@@ -57,8 +58,10 @@ class StudyScheduleFormView extends FormConsumerWidget {
               labelHelpText: tr.form_field_crossover_schedule_sequence_tooltip,
               input: DropdownButtonFormField(
                 //formControl: formViewModel.sequenceTypeControl,
-                onChanged: (value) =>
-                    formViewModel.sequenceTypeControl.value = value,
+                onChanged: formViewModel.sequenceTypeControl.disabled
+                    ? null
+                    : (PhaseSequence? value) =>
+                        formViewModel.sequenceTypeControl.value = value,
                 value: formViewModel.sequenceTypeControl.value,
                 decoration: InputDecoration(
                   helperText:
@@ -87,6 +90,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
                   Container(
                     constraints: const BoxConstraints(maxWidth: 70),
                     child: TextField(
+                      readOnly: formViewModel.phaseDurationControl.disabled,
                       controller: TextEditingController()
                         ..value = TextEditingValue(
                           text: formViewModel.phaseDurationControl.value
@@ -130,6 +134,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
                   Container(
                     constraints: const BoxConstraints(maxWidth: 70),
                     child: TextField(
+                      readOnly: formViewModel.numCyclesControl.disabled,
                       //formControl: formViewModel.numCyclesControl,
                       onChanged: (value) => formViewModel
                           .numCyclesControl.value = int.parse(value),
@@ -173,8 +178,10 @@ class StudyScheduleFormView extends FormConsumerWidget {
                     constraints: const BoxConstraints(maxWidth: 70),
                     child: Checkbox(
                       value: formViewModel.includeBaselineControl.value,
-                      onChanged: (value) =>
-                          formViewModel.includeBaselineControl.value = value,
+                      onChanged: formViewModel.includeBaselineControl.disabled
+                          ? null
+                          : (value) => formViewModel
+                              .includeBaselineControl.value = value,
                       //formControl: formViewModel.includeBaselineControl,
                     ),
                   ),
