@@ -1,6 +1,5 @@
 {
   "de": [
-    "form_field_response_audio",
     "report_status_primary",
     "report_status_secondary",
     "report_status_primary_description",

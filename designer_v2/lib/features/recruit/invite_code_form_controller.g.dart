@@ -7,7 +7,7 @@ part of 'invite_code_form_controller.dart';
 // **************************************************************************
 
 String _$inviteCodeFormViewModelHash() =>
-    r'e3de1f19dc318e720664ee06c884a2d193b4c688';
+    r'a7e83058dad45cd50142d9430f3c8907b5653c99';
 
 /// Copied from Dart SDK
 class _SystemHash {
