@@ -38,20 +38,26 @@ class ParticipantDetailsView extends ConsumerWidget {
         _buildParticipantInfo(languageCode),
         const SizedBox(height: 8.0),
         const Divider(),
-        TextParagraph(
-          text: tr.participant_details_study_days_description,
-        ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 8.0),
         if (monitorItem.missedTasksPerDay.isNotEmpty)
-          _buildPerDayStatus()
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextParagraph(
+                text: tr.participant_details_study_days_description,
+              ),
+              const SizedBox(height: 16.0),
+              _buildPerDayStatus(),
+              const SizedBox(height: 16.0),
+              _buildColorLegend(),
+            ],
+          )
         else
           EmptyBody(
             icon: Icons.hourglass_empty,
             title: tr.participant_details_progress_empty_title,
-            description: "",
+            description: tr.participant_details_progress_empty_description,
           ),
-        const SizedBox(height: 16.0),
-        _buildColorLegend(),
       ],
     );
   }
@@ -175,7 +181,7 @@ class ParticipantDetailsView extends ConsumerWidget {
                   )
                   .toList(),
             ),
-            const SizedBox(height: 10),
+            if (phaseIndex < phases.length - 1) const SizedBox(height: 10),
           ],
         );
       }).toList(),
