@@ -460,6 +460,10 @@ abstract class FormViewModel<T> implements IFormGroupController {
       }
 
       if (control is FormGroup) {
+        /*
+        final valueChanges = control.valueChanges.listen(boundListener);
+        _immediateFormChildrenSubscriptions.add(valueChanges);
+         */
         continue; // don't listen to nested descendants
       } else if (control is FormArray) {
         // We do not listen to FormArray changes. Instead the study is getting
@@ -467,10 +471,13 @@ abstract class FormViewModel<T> implements IFormGroupController {
         // There seems to be a bug related to control.collectionChanges because
         // it triggers on first load, even though the length of the array has not changed
         continue;
-        /* final collectionChanges =
-            control.collectionChanges.listen(boundListener);
-        // don't subscribe to control.valueChanges
-        _immediateFormChildrenSubscriptions.add(collectionChanges);*/
+        /*
+        final collectionChanges =
+        control.collectionChanges.listen(boundListener);
+        _immediateFormChildrenSubscriptions.add(collectionChanges);
+        final valueChanges = control.valueChanges.listen(boundListener);
+        _immediateFormChildrenSubscriptions.add(valueChanges);
+        */
       } else if (control is FormControl) {
         final valueChanges = control.valueChanges.listen(boundListener);
         _immediateFormChildrenSubscriptions.add(valueChanges);

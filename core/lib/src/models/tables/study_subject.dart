@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
@@ -125,23 +124,48 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       );
 
   int getDayOfStudyFor(DateTime date) {
+    print("getting day of study for $date with startedAt $startedAt");
+
+    if (startedAt == null) {
+      return -1;
+    }
+    // TODO: Fix started at
     return date.differenceInDays(startedAt!);
   }
 
   int getInterventionIndexForDate(DateTime date) {
+    print("getting intervention index, but this is deprecated.");
+    // print who called this
+    print(StackTrace.current);
+
     final test = date.differenceInDays(startedAt!);
     return test ~/ study.schedule.phaseDuration;
   }
 
   Intervention? getInterventionForDate(DateTime date) {
-    final index = getInterventionIndexForDate(date);
-    if (date.isBefore(startedAt!) || index >= interventionOrder.length) {
-      print('Study is over or has not begun.');
+    print("getting intervention for date");
+
+    print("date is $date");
+    final dayOfStudy = getDayOfStudyFor(date); //
+    print("day of study is $dayOfStudy");
+
+    if (dayOfStudy < 0) return null;
+
+    // print(progress);
+    print("getting progres until date");
+
+    final progressUntilDate =
+        progress.where((p) => isBeforeDay(p.completedAt!, date)).toList();
+
+    print("getting intervention for the day");
+
+    try {
+      final intervention =
+          study.getInterventionForDay(dayOfStudy, progressUntilDate);
+      return intervention;
+    } catch (e) {
       return null;
     }
-    final interventionId = interventionOrder[index];
-    return selectedInterventions
-        .firstWhereOrNull((intervention) => intervention.id == interventionId);
   }
 
   List<Intervention> getInterventionsInOrder() {
@@ -250,7 +274,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   // Currently the end of the study, as there is no real minimum, just a set study length
   bool get minimumStudyLengthCompleted {
     final diff = DateTime.now().differenceInDays(startedAt!);
-    return diff >= interventionOrder.length * study.schedule.phaseDuration - 1;
+    return diff >= study.studyDuration - 1;
   }
 
   bool get completedStudy {

@@ -9,8 +9,8 @@ import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_co
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_data.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_data.dart';
-import 'package:studyu_designer_v2/features/design/interventions/interventions_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/interventions/interventions_form_data.dart';
+import 'package:studyu_designer_v2/features/design/interventions/mp23_interventions_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/interventions/mp23_interventions_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_data.dart';
 import 'package:studyu_designer_v2/features/design/reports/reports_form_controller.dart';
@@ -84,9 +84,9 @@ class StudyFormViewModel extends FormViewModel<Study>
     validationSet: validationSet,
   );
 
-  late final InterventionsFormViewModel interventionsFormViewModel =
-      InterventionsFormViewModel(
-    formData: InterventionsFormData.fromStudy(formData!),
+  late final MP23InterventionsFormViewModel interventionsFormViewModel =
+      MP23InterventionsFormViewModel(
+    formData: MP23InterventionsFormData.fromStudy(formData!),
     delegate: this,
     study: formData!,
     router: router,
@@ -126,6 +126,7 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   @override
   Study buildFormData() {
+    print("StudyFormViewModel.buildFormData");
     final studyCopy = (formData!).exactDuplicate();
     studyInfoFormViewModel.buildFormData().apply(studyCopy);
     enrollmentFormViewModel.buildFormData().apply(studyCopy);

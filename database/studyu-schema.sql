@@ -98,6 +98,7 @@ CREATE TABLE public.study (
     interventions jsonb NOT NULL,
     consent jsonb NOT NULL,
     schedule jsonb NOT NULL,
+    mp23_schedule jsonb NULL,
     report_specification jsonb NOT NULL,
     results jsonb NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,

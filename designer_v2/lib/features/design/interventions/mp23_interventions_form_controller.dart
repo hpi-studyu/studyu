@@ -4,8 +4,8 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_data.dart';
-import 'package:studyu_designer_v2/features/design/interventions/interventions_form_data.dart';
-import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_controller_mixin.dart';
+import 'package:studyu_designer_v2/features/design/interventions/mp23_interventions_form_data.dart';
+import 'package:studyu_designer_v2/features/design/interventions/mp23_study_schedule_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
@@ -20,15 +20,16 @@ import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
-class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
+class MP23InterventionsFormViewModel
+    extends FormViewModel<MP23InterventionsFormData>
     with
-        StudyScheduleControls
+        MP23StudyScheduleControls
     implements
         IFormViewModelDelegate<InterventionFormViewModel>,
         IListActionProvider<InterventionFormViewModel>,
         IProviderArgsResolver<InterventionFormViewModel,
             InterventionFormRouteArgs> {
-  InterventionsFormViewModel({
+  MP23InterventionsFormViewModel({
     required this.study,
     required this.router,
     super.delegate,
@@ -86,7 +87,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
       );
 
   @override
-  void setControlsFrom(InterventionsFormData data) {
+  void setControlsFrom(MP23InterventionsFormData data) {
     final viewModels = data.interventionsData
         .map(
           (data) => InterventionFormViewModel(
@@ -102,8 +103,8 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   }
 
   @override
-  InterventionsFormData buildFormData() {
-    return InterventionsFormData(
+  MP23InterventionsFormData buildFormData() {
+    return MP23InterventionsFormData(
       interventionsData: interventionsCollection.formData,
       studyScheduleData: buildStudyScheduleFormData(),
     );
@@ -113,7 +114,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   Map<FormMode, String> get titles => throw UnimplementedError(); // no title
 
   @override
-  void read([InterventionsFormData? formData]) {
+  void read([MP23InterventionsFormData? formData]) {
     interventionsCollection.read();
     super.read(formData);
   }

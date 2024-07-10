@@ -70,7 +70,10 @@ class Study extends SupabaseObjectFunctions<Study>
   @JsonKey(defaultValue: [])
   late List<Observation> observations = [];
   @JsonKey(fromJson: _studyScheduleFromJson)
+  // todo deprecate old schedule
   late StudySchedule schedule = StudySchedule();
+  @JsonKey(name: 'mp23_schedule', includeToJson: true, includeFromJson: false)
+  late MP23StudySchedule mp23Schedule = MP23StudySchedule();
   @JsonKey(name: 'report_specification', fromJson: _reportSpecificationFromJson)
   late ReportSpecification reportSpecification = ReportSpecification();
   @JsonKey(defaultValue: [])
@@ -147,6 +150,12 @@ class Study extends SupabaseObjectFunctions<Study>
 
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
+
+    final mp23ScheduleJson = json['mp23_schedule'] as Map<String, dynamic>?;
+
+    if (mp23ScheduleJson != null) {
+      study.mp23Schedule = MP23StudySchedule.fromJson(mp23ScheduleJson);
+    }
 
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
@@ -277,6 +286,37 @@ class Study extends SupabaseObjectFunctions<Study>
 
   double get percentageMissedDays =>
       totalMissedDays / (participantCount * schedule.length);
+
+  int get studyDuration => mp23Schedule.segments.isEmpty
+      ? 0
+      : mp23Schedule.segments
+          .map((e) => e.getDuration(interventions))
+          .reduce((a, b) => a + b);
+
+  /// Returns the segment for the given day and the nth day of the segment
+  (StudyScheduleSegment?, int) getSegmentForDay(int day) {
+    if (day >= studyDuration || day < 0) {
+      throw ArgumentError("Day must be between 0 and $studyDuration");
+    }
+
+    int remainingDays = day;
+
+    for (final segment in mp23Schedule.segments) {
+      final int segmentDuration = segment.getDuration(interventions);
+      if (segmentDuration > remainingDays) {
+        return (segment, remainingDays);
+      } else {
+        remainingDays -= segmentDuration;
+      }
+    }
+
+    throw StateError("This should never happen");
+  }
+
+  Intervention? getInterventionForDay(int day, List<SubjectProgress> progress) {
+    final (segment, dayInSegment) = getSegmentForDay(day);
+    return segment?.getInterventionOnDay(dayInSegment, interventions, progress);
+  }
 
   static Future<String> fetchResultsCSVTable(String studyId) async {
     final List res;

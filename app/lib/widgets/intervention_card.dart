@@ -63,11 +63,17 @@ class InterventionCardTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final iconData = MdiIcons.fromString(intervention?.icon ?? 'e') ??
+        MdiIcons.clipboardOutline;
+
     return ListTile(
       onTap: onTap,
       leading: Icon(
-        MdiIcons.fromString(intervention!.icon),
-        color: theme.colorScheme.secondary,
+        iconData,
+        color: Colors.grey, // todo maybe theme.colorScheme.secondary
+        // size: 20,
+        // fill: 1,
       ),
       trailing: showCheckbox
           ? Checkbox(
@@ -80,7 +86,10 @@ class InterventionCardTitle extends StatelessWidget {
       title: Row(
         children: [
           Expanded(
-            child: Text(intervention!.name!, style: theme.textTheme.titleLarge),
+            child: Text(
+              intervention?.name ?? AppLocalizations.of(context)!.baseline,
+              style: theme.textTheme.titleLarge,
+            ),
           ),
           if (showDescriptionButton)
             IconButton(
@@ -88,13 +97,15 @@ class InterventionCardTitle extends StatelessWidget {
               onPressed: () => showDialog(
                 context: context,
                 builder: (context) {
-                  final description = intervention!.isBaseline()
+                  final description = (intervention == null)
                       ? AppLocalizations.of(context)!.baseline_description
                       : intervention!.description;
                   return AlertDialog(
                     title: ListTile(
                       leading: Icon(
-                        MdiIcons.fromString(intervention!.icon),
+                        MdiIcons.fromString(
+                          intervention?.icon ?? 'help-circle',
+                        ),
                         color: theme.colorScheme.secondary,
                       ),
                       dense: true,
@@ -123,9 +134,7 @@ class InterventionCardDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final description = intervention.isBaseline()
-        ? AppLocalizations.of(context)!.baseline_description
-        : intervention.description;
+    final description = intervention.description;
     if (description == null) return Container();
 
     return Padding(
