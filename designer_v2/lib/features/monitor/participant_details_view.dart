@@ -257,25 +257,46 @@ class ParticipantDetailsView extends ConsumerWidget {
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8.0),
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildLegendItem(
-              completeColor,
-              tr.participant_details_color_legend_completed,
-              tr.participant_details_completed_legend_tooltip,
+            Row(
+              children: [
+                _buildLegendItem(
+                  color: completeColor,
+                  tr.participant_details_color_legend_completed,
+                  tr.participant_details_completed_legend_tooltip,
+                ),
+                const SizedBox(width: 16.0),
+                _buildLegendItem(
+                  color: partiallyComplete,
+                  tr.participant_details_color_legend_partially_completed,
+                  tr.participant_details_partially_completed_legend_tooltip,
+                  gradient: true,
+                ),
+                const SizedBox(width: 16.0),
+                _buildLegendItem(
+                  color: incompleteColor,
+                  tr.participant_details_color_legend_missed,
+                  tr.participant_details_incomplete_legend_tooltip,
+                ),
+              ],
             ),
-            const SizedBox(width: 16.0),
-            _buildLegendItem(
-              partiallyComplete,
-              tr.participant_details_color_legend_partially_completed,
-              tr.participant_details_partially_completed_legend_tooltip,
-              gradient: true,
-            ),
-            const SizedBox(width: 16.0),
-            _buildLegendItem(
-              incompleteColor,
-              tr.participant_details_color_legend_missed,
-              tr.participant_details_incomplete_legend_tooltip,
+            const SizedBox(height: 8.0),
+            Row(
+              children: [
+                _buildLegendItem(
+                  widget: const Text('\u{2705}'),
+                  tr.participant_details_color_legend_completed_task,
+                  tr.participant_details_color_legend_completed_task_tooltip,
+                ),
+                const SizedBox(width: 16.0),
+                _buildLegendItem(
+                  widget: const Text('\u{274C}'),
+                  tr.participant_details_color_legend_missed_task,
+                  tr.participant_details_color_legend_missed_task_tooltip,
+                ),
+              ],
             ),
           ],
         ),
@@ -284,24 +305,30 @@ class ParticipantDetailsView extends ConsumerWidget {
   }
 
   Widget _buildLegendItem(
-    Color color,
     String text,
     String tooltipMessage, {
+    Color? color,
+    Widget? widget,
     bool gradient = false,
   }) {
+    if (color == null && widget == null) {
+      throw ArgumentError('Only color or widget can be provided.');
+    }
     return Tooltip(
       message: tooltipMessage,
       child: Row(
         children: [
-          Container(
-            width: 20.0,
-            height: 20.0,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3),
-              color: color,
-              gradient: gradient ? _buildGradient() : null,
+          if (color != null)
+            Container(
+              width: 20.0,
+              height: 20.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3),
+                color: color,
+                gradient: gradient ? _buildGradient() : null,
+              ),
             ),
-          ),
+          if (widget != null) widget,
           const SizedBox(width: 8.0),
           Text(text),
         ],
