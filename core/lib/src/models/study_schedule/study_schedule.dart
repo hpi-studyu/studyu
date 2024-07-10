@@ -22,7 +22,13 @@ class StudySchedule {
   Map<String, dynamic> toJson() => _$StudyScheduleToJson(this);
 
   int getNumberOfPhases() =>
-      numberOfCycles * numberOfInterventions + (includeBaseline ? 1 : 0);
+      numberOfCycles *
+          (sequence == PhaseSequence.customized
+              ? sequenceCustom.length
+              : StudySchedule.numberOfInterventions) +
+      (includeBaseline ? 1 : 0);
+
+  int get numberOfPhases => getNumberOfPhases();
 
   int get length => getNumberOfPhases() * phaseDuration;
 
