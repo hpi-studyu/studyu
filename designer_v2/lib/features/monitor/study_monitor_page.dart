@@ -28,7 +28,7 @@ class StudyMonitorScreen extends StudyPageWidget {
           children: <Widget>[
             _monitorSectionHeader(context, studyMonitorData),
             const SizedBox(height: 32.0),
-            if (studyMonitorData.items.isNotEmpty) ...[
+            if (studyMonitorData.isNotEmpty) ...[
               SelectableText(
                 tr.monitoring_participants_title,
                 style: Theme.of(context).textTheme.headlineSmall,
@@ -36,7 +36,7 @@ class StudyMonitorScreen extends StudyPageWidget {
               Container(width: 32.0),
               StudyMonitorTable(
                 ref: ref,
-                studyMonitorItems: studyMonitorData.items,
+                studyMonitorItems: studyMonitorData,
                 onSelectItem: (item) =>
                     _onSelectParticipant(context, ref, item, study),
               ),
@@ -54,24 +54,29 @@ class StudyMonitorScreen extends StudyPageWidget {
 
   Widget _monitorSectionHeader(
     BuildContext context,
-    StudyMonitorData monitorData,
+    List<StudyMonitorItem> monitorData,
   ) {
     final theme = Theme.of(context);
-    final int total = monitorData.items.length;
+    final int total = monitorData.length;
     const double minPercentage = 0.01; // Minimum percentage for visibility
 
-    double activePercentage = monitorData.activeParticipants / total;
-    double inactivePercentage = monitorData.inactiveParticipants / total;
-    double dropoutPercentage = monitorData.dropoutParticipants / total;
-    double completedPercentage = monitorData.completedParticipants / total;
+    double activePercentage = monitorData.activeParticipants.length / total;
+    double inactivePercentage = monitorData.inactiveParticipants.length / total;
+    double dropoutPercentage = monitorData.dropoutParticipants.length / total;
+    double completedPercentage =
+        monitorData.completedParticipants.length / total;
 
     // Adjust for minimum percentage visibility
-    if (monitorData.activeParticipants == 0) activePercentage = minPercentage;
-    if (monitorData.inactiveParticipants == 0) {
+    if (monitorData.activeParticipants.isEmpty) {
+      activePercentage = minPercentage;
+    }
+    if (monitorData.inactiveParticipants.isEmpty) {
       inactivePercentage = minPercentage;
     }
-    if (monitorData.dropoutParticipants == 0) dropoutPercentage = minPercentage;
-    if (monitorData.completedParticipants == 0) {
+    if (monitorData.dropoutParticipants.isEmpty) {
+      dropoutPercentage = minPercentage;
+    }
+    if (monitorData.completedParticipants.isEmpty) {
       completedPercentage = minPercentage;
     }
 
@@ -137,28 +142,28 @@ class StudyMonitorScreen extends StudyPageWidget {
                   _buildLegend(
                     color: activeColor,
                     text:
-                        '${tr.monitoring_active}: ${monitorData.activeParticipants}',
+                        '${tr.monitoring_active}: ${monitorData.activeParticipants.length}',
                     tooltip: tr.monitoring_active_tooltip,
                   ),
                   const SizedBox(width: 10),
                   _buildLegend(
                     color: inactiveColor,
                     text:
-                        '${tr.monitoring_inactive}: ${monitorData.inactiveParticipants}',
+                        '${tr.monitoring_inactive}: ${monitorData.inactiveParticipants.length}',
                     tooltip: tr.monitoring_inactive_tooltip,
                   ),
                   const SizedBox(width: 10),
                   _buildLegend(
                     color: dropoutColor,
                     text:
-                        '${tr.monitoring_dropout}: ${monitorData.dropoutParticipants}',
+                        '${tr.monitoring_dropout}: ${monitorData.dropoutParticipants.length}',
                     tooltip: tr.monitoring_dropout_tooltip,
                   ),
                   const SizedBox(width: 10),
                   _buildLegend(
                     color: completedColor,
                     text:
-                        '${tr.monitoring_completed}: ${monitorData.completedParticipants}',
+                        '${tr.monitoring_completed}: ${monitorData.completedParticipants.length}',
                     tooltip: tr.monitoring_completed_tooltip,
                   ),
                 ],
@@ -214,15 +219,12 @@ class StudyMonitorScreen extends StudyPageWidget {
     StudyMonitorItem item,
     Study study,
   ) {
-    // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
     showModalSideSheet(
       context: context,
       title: tr.participant_details_title,
       body: ParticipantDetailsView(
         monitorItem: item,
-        interventions: study.interventions,
-        observations: study.observations,
-        studySchedule: study.schedule,
+        study: study,
       ),
       actionButtons: [
         retainSizeInAppBar(

@@ -1,39 +1,12 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 
-class StudyMonitorData {
-  /// Number of participants who are currently active in the study
-  /// Active means that the the study has not ended yet and the participant did not drop out
-  final int activeParticipants;
-
-  // Number of participants who are currently inactive in the study for more than 3 days in a row
-  final int inactiveParticipants;
-
-  /// Number of participants who dropped out of the study before the study ended
-  /// Hint: The is_deleted flag in the study_subject database table marks a participant as dropped out
-  /// Note: If the participant's last activity exceeds 7 days, they will also be counted as a dropout
-  final int dropoutParticipants;
-
-  /// Number of participants who completed the study
-  /// Completed means that the participant has reached the end of the study
-  final int completedParticipants;
-
-  /// List of all participants with their monitoring data
-  final List<StudyMonitorItem> items;
-
-  const StudyMonitorData({
-    required this.activeParticipants,
-    required this.inactiveParticipants,
-    required this.dropoutParticipants,
-    required this.completedParticipants,
-    required this.items,
-  });
-}
-
 class StudyMonitorItem extends Equatable {
+  final StudySubject studySubject;
   final String participantId;
   final String? inviteCode;
   final DateTime startedAt;
@@ -49,6 +22,7 @@ class StudyMonitorItem extends Equatable {
   final List<Set<String>> completedTasksPerDay;
 
   const StudyMonitorItem({
+    required this.studySubject,
     required this.participantId,
     required this.inviteCode,
     required this.startedAt,
@@ -70,7 +44,7 @@ class StudyMonitorItem extends Equatable {
 }
 
 extension StudyMonitoringX on Study {
-  StudyMonitorData get monitorData {
+  List<StudyMonitorItem> get monitorData {
     final List<StudyMonitorItem> items = [];
 
     final participants = this.participants ?? [];
@@ -158,6 +132,7 @@ extension StudyMonitoringX on Study {
 
       items.add(
         StudyMonitorItem(
+          studySubject: participant,
           participantId: participant.id,
           inviteCode: participant.inviteCode,
           startedAt: participant.startedAt!,
@@ -175,50 +150,59 @@ extension StudyMonitoringX on Study {
       );
     }
 
-    int activeParticipants = 0;
-    int inactiveParticipants = 0;
-    int dropoutParticipants = 0;
-    int completedParticipants = 0;
+    final participantCategories = items.activeParticipants.toList() +
+        items.inactiveParticipants.toList() +
+        items.dropoutParticipants.toList() +
+        items.completedParticipants.toList();
+    final deepEq = const DeepCollectionEquality.unordered().equals;
+    assert(deepEq(items, participantCategories));
 
-    final participantInactiveDays = DateTime.now()
-        .subtract(const Duration(days: participantInactiveDuration));
-    final participantDropoutDays = DateTime.now()
-        .subtract(const Duration(days: participantDropoutDuration));
-
-    for (final item in items) {
-      if (!item.droppedOut) {
-        if (item.currentDayOfStudy < item.studyDurationInDays) {
-          if (item.lastActivityAt.isAfter(participantInactiveDays)) {
-            activeParticipants += 1; // Active
-          } else {
-            if (item.lastActivityAt.isBefore(participantDropoutDays)) {
-              dropoutParticipants += 1; //dropout
-            } else {
-              inactiveParticipants += 1; // Inactive
-            }
-          }
-        } else {
-          completedParticipants += 1; // Completed
-        }
-      } else {
-        dropoutParticipants += 1; // Dropout
-      }
-    }
-
-    assert(
-      activeParticipants +
-              inactiveParticipants +
-              dropoutParticipants +
-              completedParticipants ==
-          items.length,
-    );
-
-    return StudyMonitorData(
-      activeParticipants: activeParticipants,
-      inactiveParticipants: inactiveParticipants,
-      dropoutParticipants: dropoutParticipants,
-      completedParticipants: completedParticipants,
-      items: items,
-    );
+    return items;
   }
+}
+
+extension ListX on List<StudyMonitorItem> {
+  static final inactiveDate = DateTime.now()
+      .subtract(const Duration(days: Config.participantInactiveDuration));
+  static final dropoutDate = DateTime.now()
+      .subtract(const Duration(days: Config.participantDropoutDuration));
+
+  static bool Function(StudyMonitorItem p) get studyStillRunning =>
+      (StudyMonitorItem p) => p.currentDayOfStudy < p.studyDurationInDays;
+
+  static bool Function(StudyMonitorItem p) get inactive => (p) =>
+      p.lastActivityAt.isBefore(inactiveDate) &&
+      p.lastActivityAt.isAfter(dropoutDate);
+
+  static bool Function(StudyMonitorItem p) get dropout =>
+      (p) => p.droppedOut || dropoutByDuration(p) && studyStillRunning(p);
+
+  static bool Function(StudyMonitorItem p) get dropoutByDuration =>
+      (p) => p.lastActivityAt.isBefore(dropoutDate);
+
+  /// Number of participants who are currently active in the study
+  /// Active means that the the study has not ended yet and the participant
+  /// did not drop out
+  Iterable<StudyMonitorItem> get activeParticipants =>
+      where((p) => !dropout(p) && !inactive(p) && studyStillRunning(p));
+
+  /// Number of participants who are currently inactive in the study for more
+  /// than [participantDropoutDuration] days in a row
+  Iterable<StudyMonitorItem> get inactiveParticipants => where(
+        (p) => !dropout(p) && inactive(p) && studyStillRunning(p),
+      );
+
+  /// Number of participants who dropped out of the study before the study ended
+  /// Hint: The is_deleted flag in the study_subject database table marks a
+  /// participant as dropped out
+  /// Note: If the participant's last activity exceeds
+  /// [participantDropoutDuration] days, they will also be counted as a dropout
+  Iterable<StudyMonitorItem> get dropoutParticipants => where(
+        (p) => dropout(p),
+      );
+
+  /// Number of participants who completed the study
+  /// Completed means that the participant has reached the end of the study
+  Iterable<StudyMonitorItem> get completedParticipants =>
+      where((p) => !dropout(p) && !studyStillRunning(p));
 }

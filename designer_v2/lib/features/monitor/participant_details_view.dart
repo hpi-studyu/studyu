@@ -11,18 +11,19 @@ import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class ParticipantDetailsView extends ConsumerWidget {
-  const ParticipantDetailsView({
+  ParticipantDetailsView({
     required this.monitorItem,
-    required this.interventions,
-    required this.observations,
-    required this.studySchedule,
+    required this.study,
     super.key,
-  });
+  })  : studySchedule = study.schedule,
+        interventions = study.interventions,
+        observations = study.observations;
 
   final StudyMonitorItem monitorItem;
+  final Study study;
+  final StudySchedule studySchedule;
   final List<Intervention> interventions;
   final List<Observation> observations;
-  final StudySchedule studySchedule;
 
   static const Color incompleteColor = Color.fromARGB(255, 234, 234, 234);
   // Add transparency to increase the readability of the text
@@ -47,7 +48,7 @@ class ParticipantDetailsView extends ConsumerWidget {
                 text: tr.participant_details_study_days_description,
               ),
               const SizedBox(height: 16.0),
-              _buildPerDayStatus(),
+              _buildPerDayStatus(context),
               const SizedBox(height: 16.0),
               _buildColorLegend(),
             ],
@@ -101,9 +102,8 @@ class ParticipantDetailsView extends ConsumerWidget {
     );
   }
 
-  Widget _buildPerDayStatus() {
-    final int totalCompletedDays = monitorItem.missedTasksPerDay.length;
-
+  Widget _buildPerDayStatus(BuildContext context) {
+    final totalCompletedDays = monitorItem.missedTasksPerDay.length;
     final phases = <StudyPhase>[];
 
     if (studySchedule.includeBaseline) {
@@ -120,9 +120,11 @@ class ParticipantDetailsView extends ConsumerWidget {
       );
     }
 
-    final String sequence = studySchedule.nameOfSequence;
-
-    for (int i = 0; i < studySchedule.numberOfCycles * 2; i++) {
+    final numberOfInterventionPhases = studySchedule.numberOfCycles *
+        (studySchedule.sequence == PhaseSequence.customized
+            ? studySchedule.sequenceCustom.length
+            : StudySchedule.numberOfInterventions);
+    for (int i = 0; i < numberOfInterventionPhases; i++) {
       final int phaseDuration = studySchedule.phaseDuration;
       final bool includeBaseline = studySchedule.includeBaseline;
       final int baselineAdjustmentStart =
@@ -140,16 +142,15 @@ class ParticipantDetailsView extends ConsumerWidget {
           ? baselineAdjustmentEnd
           : totalCompletedDays;
 
-      var sequenceIndex = i;
-      if (sequenceIndex > 3) sequenceIndex = i % 4;
-
-      final String interventionName = sequence[sequenceIndex] == "A"
-          ? interventions[0].name!
-          : interventions[1].name!;
+      monitorItem.studySubject.study = study;
+      final intervention = monitorItem.studySubject
+          .getInterventionsInOrder()[i + (includeBaseline ? 1 : 0)];
+      final interventionIdx = study.interventions.indexOf(intervention);
 
       phases.add(
         StudyPhase(
-          name: interventionName,
+          name: intervention.name!,
+          prefix: interventionPrefix(interventionIdx, context),
           missedTasksPerDay: monitorItem.missedTasksPerDay.sublist(start, end),
         ),
       );
@@ -165,9 +166,15 @@ class ParticipantDetailsView extends ConsumerWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              phase.name,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (phase.prefix != null) phase.prefix!,
+                Text(
+                  phase.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
             const SizedBox(height: 10),
             Wrap(
@@ -232,20 +239,24 @@ class ParticipantDetailsView extends ConsumerWidget {
     for (final intervention in interventions) {
       for (final task in intervention.tasks) {
         if (missedTaskIds.contains(task.id)) {
-          sb.writeln('\u{274C} ${intervention.name} - ${task.title}');
+          sb.writeln('\u{274C} ${task.title}');
         } else if (completedTaskIds.contains(task.id)) {
-          sb.writeln('\u{2705} ${intervention.name} - ${task.title}');
+          sb.writeln('\u{2705} ${task.title}');
         }
       }
     }
     for (final observation in observations) {
       if (missedTaskIds.contains(observation.id)) {
-        sb.write('\u{274C} ${observation.title}');
+        sb.writeln('\u{274C} ${observation.title}');
       } else if (completedTaskIds.contains(observation.id)) {
-        sb.write('\u{2705} ${observation.title}');
+        sb.writeln('\u{2705} ${observation.title}');
       }
     }
-    return sb.toString();
+    String str = sb.toString();
+    if (str.isNotEmpty) {
+      str = sb.toString().substring(0, sb.length - 1);
+    }
+    return str;
   }
 
   Widget _buildColorLegend() {
@@ -354,7 +365,12 @@ class ParticipantDetailsView extends ConsumerWidget {
 
 class StudyPhase {
   final String name;
+  final Widget? prefix;
   final List<Set<String>> missedTasksPerDay;
 
-  StudyPhase({required this.name, required this.missedTasksPerDay});
+  StudyPhase({
+    required this.name,
+    this.prefix,
+    required this.missedTasksPerDay,
+  });
 }

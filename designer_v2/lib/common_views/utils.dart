@@ -1,4 +1,6 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/theme.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
 
 typedef WidgetDecorator = Widget Function(Widget widget);
 
@@ -42,4 +44,19 @@ extension ColorX on Color {
     assert(alphaScaleFactor >= 0.0 && alphaScaleFactor <= 1.0);
     return withAlpha((alphaScaleFactor * alpha).round());
   }
+}
+
+Widget interventionPrefix(int rowIdx, BuildContext context) {
+  final theme = Theme.of(context);
+  return Row(
+    children: [
+      Text(
+        ''.alphabetLetterFrom(rowIdx).toUpperCase(),
+        style: TextStyle(
+          color: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.color,
+        ),
+      ),
+      const SizedBox(width: 16.0),
+    ],
+  );
 }
