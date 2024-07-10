@@ -134,8 +134,12 @@ class ParticipantDetailsView extends ConsumerWidget {
           ? baselineAdjustmentEnd
           : totalCompletedDays;
 
-      final String interventionName =
-          sequence[i] == "A" ? interventions[0].name! : interventions[1].name!;
+      var sequenceIndex = i;
+      if (sequenceIndex > 3) sequenceIndex = i % 4;
+
+      final String interventionName = sequence[sequenceIndex] == "A"
+          ? interventions[0].name!
+          : interventions[1].name!;
 
       phases.add(
         StudyPhase(
