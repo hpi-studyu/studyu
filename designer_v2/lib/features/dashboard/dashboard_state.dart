@@ -52,9 +52,10 @@ class DashboardState extends Equatable {
       data: (studies) {
         List<Study> updatedStudies =
             studiesFilter.apply(studies: studies, user: currentUser).toList();
-        updatedStudies = filter(studiesToFilter: updatedStudies);
-        updatedStudies =
-            sort(pinnedStudies: pinnedStudies, studiesToSort: updatedStudies);
+        updatedStudies = sort(
+          pinnedStudies: pinnedStudies,
+          studiesToSort: filter(studiesToFilter: updatedStudies),
+        );
         return AsyncValue.data(updatedStudies);
       },
       error: (error, _) => AsyncValue.error(error, StackTrace.current),
