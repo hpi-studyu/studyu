@@ -26,6 +26,8 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
       data: (study) {
         final formViewModel =
             ref.watch(interventionsFormViewModelProvider(studyId));
+        final theme = Theme.of(context);
+
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -67,7 +69,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                             tr.form_array_interventions_empty_description,
                         hideLeadingTrailingWhenEmpty: true,
                         rowPrefix: (context, viewModel, rowIdx) =>
-                            interventionPrefix(rowIdx, context),
+                            interventionPrefix(rowIdx, theme),
                       );
                     },
                   );

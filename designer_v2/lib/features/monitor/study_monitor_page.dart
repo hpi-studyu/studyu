@@ -7,7 +7,7 @@ import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/domain/study_monitoring.dart';
-import 'package:studyu_designer_v2/features/monitor/participant_details_view.dart';
+import 'package:studyu_designer_v2/features/monitor/participant/participant_details_view.dart';
 import 'package:studyu_designer_v2/features/monitor/study_monitor_table.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';

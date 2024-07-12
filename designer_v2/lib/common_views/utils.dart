@@ -46,8 +46,7 @@ extension ColorX on Color {
   }
 }
 
-Widget interventionPrefix(int rowIdx, BuildContext context) {
-  final theme = Theme.of(context);
+Widget interventionPrefix(int rowIdx, ThemeData theme) {
   return Row(
     children: [
       Text(
