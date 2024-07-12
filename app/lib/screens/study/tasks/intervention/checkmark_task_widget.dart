@@ -18,7 +18,7 @@ class CheckmarkTaskWidget extends StatefulWidget {
 }
 
 class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
-  DateTime _lastClickTime = DateTime.now();
+  DateTime? _lastClickTime;
   bool _isLoading = false;
 
   @override
