@@ -36,17 +36,16 @@ class ParticipantSquare extends StatelessWidget {
               : (completed.isEmpty
                   ? incompleteColor
                   : null), // Set color to null when using gradient
-          gradient:
-              completed.isEmpty || missed.isEmpty
-                  ? null
-                  : StripedGradient(
-                      colors: [
-                        partiallyCompleteColor,
-                        partiallyCompleteColor,
-                        incompleteColor,
-                        incompleteColor,
-                      ],
-                    ).gradient,
+          gradient: completed.isEmpty || missed.isEmpty
+              ? null
+              : StripedGradient(
+                  colors: [
+                    partiallyCompleteColor,
+                    partiallyCompleteColor,
+                    incompleteColor,
+                    incompleteColor,
+                  ],
+                ).gradient,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Center(
@@ -77,8 +76,7 @@ class ParticipantSquare extends StatelessWidget {
     for (final observation in study.observations) {
       if (missed.contains(observation.id)) {
         sb.writeln('\u{274C} ${observation.title}');
-      } else if (completed
-          .contains(observation.id)) {
+      } else if (completed.contains(observation.id)) {
         sb.writeln('\u{2705} ${observation.title}');
       }
     }

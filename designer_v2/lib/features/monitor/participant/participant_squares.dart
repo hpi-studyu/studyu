@@ -82,9 +82,8 @@ class ParticipantSquares extends StatelessWidget {
               startInx,
               endInx,
             ),
-            completedTasksPerDay: monitorItem.completedTasksPerDay.sublist(
-              startInx,endInx
-            )),
+            completedTasksPerDay:
+                monitorItem.completedTasksPerDay.sublist(startInx, endInx)),
       );
     }
 
@@ -116,10 +115,11 @@ class ParticipantSquares extends StatelessWidget {
 
       phases.add(
         StudyPhase(
-          intervention: intervention,
-          missedTasksPerDay: monitorItem.missedTasksPerDay.sublist(start, end),
-          completedTasksPerDay: monitorItem.completedTasksPerDay.sublist(start,end)
-        ),
+            intervention: intervention,
+            missedTasksPerDay:
+                monitorItem.missedTasksPerDay.sublist(start, end),
+            completedTasksPerDay:
+                monitorItem.completedTasksPerDay.sublist(start, end)),
       );
     }
 
