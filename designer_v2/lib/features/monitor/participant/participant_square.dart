@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/features/monitor/participant/colors.dart';
 class ParticipantSquare extends StatelessWidget {
   final int index;
   final Set<String> missed;
+  final Set<String> completed;
   final int numberOfTheDay;
   final StudyMonitorItem monitorItem;
   final Study study;
@@ -15,6 +16,7 @@ class ParticipantSquare extends StatelessWidget {
     super.key,
     required this.index,
     required this.missed,
+    required this.completed,
     required this.numberOfTheDay,
     required this.monitorItem,
     required this.study,
@@ -31,11 +33,11 @@ class ParticipantSquare extends StatelessWidget {
         decoration: BoxDecoration(
           color: missed.isEmpty
               ? completeColor
-              : (monitorItem.completedTasksPerDay[index].isEmpty
+              : (completed.isEmpty
                   ? incompleteColor
                   : null), // Set color to null when using gradient
           gradient:
-              monitorItem.completedTasksPerDay[index].isEmpty || missed.isEmpty
+              completed.isEmpty || missed.isEmpty
                   ? null
                   : StripedGradient(
                       colors: [
@@ -67,7 +69,7 @@ class ParticipantSquare extends StatelessWidget {
       for (final task in intervention.tasks) {
         if (missed.contains(task.id)) {
           sb.writeln('\u{274C} ${task.title}');
-        } else if (monitorItem.completedTasksPerDay[index].contains(task.id)) {
+        } else if (completed.contains(task.id)) {
           sb.writeln('\u{2705} ${task.title}');
         }
       }
@@ -75,7 +77,7 @@ class ParticipantSquare extends StatelessWidget {
     for (final observation in study.observations) {
       if (missed.contains(observation.id)) {
         sb.writeln('\u{274C} ${observation.title}');
-      } else if (monitorItem.completedTasksPerDay[index]
+      } else if (completed
           .contains(observation.id)) {
         sb.writeln('\u{2705} ${observation.title}');
       }

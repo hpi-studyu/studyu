@@ -48,6 +48,7 @@ class ParticipantSquares extends StatelessWidget {
                     (index, missed) => ParticipantSquare(
                       index: index,
                       missed: missed,
+                      completed: phase.completedTasksPerDay[index],
                       numberOfTheDay:
                           (phaseIndex * study.schedule.phaseDuration) +
                               index +
@@ -70,16 +71,20 @@ class ParticipantSquares extends StatelessWidget {
     final phases = <StudyPhase>[];
 
     if (study.schedule.includeBaseline) {
+      const startInx = 0;
+      final endInx = totalCompletedDays > study.schedule.baselineLength
+          ? study.schedule.baselineLength
+          : totalCompletedDays;
       phases.add(
         StudyPhase(
-          intervention: Intervention.withId()..name = 'Baseline',
-          missedTasksPerDay: monitorItem.missedTasksPerDay.sublist(
-            0,
-            totalCompletedDays > study.schedule.baselineLength
-                ? study.schedule.baselineLength
-                : totalCompletedDays,
-          ),
-        ),
+            intervention: Intervention.withId()..name = 'Baseline',
+            missedTasksPerDay: monitorItem.missedTasksPerDay.sublist(
+              startInx,
+              endInx,
+            ),
+            completedTasksPerDay: monitorItem.completedTasksPerDay.sublist(
+              startInx,endInx
+            )),
       );
     }
 
@@ -113,6 +118,7 @@ class ParticipantSquares extends StatelessWidget {
         StudyPhase(
           intervention: intervention,
           missedTasksPerDay: monitorItem.missedTasksPerDay.sublist(start, end),
+          completedTasksPerDay: monitorItem.completedTasksPerDay.sublist(start,end)
         ),
       );
     }
@@ -128,11 +134,12 @@ class ParticipantSquares extends StatelessWidget {
 class StudyPhase {
   final Intervention intervention;
   final List<Set<String>> missedTasksPerDay;
+  final List<Set<String>> completedTasksPerDay;
 
-  StudyPhase({
-    required this.intervention,
-    required this.missedTasksPerDay,
-  });
+  StudyPhase(
+      {required this.intervention,
+      required this.missedTasksPerDay,
+      required this.completedTasksPerDay});
 
   @override
   String toString() {
