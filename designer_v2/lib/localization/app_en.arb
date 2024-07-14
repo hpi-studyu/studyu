@@ -579,7 +579,7 @@
   "monitoring_table_completed_interventions_header_tooltip": "An intervention is completed, if all of its tasks have been completed for that day",
   "monitoring_table_completed_surveys_header_tooltip":"A survey is completed, if all of its tasks have been completed for that day",
   "@__________________STUDYPAGE_ANALYZE__________________": {},
-  "banner_text_study_analyze_draft": "Because this study has not been launched yet, this page is currently based on the data generated during study testing (only the latest test session).\nThe data on this page will be reset once you launch the study with real participants.",
+  "banner_text_study_analyze_draft": "Because this study has not been launched yet, this page is currently based on the data generated during study testing.\nThe data on this page will be reset once you launch the study with real participants.",
   "action_button_study_export": "Export data",
   "action_button_study_export_prompt": "Want to run your own analysis?",
   "study_export_unavailable_empty_tooltip": "There is no data available yet",
