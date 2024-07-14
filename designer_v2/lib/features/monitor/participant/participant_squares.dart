@@ -20,7 +20,6 @@ class ParticipantSquares extends StatelessWidget {
     final theme = Theme.of(context);
     final phases = _buildPhases();
 
-    print(phases);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: phases.mapIndexed((phaseIndex, phase) {
@@ -122,7 +121,6 @@ class ParticipantSquares extends StatelessWidget {
                 monitorItem.completedTasksPerDay.sublist(start, end)),
       );
     }
-
     assert(
       monitorItem.missedTasksPerDay.length ==
           monitorItem.completedTasksPerDay.length,
@@ -136,13 +134,9 @@ class StudyPhase {
   final List<Set<String>> missedTasksPerDay;
   final List<Set<String>> completedTasksPerDay;
 
-  StudyPhase(
-      {required this.intervention,
-      required this.missedTasksPerDay,
-      required this.completedTasksPerDay});
-
-  @override
-  String toString() {
-    return 'StudyPhase{intervention: $intervention, missedTasksPerDay: $missedTasksPerDay}';
-  }
+  StudyPhase({
+    required this.intervention,
+    required this.missedTasksPerDay,
+    required this.completedTasksPerDay,
+  });
 }
