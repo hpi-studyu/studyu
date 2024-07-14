@@ -107,7 +107,6 @@ extension StudyMonitoringX on Study {
             )
             .map((p) => p.taskId)
             .toSet();
-        print(progresses.toString());
 
         final missedTaskIds = requiredTaskIds.difference(completedTaskIds);
         missedTasksPerDay.add(missedTaskIds);

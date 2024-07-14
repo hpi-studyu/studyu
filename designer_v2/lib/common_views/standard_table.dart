@@ -59,6 +59,7 @@ class StandardTable<T> extends StatefulWidget {
     this.rowSpacing = 9.0,
     this.minRowHeight = 60.0,
     this.headerMaxLines = 1,
+    this.softWrapHeader = false,
     this.showTableHeader = true,
     this.tableWrapper,
     this.leadingWidget,
@@ -108,6 +109,7 @@ class StandardTable<T> extends StatefulWidget {
   final double? minRowHeight;
 
   final int headerMaxLines;
+  final bool softWrapHeader;
   final bool showTableHeader;
   final bool hideLeadingTrailingWhenEmpty;
 
@@ -355,13 +357,15 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
               ),
               child: Row(
                 children: [
-                  Text(
-                    columns[i].label,
-                    overflow: TextOverflow.visible,
-                    maxLines: widget.headerMaxLines,
-                    softWrap: false,
-                    style: theme.textTheme.bodySmall!.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.8),
+                  Flexible(
+                    child: Text(
+                      columns[i].label,
+                      overflow: TextOverflow.visible,
+                      maxLines: widget.headerMaxLines,
+                      softWrap: widget.softWrapHeader,
+                      style: theme.textTheme.bodySmall!.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.8),
+                      ),
                     ),
                   ),
                   if (widget.inputColumns[i].sortable)

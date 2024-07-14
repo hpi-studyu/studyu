@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_designer_v2/domain/study_monitoring.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class ParticipantInfo extends ConsumerWidget {
   const ParticipantInfo({
-    required this.participantId,
-    required this.inviteCode,
-    required this.startedAt,
-    required this.lastActivityAt,
+    required this.monitorItem,
     super.key,
   });
 
-  final String participantId;
-  final String? inviteCode;
-  final DateTime startedAt;
-  final DateTime lastActivityAt;
+  final StudyMonitorItem monitorItem;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,19 +22,33 @@ class ParticipantInfo extends ConsumerWidget {
         children: [
           _buildInfoRow(
             tr.monitoring_table_column_participant_id,
-            participantId,
+            monitorItem.participantId,
           ),
           _buildInfoRow(
             tr.monitoring_table_column_invite_code,
-            inviteCode ?? 'N/A',
+            monitorItem.inviteCode ?? 'N/A',
           ),
           _buildInfoRow(
             tr.monitoring_table_column_enrolled,
-            startedAt.toLocalizedString(locale: languageCode, showTime: false),
+            monitorItem.startedAt
+                .toLocalizedString(locale: languageCode, showTime: false),
           ),
           _buildInfoRow(
             tr.monitoring_table_column_last_activity,
-            lastActivityAt.toLocalizedString(locale: languageCode),
+            monitorItem.lastActivityAt.toLocalizedString(locale: languageCode),
+          ),
+          const SizedBox(height: 8.0),
+          _buildInfoRow(
+            tr.monitoring_table_column_day_in_study,
+            '${monitorItem.currentDayOfStudy}/${monitorItem.studyDurationInDays}',
+          ),
+          _buildInfoRow(
+            tr.monitoring_table_column_completed_interventions,
+            '${monitorItem.completedInterventions}/${monitorItem.completedInterventions + monitorItem.missedInterventions}',
+          ),
+          _buildInfoRow(
+            tr.monitoring_table_column_completed_surveys,
+            '${monitorItem.completedSurveys}/${monitorItem.completedSurveys + monitorItem.missedSurveys}',
           ),
         ],
       ),
@@ -48,6 +57,7 @@ class ParticipantInfo extends ConsumerWidget {
 
   Widget _buildInfoRow(String label, String value) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           '$label: ',
