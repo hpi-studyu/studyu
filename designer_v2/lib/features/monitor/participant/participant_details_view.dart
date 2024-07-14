@@ -24,10 +24,7 @@ class ParticipantDetailsView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ParticipantInfo(
-          participantId: monitorItem.participantId,
-          inviteCode: monitorItem.inviteCode,
-          startedAt: monitorItem.startedAt,
-          lastActivityAt: monitorItem.lastActivityAt,
+          monitorItem: monitorItem,
         ),
         const SizedBox(height: 8.0),
         const Divider(),
