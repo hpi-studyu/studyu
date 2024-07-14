@@ -85,6 +85,7 @@ class StudyMonitorTable extends ConsumerWidget {
       rowSpacing: 5.0,
       minRowHeight: 30.0,
       headerMaxLines: 2,
+      softWrapHeader: true,
       onSelectItem: onSelectItem,
     );
   }
