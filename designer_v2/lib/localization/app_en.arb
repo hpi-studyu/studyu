@@ -543,6 +543,7 @@
   "participant_details_study_days_overview": "Study days overview",
   "participant_details_study_days_description": "This section provides an overview of the participant's progress in the study. The color coding indicates the status of the participant's tasks on each day. Hover over each day to see more details about the participant's activity.",
   "participant_details_color_legend_title": "Legend",
+  "participant_details_color_tooltip_legend_title": "Activity Detail Legend",
   "participant_details_color_legend_completed_task": "Completed task",
   "participant_details_color_legend_completed_task_tooltip": "The participant has completed this task",
   "participant_details_color_legend_missed_task": "Missed task",
