@@ -1,3 +1,12 @@
+## 4.4.4
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+## 4.4.3
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 4.4.3-dev.2
 
  - **FIX**: keep eligibility criterion.

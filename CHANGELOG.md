@@ -3,6 +3,83 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-07-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.7`](#studyu_app---v277)
+ - [`studyu_core` - `v4.4.4`](#studyu_core---v444)
+ - [`studyu_designer_v2` - `v1.8.2`](#studyu_designer_v2---v182)
+ - [`studyu_flutter_common` - `v1.8.5`](#studyu_flutter_common---v185)
+
+---
+
+#### `studyu_app` - `v2.7.7`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+#### `studyu_core` - `v4.4.4`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+#### `studyu_designer_v2` - `v1.8.2`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: added legend for participant activity tooltip.
+ - **FIX**: monitor section header tooltip participants list display fix.
+ - **FIX**: upgrade deps.
+
+#### `studyu_flutter_common` - `v1.8.5`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+
+## 2024-07-14
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`studyu_app` - `v2.7.6`](#studyu_app---v276)
+ - [`studyu_core` - `v4.4.3`](#studyu_core---v443)
+ - [`studyu_designer_v2` - `v1.8.1`](#studyu_designer_v2---v181)
+ - [`studyu_flutter_common` - `v1.8.4`](#studyu_flutter_common---v184)
+
+Packages with other changes:
+
+ - There are no other changes in this release.
+
+Packages graduated to a stable release (see pre-releases prior to the stable version for changelog entries):
+
+ - `studyu_app` - `v2.7.6`
+ - `studyu_core` - `v4.4.3`
+ - `studyu_designer_v2` - `v1.8.1`
+ - `studyu_flutter_common` - `v1.8.4`
+
+---
+
+#### `studyu_app` - `v2.7.6`
+
+#### `studyu_core` - `v4.4.3`
+
+#### `studyu_designer_v2` - `v1.8.1`
+
+#### `studyu_flutter_common` - `v1.8.4`
+
+
 ## 2024-07-01
 
 ### Changes
