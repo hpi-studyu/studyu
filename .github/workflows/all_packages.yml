@@ -26,7 +26,7 @@ jobs:
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
       - name: Run analyze
-        run: melos analyze
+        run: melos analyze --fatal-infos
 
   format:
     runs-on: ubuntu-latest
