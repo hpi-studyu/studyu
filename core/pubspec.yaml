@@ -11,9 +11,9 @@ dependencies:
   collection: ^1.18.0 # flutter_test
   csv: ^6.0.0
   json_annotation: ^4.9.0
-  logger: ^2.3.0
+  logger: ^2.4.0
   quiver: ^3.2.1
-  sentry: ^8.3.0
+  sentry: ^8.4.0
   supabase: ^2.2.4
   uuid: ^4.4.2
 
