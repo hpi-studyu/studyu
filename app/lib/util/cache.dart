@@ -16,13 +16,29 @@ class Cache {
     assert(subject == (await loadSubject()));
   }
 
-  static Future<StudySubject> loadSubject() async {
+  static Future<StudySubject> loadSubject({StudySubject? backupSubject}) async {
     // debugPrint("Load subject from cache");
     if (await SecureStorage.containsKey(cacheSubjectKey)) {
-      return StudySubject.fromJson(
-        jsonDecode((await SecureStorage.read(cacheSubjectKey))!)
-            as Map<String, dynamic>,
-      );
+      final cachedSubjectStr = await SecureStorage.read(cacheSubjectKey);
+      final cachedSubject =
+          jsonDecode(cachedSubjectStr!) as Map<String, dynamic>;
+      try {
+        return StudySubject.fromJson(cachedSubject);
+      } catch (e) {
+        StudyULogger.warning(
+          "Failed to parse cached subject: $cachedSubjectStr",
+        );
+        if (backupSubject != null) {
+          // Only take progress from cached subject and rest from backup,
+          // as the cached subject might be outdated or corrupted
+          final cachedProgress = (cachedSubject['progress'] as List?)
+              ?.map((e) => SubjectProgress.fromJson(e as Map<String, dynamic>))
+              .toList();
+          backupSubject.progress = cachedProgress ?? backupSubject.progress;
+          return backupSubject;
+        }
+        throw Exception("No backup subject provided");
+      }
     } else {
       throw Exception("No cached subject found");
     }
@@ -69,7 +85,7 @@ class Cache {
     if (!(await SecureStorage.containsKey(cacheSubjectKey))) {
       return remoteSubject;
     }
-    final localSubject = await loadSubject();
+    final localSubject = await loadSubject(backupSubject: remoteSubject);
     // local and remote subject are equal, nothing to synchronize
     if (localSubject == remoteSubject) return remoteSubject;
     // remote subject belongs to a different study
