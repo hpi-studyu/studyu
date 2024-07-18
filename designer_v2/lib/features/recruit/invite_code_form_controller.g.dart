@@ -7,7 +7,7 @@ part of 'invite_code_form_controller.dart';
 // **************************************************************************
 
 String _$inviteCodeFormViewModelHash() =>
-    r'a7e83058dad45cd50142d9430f3c8907b5653c99';
+    r'ed85d09c5ba2d6062dee501ae60cc35536ac378f';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -61,10 +61,10 @@ class InviteCodeFormViewModelFamily extends Family<InviteCodeFormViewModel> {
   ///
   /// Copied from [inviteCodeFormViewModel].
   InviteCodeFormViewModelProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return InviteCodeFormViewModelProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -73,7 +73,7 @@ class InviteCodeFormViewModelFamily extends Family<InviteCodeFormViewModel> {
     covariant InviteCodeFormViewModelProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -107,11 +107,11 @@ class InviteCodeFormViewModelProvider
   ///
   /// Copied from [inviteCodeFormViewModel].
   InviteCodeFormViewModelProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
           (ref) => inviteCodeFormViewModel(
             ref as InviteCodeFormViewModelRef,
-            studyId,
+            studyCreationArgs,
           ),
           from: inviteCodeFormViewModelProvider,
           name: r'inviteCodeFormViewModelProvider',
@@ -122,7 +122,7 @@ class InviteCodeFormViewModelProvider
           dependencies: InviteCodeFormViewModelFamily._dependencies,
           allTransitiveDependencies:
               InviteCodeFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   InviteCodeFormViewModelProvider._internal(
@@ -132,10 +132,10 @@ class InviteCodeFormViewModelProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   Override overrideWith(
@@ -151,7 +151,7 @@ class InviteCodeFormViewModelProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -163,13 +163,14 @@ class InviteCodeFormViewModelProvider
 
   @override
   bool operator ==(Object other) {
-    return other is InviteCodeFormViewModelProvider && other.studyId == studyId;
+    return other is InviteCodeFormViewModelProvider &&
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -177,8 +178,8 @@ class InviteCodeFormViewModelProvider
 
 mixin InviteCodeFormViewModelRef
     on AutoDisposeProviderRef<InviteCodeFormViewModel> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _InviteCodeFormViewModelProviderElement
@@ -187,7 +188,8 @@ class _InviteCodeFormViewModelProviderElement
   _InviteCodeFormViewModelProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as InviteCodeFormViewModelProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as InviteCodeFormViewModelProvider).studyCreationArgs;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

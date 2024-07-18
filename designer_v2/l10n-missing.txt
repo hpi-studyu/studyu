@@ -1,0 +1,5 @@
+{
+  "de": [
+    "action_button_study_publish"
+  ]
+}

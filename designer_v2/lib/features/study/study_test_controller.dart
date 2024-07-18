@@ -27,15 +27,16 @@ class StudyTestController extends _$StudyTestController {
       // but this is a sufficient workaround for now.
       Future.delayed(
         const Duration(milliseconds: 100),
-        () => studyRepo.fetch(studyCreationArgs),
+        () => studyRepo.fetch(studyCreationArgs.studyID),
       );
       print('StudyTestController.dispose');
     });
     return StudyTestControllerState(
-      studyCreationArgs: studyCreationArgs,
+      studyId: studyCreationArgs.studyID,
       studyRepository: ref.watch(studyRepositoryProvider),
-      studyWithMetadata:
-          ref.watch(studyControllerProvider(studyCreationArgs)).studyWithMetadata,
+      studyWithMetadata: ref
+          .watch(studyControllerProvider(studyCreationArgs))
+          .studyWithMetadata,
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
       serializedSession:
@@ -49,7 +50,7 @@ class StudyTestController extends _$StudyTestController {
 @riverpod
 PlatformController studyTestPlatformController(
   StudyTestPlatformControllerRef ref,
-    StudyCreationArgs studyCreationArgs,
+  StudyCreationArgs studyCreationArgs,
 ) {
   final state = ref.watch(studyTestControllerProvider(studyCreationArgs));
   PlatformController platformController;

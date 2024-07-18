@@ -18,7 +18,7 @@ class StudyMonitorScreen extends StudyPageWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyControllerProvider(studyId));
+    final state = ref.watch(studyControllerProvider(studyCreationArgs));
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {

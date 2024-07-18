@@ -184,7 +184,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 @riverpod
 InviteCodeFormViewModel inviteCodeFormViewModel(
   InviteCodeFormViewModelRef ref,
-    StudyCreationArgs studyCreationArgs,
+  StudyCreationArgs studyCreationArgs,
 ) {
   // Reactively bind to and obtain [StudyController]'s current study
   final study = ref.watch(

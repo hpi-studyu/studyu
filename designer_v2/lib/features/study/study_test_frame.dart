@@ -88,8 +88,8 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
         ref.watch(studyTestValidatorProvider(widget.studyCreationArgs));
 
     // Rebuild iframe component and url
-    frameController =
-        ref.watch(studyTestPlatformControllerProvider(widget.studyCreationArgs));
+    frameController = ref
+        .watch(studyTestPlatformControllerProvider(widget.studyCreationArgs));
     _updatePreviewRoute();
     frameController!.activate();
     frameController!.listen();

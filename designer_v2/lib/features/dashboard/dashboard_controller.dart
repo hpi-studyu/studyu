@@ -41,6 +41,7 @@ class DashboardController extends _$DashboardController
     _subscribeStudies();
     return DashboardState(currentUser: authRepository.currentUser!);
   }
+
   /// References to the data repositories injected by Riverpod
   late final IStudyRepository studyRepository;
   late final IAuthRepository authRepository;

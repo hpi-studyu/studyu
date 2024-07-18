@@ -7,7 +7,7 @@ part of 'study_base_controller.dart';
 // **************************************************************************
 
 String _$studyBaseControllerHash() =>
-    r'b6b47d4bf2d14f973df3669ed97ea27f62778c4b';
+    r'd3df47c305eecc1d3ea47fdca4c7ba7abb03f645';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,10 +32,10 @@ class _SystemHash {
 
 abstract class _$StudyBaseController
     extends BuildlessAutoDisposeNotifier<StudyControllerBaseState> {
-  late final String studyId;
+  late final StudyCreationArgs studyCreationArgs;
 
   StudyControllerBaseState build(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   );
 }
 
@@ -50,10 +50,10 @@ class StudyBaseControllerFamily extends Family<StudyControllerBaseState> {
 
   /// See also [StudyBaseController].
   StudyBaseControllerProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return StudyBaseControllerProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -62,7 +62,7 @@ class StudyBaseControllerFamily extends Family<StudyControllerBaseState> {
     covariant StudyBaseControllerProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -86,9 +86,9 @@ class StudyBaseControllerProvider extends AutoDisposeNotifierProviderImpl<
     StudyBaseController, StudyControllerBaseState> {
   /// See also [StudyBaseController].
   StudyBaseControllerProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
-          () => StudyBaseController()..studyId = studyId,
+          () => StudyBaseController()..studyCreationArgs = studyCreationArgs,
           from: studyBaseControllerProvider,
           name: r'studyBaseControllerProvider',
           debugGetCreateSourceHash:
@@ -98,7 +98,7 @@ class StudyBaseControllerProvider extends AutoDisposeNotifierProviderImpl<
           dependencies: StudyBaseControllerFamily._dependencies,
           allTransitiveDependencies:
               StudyBaseControllerFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   StudyBaseControllerProvider._internal(
@@ -108,17 +108,17 @@ class StudyBaseControllerProvider extends AutoDisposeNotifierProviderImpl<
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   StudyControllerBaseState runNotifierBuild(
     covariant StudyBaseController notifier,
   ) {
     return notifier.build(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -127,13 +127,13 @@ class StudyBaseControllerProvider extends AutoDisposeNotifierProviderImpl<
     return ProviderOverride(
       origin: this,
       override: StudyBaseControllerProvider._internal(
-        () => create()..studyId = studyId,
+        () => create()..studyCreationArgs = studyCreationArgs,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -146,13 +146,14 @@ class StudyBaseControllerProvider extends AutoDisposeNotifierProviderImpl<
 
   @override
   bool operator ==(Object other) {
-    return other is StudyBaseControllerProvider && other.studyId == studyId;
+    return other is StudyBaseControllerProvider &&
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -160,8 +161,8 @@ class StudyBaseControllerProvider extends AutoDisposeNotifierProviderImpl<
 
 mixin StudyBaseControllerRef
     on AutoDisposeNotifierProviderRef<StudyControllerBaseState> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _StudyBaseControllerProviderElement
@@ -170,7 +171,8 @@ class _StudyBaseControllerProviderElement
   _StudyBaseControllerProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as StudyBaseControllerProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as StudyBaseControllerProvider).studyCreationArgs;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

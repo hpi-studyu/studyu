@@ -7,7 +7,7 @@ part of 'study_settings_form_controller.dart';
 // **************************************************************************
 
 String _$studySettingsFormViewModelHash() =>
-    r'499d2fa25006ac8781e60bcd208a2cb6c05cacb9';
+    r'49bf4787baf59f2130a9dac7d635c86868b3db72';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -62,10 +62,10 @@ class StudySettingsFormViewModelFamily
   ///
   /// Copied from [studySettingsFormViewModel].
   StudySettingsFormViewModelProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return StudySettingsFormViewModelProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -74,7 +74,7 @@ class StudySettingsFormViewModelFamily
     covariant StudySettingsFormViewModelProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -108,11 +108,11 @@ class StudySettingsFormViewModelProvider
   ///
   /// Copied from [studySettingsFormViewModel].
   StudySettingsFormViewModelProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
           (ref) => studySettingsFormViewModel(
             ref as StudySettingsFormViewModelRef,
-            studyId,
+            studyCreationArgs,
           ),
           from: studySettingsFormViewModelProvider,
           name: r'studySettingsFormViewModelProvider',
@@ -123,7 +123,7 @@ class StudySettingsFormViewModelProvider
           dependencies: StudySettingsFormViewModelFamily._dependencies,
           allTransitiveDependencies:
               StudySettingsFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   StudySettingsFormViewModelProvider._internal(
@@ -133,10 +133,10 @@ class StudySettingsFormViewModelProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   Override overrideWith(
@@ -152,7 +152,7 @@ class StudySettingsFormViewModelProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -165,13 +165,13 @@ class StudySettingsFormViewModelProvider
   @override
   bool operator ==(Object other) {
     return other is StudySettingsFormViewModelProvider &&
-        other.studyId == studyId;
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -179,8 +179,8 @@ class StudySettingsFormViewModelProvider
 
 mixin StudySettingsFormViewModelRef
     on AutoDisposeProviderRef<StudySettingsFormViewModel> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _StudySettingsFormViewModelProviderElement
@@ -189,7 +189,8 @@ class _StudySettingsFormViewModelProviderElement
   _StudySettingsFormViewModelProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as StudySettingsFormViewModelProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as StudySettingsFormViewModelProvider).studyCreationArgs;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

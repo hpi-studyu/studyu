@@ -76,13 +76,14 @@ class ParticipantSquares extends StatelessWidget {
           : totalCompletedDays;
       phases.add(
         StudyPhase(
-            intervention: Intervention.withId()..name = 'Baseline',
-            missedTasksPerDay: monitorItem.missedTasksPerDay.sublist(
-              startInx,
-              endInx,
-            ),
-            completedTasksPerDay:
-                monitorItem.completedTasksPerDay.sublist(startInx, endInx)),
+          intervention: Intervention.withId()..name = 'Baseline',
+          missedTasksPerDay: monitorItem.missedTasksPerDay.sublist(
+            startInx,
+            endInx,
+          ),
+          completedTasksPerDay:
+              monitorItem.completedTasksPerDay.sublist(startInx, endInx),
+        ),
       );
     }
 
@@ -114,11 +115,11 @@ class ParticipantSquares extends StatelessWidget {
 
       phases.add(
         StudyPhase(
-            intervention: intervention,
-            missedTasksPerDay:
-                monitorItem.missedTasksPerDay.sublist(start, end),
-            completedTasksPerDay:
-                monitorItem.completedTasksPerDay.sublist(start, end)),
+          intervention: intervention,
+          missedTasksPerDay: monitorItem.missedTasksPerDay.sublist(start, end),
+          completedTasksPerDay:
+              monitorItem.completedTasksPerDay.sublist(start, end),
+        ),
       );
     }
     assert(

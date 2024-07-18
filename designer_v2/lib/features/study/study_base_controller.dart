@@ -20,7 +20,7 @@ class StudyBaseController<T extends StudyControllerBaseState>
   @override
   StudyControllerBaseState build(StudyCreationArgs studyCreationArgs) {
     state = StudyControllerBaseState(
-      studyCreationArgs: studyCreationArgs,
+      studyId: studyCreationArgs.studyID,
       studyRepository: ref.watch(studyRepositoryProvider),
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,

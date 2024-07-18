@@ -7,7 +7,7 @@ part of 'study_test_controller.dart';
 // **************************************************************************
 
 String _$studyTestPlatformControllerHash() =>
-    r'c09a0c6ecb0040703fa5fe35c927aa40c6a47a84';
+    r'969d96c554912ced48541b9e2c90102f10c17c32';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -49,10 +49,10 @@ class StudyTestPlatformControllerFamily extends Family<PlatformController> {
   ///
   /// Copied from [studyTestPlatformController].
   StudyTestPlatformControllerProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return StudyTestPlatformControllerProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -61,7 +61,7 @@ class StudyTestPlatformControllerFamily extends Family<PlatformController> {
     covariant StudyTestPlatformControllerProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -89,11 +89,11 @@ class StudyTestPlatformControllerProvider
   ///
   /// Copied from [studyTestPlatformController].
   StudyTestPlatformControllerProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
           (ref) => studyTestPlatformController(
             ref as StudyTestPlatformControllerRef,
-            studyId,
+            studyCreationArgs,
           ),
           from: studyTestPlatformControllerProvider,
           name: r'studyTestPlatformControllerProvider',
@@ -104,7 +104,7 @@ class StudyTestPlatformControllerProvider
           dependencies: StudyTestPlatformControllerFamily._dependencies,
           allTransitiveDependencies:
               StudyTestPlatformControllerFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   StudyTestPlatformControllerProvider._internal(
@@ -114,10 +114,10 @@ class StudyTestPlatformControllerProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   Override overrideWith(
@@ -132,7 +132,7 @@ class StudyTestPlatformControllerProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -145,13 +145,13 @@ class StudyTestPlatformControllerProvider
   @override
   bool operator ==(Object other) {
     return other is StudyTestPlatformControllerProvider &&
-        other.studyId == studyId;
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -159,8 +159,8 @@ class StudyTestPlatformControllerProvider
 
 mixin StudyTestPlatformControllerRef
     on AutoDisposeProviderRef<PlatformController> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _StudyTestPlatformControllerProviderElement
@@ -169,18 +169,19 @@ class _StudyTestPlatformControllerProviderElement
   _StudyTestPlatformControllerProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as StudyTestPlatformControllerProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as StudyTestPlatformControllerProvider).studyCreationArgs;
 }
 
 String _$studyTestControllerHash() =>
-    r'de261192453a0cf58ca8fa1c996a71d09bc4778c';
+    r'0843da6b9aac68eb9e7fe1a9cd78862722d0d42c';
 
 abstract class _$StudyTestController
     extends BuildlessAutoDisposeNotifier<StudyTestControllerState> {
-  late final String studyId;
+  late final StudyCreationArgs studyCreationArgs;
 
   StudyTestControllerState build(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   );
 }
 
@@ -195,10 +196,10 @@ class StudyTestControllerFamily extends Family<StudyTestControllerState> {
 
   /// See also [StudyTestController].
   StudyTestControllerProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return StudyTestControllerProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -207,7 +208,7 @@ class StudyTestControllerFamily extends Family<StudyTestControllerState> {
     covariant StudyTestControllerProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -231,9 +232,9 @@ class StudyTestControllerProvider extends AutoDisposeNotifierProviderImpl<
     StudyTestController, StudyTestControllerState> {
   /// See also [StudyTestController].
   StudyTestControllerProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
-          () => StudyTestController()..studyId = studyId,
+          () => StudyTestController()..studyCreationArgs = studyCreationArgs,
           from: studyTestControllerProvider,
           name: r'studyTestControllerProvider',
           debugGetCreateSourceHash:
@@ -243,7 +244,7 @@ class StudyTestControllerProvider extends AutoDisposeNotifierProviderImpl<
           dependencies: StudyTestControllerFamily._dependencies,
           allTransitiveDependencies:
               StudyTestControllerFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   StudyTestControllerProvider._internal(
@@ -253,17 +254,17 @@ class StudyTestControllerProvider extends AutoDisposeNotifierProviderImpl<
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   StudyTestControllerState runNotifierBuild(
     covariant StudyTestController notifier,
   ) {
     return notifier.build(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -272,13 +273,13 @@ class StudyTestControllerProvider extends AutoDisposeNotifierProviderImpl<
     return ProviderOverride(
       origin: this,
       override: StudyTestControllerProvider._internal(
-        () => create()..studyId = studyId,
+        () => create()..studyCreationArgs = studyCreationArgs,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -291,13 +292,14 @@ class StudyTestControllerProvider extends AutoDisposeNotifierProviderImpl<
 
   @override
   bool operator ==(Object other) {
-    return other is StudyTestControllerProvider && other.studyId == studyId;
+    return other is StudyTestControllerProvider &&
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -305,8 +307,8 @@ class StudyTestControllerProvider extends AutoDisposeNotifierProviderImpl<
 
 mixin StudyTestControllerRef
     on AutoDisposeNotifierProviderRef<StudyTestControllerState> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _StudyTestControllerProviderElement
@@ -315,7 +317,8 @@ class _StudyTestControllerProviderElement
   _StudyTestControllerProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as StudyTestControllerProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as StudyTestControllerProvider).studyCreationArgs;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
