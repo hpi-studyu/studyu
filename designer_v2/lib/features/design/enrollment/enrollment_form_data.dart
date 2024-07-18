@@ -46,7 +46,14 @@ class EnrollmentFormData implements IStudyFormData {
             .map((formData) => formData.toConsentItem())
             .toList()
         : [];
-    study.eligibilityCriteria = questionnaireFormData.toEligibilityCriteria();
+    // Only update eligibility criteria if they have changed
+    final newEligibilityCriteria =
+        questionnaireFormData.toEligibilityCriteria();
+    if (study.eligibilityCriteria.length != newEligibilityCriteria.length ||
+        !study.eligibilityCriteria
+            .every((c) => newEligibilityCriteria.contains(c))) {
+      study.eligibilityCriteria = newEligibilityCriteria;
+    }
     return study;
   }
 

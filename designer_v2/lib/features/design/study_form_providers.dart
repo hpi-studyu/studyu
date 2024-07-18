@@ -1,3 +1,5 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_controller.dart';
@@ -20,138 +22,160 @@ import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
+part 'study_form_providers.g.dart';
+
 // - Study Info
 
-final studyInfoFormViewModelProvider = Provider.autoDispose
-    .family<StudyInfoFormViewModel, StudyCreationArgs>(
-        (ref, studyCreationArgs) {
-  return ref
-      .watch(studyFormViewModelProvider(studyCreationArgs))
-      .studyInfoFormViewModel;
-});
+@riverpod
+StudyInfoFormViewModel studyInfoFormViewModel(
+  StudyInfoFormViewModelRef ref,
+  StudyCreationArgs studyCreationArgs,
+) {
+  return ref.watch(studyFormViewModelProvider(studyCreationArgs)).studyInfoFormViewModel;
+}
 
 // - Enrollment
 
-final enrollmentFormViewModelProvider = Provider.autoDispose
-    .family<EnrollmentFormViewModel, StudyCreationArgs>(
-        (ref, studyCreationArgs) {
-  return ref
-      .watch(studyFormViewModelProvider(studyCreationArgs))
-      .enrollmentFormViewModel;
-});
+@riverpod
+EnrollmentFormViewModel enrollmentFormViewModel(
+  EnrollmentFormViewModelRef ref,
+    StudyCreationArgs studyCreationArgs,
+) {
+  return ref.watch(studyFormViewModelProvider(studyCreationArgs)).enrollmentFormViewModel;
+}
 
-final screenerQuestionFormViewModelProvider = Provider.autoDispose
-    .family<ScreenerQuestionFormViewModel, ScreenerQuestionFormRouteArgs>(
-        (ref, args) {
-  final owner =
-      ref.watch(enrollmentFormViewModelProvider(args.studyCreationArgs));
-  return owner.provide(args);
-});
+@riverpod
+ScreenerQuestionFormViewModel screenerQuestionFormViewModel(
+  ScreenerQuestionFormViewModelRef ref,
+  ScreenerQuestionFormRouteArgs args,
+) {
+  return
+      ref.watch(enrollmentFormViewModelProvider(args.studyCreationArgs)).provide(args);
+}
 
-final consentItemFormViewModelProvider = Provider.autoDispose
-    .family<ConsentItemFormViewModel, ConsentItemFormRouteArgs>((ref, args) {
-  final owner =
-      ref.watch(enrollmentFormViewModelProvider(args.studyCreationArgs));
-  return owner.consentItemDelegate.provide(args);
-});
+@riverpod
+ConsentItemFormViewModel consentItemFormViewModel(
+  ConsentItemFormViewModelRef ref,
+  ConsentItemFormRouteArgs args,
+) {
+  return
+      ref.watch(enrollmentFormViewModelProvider(args.studyCreationArgs))
+      .consentItemDelegate
+      .provide(args);
+}
 
 // - Interventions
 
-final interventionsFormViewModelProvider = Provider.autoDispose
-    .family<InterventionsFormViewModel, StudyCreationArgs>(
-        (ref, studyCreationArgs) {
+@riverpod
+InterventionsFormViewModel interventionsFormViewModel(
+  InterventionsFormViewModelRef ref,
+    StudyCreationArgs studyCreationArgs,
+) {
   return ref
       .watch(studyFormViewModelProvider(studyCreationArgs))
       .interventionsFormViewModel;
-});
+}
 
-final interventionFormViewModelProvider = Provider.autoDispose
-    .family<InterventionFormViewModel, InterventionFormRouteArgs>((ref, args) {
-  final owner =
-      ref.watch(interventionsFormViewModelProvider(args.studyCreationArgs));
-  return owner.provide(args);
-});
+@riverpod
+InterventionFormViewModel interventionFormViewModel(
+  InterventionFormViewModelRef ref,
+  InterventionFormRouteArgs args,
+) {
+  return
+      ref.watch(interventionsFormViewModelProvider(args.studyCreationArgs))
+      .provide(args);
+}
 
-final interventionTaskFormViewModelProvider = Provider.autoDispose
-    .family<InterventionTaskFormViewModel, InterventionTaskFormRouteArgs>(
-        (ref, args) {
-  final owner = ref.watch(interventionFormViewModelProvider(args));
-  return owner.provide(args);
-});
+@riverpod
+InterventionTaskFormViewModel interventionTaskFormViewModel(
+  InterventionTaskFormViewModelRef ref,
+  InterventionTaskFormRouteArgs args,
+) {
+  return ref.watch(interventionFormViewModelProvider(args)).provide(args);
+}
 
 // - Measurements
 
-final measurementsFormViewModelProvider = Provider.autoDispose
-    .family<MeasurementsFormViewModel, StudyCreationArgs>(
-        (ref, studyCreationArgs) {
+@riverpod
+MeasurementsFormViewModel measurementsFormViewModel(
+  MeasurementsFormViewModelRef ref,
+    StudyCreationArgs studyCreationArgs,
+) {
   return ref
       .watch(studyFormViewModelProvider(studyCreationArgs))
       .measurementsFormViewModel;
-});
+}
 
-final surveyFormViewModelProvider = Provider.autoDispose
-    .family<MeasurementSurveyFormViewModel, MeasurementFormRouteArgs>(
-        (ref, args) {
-  final owner =
-      ref.watch(measurementsFormViewModelProvider(args.studyCreationArgs));
-  return owner.provide(args);
-});
+@riverpod
+MeasurementSurveyFormViewModel surveyFormViewModel(
+  SurveyFormViewModelRef ref,
+  MeasurementFormRouteArgs args,
+) {
+  return
+      ref.watch(measurementsFormViewModelProvider(args.studyCreationArgs))
+      .provide(args);
+}
 
-final surveyQuestionFormViewModelProvider = Provider.autoDispose
-    .family<QuestionFormViewModel, SurveyQuestionFormRouteArgs>((ref, args) {
-  final owner = ref.watch(surveyFormViewModelProvider(args));
-  return owner.provide(args);
-});
+@riverpod
+QuestionFormViewModel surveyQuestionFormViewModel(
+  SurveyQuestionFormViewModelRef ref,
+  SurveyQuestionFormRouteArgs args,
+) {
+  return ref.watch(surveyFormViewModelProvider(args)).provide(args);
+}
 
 // - Reports
 
-final reportsFormViewModelProvider = Provider.autoDispose
-    .family<ReportsFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
-  return ref
-      .watch(studyFormViewModelProvider(studyCreationArgs))
-      .reportsFormViewModel;
-});
+@riverpod
+ReportsFormViewModel reportsFormViewModel(
+  ReportsFormViewModelRef ref,
+    StudyCreationArgs studyCreationArgs,
+) {
+  return ref.watch(studyFormViewModelProvider(studyCreationArgs)).reportsFormViewModel;
+}
 
-final reportItemFormViewModelProvider = Provider.autoDispose
-    .family<ReportItemFormViewModel, ReportItemFormRouteArgs>((ref, args) {
-  final owner = ref.watch(reportsFormViewModelProvider(args.studyCreationArgs));
-  return owner.reportItemDelegate.provide(args);
-});
+@riverpod
+ReportItemFormViewModel reportItemFormViewModel(
+  ReportItemFormViewModelRef ref,
+  ReportItemFormRouteArgs args,
+) {
+  return ref
+      .watch(reportsFormViewModelProvider(args.studyCreationArgs))
+      .reportItemDelegate
+      .provide(args);
+}
 
 // - Validators
 
 /// Provides the [StudyFormViewModel] for validation purposes with
 /// a [StudyFormValidationSet.publish]
-final studyPublishValidatorProvider = Provider.autoDispose
-    .family<StudyFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
+@riverpod
+StudyFormViewModel studyPublishValidator(
+  StudyPublishValidatorRef ref,
+    StudyCreationArgs studyCreationArgs,
+) {
   final state = ref.watch(studyControllerProvider(studyCreationArgs));
-  final formViewModel = StudyFormViewModel(
+  return StudyFormViewModel(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
     formData: state.study.value,
     validationSet: StudyFormValidationSet.publish,
   );
-  ref.onDispose(() {
-    formViewModel.dispose();
-  });
-  return formViewModel;
-});
+}
 
 /// Provides the [StudyFormViewModel] for validation purposes with
 /// a [StudyFormValidationSet.test]
-final studyTestValidatorProvider = Provider.autoDispose
-    .family<StudyFormViewModel, StudyCreationArgs>((ref, studyCreationArgs) {
-  final state = ref.watch(studyControllerProvider(studyCreationArgs));
-  final formViewModel = StudyFormViewModel(
+@riverpod
+StudyFormViewModel studyTestValidator(
+  StudyTestValidatorRef ref,
+    StudyCreationArgs studyCreationArgs,
+) {
+  final state = ref.watch(studyControllerProvider(studyId));
+  return StudyFormViewModel(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
     formData: state.study.value,
-    validationSet: StudyFormValidationSet.test,
   );
-  ref.onDispose(() {
-    formViewModel.dispose();
-  });
-  return formViewModel;
-});
+}

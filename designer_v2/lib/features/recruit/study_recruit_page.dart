@@ -127,7 +127,7 @@ class StudyRecruitScreen extends StudyPageWidget {
           ? null
           : () {
               final formViewModel =
-                  ref.read(inviteCodeFormViewModelProvider(studyCreationArgs));
+                  ref.watch(inviteCodeFormViewModelProvider(studyCreationArgs));
               showFormSideSheet<InviteCodeFormViewModel>(
                 context: context,
                 formViewModel: formViewModel,
@@ -145,7 +145,7 @@ class StudyRecruitScreen extends StudyPageWidget {
     // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
     return (StudyInvite invite) {
       final formViewModel =
-          ref.read(inviteCodeFormViewModelProvider(studyCreationArgs));
+          ref.watch(inviteCodeFormViewModelProvider(studyCreationArgs));
       formViewModel.read(invite);
       showFormSideSheet<InviteCodeFormViewModel>(
         context: context,

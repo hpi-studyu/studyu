@@ -30,7 +30,7 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
       value: state.study,
       data: (study) {
         final formViewModel =
-            ref.read(reportsFormViewModelProvider(studyCreationArgs));
+            ref.watch(reportsFormViewModelProvider(studyCreationArgs));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: ReactiveFormConsumer(
@@ -143,7 +143,7 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final formViewModel = ref.read(reportItemFormViewModelProvider(routeArgs));
+    final formViewModel = ref.watch(reportItemFormViewModelProvider(routeArgs));
 
     showFormSideSheet<ReportItemFormViewModel>(
       context: context,

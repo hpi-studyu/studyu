@@ -1,11 +1,13 @@
 // ignore_for_file: join_return_with_assignment
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 
-// todo implements ModelRepository<StudyUUser>
+part 'user_repository.g.dart';
+
 abstract class IUserRepository {
   StudyUUser get user;
   Future<StudyUUser> fetchUser();
@@ -23,24 +25,26 @@ class UserRepository implements IUserRepository {
     required this.authRepository,
     required this.apiClient,
     required this.ref,
-  }); //: super(UserRepositoryDelegate(apiClient: apiClient));
+  });
 
   final StudyUApi apiClient;
   final IAuthRepository authRepository;
   final Ref ref;
+  StudyUUser? _user;
   @override
-  late StudyUUser user;
+  StudyUUser get user => _user!;
 
   @override
   Future<StudyUUser> fetchUser() async {
+    if (_user != null) return user;
     final userId = ref.read(authRepositoryProvider).currentUser!.id;
-    user = await apiClient.fetchUser(userId);
+    _user = await apiClient.fetchUser(userId);
     return user;
   }
 
   @override
   Future<StudyUUser> saveUser() async {
-    user = await apiClient.saveUser(user);
+    _user = await apiClient.saveUser(user);
     return user;
   }
 
@@ -61,13 +65,11 @@ class UserRepository implements IUserRepository {
   }
 }
 
-final userRepositoryProvider = Provider.autoDispose((ref) {
-  print("userRepositoryProvider");
-  final apiClient = ref.watch(apiClientProvider);
-  final authRepository = ref.watch(authRepositoryProvider);
+@riverpod
+UserRepository userRepository(UserRepositoryRef ref) {
   return UserRepository(
-    apiClient: apiClient,
+    authRepository: ref.watch(authRepositoryProvider),
+    apiClient: ref.watch(apiClientProvider),
     ref: ref,
-    authRepository: authRepository,
   );
-});
+}

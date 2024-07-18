@@ -24,7 +24,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
       value: state.study,
       data: (study) {
         final formViewModel =
-            ref.read(studyInfoFormViewModelProvider(studyCreationArgs));
+            ref.watch(studyInfoFormViewModelProvider(studyCreationArgs));
         final hasParentTitleAndDescription =
             study.templateConfiguration?.title != null &&
                 study.templateConfiguration?.description != null;

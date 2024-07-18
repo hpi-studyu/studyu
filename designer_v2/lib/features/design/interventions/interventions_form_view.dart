@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
@@ -14,7 +15,6 @@ import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
-import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
   const StudyDesignInterventionsFormView(super.studyCreationArgs, {super.key});
@@ -22,13 +22,12 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyControllerProvider(studyCreationArgs));
-    final theme = Theme.of(context);
-
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
         final formViewModel =
-            ref.read(interventionsFormViewModelProvider(studyCreationArgs));
+            ref.watch(interventionsFormViewModelProvider(studyCreationArgs));
+        final theme = Theme.of(context);
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -69,22 +68,8 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                         emptyDescription:
                             tr.form_array_interventions_empty_description,
                         hideLeadingTrailingWhenEmpty: true,
-                        rowPrefix: (context, viewModel, rowIdx) {
-                          return Row(
-                            children: [
-                              Text(
-                                ''.alphabetLetterFrom(rowIdx).toUpperCase(),
-                                style: TextStyle(
-                                  color:
-                                      ThemeConfig.dropdownMenuItemTheme(theme)
-                                          .iconTheme!
-                                          .color,
-                                ),
-                              ),
-                              const SizedBox(width: 16.0),
-                            ],
-                          );
-                        },
+                        rowPrefix: (context, viewModel, rowIdx) =>
+                            interventionPrefix(rowIdx, theme),
                       );
                     },
                   );

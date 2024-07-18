@@ -11,7 +11,6 @@ import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.d
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
-import 'package:studyu_designer_v2/utils/performance.dart';
 
 class PreviewFrame extends ConsumerStatefulWidget {
   const PreviewFrame(
@@ -40,19 +39,13 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
   @override
   void initState() {
     super.initState();
-    runAsync(() => _subscribeStudyChanges());
-  }
-
-  @override
-  void didUpdateWidget(PreviewFrame oldWidget) {
-    if (mounted) runAsync(() => _subscribeStudyChanges());
-    super.didUpdateWidget(oldWidget);
+    _subscribeStudyChanges();
   }
 
   void _subscribeStudyChanges() {
+    // debugLog('Subscribing to form changes in test frame');
     final formViewModelCurrent =
         ref.read(studyFormViewModelProvider(widget.studyCreationArgs));
-
     formViewModelCurrent.form.valueChanges.listen((event) {
       if (frameController != null) {
         final formJson =
@@ -94,9 +87,9 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     final formViewModel =
         ref.watch(studyTestValidatorProvider(widget.studyCreationArgs));
 
-    // Rebuild iframe component & url
+    // Rebuild iframe component and url
     frameController =
-        ref.read(studyTestPlatformControllerProvider(widget.studyCreationArgs));
+        ref.watch(studyTestPlatformControllerProvider(widget.studyCreationArgs));
     _updatePreviewRoute();
     frameController!.activate();
     frameController!.listen();

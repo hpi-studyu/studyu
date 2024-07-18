@@ -24,6 +24,11 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.question.lengthRange[0] == 0) {
+        widget.onDone!(widget.question.constructAnswer(""));
+      }
+    });
   }
 
   @override

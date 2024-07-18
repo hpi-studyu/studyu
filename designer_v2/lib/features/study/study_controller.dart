@@ -1,41 +1,43 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/features/study/study_base_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
-import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository_events.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
-import 'package:studyu_designer_v2/services/notification_service.dart';
-import 'package:studyu_designer_v2/utils/model_action.dart';
 
-class StudyController extends StudyBaseController<StudyControllerState> {
-  StudyController({
-    required super.studyCreationArgs,
-    required super.studyRepository,
-    required super.currentUser,
-    required super.router,
-    required this.notificationService,
-  }) : super(StudyControllerState(currentUser: currentUser)) {
+part 'study_controller.g.dart';
+
+@riverpod
+class StudyController extends _$StudyController {
+  @override
+  StudyControllerState build(StudyID studyId) {
+    state = StudyControllerState(
+      studyCreationArgs: studyCreationArgs,
+      studyRepository: ref.watch(studyRepositoryProvider),
+      router: ref.watch(routerProvider),
+      currentUser: ref.watch(authRepositoryProvider).currentUser,
+      studyWithMetadata:
+          ref.watch(studyBaseControllerProvider(studyId)).studyWithMetadata,
+    );
+    ref.onDispose(() => _studyEventsSubscription?.cancel());
     syncStudyStatus();
+    return state;
   }
 
-  final INotificationService notificationService;
-  StreamSubscription<ModelEvent<Study>>? studyEventsSubscription;
+  StreamSubscription<ModelEvent<Study>>? _studyEventsSubscription;
 
   void syncStudyStatus() {
-    if (studyEventsSubscription != null) {
-      studyEventsSubscription?.cancel();
+    if (_studyEventsSubscription != null) {
+      _studyEventsSubscription?.cancel();
     }
-    studyEventsSubscription =
-        studyRepository.watchChanges(studyId).listen((event) {
+    _studyEventsSubscription =
+        state.studyRepository.watchChanges(state.studyId).listen((event) {
       if (event is IsSaving) {
         state = state.copyWith(
           syncState: const AsyncValue.loading(),
@@ -86,24 +88,24 @@ class StudyController extends StudyBaseController<StudyControllerState> {
   Future publishStudy({bool toRegistry = false}) {
     final study = state.study.value!;
     study.registryPublished = toRegistry;
-    return studyRepository.launch(study);
+    return state.studyRepository.launch(study);
   }
 
   Future closeStudy() {
     final study = state.study.value!;
-    return studyRepository.close(study);
+    return ref.read(studyRepositoryProvider).close(study);
   }
 
   void onChangeStudyParticipation() {
-    router.dispatch(RoutingIntents.studyEditEnrollment(studyId));
+    state.router.dispatch(RoutingIntents.studyEditEnrollment(state.studyId));
   }
 
   void onAddParticipants() {
-    router.dispatch(RoutingIntents.studyRecruit(studyId));
+    state.router.dispatch(RoutingIntents.studyRecruit(state.studyId));
   }
 
   void onSettingsPressed() {
-    router.dispatch(RoutingIntents.studySettings(studyId));
+    state.router.dispatch(RoutingIntents.studySettings(state.studyId));
   }
 
   void onCreateNewSubstudy() {
@@ -116,25 +118,3 @@ class StudyController extends StudyBaseController<StudyControllerState> {
     super.dispose();
   }
 }
-
-/// Use the [family] modifier to provide a controller parametrized by [StudyID]
-final studyControllerProvider = StateNotifierProvider.autoDispose
-    .family<StudyController, StudyControllerState, StudyCreationArgs>(
-        (ref, studyCreationArgs) {
-  final studyId = studyCreationArgs.studyID;
-  print("studyControllerProvider($studyId)");
-  final controller = StudyController(
-    studyCreationArgs: studyCreationArgs,
-    studyRepository: ref.watch(studyRepositoryProvider),
-    currentUser: ref.watch(authRepositoryProvider).currentUser,
-    router: ref.watch(routerProvider),
-    notificationService: ref.watch(notificationServiceProvider),
-  );
-  controller.addListener((state) {
-    print("studyController.state updated");
-  });
-  ref.onDispose(() {
-    print("studyControllerProvider($studyId).DISPOSE");
-  });
-  return controller;
-});

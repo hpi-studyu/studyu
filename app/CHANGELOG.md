@@ -1,3 +1,26 @@
+## 2.7.7
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+## 2.7.6
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 2.7.6-dev.3
+
+ - **REFACTOR**: migrate to riverpod code generation 2.
+ - **FIX**: app preview stuck at AppLanguage.
+ - **FIX**: formatting issues.
+ - **FIX**: formatting issues.
+ - **FIX**: users not able to continue closed study.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**: upgrade deps.
+ - **FEAT**: deprecate published for study_status.
+ - **FEAT**: close study using is_closed column.
+ - **FEAT**: close study.
+
 ## 2.7.6-dev.2
 
  - **FIX**: formatting issues.

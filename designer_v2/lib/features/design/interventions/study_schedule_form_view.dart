@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_control_label.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_controller_mixin.dart';
-import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/input_formatter.dart';
 
@@ -20,20 +20,26 @@ class StudyScheduleFormView extends FormConsumerWidget {
     } else {
       return FormTableRow(
         control: formViewModel.sequenceTypeCustomControl,
-        label: "Custom Sequence",
-        // todo translate
-        labelHelpText: "Enter a custom sequence by using the letters A and B",
-        // todo translate
-        input: ReactiveTextField(
-          formControl: formViewModel.sequenceTypeCustomControl,
+        label: tr.phase_sequence_custom_label,
+        labelHelpText: tr.phase_sequence_custom_label_help,
+        input: TextField(
+          onChanged: (value) =>
+              formViewModel.sequenceTypeCustomControl.value = value,
+          controller: TextEditingController()
+            ..value = TextEditingValue(
+              text: formViewModel.sequenceTypeCustomControl.value!,
+              selection: TextSelection.collapsed(
+                offset: formViewModel.sequenceTypeCustomControl.value!.length,
+              ),
+            ),
+          //formControl: formViewModel.sequenceTypeCustomControl,
           keyboardType: TextInputType.text,
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.singleLineFormatter,
             LengthLimitingTextInputFormatter(10),
             StudySequenceFormatter(),
           ],
-          validationMessages:
-              formViewModel.sequenceTypeCustomControl.validationMessages,
+          //validationMessages: formViewModel.sequenceTypeCustomControl.validationMessages,
         ),
       );
     }
@@ -50,8 +56,13 @@ class StudyScheduleFormView extends FormConsumerWidget {
               control: formViewModel.sequenceTypeControl,
               label: tr.form_field_crossover_schedule_sequence,
               labelHelpText: tr.form_field_crossover_schedule_sequence_tooltip,
-              input: ReactiveDropdownField(
-                formControl: formViewModel.sequenceTypeControl,
+              input: DropdownButtonFormField(
+                //formControl: formViewModel.sequenceTypeControl,
+                onChanged: formViewModel.sequenceTypeControl.disabled
+                    ? null
+                    : (PhaseSequence? value) =>
+                        formViewModel.sequenceTypeControl.value = value,
+                value: formViewModel.sequenceTypeControl.value,
                 decoration: InputDecoration(
                   helperText:
                       tr.form_field_crossover_schedule_sequence_description,
@@ -65,8 +76,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
                       ),
                     )
                     .toList(),
-                validationMessages:
-                    formViewModel.sequenceTypeControl.validationMessages,
+                //validationMessages: formViewModel.sequenceTypeControl.validationMessages,
               ),
             ),
             _renderCustomSequence(),
@@ -79,8 +89,21 @@ class StudyScheduleFormView extends FormConsumerWidget {
                 children: [
                   Container(
                     constraints: const BoxConstraints(maxWidth: 70),
-                    child: ReactiveTextField(
-                      formControl: formViewModel.phaseDurationControl,
+                    child: TextField(
+                      readOnly: formViewModel.phaseDurationControl.disabled,
+                      controller: TextEditingController()
+                        ..value = TextEditingValue(
+                          text: formViewModel.phaseDurationControl.value
+                              .toString(),
+                          selection: TextSelection.collapsed(
+                            offset: formViewModel.phaseDurationControl.value
+                                .toString()
+                                .length,
+                          ),
+                        ),
+                      //formControl: formViewModel.phaseDurationControl,
+                      onChanged: (value) => formViewModel
+                          .phaseDurationControl.value = int.parse(value),
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly,
@@ -90,8 +113,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
                           max: StudyScheduleControls.kPhaseDurationMax,
                         ),
                       ],
-                      validationMessages:
-                          formViewModel.phaseDurationControl.validationMessages,
+                      //validationMessages: formViewModel.phaseDurationControl.validationMessages,
                     ),
                   ),
                   const SizedBox(width: 8.0),
@@ -111,8 +133,20 @@ class StudyScheduleFormView extends FormConsumerWidget {
                 children: [
                   Container(
                     constraints: const BoxConstraints(maxWidth: 70),
-                    child: ReactiveTextField(
-                      formControl: formViewModel.numCyclesControl,
+                    child: TextField(
+                      readOnly: formViewModel.numCyclesControl.disabled,
+                      //formControl: formViewModel.numCyclesControl,
+                      onChanged: (value) => formViewModel
+                          .numCyclesControl.value = int.parse(value),
+                      controller: TextEditingController()
+                        ..value = TextEditingValue(
+                          text: formViewModel.numCyclesControl.value.toString(),
+                          selection: TextSelection.collapsed(
+                            offset: formViewModel.numCyclesControl.value
+                                .toString()
+                                .length,
+                          ),
+                        ),
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly,
@@ -122,8 +156,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
                           max: StudyScheduleControls.kNumCyclesMax,
                         ),
                       ],
-                      validationMessages:
-                          formViewModel.numCyclesControl.validationMessages,
+                      //validationMessages: formViewModel.numCyclesControl.validationMessages,
                     ),
                   ),
                   const SizedBox(width: 8.0),
@@ -143,8 +176,13 @@ class StudyScheduleFormView extends FormConsumerWidget {
                 children: [
                   Container(
                     constraints: const BoxConstraints(maxWidth: 70),
-                    child: ReactiveCheckbox(
-                      formControl: formViewModel.includeBaselineControl,
+                    child: Checkbox(
+                      value: formViewModel.includeBaselineControl.value,
+                      onChanged: formViewModel.includeBaselineControl.disabled
+                          ? null
+                          : (value) => formViewModel
+                              .includeBaselineControl.value = value,
+                      //formControl: formViewModel.includeBaselineControl,
                     ),
                   ),
                   const SizedBox(width: 8.0),
