@@ -31,6 +31,14 @@ class Cache {
         if (backupSubject != null) {
           // Only take progress from cached subject and rest from backup,
           // as the cached subject might be outdated or corrupted
+
+          // compare IDs to make sure we are not mixing up subjects
+          // If IDs do not match we should not use the cached subject
+          if (backupSubject.id != cachedSubject['id']) {
+            throw Exception(
+              "Cached subject ID does not match remote subject ID",
+            );
+          }
           final cachedProgress = (cachedSubject['progress'] as List?)
               ?.map((e) => SubjectProgress.fromJson(e as Map<String, dynamic>))
               .toList();
