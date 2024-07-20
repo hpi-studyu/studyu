@@ -20,7 +20,7 @@ dependencies:
   flutter_local_notifications: ^17.2.1+2
   flutter_localizations:
     sdk: flutter
-  flutter_timezone: ^2.0.1
+  flutter_timezone: ^2.1.0
   flutter_web_plugins:
     sdk: flutter
   flutter_widget_from_html: ^0.15.1
@@ -36,8 +36,8 @@ dependencies:
   quiver: ^3.2.1
   rainbow_color: ^2.0.1
   record: ^5.1.2
-  sentry_flutter: ^8.3.0
-  sentry_logging: ^8.3.0
+  sentry_flutter: ^8.4.0
+  sentry_logging: ^8.4.0
   shared_preferences: ^2.2.3
   studyu_core: ^4.4.4
   studyu_flutter_common: ^1.8.5
