@@ -28,3 +28,4 @@ flutter:
   assets:
     - packages/studyu_flutter_common/envs/.env
     - packages/studyu_flutter_common/envs/.env.dev
+    - packages/studyu_flutter_common/envs/.env.local
