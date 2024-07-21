@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - ".github/workflows/e2e_tests.yml"
+      - ".github/workflows/init-workspace/action.yml"
       - 'designer_v2/**'
       - 'core/**'
       - 'flutter_common/**'
