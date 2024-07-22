@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
@@ -14,6 +15,7 @@ class PublishSuccessDialog extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(studyControllerProvider(studyId).notifier);
+    final state = ref.watch(studyControllerProvider(studyId));
     final theme = Theme.of(context);
 
     return StandardDialog(
@@ -34,33 +36,36 @@ class PublishSuccessDialog extends StudyPageWidget {
           const SizedBox(height: 8.0),
         ],
       ),
-      actionButtons: [
-        Expanded(
-          child: Column(
-            children: [
-              PrimaryButton(
-                text: tr.action_button_post_launch_followup,
-                onPressed: () => Navigator.maybePop(context)
-                    .whenComplete(() => controller.onAddParticipants()),
-              ),
-              const SizedBox(height: 8.0),
-              Opacity(
-                opacity: 0.75,
-                child: TextButton(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 4.0,
-                      horizontal: 8.0,
+      actionButtons: state.study.value!.participation == Participation.open
+          ? []
+          : [
+              Expanded(
+                child: Column(
+                  children: [
+                    PrimaryButton(
+                      text: tr.action_button_post_launch_followup,
+                      onPressed: () => Navigator.maybePop(context)
+                          .whenComplete(() => controller.onAddParticipants()),
                     ),
-                    child: Text(tr.action_button_post_launch_followup_skip),
-                  ),
-                  onPressed: () => Navigator.maybePop(context),
+                    const SizedBox(height: 8.0),
+                    Opacity(
+                      opacity: 0.75,
+                      child: TextButton(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 4.0,
+                            horizontal: 8.0,
+                          ),
+                          child:
+                              Text(tr.action_button_post_launch_followup_skip),
+                        ),
+                        onPressed: () => Navigator.maybePop(context),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
-          ),
-        ),
-      ],
       maxWidth: 450,
     );
   }
