@@ -13,10 +13,17 @@ jobs:
           uses: actions/checkout@v4
           with:
             fetch-depth: 0
+
         - name: Check final newline
           uses: johannesvedder/check-final-newline@main
           with:
-            commit_changes: 'true'
-            commit_name: 'StudyU Action Bot'
-            commit_email: 'noreply@studyu.health'
-            commit_message: 'lint: Append newlines to end of files'
+            fail_on_missing_newline: 'false'
+
+        - name: Restore ignored files
+          run: |
+            git checkout -- **/l10n-missing.txt
+
+        - name: Commit changes if any
+          uses: stefanzweifel/git-auto-commit-action@v5
+          with:
+            commit_message: 'lint: Apply final newline changes'
