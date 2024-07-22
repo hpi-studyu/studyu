@@ -18,7 +18,7 @@ jobs:
             // Define a list of workflows that need to finish successfully if run before merging  
             workflows_to_check = [
               "all_packages.yml",
-              "check-uncommitted-changes.yml",
+              "linter.yml",
               "mega-linter.yml",
               "e2e_tests.yml",
               "supabase-test.yml",
