@@ -8,10 +8,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check_commit_status:
+  ready_to_merge:
     runs-on: ubuntu-latest
     steps:
-      - name: Check if PR is mergeable
+      - name: Check if PR is ready to merge
         uses: actions/github-script@v7
         with:
           script: |
