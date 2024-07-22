@@ -19,4 +19,4 @@ jobs:
             commit_changes: 'true'
             commit_name: 'StudyU Action Bot'
             commit_email: 'noreply@studyu.health'
-            commit_message: 'lint: append newlines to end of files'
+            commit_message: 'lint: Append newlines to end of files'
