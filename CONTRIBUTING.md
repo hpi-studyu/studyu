@@ -3,7 +3,7 @@
 ## Getting Started
 
 1. [Setup Flutter](https://flutter.dev/docs/get-started/install)
-2. Make sure both flutter and dart are in your PATH. Run `dart --version` and
+2. Make sure `flutter` and `dart` are both in your PATH. Run `dart --version` and
    `flutter --version` to check.
 3. Clone this repository and `cd` into it.
 4. Install [Melos](https://melos.invertase.dev/) by running: `dart pub global
@@ -89,6 +89,18 @@ guidelines for Dart and Flutter. Run `melos format` to format your code and
 features or bug fixes, create a new branch and open a pull request.
 
 Please make sure to follow these guidelines when contributing to the project.
+
+## Flutter Version Management
+
+The StudyU monorepo uses the [FVM](https://fvm.app/) tool to manage the Flutter
+SDK version. This allows us to have a consistent Flutter version across all
+packages. The Flutter SDK version is specified in the `.fvm` file in the root
+directory. To install the Flutter SDK version, run `fvm install` in the root directory. 
+You might also want to integrate FVM within your IDE. For Android Studio you can change the Flutter
+SDK path in the settings for the Flutter plugin. Open the Android Studio settings and navigate to 
+Languages & Frameworks -> Flutter -> Flutter SDK path and set  the path to the FVM Flutter SDK
+(`<path to the studyu repository>/.fvm/flutter_sdk`). For VS Code, have a look at
+the [FVM documentation](https://fvm.app/documentation/guides/vscode).
 
 ## Database and Backend
 
