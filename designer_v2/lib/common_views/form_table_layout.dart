@@ -227,7 +227,7 @@ class FormSectionHeader extends StatelessWidget {
                     helpText: lockHelpText,
                     lockedStateText: lockedStateText,
                     unlockedStateText: unlockedStateText,
-                  )
+                  ),
                 ],
               )
             else
@@ -293,7 +293,7 @@ class FormLock extends StatefulWidget {
       this.readOnly = false,
       this.helpText,
       this.lockedStateText,
-      this.unlockedStateText});
+      this.unlockedStateText,});
 
   final bool locked;
   final bool readOnly;
@@ -326,7 +326,7 @@ class _FormLockState extends State<FormLock> {
                   color: Colors.grey[100],
                   borderRadius: BorderRadius.circular(10.0),
                   border: Border.all(
-                      color: Theme.of(context).disabledColor.withOpacity(0.05)),
+                      color: Theme.of(context).disabledColor.withOpacity(0.05),),
                 ),
                 padding: const EdgeInsets.all(6),
                 child: Row(
@@ -335,7 +335,7 @@ class _FormLockState extends State<FormLock> {
                         widget.locked
                             ? widget.lockedStateText ?? 'Locked'
                             : widget.unlockedStateText ?? 'Unlocked',
-                        style: Theme.of(context).textTheme.labelMedium),
+                        style: Theme.of(context).textTheme.labelMedium,),
                     const SizedBox(width: 4),
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 250),
@@ -348,7 +348,7 @@ class _FormLockState extends State<FormLock> {
                       ),
                     ),
                   ],
-                )),
+                ),),
             SizedBox(
               height: 30,
               child: FittedBox(
@@ -370,7 +370,7 @@ class _FormLockState extends State<FormLock> {
               ),
             ),
           ],
-        ));
+        ),);
 
     if (widget.helpText != null) {
       return Tooltip(
