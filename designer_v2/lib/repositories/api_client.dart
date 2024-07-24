@@ -92,6 +92,8 @@ class StudyUApiClient extends SupabaseClientDependant
     'study_participant_count',
     'study_ended_count',
     'active_subject_count',
+    'template_configuration',
+    'parent_template_id',
     'contact',
     'created_at',
   ];
