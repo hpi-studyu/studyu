@@ -49,6 +49,8 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                   showLock: !study.isStandalone,
                   lockControl: formViewModel.lockEnrollmentTypeControl,
                   lockHelpText: tr.form_section_lock_help,
+                  lockedStateText: tr.form_section_lock_locked,
+                  unlockedStateText: tr.form_section_lock_unlocked,
                 ),
                 const SizedBox(height: 12.0),
                 Column(

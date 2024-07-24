@@ -30,6 +30,8 @@ class StudySettingsDialog extends StudyPageWidget {
               showLock: formViewModel.study.value?.isStandalone != true,
               lockControl: formViewModel.lockPublishSettingsControl,
               lockHelpText: tr.form_section_publish_lock_help,
+              lockedStateText: tr.form_section_publish_lock_locked,
+              unlockedStateText: tr.form_section_publish_lock_unlocked,
             ),
             const SizedBox(height: 6.0),
             TextParagraph(text: tr.navlink_public_studies_description),

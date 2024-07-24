@@ -164,6 +164,8 @@ class FormSectionHeader extends StatelessWidget {
     this.showLock = false,
     this.lockControl,
     this.lockHelpText,
+    this.lockedStateText,
+    this.unlockedStateText,
     this.divider = true,
     super.key,
   });
@@ -177,6 +179,8 @@ class FormSectionHeader extends StatelessWidget {
   final bool showLock;
   final FormControl<bool>? lockControl;
   final String? lockHelpText;
+  final String? lockedStateText;
+  final String? unlockedStateText;
 
   @override
   Widget build(BuildContext context) {
@@ -210,10 +214,14 @@ class FormSectionHeader extends StatelessWidget {
             else
               const SizedBox.shrink(),
             if (showLock)
-              ReactiveFormLock(
-                formControl: lockControl,
-                helpText: lockHelpText,
-              )
+              Row(children: [
+                ReactiveFormLock(
+                  formControl: lockControl,
+                  helpText: lockHelpText,
+                  lockedStateText: lockedStateText,
+                  unlockedStateText: unlockedStateText,
+                )
+              ])
             else
               const SizedBox.shrink(),
           ],
@@ -270,18 +278,21 @@ class FormLabel extends StatelessWidget {
 }
 
 class FormLock extends StatefulWidget {
-  const FormLock({
-    super.key,
-    required this.locked,
-    this.onLockChanged,
-    this.readOnly = false,
-    this.helpText,
-  });
+  const FormLock(
+      {super.key,
+      required this.locked,
+      this.onLockChanged,
+      this.readOnly = false,
+      this.helpText,
+      this.lockedStateText,
+      this.unlockedStateText});
 
   final bool locked;
   final bool readOnly;
   final ValueChanged<bool>? onLockChanged;
   final String? helpText;
+  final String? lockedStateText;
+  final String? unlockedStateText;
 
   @override
   State<FormLock> createState() => _FormLockState();
@@ -299,26 +310,59 @@ class _FormLockState extends State<FormLock> {
   @override
   Widget build(BuildContext context) {
     final lockView = Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: widget.readOnly
-            ? null
-            : () {
-                setState(() {
-                  _locked = !_locked;
-                  widget.onLockChanged?.call(_locked);
-                });
-              },
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child:
-                Icon(_locked ? MdiIcons.lock : MdiIcons.lockOpen, size: 24.0),
-          ),
-        ),
-      ),
-    );
+        color: Colors.transparent,
+        child: Row(
+          children: [
+            Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(10.0),
+                  border: Border.all(
+                      color: Theme.of(context).disabledColor.withOpacity(0.05)),
+                ),
+                padding: const EdgeInsets.all(6),
+                child: Row(
+                  children: [
+                    Text(
+                        widget.locked
+                            ? widget.lockedStateText ?? 'Locked'
+                            : widget.unlockedStateText ?? 'Unlocked',
+                        style: Theme.of(context).textTheme.labelMedium),
+                    const SizedBox(width: 4),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      child: Icon(
+                        _locked ? MdiIcons.lock : MdiIcons.lockOpen,
+                        color: _locked
+                            ? Theme.of(context).primaryColor
+                            : Theme.of(context).disabledColor,
+                        size: 18.0,
+                      ),
+                    ),
+                  ],
+                )),
+            SizedBox(
+              height: 30,
+              child: FittedBox(
+                child: Row(
+                  children: [
+                    Switch(
+                      value: _locked,
+                      onChanged: widget.readOnly
+                          ? null
+                          : (value) {
+                              setState(() {
+                                _locked = value;
+                                widget.onLockChanged?.call(_locked);
+                              });
+                            },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ));
 
     if (widget.helpText != null) {
       return Tooltip(
@@ -338,12 +382,16 @@ class ReactiveFormLock<T> extends ReactiveFormField<bool, bool> {
     super.formControl,
     ReactiveFormFieldCallback<bool>? onChanged,
     String? helpText,
+    String? lockedStateText,
+    String? unlockedStateText,
   }) : super(
           builder: (field) {
             return FormLock(
               locked: field.value ?? false,
               readOnly: field.control.disabled,
               helpText: helpText,
+              lockedStateText: lockedStateText,
+              unlockedStateText: unlockedStateText,
               onLockChanged: field.control.enabled
                   ? (value) {
                       field.didChange(value);

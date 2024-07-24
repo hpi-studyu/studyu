@@ -169,6 +169,8 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                 showLock: !study.isStandalone,
                 lockControl: formViewModel.lockPublisherInfoControl,
                 lockHelpText: tr.form_section_lock_help,
+                lockedStateText: tr.form_section_lock_locked,
+                unlockedStateText: tr.form_section_lock_unlocked,
               ),
               const SizedBox(height: 12.0),
               TextParagraph(text: tr.form_section_publisher_description),

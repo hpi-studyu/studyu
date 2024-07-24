@@ -81,6 +81,8 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                 showLock: !study.isStandalone,
                 lockControl: formViewModel.lockStudyScheduleControl,
                 lockHelpText: tr.form_section_lock_help,
+                lockedStateText: tr.form_section_lock_locked,
+                unlockedStateText: tr.form_section_lock_unlocked,
                 right: formViewModel.canTestStudySchedule
                     ? Opacity(
                         opacity: ThemeConfig.kMuteFadeFactor,
