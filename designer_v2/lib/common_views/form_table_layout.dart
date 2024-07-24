@@ -214,14 +214,22 @@ class FormSectionHeader extends StatelessWidget {
             else
               const SizedBox.shrink(),
             if (showLock)
-              Row(children: [
-                ReactiveFormLock(
-                  formControl: lockControl,
-                  helpText: lockHelpText,
-                  lockedStateText: lockedStateText,
-                  unlockedStateText: unlockedStateText,
-                )
-              ])
+              Row(
+                children: [
+                  FormLock(
+                    locked: lockControl?.value ?? false,
+                    readOnly: lockControl?.disabled ?? false,
+                    onLockChanged: lockControl!.enabled
+                        ? (value) {
+                            lockControl?.value = value;
+                          }
+                        : null,
+                    helpText: lockHelpText,
+                    lockedStateText: lockedStateText,
+                    unlockedStateText: unlockedStateText,
+                  )
+                ],
+              )
             else
               const SizedBox.shrink(),
           ],
