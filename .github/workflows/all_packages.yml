@@ -37,8 +37,8 @@ jobs:
       - name: Run generate
         run: melos run generate
 
-      - name: Run fix
-        run: melos run fix
+      # - name: Run fix # remove until flutter_gen issue is fixed
+      #   run: melos run fix
 
       - name: Run bootstrap
         run: melos bootstrap
