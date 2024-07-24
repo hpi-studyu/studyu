@@ -1,3 +1,7 @@
+## 1.8.3
+
+ - **FIX**: upgrade deps.
+
 ## 1.8.2
 
  - **FIX**: upgrade deps.

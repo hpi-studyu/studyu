@@ -1,3 +1,9 @@
+## 2.7.8
+
+ - **FIX**: safety check.
+ - **FIX**: outdated cached subject.
+ - **FIX**: upgrade deps.
+
 ## 2.7.7
 
  - **FIX**: upgrade deps.
