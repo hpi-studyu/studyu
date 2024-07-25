@@ -19,9 +19,15 @@ class EnrollmentFormData implements IStudyFormData {
   factory EnrollmentFormData.fromStudy(Study study) {
     return EnrollmentFormData(
       enrollmentType: study.participation,
-      questionnaireFormData: QuestionnaireFormData.fromDomainModel(study.questionnaire, study.eligibilityCriteria),
-      consentItemsFormData:
-          study.consent.map((consentItem) => ConsentItemFormData.fromDomainModel(consentItem)).toList(),
+      questionnaireFormData: QuestionnaireFormData.fromDomainModel(
+        study.questionnaire,
+        study.eligibilityCriteria,
+      ),
+      consentItemsFormData: study.consent
+          .map(
+            (consentItem) => ConsentItemFormData.fromDomainModel(consentItem),
+          )
+          .toList(),
     );
   }
 
@@ -30,14 +36,24 @@ class EnrollmentFormData implements IStudyFormData {
     study.participation = enrollmentType;
     study.questionnaire = questionnaireFormData.toQuestionnaire();
     study.consent = (consentItemsFormData != null)
-        ? consentItemsFormData!.map((formData) => formData.toConsentItem()).toList()
+        ? consentItemsFormData!
+            .map((formData) => formData.toConsentItem())
+            .toList()
         : [];
-    study.eligibilityCriteria = questionnaireFormData.toEligibilityCriteria();
+    // Only update eligibility criteria if they have changed
+    final newEligibilityCriteria =
+        questionnaireFormData.toEligibilityCriteria();
+    if (study.eligibilityCriteria.length != newEligibilityCriteria.length ||
+        !study.eligibilityCriteria
+            .every((c) => newEligibilityCriteria.contains(c))) {
+      study.eligibilityCriteria = newEligibilityCriteria;
+    }
     return study;
   }
 
   @override
-  String get id => throw UnimplementedError(); // not needed for top-level form data
+  String get id =>
+      throw UnimplementedError(); // not needed for top-level form data
 
   @override
   EnrollmentFormData copy() {

@@ -1,16 +1,11 @@
-bool isRedundantClick(DateTime? loginClickTime) {
-  final currentTime = DateTime.now();
-  if (loginClickTime == null) {
-    loginClickTime = currentTime;
+bool isRedundantClick(
+  DateTime? lastClickTime, {
+  Duration interval = const Duration(seconds: 1),
+}) {
+  if (lastClickTime == null) return false;
+  final now = DateTime.now();
+  if (now.difference(lastClickTime) > interval) {
     return false;
   }
-  int secondsUntilClicked = currentTime.difference(loginClickTime).inSeconds;
-  // timeout submit button to disable multiple clicks
-  if (secondsUntilClicked < 3) {
-    print('complete button is still frozen');
-    return true;
-  }
-
-  loginClickTime = currentTime;
-  return false;
+  return true;
 }

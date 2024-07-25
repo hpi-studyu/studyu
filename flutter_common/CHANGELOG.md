@@ -1,3 +1,43 @@
+## 1.8.6
+
+ - **FIX**: upgrade deps.
+
+## 1.8.5
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+## 1.8.4
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.8.4-dev.2
+
+ - **FIX**: formatting issues.
+ - **FIX**: formatting issues.
+ - **FIX**: upgrade deps.
+
+## 1.8.4-dev.1
+
+ - **FIX**: formatting issues.
+
+## 1.8.4-dev.0
+
+ - **FIX**: upgrade deps.
+ - **FIX**: put supabase cli default anon key in env.local.example.
+
+## 1.8.3
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.8.3-dev.1
+
+ - Update a dependency to the latest release.
+
+## 1.8.3-dev.0
+
+ - **FIX**: upgrade deps and migrate.
+
 ## 1.8.2
 
  - **FIX**: skip signin after signup if user is already authenticated. ([7e978122](https://github.com/hpi-studyu/studyu/commit/7e97812279b77fb9406fb288341c0fd9e349ad9c))

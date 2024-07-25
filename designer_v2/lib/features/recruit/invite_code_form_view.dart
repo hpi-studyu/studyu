@@ -4,6 +4,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/recruit/invite_code_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
@@ -16,42 +17,51 @@ class InviteCodeFormView extends FormConsumerWidget {
   Widget build(BuildContext context, FormGroup form) {
     return Column(
       children: [
-        FormTableLayout(rows: [
-          FormTableRow(
-            label: tr.form_field_code,
-            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-            labelHelpText: tr.form_field_code_tooltip,
-            control: formViewModel.codeControl,
-            input: ReactiveTextField(
-              formControl: formViewModel.codeControl,
-              validationMessages: formViewModel.codeControlValidationMessages,
-              decoration: (formViewModel.codeControl.enabled)
-                  ? InputDecoration(
-                      helperText: "",
-                      suffixIcon: Material(
+        FormTableLayout(
+          rows: [
+            FormTableRow(
+              label: tr.form_field_code,
+              labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+              labelHelpText: tr.form_field_code_tooltip,
+              control: formViewModel.codeControl,
+              input: ReactiveTextField(
+                formControl: formViewModel.codeControl,
+                validationMessages:
+                    formViewModel.codeControl.validationMessages,
+                decoration: (formViewModel.codeControl.enabled)
+                    ? InputDecoration(
+                        helperText: "",
+                        suffixIcon: Material(
                           color: Colors.transparent,
                           child: IconButton(
                             splashRadius: 18.0,
                             onPressed: formViewModel.regenerateCode,
                             icon: const Icon(Icons.refresh_rounded),
-                          )))
-                  : const InputDecoration(),
+                          ),
+                        ),
+                      )
+                    : const InputDecoration(),
+              ),
             ),
-          ),
-          FormTableRow(
-            label: tr.form_field_is_preconfigured_schedule,
-            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-            input: ReactiveSwitch(
-              formControl: formViewModel.isPreconfiguredScheduleControl,
+            FormTableRow(
+              label: tr.form_field_is_preconfigured_schedule,
+              labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+              input: ReactiveSwitch(
+                formControl: formViewModel.isPreconfiguredScheduleControl,
+              ),
             ),
-          ),
-        ]),
+          ],
+        ),
         const SizedBox(height: 4.0),
-        TextParagraph(text: tr.form_field_is_preconfigured_schedule_description),
+        TextParagraph(
+          text: tr.form_field_is_preconfigured_schedule_description,
+        ),
         const SizedBox(height: 24.0),
-        FormTableLayout(rows: [
-          ..._conditionalInterventionRows(context),
-        ]),
+        FormTableLayout(
+          rows: [
+            ..._conditionalInterventionRows(context),
+          ],
+        ),
       ],
     );
   }
@@ -69,10 +79,12 @@ class InviteCodeFormView extends FormConsumerWidget {
           //decoration: const NullHelperDecoration(),
           readOnly: true,
           items: formViewModel.preconfiguredScheduleTypeOptions
-              .map((option) => DropdownMenuItem(
-                    value: option.value,
-                    child: Text(option.label),
-                  ))
+              .map(
+                (option) => DropdownMenuItem(
+                  value: option.value,
+                  child: Text(option.label),
+                ),
+              )
               .toList(),
         ),
       ),
@@ -83,10 +95,12 @@ class InviteCodeFormView extends FormConsumerWidget {
           hint: Text(tr.form_field_preconfigured_schedule_intervention_hint),
           //decoration: const NullHelperDecoration(),
           items: formViewModel.interventionControlOptions
-              .map((option) => DropdownMenuItem(
-                    value: option.value,
-                    child: Text(option.label),
-                  ))
+              .map(
+                (option) => DropdownMenuItem(
+                  value: option.value,
+                  child: Text(option.label),
+                ),
+              )
               .toList(),
         ),
       ),
@@ -97,13 +111,15 @@ class InviteCodeFormView extends FormConsumerWidget {
           hint: Text(tr.form_field_preconfigured_schedule_intervention_hint),
           //decoration: const NullHelperDecoration(),
           items: formViewModel.interventionControlOptions
-              .map((option) => DropdownMenuItem(
-                    value: option.value,
-                    child: Text(option.label),
-                  ))
+              .map(
+                (option) => DropdownMenuItem(
+                  value: option.value,
+                  child: Text(option.label),
+                ),
+              )
               .toList(),
         ),
-      )
+      ),
     ];
   }
 }

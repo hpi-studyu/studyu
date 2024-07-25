@@ -67,7 +67,7 @@ jobs:
 
   app-store-release:
     name: Create App Store Release
-    runs-on: macos-14 # macos-latest
+    runs-on: macos-latest
     steps:
       - name: Await potential publishing on Pub.dev
         uses: johannesvedder/await-workflow@v1

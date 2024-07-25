@@ -6,33 +6,49 @@ import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/misc.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
-import 'package:studyu_core/core.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
+import 'package:studyu_core/core.dart';
 
 class QuestionnaireTaskWidget extends StatefulWidget {
   final QuestionnaireTask task;
   final CompletionPeriod completionPeriod;
 
-  const QuestionnaireTaskWidget({required this.task, required this.completionPeriod, super.key});
+  const QuestionnaireTaskWidget({
+    required this.task,
+    required this.completionPeriod,
+    super.key,
+  });
 
   @override
-  State<QuestionnaireTaskWidget> createState() => _QuestionnaireTaskWidgetState();
+  State<QuestionnaireTaskWidget> createState() =>
+      _QuestionnaireTaskWidgetState();
 }
 
 class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   dynamic response;
   late bool responseValidator;
-  DateTime? loginClickTime;
+  DateTime? _lastClickTime;
   bool _isLoading = false;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  Future<void> _addQuestionnaireResult<T>(T response, BuildContext context) async {
+  Future<void> _addQuestionnaireResult<T>(
+    T response,
+    BuildContext context,
+  ) async {
     await handleTaskCompletion(context, (StudySubject? subject) async {
       try {
-        await subject!.addResult<T>(taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response);
+        await subject!.addResult<T>(
+          taskId: widget.task.id,
+          periodId: widget.completionPeriod.id,
+          result: response,
+        );
       } on SocketException catch (_) {
         await subject!.addResult<T>(
-            taskId: widget.task.id, periodId: widget.completionPeriod.id, result: response, offline: true);
+          taskId: widget.task.id,
+          periodId: widget.completionPeriod.id,
+          result: response,
+          offline: true,
+        );
         rethrow;
       }
     });
@@ -64,32 +80,36 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
             ),
           ),
         ),
-        response != null && responseValidator
-            ? ElevatedButton.icon(
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
-                onPressed: () async {
-                  if (isRedundantClick(loginClickTime)) {
-                    return;
-                  }
-                  if (!formKey.currentState!.validate()) {
-                    return;
-                  }
-                  setState(() {
-                    _isLoading = true;
-                  });
-                  switch (response) {
-                    case QuestionnaireState questionnaireState:
-                      await _addQuestionnaireResult<QuestionnaireState>(questionnaireState, context);
-                      break;
-                  }
-                  setState(() {
-                    _isLoading = false;
-                  });
-                },
-                icon: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Icon(Icons.check),
-                label: Text(AppLocalizations.of(context)!.complete),
-              )
-            : const SizedBox.shrink(),
+        if (response != null && responseValidator)
+          ElevatedButton.icon(
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
+            ),
+            onPressed: () async {
+              if (isRedundantClick(_lastClickTime)) return;
+              if (!formKey.currentState!.validate()) return;
+              setState(() {
+                _isLoading = true;
+                _lastClickTime = DateTime.now();
+              });
+              switch (response) {
+                case final QuestionnaireState questionnaireState:
+                  await _addQuestionnaireResult<QuestionnaireState>(
+                    questionnaireState,
+                    context,
+                  );
+              }
+              setState(() {
+                _isLoading = false;
+              });
+            },
+            icon: _isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : const Icon(Icons.check),
+            label: Text(AppLocalizations.of(context)!.complete),
+          )
+        else
+          const SizedBox.shrink(),
       ],
     );
   }

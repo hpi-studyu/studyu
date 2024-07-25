@@ -23,13 +23,14 @@ class InterventionFormView extends ConsumerStatefulWidget {
   final InterventionFormViewModel formViewModel;
 
   @override
-  ConsumerState<InterventionFormView> createState() => _InterventionFormViewState();
+  ConsumerState<InterventionFormView> createState() =>
+      _InterventionFormViewState();
 }
 
 class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
   bool isStylingInformationDismissed = true;
 
-  onDismissedCallback() => setState(() {
+  void onDismissedCallback() => setState(() {
         isStylingInformationDismissed = !isStylingInformationDismissed;
       });
 
@@ -48,27 +49,33 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                   // TODO: responsive layout (input field gets too small)
                   Expanded(
                     child: ReactiveTextField(
-                      formControl: widget.formViewModel.interventionTitleControl,
+                      formControl:
+                          widget.formViewModel.interventionTitleControl,
                       decoration: InputDecoration(
                         hintText: tr.form_field_intervention_title,
                       ),
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(200),
                       ],
-                      validationMessages: widget.formViewModel.interventionTitleControl.validationMessages,
+                      validationMessages: widget.formViewModel
+                          .interventionTitleControl.validationMessages,
                     ),
                   ),
-                  ReactiveFormConsumer(builder: (context, form, child) {
-                    return (widget.formViewModel.interventionIconControl.value != null)
-                        ? const SizedBox(width: 4.0)
-                        : const SizedBox(width: 8.0);
-                  }),
+                  ReactiveFormConsumer(
+                    builder: (context, form, child) {
+                      return (widget.formViewModel.interventionIconControl
+                                  .value !=
+                              null)
+                          ? const SizedBox(width: 4.0)
+                          : const SizedBox(width: 8.0);
+                    },
+                  ),
                   IntrinsicWidth(
                     child: ReactiveIconPicker(
                       formControl: widget.formViewModel.interventionIconControl,
                       iconOptions: IconPack.material,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -91,7 +98,8 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                         child: Hyperlink(
                           text: "styleable",
                           onClick: () => setState(() {
-                            isStylingInformationDismissed = !isStylingInformationDismissed;
+                            isStylingInformationDismissed =
+                                !isStylingInformationDismissed;
                           }),
                           visitedColor: null,
                         ),
@@ -101,14 +109,16 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                 ],
               ),
               input: ReactiveTextField(
-                formControl: widget.formViewModel.interventionDescriptionControl,
+                formControl:
+                    widget.formViewModel.interventionDescriptionControl,
                 decoration: InputDecoration(
                   hintText: tr.form_field_intervention_description_hint,
                 ),
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(2000),
                 ],
-                validationMessages: widget.formViewModel.interventionDescriptionControl.validationMessages,
+                validationMessages: widget.formViewModel
+                    .interventionDescriptionControl.validationMessages,
                 keyboardType: TextInputType.multiline,
                 minLines: 5,
                 maxLines: 5,
@@ -122,51 +132,65 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
         ),
         const SizedBox(height: 28.0),
         ReactiveFormConsumer(
-            // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
-            // By default, ReactiveFormArray only updates when adding/removing controls
-            builder: (context, form, child) {
-          return ReactiveFormArray(
-            formArray: widget.formViewModel.interventionTasksArray,
-            builder: (context, formArray, child) {
-              return FormArrayTable<InterventionTaskFormViewModel>(
-                control: widget.formViewModel.interventionTasksArray,
-                items: widget.formViewModel.tasksCollection.formViewModels,
-                onSelectItem: (viewModel) => _onSelectItem(viewModel, context, ref),
-                getActionsAt: (viewModel, _) => widget.formViewModel.availablePopupActions(viewModel),
-                onNewItem: () => _onNewItem(context, ref),
-                onNewItemLabel: tr.form_array_intervention_tasks_new,
-                rowTitle: (viewModel) => viewModel.formData?.taskTitle ?? '',
-                sectionTitle: tr.form_array_intervention_tasks,
-                sectionDescription: tr.form_array_intervention_tasks_description,
-                emptyIcon: Icons.content_paste_off_rounded,
-                emptyTitle: tr.form_array_intervention_tasks_empty_title,
-                emptyDescription: tr.form_array_intervention_tasks_empty_description,
-              );
-            },
-          );
-        }),
+          // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
+          // By default, ReactiveFormArray only updates when adding/removing controls
+          builder: (context, form, child) {
+            return ReactiveFormArray(
+              formArray: widget.formViewModel.interventionTasksArray,
+              builder: (context, formArray, child) {
+                return FormArrayTable<InterventionTaskFormViewModel>(
+                  control: widget.formViewModel.interventionTasksArray,
+                  items: widget.formViewModel.tasksCollection.formViewModels,
+                  onSelectItem: (viewModel) =>
+                      _onSelectItem(viewModel, context, ref),
+                  getActionsAt: (viewModel, _) =>
+                      widget.formViewModel.availablePopupActions(viewModel),
+                  onNewItem: () => _onNewItem(context, ref),
+                  onNewItemLabel: tr.form_array_intervention_tasks_new,
+                  rowTitle: (viewModel) => viewModel.formData?.taskTitle ?? '',
+                  sectionTitle: tr.form_array_intervention_tasks,
+                  sectionDescription:
+                      tr.form_array_intervention_tasks_description,
+                  emptyIcon: Icons.content_paste_off_rounded,
+                  emptyTitle: tr.form_array_intervention_tasks_empty_title,
+                  emptyDescription:
+                      tr.form_array_intervention_tasks_empty_description,
+                );
+              },
+            );
+          },
+        ),
       ],
     );
   }
 
-  _onNewItem(BuildContext context, WidgetRef ref) {
+  void _onNewItem(BuildContext context, WidgetRef ref) {
     final routeArgs = widget.formViewModel.buildNewFormRouteArgs();
     _showSidesheetWithArgs(routeArgs, context, ref);
   }
 
-  _onSelectItem(InterventionTaskFormViewModel item, BuildContext context, WidgetRef ref) {
+  void _onSelectItem(
+    InterventionTaskFormViewModel item,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
     final routeArgs = widget.formViewModel.buildFormRouteArgs(item);
     _showSidesheetWithArgs(routeArgs, context, ref);
   }
 
   // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
-  _showSidesheetWithArgs(InterventionTaskFormRouteArgs routeArgs, BuildContext context, WidgetRef ref) {
-    final interventionTaskFormViewModel = ref.read(interventionTaskFormViewModelProvider(routeArgs));
+  void _showSidesheetWithArgs(
+    InterventionTaskFormRouteArgs routeArgs,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    final interventionTaskFormViewModel =
+        ref.watch(interventionTaskFormViewModelProvider(routeArgs));
     showFormSideSheet<InterventionTaskFormViewModel>(
       context: context,
       formViewModel: interventionTaskFormViewModel,
-      formViewBuilder: (formViewModel) => InterventionTaskFormView(formViewModel: formViewModel),
-      ignoreAppBar: true,
+      formViewBuilder: (formViewModel) =>
+          InterventionTaskFormView(formViewModel: formViewModel),
     );
   }
 }

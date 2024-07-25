@@ -7,6 +7,10 @@ on:
       - "core/**"
       - "designer_v2/**"
       - "flutter_common/**"
+      - '*.gitignore'
+      - 'melos.yaml'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
       - ".github/workflows/all_packages.yml"
       - ".github/workflows/init-workspace/**"
   workflow_dispatch:
@@ -16,29 +20,39 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  analyze:
+  static_analysis:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Init workspace
-        uses: ./.github/workflows/init-workspace
-      - name: Run analyze
-        run: melos run analyze
+          token: ${{ secrets.READY_TO_MERGE_TOKEN }}
 
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
+
+      - name: Run generate
+        run: melos run generate
+
+      # - name: Run fix # remove until flutter_gen issue is fixed
+      #   run: melos run fix
+
+      - name: Run bootstrap
+        run: melos bootstrap
+
       - name: Run format
-        run: melos run format:ci
+        run: melos format
+
+      - name: Run analyze
+        run: melos analyze
+
+      - name: Commit changes if any
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: Apply static analysis changes'
 
   test:
     runs-on: ubuntu-latest

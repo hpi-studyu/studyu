@@ -1,5 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'clipboard.g.dart';
 
 abstract class IClipboardService {
   Future<String> copy(String text);
@@ -13,4 +15,7 @@ class ClipboardService implements IClipboardService {
   }
 }
 
-final clipboardServiceProvider = Provider<IClipboardService>((ref) => ClipboardService());
+@riverpod
+IClipboardService clipboardService(ClipboardServiceRef ref) {
+  return ClipboardService();
+}

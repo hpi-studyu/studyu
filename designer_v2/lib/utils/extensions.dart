@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
@@ -19,23 +20,43 @@ extension StringX on String {
     label ??= kCopySuffix;
 
     final regexStr = r"\((?:" + label + r")\s*(\d*)\)$";
-    suffixFactory(n) => (n > 0) ? "($label ${n.toString()})" : "($label)";
+    String suffixFactory(int n) => (n > 0) ? "($label $n)" : "($label)";
     final regex = RegExp(regexStr);
 
-    Iterable<RegExpMatch> matches = regex.allMatches(this);
+    final Iterable<RegExpMatch> matches = regex.allMatches(this);
 
     if (matches.isNotEmpty) {
       final matchedSuffix = matches.last;
       final matchedIncrement = matchedSuffix.group(1);
-      final currentIncrement = (matchedIncrement == null || matchedIncrement == '') ? 0 : int.parse(matchedIncrement);
-      final strWithoutLabel = replaceRange(matchedSuffix.start, matchedSuffix.end, '').trim();
+      final currentIncrement =
+          (matchedIncrement == null || matchedIncrement == '')
+              ? 0
+              : int.parse(matchedIncrement);
+      final strWithoutLabel =
+          replaceRange(matchedSuffix.start, matchedSuffix.end, '').trim();
       return "$strWithoutLabel ${suffixFactory(currentIncrement + 1)}";
     }
     return "$this ${suffixFactory(0)}";
   }
 
   List<String> get alphabet {
-    return ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o'];
+    return [
+      'a',
+      'b',
+      'c',
+      'd',
+      'e',
+      'f',
+      'g',
+      'h',
+      'i',
+      'j',
+      'k',
+      'l',
+      'm',
+      'n',
+      'o',
+    ];
   }
 
   String alphabetLetterFrom(int idx) {
@@ -60,8 +81,8 @@ extension DurationX on Duration {
 }
 
 extension DateTimeAgoX on DateTime {
-  String _timeAgoFormatted({inSeconds = true}) {
-    Duration diff = DateTime.now().difference(this);
+  String _timeAgoFormatted({bool inSeconds = true}) {
+    final Duration diff = DateTime.now().difference(this);
 
     if (diff.inYears >= 1) {
       return tr.date_diff_years(diff.inYears);
@@ -85,7 +106,16 @@ extension DateTimeAgoX on DateTime {
   }
 
   String toTimeAgoStringPrecise() {
-    return _timeAgoFormatted(inSeconds: true);
+    return _timeAgoFormatted();
+  }
+
+  String toLocalizedString({required String locale, bool showTime = true}) {
+    final time = toLocal();
+    final formatter = DateFormat.yMMMMd(locale);
+    if (showTime) {
+      return formatter.add_Hm().format(time);
+    }
+    return formatter.format(time);
   }
 }
 
@@ -118,7 +148,7 @@ extension ListX<E> on List<E> {
 
 extension FirstWhereOrNullExtension<E> on Iterable<E> {
   E? firstWhereOrNull(bool Function(E) test) {
-    for (E element in this) {
+    for (final E element in this) {
       if (test(element)) return element;
     }
     return null;

@@ -8,21 +8,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check_commit_status:
+  ready_to_merge:
     runs-on: ubuntu-latest
     steps:
-      - name: Check if PR is mergeable
+      - name: Check if PR is ready to merge
         uses: actions/github-script@v7
         with:
           script: |
             // Define a list of workflows that need to finish successfully if run before merging  
             workflows_to_check = [
               "all_packages.yml",
-              "check-uncommitted-changes.yml",
+              "linter.yml",
               "mega-linter.yml",
               "e2e_tests.yml",
               "supabase-test.yml",
-              "uml-docs.yml",
             ];
             console.log("Initializing with workflows to check: " + workflows_to_check);
             const { owner, repo } = context.repo;

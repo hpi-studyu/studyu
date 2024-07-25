@@ -1,3 +1,51 @@
+## 4.4.5
+
+ - **FIX**: upgrade deps.
+
+## 4.4.4
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+## 4.4.3
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 4.4.3-dev.2
+
+ - **FIX**: keep eligibility criterion.
+ - **FIX**: empty description init value.
+ - **FIX**: formatting issues.
+ - **FIX**: formatting issues.
+ - **FIX**: migrate app to status.
+ - **FIX**: users not able to continue closed study.
+ - **FIX**: upgrade deps.
+ - **FEAT**: deprecate published for study_status.
+ - **FEAT**: close study using is_closed column.
+ - **FEAT**: close study.
+
+## 4.4.3-dev.1
+
+ - **PERF**: improve dashboard study fetching.
+ - **FIX**: formatting issues.
+ - **FIX**: upgrade deps.
+
+## 4.4.3-dev.0
+
+ - **FIX**: upgrade deps.
+
+## 4.4.2
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 4.4.2-dev.1
+
+ - **REFACTOR**: improved app config error handling.
+
+## 4.4.2-dev.0
+
+ - **FIX**: upgrade deps and migrate.
+
 ## 4.4.1
 
  - **FIX**: check if result is QuestionnaireState. ([c7535804](https://github.com/hpi-studyu/studyu/commit/c7535804281f9bbdf757a2eb11df03940eceeec9))

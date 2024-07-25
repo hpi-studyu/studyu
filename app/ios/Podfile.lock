@@ -26,13 +26,11 @@ PODS:
   - record_darwin (1.0.0):
     - Flutter
     - FlutterMacOS
-  - Sentry/HybridSDK (8.21.0):
-    - SentryPrivate (= 8.21.0)
-  - sentry_flutter (7.20.0):
+  - Sentry/HybridSDK (8.30.1)
+  - sentry_flutter (8.4.0):
     - Flutter
     - FlutterMacOS
-    - Sentry/HybridSDK (= 8.21.0)
-  - SentryPrivate (8.21.0)
+    - Sentry/HybridSDK (= 8.30.1)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -74,7 +72,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Sentry
-    - SentryPrivate
 
 EXTERNAL SOURCES:
   app_links:
@@ -121,26 +118,25 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   app_links: e70ca16b4b0f88253b3b3660200d4a10b4ea9795
   audio_session: 088d2483ebd1dc43f51d253d4a1c517d9a2e7207
-  camera_avfoundation: 759172d1a77ae7be0de08fc104cfb79738b8a59e
+  camera_avfoundation: dd002b0330f4981e1bbcb46ae9b62829237459a4
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_file_dialog: 4c014a45b105709a27391e266c277d7e588e9299
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
-  flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
+  flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
   flutter_timezone: ffb07bdad3c6276af8dada0f11978d8a1f8a20bb
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
-  path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
-  record_darwin: 1f6619f2abac4d1ca91d3eeab038c980d76f1517
-  Sentry: ebc12276bd17613a114ab359074096b6b3725203
-  sentry_flutter: df6e28477322fc5202bbe20aafdd7404b6e97729
-  SentryPrivate: d651efb234cf385ec9a1cdd3eff94b5e78a0e0fe
-  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
+  record_darwin: df0a677188e5fed18472550298e675f19ddaffbe
+  Sentry: 514a3ea653886e9a48c6287d8b7bf05ec24bf3be
+  sentry_flutter: edc037f7af0dc1512d6c33a5c2c7c838bd0d6806
+  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
-  url_launcher_ios: 6116280ddcfe98ab8820085d8d76ae7449447586
-  video_player_avfoundation: 2b4384f3b157206b5e150a0083cdc0c905d260d3
+  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
+  video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
   wakelock_plus: 78ec7c5b202cab7761af8e2b2b3d0671be6c4ae1
-  webview_flutter_wkwebview: be0f0d33777f1bfd0c9fdcb594786704dbf65f36
+  webview_flutter_wkwebview: 2a23822e9039b7b1bc52e5add778e5d89ad488d1
 
 PODFILE CHECKSUM: 666752a84cc2c75e2476eadd0afa8f31ee5056b0
 

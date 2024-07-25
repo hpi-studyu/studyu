@@ -17,7 +17,8 @@ class NotExpression extends Expression {
       : expression = BooleanExpression(),
         super(expressionType);
 
-  factory NotExpression.fromJson(Map<String, dynamic> json) => _$NotExpressionFromJson(json);
+  factory NotExpression.fromJson(Map<String, dynamic> json) =>
+      _$NotExpressionFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$NotExpressionToJson(this);

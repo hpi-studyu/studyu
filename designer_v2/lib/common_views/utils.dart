@@ -1,8 +1,15 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:studyu_designer_v2/theme.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
 
 typedef WidgetDecorator = Widget Function(Widget widget);
 
-List<Widget> withSpacing(List<Widget> widgets, {required double spacing, double? paddingStart, double? paddingEnd}) {
+List<Widget> withSpacing(
+  List<Widget> widgets, {
+  required double spacing,
+  double? paddingStart,
+  double? paddingEnd,
+}) {
   final List<Widget> results = [];
   if (paddingStart != null) {
     results.add(SizedBox(height: paddingStart, width: paddingStart));
@@ -37,4 +44,18 @@ extension ColorX on Color {
     assert(alphaScaleFactor >= 0.0 && alphaScaleFactor <= 1.0);
     return withAlpha((alphaScaleFactor * alpha).round());
   }
+}
+
+Widget interventionPrefix(int rowIdx, ThemeData theme) {
+  return Row(
+    children: [
+      Text(
+        ''.alphabetLetterFrom(rowIdx).toUpperCase(),
+        style: TextStyle(
+          color: ThemeConfig.dropdownMenuItemTheme(theme).iconTheme!.color,
+        ),
+      ),
+      const SizedBox(width: 16.0),
+    ],
+  );
 }

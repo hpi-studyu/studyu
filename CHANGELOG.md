@@ -3,6 +3,488 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-07-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.8`](#studyu_app---v278)
+ - [`studyu_core` - `v4.4.5`](#studyu_core---v445)
+ - [`studyu_designer_v2` - `v1.8.3`](#studyu_designer_v2---v183)
+ - [`studyu_flutter_common` - `v1.8.6`](#studyu_flutter_common---v186)
+
+---
+
+#### `studyu_app` - `v2.7.8`
+
+ - **FIX**: safety check.
+ - **FIX**: outdated cached subject.
+ - **FIX**: upgrade deps.
+
+#### `studyu_core` - `v4.4.5`
+
+ - **FIX**: upgrade deps.
+
+#### `studyu_designer_v2` - `v1.8.3`
+
+ - **FIX**: upgrade deps.
+
+#### `studyu_flutter_common` - `v1.8.6`
+
+ - **FIX**: upgrade deps.
+
+
+## 2024-07-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.7`](#studyu_app---v277)
+ - [`studyu_core` - `v4.4.4`](#studyu_core---v444)
+ - [`studyu_designer_v2` - `v1.8.2`](#studyu_designer_v2---v182)
+ - [`studyu_flutter_common` - `v1.8.5`](#studyu_flutter_common---v185)
+
+---
+
+#### `studyu_app` - `v2.7.7`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+#### `studyu_core` - `v4.4.4`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+#### `studyu_designer_v2` - `v1.8.2`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: added legend for participant activity tooltip.
+ - **FIX**: monitor section header tooltip participants list display fix.
+ - **FIX**: upgrade deps.
+
+#### `studyu_flutter_common` - `v1.8.5`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+
+## 2024-07-14
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`studyu_app` - `v2.7.6`](#studyu_app---v276)
+ - [`studyu_core` - `v4.4.3`](#studyu_core---v443)
+ - [`studyu_designer_v2` - `v1.8.1`](#studyu_designer_v2---v181)
+ - [`studyu_flutter_common` - `v1.8.4`](#studyu_flutter_common---v184)
+
+Packages with other changes:
+
+ - There are no other changes in this release.
+
+Packages graduated to a stable release (see pre-releases prior to the stable version for changelog entries):
+
+ - `studyu_app` - `v2.7.6`
+ - `studyu_core` - `v4.4.3`
+ - `studyu_designer_v2` - `v1.8.1`
+ - `studyu_flutter_common` - `v1.8.4`
+
+---
+
+#### `studyu_app` - `v2.7.6`
+
+#### `studyu_core` - `v4.4.3`
+
+#### `studyu_designer_v2` - `v1.8.1`
+
+#### `studyu_flutter_common` - `v1.8.4`
+
+
+## 2024-07-01
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.6-dev.3`](#studyu_app---v276-dev3)
+ - [`studyu_core` - `v4.4.3-dev.2`](#studyu_core---v443-dev2)
+ - [`studyu_designer_v2` - `v1.8.1-dev.3`](#studyu_designer_v2---v181-dev3)
+ - [`studyu_flutter_common` - `v1.8.4-dev.2`](#studyu_flutter_common---v184-dev2)
+
+---
+
+#### `studyu_app` - `v2.7.6-dev.3`
+
+ - **REFACTOR**: migrate to riverpod code generation 2.
+ - **FIX**: app preview stuck at AppLanguage.
+ - **FIX**: formatting issues.
+ - **FIX**: formatting issues.
+ - **FIX**: users not able to continue closed study.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**: upgrade deps.
+ - **FEAT**: deprecate published for study_status.
+ - **FEAT**: close study using is_closed column.
+ - **FEAT**: close study.
+
+#### `studyu_core` - `v4.4.3-dev.2`
+
+ - **FIX**: keep eligibility criterion.
+ - **FIX**: empty description init value.
+ - **FIX**: formatting issues.
+ - **FIX**: formatting issues.
+ - **FIX**: migrate app to status.
+ - **FIX**: users not able to continue closed study.
+ - **FIX**: upgrade deps.
+ - **FEAT**: deprecate published for study_status.
+ - **FEAT**: close study using is_closed column.
+ - **FEAT**: close study.
+
+#### `studyu_designer_v2` - `v1.8.1-dev.3`
+
+ - **REFACTOR**: migrated auth_form_controller.dart to riverpod v2.
+ - **REFACTOR**: migrate to riverpod code generation 2.
+ - **REFACTOR**: update designer study data after test controller is disposed.
+ - **REFACTOR**: migrate StudySettingsFormViewModel Provider.
+ - **REFACTOR**: migrate appConfig FutureProvider.
+ - **REFACTOR**: migrated dashboard_controller.dart to riverpod v2.
+ - **REFACTOR**: migrate to riverpod code generation.
+ - **PERF**: remove await for onSave.
+ - **PERF**: replace read with watch.
+ - **FIX**: test frame live preview.
+ - **FIX**: keep eligibility criterion.
+ - **FIX**: disable reactive for enrollment radio tile".
+ - **FIX**: disable reactive for enrollment radio tile.
+ - **FIX**: migrate iFrameElement.
+ - **FIX**: Incorrect type casting occurs when an insufficient number of characters entered to password field on the registration page.
+ - **FIX**: do not autosave on formarray".
+ - **FIX**: do not autosave on formarray.
+ - **FIX**: enable atLeastOneTask for intervention again.
+ - **FIX**: delay fetching studyRepo.
+ - **FIX**: type.
+ - **FIX**: catch invite code not existing and better APIException output.
+ - **FIX**: disable reactive for schedule intervention screen.
+ - **FIX**: disable reactive for enrollment radio tile.
+ - **FIX**: empty description init value.
+ - **FIX**: migrate close study feature.
+ - **FIX**: cannot use ref before provider rebuilt.
+ - **FIX**: explicitly type formcontrol when adding multiple choice field.
+ - **FIX**: dashbaord user load once.
+ - **FIX**: study controller no longer extends study base controller due to riverpod v2.
+ - **FIX**: initialization route and splash page.
+ - **FIX**: merge dev fixes.
+ - **FIX**: missing intervention and measurement data when study is being duplicated.
+ - **FIX**: Flutter 3.22 arg error.
+ - **FIX**: translate study schedule.
+ - **FIX**: add closed success description.
+ - **FIX**: only show close button for editors.
+ - **FIX**: Login/register notifications (wrong password, etc.) are not showing.
+ - **FIX**: potential isClosed error.
+ - **FIX**: merge dashboard refactor pr.
+ - **FIX**: add compatibility for emoji font with flutter >= 3.22.
+ - **FIX**: upgrade deps.
+ - **FIX**: let autosave not listen to formarray anymore.
+ - **FIX**: check if canPop.
+ - **FIX**: typo / grammar.
+ - **FIX**: integration test sign out.
+ - **FIX**: do not show separator if no delete item shown.
+ - **FIX**: add emojis again.
+ - **FEAT**: close study.
+ - **FEAT**: fix duplicate and designer updates for study closing.
+ - **FEAT**: small fixes for study closing.
+ - **FEAT**: add separators to model action popup.
+ - **FEAT**: deprecate published for study_status.
+ - **FEAT**: study close button.
+ - **FEAT**: new severe close confirmation.
+ - **FEAT**: close study using is_closed column.
+ - **DOCS**: add function documentation.
+
+#### `studyu_flutter_common` - `v1.8.4-dev.2`
+
+ - **FIX**: formatting issues.
+ - **FIX**: formatting issues.
+ - **FIX**: upgrade deps.
+
+
+## 2024-06-12
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.6-dev.2`](#studyu_app---v276-dev2)
+ - [`studyu_core` - `v4.4.3-dev.1`](#studyu_core---v443-dev1)
+ - [`studyu_designer_v2` - `v1.8.1-dev.2`](#studyu_designer_v2---v181-dev2)
+ - [`studyu_flutter_common` - `v1.8.4-dev.1`](#studyu_flutter_common---v184-dev1)
+
+---
+
+#### `studyu_app` - `v2.7.6-dev.2`
+
+ - **FIX**: formatting issues.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**: upgrade deps.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+
+#### `studyu_core` - `v4.4.3-dev.1`
+
+ - **PERF**: improve dashboard study fetching.
+ - **FIX**: formatting issues.
+ - **FIX**: upgrade deps.
+
+#### `studyu_designer_v2` - `v1.8.1-dev.2`
+
+ - **PERF**: added comments to the getUserStudies function.
+ - **PERF**: improve dashboard study fetching.
+ - **FIX**: add emojis again.
+ - **FIX**: integration test sign out.
+ - **FIX**: check if canPop.
+ - **FIX**: upgrade deps.
+ - **FIX**: add compatibility for emoji font with flutter >= 3.22.
+ - **FIX**: Flutter 3.22 arg error.
+
+#### `studyu_flutter_common` - `v1.8.4-dev.1`
+
+ - **FIX**: formatting issues.
+
+
+## 2024-06-09
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.6-dev.1`](#studyu_app---v276-dev1)
+ - [`studyu_designer_v2` - `v1.8.1-dev.1`](#studyu_designer_v2---v181-dev1)
+
+---
+
+#### `studyu_app` - `v2.7.6-dev.1`
+
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+
+#### `studyu_designer_v2` - `v1.8.1-dev.1`
+
+ - **FIX**: add emojis again.
+
+
+## 2024-06-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.6-dev.0`](#studyu_app---v276-dev0)
+ - [`studyu_core` - `v4.4.3-dev.0`](#studyu_core---v443-dev0)
+ - [`studyu_designer_v2` - `v1.8.1-dev.0`](#studyu_designer_v2---v181-dev0)
+ - [`studyu_flutter_common` - `v1.8.4-dev.0`](#studyu_flutter_common---v184-dev0)
+
+---
+
+#### `studyu_app` - `v2.7.6-dev.0`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: UI overflows.
+
+#### `studyu_core` - `v4.4.3-dev.0`
+
+ - **FIX**: upgrade deps.
+
+#### `studyu_designer_v2` - `v1.8.1-dev.0`
+
+ - **FIX**: integration test sign out.
+ - **FIX**: check if canPop.
+ - **FIX**: upgrade deps.
+ - **FIX**: add compatibility for emoji font with flutter >= 3.22.
+ - **FIX**: Flutter 3.22 arg error.
+
+#### `studyu_flutter_common` - `v1.8.4-dev.0`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: put supabase cli default anon key in env.local.example.
+
+
+## 2024-05-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.5`](#studyu_app---v275)
+
+---
+
+#### `studyu_app` - `v2.7.5`
+
+ - **FIX**: update podfile.
+
+
+## 2024-05-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`studyu_app` - `v2.7.4`](#studyu_app---v274)
+ - [`studyu_core` - `v4.4.2`](#studyu_core---v442)
+ - [`studyu_flutter_common` - `v1.8.3`](#studyu_flutter_common---v183)
+
+Packages with other changes:
+
+ - [`studyu_designer_v2` - `v1.8.0`](#studyu_designer_v2---v180)
+
+Packages graduated to a stable release (see pre-releases prior to the stable version for changelog entries):
+
+ - `studyu_app` - `v2.7.4`
+ - `studyu_core` - `v4.4.2`
+ - `studyu_designer_v2` - `v1.8.0`
+ - `studyu_flutter_common` - `v1.8.3`
+
+---
+
+#### `studyu_app` - `v2.7.4`
+
+#### `studyu_core` - `v4.4.2`
+
+#### `studyu_flutter_common` - `v1.8.3`
+
+#### `studyu_designer_v2` - `v1.8.0`
+
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## 2024-05-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_core` - `v4.4.2-dev.1`](#studyu_core---v442-dev1)
+ - [`studyu_app` - `v2.7.4-dev.1`](#studyu_app---v274-dev1)
+ - [`studyu_designer_v2` - `v1.8.0-dev.1`](#studyu_designer_v2---v180-dev1)
+ - [`studyu_flutter_common` - `v1.8.3-dev.1`](#studyu_flutter_common---v183-dev1)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `studyu_app` - `v2.7.4-dev.1`
+ - `studyu_designer_v2` - `v1.8.0-dev.1`
+ - `studyu_flutter_common` - `v1.8.3-dev.1`
+
+---
+
+#### `studyu_core` - `v4.4.2-dev.1`
+
+ - **REFACTOR**: improved app config error handling.
+
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## 2024-04-29
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.4-dev.0`](#studyu_app---v274-dev0)
+ - [`studyu_core` - `v4.4.2-dev.0`](#studyu_core---v442-dev0)
+ - [`studyu_designer_v2` - `v1.8.0-dev.0`](#studyu_designer_v2---v180-dev0)
+ - [`studyu_flutter_common` - `v1.8.3-dev.0`](#studyu_flutter_common---v183-dev0)
+
+---
+
+#### `studyu_app` - `v2.7.4-dev.0`
+
+ - **FIX**: upgrade deps and migrate.
+
+#### `studyu_core` - `v4.4.2-dev.0`
+
+ - **FIX**: upgrade deps and migrate.
+
+#### `studyu_designer_v2` - `v1.8.0-dev.0`
+
+ - **FIX**: upgrade deps and migrate.
+ - **FEAT**: sort invite codes alphabetically.
+
+#### `studyu_flutter_common` - `v1.8.3-dev.0`
+
+ - **FIX**: upgrade deps and migrate.
+
+
 ## 2024-04-26
 
 ### Changes

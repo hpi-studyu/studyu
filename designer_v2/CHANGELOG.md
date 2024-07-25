@@ -1,3 +1,113 @@
+## 1.8.3
+
+ - **FIX**: upgrade deps.
+
+## 1.8.2
+
+ - **FIX**: upgrade deps.
+ - **FIX**: added legend for participant activity tooltip.
+ - **FIX**: monitor section header tooltip participants list display fix.
+ - **FIX**: upgrade deps.
+
+## 1.8.1
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.8.1-dev.3
+
+ - **REFACTOR**: migrated auth_form_controller.dart to riverpod v2.
+ - **REFACTOR**: migrate to riverpod code generation 2.
+ - **REFACTOR**: update designer study data after test controller is disposed.
+ - **REFACTOR**: migrate StudySettingsFormViewModel Provider.
+ - **REFACTOR**: migrate appConfig FutureProvider.
+ - **REFACTOR**: migrated dashboard_controller.dart to riverpod v2.
+ - **REFACTOR**: migrate to riverpod code generation.
+ - **PERF**: remove await for onSave.
+ - **PERF**: replace read with watch.
+ - **FIX**: test frame live preview.
+ - **FIX**: keep eligibility criterion.
+ - **FIX**: disable reactive for enrollment radio tile".
+ - **FIX**: disable reactive for enrollment radio tile.
+ - **FIX**: migrate iFrameElement.
+ - **FIX**: Incorrect type casting occurs when an insufficient number of characters entered to password field on the registration page.
+ - **FIX**: do not autosave on formarray".
+ - **FIX**: do not autosave on formarray.
+ - **FIX**: enable atLeastOneTask for intervention again.
+ - **FIX**: delay fetching studyRepo.
+ - **FIX**: type.
+ - **FIX**: catch invite code not existing and better APIException output.
+ - **FIX**: disable reactive for schedule intervention screen.
+ - **FIX**: disable reactive for enrollment radio tile.
+ - **FIX**: empty description init value.
+ - **FIX**: migrate close study feature.
+ - **FIX**: cannot use ref before provider rebuilt.
+ - **FIX**: explicitly type formcontrol when adding multiple choice field.
+ - **FIX**: dashbaord user load once.
+ - **FIX**: study controller no longer extends study base controller due to riverpod v2.
+ - **FIX**: initialization route and splash page.
+ - **FIX**: merge dev fixes.
+ - **FIX**: missing intervention and measurement data when study is being duplicated.
+ - **FIX**: Flutter 3.22 arg error.
+ - **FIX**: translate study schedule.
+ - **FIX**: add closed success description.
+ - **FIX**: only show close button for editors.
+ - **FIX**: Login/register notifications (wrong password, etc.) are not showing.
+ - **FIX**: potential isClosed error.
+ - **FIX**: merge dashboard refactor pr.
+ - **FIX**: add compatibility for emoji font with flutter >= 3.22.
+ - **FIX**: upgrade deps.
+ - **FIX**: let autosave not listen to formarray anymore.
+ - **FIX**: check if canPop.
+ - **FIX**: typo / grammar.
+ - **FIX**: integration test sign out.
+ - **FIX**: do not show separator if no delete item shown.
+ - **FIX**: add emojis again.
+ - **FEAT**: close study.
+ - **FEAT**: fix duplicate and designer updates for study closing.
+ - **FEAT**: small fixes for study closing.
+ - **FEAT**: add separators to model action popup.
+ - **FEAT**: deprecate published for study_status.
+ - **FEAT**: study close button.
+ - **FEAT**: new severe close confirmation.
+ - **FEAT**: close study using is_closed column.
+ - **DOCS**: add function documentation.
+
+## 1.8.1-dev.2
+
+ - **PERF**: added comments to the getUserStudies function.
+ - **PERF**: improve dashboard study fetching.
+ - **FIX**: add emojis again.
+ - **FIX**: integration test sign out.
+ - **FIX**: check if canPop.
+ - **FIX**: upgrade deps.
+ - **FIX**: add compatibility for emoji font with flutter >= 3.22.
+ - **FIX**: Flutter 3.22 arg error.
+
+## 1.8.1-dev.1
+
+ - **FIX**: add emojis again.
+
+## 1.8.1-dev.0
+
+ - **FIX**: integration test sign out.
+ - **FIX**: check if canPop.
+ - **FIX**: upgrade deps.
+ - **FIX**: add compatibility for emoji font with flutter >= 3.22.
+ - **FIX**: Flutter 3.22 arg error.
+
+## 1.8.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.8.0-dev.1
+
+ - Update a dependency to the latest release.
+
+## 1.8.0-dev.0
+
+ - **FIX**: upgrade deps and migrate.
+ - **FEAT**: sort invite codes alphabetically.
+
 ## 1.7.2
 
  - **FIX**: signup was not possible with flutter_secure_storage. ([26425971](https://github.com/hpi-studyu/studyu/commit/2642597141653aa724a1305456e43840d6fbebe5))

@@ -1,6 +1,6 @@
-name: studyu-packages
-
+name: studyu
 repository: https://github.com/hpi-studyu/studyu
+sdkPath: .fvm/flutter_sdk
 
 packages:
   - app
@@ -8,44 +8,12 @@ packages:
   - core
   - flutter_common
 
-command:
-  clean:
-    hooks:
-      # Clean things very deeply, can be used to establish "pristine checkout" status
-      pre: >
-        git clean -x -d -f -q || true
-      # Additional cleanup lifecycle script, executed when `melos clean` is ran.
-      post: >
-        melos exec --flutter --concurrency=3 -- "flutter clean"
-
 scripts:
-  analyze:
-    run: |
-      melos exec -c 6 -- \
-        "flutter analyze --fatal-infos ."
-    description: |
-      Run `dart analyze` in all packages.
-       - Note: you can also rely on your IDEs Dart Analysis / Issues window.
-
   fix:
     run: |
       melos exec -c 6 -- \
         "dart fix --apply"
     description: Fix auto-fixable lint errors
-
-  # todo exclude *.g.dart files in a platform agnostic way
-  # dart format sadly does not support this yet: https://github.com/dart-lang/dart_style/issues/864
-  format:
-    run: |
-      melos exec -c 6 -- \
-        "dart format -l 120 ."
-    description: Format all code and markdown files
-
-  format:ci:
-    run: |
-      melos exec -c 6 -- \
-        "find . -type f -name '*.dart' ! -name '*.g.dart' ! -path '**/.dart_tool/**' | tr '\n' ' ' | xargs dart format -l 120 --set-exit-if-changed"
-    description: Format all code without generated files
 
   outdated:
     run: |
@@ -66,7 +34,7 @@ scripts:
         "flutter test"
     description: Run `flutter test` for a specific package.
     packageFilters:
-      dir-exists: test
+      dirExists: test
 
   generate:
     run: |
@@ -74,31 +42,73 @@ scripts:
         "dart run build_runner build --delete-conflicting-outputs"
     description: Generate files with build_runner
     packageFilters:
-      scope: studyu_core
+      scope:
+        - 'studyu_core'
+        - 'studyu_designer_v2'
 
-  dev:designer:
+  reset:
+    run: |
+      git clean -x -d -f -q || true
+      melos clean
+      melos exec --flutter --concurrency=1 -- "flutter clean"
+      melos bootstrap
+    description: Reset the workspace to a pristine checkout status.
+
+  app:
     run: |
       melos exec -c 1 -- \
-        "flutter run -d chrome --web-port 3001 --dart-define=STUDYU_ENV=.env.local"
+        "flutter run -d chrome --web-port 8080"
+    packageFilters:
+      scope: studyu_app
+    description: Runs StudyU App with default environment
+
+  designer_v2:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8081"
     packageFilters:
       scope: studyu_designer_v2
-    description: Runs designer in Chrome on port 3001 with local env for local development
+    description: Runs StudyU Designer with default environment
 
   dev:app:
     run: |
       melos exec -c 1 -- \
-        "flutter run --dart-define=STUDYU_ENV=.env.local"
+        "flutter run -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.dev"
     packageFilters:
       scope: studyu_app
-    description: Runs app with local env for local development
+    description: Runs StudyU App with the development environment
+
+  dev:designer_v2:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
+    packageFilters:
+      scope: studyu_designer_v2
+    description: Runs StudyU Designer with the development environment
+
+  local:app:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.local"
+    packageFilters:
+      scope: studyu_app
+    description: Runs StudyU App with local environment
+
+  local:designer_v2:
+    run: |
+      melos exec -c 1 -- \
+        "flutter run -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
+    packageFilters:
+      scope: studyu_designer_v2
+    description: Runs StudyU Designer with local environment
 
   build:android:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build apk --multidex"
+        "flutter build apk"
     description: Build app for Android.
     packageFilters:
-      dir-exists: android
+      dirExists: android
 
   build:ios:
     run: |
@@ -106,7 +116,7 @@ scripts:
         "flutter build ipa --no-codesign"
     description: Build app for iOS.
     packageFilters:
-      dir-exists: ios
+      dirExists: ios
 
   build:web:
     run: |
@@ -114,8 +124,8 @@ scripts:
         "flutter build web"
     description: Build app for Web.
     packageFilters:
-      scope: [studyu_app, studyu_designer_v2]
-      dir-exists: web
+      scope: [ studyu_app, studyu_designer_v2 ]
+      dirExists: web
 
   build:web:app:
     run: |
@@ -139,8 +149,8 @@ scripts:
         "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
     description: Build web dev.
     packageFilters:
-      scope: [studyu_app, studyu_designer_v2]
-      dir-exists: web
+      scope: [ studyu_app, studyu_designer_v2 ]
+      dirExists: web
 
   build:web:app:dev:
     run: |
@@ -149,7 +159,7 @@ scripts:
     description: Build web app dev.
     packageFilters:
       scope: studyu_app
-      dir-exists: web
+      dirExists: web
 
   build:web:designer_v2:dev:
     run: |
@@ -158,21 +168,4 @@ scripts:
     description: Build web designer_v2 dev.
     packageFilters:
       scope: studyu_designer_v2
-      dir-exists: web
-
-  # Used to test Designer "Try out study" feature, where the designer opens the App using the user auth token from designer
-  app:web:local:
-    run: |
-      melos exec -c 1 -- \
-        "flutter run lib/main.dart -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.local"
-    packageFilters:
-      scope: studyu_app
-    description: Runs app in chrome on port 8080 with local env
-
-  designer_v2:web:local:
-    run: |
-      melos exec -c 1 -- \
-        "flutter run lib/main.dart -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
-    packageFilters:
-      scope: studyu_designer_v2
-    description: Runs designer in chrome on port 8081 with local env
+      dirExists: web

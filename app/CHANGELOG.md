@@ -1,3 +1,71 @@
+## 2.7.8
+
+ - **FIX**: safety check.
+ - **FIX**: outdated cached subject.
+ - **FIX**: upgrade deps.
+
+## 2.7.7
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+## 2.7.6
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 2.7.6-dev.3
+
+ - **REFACTOR**: migrate to riverpod code generation 2.
+ - **FIX**: app preview stuck at AppLanguage.
+ - **FIX**: formatting issues.
+ - **FIX**: formatting issues.
+ - **FIX**: users not able to continue closed study.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**: upgrade deps.
+ - **FEAT**: deprecate published for study_status.
+ - **FEAT**: close study using is_closed column.
+ - **FEAT**: close study.
+
+## 2.7.6-dev.2
+
+ - **FIX**: formatting issues.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**: upgrade deps.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+
+## 2.7.6-dev.1
+
+ - **FIX**(app): update android deployment.
+ - **FIX**(app): update ios deployment.
+ - **FIX**(app): update android deployment.
+
+## 2.7.6-dev.0
+
+ - **FIX**: upgrade deps.
+ - **FIX**: UI overflows.
+
+## 2.7.5
+
+ - **FIX**: update podfile.
+
+## 2.7.4
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 2.7.4-dev.1
+
+ - Update a dependency to the latest release.
+
+## 2.7.4-dev.0
+
+ - **FIX**: upgrade deps and migrate.
+
 ## 2.7.3
 
  - **FIX**: skip handling multimodal for web. ([27ba5298](https://github.com/hpi-studyu/studyu/commit/27ba5298a1b714e1cc7e21a6d88c286f91e2907a))

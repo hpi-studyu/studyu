@@ -11,7 +11,6 @@ import 'package:studyu_designer_v2/features/study/study_test_controls.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
-import 'package:studyu_designer_v2/utils/performance.dart';
 
 class PreviewFrame extends ConsumerStatefulWidget {
   const PreviewFrame(
@@ -20,10 +19,11 @@ class PreviewFrame extends ConsumerStatefulWidget {
     this.route,
     super.key,
   }) : assert(
-            (routeArgs != null && route == null) ||
-                (routeArgs == null && route != null) ||
-                (routeArgs == null && route == null),
-            "Must not specify both routeArgs and route");
+          (routeArgs != null && route == null) ||
+              (routeArgs == null && route != null) ||
+              (routeArgs == null && route == null),
+          "Must not specify both routeArgs and route",
+        );
 
   final StudyID studyId;
   final StudyFormRouteArgs? routeArgs;
@@ -39,27 +39,23 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
   @override
   void initState() {
     super.initState();
-    runAsync(() => _subscribeStudyChanges());
+    _subscribeStudyChanges();
   }
 
-  @override
-  void didUpdateWidget(PreviewFrame oldWidget) {
-    if (mounted) runAsync(() => _subscribeStudyChanges());
-    super.didUpdateWidget(oldWidget);
-  }
-
-  _subscribeStudyChanges() {
-    final formViewModelCurrent = ref.read(studyFormViewModelProvider(widget.studyId));
-
+  void _subscribeStudyChanges() {
+    // debugLog('Subscribing to form changes in test frame');
+    final formViewModelCurrent =
+        ref.read(studyFormViewModelProvider(widget.studyId));
     formViewModelCurrent.form.valueChanges.listen((event) {
       if (frameController != null) {
-        final formJson = jsonEncode(formViewModelCurrent.buildFormData().toJson());
+        final formJson =
+            jsonEncode(formViewModelCurrent.buildFormData().toJson());
         frameController!.send(formJson);
       }
     });
   }
 
-  _updatePreviewRoute() {
+  void _updatePreviewRoute() {
     if (widget.route != null) {
       frameController!.generateUrl(route: widget.route);
     } else {
@@ -67,11 +63,17 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
       if (widget.routeArgs is InterventionFormRouteArgs) {
         route = 'intervention';
-        frameController!
-            .generateUrl(route: route, extra: (widget.routeArgs as InterventionFormRouteArgs).interventionId);
+        frameController!.generateUrl(
+          route: route,
+          extra:
+              (widget.routeArgs! as InterventionFormRouteArgs).interventionId,
+        );
       } else if (widget.routeArgs is MeasurementFormRouteArgs) {
         route = 'observation';
-        frameController!.generateUrl(route: route, extra: (widget.routeArgs as MeasurementFormRouteArgs).measurementId);
+        frameController!.generateUrl(
+          route: route,
+          extra: (widget.routeArgs! as MeasurementFormRouteArgs).measurementId,
+        );
       } else {
         frameController!.generateUrl();
       }
@@ -83,47 +85,52 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     final state = ref.watch(studyTestControllerProvider(widget.studyId));
     final formViewModel = ref.watch(studyTestValidatorProvider(widget.studyId));
 
-    // Rebuild iframe component & url
-    frameController = ref.read(studyTestPlatformControllerProvider(widget.studyId));
+    // Rebuild iframe component and url
+    frameController =
+        ref.watch(studyTestPlatformControllerProvider(widget.studyId));
     _updatePreviewRoute();
     frameController!.activate();
     frameController!.listen();
 
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth < PhoneContainer.defaultWidth) {
-        // Not enough space to render app preview
-        return Container();
-      }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < PhoneContainer.defaultWidth) {
+          // Not enough space to render app preview
+          return Container();
+        }
 
-      return Stack(children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ReactiveForm(
-              formGroup: formViewModel.form,
-              child: ReactiveFormConsumer(
-                builder: (context, form, child) {
-                  if (formViewModel.form.hasErrors) {
-                    return const DisabledFrame();
-                  }
-                  return Column(
-                    children: [
-                      frameController!.frameWidget,
-                      const SizedBox(height: 8.0),
-                      FrameControlsWidget(
-                        onRefresh: () => frameController!.refresh(cmd: "reset"),
-                        onOpenNewTab: () => frameController!.openNewPage(),
-                        enabled: state.canTest,
-                      )
-                    ],
-                  );
-                },
-              ),
+        return Stack(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ReactiveForm(
+                  formGroup: formViewModel.form,
+                  child: ReactiveFormConsumer(
+                    builder: (context, form, child) {
+                      if (formViewModel.form.hasErrors) {
+                        return const DisabledFrame();
+                      }
+                      return Column(
+                        children: [
+                          frameController!.frameWidget,
+                          const SizedBox(height: 8.0),
+                          FrameControlsWidget(
+                            onRefresh: () =>
+                                frameController!.refresh(cmd: "reset"),
+                            onOpenNewTab: () => frameController!.openNewPage(),
+                            enabled: state.canTest,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-      ]);
-    });
+        );
+      },
+    );
   }
 }

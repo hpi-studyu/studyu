@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyu_core/core.dart';
 
 part 'study_schedule.g.dart';
 
@@ -16,17 +17,36 @@ class StudySchedule {
     this.sequenceCustom = 'ABAB',
   });
 
-  factory StudySchedule.fromJson(Map<String, dynamic> json) => _$StudyScheduleFromJson(json);
+  factory StudySchedule.fromJson(Map<String, dynamic> json) =>
+      _$StudyScheduleFromJson(json);
   Map<String, dynamic> toJson() => _$StudyScheduleToJson(this);
 
-  int getNumberOfPhases() => numberOfCycles * numberOfInterventions + (includeBaseline ? 1 : 0);
+  int getNumberOfPhases() =>
+      numberOfCycles *
+          (sequence == PhaseSequence.customized
+              ? sequenceCustom.length
+              : StudySchedule.numberOfInterventions) +
+      (includeBaseline ? 1 : 0);
+
+  int get numberOfPhases => getNumberOfPhases();
 
   int get length => getNumberOfPhases() * phaseDuration;
 
+  int get baselineLength => includeBaseline ? phaseDuration : 0;
+
   List<int> generateWith(int firstIntervention) {
     final cycles = Iterable<int>.generate(numberOfCycles);
-    final phases = cycles.expand((cycle) => _generateCycle(firstIntervention, cycle)).toList();
+    final phases = cycles
+        .expand((cycle) => _generateCycle(firstIntervention, cycle))
+        .toList();
     return phases;
+  }
+
+  List<String> generateInterventionIdsInOrder(List<String> interventionsIds) {
+    return [
+      if (includeBaseline) Study.baselineID,
+      ...generateWith(0).map<String>((int index) => interventionsIds[index]),
+    ];
   }
 
   int _nextIntervention(int index) => (index + 1) % numberOfInterventions;
@@ -46,7 +66,8 @@ class StudySchedule {
     }
   }
 
-  List<int> _generateAlternatingCycle(int first, int cycle) => [first, _nextIntervention(first)];
+  List<int> _generateAlternatingCycle(int first, int cycle) =>
+      [first, _nextIntervention(first)];
 
   List<int> _generateCounterBalancedCycle(int first, int cycle) {
     final shift = ((cycle + 1) ~/ 2) % 2;

@@ -2,12 +2,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/sync_indicator.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/features/study/study_base_state.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
-class StudyControllerState extends StudyControllerBaseState implements IStudyAppBarViewModel, ISyncIndicatorViewModel {
+import 'package:studyu_designer_v2/utils/model_action.dart';
+
+class StudyControllerState extends StudyControllerBaseState
+    implements IStudyAppBarViewModel, ISyncIndicatorViewModel {
   const StudyControllerState({
+    required super.studyId,
+    required super.studyRepository,
+    required super.router,
     required super.currentUser,
     super.studyWithMetadata,
     this.isDirty = false,
@@ -15,7 +22,26 @@ class StudyControllerState extends StudyControllerBaseState implements IStudyApp
     this.lastSynced,
   });
 
-  bool get isPublished => study.value != null && study.value!.published;
+  bool get isPublished =>
+      study.value != null && study.value!.status == StudyStatus.running;
+
+  bool get isClosed =>
+      study.value != null && study.value!.status == StudyStatus.closed;
+
+  List<ModelAction> get studyActions {
+    final studyVal = study.value;
+    if (studyVal == null) {
+      return [];
+    }
+    // filter out edit action since we are already editing the study
+    return withIcons(
+      studyRepository
+          .availableActions(studyVal)
+          .where((action) => action.type != StudyActionType.edit)
+          .toList(),
+      studyActionIcons,
+    );
+  }
 
   // - ISyncIndicatorViewModel
 
@@ -43,29 +69,41 @@ class StudyControllerState extends StudyControllerBaseState implements IStudyApp
 
   @override
   bool get isRecruitTabEnabled =>
-      study.value == null || (study.value != null && study.value!.canEdit(super.currentUser));
+      study.value == null ||
+      (study.value != null && study.value!.canEdit(super.currentUser));
 
   @override
-  bool get isMonitorTabEnabled => isRecruitTabEnabled;
+  bool get isMonitorTabEnabled => isAnalyzeTabEnabled;
 
   @override
   bool get isAnalyzeTabEnabled =>
       study.value == null ||
-      (study.value != null && (study.value!.canEdit(super.currentUser) || study.value!.publishedToRegistryResults));
+      (study.value != null &&
+          (study.value!.canEdit(super.currentUser) ||
+              study.value!.publishedToRegistryResults));
 
   @override
-  get isSettingsEnabled => study.value != null && study.value!.canChangeSettings(super.currentUser!);
+  bool get isSettingsEnabled =>
+      study.value != null && study.value!.canChangeSettings(super.currentUser!);
 
   // - IStudyAppBarViewModel
 
   @override
-  bool get isStatusBadgeVisible => studyStatus != null && studyStatus != StudyStatus.draft;
+  bool get isStatusBadgeVisible =>
+      studyStatus != null && studyStatus != StudyStatus.draft;
 
   @override
-  bool get isSyncIndicatorVisible => studyStatus != null && studyStatus == StudyStatus.draft;
+  bool get isSyncIndicatorVisible =>
+      studyStatus != null && studyStatus == StudyStatus.draft;
 
   @override
-  bool get isPublishVisible => studyWithMetadata?.model.status == StudyStatus.draft;
+  bool get isPublishVisible =>
+      studyWithMetadata?.model.status == StudyStatus.draft;
+
+  @override
+  bool get isClosedVisible =>
+      studyWithMetadata?.model.status == StudyStatus.running &&
+      studyWithMetadata!.model.canEdit(super.currentUser);
 
   @override
   StudyStatus? get studyStatus => study.value?.status;
@@ -86,11 +124,14 @@ class StudyControllerState extends StudyControllerBaseState implements IStudyApp
     DateTime? lastSynced,
   }) {
     return StudyControllerState(
+      studyId: studyId,
+      studyRepository: studyRepository,
+      router: router,
+      currentUser: currentUser,
       studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
       isDirty: isDirty ?? this.isDirty,
       syncState: syncState ?? this.syncState,
       lastSynced: lastSynced ?? this.lastSynced,
-      currentUser: super.currentUser,
     );
   }
 }

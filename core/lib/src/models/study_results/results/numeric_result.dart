@@ -16,7 +16,8 @@ class NumericResult extends StudyResult {
 
   NumericResult.withId() : super.withId(studyResultType);
 
-  factory NumericResult.fromJson(Map<String, dynamic> json) => _$NumericResultFromJson(json);
+  factory NumericResult.fromJson(Map<String, dynamic> json) =>
+      _$NumericResultFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$NumericResultToJson(this);
@@ -25,15 +26,20 @@ class NumericResult extends StudyResult {
   List<String> getHeaders(Study studySpec) {
     final schedule = studySpec.schedule;
     final numberOfDays = schedule.getNumberOfPhases() * schedule.phaseDuration;
-    return Iterable<int>.generate(numberOfDays).map((e) => e.toString()).toList();
+    return Iterable<int>.generate(numberOfDays)
+        .map((e) => e.toString())
+        .toList();
   }
 
   @override
   List getValues(StudySubject subject) {
-    final resultSet = resultProperty
-        .retrieveFromResults(subject)
-        .map<int, num>((key, value) => MapEntry(subject.getDayOfStudyFor(key), value));
-    final numberOfDays = subject.study.schedule.getNumberOfPhases() * subject.study.schedule.phaseDuration;
-    return Iterable<int>.generate(numberOfDays).map((day) => resultSet[day]).toList();
+    final resultSet = resultProperty.retrieveFromResults(subject).map<int, num>(
+          (key, value) => MapEntry(subject.getDayOfStudyFor(key), value),
+        );
+    final numberOfDays = subject.study.schedule.getNumberOfPhases() *
+        subject.study.schedule.phaseDuration;
+    return Iterable<int>.generate(numberOfDays)
+        .map((day) => resultSet[day])
+        .toList();
   }
 }

@@ -3,7 +3,8 @@ on:
   push:
     paths:
       - "database/**"
-      - "docker/**"
+      - "supabase/**"
+      - ".github/workflows/supabase-test.yml"
   workflow_dispatch:
 
 jobs:
@@ -26,20 +27,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Seed database
-        run: cp database/studyu-schema.sql docker/supabase/seed.sql
+      - name: Prepare Supabase CI Seed
+        run: |
+          cp supabase/seed-ci.sql supabase/seed.sql
 
       - name: Set up Supabase CLI
         uses: supabase/setup-cli@v1
         with:
           version: latest
 
-      - name: Initialize Supabase
-        working-directory: docker
+      - name: Start Supabase database
         run: |
           supabase db start
 
       - name: Run Supabase Tests
-        working-directory: docker
         run: |
           supabase test db

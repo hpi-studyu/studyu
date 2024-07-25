@@ -6,7 +6,12 @@ class TaskInstance {
 
   TaskInstance(this.task, this.id) : assert(task.id != id);
 
-  factory TaskInstance.fromInstanceId(String taskInstanceId, {StudySubject? subject, Study? study, DateTime? date}) {
+  factory TaskInstance.fromInstanceId(
+    String taskInstanceId, {
+    StudySubject? subject,
+    Study? study,
+    DateTime? date,
+  }) {
     date ??= DateTime.now();
     final Task tempTask;
     if (subject != null) {
@@ -20,22 +25,37 @@ class TaskInstance {
     return TaskInstance(tempTask, taskInstanceId);
   }
 
-  static Task _taskFromStudy(String taskInstanceId, Study study, DateTime date) {
+  static Task _taskFromStudy(
+    String taskInstanceId,
+    Study study,
+    DateTime date,
+  ) {
     final tasks = <Task>[
       ...study.observations,
-      ...study.interventions.map((intervention) => intervention.tasks).expand((element) => element),
+      ...study.interventions
+          .map((intervention) => intervention.tasks)
+          .expand((element) => element),
     ];
     return tasks.firstWhere((task) {
-      if (task.schedule.completionPeriods.any((completionPeriod) => completionPeriod.id == taskInstanceId)) {
+      if (task.schedule.completionPeriods
+          .any((completionPeriod) => completionPeriod.id == taskInstanceId)) {
         return true;
       }
       return false;
     });
   }
 
-  static Task _taskFromSubject(String taskInstanceId, StudySubject subject, DateTime now) {
-    return subject.scheduleFor(now).firstWhere((element) => element.id == taskInstanceId).task;
+  static Task _taskFromSubject(
+    String taskInstanceId,
+    StudySubject subject,
+    DateTime now,
+  ) {
+    return subject
+        .scheduleFor(now)
+        .firstWhere((element) => element.id == taskInstanceId)
+        .task;
   }
 
-  CompletionPeriod get completionPeriod => task.schedule.completionPeriods.firstWhere((element) => element.id == id);
+  CompletionPeriod get completionPeriod =>
+      task.schedule.completionPeriods.firstWhere((element) => element.id == id);
 }
