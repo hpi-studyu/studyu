@@ -7,6 +7,9 @@ import 'package:studyu_app/screens/study/report/util/plot_utilities.dart';
 import 'package:studyu_app/theme.dart';
 import 'package:studyu_app/util/data_processing.dart';
 import 'package:studyu_core/core.dart';
+import 'results_descriptive_statistics.dart';
+import 'results_gauge.dart';
+import 'results_textual_summary.dart';
 
 class AverageSectionWidget extends ReportSectionWidget {
   final AverageSection section;
@@ -15,6 +18,8 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<bool> showDescriptionNotifier = ValueNotifier(false);
+
     final data = getAggregatedData().toList();
     final taskTitle = subject.study.observations
         .firstWhereOrNull(
@@ -32,8 +37,20 @@ class AverageSectionWidget extends ReportSectionWidget {
                 .copyWith(fontWeight: FontWeight.bold),
           ),
         const SizedBox(height: 8),
+        const TextualSummaryWidget(), //Row 2
+        const SizedBox(height: 8),
+        const GaugeTitleWidget(), //Row 3
+        const SizedBox(height: 8),
+        const GaugesWidget(), //Row 4
+        const SizedBox(height: 8),
         getLegend(context, data),
         const SizedBox(height: 8),
+        ExpansionTile(
+          title: Text('Descriptive Statistics'),
+          children: [
+            DescriptiveStatisticsWidget(),
+          ],
+        ),
         AspectRatio(aspectRatio: 1.5, child: getDiagram(context, data)),
       ],
     );

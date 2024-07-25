@@ -43,6 +43,8 @@ dependencies:
   studyu_flutter_common: ^1.8.4-dev.1
   supabase: ^2.2.1
   supabase_flutter: ^2.5.5
+  syncfusion_flutter_charts: ^20.1.47
+  syncfusion_flutter_gauges: ^20.1.59
   timeline_tile: ^2.0.0
   timezone: ^0.9.3
   universal_html: ^2.2.4
