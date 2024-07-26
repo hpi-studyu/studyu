@@ -146,7 +146,7 @@ scripts:
   build:web:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
+        "flutter build web --web-renderer canvaskit --dart-define=STUDYU_ENV=.env.dev"
     description: Build web dev.
     packageFilters:
       scope: [ studyu_app, studyu_designer_v2 ]
