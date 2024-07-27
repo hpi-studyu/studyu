@@ -20,6 +20,7 @@ class AuthScaffold extends ConsumerStatefulWidget {
   const AuthScaffold({
     required this.body,
     required this.formKey,
+    this.leftContentMinWidth = 424.0,
     this.leftPanelMinWidth = 550.0,
     this.leftPanelPadding = const EdgeInsets.fromLTRB(88.0, 54.0, 88.0, 40.0),
     super.key,
@@ -28,6 +29,7 @@ class AuthScaffold extends ConsumerStatefulWidget {
   final Widget body;
   final AuthFormKey formKey;
 
+  final double leftContentMinWidth;
   final double leftPanelMinWidth;
 
   final EdgeInsets leftPanelPadding;
@@ -49,8 +51,8 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
       key: RouterKeys.authKey,
       backgroundColor: Colors.white,
       body: TwoColumnLayout(
-        flexLeft: 4,
-        flexRight: 6,
+        flexLeft: 6,
+        flexRight: 7,
         leftWidget: ReactiveFormConfig(
           validationMessages: AuthFormController.authValidationMessages,
           child: ReactiveForm(
@@ -64,74 +66,88 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                 ),
                 const SizedBox(height: 32.0),
                 Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SelectableText(
-                        formKey.title,
-                        style: theme.textTheme.displaySmall,
+                  child: Padding(
+                    // adjust for whitespace in logo
+                    padding: const EdgeInsets.only(left: 12.0),
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: widget.leftContentMinWidth - 24.0,
                       ),
-                      const SizedBox(height: 8.0),
-                      if (formKey.description != null)
-                        TextParagraph(
-                          text: formKey.description,
-                          style: ThemeConfig.bodyTextMuted(theme),
-                        )
-                      else
-                        const SizedBox.shrink(),
-                      const SizedBox(height: 24.0),
-                      Flexible(
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 24.0),
-                            child: widget.body,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SelectableText(
+                            formKey.title,
+                            style: theme.textTheme.displaySmall,
                           ),
-                        ),
+                          const SizedBox(height: 8.0),
+                          if (formKey.description != null)
+                            TextParagraph(
+                              text: formKey.description,
+                              style: ThemeConfig.bodyTextMuted(theme),
+                            )
+                          else
+                            const SizedBox.shrink(),
+                          const SizedBox(height: 24.0),
+                          Flexible(
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 24.0),
+                                child: widget.body,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SelectableText(
-                      "© HPI Digital Health Cluster ${DateTime.now().year}",
-                      style: ThemeConfig.bodyTextBackground(theme),
+                Padding(
+                  // adjust for whitespace in logo
+                  padding: const EdgeInsets.only(left: 12.0),
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxWidth: widget.leftPanelMinWidth - 24,
                     ),
-                    Row(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        LanguagePicker(
-                          languagePickerType: LanguagePickerType.icon,
-                          iconColor:
-                              ThemeConfig.bodyTextBackground(theme).color,
-                          offset: const Offset(0, -60),
+                        SelectableText(
+                          "© HPI Digital Health Cluster ${DateTime.now().year}",
+                          style: ThemeConfig.bodyTextBackground(theme),
                         ),
-                        const SizedBox(width: 12.0),
-                        Hyperlink(
-                          text: tr.imprint,
-                          onClick: () => _onClickImprint(appConfig),
-                          linkColor:
-                              ThemeConfig.bodyTextBackground(theme).color!,
+                        Row(
+                          children: [
+                            LanguagePicker(
+                              languagePickerType: LanguagePickerType.icon,
+                              iconColor:
+                                  ThemeConfig.bodyTextBackground(theme).color,
+                              offset: const Offset(0, -60),
+                            ),
+                            const SizedBox(width: 12.0),
+                            Hyperlink(
+                              text: tr.imprint,
+                              onClick: () => _onClickImprint(appConfig),
+                              linkColor:
+                                  ThemeConfig.bodyTextBackground(theme).color!,
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
           ),
         ),
-        rightWidget: const Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Center(
-                child: StudyUJobsToBeDone(),
-              ),
-            ),
-          ],
+        rightWidget: const Center(
+          child: Wrap(
+            children: [
+              StudyUJobsToBeDone(),
+            ],
+          ),
         ),
         backgroundColorLeft: ThemeConfig.bodyBackgroundColor(theme),
         backgroundColorRight: theme.colorScheme.primary,
