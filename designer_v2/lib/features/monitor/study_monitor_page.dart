@@ -58,7 +58,8 @@ class StudyMonitorScreen extends StudyPageWidget {
   ) {
     final theme = Theme.of(context);
     final int total = monitorData.length;
-    const double minPercentage = 0; // Minimum percentage for visibility, change to 0.01 if min visibility is required.
+    const double minPercentage =
+        0; // Minimum percentage for visibility, change to 0.01 if min visibility is required.
 
     double activePercentage = monitorData.activeParticipants.length / total;
     double inactivePercentage = monitorData.inactiveParticipants.length / total;
