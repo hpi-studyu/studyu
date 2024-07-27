@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reactive_forms/reactive_forms.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
 import 'package:studyu_designer_v2/common_views/navbar_tabbed.dart';
-import 'package:studyu_designer_v2/common_views/primary_button.dart';
-import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/sync_indicator.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
-import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/dialogs/study_dialogs.dart';
-import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/publish/study_publish_dialog.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
@@ -22,7 +18,7 @@ import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
-import 'package:studyu_designer_v2/theme.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
 
 abstract class IStudyAppBarViewModel
     implements IStudyStatusBadgeViewModel, IStudyNavViewModel {
@@ -91,6 +87,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
         widget.tabs ?? StudyNav.tabs(widget.studyCreationArgs.studyID, state);
 
     return Scaffold(
+      floatingActionButton: primaryActionButton(),
       appBar: AppBar(
         iconTheme: theme.iconTheme.copyWith(size: theme.iconTheme.size! * 1.2),
         bottom: (widget.tabsSubnav != null)
@@ -225,6 +222,33 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
     );
   }
 
+  Widget primaryActionButton() {
+    final theme = Theme.of(context);
+    final controller =
+        ref.watch(studyControllerProvider(widget.studyCreationArgs).notifier);
+    final state = ref.watch(studyControllerProvider(widget.studyCreationArgs));
+
+    if (state.isPublishVisible) {
+      return FloatingActionButton.extended(
+        onPressed: () {
+          showPublishDialog(context, widget.studyCreationArgs);
+        },
+        label: Text(tr.action_button_study_launch),
+        icon: Icon(MdiIcons.publish),
+      );
+    } else if (state.isCreateNewSubstudyVisible) {
+      return FloatingActionButton.extended(
+        onPressed: () {
+          controller.onCreateNewSubstudy();
+        },
+        label: Text(tr.action_button_study_create_substudy),
+        icon: Icon(MdiIcons.subdirectoryArrowRight),
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+
   /// Note: This is not save to call until [StudyControllerState.study] is
   /// fully loaded (i.e. use inside of [AsyncValueWidget])
   List<Widget> actionButtons(BuildContext context) {
@@ -235,80 +259,42 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
         ref.watch(studyControllerProvider(widget.studyCreationArgs).notifier);
     final state = ref.watch(studyControllerProvider(widget.studyCreationArgs));
 
-    if (state.isPublishVisible) {
-      final formViewModel =
-          ref.watch(studyPublishValidatorProvider(widget.studyCreationArgs));
-      final publishButton = ReactiveForm(
-        formGroup: formViewModel.form,
-        child: ReactiveFormConsumer(
-          // enable re-rendering based on form validation status
-          builder: (context, form, child) {
-            return PrimaryButton(
-              text: tr.action_button_study_launch,
-              tooltipDisabled:
-                  "${tr.form_invalid_prompt}\n\n${form.validationErrorSummary}",
-              icon: null,
-              enabled: formViewModel.isValid,
-              onPressed: () =>
-                  showPublishDialog(context, widget.studyCreationArgs),
-            );
-          },
-        ),
-      );
-      actionButtons.add(publishButton);
-      actionButtons.add(const SizedBox(width: 12.0)); // padding
-    }
+    final List<ModelAction<dynamic>> studyActions = [];
 
-    if (state.isCreateNewSubstudyVisible) {
-      actionButtons.add(
-        PrimaryButton(
-          text: tr.action_button_study_create_substudy,
-          icon: null,
-          onPressed: () => controller.onCreateNewSubstudy(),
+    if (state.isSettingsEnabled) {
+      studyActions.add(
+        ModelAction(
+          type: ModelActionType.edit,
+          label: tr.study_settings,
+          icon: Icons.settings,
+          onExecute: controller.onSettingsPressed,
         ),
       );
-      actionButtons.add(const SizedBox(width: 12.0)); // padding
     }
 
     if (state.isClosedVisible) {
-      final formViewModel =
-          ref.watch(studyPublishValidatorProvider(widget.studyCreationArgs));
-      final closeButton = ReactiveForm(
-        formGroup: formViewModel.form,
-        child: ReactiveFormConsumer(
-          // enable re-rendering based on form validation status
-          builder: (context, form, child) {
-            return SecondaryButton(
-              text: tr.action_button_study_close,
-              icon: null,
-              onPressed: () => showStudyDialog(
-                context,
-                widget.studyCreationArgs,
-                StudyDialogType.close,
-              ),
-            );
-          },
+      studyActions.add(
+        ModelAction(
+          type: ModelActionType.delete,
+          label: tr.action_button_study_close,
+          icon: Icons.close,
+          onExecute: () => showStudyDialog(
+            context,
+            widget.studyCreationArgs,
+            StudyDialogType.close,
+          ),
         ),
       );
-      actionButtons.add(closeButton);
-      actionButtons.add(const SizedBox(width: 12.0)); // padding
     }
 
-    if (state.isSettingsEnabled) {
-      actionButtons.add(
-        IconButton(
-          onPressed: controller.onSettingsPressed,
-          icon: Icon(Icons.settings_rounded, size: theme.iconTheme.size),
-          tooltip: tr.study_settings,
-          color: theme.iconTheme.color?.faded(0.8),
-          splashRadius: ThemeConfig.iconSplashRadius(theme),
-        ),
-      );
-    }
+    studyActions.addAll(state.studyActions);
+
+    //delete goes last in the list
+    studyActions.sort((a, b) => a.type == ModelActionType.delete ? 1 : 0);
 
     actionButtons.add(
       ActionPopUpMenuButton(
-        actions: state.studyActions,
+        actions: studyActions,
         orientation: Axis.vertical,
         enabled: state.study.hasValue, // disable while study is loading
         hideOnEmpty: false,
