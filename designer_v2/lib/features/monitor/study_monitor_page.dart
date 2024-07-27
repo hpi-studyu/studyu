@@ -114,25 +114,25 @@ class StudyMonitorScreen extends StudyPageWidget {
                     percentage: activePercentage,
                     color: activeColor,
                     tooltip:
-                        '${tr.monitoring_active}: ${monitorData.activeParticipants.map((e) => e.participantId)}',
+                        '${tr.monitoring_active}: ${monitorData.activeParticipants.map((e) => e.participantId).length}',
                   ),
                   _buildStat(
                     percentage: inactivePercentage,
                     color: inactiveColor,
                     tooltip:
-                        '${tr.monitoring_inactive}: ${monitorData.inactiveParticipants.map((e) => e.participantId)}',
+                        '${tr.monitoring_inactive}: ${monitorData.inactiveParticipants.map((e) => e.participantId).length}',
                   ),
                   _buildStat(
                     percentage: dropoutPercentage,
                     color: dropoutColor,
                     tooltip:
-                        '${tr.monitoring_dropout}: ${monitorData.dropoutParticipants.map((e) => e.participantId)}',
+                        '${tr.monitoring_dropout}: ${monitorData.dropoutParticipants.map((e) => e.participantId).length}',
                   ),
                   _buildStat(
                     percentage: completedPercentage,
                     color: completedColor,
                     tooltip:
-                        '${tr.monitoring_completed}: ${monitorData.completedParticipants.map((e) => e.participantId)}',
+                        '${tr.monitoring_completed}: ${monitorData.completedParticipants.map((e) => e.participantId).length}',
                   ),
                 ],
               ),
