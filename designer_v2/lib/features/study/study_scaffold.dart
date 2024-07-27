@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/layout_single_column.dart';
@@ -18,6 +19,7 @@ import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
+import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 abstract class IStudyAppBarViewModel
@@ -141,6 +143,17 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                         softWrap: false,
                       ),
                     ),
+                    if (state.studyType != StudyType.standalone)
+                      const SizedBox(width: 8.0)
+                    else
+                      const SizedBox.shrink(),
+                    if (state.studyType != StudyType.standalone)
+                      Text(
+                        "(${state.studyType == StudyType.subStudy ? tr.study_type_substudy : tr.study_type_template})",
+                        style: ThemeConfig.bodyTextMuted(theme),
+                      )
+                    else
+                      const SizedBox.shrink(),
                     if (state.isSyncIndicatorVisible)
                       const SizedBox(width: 8.0)
                     else
