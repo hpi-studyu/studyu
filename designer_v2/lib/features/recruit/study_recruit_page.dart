@@ -28,6 +28,15 @@ class StudyRecruitScreen extends StudyPageWidget {
     if (state.studyWithMetadata?.model.isTemplate == true) {
       return Padding(
         padding: const EdgeInsets.only(top: 24),
+        child: EmptyBody(
+          icon: Icons.link_off_rounded,
+          title: tr.code_list_template_title,
+          description: "",
+        ),
+      );
+
+      return Padding(
+        padding: const EdgeInsets.only(top: 24),
         child: Container(
           width: double.infinity,
           color: Theme.of(context).colorScheme.secondary.withOpacity(0.03),
