@@ -26,9 +26,9 @@ class StudyMonitorScreen extends StudyPageWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _monitorSectionHeader(context, studyMonitorData),
-            const SizedBox(height: 32.0),
             if (studyMonitorData.isNotEmpty) ...[
+              _monitorSectionHeader(context, studyMonitorData),
+              const SizedBox(height: 32.0),
               SelectableText(
                 tr.monitoring_participants_title,
                 style: Theme.of(context).textTheme.headlineSmall,
