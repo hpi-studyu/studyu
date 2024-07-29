@@ -107,6 +107,7 @@
   "studies_list_header_participants_active": "Active",
   "studies_list_header_participants_completed": "Completed",
   "studies_not_found": "No Studies found",
+  "substudies_not_found": "Sub-studies not found for this Template Trial",
   "modify_query": "Modify your query",
   "studies_empty": "You don't have any studies yet",
   "studies_empty_description": "Build your own study from scratch or create a new draft copy from an already published study!",

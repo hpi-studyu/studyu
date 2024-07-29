@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/features/study/study_participation_badge.dart';
 import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
 import 'package:studyu_designer_v2/features/study/study_type_badge.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -111,6 +112,33 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
           );
           subRows.add(_buildStudyRow(theme, subStudy, actions: subActions));
         }
+      } else if (widget.isExpanded && studyGroup.subStudies.isEmpty) {
+        subRows.add(
+          Divider(
+            thickness: isHovering ? 1.5 : 0.75,
+            color: theme.colorScheme.primaryContainer.withOpacity(0.9),
+            height: 0.0,
+          ),
+        );
+
+        subRows.add(
+          Container(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 32),
+            child: Row(
+              children: [
+                Text(
+                  tr.substudies_not_found,
+                  style: widget.normalTextStyle,
+                  maxLines: 3,
+                  overflow: TextOverflow.fade,
+                ),
+              ],
+            ),
+          ),
+        );
       }
 
       return Column(
