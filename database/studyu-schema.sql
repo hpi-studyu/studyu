@@ -1065,4 +1065,10 @@ ALTER TABLE public."user" ENABLE ROW LEVEL SECURITY;
 
 ALTER VIEW public.study_progress_export SET (security_invoker = on);
 
+--
+-- Name: study_invite; Type: TABLE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.study_invite ADD CONSTRAINT study_invite_code_unique UNIQUE (code);
+
 COMMIT;
