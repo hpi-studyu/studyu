@@ -13,7 +13,7 @@ import 'results_textual_summary.dart';
 
 class AverageSectionWidget extends ReportSectionWidget {
   final AverageSection section;
-
+//test
   const AverageSectionWidget(super.subject, this.section, {super.key});
 
   @override
