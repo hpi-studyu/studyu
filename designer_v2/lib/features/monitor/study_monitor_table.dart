@@ -142,12 +142,12 @@ class StudyMonitorTable extends ConsumerWidget {
       _buildProgressCell(
         context,
         item.completedInterventions,
-        item.completedInterventions + item.missedInterventions,
+        item.totalInterventionTasks,
       ),
       _buildProgressCell(
         context,
         item.completedSurveys,
-        item.completedSurveys + item.missedSurveys,
+        item.totalSurveyTasks,
       ),
     ];
   }
