@@ -143,7 +143,10 @@ extension StudyMonitoringX on Study {
           schedule.numberOfCycles;
 
       //calculate the total number of surveys for this participant
-      final totalSurveyTasks = observations.where((o)=>requiredSurveyTaskIds.contains(o.id)).length * schedule.length;
+      final totalSurveyTasks = observations
+              .where((o) => requiredSurveyTaskIds.contains(o.id))
+              .length *
+          schedule.length;
 
       items.add(
         StudyMonitorItem(
