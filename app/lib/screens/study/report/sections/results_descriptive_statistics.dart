@@ -18,7 +18,6 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
               ),
             ],
           ),
-          if (true)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Column(

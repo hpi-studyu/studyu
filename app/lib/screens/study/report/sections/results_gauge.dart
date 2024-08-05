@@ -65,7 +65,7 @@ class GaugesWidget extends StatelessWidget {
       Colors.yellow[500]!,
       Colors.green[300]!,
       Colors.green[500]!,
-      Colors.green[700]!
+      Colors.green[700]!,
     ];
 
     // Create gauge ranges based on steps and the color list
@@ -105,7 +105,7 @@ class GaugesWidget extends StatelessWidget {
                       style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.blue),
+                          color: Colors.blue,),
                     ),
                     TextSpan(
                       text: '/$max',
