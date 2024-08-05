@@ -73,6 +73,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.8"
+  base_codecs:
+    dependency: transitive
+    description:
+      name: base_codecs
+      sha256: "41701a12ede9912663decd708279924ece5018566daa7d1f484d5f4f10894f91"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   bidi:
     dependency: transitive
     description:
@@ -249,6 +257,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  data_serializer:
+    dependency: transitive
+    description:
+      name: data_serializer
+      sha256: "44f0e3f2b82f54bce125f2f8ed7900e5d5700603c5fa033dcc1d89b0714da3a6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   dbus:
     dependency: transitive
     description:
@@ -1170,6 +1186,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
+  statistics:
+    dependency: "direct main"
+    description:
+      name: statistics
+      sha256: ff25b9d4b46625ace470cc337a20206e5aa5e67044ff0bfbb0c28b40d8bee2d6
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   storage_client:
     dependency: transitive
     description:
@@ -1264,6 +1288,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0+1"
+  t_stats:
+    dependency: "direct main"
+    description:
+      name: t_stats
+      sha256: ebe4babf8fba8140d4a66465707a5f3db43cf31c9159df225fee823973d467c6
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.0"
   term_glyph:
     dependency: transitive
     description:
