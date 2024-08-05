@@ -27,24 +27,24 @@ class GaugesWidget extends StatelessWidget {
         Expanded(
           child: Column(
             children: <Widget>[
-              Container(
+              SizedBox(
                 width: 140, // Set the desired width
                 height: 140, // Set the desired height
                 child: createGauge(0, 10, 10, 5), // min, max, steps, value
               ),
-              Text('With Tea', style: TextStyle(fontSize: 14)),
+              const Text('With Tea', style: TextStyle(fontSize: 14)),
             ],
           ),
         ),
         Expanded(
           child: Column(
             children: <Widget>[
-              Container(
+              SizedBox(
                 width: 140, // Set the desired width
                 height: 140, // Set the desired height
                 child: createGauge(0, 10, 10, 7.5), // min, max, steps, value
               ),
-              Text('Without Tea', style: TextStyle(fontSize: 14)),
+              const Text('Without Tea', style: TextStyle(fontSize: 14)),
             ],
           ),
         ),
@@ -55,7 +55,7 @@ class GaugesWidget extends StatelessWidget {
   // Create gauge with min and max values, steps to switch colors, value to point at
   Widget createGauge(double min, double max, int steps, double value) {
     // List of colors
-    List<Color> colors = [
+    final List<Color> colors = [
       Colors.red[900]!,
       Colors.red[700]!,
       Colors.red[500]!,
@@ -70,10 +70,10 @@ class GaugesWidget extends StatelessWidget {
 
     // Create gauge ranges based on steps and the color list
     List<GaugeRange> createRanges() {
-      double stepValue = (max - min) / steps;
+      final double stepValue = (max - min) / steps;
       return List.generate(steps, (index) {
-        double start = min + (index * stepValue);
-        double end = start + stepValue;
+        final double start = min + (index * stepValue);
+        final double end = start + stepValue;
         return GaugeRange(
           startValue: start,
           endValue: end,
