@@ -14,7 +14,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Icon(
-                true ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                Icons.arrow_drop_up,
               ),
             ],
           ),
