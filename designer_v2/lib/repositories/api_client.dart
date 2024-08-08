@@ -15,6 +15,7 @@ abstract class StudyUApi {
   Future<void> deleteStudy(Study study);
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
   Future<StudyInvite> fetchStudyInvite(String code);
+  Future<Study> fetchStudyFromInvite(String code);
   Future<void> deleteStudyInvite(StudyInvite invite);
   Future<List<StudySubject>> deleteParticipants(
     Study study,
@@ -207,6 +208,20 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 
   @override
+  Future<Study> fetchStudyFromInvite(String code) async {
+    await _testDelay();
+    try {
+      final request = await executeRpc(
+        'get_study_record_from_invite',
+        params: {'invite_code': code},
+      );
+      return deserializeObject<Study>(request);
+    } catch (e) {
+      throw StudyInviteNotFoundException();
+    }
+  }
+
+  @override
   Future<StudyInvite> saveStudyInvite(StudyInvite invite) async {
     await _testDelay();
     final request = invite.save(); // upsert will override existing record
@@ -262,7 +277,9 @@ class StudyUApiClient extends SupabaseClientDependant
       final result = await future;
       return result;
     } on SupabaseQueryError catch (e) {
-      if (onError == null || e.statusCode == null) {
+      if (onError == null ||
+          onError[e.statusCode] == null ||
+          e.statusCode == null) {
         throw _apiException(error: e);
       }
       final errorHandler = onError[e.statusCode]!;
