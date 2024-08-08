@@ -21,6 +21,7 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 
@@ -49,6 +50,8 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   bool get isStudyReadonly =>
       formData?.isReadonly(authRepository.currentUser!) ?? false;
+
+  StudyType get studyType => formData?.type ?? StudyType.standalone;
 
   late final StudyInfoFormViewModel studyInfoFormViewModel =
       StudyInfoFormViewModel(
@@ -175,10 +178,10 @@ class StudyFormViewModel extends FormViewModel<Study>
 @riverpod
 StudyFormViewModel studyFormViewModel(
   StudyFormViewModelRef ref,
-  StudyID studyId,
+  StudyCreationArgs studyCreationArgs,
 ) {
   // print("studyFormViewModel");
-  final state = ref.watch(studyControllerProvider(studyId));
+  final state = ref.watch(studyControllerProvider(studyCreationArgs));
   return StudyFormViewModel(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),

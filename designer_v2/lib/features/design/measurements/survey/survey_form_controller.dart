@@ -13,6 +13,7 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
@@ -178,7 +179,7 @@ class MeasurementSurveyFormViewModel
 
   SurveyQuestionFormRouteArgs buildNewFormRouteArgs() {
     return SurveyQuestionFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       measurementId: measurementId,
       questionId: Config.newModelId,
     );
@@ -186,7 +187,7 @@ class MeasurementSurveyFormViewModel
 
   SurveyQuestionFormRouteArgs buildFormRouteArgs(QuestionFormViewModel model) {
     final args = SurveyQuestionFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       measurementId: measurementId,
       questionId: model.questionId,
     );

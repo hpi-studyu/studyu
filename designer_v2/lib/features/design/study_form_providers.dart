@@ -1,5 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_form_controller.dart';
@@ -16,6 +15,7 @@ import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -27,9 +27,11 @@ part 'study_form_providers.g.dart';
 @riverpod
 StudyInfoFormViewModel studyInfoFormViewModel(
   StudyInfoFormViewModelRef ref,
-  StudyID studyId,
+  StudyCreationArgs studyCreationArgs,
 ) {
-  return ref.watch(studyFormViewModelProvider(studyId)).studyInfoFormViewModel;
+  return ref
+      .watch(studyFormViewModelProvider(studyCreationArgs))
+      .studyInfoFormViewModel;
 }
 
 // - Enrollment
@@ -37,9 +39,11 @@ StudyInfoFormViewModel studyInfoFormViewModel(
 @riverpod
 EnrollmentFormViewModel enrollmentFormViewModel(
   EnrollmentFormViewModelRef ref,
-  StudyID studyId,
+  StudyCreationArgs studyCreationArgs,
 ) {
-  return ref.watch(studyFormViewModelProvider(studyId)).enrollmentFormViewModel;
+  return ref
+      .watch(studyFormViewModelProvider(studyCreationArgs))
+      .enrollmentFormViewModel;
 }
 
 @riverpod
@@ -47,7 +51,9 @@ ScreenerQuestionFormViewModel screenerQuestionFormViewModel(
   ScreenerQuestionFormViewModelRef ref,
   ScreenerQuestionFormRouteArgs args,
 ) {
-  return ref.watch(enrollmentFormViewModelProvider(args.studyId)).provide(args);
+  return ref
+      .watch(enrollmentFormViewModelProvider(args.studyCreationArgs))
+      .provide(args);
 }
 
 @riverpod
@@ -56,7 +62,7 @@ ConsentItemFormViewModel consentItemFormViewModel(
   ConsentItemFormRouteArgs args,
 ) {
   return ref
-      .watch(enrollmentFormViewModelProvider(args.studyId))
+      .watch(enrollmentFormViewModelProvider(args.studyCreationArgs))
       .consentItemDelegate
       .provide(args);
 }
@@ -66,10 +72,10 @@ ConsentItemFormViewModel consentItemFormViewModel(
 @riverpod
 InterventionsFormViewModel interventionsFormViewModel(
   InterventionsFormViewModelRef ref,
-  StudyID studyId,
+  StudyCreationArgs studyCreationArgs,
 ) {
   return ref
-      .watch(studyFormViewModelProvider(studyId))
+      .watch(studyFormViewModelProvider(studyCreationArgs))
       .interventionsFormViewModel;
 }
 
@@ -79,7 +85,7 @@ InterventionFormViewModel interventionFormViewModel(
   InterventionFormRouteArgs args,
 ) {
   return ref
-      .watch(interventionsFormViewModelProvider(args.studyId))
+      .watch(interventionsFormViewModelProvider(args.studyCreationArgs))
       .provide(args);
 }
 
@@ -96,10 +102,10 @@ InterventionTaskFormViewModel interventionTaskFormViewModel(
 @riverpod
 MeasurementsFormViewModel measurementsFormViewModel(
   MeasurementsFormViewModelRef ref,
-  StudyID studyId,
+  StudyCreationArgs studyCreationArgs,
 ) {
   return ref
-      .watch(studyFormViewModelProvider(studyId))
+      .watch(studyFormViewModelProvider(studyCreationArgs))
       .measurementsFormViewModel;
 }
 
@@ -109,7 +115,7 @@ MeasurementSurveyFormViewModel surveyFormViewModel(
   MeasurementFormRouteArgs args,
 ) {
   return ref
-      .watch(measurementsFormViewModelProvider(args.studyId))
+      .watch(measurementsFormViewModelProvider(args.studyCreationArgs))
       .provide(args);
 }
 
@@ -126,9 +132,11 @@ QuestionFormViewModel surveyQuestionFormViewModel(
 @riverpod
 ReportsFormViewModel reportsFormViewModel(
   ReportsFormViewModelRef ref,
-  StudyID studyId,
+  StudyCreationArgs studyCreationArgs,
 ) {
-  return ref.watch(studyFormViewModelProvider(studyId)).reportsFormViewModel;
+  return ref
+      .watch(studyFormViewModelProvider(studyCreationArgs))
+      .reportsFormViewModel;
 }
 
 @riverpod
@@ -137,7 +145,7 @@ ReportItemFormViewModel reportItemFormViewModel(
   ReportItemFormRouteArgs args,
 ) {
   return ref
-      .watch(reportsFormViewModelProvider(args.studyId))
+      .watch(reportsFormViewModelProvider(args.studyCreationArgs))
       .reportItemDelegate
       .provide(args);
 }
@@ -149,9 +157,9 @@ ReportItemFormViewModel reportItemFormViewModel(
 @riverpod
 StudyFormViewModel studyPublishValidator(
   StudyPublishValidatorRef ref,
-  StudyID studyId,
+  StudyCreationArgs studyCreationArgs,
 ) {
-  final state = ref.watch(studyControllerProvider(studyId));
+  final state = ref.watch(studyControllerProvider(studyCreationArgs));
   return StudyFormViewModel(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
@@ -166,9 +174,9 @@ StudyFormViewModel studyPublishValidator(
 @riverpod
 StudyFormViewModel studyTestValidator(
   StudyTestValidatorRef ref,
-  StudyID studyId,
+  StudyCreationArgs studyCreationArgs,
 ) {
-  final state = ref.watch(studyControllerProvider(studyId));
+  final state = ref.watch(studyControllerProvider(studyCreationArgs));
   return StudyFormViewModel(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),

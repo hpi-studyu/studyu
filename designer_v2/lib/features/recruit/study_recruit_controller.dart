@@ -19,15 +19,17 @@ class StudyRecruitController extends _$StudyRecruitController
     implements IModelActionProvider<StudyInvite> {
   /// [inviteCodeRepository] Reference to the repository for invite codes (resolved dynamically via Riverpod when the [state.study] becomes available)
   @override
-  StudyRecruitControllerState build(StudyID studyId) {
+  StudyRecruitControllerState build(StudyCreationArgs studyCreationArgs) {
     state = StudyRecruitControllerState(
-      studyId: studyId,
+      studyId: studyCreationArgs.studyID,
       studyRepository: ref.watch(studyRepositoryProvider),
-      studyWithMetadata:
-          ref.watch(studyControllerProvider(studyId)).studyWithMetadata,
+      studyWithMetadata: ref
+          .watch(studyControllerProvider(studyCreationArgs))
+          .studyWithMetadata,
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
-      inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyId)),
+      inviteCodeRepository:
+          ref.watch(inviteCodeRepositoryProvider(studyCreationArgs.studyID)),
     );
     ref.onDispose(() {
       print("StudyRecruitController.dispose");

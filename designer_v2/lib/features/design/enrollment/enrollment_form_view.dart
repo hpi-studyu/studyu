@@ -22,18 +22,18 @@ import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
-  const StudyDesignEnrollmentFormView(super.studyId, {super.key});
+  const StudyDesignEnrollmentFormView(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final state = ref.watch(studyControllerProvider(studyId));
+    final state = ref.watch(studyControllerProvider(studyCreationArgs));
 
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
         final formViewModel =
-            ref.watch(enrollmentFormViewModelProvider(studyId));
+            ref.watch(enrollmentFormViewModelProvider(studyCreationArgs));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: ReactiveFormConsumer(
@@ -44,52 +44,46 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                   text: tr.form_study_design_enrollment_description,
                 ),
                 const SizedBox(height: 24.0),
-                FormTableLayout(
-                  rows: [
-                    FormTableRow(
-                      control: formViewModel.enrollmentTypeControl,
-                      label: tr.form_field_enrollment_type,
-                      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      input: Column(
-                        children: formViewModel.enrollmentTypeControlOptions
-                            .map<Widget>(
-                              (option) => RadioListTile<Participation>(
-                                groupValue:
-                                    formViewModel.enrollmentTypeControl.value,
-                                onChanged: formViewModel.isReadonly
-                                    ? null
-                                    : (value) => formViewModel
-                                        .enrollmentTypeControl
-                                        .value = option.value,
-                                value: option.value,
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      option.value.whoShort,
-                                      style: theme.textTheme.bodyLarge,
-                                    ),
-                                    const SizedBox(height: 2.0),
-                                  ],
-                                ),
-                                subtitle: (option.description) != null
-                                    ? TextParagraph(
-                                        text: option.description,
-                                        selectable: false,
-                                        style: ThemeConfig.bodyTextMuted(theme),
-                                      )
-                                    : null,
+                FormSectionHeader(
+                  title: tr.form_field_enrollment_type,
+                  showLock: !study.isStandalone,
+                  lockControl: formViewModel.lockEnrollmentTypeControl,
+                  lockHelpText: tr.form_section_lock_help,
+                  lockedStateText: tr.form_section_lock_locked,
+                  unlockedStateText: tr.form_section_lock_unlocked,
+                ),
+                const SizedBox(height: 12.0),
+                Column(
+                  children: formViewModel.enrollmentTypeControlOptions
+                      .map<Widget>(
+                        (option) => RadioListTile<Participation>(
+                          groupValue: formViewModel.enrollmentTypeControl.value,
+                          onChanged: formViewModel.isReadonly
+                              ? null
+                              : (value) => formViewModel
+                                  .enrollmentTypeControl.value = option.value,
+                          value: option.value,
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                option.value.whoShort,
+                                style: theme.textTheme.bodyLarge,
                               ),
-                            )
-                            .toList()
-                            .separatedBy(() => const SizedBox(height: 8.0)),
-                      ),
-                    ),
-                  ],
-                  columnWidths: const {
-                    0: FixedColumnWidth(130.0),
-                    1: FlexColumnWidth(),
-                  },
+                              const SizedBox(height: 2.0),
+                            ],
+                          ),
+                          subtitle: (option.description) != null
+                              ? TextParagraph(
+                                  text: option.description,
+                                  selectable: false,
+                                  style: ThemeConfig.bodyTextMuted(theme),
+                                )
+                              : null,
+                        ),
+                      )
+                      .toList()
+                      .separatedBy(() => const SizedBox(height: 8.0)),
                 ),
                 const SizedBox(height: 32.0),
                 ReactiveFormArray(

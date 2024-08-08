@@ -4,6 +4,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
@@ -28,6 +29,8 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
       FormControl(value: defaultPublishedToRegistry);
   final FormControl<bool> isPublishedToRegistryResultsControl =
       FormControl(value: defaultPublishedToRegistryResults);
+  final FormControl<bool> lockPublishSettingsControl =
+      FormControl(value: true, disabled: true);
 
   @override
   late final FormGroup form = FormGroup({
@@ -39,6 +42,11 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
   void setControlsFrom(Study data) {
     isPublishedToRegistryControl.value = data.publishedToRegistry;
     isPublishedToRegistryResultsControl.value = data.publishedToRegistryResults;
+
+    if (data.isSubStudy) {
+      isPublishedToRegistryControl.markAsDisabled();
+      isPublishedToRegistryResultsControl.markAsDisabled();
+    }
   }
 
   @override
@@ -91,9 +99,9 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
 @riverpod
 StudySettingsFormViewModel studySettingsFormViewModel(
   StudySettingsFormViewModelRef ref,
-  String studyId,
+  StudyCreationArgs studyCreationArgs,
 ) {
-  final state = ref.watch(studyControllerProvider(studyId));
+  final state = ref.watch(studyControllerProvider(studyCreationArgs));
   final formViewModel = StudySettingsFormViewModel(
     studyRepository: ref.watch(studyRepositoryProvider),
     study: state.study,

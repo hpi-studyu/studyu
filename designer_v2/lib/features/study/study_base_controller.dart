@@ -18,26 +18,28 @@ part 'study_base_controller.g.dart';
 class StudyBaseController<T extends StudyControllerBaseState>
     extends _$StudyBaseController {
   @override
-  StudyControllerBaseState build(StudyID studyId) {
+  StudyControllerBaseState build(StudyCreationArgs studyCreationArgs) {
     state = StudyControllerBaseState(
-      studyId: studyId,
+      studyId: studyCreationArgs.studyID,
       studyRepository: ref.watch(studyRepositoryProvider),
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
       studyWithMetadata: null,
     );
-    subscribeStudy(studyId);
+    subscribeStudy(studyCreationArgs);
     return state;
   }
 
+  StudyID get studyId => studyCreationArgs.studyID;
+
   StreamSubscription<WrappedModel<Study>>? studySubscription;
 
-  void subscribeStudy(StudyID studyId) {
+  void subscribeStudy(StudyCreationArgs studyCreationArgs) {
     if (studySubscription != null) {
       studySubscription!.cancel();
     }
     studySubscription = state.studyRepository
-        .watch(studyId)
+        .watch(studyCreationArgs.studyID, args: studyCreationArgs)
         .listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
   }
 

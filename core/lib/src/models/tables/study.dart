@@ -2,6 +2,7 @@ import 'package:csv/csv.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
 import 'package:studyu_core/src/models/models.dart';
+import 'package:studyu_core/src/models/template/template_configuration.dart';
 import 'package:studyu_core/src/util/supabase_object.dart';
 import 'package:supabase/supabase.dart';
 import 'package:uuid/uuid.dart';
@@ -34,6 +35,15 @@ enum ResultSharing {
   static ResultSharing fromJson(String json) => values.byName(json);
 }
 
+enum StudyType {
+  standalone,
+  template,
+  subStudy;
+
+  String toJson() => name;
+  static StudyType fromJson(String json) => values.byName(json);
+}
+
 @JsonSerializable()
 class Study extends SupabaseObjectFunctions<Study>
     implements Comparable<Study> {
@@ -44,6 +54,10 @@ class Study extends SupabaseObjectFunctions<Study>
 
   static const String baselineID = '__baseline';
   String id;
+  @JsonKey(name: 'parent_template_id')
+  String? parentTemplateId;
+  @JsonKey(name: 'template_configuration')
+  TemplateConfiguration? templateConfiguration;
   String? title;
   String? description = '';
   @JsonKey(name: 'user_id')
@@ -79,7 +93,6 @@ class Study extends SupabaseObjectFunctions<Study>
   late List<String> collaboratorEmails = [];
   @JsonKey(name: 'registry_published', defaultValue: false)
   late bool registryPublished = false;
-
   @JsonKey(includeToJson: false, includeFromJson: false)
   int participantCount = 0;
   @JsonKey(includeToJson: false, includeFromJson: false)
@@ -106,7 +119,7 @@ class Study extends SupabaseObjectFunctions<Study>
 
   Study(this.id, this.userId);
 
-  Study.withId(this.userId) : id = const Uuid().v4();
+  Study.create(this.userId) : id = const Uuid().v4();
 
   static List<EligibilityCriterion> _eligibilityCriteriaFromJson(dynamic json) {
     if (json == null) {
@@ -146,7 +159,13 @@ class Study extends SupabaseObjectFunctions<Study>
   }
 
   factory Study.fromJson(Map<String, dynamic> json) {
-    final study = _$StudyFromJson(json);
+    final parentTemplateId = json['parent_template_id'] as String?;
+    final templateConfiguration = json['template_configuration'];
+    final study = parentTemplateId != null
+        ? _$TemplateSubStudyFromJson(json)
+        : (templateConfiguration != null
+            ? _$TemplateFromJson(json)
+            : _$StudyFromJson(json));
 
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
@@ -259,6 +278,20 @@ class Study extends SupabaseObjectFunctions<Study>
     return result;
   }
 
+  StudyType get type {
+    if (parentTemplateId != null) {
+      return StudyType.subStudy;
+    }
+    if (templateConfiguration != null) {
+      return StudyType.template;
+    }
+    return StudyType.standalone;
+  }
+
+  bool get isStandalone => type == StudyType.standalone;
+  bool get isTemplate => type == StudyType.template;
+  bool get isSubStudy => type == StudyType.subStudy;
+
   bool isOwner(User? user) => user != null && userId == user.id;
 
   bool isEditor(User? user) =>
@@ -330,5 +363,42 @@ class Study extends SupabaseObjectFunctions<Study>
   @override
   int compareTo(Study other) {
     return id.compareTo(other.id);
+  }
+}
+
+@JsonSerializable()
+class Template extends Study {
+  Template(super.id, super.userId);
+
+  Template.create(String userId) : super(const Uuid().v4(), userId) {
+    templateConfiguration = TemplateConfiguration();
+  }
+}
+
+@JsonSerializable()
+class TemplateSubStudy extends Study {
+  TemplateSubStudy(super.id, super.userId);
+
+  TemplateSubStudy.create(String userId, Template template)
+      : super(const Uuid().v4(), userId) {
+    if (template.templateConfiguration == null) {
+      throw ArgumentError('Template must have a templateConfiguration');
+    }
+    parentTemplateId = template.id;
+    templateConfiguration = template.templateConfiguration!
+        .copyWith(title: template.title, description: template.description);
+    participation = template.participation;
+    resultSharing = template.resultSharing;
+    contact = template.contact;
+    iconName = template.iconName;
+    questionnaire = template.questionnaire;
+    eligibilityCriteria = template.eligibilityCriteria;
+    consent = template.consent;
+    interventions = template.interventions;
+    observations = template.observations;
+    schedule = template.schedule;
+    reportSpecification = template.reportSpecification;
+    collaboratorEmails = template.collaboratorEmails;
+    registryPublished = template.registryPublished;
   }
 }

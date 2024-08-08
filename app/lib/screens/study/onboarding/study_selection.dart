@@ -58,6 +58,13 @@ Future<void> showStudyClosedDialog(BuildContext context) async {
   );
 }
 
+class StudySelectionScreenArgs {
+  final Template? template;
+  final List<TemplateSubStudy> subStudies;
+
+  StudySelectionScreenArgs({this.template, this.subStudies = const []});
+}
+
 class StudySelectionScreen extends StatefulWidget {
   const StudySelectionScreen({super.key});
 
@@ -71,7 +78,15 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Study> subStudies = [];
+    Template? template;
+    final args = ModalRoute.of(context)!.settings.arguments;
+    if (args is StudySelectionScreenArgs) {
+      subStudies = args.subStudies;
+      template = args.template;
+    }
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -82,7 +97,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                 child: Column(
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.study_selection_description,
+                      subStudies.isEmpty
+                          ? loc.study_selection_description
+                          : loc.sub_study_selection_description,
                       style: theme.textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 8),
@@ -90,8 +107,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: AppLocalizations.of(context)!
-                                .study_selection_single,
+                            text: loc.study_selection_single,
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
@@ -99,8 +115,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
-                            text: AppLocalizations.of(context)!
-                                .study_selection_single_why,
+                            text: loc.study_selection_single_why,
                             style: theme.textTheme.titleSmall!
                                 .copyWith(color: theme.primaryColor),
                             recognizer: TapGestureRecognizer()
@@ -108,8 +123,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                                     context: context,
                                     builder: (context) => AlertDialog(
                                       content: Text(
-                                        AppLocalizations.of(context)!
-                                            .study_selection_single_reason,
+                                        loc.study_selection_single_reason,
                                       ),
                                     ),
                                   ),
@@ -120,7 +134,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                   ],
                 ),
               ),
-              if (_hiddenStudies)
+              if (_hiddenStudies && template == null)
                 Column(
                   children: [
                     MaterialBanner(
@@ -143,9 +157,59 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                 )
               else
                 const SizedBox.shrink(),
+              if (template != null)
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        loc.selected_template_trial,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "${loc.title}: ",
+                              style: theme.textTheme.titleSmall,
+                            ),
+                            TextSpan(
+                              text: template.title,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "${loc.description}: ",
+                              style: theme.textTheme.titleSmall,
+                            ),
+                            TextSpan(
+                              text: template.description,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                const SizedBox.shrink(),
               Expanded(
                 child: RetryFutureBuilder<ExtractionResult<Study>>(
-                  tryFunction: () async => publishedStudies,
+                  tryFunction: () async => subStudies.isEmpty
+                      ? publishedStudies
+                      : Future.value(ExtractionSuccess(subStudies)),
                   successBuilder: (
                     BuildContext context,
                     ExtractionResult<Study>? extractionResult,
@@ -162,18 +226,50 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                         });
                       });
                     }
+                    // Filter out sub-studies and templates without sub studies
+                    final filteredStudies = subStudies.isEmpty
+                        ? studies
+                            .where(
+                              (study) =>
+                                  !study.isSubStudy &&
+                                  (!study.isTemplate ||
+                                      studies.any(
+                                        (s) => s.parentTemplateId == study.id,
+                                      )),
+                            )
+                            .toList()
+                        : studies;
                     return ListView.builder(
-                      itemCount: studies.length,
+                      itemCount: filteredStudies.length,
                       itemBuilder: (context, index) {
-                        final study = studies[index];
+                        final study = filteredStudies[index];
+                        final numSubtrials = studies
+                            .where((s) => s.parentTemplateId == study.id)
+                            .length;
                         return Hero(
-                          tag: 'study_tile_${studies[index].id}',
+                          tag: 'study_tile_${study.id}',
                           child: Material(
                             child: StudyTile.fromStudy(
                               study: study,
-                              onTap: () async {
-                                await navigateToStudyOverview(context, study);
-                              },
+                              numSubtrials: numSubtrials,
+                              onTap: () => study is Template
+                                  ? Navigator.pushNamed(
+                                      context,
+                                      Routes.studySelection,
+                                      arguments: StudySelectionScreenArgs(
+                                        template: study,
+                                        subStudies: studies
+                                            .where(
+                                              (s) =>
+                                                  s is TemplateSubStudy &&
+                                                  s.parentTemplateId ==
+                                                      study.id,
+                                            )
+                                            .map((s) => s as TemplateSubStudy)
+                                            .toList(),
+                                      ),
+                                    )
+                                  : navigateToStudyOverview(context, study),
                             ),
                           ),
                         );

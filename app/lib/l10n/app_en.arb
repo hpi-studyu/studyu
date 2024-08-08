@@ -16,10 +16,11 @@
 
   "get_started": "Get started",
   "study_selection": "Study Selection",
-  "study_selection_description": "Please select a study.",
-  "study_selection_single": "You can only participate in one study at a time.",
+  "study_selection_description": "Please select a Trial",
+  "sub_study_selection_description": "Please select a Subtrial",
+  "study_selection_single": "You can only participate in one Trial at a time.",
   "study_selection_single_why": "Why?",
-  "study_selection_single_reason": "If you were to participate in multiple studies at a time, the interventions of these studies might interfere with one another and alter the results.",
+  "study_selection_single_reason": "If you were to participate in multiple Trials at a time, the interventions of these Trials might interfere with one another and alter the results.",
   "study_selection_unsupported_title": "Outdated app version",
   "study_selection_unsupported": "The study you are trying to join is not compatible with your app version. Please update the app to the latest version.",
   "study_selection_closed_title": "Study closed",
@@ -33,6 +34,10 @@
   "please_select_interventions_description": "The effects of these two interventions will be measured and compared during the study.",
   "no_interventions_available": "No interventions available.",
   "loading_interventions": "Loading interventions",
+
+  "selected_template_trial": "Selected Template Trial",
+  "title": "Title",
+  "description": "Description",
 
   "task_cannot_be_completed": "The task cannot be completed",
   "study_notification_body": "A new task awaits your attention",

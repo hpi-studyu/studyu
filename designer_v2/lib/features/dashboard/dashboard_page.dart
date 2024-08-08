@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
+import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_scaffold.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
@@ -52,11 +54,64 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: <Widget>[
           Row(
             children: [
-              SizedBox(
-                height: 36.0,
-                child: PrimaryButton(
-                  text: tr.action_button_new_study,
-                  onPressed: controller.onClickNewStudy,
+              PortalTarget(
+                visible: state.createNewMenuOpen,
+                portalCandidateLabels: const [outPortalLabel],
+                portalFollower: GestureDetector(
+                  onTap: () => controller.setCreateNewMenuOpen(false),
+                  child: Container(color: Colors.transparent),
+                ),
+                child: const SizedBox.shrink(),
+              ),
+              PortalTarget(
+                visible: state.createNewMenuOpen,
+                anchor: const Aligned(
+                  follower: Alignment.topLeft,
+                  target: Alignment.bottomLeft,
+                ),
+                portalFollower: GestureDetector(
+                  onTap: () => controller.setCreateNewMenuOpen(false),
+                  child: Container(
+                    width: 600,
+                    margin: const EdgeInsets.only(top: 10.0),
+                    child: Material(
+                      color: theme.colorScheme.onPrimary,
+                      borderRadius: BorderRadius.circular(16),
+                      elevation: 20.0,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildCreateNewDropdownItem(
+                              title: tr.action_button_standalone_study_title,
+                              subtitle:
+                                  tr.action_button_standalone_study_subtitle,
+                              onTap: () => controller.onClickNewStudy(false),
+                            ),
+                            const Divider(
+                              height: 0,
+                            ),
+                            _buildCreateNewDropdownItem(
+                              title: tr.action_button_template_title,
+                              subtitle: tr.action_button_template_subtitle,
+                              hint: tr.action_button_template_hint,
+                              onTap: () => controller.onClickNewStudy(true),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                child: SizedBox(
+                  height: 36.0,
+                  child: PrimaryButton(
+                    text: tr.action_button_create,
+                    onPressed: () => controller
+                        .setCreateNewMenuOpen(!state.createNewMenuOpen),
+                  ),
                 ),
               ),
               const SizedBox(width: 28.0),
@@ -86,20 +141,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             future: ref.read(userRepositoryProvider).fetchUser(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return AsyncValueWidget<List<Study>>(
+                final pinnedStudies = snapshot.data!.preferences.pinnedStudies;
+                return AsyncValueWidget<List<StudyGroup>>(
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
-                  value: state.displayedStudies(
-                    snapshot.data!.preferences.pinnedStudies,
-                    state.query,
-                  ),
+                  value: state.displayedStudies(pinnedStudies: pinnedStudies),
                   data: (visibleStudies) => StudiesTable(
-                    studies: visibleStudies,
-                    pinnedStudies: snapshot.data!.preferences.pinnedStudies,
+                    studyGroups: visibleStudies,
+                    pinnedStudies: pinnedStudies,
+                    expandedStudies: state.expandedStudies,
                     dashboardController:
                         ref.watch(dashboardControllerProvider.notifier),
                     onSelect: controller.onSelectStudy,
+                    onExpand: controller.onExpandStudy,
                     getActions: controller.availableActions,
+                    getSubActions: controller.availableSubActions,
                     emptyWidget: (widget.filter == null ||
                             widget.filter == StudiesFilter.owned)
                         ? (state.query.isNotEmpty)
@@ -129,6 +185,62 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCreateNewDropdownItem({
+    required String title,
+    required String subtitle,
+    String? hint,
+    GestureTapCallback? onTap,
+  }) {
+    final theme = Theme.of(context);
+    return Material(
+      color: theme.colorScheme.onPrimary,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(color: theme.colorScheme.primary),
+                    ),
+                    Text(subtitle),
+                    if (hint != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(
+                          hint,
+                          style: const TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      )
+                    else
+                      const SizedBox.shrink(),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Icon(
+                Icons.add,
+                color: theme.colorScheme.primary,
+                size: 28,
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

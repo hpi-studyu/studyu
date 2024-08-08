@@ -203,7 +203,9 @@ class InviteCodeRepositoryDelegate
   }
 
   @override
-  StudyInvite createNewInstance() {
+  StudyInvite createNewInstance({
+    ModelInstanceCreationArgs args = const NoArgs(),
+  }) {
     throw UnimplementedError(); // not available
   }
 }

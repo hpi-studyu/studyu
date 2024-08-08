@@ -21,7 +21,7 @@ part 'dashboard_controller.g.dart';
 
 @riverpod
 class DashboardController extends _$DashboardController
-    implements IModelActionProvider<Study> {
+    implements IModelActionProvider<StudyGroup> {
   @override
   DashboardState build() {
     studyRepository = ref.watch(studyRepositoryProvider);
@@ -83,27 +83,46 @@ class DashboardController extends _$DashboardController
     );
   }
 
+  void setPinnedStudies(Set<String> pinnedStudies) {
+    state = state.copyWith(pinnedStudies: pinnedStudies);
+  }
+
+  void setExpandedStudies(Set<String> expandedStudies) {
+    state = state.copyWith(expandedStudies: expandedStudies);
+  }
+
   void onSelectStudy(Study study) {
     router.dispatch(RoutingIntents.studyEdit(study.id));
   }
 
-  void onClickNewStudy() {
-    router.dispatch(RoutingIntents.studyNew);
+  void onClickNewStudy(bool isTemplate) {
+    router.dispatch(RoutingIntents.studyNew(isTemplate));
+  }
+
+  void onExpandStudy(Study study) {
+    final expandedStudies = state.expandedStudies.contains(study.id)
+        ? state.expandedStudies.difference({study.id})
+        : state.expandedStudies.union({study.id});
+    setExpandedStudies(expandedStudies);
   }
 
   Future<void> pinStudy(String modelId) async {
     await userRepository.updatePreferences(PreferenceAction.pin, modelId);
-    sortStudies();
+    setPinnedStudies(userRepository.user.preferences.pinnedStudies);
   }
 
   Future<void> pinOffStudy(String modelId) async {
     await userRepository.updatePreferences(PreferenceAction.pinOff, modelId);
-    sortStudies();
+    setPinnedStudies(userRepository.user.preferences.pinnedStudies);
   }
 
   void setSorting(StudiesTableColumn sortByColumn, bool ascending) {
     state =
         state.copyWith(sortByColumn: sortByColumn, sortAscending: ascending);
+  }
+
+  void setCreateNewMenuOpen(bool open) {
+    state = state.copyWith(createNewMenuOpen: open);
   }
 
   Future<void> filterStudies(String? query) async {
@@ -132,28 +151,37 @@ class DashboardController extends _$DashboardController
   }
 
   @override
-  List<ModelAction> availableActions(Study model) {
+  List<ModelAction> availableActions(StudyGroup model) {
+    return _availableActions(model.standaloneOrTemplate);
+  }
+
+  List<ModelAction> availableSubActions(StudyGroup model, int index) {
+    final subStudy = model.subStudies[index];
+    return _availableActions(subStudy);
+  }
+
+  List<ModelAction> _availableActions(Study study) {
     final pinActions = [
       ModelAction(
         type: StudyActionType.pin,
         label: StudyActionType.pin.string,
         onExecute: () async {
-          await pinStudy(model.id);
+          await pinStudy(study.id);
         },
-        isAvailable: !isPinned(model),
+        isAvailable: !study.isSubStudy && !isPinned(study),
       ),
       ModelAction(
         type: StudyActionType.pinoff,
         label: StudyActionType.pinoff.string,
         onExecute: () async {
-          await pinOffStudy(model.id);
+          await pinOffStudy(study.id);
         },
-        isAvailable: isPinned(model),
+        isAvailable: !study.isSubStudy && isPinned(study),
       ),
     ].where((action) => action.isAvailable).toList();
 
     return withIcons(
-      [...pinActions, ...studyRepository.availableActions(model)],
+      [...pinActions, ...studyRepository.availableActions(study)],
       studyActionIcons,
     );
   }

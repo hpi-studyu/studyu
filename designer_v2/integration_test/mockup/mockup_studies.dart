@@ -4,7 +4,7 @@ class MockupStudies {
   static late Study study;
 
   static void init(String userID) {
-    study = Study.withId(userID);
+    study = Study.create(userID);
   }
 
   static Study study1() {

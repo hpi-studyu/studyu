@@ -17,13 +17,24 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 typedef InterventionProvider = Intervention? Function(String id);
 
 class StudyRecruitScreen extends StudyPageWidget {
-  const StudyRecruitScreen(super.studyId, {super.key});
+  const StudyRecruitScreen(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyRecruitControllerProvider(studyId));
+    final state = ref.watch(studyRecruitControllerProvider(studyCreationArgs));
     final controller =
-        ref.watch(studyRecruitControllerProvider(studyId).notifier);
+        ref.watch(studyRecruitControllerProvider(studyCreationArgs).notifier);
+
+    if (state.studyWithMetadata?.model.isTemplate == true) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 24),
+        child: EmptyBody(
+          icon: Icons.link_off_rounded,
+          title: tr.code_list_template_title,
+          description: "",
+        ),
+      );
+    }
 
     return AsyncValueWidget<List<StudyInvite>?>(
       value: state.invites,
@@ -58,7 +69,7 @@ class StudyRecruitScreen extends StudyPageWidget {
 
   @override
   Widget? banner(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyRecruitControllerProvider(studyId));
+    final state = ref.watch(studyRecruitControllerProvider(studyCreationArgs));
     final isStudyClosed = state.studyWithMetadata?.model.isClosed;
 
     if (isStudyClosed ?? false) {
@@ -97,7 +108,7 @@ class StudyRecruitScreen extends StudyPageWidget {
   }
 
   Widget _newInviteCodeButton(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyRecruitControllerProvider(studyId));
+    final state = ref.watch(studyRecruitControllerProvider(studyCreationArgs));
     final isStudyClosed = state.studyWithMetadata?.model.isClosed == true;
 
     return PrimaryButton(
@@ -106,7 +117,7 @@ class StudyRecruitScreen extends StudyPageWidget {
           ? null
           : () {
               final formViewModel =
-                  ref.watch(inviteCodeFormViewModelProvider(studyId));
+                  ref.watch(inviteCodeFormViewModelProvider(studyCreationArgs));
               showFormSideSheet<InviteCodeFormViewModel>(
                 context: context,
                 formViewModel: formViewModel,
@@ -123,7 +134,8 @@ class StudyRecruitScreen extends StudyPageWidget {
   ) {
     // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
     return (StudyInvite invite) {
-      final formViewModel = ref.watch(inviteCodeFormViewModelProvider(studyId));
+      final formViewModel =
+          ref.watch(inviteCodeFormViewModelProvider(studyCreationArgs));
       formViewModel.read(invite);
       showFormSideSheet<InviteCodeFormViewModel>(
         context: context,

@@ -6,7 +6,6 @@ import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/features/study/study_base_state.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
-
 import 'package:studyu_designer_v2/utils/model_action.dart';
 
 class StudyControllerState extends StudyControllerBaseState
@@ -104,6 +103,13 @@ class StudyControllerState extends StudyControllerBaseState
   bool get isClosedVisible =>
       studyWithMetadata?.model.status == StudyStatus.running &&
       studyWithMetadata!.model.canEdit(super.currentUser);
+
+  bool get isCreateNewSubstudyVisible =>
+      studyWithMetadata?.model.status == StudyStatus.running &&
+      studyWithMetadata?.model.isTemplate == true;
+
+  StudyType get studyType =>
+      studyWithMetadata?.model.type ?? StudyType.standalone;
 
   @override
   StudyStatus? get studyStatus => study.value?.status;

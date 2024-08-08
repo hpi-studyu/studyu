@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
@@ -9,11 +10,12 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class PublishSuccessDialog extends StudyPageWidget {
-  const PublishSuccessDialog(super.studyId, {super.key});
+  const PublishSuccessDialog(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = ref.watch(studyControllerProvider(studyId).notifier);
+    final controller =
+        ref.watch(studyControllerProvider(studyCreationArgs).notifier);
     final theme = Theme.of(context);
 
     return StandardDialog(
@@ -28,8 +30,12 @@ class PublishSuccessDialog extends StudyPageWidget {
                     (theme.textTheme.displayLarge?.fontSize ?? 48.0) * 1.5,
               ),
             ),
-            title: tr.study_launch_success_title,
-            description: tr.study_launch_success_description,
+            title: controller.studyType == StudyType.template
+                ? tr.template_launch_success_title
+                : tr.study_launch_success_title,
+            description: controller.studyType == StudyType.template
+                ? tr.template_launch_success_description
+                : tr.study_launch_success_description,
           ),
           const SizedBox(height: 8.0),
         ],
@@ -39,9 +45,14 @@ class PublishSuccessDialog extends StudyPageWidget {
           child: Column(
             children: [
               PrimaryButton(
-                text: tr.action_button_post_launch_followup,
-                onPressed: () => Navigator.maybePop(context)
-                    .whenComplete(() => controller.onAddParticipants()),
+                text: controller.studyType == StudyType.template
+                    ? tr.action_button_post_launch_followup_template
+                    : tr.action_button_post_launch_followup,
+                onPressed: () => Navigator.maybePop(context).whenComplete(
+                  () => controller.studyType == StudyType.template
+                      ? controller.onCreateNewSubstudy()
+                      : controller.onAddParticipants(),
+                ),
               ),
               const SizedBox(height: 8.0),
               Opacity(

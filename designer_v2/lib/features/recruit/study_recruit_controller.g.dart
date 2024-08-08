@@ -7,7 +7,7 @@ part of 'study_recruit_controller.dart';
 // **************************************************************************
 
 String _$studyRecruitControllerHash() =>
-    r'd17692a01616fc9a347f47b04494e97bdb95ff1b';
+    r'452fdbcfa901d2964068d280d50f8f1f9aa9345b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,10 +32,10 @@ class _SystemHash {
 
 abstract class _$StudyRecruitController
     extends BuildlessAutoDisposeNotifier<StudyRecruitControllerState> {
-  late final String studyId;
+  late final StudyCreationArgs studyCreationArgs;
 
   StudyRecruitControllerState build(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   );
 }
 
@@ -50,10 +50,10 @@ class StudyRecruitControllerFamily extends Family<StudyRecruitControllerState> {
 
   /// See also [StudyRecruitController].
   StudyRecruitControllerProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return StudyRecruitControllerProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -62,7 +62,7 @@ class StudyRecruitControllerFamily extends Family<StudyRecruitControllerState> {
     covariant StudyRecruitControllerProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -86,9 +86,9 @@ class StudyRecruitControllerProvider extends AutoDisposeNotifierProviderImpl<
     StudyRecruitController, StudyRecruitControllerState> {
   /// See also [StudyRecruitController].
   StudyRecruitControllerProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
-          () => StudyRecruitController()..studyId = studyId,
+          () => StudyRecruitController()..studyCreationArgs = studyCreationArgs,
           from: studyRecruitControllerProvider,
           name: r'studyRecruitControllerProvider',
           debugGetCreateSourceHash:
@@ -98,7 +98,7 @@ class StudyRecruitControllerProvider extends AutoDisposeNotifierProviderImpl<
           dependencies: StudyRecruitControllerFamily._dependencies,
           allTransitiveDependencies:
               StudyRecruitControllerFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   StudyRecruitControllerProvider._internal(
@@ -108,17 +108,17 @@ class StudyRecruitControllerProvider extends AutoDisposeNotifierProviderImpl<
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   StudyRecruitControllerState runNotifierBuild(
     covariant StudyRecruitController notifier,
   ) {
     return notifier.build(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -127,13 +127,13 @@ class StudyRecruitControllerProvider extends AutoDisposeNotifierProviderImpl<
     return ProviderOverride(
       origin: this,
       override: StudyRecruitControllerProvider._internal(
-        () => create()..studyId = studyId,
+        () => create()..studyCreationArgs = studyCreationArgs,
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -146,13 +146,14 @@ class StudyRecruitControllerProvider extends AutoDisposeNotifierProviderImpl<
 
   @override
   bool operator ==(Object other) {
-    return other is StudyRecruitControllerProvider && other.studyId == studyId;
+    return other is StudyRecruitControllerProvider &&
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -160,8 +161,8 @@ class StudyRecruitControllerProvider extends AutoDisposeNotifierProviderImpl<
 
 mixin StudyRecruitControllerRef
     on AutoDisposeNotifierProviderRef<StudyRecruitControllerState> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _StudyRecruitControllerProviderElement
@@ -170,7 +171,8 @@ class _StudyRecruitControllerProviderElement
   _StudyRecruitControllerProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as StudyRecruitControllerProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as StudyRecruitControllerProvider).studyCreationArgs;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

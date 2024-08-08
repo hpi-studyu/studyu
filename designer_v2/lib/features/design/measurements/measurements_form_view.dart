@@ -12,17 +12,17 @@ import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
-  const StudyDesignMeasurementsFormView(super.studyId, {super.key});
+  const StudyDesignMeasurementsFormView(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyControllerProvider(studyId));
+    final state = ref.watch(studyControllerProvider(studyCreationArgs));
 
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
         final formViewModel =
-            ref.watch(measurementsFormViewModelProvider(studyId));
+            ref.watch(measurementsFormViewModelProvider(studyCreationArgs));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(

@@ -3,31 +3,32 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
-import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/data_reference_editor.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/section_type.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class LinearRegressionSectionFormView extends ConsumerWidget {
   const LinearRegressionSectionFormView({
     required this.formViewModel,
-    required this.studyId,
+    required this.studyCreationArgs,
     required this.reportSectionColumnWidth,
     super.key,
   });
 
   final ReportItemFormViewModel formViewModel;
-  final StudyID studyId;
+  final StudyCreationArgs studyCreationArgs;
   final Map<int, TableColumnWidth> reportSectionColumnWidth;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final study = ref.watch(studyControllerProvider(studyId)).study.value!;
+    final study =
+        ref.watch(studyControllerProvider(studyCreationArgs)).study.value!;
     final availableTasks = <Task>[
       ...study.interventions.expand((intervention) => intervention.tasks),
       ...study.observations,

@@ -18,38 +18,49 @@ class StudyMonitorScreen extends StudyPageWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyControllerProvider(studyId));
-    return AsyncValueWidget<Study>(
-      value: state.study,
-      data: (study) {
-        final studyMonitorData = study.monitorData;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _monitorSectionHeader(context, studyMonitorData),
-            const SizedBox(height: 32.0),
-            if (studyMonitorData.isNotEmpty) ...[
-              SelectableText(
-                tr.monitoring_participants_title,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              Container(width: 32.0),
-              StudyMonitorTable(
-                ref: ref,
-                studyMonitorItems: studyMonitorData,
-                onSelectItem: (item) =>
-                    _onSelectParticipant(context, ref, item, study),
-              ),
-            ] else
-              EmptyBody(
-                icon: Icons.person_off_rounded,
-                title: tr.monitoring_no_participants_title,
-                description: tr.monitoring_no_participants_description,
-              ),
-          ],
-        );
-      },
-    );
+    final state = ref.watch(studyControllerProvider(studyCreationArgs));
+
+    // if study is template, disable monitoring view
+    return state.studyWithMetadata?.model.isTemplate == true
+        ? Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: EmptyBody(
+              icon: Icons.person_off_rounded,
+              title: tr.monitoring_template_title,
+              description: "",
+            ),
+          )
+        : AsyncValueWidget<Study>(
+            value: state.study,
+            data: (study) {
+              final studyMonitorData = study.monitorData;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  if (studyMonitorData.isNotEmpty) ...[
+                    _monitorSectionHeader(context, studyMonitorData),
+                    const SizedBox(height: 32.0),
+                    SelectableText(
+                      tr.monitoring_participants_title,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    Container(width: 32.0),
+                    StudyMonitorTable(
+                      ref: ref,
+                      studyMonitorItems: studyMonitorData,
+                      onSelectItem: (item) =>
+                          _onSelectParticipant(context, ref, item, study),
+                    ),
+                  ] else
+                    EmptyBody(
+                      icon: Icons.person_off_rounded,
+                      title: tr.monitoring_no_participants_title,
+                      description: tr.monitoring_no_participants_description,
+                    ),
+                ],
+              );
+            },
+          );
   }
 
   Widget _monitorSectionHeader(

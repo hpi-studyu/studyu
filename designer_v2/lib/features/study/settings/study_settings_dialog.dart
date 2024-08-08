@@ -10,12 +10,12 @@ import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class StudySettingsDialog extends StudyPageWidget {
-  const StudySettingsDialog(super.studyId, {super.key});
+  const StudySettingsDialog(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formViewModel =
-        ref.watch(studySettingsFormViewModelProvider(studyId));
+        ref.watch(studySettingsFormViewModelProvider(studyCreationArgs));
 
     return ReactiveForm(
       formGroup: formViewModel.form,
@@ -25,7 +25,14 @@ class StudySettingsDialog extends StudyPageWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 12.0),
-            FormSectionHeader(title: tr.navlink_public_studies),
+            FormSectionHeader(
+              title: tr.navlink_public_studies,
+              showLock: formViewModel.study.value?.isStandalone != true,
+              lockControl: formViewModel.lockPublishSettingsControl,
+              lockHelpText: tr.form_section_publish_lock_help,
+              lockedStateText: tr.form_section_publish_lock_locked,
+              unlockedStateText: tr.form_section_publish_lock_unlocked,
+            ),
             const SizedBox(height: 6.0),
             TextParagraph(text: tr.navlink_public_studies_description),
             const SizedBox(height: 24.0),

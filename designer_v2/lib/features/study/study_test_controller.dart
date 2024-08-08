@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.d
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 
@@ -15,7 +16,7 @@ part 'study_test_controller.g.dart';
 @riverpod
 class StudyTestController extends _$StudyTestController {
   @override
-  StudyTestControllerState build(StudyID studyId) {
+  StudyTestControllerState build(StudyCreationArgs studyCreationArgs) {
     final studyRepo = ref.watch(studyRepositoryProvider);
     ref.onDispose(() {
       // Reload the study after disposing the test controller so that any
@@ -26,15 +27,16 @@ class StudyTestController extends _$StudyTestController {
       // but this is a sufficient workaround for now.
       Future.delayed(
         const Duration(milliseconds: 100),
-        () => studyRepo.fetch(studyId),
+        () => studyRepo.fetch(studyCreationArgs.studyID),
       );
       print('StudyTestController.dispose');
     });
     return StudyTestControllerState(
-      studyId: studyId,
+      studyId: studyCreationArgs.studyID,
       studyRepository: ref.watch(studyRepositoryProvider),
-      studyWithMetadata:
-          ref.watch(studyControllerProvider(studyId)).studyWithMetadata,
+      studyWithMetadata: ref
+          .watch(studyControllerProvider(studyCreationArgs))
+          .studyWithMetadata,
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
       serializedSession:
@@ -48,9 +50,9 @@ class StudyTestController extends _$StudyTestController {
 @riverpod
 PlatformController studyTestPlatformController(
   StudyTestPlatformControllerRef ref,
-  StudyID studyId,
+  StudyCreationArgs studyCreationArgs,
 ) {
-  final state = ref.watch(studyTestControllerProvider(studyId));
+  final state = ref.watch(studyTestControllerProvider(studyCreationArgs));
   PlatformController platformController;
   if (!kIsWeb) {
     // Mobile could be built with the webview_flutter package
@@ -59,7 +61,7 @@ PlatformController studyTestPlatformController(
     );
   } else {
     // Desktop and Web
-    platformController = WebController(state.appUrl, studyId);
+    platformController = WebController(state.appUrl, studyCreationArgs.studyID);
   }
   return platformController;
 }

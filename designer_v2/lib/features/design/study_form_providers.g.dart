@@ -7,7 +7,7 @@ part of 'study_form_providers.dart';
 // **************************************************************************
 
 String _$studyInfoFormViewModelHash() =>
-    r'7f98d180b98a3f7fb550fa61cf9e0b60a0839f1e';
+    r'491b4f5a18e4a203bb5f157e7a43c63a22e7e172';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -41,10 +41,10 @@ class StudyInfoFormViewModelFamily extends Family<StudyInfoFormViewModel> {
 
   /// See also [studyInfoFormViewModel].
   StudyInfoFormViewModelProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return StudyInfoFormViewModelProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -53,7 +53,7 @@ class StudyInfoFormViewModelFamily extends Family<StudyInfoFormViewModel> {
     covariant StudyInfoFormViewModelProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -77,11 +77,11 @@ class StudyInfoFormViewModelProvider
     extends AutoDisposeProvider<StudyInfoFormViewModel> {
   /// See also [studyInfoFormViewModel].
   StudyInfoFormViewModelProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
           (ref) => studyInfoFormViewModel(
             ref as StudyInfoFormViewModelRef,
-            studyId,
+            studyCreationArgs,
           ),
           from: studyInfoFormViewModelProvider,
           name: r'studyInfoFormViewModelProvider',
@@ -92,7 +92,7 @@ class StudyInfoFormViewModelProvider
           dependencies: StudyInfoFormViewModelFamily._dependencies,
           allTransitiveDependencies:
               StudyInfoFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   StudyInfoFormViewModelProvider._internal(
@@ -102,10 +102,10 @@ class StudyInfoFormViewModelProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   Override overrideWith(
@@ -120,7 +120,7 @@ class StudyInfoFormViewModelProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -132,13 +132,14 @@ class StudyInfoFormViewModelProvider
 
   @override
   bool operator ==(Object other) {
-    return other is StudyInfoFormViewModelProvider && other.studyId == studyId;
+    return other is StudyInfoFormViewModelProvider &&
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -146,8 +147,8 @@ class StudyInfoFormViewModelProvider
 
 mixin StudyInfoFormViewModelRef
     on AutoDisposeProviderRef<StudyInfoFormViewModel> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _StudyInfoFormViewModelProviderElement
@@ -156,11 +157,12 @@ class _StudyInfoFormViewModelProviderElement
   _StudyInfoFormViewModelProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as StudyInfoFormViewModelProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as StudyInfoFormViewModelProvider).studyCreationArgs;
 }
 
 String _$enrollmentFormViewModelHash() =>
-    r'f89c53ecf3f90e317a1fbab38a89ae095dc29cca';
+    r'79fd02063c01ee084bb6fafd42187731b4492adf';
 
 /// See also [enrollmentFormViewModel].
 @ProviderFor(enrollmentFormViewModel)
@@ -173,10 +175,10 @@ class EnrollmentFormViewModelFamily extends Family<EnrollmentFormViewModel> {
 
   /// See also [enrollmentFormViewModel].
   EnrollmentFormViewModelProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return EnrollmentFormViewModelProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -185,7 +187,7 @@ class EnrollmentFormViewModelFamily extends Family<EnrollmentFormViewModel> {
     covariant EnrollmentFormViewModelProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -209,11 +211,11 @@ class EnrollmentFormViewModelProvider
     extends AutoDisposeProvider<EnrollmentFormViewModel> {
   /// See also [enrollmentFormViewModel].
   EnrollmentFormViewModelProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
           (ref) => enrollmentFormViewModel(
             ref as EnrollmentFormViewModelRef,
-            studyId,
+            studyCreationArgs,
           ),
           from: enrollmentFormViewModelProvider,
           name: r'enrollmentFormViewModelProvider',
@@ -224,7 +226,7 @@ class EnrollmentFormViewModelProvider
           dependencies: EnrollmentFormViewModelFamily._dependencies,
           allTransitiveDependencies:
               EnrollmentFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   EnrollmentFormViewModelProvider._internal(
@@ -234,10 +236,10 @@ class EnrollmentFormViewModelProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   Override overrideWith(
@@ -253,7 +255,7 @@ class EnrollmentFormViewModelProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -265,13 +267,14 @@ class EnrollmentFormViewModelProvider
 
   @override
   bool operator ==(Object other) {
-    return other is EnrollmentFormViewModelProvider && other.studyId == studyId;
+    return other is EnrollmentFormViewModelProvider &&
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -279,8 +282,8 @@ class EnrollmentFormViewModelProvider
 
 mixin EnrollmentFormViewModelRef
     on AutoDisposeProviderRef<EnrollmentFormViewModel> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _EnrollmentFormViewModelProviderElement
@@ -289,11 +292,12 @@ class _EnrollmentFormViewModelProviderElement
   _EnrollmentFormViewModelProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as EnrollmentFormViewModelProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as EnrollmentFormViewModelProvider).studyCreationArgs;
 }
 
 String _$screenerQuestionFormViewModelHash() =>
-    r'3c5615d74c376a66c14dc44738595d0c5a6f972a';
+    r'7d735fa1ad80e5e86b76877b02984a9e180eb5b9';
 
 /// See also [screenerQuestionFormViewModel].
 @ProviderFor(screenerQuestionFormViewModel)
@@ -430,7 +434,7 @@ class _ScreenerQuestionFormViewModelProviderElement
 }
 
 String _$consentItemFormViewModelHash() =>
-    r'002af4b4fb26f4815e747107f93a6bdad9bee823';
+    r'1b1bb1dd213a2f4b07eb84e51155b02e9454cdbe';
 
 /// See also [consentItemFormViewModel].
 @ProviderFor(consentItemFormViewModel)
@@ -564,7 +568,7 @@ class _ConsentItemFormViewModelProviderElement
 }
 
 String _$interventionsFormViewModelHash() =>
-    r'8e986de5d8f0a8983792dc91512d21c85344025d';
+    r'466e384be9d5834ffbb76c075cd191849ea6191f';
 
 /// See also [interventionsFormViewModel].
 @ProviderFor(interventionsFormViewModel)
@@ -578,10 +582,10 @@ class InterventionsFormViewModelFamily
 
   /// See also [interventionsFormViewModel].
   InterventionsFormViewModelProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return InterventionsFormViewModelProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -590,7 +594,7 @@ class InterventionsFormViewModelFamily
     covariant InterventionsFormViewModelProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -614,11 +618,11 @@ class InterventionsFormViewModelProvider
     extends AutoDisposeProvider<InterventionsFormViewModel> {
   /// See also [interventionsFormViewModel].
   InterventionsFormViewModelProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
           (ref) => interventionsFormViewModel(
             ref as InterventionsFormViewModelRef,
-            studyId,
+            studyCreationArgs,
           ),
           from: interventionsFormViewModelProvider,
           name: r'interventionsFormViewModelProvider',
@@ -629,7 +633,7 @@ class InterventionsFormViewModelProvider
           dependencies: InterventionsFormViewModelFamily._dependencies,
           allTransitiveDependencies:
               InterventionsFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   InterventionsFormViewModelProvider._internal(
@@ -639,10 +643,10 @@ class InterventionsFormViewModelProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   Override overrideWith(
@@ -658,7 +662,7 @@ class InterventionsFormViewModelProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -671,13 +675,13 @@ class InterventionsFormViewModelProvider
   @override
   bool operator ==(Object other) {
     return other is InterventionsFormViewModelProvider &&
-        other.studyId == studyId;
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -685,8 +689,8 @@ class InterventionsFormViewModelProvider
 
 mixin InterventionsFormViewModelRef
     on AutoDisposeProviderRef<InterventionsFormViewModel> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _InterventionsFormViewModelProviderElement
@@ -695,11 +699,12 @@ class _InterventionsFormViewModelProviderElement
   _InterventionsFormViewModelProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as InterventionsFormViewModelProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as InterventionsFormViewModelProvider).studyCreationArgs;
 }
 
 String _$interventionFormViewModelHash() =>
-    r'c4bbeccc4b19cc3abceb394a213201496c776f75';
+    r'977d104a10f56c4f609d5e08cdef7aa1b5d8aaab';
 
 /// See also [interventionFormViewModel].
 @ProviderFor(interventionFormViewModel)
@@ -971,7 +976,7 @@ class _InterventionTaskFormViewModelProviderElement
 }
 
 String _$measurementsFormViewModelHash() =>
-    r'21fe7b97a1c4d44406c44ecc0ac3ba4bcb8dd8c0';
+    r'57b9b16939dce5249f419fc1b54a2760bde80662';
 
 /// See also [measurementsFormViewModel].
 @ProviderFor(measurementsFormViewModel)
@@ -985,10 +990,10 @@ class MeasurementsFormViewModelFamily
 
   /// See also [measurementsFormViewModel].
   MeasurementsFormViewModelProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return MeasurementsFormViewModelProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -997,7 +1002,7 @@ class MeasurementsFormViewModelFamily
     covariant MeasurementsFormViewModelProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -1021,11 +1026,11 @@ class MeasurementsFormViewModelProvider
     extends AutoDisposeProvider<MeasurementsFormViewModel> {
   /// See also [measurementsFormViewModel].
   MeasurementsFormViewModelProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
           (ref) => measurementsFormViewModel(
             ref as MeasurementsFormViewModelRef,
-            studyId,
+            studyCreationArgs,
           ),
           from: measurementsFormViewModelProvider,
           name: r'measurementsFormViewModelProvider',
@@ -1036,7 +1041,7 @@ class MeasurementsFormViewModelProvider
           dependencies: MeasurementsFormViewModelFamily._dependencies,
           allTransitiveDependencies:
               MeasurementsFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   MeasurementsFormViewModelProvider._internal(
@@ -1046,10 +1051,10 @@ class MeasurementsFormViewModelProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   Override overrideWith(
@@ -1065,7 +1070,7 @@ class MeasurementsFormViewModelProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -1078,13 +1083,13 @@ class MeasurementsFormViewModelProvider
   @override
   bool operator ==(Object other) {
     return other is MeasurementsFormViewModelProvider &&
-        other.studyId == studyId;
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -1092,8 +1097,8 @@ class MeasurementsFormViewModelProvider
 
 mixin MeasurementsFormViewModelRef
     on AutoDisposeProviderRef<MeasurementsFormViewModel> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _MeasurementsFormViewModelProviderElement
@@ -1102,11 +1107,12 @@ class _MeasurementsFormViewModelProviderElement
   _MeasurementsFormViewModelProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as MeasurementsFormViewModelProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as MeasurementsFormViewModelProvider).studyCreationArgs;
 }
 
 String _$surveyFormViewModelHash() =>
-    r'5639e7eecf4014f6359bf8a9d81554b6cc604955';
+    r'5b3cc0f61f754cde8800ca166fbfb6a25bc3632a';
 
 /// See also [surveyFormViewModel].
 @ProviderFor(surveyFormViewModel)
@@ -1374,7 +1380,7 @@ class _SurveyQuestionFormViewModelProviderElement
 }
 
 String _$reportsFormViewModelHash() =>
-    r'6deed30173a2c97c7a9096cce168b7bb5890b933';
+    r'd959f254f4aa1b139ba72a22193176fd316ebd40';
 
 /// See also [reportsFormViewModel].
 @ProviderFor(reportsFormViewModel)
@@ -1387,10 +1393,10 @@ class ReportsFormViewModelFamily extends Family<ReportsFormViewModel> {
 
   /// See also [reportsFormViewModel].
   ReportsFormViewModelProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return ReportsFormViewModelProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -1399,7 +1405,7 @@ class ReportsFormViewModelFamily extends Family<ReportsFormViewModel> {
     covariant ReportsFormViewModelProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -1423,11 +1429,11 @@ class ReportsFormViewModelProvider
     extends AutoDisposeProvider<ReportsFormViewModel> {
   /// See also [reportsFormViewModel].
   ReportsFormViewModelProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
           (ref) => reportsFormViewModel(
             ref as ReportsFormViewModelRef,
-            studyId,
+            studyCreationArgs,
           ),
           from: reportsFormViewModelProvider,
           name: r'reportsFormViewModelProvider',
@@ -1438,7 +1444,7 @@ class ReportsFormViewModelProvider
           dependencies: ReportsFormViewModelFamily._dependencies,
           allTransitiveDependencies:
               ReportsFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   ReportsFormViewModelProvider._internal(
@@ -1448,10 +1454,10 @@ class ReportsFormViewModelProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   Override overrideWith(
@@ -1466,7 +1472,7 @@ class ReportsFormViewModelProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -1478,21 +1484,22 @@ class ReportsFormViewModelProvider
 
   @override
   bool operator ==(Object other) {
-    return other is ReportsFormViewModelProvider && other.studyId == studyId;
+    return other is ReportsFormViewModelProvider &&
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
 mixin ReportsFormViewModelRef on AutoDisposeProviderRef<ReportsFormViewModel> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _ReportsFormViewModelProviderElement
@@ -1501,11 +1508,12 @@ class _ReportsFormViewModelProviderElement
   _ReportsFormViewModelProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as ReportsFormViewModelProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as ReportsFormViewModelProvider).studyCreationArgs;
 }
 
 String _$reportItemFormViewModelHash() =>
-    r'c2244f6b47445b8c54b061be046e6dd472e1afd6';
+    r'80f9f4f57288fa4f24c7ed6f98545f5d5f5bbf9f';
 
 /// See also [reportItemFormViewModel].
 @ProviderFor(reportItemFormViewModel)
@@ -1639,7 +1647,7 @@ class _ReportItemFormViewModelProviderElement
 }
 
 String _$studyPublishValidatorHash() =>
-    r'7052ac418dfb864a61546db1c713351194f2a684';
+    r'c5b3ce0f03a611b437ba726bab479d6de27577b1';
 
 /// Provides the [StudyFormViewModel] for validation purposes with
 /// a [StudyFormValidationSet.publish]
@@ -1664,10 +1672,10 @@ class StudyPublishValidatorFamily extends Family<StudyFormViewModel> {
   ///
   /// Copied from [studyPublishValidator].
   StudyPublishValidatorProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return StudyPublishValidatorProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -1676,7 +1684,7 @@ class StudyPublishValidatorFamily extends Family<StudyFormViewModel> {
     covariant StudyPublishValidatorProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -1706,11 +1714,11 @@ class StudyPublishValidatorProvider
   ///
   /// Copied from [studyPublishValidator].
   StudyPublishValidatorProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
           (ref) => studyPublishValidator(
             ref as StudyPublishValidatorRef,
-            studyId,
+            studyCreationArgs,
           ),
           from: studyPublishValidatorProvider,
           name: r'studyPublishValidatorProvider',
@@ -1721,7 +1729,7 @@ class StudyPublishValidatorProvider
           dependencies: StudyPublishValidatorFamily._dependencies,
           allTransitiveDependencies:
               StudyPublishValidatorFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   StudyPublishValidatorProvider._internal(
@@ -1731,10 +1739,10 @@ class StudyPublishValidatorProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   Override overrideWith(
@@ -1749,7 +1757,7 @@ class StudyPublishValidatorProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -1761,21 +1769,22 @@ class StudyPublishValidatorProvider
 
   @override
   bool operator ==(Object other) {
-    return other is StudyPublishValidatorProvider && other.studyId == studyId;
+    return other is StudyPublishValidatorProvider &&
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
 mixin StudyPublishValidatorRef on AutoDisposeProviderRef<StudyFormViewModel> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _StudyPublishValidatorProviderElement
@@ -1784,11 +1793,12 @@ class _StudyPublishValidatorProviderElement
   _StudyPublishValidatorProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as StudyPublishValidatorProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as StudyPublishValidatorProvider).studyCreationArgs;
 }
 
 String _$studyTestValidatorHash() =>
-    r'207988e121f40ffd2b4b055283baaf78c7a07d2d';
+    r'69986be5facc3c1e88ea111694fd90939fd03c8d';
 
 /// Provides the [StudyFormViewModel] for validation purposes with
 /// a [StudyFormValidationSet.test]
@@ -1813,10 +1823,10 @@ class StudyTestValidatorFamily extends Family<StudyFormViewModel> {
   ///
   /// Copied from [studyTestValidator].
   StudyTestValidatorProvider call(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) {
     return StudyTestValidatorProvider(
-      studyId,
+      studyCreationArgs,
     );
   }
 
@@ -1825,7 +1835,7 @@ class StudyTestValidatorFamily extends Family<StudyFormViewModel> {
     covariant StudyTestValidatorProvider provider,
   ) {
     return call(
-      provider.studyId,
+      provider.studyCreationArgs,
     );
   }
 
@@ -1855,11 +1865,11 @@ class StudyTestValidatorProvider
   ///
   /// Copied from [studyTestValidator].
   StudyTestValidatorProvider(
-    String studyId,
+    StudyCreationArgs studyCreationArgs,
   ) : this._internal(
           (ref) => studyTestValidator(
             ref as StudyTestValidatorRef,
-            studyId,
+            studyCreationArgs,
           ),
           from: studyTestValidatorProvider,
           name: r'studyTestValidatorProvider',
@@ -1870,7 +1880,7 @@ class StudyTestValidatorProvider
           dependencies: StudyTestValidatorFamily._dependencies,
           allTransitiveDependencies:
               StudyTestValidatorFamily._allTransitiveDependencies,
-          studyId: studyId,
+          studyCreationArgs: studyCreationArgs,
         );
 
   StudyTestValidatorProvider._internal(
@@ -1880,10 +1890,10 @@ class StudyTestValidatorProvider
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.studyId,
+    required this.studyCreationArgs,
   }) : super.internal();
 
-  final String studyId;
+  final StudyCreationArgs studyCreationArgs;
 
   @override
   Override overrideWith(
@@ -1898,7 +1908,7 @@ class StudyTestValidatorProvider
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        studyId: studyId,
+        studyCreationArgs: studyCreationArgs,
       ),
     );
   }
@@ -1910,21 +1920,22 @@ class StudyTestValidatorProvider
 
   @override
   bool operator ==(Object other) {
-    return other is StudyTestValidatorProvider && other.studyId == studyId;
+    return other is StudyTestValidatorProvider &&
+        other.studyCreationArgs == studyCreationArgs;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
+    hash = _SystemHash.combine(hash, studyCreationArgs.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
 mixin StudyTestValidatorRef on AutoDisposeProviderRef<StudyFormViewModel> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
+  /// The parameter `studyCreationArgs` of this provider.
+  StudyCreationArgs get studyCreationArgs;
 }
 
 class _StudyTestValidatorProviderElement
@@ -1933,7 +1944,8 @@ class _StudyTestValidatorProviderElement
   _StudyTestValidatorProviderElement(super.provider);
 
   @override
-  String get studyId => (origin as StudyTestValidatorProvider).studyId;
+  StudyCreationArgs get studyCreationArgs =>
+      (origin as StudyTestValidatorProvider).studyCreationArgs;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

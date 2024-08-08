@@ -13,6 +13,7 @@ import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dar
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection_actions.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
@@ -234,7 +235,7 @@ class InterventionFormViewModel
 
   InterventionTaskFormRouteArgs buildNewFormRouteArgs() {
     return InterventionTaskFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       interventionId: interventionId,
       taskId: Config.newModelId,
     );
@@ -244,7 +245,7 @@ class InterventionFormViewModel
     InterventionTaskFormViewModel model,
   ) {
     final args = InterventionTaskFormRouteArgs(
-      studyId: study.id,
+      studyCreationArgs: StudyCreationArgs.fromStudy(study),
       interventionId: interventionId,
       taskId: model.taskId,
     );

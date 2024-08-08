@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_function_declarations_over_variables
 
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/domain/intervention.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -142,7 +145,27 @@ class RoutingIntents {
     route: RouterConf.route(accountSettingsRouteName),
     dispatch: RoutingIntentDispatch.push, // modal route
   );
-  static final studyNew = studyEdit(Config.newStudyId);
+
+  static final studyNew = (bool isTemplate) => RoutingIntent(
+        route: RouterConf.route(studyEditInfoRouteName),
+        params: const {
+          RouteParams.studyId: Config.newModelId,
+        },
+        queryParams:
+            isTemplate ? {RouteParams.isTemplate: isTemplate.toString()} : {},
+      );
+
+  static final substudyNew = (Template parentTemplate) => RoutingIntent(
+        route: RouterConf.route(studyEditInfoRouteName),
+        params: const {
+          RouteParams.studyId: Config.newModelId,
+        },
+        queryParams: {
+          RouteParams.parentTemplate:
+              Uri.encodeFull(jsonEncode(parentTemplate.toJson())),
+        },
+      );
+
   static final login = RoutingIntent(route: RouterConf.route(loginRouteName));
   static final signup = RoutingIntent(route: RouterConf.route(signupRouteName));
   static final passwordForgot =

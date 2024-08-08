@@ -12,7 +12,7 @@ class MockupLoader extends MockupStudies {
   }
 
   Study emptyMockupStudy() {
-    final mockupStudy = Study.withId(userID);
+    final mockupStudy = Study.create(userID);
     resetStudy(mockupStudy);
     return mockupStudy;
   }

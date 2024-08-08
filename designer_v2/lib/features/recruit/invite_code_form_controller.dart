@@ -10,6 +10,7 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/invite_code_repository.dart';
+import 'package:studyu_designer_v2/repositories/model_repository.dart';
 import 'package:uuid/uuid.dart';
 
 part 'invite_code_form_controller.g.dart';
@@ -183,12 +184,14 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 @riverpod
 InviteCodeFormViewModel inviteCodeFormViewModel(
   InviteCodeFormViewModelRef ref,
-  StudyID studyId,
+  StudyCreationArgs studyCreationArgs,
 ) {
   // Reactively bind to and obtain [StudyController]'s current study
-  final study = ref
-      .watch(studyControllerProvider(studyId).select((state) => state.study));
-  final inviteCodeRepository = ref.watch(inviteCodeRepositoryProvider(studyId));
+  final study = ref.watch(
+    studyControllerProvider(studyCreationArgs).select((state) => state.study),
+  );
+  final inviteCodeRepository =
+      ref.watch(inviteCodeRepositoryProvider(studyCreationArgs.studyID));
 
   return InviteCodeFormViewModel(
     study: study.value!,

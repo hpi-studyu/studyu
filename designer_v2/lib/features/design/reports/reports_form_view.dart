@@ -19,17 +19,18 @@ import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class StudyDesignReportsFormView extends StudyDesignPageWidget {
-  const StudyDesignReportsFormView(super.studyId, {super.key});
+  const StudyDesignReportsFormView(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final state = ref.watch(studyControllerProvider(studyId));
+    final state = ref.watch(studyControllerProvider(studyCreationArgs));
 
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel = ref.watch(reportsFormViewModelProvider(studyId));
+        final formViewModel =
+            ref.watch(reportsFormViewModelProvider(studyCreationArgs));
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: ReactiveFormConsumer(
@@ -147,8 +148,10 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
     showFormSideSheet<ReportItemFormViewModel>(
       context: context,
       formViewModel: formViewModel,
-      formViewBuilder: (formViewModel) =>
-          ReportItemFormView(formViewModel: formViewModel, studyId: studyId),
+      formViewBuilder: (formViewModel) => ReportItemFormView(
+        formViewModel: formViewModel,
+        studyCreationArgs: studyCreationArgs,
+      ),
     );
   }
 }

@@ -14,17 +14,20 @@ import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class StudyDesignInfoFormView extends StudyDesignPageWidget {
-  const StudyDesignInfoFormView(super.studyId, {super.key});
+  const StudyDesignInfoFormView(super.studyCreationArgs, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(studyControllerProvider(studyId));
+    final state = ref.watch(studyControllerProvider(studyCreationArgs));
 
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
         final formViewModel =
-            ref.watch(studyInfoFormViewModelProvider(studyId));
+            ref.watch(studyInfoFormViewModelProvider(studyCreationArgs));
+        final hasParentTitleAndDescription =
+            study.templateConfiguration?.title != null &&
+                study.templateConfiguration?.description != null;
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -32,12 +35,57 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
             children: <Widget>[
               TextParagraph(text: tr.form_study_design_info_description),
               const SizedBox(height: 24.0),
+              if (hasParentTitleAndDescription)
+                FormTableLayout(
+                  rows: [
+                    FormTableRow(
+                      label: tr.form_field_template_title,
+                      input: TextField(
+                        controller: TextEditingController(
+                          text: study.templateConfiguration!.title,
+                        ),
+                        enabled: false,
+                        readOnly: true,
+                      ),
+                    ),
+                    FormTableRow(
+                      label: tr.form_field_template_description,
+                      input: TextField(
+                        controller: TextEditingController(
+                          text: study.templateConfiguration!.description,
+                        ),
+                        enabled: false,
+                        readOnly: true,
+                      ),
+                    ),
+                  ],
+                  columnWidths: const {
+                    0: FixedColumnWidth(185.0),
+                    1: FlexColumnWidth(),
+                  },
+                )
+              else
+                const SizedBox.shrink(),
+              if (hasParentTitleAndDescription)
+                const SizedBox(height: 24.0)
+              else
+                const SizedBox.shrink(),
               FormTableLayout(
                 rows: [
                   FormTableRow(
                     control: formViewModel.titleControl,
-                    label: tr.form_field_study_title,
-                    labelHelpText: tr.form_field_study_title_tooltip,
+                    label: switch (study.type) {
+                      StudyType.standalone => tr.form_field_study_title,
+                      StudyType.template => tr.form_field_template_title,
+                      StudyType.subStudy => tr.form_field_substudy_title,
+                    },
+                    labelHelpText: switch (study.type) {
+                      StudyType.standalone => tr.form_field_study_title_tooltip,
+                      StudyType.template =>
+                        tr.form_field_template_title_tooltip,
+                      StudyType.subStudy =>
+                        tr.form_field_substudy_title_tooltip,
+                    },
                     input: Row(
                       children: [
                         // TODO: responsive layout (input field gets too small)
@@ -74,13 +122,21 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                   ),
                   FormTableRow(
                     control: formViewModel.descriptionControl,
-                    label: tr.form_field_study_description,
-                    labelHelpText: tr.form_field_study_description_tooltip,
+                    label: switch (study.type) {
+                      StudyType.standalone => tr.form_field_study_description,
+                      StudyType.template => tr.form_field_template_description,
+                      StudyType.subStudy => tr.form_field_substudy_description,
+                    },
+                    labelHelpText: switch (study.type) {
+                      StudyType.standalone =>
+                        tr.form_field_study_description_tooltip,
+                      StudyType.template =>
+                        tr.form_field_template_description_tooltip,
+                      StudyType.subStudy =>
+                        tr.form_field_substudy_description_tooltip,
+                    },
                     input: ReactiveTextField(
                       formControl: formViewModel.descriptionControl,
-                      decoration: InputDecoration(
-                        hintText: tr.form_field_study_description_hint,
-                      ),
                       validationMessages:
                           formViewModel.descriptionControl.validationMessages,
                       keyboardType: TextInputType.multiline,
@@ -89,6 +145,16 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(500),
                       ],
+                      decoration: InputDecoration(
+                        hintText: switch (study.type) {
+                          StudyType.standalone =>
+                            tr.form_field_study_description_hint,
+                          StudyType.template =>
+                            tr.form_field_template_description_hint,
+                          StudyType.subStudy =>
+                            tr.form_field_substudy_description_hint,
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -98,7 +164,14 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                 },
               ),
               const SizedBox(height: 32.0),
-              FormSectionHeader(title: tr.form_section_publisher),
+              FormSectionHeader(
+                title: tr.form_section_publisher,
+                showLock: !study.isStandalone,
+                lockControl: formViewModel.lockPublisherInfoControl,
+                lockHelpText: tr.form_section_lock_help,
+                lockedStateText: tr.form_section_lock_locked,
+                unlockedStateText: tr.form_section_lock_unlocked,
+              ),
               const SizedBox(height: 12.0),
               TextParagraph(text: tr.form_section_publisher_description),
               const SizedBox(height: 24.0),
