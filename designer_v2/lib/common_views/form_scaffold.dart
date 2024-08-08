@@ -67,20 +67,17 @@ class _FormScaffoldState<T extends FormViewModel>
   ValueListenable<bool> get canPopNotifier => ValueNotifier(false);
 
   @override
-  PopInvokedCallback? get onPopInvoked {
-    return (bool value) async {
-      final backNavigationAllowed = await _promptBackNavigationConfirmation();
-      if (backNavigationAllowed) {
-        if (mounted && Navigator.of(context).canPop()) {
-          Navigator.of(context).pop();
-        }
-      }
-    };
+  void onPopInvokedWithResult(bool didPop, Object? result) {
+    if (didPop) {
+      return;
+    }
+    _promptBackNavigationConfirmation();
   }
 
-  Future<bool> _promptBackNavigationConfirmation() async {
+  Future<void> _promptBackNavigationConfirmation() async {
     if (!formViewModel.isDirty) {
-      return true;
+      Navigator.of(context).pop();
+      return;
     }
     final shouldPop = await showDialog<bool>(
       context: context,
@@ -89,8 +86,11 @@ class _FormScaffoldState<T extends FormViewModel>
     );
     if (shouldPop!) {
       await formViewModel.cancel();
+      if (mounted && Navigator.of(context).canPop()) {
+        Navigator.of(context).pop();
+        return;
+      }
     }
-    return shouldPop;
   }
 
   @override
@@ -131,5 +131,10 @@ class _FormScaffoldState<T extends FormViewModel>
         drawer: widget.drawer,
       ),
     );
+  }
+
+  @override
+  void onPopInvoked(bool didPop) {
+    // Deprecated
   }
 }
