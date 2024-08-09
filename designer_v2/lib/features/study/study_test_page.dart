@@ -35,7 +35,11 @@ class StudyTestScreen extends StudyPageWidget {
         ref.watch(studyTestPlatformControllerProvider(studyId));
     frameController.generateUrl();
     frameController.activate();
-    load().then((hasHelped) => !hasHelped ? showHelp(ref, context) : null);
+    load().then((hasHelped) {
+      if (!hasHelped && context.mounted) {
+        showHelp(ref, context);
+      }
+    });
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,

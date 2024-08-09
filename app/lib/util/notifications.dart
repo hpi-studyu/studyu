@@ -126,31 +126,34 @@ class StudyNotifications {
   void _configureDidReceiveLocalNotificationSubject() {
     didReceiveLocalNotificationStream.stream
         .listen((ReceivedNotification receivedNotification) async {
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) => CupertinoAlertDialog(
-          title: receivedNotification.title != null
-              ? Text(receivedNotification.title!)
-              : null,
-          content: receivedNotification.body != null
-              ? Text(receivedNotification.body!)
-              : null,
-          actions: <Widget>[
-            CupertinoDialogAction(
-              isDefaultAction: true,
-              onPressed: () async {
-                Navigator.of(context, rootNavigator: true).pop();
-                await Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const DashboardScreen(),
-                  ),
-                );
-              },
-              child: const Text('Ok'),
-            ),
-          ],
-        ),
-      );
+      if (context.mounted) {
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+            title: receivedNotification.title != null
+                ? Text(receivedNotification.title!)
+                : null,
+            content: receivedNotification.body != null
+                ? Text(receivedNotification.body!)
+                : null,
+            actions: <Widget>[
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                onPressed: () async {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  await Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) =>
+                          const DashboardScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      }
     });
   }
 

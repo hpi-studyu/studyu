@@ -54,9 +54,11 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   @override
   Future<bool> isCodeAlreadyUsed(String code) async {
     try {
-      await apiClient.fetchStudyInvite(code);
+      await apiClient.fetchStudyFromInvite(code);
     } on StudyInviteNotFoundException {
       return false;
+    } catch (e) {
+      rethrow;
     }
     return true;
   }
