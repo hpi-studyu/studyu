@@ -37,7 +37,23 @@ class PublishSuccessDialog extends StudyPageWidget {
         ],
       ),
       actionButtons: state.study.value!.participation == Participation.open
-          ? []
+          ? [
+              Expanded(
+                child: Opacity(
+                  opacity: 0.75,
+                  child: TextButton(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 4.0,
+                        horizontal: 8.0,
+                      ),
+                      child: Text(tr.dialog_close),
+                    ),
+                    onPressed: () => Navigator.maybePop(context),
+                  ),
+                ),
+              ),
+            ]
           : [
               Expanded(
                 child: Column(
