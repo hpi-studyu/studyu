@@ -18,7 +18,6 @@ class TwoColumnLayout extends StatefulWidget {
     this.paddingRight = defaultContentPadding,
     this.backgroundColorLeft,
     this.backgroundColorRight,
-    this.stretchHeight = false,
     super.key,
   });
 
@@ -54,8 +53,6 @@ class TwoColumnLayout extends StatefulWidget {
 
   final Color? backgroundColorLeft;
   final Color? backgroundColorRight;
-
-  final bool stretchHeight;
 
   @override
   State<TwoColumnLayout> createState() => _TwoColumnLayoutState();
@@ -123,17 +120,6 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (widget.stretchHeight) {
-          leftWidget = SizedBox(
-            height: constraints.maxHeight,
-            child: leftWidget,
-          );
-          rightWidget = SizedBox(
-            height: constraints.maxHeight,
-            child: rightWidget,
-          );
-        }
-
         if (widget.scrollLeft) {
           leftWidget = Scrollbar(
             thumbVisibility: true,
@@ -155,31 +141,31 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
           );
         }
 
-        if (!(widget.constraintsLeft != null && widget.flexLeft != null)) {
+        // Apply constraints or flex to leftWidget if only one is provided
+        if (widget.constraintsLeft != null || widget.flexLeft != null) {
           if (widget.constraintsLeft != null) {
             leftWidget = Container(
               constraints: widget.constraintsLeft,
               child: leftWidget,
             );
-          }
-          if (widget.flexLeft != null) {
+          } else if (widget.flexLeft != null) {
             leftWidget = Flexible(flex: widget.flexLeft!, child: leftWidget);
           }
         }
 
-        if (!(widget.constraintsRight != null && widget.flexRight != null)) {
+        // Apply constraints or flex to rightWidget if only one is provided
+        if (widget.constraintsRight != null || widget.flexRight != null) {
           if (widget.constraintsRight != null) {
-            rightWidget = Container(
-              constraints: widget.constraintsRight,
-              child: rightWidget,
-            );
-          }
-          if (widget.flexRight != null) {
+          } else if (widget.flexRight != null && rightWidget is! Flexible) {
+            // THIS IS RIGHT WIDGET
             rightWidget = Flexible(flex: widget.flexRight!, child: rightWidget);
           }
         }
 
+        // Apply ConstrainedWidthFlexible to leftWidget if both
+        // constraintsLeft and flexLeft are provided
         if (widget.constraintsLeft != null && widget.flexLeft != null) {
+          // THIS IS LEFT WIDGET
           leftWidget = ConstrainedWidthFlexible(
             minWidth: widget.constraintsLeft?.minWidth ?? double.infinity,
             maxWidth: widget.constraintsLeft?.maxWidth ?? double.infinity,
@@ -190,6 +176,8 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
           );
         }
 
+        // Apply ConstrainedWidthFlexible to rightWidget if both
+        // constraintsRight and flexRight are provided
         if (widget.constraintsRight != null && widget.flexRight != null) {
           rightWidget = ConstrainedWidthFlexible(
             minWidth: widget.constraintsRight?.minWidth ?? double.infinity,

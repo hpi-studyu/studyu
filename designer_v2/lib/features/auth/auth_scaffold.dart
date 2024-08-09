@@ -21,7 +21,7 @@ class AuthScaffold extends ConsumerStatefulWidget {
     required this.body,
     required this.formKey,
     this.leftContentMinWidth = 424.0,
-    this.leftPanelMinWidth = 500.0,
+    this.leftPanelMinWidth = 550.0,
     this.leftPanelPadding = const EdgeInsets.fromLTRB(88.0, 54.0, 88.0, 40.0),
     super.key,
   });
@@ -108,7 +108,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                   padding: const EdgeInsets.only(left: 12.0),
                   child: Container(
                     constraints: BoxConstraints(
-                      maxWidth: widget.leftPanelMinWidth - 12 * 2,
+                      maxWidth: widget.leftPanelMinWidth - 24,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -142,23 +142,18 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
             ),
           ),
         ),
-        rightWidget: const Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Center(
-                child: StudyUJobsToBeDone(),
-              ),
-            ),
-          ],
+        rightWidget: const Center(
+          child: Wrap(
+            children: [
+              StudyUJobsToBeDone(),
+            ],
+          ),
         ),
         backgroundColorLeft: ThemeConfig.bodyBackgroundColor(theme),
         backgroundColorRight: theme.colorScheme.primary,
         constraintsLeft: BoxConstraints(minWidth: widget.leftPanelMinWidth),
         scrollLeft: false,
         scrollRight: false,
-        stretchHeight: true,
         paddingLeft: widget.leftPanelPadding,
       ),
     );
