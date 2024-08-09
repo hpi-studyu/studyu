@@ -13,9 +13,9 @@ dependencies:
   flutter_dotenv: ^5.1.0
   flutter_secure_storage: ^9.2.2
   lint: ^2.3.0
-  shared_preferences: ^2.2.3 # Can be removed after migrating phase
+  shared_preferences: ^2.3.1
   studyu_core: ^4.4.5
-  supabase_flutter: ^2.5.8
+  supabase_flutter: ^2.5.11
   synchronized: ^3.1.0+1
   uuid: ^4.4.2
 
