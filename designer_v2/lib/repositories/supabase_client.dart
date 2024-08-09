@@ -104,6 +104,21 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
     }
   }
 
+  Future executeRpc(
+    String functionName, {
+    Map<String, dynamic>? params,
+  }) async {
+    try {
+      return await this.supabaseClient.rpc(functionName, params: params);
+    } on PostgrestException catch (error) {
+      throw SupabaseQueryError(
+        statusCode: error.code,
+        message: error.message,
+        details: error.details,
+      );
+    }
+  }
+
   // - Deserialization
 
   List<T> deserializeList<T extends SupabaseObject>(dynamic data) {
