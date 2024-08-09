@@ -44,11 +44,11 @@ class ParticipantInfo extends ConsumerWidget {
           ),
           _buildInfoRow(
             tr.monitoring_table_column_completed_interventions,
-            '${monitorItem.completedInterventions}/${monitorItem.completedInterventions + monitorItem.missedInterventions}',
+            '${monitorItem.completedInterventions}/${monitorItem.totalInterventionTasks}',
           ),
           _buildInfoRow(
             tr.monitoring_table_column_completed_surveys,
-            '${monitorItem.completedSurveys}/${monitorItem.completedSurveys + monitorItem.missedSurveys}',
+            '${monitorItem.completedSurveys}/${monitorItem.totalSurveyTasks}',
           ),
         ],
       ),

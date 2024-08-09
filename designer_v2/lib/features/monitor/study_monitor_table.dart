@@ -28,8 +28,8 @@ class StudyMonitorTable extends ConsumerWidget {
         (a, b) => a.participantId.compareTo(b.participantId),
         (a, b) =>
             a.inviteCode != null ? a.inviteCode!.compareTo(b.inviteCode!) : 0,
-        (a, b) => a.startedAt.compareTo(b.startedAt),
-        (a, b) => a.lastActivityAt.compareTo(b.lastActivityAt),
+        (a, b) => b.startedAt.compareTo(a.startedAt),
+        (a, b) => b.lastActivityAt.compareTo(a.lastActivityAt),
         (a, b) => a.currentDayOfStudy.compareTo(b.currentDayOfStudy),
         (a, b) => a.completedInterventions.compareTo(b.completedInterventions),
         (a, b) => a.completedSurveys.compareTo(b.completedSurveys),
@@ -142,12 +142,12 @@ class StudyMonitorTable extends ConsumerWidget {
       _buildProgressCell(
         context,
         item.completedInterventions,
-        item.completedInterventions + item.missedInterventions,
+        item.totalInterventionTasks,
       ),
       _buildProgressCell(
         context,
         item.completedSurveys,
-        item.completedSurveys + item.missedSurveys,
+        item.totalSurveyTasks,
       ),
     ];
   }
