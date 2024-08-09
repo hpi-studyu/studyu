@@ -1,6 +1,5 @@
 name: studyu
 repository: https://github.com/hpi-studyu/studyu
-sdkPath: .fvm/flutter_sdk
 
 packages:
   - app

@@ -102,6 +102,10 @@ Languages & Frameworks -> Flutter -> Flutter SDK path and set  the path to the F
 (`<path to the studyu repository>/.fvm/flutter_sdk`). For VS Code, have a look at
 the [FVM documentation](https://fvm.app/documentation/guides/vscode).
 
+Using FVM with melos requires setting the `MELOS_SDK_PATH` environment variable to the path of the
+FVM Flutter SDK. This can be done by running `export MELOS_SDK_PATH=.fvm/flutter_sdk` in the
+terminal. This is needed to ensure that melos uses the correct Flutter SDK version.
+
 ## Database and Backend
 
 We are using a self-hosted instance of [Supabase](https://supabase.com/) as a
