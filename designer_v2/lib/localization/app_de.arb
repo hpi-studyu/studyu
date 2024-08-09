@@ -532,6 +532,8 @@
   "form_field_preconfigured_schedule_intervention_default": "Standard",
   "form_field_preconfigured_schedule_intervention_hint": "Intervention auswählen...",
   "code_list_section_title": "Teilnahmecodes",
+  "code_public_disabled": "Teilnahmecodes deaktiviert",
+  "code_public_disabled_description": "Teilnahmecodes sind für diese Studie deaktiviert, da die öffentliche Rekrutierung für diese Studie aktiviert ist. Alle Teilnehmer können ohne Teilnahmecodes beitreten.",
   "code_list_empty_title": "Noch keine Teilnehmer eingeladen",
   "code_list_empty_description": "Erstelle Teilnahmecodes, mit denen sich Teilnehmer zu deiner Studie in der StudyU App anmelden können.",
   "code_list_header_code": "Code",
