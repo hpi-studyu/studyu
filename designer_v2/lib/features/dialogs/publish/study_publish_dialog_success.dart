@@ -3,13 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
+import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
-
-import '../../../common_views/form_buttons.dart';
 
 class PublishSuccessDialog extends StudyPageWidget {
   const PublishSuccessDialog(super.studyId, {super.key});
@@ -45,7 +44,9 @@ class PublishSuccessDialog extends StudyPageWidget {
               Expanded(
                 child: Column(
                   children: [
-                    DismissButton(
+                    PrimaryButton(
+                      icon: null,
+                      text: tr.dialog_continue,
                       onPressed: () => Navigator.maybePop(context),
                     ),
                   ],
@@ -55,7 +56,6 @@ class PublishSuccessDialog extends StudyPageWidget {
           : [
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     PrimaryButton(
                       text: tr.action_button_post_launch_followup,
