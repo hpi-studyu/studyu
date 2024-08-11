@@ -595,6 +595,7 @@
   "study_launch_post_launch_summary": "- Der Entwurfsmodus wird gesperrt und du kannst keine Änderungen mehr an der Studie selbst vornehmen\n- Alle nicht die Studie selbst betreffenden Daten werden zurückgesetzt (einschließlich Testnutzern und Testergebnissen)",
   "study_launch_success_title": "Deine Studie ist live!",
   "study_launch_success_description": "Lade als nächstes Teilnehmer zur Anmeldung in der StudyU App ein.",
+  "study_public_launch_success_description": "Deine Studie ist jetzt für alle in der StudyU-App verfügbar.",
   "action_button_post_launch_followup": "Teilnehmer einladen",
   "action_button_post_launch_followup_skip": "Später vielleicht",
   "action_button_study_participation_change": "Teilnahme\nändern",

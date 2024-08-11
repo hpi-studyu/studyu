@@ -9,6 +9,8 @@ import 'package:studyu_designer_v2/features/study/study_page_view.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
+import '../../../common_views/form_buttons.dart';
+
 class PublishSuccessDialog extends StudyPageWidget {
   const PublishSuccessDialog(super.studyId, {super.key});
 
@@ -31,7 +33,9 @@ class PublishSuccessDialog extends StudyPageWidget {
               ),
             ),
             title: tr.study_launch_success_title,
-            description: tr.study_launch_success_description,
+            description: state.study.value!.participation == Participation.open
+                ? tr.study_public_launch_success_description
+                : tr.study_launch_success_description,
           ),
           const SizedBox(height: 8.0),
         ],
@@ -39,24 +43,19 @@ class PublishSuccessDialog extends StudyPageWidget {
       actionButtons: state.study.value!.participation == Participation.open
           ? [
               Expanded(
-                child: Opacity(
-                  opacity: 0.75,
-                  child: TextButton(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 4.0,
-                        horizontal: 8.0,
-                      ),
-                      child: Text(tr.dialog_close),
+                child: Column(
+                  children: [
+                    DismissButton(
+                      onPressed: () => Navigator.maybePop(context),
                     ),
-                    onPressed: () => Navigator.maybePop(context),
-                  ),
+                  ],
                 ),
               ),
             ]
           : [
               Expanded(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     PrimaryButton(
                       text: tr.action_button_post_launch_followup,
@@ -64,19 +63,9 @@ class PublishSuccessDialog extends StudyPageWidget {
                           .whenComplete(() => controller.onAddParticipants()),
                     ),
                     const SizedBox(height: 8.0),
-                    Opacity(
-                      opacity: 0.75,
-                      child: TextButton(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 4.0,
-                            horizontal: 8.0,
-                          ),
-                          child:
-                              Text(tr.action_button_post_launch_followup_skip),
-                        ),
-                        onPressed: () => Navigator.maybePop(context),
-                      ),
+                    DismissButton(
+                      text: tr.action_button_post_launch_followup_skip,
+                      onPressed: () => Navigator.maybePop(context),
                     ),
                   ],
                 ),

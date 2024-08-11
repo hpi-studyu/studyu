@@ -595,6 +595,7 @@
   "study_launch_post_launch_summary": "- The study design will be locked and you won’t be able to make any changes\n- All data from test runs will be reset (incl. test users, their tasks and results)",
   "study_launch_success_title": "Your study is live!",
   "study_launch_success_description": "Next, you can start inviting and enrolling your participants in the StudyU App.",
+  "study_public_launch_success_description": "Your study is now available for everyone in the StudyU App.",
   "action_button_post_launch_followup": "Add participants",
   "action_button_post_launch_followup_skip": "Skip for now",
   "action_button_study_participation_change": "Change\nparticipation",
