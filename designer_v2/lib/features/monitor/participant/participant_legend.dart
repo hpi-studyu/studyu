@@ -30,13 +30,13 @@ class ParticipantLegend extends StatelessWidget {
               tr.participant_details_partially_completed_legend_tooltip,
               gradient: true,
             ),
-            const SizedBox(width: 16.0),
-            _buildLegendItem(
-              color: incompleteColor,
-              tr.participant_details_color_legend_missed,
-              tr.participant_details_incomplete_legend_tooltip,
-            ),
           ],
+        ),
+        const SizedBox(height: 16.0),
+        _buildLegendItem(
+          color: incompleteColor,
+          tr.participant_details_color_legend_missed,
+          tr.participant_details_incomplete_legend_tooltip,
         ),
         const SizedBox(height: 16.0),
         Text(
