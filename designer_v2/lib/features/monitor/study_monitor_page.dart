@@ -102,7 +102,7 @@ class StudyMonitorScreen extends StudyPageWidget {
       children: [
         const Spacer(),
         SizedBox(
-          width: 400,
+          width: 450,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -223,6 +223,7 @@ class StudyMonitorScreen extends StudyPageWidget {
     showModalSideSheet(
       context: context,
       title: tr.participant_details_title,
+      width: 550,
       body: ParticipantDetailsView(
         monitorItem: item,
         study: study,
