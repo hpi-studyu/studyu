@@ -1,3 +1,28 @@
+## 1.9.0
+
+ - **FIX**: legend spacing.
+ - **FIX**: legend overflow.
+ - **FIX**: translation.
+ - **FIX**: overflow issues.
+ - **FIX**: participant info max intervention and survey count.
+ - **FIX**: intervention and observation wrong number in table.
+ - **FIX**: sort arrow.
+ - **FIX**: remove bar chart if no participant.
+ - **FIX**: translation.
+ - **FIX**: tooltip message.
+ - **FIX**: remove min visibility.
+ - **FIX**: style consistency for the close button, update style, and add translation.
+ - **FIX**: add close button to launch success dialog (public study).
+ - **FIX**: translation consistency.
+ - **FIX**: remove add participant action button from publish success dialog for public studies.
+ - **FIX**: reset invite codes if study gets published as public.
+ - **FIX**: check for unique invite codes in designer.
+ - **FIX**: upgrade deps.
+ - **FIX**: enable atLeastOneTask for intervention again".
+ - **FIX**: auto-save new study to prevent exception on intervention screen.
+ - **FEAT**: fix translations.
+ - **FEAT**: disable invite code creation for public studies.
+
 ## 1.8.3
 
  - **FIX**: upgrade deps.
