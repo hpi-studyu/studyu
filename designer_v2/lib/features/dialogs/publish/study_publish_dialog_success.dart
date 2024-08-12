@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
+import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_page_view.dart';
@@ -14,6 +16,7 @@ class PublishSuccessDialog extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(studyControllerProvider(studyId).notifier);
+    final state = ref.watch(studyControllerProvider(studyId));
     final theme = Theme.of(context);
 
     return StandardDialog(
@@ -29,38 +32,45 @@ class PublishSuccessDialog extends StudyPageWidget {
               ),
             ),
             title: tr.study_launch_success_title,
-            description: tr.study_launch_success_description,
+            description: state.study.value!.participation == Participation.open
+                ? tr.study_public_launch_success_description
+                : tr.study_launch_success_description,
           ),
           const SizedBox(height: 8.0),
         ],
       ),
-      actionButtons: [
-        Expanded(
-          child: Column(
-            children: [
-              PrimaryButton(
-                text: tr.action_button_post_launch_followup,
-                onPressed: () => Navigator.maybePop(context)
-                    .whenComplete(() => controller.onAddParticipants()),
-              ),
-              const SizedBox(height: 8.0),
-              Opacity(
-                opacity: 0.75,
-                child: TextButton(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 4.0,
-                      horizontal: 8.0,
+      actionButtons: state.study.value!.participation == Participation.open
+          ? [
+              Expanded(
+                child: Column(
+                  children: [
+                    PrimaryButton(
+                      icon: null,
+                      text: tr.dialog_continue,
+                      onPressed: () => Navigator.maybePop(context),
                     ),
-                    child: Text(tr.action_button_post_launch_followup_skip),
-                  ),
-                  onPressed: () => Navigator.maybePop(context),
+                  ],
+                ),
+              ),
+            ]
+          : [
+              Expanded(
+                child: Column(
+                  children: [
+                    PrimaryButton(
+                      text: tr.action_button_post_launch_followup,
+                      onPressed: () => Navigator.maybePop(context)
+                          .whenComplete(() => controller.onAddParticipants()),
+                    ),
+                    const SizedBox(height: 8.0),
+                    DismissButton(
+                      text: tr.action_button_post_launch_followup_skip,
+                      onPressed: () => Navigator.maybePop(context),
+                    ),
+                  ],
                 ),
               ),
             ],
-          ),
-        ),
-      ],
       maxWidth: 450,
     );
   }

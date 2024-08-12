@@ -24,35 +24,46 @@ class StudyRecruitScreen extends StudyPageWidget {
     final state = ref.watch(studyRecruitControllerProvider(studyId));
     final controller =
         ref.watch(studyRecruitControllerProvider(studyId).notifier);
-
-    return AsyncValueWidget<List<StudyInvite>?>(
-      value: state.invites,
-      data: (studyInvites) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _inviteCodesSectionHeader(context, ref),
-          const SizedBox(height: 24.0), // spacing between body elements
-          StudyInvitesTable(
-            invites: studyInvites!,
-            // otherwise falls through to [AsyncValueWidget.empty]
-            onSelect: _onSelectInvite(context, ref),
-            getActions: controller.availableActions,
-            getInlineActions: controller.availableInlineActions,
-            getIntervention: controller.getIntervention,
-            getParticipantCountForInvite:
-                controller.getParticipantCountForInvite,
-          ),
-        ],
-      ),
-      empty: () => Padding(
-        padding: const EdgeInsets.only(top: 24),
-        child: EmptyBody(
-          icon: Icons.link_off_rounded,
-          title: tr.code_list_empty_title,
-          description: tr.code_list_empty_description,
-          button: _newInviteCodeButton(context, ref),
-        ),
-      ),
+    return AsyncValueWidget<Study>(
+      value: state.study,
+      data: (study) => study.participation == Participation.invite
+          ? AsyncValueWidget<List<StudyInvite>?>(
+              value: state.invites,
+              data: (studyInvites) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  _inviteCodesSectionHeader(context, ref),
+                  const SizedBox(height: 24.0), // spacing between body elements
+                  StudyInvitesTable(
+                    invites: studyInvites!,
+                    // otherwise falls through to [AsyncValueWidget.empty]
+                    onSelect: _onSelectInvite(context, ref),
+                    getActions: controller.availableActions,
+                    getInlineActions: controller.availableInlineActions,
+                    getIntervention: controller.getIntervention,
+                    getParticipantCountForInvite:
+                        controller.getParticipantCountForInvite,
+                  ),
+                ],
+              ),
+              empty: () => Padding(
+                padding: const EdgeInsets.only(top: 24),
+                child: EmptyBody(
+                  icon: Icons.link_off_rounded,
+                  title: tr.code_list_empty_title,
+                  description: tr.code_list_empty_description,
+                  button: _newInviteCodeButton(context, ref),
+                ),
+              ),
+            )
+          : Padding(
+              padding: const EdgeInsets.only(top: 24),
+              child: EmptyBody(
+                icon: Icons.block_sharp,
+                title: tr.code_public_disabled,
+                description: tr.code_public_disabled_description,
+              ),
+            ),
     );
   }
 
