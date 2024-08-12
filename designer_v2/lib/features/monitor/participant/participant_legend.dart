@@ -16,21 +16,17 @@ class ParticipantLegend extends StatelessWidget {
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8.0),
-        Row(
-          children: [
-            _buildLegendItem(
-              color: completeColor,
-              tr.participant_details_color_legend_completed,
-              tr.participant_details_completed_legend_tooltip,
-            ),
-            const SizedBox(width: 16.0),
-            _buildLegendItem(
-              color: partiallyCompleteColor,
-              tr.participant_details_color_legend_partially_completed,
-              tr.participant_details_partially_completed_legend_tooltip,
-              gradient: true,
-            ),
-          ],
+        _buildLegendItem(
+          color: completeColor,
+          tr.participant_details_color_legend_completed,
+          tr.participant_details_completed_legend_tooltip,
+        ),
+        const SizedBox(width: 16.0),
+        _buildLegendItem(
+          color: partiallyCompleteColor,
+          tr.participant_details_color_legend_partially_completed,
+          tr.participant_details_partially_completed_legend_tooltip,
+          gradient: true,
         ),
         const SizedBox(height: 16.0),
         _buildLegendItem(
