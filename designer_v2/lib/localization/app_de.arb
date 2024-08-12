@@ -566,7 +566,7 @@
   "monitoring_active_tooltip": "Anzahl der Teilnehmer, die derzeit in der Studie sind",
   "monitoring_inactive": "Inaktiv",
   "monitoring_inactive_tooltip": "Anzahl der Teilnehmer, die 3 Tage hintereinander keine Aktivität in der Studie gezeigt haben",
-  "monitoring_dropout": "Dropout",
+  "monitoring_dropout": "Abgebrochen",
   "monitoring_dropout_tooltip": "Anzahl der Teilnehmer, die die Studie vorzeitig abgebrochen haben oder für 5 Tage hintereinander keine Aktivität in der Studie gezeigt haben",
   "monitoring_completed": "Abgeschlossen",
   "monitoring_completed_tooltip": "Anzahl der Teilnehmer, die das Ende der Studie erreicht haben",
