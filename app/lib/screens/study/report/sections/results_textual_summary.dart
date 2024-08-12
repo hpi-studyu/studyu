@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// Row 2: Textual Summary
+// Row 2: Textual Summary//
 
 class TextualSummaryWidget extends StatelessWidget {
   const TextualSummaryWidget({super.key});
