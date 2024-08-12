@@ -1,3 +1,7 @@
+## 4.4.6
+
+ - **FIX**: upgrade deps.
+
 ## 4.4.5
 
  - **FIX**: upgrade deps.

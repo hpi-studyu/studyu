@@ -1,3 +1,7 @@
+## 2.7.9
+
+ - **FIX**: upgrade deps.
+
 ## 2.7.8
 
  - **FIX**: safety check.

@@ -47,7 +47,7 @@ jobs:
         run: melos format
 
       - name: Run analyze
-        run: melos analyze
+        run: melos analyze --fatal-infos
 
       - name: Commit changes if any
         uses: stefanzweifel/git-auto-commit-action@v5
