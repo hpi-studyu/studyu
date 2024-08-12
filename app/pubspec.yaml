@@ -12,6 +12,7 @@ dependencies:
   camera: ^0.11.0+1
   collection: ^1.18.0
   cross_file: ^0.3.4+1
+  csv: ^6.0.0
   cupertino_icons: ^1.0.8
   fl_chart: ^0.68.0
   flutter:
@@ -46,7 +47,6 @@ dependencies:
   supabase_flutter: ^2.5.5
   syncfusion_flutter_charts: ^20.1.47
   syncfusion_flutter_gauges: ^20.1.59
-  t_stats: ^3.0.0
   timeline_tile: ^2.0.0
   timezone: ^0.9.3
   universal_html: ^2.2.4
@@ -71,6 +71,7 @@ flutter:
     - assets/
     - assets/icon/
     - assets/fonts/
+    - assets/data/t_critical_values.csv
 
 flutter_launcher_icons:
   android: true

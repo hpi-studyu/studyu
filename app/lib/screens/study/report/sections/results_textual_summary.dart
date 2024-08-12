@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:statistics/statistics.dart';
 import 'package:studyu_app/screens/study/report/sections/average_section_widget.dart';
-import 'package:t_stats/t_stats.dart';
+import 'package:studyu_app/screens/study/report/sections/t_test.dart';
 
 class TextualSummaryWidget extends AverageSectionWidget {
   final List<num> valuesInterventionA;
@@ -21,11 +21,9 @@ class TextualSummaryWidget extends AverageSectionWidget {
   @override
   Widget build(BuildContext context) {
     // Two Sample t-test
-    // TODO: t-test library license issues
-    final stats = Statistic.from(valuesInterventionA);
-    final stats2 = Statistic.from(valuesInterventionB);
+    final tTest = TTest(valuesInterventionA, valuesInterventionB);
     // Determine the summary text based on t-test results
-    final summaryText = getTextualSummary(stats.isDifferentFrom(stats2));
+    final summaryText = getTextualSummary(tTest.isSignificantlyDifferent());
     return Row(
       children: <Widget>[
         Expanded(
