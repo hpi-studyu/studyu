@@ -21,7 +21,7 @@ class ParticipantLegend extends StatelessWidget {
           tr.participant_details_color_legend_completed,
           tr.participant_details_completed_legend_tooltip,
         ),
-        const SizedBox(width: 16.0),
+        const SizedBox(height: 18.0),
         _buildLegendItem(
           color: partiallyCompleteColor,
           tr.participant_details_color_legend_partially_completed,
