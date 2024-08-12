@@ -26,9 +26,9 @@ class StudyMonitorScreen extends StudyPageWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            _monitorSectionHeader(context, studyMonitorData),
-            const SizedBox(height: 32.0),
             if (studyMonitorData.isNotEmpty) ...[
+              _monitorSectionHeader(context, studyMonitorData),
+              const SizedBox(height: 32.0),
               SelectableText(
                 tr.monitoring_participants_title,
                 style: Theme.of(context).textTheme.headlineSmall,
@@ -58,7 +58,8 @@ class StudyMonitorScreen extends StudyPageWidget {
   ) {
     final theme = Theme.of(context);
     final int total = monitorData.length;
-    const double minPercentage = 0.01; // Minimum percentage for visibility
+    const double minPercentage =
+        0; // Minimum percentage for visibility, change to 0.01 if min visibility is required.
 
     double activePercentage = monitorData.activeParticipants.length / total;
     double inactivePercentage = monitorData.inactiveParticipants.length / total;
@@ -101,7 +102,7 @@ class StudyMonitorScreen extends StudyPageWidget {
       children: [
         const Spacer(),
         SizedBox(
-          width: 400,
+          width: 450,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -113,25 +114,25 @@ class StudyMonitorScreen extends StudyPageWidget {
                     percentage: activePercentage,
                     color: activeColor,
                     tooltip:
-                        '${tr.monitoring_active}: ${monitorData.activeParticipants.map((e) => e.participantId)}',
+                        '${tr.monitoring_active}: ${monitorData.activeParticipants.map((e) => e.participantId).length}',
                   ),
                   _buildStat(
                     percentage: inactivePercentage,
                     color: inactiveColor,
                     tooltip:
-                        '${tr.monitoring_inactive}: ${monitorData.inactiveParticipants.map((e) => e.participantId)}',
+                        '${tr.monitoring_inactive}: ${monitorData.inactiveParticipants.map((e) => e.participantId).length}',
                   ),
                   _buildStat(
                     percentage: dropoutPercentage,
                     color: dropoutColor,
                     tooltip:
-                        '${tr.monitoring_dropout}: ${monitorData.dropoutParticipants.map((e) => e.participantId)}',
+                        '${tr.monitoring_dropout}: ${monitorData.dropoutParticipants.map((e) => e.participantId).length}',
                   ),
                   _buildStat(
                     percentage: completedPercentage,
                     color: completedColor,
                     tooltip:
-                        '${tr.monitoring_completed}: ${monitorData.completedParticipants.map((e) => e.participantId)}',
+                        '${tr.monitoring_completed}: ${monitorData.completedParticipants.map((e) => e.participantId).length}',
                   ),
                 ],
               ),
@@ -222,6 +223,7 @@ class StudyMonitorScreen extends StudyPageWidget {
     showModalSideSheet(
       context: context,
       title: tr.participant_details_title,
+      width: 550,
       body: ParticipantDetailsView(
         monitorItem: item,
         study: study,
