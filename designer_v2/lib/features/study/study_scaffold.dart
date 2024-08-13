@@ -297,7 +297,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
 
     actionButtons.add(
       ActionPopUpMenuButton(
-        actions: controller.studyActions,
+        actions: state.studyActions,
         orientation: Axis.vertical,
         enabled: state.study.hasValue, // disable while study is loading
         hideOnEmpty: false,

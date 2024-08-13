@@ -24,4 +24,21 @@ class EligibilityCriterion {
 
   bool isSatisfied(QuestionnaireState qs) => condition.evaluate(qs) == true;
   bool isViolated(QuestionnaireState qs) => condition.evaluate(qs) == false;
+
+  // does not compare id
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EligibilityCriterion &&
+          runtimeType == other.runtimeType &&
+          reason == other.reason &&
+          condition == other.condition;
+
+  @override
+  int get hashCode => reason.hashCode ^ condition.hashCode;
+
+  @override
+  String toString() {
+    return 'EligibilityCriterion{id: $id, reason: $reason, condition: $condition}';
+  }
 }

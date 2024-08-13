@@ -5,8 +5,11 @@ import 'package:studyu_designer_v2/repositories/model_repository.dart';
 
 class StudyAnalyzeControllerState extends StudyControllerBaseState {
   const StudyAnalyzeControllerState({
+    required super.studyId,
+    required super.studyRepository,
+    required super.router,
     required super.currentUser,
-    super.studyWithMetadata,
+    required super.studyWithMetadata,
   });
 
   bool get canExport => study.value?.canExport(currentUser!) ?? false;
@@ -19,8 +22,11 @@ class StudyAnalyzeControllerState extends StudyControllerBaseState {
     WrappedModel<Study>? studyWithMetadata,
   }) {
     return StudyAnalyzeControllerState(
-      studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
+      studyId: studyId,
+      studyRepository: studyRepository,
+      router: router,
       currentUser: currentUser,
+      studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
     );
   }
 

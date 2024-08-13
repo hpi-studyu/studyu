@@ -8,8 +8,8 @@ late AppLocalizations? _tr;
 
 class AppTranslation {
   static Future<void> init(WidgetRef ref) async {
-    // Loads the currently selected locale from localeProvider and sets the localization
-    _tr = await AppLocalizations.delegate.load(ref.watch(localeProvider));
+    // Loads the currently selected locale and sets the localization
+    _tr = lookupAppLocalizations(ref.watch(localeProvider));
   }
 }
 

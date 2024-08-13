@@ -27,7 +27,7 @@ class QuestionnaireTaskWidget extends StatefulWidget {
 class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   dynamic response;
   late bool responseValidator;
-  DateTime _lastClickTime = DateTime.now();
+  DateTime? _lastClickTime;
   bool _isLoading = false;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -86,12 +86,8 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
               backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
             ),
             onPressed: () async {
-              if (isRedundantClick(_lastClickTime)) {
-                return;
-              }
-              if (!formKey.currentState!.validate()) {
-                return;
-              }
+              if (isRedundantClick(_lastClickTime)) return;
+              if (!formKey.currentState!.validate()) return;
               setState(() {
                 _isLoading = true;
                 _lastClickTime = DateTime.now();

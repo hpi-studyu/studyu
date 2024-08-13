@@ -4,6 +4,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/locale_providers.dart';
+import 'package:studyu_designer_v2/localization/locale_state.dart';
 import 'package:studyu_designer_v2/localization/locale_translate_name.dart';
 import 'package:studyu_designer_v2/utils/font.dart';
 
@@ -28,7 +29,7 @@ class LanguagePicker extends ConsumerStatefulWidget {
 class _LanguagePickerState extends ConsumerState<LanguagePicker> {
   @override
   Widget build(BuildContext context) {
-    final controller = ref.watch(localeStateProvider.notifier);
+    final controller = ref.watch(localeStateNotifierProvider.notifier);
     final currentLocalization =
         ref.watch(localeProvider.select((value) => value));
     switch (widget.languagePickerType) {

@@ -1,12 +1,12 @@
-import 'dart:io';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/domain/study_subject.dart';
 import 'package:studyu_designer_v2/repositories/supabase_client.dart';
 import 'package:studyu_designer_v2/utils/debug_print.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+part 'api_client.g.dart';
 
 abstract class StudyUApi {
   Future<Study> saveStudy(Study study);
@@ -53,6 +53,10 @@ class ReportSectionNotFoundException extends APIException {}
 class StudyInviteNotFoundException extends APIException {}
 
 class UserNotFoundException extends APIException {}
+
+abstract class PostgrestErrorCodes {
+  static const String isNotSingleItem = 'PGRST116';
+}
 
 class StudyUApiClient extends SupabaseClientDependant
     with SupabaseQueryMixin
@@ -167,8 +171,8 @@ class StudyUApiClient extends SupabaseClientDependant
     return _awaitGuarded(
       request,
       onError: {
-        HttpStatus.notAcceptable: (e) => throw StudyNotFoundException(),
-        HttpStatus.notFound: (e) => throw StudyNotFoundException(),
+        PostgrestErrorCodes.isNotSingleItem: (e) =>
+            throw StudyNotFoundException(),
       },
     );
   }
@@ -196,8 +200,8 @@ class StudyUApiClient extends SupabaseClientDependant
     return _awaitGuarded(
       request,
       onError: {
-        HttpStatus.notAcceptable: (e) => throw StudyInviteNotFoundException(),
-        HttpStatus.notFound: (e) => throw StudyInviteNotFoundException(),
+        PostgrestErrorCodes.isNotSingleItem: (e) =>
+            throw StudyInviteNotFoundException(),
       },
     );
   }
@@ -230,8 +234,8 @@ class StudyUApiClient extends SupabaseClientDependant
     return _awaitGuarded(
       request,
       onError: {
-        HttpStatus.notAcceptable: (e) => throw UserNotFoundException(),
-        HttpStatus.notFound: (e) => throw UserNotFoundException(),
+        PostgrestErrorCodes.isNotSingleItem: (e) =>
+            throw UserNotFoundException(),
       },
     );
   }
@@ -252,33 +256,34 @@ class StudyUApiClient extends SupabaseClientDependant
   /// Raises a generic [APIException] for errors that cannot be handled.
   Future<T> _awaitGuarded<T>(
     Future<T> future, {
-    Map<int, SupabaseQueryExceptionHandler>? onError,
+    Map<String, SupabaseQueryExceptionHandler>? onError,
   }) async {
     try {
       final result = await future;
       return result;
     } on SupabaseQueryError catch (e) {
-      if (onError == null) {
+      if (onError == null || e.statusCode == null) {
         throw _apiException(error: e);
       }
-      if (e.statusCode == null ||
-          !onError.containsKey(int.parse(e.statusCode!))) {
-        throw _apiException(error: e);
-      }
-      final errorHandler = onError[int.parse(e.statusCode!)]!;
+      final errorHandler = onError[e.statusCode]!;
       errorHandler(e);
+    } catch (e) {
+      throw _apiException(error: e);
     }
     throw _apiException();
   }
 
-  APIException _apiException({SupabaseQueryError? error}) {
-    if (error != null) {
+  APIException _apiException({Object? error}) {
+    if (error != null && error is SupabaseQueryError) {
       debugLog("Supabase Exception encountered");
       debugLog(error.statusCode.toString());
       debugLog(error.details.toString());
       debugLog(error.message);
-    } else {
+    } else if (error != null) {
       debugLog("Unknown exception encountered");
+      debugLog(error.toString());
+    } else {
+      debugLog("Unknown exception encountered. No error provided.");
     }
     return APIException();
   }
@@ -291,8 +296,7 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 }
 
-final apiClientProvider = riverpod.Provider<StudyUApi>(
-  (ref) => StudyUApiClient(
-    supabaseClient: ref.watch(supabaseClientProvider),
-  ),
-);
+@riverpod
+StudyUApiClient apiClient(ApiClientRef ref) => StudyUApiClient(
+      supabaseClient: ref.watch(supabaseClientProvider),
+    );

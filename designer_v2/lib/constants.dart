@@ -19,6 +19,9 @@ class Config {
   static const minSplashTime = 0;
 
   static const formAutosaveDebounce = 1000;
+
+  static const participantDropoutDuration = 5;
+  static const participantInactiveDuration = 3;
 }
 
 const kPathSeparator = '   /   ';

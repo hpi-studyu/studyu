@@ -49,7 +49,6 @@ class StandardTable<T> extends StatefulWidget {
     required List<StandardTableColumn>? columns,
     required this.onSelectItem,
     required this.buildCellsAt,
-    this.pinnedPredicates,
     this.sortColumnPredicates,
     this.trailingActionsAt,
     StandardTableColumn? trailingActionsColumn,
@@ -59,6 +58,8 @@ class StandardTable<T> extends StatefulWidget {
     this.cellSpacing = 10.0,
     this.rowSpacing = 9.0,
     this.minRowHeight = 60.0,
+    this.headerMaxLines = 1,
+    this.softWrapHeader = false,
     this.showTableHeader = true,
     this.tableWrapper,
     this.leadingWidget,
@@ -97,7 +98,6 @@ class StandardTable<T> extends StatefulWidget {
 
   final StandardTableCellsBuilder<T> buildCellsAt;
   final List<int Function(T a, T b)?>? sortColumnPredicates;
-  final int Function(T a, T b)? pinnedPredicates;
   final StandardTableRowBuilder? headerRowBuilder;
   final StandardTableRowBuilder? dataRowBuilder;
   late final StandardTableColumn inputTrailingActionsColumn;
@@ -108,6 +108,8 @@ class StandardTable<T> extends StatefulWidget {
   final double rowSpacing;
   final double? minRowHeight;
 
+  final int headerMaxLines;
+  final bool softWrapHeader;
   final bool showTableHeader;
   final bool hideLeadingTrailingWhenEmpty;
 
@@ -254,39 +256,11 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
           sortAscending: sortAscending,
         );
       });
-      _sortPinnedStudies(
-        widget.items,
-        columnIndex: columnIndex,
-        sortAscending: sortAscending,
-      );
     } else {
       widget.items.clear();
       widget.items.addAll(sortDefaultOrder!);
-      _sortPinnedStudies(widget.items, columnIndex: columnIndex);
     }
     _cachedRows.clear();
-  }
-
-  void _sortPinnedStudies(
-    List<T> items, {
-    required int columnIndex,
-    bool? sortAscending,
-  }) {
-    // Extract and insert pinned items at the top
-    if (widget.pinnedPredicates != null) {
-      items.sort((a, b) {
-        final int ret = widget.pinnedPredicates!(a, b);
-        // Fallback to default sorting algorithm
-        return ret == 0
-            ? _sortLogic(
-                a,
-                b,
-                columnIndex: columnIndex,
-                sortAscending: sortAscending,
-              )
-            : ret;
-      });
-    }
   }
 
   int _sortLogic(
@@ -294,30 +268,13 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     T b, {
     required int columnIndex,
     required bool? sortAscending,
-    bool? useSortPredicate,
   }) {
     final sortPredicate = widget.sortColumnPredicates;
-    if (useSortPredicate != null &&
-        useSortPredicate &&
-        sortPredicate != null &&
-        sortPredicate[columnIndex] != null) {
-      final int res;
+    if (sortPredicate != null && sortPredicate[columnIndex] != null) {
       if (sortAscending ?? true) {
-        res = sortPredicate[columnIndex]!(a, b);
-      } else {
-        res = sortPredicate[columnIndex]!(b, a);
+        return sortPredicate[columnIndex]!(a, b);
       }
-      if (res == 0) {
-        // Fallback to default sorting algorithm
-        return _sortLogic(
-          a,
-          b,
-          columnIndex: columnIndex,
-          sortAscending: sortAscending,
-          useSortPredicate: false,
-        );
-      }
-      return res;
+      return sortPredicate[columnIndex]!(b, a);
     } else if (a is Comparable && b is Comparable) {
       // If sortPredicate is not provided, use default comparison logic
       return sortAscending ?? true
@@ -400,13 +357,15 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
               ),
               child: Row(
                 children: [
-                  Text(
-                    columns[i].label,
-                    overflow: TextOverflow.visible,
-                    maxLines: 1,
-                    softWrap: false,
-                    style: theme.textTheme.bodySmall!.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.8),
+                  Flexible(
+                    child: Text(
+                      columns[i].label,
+                      overflow: TextOverflow.visible,
+                      maxLines: widget.headerMaxLines,
+                      softWrap: widget.softWrapHeader,
+                      style: theme.textTheme.bodySmall!.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.8),
+                      ),
                     ),
                   ),
                   if (widget.inputColumns[i].sortable)
