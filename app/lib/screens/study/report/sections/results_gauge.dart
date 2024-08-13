@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_app/screens/study/report/sections/average_section_widget.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
-// Row 3:  Gauge title
-class GaugeTitleWidget extends StatelessWidget {
-  const GaugeTitleWidget({super.key});
+class GaugeTitleWidget extends AverageSectionWidget {
+  const GaugeTitleWidget(
+    super.subject,
+    super.section, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Text(
-        'Average Sleep Quality',
-        style: TextStyle(fontSize: 16, color: Colors.blueAccent),
+        'Average ${section.title ?? ''}',
+        style: const TextStyle(fontSize: 16, color: Colors.blueAccent),
       ),
     );
   }
 }
 
-// Row 4:  Two gauges
+// Two gauges
 class GaugesWidget extends StatelessWidget {
   const GaugesWidget({super.key});
 
@@ -28,8 +32,8 @@ class GaugesWidget extends StatelessWidget {
           child: Column(
             children: <Widget>[
               SizedBox(
-                width: 140, // Set the desired width
-                height: 140, // Set the desired height
+                width: 140,
+                height: 140,
                 child: createGauge(0, 10, 10, 5), // min, max, steps, value
               ),
               const Text('With Tea', style: TextStyle(fontSize: 14)),
@@ -40,8 +44,8 @@ class GaugesWidget extends StatelessWidget {
           child: Column(
             children: <Widget>[
               SizedBox(
-                width: 140, // Set the desired width
-                height: 140, // Set the desired height
+                width: 140,
+                height: 140,
                 child: createGauge(0, 10, 10, 7.5), // min, max, steps, value
               ),
               const Text('Without Tea', style: TextStyle(fontSize: 14)),

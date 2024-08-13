@@ -58,12 +58,21 @@ class AverageSectionWidget extends ReportSectionWidget {
                 .copyWith(fontWeight: FontWeight.bold),
           ),
         const SizedBox(height: 8),
-        TextualSummaryWidget(valuesInterventionA, valuesInterventionB,
-            nameInterventionA, nameInterventionB, subject, section), //Row 2
+        TextualSummaryWidget(
+          valuesInterventionA,
+          valuesInterventionB,
+          nameInterventionA,
+          nameInterventionB,
+          subject,
+          section,
+        ),
         const SizedBox(height: 8),
-        const GaugeTitleWidget(), //Row 3
+        GaugeTitleWidget(
+          subject,
+          section,
+        ),
         const SizedBox(height: 8),
-        const GaugesWidget(), //Row 4
+        const GaugesWidget(),
         const SizedBox(height: 8),
         getLegend(context, data),
         const SizedBox(height: 8),
