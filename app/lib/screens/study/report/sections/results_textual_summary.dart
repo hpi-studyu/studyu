@@ -24,78 +24,89 @@ class TextualSummaryWidget extends AverageSectionWidget {
     // Two Sample t-test
     final tTest = TTest(valuesInterventionA, valuesInterventionB);
     // Determine the summary text based on t-test results
-    final summaryText = getTextualSummary(tTest.isSignificantlyDifferent());
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Column(
+    return FutureBuilder<bool>(
+      future: tTest.isSignificantlyDifferent(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else {
+          final summaryText = getTextualSummary(snapshot.data!);
+          return Row(
             children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
+              Expanded(
                 child: Column(
                   children: <Widget>[
-                    Text(
-                      nameInterventionA,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
+                    Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            nameInterventionA,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            summaryText[0],
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 4), // SizedBox for spacing
-                    Text(
-                      summaryText[0],
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            nameInterventionB,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.orange,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            summaryText[1],
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
             ],
-          ),
-        ),
-        Expanded(
-          child: Column(
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      nameInterventionB,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.orange,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      summaryText[1],
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+          );
+        }
+      },
     );
   }
 

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:csv/csv.dart';
+import 'package:flutter/services.dart';
 import 'package:statistics/statistics.dart';
 
 // This class implements the Welch's two sample t-test according to https://en.wikipedia.org/wiki/Student%27s_t-test
@@ -34,27 +35,35 @@ class TTest {
     return numerator / denominator;
   }
 
-  double getTCriticalFromCsv(double degreesOfFreedom, String filePath) {
-    final List<List<double>> rows =
-        const CsvToListConverter().convert(filePath);
-    for (final row in rows) {
-      if (row[0] == degreesOfFreedom) {
-        return row[1];
+  // Method to read CSV data from assets
+  Future<List<List<dynamic>>> loadCsvData() async {
+    final csvData =
+        await rootBundle.loadString('assets/data/t_critical_values.csv');
+    return const CsvToListConverter(eol: '\n').convert(csvData);
+  }
+
+  // Get t-critical value based on degrees of freedom
+  Future<double> getTCritical(double degreesOfFreedom) async {
+    final List<List<dynamic>> rows = await loadCsvData();
+    // Default alpha/2 = 0.05/2 = 0.025
+    final int roundedDegreesOfFreedom = degreesOfFreedom.round();
+    // Iterate over rows, skipping the header
+    for (int i = 1; i < rows.length; i++) {
+      final row = rows[i];
+      if (row.isNotEmpty) {
+        final degreeOfFreedom = row[0] as int;
+        final criticalValue = row[1] as double;
+        if (degreeOfFreedom == roundedDegreesOfFreedom) {
+          return criticalValue;
+        }
       }
     }
     throw Exception(
         "Degrees of Freedom not found in CSV, study too long, reduce number of days");
   }
 
-  double getTCritical(double degreesOfFreedom) {
-    const String csvFilePath = 'assets/data/t_critical_values.csv';
-    // Default alpha/2 = 0.05/2 = 0.025
-    final double tCritical = getTCriticalFromCsv(degreesOfFreedom, csvFilePath);
-    return tCritical;
-  }
-
   // Method to check if the result is significant based on alpha level 0.05
-  bool isSignificantlyDifferent() {
+  Future<bool> isSignificantlyDifferent() async {
     final num meanA = sampleA.mean;
     final num meanB = sampleB.mean;
     final num varianceA = variance(sampleA);
@@ -65,7 +74,7 @@ class TTest {
         calculateTStatistic(meanA, meanB, varianceA, varianceB, nA, nB);
     final double degreesOfFreedom =
         calculateDegreesOfFreedom(meanA, meanB, varianceA, varianceB, nA, nB);
-    final double tCritical = getTCritical(degreesOfFreedom);
+    final double tCritical = await getTCritical(degreesOfFreedom);
     return tStatistic.abs() > tCritical;
   }
 }
