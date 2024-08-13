@@ -10,15 +10,14 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
     return GestureDetector(
       child: Column(
         children: <Widget>[
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Icon(
-                true ? Icons.arrow_drop_up : Icons.arrow_drop_down,
+                Icons.arrow_drop_up,
               ),
             ],
           ),
-          if (true)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Column(
@@ -50,7 +49,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
             color: Colors.grey.withOpacity(0.5),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),

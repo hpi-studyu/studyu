@@ -1,11 +1,31 @@
 import 'package:flutter/material.dart';
-// Row 2: Textual Summary//
+import 'package:statistics/statistics.dart';
+import 'package:studyu_app/screens/study/report/sections/average_section_widget.dart';
+import 'package:t_stats/t_stats.dart';
 
-class TextualSummaryWidget extends StatelessWidget {
-  const TextualSummaryWidget({super.key});
+class TextualSummaryWidget extends AverageSectionWidget {
+  final List<num> valuesInterventionA;
+  final List<num> valuesInterventionB;
+  final String nameInterventionA;
+  final String nameInterventionB;
+
+  const TextualSummaryWidget(
+      this.valuesInterventionA,
+      this.valuesInterventionB,
+      this.nameInterventionA,
+      this.nameInterventionB,
+      super.subject,
+      super.section,
+      {super.key,});
 
   @override
   Widget build(BuildContext context) {
+    // Two Sample t-test
+    // TODO: t-test library license issues
+    final stats = Statistic.from(valuesInterventionA);
+    final stats2 = Statistic.from(valuesInterventionB);
+    // Determine the summary text based on t-test results
+    final summaryText = getTextualSummary(stats.isDifferentFrom(stats2));
     return Row(
       children: <Widget>[
         Expanded(
@@ -18,20 +38,20 @@ class TextualSummaryWidget extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                child: const Column(
+                child: Column(
                   children: <Widget>[
                     Text(
-                      'With tea',
-                      style: TextStyle(
+                      nameInterventionA,
+                      style: const TextStyle(
                         fontSize: 16,
-                        color: Colors.green,
+                        color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 4), // SizedBox for spacing
+                    const SizedBox(height: 4), // SizedBox for spacing
                     Text(
-                      'Your sleep quality was slightly better', // Text 1 for box 1
-                      style: TextStyle(
+                      summaryText[0],
+                      style: const TextStyle(
                         fontSize: 12,
                         color: Colors.black,
                       ),
@@ -52,20 +72,20 @@ class TextualSummaryWidget extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(12.0),
                 ),
-                child: const Column(
+                child: Column(
                   children: <Widget>[
                     Text(
-                      'Without tea',
-                      style: TextStyle(
+                      nameInterventionB,
+                      style: const TextStyle(
                         fontSize: 16,
-                        color: Colors.red,
+                        color: Colors.orange,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 4), // SizedBox for spacing
+                    const SizedBox(height: 4),
                     Text(
-                      'Your sleep quality was slightly worse', // Text 2 for box 2
-                      style: TextStyle(
+                      summaryText[1],
+                      style: const TextStyle(
                         fontSize: 12,
                         color: Colors.black,
                       ),
@@ -78,5 +98,29 @@ class TextualSummaryWidget extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  // This method returns textual outcomes of a two sample t-test with respect to each of the interventions A and B.
+  List<String> getTextualSummary(bool isDifferent) {
+    List<String> textualSummaryInterventionAB;
+    if (isDifferent) {
+      if (valuesInterventionA.mean > valuesInterventionB.mean) {
+        textualSummaryInterventionAB = [
+          "Your ${section.title} was better during intervention: $nameInterventionA compared to: $nameInterventionB.",
+          "Your ${section.title} was worse in intervention: $nameInterventionB compared to: $nameInterventionA.",
+        ];
+      } else {
+        textualSummaryInterventionAB = [
+          "Your ${section.title} was worse during intervention: $nameInterventionA compared to: $nameInterventionB.",
+          "Your ${section.title} was better during intervention: $nameInterventionB compared to: $nameInterventionA.",
+        ];
+      }
+    } else {
+      textualSummaryInterventionAB = [
+        "There was no significant difference in ${section.title} between interventions: $nameInterventionA and $nameInterventionB.",
+        "There was no significant difference in ${section.title} between interventions: $nameInterventionA and $nameInterventionB.",
+      ];
+    }
+    return textualSummaryInterventionAB;
   }
 }

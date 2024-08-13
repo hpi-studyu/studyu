@@ -3,13 +3,13 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/report_section_widget.dart';
+import 'package:studyu_app/screens/study/report/sections/results_descriptive_statistics.dart';
+import 'package:studyu_app/screens/study/report/sections/results_gauge.dart';
+import 'package:studyu_app/screens/study/report/sections/results_textual_summary.dart';
 import 'package:studyu_app/screens/study/report/util/plot_utilities.dart';
 import 'package:studyu_app/theme.dart';
 import 'package:studyu_app/util/data_processing.dart';
 import 'package:studyu_core/core.dart';
-import 'results_descriptive_statistics.dart';
-import 'results_gauge.dart';
-import 'results_textual_summary.dart';
 
 class AverageSectionWidget extends ReportSectionWidget {
   final AverageSection section;
@@ -18,9 +18,23 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<bool> showDescriptionNotifier = ValueNotifier(false);
-
     final data = getAggregatedData().toList();
+    final aggregatedDataByDay =
+        aggregateDataBy(null).toList();
+    // Filter out baseline data
+    final filteredData = aggregatedDataByDay.where((datum) => datum.intervention != '__baseline');
+    // Group data by intervention
+    final interventionGroups = filteredData.fold<Map<String, List<num>>>({}, (map, datum) {
+      map.putIfAbsent(datum.intervention, () => []).add(datum.value);
+      return map;
+    });
+    // Extract keys from the map
+    final keys = interventionGroups.keys.toList();
+    // Define default empty lists
+    final List<num> valuesInterventionA = keys.isNotEmpty ? interventionGroups[keys[0]]! : [];
+    final List<num> valuesInterventionB = keys.length > 1 ? interventionGroups[keys[1]]! : [];
+    final String nameInterventionA = keys.isNotEmpty ? getInterventionNameFromInterventionId(context, keys[0])! : "";
+    final String nameInterventionB = keys.length > 1 ? getInterventionNameFromInterventionId(context, keys[1])! : "";
     final taskTitle = subject.study.observations
         .firstWhereOrNull(
           (element) => element.id == section.resultProperty!.task,
@@ -37,7 +51,7 @@ class AverageSectionWidget extends ReportSectionWidget {
                 .copyWith(fontWeight: FontWeight.bold),
           ),
         const SizedBox(height: 8),
-        const TextualSummaryWidget(), //Row 2
+        TextualSummaryWidget(valuesInterventionA, valuesInterventionB, nameInterventionA, nameInterventionB, subject, section), //Row 2
         const SizedBox(height: 8),
         const GaugeTitleWidget(), //Row 3
         const SizedBox(height: 8),
@@ -45,7 +59,7 @@ class AverageSectionWidget extends ReportSectionWidget {
         const SizedBox(height: 8),
         getLegend(context, data),
         const SizedBox(height: 8),
-        ExpansionTile(
+        const ExpansionTile(
           title: Text('Descriptive Statistics'),
           children: [
             DescriptiveStatisticsWidget(),
@@ -267,7 +281,7 @@ class AverageSectionWidget extends ReportSectionWidget {
     return subject.getDayOfStudyFor(key) - offset;
   }
 
-  Iterable<DiagramDatum> getAggregatedData() {
+  Iterable<DiagramDatum> aggregateDataBy(TemporalAggregation? aggregate) {
     final values = section.resultProperty!.retrieveFromResults(subject);
     final data = values.entries.map(
       (e) => DiagramDatum(
@@ -277,8 +291,9 @@ class AverageSectionWidget extends ReportSectionWidget {
         subject.getInterventionForDate(e.key)!.id,
       ),
     );
-
-    if (section.aggregate == TemporalAggregation.day) {
+    if (aggregate == null) {
+      return data;
+    } else if (aggregate == TemporalAggregation.day) {
       return data
           .groupBy((e) => e.x)
           .aggregateWithKey(
@@ -290,7 +305,7 @@ class AverageSectionWidget extends ReportSectionWidget {
             ),
           )
           .map((e) => e.value);
-    } else if (section.aggregate == TemporalAggregation.phase) {
+    } else if (aggregate == TemporalAggregation.phase) {
       return data
           .groupBy((e) => subject.getInterventionIndexForDate(e.timestamp!))
           .aggregateWithKey(
@@ -318,6 +333,10 @@ class AverageSectionWidget extends ReportSectionWidget {
     }
   }
 
+  Iterable<DiagramDatum> getAggregatedData() {
+    return aggregateDataBy(section.aggregate);
+  }
+
   Map<String, String?> getInterventionNames(BuildContext context) {
     final names = {
       for (final intervention in subject.study.interventions)
@@ -325,6 +344,15 @@ class AverageSectionWidget extends ReportSectionWidget {
     };
     names[Study.baselineID] = AppLocalizations.of(context)!.baseline;
     return names;
+  }
+
+  String? getInterventionNameFromInterventionId(BuildContext context, String interventionId) {
+    for (final intervention in subject.study.interventions) {
+      if (intervention.id == interventionId) {
+        return intervention.name;
+      }
+    }
+    return null;
   }
 }
 

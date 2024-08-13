@@ -39,12 +39,14 @@ dependencies:
   sentry_flutter: ^8.2.0
   sentry_logging: ^8.2.0
   shared_preferences: ^2.2.3
+  statistics: ^1.1.1
   studyu_core: ^4.4.3-dev.1
   studyu_flutter_common: ^1.8.4-dev.1
   supabase: ^2.2.1
   supabase_flutter: ^2.5.5
   syncfusion_flutter_charts: ^20.1.47
   syncfusion_flutter_gauges: ^20.1.59
+  t_stats: ^3.0.0
   timeline_tile: ^2.0.0
   timezone: ^0.9.3
   universal_html: ^2.2.4
