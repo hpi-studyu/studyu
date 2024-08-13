@@ -10,13 +10,14 @@ class TextualSummaryWidget extends AverageSectionWidget {
   final String nameInterventionB;
 
   const TextualSummaryWidget(
-      this.valuesInterventionA,
-      this.valuesInterventionB,
-      this.nameInterventionA,
-      this.nameInterventionB,
-      super.subject,
-      super.section,
-      {super.key,});
+    this.valuesInterventionA,
+    this.valuesInterventionB,
+    this.nameInterventionA,
+    this.nameInterventionB,
+    super.subject,
+    super.section, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

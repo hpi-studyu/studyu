@@ -103,9 +103,10 @@ class GaugesWidget extends StatelessWidget {
                     TextSpan(
                       text: '$value',
                       style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,),
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
                     ),
                     TextSpan(
                       text: '/$max',

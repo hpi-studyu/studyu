@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 // Row 6: Descriptive Statistics
 class DescriptiveStatisticsWidget extends StatelessWidget {
-
   const DescriptiveStatisticsWidget({super.key});
 
   @override
@@ -18,9 +17,9 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
               ),
             ],
           ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Column(
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Column(
               children: [
                 _buildStatisticsTable(),
                 const Padding(
@@ -32,8 +31,8 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
                   ),
                 ),
               ],
-              ),
             ),
+          ),
         ],
       ),
     );
@@ -65,7 +64,14 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
         },
         children: [
           _buildTableRow(
-            ['Intervention', 'Observations', 'Average', 'Min', 'Max', 'Variance'],
+            [
+              'Intervention',
+              'Observations',
+              'Average',
+              'Min',
+              'Max',
+              'Variance'
+            ],
             isHeader: true,
           ),
           _buildTableRow(['Tea', '14', '5.0', '4', '3', '1.2']),

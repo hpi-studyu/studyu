@@ -19,22 +19,29 @@ class AverageSectionWidget extends ReportSectionWidget {
   @override
   Widget build(BuildContext context) {
     final data = getAggregatedData().toList();
-    final aggregatedDataByDay =
-        aggregateDataBy(null).toList();
+    final aggregatedDataByDay = aggregateDataBy(null).toList();
     // Filter out baseline data
-    final filteredData = aggregatedDataByDay.where((datum) => datum.intervention != '__baseline');
+    final filteredData = aggregatedDataByDay
+        .where((datum) => datum.intervention != '__baseline');
     // Group data by intervention
-    final interventionGroups = filteredData.fold<Map<String, List<num>>>({}, (map, datum) {
+    final interventionGroups =
+        filteredData.fold<Map<String, List<num>>>({}, (map, datum) {
       map.putIfAbsent(datum.intervention, () => []).add(datum.value);
       return map;
     });
     // Extract keys from the map
     final keys = interventionGroups.keys.toList();
     // Define default empty lists
-    final List<num> valuesInterventionA = keys.isNotEmpty ? interventionGroups[keys[0]]! : [];
-    final List<num> valuesInterventionB = keys.length > 1 ? interventionGroups[keys[1]]! : [];
-    final String nameInterventionA = keys.isNotEmpty ? getInterventionNameFromInterventionId(context, keys[0])! : "";
-    final String nameInterventionB = keys.length > 1 ? getInterventionNameFromInterventionId(context, keys[1])! : "";
+    final List<num> valuesInterventionA =
+        keys.isNotEmpty ? interventionGroups[keys[0]]! : [];
+    final List<num> valuesInterventionB =
+        keys.length > 1 ? interventionGroups[keys[1]]! : [];
+    final String nameInterventionA = keys.isNotEmpty
+        ? getInterventionNameFromInterventionId(context, keys[0])!
+        : "";
+    final String nameInterventionB = keys.length > 1
+        ? getInterventionNameFromInterventionId(context, keys[1])!
+        : "";
     final taskTitle = subject.study.observations
         .firstWhereOrNull(
           (element) => element.id == section.resultProperty!.task,
@@ -51,7 +58,8 @@ class AverageSectionWidget extends ReportSectionWidget {
                 .copyWith(fontWeight: FontWeight.bold),
           ),
         const SizedBox(height: 8),
-        TextualSummaryWidget(valuesInterventionA, valuesInterventionB, nameInterventionA, nameInterventionB, subject, section), //Row 2
+        TextualSummaryWidget(valuesInterventionA, valuesInterventionB,
+            nameInterventionA, nameInterventionB, subject, section), //Row 2
         const SizedBox(height: 8),
         const GaugeTitleWidget(), //Row 3
         const SizedBox(height: 8),
@@ -346,7 +354,8 @@ class AverageSectionWidget extends ReportSectionWidget {
     return names;
   }
 
-  String? getInterventionNameFromInterventionId(BuildContext context, String interventionId) {
+  String? getInterventionNameFromInterventionId(
+      BuildContext context, String interventionId) {
     for (final intervention in subject.study.interventions) {
       if (intervention.id == interventionId) {
         return intervention.name;
