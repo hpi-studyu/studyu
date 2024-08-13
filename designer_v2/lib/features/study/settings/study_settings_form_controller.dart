@@ -29,23 +29,33 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
       FormControl(value: defaultPublishedToRegistry);
   final FormControl<bool> isPublishedToRegistryResultsControl =
       FormControl(value: defaultPublishedToRegistryResults);
-  final FormControl<bool> lockPublishSettingsControl =
-      FormControl(value: true, disabled: true);
+  final FormControl<bool> lockPublishSettingsControl = FormControl();
 
   @override
   late final FormGroup form = FormGroup({
     'isPublishedToRegistry': isPublishedToRegistryControl,
     'isPublishedToRegistryResults': isPublishedToRegistryResultsControl,
+    'lockStudySettings': lockPublishSettingsControl,
   });
 
   @override
   void setControlsFrom(Study data) {
     isPublishedToRegistryControl.value = data.publishedToRegistry;
     isPublishedToRegistryResultsControl.value = data.publishedToRegistryResults;
+    lockPublishSettingsControl.value =
+        data.templateConfiguration?.lockStudySettings ?? false;
 
-    if (data.isSubStudy) {
+    //disable editing registry controls if study is template and running OR if study is sub-study and publish settings are locked
+    //in other words template studies cannot change its registry settings while running and sub-studies cannot change its registry settings if publish settings are locked
+    if ((data.isTemplate && data.status == StudyStatus.running) ||
+        (data.isSubStudy && lockPublishSettingsControl.value == true)) {
       isPublishedToRegistryControl.markAsDisabled();
       isPublishedToRegistryResultsControl.markAsDisabled();
+    }
+
+    if (data.isTemplate && data.status == StudyStatus.running ||
+        data.isSubStudy) {
+      lockPublishSettingsControl.markAsDisabled();
     }
   }
 
@@ -57,6 +67,9 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
     study.resultSharing = (isPublishedToRegistryResultsControl.value!)
         ? ResultSharing.public
         : ResultSharing.private;
+    study.templateConfiguration = study.templateConfiguration?.copyWith(
+      lockStudySettings: lockPublishSettingsControl.value,
+    );
 
     return study;
   }
@@ -89,6 +102,8 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
     isPublishedToRegistryControl.value = defaultPublishedToRegistry;
     isPublishedToRegistryResultsControl.value =
         defaultPublishedToRegistryResults;
+
+    lockPublishSettingsControl.value = false;
   }
 }
 

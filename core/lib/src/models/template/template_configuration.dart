@@ -7,6 +7,7 @@ class TemplateConfiguration {
   final bool lockPublisherInformation;
   final bool lockEnrollmentType;
   final bool lockStudySchedule;
+  final bool lockStudySettings;
 
   /// The title of the parent template
   final String? title;
@@ -18,6 +19,7 @@ class TemplateConfiguration {
     this.lockPublisherInformation = false,
     this.lockEnrollmentType = false,
     this.lockStudySchedule = false,
+    this.lockStudySettings = false,
     this.title,
     this.description,
   });
@@ -26,6 +28,7 @@ class TemplateConfiguration {
     bool? lockPublisherInformation,
     bool? lockEnrollmentType,
     bool? lockStudySchedule,
+    bool? lockStudySettings,
     String? title,
     String? description,
   }) =>
@@ -34,6 +37,7 @@ class TemplateConfiguration {
             lockPublisherInformation ?? this.lockPublisherInformation,
         lockEnrollmentType: lockEnrollmentType ?? this.lockEnrollmentType,
         lockStudySchedule: lockStudySchedule ?? this.lockStudySchedule,
+        lockStudySettings: lockStudySettings ?? this.lockStudySettings,
         title: title ?? this.title,
         description: description ?? this.description,
       );

@@ -22,51 +22,57 @@ class StudySettingsDialog extends StudyPageWidget {
       child: StandardDialog(
         titleText: tr.study_settings,
         body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 12.0),
-            FormSectionHeader(
-              title: tr.navlink_public_studies,
-              showLock: formViewModel.study.value?.isStandalone != true,
-              lockControl: formViewModel.lockPublishSettingsControl,
-              lockHelpText: tr.form_section_publish_lock_help,
-              lockedStateText: tr.form_section_publish_lock_locked,
-              unlockedStateText: tr.form_section_publish_lock_unlocked,
-            ),
-            const SizedBox(height: 6.0),
-            TextParagraph(text: tr.navlink_public_studies_description),
-            const SizedBox(height: 24.0),
             ReactiveFormConsumer(
               builder: (context, form, child) {
-                return FormTableLayout(
-                  rows: [
-                    FormTableRow(
-                      label: tr.study_settings_publish_study,
-                      labelHelpText: tr.study_settings_publish_study_tooltip,
-                      input: Align(
-                        alignment: Alignment.centerRight,
-                        child: ReactiveSwitch(
-                          formControl:
-                              formViewModel.isPublishedToRegistryControl,
-                        ),
-                      ),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 12.0),
+                    FormSectionHeader(
+                      title: tr.navlink_public_studies,
+                      showLock: formViewModel.study.value?.isStandalone != true,
+                      lockControl: formViewModel.lockPublishSettingsControl,
+                      lockHelpText: tr.form_section_publish_lock_help,
+                      lockedStateText: tr.form_section_publish_lock_locked,
+                      unlockedStateText: tr.form_section_publish_lock_unlocked,
                     ),
-                    FormTableRow(
-                      label: tr.study_settings_publish_results,
-                      labelHelpText: tr.study_settings_publish_results_tooltip,
-                      input: Align(
-                        alignment: Alignment.centerRight,
-                        child: ReactiveSwitch(
-                          formControl:
-                              formViewModel.isPublishedToRegistryResultsControl,
+                    const SizedBox(height: 6.0),
+                    TextParagraph(text: tr.navlink_public_studies_description),
+                    const SizedBox(height: 24.0),
+                    FormTableLayout(
+                      rows: [
+                        FormTableRow(
+                          label: tr.study_settings_publish_study,
+                          labelHelpText:
+                              tr.study_settings_publish_study_tooltip,
+                          input: Align(
+                            alignment: Alignment.centerRight,
+                            child: ReactiveSwitch(
+                              formControl:
+                                  formViewModel.isPublishedToRegistryControl,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                        FormTableRow(
+                          label: tr.study_settings_publish_results,
+                          labelHelpText:
+                              tr.study_settings_publish_results_tooltip,
+                          input: Align(
+                            alignment: Alignment.centerRight,
+                            child: ReactiveSwitch(
+                              formControl: formViewModel
+                                  .isPublishedToRegistryResultsControl,
+                            ),
+                          ),
+                        ),
+                      ],
+                      columnWidths: const {
+                        0: IntrinsicColumnWidth(),
+                        1: FlexColumnWidth(),
+                      },
+                    )
                   ],
-                  columnWidths: const {
-                    0: IntrinsicColumnWidth(),
-                    1: FlexColumnWidth(),
-                  },
                 );
               },
             ),
