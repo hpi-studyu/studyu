@@ -40,8 +40,10 @@ dependencies:
   sentry_flutter: ^8.4.0
   sentry_logging: ^8.4.0
   shared_preferences: ^2.2.3
+  statistics: ^1.1.1
   studyu_core: ^4.4.5
   studyu_flutter_common: ^1.8.6
+  syncfusion_flutter_gauges: ^20.1.59
   supabase: ^2.2.4
   supabase_flutter: ^2.5.8
   timeline_tile: ^2.0.0
