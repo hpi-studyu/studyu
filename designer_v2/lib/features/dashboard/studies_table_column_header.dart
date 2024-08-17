@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 
 class StudiesTableColumnHeader extends StatefulWidget {
   final String title;
   final bool sortable;
   final bool sortAscending;
   final bool sortingActive;
+  final bool filterable;
+  final List<StudiesFilter>? filterOptions;
   final void Function()? onSort;
+  final void Function(StudiesFilter)? onFilter;
 
   const StudiesTableColumnHeader(
     this.title, {
@@ -16,7 +19,10 @@ class StudiesTableColumnHeader extends StatefulWidget {
     required this.sortable,
     required this.sortingActive,
     required this.sortAscending,
+    required this.filterable,
+    this.filterOptions,
     this.onSort,
+    this.onFilter,
   });
 
   @override
@@ -26,6 +32,10 @@ class StudiesTableColumnHeader extends StatefulWidget {
 
 class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
   bool isHovering = false;
+  OverlayEntry? _overlayEntry;
+
+  // Static variable to keep track of the currently active overlay
+  static OverlayEntry? _activeOverlayEntry;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +56,13 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                 ),
               ),
             ),
-            if (widget.sortable)
-              _getIcon() ?? const SizedBox(width: 17)
+            if (widget.filterable)
+              GestureDetector(
+                onTap: () => _showFilterDialog(context, widget.filterOptions!),
+                child: _getIconFilterable(),
+              )
+            else if (widget.sortable)
+              _getIconSortable() ?? const SizedBox(width: 17)
             else
               const SizedBox.shrink(),
           ],
@@ -59,7 +74,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
     );
   }
 
-  Icon? _getIcon() {
+  Icon? _getIconSortable() {
     final ascendingIcon = Icon(MdiIcons.arrowUp);
     final descendingIcon = Icon(MdiIcons.arrowDown);
     final hoveredAscendingIcon = Icon(MdiIcons.arrowUp, color: Colors.grey);
@@ -78,5 +93,140 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
     }
 
     return widget.sortAscending ? ascendingIcon : descendingIcon;
+  }
+
+ void _showFilterDialog(BuildContext context, List<StudiesFilter> filterOptions) {
+  // Remove any existing active overlay entry
+    _activeOverlayEntry?.remove();
+    _activeOverlayEntry = null;
+
+  final renderBox = context.findRenderObject()! as RenderBox;
+    final offset = renderBox.localToGlobal(Offset.zero);
+
+    _activeOverlayEntry = _createOverlayEntry(context, offset, filterOptions);
+    Overlay.of(context).insert(_activeOverlayEntry!);
+}
+
+
+  OverlayEntry _createOverlayEntry(
+      BuildContext context, Offset offset, List<StudiesFilter> filterOptions) {
+    final List<StudiesFilter> selectedOptions = []; // To hold the selected options
+
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        left: offset.dx,
+        top: offset.dy + 30, 
+        width: 200,
+        child: Material(
+          elevation: 4.0,
+          borderRadius: BorderRadius.circular(8.0),
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10.0,
+                  spreadRadius: 1.0,
+                ),
+              ],
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // List of options with checkboxes
+                    Column(
+                      children: filterOptions.map((option) {
+                        return CheckboxListTile(
+                          title: Text(_getOptionTitle(option)),
+                          value: selectedOptions.contains(option),
+                          controlAffinity: ListTileControlAffinity.leading,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              if (value == true) {
+                                selectedOptions.add(option);
+                              } else {
+                                selectedOptions.remove(option);
+                              }
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 8.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            _activeOverlayEntry?.remove();
+                            _activeOverlayEntry = null;
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            for (final option in selectedOptions) {
+                              widget.onFilter?.call(option);
+                            }
+                            _activeOverlayEntry?.remove();
+                            _activeOverlayEntry = null;
+                          },
+                          child: const Text('Filter'),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Icon? _getIconFilterable() {
+    final filterIcon = Icon(MdiIcons.filter);
+    final hoveredFilterIcon = Icon(MdiIcons.filter, color: Colors.grey);
+
+    if (!widget.filterable) {
+      return null;
+    }
+
+    return isHovering ? filterIcon : hoveredFilterIcon;
+  }
+
+  @override
+  void dispose() {
+    _overlayEntry?.remove();
+    super.dispose();
+  }
+
+  String _getOptionTitle(StudiesFilter option) {
+    switch(option) {
+      case StudiesFilter.standAlone:
+        return 'Standalone';
+      case StudiesFilter.template:
+        return 'Template';
+      case StudiesFilter.subStudy:
+        return 'Sub-study';
+      case StudiesFilter.live:
+        return 'Live';
+      case StudiesFilter.draft:
+        return 'Draft';
+      case StudiesFilter.closed:
+        return 'Closed';
+      case StudiesFilter.inviteOnly:
+        return 'Invite-only';
+      case StudiesFilter.everyone:
+        return 'Everyone';
+      default:
+        return option.toString().split('.').last;
+    }
   }
 }

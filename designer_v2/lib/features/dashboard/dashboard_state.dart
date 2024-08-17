@@ -57,8 +57,12 @@ class DashboardState extends Equatable {
     final localPinnedStudies = pinnedStudies ?? this.pinnedStudies;
     return studies.when(
       data: (studies) {
-        List<Study> updatedStudies =
-            studiesFilter.apply(studies: studies, user: currentUser).toList();
+        final List<Study> filteredStudies =
+            columnFilter(studies, studiesFilter);
+
+        List<Study> updatedStudies = studiesFilter
+            .apply(studies: filteredStudies, user: currentUser)
+            .toList();
         updatedStudies = sort(
           pinnedStudies: localPinnedStudies,
           studiesToSort: filter(studiesToFilter: updatedStudies),
@@ -87,6 +91,33 @@ class DashboardState extends Equatable {
     }
 
     return result;
+  }
+
+  List<Study> columnFilter(List<Study> studies, StudiesFilter filter) {
+    switch (filter) {
+      case StudiesFilter.standAlone:
+        return studies.where((s) => s.type == StudyType.standalone).toList();
+      case StudiesFilter.template:
+        return studies.where((s) => s.type == StudyType.template).toList();
+      case StudiesFilter.subStudy:
+        return studies.where((s) => s.type == StudyType.subStudy).toList();
+      case StudiesFilter.live:
+        return studies.where((s) => s.status == StudyStatus.running).toList();
+      case StudiesFilter.draft:
+        return studies.where((s) => s.status == StudyStatus.draft).toList();
+      case StudiesFilter.closed:
+        return studies.where((s) => s.status == StudyStatus.closed).toList();
+      case StudiesFilter.inviteOnly:
+        return studies
+            .where((s) => s.participation == Participation.invite)
+            .toList();
+      case StudiesFilter.everyone:
+        return studies
+            .where((s) => s.participation == Participation.open)
+            .toList();
+      default:
+        return studies;
+    }
   }
 
   List<Study> filter({List<Study>? studiesToFilter}) {
@@ -264,6 +295,8 @@ extension DashboardStateSafeViewProps on DashboardState {
         return tr.navlink_shared_studies;
       case StudiesFilter.all:
         return "[StudiesFilter.all]"; // not available in UI
+      default:
+        return '';
     }
   }
 }

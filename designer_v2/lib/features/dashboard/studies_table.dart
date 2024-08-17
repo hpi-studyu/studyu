@@ -5,6 +5,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -38,11 +39,32 @@ class StudiesTableColumnSize {
   final bool collapsed;
   final int? flex;
   final double? width;
+  final bool sortable;
+  final bool filterable;
+  final List<StudiesFilter>? filterOptions;
 
-  StudiesTableColumnSize._(this.flex, this.width, this.collapsed);
-  StudiesTableColumnSize.fixedWidth(double width) : this._(null, width, false);
-  StudiesTableColumnSize.flexWidth(int flex) : this._(flex, null, false);
-  StudiesTableColumnSize.collapsed() : this._(null, null, true);
+  StudiesTableColumnSize._(
+    this.flex,
+    this.width,
+    this.collapsed,
+    this.sortable,
+    this.filterable,
+    this.filterOptions,
+  );
+  StudiesTableColumnSize.fixedWidth({
+    required double width,
+    bool sortable = false,
+    bool filterable = false,
+    List<StudiesFilter>? filterOptions,
+  }) : this._(null, width, false, sortable, filterable, filterOptions);
+  StudiesTableColumnSize.flexWidth({
+    required int flex,
+    bool sortable = false,
+    bool filterable = false,
+    List<StudiesFilter>? filterOptions,
+  }) : this._(flex, null, false, sortable, filterable, filterOptions);
+  StudiesTableColumnSize.collapsed()
+      : this._(null, null, true, false, false, null);
 
   Widget createContainer({required Widget child, double? height}) {
     if (collapsed) {
@@ -135,28 +157,54 @@ class StudiesTable extends StatelessWidget {
         // Set column definitions
         final columnDefinitionsMap = {
           StudiesTableColumn.expand:
-              StudiesTableColumnSize.fixedWidth(itemHeight),
-          StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(24),
-          StudiesTableColumn.type:
-              StudiesTableColumnSize.fixedWidth(typeColumnWidth),
-          StudiesTableColumn.status:
-              StudiesTableColumnSize.fixedWidth(statusColumnWidth),
-          StudiesTableColumn.participation:
-              StudiesTableColumnSize.fixedWidth(participationColumnWidth),
+              StudiesTableColumnSize.fixedWidth(width: itemHeight),
+          StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(
+            flex: 24,
+            sortable: true,
+          ),
+          StudiesTableColumn.type: StudiesTableColumnSize.fixedWidth(
+            width: typeColumnWidth,
+            sortable: true,
+            filterable: true,
+            filterOptions: [
+              StudiesFilter.standAlone,
+              StudiesFilter.template,
+              StudiesFilter.subStudy
+            ],
+          ),
+          StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(
+            width: statusColumnWidth,
+            sortable: true,
+            filterable: true,
+            filterOptions: [
+              StudiesFilter.live,
+              StudiesFilter.draft,
+              StudiesFilter.closed
+            ],
+          ),
+          StudiesTableColumn.participation: StudiesTableColumnSize.fixedWidth(
+            width: participationColumnWidth,
+            sortable: true,
+            filterable: true,
+            filterOptions: [
+              StudiesFilter.inviteOnly,
+              StudiesFilter.everyone
+            ],
+          ),
           StudiesTableColumn.createdAt: isSuperCompact
               ? StudiesTableColumnSize.collapsed()
-              : StudiesTableColumnSize.flexWidth(10),
+              : StudiesTableColumnSize.flexWidth(flex: 10),
           StudiesTableColumn.enrolled: isCompact
               ? StudiesTableColumnSize.collapsed()
-              : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
+              : StudiesTableColumnSize.fixedWidth(width: statsColumnWidth),
           StudiesTableColumn.active: isCompact
               ? StudiesTableColumnSize.collapsed()
-              : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
+              : StudiesTableColumnSize.fixedWidth(width: statsColumnWidth),
           StudiesTableColumn.completed: isCompact
               ? StudiesTableColumnSize.collapsed()
-              : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
+              : StudiesTableColumnSize.fixedWidth(width: statsColumnWidth),
           StudiesTableColumn.action:
-              StudiesTableColumnSize.fixedWidth(itemHeight),
+              StudiesTableColumnSize.fixedWidth(width: itemHeight),
         };
         final columnDefinitions = columnDefinitionsMap.entries.toList();
 
@@ -164,7 +212,8 @@ class StudiesTable extends StatelessWidget {
         for (final columnDefinition in columnDefinitions) {
           columnRows.add(
             columnDefinition.value.createContainer(
-              child: _buildColumnHeader(columnDefinition.key),
+              child: _buildColumnHeader(
+                  context, columnDefinition.key, columnDefinitionsMap),
             ),
           );
           if (!columnDefinition.value.collapsed) {
@@ -216,29 +265,10 @@ class StudiesTable extends StatelessWidget {
     );
   }
 
-  Widget _buildColumnHeader(StudiesTableColumn column) {
-    final String title;
-    switch (column) {
-      case StudiesTableColumn.title:
-        title = tr.studies_list_header_title;
-      case StudiesTableColumn.type:
-        title = tr.studies_list_header_type;
-      case StudiesTableColumn.status:
-        title = tr.studies_list_header_status;
-      case StudiesTableColumn.participation:
-        title = tr.studies_list_header_participation;
-      case StudiesTableColumn.createdAt:
-        title = tr.studies_list_header_created_at;
-      case StudiesTableColumn.enrolled:
-        title = tr.studies_list_header_participants_enrolled;
-      case StudiesTableColumn.active:
-        title = tr.studies_list_header_participants_active;
-      case StudiesTableColumn.completed:
-        title = tr.studies_list_header_participants_completed;
-      case StudiesTableColumn.expand:
-      case StudiesTableColumn.action:
-        title = '';
-    }
+  Widget _buildColumnHeader(BuildContext context, StudiesTableColumn column,
+      Map<StudiesTableColumn, StudiesTableColumnSize> columnDefinitionsMap) {
+    final columnDefinition = columnDefinitionsMap[column]!;
+    final title = _getColumnTitle(column);
 
     final sortAscending = dashboardController.isSortAscending;
     final sortable = !(column == StudiesTableColumn.expand ||
@@ -250,6 +280,8 @@ class StudiesTable extends StatelessWidget {
       sortable: sortable,
       sortingActive: sortingActive,
       sortAscending: sortAscending,
+      filterable: columnDefinition.filterable,
+      filterOptions: columnDefinition.filterOptions,
       onSort: sortable
           ? () {
               dashboardController.setSorting(
@@ -258,6 +290,35 @@ class StudiesTable extends StatelessWidget {
               );
             }
           : null,
+      onFilter: columnDefinition.filterable
+          ? (StudiesFilter? query) {
+              dashboardController.setStudiesFilter(query);
+            }
+          : null,
     );
+  }
+
+  String _getColumnTitle(StudiesTableColumn column) {
+    switch (column) {
+      case StudiesTableColumn.title:
+        return tr.studies_list_header_title;
+      case StudiesTableColumn.type:
+        return tr.studies_list_header_type;
+      case StudiesTableColumn.status:
+        return tr.studies_list_header_status;
+      case StudiesTableColumn.participation:
+        return tr.studies_list_header_participation;
+      case StudiesTableColumn.createdAt:
+        return tr.studies_list_header_created_at;
+      case StudiesTableColumn.enrolled:
+        return tr.studies_list_header_participants_enrolled;
+      case StudiesTableColumn.active:
+        return tr.studies_list_header_participants_active;
+      case StudiesTableColumn.completed:
+        return tr.studies_list_header_participants_completed;
+      case StudiesTableColumn.expand:
+      case StudiesTableColumn.action:
+        return '';
+    }
   }
 }
