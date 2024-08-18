@@ -85,7 +85,7 @@ class TextualSummaryWidget extends AverageSectionWidget {
                             nameInterventionB,
                             style: const TextStyle(
                               fontSize: 16,
-                              color: Colors.orange,
+                              color: Colors.deepOrangeAccent,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
