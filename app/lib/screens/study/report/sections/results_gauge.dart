@@ -139,16 +139,14 @@ class GaugesWidget extends AverageSectionWidget {
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors
-                        .black87,
+                    color: Colors.black87,
                   ),
                 ),
                 const TextSpan(
                   text: '/10',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors
-                        .black,
+                    color: Colors.black,
                   ),
                 ),
               ],
@@ -164,8 +162,7 @@ class GaugesWidget extends AverageSectionWidget {
                   text: nameIntervention,
                   style: const TextStyle(
                     fontSize: 15,
-                    color: Colors
-                        .black,
+                    color: Colors.black,
                   ),
                 ),
               ],
