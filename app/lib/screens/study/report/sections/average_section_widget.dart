@@ -82,14 +82,27 @@ class AverageSectionWidget extends ReportSectionWidget {
         ),
         const SizedBox(height: 8),
         getLegend(context, data),
-        const SizedBox(height: 8),
-        const ExpansionTile(
-          title: Text('Descriptive Statistics'),
+        AspectRatio(aspectRatio: 1.5, child: getDiagram(context, data)),
+        ExpansionTile(
+          title: const Text(
+            'Descriptive Statistics',
+            style: TextStyle(
+              fontSize: 14, // Smaller font size
+              color: Colors.black, // Blue color
+              decoration: TextDecoration.underline, // Underlined text
+            ),
+          ),
           children: [
-            DescriptiveStatisticsWidget(),
+            DescriptiveStatisticsWidget(
+              valuesInterventionA,
+              valuesInterventionB,
+              nameInterventionA,
+              nameInterventionB,
+              subject,
+              section,
+            ),
           ],
         ),
-        AspectRatio(aspectRatio: 1.5, child: getDiagram(context, data)),
       ],
     );
   }

@@ -1,8 +1,58 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
 
-// Row 6: Descriptive Statistics
-class DescriptiveStatisticsWidget extends StatelessWidget {
-  const DescriptiveStatisticsWidget({super.key});
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:statistics/statistics.dart';
+import 'package:studyu_app/screens/study/report/sections/average_section_widget.dart';
+
+class DescriptiveStatisticsWidget extends AverageSectionWidget {
+  final String nameInterventionA;
+  final String nameInterventionB;
+  final String averageA;
+  final String averageB;
+  final int observationsA;
+  final int observationsB;
+  final String minA;
+  final String minB;
+  final String maxA;
+  final String maxB;
+  final String varianceA;
+  final String varianceB;
+
+  DescriptiveStatisticsWidget(
+    List<num> valuesInterventionA,
+    List<num> valuesInterventionB,
+    this.nameInterventionA,
+    this.nameInterventionB,
+    super.subject,
+    super.section, {
+    super.key,
+  })  : averageA = valuesInterventionA.isNotEmpty
+            ? valuesInterventionA.mean.toStringAsFixed(2)
+            : "NONE",
+        averageB = valuesInterventionB.isNotEmpty
+            ? valuesInterventionB.mean.toStringAsFixed(2)
+            : "NONE",
+        observationsA = valuesInterventionA.length,
+        observationsB = valuesInterventionB.length,
+        minA = valuesInterventionA.isNotEmpty
+            ? valuesInterventionA.min.toStringAsFixed(2)
+            : "NONE",
+        minB = valuesInterventionB.isNotEmpty
+            ? valuesInterventionB.min.toStringAsFixed(2)
+            : "NONE",
+        maxA = valuesInterventionA.isNotEmpty
+            ? valuesInterventionA.max.toStringAsFixed(2)
+            : "NONE",
+        maxB = valuesInterventionB.isNotEmpty
+            ? valuesInterventionB.max.toStringAsFixed(2)
+            : "NONE",
+        varianceA = valuesInterventionA.isNotEmpty
+            ? pow(valuesInterventionA.standardDeviation, 2).toStringAsFixed(2)
+            : "NONE",
+        varianceB = valuesInterventionB.isNotEmpty
+            ? pow(valuesInterventionB.standardDeviation, 2).toStringAsFixed(2)
+            : "NONE";
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +75,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text(
-                    'p-value: 0.01\nLevel of significance: α = 0.05',
+                    'Level of significance: α = 0.05',
                     style: TextStyle(fontSize: 8, color: Colors.black),
                     textAlign: TextAlign.center,
                   ),
@@ -70,12 +120,26 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
               'Average',
               'Min',
               'Max',
-              'Variance'
+              'Variance',
             ],
             isHeader: true,
           ),
-          _buildTableRow(['Tea', '14', '5.0', '4', '3', '1.2']),
-          _buildTableRow(['No Tea', '14', '7.5', '8', '6', '2']),
+          _buildTableRow([
+            nameInterventionA,
+            observationsA.toString(),
+            averageA,
+            minA,
+            maxA,
+            varianceA
+          ]),
+          _buildTableRow([
+            nameInterventionB,
+            observationsB.toString(),
+            averageB,
+            minB,
+            maxB,
+            varianceB
+          ]),
         ],
       ),
     );
