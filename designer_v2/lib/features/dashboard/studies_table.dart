@@ -1,6 +1,8 @@
+import 'dart:html' as html;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
@@ -291,8 +293,25 @@ class StudiesTable extends StatelessWidget {
           : null,
       onFilter: columnDefinition.filterable
           ? (String? query) {
-              dashboardController.setColumnFilter(query!);
+            final currentUri = Uri.base;
+
+            if (query != null && query.isNotEmpty) {
+              dashboardController.setColumnFilter(query);
+
+              final newUri = currentUri.replace(queryParameters: {
+                ...currentUri.queryParameters, 
+                title: query, 
+              });
+
+              html.window.history.pushState(null, '', newUri.toString());
+            } else {
+              final newUri = currentUri.replace(queryParameters: {
+                ...currentUri.queryParameters..remove(title),
+              });
+
+              html.window.history.pushState(null, '', newUri.toString());
             }
+          }
           : null,
     );
   }
