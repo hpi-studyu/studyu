@@ -5,7 +5,6 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -41,7 +40,7 @@ class StudiesTableColumnSize {
   final double? width;
   final bool sortable;
   final bool filterable;
-  final List<StudiesFilter>? filterOptions;
+  final List<String>? filterOptions;
 
   StudiesTableColumnSize._(
     this.flex,
@@ -55,13 +54,13 @@ class StudiesTableColumnSize {
     required double width,
     bool sortable = false,
     bool filterable = false,
-    List<StudiesFilter>? filterOptions,
+    List<String>? filterOptions,
   }) : this._(null, width, false, sortable, filterable, filterOptions);
   StudiesTableColumnSize.flexWidth({
     required int flex,
     bool sortable = false,
     bool filterable = false,
-    List<StudiesFilter>? filterOptions,
+    List<String>? filterOptions,
   }) : this._(flex, null, false, sortable, filterable, filterOptions);
   StudiesTableColumnSize.collapsed()
       : this._(null, null, true, false, false, null);
@@ -167,9 +166,9 @@ class StudiesTable extends StatelessWidget {
             sortable: true,
             filterable: true,
             filterOptions: [
-              StudiesFilter.standAlone,
-              StudiesFilter.template,
-              StudiesFilter.subStudy
+              "Standalone",
+              "Template",
+              "Substudy",
             ],
           ),
           StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(
@@ -177,9 +176,9 @@ class StudiesTable extends StatelessWidget {
             sortable: true,
             filterable: true,
             filterOptions: [
-              StudiesFilter.live,
-              StudiesFilter.draft,
-              StudiesFilter.closed
+              "Draft",
+              "Live",
+              "Closed",
             ],
           ),
           StudiesTableColumn.participation: StudiesTableColumnSize.fixedWidth(
@@ -187,8 +186,8 @@ class StudiesTable extends StatelessWidget {
             sortable: true,
             filterable: true,
             filterOptions: [
-              StudiesFilter.inviteOnly,
-              StudiesFilter.everyone
+              "Everyone",
+              "Invite-only",
             ],
           ),
           StudiesTableColumn.createdAt: isSuperCompact
@@ -291,8 +290,8 @@ class StudiesTable extends StatelessWidget {
             }
           : null,
       onFilter: columnDefinition.filterable
-          ? (StudiesFilter? query) {
-              dashboardController.setStudiesFilter(query);
+          ? (String? query) {
+              dashboardController.setColumnFilter(query!);
             }
           : null,
     );

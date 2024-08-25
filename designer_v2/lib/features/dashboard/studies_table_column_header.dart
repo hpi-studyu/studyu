@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 
 class StudiesTableColumnHeader extends StatefulWidget {
   final String title;
@@ -9,9 +8,9 @@ class StudiesTableColumnHeader extends StatefulWidget {
   final bool sortAscending;
   final bool sortingActive;
   final bool filterable;
-  final List<StudiesFilter>? filterOptions;
+  final List<String>? filterOptions;
   final void Function()? onSort;
-  final void Function(StudiesFilter)? onFilter;
+  final void Function(String)? onFilter;
 
   const StudiesTableColumnHeader(
     this.title, {
@@ -33,9 +32,10 @@ class StudiesTableColumnHeader extends StatefulWidget {
 class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
   bool isHovering = false;
   OverlayEntry? _overlayEntry;
-
-  // Static variable to keep track of the currently active overlay
   static OverlayEntry? _activeOverlayEntry;
+
+  // State variable to hold the selected options
+  List<String> selectedOptions = [];
 
   @override
   Widget build(BuildContext context) {
@@ -95,27 +95,29 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
     return widget.sortAscending ? ascendingIcon : descendingIcon;
   }
 
- void _showFilterDialog(BuildContext context, List<StudiesFilter> filterOptions) {
-  // Remove any existing active overlay entry
+  void _showFilterDialog(BuildContext context, List<String> filterOptions) {
+    // Remove any existing active overlay entry
     _activeOverlayEntry?.remove();
     _activeOverlayEntry = null;
 
-  final renderBox = context.findRenderObject()! as RenderBox;
+    // Initialize selectedOptions with the existing state if not empty
+    if (selectedOptions.isEmpty) {
+      selectedOptions = [];  // Could populate from existing filter state
+    }
+
+    final renderBox = context.findRenderObject()! as RenderBox;
     final offset = renderBox.localToGlobal(Offset.zero);
 
     _activeOverlayEntry = _createOverlayEntry(context, offset, filterOptions);
     Overlay.of(context).insert(_activeOverlayEntry!);
-}
-
+  }
 
   OverlayEntry _createOverlayEntry(
-      BuildContext context, Offset offset, List<StudiesFilter> filterOptions) {
-    final List<StudiesFilter> selectedOptions = []; // To hold the selected options
-
+      BuildContext context, Offset offset, List<String> filterOptions) {
     return OverlayEntry(
       builder: (context) => Positioned(
         left: offset.dx,
-        top: offset.dy + 30, 
+        top: offset.dy + 30,
         width: 200,
         child: Material(
           elevation: 4.0,
@@ -142,7 +144,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                     Column(
                       children: filterOptions.map((option) {
                         return CheckboxListTile(
-                          title: Text(_getOptionTitle(option)),
+                          title: Text(option),
                           value: selectedOptions.contains(option),
                           controlAffinity: ListTileControlAffinity.leading,
                           onChanged: (bool? value) {
@@ -170,9 +172,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                         ),
                         TextButton(
                           onPressed: () {
-                            for (final option in selectedOptions) {
-                              widget.onFilter?.call(option);
-                            }
+                            widget.onFilter?.call(selectedOptions.join(','));
                             _activeOverlayEntry?.remove();
                             _activeOverlayEntry = null;
                           },
@@ -205,28 +205,5 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
   void dispose() {
     _overlayEntry?.remove();
     super.dispose();
-  }
-
-  String _getOptionTitle(StudiesFilter option) {
-    switch(option) {
-      case StudiesFilter.standAlone:
-        return 'Standalone';
-      case StudiesFilter.template:
-        return 'Template';
-      case StudiesFilter.subStudy:
-        return 'Sub-study';
-      case StudiesFilter.live:
-        return 'Live';
-      case StudiesFilter.draft:
-        return 'Draft';
-      case StudiesFilter.closed:
-        return 'Closed';
-      case StudiesFilter.inviteOnly:
-        return 'Invite-only';
-      case StudiesFilter.everyone:
-        return 'Everyone';
-      default:
-        return option.toString().split('.').last;
-    }
   }
 }

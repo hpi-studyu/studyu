@@ -83,6 +83,12 @@ class DashboardController extends _$DashboardController
     );
   }
 
+    void setColumnFilter(String filter) {
+    state = state.copyWith(
+      columnFilter: () => filter,
+    );
+  }
+
   void setPinnedStudies(Set<String> pinnedStudies) {
     state = state.copyWith(pinnedStudies: pinnedStudies);
   }

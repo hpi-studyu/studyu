@@ -12,6 +12,7 @@ class DashboardState extends Equatable {
   const DashboardState({
     this.studies = const AsyncValue.loading(),
     this.studiesFilter = defaultFilter,
+    this.columnFilter = '',
     this.query = '',
     this.sortByColumn = StudiesTableColumn.title,
     this.sortAscending = true,
@@ -28,6 +29,10 @@ class DashboardState extends Equatable {
   /// Currently selected filter to be applied to the list of studies
   /// in order to determine the [displayedStudies]
   final StudiesFilter studiesFilter;
+
+  /// Currently selected column filter to be applied to the list of studies
+  /// in order to determine the [displayedStudies]
+  final String columnFilter;
 
   /// Currently selected sort column to be applied to the list of studies
   /// in order to determine the [displayedStudies]
@@ -57,12 +62,14 @@ class DashboardState extends Equatable {
     final localPinnedStudies = pinnedStudies ?? this.pinnedStudies;
     return studies.when(
       data: (studies) {
-        final List<Study> filteredStudies =
-            columnFilter(studies, studiesFilter);
+        final List<Study> filteredStudies = [];
 
-        List<Study> updatedStudies = studiesFilter
-            .apply(studies: filteredStudies, user: currentUser)
-            .toList();
+        columnFilter.split(',').forEach((element) {
+           filteredStudies.addAll(filterStudyByColumn(studies, element));
+        });
+
+        List<Study> updatedStudies =
+            studiesFilter.apply(studies: filteredStudies, user: currentUser).toList();
         updatedStudies = sort(
           pinnedStudies: localPinnedStudies,
           studiesToSort: filter(studiesToFilter: updatedStudies),
@@ -93,25 +100,25 @@ class DashboardState extends Equatable {
     return result;
   }
 
-  List<Study> columnFilter(List<Study> studies, StudiesFilter filter) {
+  List<Study> filterStudyByColumn(List<Study> studies, String filter) {
     switch (filter) {
-      case StudiesFilter.standAlone:
+      case "Standalone":
         return studies.where((s) => s.type == StudyType.standalone).toList();
-      case StudiesFilter.template:
+      case "Template":
         return studies.where((s) => s.type == StudyType.template).toList();
-      case StudiesFilter.subStudy:
+      case "Substudy":
         return studies.where((s) => s.type == StudyType.subStudy).toList();
-      case StudiesFilter.live:
+      case "Live":
         return studies.where((s) => s.status == StudyStatus.running).toList();
-      case StudiesFilter.draft:
+      case "Draft":
         return studies.where((s) => s.status == StudyStatus.draft).toList();
-      case StudiesFilter.closed:
+      case "Closed":
         return studies.where((s) => s.status == StudyStatus.closed).toList();
-      case StudiesFilter.inviteOnly:
+      case "Invite-Only":
         return studies
             .where((s) => s.participation == Participation.invite)
             .toList();
-      case StudiesFilter.everyone:
+      case "Everyone":
         return studies
             .where((s) => s.participation == Participation.open)
             .toList();
@@ -256,6 +263,7 @@ class DashboardState extends Equatable {
   DashboardState copyWith({
     AsyncValue<List<Study>> Function()? studies,
     StudiesFilter Function()? studiesFilter,
+    String Function()? columnFilter,
     User Function()? currentUser,
     String? query,
     StudiesTableColumn? sortByColumn,
@@ -268,6 +276,7 @@ class DashboardState extends Equatable {
       studies: studies != null ? studies() : this.studies,
       studiesFilter:
           studiesFilter != null ? studiesFilter() : this.studiesFilter,
+      columnFilter: columnFilter != null ? columnFilter() : this.columnFilter,
       currentUser: currentUser != null ? currentUser() : this.currentUser,
       query: query ?? this.query,
       sortByColumn: sortByColumn ?? this.sortByColumn,
@@ -295,8 +304,6 @@ extension DashboardStateSafeViewProps on DashboardState {
         return tr.navlink_shared_studies;
       case StudiesFilter.all:
         return "[StudiesFilter.all]"; // not available in UI
-      default:
-        return '';
     }
   }
 }
