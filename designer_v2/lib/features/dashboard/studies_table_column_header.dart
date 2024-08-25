@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class StudiesTableColumnHeader extends StatefulWidget {
   final String title;
@@ -147,7 +148,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                     Column(
                       children: filterOptions.map((option) {
                         return CheckboxListTile(
-                          title: Text(option),
+                          title: Text(_getFilterOptionText(option)),
                           value: selectedOptions.contains(option),
                           controlAffinity: ListTileControlAffinity.leading,
                           onChanged: (bool? value) {
@@ -171,7 +172,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                             _activeOverlayEntry?.remove();
                             _activeOverlayEntry = null;
                           },
-                          child: const Text('Cancel'),
+                          child: Text(tr.filter_dialog_cancel),
                         ),
                         TextButton(
                           onPressed: () {
@@ -179,7 +180,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                             _activeOverlayEntry?.remove();
                             _activeOverlayEntry = null;
                           },
-                          child: const Text('Filter'),
+                          child: Text(tr.filter_dialog_filter),
                         ),
                       ],
                     ),
@@ -202,6 +203,23 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
     }
 
     return isHovering ? filterIcon : hoveredFilterIcon;
+  }
+
+  String _getFilterOptionText(String option) {
+    switch (option) {
+      case 'Everyone':
+        return tr.participation_open_who;
+      case 'Invite-only':
+        return tr.participation_invite_who;
+      case 'Draft':
+        return tr.study_status_draft;
+      case 'Live':
+        return tr.study_status_running;
+      case 'Closed':
+        return tr.study_status_closed;
+      default:
+        return option;
+    }
   }
 
   @override

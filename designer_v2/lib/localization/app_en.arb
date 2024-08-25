@@ -114,6 +114,8 @@
   "study_type_standalone": "Standalone",
   "study_type_template": "Template",
   "study_type_substudy": "Subtrial",
+  "filter_dialog_cancel": "Cancel",
+  "filter_dialog_filter": "Filter",
   "@__________________STUDYPAGE__________________": {},
   "navlink_learn": "Learn",
   "navlink_study_design": "Design",

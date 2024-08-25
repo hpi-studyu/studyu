@@ -108,6 +108,8 @@
   "modify_query": "Verändere deine Suchanfrage, um mehr Studien in die Suche miteinzubeziehen",
   "studies_empty": "Du hast noch keine Studien erstellt",
   "studies_empty_description": "Erstelle deine eigene Studie von Grund auf oder erstelle einen Entwurf aus einer bereits veröffentlichten Studie",
+  "filter_dialog_cancel": "Abbrechen",
+  "filter_dialog_filter": "Filter",
   "@__________________STUDYPAGE__________________": {},
   "navlink_learn": "Lernen",
   "navlink_study_design": "Entwerfen",
