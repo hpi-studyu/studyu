@@ -96,20 +96,23 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
   }
 
   void _showFilterDialog(BuildContext context, List<String> filterOptions) {
-    // Remove any existing active overlay entry
-    _activeOverlayEntry?.remove();
-    _activeOverlayEntry = null;
-
     // Initialize selectedOptions with the existing state if not empty
     if (selectedOptions.isEmpty) {
       selectedOptions = []; // Could populate from existing filter state
     }
 
-    final renderBox = context.findRenderObject()! as RenderBox;
-    final offset = renderBox.localToGlobal(Offset.zero);
+    if (_activeOverlayEntry != null) {
+      // If an overlay is already active, remove it to close the dialog
+      _activeOverlayEntry?.remove();
+      _activeOverlayEntry = null;
+    } else {
+      // If no overlay is active, create and show a new one
+      final renderBox = context.findRenderObject()! as RenderBox;
+      final offset = renderBox.localToGlobal(Offset.zero);
 
-    _activeOverlayEntry = _createOverlayEntry(context, offset, filterOptions);
-    Overlay.of(context).insert(_activeOverlayEntry!);
+      _activeOverlayEntry = _createOverlayEntry(context, offset, filterOptions);
+      Overlay.of(context).insert(_activeOverlayEntry!);
+    }
   }
 
   OverlayEntry _createOverlayEntry(
