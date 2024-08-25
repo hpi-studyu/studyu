@@ -83,7 +83,7 @@ class DashboardController extends _$DashboardController
     );
   }
 
-    void setColumnFilter(String filter) {
+  void setColumnFilter(String filter) {
     state = state.copyWith(
       columnFilter: () => filter,
     );

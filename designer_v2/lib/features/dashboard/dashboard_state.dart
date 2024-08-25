@@ -65,11 +65,12 @@ class DashboardState extends Equatable {
         final List<Study> filteredStudies = [];
 
         columnFilter.split(',').forEach((element) {
-           filteredStudies.addAll(filterStudyByColumn(studies, element));
+          filteredStudies.addAll(filterStudyByColumn(studies, element));
         });
 
-        List<Study> updatedStudies =
-            studiesFilter.apply(studies: filteredStudies, user: currentUser).toList();
+        List<Study> updatedStudies = studiesFilter
+            .apply(studies: filteredStudies, user: currentUser)
+            .toList();
         updatedStudies = sort(
           pinnedStudies: localPinnedStudies,
           studiesToSort: filter(studiesToFilter: updatedStudies),

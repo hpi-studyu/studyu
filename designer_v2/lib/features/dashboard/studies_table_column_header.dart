@@ -102,7 +102,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
 
     // Initialize selectedOptions with the existing state if not empty
     if (selectedOptions.isEmpty) {
-      selectedOptions = [];  // Could populate from existing filter state
+      selectedOptions = []; // Could populate from existing filter state
     }
 
     final renderBox = context.findRenderObject()! as RenderBox;
