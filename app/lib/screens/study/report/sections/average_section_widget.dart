@@ -166,7 +166,17 @@ class AverageSectionWidget extends ReportSectionWidget {
       gridData: getGridData(barGroups),
       alignment: BarChartAlignment.spaceAround,
       barGroups: barGroups,
-      barTouchData: BarTouchData(enabled: true),
+      barTouchData: BarTouchData(
+        enabled: true,
+        touchTooltipData: BarTouchTooltipData(
+          getTooltipItem: (group, groupIndex, rod, rodIndex) {
+            return BarTooltipItem(
+              rod.toY.toString(),
+              const TextStyle(color: Colors.white),
+            );
+          },
+        ),
+      ),
       maxY: maxY,
     );
   }
