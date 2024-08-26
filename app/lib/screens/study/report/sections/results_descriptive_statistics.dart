@@ -18,10 +18,8 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
   final String maxB;
   final String varianceA;
   final String varianceB;
-  int totalInterventionsA;
-  int totalInterventionsB;
-  int missingObservationsA;
-  int missingObservationsB;
+  final int totalInterventionsA;
+  final int totalInterventionsB;
 
   DescriptiveStatisticsWidget(
     List<num> valuesInterventionA,
@@ -60,12 +58,7 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
         totalInterventionsA = subject.study.schedule.phaseDuration *
             subject.study.schedule.numberOfCycles,
         totalInterventionsB = subject.study.schedule.phaseDuration *
-            subject.study.schedule.numberOfCycles,
-        missingObservationsA = 0,
-        missingObservationsB = 0 {
-    missingObservationsA = totalInterventionsA - observationsA;
-    missingObservationsB = totalInterventionsB - observationsB;
-  }
+            subject.study.schedule.numberOfCycles;
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +95,8 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
   }
 
   Widget _buildStatisticsTable() {
+    final int missingObservationsA = totalInterventionsA - observationsA;
+    final int missingObservationsB = totalInterventionsB - observationsB;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
@@ -123,8 +118,10 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
           2: FixedColumnWidth(80),
         },
         children: [
-          _buildTableRow(['Intervention', nameInterventionA, nameInterventionB],
-              isHeader: true),
+          _buildTableRow(
+            ['Intervention', nameInterventionA, nameInterventionB],
+            isHeader: true,
+          ),
           _buildTableRow([
             'Observations',
             observationsA.toString(),
