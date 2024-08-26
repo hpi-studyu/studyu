@@ -18,6 +18,10 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
   final String maxB;
   final String varianceA;
   final String varianceB;
+  int totalInterventionsA;
+  int totalInterventionsB;
+  int missingObservationsA;
+  int missingObservationsB;
 
   DescriptiveStatisticsWidget(
     List<num> valuesInterventionA,
@@ -52,7 +56,16 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
             : "NONE",
         varianceB = valuesInterventionB.isNotEmpty
             ? pow(valuesInterventionB.standardDeviation, 2).toStringAsFixed(2)
-            : "NONE";
+            : "NONE",
+        totalInterventionsA = subject.study.schedule.phaseDuration *
+            subject.study.schedule.numberOfCycles,
+        totalInterventionsB = subject.study.schedule.phaseDuration *
+            subject.study.schedule.numberOfCycles,
+        missingObservationsA = 0,
+        missingObservationsB = 0 {
+    missingObservationsA = totalInterventionsA - observationsA;
+    missingObservationsB = totalInterventionsB - observationsB;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,40 +118,26 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
       child: Table(
         border: TableBorder.all(color: Colors.grey),
         columnWidths: const {
-          0: FixedColumnWidth(65),
-          1: FixedColumnWidth(65),
-          2: FixedColumnWidth(50),
-          3: FixedColumnWidth(50),
-          4: FixedColumnWidth(50),
-          5: FixedColumnWidth(65),
+          0: FixedColumnWidth(120), // Adjust column width if needed
+          1: FixedColumnWidth(80),
+          2: FixedColumnWidth(80),
         },
         children: [
-          _buildTableRow(
-            [
-              'Intervention',
-              'Observations',
-              'Average',
-              'Min',
-              'Max',
-              'Variance',
-            ],
-            isHeader: true,
-          ),
+          _buildTableRow(['Intervention', nameInterventionA, nameInterventionB],
+              isHeader: true),
           _buildTableRow([
-            nameInterventionA,
+            'Observations',
             observationsA.toString(),
-            averageA,
-            minA,
-            maxA,
-            varianceA
-          ]),
-          _buildTableRow([
-            nameInterventionB,
             observationsB.toString(),
-            averageB,
-            minB,
-            maxB,
-            varianceB
+          ]),
+          _buildTableRow(['Average', averageA, averageB]),
+          _buildTableRow(['Min', minA, minB]),
+          _buildTableRow(['Max', maxA, maxB]),
+          _buildTableRow(['Variance', varianceA, varianceB]),
+          _buildTableRow([
+            'Missing Observations',
+            missingObservationsA.toString(),
+            missingObservationsB.toString(),
           ]),
         ],
       ),
@@ -159,7 +158,7 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: isHeader ? 8 : 8,
+          fontSize: isHeader ? 15 : 15, //Adjust font size if needed
           fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
           color: isHeader ? Colors.black : Colors.grey[800],
         ),
