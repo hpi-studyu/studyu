@@ -127,8 +127,8 @@ class TextualSummaryWidget extends AverageSectionWidget {
       }
     } else {
       textualSummaryInterventionAB = [
-        "There was no significant difference in ${section.title} between interventions: $nameInterventionA and $nameInterventionB.",
-        "There was no significant difference in ${section.title} between interventions: $nameInterventionA and $nameInterventionB.",
+        "There was no evidence for a difference in ${section.title} between interventions: $nameInterventionA and $nameInterventionB.",
+        "There was no evidence for a difference in ${section.title} between interventions: $nameInterventionA and $nameInterventionB.",
       ];
     }
     return textualSummaryInterventionAB;
