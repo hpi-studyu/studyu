@@ -62,14 +62,15 @@ class DashboardState extends Equatable {
     final localPinnedStudies = pinnedStudies ?? this.pinnedStudies;
     return studies.when(
       data: (studies) {
-        final List<Study> filteredStudies = [];
+        final Set<Study> uniqueFilteredStudies = {};
 
+        // Collect studies based on the column filter
         columnFilter.split(',').forEach((element) {
-          filteredStudies.addAll(filterStudyByColumn(studies, element));
+          uniqueFilteredStudies.addAll(filterStudyByColumn(studies, element));
         });
 
         List<Study> updatedStudies = studiesFilter
-            .apply(studies: filteredStudies, user: currentUser)
+            .apply(studies: uniqueFilteredStudies.toList(), user: currentUser)
             .toList();
         updatedStudies = sort(
           pinnedStudies: localPinnedStudies,
