@@ -178,9 +178,10 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   }
 
   Widget getDiagram(BuildContext context, List<DiagramDatum> data) {
-    return BarChart(
-      getChartData(context, data),
-    );
+    if (widget.section.aggregate == TemporalAggregation.day) {
+      return LineChart(getLineChartData(context, data));
+    }
+    return BarChart(getChartData(context, data));
   }
 
   BarChartData getChartData(BuildContext context, List<DiagramDatum> data) {
@@ -218,6 +219,112 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           },
         ),
       ),
+      maxY: maxY,
+    );
+  }
+
+  LineChartData getLineChartData(
+      BuildContext context, List<DiagramDatum> data) {
+    final spots = data.map((datum) {
+      return FlSpot(datum.x.toDouble(), datum.value.toDouble());
+    }).toList();
+
+    final minX =
+        data.map((datum) => datum.x.toDouble()).reduce((a, b) => a < b ? a : b);
+    final maxX =
+        data.map((datum) => datum.x.toDouble()).reduce((a, b) => a > b ? a : b);
+    final maxY = ((data
+                .map((datum) => datum.value.toDouble())
+                .reduce((a, b) => a > b ? a : b) *
+            1.1)
+        .ceilToDouble());
+
+    print('minX: $minX');
+    print('maxX: $maxX');
+    print('maxY: $maxY');
+
+    return LineChartData(
+      gridData: FlGridData(show: false),
+      titlesData: FlTitlesData(
+        bottomTitles: AxisTitles(
+          axisNameWidget: widget.section.aggregate == TemporalAggregation.day
+              ? const Text("Day")
+              : const SizedBox.shrink(),
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 40,
+            getTitlesWidget: (value, meta) {
+              return SideTitleWidget(
+                axisSide: meta.axisSide,
+                child: Text(
+                  value.toInt().toString(),
+                  style: const TextStyle(fontSize: 14),
+                ),
+              );
+            },
+          ),
+        ),
+        leftTitles: AxisTitles(
+          axisNameWidget: const Text("Value"),
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 40,
+            getTitlesWidget: (value, meta) {
+              return SideTitleWidget(
+                axisSide: meta.axisSide,
+                child: Text(
+                  value.toString(),
+                  style: const TextStyle(fontSize: 14),
+                ),
+              );
+            },
+          ),
+        ),
+        topTitles: AxisTitles(
+          axisNameWidget: const SizedBox.shrink(),
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
+        rightTitles: AxisTitles(
+          axisNameWidget: const SizedBox.shrink(),
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(
+          color: Colors.black,
+          width: 1,
+        ),
+      ),
+      lineBarsData: [
+        LineChartBarData(
+          spots: spots,
+          isCurved: false,
+          belowBarData: BarAreaData(show: false),
+          dotData: FlDotData(
+            show: true,
+            getDotPainter: (spot, percent, barData, index) {
+              return FlDotCirclePainter(
+                radius: 4,
+                color: Colors.blue,
+                strokeWidth: 2,
+                strokeColor: Colors.white,
+              );
+            },
+          ),
+        ),
+      ],
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(),
+        handleBuiltInTouches: true,
+      ),
+      minX: 0,
+      maxX: maxX,
+      minY: 0,
       maxY: maxY,
     );
   }
