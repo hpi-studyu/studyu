@@ -46,7 +46,12 @@ class TTest {
   Future<double> getTCritical(double degreesOfFreedom) async {
     final List<List<dynamic>> rows = await loadCsvData();
     // Default alpha/2 = 0.05/2 = 0.025
-    final int roundedDegreesOfFreedom = degreesOfFreedom.round();
+    int roundedDegreesOfFreedom = degreesOfFreedom.round();
+    // Critical values of the t-test do not significantly change with large degrees of freedom.
+    // Approximate the critical values for large degrees of freedom by using the value at df = 200.
+    if (roundedDegreesOfFreedom > 200) {
+      roundedDegreesOfFreedom = 200;
+    }
     // Iterate over rows, skipping the header
     for (int i = 1; i < rows.length; i++) {
       final row = rows[i];
@@ -59,7 +64,7 @@ class TTest {
       }
     }
     throw Exception(
-        "Degrees of Freedom not found in CSV, study too long, reduce number of days");
+        "Degrees of Freedom not found in CSV file.");
   }
 
   // Method to check if the result is significant based on alpha level 0.05
