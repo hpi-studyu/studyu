@@ -63,8 +63,7 @@ class TTest {
         }
       }
     }
-    throw Exception(
-        "Degrees of Freedom not found in CSV file.");
+    throw Exception("Degrees of Freedom not found in CSV file.");
   }
 
   // Method to check if the result is significant based on alpha level 0.05
