@@ -18,7 +18,23 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = getAggregatedData().toList();
+    return _AverageSectionStatefulWidget(subject, section);
+  }
+}
+
+class _AverageSectionStatefulWidget extends StatefulWidget {
+  final StudySubject subject;
+  final AverageSection section;
+
+  const _AverageSectionStatefulWidget(this.subject, this.section, {super.key});
+
+  @override
+  _AverageSectionWidgetState createState() => _AverageSectionWidgetState();
+}
+
+class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
+  @override
+  Widget build(BuildContext context) {
     final aggregatedDataByDay = aggregateDataBy(null).toList();
     // Filter out baseline data
     final filteredData = aggregatedDataByDay
@@ -42,9 +58,9 @@ class AverageSectionWidget extends ReportSectionWidget {
     final String nameInterventionB = keys.length > 1
         ? getInterventionNameFromInterventionId(context, keys[1])!
         : "";
-    final taskTitle = subject.study.observations
+    final taskTitle = widget.subject.study.observations
         .firstWhereOrNull(
-          (element) => element.id == section.resultProperty!.task,
+          (element) => element.id == widget.section.resultProperty!.task,
         )
         ?.title;
 
@@ -63,13 +79,13 @@ class AverageSectionWidget extends ReportSectionWidget {
           valuesInterventionB,
           nameInterventionA,
           nameInterventionB,
-          subject,
-          section,
+          widget.subject,
+          widget.section,
         ),
         const SizedBox(height: 8),
         GaugeTitleWidget(
-          subject,
-          section,
+          widget.subject,
+          widget.section,
         ),
         const SizedBox(height: 8),
         GaugesWidget(
@@ -77,19 +93,44 @@ class AverageSectionWidget extends ReportSectionWidget {
           valuesInterventionB,
           nameInterventionA,
           nameInterventionB,
-          subject,
-          section,
+          widget.subject,
+          widget.section,
+        ),
+        DropdownButton<TemporalAggregation>(
+          value: widget.section.aggregate,
+          items: const [
+            DropdownMenuItem(
+              value: TemporalAggregation.intervention,
+              child: Text("Intervention"),
+            ),
+            DropdownMenuItem(
+              value: TemporalAggregation.phase,
+              child: Text("Phase"),
+            ),
+            DropdownMenuItem(
+              value: TemporalAggregation.day,
+              child: Text("Day"),
+            ),
+          ],
+          onChanged: (value) {
+            setState(() {
+              widget.section.aggregate = value;
+            });
+          },
         ),
         const SizedBox(height: 8),
-        getLegend(context, data),
-        AspectRatio(aspectRatio: 1.5, child: getDiagram(context, data)),
+        getLegend(context, aggregateDataBy(widget.section.aggregate).toList()),
+        AspectRatio(
+            aspectRatio: 1.5,
+            child: getDiagram(
+                context, aggregateDataBy(widget.section.aggregate).toList())),
         ExpansionTile(
           title: const Text(
             'Descriptive Statistics',
             style: TextStyle(
-              fontSize: 14, // Smaller font size
-              color: Colors.black, // Blue color
-              decoration: TextDecoration.underline, // Underlined text
+              fontSize: 14,
+              color: Colors.black,
+              decoration: TextDecoration.underline,
             ),
           ),
           children: [
@@ -98,8 +139,8 @@ class AverageSectionWidget extends ReportSectionWidget {
               valuesInterventionB,
               nameInterventionA,
               nameInterventionB,
-              subject,
-              section,
+              widget.subject,
+              widget.section,
             ),
           ],
         ),
@@ -108,8 +149,8 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   List<int> get titlePos {
-    final numberOfPhases = subject.interventionOrder.length;
-    final phaseDuration = subject.study.schedule.phaseDuration;
+    final numberOfPhases = widget.subject.interventionOrder.length;
+    final phaseDuration = widget.subject.study.schedule.phaseDuration;
     return Iterable<int>.generate(numberOfPhases)
         .map(
           (i) => (((i + 1) * phaseDuration - ((phaseDuration / 2) - 1)) - 1)
@@ -119,8 +160,8 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   List<int> get phasePos {
-    final numberOfPhases = subject.interventionOrder.length;
-    final phaseDuration = subject.study.schedule.phaseDuration;
+    final numberOfPhases = widget.subject.interventionOrder.length;
+    final phaseDuration = widget.subject.study.schedule.phaseDuration;
     return Iterable<int>.generate(numberOfPhases)
         .map((i) => (i + 1) * phaseDuration)
         .toList();
@@ -137,9 +178,10 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   Widget getDiagram(BuildContext context, List<DiagramDatum> data) {
-    return BarChart(
-      getChartData(context, data),
-    );
+    if (widget.section.aggregate == TemporalAggregation.day) {
+      return LineChart(getLineChartData(context, data));
+    }
+    return BarChart(getChartData(context, data));
   }
 
   BarChartData getChartData(BuildContext context, List<DiagramDatum> data) {
@@ -153,7 +195,7 @@ class AverageSectionWidget extends ReportSectionWidget {
       titlesData: FlTitlesData(
         bottomTitles: AxisTitles(
           axisNameWidget:
-              (section.aggregate != TemporalAggregation.intervention)
+              (widget.section.aggregate != TemporalAggregation.intervention)
                   ? const Text("Phase")
                   : const Text(""),
           sideTitles: SideTitles(
@@ -181,6 +223,112 @@ class AverageSectionWidget extends ReportSectionWidget {
     );
   }
 
+  LineChartData getLineChartData(
+      BuildContext context, List<DiagramDatum> data) {
+    final spots = data.map((datum) {
+      return FlSpot(datum.x.toDouble(), datum.value.toDouble());
+    }).toList();
+
+    final minX =
+        data.map((datum) => datum.x.toDouble()).reduce((a, b) => a < b ? a : b);
+    final maxX =
+        data.map((datum) => datum.x.toDouble()).reduce((a, b) => a > b ? a : b);
+    final maxY = ((data
+                .map((datum) => datum.value.toDouble())
+                .reduce((a, b) => a > b ? a : b) *
+            1.1)
+        .ceilToDouble());
+
+    print('minX: $minX');
+    print('maxX: $maxX');
+    print('maxY: $maxY');
+
+    return LineChartData(
+      gridData: FlGridData(show: false),
+      titlesData: FlTitlesData(
+        bottomTitles: AxisTitles(
+          axisNameWidget: widget.section.aggregate == TemporalAggregation.day
+              ? const Text("Day")
+              : const SizedBox.shrink(),
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 40,
+            getTitlesWidget: (value, meta) {
+              return SideTitleWidget(
+                axisSide: meta.axisSide,
+                child: Text(
+                  value.toInt().toString(),
+                  style: const TextStyle(fontSize: 14),
+                ),
+              );
+            },
+          ),
+        ),
+        leftTitles: AxisTitles(
+          axisNameWidget: const Text("Value"),
+          sideTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 40,
+            getTitlesWidget: (value, meta) {
+              return SideTitleWidget(
+                axisSide: meta.axisSide,
+                child: Text(
+                  value.toString(),
+                  style: const TextStyle(fontSize: 14),
+                ),
+              );
+            },
+          ),
+        ),
+        topTitles: AxisTitles(
+          axisNameWidget: const SizedBox.shrink(),
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
+        rightTitles: AxisTitles(
+          axisNameWidget: const SizedBox.shrink(),
+          sideTitles: SideTitles(
+            showTitles: false,
+          ),
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(
+          color: Colors.black,
+          width: 1,
+        ),
+      ),
+      lineBarsData: [
+        LineChartBarData(
+          spots: spots,
+          isCurved: false,
+          belowBarData: BarAreaData(show: false),
+          dotData: FlDotData(
+            show: true,
+            getDotPainter: (spot, percent, barData, index) {
+              return FlDotCirclePainter(
+                radius: 4,
+                color: Colors.blue,
+                strokeWidth: 2,
+                strokeColor: Colors.white,
+              );
+            },
+          ),
+        ),
+      ],
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(),
+        handleBuiltInTouches: true,
+      ),
+      minX: 0,
+      maxX: maxX,
+      minY: 0,
+      maxY: maxY,
+    );
+  }
+
   Widget getTitles(double value, TitleMeta meta) {
     return SideTitleWidget(
       axisSide: meta.axisSide,
@@ -189,7 +337,7 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   Widget getValues(double value) {
-    switch (section.aggregate) {
+    switch (widget.section.aggregate) {
       case TemporalAggregation.day:
         final index = titlePos.indexOf(value.round());
         if (index != -1) {
@@ -213,14 +361,14 @@ class AverageSectionWidget extends ReportSectionWidget {
     if (data.isEmpty) return [BarChartGroupData(x: 0)];
 
     int barCount = 0;
-    switch (section.aggregate) {
+    switch (widget.section.aggregate) {
       case TemporalAggregation.day:
-        barCount = subject.study.schedule.length;
+        barCount = widget.subject.study.schedule.length;
       case TemporalAggregation.phase:
-        barCount = subject.interventionOrder.length;
+        barCount = widget.subject.interventionOrder.length;
       case TemporalAggregation.intervention:
-        barCount = subject.selectedInterventionIds.length +
-            (subject.study.schedule.includeBaseline ? 1 : 0);
+        barCount = widget.subject.selectedInterventionIds.length +
+            (widget.subject.study.schedule.includeBaseline ? 1 : 0);
       default:
     }
 
@@ -252,7 +400,7 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   FlGridData getGridData(List<BarChartGroupData> barGroups) {
-    if (section.aggregate != TemporalAggregation.day) {
+    if (widget.section.aggregate != TemporalAggregation.day) {
       return const FlGridData(
         drawHorizontalLine: false,
         drawVerticalLine: false,
@@ -266,7 +414,9 @@ class AverageSectionWidget extends ReportSectionWidget {
     final lineCount = barGroups.length * 2;
     bool drawLine(double val) {
       // draw when we are at the border between two phases
-      return (val * lineCount % (2 * subject.study.schedule.phaseDuration))
+      return (val *
+                  lineCount %
+                  (2 * widget.subject.study.schedule.phaseDuration))
               .toInt() ==
           0;
     }
@@ -283,34 +433,34 @@ class AverageSectionWidget extends ReportSectionWidget {
     final colors = [Colors.blue, Colors.orange];
     MaterialColor? c = Colors.teal;
 
-    switch (section.aggregate) {
+    switch (widget.section.aggregate) {
       case TemporalAggregation.day:
         //c = colors[subject.interventionOrder.indexOf(diagram.intervention)];
-        if (subject.study.schedule.includeBaseline &&
-            diagram.x < subject.study.schedule.phaseDuration) {
+        if (widget.subject.study.schedule.includeBaseline &&
+            diagram.x < widget.subject.study.schedule.phaseDuration) {
           // if id == "_baseline"
           c = baselineColor;
         } else {
-          c = colors[subject.selectedInterventions
+          c = colors[widget.subject.selectedInterventions
               .map((e) => e.id)
               .toList()
               .indexOf(diagram.intervention)];
         }
       case TemporalAggregation.phase:
-        if (subject.study.schedule.includeBaseline && diagram.x == 0) {
+        if (widget.subject.study.schedule.includeBaseline && diagram.x == 0) {
           c = baselineColor;
         } else {
-          c = colors[subject.selectedInterventions
+          c = colors[widget.subject.selectedInterventions
               .map((e) => e.id)
               .toList()
               .indexOf(diagram.intervention)];
         }
       case TemporalAggregation.intervention:
-        if (subject.study.schedule.includeBaseline && diagram.x == 0) {
+        if (widget.subject.study.schedule.includeBaseline && diagram.x == 0) {
           c = baselineColor;
         } else {
           c = colors[diagram.x.round() -
-              (subject.study.schedule.includeBaseline ? 1 : 0)];
+              (widget.subject.study.schedule.includeBaseline ? 1 : 0)];
         }
       default:
     }
@@ -318,24 +468,25 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   int getDayIndex(DateTime key) {
-    if (subject.study.schedule.includeBaseline) {
-      return subject.getDayOfStudyFor(key);
+    if (widget.subject.study.schedule.includeBaseline) {
+      return widget.subject.getDayOfStudyFor(key);
     }
-    final schedule = subject.scheduleFor(subject.startedAt!);
+    final schedule = widget.subject.scheduleFor(widget.subject.startedAt!);
     // this always has to be found because studies have to have at least 2
     // interventions
     final offset = schedule.indexWhere((task) => task.id != Study.baselineID);
-    return subject.getDayOfStudyFor(key) - offset;
+    return widget.subject.getDayOfStudyFor(key) - offset;
   }
 
   Iterable<DiagramDatum> aggregateDataBy(TemporalAggregation? aggregate) {
-    final values = section.resultProperty!.retrieveFromResults(subject);
+    final values =
+        widget.section.resultProperty!.retrieveFromResults(widget.subject);
     final data = values.entries.map(
       (e) => DiagramDatum(
         getDayIndex(e.key),
         e.value,
         e.key,
-        subject.getInterventionForDate(e.key)!.id,
+        widget.subject.getInterventionForDate(e.key)!.id,
       ),
     );
     if (aggregate == null) {
@@ -354,7 +505,8 @@ class AverageSectionWidget extends ReportSectionWidget {
           .map((e) => e.value);
     } else if (aggregate == TemporalAggregation.phase) {
       return data
-          .groupBy((e) => subject.getInterventionIndexForDate(e.timestamp!))
+          .groupBy(
+              (e) => widget.subject.getInterventionIndexForDate(e.timestamp!))
           .aggregateWithKey(
             (data, phase) => DiagramDatum(
               phase,
@@ -365,7 +517,8 @@ class AverageSectionWidget extends ReportSectionWidget {
           )
           .map((e) => e.value);
     } else {
-      final order = getInterventionPositions(subject.selectedInterventions);
+      final order =
+          getInterventionPositions(widget.subject.selectedInterventions);
       return data
           .groupBy((e) => e.intervention)
           .aggregateWithKey(
@@ -381,12 +534,12 @@ class AverageSectionWidget extends ReportSectionWidget {
   }
 
   Iterable<DiagramDatum> getAggregatedData() {
-    return aggregateDataBy(section.aggregate);
+    return aggregateDataBy(widget.section.aggregate);
   }
 
   Map<String, String?> getInterventionNames(BuildContext context) {
     final names = {
-      for (final intervention in subject.study.interventions)
+      for (final intervention in widget.subject.study.interventions)
         intervention.id: intervention.name,
     };
     names[Study.baselineID] = AppLocalizations.of(context)!.baseline;
@@ -395,7 +548,7 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   String? getInterventionNameFromInterventionId(
       BuildContext context, String interventionId) {
-    for (final intervention in subject.study.interventions) {
+    for (final intervention in widget.subject.study.interventions) {
       if (intervention.id == interventionId) {
         return intervention.name;
       }

@@ -78,14 +78,6 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
             child: Column(
               children: [
                 _buildStatisticsTable(),
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    'Level of significance: α = 0.05',
-                    style: TextStyle(fontSize: 8, color: Colors.black),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
               ],
             ),
           ),
