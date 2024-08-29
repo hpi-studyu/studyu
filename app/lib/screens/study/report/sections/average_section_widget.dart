@@ -456,11 +456,12 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
               .indexOf(diagram.intervention)];
         }
       case TemporalAggregation.intervention:
-        if (widget.subject.study.schedule.includeBaseline && diagram.x == 0) {
+        if (widget.subject.study.schedule.includeBaseline && diagram.x == 2) {
           c = baselineColor;
-        } else {
-          c = colors[diagram.x.round() -
-              (widget.subject.study.schedule.includeBaseline ? 1 : 0)];
+        } else if (diagram.x == 0) {
+          c = Colors.blue;
+        } else if (diagram.x == 1) {
+          c = Colors.orange;
         }
       default:
     }
