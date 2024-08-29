@@ -310,12 +310,13 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
             getDotPainter: (spot, percent, barData, index) {
               return FlDotCirclePainter(
                 radius: 4,
-                color: Colors.blue,
+                color: Colors.black,
                 strokeWidth: 2,
                 strokeColor: Colors.white,
               );
             },
           ),
+            color: Colors.black
         ),
       ],
       lineTouchData: LineTouchData(
