@@ -47,51 +47,9 @@ class TextualSummaryWidget extends AverageSectionWidget {
                       ),
                       child: Column(
                         children: <Widget>[
-                          Text(
-                            nameInterventionA,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
                           const SizedBox(height: 4),
                           Text(
                             summaryText[0],
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            nameInterventionB,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.deepOrangeAccent,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            summaryText[1],
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.black,
@@ -117,17 +75,14 @@ class TextualSummaryWidget extends AverageSectionWidget {
       if (valuesInterventionA.mean > valuesInterventionB.mean) {
         textualSummaryInterventionAB = [
           "Your ${section.title} was better during intervention: $nameInterventionA compared to: $nameInterventionB.",
-          "Your ${section.title} was worse in intervention: $nameInterventionB compared to: $nameInterventionA.",
         ];
       } else {
         textualSummaryInterventionAB = [
           "Your ${section.title} was worse during intervention: $nameInterventionA compared to: $nameInterventionB.",
-          "Your ${section.title} was better during intervention: $nameInterventionB compared to: $nameInterventionA.",
         ];
       }
     } else {
       textualSummaryInterventionAB = [
-        "There was no evidence for a difference in ${section.title} between interventions: $nameInterventionA and $nameInterventionB.",
         "There was no evidence for a difference in ${section.title} between interventions: $nameInterventionA and $nameInterventionB.",
       ];
     }
