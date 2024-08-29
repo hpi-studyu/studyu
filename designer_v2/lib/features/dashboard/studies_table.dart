@@ -293,25 +293,29 @@ class StudiesTable extends StatelessWidget {
           : null,
       onFilter: columnDefinition.filterable
           ? (String? query) {
-            final currentUri = Uri.base;
+              final currentUri = Uri.base;
 
-            if (query != null && query.isNotEmpty) {
-              dashboardController.setColumnFilter(query);
+              if (query != null && query != '') {
+                dashboardController.setColumnFilter(query);
 
-              final newUri = currentUri.replace(queryParameters: {
-                ...currentUri.queryParameters, 
-                title: query, 
-              });
+                final newUri = currentUri.replace(queryParameters: {
+                  ...currentUri.queryParameters,
+                  title: query,
+                });
 
-              html.window.history.pushState(null, '', newUri.toString());
-            } else {
-              final newUri = currentUri.replace(queryParameters: {
-                ...currentUri.queryParameters..remove(title),
-              });
+                html.window.history.pushState(null, '', newUri.toString());
+              } else {
+                final newQueryParameters = Map.of(currentUri.queryParameters);
+                newQueryParameters.remove(title);
 
-              html.window.history.pushState(null, '', newUri.toString());
+                print(newQueryParameters);
+
+                final newUri =
+                    currentUri.replace(queryParameters: newQueryParameters);
+
+                html.window.history.pushState(null, '', newUri.toString());
+              }
             }
-          }
           : null,
     );
   }
