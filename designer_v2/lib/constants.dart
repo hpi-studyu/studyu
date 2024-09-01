@@ -1,5 +1,3 @@
-import 'package:flutter_portal/flutter_portal.dart';
-
 class Config {
   static const isDebugMode = false;
 
@@ -25,8 +23,6 @@ class Config {
   static const participantDropoutDuration = 5;
   static const participantInactiveDuration = 3;
 }
-
-const outPortalLabel = PortalLabel("out");
 
 const kPathSeparator = '   /   ';
 
