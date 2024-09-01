@@ -88,7 +88,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           widget.section,
         ),
         const SizedBox(height: 8),
-        GaugesWidget(
+        ColorfulGaugesWidget(
           valuesInterventionA,
           valuesInterventionB,
           nameInterventionA,
@@ -96,6 +96,14 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           widget.subject,
           widget.section,
         ),
+        //ColorlessGaugesWidget(
+        //  valuesInterventionA,
+        //  valuesInterventionB,
+        //  nameInterventionA,
+        //  nameInterventionB,
+        //  widget.subject,
+        //  widget.section,
+        //),
         DropdownButton<TemporalAggregation>(
           value: widget.section.aggregate,
           items: const [

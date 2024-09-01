@@ -21,13 +21,13 @@ class GaugeTitleWidget extends AverageSectionWidget {
   }
 }
 
-class GaugesWidget extends AverageSectionWidget {
+class ColorfulGaugesWidget extends AverageSectionWidget {
   final String nameInterventionA;
   final String nameInterventionB;
   final num meanInterventionA;
   final num meanInterventionB;
 
-  GaugesWidget(
+  ColorfulGaugesWidget(
     List<num> valuesInterventionA,
     List<num> valuesInterventionB,
     this.nameInterventionA,
@@ -55,7 +55,7 @@ class GaugesWidget extends AverageSectionWidget {
                 child: SizedBox(
                   width: 160,
                   height: 160,
-                  child: createGauge(0, 10, meanInterventionA,
+                  child: createColorfulGauge(0, 10, meanInterventionA,
                       nameInterventionA), // min, max, value
                 ),
               ),
@@ -75,7 +75,7 @@ class GaugesWidget extends AverageSectionWidget {
                 child: SizedBox(
                   width: 160,
                   height: 160,
-                  child: createGauge(0, 10, meanInterventionB,
+                  child: createColorfulGauge(0, 10, meanInterventionB,
                       nameInterventionB), // min, max, value
                 ),
               ),
@@ -86,7 +86,7 @@ class GaugesWidget extends AverageSectionWidget {
     );
   }
 
-  Widget createGauge(
+  Widget createColorfulGauge(
       double min, double max, num value, String nameIntervention) {
     const Color gaugeBackgroundColor = Color(0xFFDFE2EC);
 
@@ -125,6 +125,146 @@ class GaugesWidget extends AverageSectionWidget {
               GaugeSegment(from: 8, to: 9, color: Colors.green[800]!),
               GaugeSegment(from: 9, to: 10, color: Colors.green[900]!),
             ],
+          ),
+        ),
+        // Text placed inside the gauge box
+        Positioned(
+          bottom:
+              30, // Position text inside the gauge without overlapping the needle
+          child: RichText(
+            text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: value.toStringAsFixed(1),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const TextSpan(
+                  text: '/10',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 0,
+          child: RichText(
+            text: TextSpan(
+              children: <TextSpan>[
+                TextSpan(
+                  text: nameIntervention,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class ColorlessGaugesWidget extends AverageSectionWidget {
+  final String nameInterventionA;
+  final String nameInterventionB;
+  final num meanInterventionA;
+  final num meanInterventionB;
+
+  ColorlessGaugesWidget(
+    List<num> valuesInterventionA,
+    List<num> valuesInterventionB,
+    this.nameInterventionA,
+    this.nameInterventionB,
+    super.subject,
+    super.section, {
+    super.key,
+  })  : meanInterventionA = valuesInterventionA.mean,
+        meanInterventionB = valuesInterventionB.mean;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: SizedBox(
+                  width: 160,
+                  height: 160,
+                  child: createColorlessGauge(0, 10, meanInterventionA,
+                      nameInterventionA), // min, max, value
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Column(
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: SizedBox(
+                  width: 160,
+                  height: 160,
+                  child: createColorlessGauge(0, 10, meanInterventionB,
+                      nameInterventionB), // min, max, value
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget createColorlessGauge(
+      double min, double max, num value, String nameIntervention) {
+    const Color gaugeBackgroundColor = Color(0xFFDFE2EC);
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        AnimatedRadialGauge(
+          duration: const Duration(seconds: 1),
+          curve: Curves.elasticOut,
+          radius: 100,
+          value: value.toDouble(),
+          axis: GaugeAxis(
+            min: min,
+            max: max,
+            degrees: 240, // Set to 240 degrees for a 3/4 circular gauge
+            style: const GaugeAxisStyle(
+              background: gaugeBackgroundColor,
+              segmentSpacing: 4,
+            ),
+            pointer: const GaugePointer.needle(
+              width: 10,
+              height: 50,
+              borderRadius: 8,
+              color: Color(0xFF193663),
+            ),
           ),
         ),
         // Text placed inside the gauge box
