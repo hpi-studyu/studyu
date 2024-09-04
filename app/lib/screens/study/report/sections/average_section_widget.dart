@@ -41,7 +41,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
         .where((datum) => datum.intervention != '__baseline');
     // Group data by intervention
     final interventionGroups =
-        filteredData.fold<Map<String, List<num>>>({}, (map, datum) {
+    filteredData.fold<Map<String, List<num>>>({}, (map, datum) {
       map.putIfAbsent(datum.intervention, () => []).add(datum.value);
       return map;
     });
@@ -49,9 +49,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     final keys = interventionGroups.keys.toList();
     // Define default empty lists
     final List<num> valuesInterventionA =
-        keys.isNotEmpty ? interventionGroups[keys[0]]! : [];
+    keys.isNotEmpty ? interventionGroups[keys[0]]! : [];
     final List<num> valuesInterventionB =
-        keys.length > 1 ? interventionGroups[keys[1]]! : [];
+    keys.length > 1 ? interventionGroups[keys[1]]! : [];
     final String nameInterventionA = keys.isNotEmpty
         ? getInterventionNameFromInterventionId(context, keys[0])!
         : "";
@@ -61,7 +61,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     final taskTitle = widget.subject.study.observations
         .firstWhereOrNull(
           (element) => element.id == widget.section.resultProperty!.task,
-        )
+    )
         ?.title;
 
     return Column(
@@ -97,12 +97,12 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           widget.section,
         ),
         //ColorlessGaugesWidget(
-        //  valuesInterventionA,
-        //  valuesInterventionB,
-        //  nameInterventionA,
-        //  nameInterventionB,
-        //  widget.subject,
-        //  widget.section,
+        // valuesInterventionA,
+        // valuesInterventionB,
+        // nameInterventionA,
+        // nameInterventionB,
+        // widget.subject,
+        // widget.section,
         //),
         DropdownButton<TemporalAggregation>(
           value: widget.section.aggregate,
@@ -162,8 +162,8 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     return Iterable<int>.generate(numberOfPhases)
         .map(
           (i) => (((i + 1) * phaseDuration - ((phaseDuration / 2) - 1)) - 1)
-              .floor(),
-        )
+          .floor(),
+    )
         .toList();
   }
 
@@ -180,7 +180,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     final legends = {
       for (final entry in data)
         interventionNames[entry.intervention]!:
-            Legend(interventionNames[entry.intervention]!, getColor(entry)),
+        Legend(interventionNames[entry.intervention]!, getColor(entry)),
     };
     return LegendsListWidget(legends: legends.values.toList());
   }
@@ -195,17 +195,18 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   BarChartData getChartData(BuildContext context, List<DiagramDatum> data) {
     final barGroups = getBarGroups(context, data);
     final maxY =
-        ((data.sortedBy((entry) => entry.value).toList().lastOrNull?.value ??
-                    0) *
-                1.1)
-            .ceilToDouble();
+    ((data.sortedBy((entry) => entry.value).toList().lastOrNull?.value ??
+        0) *
+        1.1)
+        .ceilToDouble();
+
     return BarChartData(
       titlesData: FlTitlesData(
         bottomTitles: AxisTitles(
           axisNameWidget:
-              (widget.section.aggregate != TemporalAggregation.intervention)
-                  ? const Text("Phase")
-                  : const Text(""),
+          (widget.section.aggregate != TemporalAggregation.intervention)
+              ? const Text("Phase")
+              : const Text(""),
           sideTitles: SideTitles(
             showTitles: true,
             getTitlesWidget: getTitles,
@@ -227,29 +228,69 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           },
         ),
       ),
+      backgroundColor: getBackgroundColor(data),
       maxY: maxY,
     );
   }
 
-  LineChartData getLineChartData(
-      BuildContext context, List<DiagramDatum> data) {
-    final spots = data.map((datum) {
-      return FlSpot(datum.x.toDouble(), datum.value.toDouble());
-    }).toList();
+  LineChartData getLineChartData(BuildContext context, List<DiagramDatum> data) {
+    // Sort data by x value to ensure proper line plotting
+    data.sort((a, b) => a.x.compareTo(b.x));
 
-    final minX =
-        data.map((datum) => datum.x.toDouble()).reduce((a, b) => a < b ? a : b);
-    final maxX =
-        data.map((datum) => datum.x.toDouble()).reduce((a, b) => a > b ? a : b);
-    final maxY = ((data
-                .map((datum) => datum.value.toDouble())
-                .reduce((a, b) => a > b ? a : b) *
-            1.1)
-        .ceilToDouble());
+    final lineBarsData = <LineChartBarData>[];
 
-    print('minX: $minX');
-    print('maxX: $maxX');
-    print('maxY: $maxY');
+    // Create segments of spots with background colors
+    for (var i = 0; i < data.length - 1; i++) {
+      final datum = data[i];
+      final nextDatum = data[i + 1];
+
+      final spots = [
+        FlSpot(datum.x.toDouble(), datum.value.toDouble()),
+        FlSpot(nextDatum.x.toDouble(), nextDatum.value.toDouble()),
+      ];
+
+      // Determine the background color based on the intervention
+      Color backgroundColor;
+      if (getColor(datum) == Colors.blue) {
+        backgroundColor = Colors.blue.withOpacity(0.2);
+      } else if (getColor(datum) == Colors.orange) {
+        backgroundColor = Colors.orange.withOpacity(0.2);
+      } else if (getColor(datum) == Colors.grey) {
+        backgroundColor = Colors.grey.withOpacity(0.2);
+      } else {
+        backgroundColor = Colors.transparent;
+      }
+
+      lineBarsData.add(LineChartBarData(
+        spots: spots,
+        isCurved: false,
+        belowBarData: BarAreaData(
+          show: true,
+          color: backgroundColor,
+        ),
+        aboveBarData: BarAreaData(
+          show: true,
+          color: backgroundColor, // Adjust as needed
+        ),
+        dotData: FlDotData(
+          show: false,
+          getDotPainter: (spot, percent, barData, index) {
+            return FlDotCirclePainter(
+              radius: 4,
+              color: Colors.black,
+              strokeWidth: 2,
+              strokeColor: Colors.white,
+            );
+          },
+        ),
+        color: Colors.black, // Line color
+        barWidth: 2,
+      ));
+    }
+
+    final minX = data.map((datum) => datum.x.toDouble()).reduce((a, b) => a < b ? a : b);
+    final maxX = data.map((datum) => datum.x.toDouble()).reduce((a, b) => a > b ? a : b);
+    final maxY = ((data.map((datum) => datum.value.toDouble()).reduce((a, b) => a > b ? a : b) * 1.1).ceilToDouble());
 
     return LineChartData(
       gridData: FlGridData(show: false),
@@ -308,33 +349,38 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           width: 1,
         ),
       ),
-      lineBarsData: [
-        LineChartBarData(
-            spots: spots,
-            isCurved: false,
-            belowBarData: BarAreaData(show: false),
-            dotData: FlDotData(
-              show: true,
-              getDotPainter: (spot, percent, barData, index) {
-                return FlDotCirclePainter(
-                  radius: 4,
-                  color: Colors.black,
-                  strokeWidth: 2,
-                  strokeColor: Colors.white,
-                );
-              },
-            ),
-            color: Colors.black),
-      ],
+      lineBarsData: lineBarsData,
       lineTouchData: LineTouchData(
         touchTooltipData: LineTouchTooltipData(),
         handleBuiltInTouches: true,
       ),
-      minX: 0,
+      minX: minX,
       maxX: maxX,
       minY: 0,
       maxY: maxY,
     );
+  }
+
+
+  List<Color> getBackgroundColors(List<DiagramDatum> data) {
+    List<Color> colors = [];
+    for (var datum in data) {
+      if (getColor(datum) == Colors.blue) {
+        colors.add(Colors.blue.withOpacity(0.2));
+      } else if (getColor(datum) == Colors.orange) {
+        colors.add(Colors.orange.withOpacity(0.2));
+      }
+    }
+    return colors;
+  }
+
+  Color getBackgroundColor(List<DiagramDatum> data) {
+    if (data.any((datum) => datum.intervention == 'intervention_a')) {
+      return Colors.lightBlue.withOpacity(0.3);
+    } else if (data.any((datum) => datum.intervention == 'intervention_b')) {
+      return Colors.orange.withOpacity(0.3);
+    }
+    return Colors.transparent;
   }
 
   Widget getTitles(double value, TitleMeta meta) {
@@ -363,9 +409,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   }
 
   List<BarChartGroupData> getBarGroups(
-    BuildContext context,
-    List<DiagramDatum> data,
-  ) {
+      BuildContext context,
+      List<DiagramDatum> data,
+      ) {
     if (data.isEmpty) return [BarChartGroupData(x: 0)];
 
     int barCount = 0;
@@ -423,9 +469,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     bool drawLine(double val) {
       // draw when we are at the border between two phases
       return (val *
-                  lineCount %
-                  (2 * widget.subject.study.schedule.phaseDuration))
-              .toInt() ==
+          lineCount %
+          (2 * widget.subject.study.schedule.phaseDuration))
+          .toInt() ==
           0;
     }
 
@@ -443,7 +489,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
 
     switch (widget.section.aggregate) {
       case TemporalAggregation.day:
-        //c = colors[subject.interventionOrder.indexOf(diagram.intervention)];
+      //c = colors[subject.interventionOrder.indexOf(diagram.intervention)];
         if (widget.subject.study.schedule.includeBaseline &&
             diagram.x < widget.subject.study.schedule.phaseDuration) {
           // if id == "_baseline"
@@ -489,9 +535,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
 
   Iterable<DiagramDatum> aggregateDataBy(TemporalAggregation? aggregate) {
     final values =
-        widget.section.resultProperty!.retrieveFromResults(widget.subject);
+    widget.section.resultProperty!.retrieveFromResults(widget.subject);
     final data = values.entries.map(
-      (e) => DiagramDatum(
+          (e) => DiagramDatum(
         getDayIndex(e.key),
         e.value,
         e.key,
@@ -505,12 +551,12 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           .groupBy((e) => e.x)
           .aggregateWithKey(
             (data, day) => DiagramDatum(
-              day,
-              foldAggregateMean()(data.map((e) => e.value)),
-              null,
-              data.first.intervention,
-            ),
-          )
+          day,
+          foldAggregateMean()(data.map((e) => e.value)),
+          null,
+          data.first.intervention,
+        ),
+      )
           .map((e) => e.value);
     } else if (aggregate == TemporalAggregation.phase) {
       return data
@@ -518,26 +564,26 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
               (e) => widget.subject.getInterventionIndexForDate(e.timestamp!))
           .aggregateWithKey(
             (data, phase) => DiagramDatum(
-              phase,
-              foldAggregateMean()(data.map((e) => e.value)),
-              null,
-              data.first.intervention,
-            ),
-          )
+          phase,
+          foldAggregateMean()(data.map((e) => e.value)),
+          null,
+          data.first.intervention,
+        ),
+      )
           .map((e) => e.value);
     } else {
       final order =
-          getInterventionPositions(widget.subject.selectedInterventions);
+      getInterventionPositions(widget.subject.selectedInterventions);
       return data
           .groupBy((e) => e.intervention)
           .aggregateWithKey(
             (data, intervention) => DiagramDatum(
-              order[intervention]! as num,
-              foldAggregateMean()(data.map((e) => e.value)),
-              null,
-              intervention,
-            ),
-          )
+          order[intervention]! as num,
+          foldAggregateMean()(data.map((e) => e.value)),
+          null,
+          intervention,
+        ),
+      )
           .map((e) => e.value);
     }
   }
