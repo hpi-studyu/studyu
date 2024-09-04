@@ -1104,6 +1104,10 @@ CREATE OR REPLACE TRIGGER "status_update_permissions_template" BEFORE UPDATE ON 
 
 
 
+CREATE OR REPLACE TRIGGER "on_auth_user_created" AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION "public"."handle_new_user"();
+
+
+
 ALTER TABLE ONLY "public"."subject_progress"
     ADD CONSTRAINT "participant_progress_subjectId_fkey" FOREIGN KEY ("subject_id") REFERENCES "public"."study_subject"("id") ON DELETE CASCADE;
 
@@ -1340,10 +1344,10 @@ COMMENT ON POLICY "template_visibility" ON "public"."template" IS 'Allow visibil
 ALTER TABLE "public"."user" ENABLE ROW LEVEL SECURITY;
 
 
-CREATE PUBLICATION "logflare_pub" WITH (publish = 'insert, update, delete, truncate');
+--CREATE PUBLICATION "logflare_pub" WITH (publish = 'insert, update, delete, truncate');
 
 
-ALTER PUBLICATION "logflare_pub" OWNER TO "supabase_admin";
+--ALTER PUBLICATION "logflare_pub" OWNER TO "supabase_admin";
 
 
 

@@ -65,6 +65,13 @@ BEGIN
       'public',
       '{}'
     );
+
+    INSERT INTO "public"."template" ("id", "contact", "title", "description", "icon_name", "published", "status", "registry_published", "questionnaire", "eligibility_criteria", "observations", "interventions", "consent", "schedule", "report_specification", "results", "created_at", "updated_at", "user_id", "participation", "result_sharing", "collaborator_emails", "locked_contact", "locked_participation", "locked_schedule", "locked_registry") VALUES
+    	('53446580-ad3b-452e-bb4b-094a18f27903', '{"email": "contact@example.com"}', 'Template', 'Study description here', 'icon.png', false, 'draft', false, '{"question": "What is your age?"}', '{"criteria": "Age 18+"}', '{"observation": "None"}', '{"intervention": "None"}', '{"consent": "Agreed"}', '{"schedule": "Weekly"}', '{"report": "Complete"}', '{"result": "Pending"}', '2024-08-13 12:16:41.77377+00', '2024-08-13 12:16:41.77377+00', user_id, 'invite', 'private', '{}', true, true, true, true);
+
+    INSERT INTO "public"."study" ("contact", "title", "description", "icon_name", "published", "status", "registry_published", "questionnaire", "eligibility_criteria", "observations", "interventions", "consent", "schedule", "report_specification", "results", "created_at", "updated_at", "user_id", "participation", "result_sharing", "collaborator_emails", "parent_id") VALUES
+    	('{"email": "contact@example.com"}', 'Sub-trial', 'Study description here', 'icon.png', false, 'draft', false, '{"question": "What is your age?"}', '{"criteria": "Age 18+"}', '{"observation": "None"}', '{"intervention": "None"}', '{"consent": "Agreed"}', '{"schedule": "Weekly"}', '{"report": "Complete"}', '{"result": "Pending"}', '2024-08-13 12:16:41.77377+00', '2024-08-13 12:16:41.77377+00', user_id, 'invite', 'private', '{}', '53446580-ad3b-452e-bb4b-094a18f27903');
+
 END $$;
 
 COMMIT;
