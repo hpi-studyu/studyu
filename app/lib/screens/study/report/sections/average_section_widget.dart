@@ -253,11 +253,11 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
       // Determine the background color based on the intervention
       Color backgroundColor;
       if (getColor(datum) == Colors.blue) {
-        backgroundColor = Colors.blue.withOpacity(0.2);
+        backgroundColor = Colors.blue.withOpacity(0.6);
       } else if (getColor(datum) == Colors.orange) {
-        backgroundColor = Colors.orange.withOpacity(0.2);
+        backgroundColor = Colors.orange.withOpacity(0.6);
       } else if (getColor(datum) == Colors.grey) {
-        backgroundColor = Colors.grey.withOpacity(0.2);
+        backgroundColor = Colors.grey.withOpacity(0.6);
       } else {
         backgroundColor = Colors.transparent;
       }
