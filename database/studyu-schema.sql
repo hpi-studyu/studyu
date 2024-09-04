@@ -116,6 +116,16 @@ CREATE TYPE "public"."study_status" AS ENUM (
 ALTER TYPE "public"."study_status" OWNER TO "postgres";
 
 
+CREATE TYPE "public"."study_type" AS ENUM (
+    'standalone-trial',
+    'sub-trial',
+    'template'
+);
+
+
+ALTER TYPE "public"."study_type" OWNER TO "postgres";
+
+
 CREATE TYPE "public"."upsert_type" AS ENUM (
     'insert',
     'update'
@@ -770,6 +780,110 @@ INHERITS ("public"."study_base");
 ALTER TABLE "public"."study" OWNER TO "postgres";
 
 
+CREATE TABLE IF NOT EXISTS "public"."template" (
+    "locked_contact" boolean DEFAULT false NOT NULL,
+    "locked_participation" boolean DEFAULT false NOT NULL,
+    "locked_schedule" boolean DEFAULT false NOT NULL,
+    "locked_registry" boolean DEFAULT false NOT NULL
+)
+INHERITS ("public"."study_base");
+
+
+ALTER TABLE "public"."template" OWNER TO "postgres";
+
+
+CREATE OR REPLACE VIEW "public"."study_display_view" AS
+ SELECT "id",
+    "contact",
+    "title",
+    "description",
+    "icon_name",
+    "published",
+    "status",
+    "registry_published",
+    "questionnaire",
+    "eligibility_criteria",
+    "observations",
+    "interventions",
+    "consent",
+    "schedule",
+    "report_specification",
+    "results",
+    "created_at",
+    "updated_at",
+    "user_id",
+    "participation",
+    "result_sharing",
+    "collaborator_emails",
+    "source",
+    "study"."parent_id",
+    "template"."locked_contact",
+    "template"."locked_participation",
+    "template"."locked_schedule",
+    "template"."locked_registry",
+        CASE
+            WHEN ("template"."locked_contact" IS NOT NULL) THEN 'template'::"public"."study_type"
+            WHEN ("study"."parent_id" IS NOT NULL) THEN 'sub-trial'::"public"."study_type"
+            ELSE 'standalone-trial'::"public"."study_type"
+        END AS "study_type"
+   FROM (( SELECT "study_1"."id",
+            "study_1"."contact",
+            "study_1"."title",
+            "study_1"."description",
+            "study_1"."icon_name",
+            "study_1"."published",
+            "study_1"."status",
+            "study_1"."registry_published",
+            "study_1"."questionnaire",
+            "study_1"."eligibility_criteria",
+            "study_1"."observations",
+            "study_1"."interventions",
+            "study_1"."consent",
+            "study_1"."schedule",
+            "study_1"."report_specification",
+            "study_1"."results",
+            "study_1"."created_at",
+            "study_1"."updated_at",
+            "study_1"."user_id",
+            "study_1"."participation",
+            "study_1"."result_sharing",
+            "study_1"."collaborator_emails",
+            "study_1"."parent_id",
+            'study'::"text" AS "source"
+           FROM "public"."study" "study_1") "study"
+     FULL JOIN ( SELECT "template_1"."id",
+            "template_1"."contact",
+            "template_1"."title",
+            "template_1"."description",
+            "template_1"."icon_name",
+            "template_1"."published",
+            "template_1"."status",
+            "template_1"."registry_published",
+            "template_1"."questionnaire",
+            "template_1"."eligibility_criteria",
+            "template_1"."observations",
+            "template_1"."interventions",
+            "template_1"."consent",
+            "template_1"."schedule",
+            "template_1"."report_specification",
+            "template_1"."results",
+            "template_1"."created_at",
+            "template_1"."updated_at",
+            "template_1"."user_id",
+            "template_1"."participation",
+            "template_1"."result_sharing",
+            "template_1"."collaborator_emails",
+            "template_1"."locked_contact",
+            "template_1"."locked_participation",
+            "template_1"."locked_schedule",
+            "template_1"."locked_registry",
+            'template'::"text" AS "source"
+           FROM "public"."template" "template_1") "template" USING ("id", "contact", "title", "description", "icon_name", "published", "status", "registry_published", "questionnaire", "eligibility_criteria", "observations", "interventions", "consent", "schedule", "report_specification", "results", "created_at", "updated_at", "user_id", "participation", "result_sharing", "collaborator_emails", "source"));
+
+
+ALTER TABLE "public"."study_display_view" OWNER TO "postgres";
+
+
 CREATE TABLE IF NOT EXISTS "public"."study_invite" (
     "code" "text" NOT NULL,
     "study_id" "uuid" NOT NULL,
@@ -818,18 +932,6 @@ CREATE OR REPLACE VIEW "public"."study_progress_export" WITH ("security_invoker"
 
 
 ALTER TABLE "public"."study_progress_export" OWNER TO "postgres";
-
-
-CREATE TABLE IF NOT EXISTS "public"."template" (
-    "locked_contact" boolean DEFAULT false NOT NULL,
-    "locked_participation" boolean DEFAULT false NOT NULL,
-    "locked_schedule" boolean DEFAULT false NOT NULL,
-    "locked_registry" boolean DEFAULT false NOT NULL
-)
-INHERITS ("public"."study_base");
-
-
-ALTER TABLE "public"."template" OWNER TO "postgres";
 
 
 CREATE TABLE IF NOT EXISTS "public"."user" (
@@ -1259,6 +1361,192 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 GRANT ALL ON TABLE "public"."study_base" TO "anon";
 GRANT ALL ON TABLE "public"."study_base" TO "authenticated";
 GRANT ALL ON TABLE "public"."study_base" TO "service_role";
@@ -1427,6 +1715,21 @@ GRANT ALL ON FUNCTION "public"."user_email"("user_id" "uuid") TO "service_role";
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 GRANT ALL ON TABLE "public"."app_config" TO "anon";
 GRANT ALL ON TABLE "public"."app_config" TO "authenticated";
 GRANT ALL ON TABLE "public"."app_config" TO "service_role";
@@ -1445,6 +1748,18 @@ GRANT ALL ON TABLE "public"."study" TO "service_role";
 
 
 
+GRANT ALL ON TABLE "public"."template" TO "anon";
+GRANT ALL ON TABLE "public"."template" TO "authenticated";
+GRANT ALL ON TABLE "public"."template" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."study_display_view" TO "anon";
+GRANT ALL ON TABLE "public"."study_display_view" TO "authenticated";
+GRANT ALL ON TABLE "public"."study_display_view" TO "service_role";
+
+
+
 GRANT ALL ON TABLE "public"."study_invite" TO "anon";
 GRANT ALL ON TABLE "public"."study_invite" TO "authenticated";
 GRANT ALL ON TABLE "public"."study_invite" TO "service_role";
@@ -1460,12 +1775,6 @@ GRANT ALL ON TABLE "public"."subject_progress" TO "service_role";
 GRANT ALL ON TABLE "public"."study_progress_export" TO "anon";
 GRANT ALL ON TABLE "public"."study_progress_export" TO "authenticated";
 GRANT ALL ON TABLE "public"."study_progress_export" TO "service_role";
-
-
-
-GRANT ALL ON TABLE "public"."template" TO "anon";
-GRANT ALL ON TABLE "public"."template" TO "authenticated";
-GRANT ALL ON TABLE "public"."template" TO "service_role";
 
 
 
@@ -1499,6 +1808,35 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TAB
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES  TO "anon";
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES  TO "authenticated";
 ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT ALL ON TABLES  TO "service_role";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 RESET ALL;
 
