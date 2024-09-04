@@ -192,6 +192,11 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       );
                                       launchUrl(emailLaunchUri);
                                     },
+                                    // text color is white, so we need to set the background color to black
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Theme.of(context).primaryColor,
+                                    ),
                                     child: const Text('Send via email'),
                                   ),
                                   FutureBuilder<bool>(
@@ -203,9 +208,6 @@ class _DashboardScreenState extends State<DashboardScreen>
                                       if (snapshot.hasData) {
                                         final String data =
                                             "ignoreBatteryOptimizations: ${snapshot.data}";
-                                        StudyNotifications
-                                                .scheduledNotificationsDebug =
-                                            "${StudyNotifications.scheduledNotificationsDebug}\n\n$data\n";
                                         return Text(data);
                                       } else {
                                         return const CircularProgressIndicator();
@@ -214,7 +216,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                                   ),
                                   SelectableText(
                                     StudyNotifications
-                                        .scheduledNotificationsDebug!,
+                                            .scheduledNotificationsDebug ??
+                                        'No data',
                                   ),
                                 ],
                               ),
