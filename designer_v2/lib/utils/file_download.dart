@@ -16,7 +16,7 @@ dynamic downloadFile({required String fileContent, required String filename}) {
 void downloadBytes({required List<int> bytes, required String filename}) {
   if (!kIsWeb) {
     throw Exception(
-      "The StudyU designer only support the web platform".hardcoded,
+      "The StudyU Designer only support the web platform".hardcoded,
     );
   }
   final content = base64Encode(bytes);
