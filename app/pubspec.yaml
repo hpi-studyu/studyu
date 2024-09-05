@@ -70,7 +70,6 @@ flutter:
     - assets/
     - assets/icon/
     - assets/fonts/
-    - assets/data/t_critical_values.csv
 
 flutter_launcher_icons:
   android: true

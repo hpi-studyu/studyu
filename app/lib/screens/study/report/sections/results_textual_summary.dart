@@ -92,7 +92,7 @@ class TextualSummaryWidget extends AverageSectionWidget {
                                             ),
                                             const SizedBox(height: 2),
                                             Text(
-                                              'P-value: 0.7',
+                                              'P-value approximation: ${tTest.calculatePValue().toStringAsFixed(4)}',
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.bold,

@@ -27,7 +27,7 @@ class TTest {
   }
 
   // Calculate degrees of freedom using Welch-Satterthwaite equation
-  double calculateDegreesOfFreedom(
+  num calculateDegreesOfFreedom(
       num meanA, num meanB, num varianceA, num varianceB, int nA, int nB) {
     final num numerator = pow((varianceA / nA) + (varianceB / nB), 2);
     final num denominator = (pow(varianceA / nA, 2) / (nA - 1)) +
@@ -35,39 +35,49 @@ class TTest {
     return numerator / denominator;
   }
 
-  // Method to read CSV data from assets
-  Future<List<List<dynamic>>> loadCsvData() async {
-    final csvData =
-        await rootBundle.loadString('assets/data/t_critical_values.csv');
-    return const CsvToListConverter(eol: '\n').convert(csvData);
-  }
+  // Function to approximate the Gamma function using Lanczos approximation
+  num gamma(num x) {
+    const List<num> p = [
+      676.5203681218851,
+      -1259.1392167224028,
+      771.32342877765313,
+      -176.61502916214059,
+      12.507343278686905,
+      -0.13857109526572012,
+      9.9843695780195716e-6,
+      1.5056327351493116e-7
+    ];
 
-  // Get t-critical value based on degrees of freedom
-  Future<double> getTCritical(double degreesOfFreedom) async {
-    final List<List<dynamic>> rows = await loadCsvData();
-    // Default alpha/2 = 0.05/2 = 0.025
-    int roundedDegreesOfFreedom = degreesOfFreedom.round();
-    // Critical values of the t-test do not significantly change with large degrees of freedom.
-    // Approximate the critical values for large degrees of freedom by using the value at df = 200.
-    if (roundedDegreesOfFreedom > 200) {
-      roundedDegreesOfFreedom = 200;
-    }
-    // Iterate over rows, skipping the header
-    for (int i = 1; i < rows.length; i++) {
-      final row = rows[i];
-      if (row.isNotEmpty) {
-        final degreeOfFreedom = row[0] as int;
-        final criticalValue = row[1] as double;
-        if (degreeOfFreedom == roundedDegreesOfFreedom) {
-          return criticalValue;
-        }
+    if (x < 0.5) {
+      return pi / (sin(pi * x) * gamma(1 - x));
+    } else {
+      x -= 1;
+      num a = 0.99999999999980993;
+      num t = x + 7.5;
+
+      for (int i = 0; i < p.length; i++) {
+        a += p[i] / (x + i + 1);
       }
+
+      return sqrt(2 * pi) * pow(t, x + 0.5) * exp(-t) * a;
     }
-    throw Exception("Degrees of Freedom not found in CSV file.");
   }
 
-  // Method to check if the result is significant based on alpha level 0.05
-  Future<bool> isSignificantlyDifferent() async {
+  // Function to calculate the PDF of the t-distribution
+  num tDistributionPDF(num t, num v) {
+    num gammaHalfVPlus1 = gamma((v + 1) / 2);
+    num gammaHalfV = gamma(v / 2);
+    num sqrtVPI = sqrt(v * pi);
+
+    num numerator = gammaHalfVPlus1;
+    num denominator =
+        sqrtVPI * gammaHalfV * pow(1 + (t * t) / v, (v + 1) / 2);
+
+    return numerator / denominator;
+  }
+
+  // Calculate p-value for two-tailed t-test
+  double calculatePValue() {
     final num meanA = sampleA.mean;
     final num meanB = sampleB.mean;
     final num varianceA = variance(sampleA);
@@ -75,10 +85,32 @@ class TTest {
     final int nA = sampleA.length;
     final int nB = sampleB.length;
     final num tStatistic =
-        calculateTStatistic(meanA, meanB, varianceA, varianceB, nA, nB);
-    final double degreesOfFreedom =
-        calculateDegreesOfFreedom(meanA, meanB, varianceA, varianceB, nA, nB);
-    final double tCritical = await getTCritical(degreesOfFreedom);
-    return tStatistic.abs() > tCritical;
+    calculateTStatistic(meanA, meanB, varianceA, varianceB, nA, nB);
+    final num degreesOfFreedom =
+    calculateDegreesOfFreedom(meanA, meanB, varianceA, varianceB, nA, nB);
+
+    final double positiveTailProbability =
+    integratePDF(tStatistic.abs(), degreesOfFreedom);
+    print(positiveTailProbability.toDouble().toStringAsFixed(20));
+    print("positiveTailProbability");
+    return 2 * positiveTailProbability; // Two-tailed p-value
+  }
+
+  // Numerical integration using the trapezoidal rule to approximate the CDF
+  double integratePDF(num tStatistic, num degreesOfFreedom) {
+    const double stepSize = 0.001; // Step size for the integration
+    double sum = 0.0;
+
+    for (double t = tStatistic.toDouble(); t < 10; t += stepSize) {
+      sum += tDistributionPDF(t, degreesOfFreedom) * stepSize;
+    }
+
+    return sum;
+  }
+
+// Method to check if the result is significant based on alpha level 0.05
+  Future<bool> isSignificantlyDifferent() async {
+    final double pValue = calculatePValue();
+    return pValue < 0.05;
   }
 }
