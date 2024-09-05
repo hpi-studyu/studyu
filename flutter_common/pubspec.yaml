@@ -13,11 +13,11 @@ dependencies:
   flutter_dotenv: ^5.1.0
   flutter_secure_storage: ^9.2.2
   lint: ^2.3.0
-  shared_preferences: ^2.3.1
+  shared_preferences: ^2.3.2
   studyu_core: ^4.4.6
-  supabase_flutter: ^2.5.11
-  synchronized: ^3.1.0+1
-  uuid: ^4.4.2
+  supabase_flutter: ^2.6.0
+  synchronized: ^3.2.0
+  uuid: ^4.5.0
 
 dev_dependencies:
   flutter_lints: ^4.0.0
