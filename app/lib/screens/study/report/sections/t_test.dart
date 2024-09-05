@@ -70,8 +70,7 @@ class TTest {
     num sqrtVPI = sqrt(v * pi);
 
     num numerator = gammaHalfVPlus1;
-    num denominator =
-        sqrtVPI * gammaHalfV * pow(1 + (t * t) / v, (v + 1) / 2);
+    num denominator = sqrtVPI * gammaHalfV * pow(1 + (t * t) / v, (v + 1) / 2);
 
     return numerator / denominator;
   }
@@ -85,12 +84,12 @@ class TTest {
     final int nA = sampleA.length;
     final int nB = sampleB.length;
     final num tStatistic =
-    calculateTStatistic(meanA, meanB, varianceA, varianceB, nA, nB);
+        calculateTStatistic(meanA, meanB, varianceA, varianceB, nA, nB);
     final num degreesOfFreedom =
-    calculateDegreesOfFreedom(meanA, meanB, varianceA, varianceB, nA, nB);
+        calculateDegreesOfFreedom(meanA, meanB, varianceA, varianceB, nA, nB);
 
     final double positiveTailProbability =
-    integratePDF(tStatistic.abs(), degreesOfFreedom);
+        integratePDF(tStatistic.abs(), degreesOfFreedom);
     print(positiveTailProbability.toDouble().toStringAsFixed(20));
     print("positiveTailProbability");
     return 2 * positiveTailProbability; // Two-tailed p-value
