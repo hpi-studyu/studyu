@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:csv/csv.dart';
-import 'package:flutter/services.dart';
 import 'package:statistics/statistics.dart';
 
 // This class implements the Welch's two sample t-test according to https://en.wikipedia.org/wiki/Student%27s_t-test

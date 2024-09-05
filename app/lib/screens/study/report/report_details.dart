@@ -41,13 +41,13 @@ class ReportDetailsScreen extends StatelessWidget {
           children: [
             GeneralDetailsSection(subject),
             DisclaimerSection(subject),
-            PerformanceSection(
-              subject,
-              onTap: () => Navigator.push(
-                context,
-                PerformanceDetailsScreen.routeFor(subject: subject),
-              ),
-            ),
+            //PerformanceSection(
+            //  subject,
+            //  onTap: () => Navigator.push(
+            //    context,
+            //    PerformanceDetailsScreen.routeFor(subject: subject),
+            //  ),
+            //),
             if (subject.study.reportSpecification.primary != null &&
                 (subject.completedStudy || kDebugMode))
               ReportSectionContainer(

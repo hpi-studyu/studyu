@@ -2,7 +2,6 @@ import 'dart:convert';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 
-import 'package:csv/csv.dart';
 import 'package:flutter/foundation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/utils/json_format.dart';
