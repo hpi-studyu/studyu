@@ -12,10 +12,10 @@ dependencies:
   csv: ^6.0.0
   json_annotation: ^4.9.0
   logger: ^2.4.0
-  quiver: ^3.2.1
-  sentry: ^8.6.0
-  supabase: ^2.2.7
-  uuid: ^4.4.2
+  quiver: ^3.2.2
+  sentry: ^8.8.0
+  supabase: ^2.3.0
+  uuid: ^4.5.0
 
 dev_dependencies:
   build_runner: ^2.4.12
