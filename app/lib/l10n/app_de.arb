@@ -52,6 +52,9 @@
   "study_current": "Aktuelle Studie:",
   "opt_out": "Aussteigen",
   "delete_data": "Aussteigen und Daten löschen",
+  "soft_delete_desc": "Sie werden Ihren Fortschritt in der Studie ",
+  "soft_delete_desc_2": " unwiederbringlich verlieren. Bereits abgeschlossene Studien werden nicht gelöscht.\nIhre anonymisierten Daten bis zu diesem Zeitpunkt können weiterhin für Forschungszwecke verwendet werden.",
+  "hard_delete_desc": "Sie werden alle Daten von Ihrem Gerät und unseren Servern löschen. Sie können Ihre Daten nicht wiederherstellen. Ihre anonymisierten Daten werden nicht mehr für Forschungszwecke zur Verfügung stehen.",
 
   "summary": "Übersicht",
   "consent": "Einverständnis",
