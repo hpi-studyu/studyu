@@ -113,7 +113,7 @@ Future<void> scheduleNotifications(BuildContext context) async {
       "Timestamp: ${DateTime.now()}\nSubject ID: ${subject.id}\n";
   final List<StudyNotification> studyNotificationList = [];
 
-  for (int index = 0; index <= 3; index++) {
+  for (int index = 0; index <= 7; index++) {
     final date = DateTime.now().add(Duration(days: index));
     final tasks = subject.scheduleFor(date);
     studyNotificationList.addAll(_buildNotificationList(subject, date, tasks));

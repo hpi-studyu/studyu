@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -161,13 +162,12 @@ class OptOutAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Text('${AppLocalizations.of(context)!.opt_out} ?'),
+      title: Text('${AppLocalizations.of(context)!.opt_out}?'),
       content: RichText(
         text: TextSpan(
           style: const TextStyle(color: Colors.black),
           children: [
-            // todo translate
-            const TextSpan(text: 'You will lose your progress in '),
+            TextSpan(text: AppLocalizations.of(context)!.soft_delete_desc),
             TextSpan(
               text: subject!.study.title,
               style: TextStyle(
@@ -176,11 +176,7 @@ class OptOutAlertDialog extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
-            const TextSpan(
-              text: " and won't be able to recover it. Previously completed "
-                  'studies will not be deleted.\nYour anonymized data up to this '
-                  'point may still be used for research purposes.',
-            ),
+            TextSpan(text: AppLocalizations.of(context)!.soft_delete_desc_2),
           ],
         ),
       ),
@@ -192,13 +188,7 @@ class OptOutAlertDialog extends StatelessWidget {
           onPressed: () async {
             await subject!.softDelete();
             await deleteActiveStudyReference();
-            if (context.mounted) {
-              final studyNotifications = context
-                  .read<AppState>()
-                  .studyNotifications
-                  ?.flutterLocalNotificationsPlugin;
-              await studyNotifications?.cancelAll();
-            }
+            if (context.mounted) await cancelNotifications(context);
             if (context.mounted) {
               Navigator.pushNamedAndRemoveUntil(
                 context,
@@ -220,12 +210,9 @@ class DeleteAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text('${AppLocalizations.of(context)!.delete_data} ?'),
-        // todo translate
-        content: const Text(
-          'You are about to delete all data from your device and our servers. '
-          'You will not be able to restore your data.\nYour anonymized data will '
-          'not be available for research purposes anymore.',
+        title: Text('${AppLocalizations.of(context)!.delete_data}?'),
+        content: Text(
+          AppLocalizations.of(context)!.hard_delete_desc,
         ),
         actions: [
           ElevatedButton.icon(
@@ -236,13 +223,7 @@ class DeleteAlertDialog extends StatelessWidget {
               try {
                 await subject!.delete(); // hard-delete
                 await deleteLocalData();
-                if (context.mounted) {
-                  final studyNotifications = context
-                      .read<AppState>()
-                      .studyNotifications
-                      ?.flutterLocalNotificationsPlugin;
-                  await studyNotifications?.cancelAll();
-                }
+                if (context.mounted) await cancelNotifications(context);
                 if (context.mounted) {
                   Navigator.pushNamedAndRemoveUntil(
                     context,
@@ -255,4 +236,21 @@ class DeleteAlertDialog extends StatelessWidget {
           ),
         ],
       );
+}
+
+Future<void>? cancelNotifications(BuildContext context) {
+  if (kIsWeb) return Future.value(); // Notifications not supported on web
+  final appState = context.read<AppState>();
+  final studyNotifications = appState.studyNotifications;
+  final notificationsPlugin =
+      studyNotifications?.flutterLocalNotificationsPlugin;
+  notificationsPlugin?.cancelAll();
+  if (kDebugMode) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('DEBUG: Notifications cancelled'),
+      ),
+    );
+  }
+  return Future.value();
 }
