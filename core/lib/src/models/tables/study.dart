@@ -1,3 +1,4 @@
+import 'package:csv/csv.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
 import 'package:studyu_core/src/models/models.dart';
