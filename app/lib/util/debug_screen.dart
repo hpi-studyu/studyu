@@ -89,9 +89,13 @@ class DebugScreen {
                           await _deleteAppDir();
                           await SecureStorage.deleteAll();
                           if (context.mounted) {
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('App reset successfully'),
+                                content: Text(
+                                  'App reset successfully! Please restart the app.',
+                                ),
                               ),
                             );
                             await Future.delayed(const Duration(seconds: 1));
