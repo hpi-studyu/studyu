@@ -78,9 +78,15 @@ class DashboardState extends Equatable {
         case StudyType.standalone:
           result.add(StudyGroup.standalone(study));
         case StudyType.template:
-          final List<Study> subStudies =
-              studies.where((s) => s.parentTemplateId == study.id).toList();
-          result.add(StudyGroup.template(study as Template, subStudies));
+          final List<Study> subStudies = studies
+              .where((s) => s.parentTemplateId == study.id)
+              .map((subStudy) {
+            subStudy.templateConfiguration = study.templateConfiguration;
+            return subStudy;
+          }).toList();
+
+          result
+              .add(StudyGroup.template(Template.fromStudy(study), subStudies));
         case StudyType.subStudy:
           break;
       }

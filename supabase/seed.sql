@@ -23,7 +23,6 @@ DECLARE
 BEGIN
     user_id := mockup.create_user(email, password);
 
-    -- Insert for the "template" table based on template_rows.csv
     INSERT INTO "public"."template" ("id", "contact", "title", "description", "icon_name", "published", "status", "registry_published", "questionnaire", "eligibility_criteria", "observations", "interventions", "consent", "schedule", "report_specification", "results", "created_at", "updated_at", "user_id", "participation", "result_sharing", "collaborator_emails", "locked_contact", "locked_participation", "locked_schedule", "locked_registry")
     VALUES (
         '53446580-ad3b-452e-bb4b-094a18f27903',
@@ -54,7 +53,6 @@ BEGIN
         true
     );
 
-    -- Insert for the "study" table based on study_rows.csv
     INSERT INTO "public"."study" ("id", "contact", "title", "description", "icon_name", "published", "status", "registry_published", "questionnaire", "eligibility_criteria", "observations", "interventions", "consent", "schedule", "report_specification", "results", "created_at", "updated_at", "user_id", "participation", "result_sharing", "collaborator_emails", "parent_id")
     VALUES
         (

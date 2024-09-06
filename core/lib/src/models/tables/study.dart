@@ -276,7 +276,15 @@ class Study extends SupabaseObjectFunctions<Study>
   }
 
   StudyType get type {
-    return studyType ?? StudyType.standalone;
+    if (templateConfiguration != null && parentTemplateId == null) {
+      return StudyType.template;
+    }
+
+    if (parentTemplateId != null) {
+      return StudyType.subStudy;
+    }
+
+    return StudyType.standalone;
   }
 
   bool get isStandalone => type == StudyType.standalone;
@@ -363,7 +371,37 @@ class Template extends Study {
 
   Template.create(String userId) : super(const Uuid().v4(), userId) {
     templateConfiguration = TemplateConfiguration();
-    studyType = StudyType.template;
+  }
+
+  factory Template.fromStudy(Study study) {
+    return Template(study.id, study.userId)
+      ..title = study.title
+      ..description = study.description
+      ..participation = study.participation
+      ..resultSharing = study.resultSharing
+      ..contact = study.contact
+      ..iconName = study.iconName
+      ..status = study.status
+      ..questionnaire = study.questionnaire
+      ..eligibilityCriteria = study.eligibilityCriteria
+      ..consent = study.consent
+      ..interventions = study.interventions
+      ..observations = study.observations
+      ..schedule = study.schedule
+      ..reportSpecification = study.reportSpecification
+      ..collaboratorEmails = study.collaboratorEmails
+      ..registryPublished = study.registryPublished
+      ..participantCount = study.participantCount
+      ..endedCount = study.endedCount
+      ..activeSubjectCount = study.activeSubjectCount
+      ..missedDays = study.missedDays
+      ..createdAt = study.createdAt
+      ..repo = study.repo
+      ..invites = study.invites
+      ..participants = study.participants
+      ..participantsProgress = study.participantsProgress
+      ..templateConfiguration =
+          study.templateConfiguration; // Make sure to include this
   }
 }
 
@@ -377,8 +415,6 @@ class TemplateSubStudy extends Study {
       throw ArgumentError('Template must have a templateConfiguration');
     }
     parentTemplateId = template.id;
-
-    studyType = StudyType.subStudy;
 
     templateConfiguration = template.templateConfiguration!.copyWith(
       title: template.title,
