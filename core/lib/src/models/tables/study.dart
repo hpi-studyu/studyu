@@ -276,15 +276,7 @@ class Study extends SupabaseObjectFunctions<Study>
   }
 
   StudyType get type {
-    if (templateConfiguration != null && parentTemplateId == null) {
-      return StudyType.template;
-    }
-
-    if (parentTemplateId != null) {
-      return StudyType.subStudy;
-    }
-
-    return StudyType.standalone;
+    return studyType ?? StudyType.standalone;
   }
 
   bool get isStandalone => type == StudyType.standalone;
@@ -376,6 +368,7 @@ class Template extends Study {
   factory Template.fromStudy(Study study) {
     return Template(study.id, study.userId)
       ..title = study.title
+      ..studyType = study.studyType
       ..description = study.description
       ..participation = study.participation
       ..resultSharing = study.resultSharing
