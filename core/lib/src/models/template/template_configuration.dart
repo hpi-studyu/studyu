@@ -4,9 +4,13 @@ part 'template_configuration.g.dart';
 
 @JsonSerializable()
 class TemplateConfiguration {
+  @JsonKey(name: 'locked_contact')
   final bool lockPublisherInformation;
+  @JsonKey(name: 'locked_participation')
   final bool lockEnrollmentType;
+  @JsonKey(name: 'locked_schedule')
   final bool lockStudySchedule;
+  @JsonKey(name: 'locked_registry')
   final bool lockStudySettings;
 
   /// The title of the parent template

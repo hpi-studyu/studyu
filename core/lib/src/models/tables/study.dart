@@ -36,8 +36,11 @@ enum ResultSharing {
 }
 
 enum StudyType {
+  @JsonValue('standalone-trial')
   standalone,
+  @JsonValue('template')
   template,
+  @JsonValue('sub-trial')
   subStudy;
 
   String toJson() => name;
@@ -47,19 +50,17 @@ enum StudyType {
 @JsonSerializable()
 class Study extends SupabaseObjectFunctions<Study>
     implements Comparable<Study> {
-  static const String tableName = 'study';
+  static const String tableName = 'study_display_view';
 
   @override
   Map<String, Object> get primaryKeys => {'id': id};
 
   static const String baselineID = '__baseline';
   String id;
-  @JsonKey(name: 'parent_template_id')
-  String? parentTemplateId;
-  @JsonKey(name: 'template_configuration')
-  TemplateConfiguration? templateConfiguration;
+
   String? title;
   String? description = '';
+
   @JsonKey(name: 'user_id')
   String userId;
   Participation participation = Participation.invite;
@@ -117,6 +118,16 @@ class Study extends SupabaseObjectFunctions<Study>
   @JsonKey(includeToJson: false, includeFromJson: false)
   DateTime? createdAt;
 
+  //View Fields
+  @JsonKey(name: 'parent_id', includeFromJson: false)
+  String? parentTemplateId;
+
+  @JsonKey(name: 'study_type')
+  StudyType? studyType;
+
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  TemplateConfiguration? templateConfiguration;
+
   Study(this.id, this.userId);
 
   Study.create(this.userId) : id = const Uuid().v4();
@@ -159,13 +170,15 @@ class Study extends SupabaseObjectFunctions<Study>
   }
 
   factory Study.fromJson(Map<String, dynamic> json) {
-    final parentTemplateId = json['parent_template_id'] as String?;
-    final templateConfiguration = json['template_configuration'];
-    final study = parentTemplateId != null
-        ? _$TemplateSubStudyFromJson(json)
-        : (templateConfiguration != null
-            ? _$TemplateFromJson(json)
-            : _$StudyFromJson(json));
+    final String studyType = json['study_type'] as String;
+
+    final study = _$StudyFromJson(json);
+
+    if (studyType == 'template') {
+      study.templateConfiguration = TemplateConfiguration.fromJson(json);
+    } else if (studyType == 'sub-trial') {
+      study.parentTemplateId = json['parent_id'] as String;
+    }
 
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
@@ -240,22 +253,6 @@ class Study extends SupabaseObjectFunctions<Study>
         ],
       );
 
-  /*static Future<List<Study>> getDashboardDisplayStudies() async => SupabaseQuery.getAll<Study>(
-    selectedColumns: [
-      'id',
-      'title',
-      'description',
-      'user_id',
-      'participation',
-      'result_sharing',
-      'published',
-      'registry_published',
-      'study_participant_count',
-      'study_ended_count',
-      'active_subject_count',
-    ],
-  );*/
-
   // ['id', 'title', 'description', 'published', 'icon_name', 'results', 'schedule']
   static Future<ExtractionResult<Study>> publishedPublicStudies() async {
     ExtractionResult<Study> result;
@@ -279,13 +276,7 @@ class Study extends SupabaseObjectFunctions<Study>
   }
 
   StudyType get type {
-    if (parentTemplateId != null) {
-      return StudyType.subStudy;
-    }
-    if (templateConfiguration != null) {
-      return StudyType.template;
-    }
-    return StudyType.standalone;
+    return studyType ?? StudyType.standalone;
   }
 
   bool get isStandalone => type == StudyType.standalone;
@@ -372,6 +363,7 @@ class Template extends Study {
 
   Template.create(String userId) : super(const Uuid().v4(), userId) {
     templateConfiguration = TemplateConfiguration();
+    studyType = StudyType.template;
   }
 }
 
@@ -385,8 +377,14 @@ class TemplateSubStudy extends Study {
       throw ArgumentError('Template must have a templateConfiguration');
     }
     parentTemplateId = template.id;
-    templateConfiguration = template.templateConfiguration!
-        .copyWith(title: template.title, description: template.description);
+
+    studyType = StudyType.subStudy;
+
+    templateConfiguration = template.templateConfiguration!.copyWith(
+      title: template.title,
+      description: template.description,
+    );
+
     participation = template.participation;
     resultSharing = template.resultSharing;
     contact = template.contact;

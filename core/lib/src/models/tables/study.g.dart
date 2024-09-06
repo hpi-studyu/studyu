@@ -10,11 +10,6 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
       json['id'] as String,
       json['user_id'] as String,
     )
-      ..parentTemplateId = json['parent_template_id'] as String?
-      ..templateConfiguration = json['template_configuration'] == null
-          ? null
-          : TemplateConfiguration.fromJson(
-              json['template_configuration'] as Map<String, dynamic>)
       ..title = json['title'] as String?
       ..description = json['description'] as String?
       ..participation =
@@ -51,7 +46,8 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
               ?.map((e) => e as String)
               .toList() ??
           []
-      ..registryPublished = json['registry_published'] as bool? ?? false;
+      ..registryPublished = json['registry_published'] as bool? ?? false
+      ..studyType = $enumDecodeNullable(_$StudyTypeEnumMap, json['study_type']);
 
 Map<String, dynamic> _$StudyToJson(Study instance) {
   final val = <String, dynamic>{
@@ -64,9 +60,6 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
     }
   }
 
-  writeNotNull('parent_template_id', instance.parentTemplateId);
-  writeNotNull(
-      'template_configuration', instance.templateConfiguration?.toJson());
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   val['user_id'] = instance.userId;
@@ -87,6 +80,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   val['results'] = instance.results.map((e) => e.toJson()).toList();
   val['collaborator_emails'] = instance.collaboratorEmails;
   val['registry_published'] = instance.registryPublished;
+  writeNotNull('study_type', instance.studyType?.toJson());
   return val;
 }
 
@@ -107,15 +101,16 @@ const _$StudyStatusEnumMap = {
   StudyStatus.closed: 'closed',
 };
 
+const _$StudyTypeEnumMap = {
+  StudyType.standalone: 'standalone-trial',
+  StudyType.template: 'template',
+  StudyType.subStudy: 'sub-trial',
+};
+
 Template _$TemplateFromJson(Map<String, dynamic> json) => Template(
       json['id'] as String,
       json['user_id'] as String,
     )
-      ..parentTemplateId = json['parent_template_id'] as String?
-      ..templateConfiguration = json['template_configuration'] == null
-          ? null
-          : TemplateConfiguration.fromJson(
-              json['template_configuration'] as Map<String, dynamic>)
       ..title = json['title'] as String?
       ..description = json['description'] as String?
       ..participation =
@@ -152,7 +147,8 @@ Template _$TemplateFromJson(Map<String, dynamic> json) => Template(
               ?.map((e) => e as String)
               .toList() ??
           []
-      ..registryPublished = json['registry_published'] as bool? ?? false;
+      ..registryPublished = json['registry_published'] as bool? ?? false
+      ..studyType = $enumDecodeNullable(_$StudyTypeEnumMap, json['study_type']);
 
 Map<String, dynamic> _$TemplateToJson(Template instance) {
   final val = <String, dynamic>{
@@ -165,9 +161,6 @@ Map<String, dynamic> _$TemplateToJson(Template instance) {
     }
   }
 
-  writeNotNull('parent_template_id', instance.parentTemplateId);
-  writeNotNull(
-      'template_configuration', instance.templateConfiguration?.toJson());
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   val['user_id'] = instance.userId;
@@ -188,6 +181,7 @@ Map<String, dynamic> _$TemplateToJson(Template instance) {
   val['results'] = instance.results.map((e) => e.toJson()).toList();
   val['collaborator_emails'] = instance.collaboratorEmails;
   val['registry_published'] = instance.registryPublished;
+  writeNotNull('study_type', instance.studyType?.toJson());
   return val;
 }
 
@@ -196,11 +190,6 @@ TemplateSubStudy _$TemplateSubStudyFromJson(Map<String, dynamic> json) =>
       json['id'] as String,
       json['user_id'] as String,
     )
-      ..parentTemplateId = json['parent_template_id'] as String?
-      ..templateConfiguration = json['template_configuration'] == null
-          ? null
-          : TemplateConfiguration.fromJson(
-              json['template_configuration'] as Map<String, dynamic>)
       ..title = json['title'] as String?
       ..description = json['description'] as String?
       ..participation =
@@ -237,7 +226,8 @@ TemplateSubStudy _$TemplateSubStudyFromJson(Map<String, dynamic> json) =>
               ?.map((e) => e as String)
               .toList() ??
           []
-      ..registryPublished = json['registry_published'] as bool? ?? false;
+      ..registryPublished = json['registry_published'] as bool? ?? false
+      ..studyType = $enumDecodeNullable(_$StudyTypeEnumMap, json['study_type']);
 
 Map<String, dynamic> _$TemplateSubStudyToJson(TemplateSubStudy instance) {
   final val = <String, dynamic>{
@@ -250,9 +240,6 @@ Map<String, dynamic> _$TemplateSubStudyToJson(TemplateSubStudy instance) {
     }
   }
 
-  writeNotNull('parent_template_id', instance.parentTemplateId);
-  writeNotNull(
-      'template_configuration', instance.templateConfiguration?.toJson());
   writeNotNull('title', instance.title);
   writeNotNull('description', instance.description);
   val['user_id'] = instance.userId;
@@ -273,5 +260,6 @@ Map<String, dynamic> _$TemplateSubStudyToJson(TemplateSubStudy instance) {
   val['results'] = instance.results.map((e) => e.toJson()).toList();
   val['collaborator_emails'] = instance.collaboratorEmails;
   val['registry_published'] = instance.registryPublished;
+  writeNotNull('study_type', instance.studyType?.toJson());
   return val;
 }

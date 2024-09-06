@@ -80,23 +80,7 @@ class StudyUApiClient extends SupabaseClientDependant
     'study_missed_days',
   ];
 
-  static final studyDisplayColumns = [
-    'id',
-    'title',
-    'description',
-    'user_id',
-    'participation',
-    'result_sharing',
-    'status',
-    'registry_published',
-    'study_participant_count',
-    'study_ended_count',
-    'active_subject_count',
-    'template_configuration',
-    'parent_template_id',
-    'contact',
-    'created_at',
-  ];
+  static final studyDisplayColumns = ['*'];
 
   static final studyWithParticipantActivityColumns = [
     ...studyColumns,
