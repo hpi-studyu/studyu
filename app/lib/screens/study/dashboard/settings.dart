@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -9,6 +8,7 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/localization.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -236,21 +236,4 @@ class DeleteAlertDialog extends StatelessWidget {
           ),
         ],
       );
-}
-
-Future<void>? cancelNotifications(BuildContext context) {
-  if (kIsWeb) return Future.value(); // Notifications not supported on web
-  final appState = context.read<AppState>();
-  final studyNotifications = appState.studyNotifications;
-  final notificationsPlugin =
-      studyNotifications?.flutterLocalNotificationsPlugin;
-  notificationsPlugin?.cancelAll();
-  if (kDebugMode) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('DEBUG: Notifications cancelled'),
-      ),
-    );
-  }
-  return Future.value();
 }

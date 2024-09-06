@@ -174,7 +174,7 @@ final data_de = <Entry>[
     ],
   ),
   Entry(
-    'das Studium',
+    'Die Studie',
     <Entry>[
       Entry(
         'Wie lange dauert es, bis die Studie abgeschlossen ist?',

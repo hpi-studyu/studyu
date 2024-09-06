@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/util/debug_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -16,9 +16,14 @@ class WelcomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Spacer(),
-              const Image(
-                image: AssetImage('assets/icon/logo.png'),
-                height: 200,
+              GestureDetector(
+                onDoubleTap: () {
+                  DebugScreen.showDebugScreen(context);
+                },
+                child: const Image(
+                  image: AssetImage('assets/icon/logo.png'),
+                  height: 200,
+                ),
               ),
               const SizedBox(height: 20),
               OutlinedButton.icon(

@@ -10,6 +10,7 @@ import 'package:studyu_app/screens/app_onboarding/preview.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -39,7 +40,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
 
     if (selectedSubjectId == null) {
-      Navigator.pushReplacementNamed(context, Routes.welcome);
+      await noSubjectFound();
       return;
     }
     StudySubject? subject = await _retrieveSubject(selectedSubjectId);
@@ -51,8 +52,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
       state.init(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
-      Navigator.pushReplacementNamed(context, Routes.welcome);
+      await noSubjectFound();
     }
+  }
+
+  Future<void> noSubjectFound() async {
+    await cancelNotifications(context);
+    if (mounted) Navigator.pushReplacementNamed(context, Routes.welcome);
   }
 
   Future<StudySubject?> _fetchRemoteSubject(String selectedStudyObjectId) {
