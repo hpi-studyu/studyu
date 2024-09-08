@@ -9,3 +9,5 @@ environment:
 dev_dependencies:
   lint: ^2.3.0
   melos: ^6.1.0
+dependencies:
+  material_color_utilities: ^0.12.0
