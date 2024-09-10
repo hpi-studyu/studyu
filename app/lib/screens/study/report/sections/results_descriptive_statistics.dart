@@ -16,8 +16,6 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
   final String minB;
   final String maxA;
   final String maxB;
-  final String varianceA;
-  final String varianceB;
   final int totalInterventionsA;
   final int totalInterventionsB;
 
@@ -48,12 +46,6 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
             : "NONE",
         maxB = valuesInterventionB.isNotEmpty
             ? valuesInterventionB.max.toStringAsFixed(2)
-            : "NONE",
-        varianceA = valuesInterventionA.isNotEmpty
-            ? pow(valuesInterventionA.standardDeviation, 2).toStringAsFixed(2)
-            : "NONE",
-        varianceB = valuesInterventionB.isNotEmpty
-            ? pow(valuesInterventionB.standardDeviation, 2).toStringAsFixed(2)
             : "NONE",
         totalInterventionsA = subject.study.schedule.phaseDuration *
             subject.study.schedule.numberOfCycles,
@@ -127,7 +119,6 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
           _buildTableRow(['Average', averageA, averageB]),
           _buildTableRow(['Min', minA, minB]),
           _buildTableRow(['Max', maxA, maxB]),
-          _buildTableRow(['Variance', varianceA, varianceB]),
         ],
       ),
     );
