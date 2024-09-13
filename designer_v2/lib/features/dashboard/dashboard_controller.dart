@@ -77,15 +77,15 @@ class DashboardController extends _$DashboardController
     searchController.setText(text ?? state.query);
   }
 
-  void setStudiesFilter(StudiesFilter? filter) {
+  void setStudiesFilter(List<StudiesFilter>? filters) {
     state = state.copyWith(
-      studiesFilter: () => filter ?? DashboardState.defaultFilter,
+      studiesFilters: () => filters ?? DashboardState.defaultFilter,
     );
   }
 
   void setColumnFilter(String filter) {
     state = state.copyWith(
-      columnFilter: () => filter,
+      columnFilter: filter,
     );
   }
 
