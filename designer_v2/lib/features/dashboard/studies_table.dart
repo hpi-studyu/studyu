@@ -7,6 +7,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_column_header.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table_item.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -119,9 +120,9 @@ class StudiesTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (studyGroups.isEmpty) {
+    /*if (studyGroups.isEmpty) {
       return emptyWidget;
-    }
+    }*/
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -294,27 +295,53 @@ class StudiesTable extends StatelessWidget {
       onFilter: columnDefinition.filterable
           ? (String? query) {
               final currentUri = Uri.base;
+              final List<StudiesFilter> filters = [];
+              final Map<String, String> newQueryParameters =
+                  Map.of(currentUri.queryParameters);
 
-              if (query != null && query != '') {
-                dashboardController.setColumnFilter(query);
+              if (query != null && query.isNotEmpty) {
+                final List<String> queryParts = query.split(',');
+                final List<String> allQueryParameters = [
+                  ...currentUri.queryParameters.values,
+                  ...queryParts
+                ];
 
-                final newUri = currentUri.replace(queryParameters: {
-                  ...currentUri.queryParameters,
-                  title: query,
-                });
+                for (final queryParam in allQueryParameters) {
+                  filters.addAll(
+                    StudiesFilter.values.where(
+                      (filter) => filter
+                          .toString()
+                          .split('.')
+                          .last
+                          .toLowerCase()
+                          .contains(queryParam.toLowerCase()),
+                    ),
+                  );
+                }
 
-                html.window.history.pushState(null, '', newUri.toString());
+                newQueryParameters['title'] = query;
               } else {
-                final newQueryParameters = Map.of(currentUri.queryParameters);
-                newQueryParameters.remove(title);
+                newQueryParameters.remove('title');
 
-                print(newQueryParameters);
-
-                final newUri =
-                    currentUri.replace(queryParameters: newQueryParameters);
-
-                html.window.history.pushState(null, '', newUri.toString());
+                for (final queryParam in newQueryParameters.values) {
+                  filters.addAll(
+                    StudiesFilter.values.where(
+                      (filter) => filter
+                          .toString()
+                          .split('.')
+                          .last
+                          .toLowerCase()
+                          .contains(queryParam.toLowerCase()),
+                    ),
+                  );
+                }
               }
+
+              dashboardController.setStudiesFilter(filters);
+
+              final newUri =
+                  currentUri.replace(queryParameters: newQueryParameters);
+              html.window.history.pushState(null, '', newUri.toString());
             }
           : null,
     );
