@@ -17,9 +17,9 @@ import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
-  const DashboardScreen({required this.filter, super.key});
+  const DashboardScreen({required this.filters, super.key});
 
-  final StudiesFilter? filter;
+  final List<StudiesFilter>? filters;
 
   @override
   ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
@@ -30,15 +30,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   void initState() {
     super.initState();
     final controller = ref.read(dashboardControllerProvider.notifier);
-    runAsync(() => controller.setStudiesFilter(widget.filter));
+    runAsync(() => controller.setStudiesFilter(widget.filters));
   }
 
   @override
   void didUpdateWidget(DashboardScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.filter != widget.filter) {
+    if (oldWidget.filters != widget.filters) {
       final controller = ref.read(dashboardControllerProvider.notifier);
-      runAsync(() => controller.setStudiesFilter(widget.filter));
+      runAsync(() => controller.setStudiesFilter(widget.filters));
     }
   }
 
@@ -156,17 +156,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     onExpand: controller.onExpandStudy,
                     getActions: controller.availableActions,
                     getSubActions: controller.availableSubActions,
-                    emptyWidget: (widget.filter == null ||
-                            widget.filter == StudiesFilter.owned)
+                    emptyWidget: (widget.filters == null ||
+                            widget.filters == DashboardState.defaultFilter)
                         ? (state.query.isNotEmpty)
                             ? Padding(
                                 padding: const EdgeInsets.only(top: 24.0),
-                                child: EmptyBody(
-                                  icon: Icons.content_paste_search_rounded,
-                                  title: tr.studies_not_found,
-                                  description: tr.modify_query,
-                                ),
-                              )
+                                child: Column(
+                                  children: [
+                                    EmptyBody(
+                                      icon: Icons.content_paste_search_rounded,
+                                      title: tr.studies_not_found,
+                                      description: tr.modify_query,
+                                    ),
+                                  ],
+                                ))
                             : Padding(
                                 padding: const EdgeInsets.only(top: 24.0),
                                 child: EmptyBody(
