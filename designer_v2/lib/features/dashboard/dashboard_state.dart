@@ -7,11 +7,11 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DashboardState extends Equatable {
-  static const defaultFilter = StudiesFilter.owned;
+  static const defaultFilter = [StudiesFilter.owned];
 
   const DashboardState({
     this.studies = const AsyncValue.loading(),
-    this.studiesFilter = defaultFilter,
+    this.studiesFilters = defaultFilter,
     this.columnFilter = '',
     this.query = '',
     this.sortByColumn = StudiesTableColumn.title,
@@ -28,7 +28,7 @@ class DashboardState extends Equatable {
 
   /// Currently selected filter to be applied to the list of studies
   /// in order to determine the [displayedStudies]
-  final StudiesFilter studiesFilter;
+  final List<StudiesFilter> studiesFilters;
 
   /// Currently selected column filter to be applied to the list of studies
   /// in order to determine the [displayedStudies]
@@ -62,16 +62,11 @@ class DashboardState extends Equatable {
     final localPinnedStudies = pinnedStudies ?? this.pinnedStudies;
     return studies.when(
       data: (studies) {
-        final Set<Study> uniqueFilteredStudies = {};
+        List<Study> updatedStudies = studies.where((study) {
+          return studiesFilters.every((filter) =>
+              filter.apply(studies: [study], user: currentUser).isNotEmpty);
+        }).toList();
 
-        // Collect studies based on the column filter
-        columnFilter.split(',').forEach((element) {
-          uniqueFilteredStudies.addAll(filterStudyByColumn(studies, element));
-        });
-
-        List<Study> updatedStudies = studiesFilter
-            .apply(studies: uniqueFilteredStudies.toList(), user: currentUser)
-            .toList();
         updatedStudies = sort(
           pinnedStudies: localPinnedStudies,
           studiesToSort: filter(studiesToFilter: updatedStudies),
@@ -102,7 +97,7 @@ class DashboardState extends Equatable {
     return result;
   }
 
-  List<Study> filterStudyByColumn(List<Study> studies, String filter) {
+  /*List<Study> filterStudyByColumn(List<Study> studies, String filter) {
     switch (filter) {
       case "Standalone":
         return studies.where((s) => s.type == StudyType.standalone).toList();
@@ -127,7 +122,7 @@ class DashboardState extends Equatable {
       default:
         return studies;
     }
-  }
+  }*/
 
   List<Study> filter({List<Study>? studiesToFilter}) {
     studiesToFilter = studiesToFilter ?? studies.value!;
@@ -264,8 +259,8 @@ class DashboardState extends Equatable {
 
   DashboardState copyWith({
     AsyncValue<List<Study>> Function()? studies,
-    StudiesFilter Function()? studiesFilter,
-    String Function()? columnFilter,
+    List<StudiesFilter> Function()? studiesFilters,
+    String? columnFilter,
     User Function()? currentUser,
     String? query,
     StudiesTableColumn? sortByColumn,
@@ -276,9 +271,9 @@ class DashboardState extends Equatable {
   }) {
     return DashboardState(
       studies: studies != null ? studies() : this.studies,
-      studiesFilter:
-          studiesFilter != null ? studiesFilter() : this.studiesFilter,
-      columnFilter: columnFilter != null ? columnFilter() : this.columnFilter,
+      studiesFilters:
+          studiesFilters != null ? studiesFilters() : this.studiesFilters,
+      columnFilter: columnFilter ?? this.columnFilter,
       currentUser: currentUser != null ? currentUser() : this.currentUser,
       query: query ?? this.query,
       sortByColumn: sortByColumn ?? this.sortByColumn,
@@ -292,11 +287,13 @@ class DashboardState extends Equatable {
   // - Equatable
 
   @override
-  List<Object?> get props => [studies, studiesFilter];
+  List<Object?> get props => [studies, studiesFilters];
 }
 
 extension DashboardStateSafeViewProps on DashboardState {
   String get visibleListTitle {
+    final studiesFilter =
+        studiesFilters.isEmpty ? StudiesFilter.owned : studiesFilters.first;
     switch (studiesFilter) {
       case StudiesFilter.public:
         return tr.navlink_public_studies;
@@ -306,6 +303,8 @@ extension DashboardStateSafeViewProps on DashboardState {
         return tr.navlink_shared_studies;
       case StudiesFilter.all:
         return "[StudiesFilter.all]"; // not available in UI
+      default:
+        return tr.navlink_my_studies; // not available in UI
     }
   }
 }
