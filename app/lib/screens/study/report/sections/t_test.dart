@@ -18,7 +18,13 @@ class TTest {
 
   // Calculate t-statistic using Welch's formula for two sample t-test
   num calculateTStatistic(
-      num meanA, num meanB, num varianceA, num varianceB, int nA, int nB) {
+    num meanA,
+    num meanB,
+    num varianceA,
+    num varianceB,
+    int nA,
+    int nB,
+  ) {
     final num numerator = meanA - meanB;
     final num denominator = sqrt((varianceA / nA) + (varianceB / nB));
     return numerator / denominator;
@@ -26,7 +32,13 @@ class TTest {
 
   // Calculate degrees of freedom using Welch-Satterthwaite equation
   num calculateDegreesOfFreedom(
-      num meanA, num meanB, num varianceA, num varianceB, int nA, int nB) {
+    num meanA,
+    num meanB,
+    num varianceA,
+    num varianceB,
+    int nA,
+    int nB,
+  ) {
     final num numerator = pow((varianceA / nA) + (varianceB / nB), 2);
     final num denominator = (pow(varianceA / nA, 2) / (nA - 1)) +
         (pow(varianceB / nB, 2) / (nB - 1));
@@ -43,32 +55,32 @@ class TTest {
       12.507343278686905,
       -0.13857109526572012,
       9.9843695780195716e-6,
-      1.5056327351493116e-7
+      1.5056327351493116e-7,
     ];
 
     if (x < 0.5) {
       return pi / (sin(pi * x) * gamma(1 - x));
     } else {
-      x -= 1;
+      final num y = x - 1;
       num a = 0.99999999999980993;
-      num t = x + 7.5;
-
+      final num t = y + 7.5;
+      // Apply Lanczos approximation
       for (int i = 0; i < p.length; i++) {
-        a += p[i] / (x + i + 1);
+        a += p[i] / (y + i + 1);
       }
-
-      return sqrt(2 * pi) * pow(t, x + 0.5) * exp(-t) * a;
+      return sqrt(2 * pi) * pow(t, y + 0.5) * exp(-t) * a;
     }
   }
 
   // Function to calculate the PDF of the t-distribution
   num tDistributionPDF(num t, num v) {
-    num gammaHalfVPlus1 = gamma((v + 1) / 2);
-    num gammaHalfV = gamma(v / 2);
-    num sqrtVPI = sqrt(v * pi);
+    final num gammaHalfVPlus1 = gamma((v + 1) / 2);
+    final num gammaHalfV = gamma(v / 2);
+    final num sqrtVPI = sqrt(v * pi);
 
-    num numerator = gammaHalfVPlus1;
-    num denominator = sqrtVPI * gammaHalfV * pow(1 + (t * t) / v, (v + 1) / 2);
+    final num numerator = gammaHalfVPlus1;
+    final num denominator =
+        sqrtVPI * gammaHalfV * pow(1 + (t * t) / v, (v + 1) / 2);
 
     return numerator / denominator;
   }
@@ -88,7 +100,7 @@ class TTest {
 
     final double positiveTailProbability =
         integratePDF(tStatistic.abs(), degreesOfFreedom);
-    print(positiveTailProbability.toDouble().toStringAsFixed(20));
+    print(positiveTailProbability.toStringAsFixed(20));
     print("positiveTailProbability");
     return 2 * positiveTailProbability; // Two-tailed p-value
   }

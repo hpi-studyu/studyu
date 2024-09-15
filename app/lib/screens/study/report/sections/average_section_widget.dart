@@ -147,9 +147,12 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
         const SizedBox(height: 8),
         getLegend(context, aggregateDataBy(widget.section.aggregate).toList()),
         AspectRatio(
-            aspectRatio: 1.5,
-            child: getDiagram(
-                context, aggregateDataBy(widget.section.aggregate).toList())),
+          aspectRatio: 1.5,
+          child: getDiagram(
+            context,
+            aggregateDataBy(widget.section.aggregate).toList(),
+          ),
+        ),
         ExpansionTile(
           title: const Text(
             'Descriptive Statistics',
@@ -252,7 +255,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   }
 
   LineChartData getLineChartData(
-      BuildContext context, List<DiagramDatum> data) {
+    BuildContext context,
+    List<DiagramDatum> data,
+  ) {
     // Sort data by x value to ensure proper line plotting
     data.sort((a, b) => a.x.compareTo(b.x));
 
@@ -280,31 +285,31 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
         backgroundColor = Colors.transparent;
       }
 
-      lineBarsData.add(LineChartBarData(
-        spots: spots,
-        isCurved: false,
-        belowBarData: BarAreaData(
-          show: true,
-          color: backgroundColor,
+      lineBarsData.add(
+        LineChartBarData(
+          spots: spots,
+          belowBarData: BarAreaData(
+            show: true,
+            color: backgroundColor,
+          ),
+          aboveBarData: BarAreaData(
+            show: true,
+            color: backgroundColor, // Adjust as needed
+          ),
+          dotData: FlDotData(
+            show: false,
+            getDotPainter: (spot, percent, barData, index) {
+              return FlDotCirclePainter(
+                radius: 4,
+                color: Colors.black,
+                strokeWidth: 2,
+                strokeColor: Colors.white,
+              );
+            },
+          ),
+          color: Colors.black, // Line color
         ),
-        aboveBarData: BarAreaData(
-          show: true,
-          color: backgroundColor, // Adjust as needed
-        ),
-        dotData: FlDotData(
-          show: false,
-          getDotPainter: (spot, percent, barData, index) {
-            return FlDotCirclePainter(
-              radius: 4,
-              color: Colors.black,
-              strokeWidth: 2,
-              strokeColor: Colors.white,
-            );
-          },
-        ),
-        color: Colors.black, // Line color
-        barWidth: 2,
-      ));
+      );
     }
 
     final minX =
@@ -356,28 +361,16 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
         ),
         topTitles: const AxisTitles(
           axisNameWidget: SizedBox.shrink(),
-          sideTitles: SideTitles(
-            showTitles: false,
-          ),
         ),
         rightTitles: const AxisTitles(
           axisNameWidget: SizedBox.shrink(),
-          sideTitles: SideTitles(
-            showTitles: false,
-          ),
         ),
       ),
       borderData: FlBorderData(
         show: true,
-        border: Border.all(
-          width: 1,
-        ),
+        border: Border.all(),
       ),
       lineBarsData: lineBarsData,
-      lineTouchData: const LineTouchData(
-        touchTooltipData: LineTouchTooltipData(),
-        handleBuiltInTouches: true,
-      ),
       minX: minX,
       maxX: maxX,
       minY: 0,
@@ -584,7 +577,8 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     } else if (aggregate == TemporalAggregation.phase) {
       return data
           .groupBy(
-              (e) => widget.subject.getInterventionIndexForDate(e.timestamp!))
+            (e) => widget.subject.getInterventionIndexForDate(e.timestamp!),
+          )
           .aggregateWithKey(
             (data, phase) => DiagramDatum(
               phase,
@@ -625,7 +619,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   }
 
   String? getInterventionNameFromInterventionId(
-      BuildContext context, String interventionId) {
+    BuildContext context,
+    String interventionId,
+  ) {
     for (final intervention in widget.subject.study.interventions) {
       if (intervention.id == interventionId) {
         return intervention.name;

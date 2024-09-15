@@ -55,8 +55,12 @@ class ColorfulGaugesWidget extends AverageSectionWidget {
                 child: SizedBox(
                   width: 160,
                   height: 160,
-                  child: createColorfulGauge(0, 10, meanInterventionA,
-                      nameInterventionA), // min, max, value
+                  child: createColorfulGauge(
+                    0,
+                    10,
+                    meanInterventionA,
+                    nameInterventionA,
+                  ), // min, max, value
                 ),
               ),
             ],
@@ -75,8 +79,12 @@ class ColorfulGaugesWidget extends AverageSectionWidget {
                 child: SizedBox(
                   width: 160,
                   height: 160,
-                  child: createColorfulGauge(0, 10, meanInterventionB,
-                      nameInterventionB), // min, max, value
+                  child: createColorfulGauge(
+                    0,
+                    10,
+                    meanInterventionB,
+                    nameInterventionB,
+                  ), // min, max, value
                 ),
               ),
             ],
@@ -87,7 +95,11 @@ class ColorfulGaugesWidget extends AverageSectionWidget {
   }
 
   Widget createColorfulGauge(
-      double min, double max, num value, String nameIntervention) {
+    double min,
+    double max,
+    num value,
+    String nameIntervention,
+  ) {
     const Color gaugeBackgroundColor = Color(0xFFDFE2EC);
 
     return Stack(
@@ -208,8 +220,12 @@ class ColorlessGaugesWidget extends AverageSectionWidget {
                 child: SizedBox(
                   width: 160,
                   height: 160,
-                  child: createColorlessGauge(0, 10, meanInterventionA,
-                      nameInterventionA), // min, max, value
+                  child: createColorlessGauge(
+                    0,
+                    10,
+                    meanInterventionA,
+                    nameInterventionA,
+                  ), // min, max, value
                 ),
               ),
             ],
@@ -228,8 +244,12 @@ class ColorlessGaugesWidget extends AverageSectionWidget {
                 child: SizedBox(
                   width: 160,
                   height: 160,
-                  child: createColorlessGauge(0, 10, meanInterventionB,
-                      nameInterventionB), // min, max, value
+                  child: createColorlessGauge(
+                    0,
+                    10,
+                    meanInterventionB,
+                    nameInterventionB,
+                  ), // min, max, value
                 ),
               ),
             ],
@@ -240,7 +260,11 @@ class ColorlessGaugesWidget extends AverageSectionWidget {
   }
 
   Widget createColorlessGauge(
-      double min, double max, num value, String nameIntervention) {
+    double min,
+    double max,
+    num value,
+    String nameIntervention,
+  ) {
     const Color gaugeBackgroundColor = Color(0xFFDFE2EC);
 
     return Stack(

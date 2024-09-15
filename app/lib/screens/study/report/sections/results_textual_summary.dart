@@ -69,7 +69,8 @@ class TextualSummaryWidget extends AverageSectionWidget {
                                     builder: (BuildContext context) {
                                       return AlertDialog(
                                         title: const Text(
-                                            'Statistical Information'),
+                                          'Statistical Information',
+                                        ),
                                         content: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           crossAxisAlignment:
@@ -82,7 +83,7 @@ class TextualSummaryWidget extends AverageSectionWidget {
                                               ),
                                             ),
                                             const SizedBox(height: 8),
-                                            Text(
+                                            const Text(
                                               'Level of significance α = 0.05',
                                               style: TextStyle(
                                                 fontSize: 15,
@@ -93,7 +94,7 @@ class TextualSummaryWidget extends AverageSectionWidget {
                                             const SizedBox(height: 2),
                                             Text(
                                               'P-value approximation: ${tTest.calculatePValue().toStringAsFixed(4)}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black87,
