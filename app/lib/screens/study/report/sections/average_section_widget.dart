@@ -26,13 +26,14 @@ class _AverageSectionStatefulWidget extends StatefulWidget {
   final StudySubject subject;
   final AverageSection section;
 
-  const _AverageSectionStatefulWidget(this.subject, this.section, {super.key});
+  const _AverageSectionStatefulWidget(this.subject, this.section);
 
   @override
   _AverageSectionWidgetState createState() => _AverageSectionWidgetState();
 }
 
 class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
+  bool showColorlessGauges = false;
   @override
   Widget build(BuildContext context) {
     final aggregatedDataByDay = aggregateDataBy(null).toList();
@@ -88,22 +89,39 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           widget.section,
         ),
         const SizedBox(height: 8),
-        ColorfulGaugesWidget(
-          valuesInterventionA,
-          valuesInterventionB,
-          nameInterventionA,
-          nameInterventionB,
-          widget.subject,
-          widget.section,
+        // Checkbox to toggle between colorful and colorless gauges
+        Row(
+          children: [
+            const Text("Show Colorless Gauges"),
+            Checkbox(
+              value: showColorlessGauges,
+              onChanged: (bool? newValue) {
+                setState(() {
+                  showColorlessGauges = newValue ?? false;
+                });
+              },
+            ),
+          ],
         ),
-        //ColorlessGaugesWidget(
-        // valuesInterventionA,
-        // valuesInterventionB,
-        // nameInterventionA,
-        // nameInterventionB,
-        // widget.subject,
-        // widget.section,
-        //),
+        // Conditionally show either colorful or colorless gauges
+        if (showColorlessGauges)
+          ColorlessGaugesWidget(
+            valuesInterventionA,
+            valuesInterventionB,
+            nameInterventionA,
+            nameInterventionB,
+            widget.subject,
+            widget.section,
+          )
+        else
+          ColorfulGaugesWidget(
+            valuesInterventionA,
+            valuesInterventionB,
+            nameInterventionA,
+            nameInterventionB,
+            widget.subject,
+            widget.section,
+          ),
         DropdownButton<TemporalAggregation>(
           value: widget.section.aggregate,
           items: const [
@@ -293,14 +311,14 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
         data.map((datum) => datum.x.toDouble()).reduce((a, b) => a < b ? a : b);
     final maxX =
         data.map((datum) => datum.x.toDouble()).reduce((a, b) => a > b ? a : b);
-    final maxY = ((data
+    final maxY = (data
                 .map((datum) => datum.value.toDouble())
                 .reduce((a, b) => a > b ? a : b) *
             1.1)
-        .ceilToDouble());
+        .ceilToDouble();
 
     return LineChartData(
-      gridData: FlGridData(show: false),
+      gridData: const FlGridData(show: false),
       titlesData: FlTitlesData(
         bottomTitles: AxisTitles(
           axisNameWidget: widget.section.aggregate == TemporalAggregation.day
@@ -336,14 +354,14 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
             },
           ),
         ),
-        topTitles: AxisTitles(
-          axisNameWidget: const SizedBox.shrink(),
+        topTitles: const AxisTitles(
+          axisNameWidget: SizedBox.shrink(),
           sideTitles: SideTitles(
             showTitles: false,
           ),
         ),
-        rightTitles: AxisTitles(
-          axisNameWidget: const SizedBox.shrink(),
+        rightTitles: const AxisTitles(
+          axisNameWidget: SizedBox.shrink(),
           sideTitles: SideTitles(
             showTitles: false,
           ),
@@ -352,12 +370,11 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
       borderData: FlBorderData(
         show: true,
         border: Border.all(
-          color: Colors.black,
           width: 1,
         ),
       ),
       lineBarsData: lineBarsData,
-      lineTouchData: LineTouchData(
+      lineTouchData: const LineTouchData(
         touchTooltipData: LineTouchTooltipData(),
         handleBuiltInTouches: true,
       ),
@@ -369,8 +386,8 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   }
 
   List<Color> getBackgroundColors(List<DiagramDatum> data) {
-    List<Color> colors = [];
-    for (var datum in data) {
+    final List<Color> colors = [];
+    for (final datum in data) {
       if (getColor(datum) == Colors.blue) {
         colors.add(Colors.blue.withOpacity(0.2));
       } else if (getColor(datum) == Colors.orange) {

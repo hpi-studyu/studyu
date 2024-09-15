@@ -14,14 +14,14 @@ dependencies:
   cross_file: ^0.3.4+1
   csv: ^6.0.0
   cupertino_icons: ^1.0.8
-  fl_chart: ^0.68.0
+  fl_chart: ^0.69.0
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.2
   flutter_local_notifications: ^17.2.1+2
   flutter_localizations:
     sdk: flutter
-  flutter_timezone: ^2.1.0
+  flutter_timezone: ^3.0.1
   flutter_web_plugins:
     sdk: flutter
   flutter_widget_from_html: ^0.15.1
