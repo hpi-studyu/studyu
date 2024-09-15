@@ -136,11 +136,11 @@ class TextualSummaryWidget extends AverageSectionWidget {
     if (isDifferent) {
       if (valuesInterventionA.mean > valuesInterventionB.mean) {
         textualSummaryInterventionAB = [
-          "Your ${section.title} was better during intervention: $nameInterventionA compared to: $nameInterventionB.",
+          "Your ${section.title} was higher during intervention: $nameInterventionA compared to: $nameInterventionB.",
         ];
       } else {
         textualSummaryInterventionAB = [
-          "Your ${section.title} was worse during intervention: $nameInterventionA compared to: $nameInterventionB.",
+          "Your ${section.title} was lower during intervention: $nameInterventionA compared to: $nameInterventionB.",
         ];
       }
     } else {
