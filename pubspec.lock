@@ -161,14 +161,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.12.16+1"
-  material_color_utilities:
-    dependency: "direct main"
-    description:
-      name: material_color_utilities
-      sha256: afaac3ebbf67448ab81c891b8e1f2f4d3e7bc19aa36d269c0257b54bc0d9aa79
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.12.0"
   melos:
     dependency: "direct dev"
     description:
