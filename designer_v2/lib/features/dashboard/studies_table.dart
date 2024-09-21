@@ -190,7 +190,7 @@ class StudiesTable extends StatelessWidget {
             filterable: true,
             filterOptions: [
               "Everyone",
-              "Invite-only",
+              "Invite Only",
             ],
           ),
           StudiesTableColumn.createdAt: isSuperCompact
@@ -293,54 +293,52 @@ class StudiesTable extends StatelessWidget {
             }
           : null,
       onFilter: columnDefinition.filterable
-          ? (String? query) {
-              final currentUri = Uri.base;
-              final List<StudiesFilter> filters = [];
-              final Map<String, String> newQueryParameters =
-                  Map.of(currentUri.queryParameters);
 
-              if (query != null && query.isNotEmpty) {
-                final List<String> queryParts = query.split(',');
-                final List<String> allQueryParameters = [
-                  ...currentUri.queryParameters.values,
-                  ...queryParts
-                ];
+          /// This function is a filter handler for filtering table columns individually.
+          ///
+          /// `title`: The key representing the column name.
+          /// `query`: The value to filter by. If it's null or empty, the existing filter for column title is removed.
+          ///
+          ///  Each value in `queryParameters` is checked against the available `StudiesFilter` enum values. If a match is found
+          ///  the corresponding `StudiesFilter` is added to the `filters` list.
+          ///  The `dashboardController.setStudiesFilter(filters)` method is called to apply the filter settings to the dashboard.
+          /// If the column is not filterable, the function returns `null`.
+          //TODO: Add support for filtering by multiple values.
+          ? (String title, String? query) {
+              final Map<String, String> queryParameters =
+                  Map.of(Uri.base.queryParameters);
 
-                for (final queryParam in allQueryParameters) {
-                  filters.addAll(
-                    StudiesFilter.values.where(
-                      (filter) => filter
-                          .toString()
-                          .split('.')
-                          .last
-                          .toLowerCase()
-                          .contains(queryParam.toLowerCase()),
-                    ),
-                  );
-                }
+              List<StudiesFilter> filters = [];
 
-                newQueryParameters['title'] = query;
+              final List<String> titleParts =
+                  queryParameters[title]?.split(',') ?? [];
+
+              if (query == null || query.isEmpty) {
+                queryParameters.remove(title);
+              } else if (titleParts.contains(query)) {
+                return;
               } else {
-                newQueryParameters.remove('title');
+                queryParameters[title] =
+                    query.replaceAll(' ', '').toLowerCase();
+              }
 
-                for (final queryParam in newQueryParameters.values) {
-                  filters.addAll(
-                    StudiesFilter.values.where(
-                      (filter) => filter
-                          .toString()
-                          .split('.')
-                          .last
-                          .toLowerCase()
-                          .contains(queryParam.toLowerCase()),
-                    ),
-                  );
-                }
+              for (final filter in queryParameters.values) {
+                filters.addAll(
+                  StudiesFilter.values.where(
+                    (filterEnum) => filterEnum
+                        .toString()
+                        .split('.')
+                        .last
+                        .toLowerCase()
+                        .contains(filter.toLowerCase()),
+                  ),
+                );
               }
 
               dashboardController.setStudiesFilter(filters);
 
-              final newUri =
-                  currentUri.replace(queryParameters: newQueryParameters);
+              final newUri = Uri.base.replace(queryParameters: queryParameters);
+
               html.window.history.pushState(null, '', newUri.toString());
             }
           : null,

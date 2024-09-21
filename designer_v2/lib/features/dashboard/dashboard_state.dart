@@ -98,33 +98,6 @@ class DashboardState extends Equatable {
     return result;
   }
 
-  /*List<Study> filterStudyByColumn(List<Study> studies, String filter) {
-    switch (filter) {
-      case "Standalone":
-        return studies.where((s) => s.type == StudyType.standalone).toList();
-      case "Template":
-        return studies.where((s) => s.type == StudyType.template).toList();
-      case "Substudy":
-        return studies.where((s) => s.type == StudyType.subStudy).toList();
-      case "Live":
-        return studies.where((s) => s.status == StudyStatus.running).toList();
-      case "Draft":
-        return studies.where((s) => s.status == StudyStatus.draft).toList();
-      case "Closed":
-        return studies.where((s) => s.status == StudyStatus.closed).toList();
-      case "Invite-Only":
-        return studies
-            .where((s) => s.participation == Participation.invite)
-            .toList();
-      case "Everyone":
-        return studies
-            .where((s) => s.participation == Participation.open)
-            .toList();
-      default:
-        return studies;
-    }
-  }*/
-
   List<Study> filter({List<Study>? studiesToFilter}) {
     studiesToFilter = studiesToFilter ?? studies.value!;
     if (query.isEmpty) return studiesToFilter;

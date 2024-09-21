@@ -11,7 +11,7 @@ class StudiesTableColumnHeader extends StatefulWidget {
   final bool filterable;
   final List<String>? filterOptions;
   final void Function()? onSort;
-  final void Function(String)? onFilter;
+  final void Function(String, String?)? onFilter;
 
   const StudiesTableColumnHeader(
     this.title, {
@@ -155,6 +155,8 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                             setState(() {
                               if (value == true) {
                                 selectedOptions.add(option);
+                                selectedOptions.removeWhere(
+                                    (element) => element != option);
                               } else {
                                 selectedOptions.remove(option);
                               }
@@ -176,7 +178,8 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                         ),
                         TextButton(
                           onPressed: () {
-                            widget.onFilter?.call(selectedOptions.join(','));
+                            widget.onFilter
+                                ?.call(widget.title, selectedOptions.join(','));
                             _activeOverlayEntry?.remove();
                             _activeOverlayEntry = null;
                           },
