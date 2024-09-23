@@ -169,7 +169,7 @@ class StudyRepository extends ModelRepository<Study>
               .read(routerProvider)
               .dispatch(RoutingIntents.substudyNew(model as Template));
         },
-        isAvailable: model.status != StudyStatus.draft && model.isTemplate,
+        isAvailable: model.status == StudyStatus.running && model.isTemplate,
       ),
       ModelAction(
         type: StudyActionType.edit,
