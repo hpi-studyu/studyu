@@ -36,10 +36,12 @@ class StudyRecruitController extends _$StudyRecruitController
       _invitesSubscription?.cancel();
     });
     _subscribeInvites();
+    _subscribeParentTemplate();
     return state;
   }
 
   StreamSubscription<List<WrappedModel<StudyInvite>>>? _invitesSubscription;
+  WrappedModel<Study>? _parentTemplateSubscription;
 
   void _subscribeInvites() {
     print("StudyRecruitController.subscribe");
@@ -55,6 +57,36 @@ class StudyRecruitController extends _$StudyRecruitController
       );
     }); // TODO onError
   }
+
+  void _subscribeParentTemplate() {
+    if (state.studyWithMetadata?.model.isSubStudy == false) {
+      return;
+    }
+
+    state = state.copyWith(
+        parentTemplate: ref
+            .watch(
+              studyControllerProvider(
+                StudyCreationArgs(
+                    studyID: state.studyWithMetadata!.model.parentTemplateId!,
+                    isTemplate: true),
+              ),
+            )
+            .studyWithMetadata);
+  }
+
+  /*void _subscribeParentTemplate() {
+    if (state.studyWithMetadata?.model.isSubStudy == false) {
+      return;
+    }
+
+    _parentTemplateSubscription = state.studyRepository
+        .watch(state.study.value!.parentTemplateId!)
+        .listen((wrappedModel) {
+      final parentTemplate = wrappedModel.model;
+      state = state.copyWith(parentTemplate: AsyncValue.data(parentTemplate));
+    });
+  }*/
 
   Intervention? getIntervention(String interventionId) {
     return state.study.value!.getIntervention(interventionId);
