@@ -36,7 +36,7 @@ class StudyRecruitController extends _$StudyRecruitController
       _invitesSubscription?.cancel();
     });
     _subscribeInvites();
-    _subscribeParentTemplate();
+    _getParentTemplate();
     return state;
   }
 
@@ -57,7 +57,7 @@ class StudyRecruitController extends _$StudyRecruitController
     }); // TODO onError
   }
 
-  void _subscribeParentTemplate() {
+  void _getParentTemplate() {
     if (state.studyWithMetadata?.model.isSubStudy == false) {
       return;
     }
