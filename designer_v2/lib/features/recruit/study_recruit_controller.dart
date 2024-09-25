@@ -74,19 +74,6 @@ class StudyRecruitController extends _$StudyRecruitController
             .studyWithMetadata);
   }
 
-  /*void _subscribeParentTemplate() {
-    if (state.studyWithMetadata?.model.isSubStudy == false) {
-      return;
-    }
-
-    _parentTemplateSubscription = state.studyRepository
-        .watch(state.study.value!.parentTemplateId!)
-        .listen((wrappedModel) {
-      final parentTemplate = wrappedModel.model;
-      state = state.copyWith(parentTemplate: AsyncValue.data(parentTemplate));
-    });
-  }*/
-
   Intervention? getIntervention(String interventionId) {
     return state.study.value!.getIntervention(interventionId);
   }
