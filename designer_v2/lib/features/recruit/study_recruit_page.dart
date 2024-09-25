@@ -44,7 +44,7 @@ class StudyRecruitScreen extends StudyPageWidget {
         padding: const EdgeInsets.only(top: 24),
         child: EmptyBody(
           icon: Icons.link_off_rounded,
-          title: tr.code_list_template_title,
+          title: tr.code_list_closed_parent_template_title,
           description: "",
         ),
       );
