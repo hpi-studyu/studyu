@@ -41,7 +41,6 @@ class StudyRecruitController extends _$StudyRecruitController
   }
 
   StreamSubscription<List<WrappedModel<StudyInvite>>>? _invitesSubscription;
-  WrappedModel<Study>? _parentTemplateSubscription;
 
   void _subscribeInvites() {
     print("StudyRecruitController.subscribe");
