@@ -270,14 +270,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Icon(
-                  Icons.add,
-                  color: theme.colorScheme.primary,
-                  size: 28,
-                ),
               ],
             ),
             const Divider()
