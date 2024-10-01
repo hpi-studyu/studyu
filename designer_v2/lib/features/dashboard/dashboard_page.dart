@@ -169,7 +169,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       description: tr.modify_query,
                                     ),
                                   ],
-                                ),)
+                                ),
+                              )
                             : Padding(
                                 padding: const EdgeInsets.only(top: 24.0),
                                 child: EmptyBody(

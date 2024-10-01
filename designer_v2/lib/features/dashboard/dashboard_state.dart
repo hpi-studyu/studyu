@@ -64,8 +64,10 @@ class DashboardState extends Equatable {
       data: (studies) {
         //TODO: Filtering right now just only supports AND operation between filters (no OR)
         List<Study> updatedStudies = studies.where((study) {
-          return studiesFilters.every((filter) =>
-              filter.apply(studies: [study], user: currentUser).isNotEmpty,);
+          return studiesFilters.every(
+            (filter) =>
+                filter.apply(studies: [study], user: currentUser).isNotEmpty,
+          );
         }).toList();
 
         updatedStudies = sort(

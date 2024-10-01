@@ -1,5 +1,14 @@
 {
   "de": [
-    "action_button_study_publish"
+    "substudies_not_found",
+    "study_type_standalone",
+    "study_type_template",
+    "study_type_substudy",
+    "action_button_study_publish",
+    "form_section_lock_locked",
+    "form_section_lock_unlocked",
+    "form_section_publish_lock_locked",
+    "form_section_publish_lock_unlocked",
+    "monitoring_template_title"
   ]
 }
