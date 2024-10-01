@@ -117,7 +117,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
   }
 
   OverlayEntry _createOverlayEntry(
-      BuildContext context, Offset offset, List<String> filterOptions) {
+      BuildContext context, Offset offset, List<String> filterOptions,) {
     return OverlayEntry(
       builder: (context) => Positioned(
         left: offset.dx,
@@ -156,7 +156,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                               if (value == true) {
                                 selectedOptions.add(option);
                                 selectedOptions.removeWhere(
-                                    (element) => element != option);
+                                    (element) => element != option,);
                               } else {
                                 selectedOptions.remove(option);
                               }

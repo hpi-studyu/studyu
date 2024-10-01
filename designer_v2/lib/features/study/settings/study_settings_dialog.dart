@@ -71,7 +71,7 @@ class StudySettingsDialog extends StudyPageWidget {
                         0: IntrinsicColumnWidth(),
                         1: FlexColumnWidth(),
                       },
-                    )
+                    ),
                   ],
                 );
               },

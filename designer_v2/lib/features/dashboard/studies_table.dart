@@ -215,7 +215,7 @@ class StudiesTable extends StatelessWidget {
           columnRows.add(
             columnDefinition.value.createContainer(
               child: _buildColumnHeader(
-                  context, columnDefinition.key, columnDefinitionsMap),
+                  context, columnDefinition.key, columnDefinitionsMap,),
             ),
           );
           if (!columnDefinition.value.collapsed) {
@@ -268,7 +268,7 @@ class StudiesTable extends StatelessWidget {
   }
 
   Widget _buildColumnHeader(BuildContext context, StudiesTableColumn column,
-      Map<StudiesTableColumn, StudiesTableColumnSize> columnDefinitionsMap) {
+      Map<StudiesTableColumn, StudiesTableColumnSize> columnDefinitionsMap,) {
     final columnDefinition = columnDefinitionsMap[column]!;
     final title = _getColumnTitle(column);
 
@@ -308,7 +308,7 @@ class StudiesTable extends StatelessWidget {
               final Map<String, String> queryParameters =
                   Map.of(Uri.base.queryParameters);
 
-              List<StudiesFilter> filters = [];
+              final List<StudiesFilter> filters = [];
 
               final List<String> titleParts =
                   queryParameters[title]?.split(',') ?? [];
