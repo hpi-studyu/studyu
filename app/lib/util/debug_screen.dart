@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -58,15 +57,16 @@ class DebugScreen {
               ),
               child: const Text('Send debug information via email'),
             ),
-            ElevatedButton(
-              onPressed: () {
-                testNotification(context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.secondary,
+            if (context.read<AppState>().studyNotifications != null)
+              ElevatedButton(
+                onPressed: () {
+                  testNotification(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                ),
+                child: const Text('Receive test notification'),
               ),
-              child: const Text('Receive test notification'),
-            ),
             ElevatedButton(
               onPressed: () {
                 showDialog(
@@ -182,11 +182,18 @@ class DebugScreen {
   }
 
   static Future<void> testNotification(BuildContext context) async {
-    // Notifications not supported on web
-    if (kIsWeb) return;
-    final appState = context.read<AppState>();
-    final studyNotifications = appState.studyNotifications;
-    if (studyNotifications == null) return;
+    final studyNotifications = context.read<AppState>().studyNotifications;
+    if (studyNotifications == null) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Notifications are not initialized yet. Please start a study and open this through the about section.',
+          ),
+        ),
+      );
+      return;
+    }
     await studyNotifications.flutterLocalNotificationsPlugin.show(
       /*******************/
       99,
