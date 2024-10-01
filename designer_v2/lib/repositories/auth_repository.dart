@@ -87,6 +87,7 @@ class AuthRepository implements IAuthRepository {
           allowPasswordReset = true;
         case AuthChangeEvent.tokenRefreshed:
           print("authRepo tokenRefreshed");
+        // ignore: deprecated_member_use
         case AuthChangeEvent.userDeleted:
           print("authRepo userDeleted");
           _authStateStreamController.add(null);
