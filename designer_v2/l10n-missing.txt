@@ -9,6 +9,7 @@
     "form_section_lock_unlocked",
     "form_section_publish_lock_locked",
     "form_section_publish_lock_unlocked",
+    "code_list_closed_parent_template_title",
     "monitoring_template_title"
   ]
 }
