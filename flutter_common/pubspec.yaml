@@ -15,12 +15,12 @@ dependencies:
   lint: ^2.3.0
   shared_preferences: ^2.3.2
   studyu_core: ^4.4.7
-  supabase_flutter: ^2.6.0
-  synchronized: ^3.2.0
-  uuid: ^4.5.0
+  supabase_flutter: ^2.7.0
+  synchronized: ^3.3.0+3
+  uuid: ^4.5.1
 
 dev_dependencies:
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
 
