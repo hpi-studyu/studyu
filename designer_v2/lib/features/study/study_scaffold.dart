@@ -236,7 +236,6 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
   }
 
   Widget primaryActionButton() {
-    final theme = Theme.of(context);
     final controller =
         ref.watch(studyControllerProvider(widget.studyCreationArgs).notifier);
     final state = ref.watch(studyControllerProvider(widget.studyCreationArgs));
@@ -267,7 +266,6 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
   List<Widget> actionButtons(BuildContext context) {
     final List<Widget> actionButtons = [];
 
-    final theme = Theme.of(context);
     final controller =
         ref.watch(studyControllerProvider(widget.studyCreationArgs).notifier);
     final state = ref.watch(studyControllerProvider(widget.studyCreationArgs));

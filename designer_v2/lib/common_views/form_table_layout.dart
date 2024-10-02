@@ -286,14 +286,15 @@ class FormLabel extends StatelessWidget {
 }
 
 class FormLock extends StatefulWidget {
-  const FormLock(
-      {super.key,
-      required this.locked,
-      this.onLockChanged,
-      this.readOnly = false,
-      this.helpText,
-      this.lockedStateText,
-      this.unlockedStateText,});
+  const FormLock({
+    super.key,
+    required this.locked,
+    this.onLockChanged,
+    this.readOnly = false,
+    this.helpText,
+    this.lockedStateText,
+    this.unlockedStateText,
+  });
 
   final bool locked;
   final bool readOnly;
@@ -318,59 +319,63 @@ class _FormLockState extends State<FormLock> {
   @override
   Widget build(BuildContext context) {
     final lockView = Material(
-        color: Colors.transparent,
-        child: Row(
-          children: [
-            Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(10.0),
-                  border: Border.all(
-                      color: Theme.of(context).disabledColor.withOpacity(0.05),),
-                ),
-                padding: const EdgeInsets.all(6),
-                child: Row(
-                  children: [
-                    Text(
-                        widget.locked
-                            ? widget.lockedStateText ?? 'Locked'
-                            : widget.unlockedStateText ?? 'Unlocked',
-                        style: Theme.of(context).textTheme.labelMedium,),
-                    const SizedBox(width: 4),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 250),
-                      child: Icon(
-                        _locked ? MdiIcons.lock : MdiIcons.lockOpen,
-                        color: _locked
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).disabledColor,
-                        size: 18.0,
-                      ),
-                    ),
-                  ],
-                ),),
-            SizedBox(
-              height: 30,
-              child: FittedBox(
-                child: Row(
-                  children: [
-                    Switch(
-                      value: _locked,
-                      onChanged: widget.readOnly
-                          ? null
-                          : (value) {
-                              setState(() {
-                                _locked = value;
-                                widget.onLockChanged?.call(_locked);
-                              });
-                            },
-                    ),
-                  ],
-                ),
+      color: Colors.transparent,
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(
+                color: Theme.of(context).disabledColor.withOpacity(0.05),
               ),
             ),
-          ],
-        ),);
+            padding: const EdgeInsets.all(6),
+            child: Row(
+              children: [
+                Text(
+                  widget.locked
+                      ? widget.lockedStateText ?? 'Locked'
+                      : widget.unlockedStateText ?? 'Unlocked',
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+                const SizedBox(width: 4),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: Icon(
+                    _locked ? MdiIcons.lock : MdiIcons.lockOpen,
+                    color: _locked
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).disabledColor,
+                    size: 18.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 30,
+            child: FittedBox(
+              child: Row(
+                children: [
+                  Switch(
+                    value: _locked,
+                    onChanged: widget.readOnly
+                        ? null
+                        : (value) {
+                            setState(() {
+                              _locked = value;
+                              widget.onLockChanged?.call(_locked);
+                            });
+                          },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
 
     if (widget.helpText != null) {
       return Tooltip(

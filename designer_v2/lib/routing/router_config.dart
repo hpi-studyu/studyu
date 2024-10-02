@@ -125,15 +125,26 @@ class RouterConf {
       path: "/studies",
       name: studiesRouteName,
       builder: (context, state) => DashboardScreen(
-        filter: () {
+        filters: () {
           if (state.uri.queryParameters[RouteParams.studiesFilter] == null) {
             return null;
           }
-          final idx = StudiesFilter.values
-              .map((v) => v.toShortString())
-              .toList()
-              .indexOf(state.uri.queryParameters[RouteParams.studiesFilter]!);
-          return (idx != -1) ? StudiesFilter.values[idx] : null;
+          final List<String> filters =
+              state.uri.queryParameters[RouteParams.studiesFilter]!.split(',');
+
+          final List<StudiesFilter> result = [];
+
+          for (final filter in filters) {
+            final idx = StudiesFilter.values
+                .map((v) => v.toShortString())
+                .toList()
+                .indexOf(filter);
+            if (idx != -1) {
+              result.add(StudiesFilter.values[idx]);
+            }
+          }
+
+          return result.isNotEmpty ? result : null;
         }(), // call anonymous closure to resolve param to enum
       ),
     ),

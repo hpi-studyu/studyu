@@ -81,7 +81,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         }
       } catch (exception) {
         debugPrint(
-            "Could not login and retrieve the study subject: $exception",);
+          "Could not login and retrieve the study subject: $exception",
+        );
         if (exception is SocketException) {
           subject = await Cache.loadSubject();
           StudyULogger.info("Offline mode with cached subject: $subject");
