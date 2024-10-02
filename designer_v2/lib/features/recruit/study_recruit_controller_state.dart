@@ -12,6 +12,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
     required super.currentUser,
     required super.studyWithMetadata,
     required this.inviteCodeRepository,
+    this.parentTemplate,
     this.invites = const AsyncValue.loading(),
   });
 
@@ -20,6 +21,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
   /// Wrapped in an [AsyncValue] that mirrors the [StudyController]'s current
   /// [Study] async states, so that it can be used with [AsyncValueWidget]
   final AsyncValue<List<StudyInvite>?> invites;
+  final WrappedModel<Study>? parentTemplate;
 
   final InviteCodeRepository inviteCodeRepository;
 
@@ -27,6 +29,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
   StudyRecruitControllerState copyWith({
     WrappedModel<Study>? studyWithMetadata,
     AsyncValue<List<StudyInvite>>? invites,
+    WrappedModel<Study>? parentTemplate,
   }) {
     return StudyRecruitControllerState(
       studyId: studyId,
@@ -36,6 +39,7 @@ class StudyRecruitControllerState extends StudyControllerBaseState {
       studyWithMetadata: studyWithMetadata ?? super.studyWithMetadata,
       inviteCodeRepository: inviteCodeRepository,
       invites: invites ?? this.invites,
+      parentTemplate: parentTemplate ?? this.parentTemplate,
     );
   }
 

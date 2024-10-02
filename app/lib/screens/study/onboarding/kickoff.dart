@@ -38,7 +38,14 @@ class _KickoffScreen extends State<KickoffScreen> {
         (_) => false,
       );
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.error),
+          duration: const Duration(seconds: 30),
+        ),
+      );
       StudyULogger.fatal('Failed creating subject: $e');
+      Navigator.pushNamedAndRemoveUntil(context, Routes.welcome, (_) => false);
     }
   }
 

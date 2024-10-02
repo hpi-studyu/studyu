@@ -36,6 +36,7 @@ class StudyRecruitController extends _$StudyRecruitController
       _invitesSubscription?.cancel();
     });
     _subscribeInvites();
+    _getParentTemplate();
     return state;
   }
 
@@ -54,6 +55,23 @@ class StudyRecruitController extends _$StudyRecruitController
         invites: AsyncValue.data(invites),
       );
     }); // TODO onError
+  }
+
+  void _getParentTemplate() {
+    if (state.studyWithMetadata?.model.isSubStudy == false) {
+      return;
+    }
+
+    state = state.copyWith(
+        parentTemplate: ref
+            .watch(
+              studyControllerProvider(
+                StudyCreationArgs(
+                    studyID: state.studyWithMetadata!.model.parentTemplateId!,
+                    isTemplate: true),
+              ),
+            )
+            .studyWithMetadata);
   }
 
   Intervention? getIntervention(String interventionId) {

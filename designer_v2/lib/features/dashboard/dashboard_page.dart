@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
-import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_scaffold.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
@@ -42,6 +40,48 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
   }
 
+  final GlobalKey _createMenuButtonKey = GlobalKey();
+
+  void _showDropdownMenu(BuildContext context,
+      {required DashboardController controller}) {
+    final RenderBox button =
+        _createMenuButtonKey.currentContext!.findRenderObject()! as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject()! as RenderBox;
+
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(
+          button.size.bottomLeft(Offset(0, 10)),
+          ancestor: overlay,
+        ),
+        button.localToGlobal(
+          button.size.bottomRight(Offset(0, 10)),
+          ancestor: overlay,
+        ),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    showMenu(
+      context: context,
+      position: position,
+      items: [
+        _buildCreatePopupMenuItem(
+          title: tr.action_button_standalone_study_title,
+          subtitle: tr.action_button_standalone_study_subtitle,
+          onTap: () => controller.onClickNewStudy(false),
+        ),
+        _buildCreatePopupMenuItem(
+          title: tr.action_button_template_title,
+          subtitle: tr.action_button_template_subtitle,
+          hint: tr.action_button_template_hint,
+          onTap: () => controller.onClickNewStudy(true),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -54,64 +94,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         children: <Widget>[
           Row(
             children: [
-              PortalTarget(
-                visible: state.createNewMenuOpen,
-                portalCandidateLabels: const [outPortalLabel],
-                portalFollower: GestureDetector(
-                  onTap: () => controller.setCreateNewMenuOpen(false),
-                  child: Container(color: Colors.transparent),
-                ),
-                child: const SizedBox.shrink(),
-              ),
-              PortalTarget(
-                visible: state.createNewMenuOpen,
-                anchor: const Aligned(
-                  follower: Alignment.topLeft,
-                  target: Alignment.bottomLeft,
-                ),
-                portalFollower: GestureDetector(
-                  onTap: () => controller.setCreateNewMenuOpen(false),
-                  child: Container(
-                    width: 600,
-                    margin: const EdgeInsets.only(top: 10.0),
-                    child: Material(
-                      color: theme.colorScheme.onPrimary,
-                      borderRadius: BorderRadius.circular(16),
-                      elevation: 20.0,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildCreateNewDropdownItem(
-                              title: tr.action_button_standalone_study_title,
-                              subtitle:
-                                  tr.action_button_standalone_study_subtitle,
-                              onTap: () => controller.onClickNewStudy(false),
-                            ),
-                            const Divider(
-                              height: 0,
-                            ),
-                            _buildCreateNewDropdownItem(
-                              title: tr.action_button_template_title,
-                              subtitle: tr.action_button_template_subtitle,
-                              hint: tr.action_button_template_hint,
-                              onTap: () => controller.onClickNewStudy(true),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                child: SizedBox(
-                  height: 36.0,
-                  child: PrimaryButton(
-                    text: tr.action_button_create,
-                    onPressed: () => controller
-                        .setCreateNewMenuOpen(!state.createNewMenuOpen),
-                  ),
+              SizedBox(
+                key: _createMenuButtonKey,
+                height: 36.0,
+                child: PrimaryButton(
+                  text: tr.action_button_create,
+                  onPressed: () =>
+                      _showDropdownMenu(context, controller: controller),
                 ),
               ),
               const SizedBox(width: 28.0),
@@ -136,7 +125,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 24.0), // spacing between body elements
+          const SizedBox(height: 24.0),
           FutureBuilder<StudyUUser>(
             future: ref.read(userRepositoryProvider).fetchUser(),
             builder: (context, snapshot) {
@@ -193,59 +182,102 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildCreateNewDropdownItem({
+  // Widget _buildCreateNewDropdownItem({
+  //   required String title,
+  //   required String subtitle,
+  //   String? hint,
+  //   GestureTapCallback? onTap,
+  // }) {
+  //   final theme = Theme.of(context);
+  //   return Material(
+  //     color: theme.colorScheme.onPrimary,
+  //     child: InkWell(
+  //       onTap: onTap,
+  //       child: Container(
+  //         padding: const EdgeInsets.all(20),
+  //         child: Row(
+  //           children: [
+  //             Expanded(
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Text(
+  //                     title,
+  //                     style: theme.textTheme.titleMedium
+  //                         ?.copyWith(color: theme.colorScheme.primary),
+  //                   ),
+  //                   Text(subtitle),
+  //                   if (hint != null)
+  //                     Padding(
+  //                       padding: const EdgeInsets.only(top: 8),
+  //                       child: Text(
+  //                         hint,
+  //                         style: const TextStyle(fontStyle: FontStyle.italic),
+  //                       ),
+  //                     )
+  //                   else
+  //                     const SizedBox.shrink(),
+  //                 ],
+  //               ),
+  //             ),
+  //             const SizedBox(
+  //               width: 20,
+  //             ),
+  //             Icon(
+  //               Icons.add,
+  //               color: theme.colorScheme.primary,
+  //               size: 28,
+  //             ),
+  //             const SizedBox(
+  //               width: 8,
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  PopupMenuItem _buildCreatePopupMenuItem({
     required String title,
     required String subtitle,
     String? hint,
     GestureTapCallback? onTap,
   }) {
     final theme = Theme.of(context);
-    return Material(
-      color: theme.colorScheme.onPrimary,
-      child: InkWell(
+    return PopupMenuItem(
         onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(color: theme.colorScheme.primary),
-                    ),
-                    Text(subtitle),
-                    if (hint != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          hint,
-                          style: const TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      )
-                    else
-                      const SizedBox.shrink(),
-                  ],
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: theme.textTheme.titleMedium
+                            ?.copyWith(color: theme.colorScheme.primary),
+                      ),
+                      Text(subtitle),
+                      if (hint != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            hint,
+                            style: const TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        )
+                      else
+                        const SizedBox.shrink(),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Icon(
-                Icons.add,
-                color: theme.colorScheme.primary,
-                size: 28,
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+              ],
+            ),
+            const Divider()
+          ],
+        ));
   }
 }

@@ -1039,6 +1039,43 @@ CREATE POLICY "Joining a closed study should not be possible" ON public.study_su
 ));
 
 --
+-- Name: Joining a substudy with a closed parent template should not be possible; Type: POLICY; Schema: public; Owner: postgres
+--
+CREATE POLICY "Joining a substudy with a closed parent template should not be possible"
+ON public.study_subject
+AS RESTRICTIVE
+FOR INSERT
+WITH CHECK (
+    NOT EXISTS (
+        SELECT 1
+        FROM public.study parent
+        WHERE parent.id = (
+            SELECT study.parent_template_id
+            FROM public.study
+            WHERE study.id = study_subject.study_id
+        )
+        AND parent.status = 'closed'::public.study_status
+    )
+);
+
+--
+-- Name: Creating substudies is not possible for closed templates; Type: POLICY; Schema: public; Owner: postgres
+--
+CREATE POLICY "Creating substudies is not possible for closed templates"
+    ON public.study
+    AS RESTRICTIVE
+    FOR INSERT
+    WITH CHECK (
+    parent_template_id IS NULL
+    OR NOT EXISTS (
+        SELECT 1
+        FROM public.study parent
+        WHERE parent.id = study.parent_template_id
+        AND parent.status = 'closed'::public.study_status
+    )
+);
+
+--
 -- Name: app_config; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 

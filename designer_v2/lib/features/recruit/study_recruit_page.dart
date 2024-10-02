@@ -24,6 +24,9 @@ class StudyRecruitScreen extends StudyPageWidget {
     final state = ref.watch(studyRecruitControllerProvider(studyCreationArgs));
     final controller =
         ref.watch(studyRecruitControllerProvider(studyCreationArgs).notifier);
+    final bool isSubStudy = state.studyWithMetadata?.model.isSubStudy == true;
+    final bool isParentTemplateClosed =
+        state.parentTemplate?.model.isClosed == true;
 
     if (state.studyWithMetadata?.model.isTemplate == true) {
       return Padding(
@@ -31,6 +34,17 @@ class StudyRecruitScreen extends StudyPageWidget {
         child: EmptyBody(
           icon: Icons.link_off_rounded,
           title: tr.code_list_template_title,
+          description: "",
+        ),
+      );
+    }
+
+    if (isSubStudy && isParentTemplateClosed) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 24),
+        child: EmptyBody(
+          icon: Icons.link_off_rounded,
+          title: tr.code_list_closed_parent_template_title,
           description: "",
         ),
       );
