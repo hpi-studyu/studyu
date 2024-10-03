@@ -1204,14 +1204,14 @@ packages:
       path: "../core"
       relative: true
     source: path
-    version: "4.4.7"
+    version: "4.4.8"
   studyu_flutter_common:
     dependency: "direct main"
     description:
       path: "../flutter_common"
       relative: true
     source: path
-    version: "1.8.8"
+    version: "1.8.9"
   supabase:
     dependency: "direct main"
     description:
