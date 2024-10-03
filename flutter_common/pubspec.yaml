@@ -1,5 +1,5 @@
 name: studyu_flutter_common
-version: 1.8.8
+version: 1.8.9
 description: StudyU common flutter components and functions for app and designer
 homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
@@ -14,7 +14,7 @@ dependencies:
   flutter_secure_storage: ^9.2.2
   lint: ^2.3.0
   shared_preferences: ^2.3.2
-  studyu_core: ^4.4.7
+  studyu_core: ^4.4.8
   supabase_flutter: ^2.7.0
   synchronized: ^3.3.0+3
   uuid: ^4.5.1

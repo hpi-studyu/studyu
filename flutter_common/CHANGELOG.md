@@ -1,3 +1,8 @@
+## 1.8.9
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
 ## 1.8.8
 
  - **FIX**: upgrade to flutter v3.24.2.
