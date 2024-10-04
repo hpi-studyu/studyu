@@ -51,7 +51,10 @@
   "intervention_current": "Current intervention",
   "study_current": "Current study:",
   "opt_out": "Leave study",
-  "delete_data": "Leave study & delete all data",
+  "delete_data": "Leave study and delete all data",
+  "soft_delete_desc": "You will lose your progress in ",
+  "soft_delete_desc_2": " and won't be able to recover it. Previously completed studies will not be deleted.\nYour anonymized data up to this point may still be used for research purposes.",
+  "hard_delete_desc": "You are about to delete all data from your device and our servers. You will not be able to restore your data.\nYour anonymized data will not be available for research purposes anymore.",
 
   "your_journey": "Your Journey",
   "journey_results_available": "Results available",

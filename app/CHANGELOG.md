@@ -1,3 +1,18 @@
+## 2.7.11
+
+ - **FIX**: upgrade deps.
+ - **FIX**: notification scheduling.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+ - **FIX**: prompt user to restart after reset.
+ - **FIX**: debug screen.
+
+## 2.7.10
+
+ - **FIX**: schedule notifications for 7 days.
+ - **FIX**: refactor notification cancelling and add missing translations.
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: maybe prevent blank screen in notification debug view.
+
 ## 2.7.9
 
  - **FIX**: upgrade deps.

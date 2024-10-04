@@ -376,7 +376,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     return SupabaseQuery.extractSupabaseList<StudySubject>(
       await env.client
           .from(tableName)
-          .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)'),
+          .select('*,study!study_subject_studyId_fkey(*),subject_progress(*)')
+          .eq('user_id', userId),
     );
   }
 

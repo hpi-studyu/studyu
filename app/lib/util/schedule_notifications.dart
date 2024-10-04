@@ -31,12 +31,11 @@ Future<int> scheduleReminderForDate(
     if (date.isSameDate(DateTime.now()) &&
         !StudyUTimeOfDay(hour: date.hour, minute: date.minute)
             .earlierThan(reminder, exact: true)) {
-      final String debugStr =
-          'Skipped #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
-      //StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
+      /* final String debugStr = 'Skipped #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
+      // StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
       if (StudyNotifications.debug) {
         print(debugStr);
-      }
+      } */
       continue;
     }
 
@@ -96,24 +95,24 @@ Future<void> scheduleNotifications(BuildContext context) async {
         content: Text('Schedule Notifications'),
       ),
     );
+    print('Schedule Notifications');
   }
   // Notifications not supported on web
   if (kIsWeb) return;
   final appState = context.read<AppState>();
   final subject = appState.activeSubject!;
   final body = AppLocalizations.of(context)!.study_notification_body;
-  final studyNotifications = appState.studyNotifications ??
+  context.read<AppState>().studyNotifications ??=
       await StudyNotifications.create(subject, context);
-
   final notificationsPlugin =
-      studyNotifications.flutterLocalNotificationsPlugin;
-  await notificationsPlugin.cancelAll();
+      appState.studyNotifications!.flutterLocalNotificationsPlugin;
+  notificationsPlugin.cancelAll();
 
   StudyNotifications.scheduledNotificationsDebug =
       "Timestamp: ${DateTime.now()}\nSubject ID: ${subject.id}\n";
   final List<StudyNotification> studyNotificationList = [];
 
-  for (int index = 0; index <= 3; index++) {
+  for (int index = 0; index <= 7; index++) {
     final date = DateTime.now().add(Duration(days: index));
     final tasks = subject.scheduleFor(date);
     studyNotificationList.addAll(_buildNotificationList(subject, date, tasks));
@@ -157,21 +156,32 @@ List<StudyNotification> _buildNotificationList(
   return taskNotifications;
 }
 
-Future<void> testNotifications(BuildContext context) async {
-  // Notifications not supported on web
-  if (kIsWeb) return;
+Future<void>? cancelNotifications(BuildContext context) async {
+  if (kIsWeb) return Future.value(); // Notifications not supported on web
   final appState = context.read<AppState>();
-  final subject = appState.activeSubject;
-  final studyNotifications = appState.studyNotifications ??
-      await StudyNotifications.create(subject, context);
-  await studyNotifications.flutterLocalNotificationsPlugin.show(
-    /*******************/
-    99,
-    'StudyU Test Notification',
-    'This notification confirms that you receive StudyU notifications',
-    /*******************/
-    notificationDetails,
-  );
+  final notificationsPlugin =
+      appState.studyNotifications?.flutterLocalNotificationsPlugin;
+
+  await notificationsPlugin?.cancelAll();
+  await FlutterLocalNotificationsPlugin().cancelAll();
+  final list1 = await notificationsPlugin?.pendingNotificationRequests() ?? [];
+  final list2 =
+      await FlutterLocalNotificationsPlugin().pendingNotificationRequests();
+  StudyNotifications.scheduledNotificationsDebug = 'cleared';
+  if (context.mounted) context.read<AppState>().studyNotifications = null;
+  if (StudyNotifications.debug) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Notifications cancelled and pending notifications are empty: ${list1.isEmpty && list2.isEmpty}',
+          ),
+        ),
+      );
+    }
+    print('Notifications cancelled');
+  }
+  return Future.value();
 }
 
 class StudyNotification {

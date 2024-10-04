@@ -7,14 +7,12 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overview.dart';
 import 'package:studyu_app/screens/study/report/report_details.dart';
-import 'package:studyu_app/util/notifications.dart';
-import 'package:studyu_app/util/schedule_notifications.dart';
+import 'package:studyu_app/util/debug_screen.dart';
 import 'package:studyu_core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -88,10 +86,6 @@ class _DashboardScreenState extends State<DashboardScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  Future<bool> receivePermission() async {
-    return await Permission.ignoreBatteryOptimizations.request().isGranted;
   }
 
   @override
@@ -170,58 +164,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                       context: context,
                       applicationIcon: GestureDetector(
                         onDoubleTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                              title: const SelectableText(
-                                'Notification Log',
-                              ),
-                              content: Column(
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      final Uri emailLaunchUri = Uri(
-                                        scheme: 'mailto',
-                                        path: subject!.study.contact.email,
-                                        queryParameters: {
-                                          'subject':
-                                              '[StudyU] Debug Information',
-                                          'body': StudyNotifications
-                                              .scheduledNotificationsDebug,
-                                        },
-                                      );
-                                      launchUrl(emailLaunchUri);
-                                    },
-                                    child: const Text('Send via email'),
-                                  ),
-                                  FutureBuilder<bool>(
-                                    future: receivePermission(),
-                                    builder: (
-                                      context,
-                                      AsyncSnapshot<bool> snapshot,
-                                    ) {
-                                      if (snapshot.hasData) {
-                                        final String data =
-                                            "ignoreBatteryOptimizations: ${snapshot.data}";
-                                        StudyNotifications
-                                                .scheduledNotificationsDebug =
-                                            "${StudyNotifications.scheduledNotificationsDebug}\n\n$data\n";
-                                        return Text(data);
-                                      } else {
-                                        return const CircularProgressIndicator();
-                                      }
-                                    },
-                                  ),
-                                  SelectableText(
-                                    StudyNotifications
-                                        .scheduledNotificationsDebug!,
-                                  ),
-                                ],
-                              ),
-                              scrollable: true,
-                            ),
-                          );
-                          testNotifications(context);
+                          DebugScreen.showDebugScreen(context);
                         },
                         child: const Image(
                           image: AssetImage('assets/icon/icon.png'),

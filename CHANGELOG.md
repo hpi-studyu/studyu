@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-10-03
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.11`](#studyu_app---v2711)
+ - [`studyu_core` - `v4.4.8`](#studyu_core---v448)
+ - [`studyu_designer_v2` - `v1.9.2`](#studyu_designer_v2---v192)
+ - [`studyu_flutter_common` - `v1.8.9`](#studyu_flutter_common---v189)
+
+---
+
+#### `studyu_app` - `v2.7.11`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: notification scheduling.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+ - **FIX**: prompt user to restart after reset.
+ - **FIX**: debug screen.
+
+#### `studyu_core` - `v4.4.8`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+#### `studyu_designer_v2` - `v1.9.2`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+#### `studyu_flutter_common` - `v1.8.9`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+
+## 2024-09-05
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.10`](#studyu_app---v2710)
+ - [`studyu_core` - `v4.4.7`](#studyu_core---v447)
+ - [`studyu_designer_v2` - `v1.9.1`](#studyu_designer_v2---v191)
+ - [`studyu_flutter_common` - `v1.8.8`](#studyu_flutter_common---v188)
+
+---
+
+#### `studyu_app` - `v2.7.10`
+
+ - **FIX**: schedule notifications for 7 days.
+ - **FIX**: refactor notification cancelling and add missing translations.
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: maybe prevent blank screen in notification debug view.
+
+#### `studyu_core` - `v4.4.7`
+
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: result history filter.
+
+#### `studyu_designer_v2` - `v1.9.1`
+
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: hotfix to sanitize export contents.
+
+#### `studyu_flutter_common` - `v1.8.8`
+
+ - **FIX**: upgrade to flutter v3.24.2.
+
+
 ## 2024-08-12
 
 ### Changes
