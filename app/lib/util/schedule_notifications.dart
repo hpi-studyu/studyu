@@ -89,7 +89,7 @@ const notificationDetails = NotificationDetails(
   android: AndroidNotificationDetails(
     '0',
     'StudyU',
-    icon: "ic_notification",
+    icon: '@mipmap/ic_launcher',
     priority: Priority.max,
     importance: Importance.max,
   ),
