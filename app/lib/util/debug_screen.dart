@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +13,7 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DebugScreen {
-  static void showDebugScreen(BuildContext context) {
+  static Future<void> showDebugScreen(BuildContext context) async {
     final studyNotifications = context.read<AppState>().studyNotifications;
 
     final pendingNotifications = studyNotifications != null
@@ -26,7 +27,10 @@ class DebugScreen {
     bool? ignoreBatteryOptimizations;
     int? pendingNotificationRes;
     int? pendingNotificationsPluginRes;
-
+    final packageInfo = await PackageInfo.fromPlatform();
+    final versionString =
+        'Version: ${packageInfo.version} - ${packageInfo.buildNumber}';
+    if (!context.mounted) return;
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -35,6 +39,7 @@ class DebugScreen {
         ),
         content: Column(
           children: [
+            Text(versionString),
             ElevatedButton(
               onPressed: () {
                 AppConfig.getAppContact().then((value) {
@@ -43,7 +48,8 @@ class DebugScreen {
                     path: value.email,
                     queryParameters: {
                       'subject': '[StudyU] Debug Information',
-                      'body': 'ignoreBatteryOptimizations: ${ignoreBatteryOptimizations ?? 'null'}\n'
+                      'body': 'version: $versionString\n'
+                          'ignoreBatteryOptimizations: ${ignoreBatteryOptimizations ?? 'null'}\n'
                           'pendingNotificationsNumber: ${pendingNotificationRes ?? 'null'}\n'
                           'pendingNotificationsPluginNumber: ${pendingNotificationsPluginRes ?? 'null'}\n'
                           'scheduledNotificationsDebug: ${StudyNotifications.scheduledNotificationsDebug}',

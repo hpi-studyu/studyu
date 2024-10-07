@@ -1,3 +1,10 @@
+## 2.7.12
+
+ - **FIX**: notification icon mipmap 2.
+ - **FIX**: notification icon mipmap.
+ - **FIX**: configure AndroidNotificationDetails correctly.
+ - **FIX**: disable R8 full mode for flutter_local_notifications.
+
 ## 2.7.11
 
  - **FIX**: upgrade deps.
