@@ -1,10 +1,13 @@
 // ignore_for_file: avoid_classes_with_only_static_members
 import 'package:flutter/material.dart';
+import 'package:studyu_app/models/app_error.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/app_outdated_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
+import 'package:studyu_app/screens/error/error_screen.dart';
+import 'package:studyu_app/screens/error/troubleshoot.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/faq.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
@@ -38,6 +41,8 @@ class Routes {
   static const String reportHistory = '/reportHistory';
   static const String reportDetails = '/reportDetails';
   static const String performanceDetails = '/performanceDetails';
+  static const String troubleshooting = '/troubleshooting';
+  static const String error = '/error';
 
   static Route<dynamic> unknownRoute(RouteSettings settings) {
     return MaterialPageRoute(
@@ -145,6 +150,18 @@ class Routes {
       case reportHistory:
         return MaterialPageRoute(
           builder: (_) => const ReportHistoryScreen(),
+          settings: settings,
+        );
+      case troubleshooting:
+        return MaterialPageRoute(
+          builder: (_) => TroubleshootScreen(),
+          settings: settings,
+        );
+      case error:
+        return MaterialPageRoute(
+          builder: (_) => ErrorScreen(
+            error: AppError(AppErrorTypes.network, 'An error occurred'),
+          ),
           settings: settings,
         );
       default:
