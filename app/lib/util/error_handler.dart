@@ -15,18 +15,48 @@ class ErrorHandler {
               children: <Widget>[
                 Text(error.message),
                 //TODO: Improve UI for actions
-                for (final action in error.actions!)
-                  RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        const TextSpan(text: "Do you want to "),
-                        TextSpan(
-                          text: action.actionText,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                for (int i = 0; i < error.actions!.length; i++)
+                  Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    child: Column(
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            children: <TextSpan>[
+                              const TextSpan(text: "Do you want to "),
+                              TextSpan(
+                                text: error.actions![i].actionText,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const TextSpan(text: " instead?"),
+                            ],
+                            style: const TextStyle(color: Colors.grey),
+                          ),
                         ),
-                        const TextSpan(text: " instead?"),
+                        if (error.actions![i].actionDescription != null)
+                          Text(
+                            error.actions![i].actionDescription!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(color: Colors.grey),
+                          )
+                        else
+                          const SizedBox.shrink(),
+                        if (error.actions!.length > 1 &&
+                            i < error.actions!.length - 1)
+                          Container(
+                            margin: const EdgeInsets.only(top: 10),
+                            child: Text(
+                              "or",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(color: Colors.grey),
+                            ),
+                          ),
                       ],
-                      style: const TextStyle(color: Colors.grey),
                     ),
                   ),
               ],
@@ -40,10 +70,6 @@ class ErrorHandler {
                   },
                   child: Text(action.actionText),
                 ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text("Close"),
-              ),
             ],
           );
         },
