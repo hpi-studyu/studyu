@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_error.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
@@ -10,6 +11,7 @@ import 'package:studyu_app/screens/app_onboarding/preview.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/error_handler.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -43,7 +45,20 @@ class _LoadingScreenState extends State<LoadingScreen> {
       await noSubjectFound();
       return;
     }
-    StudySubject? subject = await _retrieveSubject(selectedSubjectId);
+
+    StudySubject? subject;
+
+    try {
+      subject = await _retrieveSubject(selectedSubjectId);
+    } catch (error) {
+      if (error is AppError && error.type == AppErrorTypes.retrieveSubject) {
+        if (!mounted) return;
+        await ErrorHandler.handleError(context, error);
+
+        return;
+      }
+    }
+
     if (!mounted) return;
     if (subject != null) {
       subject = await Cache.synchronize(subject);
@@ -89,6 +104,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         debugPrint(
           "Could not login and retrieve the study subject: $exception",
         );
+
         if (exception is SocketException) {
           subject = await Cache.loadSubject();
           StudyULogger.info("Offline mode with cached subject: $subject");
@@ -101,10 +117,34 @@ class _LoadingScreenState extends State<LoadingScreen> {
           // 4. Open the app but do not join a study
           // 5. Restart the app. Either only this error shows up, worst case is
           // app hangs and is unresponsive
-          StudyULogger.fatal('Could not login and retrieve the study subject. '
-              'One reason for this might be that the study subject is no '
-              'longer available and only resides in app backup');
-          throw Exception("Remote subject not found");
+
+          throw AppError(
+            AppErrorTypes.retrieveSubject,
+            AppLocalizations.of(context)!.error_missing_study,
+            actions: [
+              ErrorAction(
+                AppLocalizations.of(context)!.join_new_study,
+                () async {
+                  await cancelNotifications(context);
+                  await deleteActiveStudyReference();
+                  if (!mounted) return;
+                  Navigator.pushReplacementNamed(context, Routes.welcome);
+                },
+                actionDescription:
+                    AppLocalizations.of(context)!.join_new_study_description,
+              ),
+              ErrorAction(
+                AppLocalizations.of(context)!.retry,
+                () async {
+                  Navigator.of(context).pop();
+
+                  await initStudy();
+                },
+                actionDescription:
+                    AppLocalizations.of(context)!.retry_description,
+              ),
+            ],
+          );
         }
       }
     }
