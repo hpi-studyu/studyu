@@ -70,6 +70,10 @@ class ErrorHandler {
                   },
                   child: Text(action.actionText),
                 ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Close"),
+              ),
             ],
           );
         },
