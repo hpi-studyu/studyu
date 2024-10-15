@@ -104,6 +104,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         debugPrint(
           "Could not login and retrieve the study subject: $exception",
         );
+
         if (exception is SocketException) {
           subject = await Cache.loadSubject();
           StudyULogger.info("Offline mode with cached subject: $subject");
@@ -116,16 +117,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
           // 4. Open the app but do not join a study
           // 5. Restart the app. Either only this error shows up, worst case is
           // app hangs and is unresponsive
+
           throw AppError(
             AppErrorTypes.retrieveSubject,
-            '''
-              Could not login and retrieve the study subject.
-              One reason for this might be that the study subject is no
-              longer available and only resides in app backup
-          ''',
+            AppLocalizations.of(context)!.error_missing_study,
             actions: [
               ErrorAction(
-                "Join a new study",
+                AppLocalizations.of(context)!.join_new_study,
                 () async {
                   await cancelNotifications(context);
                   await deleteActiveStudyReference();
@@ -133,15 +131,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   Navigator.pushReplacementNamed(context, Routes.welcome);
                 },
                 actionDescription:
-                    'Join a new study to continue using the app.',
+                    AppLocalizations.of(context)!.join_new_study_description,
               ),
               ErrorAction(
-                "Retry",
+                AppLocalizations.of(context)!.retry,
                 () async {
-                  Navigator.of(context).popAndPushNamed(Routes.loading);
+                  Navigator.of(context).pop();
+
+                  await initStudy();
                 },
                 actionDescription:
-                    'Try to login again to retrieve the study subject.',
+                    AppLocalizations.of(context)!.retry_description,
               ),
             ],
           );
