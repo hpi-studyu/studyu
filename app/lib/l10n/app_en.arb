@@ -213,5 +213,11 @@
       }
   },
   "app_outdated_message": "A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!",
-  "update_now": "Update now"
+  "update_now": "Update now",
+
+  "error_missing_study": "Could not login and retrieve the study subject. \nOne reason for this might be that the study subject is no longer available and only resides in app backup",
+  "join_new_study": "Join a new study",
+  "join_new_study_description": "Join a new study to continue using the app. Your previous study data will be deleted.",
+  "retry": "Retry",
+  "retry_description": "Try to login again to retrieve the study subject."
 }
