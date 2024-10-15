@@ -85,8 +85,15 @@ Future<int> scheduleReminderForDate(
   return currentId;
 }
 
-const notificationDetails =
-    NotificationDetails(android: AndroidNotificationDetails('0', 'StudyU'));
+const notificationDetails = NotificationDetails(
+  android: AndroidNotificationDetails(
+    '0',
+    'StudyU',
+    icon: '@mipmap/ic_launcher',
+    priority: Priority.max,
+    importance: Importance.max,
+  ),
+);
 
 Future<void> scheduleNotifications(BuildContext context) async {
   if (StudyNotifications.debug) {
