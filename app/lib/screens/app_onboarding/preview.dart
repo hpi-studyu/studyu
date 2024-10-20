@@ -117,6 +117,17 @@ class Preview {
     return queryParameters!.containsKey(key) && queryParameters![key] == value;
   }
 
+  Future<StudySubject?> _fetchRemoteSubject(String selectedStudyObjectId) {
+    return SupabaseQuery.getById<StudySubject>(
+      selectedStudyObjectId,
+      selectedColumns: [
+        '*',
+        'study!study_subject_studyId_fkey(*)',
+        'subject_progress(*)',
+      ],
+    );
+  }
+
   /// createSubject: If true, the method will return a new StudySubject if none can be found. Otherwise, null is returned
   Future<StudySubject?> getStudySubject(
     AppState state, {
@@ -158,23 +169,27 @@ class Preview {
           // User is already subscribed to a study
           return subject;
         }
-        subject = await SupabaseQuery.getById<StudySubject>(
-          selectedStudyObjectId!,
-          selectedColumns: [
-            '*',
-            'study!study_subject_studyId_fkey(*)',
-            'subject_progress(*)',
-          ],
-        );
-        if (subject != null && subject!.studyId == study!.id) {
-          // User is already subscribed to the study
-          return subject;
-        }
+        subject = await _fetchRemoteSubject(selectedStudyObjectId!);
+
+        if (subject != null && subject!.studyId == study!.id) return subject;
       } catch (e) {
-        print('[PreviewApp]: Failed fetching subject: $e');
-        // todo try sign in again if token expired see loading screen
+        try {
+          StudyULogger.info(
+              '[PreviewApp]: Failed fetching subject: $e. Trying to sign in participant');
+
+          if (await signInParticipant()) {
+            subject = await _fetchRemoteSubject(selectedStudyObjectId!);
+          }
+
+          // User is already subscribed to the study
+          if (subject != null && subject!.studyId == study!.id) return subject;
+        } catch (e) {
+          StudyULogger.error(
+              '[PreviewApp]: Failed fetching subject after sign in: $e');
+        }
       }
     }
+
     if (createSubject) {
       // Create a new study subject
       subject = await _createFakeSubject(state);
@@ -209,9 +224,10 @@ class Preview {
         await storeActiveSubjectId(subject!.id);
         // print("[PreviewApp]: Saved subject");
       } catch (e) {
-        print('[PreviewApp]: Failed creating subject: $e');
+        StudyULogger.error('[PreviewApp]: Failed creating subject: $e');
       }
     }
+
     return subject;
   }
 
