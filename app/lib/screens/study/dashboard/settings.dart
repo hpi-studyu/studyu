@@ -7,10 +7,13 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/app_analytics.dart';
+import 'package:studyu_app/util/error_handler.dart';
 import 'package:studyu_app/util/localization.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+
+import '../../../models/app_error.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -186,14 +189,26 @@ class OptOutAlertDialog extends StatelessWidget {
           label: Text(AppLocalizations.of(context)!.opt_out),
           style: ElevatedButton.styleFrom(backgroundColor: Colors.orange[800]),
           onPressed: () async {
-            await subject!.softDelete();
-            await deleteActiveStudyReference();
-            if (context.mounted) await cancelNotifications(context);
-            if (context.mounted) {
-              Navigator.pushNamedAndRemoveUntil(
+            try {
+              await subject!.softDelete();
+              await deleteActiveStudyReference();
+              if (context.mounted) await cancelNotifications(context);
+              if (context.mounted) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  Routes.studySelection,
+                  (_) => false,
+                );
+              }
+            } on SocketException catch (_) {
+              ErrorHandler.showSnackbar(context, "Connection error");
+            } on AppError catch (e) {
+              ErrorHandler.showSnackbar(context, e.message);
+            } catch (e) {
+              StudyULogger.error(e.toString());
+              ErrorHandler.showSnackbar(
                 context,
-                Routes.studySelection,
-                (_) => false,
+                "An error occured while opting out. Please try again later",
               );
             }
           },
@@ -231,7 +246,18 @@ class DeleteAlertDialog extends StatelessWidget {
                     (_) => false,
                   );
                 }
-              } on SocketException catch (_) {}
+              } on SocketException catch (_) {
+                ErrorHandler.showSnackbar(context, "Connection error");
+              } on AppError catch (e) {
+                ErrorHandler.showSnackbar(context, e.message);
+              } catch (e) {
+                StudyULogger.error(e.toString());
+
+                ErrorHandler.showSnackbar(
+                  context,
+                  "An error occured while deleting data. Please try again later",
+                );
+              }
             },
           ),
         ],
