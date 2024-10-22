@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_error.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/tasks/intervention/checkmark_task_widget.dart';
 import 'package:studyu_app/screens/study/tasks/observation/questionnaire_task_widget.dart';
 import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/error_handler.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_core/core.dart';
 
@@ -95,9 +97,20 @@ Future<void> handleTaskCompletion(
   } on SocketException {
     await Cache.storeSubject(activeSubject);
   } catch (exception) {
-    debugPrint("Could not save results");
+    StudyULogger.error(exception);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
+    ErrorHandler.handleError(
+      context,
+      AppError(
+        AppErrorTypes.unknown,
+        AppLocalizations.of(context)!.could_not_save_results,
+        actions: [
+          ErrorAction(AppLocalizations.of(context)!.retry,
+              () => handleTaskCompletion(context, completionCallback)),
+        ],
+      ),
+    );
+    /*ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(AppLocalizations.of(context)!.could_not_save_results),
         duration: const Duration(seconds: 10),
@@ -106,7 +119,7 @@ Future<void> handleTaskCompletion(
           onPressed: () => handleTaskCompletion(context, completionCallback),
         ),
       ),
-    );
+    );*/
     rethrow;
   }
 }
