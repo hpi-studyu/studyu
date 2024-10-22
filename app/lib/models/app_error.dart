@@ -1,5 +1,6 @@
 enum AppErrorTypes {
   retrieveSubject,
+  storeSubject,
   network,
   notification,
   unknown,

@@ -219,5 +219,6 @@
   "join_new_study": "Join a new study",
   "join_new_study_description": "Join a new study to continue using the app. Your previous study data will be deleted.",
   "retry": "Retry",
-  "retry_description": "Try to login again to retrieve the study subject."
+  "retry_description": "Try again",
+    "error_no_internet": "No internet connection"
 }

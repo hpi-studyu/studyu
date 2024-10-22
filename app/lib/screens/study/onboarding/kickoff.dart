@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_error.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/error_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -37,7 +41,34 @@ class _KickoffScreen extends State<KickoffScreen> {
         Routes.dashboard,
         (_) => false,
       );
+    } on SocketException catch (e) {
+      ErrorHandler.showSnackbar(
+        context,
+        AppLocalizations.of(context)!.error_no_internet,
+      );
+
+      StudyULogger.fatal('Failed creating subject: $e');
     } catch (e) {
+      ErrorHandler.handleError(
+          context,
+          AppError(AppErrorTypes.storeSubject,
+              'An error occurred while preparing the study for you.',
+              actions: [
+                ErrorAction(AppLocalizations.of(context)!.retry,
+                    () => _storeUserStudy(context),
+                    actionDescription:
+                        AppLocalizations.of(context)!.retry_description),
+                ErrorAction(
+                  AppLocalizations.of(context)!.join_new_study,
+                  () => Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    Routes.studySelection,
+                    (_) => false,
+                  ),
+                  actionDescription:
+                      AppLocalizations.of(context)!.join_new_study_description,
+                ),
+              ]));
       StudyULogger.fatal('Failed creating subject: $e');
     }
   }
