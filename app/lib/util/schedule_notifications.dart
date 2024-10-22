@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_error.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_core/core.dart';
@@ -166,28 +167,44 @@ List<StudyNotification> _buildNotificationList(
 Future<void>? cancelNotifications(BuildContext context) async {
   if (kIsWeb) return Future.value(); // Notifications not supported on web
   final appState = context.read<AppState>();
-  final notificationsPlugin =
-      appState.studyNotifications?.flutterLocalNotificationsPlugin;
 
-  await notificationsPlugin?.cancelAll();
-  await FlutterLocalNotificationsPlugin().cancelAll();
-  final list1 = await notificationsPlugin?.pendingNotificationRequests() ?? [];
-  final list2 =
-      await FlutterLocalNotificationsPlugin().pendingNotificationRequests();
-  StudyNotifications.scheduledNotificationsDebug = 'cleared';
-  if (context.mounted) context.read<AppState>().studyNotifications = null;
-  if (StudyNotifications.debug) {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Notifications cancelled and pending notifications are empty: ${list1.isEmpty && list2.isEmpty}',
+  try {
+    final notificationsPlugin =
+        appState.studyNotifications?.flutterLocalNotificationsPlugin;
+
+    await notificationsPlugin?.cancelAll();
+    await FlutterLocalNotificationsPlugin().cancelAll();
+
+    final list1 =
+        await notificationsPlugin?.pendingNotificationRequests() ?? [];
+    final list2 =
+        await FlutterLocalNotificationsPlugin().pendingNotificationRequests();
+
+    StudyNotifications.scheduledNotificationsDebug = 'cleared';
+    if (context.mounted) context.read<AppState>().studyNotifications = null;
+
+    if (StudyNotifications.debug) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Notifications cancelled and pending notifications are empty: ${list1.isEmpty && list2.isEmpty}',
+            ),
           ),
-        ),
-      );
+        );
+      }
+      print('Notifications cancelled');
     }
-    print('Notifications cancelled');
+  } catch (e) {
+    StudyULogger.error('Error cancelling notifications: $e');
+    if (context.mounted) context.read<AppState>().studyNotifications = null;
+
+    throw AppError(
+      AppErrorTypes.notification,
+      'An error occured when cancelling notifications',
+    );
   }
+
   return Future.value();
 }
 

@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:studyu_app/util/error_handler.dart';
+import 'package:studyu_core/core.dart';
 
 Future<String?> savePDF(
   BuildContext context,
@@ -35,7 +37,14 @@ Future<String?> savePDF(
 
     return filePath.split(':')[1];
   } catch (e) {
-    print('Error saving file with FileDialog $e');
+    StudyULogger.error('An error occurred while saving the PDF: $e');
+
+    if (!context.mounted) return null;
+    ErrorHandler.showSnackbar(
+      context,
+      'An error occurred while saving the PDF.',
+    );
+
     return null;
   }
 }
