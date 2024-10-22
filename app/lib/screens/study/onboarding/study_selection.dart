@@ -249,7 +249,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                     .select()
                     .single();
               } on PostgrestException catch (error) {
-                print(error.message);
+                StudyULogger.error(error.message);
                 setState(() {
                   _errorMessage = error.message;
                 });
@@ -272,7 +272,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
                     params: {'invite_code': _controller.text},
                   ).single();
                 } on PostgrestException catch (error) {
-                  print(error.message);
+                  StudyULogger.error(error.message);
                   setState(() {
                     _errorMessage = error.message;
                   });
