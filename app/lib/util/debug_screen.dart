@@ -186,7 +186,7 @@ class DebugScreen {
                 },
               ),
             Text('userId: ${context.read<AppState>().activeSubject!.userId}'),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             const Text("Scheduled Notifications:"),
             SelectableText(
               StudyNotifications.scheduledNotificationsDebug ?? 'No data',
