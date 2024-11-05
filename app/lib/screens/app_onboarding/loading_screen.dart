@@ -101,7 +101,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           subject = await _fetchRemoteSubject(selectedStudyObjectId);
         }
       } catch (exception) {
-        debugPrint(
+        StudyULogger.debug(
           "Could not login and retrieve the study subject: $exception",
         );
 

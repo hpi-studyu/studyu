@@ -52,7 +52,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       ErrorHandler.handleError(
           context,
           AppError(AppErrorTypes.storeSubject,
-              'An error occurred while preparing the study for you.',
+              AppLocalizations.of(context)!.preparing_study_error,
               actions: [
                 ErrorAction(AppLocalizations.of(context)!.retry,
                     () => _storeUserStudy(context),

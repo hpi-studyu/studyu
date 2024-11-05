@@ -201,14 +201,14 @@ class OptOutAlertDialog extends StatelessWidget {
                 );
               }
             } on SocketException catch (_) {
-              ErrorHandler.showSnackbar(context, "Connection error");
+              ErrorHandler.showSnackbar(context, AppLocalizations.of(context)!.error_no_internet);
             } on AppError catch (e) {
               ErrorHandler.showSnackbar(context, e.message);
             } catch (e) {
               StudyULogger.error(e.toString());
               ErrorHandler.showSnackbar(
                 context,
-                "An error occured while opting out. Please try again later",
+                AppLocalizations.of(context)!.generic_error_try_again,
               );
             }
           },
@@ -247,7 +247,7 @@ class DeleteAlertDialog extends StatelessWidget {
                   );
                 }
               } on SocketException catch (_) {
-                ErrorHandler.showSnackbar(context, "Connection error");
+                ErrorHandler.showSnackbar(context, AppLocalizations.of(context)!.error_no_internet);
               } on AppError catch (e) {
                 ErrorHandler.showSnackbar(context, e.message);
               } catch (e) {
@@ -255,7 +255,7 @@ class DeleteAlertDialog extends StatelessWidget {
 
                 ErrorHandler.showSnackbar(
                   context,
-                  "An error occured while deleting data. Please try again later",
+                  AppLocalizations.of(context)!.delete_data_error,
                 );
               }
             },

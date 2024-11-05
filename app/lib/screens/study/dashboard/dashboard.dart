@@ -115,7 +115,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             },
           ),
           IconButton(
-            tooltip: 'Current report', // todo tr
+            tooltip: AppLocalizations.of(context)!.current_report,
             icon: Icon(MdiIcons.chartBar),
             onPressed: () => Navigator.push(
               context,
