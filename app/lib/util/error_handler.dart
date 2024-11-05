@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/app_error.dart';
+import 'package:studyu_app/models/app_error.dart';
 
 class ErrorHandler {
   static Future<void> handleError(BuildContext context, AppError error) async {
@@ -27,7 +27,7 @@ class ErrorHandler {
                               TextSpan(
                                 text: error.actions![i].actionText,
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                               const TextSpan(text: " instead?"),
                             ],

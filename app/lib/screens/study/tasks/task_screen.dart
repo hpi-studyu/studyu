@@ -106,7 +106,7 @@ Future<void> handleTaskCompletion(
         AppLocalizations.of(context)!.could_not_save_results,
         actions: [
           ErrorAction(AppLocalizations.of(context)!.retry,
-              () => handleTaskCompletion(context, completionCallback)),
+              () => handleTaskCompletion(context, completionCallback),),
         ],
       ),
     );

@@ -57,7 +57,7 @@ class _KickoffScreen extends State<KickoffScreen> {
                 ErrorAction(AppLocalizations.of(context)!.retry,
                     () => _storeUserStudy(context),
                     actionDescription:
-                        AppLocalizations.of(context)!.retry_description),
+                        AppLocalizations.of(context)!.retry_description,),
                 ErrorAction(
                   AppLocalizations.of(context)!.join_new_study,
                   () => Navigator.pushNamedAndRemoveUntil(
@@ -68,7 +68,7 @@ class _KickoffScreen extends State<KickoffScreen> {
                   actionDescription:
                       AppLocalizations.of(context)!.join_new_study_description,
                 ),
-              ]));
+              ],),);
       StudyULogger.fatal('Failed creating subject: $e');
     }
   }

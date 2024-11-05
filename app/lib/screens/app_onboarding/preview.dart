@@ -175,7 +175,7 @@ class Preview {
       } catch (e) {
         try {
           StudyULogger.info(
-              '[PreviewApp]: Failed fetching subject: $e. Trying to sign in participant');
+              '[PreviewApp]: Failed fetching subject: $e. Trying to sign in participant',);
 
           if (await signInParticipant()) {
             subject = await _fetchRemoteSubject(selectedStudyObjectId!);
@@ -185,7 +185,7 @@ class Preview {
           if (subject != null && subject!.studyId == study!.id) return subject;
         } catch (e) {
           StudyULogger.error(
-              '[PreviewApp]: Failed fetching subject after sign in: $e');
+              '[PreviewApp]: Failed fetching subject after sign in: $e',);
         }
       }
     }
