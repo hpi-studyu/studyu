@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_error.dart';
@@ -123,15 +124,23 @@ class _LoadingScreenState extends State<LoadingScreen> {
             AppLocalizations.of(context)!.error_missing_study,
             actions: [
               ErrorAction(
-                AppLocalizations.of(context)!.join_new_study,
+                AppLocalizations.of(context)!.delete_app_cache,
                 () async {
-                  await cancelNotifications(context);
-                  await deleteActiveStudyReference();
-                  if (!mounted) return;
-                  Navigator.pushReplacementNamed(context, Routes.welcome);
+                  await ErrorHandler.deleteCacheDir();
+                  await ErrorHandler.deleteAppDir();
+                  await SecureStorage.deleteAll();
+                  if (context.mounted) {
+                    ErrorHandler.showSnackbar(
+                      context,
+                      'App reset successfully! Please restart the app.',
+                    );
+                    await Future.delayed(const Duration(seconds: 1));
+                    await SystemChannels.platform
+                        .invokeMethod('SystemNavigator.pop');
+                  }
                 },
                 actionDescription:
-                    AppLocalizations.of(context)!.join_new_study_description,
+                    AppLocalizations.of(context)!.delete_app_cache_description,
               ),
               ErrorAction(
                 AppLocalizations.of(context)!.retry,

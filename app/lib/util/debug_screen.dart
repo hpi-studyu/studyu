@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/util/error_handler.dart';
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
@@ -91,8 +91,8 @@ class DebugScreen {
                       ),
                       TextButton(
                         onPressed: () async {
-                          await _deleteCacheDir();
-                          await _deleteAppDir();
+                          await ErrorHandler.deleteCacheDir();
+                          await ErrorHandler.deleteAppDir();
                           await SecureStorage.deleteAll();
                           if (context.mounted) {
                             Navigator.of(context).pop();
@@ -212,20 +212,5 @@ class DebugScreen {
 
   static Future<bool> receivePermission() async {
     return await Permission.ignoreBatteryOptimizations.request().isGranted;
-  }
-
-  static Future<void> _deleteCacheDir() async {
-    final cacheDir = await getTemporaryDirectory();
-
-    if (cacheDir.existsSync()) {
-      cacheDir.deleteSync(recursive: true);
-    }
-  }
-
-  static Future<void> _deleteAppDir() async {
-    final appDir = await getApplicationSupportDirectory();
-    if (appDir.existsSync()) {
-      appDir.deleteSync(recursive: true);
-    }
   }
 }

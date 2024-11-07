@@ -218,6 +218,8 @@
   "error_missing_study": "Could not login and retrieve the study subject. \nOne reason for this might be that the study subject is no longer available and only resides in app backup",
   "join_new_study": "Join a new study",
   "join_new_study_description": "Join a new study to continue using the app. Your previous study data will be deleted.",
+  "delete_app_cache": "Delete App Cache",
+  "delete_app_cache_description": "Delete application cache for a clean setup. Your previous study data will be deleted.",
   "retry": "Retry",
   "retry_description": "Try again",
   "error_no_internet": "No internet connection",

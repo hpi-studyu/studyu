@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:path_provider/path_provider.dart';
 import 'package:studyu_app/models/app_error.dart';
 
 class ErrorHandler {
@@ -27,7 +27,8 @@ class ErrorHandler {
                               TextSpan(
                                 text: error.actions![i].actionText,
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.bold,),
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               const TextSpan(text: " instead?"),
                             ],
@@ -101,5 +102,20 @@ class ErrorHandler {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
+  }
+
+  static Future<void> deleteCacheDir() async {
+    final cacheDir = await getTemporaryDirectory();
+
+    if (cacheDir.existsSync()) {
+      cacheDir.deleteSync(recursive: true);
+    }
+  }
+
+  static Future<void> deleteAppDir() async {
+    final appDir = await getApplicationSupportDirectory();
+    if (appDir.existsSync()) {
+      appDir.deleteSync(recursive: true);
+    }
   }
 }

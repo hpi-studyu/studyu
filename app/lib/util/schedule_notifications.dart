@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-import 'package:studyu_app/models/app_error.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/util/error_handler.dart';
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -199,10 +199,8 @@ Future<void>? cancelNotifications(BuildContext context) async {
     StudyULogger.error('Error cancelling notifications: $e');
     if (context.mounted) context.read<AppState>().studyNotifications = null;
 
-    throw AppError(
-      AppErrorTypes.notification,
-      'An error occured when cancelling notifications',
-    );
+    ErrorHandler.showSnackbar(
+        context, "An error occured when cancelling notifications");
   }
 
   return Future.value();
