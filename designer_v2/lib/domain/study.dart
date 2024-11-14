@@ -131,7 +131,6 @@ extension StudyDuplicateX on Study {
       observation.id = newId;
     }
 
-    print(oldObservationIdToNew);
     for (final report in [
       copy.reportSpecification.primary,
       ...copy.reportSpecification.secondary,
