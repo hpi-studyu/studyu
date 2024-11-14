@@ -124,9 +124,9 @@ extension StudyDuplicateX on Study {
       intervention.id = uuid.v4();
     }
 
-    Map<String, String> oldObservationIdToNew = {};
+    final Map<String, String> oldObservationIdToNew = {};
     for (final observation in copy.observations) {
-      String newId = uuid.v4();
+      final String newId = uuid.v4();
       oldObservationIdToNew[observation.id] = newId;
       observation.id = newId;
     }
