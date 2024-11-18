@@ -17,36 +17,36 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.2
-  flutter_local_notifications: ^17.2.3
+  flutter_local_notifications: ^18.0.1
   flutter_localizations:
     sdk: flutter
   flutter_timezone: ^3.0.1
   flutter_web_plugins:
     sdk: flutter
-  flutter_widget_from_html: ^0.15.2
+  flutter_widget_from_html: ^0.15.3
   intersperse: ^2.0.0
-  intl: ^0.19.0
+  intl: ^0.20.0
   material_design_icons_flutter: ^7.0.7296
-  package_info_plus: ^8.0.2
+  package_info_plus: ^8.1.1
   path: ^1.9.0
-  path_provider: ^2.1.4
+  path_provider: ^2.1.5
   pdf: ^3.11.1
   permission_handler: ^11.3.1
   provider: ^6.1.2
   quiver: ^3.2.2
   rainbow_color: ^2.0.1
-  record: ^5.1.2
-  sentry_flutter: ^8.9.0
-  sentry_logging: ^8.9.0
-  shared_preferences: ^2.3.2
+  record: ^5.2.0
+  sentry_flutter: ^8.10.1
+  sentry_logging: ^8.10.1
+  shared_preferences: ^2.3.3
   studyu_core: ^4.4.8
   studyu_flutter_common: ^1.8.9
-  supabase: ^2.4.0
-  supabase_flutter: ^2.7.0
+  supabase: ^2.6.0
+  supabase_flutter: ^2.8.1
   timeline_tile: ^2.0.0
-  timezone: ^0.9.4
+  timezone: ^0.10.0
   universal_html: ^2.2.4
-  url_launcher: ^6.3.0
+  url_launcher: ^6.3.1
   uuid: ^4.5.1
   wakelock_plus: ^1.2.8
 
