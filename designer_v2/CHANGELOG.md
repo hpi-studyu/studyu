@@ -1,3 +1,8 @@
+## 1.9.3
+
+ - **FIX**: migrate code.
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
 ## 1.9.2
 
  - **FIX**: upgrade deps.

@@ -1,3 +1,8 @@
+## 2.7.13
+
+ - **FIX**: migrate code.
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
 ## 2.7.12
 
  - **FIX**: notification icon mipmap 2.

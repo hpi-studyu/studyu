@@ -1,3 +1,7 @@
+## 4.4.9
+
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
 ## 4.4.8
 
  - **FIX**: upgrade deps.
