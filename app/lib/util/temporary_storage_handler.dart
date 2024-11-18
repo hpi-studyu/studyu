@@ -22,11 +22,16 @@ class TemporaryStorageHandler {
   }
 
   static Future<Directory> _getMultimodalTempDirectory() async {
-    final tempAppData = await getTemporaryDirectory();
-    final multimodalTempDirectory =
-        Directory("${tempAppData.path}/multimodal-temp");
-    await multimodalTempDirectory.create(recursive: true);
-    return multimodalTempDirectory;
+    try {
+      final tempAppData = await getTemporaryDirectory();
+      final multimodalTempDirectory =
+          Directory("${tempAppData.path}/multimodal-temp");
+      await multimodalTempDirectory.create(recursive: true);
+      return multimodalTempDirectory;
+    } catch (e) {
+      StudyULogger.error(e);
+      return Future.value();
+    }
   }
 
   static Future<Directory> _getMultimodalUploadDirectory() async {
