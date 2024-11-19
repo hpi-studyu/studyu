@@ -213,7 +213,7 @@ class InviteCodeRepositoryDelegate
 
 @riverpod
 InviteCodeRepository inviteCodeRepository(
-  InviteCodeRepositoryRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   print("inviteCodeRepositoryProvider($studyId");
