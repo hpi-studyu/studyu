@@ -7,7 +7,7 @@ part of 'auth_form_controller.dart';
 // **************************************************************************
 
 String _$authFormControllerHash() =>
-    r'5c21da6a6915af9ed2889e06ea6aba6c26af72d9';
+    r'21bd883bc2d945bc3d61375da7e790b65d892540';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -159,6 +159,8 @@ class AuthFormControllerProvider extends AutoDisposeNotifierProviderImpl<
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin AuthFormControllerRef
     on AutoDisposeNotifierProviderRef<AsyncValue<void>> {
   /// The parameter `formKeyArg` of this provider.
@@ -175,4 +177,4 @@ class _AuthFormControllerProviderElement
       (origin as AuthFormControllerProvider).formKeyArg;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
