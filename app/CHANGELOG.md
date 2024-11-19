@@ -1,3 +1,7 @@
+## 2.7.14
+
+ - **FIX**: linter.
+
 ## 2.7.13
 
  - **FIX**: migrate code.

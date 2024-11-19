@@ -1,3 +1,8 @@
+## 1.9.4
+
+ - **FIX**: linter.
+ - **FIX**: ensure data source in report is copied during study duplication.
+
 ## 1.9.3
 
  - **FIX**: migrate code.

@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2024-11-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.14`](#studyu_app---v2714)
+ - [`studyu_designer_v2` - `v1.9.4`](#studyu_designer_v2---v194)
+
+---
+
+#### `studyu_app` - `v2.7.14`
+
+ - **FIX**: linter.
+
+#### `studyu_designer_v2` - `v1.9.4`
+
+ - **FIX**: linter.
+ - **FIX**: ensure data source in report is copied during study duplication.
+
+
 ## 2024-11-18
 
 ### Changes
