@@ -75,16 +75,6 @@ final List<Entry> data_en = <Entry>[
         ],
       ),
       Entry(
-        'Can I reselect another intervention?',
-        <Entry>[
-          Entry(
-            'Yes you can simply go back to the intervention selection screen and reselect a different intervention before you start the study. '
-            'However, if you plan to do it at a later stage, you have to opt out of the study and reselect a new intervention. '
-            'Please note: You will lose all your data for the current study after you opt out. ',
-          ),
-        ],
-      ),
-      Entry(
         'Can I redo my missed tasks on a later date?',
         <Entry>[
           Entry(
@@ -94,10 +84,10 @@ final List<Entry> data_en = <Entry>[
         ],
       ),
       Entry(
-        'How can I Opt out from the current study?',
+        'How can I leave the current study?',
         <Entry>[
           Entry(
-            'You can do so by going to the Settings tab located on the Dashboard and clicking on "Opt-out" ',
+            'You can do so by going to the Settings tab located on the Dashboard and clicking on "Leave study". This will leave you from study without deleting your progress data. If you want to leave study with deleting your progress data, you can do so by clicking on "Leave study and delete all data".',
           ),
         ],
       ),
@@ -110,7 +100,7 @@ final List<Entry> data_en = <Entry>[
         'What are daily tasks and how do I complete them?',
         <Entry>[
           Entry(
-            'To find out which intervention works best for you,you need to perform some daily tasks for each intervention. Please make sure to hit the "Complete" button after finishing it',
+            'To find out which intervention works best for you, you need to perform some daily tasks for each intervention. Please make sure to hit the "Complete" button after finishing it',
           ),
         ],
       ),
@@ -127,14 +117,6 @@ final List<Entry> data_en = <Entry>[
         <Entry>[
           Entry(
             'You can get an overview of your daily tasks and health status in the "Reports History section"',
-          ),
-        ],
-      ),
-      Entry(
-        'How can I download my report?',
-        <Entry>[
-          Entry(
-            'You can download your report once you have completed the minimum required tasks. It will be available in the Report History tab located on the Dashboard.',
           ),
         ],
       ),
