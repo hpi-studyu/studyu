@@ -87,14 +87,17 @@ class _TaskOverviewState extends State<TaskOverview> {
             children: [
               const SizedBox(height: 16),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
+                  Flexible(
                     child: Text(
                       AppLocalizations.of(context)!.intervention_current,
                       style: theme.textTheme.titleLarge,
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(
+                    width: 5,
+                  ),
                   Text(
                     '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',
                     style: const TextStyle(color: primaryColor),
