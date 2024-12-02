@@ -203,7 +203,9 @@ class PerformanceBar extends StatelessWidget {
             ),
           ),
         ),
-        if (minimum != null && minimum! >= 0 && minimum! <= 1)
+
+        /// Removing the minimum indicator since it is discussed as confusing in the meeting
+        /*if (minimum != null && minimum! >= 0 && minimum! <= 1)
           Column(
             children: [
               Row(
@@ -237,7 +239,7 @@ class PerformanceBar extends StatelessWidget {
                 ],
               ),
             ],
-          ),
+          ),*/
       ],
     );
   }
