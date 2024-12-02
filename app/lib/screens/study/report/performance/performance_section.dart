@@ -157,7 +157,7 @@ class PerformanceBar extends StatelessWidget {
             .map<Color>((index) => rainbow[index])
             .toList();
 
-    final spacing = (minimum! * 1000).floor();
+    //final spacing = (minimum! * 1000).floor();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
