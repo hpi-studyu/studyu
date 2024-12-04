@@ -322,10 +322,10 @@ packages:
     dependency: "direct main"
     description:
       name: equatable
-      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
@@ -512,10 +512,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "8ae664a70174163b9f65ea68dd8673e29db8f9095de7b5cd00e167c621f4fef5"
+      sha256: "2fd11229f59e23e967b0775df8d5948a519cd7e1e8b6e849729e010587b46539"
       url: "https://pub.dev"
     source: hosted
-    version: "14.6.0"
+    version: "14.6.2"
   gotrue:
     dependency: transitive
     description:
@@ -821,18 +821,18 @@ packages:
     dependency: "direct dev"
     description:
       name: patrol_finders
-      sha256: "52cec2dbb3440994ada2053c3d4fe64d8665ed8a8342643c0c93c3ced85c4c5d"
+      sha256: "6dfa07aa951f1d769f0a736f4fd4eb63d99ef32931aaaa39e0d24126ddfe9cd9"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.5.1"
   patrol_log:
     dependency: transitive
     description:
       name: patrol_log
-      sha256: d9fa8a865e7c84477e888c1b97a6a783e765991ada94f0f053cbef9763b22bbe
+      sha256: fb67013a5305cfd30a374cce3c5ea5a99613335d8cf31c250ecb0dda75deec21
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1+2"
+    version: "0.2.1"
   petitparser:
     dependency: transitive
     description:

@@ -13,7 +13,7 @@ dependencies:
   collection: ^1.18.0
   cross_file: ^0.3.4+2
   cupertino_icons: ^1.0.8
-  fl_chart: ^0.69.0
+  fl_chart: ^0.69.2
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.2
