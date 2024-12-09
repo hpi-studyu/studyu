@@ -46,6 +46,8 @@ class Study extends SupabaseObjectFunctions<Study>
   String id;
   String? title;
   String? description = '';
+  @JsonKey(name: 'fitbit_credentials')
+  FitbitCredentials? fitbitCredentials;
   @JsonKey(name: 'user_id')
   String userId;
   Participation participation = Participation.invite;

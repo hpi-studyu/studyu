@@ -90,6 +90,7 @@ CREATE TABLE public.study (
     icon_name text NOT NULL,
     -- published is deprecated, use status instead
     published boolean DEFAULT false NOT NULL,
+    fitbit_credentials jsonb,
     status public.study_status DEFAULT 'draft'::public.study_status NOT NULL,
     registry_published boolean DEFAULT false NOT NULL,
     questionnaire jsonb NOT NULL,

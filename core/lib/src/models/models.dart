@@ -4,6 +4,7 @@ export 'data/data_reference.dart';
 export 'eligibility/eligibility_criterion.dart';
 export 'expressions/expression.dart';
 export 'expressions/types/types.dart';
+export 'fitbit/fitbit_models.dart';
 export 'interventions/interventions.dart';
 export 'observations/observations.dart';
 export 'questionnaire/questionnaire_models.dart';

@@ -63,6 +63,12 @@ class RoutingIntents {
           RouteParams.studyId: studyId,
         },
       );
+  static final studyEditFitbitCredentials = (StudyID studyId) => RoutingIntent(
+        route: RouterConf.route(studyEditFitbitCredentialsRouteName),
+        params: {
+          RouteParams.studyId: studyId,
+        },
+      );
   static final studyEditEnrollment = (StudyID studyId) => RoutingIntent(
         route: RouterConf.route(studyEditEnrollmentRouteName),
         params: {

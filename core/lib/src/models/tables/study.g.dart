@@ -46,7 +46,11 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
               ?.map((e) => e as String)
               .toList() ??
           []
-      ..registryPublished = json['registry_published'] as bool? ?? false;
+      ..registryPublished = json['registry_published'] as bool? ?? false
+      ..fitbitCredentials = json['fitbit_credentials'] == null
+          ? null
+          : FitbitCredentials.fromJson(
+              json['fitbit_credentials'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$StudyToJson(Study instance) {
   final val = <String, dynamic>{
@@ -79,6 +83,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) {
   val['results'] = instance.results.map((e) => e.toJson()).toList();
   val['collaborator_emails'] = instance.collaboratorEmails;
   val['registry_published'] = instance.registryPublished;
+  writeNotNull('fitbit_credentials', instance.fitbitCredentials?.toJson());
   return val;
 }
 

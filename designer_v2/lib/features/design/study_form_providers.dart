@@ -3,6 +3,7 @@ import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_controller.dart';
@@ -140,6 +141,18 @@ ReportItemFormViewModel reportItemFormViewModel(
       .watch(reportsFormViewModelProvider(args.studyId))
       .reportItemDelegate
       .provide(args);
+}
+
+// - Fitbit Credentials
+
+@riverpod
+FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel(
+  FitbitCredentialsFormViewModelRef ref,
+  StudyID studyId,
+) {
+  return ref
+      .watch(studyFormViewModelProvider(studyId))
+      .fitbitCredentialsFormViewModel;
 }
 
 // - Validators

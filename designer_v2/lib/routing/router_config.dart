@@ -43,6 +43,8 @@ import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
 
+import '../features/design/fitbit/fitbit_credentials_form_view.dart';
+
 class RouterKeys {
   static const studyKey = ValueKey("study"); // shared key for study page tabs
   static const authKey = ValueKey("auth"); // shared key for auth pages
@@ -296,6 +298,24 @@ class RouterConf {
             selectedTab: StudyNav.edit(studyId),
             selectedTabSubnav: StudyDesignNav.reports(studyId),
             body: StudyDesignReportsFormView(studyId),
+            layoutType: SingleColumnLayoutType.boundedNarrow,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: "/studies/:${RouteParams.studyId}/edit/fitbitCredentials",
+      name: studyEditFitbitCredentialsRouteName,
+      pageBuilder: (context, state) {
+        final studyId = state.pathParameters[RouteParams.studyId]!;
+        return MaterialPage(
+          key: RouterKeys.studyKey,
+          child: StudyScaffold(
+            studyId: studyId,
+            tabsSubnav: StudyDesignNav.tabs(studyId),
+            selectedTab: StudyNav.edit(studyId),
+            selectedTabSubnav: StudyDesignNav.fitbitCredentials(studyId),
+            body: StudyDesignFitbitCredentialsFormView(studyId),
             layoutType: SingleColumnLayoutType.boundedNarrow,
           ),
         );

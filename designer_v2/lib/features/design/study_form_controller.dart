@@ -7,6 +7,8 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_data.dart';
+import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_data.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_data.dart';
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_controller.dart';
@@ -93,6 +95,14 @@ class StudyFormViewModel extends FormViewModel<Study>
     validationSet: validationSet,
   );
 
+  late final FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel =
+      FitbitCredentialsFormViewModel(
+    formData: FitbitCredentialsFormData.fromStudy(formData!),
+    delegate: this,
+    study: formData!,
+    validationSet: validationSet,
+  );
+
   @override
   FormValidationConfigSet get sharedValidationConfig => {
         StudyFormValidationSet.draft: [], // defined in subforms
@@ -106,6 +116,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     'enrollment': enrollmentFormViewModel.form,
     'measurements': measurementsFormViewModel.form,
     'interventions': interventionsFormViewModel.form,
+    'fitbit': fitbitCredentialsFormViewModel.form,
   });
 
   @override
@@ -116,6 +127,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     measurementsFormViewModel.read();
     interventionsFormViewModel.read();
     reportsFormViewModel.read();
+    fitbitCredentialsFormViewModel.read();
     super.read(formData);
   }
 
@@ -131,6 +143,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     enrollmentFormViewModel.buildFormData().apply(studyCopy);
     measurementsFormViewModel.buildFormData().apply(studyCopy);
     interventionsFormViewModel.buildFormData().apply(studyCopy);
+    fitbitCredentialsFormViewModel.buildFormData().apply(studyCopy);
     return studyCopy;
   }
 
@@ -143,6 +156,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     enrollmentFormViewModel.dispose();
     interventionsFormViewModel.dispose();
     measurementsFormViewModel.dispose();
+    fitbitCredentialsFormViewModel.dispose();
     super.dispose();
   }
 
