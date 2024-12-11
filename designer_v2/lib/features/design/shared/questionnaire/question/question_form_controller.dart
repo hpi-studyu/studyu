@@ -309,16 +309,15 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   }
 
   // Fitbit
-  final FormControl<List<FitbitQuestionType>> fitbitQuestionTypesControl =
-      CustomFormControl<List<FitbitQuestionType>>(value: []);
-
-  final Map<FitbitQuestionType, FormControl<bool>> fitbitTypeControls = {
-    for (final type in FitbitQuestionType.values)
-      type: FormControl<bool>(value: false),
-  };
+  final FormControl<Map<FitbitQuestionType, bool>> fitbitQuestionTypesControl =
+      FormControl<Map<FitbitQuestionType, bool>>(
+    value: Map.fromEntries(
+      FitbitQuestionType.values.map((e) => MapEntry(e, false)),
+    ),
+  );
 
   late final FormArray fitbitResponseOptionsArray = FormArray([
-    ...fitbitTypeControls.values,
+    fitbitQuestionTypesControl,
   ]);
 
   // - Form fields (question type-specific) - end
@@ -556,8 +555,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         customRegexControl.value = data.textTypeExpression;
       case SurveyQuestionType.fitbit:
         //TODO: Some kind of error is throwing when saving survey, check it since its having parsing issues?
-        fitbitQuestionTypesControl.value =
-            (data as FitbitQuestionFormData).types;
+        fitbitQuestionTypesControl.value = Map.fromEntries(
+          (data as FitbitQuestionFormData).types.map((e) => MapEntry(e, true)),
+        );
     }
   }
 
@@ -641,7 +641,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
-          types: fitbitQuestionTypesControl.value!,
+          types: fitbitQuestionTypesControl.value!.entries
+              .where((e) => e.value)
+              .map((e) => e.key)
+              .toList(),
         );
     }
   }
