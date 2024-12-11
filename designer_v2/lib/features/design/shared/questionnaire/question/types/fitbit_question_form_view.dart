@@ -16,38 +16,46 @@ class FitbitQuestionFormView extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Fitbit Question Types',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        ReactiveFormField<Map<FitbitQuestionType, bool>,
-            Map<FitbitQuestionType, bool>>(
-          formControl: formViewModel.fitbitQuestionTypesControl,
-          builder: (field) {
-            final value = field.value ?? {};
+        const SizedBox(height: 8),
+        ReactiveFormArray(
+          formArray: formViewModel.fitbitResponseOptionsArray,
+          builder: (context, formArray, child) {
+            if (formArray.controls.isEmpty) {
+              return const Text('No Fitbit question types available.');
+            }
+
             return Column(
-              children: FitbitQuestionType.values.map((type) {
-                return CheckboxListTile(
-                  title: Text(type.name),
-                  value: value[type] ?? false,
-                  onChanged: (checked) {
-                    field.didChange({
-                      ...value,
-                      type: checked ?? false,
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: FitbitQuestionType.values.asMap().entries.map((entry) {
+                final index = entry.key;
+                final type = entry.value;
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Row(
+                    children: [
+                      ReactiveCheckbox(
+                        formControl: formArray.controls[index]
+                            as FormControl<bool>, // Cast control
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          type.name,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               }).toList(),
             );
           },
         ),
-        if (formViewModel.fitbitQuestionTypesControl.hasErrors)
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              'Please select at least one Fitbit question type.',
-            ),
-          ),
       ],
     );
   }
