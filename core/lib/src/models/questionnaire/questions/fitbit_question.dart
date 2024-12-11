@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/src/models/fitbit/fitbit_datas/fibit_data.dart';
+import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 
 part 'fitbit_question.g.dart';
 
@@ -33,9 +33,8 @@ class FitbitQuestion extends Question<FitbitQuestion> {
 }
 
 enum FitbitQuestionType {
-  steps,
-  sleep,
-  heartrate;
+  heartrate,
+  steps;
 
   String toJson() => name;
 

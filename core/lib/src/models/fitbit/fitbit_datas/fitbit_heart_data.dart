@@ -1,8 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyu_core/src/models/fitbit/fitbit_datas/fibit_data.dart';
 
-import 'fibit_data.dart';
-
-part 'heart_data.g.dart';
+part 'fitbit_heart_data.g.dart';
 
 @JsonSerializable()
 class FitbitHeartData extends FitbitData<FitbitHeartData> {
@@ -14,5 +13,6 @@ class FitbitHeartData extends FitbitData<FitbitHeartData> {
   factory FitbitHeartData.fromJson(Map<String, dynamic> json) =>
       _$FitbitHeartDataFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$FitbitHeartDataToJson(this);
 }

@@ -65,6 +65,12 @@ abstract class QuestionFormData implements IFormData {
           question as FreeTextQuestion,
           eligibilityCriteria,
         ),
+    SurveyQuestionType.fitbit: (question, eligibilityCriteria) {
+      return FitbitQuestionFormData.fromDomainModel(
+        question as FitbitQuestion,
+        eligibilityCriteria,
+      );
+    },
   };
 
   QuestionFormData({
@@ -606,6 +612,68 @@ class FreeTextQuestionFormData extends QuestionFormData {
   Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as FreeTextQuestion;
     final value = responseOption as String;
+    return question.constructAnswer(value);
+  }
+}
+
+class FitbitQuestionFormData extends QuestionFormData {
+  FitbitQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    required this.types,
+    super.questionInfoText,
+  });
+
+  List<FitbitQuestionType> types;
+
+  @override
+  List<String> get responseOptions =>
+      FitbitQuestionType.values.map((type) => type.toJson()).toList();
+
+  factory FitbitQuestionFormData.fromDomainModel(
+    FitbitQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = FitbitQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.freeText,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+      types: question.types,
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question = FitbitQuestion(
+      types: types,
+    );
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    return question;
+  }
+
+  @override
+  FitbitQuestionFormData copy() {
+    final data = FitbitQuestionFormData(
+      questionId: const Uuid().v4(), // always regenerate id
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+      types: types,
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(dynamic responseOption) {
+    final question = toQuestion() as FitbitQuestion;
+    final value = responseOption as List<FitbitData>;
     return question.constructAnswer(value);
   }
 }

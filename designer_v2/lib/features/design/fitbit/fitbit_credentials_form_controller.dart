@@ -50,6 +50,7 @@ class FitbitCredentialsFormViewModel
         StudyFormValidationSet.test: [],
       };
 
+  //TODO: Do a validator which checks if client_id is filled, client_secret is required and vice versa
   /*static Map<String, dynamic>? clientCredentialsValidator(
       AbstractControl<dynamic> control) {
     if (control is FormGroup) {

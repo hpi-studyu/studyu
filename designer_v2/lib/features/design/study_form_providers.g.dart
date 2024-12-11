@@ -1639,7 +1639,7 @@ class _ReportItemFormViewModelProviderElement
 }
 
 String _$fitbitCredentialsFormViewModelHash() =>
-    r'8561f1577f6d53aa67e2f8b075b348ece88522d2';
+    r'4ec578863b8cfe7100d7584d1708f92337c74cac';
 
 /// See also [fitbitCredentialsFormViewModel].
 @ProviderFor(fitbitCredentialsFormViewModel)

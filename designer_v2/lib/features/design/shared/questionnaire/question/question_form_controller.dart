@@ -41,6 +41,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         .onChanged((control) => onResponseOptionsChanged(control.controls));
     freeTextResponseOptionsArray
         .onChanged((control) => onResponseOptionsChanged(control.controls));
+    fitbitResponseOptionsArray
+        .onChanged((control) => onResponseOptionsChanged(control.controls));
   }
 
   /// Customized titles (if any) depending on the context of use
@@ -97,6 +99,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         SurveyQuestionType.image: imageResponseOptionsArray,
         SurveyQuestionType.audio: audioResponseOptionsArray,
         SurveyQuestionType.freeText: freeTextResponseOptionsArray,
+        SurveyQuestionType.fitbit: fitbitResponseOptionsArray,
       }[questionType]!;
 
   List<AbstractControl> get answerOptionsControls =>
@@ -305,6 +308,19 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     freeTextLengthMax.value = freeTextLengthControl.value!.end.toInt();
   }
 
+  // Fitbit
+  final FormControl<List<FitbitQuestionType>> fitbitQuestionTypesControl =
+      CustomFormControl<List<FitbitQuestionType>>(value: []);
+
+  final Map<FitbitQuestionType, FormControl<bool>> fitbitTypeControls = {
+    for (final type in FitbitQuestionType.values)
+      type: FormControl<bool>(value: false),
+  };
+
+  late final FormArray fitbitResponseOptionsArray = FormArray([
+    ...fitbitTypeControls.values,
+  ]);
+
   // - Form fields (question type-specific) - end
 
   late final Map<SurveyQuestionType, FormGroup> _controlsByQuestionType = {
@@ -335,6 +351,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     }),
     SurveyQuestionType.freeText: FormGroup({
       'freeTextOptionsArray': freeTextResponseOptionsArray,
+    }),
+    SurveyQuestionType.fitbit: FormGroup({
+      'fitbitOptionsArray': fitbitResponseOptionsArray,
     }),
   };
 
@@ -535,6 +554,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         );
         freeTextTypeControl.value = data.textType;
         customRegexControl.value = data.textTypeExpression;
+      case SurveyQuestionType.fitbit:
+        //TODO: Some kind of error is throwing when saving survey, check it since its having parsing issues?
+        fitbitQuestionTypesControl.value =
+            (data as FitbitQuestionFormData).types;
     }
   }
 
@@ -611,6 +634,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           ], // required
           textType: freeTextTypeControl.value!,
           textTypeExpression: customRegexControl.value,
+        );
+      case SurveyQuestionType.fitbit:
+        return FitbitQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+          types: fitbitQuestionTypesControl.value!,
         );
     }
   }

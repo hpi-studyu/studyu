@@ -8,7 +8,6 @@ import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 
 import '../../../common_views/text_paragraph.dart';
-import '../../../localization/app_translation.dart';
 
 class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
   const StudyDesignFitbitCredentialsFormView(super.studyId, {super.key});
@@ -26,7 +25,10 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
           return ReactiveForm(
               formGroup: formViewModel.form,
               child: Column(children: <Widget>[
-                TextParagraph(text: tr.form_study_design_info_description),
+                TextParagraph(
+                  text:
+                      'Information about Fitbit Credentials retrieval will be here',
+                ),
                 const SizedBox(height: 24.0),
                 FormTableLayout(
                   rows: [
@@ -54,10 +56,11 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                       input: ReactiveTextField(
                         formControl: formViewModel.clientSecretControl,
                         decoration: InputDecoration(
-                          hintText: 'Hint here',
+                          hintText: 'Client Secret',
                         ),
                       ),
                     ),
+
                   ],
                   columnWidths: const {
                     0: FixedColumnWidth(185.0),
