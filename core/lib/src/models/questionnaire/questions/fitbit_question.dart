@@ -8,6 +8,7 @@ part 'fitbit_question.g.dart';
 class FitbitQuestion extends Question<FitbitQuestion> {
   static const String questionType = 'FitbitQuestion';
 
+  @JsonKey(name: 'types')
   List<FitbitQuestionType> types;
 
   FitbitQuestion({
@@ -25,7 +26,7 @@ class FitbitQuestion extends Question<FitbitQuestion> {
   @override
   Map<String, dynamic> toJson() => _$FitbitQuestionToJson(this);
 
-  Answer<List<FitbitData>> constructAnswer(List<FitbitData> data) =>
+  Answer<FitbitQuestionType> constructAnswer(FitbitQuestionType data) =>
       Answer.forQuestion(
         this,
         data,

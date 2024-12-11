@@ -637,7 +637,7 @@ class FitbitQuestionFormData extends QuestionFormData {
   ) {
     final data = FitbitQuestionFormData(
       questionId: question.id,
-      questionType: SurveyQuestionType.freeText,
+      questionType: SurveyQuestionType.fitbit,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
       types: question.types,
@@ -670,10 +670,14 @@ class FitbitQuestionFormData extends QuestionFormData {
     return data;
   }
 
+  FitbitQuestionType _buildQuestionValue(String value) {
+    return FitbitQuestionType.fromJson(value);
+  }
+
   @override
   Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as FitbitQuestion;
-    final value = responseOption as List<FitbitData>;
+    final value = _buildQuestionValue(responseOption as String);
     return question.constructAnswer(value);
   }
 }
