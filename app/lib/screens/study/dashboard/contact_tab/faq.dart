@@ -49,7 +49,9 @@ final List<Entry> data_en = <Entry>[
         'Where and how is my data stored?',
         <Entry>[
           Entry(
-            'The data collected from you is stored locally on your device and is uploaded to a secure server when it is connected to the internet.',
+            'The data collected from you is stored locally on your device and '
+            'is uploaded to a secure server when it is connected to the '
+            'internet. All study data is collected and stored anonymously.',
           ),
         ],
       ),
@@ -57,7 +59,7 @@ final List<Entry> data_en = <Entry>[
         'Which personal data does the app collect?',
         <Entry>[
           Entry(
-            'The app does not collect any personal data of the user, it however, needs to access the time and location.',
+            'The app does not collect any personal data of the user.',
           ),
         ],
       ),
@@ -87,7 +89,12 @@ final List<Entry> data_en = <Entry>[
         'How can I leave the current study?',
         <Entry>[
           Entry(
-            'You can do so by going to the Settings tab located on the Dashboard and clicking on "Leave study". This will leave you from study without deleting your progress data. If you want to leave study with deleting your progress data, you can do so by clicking on "Leave study and delete all data".',
+            'Go to the Settings tab on the Dashboard and click "Leave study". This will '
+            'exit the study without deleting your progress data, allowing it to be '
+            'included in the study analysis. To leave the study and delete all '
+            'progress data both locally and on the server, click "Leave study and '
+            'delete all data". All data will be permanently removed from the server '
+            'and your device.',
           ),
         ],
       ),
@@ -100,7 +107,9 @@ final List<Entry> data_en = <Entry>[
         'What are daily tasks and how do I complete them?',
         <Entry>[
           Entry(
-            'To find out which intervention works best for you, you need to perform some daily tasks for each intervention. Please make sure to hit the "Complete" button after finishing it',
+            'To find out which intervention works best for you, you need to '
+            'perform some daily tasks for each intervention. Please make '
+            'sure to hit the "Complete" button after finishing it',
           ),
         ],
       ),
@@ -108,7 +117,9 @@ final List<Entry> data_en = <Entry>[
         'What is "Rate your day"?',
         <Entry>[
           Entry(
-            '"Rate your day" is a feature that tracks your health during entire study period. It requires you to rate certain health-related queries on a scale of 1 to 10.',
+            '"Rate your day" is a feature that tracks your health during '
+            'entire study period. It requires you to rate certain '
+            'health-related queries on a scale of 1 to 10.',
           ),
         ],
       ),
@@ -116,7 +127,8 @@ final List<Entry> data_en = <Entry>[
         'How can I keep track of my activities?',
         <Entry>[
           Entry(
-            'You can get an overview of your daily tasks and health status in the "Reports History section"',
+            'You can get an overview of your daily tasks and health status in '
+            'the "Reports History section"',
           ),
         ],
       ),
@@ -124,7 +136,9 @@ final List<Entry> data_en = <Entry>[
         'How can I download my Study report?',
         <Entry>[
           Entry(
-            'Your report will be ready to download once you have completed the minimum required tasks for a study. It will be available in the Report History tab located on the Dashboard.',
+            'Your report will be ready to download once you have completed the '
+            'minimum required tasks for a study. It will be available in the '
+            'Report History tab located on the Dashboard.',
           ),
         ],
       ),
@@ -132,7 +146,6 @@ final List<Entry> data_en = <Entry>[
   ),
 ];
 
-//TODO: Translate the following FAQ to German
 // ignore: non_constant_identifier_names
 final data_de = <Entry>[
   Entry(
@@ -142,7 +155,10 @@ final data_de = <Entry>[
         'Wo und wie werden meine Daten gespeichert?',
         <Entry>[
           Entry(
-            'Die von Ihnen gesammelten Daten werden lokal auf Ihrem Gerät gespeichert und bei Verbindung mit dem Internet auf einen sicheren Server hochgeladen.',
+            'Die von Ihnen gesammelten Daten werden lokal auf Ihrem Gerät '
+            'gespeichert und bei Verbindung mit dem Internet auf einen '
+            'sicheren Server hochgeladen. Alle Studiendaten werden anonymisiert '
+            'erfasst und gespeichert.',
           ),
         ],
       ),
@@ -150,7 +166,7 @@ final data_de = <Entry>[
         'Welche persönlichen Daten sammelt die App?',
         <Entry>[
           Entry(
-            'Die App sammelt keine persönlichen Daten des Benutzers, muss jedoch auf Zeit und Ort zugreifen.',
+            'Die App sammelt keine persönlichen Daten des Benutzers.',
           ),
         ],
       ),
@@ -163,7 +179,7 @@ final data_de = <Entry>[
         'Wie lange dauert es, bis die Studie abgeschlossen ist?',
         <Entry>[
           Entry(
-            'Die Dauer jeder Studie wird bei der ersten Studienauswahl angegeben.',
+            'Die Dauer jeder Studie wird bei der Studienauswahl angegeben.',
           ),
         ],
       ),
@@ -171,9 +187,13 @@ final data_de = <Entry>[
         'Kann ich eine andere Intervention erneut auswählen?',
         <Entry>[
           Entry(
-            'Ja, Sie können einfach zum Interventionsauswahlbildschirm zurückkehren und eine andere Intervention erneut auswählen, bevor Sie mit der Studie beginnen. '
-            'Wenn Sie dies jedoch zu einem späteren Zeitpunkt planen, müssen Sie die Studie abbestellen und eine neue Intervention erneut auswählen. '
-            'Bitte beachten Sie: Sie verlieren alle Ihre Daten für die aktuelle Studie, nachdem Sie sich abgemeldet haben. ',
+            'Ja, Sie können einfach zum Interventionsauswahlbildschirm '
+            'zurückkehren und eine andere Intervention erneut auswählen, '
+            'bevor Sie mit der Studie beginnen. '
+            'Möchten Sie dies jedoch zu einem späteren Zeitpunkt tun, müssen '
+            'Sie die zuerst Studie verlassen und eine neue Intervention '
+            'auswählen. Bitte beachten Sie: Sie verlieren alle Ihre Daten '
+            'für die aktuelle Studie, nachdem Sie die Studie verlassen haben. ',
           ),
         ],
       ),
@@ -181,8 +201,9 @@ final data_de = <Entry>[
         'Kann ich meine verpassten Aufgaben zu einem späteren Zeitpunkt wiederholen?',
         <Entry>[
           Entry(
-            'Nein, Sie können eine verpasste Aufgabe zu einem späteren Zeitpunkt nicht wiederholen. '
-            'Sie können es jedoch jederzeit am selben Tag beenden.',
+            'Nein, Sie können eine verpasste Aufgabe zu einem späteren '
+            'Zeitpunkt nicht wiederholen. '
+            'Sie können die Aufgabe nur am selben Tag bearbeiten.',
           ),
         ],
       ),
@@ -190,7 +211,14 @@ final data_de = <Entry>[
         'Wie kann ich mich von der aktuellen Studie abmelden?',
         <Entry>[
           Entry(
-            'Sie können dies tun, indem Sie im Dashboard auf die Registerkarte "Einstellungen" gehen und auf "Deaktivieren" klicken. ',
+            'Gehen Sie zur Registerkarte "Einstellungen" im Dashboard und '
+            'klicken Sie auf "Studie verlassen". Dies wird die Studie '
+            'beenden, ohne Ihre Fortschrittsdaten zu löschen, sodass sie '
+            'in die Studienanalyse einbezogen werden können. Um die Studie '
+            'zu verlassen und alle Fortschrittsdaten sowohl lokal als auch '
+            'auf dem Server zu löschen, klicken Sie auf "Studie verlassen '
+            'und alle Daten löschen". Alle Daten werden dauerhaft vom Server '
+            'und Ihrem Gerät entfernt.',
           ),
         ],
       ),
@@ -203,7 +231,10 @@ final data_de = <Entry>[
         'Was sind tägliche Aufgaben und wie erledige ich sie?',
         <Entry>[
           Entry(
-            'Um herauszufinden, welche Intervention für Sie am besten geeignet ist, müssen Sie für jede Intervention einige tägliche Aufgaben ausführen. Bitte stellen Sie sicher, dass Sie nach Abschluss auf die Schaltfläche "Fertig stellen" klicken.',
+            'Um herauszufinden, welche Intervention für Sie am besten geeignet '
+            'ist, müssen Sie für jede Intervention einige tägliche '
+            'Aufgaben ausführen. Bitte stellen Sie sicher, dass Sie nach '
+            'Abschluss auf die Schaltfläche "Fertig stellen" klicken.',
           ),
         ],
       ),
@@ -211,7 +242,10 @@ final data_de = <Entry>[
         'Was ist "Bewerten Sie Ihren Tag"?',
         <Entry>[
           Entry(
-            '"Bewerten Sie Ihren Tag" ist eine Funktion, die Ihre Gesundheit während des gesamten Studienzeitraums erfasst. Sie müssen bestimmte gesundheitsbezogene Abfragen auf einer Skala von 1 bis 10 bewerten.',
+            '"Bewerten Sie Ihren Tag" ist eine Funktion, die Ihre Gesundheit '
+            'während des gesamten Studienzeitraums erfasst. Sie müssen '
+            'bestimmte gesundheitsbezogene Abfragen auf einer Skala von '
+            '1 bis 10 bewerten.',
           ),
         ],
       ),
@@ -219,7 +253,8 @@ final data_de = <Entry>[
         'Wie kann ich meine Aktivitäten verfolgen?',
         <Entry>[
           Entry(
-            'Im Abschnitt "Berichtsverlauf" erhalten Sie einen Überblick über Ihre täglichen Aufgaben und Ihren Gesundheitszustand.',
+            'Im Abschnitt "Berichtsverlauf" erhalten Sie einen Überblick über '
+            'Ihre täglichen Aufgaben und Ihren Gesundheitszustand.',
           ),
         ],
       ),
@@ -227,7 +262,9 @@ final data_de = <Entry>[
         'Wie kann ich meinen Bericht herunterladen?',
         <Entry>[
           Entry(
-            'Sie können Ihren Bericht herunterladen, sobald Sie die erforderlichen Mindestaufgaben erledigt haben. Es ist auf der Registerkarte Berichtsverlauf im Dashboard verfügbar.',
+            'Sie können Ihren Bericht herunterladen, sobald Sie die '
+            'erforderlichen Mindestaufgaben erledigt haben. Es ist auf '
+            'der Registerkarte Berichtsverlauf im Dashboard verfügbar.',
           ),
         ],
       ),
@@ -235,7 +272,10 @@ final data_de = <Entry>[
         'Wie kann ich meinen Studienbericht herunterladen?',
         <Entry>[
           Entry(
-            'Ihr Bericht kann heruntergeladen werden, sobald Sie die für eine Studie erforderlichen Mindestaufgaben erledigt haben. Es ist auf der Registerkarte Berichtsverlauf im Dashboard verfügbar.',
+            'Ihr Bericht kann heruntergeladen werden, sobald Sie die für '
+            'eine Studie erforderlichen Mindestaufgaben erledigt haben. '
+            'Es ist auf der Registerkarte Berichtsverlauf im Dashboard '
+            'verfügbar.',
           ),
         ],
       ),
