@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
@@ -27,7 +28,7 @@ class AppRepository implements IAppRepository {
 }
 
 @riverpod
-Future<AppConfig> appConfig(AppConfigRef ref) async {
+Future<AppConfig> appConfig(Ref ref) async {
   final apiClient = ref.watch(apiClientProvider);
   return await AppRepository(apiClient).fetchAppConfig();
 }

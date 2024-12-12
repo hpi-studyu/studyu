@@ -34,7 +34,7 @@ class DashboardController extends _$DashboardController
       _studiesSubscription?.cancel();
     });
 
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       print("dashboardController.state updated");
     });
 

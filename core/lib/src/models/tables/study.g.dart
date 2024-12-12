@@ -48,39 +48,29 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
           []
       ..registryPublished = json['registry_published'] as bool? ?? false;
 
-Map<String, dynamic> _$StudyToJson(Study instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('title', instance.title);
-  writeNotNull('description', instance.description);
-  val['user_id'] = instance.userId;
-  val['participation'] = instance.participation.toJson();
-  val['result_sharing'] = instance.resultSharing.toJson();
-  val['contact'] = instance.contact.toJson();
-  val['icon_name'] = instance.iconName;
-  val['published'] = instance.published;
-  val['status'] = instance.status.toJson();
-  val['questionnaire'] = instance.questionnaire.toJson();
-  val['eligibility_criteria'] =
-      instance.eligibilityCriteria.map((e) => e.toJson()).toList();
-  val['consent'] = instance.consent.map((e) => e.toJson()).toList();
-  val['interventions'] = instance.interventions.map((e) => e.toJson()).toList();
-  val['observations'] = instance.observations.map((e) => e.toJson()).toList();
-  val['schedule'] = instance.schedule.toJson();
-  val['report_specification'] = instance.reportSpecification.toJson();
-  val['results'] = instance.results.map((e) => e.toJson()).toList();
-  val['collaborator_emails'] = instance.collaboratorEmails;
-  val['registry_published'] = instance.registryPublished;
-  return val;
-}
+Map<String, dynamic> _$StudyToJson(Study instance) => <String, dynamic>{
+      'id': instance.id,
+      if (instance.title case final value?) 'title': value,
+      if (instance.description case final value?) 'description': value,
+      'user_id': instance.userId,
+      'participation': instance.participation.toJson(),
+      'result_sharing': instance.resultSharing.toJson(),
+      'contact': instance.contact.toJson(),
+      'icon_name': instance.iconName,
+      'published': instance.published,
+      'status': instance.status.toJson(),
+      'questionnaire': instance.questionnaire.toJson(),
+      'eligibility_criteria':
+          instance.eligibilityCriteria.map((e) => e.toJson()).toList(),
+      'consent': instance.consent.map((e) => e.toJson()).toList(),
+      'interventions': instance.interventions.map((e) => e.toJson()).toList(),
+      'observations': instance.observations.map((e) => e.toJson()).toList(),
+      'schedule': instance.schedule.toJson(),
+      'report_specification': instance.reportSpecification.toJson(),
+      'results': instance.results.map((e) => e.toJson()).toList(),
+      'collaborator_emails': instance.collaboratorEmails,
+      'registry_published': instance.registryPublished,
+    };
 
 const _$ParticipationEnumMap = {
   Participation.open: 'open',
