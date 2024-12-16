@@ -16,10 +16,9 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/scale_question_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
-
-import '../../../../study/study_controller.dart';
 
 /// Wrapper that dispatches to the appropriate widget for the corresponding
 /// [SurveyQuestionType] as given by [formViewModel.questionType]

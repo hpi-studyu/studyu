@@ -3,11 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
+import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
-
-import '../../../common_views/text_paragraph.dart';
 
 class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
   const StudyDesignFitbitCredentialsFormView(super.studyId, {super.key});
@@ -41,7 +40,7 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                           Expanded(
                             child: ReactiveTextField(
                               formControl: formViewModel.clientIdControl,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 hintText: 'Client ID',
                               ),
                             ),
@@ -55,7 +54,7 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                       labelHelpText: 'Tooltip here',
                       input: ReactiveTextField(
                         formControl: formViewModel.clientSecretControl,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Client Secret',
                         ),
                       ),
@@ -67,7 +66,7 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                     1: FlexColumnWidth(),
                   },
                 ),
-              ]));
-        });
+              ],),);
+        },);
   }
 }

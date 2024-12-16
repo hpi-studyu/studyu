@@ -1,10 +1,9 @@
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_data.dart';
+import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
+import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
-
-import '../../forms/form_validation.dart';
-import '../study_form_validation.dart';
 
 class FitbitCredentialsFormViewModel
     extends FormViewModel<FitbitCredentialsFormData> {

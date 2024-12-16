@@ -22,6 +22,7 @@ import 'package:studyu_designer_v2/features/auth/signup_form_view.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_view.dart';
+import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_view.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_view.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_view.dart';
@@ -42,8 +43,6 @@ import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/routing/router_utils.dart';
-
-import '../features/design/fitbit/fitbit_credentials_form_view.dart';
 
 class RouterKeys {
   static const studyKey = ValueKey("study"); // shared key for study page tabs

@@ -3,11 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 
-import '../question_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 
 class FitbitQuestionFormView extends ConsumerWidget {
-  const FitbitQuestionFormView({required this.formViewModel, Key? key})
-      : super(key: key);
+  const FitbitQuestionFormView({required this.formViewModel, super.key});
 
   final QuestionFormViewModel formViewModel;
 
