@@ -16,57 +16,60 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
     final state = ref.watch(studyControllerProvider(studyId));
 
     return AsyncValueWidget(
-        value: state.study,
-        data: (study) {
-          final formViewModel =
-              ref.watch(fitbitCredentialsFormViewModelProvider(studyId));
+      value: state.study,
+      data: (study) {
+        final formViewModel =
+            ref.watch(fitbitCredentialsFormViewModelProvider(studyId));
 
-          return ReactiveForm(
-              formGroup: formViewModel.form,
-              child: Column(children: <Widget>[
-                TextParagraph(
-                  text:
-                      'Information about Fitbit Credentials retrieval will be here',
-                ),
-                const SizedBox(height: 24.0),
-                FormTableLayout(
-                  rows: [
-                    FormTableRow(
-                      control: formViewModel.clientIdControl,
-                      label: 'Client ID',
-                      labelHelpText: 'Tooltip here',
-                      input: Row(
-                        children: [
-                          Expanded(
-                            child: ReactiveTextField(
-                              formControl: formViewModel.clientIdControl,
-                              decoration: const InputDecoration(
-                                hintText: 'Client ID',
-                              ),
+        return ReactiveForm(
+          formGroup: formViewModel.form,
+          child: Column(
+            children: <Widget>[
+              TextParagraph(
+                text:
+                    'Information about Fitbit Credentials retrieval will be here',
+              ),
+              const SizedBox(height: 24.0),
+              FormTableLayout(
+                rows: [
+                  FormTableRow(
+                    control: formViewModel.clientIdControl,
+                    label: 'Client ID',
+                    labelHelpText: 'Tooltip here',
+                    input: Row(
+                      children: [
+                        Expanded(
+                          child: ReactiveTextField(
+                            formControl: formViewModel.clientIdControl,
+                            decoration: const InputDecoration(
+                              hintText: 'Client ID',
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    FormTableRow(
-                      control: formViewModel.clientSecretControl,
-                      label: 'Client Secret',
-                      labelHelpText: 'Tooltip here',
-                      input: ReactiveTextField(
-                        formControl: formViewModel.clientSecretControl,
-                        decoration: const InputDecoration(
-                          hintText: 'Client Secret',
                         ),
+                      ],
+                    ),
+                  ),
+                  FormTableRow(
+                    control: formViewModel.clientSecretControl,
+                    label: 'Client Secret',
+                    labelHelpText: 'Tooltip here',
+                    input: ReactiveTextField(
+                      formControl: formViewModel.clientSecretControl,
+                      decoration: const InputDecoration(
+                        hintText: 'Client Secret',
                       ),
                     ),
-
-                  ],
-                  columnWidths: const {
-                    0: FixedColumnWidth(185.0),
-                    1: FlexColumnWidth(),
-                  },
-                ),
-              ],),);
-        },);
+                  ),
+                ],
+                columnWidths: const {
+                  0: FixedColumnWidth(185.0),
+                  1: FlexColumnWidth(),
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
