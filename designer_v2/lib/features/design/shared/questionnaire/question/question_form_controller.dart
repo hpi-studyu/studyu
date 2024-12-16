@@ -309,6 +309,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   }
 
   // Fitbit
+
   final Map<FitbitQuestionType, FormControl<bool>> fitbitQuestionTypesControl =
       Map.fromEntries(
     FitbitQuestionType.values.map(

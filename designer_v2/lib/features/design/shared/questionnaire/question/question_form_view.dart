@@ -19,16 +19,20 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
+import '../../../../study/study_controller.dart';
+
 /// Wrapper that dispatches to the appropriate widget for the corresponding
 /// [SurveyQuestionType] as given by [formViewModel.questionType]
 class SurveyQuestionFormView extends ConsumerStatefulWidget {
   const SurveyQuestionFormView({
     required this.formViewModel,
+    required this.studyId,
     this.isHtmlStyleable = true,
     super.key,
   });
 
   final QuestionFormViewModel formViewModel;
+  final String studyId;
   final bool isHtmlStyleable;
 
   @override
@@ -48,6 +52,15 @@ class _SurveyQuestionFormViewState
         isStylingInformationDismissed = !isStylingInformationDismissed;
       });
 
+  bool _areFitbitCredentialsInvalid() {
+    final state = ref.watch(studyControllerProvider(widget.studyId));
+
+    final fitbitCredentials = state.study.value?.fitbitCredentials;
+    return fitbitCredentials == null ||
+        fitbitCredentials.clientId.isEmpty ||
+        fitbitCredentials.clientSecret.isEmpty;
+  }
+
   WidgetBuilder get questionTypeBodyBuilder {
     final Map<SurveyQuestionType, WidgetBuilder> questionTypeWidgets = {
       SurveyQuestionType.choice: (_) =>
@@ -66,6 +79,17 @@ class _SurveyQuestionFormViewState
           FitbitQuestionFormView(formViewModel: formViewModel),
     };
     //TODO: If question type is fitbit and credentials are not set, show a message to set credentials
+
+    if (formViewModel.questionType == SurveyQuestionType.fitbit &&
+        _areFitbitCredentialsInvalid()) {
+      return (_) => TextParagraph(
+            //TODO: Translations && more informative widget
+            text:
+                "Please set your Fitbit credentials in the study settings to use this question type.",
+            style: ThemeConfig.bodyTextMuted(Theme.of(context)),
+          );
+    }
+
     final questionType = formViewModel.questionType;
 
     if (!questionTypeWidgets.containsKey(questionType)) {
