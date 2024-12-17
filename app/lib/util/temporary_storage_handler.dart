@@ -91,13 +91,6 @@ class TemporaryStorageHandler {
       ].join(),
     );
 
-    final file = File(localFilePath);
-
-    if (!await file.exists()) {
-      await file.create(recursive: true);
-      StudyULogger.info("Created placeholder audio file: ${file.path}");
-    }
-
     final futureBlobId =
         [fileName, TemporaryStorageHandler._audioFileType].join();
     return FutureBlobFile(localFilePath, futureBlobId);
@@ -114,13 +107,6 @@ class TemporaryStorageHandler {
         TemporaryStorageHandler._imageFileType,
       ].join(),
     );
-
-    final file = File(localFilePath);
-
-    if (!await file.exists()) {
-      await file.create(recursive: true);
-      StudyULogger.info("Created placeholder image file: ${file.path}");
-    }
 
     final futureBlobId =
         [fileName, TemporaryStorageHandler._imageFileType].join();
