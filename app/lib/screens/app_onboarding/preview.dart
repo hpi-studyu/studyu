@@ -71,7 +71,7 @@ class Preview {
 
         final List<StudySubject> subjectsToDelete = subjects
             .where((subject) =>
-                subject.userId == Supabase.instance.client.auth.currentUser!.id)
+                subject.userId == Supabase.instance.client.auth.currentUser!.id,)
             .toList();
 
         subjectsToDelete.forEach((subject) async {
