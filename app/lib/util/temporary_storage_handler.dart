@@ -26,11 +26,20 @@ class TemporaryStorageHandler {
       final tempAppData = await getTemporaryDirectory();
       final multimodalTempDirectory =
           Directory("${tempAppData.path}/multimodal-temp");
-      await multimodalTempDirectory.create(recursive: true);
+
+      if (!await multimodalTempDirectory.exists()) {
+        await multimodalTempDirectory.create(recursive: true);
+      }
+
       return multimodalTempDirectory;
     } catch (e) {
-      StudyULogger.error(e);
-      return Future.value();
+      StudyULogger.error("Failed to create multimodal temp directory: $e");
+
+      final fallbackDirectory =
+          Directory("${Directory.systemTemp.path}/multimodal-temp-fallback");
+
+      await fallbackDirectory.create(recursive: true);
+      return fallbackDirectory;
     }
   }
 
@@ -71,6 +80,7 @@ class TemporaryStorageHandler {
 
   Future<FutureBlobFile> getStagingAudio() async {
     final temporaryMultimodalDirectory = await _getMultimodalTempDirectory();
+
     final fileName = _buildFileName();
     final localFilePath = path.join(
       temporaryMultimodalDirectory.path,
@@ -80,6 +90,14 @@ class TemporaryStorageHandler {
         TemporaryStorageHandler._audioFileType,
       ].join(),
     );
+
+    final file = File(localFilePath);
+
+    if (!await file.exists()) {
+      await file.create(recursive: true);
+      StudyULogger.info("Created placeholder audio file: ${file.path}");
+    }
+
     final futureBlobId =
         [fileName, TemporaryStorageHandler._audioFileType].join();
     return FutureBlobFile(localFilePath, futureBlobId);
@@ -96,6 +114,14 @@ class TemporaryStorageHandler {
         TemporaryStorageHandler._imageFileType,
       ].join(),
     );
+
+    final file = File(localFilePath);
+
+    if (!await file.exists()) {
+      await file.create(recursive: true);
+      StudyULogger.info("Created placeholder image file: ${file.path}");
+    }
+
     final futureBlobId =
         [fileName, TemporaryStorageHandler._imageFileType].join();
     return FutureBlobFile(localFilePath, futureBlobId);
