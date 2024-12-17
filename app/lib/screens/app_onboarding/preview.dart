@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_core/src/env/env.dart' as env;
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -69,9 +70,6 @@ class Preview {
         final List<StudySubject> subjects =
             await SupabaseQuery.getAll<StudySubject>();
 
-        final List<SubjectProgress> progress =
-            await SupabaseQuery.getAll<SubjectProgress>();
-
         final List<StudySubject> subjectsToDelete = subjects
             .where(
               (subject) =>
@@ -80,24 +78,22 @@ class Preview {
             )
             .toList();
 
-        final List<SubjectProgress> progressToDelete = progress
-            .where(
-              (prog) =>
-                  prog.subjectId ==
-                  Supabase.instance.client.auth.currentUser!.id,
-            )
-            .toList();
+        print("Subjects to delete: ${subjectsToDelete.length}");
 
         for (final subject in subjectsToDelete) {
-          await subject.delete();
-        }
-
-        for (final prog in progressToDelete) {
-          await prog.delete();
+          // todo refactor
+          await env.client
+              .from(SubjectProgress.tableName)
+              .delete()
+              .eq('subject_id', subject.id);
+          await env.client
+              .from(StudySubject.tableName)
+              .delete()
+              .eq('id', subject.id);
         }
 
         deleteActiveStudyReference();
-        selectedStudyObjectId = '';
+        selectedStudyObjectId = null;
       }
     }
   }
@@ -192,7 +188,7 @@ class Preview {
           return subject;
         }
       } catch (e) {
-        print('[PreviewApp]: Failed fetching subject: $e');
+        print('[PreviewApp]: Failed fetching subject. Maybe subject was reset? Error: $e');
         // todo try sign in again if token expired see loading screen
       }
     }
