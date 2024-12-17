@@ -66,15 +66,36 @@ class Preview {
     // delete study subscription and progress
     if (containsQueryPair('cmd', 'reset')) {
       if (selectedStudyObjectId != null) {
-        final StudySubject subject = await SupabaseQuery.getById<StudySubject>(
-          selectedStudyObjectId!,
-          selectedColumns: [
-            '*',
-            'study!study_subject_studyId_fkey(*)',
-            'subject_progress(*)',
-          ],
-        );
-        subject.delete();
+        final List<StudySubject> subjects =
+            await SupabaseQuery.getAll<StudySubject>();
+
+        final List<SubjectProgress> progress =
+            await SupabaseQuery.getAll<SubjectProgress>();
+
+        final List<StudySubject> subjectsToDelete = subjects
+            .where(
+              (subject) =>
+                  subject.userId ==
+                  Supabase.instance.client.auth.currentUser!.id,
+            )
+            .toList();
+
+        final List<SubjectProgress> progressToDelete = progress
+            .where(
+              (prog) =>
+                  prog.subjectId ==
+                  Supabase.instance.client.auth.currentUser!.id,
+            )
+            .toList();
+
+        for (final subject in subjectsToDelete) {
+          await subject.delete();
+        }
+
+        for (final prog in progressToDelete) {
+          await prog.delete();
+        }
+
         deleteActiveStudyReference();
         selectedStudyObjectId = '';
       }
