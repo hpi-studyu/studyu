@@ -26,8 +26,7 @@ class FitbitQuestion extends Question<FitbitQuestion> {
   @override
   Map<String, dynamic> toJson() => _$FitbitQuestionToJson(this);
 
-  Answer<FitbitQuestionType> constructAnswer(FitbitQuestionType data) =>
-      Answer.forQuestion(
+  Answer<FitbitData> constructAnswer(FitbitData data) => Answer.forQuestion(
         this,
         data,
       );
@@ -35,6 +34,7 @@ class FitbitQuestion extends Question<FitbitQuestion> {
 
 enum FitbitQuestionType {
   heartrate,
+  sleep,
   steps;
 
   String toJson() => name;

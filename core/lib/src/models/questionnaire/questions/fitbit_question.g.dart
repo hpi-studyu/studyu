@@ -42,5 +42,6 @@ Map<String, dynamic> _$FitbitQuestionToJson(FitbitQuestion instance) {
 
 const _$FitbitQuestionTypeEnumMap = {
   FitbitQuestionType.heartrate: 'heartrate',
+  FitbitQuestionType.sleep: 'sleep',
   FitbitQuestionType.steps: 'steps',
 };

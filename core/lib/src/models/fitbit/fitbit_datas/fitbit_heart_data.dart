@@ -4,7 +4,7 @@ import 'package:studyu_core/src/models/fitbit/fitbit_datas/fibit_data.dart';
 part 'fitbit_heart_data.g.dart';
 
 @JsonSerializable()
-class FitbitHeartData extends FitbitData<FitbitHeartData> {
+class FitbitHeartData extends FitbitData {
   static const String dataType = 'heart';
   double value;
 

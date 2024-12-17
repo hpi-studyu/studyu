@@ -670,14 +670,24 @@ class FitbitQuestionFormData extends QuestionFormData {
     return data;
   }
 
-  FitbitQuestionType _buildQuestionValue(String value) {
-    return FitbitQuestionType.fromJson(value);
+  FitbitData _buildQuestionValue(String value) {
+    final FitbitQuestionType fitbitType = FitbitQuestionType.fromJson(value);
+
+    switch (fitbitType) {
+      case FitbitQuestionType.heartrate:
+        return FitbitHeartData(0, DateTime.now());
+      case FitbitQuestionType.steps:
+        return FitbitStepData(0, DateTime.now());
+      case FitbitQuestionType.sleep:
+        return FitbitSleepData(DateTime.now(), 'deep', DateTime.now());
+    }
   }
 
   @override
   Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as FitbitQuestion;
-    final value = _buildQuestionValue(responseOption as String);
-    return question.constructAnswer(value);
+    final fitbitData = _buildQuestionValue(responseOption as String);
+
+    return question.constructAnswer(fitbitData);
   }
 }
