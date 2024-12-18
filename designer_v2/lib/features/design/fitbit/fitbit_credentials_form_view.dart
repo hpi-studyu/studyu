@@ -50,27 +50,31 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                 ),
               ),
               InkWell(
-                  onTap: () => _launchURL('https://accounts.fitbit.com/login'),
-                  child: Text(
-                    '2. Log in with your Fitbit account or create one if you do not have it.',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),),
+                onTap: () => _launchURL('https://accounts.fitbit.com/login'),
+                child: Text(
+                  '2. Log in with your Fitbit account or create one if you do not have it.',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
               TextParagraph(
-                  text:
-                      '3. Navigate to the "Manage" section and select "Register an App".',),
+                text:
+                    '3. Navigate to the "Manage" section and select "Register an App".',
+              ),
               TextParagraph(
                 text:
                     '4. Fill in the required fields such as application name, description, and callback URL (use: "https://example.com/callback").',
               ),
               TextParagraph(
-                  text:
-                      '5. Select "Client" under "OAuth 2.0 Application Type" and set "Access" to "Read-Only."',),
+                text:
+                    '5. Select "Client" under "OAuth 2.0 Application Type" and set "Access" to "Read-Only."',
+              ),
               TextParagraph(
-                  text:
-                      '6. Submit the form to get your "Client ID" and "Client Secret".',),
+                text:
+                    '6. Submit the form to get your "Client ID" and "Client Secret".',
+              ),
               TextParagraph(text: '7. Copy and paste the credentials below.'),
               const SizedBox(height: 12.0),
               _buildScreenshotsSection(context),
@@ -165,16 +169,31 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                 controller: scrollController,
                 scrollDirection: Axis.horizontal,
                 children: [
-                  _buildScreenshot(context, 'assets/images/step1.png',
-                      'Step 1: Developer Portal',),
                   _buildScreenshot(
-                      context, 'assets/images/step2.png', 'Step 2: Login',),
-                  _buildScreenshot(context, 'assets/images/step3.png',
-                      'Step 3: Register App',),
-                  _buildScreenshot(context, 'assets/images/step4.png',
-                      'Step 4: Input Details',),
+                    context,
+                    'assets/images/step1.png',
+                    'Step 1: Developer Portal',
+                  ),
                   _buildScreenshot(
-                      context, 'assets/images/step5.png', 'Step 5: Set Access',),
+                    context,
+                    'assets/images/step2.png',
+                    'Step 2: Login',
+                  ),
+                  _buildScreenshot(
+                    context,
+                    'assets/images/step3.png',
+                    'Step 3: Register App',
+                  ),
+                  _buildScreenshot(
+                    context,
+                    'assets/images/step4.png',
+                    'Step 4: Input Details',
+                  ),
+                  _buildScreenshot(
+                    context,
+                    'assets/images/step5.png',
+                    'Step 5: Set Access',
+                  ),
                 ],
               ),
             ),
@@ -211,7 +230,10 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
   }
 
   Widget _buildScreenshot(
-      BuildContext context, String imagePath, String caption,) {
+    BuildContext context,
+    String imagePath,
+    String caption,
+  ) {
     return GestureDetector(
       onTap: () => _showImageDialog(context, imagePath, caption),
       child: Padding(
@@ -239,7 +261,10 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
   }
 
   void _showImageDialog(
-      BuildContext context, String imagePath, String caption,) {
+    BuildContext context,
+    String imagePath,
+    String caption,
+  ) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
