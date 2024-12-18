@@ -82,9 +82,8 @@ class _SurveyQuestionFormViewState
     if (formViewModel.questionType == SurveyQuestionType.fitbit &&
         _areFitbitCredentialsInvalid()) {
       return (_) => TextParagraph(
-            //TODO: Translations && more informative widget
             text:
-                "Please set your Fitbit credentials in the study settings to use this question type.",
+                "Fitbit credentials are not set. Please navigate to the 'Fitbit' tab in the study designer to enter your Fitbit client ID and client secret. Once completed, return here to add Fitbit questions.",
             style: ThemeConfig.bodyTextMuted(Theme.of(context)),
           );
     }
