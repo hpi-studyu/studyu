@@ -46,8 +46,7 @@ enum SurveyQuestionType {
       case SurveyQuestionType.freeText:
         return tr.question_type_free_text;
       case SurveyQuestionType.fitbit:
-        //TODO: Add translation
-        return "Fitbit text";
+        return tr.question_type_fitbit;
       default:
         return "[Invalid SurveyQuestionType]";
     }
@@ -68,8 +67,7 @@ enum SurveyQuestionType {
       case SurveyQuestionType.freeText:
         return Icons.edit_square;
       case SurveyQuestionType.fitbit:
-        //TODO: Add icon
-        return Icons.fitness_center;
+        return Icons.fitbit;
       default:
         return null;
     }

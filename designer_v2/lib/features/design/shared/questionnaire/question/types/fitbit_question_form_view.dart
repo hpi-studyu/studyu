@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
-
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
+
+import '../../../../../../localization/app_translation.dart';
 
 class FitbitQuestionFormView extends ConsumerWidget {
   const FitbitQuestionFormView({required this.formViewModel, super.key});
@@ -15,8 +16,8 @@ class FitbitQuestionFormView extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Fitbit Question Types',
+        Text(
+          tr.fitbit_question_title,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
@@ -24,7 +25,7 @@ class FitbitQuestionFormView extends ConsumerWidget {
           formArray: formViewModel.fitbitResponseOptionsArray,
           builder: (context, formArray, child) {
             if (formArray.controls.isEmpty) {
-              return const Text('No Fitbit question types available.');
+              return Text(tr.fitbit_question_type_empty);
             }
 
             return Column(
