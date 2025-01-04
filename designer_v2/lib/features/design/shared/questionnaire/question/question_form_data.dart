@@ -686,7 +686,7 @@ class FitbitQuestionFormData extends QuestionFormData {
   @override
   Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as FitbitQuestion;
-    final fitbitData = _buildQuestionValue(responseOption as String);
+    final fitbitData = _buildQuestionValue(responseOption);
 
     return question.constructAnswer(fitbitData);
   }
