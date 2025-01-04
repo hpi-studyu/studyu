@@ -12,14 +12,14 @@ class QuestionnaireWidget extends StatefulWidget {
   final String? header;
   final String? footer;
   final List<Question> questions;
-  final String taskId;
+  final String? taskId;
   final StateHandler? onChange;
   final StateHandler? onComplete;
   final ContinuationPredicate? shouldContinue;
 
   const QuestionnaireWidget(
-    this.questions,
-    this.taskId, {
+    this.questions, {
+    this.taskId,
     this.title,
     this.header,
     this.footer,

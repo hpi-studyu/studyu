@@ -17,13 +17,13 @@ class QuestionContainer extends StatefulWidget {
   final Function(Answer, int) onDone;
   final Question question;
   final int index;
-  final String taskId;
+  final String? taskId;
 
   const QuestionContainer({
     required this.onDone,
     required this.question,
     required this.index,
-    required this.taskId,
+    this.taskId,
     super.key,
   });
 
@@ -87,7 +87,7 @@ class _QuestionContainerState extends State<QuestionContainer>
         return FitbitQuestionWidget(
           question: fitbitQuestion,
           onDone: _onDone,
-          taskId: widget.taskId,
+          taskId: widget.taskId!,
         );
       default:
         throw ArgumentError(
