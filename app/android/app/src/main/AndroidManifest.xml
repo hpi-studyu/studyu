@@ -26,15 +26,6 @@
         </intent>
     </queries>
 
-    <activity android:name="com.linusu.flutter_web_auth.CallbackActivity"
-        android:exported="true">
-        <intent-filter android:label="flutter_web_auth">
-            <action android:name="android.intent.action.VIEW" />
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
-            <data android:scheme="CALLBACK_SCHEME" />
-        </intent-filter>
-    </activity>
 
     <application
         android:label="StudyU"
@@ -62,6 +53,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Begin flutter_web_auth -->
+        <activity android:name="com.linusu.flutter_web_auth.CallbackActivity" android:exported="true">
+            <intent-filter android:label="flutter_web_auth">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="YOUR_CALLBACK_URL_SCHEME_HERE" />
+            </intent-filter>
+        </activity>
+        <!-- End flutter_web_auth -->
         <!-- Begin flutter_local_notifications -->
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
@@ -78,6 +79,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

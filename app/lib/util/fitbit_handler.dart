@@ -19,7 +19,8 @@ class FitbitHandler {
   }
 
   static fitbitter.FitbitCredentials _credentialsFromJson(
-      Map<String, dynamic> json,) {
+    Map<String, dynamic> json,
+  ) {
     return fitbitter.FitbitCredentials(
       userID: json['userID'] as String,
       fitbitAccessToken: json['fitbitAccessToken'] as String,
@@ -28,14 +29,18 @@ class FitbitHandler {
   }
 
   static Future<void> _storeCredentials(
-      fitbitter.FitbitCredentials? credentials, String studyKey,) async {
+    fitbitter.FitbitCredentials? credentials,
+    String studyKey,
+  ) async {
     final key = '$_fitbitCredentialsPrefix$studyKey';
     try {
       if (credentials == null) {
         await SecureStorage.delete(key);
       } else {
         await SecureStorage.write(
-            key, jsonEncode(_credentialsToJson(credentials)),);
+          key,
+          jsonEncode(_credentialsToJson(credentials)),
+        );
       }
     } catch (e) {
       StudyULogger.error('Failed to store Fitbit credentials: $e');
@@ -43,7 +48,8 @@ class FitbitHandler {
   }
 
   static Future<fitbitter.FitbitCredentials?> _loadCredentials(
-      String studyKey,) async {
+    String studyKey,
+  ) async {
     final key = '$_fitbitCredentialsPrefix$studyKey';
     try {
       if (await SecureStorage.containsKey(key)) {
@@ -61,9 +67,10 @@ class FitbitHandler {
   }
 
   static Future<fitbitter.FitbitCredentials?> _validateToken(
-      Study study,
-      FitbitCredentials studyCredentials,
-      fitbitter.FitbitCredentials credentials,) async {
+    Study study,
+    FitbitCredentials studyCredentials,
+    fitbitter.FitbitCredentials credentials,
+  ) async {
     try {
       final isValid = await fitbitter.FitbitConnector.isTokenValid(
         fitbitCredentials: credentials,
@@ -85,8 +92,9 @@ class FitbitHandler {
     }
   }
 
-  static Future<fitbitter.FitbitCredentials?> obtainCredentials(
-      Study study,) async {
+  static Future<fitbitter.FitbitCredentials?> _obtainCredentials(
+    Study study,
+  ) async {
     final fitbitCredentials = study.fitbitCredentials;
 
     if (fitbitCredentials == null) {
@@ -122,19 +130,23 @@ class FitbitHandler {
     return null;
   }
 
-  static Future<List<FitbitData>> getFitbitData(
-      List<FitbitQuestionType> types,
-      FitbitCredentials studyCredentials,
-      fitbitter.FitbitCredentials credentials,
-      StudySubject subject,) async {
+  static Future<List<FitbitData>> _getFitbitData(
+    List<FitbitQuestionType> types,
+    FitbitCredentials studyCredentials,
+    fitbitter.FitbitCredentials credentials,
+    String taskId,
+    StudySubject subject,
+  ) async {
+    final latestDataEntry = await _findLatestDataEntry(subject, taskId);
+
     final List<FitbitData> fitbitData = [];
     for (final type in types) {
       switch (type) {
         case FitbitQuestionType.steps:
           break;
         case FitbitQuestionType.heartrate:
-          final heartrate =
-              await _fetchHeartData(studyCredentials, credentials);
+          final heartrate = await _fetchHeartData(
+              studyCredentials, credentials, latestDataEntry ?? DateTime.now());
 
           fitbitData.addAll(heartrate);
         case FitbitQuestionType.sleep:
@@ -144,18 +156,31 @@ class FitbitHandler {
     return fitbitData;
   }
 
-  static Future<DateTime?> findLatestDataEntry(
-      StudySubject subject, String taskId,) async {
+  static Future<DateTime?> _findLatestDataEntry(
+    StudySubject subject,
+    String taskId,
+  ) async {
     final SubjectProgress latestDataEntry = subject.progress.lastWhere(
       (entry) =>
           entry.taskId == taskId && entry.resultType == 'QuestionnaireState',
     );
+
+    final questionnaireState = latestDataEntry.result as QuestionnaireState;
+    final latestData = questionnaireState.answers.entries.where(
+      (entry) => entry.key.startsWith('fitbit'),
+    );
+
+    if (latestData.isNotEmpty) {
+      return latestData.last.value.timestamp;
+    }
     return null;
   }
 
   static Future<List<FitbitHeartData>> _fetchHeartData(
-      FitbitCredentials studyCredentials,
-      fitbitter.FitbitCredentials credentials,) async {
+    FitbitCredentials studyCredentials,
+    fitbitter.FitbitCredentials credentials,
+    DateTime date,
+  ) async {
     final fitbitter.FitbitHeartRateIntradayDataManager
         fitbitHeartRateIntradayDataManager =
         fitbitter.FitbitHeartRateIntradayDataManager(
@@ -166,7 +191,7 @@ class FitbitHandler {
     final fitbitter.FitbitHeartRateIntradayAPIURL
         fitbitHeartRateIntradayAPIURL =
         fitbitter.FitbitHeartRateIntradayAPIURL.dayAndDetailLevel(
-      date: DateTime.now(),
+      date: date,
       fitbitCredentials: credentials,
       intradayDetailLevel: fitbitter.IntradayDetailLevel.ONE_MINUTE,
     );
@@ -179,5 +204,29 @@ class FitbitHandler {
     return fitbitHeartRateIntradayData
         .map((data) => FitbitHeartData(data.value!, data.dateOfMonitoring!))
         .toList();
+  }
+
+  static Future<bool> syncFitbitData(
+    Study study,
+    FitbitQuestion question,
+    String taskId,
+    StudySubject subject,
+  ) async {
+    final fitbitCredentials = await _obtainCredentials(study);
+    if (fitbitCredentials == null) {
+      return false;
+    }
+
+    final fitbitData = await _getFitbitData(
+      question.types,
+      study.fitbitCredentials!,
+      fitbitCredentials,
+      taskId,
+      subject,
+    );
+
+    print(fitbitData);
+
+    return true;
   }
 }

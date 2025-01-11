@@ -4,6 +4,8 @@ import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 
+import '../../../util/fitbit_handler.dart';
+
 class FitbitQuestionWidget extends QuestionWidget {
   final FitbitQuestion question;
   final String taskId;
@@ -30,6 +32,15 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
 
   Future<void> _syncFitbitData() async {
     final Study study = context.read<AppState>().selectedStudy!;
+
+    final success = await FitbitHandler.syncFitbitData(
+      study,
+      widget.question,
+      widget.taskId,
+      context.read<AppState>().activeSubject!,
+    );
+
+    print(success);
   }
 
   @override
