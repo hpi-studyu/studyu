@@ -308,10 +308,11 @@ packages:
   fitbitter:
     dependency: "direct main"
     description:
-      name: fitbitter
-      sha256: beab800f4771867bdffee7ae106ada1eb9582b57e674d1f71fd047ce2c89fed1
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: "660bb548be2cd3e60b49a520464cc6384b62bc2b"
+      url: "https://github.com/ibrahimozkn/fitbitter.git"
+    source: git
     version: "2.0.4"
   fixnum:
     dependency: transitive
@@ -484,10 +485,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_web_auth
-      sha256: a69fa8f43b9e4d86ac72176bf747b735e7b977dd7cf215076d95b87cb05affdd
+      sha256: "95e4856e24fb6ac1678f5ff334743b63f782d839ab324543d29ccbd295176209"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0"
+    version: "0.6.0"
   flutter_web_plugins:
     dependency: "direct main"
     description: flutter
@@ -1593,5 +1594,5 @@ packages:
     source: hosted
     version: "2.0.3"
 sdks:
-  dart: ">=3.5.0 <4.0.0"
+  dart: ">=3.5.3 <4.0.0"
   flutter: ">=3.24.0"

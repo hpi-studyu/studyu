@@ -31,7 +31,7 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
   }
 
   Future<void> _syncFitbitData() async {
-    final Study study = context.read<AppState>().selectedStudy!;
+    final Study study = context.read<AppState>().activeSubject!.study;
 
     final success = await FitbitHandler.syncFitbitData(
       study,
@@ -40,7 +40,11 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
       context.read<AppState>().activeSubject!,
     );
 
-    print(success);
+    for (final data in success) {
+      StudyULogger.info(
+          'Synced Fitbit Data: ${(data as FitbitHeartData).value}');
+    }
+    StudyULogger.info('Synced Fitbit Data');
   }
 
   @override

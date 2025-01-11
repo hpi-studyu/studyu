@@ -160,10 +160,18 @@ class FitbitHandler {
     StudySubject subject,
     String taskId,
   ) async {
-    final SubjectProgress latestDataEntry = subject.progress.lastWhere(
+    if (subject.progress.isEmpty) {
+      return null;
+    }
+
+    final SubjectProgress? latestDataEntry = subject.progress.lastWhere(
       (entry) =>
           entry.taskId == taskId && entry.resultType == 'QuestionnaireState',
     );
+
+    if (latestDataEntry == null) {
+      return null;
+    }
 
     final questionnaireState = latestDataEntry.result as QuestionnaireState;
     final latestData = questionnaireState.answers.entries.where(
@@ -188,13 +196,17 @@ class FitbitHandler {
       clientSecret: studyCredentials.clientSecret,
     );
 
-    final fitbitter.FitbitHeartRateIntradayAPIURL
-        fitbitHeartRateIntradayAPIURL =
+    fitbitter.FitbitHeartRateIntradayAPIURL fitbitHeartRateIntradayAPIURL =
         fitbitter.FitbitHeartRateIntradayAPIURL.dayAndDetailLevel(
-      date: date,
+      date: DateTime.now(),
       fitbitCredentials: credentials,
       intradayDetailLevel: fitbitter.IntradayDetailLevel.ONE_MINUTE,
     );
+
+    /*FitbitHeartRateIntradayDataManager fitbitHeartRateIntradayDataManager = FitbitHeartRateIntradayDataManager(
+      clientID: '<OAuth 2.0 Client ID>',
+      clientSecret: '<Client Secret>',
+    );*/
 
     final List<fitbitter.FitbitHeartRateIntradayData>
         fitbitHeartRateIntradayData = await fitbitHeartRateIntradayDataManager
@@ -206,7 +218,7 @@ class FitbitHandler {
         .toList();
   }
 
-  static Future<bool> syncFitbitData(
+  static Future<List<FitbitData>> syncFitbitData(
     Study study,
     FitbitQuestion question,
     String taskId,
@@ -214,7 +226,7 @@ class FitbitHandler {
   ) async {
     final fitbitCredentials = await _obtainCredentials(study);
     if (fitbitCredentials == null) {
-      return false;
+      return [];
     }
 
     final fitbitData = await _getFitbitData(
@@ -227,6 +239,6 @@ class FitbitHandler {
 
     print(fitbitData);
 
-    return true;
+    return fitbitData;
   }
 }

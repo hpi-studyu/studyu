@@ -59,7 +59,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="YOUR_CALLBACK_URL_SCHEME_HERE" />
+                <data android:scheme="example" />
             </intent-filter>
         </activity>
         <!-- End flutter_web_auth -->
