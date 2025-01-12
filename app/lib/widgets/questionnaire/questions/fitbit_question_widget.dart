@@ -45,6 +45,8 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
           'Synced Fitbit Data: ${(data as FitbitHeartData).value}');
     }
     StudyULogger.info('Synced Fitbit Data');
+
+    widget.onDone!(widget.question.constructAnswer(success));
   }
 
   @override

@@ -218,6 +218,38 @@ class FitbitHandler {
         .toList();
   }
 
+  static Future<List<FitbitSleepData>> _fetchSleepData(
+    FitbitCredentials studyCredentials,
+    fitbitter.FitbitCredentials credentials,
+    DateTime date,
+  ) async {
+    final fitbitter.FitbitSleepDataManager fitbitSleepDataManager =
+        fitbitter.FitbitSleepDataManager(
+      clientID: studyCredentials.clientId,
+      clientSecret: studyCredentials.clientSecret,
+    );
+
+    final fitbitter.FitbitSleepAPIURL fitbitSleepAPIURL =
+        fitbitter.FitbitSleepAPIURL.listAndAfterDate(
+      afterDate: date,
+      fitbitCredentials: credentials,
+    );
+
+    final List<fitbitter.FitbitSleepData> fitbitSleepData =
+        await fitbitSleepDataManager.fetch(fitbitSleepAPIURL)
+            as List<fitbitter.FitbitSleepData>;
+
+    return fitbitSleepData
+        .map(
+          (data) => FitbitSleepData(
+            data.level!,
+            data.entryDateTime!,
+            data.dateOfSleep!,
+          ),
+        )
+        .toList();
+  }
+
   static Future<List<FitbitData>> syncFitbitData(
     Study study,
     FitbitQuestion question,

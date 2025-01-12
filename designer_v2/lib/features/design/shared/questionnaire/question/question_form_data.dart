@@ -670,23 +670,23 @@ class FitbitQuestionFormData extends QuestionFormData {
     return data;
   }
 
-  FitbitData _buildQuestionValue(String value) {
-    final FitbitQuestionType fitbitType = FitbitQuestionType.fromJson(value);
+  List<FitbitData> _buildQuestionValue(String value) {
+    final fitbitType = FitbitQuestionType.fromJson(value);
 
     switch (fitbitType) {
       case FitbitQuestionType.heartrate:
-        return FitbitHeartData(0, DateTime.now());
+        return [FitbitHeartData(0, DateTime.now())];
       case FitbitQuestionType.steps:
-        return FitbitStepData(0, DateTime.now());
+        return [FitbitStepData(0, DateTime.now())];
       case FitbitQuestionType.sleep:
-        return FitbitSleepData(DateTime.now(), 'deep', DateTime.now());
+        return [FitbitSleepData('deep', DateTime.now(), DateTime.now())];
     }
   }
 
   @override
   Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as FitbitQuestion;
-    final fitbitData = _buildQuestionValue(responseOption);
+    final fitbitData = _buildQuestionValue(responseOption as String);
 
     return question.constructAnswer(fitbitData);
   }
