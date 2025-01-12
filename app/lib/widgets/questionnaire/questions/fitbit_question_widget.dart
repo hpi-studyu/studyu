@@ -9,13 +9,13 @@ import '../../../util/fitbit_handler.dart';
 class FitbitQuestionWidget extends QuestionWidget {
   final FitbitQuestion question;
   final String taskId;
-  final Function(Answer)? onDone;
+  final Function(Answer) onDone;
 
   const FitbitQuestionWidget({
     super.key,
     required this.question,
     required this.taskId,
-    this.onDone,
+    required this.onDone,
   });
 
   @override
@@ -23,30 +23,52 @@ class FitbitQuestionWidget extends QuestionWidget {
 }
 
 class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
-  List<FitbitData>? value;
+  late List<FitbitData> value;
 
   @override
   void initState() {
     super.initState();
+    value = [];
   }
 
   Future<void> _syncFitbitData() async {
     final Study study = context.read<AppState>().activeSubject!.study;
 
-    final success = await FitbitHandler.syncFitbitData(
+    /*try {*/
+
+    final data = await FitbitHandler.syncFitbitData(
       study,
       widget.question,
       widget.taskId,
       context.read<AppState>().activeSubject!,
     );
 
-    for (final data in success) {
-      StudyULogger.info(
-          'Synced Fitbit Data: ${(data as FitbitHeartData).value}');
+    if (data.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Fitbit data could not be synced'),
+        ),
+      );
+      return;
     }
-    StudyULogger.info('Synced Fitbit Data');
 
-    widget.onDone!(widget.question.constructAnswer(success));
+    setState(() {
+      value = data;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Fitbit data synced successfully'),
+      ),
+    );
+
+    widget.onDone(widget.question.constructAnswer(value));
+    /*} catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'Error syncing Fitbit data. Please try again later. Error: $e')));
+      StudyULogger.error('Error syncing Fitbit data: $e');
+    }*/
   }
 
   @override
