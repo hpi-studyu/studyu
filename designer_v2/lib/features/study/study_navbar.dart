@@ -91,7 +91,7 @@ class StudyDesignNav {
       );
   static NavbarTab fitbitCredentials(StudyID studyId) => NavbarTab(
         index: 5,
-        title: "Fitbit",
+        title: "Fitbit", //TODO: translations
         intent: RoutingIntents.studyEditFitbitCredentials(studyId),
       );
 }

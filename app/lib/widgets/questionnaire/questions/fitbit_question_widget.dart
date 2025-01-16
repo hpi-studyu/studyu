@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
-
-import '../../../util/fitbit_handler.dart';
 
 class FitbitQuestionWidget extends QuestionWidget {
   final FitbitQuestion question;

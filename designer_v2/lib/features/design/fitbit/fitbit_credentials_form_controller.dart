@@ -45,36 +45,49 @@ class FitbitCredentialsFormViewModel
   @override
   FormValidationConfigSet get sharedValidationConfig => {
         StudyFormValidationSet.draft: [],
-        StudyFormValidationSet.publish: [],
+        StudyFormValidationSet.publish: [fitbitCredentialsValidation],
         StudyFormValidationSet.test: [],
       };
 
-  //TODO: Do a validator which checks if client_id is filled, client_secret is required and vice versa
-  /*static Map<String, dynamic>? clientCredentialsValidator(
+  FormControlValidation get fitbitCredentialsValidation =>
+      FormControlValidation(
+        control: form,
+        validators: [
+          Validators.delegate(_validateFitbitCredentials),
+        ],
+        validationMessages: {
+          'fitbitCredentialsRequired': (_) => 'Fitbit credentials are required',
+        },
+      );
+
+  //TODO: translations
+  Map<String, dynamic>? _validateFitbitCredentials(
       AbstractControl<dynamic> control) {
+    final hasFitbitQuestion = study.observations.any((observation) {
+      if (observation.type != 'questionnaire') return false;
+
+      final questionnaire = observation as QuestionnaireTask;
+      return questionnaire.questions.questions
+          .any((question) => question is FitbitQuestion);
+    });
+
+    if (!hasFitbitQuestion) return null;
+
     if (control is FormGroup) {
       final clientId = control.control('client_id').value as String?;
       final clientSecret = control.control('client_secret').value as String?;
 
-      if ((clientId != null && clientId.isNotEmpty) &&
-          (clientSecret == null || clientSecret.isEmpty)) {
-        return {
-          'clientSecretRequired':
-              'Client secret is required when client ID is filled',
-        } as Map<String, dynamic>;
+      if (clientId == null || clientId.isEmpty) {
+        return {'fitbitCredentialsRequired': true};
       }
 
-      if ((clientSecret != null && clientSecret.isNotEmpty) &&
-          (clientId == null || clientId.isEmpty)) {
-        return {
-          'clientIdRequired':
-              'Client ID is required when client secret is filled'
-        } as Map<String, dynamic>;
+      if (clientSecret == null || clientSecret.isEmpty) {
+        return {'fitbitCredentialsRequired': true};
       }
     }
 
     return null;
-  }*/
+  }
 
   @override
   // TODO: implement titles
