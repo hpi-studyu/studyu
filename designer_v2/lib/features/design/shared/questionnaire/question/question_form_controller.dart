@@ -379,6 +379,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       StudyFormValidationSet.draft: [maxRecordingDurationValid],
       StudyFormValidationSet.publish: [maxRecordingDurationValid],
     },
+    SurveyQuestionType.fitbit: {
+      StudyFormValidationSet.draft: [fitbitTypeRequired],
+      StudyFormValidationSet.publish: [fitbitTypeRequired],
+    },
   };
 
   @override
@@ -399,6 +403,20 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       ..._validationConfigsByQuestionType[questionType]?[validationSet] ?? [],
     ];
   }
+
+  FormControlValidation get fitbitTypeRequired => FormControlValidation(
+        control: fitbitResponseOptionsArray,
+        validators: [
+          CountWhereValidator<dynamic>(
+            (dynamic value) => value == true,
+            minCount: 1,
+          ),
+        ],
+        validationMessages: {
+          CountWhereValidator.kValidationMessageMinCount: (error) =>
+              "At least one Fitbit type must be selected.", //TODO: translations
+        },
+      );
 
   FormControlValidation get questionTextRequired => FormControlValidation(
         control: questionTextControl,
@@ -558,7 +576,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         freeTextTypeControl.value = data.textType;
         customRegexControl.value = data.textTypeExpression;
       case SurveyQuestionType.fitbit:
-        //TODO: Some kind of error is throwing when saving survey, check it since its having parsing issues?
         fitbitQuestionTypesControl.forEach((key, value) {
           value.value = (data as FitbitQuestionFormData).types.contains(key);
         });
