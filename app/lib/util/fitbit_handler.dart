@@ -96,7 +96,8 @@ class FitbitHandler {
   }
 
   static Future<fitbitter.FitbitCredentials?> _obtainCredentials(
-      Study study,) async {
+    Study study,
+  ) async {
     final fitbitCreds = study.fitbitCredentials;
 
     if (fitbitCreds == null) {
@@ -186,13 +187,16 @@ class FitbitHandler {
 
     final items = await manager.fetch(url) as List<fitbitter.FitbitSleepData>;
 
+    //TODO: handle data that spans multiple days
     return items
-        .map((item) => FitbitSleepData(
-              item.level!,
-              item.entryDateTime!,
-              item.dateOfSleep!,
-            ),)
-        .where((data) => data.dateTime.isAfter(latest))
+        .map(
+          (item) => FitbitSleepData(
+            item.level!,
+            item.entryDateTime!,
+            item.dateOfSleep!,
+          ),
+        )
+        .where((data) => data.entryDateTime.isAfter(latest))
         .toList();
   }
 
@@ -224,8 +228,10 @@ class FitbitHandler {
 
         StudyULogger.warning(url);
 
-        items.addAll(await manager.fetch(url)
-            as List<fitbitter.FitbitActivityTimeseriesData>,);
+        items.addAll(
+          await manager.fetch(url)
+              as List<fitbitter.FitbitActivityTimeseriesData>,
+        );
       }
 
       return items
@@ -268,13 +274,16 @@ class FitbitHandler {
       switch (type) {
         case FitbitQuestionType.steps:
           allData.addAll(
-              await _fetchStepData(studyCredentials, credentials, latest),);
+            await _fetchStepData(studyCredentials, credentials, latest),
+          );
         case FitbitQuestionType.heartrate:
           allData.addAll(
-              await _fetchHeartData(studyCredentials, credentials, latest),);
+            await _fetchHeartData(studyCredentials, credentials, latest),
+          );
         case FitbitQuestionType.sleep:
           allData.addAll(
-              await _fetchSleepData(studyCredentials, credentials, latest),);
+            await _fetchSleepData(studyCredentials, credentials, latest),
+          );
       }
     }
     return allData;
@@ -363,7 +372,8 @@ class FitbitHandler {
 
     if (credentials == null) {
       throw Exception(
-          'Failed to obtain Fitbit credentials. Please try syncing again',);
+        'Failed to obtain Fitbit credentials. Please try syncing again',
+      );
     }
     return _getFitbitData(
       question.types,
