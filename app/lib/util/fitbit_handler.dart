@@ -397,13 +397,12 @@ class FitbitHandler {
 
           if (data.type.toLowerCase() != typeLower) continue;
 
-          final DateTime? date = switch (type) {
+          final DateTime date = switch (type) {
             FitbitQuestionType.sleep => (data as FitbitSleepData).entryDateTime,
             _ => data.dateTime,
           };
 
-          if (date != null &&
-              (latestDate == null || date.isAfter(latestDate))) {
+          if (latestDate == null || date.isAfter(latestDate)) {
             latestDate = date;
           }
         }
