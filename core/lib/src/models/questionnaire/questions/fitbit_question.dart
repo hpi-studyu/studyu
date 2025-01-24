@@ -40,5 +40,7 @@ enum FitbitQuestionType {
 
   String toJson() => name;
 
+  String toReadable() => name;
+
   static FitbitQuestionType fromJson(String json) => values.byName(json);
 }

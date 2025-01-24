@@ -19,12 +19,12 @@ class FitbitHandler {
   }
 
   static fitbitter.FitbitCredentials _credentialsFromJson(
-    Map<String, dynamic> json,
+    Map<String, dynamic> jsonData,
   ) {
     return fitbitter.FitbitCredentials(
-      userID: json['userID'] as String,
-      fitbitAccessToken: json['fitbitAccessToken'] as String,
-      fitbitRefreshToken: json['fitbitRefreshToken'] as String,
+      userID: jsonData['userID'] as String,
+      fitbitAccessToken: jsonData['fitbitAccessToken'] as String,
+      fitbitRefreshToken: jsonData['fitbitRefreshToken'] as String,
     );
   }
 
@@ -33,6 +33,7 @@ class FitbitHandler {
     String studyKey,
   ) async {
     final key = '$_fitbitCredentialsPrefix$studyKey';
+
     try {
       if (credentials == null) {
         await SecureStorage.delete(key);
@@ -51,40 +52,42 @@ class FitbitHandler {
     String studyKey,
   ) async {
     final key = '$_fitbitCredentialsPrefix$studyKey';
+
     try {
       if (await SecureStorage.containsKey(key)) {
-        final credentialsStr = await SecureStorage.read(key);
-        if (credentialsStr != null) {
-          final credentialsJson =
-              jsonDecode(credentialsStr) as Map<String, dynamic>;
-          return _credentialsFromJson(credentialsJson);
+        final storedString = await SecureStorage.read(key);
+        if (storedString != null) {
+          final jsonData = jsonDecode(storedString) as Map<String, dynamic>;
+          return _credentialsFromJson(jsonData);
         }
       }
     } catch (e) {
       StudyULogger.error('Failed to load Fitbit credentials: $e');
     }
+
     return null;
   }
 
   static Future<fitbitter.FitbitCredentials?> _validateToken(
     Study study,
     FitbitCredentials studyCredentials,
-    fitbitter.FitbitCredentials credentials,
+    fitbitter.FitbitCredentials currentCredentials,
   ) async {
     try {
-      final isValid = await fitbitter.FitbitConnector.isTokenValid(
-        fitbitCredentials: credentials,
+      final valid = await fitbitter.FitbitConnector.isTokenValid(
+        fitbitCredentials: currentCredentials,
       );
 
-      if (isValid) return credentials;
+      if (valid) return currentCredentials;
 
       final newCredentials = await fitbitter.FitbitConnector.refreshToken(
-        fitbitCredentials: credentials,
+        fitbitCredentials: currentCredentials,
         clientID: studyCredentials.clientId,
         clientSecret: studyCredentials.clientSecret,
       );
 
       await _storeCredentials(newCredentials, study.id);
+
       return newCredentials;
     } catch (e) {
       StudyULogger.error('Failed to refresh Fitbit token: $e');
@@ -93,28 +96,29 @@ class FitbitHandler {
   }
 
   static Future<fitbitter.FitbitCredentials?> _obtainCredentials(
-    Study study,
-  ) async {
-    final fitbitCredentials = study.fitbitCredentials;
+      Study study) async {
+    final fitbitCreds = study.fitbitCredentials;
 
-    if (fitbitCredentials == null) {
+    if (fitbitCreds == null) {
       StudyULogger.error('Study is missing Fitbit credentials.');
       return null;
     }
 
     final storedCredentials = await _loadCredentials(study.id);
-    if (storedCredentials != null) {
-      final validatedCredentials =
-          await _validateToken(study, fitbitCredentials, storedCredentials);
-      if (validatedCredentials != null) {
-        return validatedCredentials;
-      }
-    }
 
+    if (storedCredentials != null) {
+      final validCredentials = await _validateToken(
+        study,
+        fitbitCreds,
+        storedCredentials,
+      );
+
+      if (validCredentials != null) return validCredentials;
+    }
     try {
       final newCredentials = await fitbitter.FitbitConnector.authorize(
-        clientID: fitbitCredentials.clientId,
-        clientSecret: fitbitCredentials.clientSecret,
+        clientID: fitbitCreds.clientId,
+        clientSecret: fitbitCreds.clientSecret,
         redirectUri: fitbitRedirectUrl,
         callbackUrlScheme: fitbitCallbackScheme,
       );
@@ -130,6 +134,123 @@ class FitbitHandler {
     return null;
   }
 
+  static DateTime _startOfToday() {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day);
+  }
+
+  static Future<List<FitbitHeartData>> _fetchHeartData(
+    FitbitCredentials studyCredentials,
+    fitbitter.FitbitCredentials credentials,
+    DateTime latest,
+  ) async {
+    final manager = fitbitter.FitbitHeartRateIntradayDataManager(
+      clientID: studyCredentials.clientId,
+      clientSecret: studyCredentials.clientSecret,
+    );
+
+    final startDate = DateTime(latest.year, latest.month, latest.day);
+
+    final url = fitbitter.FitbitHeartRateIntradayAPIURL.dayAndDetailLevel(
+      date: startDate,
+      fitbitCredentials: credentials,
+      intradayDetailLevel: fitbitter.IntradayDetailLevel.ONE_MINUTE,
+    );
+
+    final items =
+        await manager.fetch(url) as List<fitbitter.FitbitHeartRateIntradayData>;
+
+    return items
+        .map((item) => FitbitHeartData(item.value!, item.dateOfMonitoring!))
+        .where((data) => data.dateTime.isAfter(latest))
+        .toList();
+  }
+
+  static Future<List<FitbitSleepData>> _fetchSleepData(
+    FitbitCredentials studyCredentials,
+    fitbitter.FitbitCredentials credentials,
+    DateTime latest,
+  ) async {
+    final manager = fitbitter.FitbitSleepDataManager(
+      clientID: studyCredentials.clientId,
+      clientSecret: studyCredentials.clientSecret,
+    );
+
+    final startDate = DateTime(latest.year, latest.month, latest.day);
+
+    final url = fitbitter.FitbitSleepAPIURL.dateRange(
+      startDate: startDate,
+      endDate: DateTime.now(),
+      fitbitCredentials: credentials,
+    );
+
+    final items = await manager.fetch(url) as List<fitbitter.FitbitSleepData>;
+
+    return items
+        .map((item) => FitbitSleepData(
+              item.level!,
+              item.entryDateTime!,
+              item.dateOfSleep!,
+            ))
+        .where((data) => data.dateTime.isAfter(latest))
+        .toList();
+  }
+
+  static Future<List<FitbitStepData>> _fetchStepData(
+    FitbitCredentials studyCredentials,
+    fitbitter.FitbitCredentials credentials,
+    DateTime latest,
+  ) async {
+    final manager = fitbitter.FitbitActivityTimeseriesIntradayDataManager(
+      clientID: studyCredentials.clientId,
+      clientSecret: studyCredentials.clientSecret,
+    );
+
+    final startDate = DateTime(latest.year, latest.month, latest.day);
+
+    final days = DateTime.now().difference(startDate).inDays;
+
+    if (days > 1) {
+      List<fitbitter.FitbitActivityTimeseriesData> items = [];
+
+      for (int i = 0; i < days; i++) {
+        final url =
+            fitbitter.FitbitActivityTimeseriesIntradayAPIURL.dayWithResource(
+          date: startDate.add(Duration(days: i)),
+          fitbitCredentials: credentials,
+          resource: fitbitter.Resource.steps,
+          detailLevel: fitbitter.IntradayDetailLevel.ONE_MINUTE,
+        );
+
+        StudyULogger.warning(url);
+
+        items.addAll(await manager.fetch(url)
+            as List<fitbitter.FitbitActivityTimeseriesData>);
+      }
+
+      return items
+          .map((item) => FitbitStepData(item.value!, item.dateOfMonitoring!))
+          .where((data) => data.dateTime.isAfter(latest))
+          .toList();
+    } else {
+      final url =
+          fitbitter.FitbitActivityTimeseriesIntradayAPIURL.dayWithResource(
+        date: startDate,
+        fitbitCredentials: credentials,
+        resource: fitbitter.Resource.steps,
+        detailLevel: fitbitter.IntradayDetailLevel.ONE_MINUTE,
+      );
+
+      final items = await manager.fetch(url)
+          as List<fitbitter.FitbitActivityTimeseriesData>;
+
+      return items
+          .map((item) => FitbitStepData(item.value!, item.dateOfMonitoring!))
+          .where((data) => data.dateTime.isAfter(latest))
+          .toList();
+    }
+  }
+
   static Future<List<FitbitData>> _getFitbitData(
     List<FitbitQuestionType> types,
     FitbitCredentials studyCredentials,
@@ -138,177 +259,101 @@ class FitbitHandler {
     StudySubject subject,
     FitbitQuestion question,
   ) async {
-    final latestDataEntry =
-        await _findLatestDataEntry(subject, taskId, question.id);
-
-    final List<FitbitData> fitbitData = [];
+    final allData = <FitbitData>[];
     for (final type in types) {
+      final latest =
+          await _findLatestDataEntry(subject, taskId, question.id, type) ??
+              _startOfToday();
+
       switch (type) {
         case FitbitQuestionType.steps:
-          final steps = await _fetchStepData(
-            studyCredentials,
-            credentials,
-            latestDataEntry ?? DateTime.now(),
-          );
-
-          fitbitData.addAll(steps);
+          allData.addAll(
+              await _fetchStepData(studyCredentials, credentials, latest));
+          break;
         case FitbitQuestionType.heartrate:
-          final heartrate = await _fetchHeartData(
-            studyCredentials,
-            credentials,
-            latestDataEntry ?? DateTime.now(),
-          );
-
-          fitbitData.addAll(heartrate);
+          allData.addAll(
+              await _fetchHeartData(studyCredentials, credentials, latest));
+          break;
         case FitbitQuestionType.sleep:
-          final sleep = await _fetchSleepData(
-            studyCredentials,
-            credentials,
-            latestDataEntry ?? DateTime.now(),
-          );
-
-          fitbitData.addAll(sleep);
+          allData.addAll(
+              await _fetchSleepData(studyCredentials, credentials, latest));
+          break;
       }
     }
-    return fitbitData;
+    return allData;
+  }
+
+  static Map<String, dynamic> parseLine(String line) {
+    var cleanedLine = line.trim();
+    if (cleanedLine.startsWith('"') && cleanedLine.endsWith('"')) {
+      cleanedLine = cleanedLine.substring(1, cleanedLine.length - 1);
+    }
+    if (cleanedLine.startsWith('{') && cleanedLine.endsWith('}')) {
+      cleanedLine = cleanedLine.substring(1, cleanedLine.length - 1).trim();
+    }
+    final parts = cleanedLine.split(',');
+    final mapped = <String, dynamic>{};
+    for (var part in parts) {
+      part = part.trim();
+      final idx = part.indexOf(':');
+      if (idx == -1) continue;
+      final key = part.substring(0, idx).trim();
+      final val = part.substring(idx + 1).trim();
+      if (key == 'value') {
+        mapped[key] = double.tryParse(val) ?? val;
+      } else {
+        mapped[key] = val;
+      }
+    }
+    return mapped;
   }
 
   static Future<DateTime?> _findLatestDataEntry(
     StudySubject subject,
     String taskId,
     String questionId,
+    FitbitQuestionType type,
   ) async {
-    if (subject.progress.isEmpty) {
-      return null;
-    }
+    if (subject.progress.isEmpty) return null;
 
-    final SubjectProgress latestDataEntry = subject.progress.lastWhere(
+    final latestProgress = subject.progress.lastWhere(
       (entry) =>
           entry.taskId == taskId && entry.resultType == 'QuestionnaireState',
     );
 
+    if (latestProgress.taskId != taskId) return null;
+
     final questionnaireState =
-        latestDataEntry.result as Result<QuestionnaireState>;
-    final latestData = questionnaireState.result.answers.values.where(
+        latestProgress.result as Result<QuestionnaireState>;
+
+    final answers = questionnaireState.result.answers.values.where(
       (answer) => answer.question == questionId,
     );
 
-    if (latestData.isNotEmpty) {
-      /// TODO: Right now, it returns the latest data entry date that is written to database. However, because of fitbit
-      /// synchronization, it should return the latest fitbit data entry date. There are some problems in parsing the progress data from string
-      return latestData.last.timestamp;
-      /*List<String> responseRaw = latestData.last.response as List<String>;
+    if (answers.isEmpty) return null;
 
-      final fitbitData = responseRaw.map((e) {
-        final json = jsonDecode(e) as Map<String, dynamic>;
+    final raw = answers.first.response as List<dynamic>;
+    final stringList = raw.cast<String>();
+    final parsedList = stringList.map(parseLine).toList();
+    final fitbitData = parsedList.map(FitbitData.fromJson).toList();
+    final filtered = fitbitData
+        .where(
+          (data) => data.type.toLowerCase() == type.toReadable().toLowerCase(),
+        )
+        .toList();
 
-        return FitbitData.fromJson(json);
-      }).toList();
+    if (filtered.isEmpty) return null;
 
-      print(fitbitData);
-
-      return fitbitData.last.dateTime;*/
+    switch (type) {
+      case FitbitQuestionType.steps:
+        return filtered.last.dateTime;
+      case FitbitQuestionType.heartrate:
+        return filtered.last.dateTime;
+      case FitbitQuestionType.sleep:
+        return (filtered.last as FitbitSleepData).entryDateTime;
     }
 
     return null;
-  }
-
-  static Future<List<FitbitHeartData>> _fetchHeartData(
-    FitbitCredentials studyCredentials,
-    fitbitter.FitbitCredentials credentials,
-    DateTime date,
-  ) async {
-    final fitbitter.FitbitHeartRateIntradayDataManager
-        fitbitHeartRateIntradayDataManager =
-        fitbitter.FitbitHeartRateIntradayDataManager(
-      clientID: studyCredentials.clientId,
-      clientSecret: studyCredentials.clientSecret,
-    );
-
-    final fitbitter.FitbitHeartRateIntradayAPIURL
-        fitbitHeartRateIntradayAPIURL =
-        fitbitter.FitbitHeartRateIntradayAPIURL.dayAndDetailLevel(
-      date: DateTime.now(),
-      fitbitCredentials: credentials,
-      intradayDetailLevel: fitbitter.IntradayDetailLevel.ONE_MINUTE,
-    );
-
-    final List<fitbitter.FitbitHeartRateIntradayData>
-        fitbitHeartRateIntradayData = await fitbitHeartRateIntradayDataManager
-                .fetch(fitbitHeartRateIntradayAPIURL)
-            as List<fitbitter.FitbitHeartRateIntradayData>;
-
-    return fitbitHeartRateIntradayData
-        .map((data) => FitbitHeartData(data.value!, data.dateOfMonitoring!))
-        .toList();
-  }
-
-  static Future<List<FitbitSleepData>> _fetchSleepData(
-    FitbitCredentials studyCredentials,
-    fitbitter.FitbitCredentials credentials,
-    DateTime date,
-  ) async {
-    final fitbitter.FitbitSleepDataManager fitbitSleepDataManager =
-        fitbitter.FitbitSleepDataManager(
-      clientID: studyCredentials.clientId,
-      clientSecret: studyCredentials.clientSecret,
-    );
-
-    final fitbitter.FitbitSleepAPIURL fitbitSleepAPIURL =
-        fitbitter.FitbitSleepAPIURL.listAndAfterDate(
-      afterDate: date,
-      fitbitCredentials: credentials,
-    );
-
-    final List<fitbitter.FitbitSleepData> fitbitSleepData =
-        await fitbitSleepDataManager.fetch(fitbitSleepAPIURL)
-            as List<fitbitter.FitbitSleepData>;
-
-    return fitbitSleepData
-        .map(
-          (data) => FitbitSleepData(
-            data.level!,
-            data.entryDateTime!,
-            data.dateOfSleep!,
-          ),
-        )
-        .toList();
-  }
-
-  static Future<List<FitbitStepData>> _fetchStepData(
-    FitbitCredentials studyCredentials,
-    fitbitter.FitbitCredentials credentials,
-    DateTime date,
-  ) async {
-    final fitbitter.FitbitActivityTimeseriesDataManager
-        fitbitActivityTimeseriesDataManager =
-        fitbitter.FitbitActivityTimeseriesDataManager(
-      clientID: studyCredentials.clientId,
-      clientSecret: studyCredentials.clientSecret,
-    );
-
-    final fitbitter.FitbitActivityTimeseriesAPIURL
-        fitbitActivityTimeseriesAPIURL =
-        fitbitter.FitbitActivityTimeseriesAPIURL.dateRangeWithResource(
-      startDate: date,
-      endDate: DateTime.now(),
-      fitbitCredentials: credentials,
-      resource: fitbitter.Resource.steps,
-    );
-
-    final List<fitbitter.FitbitActivityTimeseriesData> fitbitStepData =
-        await fitbitActivityTimeseriesDataManager
-                .fetch(fitbitActivityTimeseriesAPIURL)
-            as List<fitbitter.FitbitActivityTimeseriesData>;
-
-    return fitbitStepData
-        .map(
-          (data) => FitbitStepData(
-            data.value!,
-            data.dateOfMonitoring!,
-          ),
-        )
-        .toList();
   }
 
   static Future<List<FitbitData>> syncFitbitData(
@@ -317,22 +362,19 @@ class FitbitHandler {
     String taskId,
     StudySubject subject,
   ) async {
-    final fitbitCredentials = await _obtainCredentials(study);
+    final credentials = await _obtainCredentials(study);
 
-    if (fitbitCredentials == null) {
+    if (credentials == null) {
       throw Exception(
           'Failed to obtain Fitbit credentials. Please try syncing again');
     }
-
-    final fitbitData = await _getFitbitData(
+    return _getFitbitData(
       question.types,
       study.fitbitCredentials!,
-      fitbitCredentials,
+      credentials,
       taskId,
       subject,
       question,
     );
-
-    return fitbitData;
   }
 }

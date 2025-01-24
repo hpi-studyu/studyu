@@ -10,7 +10,7 @@ class FitbitQuestionWidget extends QuestionWidget {
   final String taskId;
   final Function(Answer) onDone;
 
-  const FitbitQuestionWidget({
+  FitbitQuestionWidget({
     super.key,
     required this.question,
     required this.taskId,
@@ -23,6 +23,7 @@ class FitbitQuestionWidget extends QuestionWidget {
 
 class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
   late List<FitbitData> value;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -31,43 +32,47 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
   }
 
   Future<void> _syncFitbitData() async {
-    final Study study = context.read<AppState>().activeSubject!.study;
-
-    /*try {*/
-
-    final data = await FitbitHandler.syncFitbitData(
-      study,
-      widget.question,
-      widget.taskId,
-      context.read<AppState>().activeSubject!,
-    );
-
-    if (data.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Fitbit data could not be synced'),
-        ),
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+      final study = context.read<AppState>().activeSubject!.study;
+      final data = await FitbitHandler.syncFitbitData(
+        study,
+        widget.question,
+        widget.taskId,
+        context.read<AppState>().activeSubject!,
       );
-      return;
-    }
 
-    setState(() {
-      value = data;
-    });
+      setState(() {
+        value = data;
+        _isLoading = false;
+      });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Fitbit data synced successfully'),
-      ),
-    );
+      if (data.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+                'Fitbit data could not be synced. Please be sure that you have synced your fitbit data with Fitbit app.'),
+          ),
+        );
 
-    widget.onDone(widget.question.constructAnswer(value));
-    /*} catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-              'Error syncing Fitbit data. Please try again later. Error: $e')));
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Fitbit data synced successfully')),
+      );
+      widget.onDone(widget.question.constructAnswer(value));
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error syncing Fitbit data: $e')),
+      );
       StudyULogger.error('Error syncing Fitbit data: $e');
-    }*/
+    }
   }
 
   @override
@@ -75,8 +80,19 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
     return Column(
       children: [
         ElevatedButton(
-          onPressed: _syncFitbitData,
-          child: const Text('Sync Fitbit Data'),
+          style: ButtonStyle(
+            backgroundColor: WidgetStateProperty.all<Color>(
+                Theme.of(context).colorScheme.secondary),
+          ),
+          onPressed: _isLoading ? null : _syncFitbitData,
+          child: _isLoading
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                )
+              : const Text('Sync Fitbit Data'),
         ),
       ],
     );

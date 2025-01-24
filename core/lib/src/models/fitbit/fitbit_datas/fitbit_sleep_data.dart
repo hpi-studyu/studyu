@@ -5,7 +5,7 @@ part 'fitbit_sleep_data.g.dart';
 
 @JsonSerializable()
 class FitbitSleepData extends FitbitData {
-  static const String dataType = 'steps';
+  static const String dataType = 'sleep';
   String level;
   DateTime entryDateTime;
 

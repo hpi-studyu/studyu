@@ -5,7 +5,7 @@ part 'fitbit_heart_data.g.dart';
 
 @JsonSerializable()
 class FitbitHeartData extends FitbitData {
-  static const String dataType = 'heart';
+  static const String dataType = 'heartrate';
   double value;
 
   FitbitHeartData(this.value, DateTime dateTime) : super(dataType, dateTime);

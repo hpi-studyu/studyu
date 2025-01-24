@@ -8,7 +8,7 @@ abstract class FitbitData {
 
   @override
   String toString() {
-    return 'FitbitData(dateTime: $dateTime)';
+    return 'FitbitData(type: $type, dateTime: $dateTime)';
   }
 
   Map<String, dynamic> toJson();
@@ -17,6 +17,10 @@ abstract class FitbitData {
     switch (json['type']) {
       case FitbitHeartData.dataType:
         return FitbitHeartData.fromJson(json) as FitbitData;
+      case FitbitSleepData.dataType:
+        return FitbitSleepData.fromJson(json) as FitbitData;
+      case FitbitStepData.dataType:
+        return FitbitStepData.fromJson(json) as FitbitData;
       default:
         throw Exception('Unknown FitbitData type: ${json['type']}');
     }
