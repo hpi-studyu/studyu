@@ -314,6 +314,56 @@ class FitbitHandler {
     return mapped;
   }
 
+  /*static Future<DateTime?> _findLatestDataEntry(
+    StudySubject subject,
+    String taskId,
+    String questionId,
+    FitbitQuestionType type,
+  ) async {
+    if (subject.progress.isEmpty) {
+      return null;
+    }
+
+    final answers = subject.progress
+        .where((entry) =>
+            entry.taskId == taskId && entry.resultType == 'QuestionnaireState')
+        .map((entry) =>
+            (entry.result as Result<QuestionnaireState>).result.answers.values)
+        .expand((answerList) => answerList)
+        .where((answer) => answer.question == questionId)
+        .map((answer) => answer.response as List<dynamic>)
+        .toList();
+
+    if (answers.isEmpty) return null;
+
+    final fitbitData = answers
+        .map((raw) => raw.cast<String>())
+        .map((stringList) => stringList.map(parseLine).toList())
+        .map((parsedList) => parsedList.map(FitbitData.fromJson).toList())
+        .toList()
+        .expand((element) => element)
+        .toList();
+
+    if (fitbitData.isEmpty) return null;
+
+    final fitbitDataTypedList = fitbitData
+        .where((data) =>
+            data.type.toLowerCase() == type.toReadable().toLowerCase())
+        .toList();
+
+    if (fitbitDataTypedList.isEmpty) return null;
+
+    switch (type) {
+      case FitbitQuestionType.steps:
+        return fitbitDataTypedList.last.dateTime;
+      case FitbitQuestionType.heartrate:
+        return fitbitDataTypedList.last.dateTime;
+      case FitbitQuestionType.sleep:
+        return (fitbitDataTypedList.last as FitbitSleepData).entryDateTime;
+    }
+  }*/
+
+  //refactored
   static Future<DateTime?> _findLatestDataEntry(
     StudySubject subject,
     String taskId,
@@ -322,44 +372,39 @@ class FitbitHandler {
   ) async {
     if (subject.progress.isEmpty) return null;
 
-    final latestProgress = subject.progress.lastWhere(
-      (entry) =>
-          entry.taskId == taskId && entry.resultType == 'QuestionnaireState',
-    );
+    DateTime? latestDate;
+    final typeLower = type.toReadable().toLowerCase();
 
-    if (latestProgress.taskId != taskId) return null;
+    for (final entry in subject.progress) {
+      if (entry.taskId != taskId || entry.resultType != 'QuestionnaireState') {
+        continue;
+      }
 
-    final questionnaireState =
-        latestProgress.result as Result<QuestionnaireState>;
+      final questionnaireState =
+          (entry.result as Result<QuestionnaireState>).result;
 
-    final answers = questionnaireState.result.answers.values.where(
-      (answer) => answer.question == questionId,
-    );
+      for (final answer in questionnaireState.answers.values) {
+        if (answer.question != questionId) continue;
 
-    if (answers.isEmpty) return null;
+        for (final raw in (answer.response as List<dynamic>).cast<String>()) {
+          final data = FitbitData.fromJson(parseLine(raw));
 
-    final raw = answers.first.response as List<dynamic>;
-    final stringList = raw.cast<String>();
-    final parsedList = stringList.map(parseLine).toList();
-    final fitbitData = parsedList.map(FitbitData.fromJson).toList();
-    final filtered = fitbitData
-        .where(
-          (data) => data.type.toLowerCase() == type.toReadable().toLowerCase(),
-        )
-        .toList();
+          if (data.type.toLowerCase() != typeLower) continue;
 
-    if (filtered.isEmpty) return null;
+          final DateTime? date = switch (type) {
+            FitbitQuestionType.sleep => (data as FitbitSleepData).entryDateTime,
+            _ => data.dateTime,
+          };
 
-    switch (type) {
-      case FitbitQuestionType.steps:
-        return filtered.last.dateTime;
-      case FitbitQuestionType.heartrate:
-        return filtered.last.dateTime;
-      case FitbitQuestionType.sleep:
-        return (filtered.last as FitbitSleepData).entryDateTime;
+          if (date != null &&
+              (latestDate == null || date.isAfter(latestDate))) {
+            latestDate = date;
+          }
+        }
+      }
     }
 
-    return null;
+    return latestDate;
   }
 
   static Future<List<FitbitData>> syncFitbitData(
