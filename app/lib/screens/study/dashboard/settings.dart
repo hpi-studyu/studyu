@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/app_analytics.dart';
+import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
@@ -188,6 +189,7 @@ class OptOutAlertDialog extends StatelessWidget {
           onPressed: () async {
             await subject!.softDelete();
             await deleteActiveStudyReference();
+            await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
             if (context.mounted) await cancelNotifications(context);
             if (context.mounted) {
               Navigator.pushNamedAndRemoveUntil(
@@ -223,6 +225,8 @@ class DeleteAlertDialog extends StatelessWidget {
               try {
                 await subject!.delete(); // hard-delete
                 await deleteLocalData();
+                await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
+
                 if (context.mounted) await cancelNotifications(context);
                 if (context.mounted) {
                   Navigator.pushNamedAndRemoveUntil(

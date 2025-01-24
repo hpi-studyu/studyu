@@ -28,6 +28,12 @@ class FitbitHandler {
     );
   }
 
+  static Future<void> deleteFitbitCredentials(String studyKey) async {
+    if (await SecureStorage.containsKey('$_fitbitCredentialsPrefix$studyKey')) {
+      await SecureStorage.delete('$_fitbitCredentialsPrefix$studyKey');
+    }
+  }
+
   static Future<void> _storeCredentials(
     fitbitter.FitbitCredentials? credentials,
     String studyKey,
