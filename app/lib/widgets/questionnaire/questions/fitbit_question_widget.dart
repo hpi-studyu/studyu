@@ -10,7 +10,7 @@ class FitbitQuestionWidget extends QuestionWidget {
   final String taskId;
   final Function(Answer) onDone;
 
-  FitbitQuestionWidget({
+  const FitbitQuestionWidget({
     super.key,
     required this.question,
     required this.taskId,
@@ -53,7 +53,7 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-                'Fitbit data could not be synced. Please be sure that you have synced your fitbit data with Fitbit app.'),
+                'Fitbit data could not be synced. Please be sure that you have synced your fitbit data with Fitbit app.',),
           ),
         );
 
@@ -82,7 +82,7 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
         ElevatedButton(
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all<Color>(
-                Theme.of(context).colorScheme.secondary),
+                Theme.of(context).colorScheme.secondary,),
           ),
           onPressed: _isLoading ? null : _syncFitbitData,
           child: _isLoading

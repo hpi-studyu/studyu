@@ -62,7 +62,7 @@ class FitbitCredentialsFormViewModel
 
   //TODO: translations
   Map<String, dynamic>? _validateFitbitCredentials(
-      AbstractControl<dynamic> control) {
+      AbstractControl<dynamic> control,) {
     final hasFitbitQuestion = study.observations.any((observation) {
       if (observation.type != 'questionnaire') return false;
 
