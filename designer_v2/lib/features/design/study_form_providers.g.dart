@@ -144,6 +144,8 @@ class StudyInfoFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyInfoFormViewModelRef
     on AutoDisposeProviderRef<StudyInfoFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -277,6 +279,8 @@ class EnrollmentFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin EnrollmentFormViewModelRef
     on AutoDisposeProviderRef<EnrollmentFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -413,6 +417,8 @@ class ScreenerQuestionFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ScreenerQuestionFormViewModelRef
     on AutoDisposeProviderRef<ScreenerQuestionFormViewModel> {
   /// The parameter `args` of this provider.
@@ -547,6 +553,8 @@ class ConsentItemFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ConsentItemFormViewModelRef
     on AutoDisposeProviderRef<ConsentItemFormViewModel> {
   /// The parameter `args` of this provider.
@@ -683,6 +691,8 @@ class InterventionsFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin InterventionsFormViewModelRef
     on AutoDisposeProviderRef<InterventionsFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -817,6 +827,8 @@ class InterventionFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin InterventionFormViewModelRef
     on AutoDisposeProviderRef<InterventionFormViewModel> {
   /// The parameter `args` of this provider.
@@ -954,6 +966,8 @@ class InterventionTaskFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin InterventionTaskFormViewModelRef
     on AutoDisposeProviderRef<InterventionTaskFormViewModel> {
   /// The parameter `args` of this provider.
@@ -1090,6 +1104,8 @@ class MeasurementsFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin MeasurementsFormViewModelRef
     on AutoDisposeProviderRef<MeasurementsFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -1223,6 +1239,8 @@ class SurveyFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SurveyFormViewModelRef
     on AutoDisposeProviderRef<MeasurementSurveyFormViewModel> {
   /// The parameter `args` of this provider.
@@ -1357,6 +1375,8 @@ class SurveyQuestionFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SurveyQuestionFormViewModelRef
     on AutoDisposeProviderRef<QuestionFormViewModel> {
   /// The parameter `args` of this provider.
@@ -1490,6 +1510,8 @@ class ReportsFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ReportsFormViewModelRef on AutoDisposeProviderRef<ReportsFormViewModel> {
   /// The parameter `studyId` of this provider.
   String get studyId;
@@ -1622,6 +1644,8 @@ class ReportItemFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ReportItemFormViewModelRef
     on AutoDisposeProviderRef<ReportItemFormViewModel> {
   /// The parameter `args` of this provider.
@@ -1760,6 +1784,8 @@ class FitbitCredentialsFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin FitbitCredentialsFormViewModelRef
     on AutoDisposeProviderRef<FitbitCredentialsFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -1911,6 +1937,8 @@ class StudyPublishValidatorProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyPublishValidatorRef on AutoDisposeProviderRef<StudyFormViewModel> {
   /// The parameter `studyId` of this provider.
   String get studyId;
@@ -2060,6 +2088,8 @@ class StudyTestValidatorProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyTestValidatorRef on AutoDisposeProviderRef<StudyFormViewModel> {
   /// The parameter `studyId` of this provider.
   String get studyId;
@@ -2074,4 +2104,4 @@ class _StudyTestValidatorProviderElement
   String get studyId => (origin as StudyTestValidatorProvider).studyId;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

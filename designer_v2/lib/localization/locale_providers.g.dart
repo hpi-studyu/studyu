@@ -23,6 +23,8 @@ final platformLocaleProvider = AutoDisposeProvider<Locale>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef PlatformLocaleRef = AutoDisposeProviderRef<Locale>;
 String _$supportedLocalesHash() => r'5668fd6c2cb7ae6ce48a909d39d947d6ee61236a';
 
@@ -40,6 +42,8 @@ final supportedLocalesProvider = AutoDisposeProvider<List<Locale>>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef SupportedLocalesRef = AutoDisposeProviderRef<List<Locale>>;
 String _$localeHash() => r'575c8d69cac8ac079fbb4a4d4b2307512dcfc728';
 
@@ -57,6 +61,8 @@ final localeProvider = AutoDisposeProvider<Locale>.internal(
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef LocaleRef = AutoDisposeProviderRef<Locale>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
