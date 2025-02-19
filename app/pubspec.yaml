@@ -51,7 +51,7 @@ dependencies:
   wakelock_plus: ^1.2.8
   fitbitter:
     git:
-      url: https://github.com/ibrahimozkn/fitbitter.git
+      url: https://github.com/hpi-studyu/fitbitter.git
       ref: master
 
 dev_dependencies:
