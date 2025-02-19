@@ -14,8 +14,8 @@ class FitbitCredentialsFormData implements IStudyFormData {
   factory FitbitCredentialsFormData.fromStudy(Study study) {
     final fitbitCredentials = study.fitbitCredentials;
     return FitbitCredentialsFormData(
-      clientId: fitbitCredentials?.clientId ?? '',
-      clientSecret: fitbitCredentials?.clientSecret ?? '',
+      clientId: fitbitCredentials?.fitbitCredentials.clientId ?? '',
+      clientSecret: fitbitCredentials?.fitbitCredentials.clientSecret ?? '',
     );
   }
 
@@ -24,7 +24,7 @@ class FitbitCredentialsFormData implements IStudyFormData {
     final credentials =
         FitbitCredentials(clientId: clientId, clientSecret: clientSecret);
 
-    study.fitbitCredentials = credentials;
+    study.fitbitCredentials = StudyFitbitCredentials(study.id, credentials);
 
     return study;
   }

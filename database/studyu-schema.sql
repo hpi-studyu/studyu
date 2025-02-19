@@ -90,7 +90,6 @@ CREATE TABLE public.study (
     icon_name text NOT NULL,
     -- published is deprecated, use status instead
     published boolean DEFAULT false NOT NULL,
-    fitbit_credentials jsonb,
     status public.study_status DEFAULT 'draft'::public.study_status NOT NULL,
     registry_published boolean DEFAULT false NOT NULL,
     questionnaire jsonb NOT NULL,
@@ -634,6 +633,50 @@ ALTER TABLE public.study_invite OWNER TO postgres;
 
 COMMENT ON TABLE public.study_invite IS 'Study invite codes';
 
+--
+-- Name: study_fitbit_credentials; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.study_fitbit_credentials (
+    study_id uuid NOT NULL PRIMARY KEY,
+    fitbit_credentials jsonb NOT NULL
+);
+
+ALTER TABLE public.study_fitbit_credentials OWNER TO postgres;
+
+
+-- SELECT policy: Allow access if the user is either the study owner (or collaborator) or a study participant.
+CREATE POLICY "Fitbit: study owner or participant can select"
+  ON public.study_fitbit_credentials
+  FOR SELECT
+  USING (
+    (
+      SELECT public.can_edit(auth.uid(), study)
+      FROM public.study
+      WHERE study.id = study_fitbit_credentials.study_id
+    )
+    OR public.is_study_subject_of(auth.uid(), study_fitbit_credentials.study_id)
+  );
+
+-- Modification policy: Allow INSERT, UPDATE, DELETE only if the user is the study owner (or collaborator).
+CREATE POLICY "Fitbit: study owner can modify credentials"
+  ON public.study_fitbit_credentials
+  FOR ALL
+  USING (
+    (
+      SELECT public.can_edit(auth.uid(), study)
+      FROM public.study
+      WHERE study.id = study_fitbit_credentials.study_id
+    )
+  )
+  WITH CHECK (
+    (
+      SELECT public.can_edit(auth.uid(), study)
+      FROM public.study
+      WHERE study.id = study_fitbit_credentials.study_id
+    )
+  );
+
 
 --
 -- Name: COLUMN study_invite.preselected_intervention_ids; Type: COMMENT; Schema: public; Owner: postgres
@@ -731,7 +774,6 @@ ALTER TABLE ONLY public.repo
 ALTER TABLE ONLY public.study_invite
     ADD CONSTRAINT study_invite_pkey PRIMARY KEY (code);
 
-
 --
 -- Name: study study_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
@@ -806,6 +848,9 @@ ALTER TABLE ONLY public.repo
 ALTER TABLE ONLY public.study_invite
     ADD CONSTRAINT "study_invite_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
 
+
+ALTER TABLE ONLY public.study_fitbit_credentials
+    ADD CONSTRAINT "study_fitbit_credentials_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
 
 --
 -- Name: study_subject study_subject_loginCode_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
@@ -1090,6 +1135,8 @@ ALTER TABLE public.study_subject ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER TABLE public.subject_progress ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE public.study_fitbit_credentials ENABLE ROW LEVEL SECURITY;
 
 --
 -- Name: user; Type: ROW SECURITY; Schema: public; Owner: postgres

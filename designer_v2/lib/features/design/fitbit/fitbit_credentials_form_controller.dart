@@ -1,14 +1,16 @@
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/repositories/fitbit_credentials_repository.dart';
 
+//TODO: right now FitbitCredentials is part of Study form controller, this is not an issue it still works but I think I need to refactor it.
 class FitbitCredentialsFormViewModel
-    extends FormViewModel<FitbitCredentialsFormData> {
+    extends FormViewModel<StudyFitbitCredentials> {
   FitbitCredentialsFormViewModel({
     required this.study,
+    required this.fitbitCredentialsRepository,
     super.delegate,
     super.formData,
     super.autosave = true,
@@ -16,11 +18,20 @@ class FitbitCredentialsFormViewModel
   });
 
   final Study study;
+  final IFitbitCredentialsRepository fitbitCredentialsRepository;
 
   // - Form fields
 
   final FormControl<String> clientIdControl = FormControl();
   final FormControl<String> clientSecretControl = FormControl();
+
+  @override
+  void initControls() {
+    clientIdControl.value =
+        study.fitbitCredentials?.fitbitCredentials.clientId ?? '';
+    clientSecretControl.value =
+        study.fitbitCredentials?.fitbitCredentials.clientSecret ?? '';
+  }
 
   @override
   late final FormGroup form = FormGroup({
@@ -29,16 +40,19 @@ class FitbitCredentialsFormViewModel
   });
 
   @override
-  void setControlsFrom(FitbitCredentialsFormData data) {
-    clientIdControl.value = data.clientId;
-    clientSecretControl.value = data.clientSecret;
+  void setControlsFrom(StudyFitbitCredentials data) {
+    clientIdControl.value = data.fitbitCredentials.clientId;
+    clientSecretControl.value = data.fitbitCredentials.clientSecret;
   }
 
   @override
-  FitbitCredentialsFormData buildFormData() {
-    return FitbitCredentialsFormData(
-      clientId: clientIdControl.value ?? '',
-      clientSecret: clientSecretControl.value ?? '',
+  StudyFitbitCredentials buildFormData() {
+    return StudyFitbitCredentials(
+      study.id,
+      FitbitCredentials(
+        clientId: clientIdControl.value ?? '',
+        clientSecret: clientSecretControl.value ?? '',
+      ),
     );
   }
 
@@ -62,7 +76,8 @@ class FitbitCredentialsFormViewModel
 
   //TODO: translations
   Map<String, dynamic>? _validateFitbitCredentials(
-      AbstractControl<dynamic> control,) {
+    AbstractControl<dynamic> control,
+  ) {
     final hasFitbitQuestion = study.observations.any((observation) {
       if (observation.type != 'questionnaire') return false;
 
@@ -87,6 +102,13 @@ class FitbitCredentialsFormViewModel
     }
 
     return null;
+  }
+
+  @override
+  Future<StudyFitbitCredentials> save({bool updateState = true}) {
+    return fitbitCredentialsRepository
+        .save(buildFormData())
+        .then((wrapped) => wrapped!.model);
   }
 
   @override

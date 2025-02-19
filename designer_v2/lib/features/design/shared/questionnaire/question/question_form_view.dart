@@ -56,8 +56,8 @@ class _SurveyQuestionFormViewState
 
     final fitbitCredentials = state.study.value?.fitbitCredentials;
     return fitbitCredentials == null ||
-        fitbitCredentials.clientId.isEmpty ||
-        fitbitCredentials.clientSecret.isEmpty;
+        fitbitCredentials.fitbitCredentials.clientId.isEmpty ||
+        fitbitCredentials.fitbitCredentials.clientSecret.isEmpty;
   }
 
   WidgetBuilder get questionTypeBodyBuilder {

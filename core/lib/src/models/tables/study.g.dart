@@ -12,10 +12,6 @@ Study _$StudyFromJson(Map<String, dynamic> json) => Study(
     )
       ..title = json['title'] as String?
       ..description = json['description'] as String?
-      ..fitbitCredentials = json['fitbit_credentials'] == null
-          ? null
-          : FitbitCredentials.fromJson(
-              json['fitbit_credentials'] as Map<String, dynamic>)
       ..participation =
           $enumDecode(_$ParticipationEnumMap, json['participation'])
       ..resultSharing =
@@ -56,8 +52,6 @@ Map<String, dynamic> _$StudyToJson(Study instance) => <String, dynamic>{
       'id': instance.id,
       if (instance.title case final value?) 'title': value,
       if (instance.description case final value?) 'description': value,
-      if (instance.fitbitCredentials?.toJson() case final value?)
-        'fitbit_credentials': value,
       'user_id': instance.userId,
       'participation': instance.participation.toJson(),
       'result_sharing': instance.resultSharing.toJson(),

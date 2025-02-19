@@ -104,7 +104,7 @@ class FitbitHandler {
   static Future<fitbitter.FitbitCredentials?> _obtainCredentials(
     Study study,
   ) async {
-    final fitbitCreds = study.fitbitCredentials;
+    final fitbitCreds = study.fitbitCredentials?.fitbitCredentials;
 
     if (fitbitCreds == null) {
       StudyULogger.error('Study is missing Fitbit credentials.');
@@ -427,7 +427,7 @@ class FitbitHandler {
     }
     return _getFitbitData(
       question.types,
-      study.fitbitCredentials!,
+      study.fitbitCredentials!.fitbitCredentials,
       credentials,
       taskId,
       subject,
