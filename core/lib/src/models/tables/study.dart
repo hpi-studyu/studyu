@@ -159,7 +159,7 @@ class Study extends SupabaseObjectFunctions<Study>
         json['study_fitbit_credentials'] as Map<String, dynamic>?;
     if (fitbitCredentials != null && fitbitCredentials.isNotEmpty) {
       study.fitbitCredentials = StudyFitbitCredentials.fromJson(
-          (json['study_fitbit_credentials'] as Map<String, dynamic>));
+          json['study_fitbit_credentials'] as Map<String, dynamic>,);
     }
 
     final List? repo = json['repo'] as List?;
