@@ -65,7 +65,7 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
               ),
               TextParagraph(
                 text:
-                    '4. Fill in the required fields such as application name, description, and callback URL (use: "https://example.com/callback").',
+                    '4. Fill in the required fields such as application name, description, and callback URL (use: "studyu://").',
               ),
               TextParagraph(
                 text:
@@ -75,7 +75,18 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                 text:
                     '6. Submit the form to get your "Client ID" and "Client Secret".',
               ),
-              TextParagraph(text: '7. Copy and paste the credentials below.'),
+              InkWell(
+                onTap: () => _launchURL(
+                    'https://partners.fitbit.com/researchapplication'),
+                child: Text(
+                  '7. Please fill the following form to obtain access for intraday data. Without this, you cannot obtain any data from Fitbit for your trials.',
+                  style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+              TextParagraph(text: '8. Copy and paste the credentials below.'),
               const SizedBox(height: 12.0),
               _buildScreenshotsSection(context),
               const SizedBox(height: 16.0),
@@ -193,6 +204,16 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                     context,
                     'assets/images/step5.png',
                     'Step 5: Set Access',
+                  ),
+                  _buildScreenshot(
+                    context,
+                    'assets/images/step6.png',
+                    'Step 6: Get Credentials',
+                  ),
+                  _buildScreenshot(
+                    context,
+                    'assets/images/step7.png',
+                    'Step 7: Fill Form',
                   ),
                 ],
               ),
