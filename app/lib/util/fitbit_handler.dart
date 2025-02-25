@@ -103,6 +103,7 @@ class FitbitHandler {
 
   static Future<fitbitter.FitbitCredentials?> _obtainCredentials(
     Study study,
+    List<FitbitQuestionType> types,
   ) async {
     final fitbitCreds = study.fitbitCredentials?.fitbitCredentials;
 
@@ -123,12 +124,28 @@ class FitbitHandler {
       if (validCredentials != null) return validCredentials;
     }
     try {
+      final scopes = <fitbitter.FitbitAuthScope>[];
+
+      for (final type in types) {
+        switch (type) {
+          case FitbitQuestionType.steps:
+            scopes.add(fitbitter.FitbitAuthScope.ACTIVITY);
+            break;
+          case FitbitQuestionType.heartrate:
+            scopes.add(fitbitter.FitbitAuthScope.HEART_RATE);
+            break;
+          case FitbitQuestionType.sleep:
+            scopes.add(fitbitter.FitbitAuthScope.SLEEP);
+            break;
+        }
+      }
+
       final newCredentials = await fitbitter.FitbitConnector.authorize(
-        clientID: fitbitCreds.clientId,
-        clientSecret: fitbitCreds.clientSecret,
-        redirectUri: fitbitRedirectUrl,
-        callbackUrlScheme: fitbitCallbackScheme,
-      );
+          clientID: fitbitCreds.clientId,
+          clientSecret: fitbitCreds.clientSecret,
+          redirectUri: fitbitRedirectUrl,
+          callbackUrlScheme: fitbitCallbackScheme,
+          scopeList: scopes);
 
       if (newCredentials != null) {
         await _storeCredentials(newCredentials, study.id);
@@ -418,7 +435,7 @@ class FitbitHandler {
     String taskId,
     StudySubject subject,
   ) async {
-    final credentials = await _obtainCredentials(study);
+    final credentials = await _obtainCredentials(study, question.types);
 
     if (credentials == null) {
       throw Exception(
