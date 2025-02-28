@@ -77,7 +77,7 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
               ),
               InkWell(
                 onTap: () => _launchURL(
-                    'https://partners.fitbit.com/researchapplication'),
+                    'https://partners.fitbit.com/researchapplication',),
                 child: Text(
                   '7. Please fill the following form to obtain access for intraday data. Without this, you cannot obtain any data from Fitbit for your trials.',
                   style: TextStyle(

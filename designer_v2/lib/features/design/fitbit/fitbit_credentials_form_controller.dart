@@ -2,7 +2,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
@@ -135,5 +134,5 @@ FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel(
 
   return FitbitCredentialsFormViewModel(
       study: study.value!,
-      fitbitCredentialsRepository: fitbitCredentialsRepository);
+      fitbitCredentialsRepository: fitbitCredentialsRepository,);
 }

@@ -130,13 +130,10 @@ class FitbitHandler {
         switch (type) {
           case FitbitQuestionType.steps:
             scopes.add(fitbitter.FitbitAuthScope.ACTIVITY);
-            break;
           case FitbitQuestionType.heartrate:
             scopes.add(fitbitter.FitbitAuthScope.HEART_RATE);
-            break;
           case FitbitQuestionType.sleep:
             scopes.add(fitbitter.FitbitAuthScope.SLEEP);
-            break;
         }
       }
 
@@ -145,7 +142,7 @@ class FitbitHandler {
           clientSecret: fitbitCreds.clientSecret,
           redirectUri: fitbitRedirectUrl,
           callbackUrlScheme: fitbitCallbackScheme,
-          scopeList: scopes);
+          scopeList: scopes,);
 
       if (newCredentials != null) {
         await _storeCredentials(newCredentials, study.id);
