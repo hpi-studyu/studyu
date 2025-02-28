@@ -3,7 +3,6 @@ import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_controller.dart';
@@ -17,7 +16,6 @@ import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
-import 'package:studyu_designer_v2/repositories/fitbit_credentials_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -144,18 +142,6 @@ ReportItemFormViewModel reportItemFormViewModel(
       .provide(args);
 }
 
-// - Fitbit Credentials
-
-@riverpod
-FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel(
-  FitbitCredentialsFormViewModelRef ref,
-  StudyID studyId,
-) {
-  return ref
-      .watch(studyFormViewModelProvider(studyId))
-      .fitbitCredentialsFormViewModel;
-}
-
 // - Validators
 
 /// Provides the [StudyFormViewModel] for validation purposes with
@@ -170,8 +156,6 @@ StudyFormViewModel studyPublishValidator(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
-    fitbitCredentialsRepository:
-        ref.watch(fitbitCredentialsRepositoryProvider(studyId)),
     formData: state.study.value,
     validationSet: StudyFormValidationSet.publish,
   );
@@ -189,8 +173,6 @@ StudyFormViewModel studyTestValidator(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
-    fitbitCredentialsRepository:
-        ref.watch(fitbitCredentialsRepositoryProvider(studyId)),
     formData: state.study.value,
   );
 }

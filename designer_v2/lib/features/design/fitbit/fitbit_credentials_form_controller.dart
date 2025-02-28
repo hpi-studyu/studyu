@@ -1,9 +1,15 @@
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/fitbit_credentials_repository.dart';
+
+part 'fitbit_credentials_form_controller.g.dart';
 
 //TODO: right now FitbitCredentials is part of Study form controller, this is not an issue it still works but I think I need to refactor it.
 class FitbitCredentialsFormViewModel
@@ -114,4 +120,20 @@ class FitbitCredentialsFormViewModel
   @override
   // TODO: implement titles
   Map<FormMode, String> get titles => throw UnimplementedError();
+}
+
+@riverpod
+FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel(
+  FitbitCredentialsFormViewModelRef ref,
+  StudyID studyId,
+) {
+  final study = ref
+      .watch(studyControllerProvider(studyId).select((state) => state.study));
+
+  final fitbitCredentialsRepository =
+      ref.watch(fitbitCredentialsRepositoryProvider(studyId));
+
+  return FitbitCredentialsFormViewModel(
+      study: study.value!,
+      fitbitCredentialsRepository: fitbitCredentialsRepository);
 }
