@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
@@ -35,14 +36,14 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextParagraph(
-                text:
-                    'To integrate Fitbit data, follow these steps to obtain your Client ID and Client Secret:',
+                text: AppLocalizations.of(context)!
+                    .fitbit_credentials_instruction,
               ),
               const SizedBox(height: 12.0),
               InkWell(
                 onTap: () => _launchURL('https://dev.fitbit.com/'),
                 child: Text(
-                  '1. Go to the Fitbit Developer Portal.',
+                  AppLocalizations.of(context)!.fitbit_credentials_step1,
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     decoration: TextDecoration.underline,
@@ -52,7 +53,7 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
               InkWell(
                 onTap: () => _launchURL('https://accounts.fitbit.com/login'),
                 child: Text(
-                  '2. Log in with your Fitbit account or create one if you do not have it.',
+                  AppLocalizations.of(context)!.fitbit_credentials_step2,
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     decoration: TextDecoration.underline,
@@ -60,60 +61,59 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                 ),
               ),
               TextParagraph(
-                text:
-                    '3. Navigate to the "Manage" section and select "Register an App".',
+                text: AppLocalizations.of(context)!.fitbit_credentials_step3,
               ),
               TextParagraph(
-                text:
-                    '4. Fill in the required fields such as application name, description, and callback URL (use: "studyu://").',
+                text: AppLocalizations.of(context)!.fitbit_credentials_step4,
               ),
               TextParagraph(
-                text:
-                    '5. Select "Client" under "OAuth 2.0 Application Type" and set "Access" to "Read-Only."',
+                text: AppLocalizations.of(context)!.fitbit_credentials_step5,
               ),
               TextParagraph(
-                text:
-                    '6. Submit the form to get your "Client ID" and "Client Secret".',
+                text: AppLocalizations.of(context)!.fitbit_credentials_step6,
               ),
               InkWell(
                 onTap: () => _launchURL(
-                    'https://partners.fitbit.com/researchapplication',),
+                    'https://partners.fitbit.com/researchapplication'),
                 child: Text(
-                  '7. Please fill the following form to obtain access for intraday data. Without this, you cannot obtain any data from Fitbit for your trials.',
+                  AppLocalizations.of(context)!.fitbit_credentials_step7,
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     decoration: TextDecoration.underline,
                   ),
                 ),
               ),
-              TextParagraph(text: '8. Copy and paste the credentials below.'),
+              TextParagraph(
+                text: AppLocalizations.of(context)!.fitbit_credentials_step8,
+              ),
               const SizedBox(height: 12.0),
               _buildScreenshotsSection(context),
               const SizedBox(height: 16.0),
               TextParagraph(
-                text:
-                    'Once you enter the credentials, Fitbit integration will be enabled for your study.',
+                text: AppLocalizations.of(context)!
+                    .fitbit_credentials_success_instruction,
               ),
               const SizedBox(height: 12.0),
               TextParagraph(
-                text:
-                    'To add a Fitbit question, navigate to the measurements section and create a new Fitbit Question within a measurement.',
+                text: AppLocalizations.of(context)!
+                    .fitbit_credentials_add_question_instruction,
               ),
               const SizedBox(height: 24.0),
               FormTableLayout(
                 rows: [
                   FormTableRow(
                     control: formViewModel.clientIdControl,
-                    label: 'Client ID',
+                    label: AppLocalizations.of(context)!.client_id,
                     labelHelpText:
-                        'Enter the Client ID from Fitbit Developer Portal.',
+                        AppLocalizations.of(context)!.client_id_label_help,
                     input: Row(
                       children: [
                         Expanded(
                           child: ReactiveTextField(
                             formControl: formViewModel.clientIdControl,
-                            decoration: const InputDecoration(
-                              hintText: 'Client ID',
+                            decoration: InputDecoration(
+                              hintText:
+                                  AppLocalizations.of(context)!.client_id_hint,
                             ),
                           ),
                         ),
@@ -122,13 +122,14 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                   ),
                   FormTableRow(
                     control: formViewModel.clientSecretControl,
-                    label: 'Client Secret',
+                    label: AppLocalizations.of(context)!.client_secret,
                     labelHelpText:
-                        'Enter the Client Secret from Fitbit Developer Portal.',
+                        AppLocalizations.of(context)!.client_secret_label_help,
                     input: ReactiveTextField(
                       formControl: formViewModel.clientSecretControl,
-                      decoration: const InputDecoration(
-                        hintText: 'Client Secret',
+                      decoration: InputDecoration(
+                        hintText:
+                            AppLocalizations.of(context)!.client_secret_hint,
                       ),
                     ),
                   ),
@@ -167,9 +168,9 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16.0),
-        const Text(
-          'Screenshots for Guidance:',
-          style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+        Text(
+          AppLocalizations.of(context)!.screenshots_for_guidance,
+          style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12.0),
         Stack(
@@ -183,37 +184,44 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                   _buildScreenshot(
                     context,
                     'assets/images/step1.png',
-                    'Step 1: Developer Portal',
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step1,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step2.png',
-                    'Step 2: Login',
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step2,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step3.png',
-                    'Step 3: Register App',
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step3,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step4.png',
-                    'Step 4: Input Details',
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step4,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step5.png',
-                    'Step 5: Set Access',
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step5,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step6.png',
-                    'Step 6: Get Credentials',
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step6,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step7.png',
-                    'Step 7: Fill Form',
+                    AppLocalizations.of(context)!
+                        .fitbit_credentials_screenshot_step7,
                   ),
                 ],
               ),

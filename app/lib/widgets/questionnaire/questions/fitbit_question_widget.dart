@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
@@ -51,17 +52,21 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
 
       if (data.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-                'Fitbit data could not be synced. Please be sure that you have synced your fitbit data with Fitbit app.',),
+              AppLocalizations.of(context)!.fitbit_data_not_synced,
+            ),
           ),
         );
-
         return;
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Fitbit data synced successfully')),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)!.fitbit_data_synced,
+          ),
+        ),
       );
       widget.onDone(widget.question.constructAnswer(value));
     } catch (e) {
@@ -69,7 +74,12 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
         _isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error syncing Fitbit data: $e')),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)!
+                .error_syncing_fitbit_data(e.toString()),
+          ),
+        ),
       );
       StudyULogger.error('Error syncing Fitbit data: $e');
     }
@@ -82,7 +92,8 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
         ElevatedButton(
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.all<Color>(
-                Theme.of(context).colorScheme.secondary,),
+              Theme.of(context).colorScheme.secondary,
+            ),
           ),
           onPressed: _isLoading ? null : _syncFitbitData,
           child: _isLoading
@@ -92,7 +103,9 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
                     color: Theme.of(context).colorScheme.onSecondary,
                   ),
                 )
-              : const Text('Sync Fitbit Data'),
+              : Text(
+                  AppLocalizations.of(context)!.sync_fitbit_data,
+                ),
         ),
       ],
     );
