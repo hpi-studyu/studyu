@@ -74,7 +74,7 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
               ),
               InkWell(
                 onTap: () => _launchURL(
-                    'https://partners.fitbit.com/researchapplication'),
+                    'https://partners.fitbit.com/researchapplication',),
                 child: Text(
                   AppLocalizations.of(context)!.fitbit_credentials_step7,
                   style: TextStyle(

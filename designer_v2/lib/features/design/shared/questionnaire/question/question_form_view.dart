@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -82,8 +83,7 @@ class _SurveyQuestionFormViewState
     if (formViewModel.questionType == SurveyQuestionType.fitbit &&
         _areFitbitCredentialsInvalid()) {
       return (_) => TextParagraph(
-            text:
-                "Fitbit credentials are not set. Please navigate to the 'Fitbit' tab in the study designer to enter your Fitbit client ID and client secret. Once completed, return here to add Fitbit questions.",
+            text: AppLocalizations.of(context)!.fitbit_credentials_not_set,
             style: ThemeConfig.bodyTextMuted(Theme.of(context)),
           );
     }

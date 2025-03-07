@@ -697,5 +697,6 @@
   "client_secret": "Client Secret",
   "client_secret_label_help": "Enter the Client Secret from Fitbit Developer Portal.",
   "client_secret_hint": "Client Secret",
-  "screenshots_for_guidance": "Screenshots for Guidance:"
+  "screenshots_for_guidance": "Screenshots for Guidance:",
+  "fitbit_credentials_not_set": "Fitbit credentials are not set. Please navigate to the 'Fitbit' tab in the study designer to enter your Fitbit client ID and client secret. Once completed, return here to add Fitbit questions."
 }

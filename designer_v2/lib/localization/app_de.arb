@@ -694,5 +694,7 @@
   "client_secret": "Client Secret",
   "client_secret_label_help": "Geben Sie den Client Secret aus dem Fitbit Developer Portal ein.",
   "client_secret_hint": "Client Secret",
-  "screenshots_for_guidance": "Screenshots zur Anleitung:"
+  "screenshots_for_guidance": "Screenshots zur Anleitung:",
+  "fitbit_credentials_not_set": "Fitbit-Anmeldedaten sind nicht gesetzt. Bitte navigieren Sie zum 'Fitbit'-Tab im Studien-Designer, um Ihre Fitbit-Client-ID und Ihr Client-Secret einzugeben. Sobald dies abgeschlossen ist, kehren Sie hierher zurück, um Fitbit-Fragen hinzuzufügen."
+
 }
