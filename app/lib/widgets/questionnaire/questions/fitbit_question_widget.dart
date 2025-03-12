@@ -49,7 +49,7 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
         value = data;
         _isLoading = false;
       });
-
+      if (!mounted) return;
       if (data.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -73,6 +73,7 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
       setState(() {
         _isLoading = false;
       });
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

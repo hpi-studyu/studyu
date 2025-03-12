@@ -262,7 +262,7 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 
   @override
-  Future<AppConfig> fetchAppConfig() async {
+  Future<AppConfig> fetchAppConfig() {
     final request = AppConfig.getAppConfig();
     return _awaitGuarded(request);
   }

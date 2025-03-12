@@ -216,7 +216,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   }
 
   @override
-  Future<void> delete(ModelID modelId, {bool runOptimistically = true}) async {
+  Future<void> delete(ModelID modelId, {bool runOptimistically = true}) {
     final wrappedModel = get(modelId);
     if (wrappedModel == null) {
       throw ModelNotFoundException();

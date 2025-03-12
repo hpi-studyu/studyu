@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
@@ -7,7 +5,7 @@ class ModelAction<T> {
   final T type;
   final String label;
   IconData? icon;
-  final FutureOr<void> Function() onExecute;
+  final void Function() onExecute;
   final bool isSeparator;
   final bool isAvailable;
   final bool isDestructive;
