@@ -301,7 +301,7 @@ class AuthFormController extends _$AuthFormController
         .then((_) => notificationService.show(Notifications.passwordReset));
   }
 
-  Future<void> recoverPassword() async {
+  Future<void> recoverPassword() {
     if (!form.valid) {
       return Future.value();
     }

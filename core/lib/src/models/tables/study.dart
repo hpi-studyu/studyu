@@ -14,6 +14,7 @@ enum StudyStatus {
   closed;
 
   String toJson() => name;
+
   static StudyStatus fromJson(String json) => values.byName(json);
 }
 
@@ -22,6 +23,7 @@ enum Participation {
   invite;
 
   String toJson() => name;
+
   static Participation fromJson(String json) => values.byName(json);
 }
 
@@ -31,6 +33,7 @@ enum ResultSharing {
   organization;
 
   String toJson() => name;
+
   static ResultSharing fromJson(String json) => values.byName(json);
 }
 
@@ -209,7 +212,7 @@ class Study extends SupabaseObjectFunctions<Study>
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<List<Study>> getResearcherDashboardStudies() async =>
+  static Future<List<Study>> getResearcherDashboardStudies() =>
       SupabaseQuery.getAll<Study>(
         selectedColumns: [
           '*',
@@ -320,7 +323,9 @@ class Study extends SupabaseObjectFunctions<Study>
   // - Status
 
   bool get isDraft => status == StudyStatus.draft;
+
   bool get isRunning => status == StudyStatus.running;
+
   bool get isClosed => status == StudyStatus.closed;
 
   bool isReadonly(User user) {
