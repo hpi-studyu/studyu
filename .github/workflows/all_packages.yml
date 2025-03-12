@@ -15,6 +15,9 @@ on:
       - ".github/workflows/init-workspace/**"
   workflow_dispatch:
 
+env:
+  MELOS_SDK_PATH: 'auto'
+
 concurrency:
   group: ${{ github.ref }}-all-packages
   cancel-in-progress: true

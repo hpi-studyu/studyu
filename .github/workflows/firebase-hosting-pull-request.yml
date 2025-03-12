@@ -15,6 +15,9 @@ on:
       - 'firebase.json'
       - '.firebaserc'
 
+env:
+  MELOS_SDK_PATH: 'auto'
+
 concurrency:
   group: ${{ github.ref }}-pr
   cancel-in-progress: true
