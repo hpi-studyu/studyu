@@ -10,6 +10,9 @@ on:
       - 'flutter_common/**'
   workflow_dispatch:
 
+env:
+  MELOS_SDK_PATH: 'auto'
+
 jobs:
   drive_web:
     runs-on: ubuntu-latest
