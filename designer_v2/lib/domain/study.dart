@@ -37,8 +37,6 @@ extension StudyActionTypeFormatted on StudyActionType {
         return "[StudyActionType.addCollaborator]"; // todo not implemented yet
       case StudyActionType.export:
         return tr.action_study_export_results;
-      default:
-        return "[Invalid ModelActionType]";
     }
   }
 }
@@ -68,9 +66,7 @@ extension StudyStatusFormatted on StudyStatus {
         return tr.study_status_running;
       case StudyStatus.closed:
         return tr.study_status_closed;
-      default:
-        return "[Invalid StudyStatus]";
-    }
+      }
   }
 
   String get description {
@@ -81,9 +77,7 @@ extension StudyStatusFormatted on StudyStatus {
         return tr.study_status_running_description;
       case StudyStatus.closed:
         return tr.study_status_closed_description;
-      default:
-        return "[Invalid StudyStatus]";
-    }
+      }
   }
 }
 

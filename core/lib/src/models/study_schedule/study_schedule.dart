@@ -61,9 +61,7 @@ class StudySchedule {
         return _generateRandomizedCycle(first, cycle);
       case PhaseSequence.customized:
         return _generateCustomizedCycle(cycle);
-      default:
-        throw TypeError();
-    }
+      }
   }
 
   List<int> _generateAlternatingCycle(int first, int cycle) =>

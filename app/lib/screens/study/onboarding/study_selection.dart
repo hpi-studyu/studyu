@@ -145,7 +145,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                 const SizedBox.shrink(),
               Expanded(
                 child: RetryFutureBuilder<ExtractionResult<Study>>(
-                  tryFunction: () async => publishedStudies,
+                  tryFunction: () => publishedStudies,
                   successBuilder: (
                     BuildContext context,
                     ExtractionResult<Study>? extractionResult,

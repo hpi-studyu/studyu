@@ -143,7 +143,7 @@ class StudyUApiClient extends SupabaseClientDependant
   /// otherwise, all columns are fetched => [studyColumns]
   ///
   ///
-  /// @return List<Study>
+  /// @return List`<Study`>
   @override
   Future<List<Study>> getUserStudies({
     bool withParticipantActivity = false,

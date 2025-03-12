@@ -119,7 +119,7 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   Widget getTitles(double value, TitleMeta meta) {
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       child: getValues(value),
     );
   }

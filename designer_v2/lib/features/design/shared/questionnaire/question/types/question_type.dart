@@ -43,8 +43,6 @@ enum SurveyQuestionType {
         return tr.question_type_audio;
       case SurveyQuestionType.freeText:
         return tr.question_type_free_text;
-      default:
-        return "[Invalid SurveyQuestionType]";
     }
   }
 
@@ -62,8 +60,6 @@ enum SurveyQuestionType {
         return Icons.mic;
       case SurveyQuestionType.freeText:
         return Icons.edit_square;
-      default:
-        return null;
     }
   }
 
@@ -82,8 +78,6 @@ extension FreeTextQuestionTypeExtension on FreeTextQuestionType {
         return tr.free_text_question_type_numeric;
       case FreeTextQuestionType.custom:
         return tr.free_text_question_type_custom;
-      default:
-        return "[Invalid FreeTextQuestionType]";
     }
   }
 }

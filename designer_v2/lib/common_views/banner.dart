@@ -120,8 +120,6 @@ class _BannerBoxState extends State<BannerBox> {
         return const Color(0xFFFFC808);
       case BannerStyle.error:
         return theme.colorScheme.errorContainer;
-      default:
-        return theme.colorScheme.primary;
     }
   }
 

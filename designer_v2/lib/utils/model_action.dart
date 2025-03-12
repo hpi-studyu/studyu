@@ -66,8 +66,6 @@ extension ModelActionTypeFormatted on ModelActionType {
         return tr.action_clipboard;
       case ModelActionType.primary:
         return tr.action_reportPrimary;
-      default:
-        return "[Invalid ModelActionType]";
     }
   }
 }
