@@ -77,18 +77,32 @@ class AverageSectionWidget extends ReportSectionWidget {
   BarChartData getChartData(BuildContext context, List<DiagramDatum> data) {
     final barGroups = getBarGroups(context, data);
     final maxY =
-        ((data.sortedBy((entry) => entry.value).toList().lastOrNull?.value ??
-                    0) *
-                1.1)
+        (data.sortedBy((entry) => entry.value).toList().lastOrNull?.value ?? 0)
             .ceilToDouble();
     return BarChartData(
       titlesData: FlTitlesData(
         bottomTitles: AxisTitles(
           axisNameWidget:
               (section.aggregate != TemporalAggregation.intervention)
-                  ? const Text("Phase")
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const Text("Phase"),
+                        const SizedBox(width: 8),
+                        Tooltip(
+                          message:
+                              "One phase represents ${subject.study.schedule.phaseDuration} days",
+                          child: const Icon(
+                            Icons.info,
+                            size: 18,
+                          ),
+                        ),
+                      ],
+                    )
                   : const Text(""),
           sideTitles: SideTitles(
+            reservedSize: 30,
             showTitles: true,
             getTitlesWidget: getTitles,
           ),

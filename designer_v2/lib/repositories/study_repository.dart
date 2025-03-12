@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -47,7 +48,7 @@ class StudyRepository extends ModelRepository<Study>
   final IAuthRepository authRepository;
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
-  final ProviderRef ref;
+  final Ref ref;
 
   final VoidCallback? sortCallback;
 
@@ -285,7 +286,7 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
 }
 
 @riverpod
-StudyRepository studyRepository(StudyRepositoryRef ref) => StudyRepository(
+StudyRepository studyRepository(Ref ref) => StudyRepository(
       apiClient: ref.watch(apiClientProvider),
       authRepository: ref.watch(authRepositoryProvider),
       ref: ref,

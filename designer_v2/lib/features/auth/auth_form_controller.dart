@@ -64,7 +64,7 @@ class AuthFormController extends _$AuthFormController
     formKey = formKeyArg;
     resetControlsFor(formKey);
 
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       print("authFormController.state updated");
       if (state.hasError) {
         final AuthException error = state.error! as AuthException;

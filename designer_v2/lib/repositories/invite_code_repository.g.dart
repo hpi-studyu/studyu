@@ -7,7 +7,7 @@ part of 'invite_code_repository.dart';
 // **************************************************************************
 
 String _$inviteCodeRepositoryHash() =>
-    r'6e64d53ba64268495919cd6dc28d55ee5fa1e5e8';
+    r'301a627858ddb89e3c4a291bb9ebd09d6b933513';
 
 /// Copied from Dart SDK
 class _SystemHash {

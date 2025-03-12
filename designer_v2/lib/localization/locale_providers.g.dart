@@ -6,7 +6,7 @@ part of 'locale_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$platformLocaleHash() => r'a84e9e99af5cc228a9c3804c7b4b834044dff6d1';
+String _$platformLocaleHash() => r'e490bf2439a27d6a6ca15f4029f5b198fd6817ba';
 
 /// Platform Locale Provider
 /// Returns the locale of the Platform.localeName
@@ -26,7 +26,7 @@ final platformLocaleProvider = AutoDisposeProvider<Locale>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef PlatformLocaleRef = AutoDisposeProviderRef<Locale>;
-String _$supportedLocalesHash() => r'5668fd6c2cb7ae6ce48a909d39d947d6ee61236a';
+String _$supportedLocalesHash() => r'9cd4634b71b66c5e97b66ecbfd966d91eecfcc64';
 
 /// Supported Locales Provider
 ///
@@ -45,7 +45,7 @@ final supportedLocalesProvider = AutoDisposeProvider<List<Locale>>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SupportedLocalesRef = AutoDisposeProviderRef<List<Locale>>;
-String _$localeHash() => r'575c8d69cac8ac079fbb4a4d4b2307512dcfc728';
+String _$localeHash() => r'9b088ff7f2fc32aeeeb72d3c9d8a37abddb9757e';
 
 /// Locale Provider
 /// Provides the current locale, and automatically updates when the locale changes.

@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
@@ -90,7 +91,7 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 @riverpod
 StudySettingsFormViewModel studySettingsFormViewModel(
-  StudySettingsFormViewModelRef ref,
+  Ref ref,
   String studyId,
 ) {
   final state = ref.watch(studyControllerProvider(studyId));

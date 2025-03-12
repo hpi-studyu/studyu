@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
@@ -182,7 +183,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 @riverpod
 InviteCodeFormViewModel inviteCodeFormViewModel(
-  InviteCodeFormViewModelRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   // Reactively bind to and obtain [StudyController]'s current study
