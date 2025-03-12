@@ -5,29 +5,23 @@ description: Initialize workspace for all packages
 runs:
   using: "composite"
   steps:
-    - uses: kuhnroyal/flutter-fvm-config-action@v2
-      id: fvm-config-action
-
-    - uses: subosito/flutter-action@v2
+    - name: Set up Flutter with FVM
+      uses: kuhnroyal/flutter-fvm-config-action/setup@v3
       with:
-        flutter-version: ${{ steps.fvm-config-action.outputs.FLUTTER_VERSION }}
-        channel: ${{ steps.fvm-config-action.outputs.FLUTTER_CHANNEL }}
-      id: flutter-action
-
-    - run: |
-        echo CACHE-PATH=${{ steps.flutter-action.outputs.CACHE-PATH }}
-        mkdir -p .fvm
-        ln -s ${{ steps.flutter-action.outputs.CACHE-PATH }} .fvm/flutter_sdk
-      shell: bash
+        cache: false
 
     - name: Install melos
       run: dart pub global activate melos
+      shell: bash
+
+    - name: Install dependencies
+      run: dart pub get
       shell: bash
 
     - name: Bootstrap workspace
       run: melos bootstrap
       shell: bash
 
-    - name: Dart pub root project
-      run: dart pub get
+    - name: Run build runner
+      run: melos generate
       shell: bash
