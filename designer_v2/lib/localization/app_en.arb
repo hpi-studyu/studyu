@@ -43,7 +43,9 @@
   "form_field_password_minlength": "Passwords must have a minimum of {minLength} characters",
   "@form_field_password_minlength": {
     "placeholders": {
-      "minLength": {}
+      "minLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_password_new": "New password",
@@ -178,27 +180,35 @@
   "form_array_response_options_choice_countmin": "Your question must have at least {count} non-empty response options",
   "@form_array_response_options_choice_countmin": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_response_options_choice_countmax": "Your question must have at most {count} non-empty response options",
   "@form_array_response_options_choice_countmax": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_response_options_scale_rangevalid_min": "The high value of the scale must be greater than the low value",
   "form_array_response_options_scale_rangevalid_max": "Do not exceed {count} as a maximum difference between the high and low values of the scale",
   "@form_array_response_options_scale_rangevalid_max": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "audio_recording_max_duration_rangevalid_min": "The minimum recording duration is 1 second",
   "audio_recording_max_duration_rangevalid_max": "The maximum recording duration is {count} seconds",
   "@audio_recording_max_duration_rangevalid_max": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "free_text_question_logic_not_supported": "The screener question logic is not yet supported for free text questions.",
@@ -221,13 +231,17 @@
   "free_text_validation_min_length": "The input must be at least {countMin} characters long.",
   "@free_text_validation_min_length": {
     "placeholders": {
-      "countMin": {}
+      "countMin": {
+        "type": "num"
+      }
     }
   },
   "free_text_validation_max_length": "The input must be at most {countMax} characters long.",
   "@free_text_validation_max_length": {
     "placeholders": {
-      "countMax": {}
+      "countMax": {
+        "type": "num"
+      }
     }
   },
   "free_text_validation_pattern": "The input must match the specified format.",
@@ -235,9 +249,12 @@
   "free_text_example_explanation": "Inputs of type {type} with a character length range of {countMin} to {countMax} will be accepted.",
   "@free_text_example_explanation": {
     "placeholders": {
-      "type": {},
-      "countMin": {},
-      "countMax": {}
+      "countMin": {
+        "type": "num"
+      },
+      "countMax": {
+        "type": "num"
+      }
     }
   },
   "free_text_question_type_any_explanation": "Any input will be accepted.",
@@ -334,7 +351,9 @@
   "form_array_interventions_minlength": "{count,plural, =2{You must define at least two interventions to compare.} other{form_array_interventions_minlength}}",
   "@form_array_interventions_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_interventions": "Intervention phases",
@@ -356,7 +375,9 @@
   "form_array_intervention_tasks_minlength": "{count,plural, =1{You must define at least one task for participants to complete during this intervention phase} other{form_array_intervention_tasks_minlength}}",
   "@form_array_intervention_tasks_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_intervention_task_create": "New Intervention Task",
@@ -380,8 +401,12 @@
   "form_field_crossover_schedule_phase_length_range": "Intervention phases must be between {min} and {max} days long",
   "@form_field_crossover_schedule_phase_length_range": {
     "placeholders": {
-      "min": {},
-      "max": {}
+      "min": {
+        "type": "num"
+      },
+      "max": {
+        "type": "num"
+      }
     }
   },
   "form_field_amount_days": "days",
@@ -390,8 +415,12 @@
   "form_field_crossover_schedule_num_cycles_range": "The number of cycles in your study schedule must be between {min} and {max}",
   "@form_field_crossover_schedule_num_cycles_range": {
     "placeholders": {
-      "min": {},
-      "max": {}
+      "min": {
+        "type": "num"
+      },
+      "max": {
+        "type": "num"
+      }
     }
   },
   "form_field_amount_crossover_schedule_num_cycles": "cycles",
@@ -403,7 +432,9 @@
   "form_array_measurements_minlength": "{count,plural, =1{You need to define at least one survey to determine the effect of your intervention(s).} other{form_array_measurements_minlength}}",
   "@form_array_measurements_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_measurements_surveys": "Surveys",
@@ -427,7 +458,9 @@
   "form_array_measurement_survey_questions_minlength": "{count,plural, =1{You need to define at least one question to determine the effect of your intervention(s)} other{form_array_measurement_survey_questions_minlength}}",
   "@form_array_measurement_survey_questions_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "@__________________STUDYPAGE_DESIGN_REPORTS__________________": {},
@@ -505,7 +538,9 @@
   "enrolled_count_tooltip": "{count,plural, =0{Nobody has enrolled in the study with this code yet} =1{{count} participant is enrolled in the study with this code} other{{count} participants are enrolled in the study with this code}}",
   "@enrolled_count_tooltip": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_code_create": "New Invite Code",
@@ -516,13 +551,17 @@
   "form_field_code_minlength": "The code must have at least {minLength} characters",
   "@form_field_code_minlength": {
     "placeholders": {
-      "minLength": {}
+      "minLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_code_maxlength": "The code must have at most {maxLength} characters",
   "@form_field_code_maxlength": {
     "placeholders": {
-      "maxLength": {}
+      "maxLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_code_alreadyused": "This code is already in use",
@@ -607,37 +646,49 @@
   "date_diff_years": "{count,plural, =1{1 year ago} other{{count} years ago}}",
   "@date_diff_years": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_months": "{count,plural, =1{1 month ago} other{{count} months ago}}",
   "@date_diff_months": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_days": "{count,plural, =1{1 day ago} other{{count} days ago}}",
   "@date_diff_days": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_hours": "{count,plural, =1{1 hour ago} other{{count} hours ago}}",
   "@date_diff_hours": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_minutes": "{count,plural, =1{1 minute ago} other{{count} minutes ago}}",
   "@date_diff_minutes": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_seconds": "{count,plural, =1{1 second ago} other{{count} seconds ago}}",
   "@date_diff_seconds": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_just_now": "Just now",
