@@ -174,7 +174,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
                     alignment: Alignment.center,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).dialogBackgroundColor,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       padding: const EdgeInsets.all(20.0),

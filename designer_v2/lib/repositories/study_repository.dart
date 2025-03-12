@@ -58,7 +58,7 @@ class StudyRepository extends ModelRepository<Study>
   }
 
   @override
-  Future<void> deleteParticipants(Study study) async {
+  Future<void> deleteParticipants(Study study) {
     final wrappedModel = get(study.id);
     if (wrappedModel == null) {
       throw ModelNotFoundException();
@@ -85,7 +85,7 @@ class StudyRepository extends ModelRepository<Study>
   }
 
   @override
-  Future<void> launch(Study study) async {
+  Future<void> launch(Study study) {
     final wrappedModel = get(study.id);
     if (wrappedModel == null) {
       throw ModelNotFoundException();
@@ -119,7 +119,7 @@ class StudyRepository extends ModelRepository<Study>
   }
 
   @override
-  Future<void> close(Study study) async {
+  Future<void> close(Study study) {
     final wrappedModel = get(study.id);
     if (wrappedModel == null) {
       throw ModelNotFoundException();
@@ -174,8 +174,8 @@ class StudyRepository extends ModelRepository<Study>
         // same as "Copy" but for non-drafts
         type: StudyActionType.duplicateDraft,
         label: StudyActionType.duplicateDraft.string,
-        onExecute: () {
-          return duplicateAndSave(model).then(
+        onExecute: () async {
+          return await duplicateAndSave(model).then(
             (value) =>
                 ref.read(routerProvider).dispatch(RoutingIntents.studies),
           );
@@ -186,8 +186,8 @@ class StudyRepository extends ModelRepository<Study>
       ModelAction(
         type: StudyActionType.duplicate,
         label: StudyActionType.duplicate.string,
-        onExecute: () {
-          return duplicateAndSave(model).then(
+        onExecute: () async {
+          return await duplicateAndSave(model).then(
             (value) =>
                 ref.read(routerProvider).dispatch(RoutingIntents.studies),
           );

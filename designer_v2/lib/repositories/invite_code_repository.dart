@@ -81,8 +81,8 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
       ModelAction(
         type: ModelActionType.delete,
         label: ModelActionType.delete.string,
-        onExecute: () {
-          return delete(getKey(model))
+        onExecute: () async {
+          return await delete(getKey(model))
               .then(
                 (value) => ref
                     .read(routerProvider)
@@ -137,7 +137,7 @@ class InviteCodeRepositoryDelegate
   }
 
   @override
-  Future<StudyInvite> save(StudyInvite model) async {
+  Future<StudyInvite> save(StudyInvite model) {
     study.invites ??= [];
     final prevInvites = [...study.invites!];
 
