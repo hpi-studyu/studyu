@@ -198,13 +198,17 @@
   "free_text_min_length_error": "Bitte geben Sie mindestens {min} Zeichen ein",
   "@free_text_min_length_error": {
     "placeholders": {
-      "min": {}
+      "min": {
+        "type": "num"
+      }
     }
   },
   "free_text_max_length_error": "Bitte geben Sie maximal {max} Zeichen ein",
   "@free_text_max_length_error": {
     "placeholders": {
-      "max": {}
+      "max": {
+        "type": "num"
+      }
     }
   },
   "free_text_alphanumeric_error": "Bitte geben Sie nur alphanumerische Zeichen ein",
@@ -212,7 +216,9 @@
   "free_text_custom_error": "Bitte geben Sie nur Zeichen ein, die dem Muster {pattern} entsprechen",
   "@free_text_custom_error": {
     "placeholders": {
-      "pattern": {}
+      "pattern": {
+        "type": "String"
+      }
     }
   },
   "app_outdated_message": "Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!",

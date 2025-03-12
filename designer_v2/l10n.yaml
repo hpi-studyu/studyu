@@ -3,3 +3,4 @@ template-arb-file: app_en.arb
 output-localization-file: app_localizations.dart
 required-resource-attributes: false
 untranslated-messages-file: l10n-missing.txt
+synthetic-package: false
