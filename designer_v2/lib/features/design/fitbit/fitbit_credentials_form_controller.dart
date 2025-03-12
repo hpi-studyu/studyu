@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
@@ -123,7 +124,7 @@ class FitbitCredentialsFormViewModel
 
 @riverpod
 FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel(
-  FitbitCredentialsFormViewModelRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   final study = ref
@@ -133,6 +134,7 @@ FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel(
       ref.watch(fitbitCredentialsRepositoryProvider(studyId));
 
   return FitbitCredentialsFormViewModel(
-      study: study.value!,
-      fitbitCredentialsRepository: fitbitCredentialsRepository,);
+    study: study.value!,
+    fitbitCredentialsRepository: fitbitCredentialsRepository,
+  );
 }

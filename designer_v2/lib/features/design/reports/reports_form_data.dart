@@ -60,8 +60,6 @@ extension ReportStatusFormatted on ReportStatus {
         return tr.report_status_primary;
       case ReportStatus.secondary:
         return tr.report_status_secondary;
-      default:
-        return "[Invalid ReportStatus]";
     }
   }
 
@@ -71,8 +69,6 @@ extension ReportStatusFormatted on ReportStatus {
         return tr.report_status_primary_description;
       case ReportStatus.secondary:
         return tr.report_status_secondary_description;
-      default:
-        return "[Invalid ReportStatus]";
     }
   }
 }

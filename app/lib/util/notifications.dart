@@ -158,7 +158,7 @@ class StudyNotifications {
   }
 
   void _configureSelectNotificationSubject() {
-    selectNotificationStream.stream.listen((String? payload) async {
+    selectNotificationStream.stream.listen((String? payload) {
       handleNotificationResponse(payload!);
     });
   }

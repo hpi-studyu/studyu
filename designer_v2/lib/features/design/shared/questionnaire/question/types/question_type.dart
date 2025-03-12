@@ -47,8 +47,6 @@ enum SurveyQuestionType {
         return tr.question_type_free_text;
       case SurveyQuestionType.fitbit:
         return tr.question_type_fitbit;
-      default:
-        return "[Invalid SurveyQuestionType]";
     }
   }
 
@@ -68,8 +66,6 @@ enum SurveyQuestionType {
         return Icons.edit_square;
       case SurveyQuestionType.fitbit:
         return Icons.fitbit;
-      default:
-        return null;
     }
   }
 
@@ -88,8 +84,6 @@ extension FreeTextQuestionTypeExtension on FreeTextQuestionType {
         return tr.free_text_question_type_numeric;
       case FreeTextQuestionType.custom:
         return tr.free_text_question_type_custom;
-      default:
-        return "[Invalid FreeTextQuestionType]";
     }
   }
 }

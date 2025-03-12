@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -41,7 +42,7 @@ class FitbitCredentialsRepository
   Study get study => studyRepository.get(studyId)!.model;
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
-  final ProviderRef ref;
+  final Ref ref;
 
   final StudyUApi apiClient;
   final IAuthRepository authRepository;
@@ -189,7 +190,7 @@ class FitbitCredentialsRepositoryDelegate
 
 @riverpod
 FitbitCredentialsRepository fitbitCredentialsRepository(
-  FitbitCredentialsRepositoryRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   print("fitbitCredentialsRepositoryProvider($studyId");
