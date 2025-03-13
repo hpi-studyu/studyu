@@ -58,7 +58,6 @@ platform :ios do
 
     build_app(
       export_method: "app-store",
-      xcargs: "-allowProvisioningUpdates"
     )
 
     upload_to_testflight(
