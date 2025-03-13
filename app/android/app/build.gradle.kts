@@ -1,8 +1,8 @@
 plugins {
-    id "com.android.application"
-    id "kotlin-android"
+    id("com.android.application")
+    id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
-    id "dev.flutter.flutter-gradle-plugin"
+    id("dev.flutter.flutter-gradle-plugin")
 }
 
 def localProperties = new Properties()
@@ -31,11 +31,14 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "health.studyu.app"
+    // compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
+
     // Start flutter_local_notifications
     compileSdkVersion = Math.max(flutter.compileSdkVersion, 34)
     // End flutter_local_notifications
     // temp fix for record_audio package instead of "flutter.ndkVersion"
-    ndkVersion = "26.1.10909125"
+    // ndkVersion = "26.1.10909125"
 
     // Start flutter_local_notifications
     defaultConfig {
@@ -48,21 +51,27 @@ android {
         // Flag to enable support for the new language APIs
         coreLibraryDesugaringEnabled = true
         // End flutter_local_notifications
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        // sourceCompatibility = JavaVersion.VERSION_17
+        // targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
-        jvmTarget = '17'
+        // jvmTarget = '17'
+        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "health.studyu.app"
         // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
+        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        // minSdk = flutter.minSdkVersion
         minSdk = Math.max(flutter.minSdkVersion, 23)
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode.toInteger()
-        versionName = flutterVersionName
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
     }
 
     signingConfigs {
@@ -75,6 +84,8 @@ android {
     }
     buildTypes {
         release {
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            // signingConfig = signingConfigs.getByName("debug")
             signingConfig = keystorePropertiesFile.exists() ? signingConfigs.release : null
         }
     }
