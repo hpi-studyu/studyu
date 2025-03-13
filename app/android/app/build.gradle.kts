@@ -30,9 +30,9 @@ android {
     compileSdk = maxOf(flutter.compileSdkVersion, 34)
     // End flutter_local_notifications
     // temp fix for record_audio package instead of "flutter.ndkVersion"
-    ndkVersion = flutter.ndkVersion
+    //ndkVersion = flutter.ndkVersion
     // ndkVersion = "26.1.10909125"
-    // ndkVersion = "27.0.12077973"
+    ndkVersion = "27.0.12077973"
 
     defaultConfig {
         // Start flutter_local_notifications
