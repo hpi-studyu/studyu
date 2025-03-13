@@ -1239,7 +1239,7 @@ abstract class AppLocalizations {
   ///
   /// In en, this message translates to:
   /// **'Inputs of type {type} with a character length range of {countMin} to {countMax} will be accepted.'**
-  String free_text_example_explanation(num countMin, num countMax, Object type);
+  String free_text_example_explanation(String type, num countMin, num countMax);
 
   /// No description provided for @free_text_question_type_any_explanation.
   ///
