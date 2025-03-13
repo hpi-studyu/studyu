@@ -593,7 +593,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get free_text_validation_number => 'Die Eingabe muss eine Zahl sein.';
 
   @override
-  String free_text_example_explanation(num countMin, num countMax, Object type) {
+  String free_text_example_explanation(String type, num countMin, num countMax) {
     return 'Eingaben vom Typ $type mit einer Zeichenlänge im Bereich von $countMin bis $countMax werden akzeptiert.';
   }
 
