@@ -5,28 +5,22 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file("local.properties")
+import java.util.Properties
+import java.io.FileInputStream
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader("UTF-8") { reader ->
-        localProperties.load(reader)
-    }
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
 }
 
-def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
-if (flutterVersionCode == null) {
-    flutterVersionCode = "1"
-}
+val flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "1"
+val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0"
 
-def flutterVersionName = localProperties.getProperty("flutter.versionName")
-if (flutterVersionName == null) {
-    flutterVersionName = "1.0"
-}
-
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    keystorePropertiesFile.inputStream().use { keystoreProperties.load(it) }
 }
 
 android {
@@ -35,21 +29,27 @@ android {
     ndkVersion = flutter.ndkVersion
 
     // Start flutter_local_notifications
-    compileSdkVersion = Math.max(flutter.compileSdkVersion, 34)
+    compileSdk = maxOf(flutter.compileSdkVersion, 34)
     // End flutter_local_notifications
     // temp fix for record_audio package instead of "flutter.ndkVersion"
     // ndkVersion = "26.1.10909125"
 
-    // Start flutter_local_notifications
     defaultConfig {
+        // Start flutter_local_notifications
         multiDexEnabled = true
+        // End flutter_local_notifications
+        applicationId = "health.studyu.app"
+        // minSdk = flutter.minSdkVersion
+        minSdk = maxOf(flutter.minSdkVersion, 23)
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutterVersionCode.toInt()
+        versionName = flutterVersionName
     }
-    // End flutter_local_notifications
 
     compileOptions {
         // Start flutter_local_notifications
         // Flag to enable support for the new language APIs
-        coreLibraryDesugaringEnabled = true
+        isCoreLibraryDesugaringEnabled = true
         // End flutter_local_notifications
         // sourceCompatibility = JavaVersion.VERSION_17
         // targetCompatibility = JavaVersion.VERSION_17
@@ -75,18 +75,17 @@ android {
     }
 
     signingConfigs {
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
+            storeFile = keystoreProperties["storeFile"]?.let { file(it as String) }
+            storePassword = keystoreProperties["storePassword"] as String?
         }
     }
     buildTypes {
         release {
             // Signing with the debug keys for now, so `flutter run --release` works.
-            // signingConfig = signingConfigs.getByName("debug")
-            signingConfig = keystorePropertiesFile.exists() ? signingConfigs.release : null
+            signingConfig = if (keystorePropertiesFile.exists()) signingConfigs.getByName("release") else signingConfigs.getByName("debug")
         }
     }
 }
@@ -97,10 +96,10 @@ flutter {
 
 dependencies {
     // Start flutter_local_notifications
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.2.2")
     // Fix crash on Android 12L / 13 using workaround
     // See https://github.com/flutter/flutter/issues/110658#issuecomment-1320834920
-    implementation 'androidx.window:window:1.0.0'
-    implementation 'androidx.window:window-java:1.0.0'
+    implementation("androidx.window:window:1.0.0")
+    implementation("androidx.window:window-java:1.0.0")
     // End flutter_local_notifications
 }
