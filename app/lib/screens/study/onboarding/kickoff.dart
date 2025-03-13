@@ -50,10 +50,10 @@ class _KickoffScreen extends State<KickoffScreen> {
       selectedColumns: [
         '*',
         // Retrieve the related study along with its fitbit credentials
-        'study!study_subject_studyId_fkey(',
-        '*,',
-        'study_fitbit_credentials:study_fitbit_credentials_studyId_fkey(*)',
-        ')',
+        'study!study_subject_studyId_fkey('
+            '*,'
+            'study_fitbit_credentials:study_fitbit_credentials_studyId_fkey(*)'
+            ')',
         'subject_progress(*)',
       ],
     );
