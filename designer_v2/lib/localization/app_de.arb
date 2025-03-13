@@ -247,6 +247,9 @@
   "free_text_example_explanation": "Eingaben vom Typ {type} mit einer Zeichenlänge im Bereich von {countMin} bis {countMax} werden akzeptiert.",
   "@free_text_example_explanation": {
     "placeholders": {
+      "type": {
+        "type": "String"
+      },
       "countMin": {
         "type": "num"
       },
