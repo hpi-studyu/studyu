@@ -54,6 +54,12 @@ dependencies:
   uuid: ^4.5.1
   wakelock_plus: ^1.2.10
 
+dependency_overrides:
+  flutter_web_auth:
+    git:
+      url: https://github.com/johannesvedder/flutter_web_auth.git
+      branch: fix-android-kotlin
+
 dev_dependencies:
   flutter_launcher_icons: ^0.14.3
   flutter_lints: ^5.0.0
