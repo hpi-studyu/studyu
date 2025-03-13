@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_core` - `v4.5.0-dev.0`](#studyu_core---v450-dev0)
+ - [`studyu_flutter_common` - `v1.9.0-dev.0`](#studyu_flutter_common---v190-dev0)
+
+---
+
+#### `studyu_core` - `v4.5.0-dev.0`
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
+
+#### `studyu_flutter_common` - `v1.9.0-dev.0`
+
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+
+
 ## 2024-11-19
 
 ### Changes
