@@ -1,3 +1,15 @@
+## 4.5.0-dev.0
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
+
 ## 4.4.9
 
  - **FIX**: upgrade deps and flutter v3.24.5.
