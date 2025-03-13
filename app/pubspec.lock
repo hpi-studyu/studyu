@@ -310,7 +310,7 @@ packages:
     description:
       path: "."
       ref: studyu-compatibility-fix
-      resolved-ref: "2934c709d6c46e24d213b346d5e3d5dab8e8c5aa"
+      resolved-ref: f9085dd7db54c4f253039e7df1018ca29390ced9
       url: "https://github.com/hpi-studyu/fitbitter.git"
     source: git
     version: "2.0.6"
@@ -484,10 +484,11 @@ packages:
   flutter_web_auth:
     dependency: transitive
     description:
-      name: flutter_web_auth
-      sha256: "95e4856e24fb6ac1678f5ff334743b63f782d839ab324543d29ccbd295176209"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: bf04a9fdb2cab08e3195b890aef7cd348f1babf0
+      url: "https://github.com/johannesvedder/flutter_web_auth.git"
+    source: git
     version: "0.6.0"
   flutter_web_plugins:
     dependency: "direct main"
