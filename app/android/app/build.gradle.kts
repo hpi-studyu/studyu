@@ -14,8 +14,8 @@ if (localPropertiesFile.exists()) {
     localPropertiesFile.inputStream().use { localProperties.load(it) }
 }
 
-val flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "1"
-val flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0"
+val flutterVersionCode = localProperties.getProperty("flutter.versionCode")?.toInt()
+val flutterVersionName = localProperties.getProperty("flutter.versionName")
 
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
@@ -26,14 +26,13 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "health.studyu.app"
     // compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
-
     // Start flutter_local_notifications
     compileSdk = maxOf(flutter.compileSdkVersion, 34)
     // End flutter_local_notifications
     // temp fix for record_audio package instead of "flutter.ndkVersion"
+    ndkVersion = flutter.ndkVersion
     // ndkVersion = "26.1.10909125"
-    ndkVersion = "27.0.12077973"
+    // ndkVersion = "27.0.12077973"
 
     defaultConfig {
         // Start flutter_local_notifications
@@ -43,7 +42,7 @@ android {
         // minSdk = flutter.minSdkVersion
         minSdk = maxOf(flutter.minSdkVersion, 23)
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode.toInt()
+        versionCode = flutterVersionCode
         versionName = flutterVersionName
     }
 
@@ -63,18 +62,6 @@ android {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
-    defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "health.studyu.app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        // minSdk = flutter.minSdkVersion
-        minSdk = Math.max(flutter.minSdkVersion, 23)
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
-    }
-
     signingConfigs {
         create("release") {
             keyAlias = keystoreProperties["keyAlias"] as String?
@@ -86,7 +73,10 @@ android {
     buildTypes {
         release {
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = if (keystorePropertiesFile.exists()) signingConfigs.getByName("release") else signingConfigs.getByName("debug")
+            signingConfig =
+                if (keystorePropertiesFile.exists())
+                    signingConfigs.getByName("release")
+                else signingConfigs.getByName("debug")
         }
     }
 }
