@@ -48,6 +48,7 @@ platform :ios do
     )
 
     match(
+      type: "appstore",
       git_url: ENV['FASTLANE_APP_IOS_MATCH_GIT_URL'],
       git_private_key: ENV['FASTLANE_APP_IOS_MATCH_GIT_PRIVATE_KEY'],
       readonly: true,
