@@ -10,7 +10,7 @@ StudyFitbitCredentials _$StudyFitbitCredentialsFromJson(
         Map<String, dynamic> json) =>
     StudyFitbitCredentials(
       json['study_id'] as String,
-      FitbitCredentials.fromJson(
+      FitbitAuthCredentials.fromJson(
           json['fitbit_credentials'] as Map<String, dynamic>),
     );
 

@@ -55,7 +55,7 @@ class FitbitCredentialsFormViewModel
   StudyFitbitCredentials buildFormData() {
     return StudyFitbitCredentials(
       study.id,
-      FitbitCredentials(
+      FitbitAuthCredentials(
         clientId: clientIdControl.value ?? '',
         clientSecret: clientSecretControl.value ?? '',
       ),
