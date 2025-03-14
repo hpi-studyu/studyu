@@ -14,8 +14,6 @@ class DashboardScaffold extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isCompact = size.width < compactWidthThreshold;
     return Scaffold(
-      backgroundColor:
-          Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.2),
       appBar: isCompact
           ? AppBar(
               title: Image.asset(
