@@ -79,7 +79,8 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
             shape: RoundedRectangleBorder(
               borderRadius: const BorderRadius.all(Radius.circular(4)),
               side: BorderSide(
-                color: theme.colorScheme.primaryContainer.withOpacity(0.9),
+                color:
+                    theme.colorScheme.primaryContainer.withValues(alpha: 0.9),
                 width: isHovering ? 1.5 : 0.75,
               ),
             ),

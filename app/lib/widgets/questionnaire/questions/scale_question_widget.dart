@@ -53,7 +53,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
             maxColor,
             (value! - widget.question.minimum) / sliderRange,
           )!
-            .withOpacity(1)
+            .withValues(alpha: 1)
         : null;
     final activeTrackColor =
         isColored ? coloredSliderTheme.activeTrackColor : null;
@@ -68,7 +68,7 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
               data: isColored
                   ? theme.copyWith(
                       sliderTheme: SliderThemeData(
-                        overlayColor: thumbColor!.withOpacity(0.5),
+                        overlayColor: thumbColor!.withValues(alpha: 0.5),
                       ),
                     )
                   : theme,

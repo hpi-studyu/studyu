@@ -201,7 +201,8 @@ class _TabbedNavbarState<T extends NavbarTab>
         dividerColor: Colors.transparent,
         isScrollable: widget.isScrollable,
         labelPadding: widget.labelPadding,
-        unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.8),
+        unselectedLabelColor:
+            theme.colorScheme.onSurface.withValues(alpha: 0.8),
         unselectedLabelStyle: theme.textTheme.labelLarge,
         indicator: widget.indicator ?? theme.tabBarTheme.indicator,
         indicatorPadding: EdgeInsets.only(right: widget.labelSpacing ?? 0),

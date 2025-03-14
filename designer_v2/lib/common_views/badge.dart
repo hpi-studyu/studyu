@@ -121,7 +121,7 @@ class Badge extends StatelessWidget {
 
     switch (type) {
       case BadgeType.filled:
-        return theme.textTheme.labelLarge?.color?.withOpacity(0.6);
+        return theme.textTheme.labelLarge?.color?.withValues(alpha: 0.6);
       case BadgeType.outlineFill:
         return actualColor.faded(0.8);
       case BadgeType.outlined:

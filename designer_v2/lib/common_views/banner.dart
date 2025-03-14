@@ -65,7 +65,7 @@ class _BannerBoxState extends State<BannerBox> {
 
     return Container(
       decoration: BoxDecoration(
-        color: bannerColor.withOpacity(0.6),
+        color: bannerColor.withValues(alpha: 0.6),
         border: Border.all(color: bannerColor),
       ),
       child: Padding(

@@ -159,7 +159,7 @@ class StudyMonitorTable extends ConsumerWidget {
         SizedBox.expand(
           child: LinearProgressIndicator(
             value: total <= 0 ? 0 : progress / total,
-            backgroundColor: theme.primaryColor.withOpacity(0.7),
+            backgroundColor: theme.primaryColor.withValues(alpha: 0.7),
             valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
           ),
         ),

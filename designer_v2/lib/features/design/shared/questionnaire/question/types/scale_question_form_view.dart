@@ -165,7 +165,7 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
               child: Hyperlink(
                 text: "+ ${tr.form_field_response_scale_color_add}",
                 onClick: () => control.value = SerializableColor(
-                  ThemeConfig.colorPickerInitialColor(theme).value,
+                  ThemeConfig.colorPickerInitialColor(theme).toARGB32(),
                 ),
                 visitedColor: null,
               ),
