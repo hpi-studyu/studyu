@@ -25,6 +25,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       final now = DateTime.now();
       subject!.startedAt = DateTime(now.year, now.month, now.day + 1).toUtc();
       subject = await subject!.save();
+      subject = await _fetchRemoteSubject(subject!.id);
       if (!context.mounted) return;
       context.read<AppState>().activeSubject = subject;
       context.read<AppState>().init(context);
