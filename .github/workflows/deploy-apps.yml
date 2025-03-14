@@ -76,14 +76,20 @@ jobs:
     name: Create App Store Release
     runs-on: macos-latest
     steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
       - name: Await potential publishing on Pub.dev
         uses: johannesvedder/await-workflow@v1
         with:
           workflowId: publish_pubdev.yml
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Set up ruby env
         uses: ruby/setup-ruby@v1
         with:
