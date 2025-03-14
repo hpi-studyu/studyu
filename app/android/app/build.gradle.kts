@@ -14,12 +14,12 @@ if (localPropertiesFile.exists()) {
     localPropertiesFile.inputStream().use { localProperties.load(it) }
 }
 
-val flutterVersionCode = localProperties.getProperty("flutter.versionCode")?.toInt()
+var flutterVersionCode = localProperties.getProperty("flutter.versionCode")?.toInt()
 if (flutterVersionCode == null) {
     flutterVersionCode = 1
 }
 
-val flutterVersionName = localProperties.getProperty("flutter.versionName")
+var flutterVersionName = localProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
