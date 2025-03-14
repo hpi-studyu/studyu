@@ -73,4 +73,5 @@ jobs:
         run: |
           flutter drive --driver=test_driver/integration_driver.dart \
             --target=integration_test/app_test.dart -d web-server \
+            --web-browser-flag="--disable-web-security" \
             --dart-define="STUDYU_ENV=.env.local"
