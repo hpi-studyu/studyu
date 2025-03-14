@@ -3,7 +3,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/features/study/study_participation_badge.dart';
 import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
@@ -222,7 +221,8 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       alignment: Alignment.centerRight,
       child: ActionPopUpMenuButton(
         actions: actions,
-        triggerIconColor: ThemeConfig.bodyTextMuted(theme).color?.faded(0.6),
+        triggerIconColor:
+            ThemeConfig.bodyTextMuted(theme).color?.withValues(alpha: 0.6),
         triggerIconColorHover: theme.colorScheme.primary,
         disableSplashEffect: true,
         position: PopupMenuPosition.over,
