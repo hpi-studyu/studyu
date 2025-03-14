@@ -576,7 +576,8 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       final theme = Theme.of(context);
       actionMenuWidget = ActionPopUpMenuButton(
         actions: actions,
-        triggerIconColor: ThemeConfig.bodyTextMuted(theme).color?.faded(0.6),
+        triggerIconColor:
+            ThemeConfig.bodyTextMuted(theme).color?.withValues(alpha: 0.6),
         triggerIconColorHover: theme.colorScheme.primary,
         disableSplashEffect: true,
         position: PopupMenuPosition.over,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/assets.dart';
 import 'package:studyu_designer_v2/common_views/icons.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/account/account_settings.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -310,8 +309,8 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         color: isSelected
             ? null
             : (entry.enabled)
-                ? theme.iconTheme.color!.faded(0.75)
-                : theme.iconTheme.color!.faded(0.3),
+                ? theme.iconTheme.color!.withValues(alpha: 0.75)
+                : theme.iconTheme.color!.withValues(alpha: 0.3),
       ),
       //hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
       title: Text(

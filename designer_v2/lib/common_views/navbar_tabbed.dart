@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
@@ -263,7 +262,8 @@ class _TabbedNavbarState<T extends NavbarTab>
                 child: Text(
                   t.title,
                   style: (!t.enabled)
-                      ? TextStyle(color: theme.disabledColor.faded(0.5))
+                      ? TextStyle(
+                          color: theme.disabledColor.withValues(alpha: 0.5))
                       : actualTextStyle,
                 ),
               );
