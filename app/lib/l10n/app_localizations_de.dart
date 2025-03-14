@@ -15,31 +15,40 @@ class AppLocalizationsDe extends AppLocalizations {
   String get what_is_studyu => 'Was ist StudyU?';
 
   @override
-  String get description_part1 => 'Stellen Sie sich vor, Sie lesen den Satz: \"Studien konnten zeigen, dass Essen nach 18 Uhr die Schlafqualität verschlechtert.\"';
+  String get description_part1 =>
+      'Stellen Sie sich vor, Sie lesen den Satz: \"Studien konnten zeigen, dass Essen nach 18 Uhr die Schlafqualität verschlechtert.\"';
 
   @override
-  String get description_part2 => 'Sie denken jetzt möglicherweise: Okay... gut zu wissen, aber trifft das wirklich auf jeden, also auch auf MICH zu?';
+  String get description_part2 =>
+      'Sie denken jetzt möglicherweise: Okay... gut zu wissen, aber trifft das wirklich auf jeden, also auch auf MICH zu?';
 
   @override
-  String get description_part3 => 'Das Problem ist: Sie haben nicht persönlich an der Studie teilgenommen, sodass wir Ihnen die Frage nicht beantworten können. Eine gewöhnliche Studie kann nur beantworten, ob sich Ihre Schlafqualität WAHRSCHEINLICH reduziert. Sie müssten also bei sich selber testen, welche Wirkung spätes Essen auf IHREN Schlaf hat.';
+  String get description_part3 =>
+      'Das Problem ist: Sie haben nicht persönlich an der Studie teilgenommen, sodass wir Ihnen die Frage nicht beantworten können. Eine gewöhnliche Studie kann nur beantworten, ob sich Ihre Schlafqualität WAHRSCHEINLICH reduziert. Sie müssten also bei sich selber testen, welche Wirkung spätes Essen auf IHREN Schlaf hat.';
 
   @override
-  String get description_part4 => 'Das heißt nichts anderes, als dass Sie Ihre ganz persönliche Studie durchführen, in der Sie mal spät essen und mal auf spätes Essen verzichten. Sie würden regelmäßig Ihre Schlafqualität beurteilen und am Ende zu einem Ergebnis kommen, dass Ihnen endlich die Frage beantworten kann, ob Ihre Schlafqualität durch spätes Essen beeinflusst wird. Ihnen solche Fragen sicher beantworten zu können, ist das Ziel von StudyU.';
+  String get description_part4 =>
+      'Das heißt nichts anderes, als dass Sie Ihre ganz persönliche Studie durchführen, in der Sie mal spät essen und mal auf spätes Essen verzichten. Sie würden regelmäßig Ihre Schlafqualität beurteilen und am Ende zu einem Ergebnis kommen, dass Ihnen endlich die Frage beantworten kann, ob Ihre Schlafqualität durch spätes Essen beeinflusst wird. Ihnen solche Fragen sicher beantworten zu können, ist das Ziel von StudyU.';
 
   @override
-  String get description_part5 => 'StudyU bietet Ihnen die Möglichkeit, an professionell erstellten N-of-1 Studien teilzunehmen. N-of-1 heißt, dass die Anzahl der Studienteilnehmer, die normalerweise mit N angegeben wird, bei 1 liegt. Und genauso wie gewöhnliche Studien brauchen auch N-of-1 Studien einen klar festgelegten Plan (ein so genanntes Studienprotokoll).';
+  String get description_part5 =>
+      'StudyU bietet Ihnen die Möglichkeit, an professionell erstellten N-of-1 Studien teilzunehmen. N-of-1 heißt, dass die Anzahl der Studienteilnehmer, die normalerweise mit N angegeben wird, bei 1 liegt. Und genauso wie gewöhnliche Studien brauchen auch N-of-1 Studien einen klar festgelegten Plan (ein so genanntes Studienprotokoll).';
 
   @override
-  String get description_part6 => 'Und da gute Studienprotokolle nicht einfach zu machen sind, haben wir diese App entwickelt. Hier können Sie zwischen verschiedenen N-of-1 Studien wählen, ganz nach IHREM persönlichen Interesse, und Sie erhalten ganz automatisch einen Plan, der von Experten entwickelt wurde und Ihnen ein zuverlässiges Ergebnis liefern wird.';
+  String get description_part6 =>
+      'Und da gute Studienprotokolle nicht einfach zu machen sind, haben wir diese App entwickelt. Hier können Sie zwischen verschiedenen N-of-1 Studien wählen, ganz nach IHREM persönlichen Interesse, und Sie erhalten ganz automatisch einen Plan, der von Experten entwickelt wurde und Ihnen ein zuverlässiges Ergebnis liefern wird.';
 
   @override
-  String get description_part7 => 'Nachdem Sie sich für eine Studie entschieden haben, werden wir sichergehen, dass Ihr Gesundheitsstatus eine Teilnahme erlaubt. Danach können Sie sich als Teilnehmer einschreiben und den Studienplan an Ihren Alltag anpassen. Anschließend werden Sie regelmäßig (meistens 1x pro Tag) eine von zwei möglichen Aufgaben (bspw. essen nach 18 Uhr) absolvieren und Ihre Beobachtungen (bspw. Müdigkeit) eintragen. Ihre Ergebnisse können Sie kostenlos freischalten sobald Sie die minimale Studiendauer (meist nur wenige Wochen) erreicht haben.';
+  String get description_part7 =>
+      'Nachdem Sie sich für eine Studie entschieden haben, werden wir sichergehen, dass Ihr Gesundheitsstatus eine Teilnahme erlaubt. Danach können Sie sich als Teilnehmer einschreiben und den Studienplan an Ihren Alltag anpassen. Anschließend werden Sie regelmäßig (meistens 1x pro Tag) eine von zwei möglichen Aufgaben (bspw. essen nach 18 Uhr) absolvieren und Ihre Beobachtungen (bspw. Müdigkeit) eintragen. Ihre Ergebnisse können Sie kostenlos freischalten sobald Sie die minimale Studiendauer (meist nur wenige Wochen) erreicht haben.';
 
   @override
-  String get description_part8 => 'Aber bitte beachten Sie Folgendes: Ergebnisse sind umso aussagekräftiger, je länger Sie aktiv an der Studie teilnehmen. Um systematische Fehler zu vermeiden, ist eine weitere Teilnahme nach Freischaltung der Ergebnisse ausgeschlossen. Daher werden wir Ihnen mit einem Fortschrittsbalken anzeigen, wie viele weitere Aufgaben mindestens noch absolviert werden müssen und wie sehr sie die Aussagekraft der Ergebnisse mit ein paar weiteren Wochen verbessern können.';
+  String get description_part8 =>
+      'Aber bitte beachten Sie Folgendes: Ergebnisse sind umso aussagekräftiger, je länger Sie aktiv an der Studie teilnehmen. Um systematische Fehler zu vermeiden, ist eine weitere Teilnahme nach Freischaltung der Ergebnisse ausgeschlossen. Daher werden wir Ihnen mit einem Fortschrittsbalken anzeigen, wie viele weitere Aufgaben mindestens noch absolviert werden müssen und wie sehr sie die Aussagekraft der Ergebnisse mit ein paar weiteren Wochen verbessern können.';
 
   @override
-  String get description_part9 => 'Aber genug von unserer Seite, jetzt ist es Zeit für StudyU!';
+  String get description_part9 =>
+      'Aber genug von unserer Seite, jetzt ist es Zeit für StudyU!';
 
   @override
   String get get_started => 'Los geht\'s';
@@ -51,28 +60,33 @@ class AppLocalizationsDe extends AppLocalizations {
   String get study_selection_description => 'Bitte wählen Sie eine Studie aus.';
 
   @override
-  String get study_selection_single => 'Sie können zu jeder Zeit maximal an einer Studie teilnehmen.';
+  String get study_selection_single =>
+      'Sie können zu jeder Zeit maximal an einer Studie teilnehmen.';
 
   @override
   String get study_selection_single_why => 'Warum?';
 
   @override
-  String get study_selection_single_reason => 'Wenn Sie zur selben Zeit an mehreren Studien teilnehmen würde, könnten die Kombination der Interventionen die Ergebnisse verfälschen.';
+  String get study_selection_single_reason =>
+      'Wenn Sie zur selben Zeit an mehreren Studien teilnehmen würde, könnten die Kombination der Interventionen die Ergebnisse verfälschen.';
 
   @override
   String get study_selection_unsupported_title => 'Veraltete App-Version';
 
   @override
-  String get study_selection_unsupported => 'Die Studie, an der Sie teilnehmen möchten, ist nicht mit Ihrer App-Version kompatibel. Bitte aktualisieren Sie die App auf die neueste Version.';
+  String get study_selection_unsupported =>
+      'Die Studie, an der Sie teilnehmen möchten, ist nicht mit Ihrer App-Version kompatibel. Bitte aktualisieren Sie die App auf die neueste Version.';
 
   @override
   String get study_selection_closed_title => 'Studie geschlossen';
 
   @override
-  String get study_selection_closed => 'Diese Studie ist derzeit für neue Teilnehmer geschlossen.';
+  String get study_selection_closed =>
+      'Diese Studie ist derzeit für neue Teilnehmer geschlossen.';
 
   @override
-  String get study_selection_hidden_studies => 'Einige Studien konnten nicht angezeigt werden, da Ihre App-Version veraltet ist. Bitte aktualisieren Sie Ihre App, um alle verfügbaren Studien zu sehen.';
+  String get study_selection_hidden_studies =>
+      'Einige Studien konnten nicht angezeigt werden, da Ihre App-Version veraltet ist. Bitte aktualisieren Sie Ihre App, um alle verfügbaren Studien zu sehen.';
 
   @override
   String get study_overview_title => 'Übersicht';
@@ -81,16 +95,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eligibility_questionnaire_title => 'Fragebogen';
 
   @override
-  String get please_answer_eligibility => 'Bitte beantworten Sie ein paar Fragen um sicherzugehen, dass diese Studie für Sie geeignet ist';
+  String get please_answer_eligibility =>
+      'Bitte beantworten Sie ein paar Fragen um sicherzugehen, dass diese Studie für Sie geeignet ist';
 
   @override
   String get intervention_selection_title => 'Interventionen';
 
   @override
-  String get please_select_interventions => 'Bitte wählen Sie zwei Interventionen für die Studie aus.';
+  String get please_select_interventions =>
+      'Bitte wählen Sie zwei Interventionen für die Studie aus.';
 
   @override
-  String get please_select_interventions_description => 'Die Auswirkungen dieser zwei Maßnahmen werden während der Studie gemessen und verglichen.';
+  String get please_select_interventions_description =>
+      'Die Auswirkungen dieser zwei Maßnahmen werden während der Studie gemessen und verglichen.';
 
   @override
   String get no_interventions_available => 'Keine Interventionen verfügbar.';
@@ -99,10 +116,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get loading_interventions => 'Interventionen laden';
 
   @override
-  String get task_cannot_be_completed => 'Die Aufgabe kann nicht bearbeitet werden';
+  String get task_cannot_be_completed =>
+      'Die Aufgabe kann nicht bearbeitet werden';
 
   @override
-  String get study_notification_body => 'Eine neue Aufgabe benötigt Ihre Aufmerksamkeit';
+  String get study_notification_body =>
+      'Eine neue Aufgabe benötigt Ihre Aufmerksamkeit';
 
   @override
   String get intervention_phase_duration => 'Länge der Interventionphasen';
@@ -120,7 +139,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tasks_daily => 'Aufgaben:';
 
   @override
-  String get baseline_description => 'Die Baseline ist eine Phase innerhalb einer Studie, in der der Ausgangszustand gemessen wird, um spätere Vergleiche zu ermöglichen. Während der Baseline-Phase sollen Sie sich wie gewohnt verhalten, studienspezifische Maßnahmen werden noch keine durchgeführt.';
+  String get baseline_description =>
+      'Die Baseline ist eine Phase innerhalb einer Studie, in der der Ausgangszustand gemessen wird, um spätere Vergleiche zu ermöglichen. Während der Baseline-Phase sollen Sie sich wie gewohnt verhalten, studienspezifische Maßnahmen werden noch keine durchgeführt.';
 
   @override
   String get baseline => 'Baseline';
@@ -147,10 +167,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get soft_delete_desc => 'Sie werden Ihren Fortschritt in der Studie ';
 
   @override
-  String get soft_delete_desc_2 => ' unwiederbringlich verlieren. Bereits abgeschlossene Studien werden nicht gelöscht.\nIhre anonymisierten Daten bis zu diesem Zeitpunkt können weiterhin für Forschungszwecke verwendet werden.';
+  String get soft_delete_desc_2 =>
+      ' unwiederbringlich verlieren. Bereits abgeschlossene Studien werden nicht gelöscht.\nIhre anonymisierten Daten bis zu diesem Zeitpunkt können weiterhin für Forschungszwecke verwendet werden.';
 
   @override
-  String get hard_delete_desc => 'Sie werden alle Daten von Ihrem Gerät und unseren Servern löschen. Sie können Ihre Daten nicht wiederherstellen. Ihre anonymisierten Daten werden nicht mehr für Forschungszwecke zur Verfügung stehen.';
+  String get hard_delete_desc =>
+      'Sie werden alle Daten von Ihrem Gerät und unseren Servern löschen. Sie können Ihre Daten nicht wiederherstellen. Ihre anonymisierten Daten werden nicht mehr für Forschungszwecke zur Verfügung stehen.';
 
   @override
   String get your_journey => 'Deine Reise';
@@ -183,22 +205,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get finished => 'Fertig';
 
   @override
-  String get how_would_you_rate_your_pain_today => 'Wie würden Sie heute Ihren Schmerz bewerten? (0 = kein Schmerz, 10 = extreme Schmerzen)';
+  String get how_would_you_rate_your_pain_today =>
+      'Wie würden Sie heute Ihren Schmerz bewerten? (0 = kein Schmerz, 10 = extreme Schmerzen)';
 
   @override
   String get thank_you_for_your_input => 'Danke für Ihre Eingaben';
 
   @override
-  String get please_give_consent => 'Bitte geben Sie Ihr Einverständnis ab, um an der Studie teilzunehmen. Sie müssen alle Boxen anklicken und lesen.';
+  String get please_give_consent =>
+      'Bitte geben Sie Ihr Einverständnis ab, um an der Studie teilzunehmen. Sie müssen alle Boxen anklicken und lesen.';
 
   @override
   String get please_give_consent_why => 'Warum?';
 
   @override
-  String get please_give_consent_reason => 'Aus Gründen der Sicherheit und des Datenschutzes müssen Studien das Einverständnis der Teilnehmer einholen. Aus diesem Grund müssen Sie für jede Studie erneut Ihr Einverständnis abgeben.';
+  String get please_give_consent_reason =>
+      'Aus Gründen der Sicherheit und des Datenschutzes müssen Studien das Einverständnis der Teilnehmer einholen. Aus diesem Grund müssen Sie für jede Studie erneut Ihr Einverständnis abgeben.';
 
   @override
-  String get user_did_not_give_consent => 'Um an der Studie teilzunehmen müssen Sie erst Ihr Einverständnis abgeben.';
+  String get user_did_not_give_consent =>
+      'Um an der Studie teilzunehmen müssen Sie erst Ihr Einverständnis abgeben.';
 
   @override
   String get setting_up_study => 'Studie wird vorbereitet...';
@@ -276,7 +302,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get next_day => 'Nächster Tag';
 
   @override
-  String get could_not_save_results => 'Ergebnisse konnten nicht gespeichert werden.';
+  String get could_not_save_results =>
+      'Ergebnisse konnten nicht gespeichert werden.';
 
   @override
   String get take_a_photo => 'Mache ein Foto';
@@ -297,7 +324,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get audio_recorded => 'Audio aufgenommen';
 
   @override
-  String get multimodal_not_supported => 'Multimodale Aufgaben werden in der Web-Version zur Zeit nicht unterstützt. Bitte verwenden Sie die App Version für iOS oder Android.';
+  String get multimodal_not_supported =>
+      'Multimodale Aufgaben werden in der Web-Version zur Zeit nicht unterstützt. Bitte verwenden Sie die App Version für iOS oder Android.';
 
   @override
   String get camera_access_denied => 'Zugriff auf Kamera verweigert';
@@ -336,7 +364,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get allow_analytics => 'Analysefunktionen erlauben';
 
   @override
-  String get allow_analytics_desc => 'Die App sammelt Analysedaten ausschließlich zu Verbesserungszwecken und niemals zur Nutzerverfolgung. Details können in den Datenschutzbestimmungen nachgelesen werden.';
+  String get allow_analytics_desc =>
+      'Die App sammelt Analysedaten ausschließlich zu Verbesserungszwecken und niemals zur Nutzerverfolgung. Details können in den Datenschutzbestimmungen nachgelesen werden.';
 
   @override
   String get video_test => 'Das ist ein Videotest';
@@ -366,10 +395,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get terms_read => 'Nutzungsbedingungen lesen';
 
   @override
-  String get terms_content => 'Die Nutzungsbedingungen geben einen Überblick zu dem Zweck und der Nutzung der StudyU App. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.';
+  String get terms_content =>
+      'Die Nutzungsbedingungen geben einen Überblick zu dem Zweck und der Nutzung der StudyU App. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.';
 
   @override
-  String get terms_agree => 'Ich habe die Nutzungsbedingungen gelesen und bin damit einverstanden';
+  String get terms_agree =>
+      'Ich habe die Nutzungsbedingungen gelesen und bin damit einverstanden';
 
   @override
   String get privacy => 'Datenschutz';
@@ -378,10 +409,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get privacy_read => 'Datenschutzbestimmung lesen';
 
   @override
-  String get privacy_content => 'Die Datenschutzbestimmung beschreibt welche Daten gespeichert werden, warum, wann, wo, Zugangsrechte und welche Rechte Sie haben. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.';
+  String get privacy_content =>
+      'Die Datenschutzbestimmung beschreibt welche Daten gespeichert werden, warum, wann, wo, Zugangsrechte und welche Rechte Sie haben. Bei Fragen, bitte wenden Sie sich an uns mit den Kontaktinformationen im Impressum.';
 
   @override
-  String get privacy_agree => 'Ich habe die Datenschutzbestimmung gelesen und bin damit einverstanden';
+  String get privacy_agree =>
+      'Ich habe die Datenschutzbestimmung gelesen und bin damit einverstanden';
 
   @override
   String get imprint_read => 'Impressum lesen';
@@ -408,7 +441,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get save_not_supported => 'Fehler';
 
   @override
-  String get save_not_supported_description => 'Dateidownload ist in der Web-Version zur Zeit nicht unterstützt.';
+  String get save_not_supported_description =>
+      'Dateidownload ist in der Web-Version zur Zeit nicht unterstützt.';
 
   @override
   String get eligible_no => 'Diese Studie ist für Sie leider nicht auswählbar';
@@ -417,13 +451,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get eligible_yes => 'Sie sind berechtigt, diese Studie auszuwählen';
 
   @override
-  String get eligible_mistake => 'Falls Sie einen Fehler gemacht haben, können Sie Ihre Antworten ändern';
+  String get eligible_mistake =>
+      'Falls Sie einen Fehler gemacht haben, können Sie Ihre Antworten ändern';
 
   @override
   String get eligible_back => 'Zurück zur Studienauswahl';
 
   @override
-  String get eligible_choice_multi_selection => 'Alle zutreffenden Antworten auswählen';
+  String get eligible_choice_multi_selection =>
+      'Alle zutreffenden Antworten auswählen';
 
   @override
   String get report_overview => 'Ergebnisübersicht';
@@ -432,7 +468,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get report_primary_result => 'Hauptresultat';
 
   @override
-  String get report_disclaimer => 'Die Ergebnisse sind nur korrekt, wenn Sie alle Informationen wahrheitsgemäß angegeben haben';
+  String get report_disclaimer =>
+      'Die Ergebnisse sind nur korrekt, wenn Sie alle Informationen wahrheitsgemäß angegeben haben';
 
   @override
   String get performance => 'Fortschritt';
@@ -447,10 +484,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get performance_overview_observations => 'Messungen';
 
   @override
-  String get report_outcome_inconclusive => 'Die Ergebnisse sind unschlüssig. Es gibt anscheinend keinen statistisch signifikanten Unterschied zwischen den Interventionen.';
+  String get report_outcome_inconclusive =>
+      'Die Ergebnisse sind unschlüssig. Es gibt anscheinend keinen statistisch signifikanten Unterschied zwischen den Interventionen.';
 
   @override
-  String get report_outcome_neither => 'Beide Interventionen scheinen einen negativen Effekt auf das Ereignis zu haben.';
+  String get report_outcome_neither =>
+      'Beide Interventionen scheinen einen negativen Effekt auf das Ereignis zu haben.';
 
   @override
   String report_outcome_one(Object intervention) {
@@ -461,22 +500,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get report_axis_phase => 'Phase';
 
   @override
-  String get study_not_started => 'Ihre Studie hat noch nicht angefangen. Bitte schauen Sie morgen noch einmal vorbei!';
+  String get study_not_started =>
+      'Ihre Studie hat noch nicht angefangen. Bitte schauen Sie morgen noch einmal vorbei!';
 
   @override
-  String get completed_study => 'Sie haben Ihre letzte Studie abgeschlossen. Schauen Sie vergangene Ergebnisse an oder starten Sie eine neue Studie.';
+  String get completed_study =>
+      'Sie haben Ihre letzte Studie abgeschlossen. Schauen Sie vergangene Ergebnisse an oder starten Sie eine neue Studie.';
 
   @override
   String get app_support => 'App Support';
 
   @override
-  String get app_support_text => 'Bei Problemen oder Fragen zur App kontaktieren';
+  String get app_support_text =>
+      'Bei Problemen oder Fragen zur App kontaktieren';
 
   @override
   String get study_support => 'Studien Support';
 
   @override
-  String get study_support_text => 'Bei Problemen oder Fragen zur Studie kontaktieren';
+  String get study_support_text =>
+      'Bei Problemen oder Fragen zur Studie kontaktieren';
 
   @override
   String get organization => 'Organisation';
@@ -510,10 +553,12 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get free_text_alphanumeric_error => 'Bitte geben Sie nur alphanumerische Zeichen ein';
+  String get free_text_alphanumeric_error =>
+      'Bitte geben Sie nur alphanumerische Zeichen ein';
 
   @override
-  String get free_text_numeric_error => 'Bitte geben Sie nur numerische Zeichen ein';
+  String get free_text_numeric_error =>
+      'Bitte geben Sie nur numerische Zeichen ein';
 
   @override
   String free_text_custom_error(String pattern) {
@@ -521,7 +566,8 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get app_outdated_message => 'Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!';
+  String get app_outdated_message =>
+      'Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!';
 
   @override
   String get update_now => 'Jetzt aktualisieren';
@@ -530,10 +576,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get sync_fitbit_data => 'Fitbit-Daten synchronisieren';
 
   @override
-  String get fitbit_data_synced => 'Fitbit-Daten wurden erfolgreich synchronisiert';
+  String get fitbit_data_synced =>
+      'Fitbit-Daten wurden erfolgreich synchronisiert';
 
   @override
-  String get fitbit_data_not_synced => 'Fitbit-Daten konnten nicht synchronisiert werden. Bitte stellen Sie sicher, dass Sie Ihre Fitbit-Daten in der Fitbit-App synchronisiert haben.';
+  String get fitbit_data_not_synced =>
+      'Fitbit-Daten konnten nicht synchronisiert werden. Bitte stellen Sie sicher, dass Sie Ihre Fitbit-Daten in der Fitbit-App synchronisiert haben.';
 
   @override
   String error_syncing_fitbit_data(String error) {

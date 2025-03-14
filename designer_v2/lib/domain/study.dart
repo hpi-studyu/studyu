@@ -66,7 +66,7 @@ extension StudyStatusFormatted on StudyStatus {
         return tr.study_status_running;
       case StudyStatus.closed:
         return tr.study_status_closed;
-      }
+    }
   }
 
   String get description {
@@ -77,7 +77,7 @@ extension StudyStatusFormatted on StudyStatus {
         return tr.study_status_running_description;
       case StudyStatus.closed:
         return tr.study_status_closed_description;
-      }
+    }
   }
 }
 
