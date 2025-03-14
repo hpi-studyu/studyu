@@ -65,9 +65,9 @@ class ActionPopUpMenuButton extends StatelessWidget {
     final theme = Theme.of(context);
     final isHovered = state.contains(WidgetState.hovered);
     final iconColorDefault =
-        triggerIconColor ?? theme.iconTheme.color!.withOpacity(0.7);
+        triggerIconColor ?? theme.iconTheme.color!.withValues(alpha: 0.7);
     final iconColorHover =
-        triggerIconColorHover ?? theme.iconTheme.color!.withOpacity(0.7);
+        triggerIconColorHover ?? theme.iconTheme.color!.withValues(alpha: 0.7);
     final triggerIcon = (orientation == Axis.vertical)
         ? Icons.more_vert_rounded
         : Icons.more_horiz_rounded;

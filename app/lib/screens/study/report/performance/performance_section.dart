@@ -150,7 +150,7 @@ class PerformanceBar extends StatelessWidget {
       rangeEnd: 1,
     );
     final fullSpectrum = List<double>.generate(3, (index) => index * 0.5)
-        .map<Color>((index) => rainbow[index].withOpacity(0.4))
+        .map<Color>((index) => rainbow[index].withValues(alpha: 0.4))
         .toList();
     final colorSamples =
         List<double>.generate(11, (index) => index * 0.1 * progress)

@@ -95,7 +95,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
                 preferredSize: Size(double.infinity, widget.appbarSubnavHeight),
                 child: ColoredBox(
                   //color: theme.colorScheme.primary.withOpacity(0.05),
-                  color: theme.scaffoldBackgroundColor.withOpacity(0.15),
+                  color: theme.scaffoldBackgroundColor.withValues(alpha: 0.15),
                   child: Row(
                     children: [
                       const SizedBox(width: 35.0),

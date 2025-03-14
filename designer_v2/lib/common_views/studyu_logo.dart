@@ -19,7 +19,7 @@ class StudyULogo extends StatelessWidget {
             color: Theme.of(context)
                 .colorScheme
                 .primary
-                .withOpacity(colorBlendFactor),
+                .withValues(alpha: colorBlendFactor),
             backgroundBlendMode: BlendMode.color,
           ),
           child: Image.asset(
