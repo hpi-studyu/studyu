@@ -199,7 +199,8 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
             Expanded(
               child: ListTileTheme(
                 selectedColor: theme.colorScheme.primary,
-                selectedTileColor: theme.colorScheme.primary.withOpacity(0.1),
+                selectedTileColor:
+                    theme.colorScheme.primary.withValues(alpha: 0.1),
                 child: ListView(
                   // Important: Remove any padding from the ListView.
                   padding: EdgeInsets.zero,
@@ -239,7 +240,10 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
             onTap: () => ref.read(routerProvider).dispatch(RoutingIntents.root),
             child: Container(
               foregroundDecoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.4),
                 backgroundBlendMode: BlendMode.color,
               ),
               child: Image.asset(

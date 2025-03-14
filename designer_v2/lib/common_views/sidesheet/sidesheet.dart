@@ -145,7 +145,7 @@ class _SidesheetState extends State<Sidesheet> {
         border: Border(
           left: BorderSide(
             color: (theme.dividerTheme.color ?? theme.dividerColor)
-                .withOpacity(0.1),
+                .withValues(alpha: 0.1),
           ),
         ),
       ),
