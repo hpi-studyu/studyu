@@ -289,7 +289,7 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
           onPressed: controller.onSettingsPressed,
           icon: Icon(Icons.settings_rounded, size: theme.iconTheme.size),
           tooltip: tr.study_settings,
-          color: theme.iconTheme.color?.faded(0.8),
+          color: theme.iconTheme.color?.withValues(alpha: 0.8),
           splashRadius: ThemeConfig.iconSplashRadius(theme),
         ),
       );

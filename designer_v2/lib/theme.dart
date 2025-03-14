@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 
 class DropdownMenuItemTheme with Diagnosticable {
   const DropdownMenuItemTheme({this.iconTheme});
@@ -18,7 +17,7 @@ class ThemeConfig {
   static const double kMuteFadeFactor = 0.8;
 
   static Color bodyBackgroundColor(ThemeData theme) =>
-      theme.scaffoldBackgroundColor.faded(0.5);
+      theme.scaffoldBackgroundColor.withValues(alpha: 0.5);
 
   static Color modalBarrierColor(ThemeData theme) =>
       theme.colorScheme.secondary.withValues(alpha: 0.4);
@@ -32,7 +31,7 @@ class ThemeConfig {
   static TextStyle bodyTextMuted(ThemeData theme) => TextStyle(
         fontSize: 14.0,
         height: 1.35,
-        color: theme.textTheme.bodyLarge?.color?.faded(0.65),
+        color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 0.65),
       );
 
   static TextStyle bodyTextBackground(ThemeData theme) => TextStyle(
@@ -54,8 +53,7 @@ class ThemeConfig {
   static DropdownMenuItemTheme dropdownMenuItemTheme(ThemeData theme) =>
       DropdownMenuItemTheme(
         iconTheme: IconThemeData(
-          color: theme.textTheme.bodyLarge?.color?.faded(0.4),
-          // theme.iconTheme.color?.faded(0.75)
+          color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 0.4),
           size: 18.0,
         ),
       );
@@ -412,7 +410,8 @@ class ThemeProvider extends InheritedWidget {
 
   IconThemeData iconTheme(ColorScheme colors) {
     return IconThemeData(
-      color: colors.onSurface.withValues(alpha: 0.8),
+      color: colors.onSurface,
+      opacity: 0.8,
       size: 17.0,
     );
   }
@@ -476,7 +475,6 @@ class ThemeProvider extends InheritedWidget {
 
   ThemeData light([Color? targetColor]) {
     final colorScheme = colors(Brightness.light, targetColor);
-    print(colorScheme.onSurface);
     return ThemeData.light().copyWith(
       pageTransitionsTheme: pageTransitionsTheme,
       colorScheme: colorScheme,
