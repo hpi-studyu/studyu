@@ -1,3 +1,7 @@
+## 1.9.0-dev.1
+
+ - **FIX**: update Supabase public anon key in development environment.
+
 ## 1.9.0-dev.0
 
  - **FEAT**: update Fitbit credentials form and related dependencies.

@@ -1,3 +1,25 @@
+## 1.10.0-dev.0
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**: incorrect use of static final with lambda function.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: platform localization.
+ - **FIX**: localization.
+ - **FIX**: fitbit question form.
+ - **FIX**: form control for fitbit question.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**(questionnaire): add validation for Fitbit question type.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: check if credentials exists when adding fitbit question.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
+
 ## 1.9.4
 
  - **FIX**: linter.
