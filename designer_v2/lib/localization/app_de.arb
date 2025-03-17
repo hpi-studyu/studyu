@@ -742,6 +742,8 @@
   "fitbit_credentials_screenshot_step5": "Schritt 5: Zugriff einstellen",
   "fitbit_credentials_screenshot_step6": "Schritt 6: Zugangsdaten erhalten",
   "fitbit_credentials_screenshot_step7": "Schritt 7: Formular ausfüllen",
+  "fitbit_credentials_cannot_change_title": "Fitbit-Anmeldedaten können nicht geändert werden",
+  "fitbit_credentials_cannot_change_description": "Fitbit-Anmeldedaten können nicht geändert werden, wenn die Studie nicht im Entwurfsmodus ist.",
   "client_id": "Client ID",
   "client_id_label_help": "Geben Sie die Client-ID aus dem Fitbit Developer Portal ein.",
   "client_id_hint": "Client ID",

@@ -3410,6 +3410,18 @@ abstract class AppLocalizations {
   /// **'Step 7: Fill Form'**
   String get fitbit_credentials_screenshot_step7;
 
+  /// No description provided for @fitbit_credentials_cannot_change_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit credentials can\'t be changed'**
+  String get fitbit_credentials_cannot_change_title;
+
+  /// No description provided for @fitbit_credentials_cannot_change_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit credentials can\'t be changed while the study is not in draft mode.'**
+  String get fitbit_credentials_cannot_change_description;
+
   /// No description provided for @client_id.
   ///
   /// In en, this message translates to:

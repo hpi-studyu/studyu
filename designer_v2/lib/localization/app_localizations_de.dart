@@ -2019,6 +2019,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Schritt 7: Formular ausfüllen';
 
   @override
+  String get fitbit_credentials_cannot_change_title =>
+      'Fitbit-Anmeldedaten können nicht geändert werden';
+
+  @override
+  String get fitbit_credentials_cannot_change_description =>
+      'Fitbit-Anmeldedaten können nicht geändert werden, wenn die Studie nicht im Entwurfsmodus ist.';
+
+  @override
   String get client_id => 'Client ID';
 
   @override

@@ -745,6 +745,8 @@
   "fitbit_credentials_screenshot_step5": "Step 5: Set Access",
   "fitbit_credentials_screenshot_step6": "Step 6: Get Credentials",
   "fitbit_credentials_screenshot_step7": "Step 7: Fill Form",
+  "fitbit_credentials_cannot_change_title": "Fitbit credentials can't be changed",
+  "fitbit_credentials_cannot_change_description": "Fitbit credentials can't be changed while the study is not in draft mode.",
   "client_id": "Client ID",
   "client_id_label_help": "Enter the Client ID from Fitbit Developer Portal.",
   "client_id_hint": "Client ID",

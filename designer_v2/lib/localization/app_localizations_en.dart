@@ -1987,6 +1987,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fitbit_credentials_screenshot_step7 => 'Step 7: Fill Form';
 
   @override
+  String get fitbit_credentials_cannot_change_title =>
+      'Fitbit credentials can\'t be changed';
+
+  @override
+  String get fitbit_credentials_cannot_change_description =>
+      'Fitbit credentials can\'t be changed while the study is not in draft mode.';
+
+  @override
   String get client_id => 'Client ID';
 
   @override
