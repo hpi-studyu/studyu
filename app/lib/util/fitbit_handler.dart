@@ -76,7 +76,7 @@ class FitbitHandler {
 
   static Future<fitbitter.FitbitCredentials?> _validateToken(
     Study study,
-    FitbitCredentials studyCredentials,
+    FitbitAuthCredentials studyCredentials,
     fitbitter.FitbitCredentials currentCredentials,
   ) async {
     try {
@@ -138,11 +138,12 @@ class FitbitHandler {
       }
 
       final newCredentials = await fitbitter.FitbitConnector.authorize(
-          clientID: fitbitCreds.clientId,
-          clientSecret: fitbitCreds.clientSecret,
-          redirectUri: fitbitRedirectUrl,
-          callbackUrlScheme: fitbitCallbackScheme,
-          scopeList: scopes,);
+        clientID: fitbitCreds.clientId,
+        clientSecret: fitbitCreds.clientSecret,
+        redirectUri: fitbitRedirectUrl,
+        callbackUrlScheme: fitbitCallbackScheme,
+        scopeList: scopes,
+      );
 
       if (newCredentials != null) {
         await _storeCredentials(newCredentials, study.id);
@@ -161,7 +162,7 @@ class FitbitHandler {
   }
 
   static Future<List<FitbitHeartData>> _fetchHeartData(
-    FitbitCredentials studyCredentials,
+    FitbitAuthCredentials studyCredentials,
     fitbitter.FitbitCredentials credentials,
     DateTime latest,
   ) async {
@@ -188,7 +189,7 @@ class FitbitHandler {
   }
 
   static Future<List<FitbitSleepData>> _fetchSleepData(
-    FitbitCredentials studyCredentials,
+    FitbitAuthCredentials studyCredentials,
     fitbitter.FitbitCredentials credentials,
     DateTime latest,
   ) async {
@@ -221,7 +222,7 @@ class FitbitHandler {
   }
 
   static Future<List<FitbitStepData>> _fetchStepData(
-    FitbitCredentials studyCredentials,
+    FitbitAuthCredentials studyCredentials,
     fitbitter.FitbitCredentials credentials,
     DateTime latest,
   ) async {
@@ -279,7 +280,7 @@ class FitbitHandler {
 
   static Future<List<FitbitData>> _getFitbitData(
     List<FitbitQuestionType> types,
-    FitbitCredentials studyCredentials,
+    FitbitAuthCredentials studyCredentials,
     fitbitter.FitbitCredentials credentials,
     String taskId,
     StudySubject subject,

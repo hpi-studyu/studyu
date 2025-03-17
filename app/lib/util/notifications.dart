@@ -158,7 +158,7 @@ class StudyNotifications {
   }
 
   void _configureSelectNotificationSubject() {
-    selectNotificationStream.stream.listen((String? payload) async {
+    selectNotificationStream.stream.listen((String? payload) {
       handleNotificationResponse(payload!);
     });
   }
@@ -167,29 +167,13 @@ class StudyNotifications {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    final DarwinInitializationSettings initializationSettingsDarwin =
-        DarwinInitializationSettings(
-      onDidReceiveLocalNotification: (
-        int id,
-        String? title,
-        String? body,
-        String? payload,
-      ) async {
-        didReceiveLocalNotificationStream.add(
-          ReceivedNotification(
-            id: id,
-            title: title,
-            body: body,
-            payload: payload,
-          ),
-        );
-      },
-    );
+    const DarwinInitializationSettings initializationSettingsDarwin =
+        DarwinInitializationSettings();
     const LinuxInitializationSettings initializationSettingsLinux =
         LinuxInitializationSettings(
       defaultActionName: 'Open notification',
     );
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsDarwin,

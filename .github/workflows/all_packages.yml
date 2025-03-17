@@ -15,6 +15,9 @@ on:
       - ".github/workflows/init-workspace/**"
   workflow_dispatch:
 
+env:
+  MELOS_SDK_PATH: 'auto'
+
 concurrency:
   group: ${{ github.ref }}-all-packages
   cancel-in-progress: true
@@ -34,14 +37,8 @@ jobs:
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
 
-      - name: Run generate
-        run: melos run generate
-
       # - name: Run fix # remove until flutter_gen issue is fixed
       #   run: melos run fix
-
-      - name: Run bootstrap
-        run: melos bootstrap
 
       - name: Run format
         run: melos format
@@ -61,7 +58,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
+
       - name: Run Test
         run: melos run test --no-select

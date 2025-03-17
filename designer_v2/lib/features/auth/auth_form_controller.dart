@@ -64,7 +64,7 @@ class AuthFormController extends _$AuthFormController
     formKey = formKeyArg;
     resetControlsFor(formKey);
 
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       print("authFormController.state updated");
       if (state.hasError) {
         final AuthException error = state.error! as AuthException;
@@ -105,7 +105,7 @@ class AuthFormController extends _$AuthFormController
     ValidationMessage.email: (_) => tr.form_field_email_invalid,
     ValidationMessage.mustMatch: (_) => tr.form_field_password_mustmatch,
     ValidationMessage.minLength: (error) => tr.form_field_password_minlength(
-          (error as Map)['requiredLength'].toString(),
+          (error as Map)['requiredLength'] as num,
         ),
   };
 
@@ -301,7 +301,7 @@ class AuthFormController extends _$AuthFormController
         .then((_) => notificationService.show(Notifications.passwordReset));
   }
 
-  Future<void> recoverPassword() async {
+  Future<void> recoverPassword() {
     if (!form.valid) {
       return Future.value();
     }

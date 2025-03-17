@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_core` - `v4.5.0-dev.0`](#studyu_core---v450-dev0)
+ - [`studyu_flutter_common` - `v1.9.0-dev.0`](#studyu_flutter_common---v190-dev0)
+
+---
+
+#### `studyu_core` - `v4.5.0-dev.0`
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
+
+#### `studyu_flutter_common` - `v1.9.0-dev.0`
+
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+
+
+## 2024-11-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.14`](#studyu_app---v2714)
+ - [`studyu_designer_v2` - `v1.9.4`](#studyu_designer_v2---v194)
+
+---
+
+#### `studyu_app` - `v2.7.14`
+
+ - **FIX**: linter.
+
+#### `studyu_designer_v2` - `v1.9.4`
+
+ - **FIX**: linter.
+ - **FIX**: ensure data source in report is copied during study duplication.
+
+
+## 2024-11-18
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.13`](#studyu_app---v2713)
+ - [`studyu_core` - `v4.4.9`](#studyu_core---v449)
+ - [`studyu_designer_v2` - `v1.9.3`](#studyu_designer_v2---v193)
+ - [`studyu_flutter_common` - `v1.8.10`](#studyu_flutter_common---v1810)
+
+---
+
+#### `studyu_app` - `v2.7.13`
+
+ - **FIX**: migrate code.
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+#### `studyu_core` - `v4.4.9`
+
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+#### `studyu_designer_v2` - `v1.9.3`
+
+ - **FIX**: migrate code.
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+#### `studyu_flutter_common` - `v1.8.10`
+
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+
 ## 2024-10-07
 
 ### Changes

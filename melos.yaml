@@ -1,5 +1,6 @@
 name: studyu
 repository: https://github.com/hpi-studyu/studyu
+sdkPath: .fvm/flutter_sdk
 
 packages:
   - app
@@ -145,7 +146,7 @@ scripts:
   build:web:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
+        "flutter build web --dart-define=STUDYU_ENV=.env.dev"
     description: Build web dev.
     packageFilters:
       scope: [ studyu_app, studyu_designer_v2 ]
@@ -154,7 +155,7 @@ scripts:
   build:web:app:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
+        "flutter build web --dart-define=STUDYU_ENV=.env.dev"
     description: Build web app dev.
     packageFilters:
       scope: studyu_app
@@ -163,7 +164,7 @@ scripts:
   build:web:designer_v2:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
-        "flutter build web --web-renderer auto --dart-define=STUDYU_ENV=.env.dev"
+        "flutter build web --dart-define=STUDYU_ENV=.env.dev"
     description: Build web designer_v2 dev.
     packageFilters:
       scope: studyu_designer_v2

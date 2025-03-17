@@ -43,7 +43,9 @@
   "form_field_password_minlength": "Passwörter müssen mindestens {minLength} Zeichen lang sein",
   "@form_field_password_minlength": {
     "placeholders": {
-      "minLength": {}
+      "minLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_password_new": "Neues Passwort",
@@ -176,27 +178,35 @@
   "form_array_response_options_choice_countmin": "Die Frage muss mindestens {count} gültige Antwortoptionen haben",
   "@form_array_response_options_choice_countmin": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_response_options_choice_countmax": "Die Frage darf nicht mehr als {count} gültige Antwortoptionen haben",
   "@form_array_response_options_choice_countmax": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_response_options_scale_rangevalid_min": "Der Startwert muss kleiner als der Endwert der Skala sein",
   "form_array_response_options_scale_rangevalid_max": "Die Differenz zwischen dem Start- und Endwert der Skala darf maximal {count} betragen",
   "@form_array_response_options_scale_rangevalid_max": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "audio_recording_max_duration_rangevalid_min": "Die minimale Aufnahmedauer beträgt 1 Sekunde",
   "audio_recording_max_duration_rangevalid_max": "Die maximale Aufnahmedauer beträgt {count} Sekunden",
   "@audio_recording_max_duration_rangevalid_max": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "free_text_question_logic_not_supported": "Logik ist für Freitext-Fragen noch nicht verfügbar",
@@ -219,13 +229,17 @@
   "free_text_validation_min_length": "Die Eingabe muss mindestens {countMin} Zeichen lang sein.",
   "@free_text_validation_min_length": {
     "placeholders": {
-      "countMin": {}
+      "countMin": {
+        "type": "num"
+      }
     }
   },
   "free_text_validation_max_length": "Die Eingabe darf höchstens {countMax} Zeichen lang sein.",
   "@free_text_validation_max_length": {
     "placeholders": {
-      "countMax": {}
+      "countMax": {
+        "type": "num"
+      }
     }
   },
   "free_text_validation_pattern": "Die Eingabe muss dem angegebenen Format entsprechen.",
@@ -233,9 +247,15 @@
   "free_text_example_explanation": "Eingaben vom Typ {type} mit einer Zeichenlänge im Bereich von {countMin} bis {countMax} werden akzeptiert.",
   "@free_text_example_explanation": {
     "placeholders": {
-      "type": {},
-      "countMin": {},
-      "countMax": {}
+      "type": {
+        "type": "String"
+      },
+      "countMin": {
+        "type": "num"
+      },
+      "countMax": {
+        "type": "num"
+      }
     }
   },
   "free_text_question_type_any_explanation": "Jede Eingabe wird akzeptiert.",
@@ -332,7 +352,9 @@
   "form_array_interventions_minlength": "{count,plural, =2{Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.} other{form_array_interventions_minlength}}",
   "@form_array_interventions_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_interventions": "Interventionsphasen",
@@ -354,7 +376,9 @@
   "form_array_intervention_tasks_minlength": "{count,plural, =1{Du musst mindestens eine Maßnahme definieren, die während der Interventionsphase erfüllt werden soll} other{form_array_intervention_tasks_minlength}}",
   "@form_array_intervention_tasks_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_intervention_task_create": "Neue Maßnahme",
@@ -378,8 +402,12 @@
   "form_field_crossover_schedule_phase_length_range": "Interventionsphasen müssen zwischen {min} und {max} Tagen lang sein",
   "@form_field_crossover_schedule_phase_length_range": {
     "placeholders": {
-      "min": {},
-      "max": {}
+      "min": {
+        "type": "num"
+      },
+      "max": {
+        "type": "num"
+      }
     }
   },
   "form_field_amount_days": "Tage",
@@ -388,8 +416,12 @@
   "form_field_crossover_schedule_num_cycles_range": "Die Anzahl der Wiederholungen für Interventionsphasen im Versuchsplan muss zwischen {min} und {max} liegen",
   "@form_field_crossover_schedule_num_cycles_range": {
     "placeholders": {
-      "min": {},
-      "max": {}
+      "min": {
+        "type": "num"
+      },
+      "max": {
+        "type": "num"
+      }
     }
   },
   "form_field_amount_crossover_schedule_num_cycles": "Wiederholungen",
@@ -401,7 +433,9 @@
   "form_array_measurements_minlength": "{count,plural, =1{Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.} other{form_array_measurements_minlength}}",
   "@form_array_measurements_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_measurements_surveys": "Fragebögen",
@@ -425,7 +459,9 @@
   "form_array_measurement_survey_questions_minlength": "{count,plural, =1{Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.} other{form_array_measurement_survey_questions_minlength}}",
   "@form_array_measurement_survey_questions_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "@__________________STUDYPAGE_DESIGN_REPORTS__________________": {},
@@ -503,7 +539,9 @@
   "enrolled_count_tooltip": "{count,plural, =0{Bisher hat sich niemand mit diesem Teilnahme-Code zur Studie angemeldet} =1{{count} Teilnehmer hat sich mit diesem Code zur Studie angemeldet} other{{count} Teilnehmer haben sich mit diesem Code zur Studie angemeldet}}",
   "@enrolled_count_tooltip": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_code_create": "Neuer Teilnahmecode",
@@ -514,13 +552,17 @@
   "form_field_code_minlength": "Der Code muss mindestens {minLength} Zeichen lang sein",
   "@form_field_code_minlength": {
     "placeholders": {
-      "minLength": {}
+      "minLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_code_maxlength": "Der Code darf maximal {maxLength} Zeichen lang sein",
   "@form_field_code_maxlength": {
     "placeholders": {
-      "maxLength": {}
+      "maxLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_code_alreadyused": "Dieser Code wird bereits verwendet",
@@ -607,37 +649,49 @@
   "date_diff_years": "{count,plural, =1{Vor einem Jahr} other{Vor {count} Jahren}}",
   "@date_diff_years": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_months": "{count,plural, =1{Vor einem Monat} other{Vor {count} Monaten}}",
   "@date_diff_months": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_days": "{count,plural, =1{Vor einem Tag} other{Vor {count} Tagen}}",
   "@date_diff_days": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_hours": "{count,plural, =1{Vor einer Stunde} other{Vor {count} Stunden}}",
   "@date_diff_hours": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_minutes": "{count,plural, =1{Vor einer Minute} other{Vor {count} Minuten}}",
   "@date_diff_minutes": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_seconds": "{count,plural, =1{Vor einer Sekunde} other{Vor {count} Sekunden}}",
   "@date_diff_seconds": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_just_now": "Gerade eben",
@@ -674,7 +728,7 @@
   "fitbit_credentials_step1": "1. Gehen Sie zum Fitbit Developer Portal.",
   "fitbit_credentials_step2": "2. Melden Sie sich mit Ihrem Fitbit-Konto an oder erstellen Sie eins, falls Sie noch keines haben.",
   "fitbit_credentials_step3": "3. Navigieren Sie zum Abschnitt \"Verwalten\" und wählen Sie \"App registrieren\".",
-  "fitbit_credentials_step4": "4. Füllen Sie die erforderlichen Felder wie Anwendungsname, Beschreibung und Callback-URL (verwenden Sie: \"studyu://\") aus.",
+  "fitbit_credentials_step4": "4. Füllen Sie die erforderlichen Felder wie Anwendungsname, Beschreibung und Redirect-URL (verwenden Sie: \"studyu://fitbit/auth\") aus.",
   "fitbit_credentials_step5": "5. Wählen Sie unter \"OAuth 2.0 Application Type\" die Option \"Client\" und setzen Sie den Zugriff auf \"Nur Lesen\".",
   "fitbit_credentials_step6": "6. Senden Sie das Formular ab, um Ihre \"Client ID\" und \"Client Secret\" zu erhalten.",
   "fitbit_credentials_step7": "7. Bitte füllen Sie das folgende Formular aus, um Zugang zu Intraday-Daten zu erhalten. Ohne diesen Schritt können Sie keine Daten von Fitbit für Ihre Versuche abrufen.",
@@ -688,6 +742,8 @@
   "fitbit_credentials_screenshot_step5": "Schritt 5: Zugriff einstellen",
   "fitbit_credentials_screenshot_step6": "Schritt 6: Zugangsdaten erhalten",
   "fitbit_credentials_screenshot_step7": "Schritt 7: Formular ausfüllen",
+  "fitbit_credentials_cannot_change_title": "Fitbit-Anmeldedaten können nicht geändert werden",
+  "fitbit_credentials_cannot_change_description": "Fitbit-Anmeldedaten können nicht geändert werden, wenn die Studie nicht im Entwurfsmodus ist.",
   "client_id": "Client ID",
   "client_id_label_help": "Geben Sie die Client-ID aus dem Fitbit Developer Portal ein.",
   "client_id_hint": "Client ID",

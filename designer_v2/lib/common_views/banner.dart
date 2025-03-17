@@ -65,7 +65,7 @@ class _BannerBoxState extends State<BannerBox> {
 
     return Container(
       decoration: BoxDecoration(
-        color: bannerColor.withOpacity(0.6),
+        color: bannerColor.withValues(alpha: 0.6),
         border: Border.all(color: bannerColor),
       ),
       child: Padding(
@@ -120,8 +120,6 @@ class _BannerBoxState extends State<BannerBox> {
         return const Color(0xFFFFC808);
       case BannerStyle.error:
         return theme.colorScheme.errorContainer;
-      default:
-        return theme.colorScheme.primary;
     }
   }
 

@@ -38,7 +38,7 @@ class StudyParticipationBadge extends StatelessWidget {
           studybadge.Badge(
             label: participation.whoShort,
             center: center,
-            color: colorScheme.primary.withOpacity(0.8),
+            color: colorScheme.primary.withValues(alpha: 0.8),
             type: type,
             icon: showPrefixIcon ? Icons.people_rounded : null,
             padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
@@ -49,7 +49,7 @@ class StudyParticipationBadge extends StatelessWidget {
           studybadge.Badge(
             label: participation.whoShort,
             center: center,
-            color: colorScheme.onPrimaryContainer.withOpacity(0.6),
+            color: colorScheme.onPrimaryContainer.withValues(alpha: 0.6),
             type: type,
             icon: showPrefixIcon ? Icons.lock_rounded : null,
             padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),

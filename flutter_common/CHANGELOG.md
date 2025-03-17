@@ -1,3 +1,11 @@
+## 1.9.0-dev.0
+
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+
+## 1.8.10
+
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
 ## 1.8.9
 
  - **FIX**: upgrade deps.

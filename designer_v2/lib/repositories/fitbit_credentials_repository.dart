@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -41,7 +42,7 @@ class FitbitCredentialsRepository
   Study get study => studyRepository.get(studyId)!.model;
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
-  final ProviderRef ref;
+  final Ref ref;
 
   final StudyUApi apiClient;
   final IAuthRepository authRepository;
@@ -69,8 +70,8 @@ class FitbitCredentialsRepository
       ModelAction(
         type: ModelActionType.delete,
         label: ModelActionType.delete.string,
-        onExecute: () {
-          return delete(getKey(model))
+        onExecute: () async {
+          return await delete(getKey(model))
               .then(
                 (value) => ref
                     .read(routerProvider)
@@ -119,7 +120,7 @@ class FitbitCredentialsRepositoryDelegate
   }
 
   @override
-  Future<StudyFitbitCredentials> save(StudyFitbitCredentials model) async {
+  Future<StudyFitbitCredentials> save(StudyFitbitCredentials model) {
     final prevCredentials = study.fitbitCredentials;
 
     final saveOperation = OptimisticUpdate(
@@ -189,7 +190,7 @@ class FitbitCredentialsRepositoryDelegate
 
 @riverpod
 FitbitCredentialsRepository fitbitCredentialsRepository(
-  FitbitCredentialsRepositoryRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   print("fitbitCredentialsRepositoryProvider($studyId");

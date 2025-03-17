@@ -1,5 +1,5 @@
 name: studyu_app
-version: 2.7.12
+version: 2.7.14
 description: Partake in digital N-of-1 trials with the innovative StudyU Health App
 publish_to: none
 homepage: https://studyu.health
@@ -9,60 +9,65 @@ environment:
   sdk: '>=3.2.0 <4.0.0'
 
 dependencies:
-  camera: ^0.11.0+2
-  collection: ^1.18.0
+  camera: ^0.11.1
+  collection: ^1.19.1
   cross_file: ^0.3.4+2
   cupertino_icons: ^1.0.8
-  fl_chart: ^0.69.0
+  fitbitter:
+    # path: ../../fitbitter
+    git:
+      url: https://github.com/hpi-studyu/fitbitter.git
+      ref: studyu-compatibility-fix
+  fl_chart: ^0.70.2
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.2
-  flutter_local_notifications: ^17.2.3
+  flutter_local_notifications: ^18.0.1
   flutter_localizations:
     sdk: flutter
-  flutter_timezone: ^3.0.1
+  flutter_timezone: ^4.1.0
   flutter_web_plugins:
     sdk: flutter
-  flutter_widget_from_html: ^0.15.2
+  flutter_widget_from_html: ^0.16.0
   intersperse: ^2.0.0
   intl: ^0.19.0
   material_design_icons_flutter: ^7.0.7296
-  package_info_plus: ^8.0.2
-  path: ^1.9.0
-  path_provider: ^2.1.4
-  pdf: ^3.11.1
-  permission_handler: ^11.3.1
+  package_info_plus: ^8.3.0
+  path: ^1.9.1
+  path_provider: ^2.1.5
+  pdf: ^3.11.3
+  permission_handler: ^11.4.0
   provider: ^6.1.2
   quiver: ^3.2.2
   rainbow_color: ^2.0.1
-  record: ^5.1.2
-  sentry_flutter: ^8.9.0
-  sentry_logging: ^8.9.0
-  shared_preferences: ^2.3.2
-  studyu_core: ^4.4.8
-  studyu_flutter_common: ^1.8.9
-  supabase: ^2.4.0
-  supabase_flutter: ^2.7.0
+  record: ^5.2.1
+  sentry_flutter: ^8.14.0
+  sentry_logging: ^8.14.0
+  shared_preferences: ^2.5.2
+  studyu_core: ^4.5.0-dev.0
+  studyu_flutter_common: ^1.9.0-dev.0
+  supabase: ^2.6.3
+  supabase_flutter: ^2.8.4
   timeline_tile: ^2.0.0
-  timezone: ^0.9.4
+  timezone: ^0.10.0
   universal_html: ^2.2.4
-  url_launcher: ^6.3.0
+  url_launcher: ^6.3.1
   uuid: ^4.5.1
-  wakelock_plus: ^1.2.8
-  fitbitter:
+  wakelock_plus: ^1.2.10
+
+dependency_overrides:
+  # todo if this works we can remove the override in hpi-studyu/fitbitter
+  flutter_web_auth:
     git:
-      url: https://github.com/hpi-studyu/fitbitter.git
-      ref: master
+      url: https://github.com/johannesvedder/flutter_web_auth.git
+      ref: fix-android-kotlin
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.14.1
+  flutter_launcher_icons: ^0.14.3
   flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
-  lint: ^2.3.0
-
-dependency_overrides:
-  intl: ^0.19.0
+  lint: ^2.8.0
 
 flutter:
   generate: true

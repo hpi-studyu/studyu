@@ -94,13 +94,14 @@ Please make sure to follow these guidelines when contributing to the project.
 
 The StudyU monorepo uses the [FVM](https://fvm.app/) tool to manage the Flutter
 SDK version. This allows us to have a consistent Flutter version across all
-packages. The Flutter SDK version is specified in the `.fvm` file in the root
-directory. To install the Flutter SDK version, run `fvm install` in the root directory. 
+packages. The Flutter SDK version is specified in the `.fvmrc` file in the root
+directory. To install the Flutter SDK version, run `fvm install` in the root directory.
 You might also want to integrate FVM within your IDE. For Android Studio you can change the Flutter
-SDK path in the settings for the Flutter plugin. Open the Android Studio settings and navigate to 
-Languages & Frameworks -> Flutter -> Flutter SDK path and set  the path to the FVM Flutter SDK
-(`<path to the studyu repository>/.fvm/flutter_sdk`). For VS Code, have a look at
-the [FVM documentation](https://fvm.app/documentation/guides/vscode).
+SDK path in the settings for the Flutter plugin. Open the Android Studio settings and navigate to
+Languages & Frameworks -> Flutter -> Flutter SDK path and set the path to the FVM Flutter SDK
+(`<path to the studyu repository>/.fvm/flutter_sdk`). The Dart SDK path should be changed
+respectively to (`<path to the studyu repository>/.fvm/flutter_sdk/bin/cache/dart-sdk`). For VS
+Code, have a look at the [FVM documentation](https://fvm.app/documentation/guides/vscode).
 
 Using FVM with melos requires setting the `MELOS_SDK_PATH` environment variable to the path of the
 FVM Flutter SDK. This can be done by running `export MELOS_SDK_PATH=.fvm/flutter_sdk` in the

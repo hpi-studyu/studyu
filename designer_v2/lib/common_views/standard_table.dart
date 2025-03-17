@@ -364,7 +364,8 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
                       maxLines: widget.headerMaxLines,
                       softWrap: widget.softWrapHeader,
                       style: theme.textTheme.bodySmall!.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.8),
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.8),
                       ),
                     ),
                   ),
@@ -539,17 +540,17 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
             decoration: BoxDecoration(
               border: Border.all(
                 color: rowIsPressed
-                    ? theme.colorScheme.primary.withOpacity(0.7)
-                    : theme.colorScheme.primaryContainer.withOpacity(0.9),
+                    ? theme.colorScheme.primary.withValues(alpha: 0.7)
+                    : theme.colorScheme.primaryContainer.withValues(alpha: 0.9),
               ),
               borderRadius: const BorderRadius.all(Radius.circular(4)),
               boxShadow: [
                 BoxShadow(
                   color: rowIsPressed
-                      ? theme.colorScheme.primary.withOpacity(0.15)
+                      ? theme.colorScheme.primary.withValues(alpha: 0.15)
                       : (rowIsHovered
-                          ? theme.colorScheme.onSurface.withOpacity(0.2)
-                          : theme.colorScheme.onSurface.withOpacity(0.1)),
+                          ? theme.colorScheme.onSurface.withValues(alpha: 0.2)
+                          : theme.colorScheme.onSurface.withValues(alpha: 0.1)),
                   blurRadius: rowIsHovered ? 3 : 2,
                   offset:
                       rowIsHovered ? const Offset(1, 1) : const Offset(0, 1),
@@ -575,7 +576,8 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       final theme = Theme.of(context);
       actionMenuWidget = ActionPopUpMenuButton(
         actions: actions,
-        triggerIconColor: ThemeConfig.bodyTextMuted(theme).color?.faded(0.6),
+        triggerIconColor:
+            ThemeConfig.bodyTextMuted(theme).color?.withValues(alpha: 0.6),
         triggerIconColorHover: theme.colorScheme.primary,
         disableSplashEffect: true,
         position: PopupMenuPosition.over,

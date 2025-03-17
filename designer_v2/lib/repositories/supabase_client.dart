@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
@@ -78,7 +79,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
   Future<T> getById<T extends SupabaseObject>(
     String id, {
     List<String> selectedColumns = const ['*'],
-  }) async {
+  }) {
     return getByColumn('id', id, selectedColumns: selectedColumns);
   }
 
@@ -135,5 +136,4 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 
 // Re-expose the global client object via Riverpod
 @riverpod
-SupabaseClient supabaseClient(AutoDisposeProviderRef<SupabaseClient> ref) =>
-    env.client;
+SupabaseClient supabaseClient(Ref<SupabaseClient> ref) => env.client;

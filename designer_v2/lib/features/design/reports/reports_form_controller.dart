@@ -218,7 +218,7 @@ class ReportFormItemDelegate
       type: ModelActionType.primary,
       label: ModelActionType.primary.string,
       isAvailable: !owner.isReadonly,
-      onExecute: () async {
+      onExecute: () {
         for (final e in formViewModelCollection.formViewModels) {
           if (e.formData!.isPrimary) {
             e.formData!.isPrimary = false;

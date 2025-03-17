@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
+import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/localization/app_localizations.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
@@ -29,6 +31,17 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
       data: (study) {
         final formViewModel =
             ref.watch(fitbitCredentialsFormViewModelProvider(studyId));
+
+        if (!study.isDraft) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: EmptyBody(
+              icon: Icons.block_sharp,
+              title: tr.fitbit_credentials_cannot_change_title,
+              description: tr.fitbit_credentials_cannot_change_description,
+            ),
+          );
+        }
 
         return ReactiveForm(
           formGroup: formViewModel.form,
@@ -74,7 +87,8 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
               ),
               InkWell(
                 onTap: () => _launchURL(
-                    'https://partners.fitbit.com/researchapplication',),
+                  'https://partners.fitbit.com/researchapplication',
+                ),
                 child: Text(
                   AppLocalizations.of(context)!.fitbit_credentials_step7,
                   style: TextStyle(

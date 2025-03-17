@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/report_section_widget.dart';
 import 'package:studyu_app/screens/study/report/util/plot_utilities.dart';
 import 'package:studyu_app/theme.dart';
@@ -77,18 +77,32 @@ class AverageSectionWidget extends ReportSectionWidget {
   BarChartData getChartData(BuildContext context, List<DiagramDatum> data) {
     final barGroups = getBarGroups(context, data);
     final maxY =
-        ((data.sortedBy((entry) => entry.value).toList().lastOrNull?.value ??
-                    0) *
-                1.1)
+        (data.sortedBy((entry) => entry.value).toList().lastOrNull?.value ?? 0)
             .ceilToDouble();
     return BarChartData(
       titlesData: FlTitlesData(
         bottomTitles: AxisTitles(
           axisNameWidget:
               (section.aggregate != TemporalAggregation.intervention)
-                  ? const Text("Phase")
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const Text("Phase"),
+                        const SizedBox(width: 8),
+                        Tooltip(
+                          message:
+                              "One phase represents ${subject.study.schedule.phaseDuration} days",
+                          child: const Icon(
+                            Icons.info,
+                            size: 18,
+                          ),
+                        ),
+                      ],
+                    )
                   : const Text(""),
           sideTitles: SideTitles(
+            reservedSize: 30,
             showTitles: true,
             getTitlesWidget: getTitles,
           ),
@@ -105,7 +119,7 @@ class AverageSectionWidget extends ReportSectionWidget {
 
   Widget getTitles(double value, TitleMeta meta) {
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       child: getValues(value),
     );
   }

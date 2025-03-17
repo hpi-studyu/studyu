@@ -109,16 +109,16 @@ class RoutingIntents {
               RouteParams.measurementId: measurementId,
             },
           );
-  static final studyTest =
-      (StudyID studyId, {String? appRoute}) => RoutingIntent(
-            route: RouterConf.route(studyTestRouteName),
-            params: {
-              RouteParams.studyId: studyId,
-            },
-            queryParams: {
-              if (appRoute != null) RouteParams.testAppRoute: appRoute,
-            },
-          );
+  static RoutingIntent studyTest(StudyID studyId, {String? appRoute}) =>
+      RoutingIntent(
+        route: RouterConf.route(studyTestRouteName),
+        params: {
+          RouteParams.studyId: studyId,
+        },
+        queryParams: {
+          if (appRoute != null) RouteParams.testAppRoute: appRoute,
+        },
+      );
   static final studyRecruit = (StudyID studyId) => RoutingIntent(
         route: RouterConf.route(studyRecruitRouteName),
         params: {

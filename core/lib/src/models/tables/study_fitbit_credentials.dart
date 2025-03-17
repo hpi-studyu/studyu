@@ -14,7 +14,7 @@ class StudyFitbitCredentials
   @JsonKey(name: 'study_id')
   String studyId;
   @JsonKey(name: 'fitbit_credentials')
-  FitbitCredentials fitbitCredentials;
+  FitbitAuthCredentials fitbitCredentials;
 
   StudyFitbitCredentials(this.studyId, this.fitbitCredentials);
 

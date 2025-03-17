@@ -1,31 +1,31 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'fitbit_credentials.g.dart';
+part 'fitbit_auth_credentials.g.dart';
 
 @JsonSerializable()
-class FitbitCredentials {
+class FitbitAuthCredentials {
   String clientId;
   String clientSecret;
 
-  FitbitCredentials({
+  FitbitAuthCredentials({
     required this.clientId,
     required this.clientSecret,
   });
 
-  FitbitCredentials copyWith({
+  FitbitAuthCredentials copyWith({
     String? clientId,
     String? clientSecret,
   }) {
-    return FitbitCredentials(
+    return FitbitAuthCredentials(
       clientId: clientId ?? this.clientId,
       clientSecret: clientSecret ?? this.clientSecret,
     );
   }
 
-  factory FitbitCredentials.fromJson(Map<String, dynamic> json) =>
-      _$FitbitCredentialsFromJson(json);
+  factory FitbitAuthCredentials.fromJson(Map<String, dynamic> json) =>
+      _$FitbitAuthCredentialsFromJson(json);
 
-  Map<String, dynamic> toJson() => _$FitbitCredentialsToJson(this);
+  Map<String, dynamic> toJson() => _$FitbitAuthCredentialsToJson(this);
 
   @override
   String toString() => toJson().toString();

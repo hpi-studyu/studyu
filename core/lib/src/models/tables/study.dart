@@ -159,7 +159,8 @@ class Study extends SupabaseObjectFunctions<Study>
         json['study_fitbit_credentials'] as Map<String, dynamic>?;
     if (fitbitCredentials != null && fitbitCredentials.isNotEmpty) {
       study.fitbitCredentials = StudyFitbitCredentials.fromJson(
-          json['study_fitbit_credentials'] as Map<String, dynamic>,);
+        json['study_fitbit_credentials'] as Map<String, dynamic>,
+      );
     }
 
     final List? repo = json['repo'] as List?;
@@ -223,7 +224,7 @@ class Study extends SupabaseObjectFunctions<Study>
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<List<Study>> getResearcherDashboardStudies() async =>
+  static Future<List<Study>> getResearcherDashboardStudies() =>
       SupabaseQuery.getAll<Study>(
         selectedColumns: [
           '*',

@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -166,7 +167,7 @@ class StudyUApiClient extends SupabaseClientDependant
   /// otherwise, all columns are fetched => [studyColumns]
   ///
   ///
-  /// @return List<Study>
+  /// @return List`<Study`>
   @override
   Future<List<Study>> getUserStudies({
     bool withParticipantActivity = false,
@@ -261,7 +262,7 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 
   @override
-  Future<AppConfig> fetchAppConfig() async {
+  Future<AppConfig> fetchAppConfig() {
     final request = AppConfig.getAppConfig();
     return _awaitGuarded(request);
   }
@@ -371,6 +372,6 @@ class StudyUApiClient extends SupabaseClientDependant
 }
 
 @riverpod
-StudyUApiClient apiClient(ApiClientRef ref) => StudyUApiClient(
+StudyUApiClient apiClient(Ref ref) => StudyUApiClient(
       supabaseClient: ref.watch(supabaseClientProvider),
     );

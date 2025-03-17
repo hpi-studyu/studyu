@@ -7,7 +7,7 @@ part of 'fitbit_credentials_form_controller.dart';
 // **************************************************************************
 
 String _$fitbitCredentialsFormViewModelHash() =>
-    r'78eca632e16cef6095529481e8892531ea5d698e';
+    r'd975b7edada5bd981f787fc25f4cdbadada6a79d';
 
 /// Copied from Dart SDK
 class _SystemHash {

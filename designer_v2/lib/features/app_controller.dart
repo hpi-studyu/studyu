@@ -42,6 +42,7 @@ class AppController extends _$AppController {
   }
 
   Stream get stream => _stateController.stream;
+
   final StreamController<AppControllerState> _stateController =
       StreamController<AppControllerState>.broadcast();
 
