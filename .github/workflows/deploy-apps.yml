@@ -10,6 +10,7 @@ on:
       - 'app/**'
       - 'core/**'
       - 'flutter_common/**'
+      - '.github/workflows/deploy-apps.yml'
   workflow_dispatch:
 
 concurrency:
@@ -65,12 +66,12 @@ jobs:
           STUDYU_KEY_PROPERTIES: ${{ secrets.STUDYU_KEY_PROPERTIES }}
 
       - name: Build StudyU app bundle (prod)
-        if: !startsWith(github.ref, 'refs/heads/feat/fitbit')
+        if: ${{ !startsWith(github.ref, 'refs/heads/feat/fitbit') }}
         run: flutter build appbundle --release --build-number ${{ github.run_number }}
         working-directory: ./app
 
       - name: Build StudyU app bundle (dev)
-        if: startsWith(github.ref, 'refs/heads/feat/fitbit')
+        if: ${{ startsWith(github.ref, 'refs/heads/feat/fitbit') }}
         run: flutter build appbundle --release --build-number ${{ github.run_number }} --dart-define=STUDYU_ENV=.env.dev
         working-directory: ./app
 
@@ -135,12 +136,12 @@ jobs:
         working-directory: ./app
 
       - name: Build StudyU ios without codesign (prod
-        if: !startsWith(github.ref, 'refs/heads/feat/fitbit')
+        if: ${{ !startsWith(github.ref, 'refs/heads/feat/fitbit') }}
         run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }} --build-name ${{ env.STUDYU_APP_VERSION }}
         working-directory: ./app
 
       - name: Build StudyU ios without codesign (dev)
-        if: startsWith(github.ref, 'refs/heads/feat/fitbit')
+        if: ${{ startsWith(github.ref, 'refs/heads/feat/fitbit') }}
         run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }} --build-name ${{ env.STUDYU_APP_VERSION }} --dart-define=STUDYU_ENV=.env.dev
         working-directory: ./app
 
