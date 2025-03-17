@@ -1995,6 +1995,22 @@ class AppLocalizationsEn extends AppLocalizations {
       'Fitbit credentials can\'t be changed while the study is not in draft mode.';
 
   @override
+  String get fitbit_only_participant_title =>
+      'If you\'re running this study just for yourself';
+
+  @override
+  String get fitbit_only_participant_subtitle =>
+      'Since you\'re both creating and participating in this study, you don\'t need to fill out the intraday data request form. Simply follow these easy steps:';
+
+  @override
+  String get fitbit_only_participant_step_1 =>
+      'When creating your Fitbit app, choose \'Personal\' as the app type.';
+
+  @override
+  String get fitbit_only_participant_step_2 =>
+      'When syncing data, make sure to use the same Google account that\'s connected to your Fitbit watch and the Fitbit app you\'ve set up.';
+
+  @override
   String get client_id => 'Client ID';
 
   @override

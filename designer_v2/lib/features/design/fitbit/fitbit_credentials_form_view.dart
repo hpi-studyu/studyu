@@ -103,15 +103,7 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
               const SizedBox(height: 12.0),
               _buildScreenshotsSection(context),
               const SizedBox(height: 16.0),
-              TextParagraph(
-                text: AppLocalizations.of(context)!
-                    .fitbit_credentials_success_instruction,
-              ),
-              const SizedBox(height: 12.0),
-              TextParagraph(
-                text: AppLocalizations.of(context)!
-                    .fitbit_credentials_add_question_instruction,
-              ),
+              _buildSingleParticipantInstructions(context),
               const SizedBox(height: 24.0),
               FormTableLayout(
                 rows: [
@@ -156,6 +148,48 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildSingleParticipantInstructions(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 16.0),
+      color: Theme.of(context).colorScheme.surfaceContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.info_outline, color: Theme.of(context).primaryColor),
+                const SizedBox(width: 8.0),
+                Text(
+                  AppLocalizations.of(context)!.fitbit_only_participant_title,
+                  style: const TextStyle(
+                      fontSize: 16.0, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              AppLocalizations.of(context)!.fitbit_only_participant_subtitle,
+              style: const TextStyle(fontSize: 14.0),
+            ),
+            const SizedBox(height: 8.0),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(AppLocalizations.of(context)!
+                    .fitbit_only_participant_step_1),
+                const SizedBox(height: 4.0),
+                Text(AppLocalizations.of(context)!
+                    .fitbit_only_participant_step_2),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 

@@ -2027,6 +2027,22 @@ class AppLocalizationsDe extends AppLocalizations {
       'Fitbit-Anmeldedaten können nicht geändert werden, wenn die Studie nicht im Entwurfsmodus ist.';
 
   @override
+  String get fitbit_only_participant_title =>
+      'Wenn du diese Studie nur für dich selbst durchführst';
+
+  @override
+  String get fitbit_only_participant_subtitle =>
+      'Da du sowohl Ersteller als auch einziger Teilnehmer dieser Studie bist, brauchst du das Formular für den Zugriff auf Intraday-Daten nicht auszufüllen. Befolge einfach diese Schritte:';
+
+  @override
+  String get fitbit_only_participant_step_1 =>
+      'Wähle beim Erstellen deiner Fitbit-App als Anwendungstyp „Persönlich“.';
+
+  @override
+  String get fitbit_only_participant_step_2 =>
+      'Verwende beim Synchronisieren deiner Daten unbedingt dasselbe Google-Konto, das du mit deiner Fitbit-Uhr und der von dir eingerichteten Fitbit-App verbunden hast.';
+
+  @override
   String get client_id => 'Client ID';
 
   @override

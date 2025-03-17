@@ -3422,6 +3422,30 @@ abstract class AppLocalizations {
   /// **'Fitbit credentials can\'t be changed while the study is not in draft mode.'**
   String get fitbit_credentials_cannot_change_description;
 
+  /// No description provided for @fitbit_only_participant_title.
+  ///
+  /// In en, this message translates to:
+  /// **'If you\'re running this study just for yourself'**
+  String get fitbit_only_participant_title;
+
+  /// No description provided for @fitbit_only_participant_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Since you\'re both creating and participating in this study, you don\'t need to fill out the intraday data request form. Simply follow these easy steps:'**
+  String get fitbit_only_participant_subtitle;
+
+  /// No description provided for @fitbit_only_participant_step_1.
+  ///
+  /// In en, this message translates to:
+  /// **'When creating your Fitbit app, choose \'Personal\' as the app type.'**
+  String get fitbit_only_participant_step_1;
+
+  /// No description provided for @fitbit_only_participant_step_2.
+  ///
+  /// In en, this message translates to:
+  /// **'When syncing data, make sure to use the same Google account that\'s connected to your Fitbit watch and the Fitbit app you\'ve set up.'**
+  String get fitbit_only_participant_step_2;
+
   /// No description provided for @client_id.
   ///
   /// In en, this message translates to:
