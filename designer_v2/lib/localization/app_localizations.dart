@@ -3329,7 +3329,7 @@ abstract class AppLocalizations {
   /// No description provided for @fitbit_credentials_step4.
   ///
   /// In en, this message translates to:
-  /// **'4. Fill in the required fields such as application name, description, and callback URL (use: \"studyu://\").'**
+  /// **'4. Fill in the required fields such as application name, description, and Redirect URL (use: \"studyu://fitbit/auth\").'**
   String get fitbit_credentials_step4;
 
   /// No description provided for @fitbit_credentials_step5.

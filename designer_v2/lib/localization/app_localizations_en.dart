@@ -1939,7 +1939,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fitbit_credentials_step4 =>
-      '4. Fill in the required fields such as application name, description, and callback URL (use: \"studyu://\").';
+      '4. Fill in the required fields such as application name, description, and Redirect URL (use: \"studyu://fitbit/auth\").';
 
   @override
   String get fitbit_credentials_step5 =>

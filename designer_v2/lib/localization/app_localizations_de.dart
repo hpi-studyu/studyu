@@ -1965,7 +1965,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get fitbit_credentials_step4 =>
-      '4. Füllen Sie die erforderlichen Felder wie Anwendungsname, Beschreibung und Callback-URL (verwenden Sie: \"studyu://\") aus.';
+      '4. Füllen Sie die erforderlichen Felder wie Anwendungsname, Beschreibung und Redirect-URL (verwenden Sie: \"studyu://fitbit/auth\") aus.';
 
   @override
   String get fitbit_credentials_step5 =>

@@ -728,7 +728,7 @@
   "fitbit_credentials_step1": "1. Gehen Sie zum Fitbit Developer Portal.",
   "fitbit_credentials_step2": "2. Melden Sie sich mit Ihrem Fitbit-Konto an oder erstellen Sie eins, falls Sie noch keines haben.",
   "fitbit_credentials_step3": "3. Navigieren Sie zum Abschnitt \"Verwalten\" und wählen Sie \"App registrieren\".",
-  "fitbit_credentials_step4": "4. Füllen Sie die erforderlichen Felder wie Anwendungsname, Beschreibung und Callback-URL (verwenden Sie: \"studyu://\") aus.",
+  "fitbit_credentials_step4": "4. Füllen Sie die erforderlichen Felder wie Anwendungsname, Beschreibung und Redirect-URL (verwenden Sie: \"studyu://fitbit/auth\") aus.",
   "fitbit_credentials_step5": "5. Wählen Sie unter \"OAuth 2.0 Application Type\" die Option \"Client\" und setzen Sie den Zugriff auf \"Nur Lesen\".",
   "fitbit_credentials_step6": "6. Senden Sie das Formular ab, um Ihre \"Client ID\" und \"Client Secret\" zu erhalten.",
   "fitbit_credentials_step7": "7. Bitte füllen Sie das folgende Formular aus, um Zugang zu Intraday-Daten zu erhalten. Ohne diesen Schritt können Sie keine Daten von Fitbit für Ihre Versuche abrufen.",
