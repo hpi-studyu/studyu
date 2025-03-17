@@ -3,6 +3,86 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-17
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.8.0-dev.0`](#studyu_app---v280-dev0)
+ - [`studyu_designer_v2` - `v1.10.0-dev.0`](#studyu_designer_v2---v1100-dev0)
+ - [`studyu_flutter_common` - `v1.9.0-dev.1`](#studyu_flutter_common---v190-dev1)
+
+---
+
+#### `studyu_app` - `v2.8.0-dev.0`
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**(fitbit): sleep data fetching logic.
+ - **FIX**: default for app deployment flutter variables 2.
+ - **FIX**: default for app deployment flutter variables.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: android config.
+ - **FIX**: ios and android configuration.
+ - **FIX**: localization.
+ - **FIX**: proper onDone handling for fitbit_question_widget.dart.
+ - **FIX**: update Fitbit integration and callback URLs.
+ - **FIX**: passing taskId to fitbit_question_widget.dart.
+ - **FIX**: current intervention text split.
+ - **FEAT**: re-create android and ios folders gemfile"".
+ - **FEAT**: re-create android and ios folders gemfile".
+ - **FEAT**: re-create android and ios folders gemfile.
+ - **FEAT**: re-create android and ios folders.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: enhance Fitbit credential handling to include permission scopes.
+ - **FEAT**: update Fitbit redirect URL and callback scheme.
+ - **FEAT**: fetching remote subject with Fitbit credentials on onboarding.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: Add Fitbit credential deletion on study removal.
+ - **FEAT**(fitbit): refactor _findLatestDataEntry function in fitbit_handler.dart.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**: add sleep data fetching.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sync Fitbit data on button press.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: report overview.
+ - **FEAT**: report overview.
+
+#### `studyu_designer_v2` - `v1.10.0-dev.0`
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**: incorrect use of static final with lambda function.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: platform localization.
+ - **FIX**: localization.
+ - **FIX**: fitbit question form.
+ - **FIX**: form control for fitbit question.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**(questionnaire): add validation for Fitbit question type.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: check if credentials exists when adding fitbit question.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
+
+#### `studyu_flutter_common` - `v1.9.0-dev.1`
+
+ - **FIX**: update Supabase public anon key in development environment.
+
+
 ## 2025-03-13
 
 ### Changes

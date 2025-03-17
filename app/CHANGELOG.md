@@ -1,3 +1,38 @@
+## 2.8.0-dev.0
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**(fitbit): sleep data fetching logic.
+ - **FIX**: default for app deployment flutter variables 2.
+ - **FIX**: default for app deployment flutter variables.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: android config.
+ - **FIX**: ios and android configuration.
+ - **FIX**: localization.
+ - **FIX**: proper onDone handling for fitbit_question_widget.dart.
+ - **FIX**: update Fitbit integration and callback URLs.
+ - **FIX**: passing taskId to fitbit_question_widget.dart.
+ - **FIX**: current intervention text split.
+ - **FEAT**: re-create android and ios folders gemfile"".
+ - **FEAT**: re-create android and ios folders gemfile".
+ - **FEAT**: re-create android and ios folders gemfile.
+ - **FEAT**: re-create android and ios folders.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: enhance Fitbit credential handling to include permission scopes.
+ - **FEAT**: update Fitbit redirect URL and callback scheme.
+ - **FEAT**: fetching remote subject with Fitbit credentials on onboarding.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: Add Fitbit credential deletion on study removal.
+ - **FEAT**(fitbit): refactor _findLatestDataEntry function in fitbit_handler.dart.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**: add sleep data fetching.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sync Fitbit data on button press.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: report overview.
+ - **FEAT**: report overview.
+
 ## 2.7.14
 
  - **FIX**: linter.
