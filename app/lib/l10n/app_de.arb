@@ -226,5 +226,32 @@
   "sync_fitbit_data": "Fitbit-Daten synchronisieren",
   "fitbit_data_synced": "Fitbit-Daten wurden erfolgreich synchronisiert",
   "fitbit_data_not_synced": "Fitbit-Daten konnten nicht synchronisiert werden. Bitte stellen Sie sicher, dass Sie Ihre Fitbit-Daten in der Fitbit-App synchronisiert haben.",
-  "error_syncing_fitbit_data": "Fehler beim Synchronisieren der Fitbit-Daten: {error}"
+  "error_syncing_fitbit_data": "Fehler beim Synchronisieren der Fitbit-Daten: {error}",
+  "@error_syncing_fitbit_data": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fitbit_data_synced_dialog_title": "Fitbit-Daten synchronisiert",
+  "fitbit_data_synced_info": "Daten wurden für die folgenden Datentypen synchronisiert:",
+  "fitbit_data_earliest_date": "Frühestes Datum: {date}",
+  "fitbit_data_latest_date": "Spätestes Datum: {date}",
+  "fitbit_data_details_btn": "Details",
+  "fitbit_data_close_btn": "Schließen",
+  "@fitbit_data_earliest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@fitbit_data_latest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

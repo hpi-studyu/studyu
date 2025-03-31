@@ -1141,6 +1141,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error syncing Fitbit data: {error}'**
   String error_syncing_fitbit_data(String error);
+
+  /// No description provided for @fitbit_data_synced_dialog_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit Data Synced'**
+  String get fitbit_data_synced_dialog_title;
+
+  /// No description provided for @fitbit_data_synced_info.
+  ///
+  /// In en, this message translates to:
+  /// **'Data was synced for the following data types:'**
+  String get fitbit_data_synced_info;
+
+  /// No description provided for @fitbit_data_earliest_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest date: {date}'**
+  String fitbit_data_earliest_date(String date);
+
+  /// No description provided for @fitbit_data_latest_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest date: {date}'**
+  String fitbit_data_latest_date(String date);
+
+  /// No description provided for @fitbit_data_details_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get fitbit_data_details_btn;
+
+  /// No description provided for @fitbit_data_close_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get fitbit_data_close_btn;
 }
 
 class _AppLocalizationsDelegate

@@ -579,4 +579,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String error_syncing_fitbit_data(String error) {
     return 'Error syncing Fitbit data: $error';
   }
+
+  @override
+  String get fitbit_data_synced_dialog_title => 'Fitbit Data Synced';
+
+  @override
+  String get fitbit_data_synced_info =>
+      'Data was synced for the following data types:';
+
+  @override
+  String fitbit_data_earliest_date(String date) {
+    return 'Earliest date: $date';
+  }
+
+  @override
+  String fitbit_data_latest_date(String date) {
+    return 'Latest date: $date';
+  }
+
+  @override
+  String get fitbit_data_details_btn => 'Details';
+
+  @override
+  String get fitbit_data_close_btn => 'Close';
 }

@@ -230,5 +230,25 @@
         "type": "String"
       }
     }
+  },
+  "fitbit_data_synced_dialog_title": "Fitbit Data Synced",
+  "fitbit_data_synced_info": "Data was synced for the following data types:",
+  "fitbit_data_earliest_date": "Earliest date: {date}",
+  "fitbit_data_latest_date": "Latest date: {date}",
+  "fitbit_data_details_btn": "Details",
+  "fitbit_data_close_btn": "Close",
+  "@fitbit_data_earliest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@fitbit_data_latest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
   }
 }
