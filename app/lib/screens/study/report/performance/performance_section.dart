@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rainbow_color/rainbow_color.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/generic_section.dart';
 import 'package:studyu_core/core.dart';
 
@@ -150,14 +150,14 @@ class PerformanceBar extends StatelessWidget {
       rangeEnd: 1,
     );
     final fullSpectrum = List<double>.generate(3, (index) => index * 0.5)
-        .map<Color>((index) => rainbow[index].withOpacity(0.4))
+        .map<Color>((index) => rainbow[index].withValues(alpha: 0.4))
         .toList();
     final colorSamples =
         List<double>.generate(11, (index) => index * 0.1 * progress)
             .map<Color>((index) => rainbow[index])
             .toList();
 
-    final spacing = (minimum! * 1000).floor();
+    //final spacing = (minimum! * 1000).floor();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,7 +203,9 @@ class PerformanceBar extends StatelessWidget {
             ),
           ),
         ),
-        if (minimum != null && minimum! >= 0 && minimum! <= 1)
+
+        /// Removing the minimum indicator since it is discussed as confusing in the meeting
+        /*if (minimum != null && minimum! >= 0 && minimum! <= 1)
           Column(
             children: [
               Row(
@@ -237,7 +239,7 @@ class PerformanceBar extends StatelessWidget {
                 ],
               ),
             ],
-          ),
+          ),*/
       ],
     );
   }

@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
 
 class CapturePictureScreen extends StatefulWidget {
@@ -170,11 +170,11 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
                 CameraPreview(cameraController),
                 if (_isTakingPicture)
                   Container(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.black.withValues(alpha: 0.5),
                     alignment: Alignment.center,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).dialogBackgroundColor,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       padding: const EdgeInsets.all(20.0),

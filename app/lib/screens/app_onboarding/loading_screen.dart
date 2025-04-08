@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
@@ -10,6 +10,7 @@ import 'package:studyu_app/screens/app_onboarding/preview.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/cache.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -39,7 +40,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (!mounted) return;
 
     if (selectedSubjectId == null) {
-      Navigator.pushReplacementNamed(context, Routes.welcome);
+      await noSubjectFound();
       return;
     }
     StudySubject? subject = await _retrieveSubject(selectedSubjectId);
@@ -51,8 +52,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
       state.init(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
-      Navigator.pushReplacementNamed(context, Routes.welcome);
+      await noSubjectFound();
     }
+  }
+
+  Future<void> noSubjectFound() async {
+    await cancelNotifications(context);
+    if (mounted) Navigator.pushReplacementNamed(context, Routes.welcome);
   }
 
   Future<StudySubject?> _fetchRemoteSubject(String selectedStudyObjectId) {
@@ -60,7 +66,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
       selectedStudyObjectId,
       selectedColumns: [
         '*',
-        'study!study_subject_studyId_fkey(*)',
+        // Retrieve the related study along with its fitbit credentials
+        'study!study_subject_studyId_fkey(*, study_fitbit_credentials:study_fitbit_credentials_studyId_fkey(*))',
         'subject_progress(*)',
       ],
     );
@@ -81,7 +88,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         }
       } catch (exception) {
         debugPrint(
-            "Could not login and retrieve the study subject: $exception");
+          "Could not login and retrieve the study subject: $exception",
+        );
         if (exception is SocketException) {
           subject = await Cache.loadSubject();
           StudyULogger.info("Offline mode with cached subject: $subject");

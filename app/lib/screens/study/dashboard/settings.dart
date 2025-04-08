@@ -1,13 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/app_analytics.dart';
+import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
@@ -161,13 +163,12 @@ class OptOutAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Text('${AppLocalizations.of(context)!.opt_out} ?'),
+      title: Text('${AppLocalizations.of(context)!.opt_out}?'),
       content: RichText(
         text: TextSpan(
           style: const TextStyle(color: Colors.black),
           children: [
-            // todo translate
-            const TextSpan(text: 'You will lose your progress in '),
+            TextSpan(text: AppLocalizations.of(context)!.soft_delete_desc),
             TextSpan(
               text: subject!.study.title,
               style: TextStyle(
@@ -176,11 +177,7 @@ class OptOutAlertDialog extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
-            const TextSpan(
-              text: " and won't be able to recover it. Previously completed "
-                  'studies will not be deleted.\nYour anonymized data up to this '
-                  'point may still be used for research purposes.',
-            ),
+            TextSpan(text: AppLocalizations.of(context)!.soft_delete_desc_2),
           ],
         ),
       ),
@@ -192,13 +189,8 @@ class OptOutAlertDialog extends StatelessWidget {
           onPressed: () async {
             await subject!.softDelete();
             await deleteActiveStudyReference();
-            if (context.mounted) {
-              final studyNotifications = context
-                  .read<AppState>()
-                  .studyNotifications
-                  ?.flutterLocalNotificationsPlugin;
-              await studyNotifications?.cancelAll();
-            }
+            await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
+            if (context.mounted) await cancelNotifications(context);
             if (context.mounted) {
               Navigator.pushNamedAndRemoveUntil(
                 context,
@@ -220,12 +212,9 @@ class DeleteAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text('${AppLocalizations.of(context)!.delete_data} ?'),
-        // todo translate
-        content: const Text(
-          'You are about to delete all data from your device and our servers. '
-          'You will not be able to restore your data.\nYour anonymized data will '
-          'not be available for research purposes anymore.',
+        title: Text('${AppLocalizations.of(context)!.delete_data}?'),
+        content: Text(
+          AppLocalizations.of(context)!.hard_delete_desc,
         ),
         actions: [
           ElevatedButton.icon(
@@ -236,13 +225,9 @@ class DeleteAlertDialog extends StatelessWidget {
               try {
                 await subject!.delete(); // hard-delete
                 await deleteLocalData();
-                if (context.mounted) {
-                  final studyNotifications = context
-                      .read<AppState>()
-                      .studyNotifications
-                      ?.flutterLocalNotificationsPlugin;
-                  await studyNotifications?.cancelAll();
-                }
+                await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
+
+                if (context.mounted) await cancelNotifications(context);
                 if (context.mounted) {
                   Navigator.pushNamedAndRemoveUntil(
                     context,

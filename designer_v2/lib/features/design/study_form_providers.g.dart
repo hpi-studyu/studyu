@@ -7,7 +7,7 @@ part of 'study_form_providers.dart';
 // **************************************************************************
 
 String _$studyInfoFormViewModelHash() =>
-    r'7f98d180b98a3f7fb550fa61cf9e0b60a0839f1e';
+    r'5c8e15ba88d7868835fab650519ae93111c380aa';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -144,6 +144,8 @@ class StudyInfoFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyInfoFormViewModelRef
     on AutoDisposeProviderRef<StudyInfoFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -160,7 +162,7 @@ class _StudyInfoFormViewModelProviderElement
 }
 
 String _$enrollmentFormViewModelHash() =>
-    r'f89c53ecf3f90e317a1fbab38a89ae095dc29cca';
+    r'd41cdb067044c6a683bb9e3cbf7260561a681657';
 
 /// See also [enrollmentFormViewModel].
 @ProviderFor(enrollmentFormViewModel)
@@ -277,6 +279,8 @@ class EnrollmentFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin EnrollmentFormViewModelRef
     on AutoDisposeProviderRef<EnrollmentFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -293,7 +297,7 @@ class _EnrollmentFormViewModelProviderElement
 }
 
 String _$screenerQuestionFormViewModelHash() =>
-    r'3c5615d74c376a66c14dc44738595d0c5a6f972a';
+    r'59315db1776e5f6fcc23580a90b137c08d5e6b7f';
 
 /// See also [screenerQuestionFormViewModel].
 @ProviderFor(screenerQuestionFormViewModel)
@@ -413,6 +417,8 @@ class ScreenerQuestionFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ScreenerQuestionFormViewModelRef
     on AutoDisposeProviderRef<ScreenerQuestionFormViewModel> {
   /// The parameter `args` of this provider.
@@ -430,7 +436,7 @@ class _ScreenerQuestionFormViewModelProviderElement
 }
 
 String _$consentItemFormViewModelHash() =>
-    r'002af4b4fb26f4815e747107f93a6bdad9bee823';
+    r'2e27c1f83cafe5e2e578b9f5421915d299540c1f';
 
 /// See also [consentItemFormViewModel].
 @ProviderFor(consentItemFormViewModel)
@@ -547,6 +553,8 @@ class ConsentItemFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ConsentItemFormViewModelRef
     on AutoDisposeProviderRef<ConsentItemFormViewModel> {
   /// The parameter `args` of this provider.
@@ -564,7 +572,7 @@ class _ConsentItemFormViewModelProviderElement
 }
 
 String _$interventionsFormViewModelHash() =>
-    r'8e986de5d8f0a8983792dc91512d21c85344025d';
+    r'65e18dc8fa37860c31726352b99ac6c9b5de4bdb';
 
 /// See also [interventionsFormViewModel].
 @ProviderFor(interventionsFormViewModel)
@@ -683,6 +691,8 @@ class InterventionsFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin InterventionsFormViewModelRef
     on AutoDisposeProviderRef<InterventionsFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -699,7 +709,7 @@ class _InterventionsFormViewModelProviderElement
 }
 
 String _$interventionFormViewModelHash() =>
-    r'c4bbeccc4b19cc3abceb394a213201496c776f75';
+    r'1f661e24b1bfeee6e51a68cb156789bbd0b6fc9c';
 
 /// See also [interventionFormViewModel].
 @ProviderFor(interventionFormViewModel)
@@ -817,6 +827,8 @@ class InterventionFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin InterventionFormViewModelRef
     on AutoDisposeProviderRef<InterventionFormViewModel> {
   /// The parameter `args` of this provider.
@@ -834,7 +846,7 @@ class _InterventionFormViewModelProviderElement
 }
 
 String _$interventionTaskFormViewModelHash() =>
-    r'58c02adfdf31d7529b49bed1b884d3042f032db0';
+    r'1b6cdb9b40dcb77121ec70113867a8f4ab2628a8';
 
 /// See also [interventionTaskFormViewModel].
 @ProviderFor(interventionTaskFormViewModel)
@@ -954,6 +966,8 @@ class InterventionTaskFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin InterventionTaskFormViewModelRef
     on AutoDisposeProviderRef<InterventionTaskFormViewModel> {
   /// The parameter `args` of this provider.
@@ -971,7 +985,7 @@ class _InterventionTaskFormViewModelProviderElement
 }
 
 String _$measurementsFormViewModelHash() =>
-    r'21fe7b97a1c4d44406c44ecc0ac3ba4bcb8dd8c0';
+    r'a92c30b523d67c47db86b09bee1d176d8fccc2a5';
 
 /// See also [measurementsFormViewModel].
 @ProviderFor(measurementsFormViewModel)
@@ -1090,6 +1104,8 @@ class MeasurementsFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin MeasurementsFormViewModelRef
     on AutoDisposeProviderRef<MeasurementsFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -1106,7 +1122,7 @@ class _MeasurementsFormViewModelProviderElement
 }
 
 String _$surveyFormViewModelHash() =>
-    r'5639e7eecf4014f6359bf8a9d81554b6cc604955';
+    r'2cc4aef41c732ff379675a5ce4d5969a04c737ad';
 
 /// See also [surveyFormViewModel].
 @ProviderFor(surveyFormViewModel)
@@ -1223,6 +1239,8 @@ class SurveyFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SurveyFormViewModelRef
     on AutoDisposeProviderRef<MeasurementSurveyFormViewModel> {
   /// The parameter `args` of this provider.
@@ -1240,7 +1258,7 @@ class _SurveyFormViewModelProviderElement
 }
 
 String _$surveyQuestionFormViewModelHash() =>
-    r'8359acab6df34eec28b3523b6e0c22cbfa001b66';
+    r'd2b779f1b025110501edde497b421a479b1e059d';
 
 /// See also [surveyQuestionFormViewModel].
 @ProviderFor(surveyQuestionFormViewModel)
@@ -1357,6 +1375,8 @@ class SurveyQuestionFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SurveyQuestionFormViewModelRef
     on AutoDisposeProviderRef<QuestionFormViewModel> {
   /// The parameter `args` of this provider.
@@ -1374,7 +1394,7 @@ class _SurveyQuestionFormViewModelProviderElement
 }
 
 String _$reportsFormViewModelHash() =>
-    r'6deed30173a2c97c7a9096cce168b7bb5890b933';
+    r'570680561e1f2f5cc5c740b221ef2a0d8405bc6f';
 
 /// See also [reportsFormViewModel].
 @ProviderFor(reportsFormViewModel)
@@ -1490,6 +1510,8 @@ class ReportsFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ReportsFormViewModelRef on AutoDisposeProviderRef<ReportsFormViewModel> {
   /// The parameter `studyId` of this provider.
   String get studyId;
@@ -1505,7 +1527,7 @@ class _ReportsFormViewModelProviderElement
 }
 
 String _$reportItemFormViewModelHash() =>
-    r'c2244f6b47445b8c54b061be046e6dd472e1afd6';
+    r'34aad4103b63c267100cf7465127254feef5b90f';
 
 /// See also [reportItemFormViewModel].
 @ProviderFor(reportItemFormViewModel)
@@ -1622,6 +1644,8 @@ class ReportItemFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ReportItemFormViewModelRef
     on AutoDisposeProviderRef<ReportItemFormViewModel> {
   /// The parameter `args` of this provider.
@@ -1639,7 +1663,7 @@ class _ReportItemFormViewModelProviderElement
 }
 
 String _$studyPublishValidatorHash() =>
-    r'7052ac418dfb864a61546db1c713351194f2a684';
+    r'cfbd3f755d6648cc5c1bd08882377aa143120c1f';
 
 /// Provides the [StudyFormViewModel] for validation purposes with
 /// a [StudyFormValidationSet.publish]
@@ -1773,6 +1797,8 @@ class StudyPublishValidatorProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyPublishValidatorRef on AutoDisposeProviderRef<StudyFormViewModel> {
   /// The parameter `studyId` of this provider.
   String get studyId;
@@ -1788,7 +1814,7 @@ class _StudyPublishValidatorProviderElement
 }
 
 String _$studyTestValidatorHash() =>
-    r'207988e121f40ffd2b4b055283baaf78c7a07d2d';
+    r'208c3b6e26d0c566909efd11b9870dd0a10fb8b1';
 
 /// Provides the [StudyFormViewModel] for validation purposes with
 /// a [StudyFormValidationSet.test]
@@ -1922,6 +1948,8 @@ class StudyTestValidatorProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyTestValidatorRef on AutoDisposeProviderRef<StudyFormViewModel> {
   /// The parameter `studyId` of this provider.
   String get studyId;
@@ -1936,4 +1964,4 @@ class _StudyTestValidatorProviderElement
   String get studyId => (origin as StudyTestValidatorProvider).studyId;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -58,8 +58,9 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
       builder: (context, form, child) {
         return retainSizeInAppBar(
           DismissButton(
-            onPressed: () =>
-                formViewModel.cancel().then((_) => Navigator.maybePop(context)),
+            onPressed: () => formViewModel.cancel().then((_) {
+              if (context.mounted) Navigator.maybePop(context);
+            }),
           ),
         );
       },
@@ -78,7 +79,9 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
                 ? () => formViewModel.save().then(
                       // Close the form (side sheet or scaffold route) if future
                       // completed successfully
-                      (value) => Navigator.maybePop(context),
+                      (value) {
+                        if (context.mounted) Navigator.maybePop(context);
+                      },
                     )
                 : null,
           ),

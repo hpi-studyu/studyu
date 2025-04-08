@@ -1,3 +1,73 @@
+## 2.8.0-dev.0
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**(fitbit): sleep data fetching logic.
+ - **FIX**: default for app deployment flutter variables 2.
+ - **FIX**: default for app deployment flutter variables.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: android config.
+ - **FIX**: ios and android configuration.
+ - **FIX**: localization.
+ - **FIX**: proper onDone handling for fitbit_question_widget.dart.
+ - **FIX**: update Fitbit integration and callback URLs.
+ - **FIX**: passing taskId to fitbit_question_widget.dart.
+ - **FIX**: current intervention text split.
+ - **FEAT**: re-create android and ios folders gemfile"".
+ - **FEAT**: re-create android and ios folders gemfile".
+ - **FEAT**: re-create android and ios folders gemfile.
+ - **FEAT**: re-create android and ios folders.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: enhance Fitbit credential handling to include permission scopes.
+ - **FEAT**: update Fitbit redirect URL and callback scheme.
+ - **FEAT**: fetching remote subject with Fitbit credentials on onboarding.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: Add Fitbit credential deletion on study removal.
+ - **FEAT**(fitbit): refactor _findLatestDataEntry function in fitbit_handler.dart.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**: add sleep data fetching.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sync Fitbit data on button press.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: report overview.
+ - **FEAT**: report overview.
+
+## 2.7.14
+
+ - **FIX**: linter.
+
+## 2.7.13
+
+ - **FIX**: migrate code.
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+## 2.7.12
+
+ - **FIX**: notification icon mipmap 2.
+ - **FIX**: notification icon mipmap.
+ - **FIX**: configure AndroidNotificationDetails correctly.
+ - **FIX**: disable R8 full mode for flutter_local_notifications.
+
+## 2.7.11
+
+ - **FIX**: upgrade deps.
+ - **FIX**: notification scheduling.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+ - **FIX**: prompt user to restart after reset.
+ - **FIX**: debug screen.
+
+## 2.7.10
+
+ - **FIX**: schedule notifications for 7 days.
+ - **FIX**: refactor notification cancelling and add missing translations.
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: maybe prevent blank screen in notification debug view.
+
+## 2.7.9
+
+ - **FIX**: upgrade deps.
+
 ## 2.7.8
 
  - **FIX**: safety check.

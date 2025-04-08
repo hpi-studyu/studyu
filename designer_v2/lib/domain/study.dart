@@ -37,8 +37,6 @@ extension StudyActionTypeFormatted on StudyActionType {
         return "[StudyActionType.addCollaborator]"; // todo not implemented yet
       case StudyActionType.export:
         return tr.action_study_export_results;
-      default:
-        return "[Invalid ModelActionType]";
     }
   }
 }
@@ -68,8 +66,6 @@ extension StudyStatusFormatted on StudyStatus {
         return tr.study_status_running;
       case StudyStatus.closed:
         return tr.study_status_closed;
-      default:
-        return "[Invalid StudyStatus]";
     }
   }
 
@@ -81,8 +77,6 @@ extension StudyStatusFormatted on StudyStatus {
         return tr.study_status_running_description;
       case StudyStatus.closed:
         return tr.study_status_closed_description;
-      default:
-        return "[Invalid StudyStatus]";
     }
   }
 }
@@ -115,6 +109,7 @@ extension StudyDuplicateX on Study {
     copy.registryPublished = false;
     copy.results = [];
     copy.collaboratorEmails = [];
+    copy.fitbitCredentials = null;
     copy.createdAt = DateTime.now();
 
     // Generate a new random UUIDs
@@ -123,14 +118,31 @@ extension StudyDuplicateX on Study {
     for (final intervention in copy.interventions) {
       intervention.id = uuid.v4();
     }
+
+    final Map<String, String> oldObservationIdToNew = {};
     for (final observation in copy.observations) {
-      observation.id = uuid.v4();
+      final String newId = uuid.v4();
+      oldObservationIdToNew[observation.id] = newId;
+      observation.id = newId;
     }
+
     for (final report in [
       copy.reportSpecification.primary,
       ...copy.reportSpecification.secondary,
     ]) {
       report?.id = uuid.v4();
+
+      if (report is core.AverageSection) {
+        if (oldObservationIdToNew.containsKey(report.resultProperty?.task)) {
+          report.resultProperty?.task =
+              oldObservationIdToNew[report.resultProperty?.task]!;
+        }
+      } else if (report is core.LinearRegressionSection) {
+        if (oldObservationIdToNew.containsKey(report.resultProperty?.task)) {
+          report.resultProperty?.task =
+              oldObservationIdToNew[report.resultProperty?.task]!;
+        }
+      }
     }
 
     return copy;

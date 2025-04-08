@@ -3,6 +3,350 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-03-17
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.8.0-dev.0`](#studyu_app---v280-dev0)
+ - [`studyu_designer_v2` - `v1.10.0-dev.0`](#studyu_designer_v2---v1100-dev0)
+ - [`studyu_flutter_common` - `v1.9.0-dev.1`](#studyu_flutter_common---v190-dev1)
+
+---
+
+#### `studyu_app` - `v2.8.0-dev.0`
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**(fitbit): sleep data fetching logic.
+ - **FIX**: default for app deployment flutter variables 2.
+ - **FIX**: default for app deployment flutter variables.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: android config.
+ - **FIX**: ios and android configuration.
+ - **FIX**: localization.
+ - **FIX**: proper onDone handling for fitbit_question_widget.dart.
+ - **FIX**: update Fitbit integration and callback URLs.
+ - **FIX**: passing taskId to fitbit_question_widget.dart.
+ - **FIX**: current intervention text split.
+ - **FEAT**: re-create android and ios folders gemfile"".
+ - **FEAT**: re-create android and ios folders gemfile".
+ - **FEAT**: re-create android and ios folders gemfile.
+ - **FEAT**: re-create android and ios folders.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: enhance Fitbit credential handling to include permission scopes.
+ - **FEAT**: update Fitbit redirect URL and callback scheme.
+ - **FEAT**: fetching remote subject with Fitbit credentials on onboarding.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: Add Fitbit credential deletion on study removal.
+ - **FEAT**(fitbit): refactor _findLatestDataEntry function in fitbit_handler.dart.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**: add sleep data fetching.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sync Fitbit data on button press.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: report overview.
+ - **FEAT**: report overview.
+
+#### `studyu_designer_v2` - `v1.10.0-dev.0`
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**: incorrect use of static final with lambda function.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: platform localization.
+ - **FIX**: localization.
+ - **FIX**: fitbit question form.
+ - **FIX**: form control for fitbit question.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**(questionnaire): add validation for Fitbit question type.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: check if credentials exists when adding fitbit question.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
+
+#### `studyu_flutter_common` - `v1.9.0-dev.1`
+
+ - **FIX**: update Supabase public anon key in development environment.
+
+
+## 2025-03-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_core` - `v4.5.0-dev.0`](#studyu_core---v450-dev0)
+ - [`studyu_flutter_common` - `v1.9.0-dev.0`](#studyu_flutter_common---v190-dev0)
+
+---
+
+#### `studyu_core` - `v4.5.0-dev.0`
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
+
+#### `studyu_flutter_common` - `v1.9.0-dev.0`
+
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+
+
+## 2024-11-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.14`](#studyu_app---v2714)
+ - [`studyu_designer_v2` - `v1.9.4`](#studyu_designer_v2---v194)
+
+---
+
+#### `studyu_app` - `v2.7.14`
+
+ - **FIX**: linter.
+
+#### `studyu_designer_v2` - `v1.9.4`
+
+ - **FIX**: linter.
+ - **FIX**: ensure data source in report is copied during study duplication.
+
+
+## 2024-11-18
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.13`](#studyu_app---v2713)
+ - [`studyu_core` - `v4.4.9`](#studyu_core---v449)
+ - [`studyu_designer_v2` - `v1.9.3`](#studyu_designer_v2---v193)
+ - [`studyu_flutter_common` - `v1.8.10`](#studyu_flutter_common---v1810)
+
+---
+
+#### `studyu_app` - `v2.7.13`
+
+ - **FIX**: migrate code.
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+#### `studyu_core` - `v4.4.9`
+
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+#### `studyu_designer_v2` - `v1.9.3`
+
+ - **FIX**: migrate code.
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+#### `studyu_flutter_common` - `v1.8.10`
+
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+
+## 2024-10-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.12`](#studyu_app---v2712)
+
+---
+
+#### `studyu_app` - `v2.7.12`
+
+ - **FIX**: notification icon mipmap 2.
+ - **FIX**: notification icon mipmap.
+ - **FIX**: configure AndroidNotificationDetails correctly.
+ - **FIX**: disable R8 full mode for flutter_local_notifications.
+
+
+## 2024-10-03
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.11`](#studyu_app---v2711)
+ - [`studyu_core` - `v4.4.8`](#studyu_core---v448)
+ - [`studyu_designer_v2` - `v1.9.2`](#studyu_designer_v2---v192)
+ - [`studyu_flutter_common` - `v1.8.9`](#studyu_flutter_common---v189)
+
+---
+
+#### `studyu_app` - `v2.7.11`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: notification scheduling.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+ - **FIX**: prompt user to restart after reset.
+ - **FIX**: debug screen.
+
+#### `studyu_core` - `v4.4.8`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+#### `studyu_designer_v2` - `v1.9.2`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+#### `studyu_flutter_common` - `v1.8.9`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+
+## 2024-09-05
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.10`](#studyu_app---v2710)
+ - [`studyu_core` - `v4.4.7`](#studyu_core---v447)
+ - [`studyu_designer_v2` - `v1.9.1`](#studyu_designer_v2---v191)
+ - [`studyu_flutter_common` - `v1.8.8`](#studyu_flutter_common---v188)
+
+---
+
+#### `studyu_app` - `v2.7.10`
+
+ - **FIX**: schedule notifications for 7 days.
+ - **FIX**: refactor notification cancelling and add missing translations.
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: maybe prevent blank screen in notification debug view.
+
+#### `studyu_core` - `v4.4.7`
+
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: result history filter.
+
+#### `studyu_designer_v2` - `v1.9.1`
+
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: hotfix to sanitize export contents.
+
+#### `studyu_flutter_common` - `v1.8.8`
+
+ - **FIX**: upgrade to flutter v3.24.2.
+
+
+## 2024-08-12
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.9`](#studyu_app---v279)
+ - [`studyu_core` - `v4.4.6`](#studyu_core---v446)
+ - [`studyu_designer_v2` - `v1.9.0`](#studyu_designer_v2---v190)
+ - [`studyu_flutter_common` - `v1.8.7`](#studyu_flutter_common---v187)
+
+---
+
+#### `studyu_app` - `v2.7.9`
+
+ - **FIX**: upgrade deps.
+
+#### `studyu_core` - `v4.4.6`
+
+ - **FIX**: upgrade deps.
+
+#### `studyu_designer_v2` - `v1.9.0`
+
+ - **FIX**: legend spacing.
+ - **FIX**: legend overflow.
+ - **FIX**: translation.
+ - **FIX**: overflow issues.
+ - **FIX**: participant info max intervention and survey count.
+ - **FIX**: intervention and observation wrong number in table.
+ - **FIX**: sort arrow.
+ - **FIX**: remove bar chart if no participant.
+ - **FIX**: translation.
+ - **FIX**: tooltip message.
+ - **FIX**: remove min visibility.
+ - **FIX**: style consistency for the close button, update style, and add translation.
+ - **FIX**: add close button to launch success dialog (public study).
+ - **FIX**: translation consistency.
+ - **FIX**: remove add participant action button from publish success dialog for public studies.
+ - **FIX**: reset invite codes if study gets published as public.
+ - **FIX**: check for unique invite codes in designer.
+ - **FIX**: upgrade deps.
+ - **FIX**: enable atLeastOneTask for intervention again".
+ - **FIX**: auto-save new study to prevent exception on intervention screen.
+ - **FEAT**: fix translations.
+ - **FEAT**: disable invite code creation for public studies.
+
+#### `studyu_flutter_common` - `v1.8.7`
+
+ - **FIX**: upgrade deps.
+
+
 ## 2024-07-24
 
 ### Changes

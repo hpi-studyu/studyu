@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/assets.dart';
 import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 
 class DashboardScaffold extends StatelessWidget {
@@ -15,7 +14,6 @@ class DashboardScaffold extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final isCompact = size.width < compactWidthThreshold;
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor.faded(0.75),
       appBar: isCompact
           ? AppBar(
               title: Image.asset(

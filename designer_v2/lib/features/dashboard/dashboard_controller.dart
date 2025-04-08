@@ -34,7 +34,7 @@ class DashboardController extends _$DashboardController
       _studiesSubscription?.cancel();
     });
 
-    ref.listenSelf((previous, next) {
+    listenSelf((previous, next) {
       print("dashboardController.state updated");
     });
 
@@ -88,7 +88,9 @@ class DashboardController extends _$DashboardController
   }
 
   void onClickNewStudy() {
-    router.dispatch(RoutingIntents.studyNew);
+    final Study newStudy = studyRepository.delegate.createNewInstance();
+    newStudy.save();
+    router.dispatch(RoutingIntents.studyEdit(newStudy.id));
   }
 
   Future<void> pinStudy(String modelId) async {

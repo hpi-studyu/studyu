@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
@@ -87,6 +88,7 @@ class AuthRepository implements IAuthRepository {
           allowPasswordReset = true;
         case AuthChangeEvent.tokenRefreshed:
           print("authRepo tokenRefreshed");
+        // ignore: deprecated_member_use
         case AuthChangeEvent.userDeleted:
           print("authRepo userDeleted");
           _authStateStreamController.add(null);
@@ -164,7 +166,7 @@ class AuthRepository implements IAuthRepository {
 }
 
 @riverpod
-AuthRepository authRepository(AuthRepositoryRef ref) {
+AuthRepository authRepository(Ref ref) {
   final authRepository = AuthRepository(
     supabaseClient: ref.watch(supabaseClientProvider),
   );

@@ -52,6 +52,9 @@
   "study_current": "Aktuelle Studie:",
   "opt_out": "Aussteigen",
   "delete_data": "Aussteigen und Daten löschen",
+  "soft_delete_desc": "Sie werden Ihren Fortschritt in der Studie ",
+  "soft_delete_desc_2": " unwiederbringlich verlieren. Bereits abgeschlossene Studien werden nicht gelöscht.\nIhre anonymisierten Daten bis zu diesem Zeitpunkt können weiterhin für Forschungszwecke verwendet werden.",
+  "hard_delete_desc": "Sie werden alle Daten von Ihrem Gerät und unseren Servern löschen. Sie können Ihre Daten nicht wiederherstellen. Ihre anonymisierten Daten werden nicht mehr für Forschungszwecke zur Verfügung stehen.",
 
   "summary": "Übersicht",
   "consent": "Einverständnis",
@@ -195,13 +198,17 @@
   "free_text_min_length_error": "Bitte geben Sie mindestens {min} Zeichen ein",
   "@free_text_min_length_error": {
     "placeholders": {
-      "min": {}
+      "min": {
+        "type": "num"
+      }
     }
   },
   "free_text_max_length_error": "Bitte geben Sie maximal {max} Zeichen ein",
   "@free_text_max_length_error": {
     "placeholders": {
-      "max": {}
+      "max": {
+        "type": "num"
+      }
     }
   },
   "free_text_alphanumeric_error": "Bitte geben Sie nur alphanumerische Zeichen ein",
@@ -209,9 +216,42 @@
   "free_text_custom_error": "Bitte geben Sie nur Zeichen ein, die dem Muster {pattern} entsprechen",
   "@free_text_custom_error": {
     "placeholders": {
-      "pattern": {}
+      "pattern": {
+        "type": "String"
+      }
     }
   },
   "app_outdated_message": "Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!",
-  "update_now": "Jetzt aktualisieren"
+  "update_now": "Jetzt aktualisieren",
+  "sync_fitbit_data": "Fitbit-Daten synchronisieren",
+  "fitbit_data_synced": "Fitbit-Daten wurden erfolgreich synchronisiert",
+  "fitbit_data_not_synced": "Fitbit-Daten konnten nicht synchronisiert werden. Bitte stellen Sie sicher, dass Sie Ihre Fitbit-Daten in der Fitbit-App synchronisiert haben.",
+  "error_syncing_fitbit_data": "Fehler beim Synchronisieren der Fitbit-Daten: {error}",
+  "@error_syncing_fitbit_data": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fitbit_data_synced_dialog_title": "Fitbit-Daten synchronisiert",
+  "fitbit_data_synced_info": "Daten wurden für die folgenden Datentypen synchronisiert:",
+  "fitbit_data_earliest_date": "Frühestes Datum: {date}",
+  "fitbit_data_latest_date": "Spätestes Datum: {date}",
+  "fitbit_data_details_btn": "Details",
+  "fitbit_data_close_btn": "Schließen",
+  "@fitbit_data_earliest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@fitbit_data_latest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

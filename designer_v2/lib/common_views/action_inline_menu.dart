@@ -33,9 +33,9 @@ class ActionMenuInline extends StatelessWidget {
 
     Color defaultIconColor(Set<WidgetState> states) {
       if (states.contains(WidgetState.hovered)) {
-        return theme.colorScheme.secondary.withOpacity(0.8);
+        return theme.colorScheme.secondary.withValues(alpha: 0.8);
       }
-      return theme.colorScheme.secondary.withOpacity(0.4);
+      return theme.colorScheme.secondary.withValues(alpha: 0.4);
     }
 
     final actionButtons = actions.map((ModelAction action) {

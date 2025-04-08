@@ -39,7 +39,7 @@ class StudyNotifications {
   static final NotificationValidators validator =
       NotificationValidators(false, false, false);
 
-  static const bool debug = false; //kDebugMode;
+  static const bool debug = kDebugMode; //kDebugMode;
   static String? scheduledNotificationsDebug;
 
   /// Private constructor
@@ -126,36 +126,39 @@ class StudyNotifications {
   void _configureDidReceiveLocalNotificationSubject() {
     didReceiveLocalNotificationStream.stream
         .listen((ReceivedNotification receivedNotification) async {
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) => CupertinoAlertDialog(
-          title: receivedNotification.title != null
-              ? Text(receivedNotification.title!)
-              : null,
-          content: receivedNotification.body != null
-              ? Text(receivedNotification.body!)
-              : null,
-          actions: <Widget>[
-            CupertinoDialogAction(
-              isDefaultAction: true,
-              onPressed: () async {
-                Navigator.of(context, rootNavigator: true).pop();
-                await Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const DashboardScreen(),
-                  ),
-                );
-              },
-              child: const Text('Ok'),
-            ),
-          ],
-        ),
-      );
+      if (context.mounted) {
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+            title: receivedNotification.title != null
+                ? Text(receivedNotification.title!)
+                : null,
+            content: receivedNotification.body != null
+                ? Text(receivedNotification.body!)
+                : null,
+            actions: <Widget>[
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                onPressed: () async {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  await Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) =>
+                          const DashboardScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      }
     });
   }
 
   void _configureSelectNotificationSubject() {
-    selectNotificationStream.stream.listen((String? payload) async {
+    selectNotificationStream.stream.listen((String? payload) {
       handleNotificationResponse(payload!);
     });
   }
@@ -163,30 +166,14 @@ class StudyNotifications {
   void _initNotificationsPlugin() {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@drawable/ic_notification');
-    final DarwinInitializationSettings initializationSettingsDarwin =
-        DarwinInitializationSettings(
-      onDidReceiveLocalNotification: (
-        int id,
-        String? title,
-        String? body,
-        String? payload,
-      ) async {
-        didReceiveLocalNotificationStream.add(
-          ReceivedNotification(
-            id: id,
-            title: title,
-            body: body,
-            payload: payload,
-          ),
-        );
-      },
-    );
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const DarwinInitializationSettings initializationSettingsDarwin =
+        DarwinInitializationSettings();
     const LinuxInitializationSettings initializationSettingsLinux =
         LinuxInitializationSettings(
       defaultActionName: 'Open notification',
     );
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsDarwin,

@@ -633,6 +633,19 @@ ALTER TABLE public.study_invite OWNER TO postgres;
 
 COMMENT ON TABLE public.study_invite IS 'Study invite codes';
 
+--
+-- Name: study_fitbit_credentials; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.study_fitbit_credentials (
+    study_id uuid NOT NULL PRIMARY KEY,
+    fitbit_credentials jsonb NOT NULL
+);
+
+ALTER TABLE public.study_fitbit_credentials OWNER TO postgres;
+
+
+COMMENT ON TABLE public.study_fitbit_credentials IS 'Fitbit credentials for studies';
 
 --
 -- Name: COLUMN study_invite.preselected_intervention_ids; Type: COMMENT; Schema: public; Owner: postgres
@@ -730,7 +743,6 @@ ALTER TABLE ONLY public.repo
 ALTER TABLE ONLY public.study_invite
     ADD CONSTRAINT study_invite_pkey PRIMARY KEY (code);
 
-
 --
 -- Name: study study_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
@@ -805,6 +817,13 @@ ALTER TABLE ONLY public.repo
 ALTER TABLE ONLY public.study_invite
     ADD CONSTRAINT "study_invite_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
 
+
+--
+-- Name: study_fitbit_credentials study_fitbit_credentials_studyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.study_fitbit_credentials
+    ADD CONSTRAINT "study_fitbit_credentials_studyId_fkey" FOREIGN KEY (study_id) REFERENCES public.study(id) ON DELETE CASCADE;
 
 --
 -- Name: study_subject study_subject_loginCode_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
@@ -887,13 +906,50 @@ AND (registry_published = true OR participation = 'open'::public.participation O
 
 
 --
--- Name: study_invite Editors can do everything with study invite codes; Type: POLICY; Schema: public; Owner: postgres
+-- Name: study_invite Editors can manage their own invite-only study invite codes; Type: POLICY; Schema: public; Owner: postgres
 --
 
-CREATE POLICY "Editors can do everything with study invite codes" ON public.study_invite USING (( SELECT public.can_edit(auth.uid(), study.*) AS can_edit
+CREATE POLICY "Editors can manage their own invite-only study invite codes" ON public.study_invite
+USING (
+ (
+   SELECT public.can_edit(auth.uid(), study.*) AS can_edit
    FROM public.study
-  WHERE (study.id = study_invite.study_id)));
+   WHERE study.id = study_invite.study_id
+   AND study.participation = 'invite'::public.participation
+ )
+);
 
+--
+-- Name: study_invite Editors can read their own open-study invite codes; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Editors can read their own open-study invite codes"
+ON public.study_invite
+FOR SELECT
+USING (
+ (
+  SELECT public.can_edit(auth.uid(), study.*) AS can_edit
+  FROM public.study
+  WHERE study.id = study_invite.study_id
+  AND study.participation = 'open'::public.participation
+ )
+);
+
+--
+-- Name: study_invite Editors can delete their own open-study invite codes; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Editors can delete their own open-study invite codes"
+ON public.study_invite
+FOR DELETE
+USING (
+  (
+    SELECT public.can_edit(auth.uid(), study.*) AS can_edit
+    FROM public.study
+    WHERE study.id = study_invite.study_id
+    AND study.participation = 'open'::public.participation
+  )
+);
 
 --
 -- Name: study_subject Users can do everything with their subjects; Type: POLICY; Schema: public; Owner: postgres
@@ -1017,6 +1073,45 @@ CREATE POLICY "Joining a closed study should not be possible" ON public.study_su
       AND study.status = 'closed'::public.study_status
 ));
 
+
+--
+-- Name: "Enable read access for study participants for fitbit credentials and owners"; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Enable read access for study participants for fitbit credentials and owners"
+  ON public.study_fitbit_credentials
+  FOR SELECT
+  USING (
+    (
+      SELECT public.can_edit(auth.uid(), study)
+      FROM public.study
+      WHERE study.id = study_fitbit_credentials.study_id
+    )
+    OR public.is_study_subject_of(auth.uid(), study_fitbit_credentials.study_id)
+  );
+
+--
+-- Name: "Study owners can manage their own fitbit credentials"; Type: POLICY; Schema: public; Owner: postgres
+--
+
+CREATE POLICY "Study owners can manage their own fitbit credentials"
+  ON public.study_fitbit_credentials
+  FOR ALL
+  USING (
+    (
+      SELECT public.can_edit(auth.uid(), study)
+      FROM public.study
+      WHERE study.id = study_fitbit_credentials.study_id
+    )
+  )
+  WITH CHECK (
+    (
+      SELECT public.can_edit(auth.uid(), study)
+      FROM public.study
+      WHERE study.id = study_fitbit_credentials.study_id
+    )
+  );
+
 --
 -- Name: app_config; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
@@ -1054,6 +1149,12 @@ ALTER TABLE public.study_subject ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.subject_progress ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: study_fitbit_credentials; Type: ROW SECURITY; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.study_fitbit_credentials ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: user; Type: ROW SECURITY; Schema: public; Owner: postgres
 --
 
@@ -1064,5 +1165,11 @@ ALTER TABLE public."user" ENABLE ROW LEVEL SECURITY;
 --
 
 ALTER VIEW public.study_progress_export SET (security_invoker = on);
+
+--
+-- Name: study_invite; Type: TABLE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.study_invite ADD CONSTRAINT study_invite_code_unique UNIQUE (code);
 
 COMMIT;

@@ -43,7 +43,9 @@
   "form_field_password_minlength": "Passwörter müssen mindestens {minLength} Zeichen lang sein",
   "@form_field_password_minlength": {
     "placeholders": {
-      "minLength": {}
+      "minLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_password_new": "Neues Passwort",
@@ -176,27 +178,35 @@
   "form_array_response_options_choice_countmin": "Die Frage muss mindestens {count} gültige Antwortoptionen haben",
   "@form_array_response_options_choice_countmin": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_response_options_choice_countmax": "Die Frage darf nicht mehr als {count} gültige Antwortoptionen haben",
   "@form_array_response_options_choice_countmax": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_response_options_scale_rangevalid_min": "Der Startwert muss kleiner als der Endwert der Skala sein",
   "form_array_response_options_scale_rangevalid_max": "Die Differenz zwischen dem Start- und Endwert der Skala darf maximal {count} betragen",
   "@form_array_response_options_scale_rangevalid_max": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "audio_recording_max_duration_rangevalid_min": "Die minimale Aufnahmedauer beträgt 1 Sekunde",
   "audio_recording_max_duration_rangevalid_max": "Die maximale Aufnahmedauer beträgt {count} Sekunden",
   "@audio_recording_max_duration_rangevalid_max": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "free_text_question_logic_not_supported": "Logik ist für Freitext-Fragen noch nicht verfügbar",
@@ -219,13 +229,17 @@
   "free_text_validation_min_length": "Die Eingabe muss mindestens {countMin} Zeichen lang sein.",
   "@free_text_validation_min_length": {
     "placeholders": {
-      "countMin": {}
+      "countMin": {
+        "type": "num"
+      }
     }
   },
   "free_text_validation_max_length": "Die Eingabe darf höchstens {countMax} Zeichen lang sein.",
   "@free_text_validation_max_length": {
     "placeholders": {
-      "countMax": {}
+      "countMax": {
+        "type": "num"
+      }
     }
   },
   "free_text_validation_pattern": "Die Eingabe muss dem angegebenen Format entsprechen.",
@@ -233,9 +247,15 @@
   "free_text_example_explanation": "Eingaben vom Typ {type} mit einer Zeichenlänge im Bereich von {countMin} bis {countMax} werden akzeptiert.",
   "@free_text_example_explanation": {
     "placeholders": {
-      "type": {},
-      "countMin": {},
-      "countMax": {}
+      "type": {
+        "type": "String"
+      },
+      "countMin": {
+        "type": "num"
+      },
+      "countMax": {
+        "type": "num"
+      }
     }
   },
   "free_text_question_type_any_explanation": "Jede Eingabe wird akzeptiert.",
@@ -332,7 +352,9 @@
   "form_array_interventions_minlength": "{count,plural, =2{Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.} other{form_array_interventions_minlength}}",
   "@form_array_interventions_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_interventions": "Interventionsphasen",
@@ -354,7 +376,9 @@
   "form_array_intervention_tasks_minlength": "{count,plural, =1{Du musst mindestens eine Maßnahme definieren, die während der Interventionsphase erfüllt werden soll} other{form_array_intervention_tasks_minlength}}",
   "@form_array_intervention_tasks_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_intervention_task_create": "Neue Maßnahme",
@@ -378,8 +402,12 @@
   "form_field_crossover_schedule_phase_length_range": "Interventionsphasen müssen zwischen {min} und {max} Tagen lang sein",
   "@form_field_crossover_schedule_phase_length_range": {
     "placeholders": {
-      "min": {},
-      "max": {}
+      "min": {
+        "type": "num"
+      },
+      "max": {
+        "type": "num"
+      }
     }
   },
   "form_field_amount_days": "Tage",
@@ -388,8 +416,12 @@
   "form_field_crossover_schedule_num_cycles_range": "Die Anzahl der Wiederholungen für Interventionsphasen im Versuchsplan muss zwischen {min} und {max} liegen",
   "@form_field_crossover_schedule_num_cycles_range": {
     "placeholders": {
-      "min": {},
-      "max": {}
+      "min": {
+        "type": "num"
+      },
+      "max": {
+        "type": "num"
+      }
     }
   },
   "form_field_amount_crossover_schedule_num_cycles": "Wiederholungen",
@@ -401,7 +433,9 @@
   "form_array_measurements_minlength": "{count,plural, =1{Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.} other{form_array_measurements_minlength}}",
   "@form_array_measurements_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_measurements_surveys": "Fragebögen",
@@ -425,7 +459,9 @@
   "form_array_measurement_survey_questions_minlength": "{count,plural, =1{Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.} other{form_array_measurement_survey_questions_minlength}}",
   "@form_array_measurement_survey_questions_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "@__________________STUDYPAGE_DESIGN_REPORTS__________________": {},
@@ -503,7 +539,9 @@
   "enrolled_count_tooltip": "{count,plural, =0{Bisher hat sich niemand mit diesem Teilnahme-Code zur Studie angemeldet} =1{{count} Teilnehmer hat sich mit diesem Code zur Studie angemeldet} other{{count} Teilnehmer haben sich mit diesem Code zur Studie angemeldet}}",
   "@enrolled_count_tooltip": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_code_create": "Neuer Teilnahmecode",
@@ -514,13 +552,17 @@
   "form_field_code_minlength": "Der Code muss mindestens {minLength} Zeichen lang sein",
   "@form_field_code_minlength": {
     "placeholders": {
-      "minLength": {}
+      "minLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_code_maxlength": "Der Code darf maximal {maxLength} Zeichen lang sein",
   "@form_field_code_maxlength": {
     "placeholders": {
-      "maxLength": {}
+      "maxLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_code_alreadyused": "Dieser Code wird bereits verwendet",
@@ -532,6 +574,8 @@
   "form_field_preconfigured_schedule_intervention_default": "Standard",
   "form_field_preconfigured_schedule_intervention_hint": "Intervention auswählen...",
   "code_list_section_title": "Teilnahmecodes",
+  "code_public_disabled": "Teilnahmecodes deaktiviert",
+  "code_public_disabled_description": "Teilnahmecodes sind für diese Studie deaktiviert, da die öffentliche Rekrutierung für diese Studie aktiviert ist. Alle Teilnehmer können ohne Teilnahmecodes beitreten.",
   "code_list_empty_title": "Noch keine Teilnehmer eingeladen",
   "code_list_empty_description": "Erstelle Teilnahmecodes, mit denen sich Teilnehmer zu deiner Studie in der StudyU App anmelden können.",
   "code_list_header_code": "Code",
@@ -544,10 +588,10 @@
   "participant_details_study_days_description": "Dieser Abschnitt bietet einen Überblick über die täglichen Aktivitäten des Teilnehmers in der Studie. Die Farblegende zeigt den Status der täglichen Aufgaben an. Bewege den Mauszeiger über die Studientage, um mehr Details über die tägliche Aktivität des Teilnehmers zu erfahren.",
   "participant_details_color_legend_title": "Legende",
   "participant_details_color_tooltip_legend_title": "Aktivitätsdetail Legende",
-  "participant_details_color_legend_completed_task": "Completed task",
-  "participant_details_color_legend_completed_task_tooltip": "The participant has completed this task",
-  "participant_details_color_legend_missed_task": "Missed task",
-  "participant_details_color_legend_missed_task_tooltip": "The participant has missed this task",
+  "participant_details_color_legend_completed_task": "Abgeschlossene Aufgabe",
+  "participant_details_color_legend_completed_task_tooltip": "Der Teilnehmer hat diese Aufgabe erledigt",
+  "participant_details_color_legend_missed_task": "Verpasste Aufgabe",
+  "participant_details_color_legend_missed_task_tooltip": "Der Teilnehmer hat diese Aufgabe verpasst",
   "participant_details_color_legend_completed": "Alle Aufgaben abgeschlossen",
   "participant_details_color_legend_partially_completed": "Einige Aufgaben unvollständig",
   "participant_details_color_legend_missed": "Alle Aufgaben verpasst",
@@ -564,7 +608,7 @@
   "monitoring_active_tooltip": "Anzahl der Teilnehmer, die derzeit in der Studie sind",
   "monitoring_inactive": "Inaktiv",
   "monitoring_inactive_tooltip": "Anzahl der Teilnehmer, die 3 Tage hintereinander keine Aktivität in der Studie gezeigt haben",
-  "monitoring_dropout": "Dropout",
+  "monitoring_dropout": "Abgebrochen",
   "monitoring_dropout_tooltip": "Anzahl der Teilnehmer, die die Studie vorzeitig abgebrochen haben oder für 5 Tage hintereinander keine Aktivität in der Studie gezeigt haben",
   "monitoring_completed": "Abgeschlossen",
   "monitoring_completed_tooltip": "Anzahl der Teilnehmer, die das Ende der Studie erreicht haben",
@@ -593,6 +637,7 @@
   "study_launch_post_launch_summary": "- Der Entwurfsmodus wird gesperrt und du kannst keine Änderungen mehr an der Studie selbst vornehmen\n- Alle nicht die Studie selbst betreffenden Daten werden zurückgesetzt (einschließlich Testnutzern und Testergebnissen)",
   "study_launch_success_title": "Deine Studie ist live!",
   "study_launch_success_description": "Lade als nächstes Teilnehmer zur Anmeldung in der StudyU App ein.",
+  "study_public_launch_success_description": "Deine Studie ist jetzt in der StudyU App für alle öffentlich verfügbar.",
   "action_button_post_launch_followup": "Teilnehmer einladen",
   "action_button_post_launch_followup_skip": "Später vielleicht",
   "action_button_study_participation_change": "Teilnahme\nändern",
@@ -604,37 +649,49 @@
   "date_diff_years": "{count,plural, =1{Vor einem Jahr} other{Vor {count} Jahren}}",
   "@date_diff_years": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_months": "{count,plural, =1{Vor einem Monat} other{Vor {count} Monaten}}",
   "@date_diff_months": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_days": "{count,plural, =1{Vor einem Tag} other{Vor {count} Tagen}}",
   "@date_diff_days": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_hours": "{count,plural, =1{Vor einer Stunde} other{Vor {count} Stunden}}",
   "@date_diff_hours": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_minutes": "{count,plural, =1{Vor einer Minute} other{Vor {count} Minuten}}",
   "@date_diff_minutes": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_seconds": "{count,plural, =1{Vor einer Sekunde} other{Vor {count} Sekunden}}",
   "@date_diff_seconds": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_just_now": "Gerade eben",
@@ -648,6 +705,7 @@
   "action_reportPrimary": "Als Primärauswertung setzen",
   "action_study_duplicate_draft": "Als Entwurf duplizieren",
   "action_study_export_results": "Ergebnisdaten exportieren",
+  "dialog_continue": "Fortfahren",
   "dialog_close": "Schließen",
   "dialog_cancel": "Abbrechen",
   "dialog_save": "Speichern",
@@ -665,5 +723,38 @@
   "dialog_action_unsaved_changes_stay": "Hier bleiben",
   "dialog_action_unsaved_changes_discard": "Änderungen verwerfen",
   "under_construction": "Noch in Arbeit",
-  "under_construction_description": "Hier wird gerade noch dran gearbeitet, bitte hab ein wenig Geduld & komm denächst wieder!"
+  "under_construction_description": "Hier wird gerade noch dran gearbeitet, bitte hab ein wenig Geduld & komm denächst wieder!",
+  "fitbit_credentials_instruction": "Um Fitbit-Daten zu integrieren, folgen Sie diesen Schritten, um Ihre Client-ID und Ihren Client-Secret zu erhalten:",
+  "fitbit_credentials_step1": "1. Gehen Sie zum Fitbit Developer Portal.",
+  "fitbit_credentials_step2": "2. Melden Sie sich mit Ihrem Fitbit-Konto an oder erstellen Sie eins, falls Sie noch keines haben.",
+  "fitbit_credentials_step3": "3. Navigieren Sie zum Abschnitt \"Verwalten\" und wählen Sie \"App registrieren\".",
+  "fitbit_credentials_step4": "4. Füllen Sie die erforderlichen Felder wie Anwendungsname, Beschreibung und Redirect-URL (verwenden Sie: \"studyu://fitbit/auth\") aus.",
+  "fitbit_credentials_step5": "5. Wählen Sie unter \"OAuth 2.0 Application Type\" die Option \"Client\" und setzen Sie den Zugriff auf \"Nur Lesen\".",
+  "fitbit_credentials_step6": "6. Senden Sie das Formular ab, um Ihre \"Client ID\" und \"Client Secret\" zu erhalten.",
+  "fitbit_credentials_step7": "7. Bitte füllen Sie das folgende Formular aus, um Zugang zu Intraday-Daten zu erhalten. Ohne diesen Schritt können Sie keine Daten von Fitbit für Ihre Versuche abrufen.",
+  "fitbit_credentials_step8": "8. Kopieren Sie die unten stehenden Zugangsdaten und fügen Sie sie ein.",
+  "fitbit_credentials_success_instruction": "Sobald Sie die Zugangsdaten eingegeben haben, wird die Fitbit-Integration für Ihre Studie aktiviert.",
+  "fitbit_credentials_add_question_instruction": "Um eine Fitbit-Frage hinzuzufügen, navigieren Sie zum Bereich Messungen und erstellen Sie innerhalb einer Messung eine neue Fitbit-Frage.",
+  "fitbit_credentials_screenshot_step1": "Schritt 1: Developer Portal",
+  "fitbit_credentials_screenshot_step2": "Schritt 2: Login",
+  "fitbit_credentials_screenshot_step3": "Schritt 3: App registrieren",
+  "fitbit_credentials_screenshot_step4": "Schritt 4: Details eingeben",
+  "fitbit_credentials_screenshot_step5": "Schritt 5: Zugriff einstellen",
+  "fitbit_credentials_screenshot_step6": "Schritt 6: Zugangsdaten erhalten",
+  "fitbit_credentials_screenshot_step7": "Schritt 7: Formular ausfüllen",
+  "fitbit_credentials_cannot_change_title": "Fitbit-Anmeldedaten können nicht geändert werden",
+  "fitbit_credentials_cannot_change_description": "Fitbit-Anmeldedaten können nicht geändert werden, wenn die Studie nicht im Entwurfsmodus ist.",
+  "fitbit_only_participant_title": "Wenn du diese Studie nur für dich selbst durchführst",
+  "fitbit_only_participant_subtitle": "Da du sowohl Ersteller als auch einziger Teilnehmer dieser Studie bist, brauchst du das Formular für den Zugriff auf Intraday-Daten nicht auszufüllen. Befolge einfach diese Schritte:",
+  "fitbit_only_participant_step_1": "Wähle beim Erstellen deiner Fitbit-App als Anwendungstyp „Persönlich“.",
+  "fitbit_only_participant_step_2": "Verwende beim Synchronisieren deiner Daten unbedingt dasselbe Google-Konto, das du mit deiner Fitbit-Uhr und der von dir eingerichteten Fitbit-App verbunden hast.",
+  "client_id": "Client ID",
+  "client_id_label_help": "Geben Sie die Client-ID aus dem Fitbit Developer Portal ein.",
+  "client_id_hint": "Client ID",
+  "client_secret": "Client Secret",
+  "client_secret_label_help": "Geben Sie den Client Secret aus dem Fitbit Developer Portal ein.",
+  "client_secret_hint": "Client Secret",
+  "screenshots_for_guidance": "Screenshots zur Anleitung:",
+  "fitbit_credentials_not_set": "Fitbit-Anmeldedaten sind nicht gesetzt. Bitte navigieren Sie zum 'Fitbit'-Tab im Studien-Designer, um Ihre Fitbit-Client-ID und Ihr Client-Secret einzugeben. Sobald dies abgeschlossen ist, kehren Sie hierher zurück, um Fitbit-Fragen hinzuzufügen."
+
 }

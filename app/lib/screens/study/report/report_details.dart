@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/report/disclaimer_section.dart';
 import 'package:studyu_app/screens/study/report/general_details_section.dart';

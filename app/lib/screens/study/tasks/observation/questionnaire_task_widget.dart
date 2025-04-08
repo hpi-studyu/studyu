@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/misc.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
@@ -71,6 +71,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
             key: formKey,
             child: QuestionnaireWidget(
               widget.task.questions.questions,
+              taskId: widget.task.id,
               header: widget.task.header,
               footer: widget.task.footer,
               onChange: _responseValidator,

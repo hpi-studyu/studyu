@@ -1,3 +1,28 @@
+## 1.9.0-dev.1
+
+ - **FIX**: update Supabase public anon key in development environment.
+
+## 1.9.0-dev.0
+
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+
+## 1.8.10
+
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+## 1.8.9
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+## 1.8.8
+
+ - **FIX**: upgrade to flutter v3.24.2.
+
+## 1.8.7
+
+ - **FIX**: upgrade deps.
+
 ## 1.8.6
 
  - **FIX**: upgrade deps.

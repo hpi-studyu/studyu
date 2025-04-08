@@ -20,6 +20,8 @@ class StudyMonitorItem extends Equatable {
   final bool droppedOut;
   final List<Set<String>> missedTasksPerDay;
   final List<Set<String>> completedTasksPerDay;
+  final int totalInterventionTasks;
+  final int totalSurveyTasks;
 
   const StudyMonitorItem({
     required this.studySubject,
@@ -36,6 +38,8 @@ class StudyMonitorItem extends Equatable {
     required this.droppedOut,
     required this.missedTasksPerDay,
     required this.completedTasksPerDay,
+    required this.totalInterventionTasks,
+    required this.totalSurveyTasks,
   })  : assert(missedTasksPerDay.length == currentDayOfStudy),
         assert(completedTasksPerDay.length == currentDayOfStudy);
 
@@ -130,6 +134,20 @@ extension StudyMonitoringX on Study {
       final missedInterventions = totalInterventions - completedInterventions;
       final missedSurveys = totalSurveys - completedSurveys;
 
+      // Calculate total number of tasks for all interventions for this participant
+      final totalInterventionTasks = interventions
+              .where((i) => participant.selectedInterventionIds.contains(i.id))
+              .map((i) => i.tasks.length)
+              .fold(0, (prev, element) => prev + element) *
+          schedule.phaseDuration *
+          schedule.numberOfCycles;
+
+      //calculate the total number of surveys for this participant
+      final totalSurveyTasks = observations
+              .where((o) => requiredSurveyTaskIds.contains(o.id))
+              .length *
+          schedule.length;
+
       items.add(
         StudyMonitorItem(
           studySubject: participant,
@@ -146,6 +164,8 @@ extension StudyMonitoringX on Study {
           droppedOut: participant.isDeleted,
           missedTasksPerDay: missedTasksPerDay,
           completedTasksPerDay: completedTasksPerDay,
+          totalInterventionTasks: totalInterventionTasks,
+          totalSurveyTasks: totalSurveyTasks,
         ),
       );
     }

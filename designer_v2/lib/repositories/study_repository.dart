@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -47,7 +48,7 @@ class StudyRepository extends ModelRepository<Study>
   final IAuthRepository authRepository;
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
-  final ProviderRef ref;
+  final Ref ref;
 
   final VoidCallback? sortCallback;
 
@@ -57,7 +58,7 @@ class StudyRepository extends ModelRepository<Study>
   }
 
   @override
-  Future<void> deleteParticipants(Study study) async {
+  Future<void> deleteParticipants(Study study) {
     final wrappedModel = get(study.id);
     if (wrappedModel == null) {
       throw ModelNotFoundException();
@@ -84,7 +85,7 @@ class StudyRepository extends ModelRepository<Study>
   }
 
   @override
-  Future<void> launch(Study study) async {
+  Future<void> launch(Study study) {
     final wrappedModel = get(study.id);
     if (wrappedModel == null) {
       throw ModelNotFoundException();
@@ -118,7 +119,7 @@ class StudyRepository extends ModelRepository<Study>
   }
 
   @override
-  Future<void> close(Study study) async {
+  Future<void> close(Study study) {
     final wrappedModel = get(study.id);
     if (wrappedModel == null) {
       throw ModelNotFoundException();
@@ -173,8 +174,8 @@ class StudyRepository extends ModelRepository<Study>
         // same as "Copy" but for non-drafts
         type: StudyActionType.duplicateDraft,
         label: StudyActionType.duplicateDraft.string,
-        onExecute: () {
-          return duplicateAndSave(model).then(
+        onExecute: () async {
+          return await duplicateAndSave(model).then(
             (value) =>
                 ref.read(routerProvider).dispatch(RoutingIntents.studies),
           );
@@ -185,8 +186,8 @@ class StudyRepository extends ModelRepository<Study>
       ModelAction(
         type: StudyActionType.duplicate,
         label: StudyActionType.duplicate.string,
-        onExecute: () {
-          return duplicateAndSave(model).then(
+        onExecute: () async {
+          return await duplicateAndSave(model).then(
             (value) =>
                 ref.read(routerProvider).dispatch(RoutingIntents.studies),
           );
@@ -285,7 +286,7 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
 }
 
 @riverpod
-StudyRepository studyRepository(StudyRepositoryRef ref) => StudyRepository(
+StudyRepository studyRepository(Ref ref) => StudyRepository(
       apiClient: ref.watch(apiClientProvider),
       authRepository: ref.watch(authRepositoryProvider),
       ref: ref,

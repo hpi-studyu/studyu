@@ -14,6 +14,7 @@ enum StudyStatus {
   closed;
 
   String toJson() => name;
+
   static StudyStatus fromJson(String json) => values.byName(json);
 }
 
@@ -22,6 +23,7 @@ enum Participation {
   invite;
 
   String toJson() => name;
+
   static Participation fromJson(String json) => values.byName(json);
 }
 
@@ -31,6 +33,7 @@ enum ResultSharing {
   organization;
 
   String toJson() => name;
+
   static ResultSharing fromJson(String json) => values.byName(json);
 }
 
@@ -79,6 +82,9 @@ class Study extends SupabaseObjectFunctions<Study>
   late List<String> collaboratorEmails = [];
   @JsonKey(name: 'registry_published', defaultValue: false)
   late bool registryPublished = false;
+
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  StudyFitbitCredentials? fitbitCredentials;
 
   @JsonKey(includeToJson: false, includeFromJson: false)
   int participantCount = 0;
@@ -148,6 +154,15 @@ class Study extends SupabaseObjectFunctions<Study>
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
 
+    //fitbitCredentials
+    final fitbitCredentials =
+        json['study_fitbit_credentials'] as Map<String, dynamic>?;
+    if (fitbitCredentials != null && fitbitCredentials.isNotEmpty) {
+      study.fitbitCredentials = StudyFitbitCredentials.fromJson(
+        json['study_fitbit_credentials'] as Map<String, dynamic>,
+      );
+    }
+
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
       study.repo =
@@ -209,7 +224,7 @@ class Study extends SupabaseObjectFunctions<Study>
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<List<Study>> getResearcherDashboardStudies() async =>
+  static Future<List<Study>> getResearcherDashboardStudies() =>
       SupabaseQuery.getAll<Study>(
         selectedColumns: [
           '*',
@@ -320,7 +335,9 @@ class Study extends SupabaseObjectFunctions<Study>
   // - Status
 
   bool get isDraft => status == StudyStatus.draft;
+
   bool get isRunning => status == StudyStatus.running;
+
   bool get isClosed => status == StudyStatus.closed;
 
   bool isReadonly(User user) {

@@ -22,26 +22,18 @@ LinearRegressionSection _$LinearRegressionSectionFromJson(
           _$ImprovementDirectionEnumMap, json['improvement']);
 
 Map<String, dynamic> _$LinearRegressionSectionToJson(
-    LinearRegressionSection instance) {
-  final val = <String, dynamic>{
-    'type': instance.type,
-    'id': instance.id,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('title', instance.title);
-  writeNotNull('description', instance.description);
-  writeNotNull('resultProperty', instance.resultProperty?.toJson());
-  val['alpha'] = instance.alpha;
-  writeNotNull(
-      'improvement', _$ImprovementDirectionEnumMap[instance.improvement]);
-  return val;
-}
+        LinearRegressionSection instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'id': instance.id,
+      if (instance.title case final value?) 'title': value,
+      if (instance.description case final value?) 'description': value,
+      if (instance.resultProperty?.toJson() case final value?)
+        'resultProperty': value,
+      'alpha': instance.alpha,
+      if (_$ImprovementDirectionEnumMap[instance.improvement] case final value?)
+        'improvement': value,
+    };
 
 const _$ImprovementDirectionEnumMap = {
   ImprovementDirection.positive: 'positive',

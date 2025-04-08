@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -10,23 +11,47 @@ part 'api_client.g.dart';
 
 abstract class StudyUApi {
   Future<Study> saveStudy(Study study);
+
   Future<Study> fetchStudy(StudyID studyId);
+
   Future<List<Study>> getUserStudies();
+
   Future<void> deleteStudy(Study study);
+
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
+
   Future<StudyInvite> fetchStudyInvite(String code);
+
+  Future<Study> fetchStudyFromInvite(String code);
+
   Future<void> deleteStudyInvite(StudyInvite invite);
+
   Future<List<StudySubject>> deleteParticipants(
     Study study,
     List<StudySubject> participants,
   );
+
   /*
   Future<List<SubjectProgress>> deleteStudyProgress(
       Study study, List<SubjectProgress> records);
    */
   Future<AppConfig> fetchAppConfig();
+
   Future<StudyUUser> fetchUser(String userId);
+
   Future<StudyUUser> saveUser(StudyUUser user);
+
+  Future<StudyFitbitCredentials> saveStudyFitbitCredentials(
+    StudyFitbitCredentials credentials,
+  );
+
+  Future<StudyFitbitCredentials> fetchStudyFitbitCredentials(
+    StudyID studyId,
+  );
+
+  Future<void> deleteStudyFitbitCredentials(
+    StudyFitbitCredentials credentials,
+  );
 }
 
 typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
@@ -74,6 +99,7 @@ class StudyUApiClient extends SupabaseClientDependant
     '*',
     'repo(*)',
     'study_invite!study_invite_studyId_fkey(*)',
+    'study_fitbit_credentials!study_fitbit_credentials_studyId_fkey(*)',
     'study_participant_count',
     'study_ended_count',
     'active_subject_count',
@@ -141,7 +167,7 @@ class StudyUApiClient extends SupabaseClientDependant
   /// otherwise, all columns are fetched => [studyColumns]
   ///
   ///
-  /// @return List<Study>
+  /// @return List`<Study`>
   @override
   Future<List<Study>> getUserStudies({
     bool withParticipantActivity = false,
@@ -207,6 +233,20 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 
   @override
+  Future<Study> fetchStudyFromInvite(String code) async {
+    await _testDelay();
+    try {
+      final request = await executeRpc(
+        'get_study_record_from_invite',
+        params: {'invite_code': code},
+      );
+      return deserializeObject<Study>(request);
+    } catch (e) {
+      throw StudyInviteNotFoundException();
+    }
+  }
+
+  @override
   Future<StudyInvite> saveStudyInvite(StudyInvite invite) async {
     await _testDelay();
     final request = invite.save(); // upsert will override existing record
@@ -222,7 +262,7 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 
   @override
-  Future<AppConfig> fetchAppConfig() async {
+  Future<AppConfig> fetchAppConfig() {
     final request = AppConfig.getAppConfig();
     return _awaitGuarded(request);
   }
@@ -247,6 +287,39 @@ class StudyUApiClient extends SupabaseClientDependant
     return _awaitGuarded<StudyUUser>(request);
   }
 
+  @override
+  Future<StudyFitbitCredentials> saveStudyFitbitCredentials(
+    StudyFitbitCredentials credentials,
+  ) async {
+    await _testDelay();
+    final request = credentials.save();
+    return _awaitGuarded<StudyFitbitCredentials>(request);
+  }
+
+  @override
+  Future<StudyFitbitCredentials> fetchStudyFitbitCredentials(
+    StudyID studyId,
+  ) async {
+    await _testDelay();
+    final request = getById<StudyFitbitCredentials>(studyId);
+    return _awaitGuarded(
+      request,
+      onError: {
+        PostgrestErrorCodes.isNotSingleItem: (e) =>
+            throw StudyNotFoundException(),
+      },
+    );
+  }
+
+  @override
+  Future<void> deleteStudyFitbitCredentials(
+    StudyFitbitCredentials credentials,
+  ) async {
+    await _testDelay();
+    final request = credentials.delete();
+    return _awaitGuarded<void>(request);
+  }
+
   /// Helper that tries to complete the given Supabase query [future] while
   /// dispatching errors to the registered [onError] handlers.
   ///
@@ -262,7 +335,9 @@ class StudyUApiClient extends SupabaseClientDependant
       final result = await future;
       return result;
     } on SupabaseQueryError catch (e) {
-      if (onError == null || e.statusCode == null) {
+      if (onError == null ||
+          onError[e.statusCode] == null ||
+          e.statusCode == null) {
         throw _apiException(error: e);
       }
       final errorHandler = onError[e.statusCode]!;
@@ -297,6 +372,6 @@ class StudyUApiClient extends SupabaseClientDependant
 }
 
 @riverpod
-StudyUApiClient apiClient(ApiClientRef ref) => StudyUApiClient(
+StudyUApiClient apiClient(Ref ref) => StudyUApiClient(
       supabaseClient: ref.watch(supabaseClientProvider),
     );

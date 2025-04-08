@@ -7,7 +7,7 @@ part of 'invite_code_form_controller.dart';
 // **************************************************************************
 
 String _$inviteCodeFormViewModelHash() =>
-    r'a7e83058dad45cd50142d9430f3c8907b5653c99';
+    r'dc764c80c619d39935e0c00fc7ca353f81213557';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -175,6 +175,8 @@ class InviteCodeFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin InviteCodeFormViewModelRef
     on AutoDisposeProviderRef<InviteCodeFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -190,4 +192,4 @@ class _InviteCodeFormViewModelProviderElement
   String get studyId => (origin as InviteCodeFormViewModelProvider).studyId;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

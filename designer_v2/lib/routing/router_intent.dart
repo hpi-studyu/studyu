@@ -63,6 +63,12 @@ class RoutingIntents {
           RouteParams.studyId: studyId,
         },
       );
+  static final studyEditFitbitCredentials = (StudyID studyId) => RoutingIntent(
+        route: RouterConf.route(studyEditFitbitCredentialsRouteName),
+        params: {
+          RouteParams.studyId: studyId,
+        },
+      );
   static final studyEditEnrollment = (StudyID studyId) => RoutingIntent(
         route: RouterConf.route(studyEditEnrollmentRouteName),
         params: {
@@ -103,16 +109,16 @@ class RoutingIntents {
               RouteParams.measurementId: measurementId,
             },
           );
-  static final studyTest =
-      (StudyID studyId, {String? appRoute}) => RoutingIntent(
-            route: RouterConf.route(studyTestRouteName),
-            params: {
-              RouteParams.studyId: studyId,
-            },
-            queryParams: {
-              if (appRoute != null) RouteParams.testAppRoute: appRoute,
-            },
-          );
+  static RoutingIntent studyTest(StudyID studyId, {String? appRoute}) =>
+      RoutingIntent(
+        route: RouterConf.route(studyTestRouteName),
+        params: {
+          RouteParams.studyId: studyId,
+        },
+        queryParams: {
+          if (appRoute != null) RouteParams.testAppRoute: appRoute,
+        },
+      );
   static final studyRecruit = (StudyID studyId) => RoutingIntent(
         route: RouterConf.route(studyRecruitRouteName),
         params: {

@@ -51,7 +51,10 @@
   "intervention_current": "Current intervention",
   "study_current": "Current study:",
   "opt_out": "Leave study",
-  "delete_data": "Leave study & delete all data",
+  "delete_data": "Leave study and delete all data",
+  "soft_delete_desc": "You will lose your progress in ",
+  "soft_delete_desc_2": " and won't be able to recover it. Previously completed studies will not be deleted.\nYour anonymized data up to this point may still be used for research purposes.",
+  "hard_delete_desc": "You are about to delete all data from your device and our servers. You will not be able to restore your data.\nYour anonymized data will not be available for research purposes anymore.",
 
   "your_journey": "Your Journey",
   "journey_results_available": "Results available",
@@ -192,23 +195,60 @@
   "free_text_min_length_error": "Please enter at least {min} characters",
   "@free_text_min_length_error": {
     "placeholders": {
-      "min": {}
+      "min": {
+        "type": "num"
+      }
     }
   },
   "free_text_max_length_error": "Please enter at most {max} characters",
   "@free_text_max_length_error": {
     "placeholders": {
-      "max": {}
+      "max": {
+        "type": "num"
+      }
     }
   },
   "free_text_alphanumeric_error": "Please enter only alphanumeric characters",
   "free_text_numeric_error": "Please enter only numeric characters",
   "free_text_custom_error": "Please enter only characters matching the pattern {pattern}",
   "@free_text_custom_error": {
-      "placeholders": {
-      "pattern": {}
+    "placeholders": {
+      "pattern": {
+        "type": "String"
       }
+    }
   },
   "app_outdated_message": "A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!",
-  "update_now": "Update now"
+  "update_now": "Update now",
+  "sync_fitbit_data": "Sync Fitbit Data",
+  "fitbit_data_synced": "Fitbit data synced successfully",
+  "fitbit_data_not_synced": "Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.",
+  "error_syncing_fitbit_data": "Error syncing Fitbit data: {error}",
+  "@error_syncing_fitbit_data": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fitbit_data_synced_dialog_title": "Fitbit Data Synced",
+  "fitbit_data_synced_info": "Data was synced for the following data types:",
+  "fitbit_data_earliest_date": "Earliest date: {date}",
+  "fitbit_data_latest_date": "Latest date: {date}",
+  "fitbit_data_details_btn": "Details",
+  "fitbit_data_close_btn": "Close",
+  "@fitbit_data_earliest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@fitbit_data_latest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

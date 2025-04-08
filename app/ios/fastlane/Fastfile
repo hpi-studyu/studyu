@@ -48,15 +48,16 @@ platform :ios do
     )
 
     match(
+      type: "appstore",
       git_url: ENV['FASTLANE_APP_IOS_MATCH_GIT_URL'],
       git_private_key: ENV['FASTLANE_APP_IOS_MATCH_GIT_PRIVATE_KEY'],
       readonly: true,
       keychain_name: keychain_name,
-      keychain_password: keychain_password 
+      keychain_password: keychain_password
     )
 
     build_app(
-      export_method: "app-store"
+      export_method: "app-store",
     )
 
     upload_to_testflight(

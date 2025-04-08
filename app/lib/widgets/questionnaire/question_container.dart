@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/questionnaire/audio_recording_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/image_capturing_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/question_header.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/annotated_scale_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/boolean_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/choice_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/fitbit_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/free_text_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/scale_question_widget.dart';
@@ -16,11 +17,13 @@ class QuestionContainer extends StatefulWidget {
   final Function(Answer, int) onDone;
   final Question question;
   final int index;
+  final String? taskId;
 
   const QuestionContainer({
     required this.onDone,
     required this.question,
     required this.index,
+    this.taskId,
     super.key,
   });
 
@@ -79,6 +82,12 @@ class _QuestionContainerState extends State<QuestionContainer>
         return FreeTextQuestionWidget(
           question: freeTextQuestion,
           onDone: _onDone,
+        );
+      case final FitbitQuestion fitbitQuestion:
+        return FitbitQuestionWidget(
+          question: fitbitQuestion,
+          onDone: _onDone,
+          taskId: widget.taskId!,
         );
       default:
         throw ArgumentError(

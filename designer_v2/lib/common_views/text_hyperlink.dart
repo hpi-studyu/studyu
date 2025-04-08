@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -57,9 +56,9 @@ class _HyperlinkState extends State<Hyperlink> {
 
         final visitedColor = widget.visitedColor ?? widget.linkColor;
         final visitedHoverColor = widget.hoverColor ??
-            visitedColor.faded(ThemeConfig.kHoverFadeFactor);
+            visitedColor.withValues(alpha: ThemeConfig.kHoverFadeFactor);
         final hoverColor = widget.hoverColor ??
-            widget.linkColor.faded(ThemeConfig.kHoverFadeFactor);
+            widget.linkColor.withValues(alpha: ThemeConfig.kHoverFadeFactor);
 
         final actualColor = isVisited
             ? (isHovered ? visitedHoverColor : visitedColor)

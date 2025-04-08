@@ -8,7 +8,8 @@ enum SurveyQuestionType {
   scale,
   image,
   audio,
-  freeText;
+  freeText,
+  fitbit;
 
   static SurveyQuestionType of(Question question) {
     final typeMapping = {
@@ -20,6 +21,7 @@ enum SurveyQuestionType {
       FreeTextQuestion.questionType: SurveyQuestionType.freeText,
       ImageCapturingQuestion.questionType: SurveyQuestionType.image,
       AudioRecordingQuestion.questionType: SurveyQuestionType.audio,
+      FitbitQuestion.questionType: SurveyQuestionType.fitbit,
     };
     if (!typeMapping.containsKey(question.type)) {
       throw UnimplementedError(
@@ -43,8 +45,8 @@ enum SurveyQuestionType {
         return tr.question_type_audio;
       case SurveyQuestionType.freeText:
         return tr.question_type_free_text;
-      default:
-        return "[Invalid SurveyQuestionType]";
+      case SurveyQuestionType.fitbit:
+        return tr.question_type_fitbit;
     }
   }
 
@@ -62,8 +64,8 @@ enum SurveyQuestionType {
         return Icons.mic;
       case SurveyQuestionType.freeText:
         return Icons.edit_square;
-      default:
-        return null;
+      case SurveyQuestionType.fitbit:
+        return Icons.fitbit;
     }
   }
 
@@ -82,8 +84,6 @@ extension FreeTextQuestionTypeExtension on FreeTextQuestionType {
         return tr.free_text_question_type_numeric;
       case FreeTextQuestionType.custom:
         return tr.free_text_question_type_custom;
-      default:
-        return "[Invalid FreeTextQuestionType]";
     }
   }
 }

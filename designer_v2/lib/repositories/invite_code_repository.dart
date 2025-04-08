@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -40,7 +41,7 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   Study get study => studyRepository.get(studyId)!.model;
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
-  final ProviderRef ref;
+  final Ref ref;
 
   final StudyUApi apiClient;
   final IAuthRepository authRepository;
@@ -54,9 +55,11 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
   @override
   Future<bool> isCodeAlreadyUsed(String code) async {
     try {
-      await apiClient.fetchStudyInvite(code);
+      await apiClient.fetchStudyFromInvite(code);
     } on StudyInviteNotFoundException {
       return false;
+    } catch (e) {
+      rethrow;
     }
     return true;
   }
@@ -78,8 +81,8 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
       ModelAction(
         type: ModelActionType.delete,
         label: ModelActionType.delete.string,
-        onExecute: () {
-          return delete(getKey(model))
+        onExecute: () async {
+          return await delete(getKey(model))
               .then(
                 (value) => ref
                     .read(routerProvider)
@@ -134,7 +137,7 @@ class InviteCodeRepositoryDelegate
   }
 
   @override
-  Future<StudyInvite> save(StudyInvite model) async {
+  Future<StudyInvite> save(StudyInvite model) {
     study.invites ??= [];
     final prevInvites = [...study.invites!];
 
@@ -210,7 +213,7 @@ class InviteCodeRepositoryDelegate
 
 @riverpod
 InviteCodeRepository inviteCodeRepository(
-  InviteCodeRepositoryRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   print("inviteCodeRepositoryProvider($studyId");
