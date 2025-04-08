@@ -614,7 +614,8 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
       for (final intervention in widget.subject.study.interventions)
         intervention.id: intervention.name,
     };
-    names[Study.baselineID] = AppLocalizations.of(context)!.baseline;
+    final localizations = AppLocalizations.of(context);
+    names[Study.baselineID] = localizations?.baseline ?? "baseline";
     return names;
   }
 
