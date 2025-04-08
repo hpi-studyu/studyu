@@ -334,7 +334,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
             reservedSize: 40,
             getTitlesWidget: (value, meta) {
               return SideTitleWidget(
-                axisSide: meta.axisSide,
+                meta: meta,
                 child: Text(
                   value.toInt().toString(),
                   style: const TextStyle(fontSize: 14),
@@ -350,7 +350,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
             reservedSize: 40,
             getTitlesWidget: (value, meta) {
               return SideTitleWidget(
-                axisSide: meta.axisSide,
+                meta: meta,
                 child: Text(
                   value.toString(),
                   style: const TextStyle(fontSize: 14),
@@ -392,7 +392,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
 
   Color getBackgroundColor(List<DiagramDatum> data) {
     if (data.any((datum) => datum.intervention == 'intervention_a')) {
-      return Colors.lightBlue.withOpacity(0.3);
+      return Colors.lightBlue.withValues(alpha: 0.3);
     } else if (data.any((datum) => datum.intervention == 'intervention_b')) {
       return Colors.orange.withOpacity(0.3);
     }
@@ -401,7 +401,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
 
   Widget getTitles(double value, TitleMeta meta) {
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       child: getValues(value),
     );
   }
