@@ -250,5 +250,12 @@
         "type": "String"
       }
     }
-  }
+  },
+  "text_summary_section_prefix_higher": "Your ",
+  "text_summary_section_was_higher": " was higher during intervention: ",
+  "text_summary_section_was_lower": " was lower during intervention: ",
+  "text_summary_section_compared_to": " compared to: ",
+  "text_summary_section_and": " and ",
+  "text_summary_section_no_evidence": "There was no evidence for a difference in ",
+  "text_summary_section_between": " between interventions: "
 }

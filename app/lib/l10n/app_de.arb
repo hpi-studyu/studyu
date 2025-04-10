@@ -253,5 +253,12 @@
         "type": "String"
       }
     }
-  }
+  },
+  "text_summary_section_prefix_higher": "Dein ",
+  "text_summary_section_was_higher": " war höher während der Intervention: ",
+  "text_summary_section_was_lower": " war niedriger während der Intervention: ",
+  "text_summary_section_compared_to": " im Vergleich zu: ",
+  "text_summary_section_and": " und ",
+  "text_summary_section_no_evidence": "Es gab keinen Hinweis auf einen Unterschied bei ",
+  "text_summary_section_between": " zwischen den Interventionen: "
 }

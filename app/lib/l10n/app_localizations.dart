@@ -1177,6 +1177,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Close'**
   String get fitbit_data_close_btn;
+
+  /// No description provided for @text_summary_section_prefix_higher.
+  ///
+  /// In en, this message translates to:
+  /// **'Your '**
+  String get text_summary_section_prefix_higher;
+
+  /// No description provided for @text_summary_section_was_higher.
+  ///
+  /// In en, this message translates to:
+  /// **' was higher during intervention: '**
+  String get text_summary_section_was_higher;
+
+  /// No description provided for @text_summary_section_was_lower.
+  ///
+  /// In en, this message translates to:
+  /// **' was lower during intervention: '**
+  String get text_summary_section_was_lower;
+
+  /// No description provided for @text_summary_section_compared_to.
+  ///
+  /// In en, this message translates to:
+  /// **' compared to: '**
+  String get text_summary_section_compared_to;
+
+  /// No description provided for @text_summary_section_and.
+  ///
+  /// In en, this message translates to:
+  /// **' and '**
+  String get text_summary_section_and;
+
+  /// No description provided for @text_summary_section_no_evidence.
+  ///
+  /// In en, this message translates to:
+  /// **'There was no evidence for a difference in '**
+  String get text_summary_section_no_evidence;
+
+  /// No description provided for @text_summary_section_between.
+  ///
+  /// In en, this message translates to:
+  /// **' between interventions: '**
+  String get text_summary_section_between;
 }
 
 class _AppLocalizationsDelegate

@@ -610,4 +610,28 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get fitbit_data_close_btn => 'Schließen';
+
+  @override
+  String get text_summary_section_prefix_higher => 'Dein ';
+
+  @override
+  String get text_summary_section_was_higher =>
+      ' war höher während der Intervention: ';
+
+  @override
+  String get text_summary_section_was_lower =>
+      ' war niedriger während der Intervention: ';
+
+  @override
+  String get text_summary_section_compared_to => ' im Vergleich zu: ';
+
+  @override
+  String get text_summary_section_and => ' und ';
+
+  @override
+  String get text_summary_section_no_evidence =>
+      'Es gab keinen Hinweis auf einen Unterschied bei ';
+
+  @override
+  String get text_summary_section_between => ' zwischen den Interventionen: ';
 }
