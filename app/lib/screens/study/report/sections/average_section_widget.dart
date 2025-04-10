@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/report_section_widget.dart';
 import 'package:studyu_app/screens/study/report/sections/results_descriptive_statistics.dart';
-import 'package:studyu_app/screens/study/report/sections/results_gauge.dart';
 import 'package:studyu_app/screens/study/report/util/plot_utilities.dart';
 import 'package:studyu_app/util/data_processing.dart';
 import 'package:studyu_core/core.dart';
@@ -61,44 +60,6 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        GaugeTitleWidget(
-          widget.subject,
-          widget.section,
-        ),
-        const SizedBox(height: 8),
-        // Checkbox to toggle between colorful and colorless gauges
-        Row(
-          children: [
-            const Text("Show Colorless Gauges"),
-            Checkbox(
-              value: showColorlessGauges,
-              onChanged: (bool? newValue) {
-                setState(() {
-                  showColorlessGauges = newValue ?? false;
-                });
-              },
-            ),
-          ],
-        ),
-        // Conditionally show either colorful or colorless gauges
-        if (showColorlessGauges)
-          ColorlessGaugesWidget(
-            valuesInterventionA,
-            valuesInterventionB,
-            nameInterventionA,
-            nameInterventionB,
-            widget.subject,
-            widget.section,
-          )
-        else
-          ColorfulGaugesWidget(
-            valuesInterventionA,
-            valuesInterventionB,
-            nameInterventionA,
-            nameInterventionB,
-            widget.subject,
-            widget.section,
-          ),
         DropdownButton<TemporalAggregation>(
           value: widget.section.aggregate,
           items: const [
