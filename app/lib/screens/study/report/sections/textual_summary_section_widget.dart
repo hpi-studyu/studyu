@@ -19,8 +19,7 @@ class _TextualSummarySectionStatefulWidget extends StatefulWidget {
   final StudySubject subject;
   final TextualSummarySection section;
 
-  const _TextualSummarySectionStatefulWidget(this.subject, this.section,
-      {super.key});
+  const _TextualSummarySectionStatefulWidget(this.subject, this.section);
 
   @override
   State<_TextualSummarySectionStatefulWidget> createState() =>
