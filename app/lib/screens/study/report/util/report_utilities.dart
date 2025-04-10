@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:studyu_app/screens/study/report/sections/average_section_widget.dart';
 import 'package:studyu_app/screens/study/report/util/plot_utilities.dart';
 import 'package:studyu_app/util/data_processing.dart';
@@ -96,5 +97,11 @@ class ReportUtilities {
     });
 
     return interventionGroups;
+  }
+
+  String getInterventionName(String interventionId) {
+    final intervention = subject.study.interventions
+        .firstWhereOrNull((intervention) => intervention.id == interventionId);
+    return intervention?.name ?? '';
   }
 }

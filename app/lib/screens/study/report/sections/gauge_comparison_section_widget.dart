@@ -1,34 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/screens/study/report/report_section_widget.dart';
-import 'package:studyu_app/screens/study/report/sections/results_textual_summary.dart';
+import 'package:studyu_app/screens/study/report/sections/results_gauge.dart';
 import 'package:studyu_app/screens/study/report/util/report_utilities.dart';
 import 'package:studyu_core/core.dart';
 
-class TextualSummarySectionWidget extends ReportSectionWidget {
-  final TextualSummarySection section;
+class GaugeComparisonSectionWidget extends ReportSectionWidget {
+  final GaugeComparisonSection section;
 
-  const TextualSummarySectionWidget(super.subject, this.section, {super.key});
+  const GaugeComparisonSectionWidget(super.subject, this.section, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return _TextualSummarySectionStatefulWidget(subject, section);
+    return _GaugeComparisonSectionStatefulWidget(subject, section);
   }
 }
 
-class _TextualSummarySectionStatefulWidget extends StatefulWidget {
+class _GaugeComparisonSectionStatefulWidget extends StatefulWidget {
   final StudySubject subject;
-  final TextualSummarySection section;
+  final GaugeComparisonSection section;
 
-  const _TextualSummarySectionStatefulWidget(this.subject, this.section);
+  const _GaugeComparisonSectionStatefulWidget(this.subject, this.section);
 
   @override
-  State<_TextualSummarySectionStatefulWidget> createState() =>
-      _TextualSummarySectionState();
+  State<_GaugeComparisonSectionStatefulWidget> createState() =>
+      _GaugeComparisonSectionState();
 }
 
-class _TextualSummarySectionState
-    extends State<_TextualSummarySectionStatefulWidget> {
+class _GaugeComparisonSectionState
+    extends State<_GaugeComparisonSectionStatefulWidget> {
   bool _isLoading = true;
+  bool showColorlessGauges = false;
+
   late final ReportUtilities _reportUtilities;
   late final Map<String, List<num>> _interventionValues;
 
@@ -80,23 +82,30 @@ class _TextualSummarySectionState
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (widget.section.title != null)
-          Text(
-            widget.section.title!,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-        const SizedBox(height: 4),
-        TextualSummaryWidget(
+        Row(
+          children: [
+            const Text("Show Colorless Gauges"),
+            Checkbox(
+              value: showColorlessGauges,
+              onChanged: (bool? newValue) {
+                setState(() {
+                  showColorlessGauges = newValue ?? false;
+                });
+              },
+            ),
+          ],
+        ),
+        // Conditionally show either colorful or colorless gauges
+        MergedGaugesWidget(
           _reportUtilities.getInterventionName(
             _interventionValues.keys.first,
           ),
           _reportUtilities.getInterventionName(
             _interventionValues.keys.elementAt(1),
           ),
-          _interventionValues[_interventionValues.keys.first]!,
-          _interventionValues[_interventionValues.keys.elementAt(1)]!,
-          widget.subject,
-          widget.section,
+          _interventionValues.values.first,
+          _interventionValues.values.elementAt(1),
+          showColors: showColorlessGauges,
         ),
       ],
     );
