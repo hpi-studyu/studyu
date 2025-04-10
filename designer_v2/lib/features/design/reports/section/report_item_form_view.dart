@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/features/design/reports/section/report_item_f
 import 'package:studyu_designer_v2/features/design/reports/section/types/average_section_form_view.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/linear_regression_section_form_view.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/section_type.dart';
+import 'package:studyu_designer_v2/features/design/reports/section/types/textual_summary_section_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -36,6 +37,11 @@ class ReportItemFormView extends StatelessWidget {
           ),
       ReportSectionType.linearRegression: (_) =>
           LinearRegressionSectionFormView(
+            formViewModel: formViewModel,
+            studyId: studyId,
+            reportSectionColumnWidth: reportSectionColumnWidth,
+          ),
+      ReportSectionType.textualSummary: (_) => TextualSummarySectionFormView(
             formViewModel: formViewModel,
             studyId: studyId,
             reportSectionColumnWidth: reportSectionColumnWidth,

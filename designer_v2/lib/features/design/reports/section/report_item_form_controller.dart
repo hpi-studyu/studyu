@@ -84,6 +84,7 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
       'improvementDirection': improvementDirectionControl,
       'alphaControl': alphaControl,
     }),
+    ReportSectionType.textualSummary: FormGroup({}),
   };
 
   late final FormValidationConfigSet _sharedValidationConfig = {
@@ -125,6 +126,11 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
         alphaConfidenceRequired,
       ],
     },
+    ReportSectionType.textualSummary: {
+      StudyFormValidationSet.draft: [],
+      StudyFormValidationSet.publish: [],
+      StudyFormValidationSet.test: [],
+    }
   };
 
   @override
@@ -239,6 +245,12 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
           linearSection.alpha = alphaControl.value!;
           linearSection.resultProperty = dataReferenceControl.value;
           return linearSection;
+        case ReportSectionType.textualSummary:
+          final TextualSummarySection textualSummarySection =
+              TextualSummarySection();
+
+          textualSummarySection.resultProperty = dataReferenceControl.value;
+          return textualSummarySection;
       }
     }
 
@@ -321,6 +333,14 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
         dataReferenceControl.value = DataReferenceIdentifier(
           linearRegressionSection.resultProperty!.task,
           linearRegressionSection.resultProperty!.property,
+        );
+      case ReportSectionType.textualSummary:
+        final TextualSummarySection textualSummarySection =
+            data.section as TextualSummarySection;
+
+        dataReferenceControl.value = DataReferenceIdentifier(
+          textualSummarySection.resultProperty!.task,
+          textualSummarySection.resultProperty!.property,
         );
     }
   }

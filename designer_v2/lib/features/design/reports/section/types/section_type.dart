@@ -4,12 +4,14 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 enum ReportSectionType {
   average,
-  linearRegression;
+  linearRegression,
+  textualSummary;
 
   static ReportSectionType of(ReportSection reportSection) {
     final typeMapping = {
       AverageSection.sectionType: ReportSectionType.average,
       LinearRegressionSection.sectionType: ReportSectionType.linearRegression,
+      TextualSummarySection.sectionType: ReportSectionType.textualSummary,
     };
     if (!typeMapping.containsKey(reportSection.type)) {
       throw UnimplementedError(
@@ -25,8 +27,8 @@ enum ReportSectionType {
         return tr.reportSection_type_average;
       case ReportSectionType.linearRegression:
         return tr.reportSection_type_linearRegression;
-      default:
-        return "[Invalid ReportSectionType]";
+      case ReportSectionType.textualSummary:
+        return "Textual Summary";
     }
   }
 
@@ -36,8 +38,8 @@ enum ReportSectionType {
         return Icons.functions_rounded;
       case ReportSectionType.linearRegression:
         return Icons.insights_rounded;
-      default:
-        return null;
+      case ReportSectionType.textualSummary:
+        return Icons.text_snippet_rounded;
     }
   }
 
@@ -66,8 +68,6 @@ class TemporalAggregationFormatted {
         return tr.reportSection_type_temporalAggregation_phase;
       case TemporalAggregation.intervention:
         return tr.reportSection_type_temporalAggregation_intervention;
-      default:
-        return "[Invalid TemporalAggregation]";
     }
   }
 
@@ -79,8 +79,6 @@ class TemporalAggregationFormatted {
         return Icons.fast_forward_rounded;
       case TemporalAggregation.intervention:
         return Icons.task_alt_rounded;
-      default:
-        return null;
     }
   }
 
@@ -117,8 +115,6 @@ class ImprovementDirectionFormatted {
         return tr.reportSection_type_improvementDirection_positive;
       case ImprovementDirection.negative:
         return tr.reportSection_type_improvementDirection_negative;
-      default:
-        return "[Invalid ImprovementDirection]";
     }
   }
 
@@ -128,8 +124,6 @@ class ImprovementDirectionFormatted {
         return Icons.arrow_upward_rounded;
       case ImprovementDirection.negative:
         return Icons.arrow_downward_rounded;
-      default:
-        return null;
     }
   }
 
