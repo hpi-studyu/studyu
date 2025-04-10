@@ -85,6 +85,7 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
       'alphaControl': alphaControl,
     }),
     ReportSectionType.textualSummary: FormGroup({}),
+    ReportSectionType.gaugeComparison: FormGroup({}),
   };
 
   late final FormValidationConfigSet _sharedValidationConfig = {
@@ -130,7 +131,12 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
       StudyFormValidationSet.draft: [],
       StudyFormValidationSet.publish: [],
       StudyFormValidationSet.test: [],
-    }
+    },
+    ReportSectionType.gaugeComparison: {
+      StudyFormValidationSet.draft: [],
+      StudyFormValidationSet.publish: [],
+      StudyFormValidationSet.test: [],
+    },
   };
 
   @override
@@ -251,6 +257,11 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
 
           textualSummarySection.resultProperty = dataReferenceControl.value;
           return textualSummarySection;
+        case ReportSectionType.gaugeComparison:
+          final GaugeComparisonSection gaugeComparisonSection =
+              GaugeComparisonSection();
+          gaugeComparisonSection.resultProperty = dataReferenceControl.value;
+          return gaugeComparisonSection;
       }
     }
 
@@ -341,6 +352,14 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
         dataReferenceControl.value = DataReferenceIdentifier(
           textualSummarySection.resultProperty!.task,
           textualSummarySection.resultProperty!.property,
+        );
+      case ReportSectionType.gaugeComparison:
+        final GaugeComparisonSection gaugeComparisonSection =
+            data.section as GaugeComparisonSection;
+
+        dataReferenceControl.value = DataReferenceIdentifier(
+          gaugeComparisonSection.resultProperty!.task,
+          gaugeComparisonSection.resultProperty!.property,
         );
     }
   }

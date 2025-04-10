@@ -21,6 +21,8 @@ abstract class ReportSection {
           LinearRegressionSection.fromJson(data),
         TextualSummarySection.sectionType =>
           TextualSummarySection.fromJson(data),
+        GaugeComparisonSection.sectionType =>
+          GaugeComparisonSection.fromJson(data),
         _ => throw UnknownJsonTypeError(data[keyType]),
       };
   Map<String, dynamic> toJson();

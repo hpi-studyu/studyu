@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/average_section_form_view.dart';
+import 'package:studyu_designer_v2/features/design/reports/section/types/gauge_comparison_section_form_view.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/linear_regression_section_form_view.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/section_type.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/textual_summary_section_form_view.dart';
@@ -46,6 +47,10 @@ class ReportItemFormView extends StatelessWidget {
             studyId: studyId,
             reportSectionColumnWidth: reportSectionColumnWidth,
           ),
+      ReportSectionType.gaugeComparison: (_) => GaugeComparisonSectionFormView(
+          formViewModel: formViewModel,
+          studyId: studyId,
+          reportSectionColumnWidth: reportSectionColumnWidth)
     };
     final sectionType = formViewModel.sectionType;
 
