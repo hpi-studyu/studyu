@@ -5,9 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/report_section_widget.dart';
 import 'package:studyu_app/screens/study/report/sections/results_descriptive_statistics.dart';
 import 'package:studyu_app/screens/study/report/sections/results_gauge.dart';
-import 'package:studyu_app/screens/study/report/sections/results_textual_summary.dart';
 import 'package:studyu_app/screens/study/report/util/plot_utilities.dart';
-import 'package:studyu_app/theme.dart';
 import 'package:studyu_app/util/data_processing.dart';
 import 'package:studyu_core/core.dart';
 
@@ -68,22 +66,6 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (taskTitle != null)
-          Text(
-            taskTitle,
-            style: theme.textTheme.bodyLarge!
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
-        const SizedBox(height: 8),
-        TextualSummaryWidget(
-          valuesInterventionA,
-          valuesInterventionB,
-          nameInterventionA,
-          nameInterventionB,
-          widget.subject,
-          widget.section,
-        ),
-        const SizedBox(height: 8),
         GaugeTitleWidget(
           widget.subject,
           widget.section,
@@ -538,15 +520,31 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     return c;
   }
 
+  /// Returns the day index adjusted for baseline inclusion.
   int getDayIndex(DateTime key) {
+    final dayOfStudy = widget.subject.getDayOfStudyFor(key);
     if (widget.subject.study.schedule.includeBaseline) {
-      return widget.subject.getDayOfStudyFor(key);
+      return dayOfStudy;
     }
     final schedule = widget.subject.scheduleFor(widget.subject.startedAt!);
-    // this always has to be found because studies have to have at least 2
-    // interventions
+    // The offset is the index of the first task that is not the baseline.
     final offset = schedule.indexWhere((task) => task.id != Study.baselineID);
-    return widget.subject.getDayOfStudyFor(key) - offset;
+    return dayOfStudy - offset;
+  }
+
+  /// Groups data by intervention (excluding baseline data)
+  /// and returns a mapping from intervention IDs to a list of values.
+  Map<String, List<num>> getInterventionGroups(List<DiagramDatum> data) {
+    final filteredData =
+        data.where((datum) => datum.intervention != '__baseline');
+    // Group data by intervention
+    final interventionGroups =
+        filteredData.fold<Map<String, List<num>>>({}, (map, datum) {
+      map.putIfAbsent(datum.intervention, () => []).add(datum.value);
+      return map;
+    });
+
+    return interventionGroups;
   }
 
   Iterable<DiagramDatum> aggregateDataBy(TemporalAggregation? aggregate) {
