@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:statistics/statistics.dart';
-import 'package:studyu_app/screens/study/report/sections/average_section_widget.dart';
 import 'package:studyu_app/screens/study/report/sections/t_test.dart';
+import 'package:studyu_core/core.dart';
 
-class TextualSummaryWidget extends AverageSectionWidget {
+class TextualSummaryWidget extends StatelessWidget {
   final List<num> valuesInterventionA;
   final List<num> valuesInterventionB;
   final String nameInterventionA;
   final String nameInterventionB;
 
+  final StudySubject subject;
+  final ReportSection section;
+
   const TextualSummaryWidget(
-    this.valuesInterventionA,
-    this.valuesInterventionB,
     this.nameInterventionA,
     this.nameInterventionB,
-    super.subject,
-    super.section, {
+    this.valuesInterventionA,
+    this.valuesInterventionB,
+    this.subject,
+    this.section, {
     super.key,
   });
 
