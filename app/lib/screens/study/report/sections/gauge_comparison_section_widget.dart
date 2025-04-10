@@ -105,7 +105,7 @@ class _GaugeComparisonSectionState
           ),
           _interventionValues.values.first,
           _interventionValues.values.elementAt(1),
-          showColors: showColorlessGauges,
+          showColors: !showColorlessGauges,
         ),
       ],
     );
