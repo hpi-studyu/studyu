@@ -52,6 +52,9 @@
   "study_current": "Aktuelle Studie:",
   "opt_out": "Aussteigen",
   "delete_data": "Aussteigen und Daten löschen",
+  "soft_delete_desc": "Sie werden Ihren Fortschritt in der Studie ",
+  "soft_delete_desc_2": " unwiederbringlich verlieren. Bereits abgeschlossene Studien werden nicht gelöscht.\nIhre anonymisierten Daten bis zu diesem Zeitpunkt können weiterhin für Forschungszwecke verwendet werden.",
+  "hard_delete_desc": "Sie werden alle Daten von Ihrem Gerät und unseren Servern löschen. Sie können Ihre Daten nicht wiederherstellen. Ihre anonymisierten Daten werden nicht mehr für Forschungszwecke zur Verfügung stehen.",
 
   "summary": "Übersicht",
   "consent": "Einverständnis",
@@ -195,13 +198,17 @@
   "free_text_min_length_error": "Bitte geben Sie mindestens {min} Zeichen ein",
   "@free_text_min_length_error": {
     "placeholders": {
-      "min": {}
+      "min": {
+        "type": "num"
+      }
     }
   },
   "free_text_max_length_error": "Bitte geben Sie maximal {max} Zeichen ein",
   "@free_text_max_length_error": {
     "placeholders": {
-      "max": {}
+      "max": {
+        "type": "num"
+      }
     }
   },
   "free_text_alphanumeric_error": "Bitte geben Sie nur alphanumerische Zeichen ein",
@@ -209,9 +216,18 @@
   "free_text_custom_error": "Bitte geben Sie nur Zeichen ein, die dem Muster {pattern} entsprechen",
   "@free_text_custom_error": {
     "placeholders": {
-      "pattern": {}
+      "pattern": {
+        "type": "String"
+      }
     }
   },
   "app_outdated_message": "Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!",
-  "update_now": "Jetzt aktualisieren"
+  "update_now": "Jetzt aktualisieren",
+  "text_summary_section_prefix_higher": "Dein ",
+  "text_summary_section_was_higher": " war höher während der Intervention: ",
+  "text_summary_section_was_lower": " war niedriger während der Intervention: ",
+  "text_summary_section_compared_to": " im Vergleich zu: ",
+  "text_summary_section_and": " und ",
+  "text_summary_section_no_evidence": "Es gab keinen Hinweis auf einen Unterschied bei ",
+  "text_summary_section_between": " zwischen den Interventionen: "
 }

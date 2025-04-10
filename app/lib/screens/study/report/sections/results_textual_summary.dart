@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:statistics/statistics.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/sections/t_test.dart';
 import 'package:studyu_core/core.dart';
 
@@ -35,7 +36,6 @@ class TextualSummaryWidget extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else {
-          final summaryText = getTextualSummary(snapshot.data!);
           return Row(
             children: <Widget>[
               Expanded(
@@ -44,7 +44,6 @@ class TextualSummaryWidget extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
-                        color: Colors.white,
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(12.0),
                       ),
@@ -55,13 +54,8 @@ class TextualSummaryWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                child: Text(
-                                  summaryText[0],
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                  ),
-                                ),
+                                child: getTextualSummaryRich(
+                                    context, snapshot.data!),
                               ),
                               IconButton(
                                 icon: const Icon(Icons.info_outline),
@@ -134,23 +128,62 @@ class TextualSummaryWidget extends StatelessWidget {
   }
 
   // This method returns textual outcomes of a two sample t-test with respect to each of the interventions A and B.
-  List<String> getTextualSummary(bool isDifferent) {
-    List<String> textualSummaryInterventionAB;
+  RichText getTextualSummaryRich(BuildContext context, bool isDifferent) {
+    final loc = AppLocalizations.of(context)!;
+
+    List<TextSpan> spans;
+
     if (isDifferent) {
-      if (valuesInterventionA.mean > valuesInterventionB.mean) {
-        textualSummaryInterventionAB = [
-          "Your ${section.title} was higher during intervention: $nameInterventionA compared to: $nameInterventionB.",
-        ];
-      } else {
-        textualSummaryInterventionAB = [
-          "Your ${section.title} was lower during intervention: $nameInterventionA compared to: $nameInterventionB.",
-        ];
-      }
+      final isHigher = valuesInterventionA.mean > valuesInterventionB.mean;
+
+      spans = [
+        TextSpan(text: loc.text_summary_section_prefix_higher),
+        TextSpan(
+          text: section.title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextSpan(
+          text: isHigher
+              ? loc.text_summary_section_was_higher
+              : loc.text_summary_section_was_lower,
+        ),
+        TextSpan(
+          text: nameInterventionA,
+          style: const TextStyle(fontStyle: FontStyle.italic),
+        ),
+        TextSpan(text: loc.text_summary_section_compared_to),
+        TextSpan(
+          text: nameInterventionB,
+          style: const TextStyle(fontStyle: FontStyle.italic),
+        ),
+        const TextSpan(text: "."),
+      ];
     } else {
-      textualSummaryInterventionAB = [
-        "There was no evidence for a difference in ${section.title} between interventions: $nameInterventionA and $nameInterventionB.",
+      spans = [
+        TextSpan(text: loc.text_summary_section_no_evidence),
+        TextSpan(
+          text: section.title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextSpan(text: loc.text_summary_section_between),
+        TextSpan(
+          text: nameInterventionA,
+          style: const TextStyle(fontStyle: FontStyle.italic),
+        ),
+        TextSpan(text: loc.text_summary_section_and),
+        TextSpan(
+          text: nameInterventionB,
+          style: const TextStyle(fontStyle: FontStyle.italic),
+        ),
+        const TextSpan(text: "."),
       ];
     }
-    return textualSummaryInterventionAB;
+
+    return RichText(
+      text: TextSpan(
+        style: const TextStyle(color: Colors.black),
+        children: spans,
+      ),
+    );
   }
 }

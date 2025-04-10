@@ -80,12 +80,6 @@ class _TextualSummarySectionState
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (widget.section.title != null)
-          Text(
-            widget.section.title!,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-        const SizedBox(height: 4),
         TextualSummaryWidget(
           _reportUtilities.getInterventionName(
             _interventionValues.keys.first,
