@@ -57,11 +57,6 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     final String nameInterventionB = keys.length > 1
         ? getInterventionNameFromInterventionId(context, keys[1])!
         : "";
-    final taskTitle = widget.subject.study.observations
-        .firstWhereOrNull(
-          (element) => element.id == widget.section.resultProperty!.task,
-        )
-        ?.title;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -258,11 +253,11 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
       // Determine the background color based on the intervention
       Color backgroundColor;
       if (getColor(datum) == Colors.blue) {
-        backgroundColor = Colors.blue.withOpacity(0.6);
+        backgroundColor = Colors.blue.withValues(alpha: 0.6);
       } else if (getColor(datum) == Colors.orange) {
-        backgroundColor = Colors.orange.withOpacity(0.6);
+        backgroundColor = Colors.orange.withValues(alpha: 0.6);
       } else if (getColor(datum) == Colors.grey) {
-        backgroundColor = Colors.grey.withOpacity(0.6);
+        backgroundColor = Colors.grey.withValues(alpha: 0.6);
       } else {
         backgroundColor = Colors.transparent;
       }
@@ -364,9 +359,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     final List<Color> colors = [];
     for (final datum in data) {
       if (getColor(datum) == Colors.blue) {
-        colors.add(Colors.blue.withOpacity(0.2));
+        colors.add(Colors.blue.withValues(alpha: 0.2));
       } else if (getColor(datum) == Colors.orange) {
-        colors.add(Colors.orange.withOpacity(0.2));
+        colors.add(Colors.orange.withValues(alpha: 0.2));
       }
     }
     return colors;
@@ -376,7 +371,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
     if (data.any((datum) => datum.intervention == 'intervention_a')) {
       return Colors.lightBlue.withValues(alpha: 0.3);
     } else if (data.any((datum) => datum.intervention == 'intervention_b')) {
-      return Colors.orange.withOpacity(0.3);
+      return Colors.orange.withValues(alpha: 0.3);
     }
     return Colors.transparent;
   }
