@@ -28,71 +28,73 @@ class _TextualSummarySectionStatefulWidget extends StatefulWidget {
 
 class _TextualSummarySectionState
     extends State<_TextualSummarySectionStatefulWidget> {
-  bool _loading = true;
-  late final ReportUtilities reportUtilities;
-  late final Map<String, List<num>> interventionValues;
+  bool _isLoading = true;
+  late final ReportUtilities _reportUtilities;
+  late final Map<String, List<num>> _interventionValues;
 
   @override
   void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    _reportUtilities = ReportUtilities(widget.subject);
+
     final results =
         widget.section.resultProperty?.retrieveFromResults(widget.subject);
 
-    reportUtilities = ReportUtilities(widget.subject);
-
-    if (results == null) {
-      interventionValues = {};
-
-      return;
+    if (results == null || results.isEmpty) {
+      _interventionValues = {};
+    } else {
+      final diagramDatums =
+          _reportUtilities.convertToDiagramData(results).toList();
+      _interventionValues =
+          _reportUtilities.getInterventionGroups(diagramDatums);
     }
 
-    if (results.isEmpty) {
-      interventionValues = {};
-      return;
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
     }
-
-    final diagramDatums =
-        reportUtilities.convertToDiagramData(results).toList();
-
-    interventionValues = reportUtilities.getInterventionGroups(diagramDatums);
-
-    setState(() {
-      _loading = false;
-    });
-
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _loading
-        ? const CircularProgressIndicator()
-        : interventionValues.keys.length < 2
-            ? const SizedBox(
-                width: double.infinity,
-                child: Column(
-                  children: [
-                    Text("No enough data yet to provide summary"),
-                  ],
-                ),
-              )
-            : Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (widget.section.title != null)
-                    Text(
-                      widget.section.title!,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                  const SizedBox(height: 4),
-                  TextualSummaryWidget(
-                    interventionValues.keys.first,
-                    interventionValues.keys.elementAt(1),
-                    interventionValues[interventionValues.keys.first]!,
-                    interventionValues[interventionValues.keys.elementAt(1)]!,
-                    widget.subject,
-                    widget.section,
-                  ),
-                ],
-              );
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_interventionValues.keys.length < 2) {
+      return const SizedBox(
+        width: double.infinity,
+        child: Column(
+          children: [
+            Text("Not enough data yet to provide summary"), //TODO: translation
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (widget.section.title != null)
+          Text(
+            widget.section.title!,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+        const SizedBox(height: 4),
+        TextualSummaryWidget(
+          _interventionValues.keys.first,
+          _interventionValues.keys.elementAt(1),
+          _interventionValues[_interventionValues.keys.first]!,
+          _interventionValues[_interventionValues.keys.elementAt(1)]!,
+          widget.subject,
+          widget.section,
+        ),
+      ],
+    );
   }
 }
