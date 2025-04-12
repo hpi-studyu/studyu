@@ -23,6 +23,8 @@ abstract class ReportSection {
           TextualSummarySection.fromJson(data),
         GaugeComparisonSection.sectionType =>
           GaugeComparisonSection.fromJson(data),
+        DescriptiveStatsSection.sectionType =>
+          DescriptiveStatsSection.fromJson(data),
         _ => throw UnknownJsonTypeError(data[keyType]),
       };
   Map<String, dynamic> toJson();

@@ -152,6 +152,11 @@ extension StudyDuplicateX on Study {
           report.resultProperty?.task =
               oldObservationIdToNew[report.resultProperty?.task]!;
         }
+      } else if (report is core.DescriptiveStatsSection) {
+        if (oldObservationIdToNew.containsKey(report.resultProperty?.task)) {
+          report.resultProperty?.task =
+              oldObservationIdToNew[report.resultProperty?.task]!;
+        }
       }
     }
 

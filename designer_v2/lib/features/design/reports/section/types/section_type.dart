@@ -6,7 +6,8 @@ enum ReportSectionType {
   average,
   linearRegression,
   textualSummary,
-  gaugeComparison;
+  gaugeComparison,
+  descriptiveStats;
 
   static ReportSectionType of(ReportSection reportSection) {
     final typeMapping = {
@@ -14,6 +15,7 @@ enum ReportSectionType {
       LinearRegressionSection.sectionType: ReportSectionType.linearRegression,
       TextualSummarySection.sectionType: ReportSectionType.textualSummary,
       GaugeComparisonSection.sectionType: ReportSectionType.gaugeComparison,
+      DescriptiveStatsSection.sectionType: ReportSectionType.descriptiveStats,
     };
     if (!typeMapping.containsKey(reportSection.type)) {
       throw UnimplementedError(
@@ -33,6 +35,8 @@ enum ReportSectionType {
         return "Textual Summary";
       case ReportSectionType.gaugeComparison:
         return "Gauge Comparison";
+      case ReportSectionType.descriptiveStats:
+        return "Descriptive Statistics";
     }
   }
 
@@ -46,6 +50,8 @@ enum ReportSectionType {
         return Icons.text_snippet_rounded;
       case ReportSectionType.gaugeComparison:
         return Icons.speed_rounded;
+      case ReportSectionType.descriptiveStats:
+        return Icons.stacked_line_chart_rounded;
     }
   }
 
