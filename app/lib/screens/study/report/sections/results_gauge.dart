@@ -443,8 +443,6 @@ class MergedGaugesWidget extends StatelessWidget {
           borderRadius: 8,
           color: Color(0xFF193663),
         ),
-        // For colorless gauge, we don't set any segments
-        segments: const [], // Empty list instead of null
       );
     }
 

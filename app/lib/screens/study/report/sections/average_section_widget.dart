@@ -3,7 +3,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/report_section_widget.dart';
-import 'package:studyu_app/screens/study/report/sections/results_descriptive_statistics.dart';
 import 'package:studyu_app/screens/study/report/util/plot_utilities.dart';
 import 'package:studyu_app/util/data_processing.dart';
 import 'package:studyu_core/core.dart';
@@ -33,30 +32,6 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   bool showColorlessGauges = false;
   @override
   Widget build(BuildContext context) {
-    final aggregatedDataByDay = aggregateDataBy(null).toList();
-    // Filter out baseline data
-    final filteredData = aggregatedDataByDay
-        .where((datum) => datum.intervention != '__baseline');
-    // Group data by intervention
-    final interventionGroups =
-        filteredData.fold<Map<String, List<num>>>({}, (map, datum) {
-      map.putIfAbsent(datum.intervention, () => []).add(datum.value);
-      return map;
-    });
-    // Extract keys from the map
-    final keys = interventionGroups.keys.toList();
-    // Define default empty lists
-    final List<num> valuesInterventionA =
-        keys.isNotEmpty ? interventionGroups[keys[0]]! : [];
-    final List<num> valuesInterventionB =
-        keys.length > 1 ? interventionGroups[keys[1]]! : [];
-    final String nameInterventionA = keys.isNotEmpty
-        ? getInterventionNameFromInterventionId(context, keys[0])!
-        : "";
-    final String nameInterventionB = keys.length > 1
-        ? getInterventionNameFromInterventionId(context, keys[1])!
-        : "";
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -91,26 +66,26 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
             aggregateDataBy(widget.section.aggregate).toList(),
           ),
         ),
-        ExpansionTile(
-          title: const Text(
-            'Descriptive Statistics',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.black,
-              decoration: TextDecoration.underline,
-            ),
-          ),
-          children: [
-            DescriptiveStatisticsWidget(
-              valuesInterventionA,
-              valuesInterventionB,
-              nameInterventionA,
-              nameInterventionB,
-              widget.subject,
-              widget.section,
-            ),
-          ],
-        ),
+        // ExpansionTile(
+        //   title: const Text(
+        //     'Descriptive Statistics',
+        //     style: TextStyle(
+        //       fontSize: 14,
+        //       color: Colors.black,
+        //       decoration: TextDecoration.underline,
+        //     ),
+        //   ),
+        //   children: [
+        //     DescriptiveStatisticsWidget(
+        //       valuesInterventionA,
+        //       valuesInterventionB,
+        //       nameInterventionA,
+        //       nameInterventionB,
+        //       widget.subject,
+        //       widget.section,
+        //     ),
+        //   ],
+        // ),
       ],
     );
   }
@@ -145,6 +120,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   }
 
   Widget getDiagram(BuildContext context, List<DiagramDatum> data) {
+    if (data.isEmpty) {
+      return const Center(child: Text("No data available yet"));
+    }
     if (widget.section.aggregate == TemporalAggregation.day) {
       return LineChart(getLineChartData(context, data));
     }
@@ -557,10 +535,6 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           )
           .map((e) => e.value);
     }
-  }
-
-  Iterable<DiagramDatum> getAggregatedData() {
-    return aggregateDataBy(widget.section.aggregate);
   }
 
   Map<String, String?> getInterventionNames(BuildContext context) {
