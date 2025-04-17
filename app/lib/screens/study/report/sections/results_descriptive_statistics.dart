@@ -111,7 +111,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.1),
+        color: Colors.blue.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -209,7 +209,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
         color: isHeader
             ? Colors.grey.shade200
             : highlight
-                ? Colors.amber.withOpacity(0.1)
+                ? Colors.amber.withValues(alpha: 0.1)
                 : null,
       ),
       children: cells.map((cell) {
