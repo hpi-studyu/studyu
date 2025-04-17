@@ -1,73 +1,99 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:statistics/statistics.dart';
-import 'package:studyu_app/screens/study/report/sections/average_section_widget.dart';
+import 'package:studyu_core/core.dart';
 
-class DescriptiveStatisticsWidget extends AverageSectionWidget {
-  final String nameInterventionA;
-  final String nameInterventionB;
-  final String averageA;
-  final String averageB;
-  final int observationsA;
-  final int observationsB;
-  final String minA;
-  final String minB;
-  final String maxA;
-  final String maxB;
-  final int totalInterventionsA;
-  final int totalInterventionsB;
+class DescriptiveStats {
+  final String name;
+  final int observations;
+  final int missing;
+  final int total;
+  final double? average;
+  final double? minimum;
+  final double? maximum;
 
-  DescriptiveStatisticsWidget(
-    List<num> valuesInterventionA,
-    List<num> valuesInterventionB,
-    this.nameInterventionA,
-    this.nameInterventionB,
-    super.subject,
-    super.section, {
+  DescriptiveStats({
+    required this.name,
+    required this.total,
+    required List<num> values,
+  })  : observations = values.length,
+        missing = total - values.length,
+        average = values.isNotEmpty ? values.mean : null,
+        minimum = values.isNotEmpty ? values.min as double : null,
+        maximum = values.isNotEmpty ? values.max as double : null;
+
+  String formatted(double? value) =>
+      value != null ? value.toStringAsFixed(2) : 'No data';
+  String get avgString => formatted(average);
+  String get minString => formatted(minimum);
+  String get maxString => formatted(maximum);
+  String get completeness => total > 0
+      ? '${((observations / total) * 100).toStringAsFixed(0)}%'
+      : 'No data';
+}
+
+class DescriptiveStatisticsWidget extends StatelessWidget {
+  final DescriptiveStats statsA;
+  final DescriptiveStats statsB;
+  final bool initiallyExpanded;
+
+  DescriptiveStatisticsWidget({
     super.key,
-  })  : averageA = valuesInterventionA.isNotEmpty
-            ? valuesInterventionA.mean.toStringAsFixed(2)
-            : "NONE",
-        averageB = valuesInterventionB.isNotEmpty
-            ? valuesInterventionB.mean.toStringAsFixed(2)
-            : "NONE",
-        observationsA = valuesInterventionA.length,
-        observationsB = valuesInterventionB.length,
-        minA = valuesInterventionA.isNotEmpty
-            ? valuesInterventionA.min.toStringAsFixed(2)
-            : "NONE",
-        minB = valuesInterventionB.isNotEmpty
-            ? valuesInterventionB.min.toStringAsFixed(2)
-            : "NONE",
-        maxA = valuesInterventionA.isNotEmpty
-            ? valuesInterventionA.max.toStringAsFixed(2)
-            : "NONE",
-        maxB = valuesInterventionB.isNotEmpty
-            ? valuesInterventionB.max.toStringAsFixed(2)
-            : "NONE",
-        totalInterventionsA = subject.study.schedule.phaseDuration *
-            subject.study.schedule.numberOfCycles,
-        totalInterventionsB = subject.study.schedule.phaseDuration *
-            subject.study.schedule.numberOfCycles;
+    required List<num> valuesInterventionA,
+    required String nameInterventionA,
+    required List<num> valuesInterventionB,
+    required String nameInterventionB,
+    required StudySubject subject,
+    this.initiallyExpanded = false,
+  })  : statsA = DescriptiveStats(
+          name: nameInterventionA,
+          total: subject.study.schedule.phaseDuration *
+              subject.study.schedule.numberOfCycles,
+          values: valuesInterventionA,
+        ),
+        statsB = DescriptiveStats(
+          name: nameInterventionB,
+          total: subject.study.schedule.phaseDuration *
+              subject.study.schedule.numberOfCycles,
+          values: valuesInterventionB,
+        );
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Column(
-        children: <Widget>[
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Icon(
-                Icons.arrow_drop_up,
-              ),
-            ],
-          ),
+    final theme = Theme.of(context);
+
+    return Card(
+      elevation: 3,
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: ExpansionTile(
+        title:
+            Text('Descriptive Statistics', style: theme.textTheme.titleLarge),
+        subtitle: Text(
+          'Compare results between ${statsA.name} and ${statsB.name}',
+          style: theme.textTheme.bodyMedium,
+        ),
+        initiallyExpanded: initiallyExpanded,
+        children: [
           Padding(
-            padding: const EdgeInsets.only(top: 8.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildStatisticsTable(),
+                _buildSummary(context),
+                const SizedBox(height: 16),
+                _buildStatsTable(context),
+                if (statsA.missing > 0 || statsB.missing > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Text(
+                      'Note: Missing observations indicate days when data was not recorded.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -76,72 +102,130 @@ class DescriptiveStatisticsWidget extends AverageSectionWidget {
     );
   }
 
-  Widget _buildStatisticsTable() {
-    final int missingObservationsA = totalInterventionsA - observationsA;
-    final int missingObservationsB = totalInterventionsB - observationsB;
+  Widget _buildSummary(BuildContext context) {
+    final theme = Theme.of(context);
+    final headingStyle = theme.textTheme.titleMedium?.copyWith(
+      fontWeight: FontWeight.bold,
+    );
+
     return Container(
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
-        color: Colors.grey[200],
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        color: Colors.blue.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
       ),
-      child: Table(
-        border: TableBorder.all(color: Colors.grey),
-        columnWidths: const {
-          0: FixedColumnWidth(120), // Adjust column width if needed
-          1: FixedColumnWidth(80),
-          2: FixedColumnWidth(80),
-        },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTableRow(
-            ['Intervention', nameInterventionA, nameInterventionB],
-            isHeader: true,
+          Text('Quick Summary', style: headingStyle),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Text('Average score', style: theme.textTheme.bodyMedium),
+              ),
+              Expanded(child: _valueLabel(statsA.avgString, statsA.name)),
+              Expanded(child: _valueLabel(statsB.avgString, statsB.name)),
+            ],
           ),
-          _buildTableRow([
-            'Observations',
-            observationsA.toString(),
-            observationsB.toString(),
-          ]),
-          _buildTableRow([
-            'Missing Observations',
-            missingObservationsA.toString(),
-            missingObservationsB.toString(),
-          ]),
-          _buildTableRow(['Average', averageA, averageB]),
-          _buildTableRow(['Min', minA, minB]),
-          _buildTableRow(['Max', maxA, maxB]),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Text('Data completeness',
+                    style: theme.textTheme.bodyMedium),
+              ),
+              Expanded(child: _valueLabel(statsA.completeness, statsA.name)),
+              Expanded(child: _valueLabel(statsB.completeness, statsB.name)),
+            ],
+          ),
         ],
       ),
     );
   }
 
-  TableRow _buildTableRow(List<String> cells, {bool isHeader = false}) {
-    return TableRow(
-      children: cells.map((cell) {
-        return _buildTableCell(cell, isHeader: isHeader);
-      }).toList(),
+  Widget _valueLabel(String value, String label) {
+    return Column(
+      children: [
+        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(
+          label,
+          softWrap: true,
+          maxLines: 2,
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 
-  Widget _buildTableCell(String text, {bool isHeader = false}) {
-    return Padding(
-      padding: const EdgeInsets.all(6.0),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: isHeader ? 15 : 15, //Adjust font size if needed
-          fontWeight: isHeader ? FontWeight.bold : FontWeight.normal,
-          color: isHeader ? Colors.black : Colors.grey[800],
+  Widget _buildStatsTable(BuildContext context) {
+    // Use a flexible Table to allow wrapping long intervention names
+    return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      columnWidths: const {
+        0: FlexColumnWidth(2),
+        1: FlexColumnWidth(),
+        2: FlexColumnWidth(),
+      },
+      border: TableBorder.all(color: Colors.grey.shade300),
+      children: [
+        _buildTableRow(
+          ['Statistic', statsA.name, statsB.name],
+          isHeader: true,
+          context: context,
         ),
-        textAlign: TextAlign.center,
+        _buildTableRow(
+          [
+            'Total recordings',
+            '${statsA.observations}',
+            '${statsB.observations}'
+          ],
+          context: context,
+        ),
+        _buildTableRow(
+          ['Missing recordings', '${statsA.missing}', '${statsB.missing}'],
+          context: context,
+          highlight: statsA.missing > 0 || statsB.missing > 0,
+        ),
+        _buildTableRow(['Average', statsA.avgString, statsB.avgString],
+            context: context),
+        _buildTableRow(['Minimum', statsA.minString, statsB.minString],
+            context: context),
+        _buildTableRow(['Maximum', statsA.maxString, statsB.maxString],
+            context: context),
+      ],
+    );
+  }
+
+  TableRow _buildTableRow(List<String> cells,
+      {bool isHeader = false,
+      required BuildContext context,
+      bool highlight = false}) {
+    final theme = Theme.of(context);
+    return TableRow(
+      decoration: BoxDecoration(
+        color: isHeader
+            ? Colors.grey.shade200
+            : highlight
+                ? Colors.amber.withOpacity(0.1)
+                : null,
       ),
+      children: cells.map((cell) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          child: Text(
+            cell,
+            softWrap: true,
+            textAlign: TextAlign.center,
+            style: isHeader
+                ? theme.textTheme.bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.bold)
+                : theme.textTheme.bodyMedium,
+          ),
+        );
+      }).toList(),
     );
   }
 }
