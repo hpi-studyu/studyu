@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/screens/study/report/report_section_widget.dart';
-import 'package:studyu_app/screens/study/report/sections/results_descriptive_statistics.dart';
 import 'package:studyu_app/screens/study/report/util/report_utilities.dart';
+import 'package:studyu_app/widgets/report/descriptive_statistics_widget.dart';
 import 'package:studyu_core/core.dart';
 
 class DescriptiveStatsSectionWidget extends ReportSectionWidget {
