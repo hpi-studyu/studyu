@@ -247,5 +247,6 @@
   "level_of_significance": "Level of significance",
   "t_test_outcome_based_on": "The outcome is based on the following values:",
   "statistical_information": "Statistical Information",
-  "close": "Close"
+  "close": "Close",
+  "significance_level_and_p_value": "Significance level and p-value"
 }

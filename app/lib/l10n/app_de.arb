@@ -250,5 +250,6 @@
   "level_of_significance": "Signifikanzniveau",
   "t_test_outcome_based_on": "Das Ergebnis basiert auf den folgenden Werten:",
   "statistical_information": "Statistische Informationen",
-  "close": "Schließen"
+  "close": "Schließen",
+  "significance_level_and_p_value": "Signifikanzniveau und p-Wert"
 }
