@@ -229,5 +229,10 @@
   "text_summary_section_compared_to": " im Vergleich zu: ",
   "text_summary_section_and": " und ",
   "text_summary_section_no_evidence": "Es gab keinen Hinweis auf einen Unterschied bei ",
-  "text_summary_section_between": " zwischen den Interventionen: "
+  "text_summary_section_between": " zwischen den Interventionen: ",
+  "intervention": "Intervention",
+  "phase": "Phase",
+  "day": "Tag",
+  "no_data_available_yet": "Noch keine Daten verfügbar",
+  "value": "Wert"
 }
