@@ -234,5 +234,6 @@
   "phase": "Phase",
   "day": "Tag",
   "no_data_available_yet": "Noch keine Daten verfügbar",
-  "value": "Wert"
+  "value": "Wert",
+  "show_colorless_gauges": "Farblose Anzeigen anzeigen"
 }
