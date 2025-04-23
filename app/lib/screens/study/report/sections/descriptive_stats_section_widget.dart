@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/report_section_widget.dart';
 import 'package:studyu_app/screens/study/report/util/report_utilities.dart';
 import 'package:studyu_app/widgets/report/descriptive_statistics_widget.dart';
@@ -72,12 +73,12 @@ class _DescriptiveStatsSectionState
     final interventionB = _interventionValues.entries.elementAtOrNull(1);
 
     if (interventionA == null) {
-      return const SizedBox(
+      return SizedBox(
         width: double.infinity,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("No data available"),
+            Text(AppLocalizations.of(context)!.no_data_available_yet),
           ],
         ),
       );
@@ -93,7 +94,7 @@ class _DescriptiveStatsSectionState
           valuesInterventionB: interventionB?.value ?? const <num>[],
           nameInterventionB: interventionB?.key != null
               ? _reportUtilities.getInterventionName(interventionB!.key)
-              : 'No data available', //TODO: translation
+              : AppLocalizations.of(context)!.no_data_available_yet,
           subject: widget.subject,
         ),
       ],
