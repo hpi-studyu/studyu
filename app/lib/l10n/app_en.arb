@@ -262,5 +262,6 @@
   "phase": "Phase",
   "day": "Day",
   "no_data_available_yet": "No data available yet",
-  "value": "Value"
+  "value": "Value",
+  "show_colorless_gauges": "Show Colorless Gauges"
 }

@@ -649,4 +649,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get value => 'Wert';
+
+  @override
+  String get show_colorless_gauges => 'Farblose Anzeigen anzeigen';
 }

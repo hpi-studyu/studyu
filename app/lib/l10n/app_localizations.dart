@@ -1249,6 +1249,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Value'**
   String get value;
+
+  /// No description provided for @show_colorless_gauges.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Colorless Gauges'**
+  String get show_colorless_gauges;
 }
 
 class _AppLocalizationsDelegate

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/report_section_widget.dart';
 import 'package:studyu_app/screens/study/report/util/report_utilities.dart';
 import 'package:studyu_app/widgets/report/gauges_widget.dart';
@@ -69,11 +70,11 @@ class _GaugeComparisonSectionState
     }
 
     if (_interventionValues.keys.length < 2) {
-      return const SizedBox(
+      return SizedBox(
         width: double.infinity,
         child: Column(
           children: [
-            Text("Not enough data yet to provide summary"), //TODO: translation
+            Text(AppLocalizations.of(context)!.no_data_available_yet),
           ],
         ),
       );
@@ -84,7 +85,7 @@ class _GaugeComparisonSectionState
       children: [
         Row(
           children: [
-            const Text("Show Colorless Gauges"),
+            Text(AppLocalizations.of(context)!.show_colorless_gauges),
             Checkbox(
               value: showColorlessGauges,
               onChanged: (bool? newValue) {

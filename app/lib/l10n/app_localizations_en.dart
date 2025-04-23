@@ -641,4 +641,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get value => 'Value';
+
+  @override
+  String get show_colorless_gauges => 'Show Colorless Gauges';
 }
