@@ -690,4 +690,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get close => 'Close';
+
+  @override
+  String get significance_level_and_p_value => 'Significance level and p-value';
 }

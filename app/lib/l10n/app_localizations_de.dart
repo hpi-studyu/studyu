@@ -698,4 +698,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get close => 'Schließen';
+
+  @override
+  String get significance_level_and_p_value => 'Signifikanzniveau und p-Wert';
 }

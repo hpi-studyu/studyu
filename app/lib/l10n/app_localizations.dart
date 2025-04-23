@@ -1345,6 +1345,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Close'**
   String get close;
+
+  /// No description provided for @significance_level_and_p_value.
+  ///
+  /// In en, this message translates to:
+  /// **'Significance level and p-value'**
+  String get significance_level_and_p_value;
 }
 
 class _AppLocalizationsDelegate
