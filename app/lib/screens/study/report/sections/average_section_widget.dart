@@ -37,18 +37,22 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
       children: [
         DropdownButton<TemporalAggregation>(
           value: widget.section.aggregate,
-          items: const [
+          items: [
             DropdownMenuItem(
               value: TemporalAggregation.intervention,
-              child: Text("Intervention"),
+              child: Text(AppLocalizations.of(context)!.intervention),
             ),
             DropdownMenuItem(
               value: TemporalAggregation.phase,
-              child: Text("Phase"),
+              child: Text(
+                AppLocalizations.of(context)!.phase,
+              ),
             ),
             DropdownMenuItem(
               value: TemporalAggregation.day,
-              child: Text("Day"),
+              child: Text(
+                AppLocalizations.of(context)!.day,
+              ),
             ),
           ],
           onChanged: (value) {
@@ -121,7 +125,8 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
 
   Widget getDiagram(BuildContext context, List<DiagramDatum> data) {
     if (data.isEmpty) {
-      return const Center(child: Text("No data available yet"));
+      return Center(
+          child: Text(AppLocalizations.of(context)!.no_data_available_yet));
     }
     if (widget.section.aggregate == TemporalAggregation.day) {
       return LineChart(getLineChartData(context, data));
@@ -142,7 +147,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
         bottomTitles: AxisTitles(
           axisNameWidget:
               (widget.section.aggregate != TemporalAggregation.intervention)
-                  ? const Text("Phase")
+                  ? Text(AppLocalizations.of(context)!.phase)
                   : const Text(""),
           sideTitles: SideTitles(
             showTitles: true,
@@ -243,7 +248,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
       titlesData: FlTitlesData(
         bottomTitles: AxisTitles(
           axisNameWidget: widget.section.aggregate == TemporalAggregation.day
-              ? const Text("Day")
+              ? Text(AppLocalizations.of(context)!.day)
               : const SizedBox.shrink(),
           sideTitles: SideTitles(
             showTitles: true,
@@ -260,7 +265,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           ),
         ),
         leftTitles: AxisTitles(
-          axisNameWidget: const Text("Value"),
+          axisNameWidget: Text(AppLocalizations.of(context)!.value),
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 40,

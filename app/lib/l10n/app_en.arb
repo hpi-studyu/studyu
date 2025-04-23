@@ -226,5 +226,10 @@
   "text_summary_section_compared_to": " compared to: ",
   "text_summary_section_and": " and ",
   "text_summary_section_no_evidence": "There was no evidence for a difference in ",
-  "text_summary_section_between": " between interventions: "
+  "text_summary_section_between": " between interventions: ",
+  "intervention": "Intervention",
+  "phase": "Phase",
+  "day": "Day",
+  "no_data_available_yet": "No data available yet",
+  "value": "Value"
 }
