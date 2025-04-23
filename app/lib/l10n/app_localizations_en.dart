@@ -626,4 +626,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get text_summary_section_between => ' between interventions: ';
+
+  @override
+  String get intervention => 'Intervention';
+
+  @override
+  String get phase => 'Phase';
+
+  @override
+  String get day => 'Day';
+
+  @override
+  String get no_data_available_yet => 'No data available yet';
+
+  @override
+  String get value => 'Value';
 }

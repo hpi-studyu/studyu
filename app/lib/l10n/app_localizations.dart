@@ -1219,6 +1219,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **' between interventions: '**
   String get text_summary_section_between;
+
+  /// No description provided for @intervention.
+  ///
+  /// In en, this message translates to:
+  /// **'Intervention'**
+  String get intervention;
+
+  /// No description provided for @phase.
+  ///
+  /// In en, this message translates to:
+  /// **'Phase'**
+  String get phase;
+
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// No description provided for @no_data_available_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available yet'**
+  String get no_data_available_yet;
+
+  /// No description provided for @value.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get value;
 }
 
 class _AppLocalizationsDelegate
