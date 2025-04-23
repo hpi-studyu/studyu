@@ -642,11 +642,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get phase => 'Phase';
 
   @override
-  String get day => 'Day';
+  String get day => 'Tag';
 
   @override
-  String get no_data_available_yet => 'No data available yet';
+  String get no_data_available_yet => 'Noch keine Daten verfügbar';
 
   @override
-  String get value => 'Value';
+  String get value => 'Wert';
 }
