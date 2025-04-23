@@ -1255,6 +1255,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show Colorless Gauges'**
   String get show_colorless_gauges;
+
+  /// No description provided for @welchs_t_test_results.
+  ///
+  /// In en, this message translates to:
+  /// **'Welch\'s t-test Results'**
+  String get welchs_t_test_results;
+
+  /// No description provided for @sample_a.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample A'**
+  String get sample_a;
+
+  /// No description provided for @sample_b.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample B'**
+  String get sample_b;
+
+  /// No description provided for @sample_size.
+  ///
+  /// In en, this message translates to:
+  /// **'n'**
+  String get sample_size;
+
+  /// No description provided for @mean.
+  ///
+  /// In en, this message translates to:
+  /// **'mean'**
+  String get mean;
+
+  /// No description provided for @variance.
+  ///
+  /// In en, this message translates to:
+  /// **'var'**
+  String get variance;
+
+  /// No description provided for @t_statistic.
+  ///
+  /// In en, this message translates to:
+  /// **'t-statistic'**
+  String get t_statistic;
+
+  /// No description provided for @degrees_of_freedom.
+  ///
+  /// In en, this message translates to:
+  /// **'Degrees of freedom'**
+  String get degrees_of_freedom;
+
+  /// No description provided for @p_value.
+  ///
+  /// In en, this message translates to:
+  /// **'p-value'**
+  String get p_value;
+
+  /// No description provided for @result_significant.
+  ///
+  /// In en, this message translates to:
+  /// **'Significantly different'**
+  String get result_significant;
+
+  /// No description provided for @result_not_significant.
+  ///
+  /// In en, this message translates to:
+  /// **'Not significantly different'**
+  String get result_not_significant;
+
+  /// No description provided for @level_of_significance.
+  ///
+  /// In en, this message translates to:
+  /// **'Level of significance'**
+  String get level_of_significance;
+
+  /// No description provided for @t_test_outcome_based_on.
+  ///
+  /// In en, this message translates to:
+  /// **'The outcome is based on the following values:'**
+  String get t_test_outcome_based_on;
+
+  /// No description provided for @statistical_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistical Information'**
+  String get statistical_information;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
 }
 
 class _AppLocalizationsDelegate

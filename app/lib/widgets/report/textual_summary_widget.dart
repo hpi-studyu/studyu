@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:statistics/statistics.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/sections/t_test.dart';
+import 'package:studyu_app/util/string_extensions.dart';
 import 'package:studyu_core/core.dart';
 
 class TextualSummaryWidget extends StatelessWidget {
@@ -26,7 +27,7 @@ class TextualSummaryWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (valuesInterventionA.length < 2 || valuesInterventionB.length < 2) {
       return Text(
-        "no data",
+        AppLocalizations.of(context)!.no_data_available_yet,
         style: const TextStyle(fontStyle: FontStyle.italic),
       );
     }
@@ -79,27 +80,18 @@ class TextualSummaryWidget extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Statistical Information'),
+          title: Text(AppLocalizations.of(context)!.statistical_information),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'The outcome is based on the following values:',
+              Text(
+                AppLocalizations.of(context)!.t_test_outcome_based_on,
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Level of significance α = 0.05',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 2),
               Text(
-                'P-value: ${tTest.pValue.toStringAsFixed(4)}',
+                '${AppLocalizations.of(context)!.level_of_significance} α = 0.05',
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -108,7 +100,7 @@ class TextualSummaryWidget extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                't-statistic: ${tTest.tStatistic.toStringAsFixed(4)}',
+                '${AppLocalizations.of(context)!.p_value.toPascalCase()} ${tTest.pValue.toStringAsFixed(4)}',
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -117,7 +109,16 @@ class TextualSummaryWidget extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                'Degrees of freedom: ${tTest.degreesOfFreedom.toStringAsFixed(2)}',
+                '${AppLocalizations.of(context)!.t_statistic} ${tTest.tStatistic.toStringAsFixed(4)}',
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                '${AppLocalizations.of(context)!.degrees_of_freedom} ${tTest.degreesOfFreedom.toStringAsFixed(2)}',
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -128,7 +129,7 @@ class TextualSummaryWidget extends StatelessWidget {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('OK'),
+              child: Text(AppLocalizations.of(context)!.close),
               onPressed: () {
                 Navigator.of(context).pop();
               },

@@ -644,4 +644,50 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get show_colorless_gauges => 'Show Colorless Gauges';
+
+  @override
+  String get welchs_t_test_results => 'Welch\'s t-test Results';
+
+  @override
+  String get sample_a => 'Sample A';
+
+  @override
+  String get sample_b => 'Sample B';
+
+  @override
+  String get sample_size => 'n';
+
+  @override
+  String get mean => 'mean';
+
+  @override
+  String get variance => 'var';
+
+  @override
+  String get t_statistic => 't-statistic';
+
+  @override
+  String get degrees_of_freedom => 'Degrees of freedom';
+
+  @override
+  String get p_value => 'p-value';
+
+  @override
+  String get result_significant => 'Significantly different';
+
+  @override
+  String get result_not_significant => 'Not significantly different';
+
+  @override
+  String get level_of_significance => 'Level of significance';
+
+  @override
+  String get t_test_outcome_based_on =>
+      'The outcome is based on the following values:';
+
+  @override
+  String get statistical_information => 'Statistical Information';
+
+  @override
+  String get close => 'Close';
 }
