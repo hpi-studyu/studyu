@@ -235,5 +235,20 @@
   "day": "Tag",
   "no_data_available_yet": "Noch keine Daten verfügbar",
   "value": "Wert",
-  "show_colorless_gauges": "Farblose Anzeigen anzeigen"
+  "show_colorless_gauges": "Farblose Anzeigen anzeigen",
+  "welchs_t_test_results": "Welchs t-Test Ergebnisse",
+  "sample_a": "Stichprobe A",
+  "sample_b": "Stichprobe B",
+  "sample_size": "n",
+  "mean": "Mittelwert",
+  "variance": "Varianz",
+  "t_statistic": "t-Wert",
+  "degrees_of_freedom": "Freiheitsgrade",
+  "p_value": "p-Wert",
+  "result_significant": "Signifikanter Unterschied",
+  "result_not_significant": "Kein signifikanter Unterschied",
+  "level_of_significance": "Signifikanzniveau",
+  "t_test_outcome_based_on": "Das Ergebnis basiert auf den folgenden Werten:",
+  "statistical_information": "Statistische Informationen",
+  "close": "Schließen"
 }

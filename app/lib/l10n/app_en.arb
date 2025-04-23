@@ -232,5 +232,20 @@
   "day": "Day",
   "no_data_available_yet": "No data available yet",
   "value": "Value",
-  "show_colorless_gauges": "Show Colorless Gauges"
+  "show_colorless_gauges": "Show Colorless Gauges",
+  "welchs_t_test_results": "Welch's t-test Results",
+  "sample_a": "Sample A",
+  "sample_b": "Sample B",
+  "sample_size": "n",
+  "mean": "mean",
+  "variance": "var",
+  "t_statistic": "t-statistic",
+  "degrees_of_freedom": "Degrees of freedom",
+  "p_value": "p-value",
+  "result_significant": "Significantly different",
+  "result_not_significant": "Not significantly different",
+  "level_of_significance": "Level of significance",
+  "t_test_outcome_based_on": "The outcome is based on the following values:",
+  "statistical_information": "Statistical Information",
+  "close": "Close"
 }
