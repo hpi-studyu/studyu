@@ -2342,6 +2342,24 @@ abstract class AppLocalizations {
   /// **'Average'**
   String get reportSection_type_average;
 
+  /// No description provided for @reportSection_type_textual_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Textuelle Zusammenfassung'**
+  String get reportSection_type_textual_summary;
+
+  /// No description provided for @reportSection_type_gauge_comparison.
+  ///
+  /// In en, this message translates to:
+  /// **'Tachometer-Vergleich'**
+  String get reportSection_type_gauge_comparison;
+
+  /// No description provided for @reportSection_type_descriptive_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Deskriptive Statistik'**
+  String get reportSection_type_descriptive_statistics;
+
   /// No description provided for @form_field_report_average_temporalAggregation_title.
   ///
   /// In en, this message translates to:

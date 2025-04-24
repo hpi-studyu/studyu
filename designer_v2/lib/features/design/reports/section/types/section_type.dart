@@ -32,11 +32,11 @@ enum ReportSectionType {
       case ReportSectionType.linearRegression:
         return tr.reportSection_type_linearRegression;
       case ReportSectionType.textualSummary:
-        return "Textual Summary";
+        return tr.reportSection_type_textual_summary;
       case ReportSectionType.gaugeComparison:
-        return "Gauge Comparison";
+        return tr.reportSection_type_gauge_comparison;
       case ReportSectionType.descriptiveStats:
-        return "Descriptive Statistics";
+        return tr.reportSection_type_descriptive_statistics;
     }
   }
 
