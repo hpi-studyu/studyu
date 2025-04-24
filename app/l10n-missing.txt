@@ -1,9 +1,1 @@
-{
-  "de": [
-    "intervention",
-    "phase",
-    "day",
-    "no_data_available_yet",
-    "value"
-  ]
-}
+{}
