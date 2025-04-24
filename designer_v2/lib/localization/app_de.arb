@@ -474,6 +474,7 @@
   "form_field_report_data_source_title": "Datenquelle",
   "form_field_report_data_source_tooltip": "Die Datenquelle definiert, auf welcher Beobachtung der Berichtsabschnitt basiert. Die Beobachtung muss eine Frage mit einem numerischen Ergebnis sein, z.B. eine Skalenfrage.",
   "form_field_report_data_source_required": "Eine Datenquelle muss definiert werden",
+  "form_field_report_select_aggregation": "Wähle einen Aggregationswert",
   "@__________________STUDYPAGE_TEST__________________": {},
   "study_test_page_description": "Im Testmodus kannst du die Studie aus Teilnehmersicht testen.",
   "navlink_study_test_help": "Wie funktioniert's?",
