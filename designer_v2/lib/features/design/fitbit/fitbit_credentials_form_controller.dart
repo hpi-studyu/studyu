@@ -110,6 +110,10 @@ class FitbitCredentialsFormViewModel
     return null;
   }
 
+  Study apply(Study study) {
+    return study;
+  }
+
   @override
   Future<StudyFitbitCredentials> save({bool updateState = true}) {
     return fitbitCredentialsRepository
