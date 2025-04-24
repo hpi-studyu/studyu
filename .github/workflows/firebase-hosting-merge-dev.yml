@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - dev
-      - feat/fitbit-dev-deploy
+      - feat/fitbit
     paths:
       - '.github/workflows/firebase-hosting-merge-dev.yml'
       - '.github/workflows/init-workspace/action.yml'
