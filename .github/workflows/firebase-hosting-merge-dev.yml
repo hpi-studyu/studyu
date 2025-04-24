@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - dev
+      - feat/fitbit-dev-deploy
     paths:
       - 'app/**'
       - 'designer_v2/**'
