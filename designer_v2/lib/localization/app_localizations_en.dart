@@ -1319,6 +1319,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportSection_type_average => 'Average';
 
   @override
+  String get reportSection_type_textual_summary => 'Textuelle Zusammenfassung';
+
+  @override
+  String get reportSection_type_gauge_comparison => 'Tachometer-Vergleich';
+
+  @override
+  String get reportSection_type_descriptive_statistics =>
+      'Deskriptive Statistik';
+
+  @override
   String get form_field_report_average_temporalAggregation_title =>
       'Temporal Aggregation';
 
