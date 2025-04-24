@@ -251,5 +251,28 @@
   "t_test_outcome_based_on": "Das Ergebnis basiert auf den folgenden Werten:",
   "statistical_information": "Statistische Informationen",
   "close": "Schließen",
-  "significance_level_and_p_value": "Signifikanzniveau und p-Wert"
+  "significance_level_and_p_value": "Signifikanzniveau und p-Wert",
+  "descriptive_statistics": "Deskriptive Statistik",
+  "compare_results_between": "Vergleiche Ergebnisse zwischen {nameA} und {nameB}",
+  "@compare_results_between": {
+    "description": "Bezeichnung für den Vergleich der Ergebnisse zwischen zwei Interventionen oder Stichproben",
+    "placeholders": {
+      "nameA": {
+        "type": "String"
+      },
+      "nameB": {
+        "type": "String"
+      }
+    }
+  },
+  "missing_observations_note": "Hinweis: Fehlende Beobachtungen bedeuten, dass an diesen Tagen keine Daten aufgezeichnet wurden.",
+  "quick_summary": "Kurzfassung",
+  "average_score": "Durchschnittswert",
+  "data_completeness": "Datenvollständigkeit",
+  "statistic": "Statistik",
+  "total_recordings": "Gesamtaufzeichnungen",
+  "missing_recordings": "Fehlende Aufzeichnungen",
+  "average": "Durchschnitt",
+  "minimum": "Minimum",
+  "maximum": "Maximum"
 }

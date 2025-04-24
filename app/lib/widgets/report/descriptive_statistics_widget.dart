@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:statistics/statistics.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
 
 class DescriptiveStats {
@@ -29,7 +30,7 @@ class DescriptiveStats {
   String get maxString => formatted(maximum);
   String get completeness => total > 0
       ? '${((observations / total) * 100).toStringAsFixed(0)}%'
-      : 'No data';
+      : 'Null';
 }
 
 class DescriptiveStatisticsWidget extends StatelessWidget {
@@ -70,7 +71,10 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
         title:
             Text('Descriptive Statistics', style: theme.textTheme.titleLarge),
         subtitle: Text(
-          'Compare results between ${statsA.name} and ${statsB.name}',
+          AppLocalizations.of(context)!.compare_results_between(
+            statsA.name,
+            statsB.name,
+          ),
           style: theme.textTheme.bodyMedium,
         ),
         initiallyExpanded: initiallyExpanded,
@@ -87,7 +91,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
-                      'Note: Missing observations indicate days when data was not recorded.',
+                      AppLocalizations.of(context)!.missing_observations_note,
                       style: theme.textTheme.bodySmall?.copyWith(
                         fontStyle: FontStyle.italic,
                         color: Colors.grey[600],
@@ -117,13 +121,15 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Quick Summary', style: headingStyle),
+          Text(AppLocalizations.of(context)!.quick_summary,
+              style: headingStyle),
           const SizedBox(height: 8),
           Row(
             children: [
               Expanded(
                 flex: 2,
-                child: Text('Average score', style: theme.textTheme.bodyMedium),
+                child: Text(AppLocalizations.of(context)!.average_score,
+                    style: theme.textTheme.bodyMedium),
               ),
               Expanded(child: _valueLabel(statsA.avgString, statsA.name)),
               Expanded(child: _valueLabel(statsB.avgString, statsB.name)),
@@ -134,7 +140,7 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
             children: [
               Expanded(
                 flex: 2,
-                child: Text('Data completeness',
+                child: Text(AppLocalizations.of(context)!.data_completeness,
                     style: theme.textTheme.bodyMedium),
               ),
               Expanded(child: _valueLabel(statsA.completeness, statsA.name)),
@@ -172,29 +178,42 @@ class DescriptiveStatisticsWidget extends StatelessWidget {
       border: TableBorder.all(color: Colors.grey.shade300),
       children: [
         _buildTableRow(
-          ['Statistic', statsA.name, statsB.name],
+          [AppLocalizations.of(context)!.statistic, statsA.name, statsB.name],
           isHeader: true,
           context: context,
         ),
         _buildTableRow(
           [
-            'Total recordings',
+            AppLocalizations.of(context)!.total_recordings,
             '${statsA.observations}',
             '${statsB.observations}'
           ],
           context: context,
         ),
         _buildTableRow(
-          ['Missing recordings', '${statsA.missing}', '${statsB.missing}'],
+          [
+            AppLocalizations.of(context)!.missing_recordings,
+            '${statsA.missing}',
+            '${statsB.missing}'
+          ],
           context: context,
           highlight: statsA.missing > 0 || statsB.missing > 0,
         ),
-        _buildTableRow(['Average', statsA.avgString, statsB.avgString],
-            context: context),
-        _buildTableRow(['Minimum', statsA.minString, statsB.minString],
-            context: context),
-        _buildTableRow(['Maximum', statsA.maxString, statsB.maxString],
-            context: context),
+        _buildTableRow([
+          AppLocalizations.of(context)!.average,
+          statsA.avgString,
+          statsB.avgString
+        ], context: context),
+        _buildTableRow([
+          AppLocalizations.of(context)!.minimum,
+          statsA.minString,
+          statsB.minString
+        ], context: context),
+        _buildTableRow([
+          AppLocalizations.of(context)!.maximum,
+          statsA.maxString,
+          statsB.maxString
+        ], context: context),
       ],
     );
   }
