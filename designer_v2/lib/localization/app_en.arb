@@ -515,6 +515,7 @@
   "form_field_report_data_source_title": "Data Source",
   "form_field_report_data_source_tooltip": "The data source defines which observation the report section is based on. The observation needs to be a question with a numerical result, e.g. a scale question.",
   "form_field_report_data_source_required": "A data source needs to be defined",
+  "form_field_report_select_aggregation": "Select an aggregation value",
   "@__________________STUDYPAGE_TEST__________________": {},
   "study_test_page_description": "In the test mode you can test your study as a participant.",
   "navlink_study_test_help": "How does this work?",

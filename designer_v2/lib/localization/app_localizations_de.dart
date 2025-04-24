@@ -1402,6 +1402,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Eine Datenquelle muss definiert werden';
 
   @override
+  String get form_field_report_select_aggregation =>
+      'Wähle einen Aggregationswert';
+
+  @override
   String get study_test_page_description =>
       'Im Testmodus kannst du die Studie aus Teilnehmersicht testen.';
 

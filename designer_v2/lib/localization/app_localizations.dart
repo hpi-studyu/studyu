@@ -2450,6 +2450,12 @@ abstract class AppLocalizations {
   /// **'A data source needs to be defined'**
   String get form_field_report_data_source_required;
 
+  /// No description provided for @form_field_report_select_aggregation.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an aggregation value'**
+  String get form_field_report_select_aggregation;
+
   /// No description provided for @study_test_page_description.
   ///
   /// In en, this message translates to:

@@ -1385,6 +1385,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'A data source needs to be defined';
 
   @override
+  String get form_field_report_select_aggregation =>
+      'Select an aggregation value';
+
+  @override
   String get study_test_page_description =>
       'In the test mode you can test your study as a participant.';
 
