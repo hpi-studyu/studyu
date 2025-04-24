@@ -279,5 +279,28 @@
   "t_test_outcome_based_on": "The outcome is based on the following values:",
   "statistical_information": "Statistical Information",
   "close": "Close",
-  "significance_level_and_p_value": "Significance level and p-value"
+  "significance_level_and_p_value": "Significance level and p-value",
+  "descriptive_statistics": "Descriptive statistics",
+  "compare_results_between": "Compare results between {nameA} and {nameB}",
+  "@compare_results_between": {
+    "description": "Label for comparing results between two interventions or samples",
+    "placeholders": {
+      "nameA": {
+        "type": "String"
+      },
+      "nameB": {
+        "type": "String"
+      }
+    }
+  },
+  "missing_observations_note": "Note: Missing observations indicate days when data was not recorded.",
+  "quick_summary": "Quick Summary",
+  "average_score": "Average score",
+  "data_completeness": "Data completeness",
+  "statistic": "Statistic",
+  "total_recordings": "Total recordings",
+  "missing_recordings": "Missing recordings",
+  "average": "Average",
+  "minimum": "Minimum",
+    "maximum": "Maximum"
 }

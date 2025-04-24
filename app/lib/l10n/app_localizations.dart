@@ -1351,6 +1351,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Significance level and p-value'**
   String get significance_level_and_p_value;
+
+  /// No description provided for @descriptive_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Descriptive statistics'**
+  String get descriptive_statistics;
+
+  /// Label for comparing results between two interventions or samples
+  ///
+  /// In en, this message translates to:
+  /// **'Compare results between {nameA} and {nameB}'**
+  String compare_results_between(String nameA, String nameB);
+
+  /// No description provided for @missing_observations_note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: Missing observations indicate days when data was not recorded.'**
+  String get missing_observations_note;
+
+  /// No description provided for @quick_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Summary'**
+  String get quick_summary;
+
+  /// No description provided for @average_score.
+  ///
+  /// In en, this message translates to:
+  /// **'Average score'**
+  String get average_score;
+
+  /// No description provided for @data_completeness.
+  ///
+  /// In en, this message translates to:
+  /// **'Data completeness'**
+  String get data_completeness;
+
+  /// No description provided for @statistic.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistic'**
+  String get statistic;
+
+  /// No description provided for @total_recordings.
+  ///
+  /// In en, this message translates to:
+  /// **'Total recordings'**
+  String get total_recordings;
+
+  /// No description provided for @missing_recordings.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing recordings'**
+  String get missing_recordings;
+
+  /// No description provided for @average.
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get average;
+
+  /// No description provided for @minimum.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum'**
+  String get minimum;
+
+  /// No description provided for @maximum.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum'**
+  String get maximum;
 }
 
 class _AppLocalizationsDelegate

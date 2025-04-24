@@ -693,4 +693,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get significance_level_and_p_value => 'Significance level and p-value';
+
+  @override
+  String get descriptive_statistics => 'Descriptive statistics';
+
+  @override
+  String compare_results_between(String nameA, String nameB) {
+    return 'Compare results between $nameA and $nameB';
+  }
+
+  @override
+  String get missing_observations_note =>
+      'Note: Missing observations indicate days when data was not recorded.';
+
+  @override
+  String get quick_summary => 'Quick Summary';
+
+  @override
+  String get average_score => 'Average score';
+
+  @override
+  String get data_completeness => 'Data completeness';
+
+  @override
+  String get statistic => 'Statistic';
+
+  @override
+  String get total_recordings => 'Total recordings';
+
+  @override
+  String get missing_recordings => 'Missing recordings';
+
+  @override
+  String get average => 'Average';
+
+  @override
+  String get minimum => 'Minimum';
+
+  @override
+  String get maximum => 'Maximum';
 }
