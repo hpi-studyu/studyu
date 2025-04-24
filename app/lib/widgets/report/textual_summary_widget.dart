@@ -26,7 +26,7 @@ class TextualSummaryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (valuesInterventionA.length < 2 || valuesInterventionB.length < 2) {
-      return Container(
+      return SizedBox(
         width: double.infinity,
         child: Text(
           AppLocalizations.of(context)!.no_data_available_yet,
@@ -91,7 +91,7 @@ class TextualSummaryWidget extends StatelessWidget {
             children: [
               Text(
                 AppLocalizations.of(context)!.t_test_outcome_based_on,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 8),
               Text(
