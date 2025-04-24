@@ -26,9 +26,12 @@ class TextualSummaryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (valuesInterventionA.length < 2 || valuesInterventionB.length < 2) {
-      return Text(
-        AppLocalizations.of(context)!.no_data_available_yet,
-        style: const TextStyle(fontStyle: FontStyle.italic),
+      return Container(
+        width: double.infinity,
+        child: Text(
+          AppLocalizations.of(context)!.no_data_available_yet,
+          style: const TextStyle(fontStyle: FontStyle.italic),
+        ),
       );
     }
     // Create t-test with the refactored class
