@@ -371,6 +371,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get survey_test => 'This is a survey test';
 
   @override
+  String get current_report => 'Current report';
+
+  @override
   String get report_history => 'Report history';
 
   @override
