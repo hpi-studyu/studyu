@@ -21,7 +21,7 @@ class TemporaryStorageHandler {
     return "user-id_${_userId}_study-id_${_studyId}_$timestamp";
   }
 
-  static Future<Directory> _getMultimodalTempDirectory() async {
+  static Future<Directory?> _getMultimodalTempDirectory() async {
     try {
       final tempAppData = await getTemporaryDirectory();
       final multimodalTempDirectory =
@@ -33,13 +33,8 @@ class TemporaryStorageHandler {
 
       return multimodalTempDirectory;
     } catch (e) {
-      StudyULogger.error("Failed to create multimodal temp directory: $e");
-
-      final fallbackDirectory =
-          Directory("${Directory.systemTemp.path}/multimodal-temp-fallback");
-
-      await fallbackDirectory.create(recursive: true);
-      return fallbackDirectory;
+      StudyULogger.error(e);
+      return null;
     }
   }
 
@@ -78,8 +73,12 @@ class TemporaryStorageHandler {
     return futureBlobFiles;
   }
 
-  Future<FutureBlobFile> getStagingAudio() async {
+  Future<FutureBlobFile?> getStagingAudio() async {
     final temporaryMultimodalDirectory = await _getMultimodalTempDirectory();
+
+    if (temporaryMultimodalDirectory == null) {
+      return null;
+    }
 
     final fileName = _buildFileName();
     final localFilePath = path.join(
@@ -96,8 +95,13 @@ class TemporaryStorageHandler {
     return FutureBlobFile(localFilePath, futureBlobId);
   }
 
-  Future<FutureBlobFile> getStagingImage() async {
+  Future<FutureBlobFile?> getStagingImage() async {
     final temporaryMultimodalDirectory = await _getMultimodalTempDirectory();
+
+    if (temporaryMultimodalDirectory == null) {
+      return null;
+    }
+
     final fileName = _buildFileName();
     final localFilePath = path.join(
       temporaryMultimodalDirectory.path,
@@ -115,6 +119,12 @@ class TemporaryStorageHandler {
 
   static Future<void> deleteAllStagingFiles() async {
     final temporaryMultimodalDirectory = await _getMultimodalTempDirectory();
+
+    if (temporaryMultimodalDirectory == null) {
+      StudyULogger.error("Temporary multimodal directory is null");
+      return;
+    }
+
     for (final file in await temporaryMultimodalDirectory
         .list()
         .where(

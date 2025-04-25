@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
+import 'package:studyu_core/core.dart';
 
 class CapturePictureScreen extends StatefulWidget {
   final String userId;
@@ -152,6 +153,21 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
     final imageFile = File(image.path);
     final storage = TemporaryStorageHandler(widget.studyId, widget.userId);
     final stagingImageFile = await storage.getStagingImage();
+
+    if (stagingImageFile == null) {
+      StudyULogger.error("Failed to get staging image file");
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.camera_error),
+        ),
+      );
+      setState(() {
+        _isTakingPicture = false;
+      });
+      return;
+    }
+
     await imageFile.rename(stagingImageFile.localFilePath);
 
     if (!mounted) return;

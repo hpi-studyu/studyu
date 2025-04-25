@@ -171,6 +171,11 @@ class _AudioRecordingQuestionWidgetState
       final storage = TemporaryStorageHandler(studyId, userId);
       const config = RecordConfig(numChannels: 1);
       _recordedFile = await storage.getStagingAudio();
+
+      if (_recordedFile == null) {
+        throw ArgumentError('Staging audio file is null');
+      }
+
       await _audioRecorder.start(config, path: _recordedFile!.localFilePath);
       _startTimer();
     } catch (e) {
