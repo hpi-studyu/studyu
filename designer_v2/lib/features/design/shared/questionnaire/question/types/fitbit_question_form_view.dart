@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
-
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/utils/string_extensions.dart';
 
 class FitbitQuestionFormView extends ConsumerWidget {
   const FitbitQuestionFormView({required this.formViewModel, super.key});
@@ -44,9 +44,18 @@ class FitbitQuestionFormView extends ConsumerWidget {
                       ),
                       const SizedBox(width: 8),
                       Expanded(
-                        child: Text(
-                          type.name,
-                          style: const TextStyle(fontSize: 14),
+                        child: Row(
+                          children: [
+                            Text(
+                              type.name.toPascalCase(),
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                            const SizedBox(width: 8),
+                            Tooltip(
+                              message: _getTranslation(type),
+                              child: const Icon(Icons.info_outline),
+                            )
+                          ],
                         ),
                       ),
                     ],
@@ -58,5 +67,16 @@ class FitbitQuestionFormView extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  String _getTranslation(
+    FitbitQuestionType type,
+  ) {
+    return switch (type) {
+      FitbitQuestionType.heartrate =>
+        tr.fitbit_question_type_heartrate_description,
+      FitbitQuestionType.sleep => tr.fitbit_question_type_sleep_description,
+      FitbitQuestionType.steps => tr.fitbit_question_type_steps_description,
+    };
   }
 }
