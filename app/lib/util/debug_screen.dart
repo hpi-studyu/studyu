@@ -91,22 +91,36 @@ class DebugScreen {
                       ),
                       TextButton(
                         onPressed: () async {
-                          await _deleteCacheDir();
-                          await _deleteAppDir();
-                          await SecureStorage.deleteAll();
-                          if (context.mounted) {
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'App reset successfully! Please restart the app.',
+                          try {
+                            await _deleteCacheDir();
+                            await _deleteAppDir();
+                            await SecureStorage.deleteAll();
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'App reset successfully! Please restart the app.',
+                                  ),
                                 ),
-                              ),
-                            );
-                            await Future.delayed(const Duration(seconds: 1));
-                            await SystemChannels.platform
-                                .invokeMethod('SystemNavigator.pop');
+                              );
+                              await Future.delayed(const Duration(seconds: 1));
+                              await SystemChannels.platform
+                                  .invokeMethod('SystemNavigator.pop');
+                            }
+                          } catch (e) {
+                            StudyULogger.error(e);
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Error while resetting the app. Please try again.',
+                                  ),
+                                ),
+                              );
+                            }
                           }
                         },
                         child: const Text('Reset'),
@@ -215,13 +229,9 @@ class DebugScreen {
   }
 
   static Future<void> _deleteCacheDir() async {
-    try {
-      final cacheDir = await getTemporaryDirectory();
-      if (cacheDir.existsSync()) {
-        cacheDir.deleteSync(recursive: true);
-      }
-    } catch (e) {
-      StudyULogger.error(e);
+    final cacheDir = await getTemporaryDirectory();
+    if (cacheDir.existsSync()) {
+      cacheDir.deleteSync(recursive: true);
     }
   }
 
