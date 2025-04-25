@@ -223,7 +223,7 @@ class DeleteAlertDialog extends StatelessWidget {
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () async {
               try {
-                await subject!.delete(); // hard-delete
+                await subject!.delete(); // hard-delete the subject
                 await deleteLocalData();
                 await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
 
