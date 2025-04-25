@@ -2047,4 +2047,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fitbit_credentials_not_set =>
       'Fitbit credentials are not set. Please navigate to the \'Fitbit\' tab in the study designer to enter your Fitbit client ID and client secret. Once completed, return here to add Fitbit questions.';
+
+  @override
+  String get fitbit_question_type_heartrate_description =>
+      'Captures heart rate measured every minute throughout the day.';
+
+  @override
+  String get fitbit_question_type_steps_description =>
+      'Records the number of steps taken, measured every minute.';
+
+  @override
+  String get fitbit_question_type_sleep_description =>
+      'Records sleep stages (wake, light, deep, REM) at 30-second to 1-minute intervals during your sleep.';
 }

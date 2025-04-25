@@ -2079,4 +2079,16 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get fitbit_credentials_not_set =>
       'Fitbit-Anmeldedaten sind nicht gesetzt. Bitte navigieren Sie zum \'Fitbit\'-Tab im Studien-Designer, um Ihre Fitbit-Client-ID und Ihr Client-Secret einzugeben. Sobald dies abgeschlossen ist, kehren Sie hierher zurück, um Fitbit-Fragen hinzuzufügen.';
+
+  @override
+  String get fitbit_question_type_heartrate_description =>
+      'Erfasst die Herzfrequenz, gemessen jede Minute über den Tag verteilt.';
+
+  @override
+  String get fitbit_question_type_steps_description =>
+      'Zeichnet die Anzahl der gegangenen Schritte auf, gemessen jede Minute.';
+
+  @override
+  String get fitbit_question_type_sleep_description =>
+      'Erfasst Schlafstadien (Wach, Leichtschlaf, Tiefschlaf, REM) in 30-Sekunden- bis 1-Minuten-Intervallen während des Schlafs.';
 }

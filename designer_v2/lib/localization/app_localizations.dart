@@ -3511,6 +3511,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fitbit credentials are not set. Please navigate to the \'Fitbit\' tab in the study designer to enter your Fitbit client ID and client secret. Once completed, return here to add Fitbit questions.'**
   String get fitbit_credentials_not_set;
+
+  /// No description provided for @fitbit_question_type_heartrate_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Captures heart rate measured every minute throughout the day.'**
+  String get fitbit_question_type_heartrate_description;
+
+  /// No description provided for @fitbit_question_type_steps_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Records the number of steps taken, measured every minute.'**
+  String get fitbit_question_type_steps_description;
+
+  /// No description provided for @fitbit_question_type_sleep_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Records sleep stages (wake, light, deep, REM) at 30-second to 1-minute intervals during your sleep.'**
+  String get fitbit_question_type_sleep_description;
 }
 
 class _AppLocalizationsDelegate
