@@ -109,7 +109,8 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                             tr.form_array_report_items_title,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
-                          if (formViewModel.canTestConsent)
+                          // Todo add report preview feature that generates test data to preview the selected reports
+                          /*if (formViewModel.canTestConsent)
                             Opacity(
                               opacity: ThemeConfig.kMuteFadeFactor,
                               child: TextButton.icon(
@@ -122,7 +123,7 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                               ),
                             )
                           else
-                            const SizedBox.shrink(),
+                            const SizedBox.shrink(),*/
                         ],
                       ),
                     );
