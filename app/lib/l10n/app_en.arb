@@ -233,7 +233,7 @@
   "day": "Day",
   "no_data_available_yet": "No data available yet",
   "value": "Value",
-  "show_colorless_gauges": "Show Colorless Gauges",
+  "show_colorless_gauges": "Enable accessible charts",
   "welchs_t_test_results": "Welch's t-test Results",
   "sample_a": "Sample A",
   "sample_b": "Sample B",
