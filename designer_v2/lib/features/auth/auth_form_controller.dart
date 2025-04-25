@@ -20,6 +20,7 @@ enum AuthFormKey {
   signup,
   passwordForgot,
   passwordRecovery,
+  passwordReset,
   _loginSubmit,
   _signupSubmit;
 
@@ -33,6 +34,8 @@ enum AuthFormKey {
         return tr.password_forgot_page_title;
       case passwordRecovery:
         return tr.password_recover_page_title;
+      case passwordReset:
+        return "Reset Password";
       default:
         return "[AuthFormKey.title]";
     }
@@ -46,6 +49,8 @@ enum AuthFormKey {
         return tr.signup_page_description;
       case passwordForgot:
         return tr.password_forgot_page_description;
+      case passwordRecovery:
+        return "password_recover_page_description";
       default:
         return null;
     }
@@ -96,6 +101,7 @@ class AuthFormController extends _$AuthFormController
   // - Form controls
 
   final FormControl<String> emailControl = FormControl();
+  final FormControl<String> oldPasswordControl = FormControl();
   final FormControl<String> passwordControl = FormControl();
   final FormControl<String> passwordConfirmationControl = FormControl();
   final FormControl<bool> termsOfServiceControl = FormControl(value: false);
@@ -108,6 +114,28 @@ class AuthFormController extends _$AuthFormController
           (error as Map)['requiredLength'].toString(),
         ),
   };
+
+  Future<Map<String, dynamic>?> _validateOldPassword(
+    AbstractControl<dynamic> control,
+  ) async {
+    if (control is! FormGroup) return null;
+
+    final oldPassword = control.control('oldPassword').value as String?;
+
+    if (oldPassword == null || oldPassword.isEmpty) {
+      print('Old password is null or empty');
+      return null;
+    }
+
+    final isValid = await _isOldPasswordValid(oldPassword);
+
+    if (!isValid) {
+      return {'oldPassword': "Wrong password"};
+    }
+
+    print('Old password is valid');
+    return null;
+  }
 
   late final FormGroup loginForm = FormGroup({
     'email': emailControl,
@@ -140,6 +168,20 @@ class AuthFormController extends _$AuthFormController
     ],
   );
 
+  late final FormGroup passwordResetForm = FormGroup(
+    {
+      'oldPassword': oldPasswordControl,
+      'password': passwordControl,
+      'passwordConfirmation': passwordConfirmationControl,
+    },
+    validators: [
+      Validators.mustMatch('password', 'passwordConfirmation'),
+    ],
+    asyncValidators: [
+      Validators.delegateAsync(_validateOldPassword),
+    ],
+  );
+
   late final Map<AuthFormKey, Map<FormControl, List<Validator<dynamic>>>>
       controlValidatorsByForm = {
     AuthFormKey.signup: {
@@ -165,6 +207,11 @@ class AuthFormController extends _$AuthFormController
       passwordControl: [Validators.required, Validators.minLength(8)],
       passwordConfirmationControl: [Validators.required],
     },
+    AuthFormKey.passwordReset: {
+      oldPasswordControl: [Validators.required, Validators.minLength(8)],
+      passwordControl: [Validators.required, Validators.minLength(8)],
+      passwordConfirmationControl: [Validators.required],
+    }
   };
 
   AuthFormKey _formKey = AuthFormKey.login;
@@ -190,6 +237,8 @@ class AuthFormController extends _$AuthFormController
         return passwordForgotForm;
       case AuthFormKey.passwordRecovery:
         return passwordRecoveryForm;
+      case AuthFormKey.passwordReset:
+        return passwordResetForm;
       default:
         return null;
     }
@@ -312,6 +361,14 @@ class AuthFormController extends _$AuthFormController
         .then((_) => router.dispatch(RoutingIntents.studies));
   }
 
+  Future<void> resetPassword() async {
+    if (!form.valid) {
+      return Future.value();
+    }
+    return updateUser(passwordControl.value!).then(
+        (_) => notificationService.show(Notifications.passwordResetSuccess));
+  }
+
   Future<bool> updateUser(String newPassword) async {
     try {
       state = const AsyncValue.loading();
@@ -323,6 +380,27 @@ class AuthFormController extends _$AuthFormController
       state = const AsyncValue.data(null);
     }
     return false;
+  }
+
+  Future<bool> _isOldPasswordValid(String oldPassword) async {
+    if (oldPassword.isEmpty || authRepository.currentUser?.email == null) {
+      return false;
+    }
+
+    try {
+      state = const AsyncValue.loading();
+
+      final response = await authRepository.signInWith(
+        email: authRepository.currentUser!.email!,
+        password: oldPassword,
+      );
+
+      return response.session != null;
+    } catch (e, st) {
+      return false;
+    } finally {
+      state = const AsyncValue.data(null);
+    }
   }
 
   Future<void> _readDebugUser() async {
