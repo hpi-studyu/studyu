@@ -186,7 +186,7 @@ class AuthFormController extends _$AuthFormController
       oldPasswordControl: [Validators.required, Validators.minLength(8)],
       passwordControl: [Validators.required, Validators.minLength(8)],
       passwordConfirmationControl: [Validators.required],
-    }
+    },
   };
 
   AuthFormKey _formKey = AuthFormKey.login;
@@ -378,7 +378,7 @@ class AuthFormController extends _$AuthFormController
       );
 
       return response.session != null;
-    } catch (e, st) {
+    } catch (e) {
       return false;
     } finally {
       state = const AsyncValue.data(null);
