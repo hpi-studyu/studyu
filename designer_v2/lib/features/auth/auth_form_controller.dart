@@ -35,7 +35,7 @@ enum AuthFormKey {
       case passwordRecovery:
         return tr.password_recover_page_title;
       case passwordReset:
-        return "Reset Password";
+        return tr.change_password;
       default:
         return "[AuthFormKey.title]";
     }
@@ -49,8 +49,8 @@ enum AuthFormKey {
         return tr.signup_page_description;
       case passwordForgot:
         return tr.password_forgot_page_description;
-      case passwordRecovery:
-        return "password_recover_page_description";
+      case passwordReset:
+        return tr.password_change_description;
       default:
         return null;
     }
@@ -115,28 +115,6 @@ class AuthFormController extends _$AuthFormController
         ),
   };
 
-  Future<Map<String, dynamic>?> _validateOldPassword(
-    AbstractControl<dynamic> control,
-  ) async {
-    if (control is! FormGroup) return null;
-
-    final oldPassword = control.control('oldPassword').value as String?;
-
-    if (oldPassword == null || oldPassword.isEmpty) {
-      print('Old password is null or empty');
-      return null;
-    }
-
-    final isValid = await _isOldPasswordValid(oldPassword);
-
-    if (!isValid) {
-      return {'oldPassword': "Wrong password"};
-    }
-
-    print('Old password is valid');
-    return null;
-  }
-
   late final FormGroup loginForm = FormGroup({
     'email': emailControl,
     'password': passwordControl,
@@ -176,9 +154,6 @@ class AuthFormController extends _$AuthFormController
     },
     validators: [
       Validators.mustMatch('password', 'passwordConfirmation'),
-    ],
-    asyncValidators: [
-      Validators.delegateAsync(_validateOldPassword),
     ],
   );
 
@@ -361,12 +336,19 @@ class AuthFormController extends _$AuthFormController
         .then((_) => router.dispatch(RoutingIntents.studies));
   }
 
-  Future<void> resetPassword() async {
+  Future<bool> resetPassword() async {
     if (!form.valid) {
-      return Future.value();
+      return false;
     }
-    return updateUser(passwordControl.value!).then(
-        (_) => notificationService.show(Notifications.passwordResetSuccess));
+
+    final isOldPasswordValid =
+        await _isOldPasswordValid(oldPasswordControl.value!);
+
+    if (!isOldPasswordValid) {
+      return false;
+    }
+
+    return updateUser(passwordControl.value!);
   }
 
   Future<bool> updateUser(String newPassword) async {

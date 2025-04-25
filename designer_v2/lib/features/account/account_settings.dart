@@ -7,8 +7,10 @@ import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/language_picker.dart';
+import 'package:studyu_designer_v2/services/notification_service.dart';
 
 import '../../common_views/primary_button.dart';
+import '../../services/notifications.dart';
 import '../auth/auth_form_controller.dart';
 import '../auth/auth_form_fields.dart';
 
@@ -42,66 +44,75 @@ class AccountSettingsDialog extends ConsumerWidget {
             const SizedBox(height: 16.0),
             const Divider(),
             const SizedBox(height: 16.0),
-            ReactiveForm(
-                formGroup: controller.form,
-                child: Column(
-                  children: [
-                    Text(
-                      "Change Password",
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 16.0),
-                    PasswordTextField(
-                      formControl: controller.oldPasswordControl,
-                      labelText: "Current Password",
-                      hintText: "Enter your current password",
-                    ),
-                    const SizedBox(height: 12.0),
-                    PasswordTextField(
-                      formControl: controller.passwordControl,
-                      labelText: tr.form_field_password_new,
-                      hintText: tr.form_field_password_new_hint,
-                    ),
-                    PasswordTextField(
-                      formControl: controller.passwordConfirmationControl,
-                      labelText: tr.form_field_password_new_confirm,
-                      hintText: tr.form_field_password_new_confirm_hint,
-                    ),
-                    const SizedBox(height: 16.0),
-                    ReactiveFormConsumer(
-                      builder: (context, form, child) {
-                        return SizedBox(
-                          width: double.infinity,
-                          child: PrimaryButton(
-                            text: "Reset Password",
-                            icon: Icons.lock_reset,
-                            enabled: form.valid,
-                            isLoading: state.isLoading,
-                            onPressedFuture: () {
-                              final result = ref
-                                  .read(
-                                    authFormControllerProvider(formKey)
-                                        .notifier,
-                                  )
-                                  .recoverPassword();
+            ReactiveFormConfig(
+              validationMessages: AuthFormController.authValidationMessages,
+              child: ReactiveForm(
+                  formGroup: controller.form,
+                  child: Column(
+                    children: [
+                      Text(
+                        tr.change_password,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 16.0),
+                      PasswordTextField(
+                        formControl: controller.oldPasswordControl,
+                        labelText: tr.form_field_password_current,
+                        hintText: tr.form_field_password_current_hint,
+                      ),
+                      const SizedBox(height: 12.0),
+                      PasswordTextField(
+                        formControl: controller.passwordControl,
+                        labelText: tr.form_field_password_new,
+                        hintText: tr.form_field_password_new_hint,
+                      ),
+                      PasswordTextField(
+                        formControl: controller.passwordConfirmationControl,
+                        labelText: tr.form_field_password_new_confirm,
+                        hintText: tr.form_field_password_new_confirm_hint,
+                      ),
+                      const SizedBox(height: 16.0),
+                      ReactiveFormConsumer(
+                        builder: (context, form, child) {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: PrimaryButton(
+                              text: tr.form_field_reset_password,
+                              icon: Icons.lock_reset,
+                              enabled: form.valid,
+                              isLoading: state.isLoading,
+                              onPressedFuture: () async {
+                                final controller = ref.read(
+                                  authFormControllerProvider(formKey).notifier,
+                                );
 
-                              return result.then((_) {
-                                if (context.mounted) {
-                                  Navigator.maybePop(context);
-                                }
-                              });
-                            },
-                            tooltipDisabled: tr.form_invalid_prompt,
-                            innerPadding: const EdgeInsets.symmetric(
-                              horizontal: 24.0,
-                              vertical: 10.0,
+                                final result = await controller.resetPassword();
+
+                                if (!context.mounted) return;
+
+                                Navigator.maybePop(context);
+
+                                final notificationService =
+                                    ref.read(notificationServiceProvider);
+
+                                notificationService.show(
+                                  result
+                                      ? Notifications.passwordResetSuccess
+                                      : Notifications.credentialsInvalid,
+                                );
+                              },
+                              tooltipDisabled: tr.form_invalid_prompt,
+                              innerPadding: const EdgeInsets.symmetric(
+                                horizontal: 24.0,
+                                vertical: 10.0,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ))
+                          );
+                        },
+                      ),
+                    ],
+                  )),
+            )
           ],
         ),
         actionButtons: [DismissButton(text: tr.dialog_close)],
