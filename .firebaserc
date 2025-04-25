@@ -1,7 +1,7 @@
 {
   "projects": {
     "default": "studyu-e37af",
-    "dev": "studyu-dev"
+    "dev": "studyu-dev",
     "fitbit": "studyu-fitbit"
   },
   "targets": {
