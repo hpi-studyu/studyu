@@ -5,9 +5,9 @@ name: Deploy to Firebase Hosting on merge
 on:
   push:
     branches:
-      - dev
+      - feat/fitbit-dev-deploy
     paths:
-      - '.github/workflows/firebase-hosting-merge-dev.yml'
+      - '.github/workflows/firebase-hosting-merge-fitbit.yml'
       - '.github/workflows/init-workspace/action.yml'
       - 'app/**'
       - 'designer_v2/**'
@@ -46,10 +46,10 @@ jobs:
       - name: Enable web support
         run: flutter config --enable-web
       - name: Build Web
-        run: melos run build:web:dev --no-select
+        run: melos run build:web:fitbit --no-select
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STUDYU_DEV }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STUDYU_FITBIT }}'
           channelId: live
-          projectId: studyu-dev
+          projectId: studyu-fitbit
