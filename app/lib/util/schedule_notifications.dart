@@ -96,14 +96,14 @@ const notificationDetails = NotificationDetails(
 );
 
 Future<void> scheduleNotifications(BuildContext context) async {
-  if (StudyNotifications.debug) {
+  /*if (StudyNotifications.debug) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Schedule Notifications'),
       ),
     );
     print('Schedule Notifications');
-  }
+  }*/
   // Notifications not supported on web
   if (kIsWeb) return;
   final appState = context.read<AppState>();
