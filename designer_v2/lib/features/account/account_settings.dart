@@ -46,71 +46,72 @@ class AccountSettingsDialog extends ConsumerWidget {
             ReactiveFormConfig(
               validationMessages: AuthFormController.authValidationMessages,
               child: ReactiveForm(
-                  formGroup: controller.form,
-                  child: Column(
-                    children: [
-                      Text(
-                        tr.change_password,
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      const SizedBox(height: 16.0),
-                      PasswordTextField(
-                        formControl: controller.oldPasswordControl,
-                        labelText: tr.form_field_password_current,
-                        hintText: tr.form_field_password_current_hint,
-                      ),
-                      const SizedBox(height: 12.0),
-                      PasswordTextField(
-                        formControl: controller.passwordControl,
-                        labelText: tr.form_field_password_new,
-                        hintText: tr.form_field_password_new_hint,
-                      ),
-                      PasswordTextField(
-                        formControl: controller.passwordConfirmationControl,
-                        labelText: tr.form_field_password_new_confirm,
-                        hintText: tr.form_field_password_new_confirm_hint,
-                      ),
-                      const SizedBox(height: 16.0),
-                      ReactiveFormConsumer(
-                        builder: (context, form, child) {
-                          return SizedBox(
-                            width: double.infinity,
-                            child: PrimaryButton(
-                              text: tr.form_field_reset_password,
-                              icon: Icons.lock_reset,
-                              enabled: form.valid,
-                              isLoading: state.isLoading,
-                              onPressedFuture: () async {
-                                final controller = ref.read(
-                                  authFormControllerProvider(formKey).notifier,
-                                );
+                formGroup: controller.form,
+                child: Column(
+                  children: [
+                    Text(
+                      tr.change_password,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    const SizedBox(height: 16.0),
+                    PasswordTextField(
+                      formControl: controller.oldPasswordControl,
+                      labelText: tr.form_field_password_current,
+                      hintText: tr.form_field_password_current_hint,
+                    ),
+                    const SizedBox(height: 12.0),
+                    PasswordTextField(
+                      formControl: controller.passwordControl,
+                      labelText: tr.form_field_password_new,
+                      hintText: tr.form_field_password_new_hint,
+                    ),
+                    PasswordTextField(
+                      formControl: controller.passwordConfirmationControl,
+                      labelText: tr.form_field_password_new_confirm,
+                      hintText: tr.form_field_password_new_confirm_hint,
+                    ),
+                    const SizedBox(height: 16.0),
+                    ReactiveFormConsumer(
+                      builder: (context, form, child) {
+                        return SizedBox(
+                          width: double.infinity,
+                          child: PrimaryButton(
+                            text: tr.form_field_reset_password,
+                            icon: Icons.lock_reset,
+                            enabled: form.valid,
+                            isLoading: state.isLoading,
+                            onPressedFuture: () async {
+                              final controller = ref.read(
+                                authFormControllerProvider(formKey).notifier,
+                              );
 
-                                final result = await controller.resetPassword();
+                              final result = await controller.resetPassword();
 
-                                if (!context.mounted) return;
+                              if (!context.mounted) return;
 
-                                Navigator.maybePop(context);
+                              Navigator.maybePop(context);
 
-                                final notificationService =
-                                    ref.read(notificationServiceProvider);
+                              final notificationService =
+                                  ref.read(notificationServiceProvider);
 
-                                notificationService.show(
-                                  result
-                                      ? Notifications.passwordResetSuccess
-                                      : Notifications.credentialsInvalid,
-                                );
-                              },
-                              tooltipDisabled: tr.form_invalid_prompt,
-                              innerPadding: const EdgeInsets.symmetric(
-                                horizontal: 24.0,
-                                vertical: 10.0,
-                              ),
+                              notificationService.show(
+                                result
+                                    ? Notifications.passwordResetSuccess
+                                    : Notifications.credentialsInvalid,
+                              );
+                            },
+                            tooltipDisabled: tr.form_invalid_prompt,
+                            innerPadding: const EdgeInsets.symmetric(
+                              horizontal: 24.0,
+                              vertical: 10.0,
                             ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
