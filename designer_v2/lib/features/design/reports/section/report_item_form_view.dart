@@ -175,10 +175,14 @@ class ReportItemFormView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16.0),
-        TextParagraph(
-          text: tr.form_field_report_section_type_description,
-          style: ThemeConfig.bodyTextMuted(theme),
-        ),
+        FormTableLayout(columnWidths: reportSectionColumnWidth, rows: [
+          FormTableRow(
+            input: TextParagraph(
+              text: tr.form_field_report_section_type_description,
+              style: ThemeConfig.bodyTextMuted(theme),
+            ),
+          ),
+        ]),
         const SizedBox(height: 16.0),
       ],
     );

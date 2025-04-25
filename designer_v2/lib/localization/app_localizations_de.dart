@@ -1295,9 +1295,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Definiere, wie der Bericht, den deine Teilnehmer erhalten, aussehen soll. Ein Bericht umfasst verschiedene Abschnitte, wobei der erste der primäre Abschnitt ist. Für jeden Abschnitt kannst du definieren, ob die Daten als Durchschnitt oder über eine lineare Regression der Benutzerdaten berichtet werden sollen. Du kannst wählen, ob die Daten für einzelne Tage, Phasen oder für jede Intervention berichtet werden. Die Datenquelle definiert, auf welcher Beobachtung der Berichtsabschnitt basiert.';
 
   @override
-  String get form_array_report_items_test => 'Berichte testen (tba)';
-
-  @override
   String get form_array_reports_empty_description =>
       'Du musst mindestens einen Bericht definieren, um deinen Teilnehmern Feedback zu geben.';
 

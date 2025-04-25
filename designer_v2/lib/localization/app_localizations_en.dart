@@ -1279,9 +1279,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Define how the report that your participants receive should look like. A report includes various sections, the first of which is the primary section. For each section you can define if the data should be reported as average or via a linear regression of the user\'s data. You can choose whether the data is reported for individual days, phases or for each intervention. The data source defines which observation the report section is based on.';
 
   @override
-  String get form_array_report_items_test => 'Test Reports (tba)';
-
-  @override
   String get form_array_reports_empty_description =>
       'You need to define at least one report to provide feedback to your participants.';
 
