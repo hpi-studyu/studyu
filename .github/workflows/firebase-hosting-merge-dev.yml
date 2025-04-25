@@ -5,7 +5,7 @@ name: Deploy to Firebase Hosting on merge
 on:
   push:
     branches:
-      - dev
+      # - dev
       - feat/fitbit
     paths:
       - '.github/workflows/firebase-hosting-merge-dev.yml'
