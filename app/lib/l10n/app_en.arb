@@ -131,6 +131,7 @@
   "video_test": "This is a video test",
   "survey_test": "This is a survey test",
 
+  "current_report": "Current report",
   "report_history": "Report history",
   "current_power_level": "Current status",
   "not_enough_data": "Not enough data",

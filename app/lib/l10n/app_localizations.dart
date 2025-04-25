@@ -770,6 +770,12 @@ abstract class AppLocalizations {
   /// **'This is a survey test'**
   String get survey_test;
 
+  /// No description provided for @current_report.
+  ///
+  /// In en, this message translates to:
+  /// **'Current report'**
+  String get current_report;
+
   /// No description provided for @report_history.
   ///
   /// In en, this message translates to:
