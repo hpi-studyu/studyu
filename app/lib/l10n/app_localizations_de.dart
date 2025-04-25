@@ -654,7 +654,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get value => 'Wert';
 
   @override
-  String get show_colorless_gauges => 'Farblose Anzeigen anzeigen';
+  String get show_colorless_gauges => 'Barrierefreie Diagramme anzeigen';
 
   @override
   String get welchs_t_test_results => 'Welchs t-Test Ergebnisse';

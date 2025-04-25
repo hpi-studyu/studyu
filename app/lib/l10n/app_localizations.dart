@@ -1259,7 +1259,7 @@ abstract class AppLocalizations {
   /// No description provided for @show_colorless_gauges.
   ///
   /// In en, this message translates to:
-  /// **'Show Colorless Gauges'**
+  /// **'Enable accessible charts'**
   String get show_colorless_gauges;
 
   /// No description provided for @welchs_t_test_results.

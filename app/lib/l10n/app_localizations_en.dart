@@ -646,7 +646,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get value => 'Value';
 
   @override
-  String get show_colorless_gauges => 'Show Colorless Gauges';
+  String get show_colorless_gauges => 'Enable accessible charts';
 
   @override
   String get welchs_t_test_results => 'Welch\'s t-test Results';
