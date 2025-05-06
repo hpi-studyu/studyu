@@ -213,6 +213,12 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   ) {
     return getTaskProgressForDay(taskId, dateTime).any(
       (progress) {
+        final now = DateTime.now();
+        final completedAt = progress.completedAt;
+
+        print("Now local: $now, UTC: ${now.toUtc()}");
+        print(
+            "CompletedAt local: ${completedAt!.toLocal()}, UTC: ${completedAt.toUtc()}");
         if (progress.result.periodId == null) {
           // fallback to support studies without periodIds
           return progress.completedAt!.isSameDate(dateTime);
