@@ -1,33 +1,27 @@
 extension DateOnlyCompare on DateTime {
   bool isSameDate(DateTime other) {
-    final otherUtc = other.toUtc();
-    return toUtc().year == otherUtc.year &&
-        toUtc().month == otherUtc.month &&
-        toUtc().day == otherUtc.day;
+    final a = toLocal();
+    final b = other.toLocal();
+    return a.year == b.year && a.month == b.month && a.day == b.day;
   }
 
   bool isEarlierDateThan(DateTime other) {
-    final otherUtc = other.toUtc();
-    if (toUtc().year < otherUtc.year) {
-      return true;
-    } else if (toUtc().year == otherUtc.year) {
-      if (toUtc().month < otherUtc.month) {
-        return true;
-      } else if (toUtc().month == otherUtc.month) {
-        if (toUtc().day < otherUtc.day) {
-          return true;
-        }
-      }
-    }
-    return false;
+    final a = toLocal();
+    final b = other.toLocal();
+    if (a.year != b.year) return a.year < b.year;
+    if (a.month != b.month) return a.month < b.month;
+    return a.day < b.day;
   }
 
   bool isLaterDateThan(DateTime other) {
-    return !(toUtc().isSameDate(other.toUtc()) ||
-        toUtc().isEarlierDateThan(other.toUtc()));
+    final a = toLocal();
+    final b = other.toLocal();
+    return !(a.isSameDate(b) || a.isEarlierDateThan(b));
   }
 
   int differenceInDays(DateTime other) {
-    return toUtc().difference(other.toUtc()).inDays;
+    final a = toLocal();
+    final b = other.toLocal();
+    return a.difference(b).inDays;
   }
 }

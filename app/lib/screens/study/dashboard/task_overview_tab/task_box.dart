@@ -25,6 +25,8 @@ class TaskBox extends StatefulWidget {
 }
 
 class _TaskBoxState extends State<TaskBox> {
+  bool _showDebug = true;
+
   Future<void> _navigateToTaskScreen() async {
     await Navigator.push<bool>(
       context,
@@ -40,42 +42,83 @@ class _TaskBoxState extends State<TaskBox> {
 
   @override
   Widget build(BuildContext context) {
+    final now = DateTime.now();
     final completed =
         context.watch<AppState>().activeSubject!.completedTaskInstanceForDay(
               widget.taskInstance.task.id,
               widget.taskInstance.completionPeriod,
-              DateTime.now(),
+              now,
             );
+    final completedTasks = context
+        .watch<AppState>()
+        .activeSubject!
+        .getTaskProgressForDay(widget.taskInstance.task.id, DateTime.now());
     final isPreview = context.read<AppState>().isPreview;
     final isInsidePeriod =
         widget.taskInstance.completionPeriod.contains(StudyUTimeOfDay.now());
+
     final isTaskOpen = !completed && isInsidePeriod || isPreview || kDebugMode;
+
     return Card(
       elevation: 2,
-      child: InkWell(
-        onTap: isTaskOpen ? _navigateToTaskScreen : () {},
-        child: Row(
-          children: [
-            Expanded(
-              child: ListTile(
-                leading: widget.icon,
-                title: Text(widget.taskInstance.task.title ?? ''),
-                onTap: isTaskOpen ? _navigateToTaskScreen : () {},
+      child: Column(
+        children: [
+          InkWell(
+            onTap: isTaskOpen ? _navigateToTaskScreen : () {},
+            onLongPress: kDebugMode
+                ? () {
+                    setState(() {
+                      _showDebug = !_showDebug;
+                    });
+                  }
+                : null,
+            child: Row(
+              children: [
+                Expanded(
+                  child: ListTile(
+                    leading: widget.icon,
+                    title: Text(widget.taskInstance.task.title ?? ''),
+                    onTap: isTaskOpen ? _navigateToTaskScreen : () {},
+                  ),
+                ),
+                if (isInsidePeriod || isPreview || completed)
+                  RoundCheckbox(
+                    value: completed,
+                    onChanged: (value) =>
+                        isTaskOpen ? _navigateToTaskScreen() : () {},
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                    child: Icon(Icons.lock, color: theme.colorScheme.secondary),
+                  ),
+              ],
+            ),
+          ),
+          if (_showDebug)
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('🧪 DEBUG INFO',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('Now local: $now'),
+                  Text('Now UTC: ${now.toUtc()}'),
+                  Text('isInsidePeriod: $isInsidePeriod'),
+                  Text('Completed: $completed'),
+                  Text(
+                      'Unlocks: ${widget.taskInstance.completionPeriod.unlockTime}'),
+                  Text(
+                      'Locks: ${widget.taskInstance.completionPeriod.lockTime}'),
+                  Text('Task ID: ${widget.taskInstance.task.id}'),
+                  Text('Period ID: ${widget.taskInstance.completionPeriod.id}'),
+                  Text('Completed tasks: $completedTasks'),
+                ],
               ),
             ),
-            if (isInsidePeriod || isPreview || completed)
-              RoundCheckbox(
-                value: completed, //_isCompleted,
-                onChanged: (value) =>
-                    isTaskOpen ? _navigateToTaskScreen() : () {},
-              )
-            else
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                child: Icon(Icons.lock, color: theme.colorScheme.secondary),
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }
