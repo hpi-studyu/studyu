@@ -13,10 +13,6 @@ dependencies:
   collection: ^1.19.1
   cross_file: ^0.3.4+2
   cupertino_icons: ^1.0.8
-  fitbitter:
-    git:
-      url: https://github.com/hpi-studyu/fitbitter.git
-      ref: studyu-compatibility-fix
   fl_chart: ^0.70.2
   flutter:
     sdk: flutter

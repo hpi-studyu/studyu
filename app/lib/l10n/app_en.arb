@@ -219,16 +219,5 @@
     }
   },
   "app_outdated_message": "A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!",
-  "update_now": "Update now",
-  "sync_fitbit_data": "Sync Fitbit Data",
-  "fitbit_data_synced": "Fitbit data synced successfully",
-  "fitbit_data_not_synced": "Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.",
-  "error_syncing_fitbit_data": "Error syncing Fitbit data: {error}",
-  "@error_syncing_fitbit_data": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  }
+  "update_now": "Update now"
 }

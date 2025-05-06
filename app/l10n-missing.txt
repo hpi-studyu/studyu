@@ -1,1 +1,8 @@
-{}
+{
+  "de": [
+    "sync_fitbit_data",
+    "fitbit_data_synced",
+    "fitbit_data_not_synced",
+    "error_syncing_fitbit_data"
+  ]
+}

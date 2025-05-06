@@ -257,22 +257,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.11"
-  dio:
-    dependency: transitive
-    description:
-      name: dio
-      sha256: "253a18bbd4851fecba42f7343a1df3a9a4c1d31a2c1b37e221086b4fa8c8dbc9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.8.0+1"
-  dio_web_adapter:
-    dependency: transitive
-    description:
-      name: dio_web_adapter
-      sha256: "7586e476d70caecaf1686d21eee7247ea43ef5c345eab9e0cc3583ff13378d78"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
   equatable:
     dependency: transitive
     description:
@@ -305,15 +289,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
-  fitbitter:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: studyu-compatibility-fix
-      resolved-ref: "2934c709d6c46e24d213b346d5e3d5dab8e8c5aa"
-      url: "https://github.com/hpi-studyu/fitbitter.git"
-    source: git
-    version: "2.0.6"
   fixnum:
     dependency: transitive
     description:
@@ -481,14 +456,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  flutter_web_auth:
-    dependency: transitive
-    description:
-      name: flutter_web_auth
-      sha256: "95e4856e24fb6ac1678f5ff334743b63f782d839ab324543d29ccbd295176209"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.0"
   flutter_web_plugins:
     dependency: "direct main"
     description: flutter

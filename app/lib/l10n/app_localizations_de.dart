@@ -573,18 +573,17 @@ class AppLocalizationsDe extends AppLocalizations {
   String get update_now => 'Jetzt aktualisieren';
 
   @override
-  String get sync_fitbit_data => 'Fitbit-Daten synchronisieren';
+  String get sync_fitbit_data => 'Sync Fitbit Data';
 
   @override
-  String get fitbit_data_synced =>
-      'Fitbit-Daten wurden erfolgreich synchronisiert';
+  String get fitbit_data_synced => 'Fitbit data synced successfully';
 
   @override
   String get fitbit_data_not_synced =>
-      'Fitbit-Daten konnten nicht synchronisiert werden. Bitte stellen Sie sicher, dass Sie Ihre Fitbit-Daten in der Fitbit-App synchronisiert haben.';
+      'Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.';
 
   @override
   String error_syncing_fitbit_data(String error) {
-    return 'Fehler beim Synchronisieren der Fitbit-Daten: $error';
+    return 'Error syncing Fitbit data: $error';
   }
 }
