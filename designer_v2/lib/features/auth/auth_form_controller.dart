@@ -62,9 +62,9 @@ class AuthFormController extends _$AuthFormController
     implements IFormGroupController {
   @override
   AsyncValue<void> build(AuthFormKey formKeyArg) {
-    authRepository = ref.watch(authRepositoryProvider);
-    notificationService = ref.watch(notificationServiceProvider);
-    router = ref.watch(routerProvider);
+    _authRepository = ref.watch(authRepositoryProvider);
+    _notificationService = ref.watch(notificationServiceProvider);
+    _router = ref.watch(routerProvider);
 
     formKey = formKeyArg;
     resetControlsFor(formKey);
@@ -76,11 +76,11 @@ class AuthFormController extends _$AuthFormController
         switch (error.message) {
           case "Invalid login credentials":
             print("authFormController.state listen self");
-            notificationService.show(Notifications.credentialsInvalid);
+            _notificationService.show(Notifications.credentialsInvalid);
           case "User already registered":
-            notificationService.show(Notifications.userAlreadyRegistered);
+            _notificationService.show(Notifications.userAlreadyRegistered);
           default:
-            notificationService.showMessage(error.message);
+            _notificationService.showMessage(error.message);
         }
       }
     });
@@ -94,9 +94,9 @@ class AuthFormController extends _$AuthFormController
     return const AsyncValue.data(null);
   }
 
-  late final IAuthRepository authRepository;
-  late final INotificationService notificationService;
-  late final GoRouter router;
+  late final IAuthRepository _authRepository;
+  late final INotificationService _notificationService;
+  late final GoRouter _router;
 
   // - Form controls
 
@@ -115,12 +115,12 @@ class AuthFormController extends _$AuthFormController
         ),
   };
 
-  late final FormGroup loginForm = FormGroup({
+  late final FormGroup _loginForm = FormGroup({
     'email': emailControl,
     'password': passwordControl,
   });
 
-  late final FormGroup signupForm = FormGroup(
+  late final FormGroup _signupForm = FormGroup(
     {
       'email': emailControl,
       'password': passwordControl,
@@ -132,11 +132,11 @@ class AuthFormController extends _$AuthFormController
     ],
   );
 
-  late final FormGroup passwordForgotForm = FormGroup({
+  late final FormGroup _passwordForgotForm = FormGroup({
     'email': emailControl,
   });
 
-  late final FormGroup passwordRecoveryForm = FormGroup(
+  late final FormGroup _passwordRecoveryForm = FormGroup(
     {
       'password': passwordControl,
       'passwordConfirmation': passwordConfirmationControl,
@@ -146,7 +146,7 @@ class AuthFormController extends _$AuthFormController
     ],
   );
 
-  late final FormGroup passwordResetForm = FormGroup(
+  late final FormGroup _passwordResetForm = FormGroup(
     {
       'oldPassword': oldPasswordControl,
       'password': passwordControl,
@@ -158,7 +158,7 @@ class AuthFormController extends _$AuthFormController
   );
 
   late final Map<AuthFormKey, Map<FormControl, List<Validator<dynamic>>>>
-      controlValidatorsByForm = {
+      _controlValidatorsByForm = {
     AuthFormKey.signup: {
       emailControl: [Validators.required, Validators.email],
       passwordControl: [Validators.minLength(8)],
@@ -191,6 +191,7 @@ class AuthFormController extends _$AuthFormController
 
   AuthFormKey _formKey = AuthFormKey.login;
   AuthFormKey get formKey => _formKey;
+
   set formKey(AuthFormKey key) {
     if (!AuthFormKey.values.contains(key)) {
       throw Exception("Unknown AuthFormKey");
@@ -205,15 +206,15 @@ class AuthFormController extends _$AuthFormController
   FormGroup? _getFormFor(AuthFormKey key) {
     switch (key) {
       case AuthFormKey.login:
-        return loginForm;
+        return _loginForm;
       case AuthFormKey.signup:
-        return signupForm;
+        return _signupForm;
       case AuthFormKey.passwordForgot:
-        return passwordForgotForm;
+        return _passwordForgotForm;
       case AuthFormKey.passwordRecovery:
-        return passwordRecoveryForm;
+        return _passwordRecoveryForm;
       case AuthFormKey.passwordReset:
-        return passwordResetForm;
+        return _passwordResetForm;
       default:
         return null;
     }
@@ -224,7 +225,7 @@ class AuthFormController extends _$AuthFormController
   }
 
   void resetControlsFor(AuthFormKey key) {
-    final formControlValidators = controlValidatorsByForm[key];
+    final formControlValidators = _controlValidatorsByForm[key];
     if (formControlValidators != null) {
       for (final entry in formControlValidators.entries) {
         final control = entry.key;
@@ -262,7 +263,7 @@ class AuthFormController extends _$AuthFormController
     }
     try {
       state = const AsyncValue.loading();
-      return await authRepository.signUp(email: email, password: password);
+      return await _authRepository.signUp(email: email, password: password);
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     } finally {
@@ -285,7 +286,7 @@ class AuthFormController extends _$AuthFormController
     try {
       state = const AsyncValue.loading();
       final response =
-          await authRepository.signInWith(email: email, password: password);
+          await _authRepository.signInWith(email: email, password: password);
       return response;
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -298,7 +299,7 @@ class AuthFormController extends _$AuthFormController
   Future<void> signOut() async {
     try {
       state = const AsyncValue.loading();
-      return await authRepository.signOut();
+      return await _authRepository.signOut();
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     } finally {
@@ -309,7 +310,7 @@ class AuthFormController extends _$AuthFormController
   Future<void> resetPasswordForEmail(String email) async {
     try {
       state = const AsyncValue.loading();
-      return await authRepository.resetPasswordForEmail(email: email);
+      return await _authRepository.resetPasswordForEmail(email: email);
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     } finally {
@@ -322,7 +323,7 @@ class AuthFormController extends _$AuthFormController
       return Future.value();
     }
     return resetPasswordForEmail(emailControl.value!)
-        .then((_) => notificationService.show(Notifications.passwordReset));
+        .then((_) => _notificationService.show(Notifications.passwordReset));
   }
 
   Future<void> recoverPassword() {
@@ -331,9 +332,9 @@ class AuthFormController extends _$AuthFormController
     }
     return updateUser(passwordControl.value!)
         .then(
-          (_) => notificationService.show(Notifications.passwordResetSuccess),
+          (_) => _notificationService.show(Notifications.passwordResetSuccess),
         )
-        .then((_) => router.dispatch(RoutingIntents.studies));
+        .then((_) => _router.dispatch(RoutingIntents.studies));
   }
 
   Future<bool> resetPassword() async {
@@ -354,7 +355,8 @@ class AuthFormController extends _$AuthFormController
   Future<bool> updateUser(String newPassword) async {
     try {
       state = const AsyncValue.loading();
-      return (await authRepository.updateUser(newPassword: newPassword)).user !=
+      return (await _authRepository.updateUser(newPassword: newPassword))
+              .user !=
           null;
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -365,15 +367,15 @@ class AuthFormController extends _$AuthFormController
   }
 
   Future<bool> _isOldPasswordValid(String oldPassword) async {
-    if (oldPassword.isEmpty || authRepository.currentUser?.email == null) {
+    if (oldPassword.isEmpty || _authRepository.currentUser?.email == null) {
       return false;
     }
 
     try {
       state = const AsyncValue.loading();
 
-      final response = await authRepository.signInWith(
-        email: authRepository.currentUser!.email!,
+      final response = await _authRepository.signInWith(
+        email: _authRepository.currentUser!.email!,
         password: oldPassword,
       );
 
