@@ -1344,6 +1344,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get reportSection_type_average => 'Durchschnitt';
 
   @override
+  String get reportSection_type_textual_summary => 'Textuelle Zusammenfassung';
+
+  @override
+  String get reportSection_type_gauge_comparison => 'Tachometer-Vergleich';
+
+  @override
+  String get reportSection_type_descriptive_statistics =>
+      'Deskriptive Statistik';
+
+  @override
   String get form_field_report_average_temporalAggregation_title =>
       'Zeitliche Aggregation';
 
@@ -1408,6 +1418,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get form_field_report_data_source_required =>
       'Eine Datenquelle muss definiert werden';
+
+  @override
+  String get form_field_report_select_aggregation =>
+      'Wähle einen Aggregationswert';
 
   @override
   String get study_test_page_description =>

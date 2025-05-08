@@ -2354,6 +2354,24 @@ abstract class AppLocalizations {
   /// **'Average'**
   String get reportSection_type_average;
 
+  /// No description provided for @reportSection_type_textual_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Textual Summary'**
+  String get reportSection_type_textual_summary;
+
+  /// No description provided for @reportSection_type_gauge_comparison.
+  ///
+  /// In en, this message translates to:
+  /// **'Gauge Comparison'**
+  String get reportSection_type_gauge_comparison;
+
+  /// No description provided for @reportSection_type_descriptive_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Descriptive Statistics'**
+  String get reportSection_type_descriptive_statistics;
+
   /// No description provided for @form_field_report_average_temporalAggregation_title.
   ///
   /// In en, this message translates to:
@@ -2461,6 +2479,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A data source needs to be defined'**
   String get form_field_report_data_source_required;
+
+  /// No description provided for @form_field_report_select_aggregation.
+  ///
+  /// In en, this message translates to:
+  /// **'Select an aggregation value'**
+  String get form_field_report_select_aggregation;
 
   /// No description provided for @study_test_page_description.
   ///

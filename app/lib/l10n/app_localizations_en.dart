@@ -567,4 +567,134 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get update_now => 'Update now';
+
+  @override
+  String get text_summary_section_prefix_higher => 'Your ';
+
+  @override
+  String get text_summary_section_was_higher =>
+      ' was higher during intervention: ';
+
+  @override
+  String get text_summary_section_was_lower =>
+      ' was lower during intervention: ';
+
+  @override
+  String get text_summary_section_compared_to => ' compared to: ';
+
+  @override
+  String get text_summary_section_and => ' and ';
+
+  @override
+  String get text_summary_section_no_evidence =>
+      'There was no evidence for a difference in ';
+
+  @override
+  String get text_summary_section_between => ' between interventions: ';
+
+  @override
+  String get intervention => 'Intervention';
+
+  @override
+  String get phase => 'Phase';
+
+  @override
+  String get day => 'Day';
+
+  @override
+  String get no_data_available_yet => 'No data available yet';
+
+  @override
+  String get value => 'Value';
+
+  @override
+  String get show_colorless_gauges => 'Enable accessible charts';
+
+  @override
+  String get welchs_t_test_results => 'Welch\'s t-test Results';
+
+  @override
+  String get sample_a => 'Sample A';
+
+  @override
+  String get sample_b => 'Sample B';
+
+  @override
+  String get sample_size => 'n';
+
+  @override
+  String get mean => 'mean';
+
+  @override
+  String get variance => 'var';
+
+  @override
+  String get t_statistic => 't-statistic';
+
+  @override
+  String get degrees_of_freedom => 'Degrees of freedom';
+
+  @override
+  String get p_value => 'p-value';
+
+  @override
+  String get result_significant => 'Significantly different';
+
+  @override
+  String get result_not_significant => 'Not significantly different';
+
+  @override
+  String get level_of_significance => 'Level of significance';
+
+  @override
+  String get t_test_outcome_based_on =>
+      'The outcome is based on the following values:';
+
+  @override
+  String get statistical_information => 'Statistical Information';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get significance_level_and_p_value => 'Significance level and p-value';
+
+  @override
+  String get descriptive_statistics => 'Descriptive statistics';
+
+  @override
+  String compare_results_between(String nameA, String nameB) {
+    return 'Compare results between $nameA and $nameB';
+  }
+
+  @override
+  String get missing_observations_note =>
+      'Note: Missing observations indicate days when data was not recorded.';
+
+  @override
+  String get quick_summary => 'Quick Summary';
+
+  @override
+  String get average_score => 'Average score';
+
+  @override
+  String get data_completeness => 'Data completeness';
+
+  @override
+  String get statistic => 'Statistic';
+
+  @override
+  String get total_recordings => 'Total recordings';
+
+  @override
+  String get missing_recordings => 'Missing recordings';
+
+  @override
+  String get average => 'Average';
+
+  @override
+  String get minimum => 'Minimum';
+
+  @override
+  String get maximum => 'Maximum';
 }
