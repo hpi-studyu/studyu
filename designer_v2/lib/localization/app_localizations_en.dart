@@ -450,9 +450,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get question_type_audio => 'Audio';
 
   @override
-  String get question_type_fitbit => 'Fitbit';
-
-  @override
   String get form_array_response_options_bool_yes => 'Yes';
 
   @override
@@ -659,12 +656,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get free_text_question_type_custom_explanation =>
       'The input must match the specified regular expression.';
-
-  @override
-  String get fitbit_question_title => 'Fitbit';
-
-  @override
-  String get fitbit_question_type_empty => 'No Fitbit data available';
 
   @override
   String get banner_study_readonly_title => 'This study cannot be edited.';
@@ -1920,96 +1911,4 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get under_construction_description =>
       'We are still busy working on this part, check back soon!';
-
-  @override
-  String get fitbit_credentials_instruction =>
-      'To integrate Fitbit data, follow these steps to obtain your Client ID and Client Secret:';
-
-  @override
-  String get fitbit_credentials_step1 =>
-      '1. Go to the Fitbit Developer Portal.';
-
-  @override
-  String get fitbit_credentials_step2 =>
-      '2. Log in with your Fitbit account or create one if you do not have it.';
-
-  @override
-  String get fitbit_credentials_step3 =>
-      '3. Navigate to the \"Manage\" section and select \"Register an App\".';
-
-  @override
-  String get fitbit_credentials_step4 =>
-      '4. Fill in the required fields such as application name, description, and callback URL (use: \"studyu://\").';
-
-  @override
-  String get fitbit_credentials_step5 =>
-      '5. Select \"Client\" under \"OAuth 2.0 Application Type\" and set \"Access\" to \"Read-Only.\"';
-
-  @override
-  String get fitbit_credentials_step6 =>
-      '6. Submit the form to get your \"Client ID\" and \"Client Secret\".';
-
-  @override
-  String get fitbit_credentials_step7 =>
-      '7. Please fill the following form to obtain access for intraday data. Without this, you cannot obtain any data from Fitbit for your trials.';
-
-  @override
-  String get fitbit_credentials_step8 =>
-      '8. Copy and paste the credentials below.';
-
-  @override
-  String get fitbit_credentials_success_instruction =>
-      'Once you enter the credentials, Fitbit integration will be enabled for your study.';
-
-  @override
-  String get fitbit_credentials_add_question_instruction =>
-      'To add a Fitbit question, navigate to the measurements section and create a new Fitbit Question within a measurement.';
-
-  @override
-  String get fitbit_credentials_screenshot_step1 => 'Step 1: Developer Portal';
-
-  @override
-  String get fitbit_credentials_screenshot_step2 => 'Step 2: Login';
-
-  @override
-  String get fitbit_credentials_screenshot_step3 => 'Step 3: Register App';
-
-  @override
-  String get fitbit_credentials_screenshot_step4 => 'Step 4: Input Details';
-
-  @override
-  String get fitbit_credentials_screenshot_step5 => 'Step 5: Set Access';
-
-  @override
-  String get fitbit_credentials_screenshot_step6 => 'Step 6: Get Credentials';
-
-  @override
-  String get fitbit_credentials_screenshot_step7 => 'Step 7: Fill Form';
-
-  @override
-  String get client_id => 'Client ID';
-
-  @override
-  String get client_id_label_help =>
-      'Enter the Client ID from Fitbit Developer Portal.';
-
-  @override
-  String get client_id_hint => 'Client ID';
-
-  @override
-  String get client_secret => 'Client Secret';
-
-  @override
-  String get client_secret_label_help =>
-      'Enter the Client Secret from Fitbit Developer Portal.';
-
-  @override
-  String get client_secret_hint => 'Client Secret';
-
-  @override
-  String get screenshots_for_guidance => 'Screenshots for Guidance:';
-
-  @override
-  String get fitbit_credentials_not_set =>
-      'Fitbit credentials are not set. Please navigate to the \'Fitbit\' tab in the study designer to enter your Fitbit client ID and client secret. Once completed, return here to add Fitbit questions.';
 }

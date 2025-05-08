@@ -1117,30 +1117,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update now'**
   String get update_now;
-
-  /// No description provided for @sync_fitbit_data.
-  ///
-  /// In en, this message translates to:
-  /// **'Sync Fitbit Data'**
-  String get sync_fitbit_data;
-
-  /// No description provided for @fitbit_data_synced.
-  ///
-  /// In en, this message translates to:
-  /// **'Fitbit data synced successfully'**
-  String get fitbit_data_synced;
-
-  /// No description provided for @fitbit_data_not_synced.
-  ///
-  /// In en, this message translates to:
-  /// **'Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.'**
-  String get fitbit_data_not_synced;
-
-  /// No description provided for @error_syncing_fitbit_data.
-  ///
-  /// In en, this message translates to:
-  /// **'Error syncing Fitbit data: {error}'**
-  String error_syncing_fitbit_data(String error);
 }
 
 class _AppLocalizationsDelegate
