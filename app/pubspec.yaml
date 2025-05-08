@@ -41,8 +41,10 @@ dependencies:
   sentry_logging: ^8.14.2
   shared_preferences: ^2.5.3
   statistics: ^1.1.3 # intl needs to be >= ^0.20.2
-  studyu_core: ^4.4.9
-  studyu_flutter_common: ^1.8.10
+  studyu_core:
+    path: ../core
+  studyu_flutter_common:
+    path: ../flutter_common
   supabase: ^2.7.0
   supabase_flutter: ^2.9.0
   timeline_tile: ^2.0.0

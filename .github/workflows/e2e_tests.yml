@@ -18,11 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Await potential publishing on Pub.dev
-        uses: johannesvedder/await-workflow@v1
-        with:
-          workflowId: 'publish_pubdev.yml'
-
       - name: Checkout code
         uses: actions/checkout@v4
         with:
