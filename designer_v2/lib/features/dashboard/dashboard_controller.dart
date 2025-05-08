@@ -39,7 +39,10 @@ class DashboardController extends _$DashboardController
     });
 
     _subscribeStudies();
-    return DashboardState(currentUser: _authRepository.currentUser!);
+    return DashboardState(
+      currentUser: _authRepository.currentUser!,
+      searchController: SearchController(),
+    );
   }
 
   /// References to the data repositories injected by Riverpod
@@ -52,8 +55,6 @@ class DashboardController extends _$DashboardController
 
   /// A subscription for synchronizing state between the repository and the controller
   StreamSubscription<List<WrappedModel<Study>>>? _studiesSubscription;
-
-  final SearchController searchController = SearchController();
 
   void _subscribeStudies() {
     _studiesSubscription = _studyRepository.watchAll().listen(
@@ -74,7 +75,7 @@ class DashboardController extends _$DashboardController
   }
 
   void setSearchText(String? text) {
-    searchController.setText(text ?? state.query);
+    state.searchController.setText(text ?? state.query);
   }
 
   void setStudiesFilter(StudiesFilter? filter) {
