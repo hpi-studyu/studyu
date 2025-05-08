@@ -920,12 +920,6 @@ abstract class AppLocalizations {
   /// **'Audio'**
   String get question_type_audio;
 
-  /// No description provided for @question_type_fitbit.
-  ///
-  /// In en, this message translates to:
-  /// **'Fitbit'**
-  String get question_type_fitbit;
-
   /// No description provided for @form_array_response_options_bool_yes.
   ///
   /// In en, this message translates to:
@@ -1267,18 +1261,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The input must match the specified regular expression.'**
   String get free_text_question_type_custom_explanation;
-
-  /// No description provided for @fitbit_question_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Fitbit'**
-  String get fitbit_question_title;
-
-  /// No description provided for @fitbit_question_type_empty.
-  ///
-  /// In en, this message translates to:
-  /// **'No Fitbit data available'**
-  String get fitbit_question_type_empty;
 
   /// No description provided for @banner_study_readonly_title.
   ///
@@ -3301,162 +3283,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We are still busy working on this part, check back soon!'**
   String get under_construction_description;
-
-  /// No description provided for @fitbit_credentials_instruction.
-  ///
-  /// In en, this message translates to:
-  /// **'To integrate Fitbit data, follow these steps to obtain your Client ID and Client Secret:'**
-  String get fitbit_credentials_instruction;
-
-  /// No description provided for @fitbit_credentials_step1.
-  ///
-  /// In en, this message translates to:
-  /// **'1. Go to the Fitbit Developer Portal.'**
-  String get fitbit_credentials_step1;
-
-  /// No description provided for @fitbit_credentials_step2.
-  ///
-  /// In en, this message translates to:
-  /// **'2. Log in with your Fitbit account or create one if you do not have it.'**
-  String get fitbit_credentials_step2;
-
-  /// No description provided for @fitbit_credentials_step3.
-  ///
-  /// In en, this message translates to:
-  /// **'3. Navigate to the \"Manage\" section and select \"Register an App\".'**
-  String get fitbit_credentials_step3;
-
-  /// No description provided for @fitbit_credentials_step4.
-  ///
-  /// In en, this message translates to:
-  /// **'4. Fill in the required fields such as application name, description, and callback URL (use: \"studyu://\").'**
-  String get fitbit_credentials_step4;
-
-  /// No description provided for @fitbit_credentials_step5.
-  ///
-  /// In en, this message translates to:
-  /// **'5. Select \"Client\" under \"OAuth 2.0 Application Type\" and set \"Access\" to \"Read-Only.\"'**
-  String get fitbit_credentials_step5;
-
-  /// No description provided for @fitbit_credentials_step6.
-  ///
-  /// In en, this message translates to:
-  /// **'6. Submit the form to get your \"Client ID\" and \"Client Secret\".'**
-  String get fitbit_credentials_step6;
-
-  /// No description provided for @fitbit_credentials_step7.
-  ///
-  /// In en, this message translates to:
-  /// **'7. Please fill the following form to obtain access for intraday data. Without this, you cannot obtain any data from Fitbit for your trials.'**
-  String get fitbit_credentials_step7;
-
-  /// No description provided for @fitbit_credentials_step8.
-  ///
-  /// In en, this message translates to:
-  /// **'8. Copy and paste the credentials below.'**
-  String get fitbit_credentials_step8;
-
-  /// No description provided for @fitbit_credentials_success_instruction.
-  ///
-  /// In en, this message translates to:
-  /// **'Once you enter the credentials, Fitbit integration will be enabled for your study.'**
-  String get fitbit_credentials_success_instruction;
-
-  /// No description provided for @fitbit_credentials_add_question_instruction.
-  ///
-  /// In en, this message translates to:
-  /// **'To add a Fitbit question, navigate to the measurements section and create a new Fitbit Question within a measurement.'**
-  String get fitbit_credentials_add_question_instruction;
-
-  /// No description provided for @fitbit_credentials_screenshot_step1.
-  ///
-  /// In en, this message translates to:
-  /// **'Step 1: Developer Portal'**
-  String get fitbit_credentials_screenshot_step1;
-
-  /// No description provided for @fitbit_credentials_screenshot_step2.
-  ///
-  /// In en, this message translates to:
-  /// **'Step 2: Login'**
-  String get fitbit_credentials_screenshot_step2;
-
-  /// No description provided for @fitbit_credentials_screenshot_step3.
-  ///
-  /// In en, this message translates to:
-  /// **'Step 3: Register App'**
-  String get fitbit_credentials_screenshot_step3;
-
-  /// No description provided for @fitbit_credentials_screenshot_step4.
-  ///
-  /// In en, this message translates to:
-  /// **'Step 4: Input Details'**
-  String get fitbit_credentials_screenshot_step4;
-
-  /// No description provided for @fitbit_credentials_screenshot_step5.
-  ///
-  /// In en, this message translates to:
-  /// **'Step 5: Set Access'**
-  String get fitbit_credentials_screenshot_step5;
-
-  /// No description provided for @fitbit_credentials_screenshot_step6.
-  ///
-  /// In en, this message translates to:
-  /// **'Step 6: Get Credentials'**
-  String get fitbit_credentials_screenshot_step6;
-
-  /// No description provided for @fitbit_credentials_screenshot_step7.
-  ///
-  /// In en, this message translates to:
-  /// **'Step 7: Fill Form'**
-  String get fitbit_credentials_screenshot_step7;
-
-  /// No description provided for @client_id.
-  ///
-  /// In en, this message translates to:
-  /// **'Client ID'**
-  String get client_id;
-
-  /// No description provided for @client_id_label_help.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter the Client ID from Fitbit Developer Portal.'**
-  String get client_id_label_help;
-
-  /// No description provided for @client_id_hint.
-  ///
-  /// In en, this message translates to:
-  /// **'Client ID'**
-  String get client_id_hint;
-
-  /// No description provided for @client_secret.
-  ///
-  /// In en, this message translates to:
-  /// **'Client Secret'**
-  String get client_secret;
-
-  /// No description provided for @client_secret_label_help.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter the Client Secret from Fitbit Developer Portal.'**
-  String get client_secret_label_help;
-
-  /// No description provided for @client_secret_hint.
-  ///
-  /// In en, this message translates to:
-  /// **'Client Secret'**
-  String get client_secret_hint;
-
-  /// No description provided for @screenshots_for_guidance.
-  ///
-  /// In en, this message translates to:
-  /// **'Screenshots for Guidance:'**
-  String get screenshots_for_guidance;
-
-  /// No description provided for @fitbit_credentials_not_set.
-  ///
-  /// In en, this message translates to:
-  /// **'Fitbit credentials are not set. Please navigate to the \'Fitbit\' tab in the study designer to enter your Fitbit client ID and client secret. Once completed, return here to add Fitbit questions.'**
-  String get fitbit_credentials_not_set;
 }
 
 class _AppLocalizationsDelegate
