@@ -219,5 +219,57 @@
     }
   },
   "app_outdated_message": "A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!",
-  "update_now": "Update now"
+  "update_now": "Update now",
+  "text_summary_section_prefix_higher": "Your ",
+  "text_summary_section_was_higher": " was higher during intervention: ",
+  "text_summary_section_was_lower": " was lower during intervention: ",
+  "text_summary_section_compared_to": " compared to: ",
+  "text_summary_section_and": " and ",
+  "text_summary_section_no_evidence": "There was no evidence for a difference in ",
+  "text_summary_section_between": " between interventions: ",
+  "intervention": "Intervention",
+  "phase": "Phase",
+  "day": "Day",
+  "no_data_available_yet": "No data available yet",
+  "value": "Value",
+  "show_colorless_gauges": "Show Colorless Gauges",
+  "welchs_t_test_results": "Welch's t-test Results",
+  "sample_a": "Sample A",
+  "sample_b": "Sample B",
+  "sample_size": "n",
+  "mean": "mean",
+  "variance": "var",
+  "t_statistic": "t-statistic",
+  "degrees_of_freedom": "Degrees of freedom",
+  "p_value": "p-value",
+  "result_significant": "Significantly different",
+  "result_not_significant": "Not significantly different",
+  "level_of_significance": "Level of significance",
+  "t_test_outcome_based_on": "The outcome is based on the following values:",
+  "statistical_information": "Statistical Information",
+  "close": "Close",
+  "significance_level_and_p_value": "Significance level and p-value",
+  "descriptive_statistics": "Descriptive statistics",
+  "compare_results_between": "Compare results between {nameA} and {nameB}",
+  "@compare_results_between": {
+    "description": "Label for comparing results between two interventions or samples",
+    "placeholders": {
+      "nameA": {
+        "type": "String"
+      },
+      "nameB": {
+        "type": "String"
+      }
+    }
+  },
+  "missing_observations_note": "Note: Missing observations indicate days when data was not recorded.",
+  "quick_summary": "Quick Summary",
+  "average_score": "Average score",
+  "data_completeness": "Data completeness",
+  "statistic": "Statistic",
+  "total_recordings": "Total recordings",
+  "missing_recordings": "Missing recordings",
+  "average": "Average",
+  "minimum": "Minimum",
+    "maximum": "Maximum"
 }

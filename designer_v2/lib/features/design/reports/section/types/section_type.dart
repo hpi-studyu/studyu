@@ -4,12 +4,18 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 enum ReportSectionType {
   average,
-  linearRegression;
+  linearRegression,
+  textualSummary,
+  gaugeComparison,
+  descriptiveStats;
 
   static ReportSectionType of(ReportSection reportSection) {
     final typeMapping = {
       AverageSection.sectionType: ReportSectionType.average,
       LinearRegressionSection.sectionType: ReportSectionType.linearRegression,
+      TextualSummarySection.sectionType: ReportSectionType.textualSummary,
+      GaugeComparisonSection.sectionType: ReportSectionType.gaugeComparison,
+      DescriptiveStatsSection.sectionType: ReportSectionType.descriptiveStats,
     };
     if (!typeMapping.containsKey(reportSection.type)) {
       throw UnimplementedError(
@@ -25,6 +31,12 @@ enum ReportSectionType {
         return tr.reportSection_type_average;
       case ReportSectionType.linearRegression:
         return tr.reportSection_type_linearRegression;
+      case ReportSectionType.textualSummary:
+        return tr.reportSection_type_textual_summary;
+      case ReportSectionType.gaugeComparison:
+        return tr.reportSection_type_gauge_comparison;
+      case ReportSectionType.descriptiveStats:
+        return tr.reportSection_type_descriptive_statistics;
     }
   }
 
@@ -34,6 +46,12 @@ enum ReportSectionType {
         return Icons.functions_rounded;
       case ReportSectionType.linearRegression:
         return Icons.insights_rounded;
+      case ReportSectionType.textualSummary:
+        return Icons.text_snippet_rounded;
+      case ReportSectionType.gaugeComparison:
+        return Icons.speed_rounded;
+      case ReportSectionType.descriptiveStats:
+        return Icons.stacked_line_chart_rounded;
     }
   }
 
