@@ -154,6 +154,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notification_user_already_registered => 'User already registered';
 
   @override
+  String get form_field_password_current => 'Current password';
+
+  @override
+  String get form_field_password_current_hint => 'Enter current password';
+
+  @override
+  String get form_field_password_current_invalid =>
+      'Current password is invalid';
+
+  @override
+  String get form_field_reset_password => 'Reset password';
+
+  @override
+  String get change_password => 'Change password';
+
+  @override
+  String get password_change_description =>
+      'Enter a new password for your account';
+
+  @override
   String get navlink_my_studies => 'My Studies';
 
   @override

@@ -159,6 +159,26 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ein Nutzerkonto mit dieser Email-Addresse existiert bereits';
 
   @override
+  String get form_field_password_current => 'Aktuelles Passwort';
+
+  @override
+  String get form_field_password_current_hint => 'Aktuelles Passwort eingeben';
+
+  @override
+  String get form_field_password_current_invalid =>
+      'Aktuelles Passwort ist ungültig';
+
+  @override
+  String get form_field_reset_password => 'Passwort zurücksetzen';
+
+  @override
+  String get change_password => 'Passwort ändern';
+
+  @override
+  String get password_change_description =>
+      'Gib ein neues Passwort für dein Konto ein';
+
+  @override
   String get navlink_my_studies => 'Meine Studien';
 
   @override

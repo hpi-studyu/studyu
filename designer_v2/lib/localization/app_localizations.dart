@@ -374,6 +374,42 @@ abstract class AppLocalizations {
   /// **'User already registered'**
   String get notification_user_already_registered;
 
+  /// No description provided for @form_field_password_current.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get form_field_password_current;
+
+  /// No description provided for @form_field_password_current_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter current password'**
+  String get form_field_password_current_hint;
+
+  /// No description provided for @form_field_password_current_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password is invalid'**
+  String get form_field_password_current_invalid;
+
+  /// No description provided for @form_field_reset_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get form_field_reset_password;
+
+  /// No description provided for @change_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get change_password;
+
+  /// No description provided for @password_change_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a new password for your account'**
+  String get password_change_description;
+
   /// No description provided for @navlink_my_studies.
   ///
   /// In en, this message translates to:
