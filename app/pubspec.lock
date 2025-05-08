@@ -480,15 +480,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  flutter_web_auth:
-    dependency: "direct overridden"
-    description:
-      path: "."
-      ref: fix-android-kotlin
-      resolved-ref: fbd8a083629856f7081422c8c2f8861caf1d5bd2
-      url: "https://github.com/johannesvedder/flutter_web_auth.git"
-    source: git
-    version: "0.6.1"
   flutter_web_plugins:
     dependency: "direct main"
     description: flutter
