@@ -55,8 +55,6 @@ Future<int> scheduleReminderForDate(
       reminderTime,
       notificationDetails,
       payload: studyNotification.taskInstance.id,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.wallClockTime,
       // exactAllowWhileIdle only works if the exact alarm permission has been granted
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
