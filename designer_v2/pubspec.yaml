@@ -35,10 +35,8 @@ dependencies:
   reactive_range_slider: ^2.1.0
   riverpod_annotation: ^2.6.1
   rxdart: ^0.28.0
-  studyu_core:
-    path: ../core
-  studyu_flutter_common:
-    path: ../flutter_common
+  studyu_core: ^4.4.9
+  studyu_flutter_common: ^1.8.10
   supabase: ^2.7.0
   supabase_flutter: ^2.9.0
   url_launcher: ^6.3.1
