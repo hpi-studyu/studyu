@@ -152,6 +152,15 @@ scripts:
       scope: [ studyu_app, studyu_designer_v2 ]
       dirExists: web
 
+  build:web:fitbit:
+    run: |
+      melos exec -c 2 --fail-fast -- \
+        "flutter build web --dart-define=STUDYU_ENV=.env.fitbit"
+    description: Build web fitbit.
+    packageFilters:
+      scope: [ studyu_app, studyu_designer_v2 ]
+      dirExists: web
+
   build:web:app:dev:
     run: |
       melos exec -c 2 --fail-fast -- \
