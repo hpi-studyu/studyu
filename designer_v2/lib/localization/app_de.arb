@@ -755,6 +755,8 @@
   "client_secret_label_help": "Geben Sie den Client Secret aus dem Fitbit Developer Portal ein.",
   "client_secret_hint": "Client Secret",
   "screenshots_for_guidance": "Screenshots zur Anleitung:",
-  "fitbit_credentials_not_set": "Fitbit-Anmeldedaten sind nicht gesetzt. Bitte navigieren Sie zum 'Fitbit'-Tab im Studien-Designer, um Ihre Fitbit-Client-ID und Ihr Client-Secret einzugeben. Sobald dies abgeschlossen ist, kehren Sie hierher zurück, um Fitbit-Fragen hinzuzufügen."
-
+  "fitbit_credentials_not_set": "Fitbit-Anmeldedaten sind nicht gesetzt. Bitte navigieren Sie zum 'Fitbit'-Tab im Studien-Designer, um Ihre Fitbit-Client-ID und Ihr Client-Secret einzugeben. Sobald dies abgeschlossen ist, kehren Sie hierher zurück, um Fitbit-Fragen hinzuzufügen.",
+  "fitbit_question_type_heartrate_description": "Erfasst die Herzfrequenz, gemessen jede Minute über den Tag verteilt.",
+  "fitbit_question_type_steps_description": "Zeichnet die Anzahl der gegangenen Schritte auf, gemessen jede Minute.",
+  "fitbit_question_type_sleep_description": "Erfasst Schlafstadien (Wach, Leichtschlaf, Tiefschlaf, REM) in 30-Sekunden- bis 1-Minuten-Intervallen während des Schlafs."
 }
