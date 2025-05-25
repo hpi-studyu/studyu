@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev
+      - fix/task-box
     paths:
       - 'app/**'
       - 'core/**'
