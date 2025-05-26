@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-      - fix/task-box
+      - fix/task-box-lock
     paths:
       - 'app/**'
       - 'core/**'
