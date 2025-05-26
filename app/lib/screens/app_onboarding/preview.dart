@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/src/env/env.dart' as env;
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -67,31 +66,33 @@ class Preview {
     // delete study subscription and progress
     if (containsQueryPair('cmd', 'reset')) {
       if (selectedStudyObjectId != null) {
-        final List<StudySubject> subjects =
-            await SupabaseQuery.getAll<StudySubject>();
+        final userId = Supabase.instance.client.auth.currentUser!.id;
 
-        final List<StudySubject> subjectsToDelete = subjects
-            .where(
-              (subject) =>
-                  subject.userId ==
-                  Supabase.instance.client.auth.currentUser!.id,
-            )
+        // Fetch all study subjects and progress records
+        final List<StudySubject> allSubjects =
+            await SupabaseQuery.getAll<StudySubject>();
+        final List<SubjectProgress> allProgress =
+            await SupabaseQuery.getAll<SubjectProgress>();
+
+        // Filter subjects and progress related to the current user
+        final List<StudySubject> userSubjects =
+            allSubjects.where((subject) => subject.userId == userId).toList();
+
+        final List<SubjectProgress> userProgress = allProgress
+            .where((progressItem) => progressItem.subjectId == userId)
             .toList();
 
-        print("Subjects to delete: ${subjectsToDelete.length}");
-
-        for (final subject in subjectsToDelete) {
-          // todo refactor
-          await env.client
-              .from(SubjectProgress.tableName)
-              .delete()
-              .eq('subject_id', subject.id);
-          await env.client
-              .from(StudySubject.tableName)
-              .delete()
-              .eq('id', subject.id);
+        // Delete user's progress records
+        for (final progressItem in userProgress) {
+          await progressItem.delete();
         }
 
+        // Delete user's subjects
+        for (final subject in userSubjects) {
+          await subject.delete();
+        }
+
+        // Clear active study reference
         deleteActiveStudyReference();
         selectedStudyObjectId = null;
       }
@@ -188,7 +189,8 @@ class Preview {
           return subject;
         }
       } catch (e) {
-        print('[PreviewApp]: Failed fetching subject. Maybe subject was reset? Error: $e');
+        print(
+            '[PreviewApp]: Failed fetching subject. Maybe subject was reset? Error: $e');
         // todo try sign in again if token expired see loading screen
       }
     }
