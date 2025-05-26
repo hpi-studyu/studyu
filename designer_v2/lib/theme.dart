@@ -180,8 +180,8 @@ class ThemeProvider extends InheritedWidget {
         borderRadius: BorderRadius.circular(8),
       );
 
-  CardTheme cardTheme() {
-    return CardTheme(
+  CardThemeData cardThemeData() {
+    return CardThemeData(
       elevation: 0,
       shape: shapeMedium,
       clipBehavior: Clip.antiAlias,
@@ -224,8 +224,8 @@ class ThemeProvider extends InheritedWidget {
     );
   }
 
-  TabBarTheme tabBarTheme(ColorScheme colors) {
-    return TabBarTheme(
+  TabBarThemeData tabBarThemeData(ColorScheme colors) {
+    return TabBarThemeData(
       labelColor: colors.primary,
       unselectedLabelColor: colors.onSurfaceVariant,
       indicator: BoxDecoration(
@@ -479,12 +479,12 @@ class ThemeProvider extends InheritedWidget {
       pageTransitionsTheme: pageTransitionsTheme,
       colorScheme: colorScheme,
       appBarTheme: appBarTheme(colorScheme),
-      cardTheme: cardTheme(),
+      cardTheme: cardThemeData(),
       listTileTheme: listTileTheme(colorScheme),
       bottomAppBarTheme: bottomAppBarTheme(colorScheme),
       bottomNavigationBarTheme: bottomNavigationBarTheme(colorScheme),
       navigationRailTheme: navigationRailTheme(colorScheme),
-      tabBarTheme: tabBarTheme(colorScheme),
+      tabBarTheme: tabBarThemeData(colorScheme),
       drawerTheme: drawerTheme(colorScheme),
       snackBarTheme: snackBarThemeData(colorScheme),
       scaffoldBackgroundColor:
@@ -510,12 +510,12 @@ class ThemeProvider extends InheritedWidget {
       pageTransitionsTheme: pageTransitionsTheme,
       colorScheme: colorScheme,
       appBarTheme: appBarTheme(colorScheme),
-      cardTheme: cardTheme(),
+      cardTheme: cardThemeData(),
       listTileTheme: listTileTheme(colorScheme),
       bottomAppBarTheme: bottomAppBarTheme(colorScheme),
       bottomNavigationBarTheme: bottomNavigationBarTheme(colorScheme),
       navigationRailTheme: navigationRailTheme(colorScheme),
-      tabBarTheme: tabBarTheme(colorScheme),
+      tabBarTheme: tabBarThemeData(colorScheme),
       drawerTheme: drawerTheme(colorScheme),
       snackBarTheme: snackBarThemeData(colorScheme),
       scaffoldBackgroundColor: colorScheme.surface,
