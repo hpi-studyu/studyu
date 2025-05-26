@@ -6,7 +6,8 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
-import 'package:studyu_app/screens/app_onboarding/preview.dart';
+import 'package:studyu_app/screens/app_onboarding/preview.dart'
+    as study_preview;
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/cache.dart';
@@ -121,7 +122,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       "Preview: Found query parameters ${widget.queryParameters}",
     );
     final lang = AppLanguage(AppLocalizations.supportedLocales);
-    final preview = Preview(
+    final preview = study_preview.Preview(
       widget.queryParameters,
       lang,
     );
