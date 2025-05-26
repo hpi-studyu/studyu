@@ -520,10 +520,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         scaleMidLabelControls.clear();
         scaleMidLabelControls.value = data.midLabels;
         scaleMinColorControl.value = data.minColor != null
-            ? SerializableColor(data.minColor!.value)
+            ? SerializableColor(data.minColor!.toARGB32())
             : null;
         scaleMaxColorControl.value = data.maxColor != null
-            ? SerializableColor(data.maxColor!.value)
+            ? SerializableColor(data.maxColor!.toARGB32())
             : null;
         _updateScaleMidValueControls();
       // TODO scaleInitialValueControl

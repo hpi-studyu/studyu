@@ -20,6 +20,7 @@ enum AuthFormKey {
   signup,
   passwordForgot,
   passwordRecovery,
+  passwordReset,
   _loginSubmit,
   _signupSubmit;
 
@@ -33,6 +34,8 @@ enum AuthFormKey {
         return tr.password_forgot_page_title;
       case passwordRecovery:
         return tr.password_recover_page_title;
+      case passwordReset:
+        return tr.change_password;
       default:
         return "[AuthFormKey.title]";
     }
@@ -46,6 +49,8 @@ enum AuthFormKey {
         return tr.signup_page_description;
       case passwordForgot:
         return tr.password_forgot_page_description;
+      case passwordReset:
+        return tr.password_change_description;
       default:
         return null;
     }
@@ -57,9 +62,9 @@ class AuthFormController extends _$AuthFormController
     implements IFormGroupController {
   @override
   AsyncValue<void> build(AuthFormKey formKeyArg) {
-    authRepository = ref.watch(authRepositoryProvider);
-    notificationService = ref.watch(notificationServiceProvider);
-    router = ref.watch(routerProvider);
+    _authRepository = ref.watch(authRepositoryProvider);
+    _notificationService = ref.watch(notificationServiceProvider);
+    _router = ref.watch(routerProvider);
 
     formKey = formKeyArg;
     resetControlsFor(formKey);
@@ -71,11 +76,11 @@ class AuthFormController extends _$AuthFormController
         switch (error.message) {
           case "Invalid login credentials":
             print("authFormController.state listen self");
-            notificationService.show(Notifications.credentialsInvalid);
+            _notificationService.show(Notifications.credentialsInvalid);
           case "User already registered":
-            notificationService.show(Notifications.userAlreadyRegistered);
+            _notificationService.show(Notifications.userAlreadyRegistered);
           default:
-            notificationService.showMessage(error.message);
+            _notificationService.showMessage(error.message);
         }
       }
     });
@@ -89,13 +94,14 @@ class AuthFormController extends _$AuthFormController
     return const AsyncValue.data(null);
   }
 
-  late final IAuthRepository authRepository;
-  late final INotificationService notificationService;
-  late final GoRouter router;
+  late final IAuthRepository _authRepository;
+  late final INotificationService _notificationService;
+  late final GoRouter _router;
 
   // - Form controls
 
   final FormControl<String> emailControl = FormControl();
+  final FormControl<String> oldPasswordControl = FormControl();
   final FormControl<String> passwordControl = FormControl();
   final FormControl<String> passwordConfirmationControl = FormControl();
   final FormControl<bool> termsOfServiceControl = FormControl(value: false);
@@ -105,16 +111,16 @@ class AuthFormController extends _$AuthFormController
     ValidationMessage.email: (_) => tr.form_field_email_invalid,
     ValidationMessage.mustMatch: (_) => tr.form_field_password_mustmatch,
     ValidationMessage.minLength: (error) => tr.form_field_password_minlength(
-          (error as Map)['requiredLength'].toString(),
+          (error as Map)['requiredLength'] as num,
         ),
   };
 
-  late final FormGroup loginForm = FormGroup({
+  late final FormGroup _loginForm = FormGroup({
     'email': emailControl,
     'password': passwordControl,
   });
 
-  late final FormGroup signupForm = FormGroup(
+  late final FormGroup _signupForm = FormGroup(
     {
       'email': emailControl,
       'password': passwordControl,
@@ -126,11 +132,11 @@ class AuthFormController extends _$AuthFormController
     ],
   );
 
-  late final FormGroup passwordForgotForm = FormGroup({
+  late final FormGroup _passwordForgotForm = FormGroup({
     'email': emailControl,
   });
 
-  late final FormGroup passwordRecoveryForm = FormGroup(
+  late final FormGroup _passwordRecoveryForm = FormGroup(
     {
       'password': passwordControl,
       'passwordConfirmation': passwordConfirmationControl,
@@ -140,8 +146,19 @@ class AuthFormController extends _$AuthFormController
     ],
   );
 
+  late final FormGroup _passwordResetForm = FormGroup(
+    {
+      'oldPassword': oldPasswordControl,
+      'password': passwordControl,
+      'passwordConfirmation': passwordConfirmationControl,
+    },
+    validators: [
+      Validators.mustMatch('password', 'passwordConfirmation'),
+    ],
+  );
+
   late final Map<AuthFormKey, Map<FormControl, List<Validator<dynamic>>>>
-      controlValidatorsByForm = {
+      _controlValidatorsByForm = {
     AuthFormKey.signup: {
       emailControl: [Validators.required, Validators.email],
       passwordControl: [Validators.minLength(8)],
@@ -165,10 +182,16 @@ class AuthFormController extends _$AuthFormController
       passwordControl: [Validators.required, Validators.minLength(8)],
       passwordConfirmationControl: [Validators.required],
     },
+    AuthFormKey.passwordReset: {
+      oldPasswordControl: [Validators.required, Validators.minLength(8)],
+      passwordControl: [Validators.required, Validators.minLength(8)],
+      passwordConfirmationControl: [Validators.required],
+    },
   };
 
   AuthFormKey _formKey = AuthFormKey.login;
   AuthFormKey get formKey => _formKey;
+
   set formKey(AuthFormKey key) {
     if (!AuthFormKey.values.contains(key)) {
       throw Exception("Unknown AuthFormKey");
@@ -183,13 +206,15 @@ class AuthFormController extends _$AuthFormController
   FormGroup? _getFormFor(AuthFormKey key) {
     switch (key) {
       case AuthFormKey.login:
-        return loginForm;
+        return _loginForm;
       case AuthFormKey.signup:
-        return signupForm;
+        return _signupForm;
       case AuthFormKey.passwordForgot:
-        return passwordForgotForm;
+        return _passwordForgotForm;
       case AuthFormKey.passwordRecovery:
-        return passwordRecoveryForm;
+        return _passwordRecoveryForm;
+      case AuthFormKey.passwordReset:
+        return _passwordResetForm;
       default:
         return null;
     }
@@ -200,7 +225,7 @@ class AuthFormController extends _$AuthFormController
   }
 
   void resetControlsFor(AuthFormKey key) {
-    final formControlValidators = controlValidatorsByForm[key];
+    final formControlValidators = _controlValidatorsByForm[key];
     if (formControlValidators != null) {
       for (final entry in formControlValidators.entries) {
         final control = entry.key;
@@ -238,7 +263,7 @@ class AuthFormController extends _$AuthFormController
     }
     try {
       state = const AsyncValue.loading();
-      return await authRepository.signUp(email: email, password: password);
+      return await _authRepository.signUp(email: email, password: password);
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     } finally {
@@ -261,7 +286,7 @@ class AuthFormController extends _$AuthFormController
     try {
       state = const AsyncValue.loading();
       final response =
-          await authRepository.signInWith(email: email, password: password);
+          await _authRepository.signInWith(email: email, password: password);
       return response;
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -274,7 +299,7 @@ class AuthFormController extends _$AuthFormController
   Future<void> signOut() async {
     try {
       state = const AsyncValue.loading();
-      return await authRepository.signOut();
+      return await _authRepository.signOut();
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     } finally {
@@ -285,7 +310,7 @@ class AuthFormController extends _$AuthFormController
   Future<void> resetPasswordForEmail(String email) async {
     try {
       state = const AsyncValue.loading();
-      return await authRepository.resetPasswordForEmail(email: email);
+      return await _authRepository.resetPasswordForEmail(email: email);
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     } finally {
@@ -298,24 +323,40 @@ class AuthFormController extends _$AuthFormController
       return Future.value();
     }
     return resetPasswordForEmail(emailControl.value!)
-        .then((_) => notificationService.show(Notifications.passwordReset));
+        .then((_) => _notificationService.show(Notifications.passwordReset));
   }
 
-  Future<void> recoverPassword() async {
+  Future<void> recoverPassword() {
     if (!form.valid) {
       return Future.value();
     }
     return updateUser(passwordControl.value!)
         .then(
-          (_) => notificationService.show(Notifications.passwordResetSuccess),
+          (_) => _notificationService.show(Notifications.passwordResetSuccess),
         )
-        .then((_) => router.dispatch(RoutingIntents.studies));
+        .then((_) => _router.dispatch(RoutingIntents.studies));
+  }
+
+  Future<bool> resetPassword() async {
+    if (!form.valid) {
+      return false;
+    }
+
+    final isOldPasswordValid =
+        await _isOldPasswordValid(oldPasswordControl.value!);
+
+    if (!isOldPasswordValid) {
+      return false;
+    }
+
+    return updateUser(passwordControl.value!);
   }
 
   Future<bool> updateUser(String newPassword) async {
     try {
       state = const AsyncValue.loading();
-      return (await authRepository.updateUser(newPassword: newPassword)).user !=
+      return (await _authRepository.updateUser(newPassword: newPassword))
+              .user !=
           null;
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -323,6 +364,27 @@ class AuthFormController extends _$AuthFormController
       state = const AsyncValue.data(null);
     }
     return false;
+  }
+
+  Future<bool> _isOldPasswordValid(String oldPassword) async {
+    if (oldPassword.isEmpty || _authRepository.currentUser?.email == null) {
+      return false;
+    }
+
+    try {
+      state = const AsyncValue.loading();
+
+      final response = await _authRepository.signInWith(
+        email: _authRepository.currentUser!.email!,
+        password: oldPassword,
+      );
+
+      return response.session != null;
+    } catch (e) {
+      return false;
+    } finally {
+      state = const AsyncValue.data(null);
+    }
   }
 
   Future<void> _readDebugUser() async {

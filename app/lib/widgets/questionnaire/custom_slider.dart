@@ -153,7 +153,7 @@ class CustomSlider extends StatelessWidget {
               inactiveTickMarkColor: isColored ? activeColor : null,
               activeTrackColor: activeColor,
               inactiveTrackColor: inactiveColor,
-              overlayColor: activeColor?.withOpacity(0.1),
+              overlayColor: activeColor?.withValues(alpha: 0.1),
               thumbColor: thumbColor,
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 15.0),
               trackShape: CustomTrackShape(),

@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rainbow_color/rainbow_color.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/generic_section.dart';
 import 'package:studyu_core/core.dart';
 
@@ -150,7 +150,7 @@ class PerformanceBar extends StatelessWidget {
       rangeEnd: 1,
     );
     final fullSpectrum = List<double>.generate(3, (index) => index * 0.5)
-        .map<Color>((index) => rainbow[index].withOpacity(0.4))
+        .map<Color>((index) => rainbow[index].withValues(alpha: 0.4))
         .toList();
     final colorSamples =
         List<double>.generate(11, (index) => index * 0.1 * progress)

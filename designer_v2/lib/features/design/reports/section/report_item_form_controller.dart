@@ -84,6 +84,9 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
       'improvementDirection': improvementDirectionControl,
       'alphaControl': alphaControl,
     }),
+    ReportSectionType.textualSummary: FormGroup({}),
+    ReportSectionType.gaugeComparison: FormGroup({}),
+    ReportSectionType.descriptiveStats: FormGroup({}),
   };
 
   late final FormValidationConfigSet _sharedValidationConfig = {
@@ -124,6 +127,21 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
         improvementDirectionRequired,
         alphaConfidenceRequired,
       ],
+    },
+    ReportSectionType.textualSummary: {
+      StudyFormValidationSet.draft: [],
+      StudyFormValidationSet.publish: [],
+      StudyFormValidationSet.test: [],
+    },
+    ReportSectionType.gaugeComparison: {
+      StudyFormValidationSet.draft: [],
+      StudyFormValidationSet.publish: [],
+      StudyFormValidationSet.test: [],
+    },
+    ReportSectionType.descriptiveStats: {
+      StudyFormValidationSet.draft: [],
+      StudyFormValidationSet.publish: [],
+      StudyFormValidationSet.test: [],
     },
   };
 
@@ -239,6 +257,21 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
           linearSection.alpha = alphaControl.value!;
           linearSection.resultProperty = dataReferenceControl.value;
           return linearSection;
+        case ReportSectionType.textualSummary:
+          final TextualSummarySection textualSummarySection =
+              TextualSummarySection();
+          textualSummarySection.resultProperty = dataReferenceControl.value;
+          return textualSummarySection;
+        case ReportSectionType.gaugeComparison:
+          final GaugeComparisonSection gaugeComparisonSection =
+              GaugeComparisonSection();
+          gaugeComparisonSection.resultProperty = dataReferenceControl.value;
+          return gaugeComparisonSection;
+        case ReportSectionType.descriptiveStats:
+          final DescriptiveStatsSection descriptiveStatsSection =
+              DescriptiveStatsSection();
+          descriptiveStatsSection.resultProperty = dataReferenceControl.value;
+          return descriptiveStatsSection;
       }
     }
 
@@ -321,6 +354,30 @@ class ReportItemFormViewModel extends ManagedFormViewModel<ReportItemFormData> {
         dataReferenceControl.value = DataReferenceIdentifier(
           linearRegressionSection.resultProperty!.task,
           linearRegressionSection.resultProperty!.property,
+        );
+      case ReportSectionType.textualSummary:
+        final TextualSummarySection textualSummarySection =
+            data.section as TextualSummarySection;
+
+        dataReferenceControl.value = DataReferenceIdentifier(
+          textualSummarySection.resultProperty!.task,
+          textualSummarySection.resultProperty!.property,
+        );
+      case ReportSectionType.gaugeComparison:
+        final GaugeComparisonSection gaugeComparisonSection =
+            data.section as GaugeComparisonSection;
+
+        dataReferenceControl.value = DataReferenceIdentifier(
+          gaugeComparisonSection.resultProperty!.task,
+          gaugeComparisonSection.resultProperty!.property,
+        );
+      case ReportSectionType.descriptiveStats:
+        final DescriptiveStatsSection descriptiveStatsSection =
+            data.section as DescriptiveStatsSection;
+
+        dataReferenceControl.value = DataReferenceIdentifier(
+          descriptiveStatsSection.resultProperty!.task,
+          descriptiveStatsSection.resultProperty!.property,
         );
     }
   }

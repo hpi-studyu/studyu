@@ -133,6 +133,7 @@
   "video_test": "Das ist ein Videotest",
   "survey_test": "Das ist ein Umfragetest",
 
+  "current_report": "Aktueller Bericht",
   "report_history": "Reportverlauf",
   "current_power_level": "Aktueller Status",
   "not_enough_data": "Nicht genügend Daten",
@@ -198,13 +199,17 @@
   "free_text_min_length_error": "Bitte geben Sie mindestens {min} Zeichen ein",
   "@free_text_min_length_error": {
     "placeholders": {
-      "min": {}
+      "min": {
+        "type": "num"
+      }
     }
   },
   "free_text_max_length_error": "Bitte geben Sie maximal {max} Zeichen ein",
   "@free_text_max_length_error": {
     "placeholders": {
-      "max": {}
+      "max": {
+        "type": "num"
+      }
     }
   },
   "free_text_alphanumeric_error": "Bitte geben Sie nur alphanumerische Zeichen ein",
@@ -212,9 +217,63 @@
   "free_text_custom_error": "Bitte geben Sie nur Zeichen ein, die dem Muster {pattern} entsprechen",
   "@free_text_custom_error": {
     "placeholders": {
-      "pattern": {}
+      "pattern": {
+        "type": "String"
+      }
     }
   },
   "app_outdated_message": "Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!",
-  "update_now": "Jetzt aktualisieren"
+  "update_now": "Jetzt aktualisieren",
+  "text_summary_section_prefix_higher": "Dein ",
+  "text_summary_section_was_higher": " war höher während der Intervention: ",
+  "text_summary_section_was_lower": " war niedriger während der Intervention: ",
+  "text_summary_section_compared_to": " im Vergleich zu: ",
+  "text_summary_section_and": " und ",
+  "text_summary_section_no_evidence": "Es gab keinen Hinweis auf einen Unterschied bei ",
+  "text_summary_section_between": " zwischen den Interventionen: ",
+  "intervention": "Intervention",
+  "phase": "Phase",
+  "day": "Tag",
+  "no_data_available_yet": "Noch keine Daten verfügbar",
+  "value": "Wert",
+  "show_colorless_gauges": "Barrierefreie Diagramme anzeigen",
+  "welchs_t_test_results": "Welchs t-Test Ergebnisse",
+  "sample_a": "Stichprobe A",
+  "sample_b": "Stichprobe B",
+  "sample_size": "n",
+  "mean": "Mittelwert",
+  "variance": "Varianz",
+  "t_statistic": "t-Wert",
+  "degrees_of_freedom": "Freiheitsgrade",
+  "p_value": "p-Wert",
+  "result_significant": "Signifikanter Unterschied",
+  "result_not_significant": "Kein signifikanter Unterschied",
+  "level_of_significance": "Signifikanzniveau",
+  "t_test_outcome_based_on": "Das Ergebnis basiert auf den folgenden Werten:",
+  "statistical_information": "Statistische Informationen",
+  "close": "Schließen",
+  "significance_level_and_p_value": "Signifikanzniveau und p-Wert",
+  "descriptive_statistics": "Deskriptive Statistik",
+  "compare_results_between": "Vergleiche Ergebnisse zwischen {nameA} und {nameB}",
+  "@compare_results_between": {
+    "description": "Bezeichnung für den Vergleich der Ergebnisse zwischen zwei Interventionen oder Stichproben",
+    "placeholders": {
+      "nameA": {
+        "type": "String"
+      },
+      "nameB": {
+        "type": "String"
+      }
+    }
+  },
+  "missing_observations_note": "Hinweis: Fehlende Beobachtungen bedeuten, dass an diesen Tagen keine Daten aufgezeichnet wurden.",
+  "quick_summary": "Kurzfassung",
+  "average_score": "Durchschnittswert",
+  "data_completeness": "Datenvollständigkeit",
+  "statistic": "Statistik",
+  "total_recordings": "Gesamtaufzeichnungen",
+  "missing_recordings": "Fehlende Aufzeichnungen",
+  "average": "Durchschnitt",
+  "minimum": "Minimum",
+  "maximum": "Maximum"
 }

@@ -37,8 +37,6 @@ extension StudyActionTypeFormatted on StudyActionType {
         return "[StudyActionType.addCollaborator]"; // todo not implemented yet
       case StudyActionType.export:
         return tr.action_study_export_results;
-      default:
-        return "[Invalid ModelActionType]";
     }
   }
 }
@@ -68,8 +66,6 @@ extension StudyStatusFormatted on StudyStatus {
         return tr.study_status_running;
       case StudyStatus.closed:
         return tr.study_status_closed;
-      default:
-        return "[Invalid StudyStatus]";
     }
   }
 
@@ -81,8 +77,6 @@ extension StudyStatusFormatted on StudyStatus {
         return tr.study_status_running_description;
       case StudyStatus.closed:
         return tr.study_status_closed_description;
-      default:
-        return "[Invalid StudyStatus]";
     }
   }
 }
@@ -143,6 +137,21 @@ extension StudyDuplicateX on Study {
               oldObservationIdToNew[report.resultProperty?.task]!;
         }
       } else if (report is core.LinearRegressionSection) {
+        if (oldObservationIdToNew.containsKey(report.resultProperty?.task)) {
+          report.resultProperty?.task =
+              oldObservationIdToNew[report.resultProperty?.task]!;
+        }
+      } else if (report is core.TextualSummarySection) {
+        if (oldObservationIdToNew.containsKey(report.resultProperty?.task)) {
+          report.resultProperty?.task =
+              oldObservationIdToNew[report.resultProperty?.task]!;
+        }
+      } else if (report is core.GaugeComparisonSection) {
+        if (oldObservationIdToNew.containsKey(report.resultProperty?.task)) {
+          report.resultProperty?.task =
+              oldObservationIdToNew[report.resultProperty?.task]!;
+        }
+      } else if (report is core.DescriptiveStatsSection) {
         if (oldObservationIdToNew.containsKey(report.resultProperty?.task)) {
           report.resultProperty?.task =
               oldObservationIdToNew[report.resultProperty?.task]!;

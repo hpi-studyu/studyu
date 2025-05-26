@@ -21,11 +21,7 @@ extension StudyExportZipX on StudyExportData {
     };
 
     files.forEach((filename, content) {
-      final archiveFile = ArchiveFile.string(
-        filename,
-        // todo sanitize contents manually until archive v4 is released
-        content.replaceAll('’', "'").replaceAll('…', '...'),
-      );
+      final archiveFile = ArchiveFile.string(filename, content);
       archive.addFile(archiveFile);
     });
 

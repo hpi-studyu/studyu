@@ -140,7 +140,7 @@ class ReactiveCustomColorPicker<T> extends ReactiveFormField<T, Color> {
                                   // superclass that color_picker expects &
                                   // the [SerializableColor] type of the control
                                   field.didChange(
-                                    SerializableColor(color.value),
+                                    SerializableColor(color.toARGB32()),
                                   );
                                 },
                               );

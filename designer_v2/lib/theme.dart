@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 
 class DropdownMenuItemTheme with Diagnosticable {
   const DropdownMenuItemTheme({this.iconTheme});
@@ -18,13 +17,13 @@ class ThemeConfig {
   static const double kMuteFadeFactor = 0.8;
 
   static Color bodyBackgroundColor(ThemeData theme) =>
-      theme.scaffoldBackgroundColor.faded(0.5);
+      theme.scaffoldBackgroundColor.withValues(alpha: 0.5);
 
   static Color modalBarrierColor(ThemeData theme) =>
-      theme.colorScheme.secondary.withOpacity(0.4);
+      theme.colorScheme.secondary.withValues(alpha: 0.4);
 
   static Color containerColor(ThemeData theme) =>
-      theme.colorScheme.secondaryContainer.withOpacity(0.3);
+      theme.colorScheme.secondaryContainer.withValues(alpha: 0.3);
 
   static Color colorPickerInitialColor(ThemeData theme) =>
       theme.colorScheme.primary;
@@ -32,19 +31,19 @@ class ThemeConfig {
   static TextStyle bodyTextMuted(ThemeData theme) => TextStyle(
         fontSize: 14.0,
         height: 1.35,
-        color: theme.textTheme.bodyLarge?.color?.faded(0.65),
+        color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 0.65),
       );
 
   static TextStyle bodyTextBackground(ThemeData theme) => TextStyle(
         fontSize: 14.0,
         height: 1.35,
-        color: theme.colorScheme.onSurface.withOpacity(0.25),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
       );
 
   static double iconSplashRadius(ThemeData theme) => 24.0;
 
   static Color sidesheetBackgroundColor(ThemeData theme) =>
-      theme.scaffoldBackgroundColor.withOpacity(0.15);
+      theme.scaffoldBackgroundColor.withValues(alpha: 0.15);
 
   static InputDecorationTheme dropdownInputDecorationTheme(ThemeData theme) =>
       theme.inputDecorationTheme.copyWith(
@@ -54,8 +53,7 @@ class ThemeConfig {
   static DropdownMenuItemTheme dropdownMenuItemTheme(ThemeData theme) =>
       DropdownMenuItemTheme(
         iconTheme: IconThemeData(
-          color: theme.textTheme.bodyLarge?.color?.faded(0.4),
-          // theme.iconTheme.color?.faded(0.75)
+          color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 0.4),
           size: 18.0,
         ),
       );
@@ -145,7 +143,8 @@ class ThemeProvider extends InheritedWidget {
 
   Color blend(Color targetColor) {
     return Color(
-      Blend.harmonize(targetColor.value, settings.value.sourceColor.value),
+      Blend.harmonize(
+          targetColor.toARGB32(), settings.value.sourceColor.toARGB32()),
     );
   }
 
@@ -163,8 +162,8 @@ class ThemeProvider extends InheritedWidget {
         : darkDynamic?.primary;
     final scheme = SchemeFidelity(
       sourceColorHct: dynamicPrimary != null
-          ? Hct.fromInt(dynamicPrimary.value)
-          : Hct.fromInt(source(targetColor).value),
+          ? Hct.fromInt(dynamicPrimary.toARGB32())
+          : Hct.fromInt(source(targetColor).toARGB32()),
       isDark: false,
       contrastLevel: 0.0,
     );
@@ -181,8 +180,8 @@ class ThemeProvider extends InheritedWidget {
         borderRadius: BorderRadius.circular(8),
       );
 
-  CardTheme cardTheme() {
-    return CardTheme(
+  CardThemeData cardThemeData() {
+    return CardThemeData(
       elevation: 0,
       shape: shapeMedium,
       clipBehavior: Clip.antiAlias,
@@ -201,15 +200,15 @@ class ThemeProvider extends InheritedWidget {
     return AppBarTheme(
       elevation: 2,
       //backgroundColor: Colors.transparent,
-      //backgroundColor: colors.surface.withOpacity(0.1),
+      //backgroundColor: colors.surface.withValues(alpha: 0.1),
       backgroundColor: Colors.white,
       foregroundColor: colors.onSurface,
       surfaceTintColor: Colors.white,
-      shadowColor: colors.primaryContainer.withOpacity(0.3),
+      shadowColor: colors.primaryContainer.withValues(alpha: 0.3),
       /*
       shape: Border(
           bottom: BorderSide(
-              color: colors.secondary.withOpacity(0.1),
+              color: colors.secondary.withValues(alpha: 0.1),
               width: 1
           )
       ),
@@ -225,8 +224,8 @@ class ThemeProvider extends InheritedWidget {
     );
   }
 
-  TabBarTheme tabBarTheme(ColorScheme colors) {
-    return TabBarTheme(
+  TabBarThemeData tabBarThemeData(ColorScheme colors) {
+    return TabBarThemeData(
       labelColor: colors.primary,
       unselectedLabelColor: colors.onSurfaceVariant,
       indicator: BoxDecoration(
@@ -263,26 +262,26 @@ class ThemeProvider extends InheritedWidget {
       thumbColor: WidgetStateColor.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           if (states.contains(WidgetState.disabled)) {
-            return colors.primary.withOpacity(0.6);
+            return colors.primary.withValues(alpha: 0.6);
           }
           return colors.primary;
         }
         if (states.contains(WidgetState.disabled)) {
-          return Colors.white.withOpacity(0.6);
+          return Colors.white.withValues(alpha: 0.6);
         }
         return Colors.white;
       }),
       trackColor: WidgetStateColor.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           if (states.contains(WidgetState.disabled)) {
-            return colors.primary.withOpacity(0.5 * 0.6);
+            return colors.primary.withValues(alpha: 0.5 * 0.6);
           }
-          return colors.primary.withOpacity(0.5);
+          return colors.primary.withValues(alpha: 0.5);
         }
         if (states.contains(WidgetState.disabled)) {
-          return colors.onSurface.withOpacity(0.3 * 0.6);
+          return colors.onSurface.withValues(alpha: 0.3 * 0.6);
         }
-        return colors.onSurface.withOpacity(0.3);
+        return colors.onSurface.withValues(alpha: 0.3);
       }),
     );
   }
@@ -294,18 +293,19 @@ class ThemeProvider extends InheritedWidget {
       hoverColor: Colors.white,
       focusColor: Colors.white,
       isDense: true,
-      hintStyle: TextStyle(color: colors.onSurfaceVariant.withOpacity(0.4)),
+      hintStyle:
+          TextStyle(color: colors.onSurfaceVariant.withValues(alpha: 0.4)),
       contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
-          color: colors.surfaceContainerHighest.withOpacity(0.6),
+          color: colors.surfaceContainerHighest.withValues(alpha: 0.6),
         ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
         borderSide: BorderSide(
-          color: colors.surfaceContainerHighest.withOpacity(0.8),
+          color: colors.surfaceContainerHighest.withValues(alpha: 0.8),
         ),
       ),
       focusedBorder: OutlineInputBorder(
@@ -335,27 +335,30 @@ class ThemeProvider extends InheritedWidget {
     final headlineColor = colors.onSurfaceVariant;
 
     return TextTheme(
-      labelLarge:
-          TextStyle(fontSize: 14.0, color: colors.onSurface.withOpacity(0.9)),
+      labelLarge: TextStyle(
+          fontSize: 14.0, color: colors.onSurface.withValues(alpha: 0.9)),
       bodySmall: TextStyle(
         fontSize: 14.0,
         height: 1.35,
-        color: colors.onSurface.withOpacity(0.9),
+        //withOpacity(0.9)
+        color: colors.onSurface.withValues(
+          alpha: 0.9,
+        ),
       ), // Form Labels
       titleMedium: TextStyle(
         fontSize: 14.0,
         height: 1.35,
-        color: colors.onSurface.withOpacity(0.9),
+        color: colors.onSurface.withValues(alpha: 0.9),
       ), // TextInput
       bodyLarge: TextStyle(
         fontSize: 14.0,
         height: 1.35,
-        color: colors.onSurface.withOpacity(0.9),
+        color: colors.onSurface.withValues(alpha: 0.9),
       ),
       bodyMedium: TextStyle(
         fontSize: 14.0,
         height: 1.35,
-        color: colors.onSurface.withOpacity(0.8),
+        color: colors.onSurface.withValues(alpha: 0.8),
       ),
       titleLarge: TextStyle(
         fontSize: 15.0,
@@ -393,7 +396,7 @@ class ThemeProvider extends InheritedWidget {
   DividerThemeData dividerTheme(ColorScheme colors) {
     return DividerThemeData(
       thickness: 0.5,
-      color: colors.onPrimaryContainer.withOpacity(0.15),
+      color: colors.onPrimaryContainer.withValues(alpha: 0.15),
     );
   }
 
@@ -407,7 +410,8 @@ class ThemeProvider extends InheritedWidget {
 
   IconThemeData iconTheme(ColorScheme colors) {
     return IconThemeData(
-      color: colors.onSurface.withOpacity(0.8),
+      color: colors.onSurface,
+      opacity: 0.8,
       size: 17.0,
     );
   }
@@ -418,14 +422,14 @@ class ThemeProvider extends InheritedWidget {
       fillColor: WidgetStateColor.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
           if (states.contains(WidgetState.disabled)) {
-            return colors.primary.withOpacity(0.5 * 1.0);
+            return colors.primary.withValues(alpha: 0.5 * 1.0);
           }
-          return colors.primary.withOpacity(1.0);
+          return colors.primary.withValues(alpha: 1.0);
         }
         return Colors.transparent;
       }),
       side: BorderSide(
-        color: colors.secondary.withOpacity(0.2),
+        color: colors.secondary.withValues(alpha: 0.2),
         width: 1.5,
       ),
     );
@@ -440,7 +444,7 @@ class ThemeProvider extends InheritedWidget {
           return null;
         }
         if (states.contains(WidgetState.selected)) {
-          return colors.primary.withOpacity(0.9);
+          return colors.primary.withValues(alpha: 0.9);
         }
         return null;
       }),
@@ -452,16 +456,16 @@ class ThemeProvider extends InheritedWidget {
       padding: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 11.0),
       textStyle: textTheme(colors).bodySmall!.copyWith(color: colors.onPrimary),
       decoration: BoxDecoration(
-        color: colors.secondary.withOpacity(0.9),
+        color: colors.secondary.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(2.0),
         boxShadow: [
           BoxShadow(
-            color: colors.primaryContainer.withOpacity(0.1),
+            color: colors.primaryContainer.withValues(alpha: 0.1),
             blurRadius: 1,
             spreadRadius: 2,
           ),
           BoxShadow(
-            color: colors.secondary.withOpacity(0.3),
+            color: colors.secondary.withValues(alpha: 0.3),
             blurRadius: 3,
           ),
         ],
@@ -475,18 +479,19 @@ class ThemeProvider extends InheritedWidget {
       pageTransitionsTheme: pageTransitionsTheme,
       colorScheme: colorScheme,
       appBarTheme: appBarTheme(colorScheme),
-      cardTheme: cardTheme(),
+      cardTheme: cardThemeData(),
       listTileTheme: listTileTheme(colorScheme),
       bottomAppBarTheme: bottomAppBarTheme(colorScheme),
       bottomNavigationBarTheme: bottomNavigationBarTheme(colorScheme),
       navigationRailTheme: navigationRailTheme(colorScheme),
-      tabBarTheme: tabBarTheme(colorScheme),
+      tabBarTheme: tabBarThemeData(colorScheme),
       drawerTheme: drawerTheme(colorScheme),
       snackBarTheme: snackBarThemeData(colorScheme),
-      scaffoldBackgroundColor: colorScheme.primaryContainer.withOpacity(0.15),
+      scaffoldBackgroundColor:
+          colorScheme.primaryContainer.withValues(alpha: 0.15),
       dividerTheme: dividerTheme(colorScheme),
-      //splashColor: colorScheme.secondary.withOpacity(0.4),
-      //highlightColor: colorScheme.secondary.withOpacity(0.3),
+      //splashColor: colorScheme.secondary.withValues(alpha: 0.4),
+      //highlightColor: colorScheme.secondary.withValues(alpha: 0.3),
       inputDecorationTheme: inputDecorationTheme(colorScheme),
       switchTheme: switchTheme(colorScheme),
       textTheme: textTheme(colorScheme),
@@ -494,8 +499,8 @@ class ThemeProvider extends InheritedWidget {
       checkboxTheme: checkboxTheme(colorScheme),
       radioTheme: radioTheme(colorScheme),
       tooltipTheme: tooltipTheme(colorScheme),
-      disabledColor: colorScheme.onSurface.withOpacity(0.5),
-      shadowColor: colorScheme.primaryContainer.withOpacity(0.4),
+      disabledColor: colorScheme.onSurface.withValues(alpha: 0.5),
+      shadowColor: colorScheme.primaryContainer.withValues(alpha: 0.4),
     );
   }
 
@@ -505,12 +510,12 @@ class ThemeProvider extends InheritedWidget {
       pageTransitionsTheme: pageTransitionsTheme,
       colorScheme: colorScheme,
       appBarTheme: appBarTheme(colorScheme),
-      cardTheme: cardTheme(),
+      cardTheme: cardThemeData(),
       listTileTheme: listTileTheme(colorScheme),
       bottomAppBarTheme: bottomAppBarTheme(colorScheme),
       bottomNavigationBarTheme: bottomNavigationBarTheme(colorScheme),
       navigationRailTheme: navigationRailTheme(colorScheme),
-      tabBarTheme: tabBarTheme(colorScheme),
+      tabBarTheme: tabBarThemeData(colorScheme),
       drawerTheme: drawerTheme(colorScheme),
       snackBarTheme: snackBarThemeData(colorScheme),
       scaffoldBackgroundColor: colorScheme.surface,
@@ -521,8 +526,8 @@ class ThemeProvider extends InheritedWidget {
       checkboxTheme: checkboxTheme(colorScheme),
       radioTheme: radioTheme(colorScheme),
       tooltipTheme: tooltipTheme(colorScheme),
-      disabledColor: colorScheme.onSurface.withOpacity(0.5),
-      shadowColor: colorScheme.primaryContainer.withOpacity(0.4),
+      disabledColor: colorScheme.onSurface.withValues(alpha: 0.5),
+      shadowColor: colorScheme.primaryContainer.withValues(alpha: 0.4),
     );
   }
 

@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/features/design/reports/section/report_item_f
 import 'package:studyu_designer_v2/features/design/reports/section/types/data_reference_editor.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/section_type.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
@@ -51,7 +52,8 @@ class AverageSectionFormView extends ConsumerWidget {
                 ),
                 child: ReactiveDropdownField<TemporalAggregationFormatted>(
                   formControl: formViewModel.temporalAggregationControl,
-                  hint: const Text("Select an aggregation value"),
+                  hint: Text(AppLocalizations.of(context)!
+                      .form_field_report_select_aggregation),
                   items: ReportItemFormViewModel
                       .temporalAggregationControlOptions
                       .map((option) {

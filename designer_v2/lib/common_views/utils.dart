@@ -42,7 +42,7 @@ extension ColorX on Color {
   /// multiplied by [alphaScaleFactor] (ranging from 0 to 1).
   Color faded(double alphaScaleFactor) {
     assert(alphaScaleFactor >= 0.0 && alphaScaleFactor <= 1.0);
-    return withAlpha((alphaScaleFactor * alpha).round());
+    return withAlpha((alphaScaleFactor * a).round());
   }
 }
 

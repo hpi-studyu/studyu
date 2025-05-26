@@ -138,14 +138,14 @@ class _SidesheetState extends State<Sidesheet> {
 
     final tabBarLabelHoverColor =
         (theme.tabBarTheme.labelColor ?? theme.tabBarTheme.labelStyle?.color)
-            ?.faded(ThemeConfig.kHoverFadeFactor);
+            ?.withValues(alpha: ThemeConfig.kHoverFadeFactor);
 
     return Container(
       decoration: BoxDecoration(
         border: Border(
           left: BorderSide(
             color: (theme.dividerTheme.color ?? theme.dividerColor)
-                .withOpacity(0.1),
+                .withValues(alpha: 0.1),
           ),
         ),
       ),

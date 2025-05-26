@@ -52,7 +52,7 @@ class UserRepository implements IUserRepository {
   Future<StudyUUser> updatePreferences(
     PreferenceAction pinAction,
     String modelId,
-  ) async {
+  ) {
     final newPinnedStudies = Set<String>.from(user.preferences.pinnedStudies);
     switch (pinAction) {
       case PreferenceAction.pin:

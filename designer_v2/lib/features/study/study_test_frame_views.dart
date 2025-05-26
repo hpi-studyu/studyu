@@ -21,9 +21,9 @@ class WebFrame extends StatelessWidget {
     final theme = Theme.of(context);
     return PhoneContainer(
       innerContent: HtmlElementView(key: key, viewType: '$studyId$key'),
-      borderColor: theme.colorScheme.secondary.withOpacity(0.4),
+      borderColor: theme.colorScheme.secondary.withValues(alpha: 0.4),
       innerContentBackgroundColor:
-          theme.colorScheme.secondary.withOpacity(0.025),
+          theme.colorScheme.secondary.withValues(alpha: 0.025),
     );
   }
 }
@@ -45,9 +45,9 @@ class DisabledFrame extends StatelessWidget {
           ),
         ),
       ),
-      borderColor: theme.colorScheme.secondary.withOpacity(0.3),
+      borderColor: theme.colorScheme.secondary.withValues(alpha: 0.3),
       innerContentBackgroundColor:
-          theme.colorScheme.secondary.withOpacity(0.03),
+          theme.colorScheme.secondary.withValues(alpha: 0.03),
     );
   }
 }

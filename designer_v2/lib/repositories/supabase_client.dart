@@ -79,7 +79,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
   Future<T> getById<T extends SupabaseObject>(
     String id, {
     List<String> selectedColumns = const ['*'],
-  }) async {
+  }) {
     return getByColumn('id', id, selectedColumns: selectedColumns);
   }
 

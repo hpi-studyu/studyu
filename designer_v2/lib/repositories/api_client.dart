@@ -143,7 +143,7 @@ class StudyUApiClient extends SupabaseClientDependant
   /// otherwise, all columns are fetched => [studyColumns]
   ///
   ///
-  /// @return List<Study>
+  /// @return List`<Study`>
   @override
   Future<List<Study>> getUserStudies({
     bool withParticipantActivity = false,
@@ -238,7 +238,7 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 
   @override
-  Future<AppConfig> fetchAppConfig() async {
+  Future<AppConfig> fetchAppConfig() {
     final request = AppConfig.getAppConfig();
     return _awaitGuarded(request);
   }
