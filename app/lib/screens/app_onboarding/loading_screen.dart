@@ -133,6 +133,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
                     child: Text(AppLocalizations.of(context)!.try_again),
                   ),
                   TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.red,
+                    ),
                     onPressed: () => Navigator.of(context).pop(true),
                     child: Text(AppLocalizations.of(context)!.delete_data),
                   ),
@@ -157,6 +160,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
                       child: Text(AppLocalizations.of(context)!.cancel),
                     ),
                     TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.red,
+                      ),
                       onPressed: () => Navigator.of(context).pop(true),
                       child: Text(AppLocalizations.of(context)!.reset_app),
                     ),
