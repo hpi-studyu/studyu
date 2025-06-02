@@ -60,11 +60,9 @@ class SecureStorage {
   }
 
   static Future<bool?> readBool(String key) async {
-    return await storageLock.synchronized(() async {
-      final readValue = await storage.read(key: key);
-      if (readValue == null) return null;
-      return bool.parse(readValue);
-    });
+    final readValue = await read(key);
+    if (readValue == null) return null;
+    return bool.parse(readValue);
   }
 
   static Future<void> delete(String key) async {
