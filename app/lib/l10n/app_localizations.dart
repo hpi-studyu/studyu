@@ -104,6 +104,42 @@ abstract class AppLocalizations {
   /// **'Loading'**
   String get loading;
 
+  /// No description provided for @loading_error_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading Error'**
+  String get loading_error_title;
+
+  /// No description provided for @loading_error_description.
+  ///
+  /// In en, this message translates to:
+  /// **'The study data could not be retrieved. Please check your internet connection or try again later. If the problem persists, you can delete all data to reset the app. This will delete all your study data and you will have to rejoin the study.'**
+  String get loading_error_description;
+
+  /// No description provided for @try_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get try_again;
+
+  /// No description provided for @delete_all_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all data'**
+  String get delete_all_data;
+
+  /// No description provided for @delete_all_data_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you really want to delete all data? This will delete all your study data and you will have to rejoin the study.'**
+  String get delete_all_data_description;
+
+  /// No description provided for @reset_app.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset App'**
+  String get reset_app;
+
   /// No description provided for @what_is_studyu.
   ///
   /// In en, this message translates to:

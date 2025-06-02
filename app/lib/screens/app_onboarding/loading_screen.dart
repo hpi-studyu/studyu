@@ -96,7 +96,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           subject = await _fetchRemoteSubject(selectedStudyObjectId);
         }
       } catch (exception) {
-        debugPrint(
+        StudyULogger.warning(
           "Could not login and retrieve the study subject: $exception",
         );
         if (exception is SocketException) {
@@ -120,30 +120,63 @@ class _LoadingScreenState extends State<LoadingScreen> {
           if (!mounted) return null;
           final result = await showDialog<bool>(
             context: context,
+            barrierDismissible: false,
             builder: (context) {
               return AlertDialog(
-                title: const Text("Secure Storage Error"),
-                content: const Text(
-                  "The secure storage seems to be corrupted. Do you want to delete all secure storage data?",
+                title: Text(AppLocalizations.of(context)!.loading_error_title),
+                content: Text(
+                  AppLocalizations.of(context)!.loading_error_description,
                 ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text("Cancel"),
+                    child: Text(AppLocalizations.of(context)!.try_again),
                   ),
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(true),
-                    child: const Text("Delete All Data"),
+                    child: Text(AppLocalizations.of(context)!.delete_data),
                   ),
                 ],
               );
             },
           );
           if (result == true) {
-            await SecureStorage.deleteAll();
-            StudyULogger.info("Secure storage data deleted");
-          } else {
-            StudyULogger.info("User chose not to delete secure storage data");
+            if (!mounted) return null;
+            // Confirm deletion of storage data
+            final deleteResult = await showDialog<bool>(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(AppLocalizations.of(context)!.delete_all_data),
+                  content: Text(AppLocalizations.of(context)!
+                      .delete_all_data_description),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text(AppLocalizations.of(context)!.cancel),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: Text(AppLocalizations.of(context)!.reset_app),
+                    ),
+                  ],
+                );
+              },
+            );
+            if (deleteResult == true) {
+              // Delete all secure storage data
+              StudyULogger.info("Deleting all secure storage data");
+              if (!mounted) return null;
+              await cancelNotifications(context);
+              await SecureStorage.deleteAll();
+              StudyULogger.info("Secure storage data deleted");
+            }
+          }
+          StudyULogger.info("User chose not to delete secure storage data. "
+              "Going back to loading screen");
+          if (mounted) {
+            Navigator.pushReplacementNamed(context, Routes.loading);
           }
         }
       }

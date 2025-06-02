@@ -12,6 +12,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get loading => 'Laden';
 
   @override
+  String get loading_error_title => 'Ladefehler';
+
+  @override
+  String get loading_error_description =>
+      'Die Studiendaten konnten nicht abgerufen werden. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später erneut. Wenn das Problem weiterhin besteht, können Sie alle Daten löschen, um die App zurückzusetzen. Dadurch werden alle Ihre Studiendaten gelöscht und Sie müssen der Studie erneut beitreten.';
+
+  @override
+  String get try_again => 'Erneut versuchen';
+
+  @override
+  String get delete_all_data => 'Alle Daten löschen';
+
+  @override
+  String get delete_all_data_description =>
+      'Möchten Sie wirklich alle Daten löschen? Dadurch werden alle Ihre Studiendaten gelöscht und Sie müssen der Studie erneut beitreten.';
+
+  @override
+  String get reset_app => 'App zurücksetzen';
+
+  @override
   String get what_is_studyu => 'Was ist StudyU?';
 
   @override
