@@ -37,13 +37,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await _initPreview(state);
 
     final selectedSubjectId = await getActiveSubjectId();
-    StudyULogger.info('Subject ID: $selectedSubjectId');
     if (!mounted) return;
 
     if (selectedSubjectId == null) {
       await noSubjectFound();
       return;
     }
+    StudyULogger.info(
+      "Retrieving subject with ID: $selectedSubjectId",
+    );
     StudySubject? subject = await _retrieveSubject(selectedSubjectId);
     if (!mounted) return;
     if (subject != null) {
@@ -53,11 +55,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
       state.init(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
+      StudyULogger.warning(
+        "No subject found for ID: $selectedSubjectId. Local data will be cleared.",
+      );
+      SecureStorage.deleteAll();
       await noSubjectFound();
     }
   }
 
   Future<void> noSubjectFound() async {
+    StudyULogger.info(
+      "No subject found, redirecting to welcome screen",
+    );
     await cancelNotifications(context);
     if (mounted) Navigator.pushReplacementNamed(context, Routes.welcome);
   }
