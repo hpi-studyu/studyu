@@ -23,7 +23,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  static_analysis:
+  static_analysis_fix:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -37,14 +37,11 @@ jobs:
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
 
-      # - name: Run fix # remove until flutter_gen issue is fixed
-      #   run: melos run fix
+      - name: Run fix
+        run: melos run fix
 
-      - name: Run format
-        run: melos format
-
-      - name: Run analyze
-        run: melos analyze --fatal-infos
+      - name: Run quality check
+        run: melos qualitycheck
 
       - name: Commit changes if any
         uses: stefanzweifel/git-auto-commit-action@v5
