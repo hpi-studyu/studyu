@@ -169,13 +169,13 @@ Future<void>? cancelNotifications(BuildContext context) async {
 
   await notificationsPlugin?.cancelAll();
   await FlutterLocalNotificationsPlugin().cancelAll();
-  final list1 = await notificationsPlugin?.pendingNotificationRequests() ?? [];
-  final list2 =
-      await FlutterLocalNotificationsPlugin().pendingNotificationRequests();
   StudyNotifications.scheduledNotificationsDebug = 'cleared';
   if (context.mounted) context.read<AppState>().studyNotifications = null;
   if (StudyNotifications.debug) {
-    if (context.mounted) {
+    print('Notifications cancelled');
+    /*if (context.mounted) {
+      final list1 = await notificationsPlugin?.pendingNotificationRequests() ?? [];
+      final list2 = await FlutterLocalNotificationsPlugin().pendingNotificationRequests();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -183,8 +183,7 @@ Future<void>? cancelNotifications(BuildContext context) async {
           ),
         ),
       );
-    }
-    print('Notifications cancelled');
+    }*/
   }
   return Future.value();
 }
