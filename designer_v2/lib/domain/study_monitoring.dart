@@ -61,19 +61,25 @@ extension StudyMonitoringX on Study {
       final progresses = participantsProgress
           .where((progress) => progress.subjectId == participant.id)
           .toList();
+
       progresses.sort(
         (b, a) => a.completedAt!.compareTo(b.completedAt!),
       ); // descending
+
       final interventionOrder = schedule
           .generateInterventionIdsInOrder(participant.selectedInterventionIds);
+
       final lastActivityAt = progresses.isNotEmpty
           ? progresses.first.completedAt!
           : participant.startedAt!;
+
       final studyDurationInDays = schedule.length;
+
       final currentDayOfStudy = min(
         studyDurationInDays,
         DateTime.now().toUtc().difference(participant.startedAt!).inDays,
       );
+
       final daysInBaseline =
           schedule.includeBaseline ? schedule.phaseDuration : 0;
 
@@ -87,11 +93,14 @@ extension StudyMonitoringX on Study {
 
       for (int day = 0; day < currentDayOfStudy; day++) {
         final Set<String> requiredInterventionTaskIds = {};
+
         if (day >= daysInBaseline) {
           final interventionIdForThisPhase =
               interventionOrder[day ~/ schedule.phaseDuration];
+
           final interventionForThisPhase = interventions
               .firstWhere((i) => i.id == interventionIdForThisPhase);
+
           requiredInterventionTaskIds
               .addAll(interventionForThisPhase.tasks.map((t) => t.id));
         }
@@ -121,10 +130,13 @@ extension StudyMonitoringX on Study {
 
         final completedSurveysSet =
             requiredSurveyTaskIds.intersection(completedTaskIds);
+
         final completedIntervention = requiredInterventionTaskIds.isNotEmpty &&
             requiredInterventionTaskIds.intersection(completedTaskIds).length ==
                 requiredInterventionTaskIds.length;
+
         completedSurveys += completedSurveysSet.length;
+
         completedInterventions += completedIntervention ? 1 : 0;
       }
 

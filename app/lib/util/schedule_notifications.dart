@@ -172,18 +172,7 @@ Future<void>? cancelNotifications(BuildContext context) async {
   StudyNotifications.scheduledNotificationsDebug = 'cleared';
   if (context.mounted) context.read<AppState>().studyNotifications = null;
   if (StudyNotifications.debug) {
-    print('Notifications cancelled');
-    /*if (context.mounted) {
-      final list1 = await notificationsPlugin?.pendingNotificationRequests() ?? [];
-      final list2 = await FlutterLocalNotificationsPlugin().pendingNotificationRequests();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Notifications cancelled and pending notifications are empty: ${list1.isEmpty && list2.isEmpty}',
-          ),
-        ),
-      );
-    }*/
+    StudyULogger.debug('Notifications cancelled');
   }
   return Future.value();
 }

@@ -12,6 +12,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loading => 'Loading';
 
   @override
+  String get loading_error_title => 'Loading Error';
+
+  @override
+  String get loading_error_description =>
+      'The study data could not be retrieved. Please check your internet connection or try again later. If the problem persists, you can delete all data to reset the app. This will delete all your study data and you will have to rejoin the study.';
+
+  @override
+  String get try_again => 'Try again';
+
+  @override
+  String get delete_all_data => 'Delete all data';
+
+  @override
+  String get delete_all_data_description =>
+      'Do you really want to delete all data? This will delete all your study data and you will have to rejoin the study.';
+
+  @override
+  String get reset_app => 'Reset App';
+
+  @override
   String get what_is_studyu => 'What is StudyU?';
 
   @override
