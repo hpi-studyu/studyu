@@ -724,4 +724,43 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get maximum => 'Maximum';
+
+  @override
+  String get sync_fitbit_data => 'Fitbit-Daten synchronisieren';
+
+  @override
+  String get fitbit_data_synced =>
+      'Fitbit-Daten wurden erfolgreich synchronisiert';
+
+  @override
+  String get fitbit_data_not_synced =>
+      'Fitbit-Daten konnten nicht synchronisiert werden. Bitte stellen Sie sicher, dass Sie Ihre Fitbit-Daten in der Fitbit-App synchronisiert haben.';
+
+  @override
+  String error_syncing_fitbit_data(String error) {
+    return 'Fehler beim Synchronisieren der Fitbit-Daten: $error';
+  }
+
+  @override
+  String get fitbit_data_synced_dialog_title => 'Fitbit-Daten synchronisiert';
+
+  @override
+  String get fitbit_data_synced_info =>
+      'Daten wurden für die folgenden Datentypen synchronisiert:';
+
+  @override
+  String fitbit_data_earliest_date(String date) {
+    return 'Frühestes Datum: $date';
+  }
+
+  @override
+  String fitbit_data_latest_date(String date) {
+    return 'Spätestes Datum: $date';
+  }
+
+  @override
+  String get fitbit_data_details_btn => 'Details';
+
+  @override
+  String get fitbit_data_close_btn => 'Schließen';
 }
