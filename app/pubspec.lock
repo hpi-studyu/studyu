@@ -273,6 +273,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.11"
+  desktop_webview_window:
+    dependency: transitive
+    description:
+      name: desktop_webview_window
+      sha256: "57cf20d81689d5cbb1adfd0017e96b669398a669d927906073b0e42fc64111c0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.3"
   dio:
     dependency: transitive
     description:
@@ -326,7 +334,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: "39fe05b494f754a6e57cafe9957986610ec5c9de"
+      resolved-ref: e15386acb8ae8fcd7f84e90f8d274a5a4543d72d
       url: "https://github.com/hpi-studyu/fitbitter.git"
     source: git
     version: "2.0.6"
@@ -505,15 +513,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.1"
-  flutter_web_auth:
+  flutter_web_auth_2:
     dependency: transitive
     description:
-      path: "."
-      ref: fix-android-kotlin
-      resolved-ref: fbd8a083629856f7081422c8c2f8861caf1d5bd2
-      url: "https://github.com/johannesvedder/flutter_web_auth.git"
-    source: git
-    version: "0.6.1"
+      name: flutter_web_auth_2
+      sha256: "3c14babeaa066c371f3a743f204dd0d348b7d42ffa6fae7a9847a521aff33696"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
+  flutter_web_auth_2_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_web_auth_2_platform_interface
+      sha256: c63a472c8070998e4e422f6b34a17070e60782ac442107c70000dd1bed645f4d
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   flutter_web_plugins:
     dependency: "direct main"
     description: flutter
@@ -1642,6 +1657,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.13.0"
+  window_to_front:
+    dependency: transitive
+    description:
+      name: window_to_front
+      sha256: "7aef379752b7190c10479e12b5fd7c0b9d92adc96817d9e96c59937929512aee"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   xdg_directories:
     dependency: transitive
     description:
