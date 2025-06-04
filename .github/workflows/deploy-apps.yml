@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-      - feat/fitbit*
+      # - feat/fitbit*
     paths:
       - 'app/**'
       - 'core/**'
