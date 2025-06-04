@@ -13,6 +13,9 @@ on:
       - '.github/workflows/deploy-apps.yml'
   workflow_dispatch:
 
+env:
+  MELOS_SDK_PATH: 'auto'
+
 concurrency:
   group: ${{ github.ref }}-deploy-apps
   cancel-in-progress: true
@@ -22,15 +25,13 @@ jobs:
     name: Create Play Store Release
     runs-on: ubuntu-latest
     steps:
-      - name: Await potential publishing on Pub.dev
-        uses: johannesvedder/await-workflow@v1
-        with:
-          workflowId: publish_pubdev.yml
-
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
 
       - name: Set up ruby env
         uses: ruby/setup-ruby@v1
@@ -89,15 +90,13 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      - name: Await potential publishing on Pub.dev
-        uses: johannesvedder/await-workflow@v1
-        with:
-          workflowId: publish_pubdev.yml
-
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
 
       - name: Set up ruby env
         uses: ruby/setup-ruby@v1

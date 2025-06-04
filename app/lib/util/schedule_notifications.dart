@@ -55,8 +55,6 @@ Future<int> scheduleReminderForDate(
       reminderTime,
       notificationDetails,
       payload: studyNotification.taskInstance.id,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.wallClockTime,
       // exactAllowWhileIdle only works if the exact alarm permission has been granted
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
@@ -96,14 +94,14 @@ const notificationDetails = NotificationDetails(
 );
 
 Future<void> scheduleNotifications(BuildContext context) async {
-  if (StudyNotifications.debug) {
+  /*if (StudyNotifications.debug) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Schedule Notifications'),
       ),
     );
     print('Schedule Notifications');
-  }
+  }*/
   // Notifications not supported on web
   if (kIsWeb) return;
   final appState = context.read<AppState>();
@@ -171,22 +169,10 @@ Future<void>? cancelNotifications(BuildContext context) async {
 
   await notificationsPlugin?.cancelAll();
   await FlutterLocalNotificationsPlugin().cancelAll();
-  final list1 = await notificationsPlugin?.pendingNotificationRequests() ?? [];
-  final list2 =
-      await FlutterLocalNotificationsPlugin().pendingNotificationRequests();
   StudyNotifications.scheduledNotificationsDebug = 'cleared';
   if (context.mounted) context.read<AppState>().studyNotifications = null;
   if (StudyNotifications.debug) {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Notifications cancelled and pending notifications are empty: ${list1.isEmpty && list2.isEmpty}',
-          ),
-        ),
-      );
-    }
-    print('Notifications cancelled');
+    StudyULogger.debug('Notifications cancelled');
   }
   return Future.value();
 }

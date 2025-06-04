@@ -104,6 +104,42 @@ abstract class AppLocalizations {
   /// **'Loading'**
   String get loading;
 
+  /// No description provided for @loading_error_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading Error'**
+  String get loading_error_title;
+
+  /// No description provided for @loading_error_description.
+  ///
+  /// In en, this message translates to:
+  /// **'The study data could not be retrieved. Please check your internet connection or try again later. If the problem persists, you can delete all data to reset the app. This will delete all your study data and you will have to rejoin the study.'**
+  String get loading_error_description;
+
+  /// No description provided for @try_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get try_again;
+
+  /// No description provided for @delete_all_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all data'**
+  String get delete_all_data;
+
+  /// No description provided for @delete_all_data_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you really want to delete all data? This will delete all your study data and you will have to rejoin the study.'**
+  String get delete_all_data_description;
+
+  /// No description provided for @reset_app.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset App'**
+  String get reset_app;
+
   /// No description provided for @what_is_studyu.
   ///
   /// In en, this message translates to:
@@ -770,6 +806,12 @@ abstract class AppLocalizations {
   /// **'This is a survey test'**
   String get survey_test;
 
+  /// No description provided for @current_report.
+  ///
+  /// In en, this message translates to:
+  /// **'Current report'**
+  String get current_report;
+
   /// No description provided for @report_history.
   ///
   /// In en, this message translates to:
@@ -1118,65 +1160,251 @@ abstract class AppLocalizations {
   /// **'Update now'**
   String get update_now;
 
-  /// No description provided for @sync_fitbit_data.
+  /// No description provided for @text_summary_section_prefix_higher.
   ///
   /// In en, this message translates to:
-  /// **'Sync Fitbit Data'**
-  String get sync_fitbit_data;
+  /// **'Your '**
+  String get text_summary_section_prefix_higher;
 
-  /// No description provided for @fitbit_data_synced.
+  /// No description provided for @text_summary_section_was_higher.
   ///
   /// In en, this message translates to:
-  /// **'Fitbit data synced successfully'**
-  String get fitbit_data_synced;
+  /// **' was higher during intervention: '**
+  String get text_summary_section_was_higher;
 
-  /// No description provided for @fitbit_data_not_synced.
+  /// No description provided for @text_summary_section_was_lower.
   ///
   /// In en, this message translates to:
-  /// **'Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.'**
-  String get fitbit_data_not_synced;
+  /// **' was lower during intervention: '**
+  String get text_summary_section_was_lower;
 
-  /// No description provided for @error_syncing_fitbit_data.
+  /// No description provided for @text_summary_section_compared_to.
   ///
   /// In en, this message translates to:
-  /// **'Error syncing Fitbit data: {error}'**
-  String error_syncing_fitbit_data(String error);
+  /// **' compared to: '**
+  String get text_summary_section_compared_to;
 
-  /// No description provided for @fitbit_data_synced_dialog_title.
+  /// No description provided for @text_summary_section_and.
   ///
   /// In en, this message translates to:
-  /// **'Fitbit Data Synced'**
-  String get fitbit_data_synced_dialog_title;
+  /// **' and '**
+  String get text_summary_section_and;
 
-  /// No description provided for @fitbit_data_synced_info.
+  /// No description provided for @text_summary_section_no_evidence.
   ///
   /// In en, this message translates to:
-  /// **'Data was synced for the following data types:'**
-  String get fitbit_data_synced_info;
+  /// **'There was no evidence for a difference in '**
+  String get text_summary_section_no_evidence;
 
-  /// No description provided for @fitbit_data_earliest_date.
+  /// No description provided for @text_summary_section_between.
   ///
   /// In en, this message translates to:
-  /// **'Earliest date: {date}'**
-  String fitbit_data_earliest_date(String date);
+  /// **' between interventions: '**
+  String get text_summary_section_between;
 
-  /// No description provided for @fitbit_data_latest_date.
+  /// No description provided for @intervention.
   ///
   /// In en, this message translates to:
-  /// **'Latest date: {date}'**
-  String fitbit_data_latest_date(String date);
+  /// **'Intervention'**
+  String get intervention;
 
-  /// No description provided for @fitbit_data_details_btn.
+  /// No description provided for @phase.
   ///
   /// In en, this message translates to:
-  /// **'Details'**
-  String get fitbit_data_details_btn;
+  /// **'Phase'**
+  String get phase;
 
-  /// No description provided for @fitbit_data_close_btn.
+  /// No description provided for @day.
+  ///
+  /// In en, this message translates to:
+  /// **'Day'**
+  String get day;
+
+  /// No description provided for @no_data_available_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available yet'**
+  String get no_data_available_yet;
+
+  /// No description provided for @value.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get value;
+
+  /// No description provided for @show_colorless_gauges.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable accessible charts'**
+  String get show_colorless_gauges;
+
+  /// No description provided for @welchs_t_test_results.
+  ///
+  /// In en, this message translates to:
+  /// **'Welch\'s t-test Results'**
+  String get welchs_t_test_results;
+
+  /// No description provided for @sample_a.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample A'**
+  String get sample_a;
+
+  /// No description provided for @sample_b.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample B'**
+  String get sample_b;
+
+  /// No description provided for @sample_size.
+  ///
+  /// In en, this message translates to:
+  /// **'n'**
+  String get sample_size;
+
+  /// No description provided for @mean.
+  ///
+  /// In en, this message translates to:
+  /// **'mean'**
+  String get mean;
+
+  /// No description provided for @variance.
+  ///
+  /// In en, this message translates to:
+  /// **'var'**
+  String get variance;
+
+  /// No description provided for @t_statistic.
+  ///
+  /// In en, this message translates to:
+  /// **'t-statistic'**
+  String get t_statistic;
+
+  /// No description provided for @degrees_of_freedom.
+  ///
+  /// In en, this message translates to:
+  /// **'Degrees of freedom'**
+  String get degrees_of_freedom;
+
+  /// No description provided for @p_value.
+  ///
+  /// In en, this message translates to:
+  /// **'p-value'**
+  String get p_value;
+
+  /// No description provided for @result_significant.
+  ///
+  /// In en, this message translates to:
+  /// **'Significantly different'**
+  String get result_significant;
+
+  /// No description provided for @result_not_significant.
+  ///
+  /// In en, this message translates to:
+  /// **'Not significantly different'**
+  String get result_not_significant;
+
+  /// No description provided for @level_of_significance.
+  ///
+  /// In en, this message translates to:
+  /// **'Level of significance'**
+  String get level_of_significance;
+
+  /// No description provided for @t_test_outcome_based_on.
+  ///
+  /// In en, this message translates to:
+  /// **'The outcome is based on the following values:'**
+  String get t_test_outcome_based_on;
+
+  /// No description provided for @statistical_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistical Information'**
+  String get statistical_information;
+
+  /// No description provided for @close.
   ///
   /// In en, this message translates to:
   /// **'Close'**
-  String get fitbit_data_close_btn;
+  String get close;
+
+  /// No description provided for @significance_level_and_p_value.
+  ///
+  /// In en, this message translates to:
+  /// **'Significance level and p-value'**
+  String get significance_level_and_p_value;
+
+  /// No description provided for @descriptive_statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Descriptive statistics'**
+  String get descriptive_statistics;
+
+  /// Label for comparing results between two interventions or samples
+  ///
+  /// In en, this message translates to:
+  /// **'Compare results between {nameA} and {nameB}'**
+  String compare_results_between(String nameA, String nameB);
+
+  /// No description provided for @missing_observations_note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note: Missing observations indicate days when data was not recorded.'**
+  String get missing_observations_note;
+
+  /// No description provided for @quick_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Summary'**
+  String get quick_summary;
+
+  /// No description provided for @average_score.
+  ///
+  /// In en, this message translates to:
+  /// **'Average score'**
+  String get average_score;
+
+  /// No description provided for @data_completeness.
+  ///
+  /// In en, this message translates to:
+  /// **'Data completeness'**
+  String get data_completeness;
+
+  /// No description provided for @statistic.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistic'**
+  String get statistic;
+
+  /// No description provided for @total_recordings.
+  ///
+  /// In en, this message translates to:
+  /// **'Total recordings'**
+  String get total_recordings;
+
+  /// No description provided for @missing_recordings.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing recordings'**
+  String get missing_recordings;
+
+  /// No description provided for @average.
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get average;
+
+  /// No description provided for @minimum.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum'**
+  String get minimum;
+
+  /// No description provided for @maximum.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum'**
+  String get maximum;
 }
 
 class _AppLocalizationsDelegate

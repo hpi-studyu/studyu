@@ -71,7 +71,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   child: Container(
                     constraints: const BoxConstraints(maxWidth: 400),
                     child: Search(
-                      searchController: controller.searchController,
+                      searchController: state.searchController,
                       hintText: tr.search,
                       onQueryChanged: (query) =>
                           controller.filterStudies(query),

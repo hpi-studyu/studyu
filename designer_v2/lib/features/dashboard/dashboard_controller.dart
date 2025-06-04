@@ -24,10 +24,10 @@ class DashboardController extends _$DashboardController
     implements IModelActionProvider<Study> {
   @override
   DashboardState build() {
-    studyRepository = ref.watch(studyRepositoryProvider);
-    authRepository = ref.watch(authRepositoryProvider);
-    userRepository = ref.watch(userRepositoryProvider);
-    router = ref.watch(routerProvider);
+    _studyRepository = ref.watch(studyRepositoryProvider);
+    _authRepository = ref.watch(authRepositoryProvider);
+    _userRepository = ref.watch(userRepositoryProvider);
+    _router = ref.watch(routerProvider);
 
     ref.onDispose(() {
       print("dashboardControllerProvider.DISPOSE");
@@ -39,24 +39,25 @@ class DashboardController extends _$DashboardController
     });
 
     _subscribeStudies();
-    return DashboardState(currentUser: authRepository.currentUser!);
+    return DashboardState(
+      currentUser: _authRepository.currentUser!,
+      searchController: SearchController(),
+    );
   }
 
   /// References to the data repositories injected by Riverpod
-  late final IStudyRepository studyRepository;
-  late final IAuthRepository authRepository;
-  late final IUserRepository userRepository;
+  late final IStudyRepository _studyRepository;
+  late final IAuthRepository _authRepository;
+  late final IUserRepository _userRepository;
 
   /// Reference to services injected via Riverpod
-  late final GoRouter router;
+  late final GoRouter _router;
 
   /// A subscription for synchronizing state between the repository and the controller
   StreamSubscription<List<WrappedModel<Study>>>? _studiesSubscription;
 
-  final SearchController searchController = SearchController();
-
   void _subscribeStudies() {
-    _studiesSubscription = studyRepository.watchAll().listen(
+    _studiesSubscription = _studyRepository.watchAll().listen(
       (wrappedModels) {
         print("studyRepository.update");
         // Update the controller's state when new studies are available in the repository
@@ -74,7 +75,7 @@ class DashboardController extends _$DashboardController
   }
 
   void setSearchText(String? text) {
-    searchController.setText(text ?? state.query);
+    state.searchController.setText(text ?? state.query);
   }
 
   void setStudiesFilter(StudiesFilter? filter) {
@@ -84,22 +85,22 @@ class DashboardController extends _$DashboardController
   }
 
   void onSelectStudy(Study study) {
-    router.dispatch(RoutingIntents.studyEdit(study.id));
+    _router.dispatch(RoutingIntents.studyEdit(study.id));
   }
 
   void onClickNewStudy() {
-    final Study newStudy = studyRepository.delegate.createNewInstance();
+    final Study newStudy = _studyRepository.delegate.createNewInstance();
     newStudy.save();
-    router.dispatch(RoutingIntents.studyEdit(newStudy.id));
+    _router.dispatch(RoutingIntents.studyEdit(newStudy.id));
   }
 
   Future<void> pinStudy(String modelId) async {
-    await userRepository.updatePreferences(PreferenceAction.pin, modelId);
+    await _userRepository.updatePreferences(PreferenceAction.pin, modelId);
     sortStudies();
   }
 
   Future<void> pinOffStudy(String modelId) async {
-    await userRepository.updatePreferences(PreferenceAction.pinOff, modelId);
+    await _userRepository.updatePreferences(PreferenceAction.pinOff, modelId);
     sortStudies();
   }
 
@@ -116,7 +117,7 @@ class DashboardController extends _$DashboardController
 
   Future<void> sortStudies() async {
     final studies = state.sort(
-      pinnedStudies: userRepository.user.preferences.pinnedStudies,
+      pinnedStudies: _userRepository.user.preferences.pinnedStudies,
     );
     state = state.copyWith(
       studies: () => AsyncValue.data(studies),
@@ -127,10 +128,12 @@ class DashboardController extends _$DashboardController
     return state.sortByColumn == column;
   }
 
-  bool get isSortAscending => state.sortAscending;
+  bool isSortAscending() {
+    return state.sortAscending;
+  }
 
   bool isPinned(Study study) {
-    return userRepository.user.preferences.pinnedStudies.contains(study.id);
+    return _userRepository.user.preferences.pinnedStudies.contains(study.id);
   }
 
   @override
@@ -155,7 +158,7 @@ class DashboardController extends _$DashboardController
     ].where((action) => action.isAvailable).toList();
 
     return withIcons(
-      [...pinActions, ...studyRepository.availableActions(model)],
+      [...pinActions, ..._studyRepository.availableActions(model)],
       studyActionIcons,
     );
   }

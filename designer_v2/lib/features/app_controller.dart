@@ -41,12 +41,16 @@ class AppController extends _$AppController {
         .add(const AppControllerState(status: AppStatus.initialized));
   }
 
-  Stream get stream => _stateController.stream;
+  Stream getStream() {
+    return _stateController.stream;
+  }
 
   final StreamController<AppControllerState> _stateController =
       StreamController<AppControllerState>.broadcast();
 
-  bool get isInitialized => state.value?.status == AppStatus.initialized;
+  bool isInitialized() {
+    return state.value?.status == AppStatus.initialized;
+  }
 
   /// List of listeners for app lifecycle events registered via Riverpod
   late final List<IAppDelegate> _appDelegates;

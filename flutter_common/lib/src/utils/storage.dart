@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studyu_core/core.dart';
@@ -35,7 +36,11 @@ class SupabaseStorage extends LocalStorage {
 }
 
 class SecureStorage {
-  static const storage = FlutterSecureStorage();
+  static const storage = FlutterSecureStorage(
+    aOptions: AndroidOptions(
+      encryptedSharedPreferences: true,
+    ),
+  );
 
   static Future<bool> containsKey(String key) async {
     return await storageLock.synchronized(() async {
@@ -51,16 +56,26 @@ class SecureStorage {
 
   static Future<String?> read(String key) async {
     return await storageLock.synchronized(() async {
-      return await storage.read(key: key);
+      try {
+        return await storage.read(key: key);
+      } catch (e) {
+        StudyULogger.error(
+          "Error reading key $key from secure storage: $e",
+        );
+        if (e is PlatformException && e.code == 'BadPaddingException') {
+          StudyULogger.error(
+            "BadPaddingException: $e. This might indicate that the secure storage is corrupted.",
+          );
+        }
+        rethrow;
+      }
     });
   }
 
   static Future<bool?> readBool(String key) async {
-    return await storageLock.synchronized(() async {
-      final readValue = await storage.read(key: key);
-      if (readValue == null) return null;
-      return bool.parse(readValue);
-    });
+    final readValue = await read(key);
+    if (readValue == null) return null;
+    return bool.parse(readValue);
   }
 
   static Future<void> delete(String key) async {

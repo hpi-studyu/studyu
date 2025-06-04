@@ -4,8 +4,6 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/report/disclaimer_section.dart';
 import 'package:studyu_app/screens/study/report/general_details_section.dart';
-import 'package:studyu_app/screens/study/report/performance/performance_details.dart';
-import 'package:studyu_app/screens/study/report/performance/performance_section.dart';
 import 'package:studyu_app/screens/study/report/report_section_container.dart';
 import 'package:studyu_core/core.dart';
 
@@ -41,13 +39,13 @@ class ReportDetailsScreen extends StatelessWidget {
           children: [
             GeneralDetailsSection(subject),
             DisclaimerSection(subject),
-            PerformanceSection(
-              subject,
-              onTap: () => Navigator.push(
-                context,
-                PerformanceDetailsScreen.routeFor(subject: subject),
-              ),
-            ),
+            //PerformanceSection(
+            //  subject,
+            //  onTap: () => Navigator.push(
+            //    context,
+            //    PerformanceDetailsScreen.routeFor(subject: subject),
+            //  ),
+            //),
             if (subject.study.reportSpecification.primary != null &&
                 (subject.completedStudy || kDebugMode))
               ReportSectionContainer(

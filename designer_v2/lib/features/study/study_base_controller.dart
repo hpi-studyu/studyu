@@ -30,13 +30,13 @@ class StudyBaseController<T extends StudyControllerBaseState>
     return state;
   }
 
-  StreamSubscription<WrappedModel<Study>>? studySubscription;
+  StreamSubscription<WrappedModel<Study>>? _studySubscription;
 
   void subscribeStudy(StudyID studyId) {
-    if (studySubscription != null) {
-      studySubscription!.cancel();
+    if (_studySubscription != null) {
+      _studySubscription!.cancel();
     }
-    studySubscription = state.studyRepository
+    _studySubscription = state.studyRepository
         .watch(studyId)
         .listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
   }

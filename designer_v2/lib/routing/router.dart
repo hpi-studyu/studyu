@@ -73,7 +73,7 @@ GoRouter router(Ref ref) {
       return router.namedLocation(name, queryParameters: qParams);
     }
 
-    if (!isInitialized) {
+    if (!isInitialized()) {
       // Redirect to splash screen while app is pending initialization
       return isOnSplashPage ? null : namedLocForwarded(splashRouteName);
     }
@@ -118,7 +118,7 @@ GoRouter router(Ref ref) {
   router = GoRouter(
     refreshListenable: CombinedStreamNotifier([
       // Any stream registered here will trigger the router's redirect logic
-      appController.stream, // initialization events
+      appController.getStream(), // initialization events
       authRepository.watchAuthStateChanges(), // authentication events
     ]),
     routes: RouterConf.routes,

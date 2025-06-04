@@ -12,6 +12,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loading => 'Loading';
 
   @override
+  String get loading_error_title => 'Loading Error';
+
+  @override
+  String get loading_error_description =>
+      'The study data could not be retrieved. Please check your internet connection or try again later. If the problem persists, you can delete all data to reset the app. This will delete all your study data and you will have to rejoin the study.';
+
+  @override
+  String get try_again => 'Try again';
+
+  @override
+  String get delete_all_data => 'Delete all data';
+
+  @override
+  String get delete_all_data_description =>
+      'Do you really want to delete all data? This will delete all your study data and you will have to rejoin the study.';
+
+  @override
+  String get reset_app => 'Reset App';
+
+  @override
   String get what_is_studyu => 'What is StudyU?';
 
   @override
@@ -371,6 +391,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get survey_test => 'This is a survey test';
 
   @override
+  String get current_report => 'Current report';
+
+  @override
   String get report_history => 'Report history';
 
   @override
@@ -566,40 +589,132 @@ class AppLocalizationsEn extends AppLocalizations {
   String get update_now => 'Update now';
 
   @override
-  String get sync_fitbit_data => 'Sync Fitbit Data';
+  String get text_summary_section_prefix_higher => 'Your ';
 
   @override
-  String get fitbit_data_synced => 'Fitbit data synced successfully';
+  String get text_summary_section_was_higher =>
+      ' was higher during intervention: ';
 
   @override
-  String get fitbit_data_not_synced =>
-      'Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.';
+  String get text_summary_section_was_lower =>
+      ' was lower during intervention: ';
 
   @override
-  String error_syncing_fitbit_data(String error) {
-    return 'Error syncing Fitbit data: $error';
+  String get text_summary_section_compared_to => ' compared to: ';
+
+  @override
+  String get text_summary_section_and => ' and ';
+
+  @override
+  String get text_summary_section_no_evidence =>
+      'There was no evidence for a difference in ';
+
+  @override
+  String get text_summary_section_between => ' between interventions: ';
+
+  @override
+  String get intervention => 'Intervention';
+
+  @override
+  String get phase => 'Phase';
+
+  @override
+  String get day => 'Day';
+
+  @override
+  String get no_data_available_yet => 'No data available yet';
+
+  @override
+  String get value => 'Value';
+
+  @override
+  String get show_colorless_gauges => 'Enable accessible charts';
+
+  @override
+  String get welchs_t_test_results => 'Welch\'s t-test Results';
+
+  @override
+  String get sample_a => 'Sample A';
+
+  @override
+  String get sample_b => 'Sample B';
+
+  @override
+  String get sample_size => 'n';
+
+  @override
+  String get mean => 'mean';
+
+  @override
+  String get variance => 'var';
+
+  @override
+  String get t_statistic => 't-statistic';
+
+  @override
+  String get degrees_of_freedom => 'Degrees of freedom';
+
+  @override
+  String get p_value => 'p-value';
+
+  @override
+  String get result_significant => 'Significantly different';
+
+  @override
+  String get result_not_significant => 'Not significantly different';
+
+  @override
+  String get level_of_significance => 'Level of significance';
+
+  @override
+  String get t_test_outcome_based_on =>
+      'The outcome is based on the following values:';
+
+  @override
+  String get statistical_information => 'Statistical Information';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get significance_level_and_p_value => 'Significance level and p-value';
+
+  @override
+  String get descriptive_statistics => 'Descriptive statistics';
+
+  @override
+  String compare_results_between(String nameA, String nameB) {
+    return 'Compare results between $nameA and $nameB';
   }
 
   @override
-  String get fitbit_data_synced_dialog_title => 'Fitbit Data Synced';
+  String get missing_observations_note =>
+      'Note: Missing observations indicate days when data was not recorded.';
 
   @override
-  String get fitbit_data_synced_info =>
-      'Data was synced for the following data types:';
+  String get quick_summary => 'Quick Summary';
 
   @override
-  String fitbit_data_earliest_date(String date) {
-    return 'Earliest date: $date';
-  }
+  String get average_score => 'Average score';
 
   @override
-  String fitbit_data_latest_date(String date) {
-    return 'Latest date: $date';
-  }
+  String get data_completeness => 'Data completeness';
 
   @override
-  String get fitbit_data_details_btn => 'Details';
+  String get statistic => 'Statistic';
 
   @override
-  String get fitbit_data_close_btn => 'Close';
+  String get total_recordings => 'Total recordings';
+
+  @override
+  String get missing_recordings => 'Missing recordings';
+
+  @override
+  String get average => 'Average';
+
+  @override
+  String get minimum => 'Minimum';
+
+  @override
+  String get maximum => 'Maximum';
 }

@@ -39,8 +39,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Init workspace
-        uses: ./.github/workflows/init-workspace
       - name: Enable web support
         run: flutter config --enable-web
       - name: Build Web

@@ -11,7 +11,7 @@
 #
 
 opt_out_usage
-# update_fastlane # not working
+# update_fastlane # throws an error
 
 def delete_temp_keychain(name)
   delete_keychain(

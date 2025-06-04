@@ -12,6 +12,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get loading => 'Laden';
 
   @override
+  String get loading_error_title => 'Ladefehler';
+
+  @override
+  String get loading_error_description =>
+      'Die Studiendaten konnten nicht abgerufen werden. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später erneut. Wenn das Problem weiterhin besteht, können Sie alle Daten löschen, um die App zurückzusetzen. Dadurch werden alle Ihre Studiendaten gelöscht und Sie müssen der Studie erneut beitreten.';
+
+  @override
+  String get try_again => 'Erneut versuchen';
+
+  @override
+  String get delete_all_data => 'Alle Daten löschen';
+
+  @override
+  String get delete_all_data_description =>
+      'Möchten Sie wirklich alle Daten löschen? Dadurch werden alle Ihre Studiendaten gelöscht und Sie müssen der Studie erneut beitreten.';
+
+  @override
+  String get reset_app => 'App zurücksetzen';
+
+  @override
   String get what_is_studyu => 'Was ist StudyU?';
 
   @override
@@ -374,6 +394,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get survey_test => 'Das ist ein Umfragetest';
 
   @override
+  String get current_report => 'Aktueller Bericht';
+
+  @override
   String get report_history => 'Reportverlauf';
 
   @override
@@ -573,41 +596,132 @@ class AppLocalizationsDe extends AppLocalizations {
   String get update_now => 'Jetzt aktualisieren';
 
   @override
-  String get sync_fitbit_data => 'Fitbit-Daten synchronisieren';
+  String get text_summary_section_prefix_higher => 'Dein ';
 
   @override
-  String get fitbit_data_synced =>
-      'Fitbit-Daten wurden erfolgreich synchronisiert';
+  String get text_summary_section_was_higher =>
+      ' war höher während der Intervention: ';
 
   @override
-  String get fitbit_data_not_synced =>
-      'Fitbit-Daten konnten nicht synchronisiert werden. Bitte stellen Sie sicher, dass Sie Ihre Fitbit-Daten in der Fitbit-App synchronisiert haben.';
+  String get text_summary_section_was_lower =>
+      ' war niedriger während der Intervention: ';
 
   @override
-  String error_syncing_fitbit_data(String error) {
-    return 'Fehler beim Synchronisieren der Fitbit-Daten: $error';
+  String get text_summary_section_compared_to => ' im Vergleich zu: ';
+
+  @override
+  String get text_summary_section_and => ' und ';
+
+  @override
+  String get text_summary_section_no_evidence =>
+      'Es gab keinen Hinweis auf einen Unterschied bei ';
+
+  @override
+  String get text_summary_section_between => ' zwischen den Interventionen: ';
+
+  @override
+  String get intervention => 'Intervention';
+
+  @override
+  String get phase => 'Phase';
+
+  @override
+  String get day => 'Tag';
+
+  @override
+  String get no_data_available_yet => 'Noch keine Daten verfügbar';
+
+  @override
+  String get value => 'Wert';
+
+  @override
+  String get show_colorless_gauges => 'Barrierefreie Diagramme anzeigen';
+
+  @override
+  String get welchs_t_test_results => 'Welchs t-Test Ergebnisse';
+
+  @override
+  String get sample_a => 'Stichprobe A';
+
+  @override
+  String get sample_b => 'Stichprobe B';
+
+  @override
+  String get sample_size => 'n';
+
+  @override
+  String get mean => 'Mittelwert';
+
+  @override
+  String get variance => 'Varianz';
+
+  @override
+  String get t_statistic => 't-Wert';
+
+  @override
+  String get degrees_of_freedom => 'Freiheitsgrade';
+
+  @override
+  String get p_value => 'p-Wert';
+
+  @override
+  String get result_significant => 'Signifikanter Unterschied';
+
+  @override
+  String get result_not_significant => 'Kein signifikanter Unterschied';
+
+  @override
+  String get level_of_significance => 'Signifikanzniveau';
+
+  @override
+  String get t_test_outcome_based_on =>
+      'Das Ergebnis basiert auf den folgenden Werten:';
+
+  @override
+  String get statistical_information => 'Statistische Informationen';
+
+  @override
+  String get close => 'Schließen';
+
+  @override
+  String get significance_level_and_p_value => 'Signifikanzniveau und p-Wert';
+
+  @override
+  String get descriptive_statistics => 'Deskriptive Statistik';
+
+  @override
+  String compare_results_between(String nameA, String nameB) {
+    return 'Vergleiche Ergebnisse zwischen $nameA und $nameB';
   }
 
   @override
-  String get fitbit_data_synced_dialog_title => 'Fitbit-Daten synchronisiert';
+  String get missing_observations_note =>
+      'Hinweis: Fehlende Beobachtungen bedeuten, dass an diesen Tagen keine Daten aufgezeichnet wurden.';
 
   @override
-  String get fitbit_data_synced_info =>
-      'Daten wurden für die folgenden Datentypen synchronisiert:';
+  String get quick_summary => 'Kurzfassung';
 
   @override
-  String fitbit_data_earliest_date(String date) {
-    return 'Frühestes Datum: $date';
-  }
+  String get average_score => 'Durchschnittswert';
 
   @override
-  String fitbit_data_latest_date(String date) {
-    return 'Spätestes Datum: $date';
-  }
+  String get data_completeness => 'Datenvollständigkeit';
 
   @override
-  String get fitbit_data_details_btn => 'Details';
+  String get statistic => 'Statistik';
 
   @override
-  String get fitbit_data_close_btn => 'Schließen';
+  String get total_recordings => 'Gesamtaufzeichnungen';
+
+  @override
+  String get missing_recordings => 'Fehlende Aufzeichnungen';
+
+  @override
+  String get average => 'Durchschnitt';
+
+  @override
+  String get minimum => 'Minimum';
+
+  @override
+  String get maximum => 'Maximum';
 }
