@@ -23,102 +23,104 @@ class AccountSettingsDialog extends ConsumerWidget {
     final controller = ref.watch(authFormControllerProvider(formKey).notifier);
 
     return PointerInterceptor(
-      child: StandardDialog(
-        titleText: tr.navlink_account_settings,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16.0),
-            FormTableLayout(
-              rows: [
-                FormTableRow(
-                  label: tr.language,
-                  input: const Align(
-                    alignment: Alignment.centerRight,
-                    child: LanguagePicker(),
+      child: SelectionArea(
+        child: StandardDialog(
+          titleText: tr.navlink_account_settings,
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 16.0),
+              FormTableLayout(
+                rows: [
+                  FormTableRow(
+                    label: tr.language,
+                    input: const Align(
+                      alignment: Alignment.centerRight,
+                      child: LanguagePicker(),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16.0),
+              const Divider(),
+              const SizedBox(height: 16.0),
+              ReactiveFormConfig(
+                validationMessages: AuthFormController.authValidationMessages,
+                child: ReactiveForm(
+                  formGroup: controller.form,
+                  child: Column(
+                    children: [
+                      Text(
+                        tr.change_password,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 16.0),
+                      PasswordTextField(
+                        formControl: controller.oldPasswordControl,
+                        labelText: tr.form_field_password_current,
+                        hintText: tr.form_field_password_current_hint,
+                      ),
+                      const SizedBox(height: 12.0),
+                      PasswordTextField(
+                        formControl: controller.passwordControl,
+                        labelText: tr.form_field_password_new,
+                        hintText: tr.form_field_password_new_hint,
+                      ),
+                      PasswordTextField(
+                        formControl: controller.passwordConfirmationControl,
+                        labelText: tr.form_field_password_new_confirm,
+                        hintText: tr.form_field_password_new_confirm_hint,
+                      ),
+                      const SizedBox(height: 16.0),
+                      ReactiveFormConsumer(
+                        builder: (context, form, child) {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: PrimaryButton(
+                              text: tr.form_field_reset_password,
+                              icon: Icons.lock_reset,
+                              enabled: form.valid,
+                              isLoading: state.isLoading,
+                              onPressedFuture: () async {
+                                final controller = ref.read(
+                                  authFormControllerProvider(formKey).notifier,
+                                );
+
+                                final result = await controller.resetPassword();
+
+                                if (!context.mounted) return;
+
+                                Navigator.maybePop(context);
+
+                                final notificationService =
+                                    ref.read(notificationServiceProvider);
+
+                                notificationService.show(
+                                  result
+                                      ? Notifications.passwordResetSuccess
+                                      : Notifications.credentialsInvalid,
+                                );
+                              },
+                              tooltipDisabled: tr.form_invalid_prompt,
+                              innerPadding: const EdgeInsets.symmetric(
+                                horizontal: 24.0,
+                                vertical: 10.0,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 16.0),
-            const Divider(),
-            const SizedBox(height: 16.0),
-            ReactiveFormConfig(
-              validationMessages: AuthFormController.authValidationMessages,
-              child: ReactiveForm(
-                formGroup: controller.form,
-                child: Column(
-                  children: [
-                    Text(
-                      tr.change_password,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 16.0),
-                    PasswordTextField(
-                      formControl: controller.oldPasswordControl,
-                      labelText: tr.form_field_password_current,
-                      hintText: tr.form_field_password_current_hint,
-                    ),
-                    const SizedBox(height: 12.0),
-                    PasswordTextField(
-                      formControl: controller.passwordControl,
-                      labelText: tr.form_field_password_new,
-                      hintText: tr.form_field_password_new_hint,
-                    ),
-                    PasswordTextField(
-                      formControl: controller.passwordConfirmationControl,
-                      labelText: tr.form_field_password_new_confirm,
-                      hintText: tr.form_field_password_new_confirm_hint,
-                    ),
-                    const SizedBox(height: 16.0),
-                    ReactiveFormConsumer(
-                      builder: (context, form, child) {
-                        return SizedBox(
-                          width: double.infinity,
-                          child: PrimaryButton(
-                            text: tr.form_field_reset_password,
-                            icon: Icons.lock_reset,
-                            enabled: form.valid,
-                            isLoading: state.isLoading,
-                            onPressedFuture: () async {
-                              final controller = ref.read(
-                                authFormControllerProvider(formKey).notifier,
-                              );
-
-                              final result = await controller.resetPassword();
-
-                              if (!context.mounted) return;
-
-                              Navigator.maybePop(context);
-
-                              final notificationService =
-                                  ref.read(notificationServiceProvider);
-
-                              notificationService.show(
-                                result
-                                    ? Notifications.passwordResetSuccess
-                                    : Notifications.credentialsInvalid,
-                              );
-                            },
-                            tooltipDisabled: tr.form_invalid_prompt,
-                            innerPadding: const EdgeInsets.symmetric(
-                              horizontal: 24.0,
-                              vertical: 10.0,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
+          actionButtons: [DismissButton(text: tr.dialog_close)],
+          minWidth: 650,
+          maxWidth: 750,
+          minHeight: 450,
         ),
-        actionButtons: [DismissButton(text: tr.dialog_close)],
-        minWidth: 650,
-        maxWidth: 750,
-        minHeight: 450,
       ),
     );
   }

@@ -4,7 +4,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/action_menu.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
-import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -63,11 +62,11 @@ class ChoiceQuestionFormView extends ConsumerWidget {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Opacity(
                         opacity: ThemeConfig.kMuteFadeFactor,
-                        child: Hyperlink(
-                          text:
-                              "+ ${tr.form_array_response_options_choice_new}",
-                          visitedColor: null,
-                          onClick: formViewModel.onNewItem,
+                        child: TextButton.icon(
+                          onPressed: formViewModel.onNewItem,
+                          icon: const Icon(Icons.add),
+                          label:
+                              Text(tr.form_array_response_options_choice_new),
                         ),
                       ),
                     )
