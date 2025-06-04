@@ -60,7 +60,7 @@ extension StudyMonitoringX on Study {
         .toList();
 
     // Build a map for quick lookup of interventions by ID
-    final interventionMap = {for (var i in interventions) i.id: i};
+    final interventionMap = {for (final i in interventions) i.id: i};
 
     int total = 0;
     for (final id in interventionOrder) {
@@ -134,7 +134,7 @@ extension StudyMonitoringX on Study {
             final intervention = interventionMap[interventionId];
             if (intervention != null) {
               requiredInterventionTaskIds = {
-                for (var t in intervention.tasks) t.id
+                for (final t in intervention.tasks) t.id
               };
             }
           }
