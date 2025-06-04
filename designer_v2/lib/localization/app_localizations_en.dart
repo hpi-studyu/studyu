@@ -1697,8 +1697,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get monitoring_table_column_day_in_study => 'Day in study';
 
   @override
-  String get monitoring_table_column_completed_interventions =>
-      'Completed interventions';
+  String get monitoring_table_column_completed_intervention_tasks =>
+      'Completed intervention tasks';
 
   @override
   String get monitoring_table_column_completed_surveys => 'Completed surveys';
@@ -1713,7 +1713,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get monitoring_table_completed_interventions_header_tooltip =>
-      'An intervention is completed, if all of its tasks have been completed for that day';
+      'All of intervention tasks have been completed throughout the study';
 
   @override
   String get monitoring_table_completed_surveys_header_tooltip =>

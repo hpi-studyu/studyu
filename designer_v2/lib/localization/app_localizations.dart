@@ -2972,11 +2972,11 @@ abstract class AppLocalizations {
   /// **'Day in study'**
   String get monitoring_table_column_day_in_study;
 
-  /// No description provided for @monitoring_table_column_completed_interventions.
+  /// No description provided for @monitoring_table_column_completed_intervention_tasks.
   ///
   /// In en, this message translates to:
-  /// **'Completed interventions'**
-  String get monitoring_table_column_completed_interventions;
+  /// **'Completed intervention tasks'**
+  String get monitoring_table_column_completed_intervention_tasks;
 
   /// No description provided for @monitoring_table_column_completed_surveys.
   ///
@@ -2999,7 +2999,7 @@ abstract class AppLocalizations {
   /// No description provided for @monitoring_table_completed_interventions_header_tooltip.
   ///
   /// In en, this message translates to:
-  /// **'An intervention is completed, if all of its tasks have been completed for that day'**
+  /// **'All of intervention tasks have been completed throughout the study'**
   String get monitoring_table_completed_interventions_header_tooltip;
 
   /// No description provided for @monitoring_table_completed_surveys_header_tooltip.
