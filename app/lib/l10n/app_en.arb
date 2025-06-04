@@ -40,7 +40,9 @@
   "no_interventions_available": "No interventions available.",
   "loading_interventions": "Loading interventions",
 
+  "task_already_completed": "You have already completed this task today",
   "task_cannot_be_completed": "The task cannot be completed",
+  "task_outside_period": "The task cannot be completed outside of the intervention period",
   "study_notification_body": "A new task awaits your attention",
 
   "intervention_phase_duration": "Intervention phase duration",
