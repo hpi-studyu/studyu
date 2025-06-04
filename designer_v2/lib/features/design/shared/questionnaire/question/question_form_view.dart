@@ -110,28 +110,30 @@ class _SurveyQuestionFormViewState
         // ReactiveFormConsumer here & use consumers / listeners selectively for
         // the UI parts that need to be rebuild
         return PointerInterceptor(
-          child: Column(
-            children: [
-              _buildQuestionText(context),
-              if (isQuestionHelpTextFieldVisible)
-                Column(
-                  children: [
-                    const SizedBox(height: 16.0),
-                    _buildQuestionHelpText(context),
-                  ],
-                )
-              else
-                const SizedBox.shrink(),
-              if (widget.isHtmlStyleable)
-                HtmlStylingBanner(
-                  isDismissed: isStylingInformationDismissed,
-                  onDismissed: onDismissedCallback,
-                ),
-              const SizedBox(height: 24.0),
-              _buildResponseTypeHeader(context),
-              const SizedBox(height: 16.0),
-              questionTypeBodyBuilder(context),
-            ],
+          child: SelectionArea(
+            child: Column(
+              children: [
+                _buildQuestionText(context),
+                if (isQuestionHelpTextFieldVisible)
+                  Column(
+                    children: [
+                      const SizedBox(height: 16.0),
+                      _buildQuestionHelpText(context),
+                    ],
+                  )
+                else
+                  const SizedBox.shrink(),
+                if (widget.isHtmlStyleable)
+                  HtmlStylingBanner(
+                    isDismissed: isStylingInformationDismissed,
+                    onDismissed: onDismissedCallback,
+                  ),
+                const SizedBox(height: 24.0),
+                _buildResponseTypeHeader(context),
+                const SizedBox(height: 16.0),
+                questionTypeBodyBuilder(context),
+              ],
+            ),
           ),
         );
       },
