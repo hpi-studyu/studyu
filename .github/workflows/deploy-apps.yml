@@ -73,7 +73,7 @@ jobs:
 
       - name: Build StudyU app bundle (dev)
         if: ${{ startsWith(github.ref, 'refs/heads/feat/fitbit') }}
-        run: flutter build appbundle --release --build-number ${{ github.run_number }} --dart-define=STUDYU_ENV=.env.dev
+        run: flutter build appbundle --release --build-number ${{ github.run_number }} --dart-define=STUDYU_ENV=.env.fitbit
         working-directory: ./app
 
       - name: Fastlane upload
