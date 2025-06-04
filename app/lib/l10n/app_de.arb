@@ -40,7 +40,10 @@
   "please_select_interventions_description": "Die Auswirkungen dieser zwei Maßnahmen werden während der Studie gemessen und verglichen.",
   "no_interventions_available": "Keine Interventionen verfügbar.",
   "loading_interventions": "Interventionen laden",
+
+  "task_already_completed": "Die Aufgabe wurde heute bereits erledigt",
   "task_cannot_be_completed": "Die Aufgabe kann nicht bearbeitet werden",
+  "task_outside_period": "Die Aufgabe kann nicht außerhalb der Interventionsphase bearbeitet werden",
   "study_notification_body": "Eine neue Aufgabe benötigt Ihre Aufmerksamkeit",
 
   "intervention_phase_duration": "Länge der Interventionphasen",

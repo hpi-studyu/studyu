@@ -53,16 +53,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <!-- Begin flutter_web_auth -->
-        <activity android:name="com.linusu.flutter_web_auth.CallbackActivity" android:exported="true">
-            <intent-filter android:label="flutter_web_auth">
+        <!-- Begin flutter_web_auth_2 -->
+        <activity
+            android:name="com.linusu.flutter_web_auth_2.CallbackActivity"
+            android:exported="true">
+            <intent-filter android:label="flutter_web_auth_2">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="studyu" />
             </intent-filter>
         </activity>
-        <!-- End flutter_web_auth -->
+        <!-- End flutter_web_auth_2 -->
         <!-- Begin flutter_local_notifications -->
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" android:exported="false" />
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver" android:exported="false">
