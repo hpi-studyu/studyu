@@ -116,8 +116,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get loading_interventions => 'Interventionen laden';
 
   @override
+  String get task_already_completed =>
+      'Die Aufgabe wurde heute bereits erledigt';
+
+  @override
   String get task_cannot_be_completed =>
       'Die Aufgabe kann nicht bearbeitet werden';
+
+  @override
+  String get task_outside_period =>
+      'Die Aufgabe kann nicht außerhalb der Interventionsphase bearbeitet werden';
 
   @override
   String get study_notification_body =>

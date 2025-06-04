@@ -278,11 +278,23 @@ abstract class AppLocalizations {
   /// **'Loading interventions'**
   String get loading_interventions;
 
+  /// No description provided for @task_already_completed.
+  ///
+  /// In en, this message translates to:
+  /// **'You have already completed this task today'**
+  String get task_already_completed;
+
   /// No description provided for @task_cannot_be_completed.
   ///
   /// In en, this message translates to:
   /// **'The task cannot be completed'**
   String get task_cannot_be_completed;
+
+  /// No description provided for @task_outside_period.
+  ///
+  /// In en, this message translates to:
+  /// **'The task cannot be completed outside of the intervention period'**
+  String get task_outside_period;
 
   /// No description provided for @study_notification_body.
   ///

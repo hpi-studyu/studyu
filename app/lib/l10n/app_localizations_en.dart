@@ -116,7 +116,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loading_interventions => 'Loading interventions';
 
   @override
+  String get task_already_completed =>
+      'You have already completed this task today';
+
+  @override
   String get task_cannot_be_completed => 'The task cannot be completed';
+
+  @override
+  String get task_outside_period =>
+      'The task cannot be completed outside of the intervention period';
 
   @override
   String get study_notification_body => 'A new task awaits your attention';
