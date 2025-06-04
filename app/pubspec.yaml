@@ -17,7 +17,7 @@ dependencies:
     # path: ../../fitbitter
     git:
       url: https://github.com/hpi-studyu/fitbitter.git
-      ref: studyu-compatibility-fix
+      ref: master
   fl_chart: ^1.0.0
   flutter:
     sdk: flutter

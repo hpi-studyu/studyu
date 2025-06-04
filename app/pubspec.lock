@@ -325,8 +325,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: studyu-compatibility-fix
-      resolved-ref: "423fd83029b55e13da2d1ec1e90e17a5bfe12f6b"
+      ref: master
+      resolved-ref: "39fe05b494f754a6e57cafe9957986610ec5c9de"
       url: "https://github.com/hpi-studyu/fitbitter.git"
     source: git
     version: "2.0.6"
