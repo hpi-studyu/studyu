@@ -528,6 +528,7 @@
   "navlink_study_test_app_overview": "Study Overview",
   "navlink_study_test_app_eligibility": "Screener",
   "navlink_study_test_app_intervention": "Intervention Selection",
+  "navlink_study_test_app_intervention_disabled": "The intervention selection is disabled, as the study has less than three interventions defined. Interventions are selected automatically in this case.",
   "navlink_study_test_app_consent": "Consent",
   "navlink_study_test_app_journey": "Schedule",
   "navlink_study_test_app_dashboard": "Daily Dashboard",

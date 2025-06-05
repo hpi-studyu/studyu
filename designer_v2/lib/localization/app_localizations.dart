@@ -2522,6 +2522,12 @@ abstract class AppLocalizations {
   /// **'Intervention Selection'**
   String get navlink_study_test_app_intervention;
 
+  /// No description provided for @navlink_study_test_app_intervention_disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'The intervention selection is disabled, as the study has less than three interventions defined. Interventions are selected automatically in this case.'**
+  String get navlink_study_test_app_intervention_disabled;
+
   /// No description provided for @navlink_study_test_app_consent.
   ///
   /// In en, this message translates to:
