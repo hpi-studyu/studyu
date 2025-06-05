@@ -91,6 +91,7 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     _updatePreviewRoute();
     frameController!.activate();
     frameController!.listen();
+    frameController!.refresh(cmd: "reset");
 
     return LayoutBuilder(
       builder: (context, constraints) {
