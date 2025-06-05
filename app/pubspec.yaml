@@ -20,6 +20,7 @@ dependencies:
   flutter_local_notifications: ^19.2.1
   flutter_localizations:
     sdk: flutter
+  flutter_native_splash: ^2.4.6
   flutter_timezone: ^4.1.1
   flutter_web_plugins:
     sdk: flutter
@@ -62,7 +63,7 @@ dependencies:
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.3
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
   lint: ^2.8.0
@@ -94,3 +95,16 @@ flutter_launcher_icons:
   macos:
     generate: true
     image_path: "assets/icon/icon.png"
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/icon/icon.png
+  # branding: assets/icon/logo.png
+  # branding_bottom_padding: 24
+  android_12:
+    image: assets/icon/icon_android12.png
+    color: "#ffffff"
+    # icon_background_color: "#ffffff"
+    # branding: assets/icon/logo.png
+  fullscreen: true
+  # web: false
