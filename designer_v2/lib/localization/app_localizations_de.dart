@@ -1721,8 +1721,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get monitoring_table_column_day_in_study => 'Studientag';
 
   @override
-  String get monitoring_table_column_completed_interventions =>
-      'Abgeschlossene Interventionen';
+  String get monitoring_table_column_completed_intervention_tasks =>
+      'Abgeschlossene Interventionsaufgaben';
 
   @override
   String get monitoring_table_column_completed_surveys =>
@@ -1738,7 +1738,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get monitoring_table_completed_interventions_header_tooltip =>
-      'Eine Intervention zählt als abgeschlossen, wenn alle Aufgaben für den Tag erledigt wurden';
+      'Alle Interventionsaufgaben wurden während der gesamten Studie abgeschlossen';
 
   @override
   String get monitoring_table_completed_surveys_header_tooltip =>

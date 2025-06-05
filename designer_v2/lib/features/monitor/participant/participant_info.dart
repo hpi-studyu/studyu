@@ -43,7 +43,7 @@ class ParticipantInfo extends ConsumerWidget {
             '${monitorItem.currentDayOfStudy}/${monitorItem.studyDurationInDays}',
           ),
           _buildInfoRow(
-            tr.monitoring_table_column_completed_interventions,
+            tr.monitoring_table_column_completed_intervention_tasks,
             '${monitorItem.completedInterventions}/${monitorItem.totalInterventionTasks}',
           ),
           _buildInfoRow(
