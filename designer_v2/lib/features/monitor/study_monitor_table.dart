@@ -68,7 +68,7 @@ class StudyMonitorTable extends ConsumerWidget {
         ),
         StandardTableColumn(
           sortable: true,
-          label: tr.monitoring_table_column_completed_interventions,
+          label: tr.monitoring_table_column_completed_intervention_tasks,
           tooltip: tr.monitoring_table_completed_interventions_header_tooltip,
           columnWidth:
               const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.6)),
@@ -84,7 +84,7 @@ class StudyMonitorTable extends ConsumerWidget {
       buildCellsAt: _buildRow,
       rowSpacing: 5.0,
       minRowHeight: 30.0,
-      headerMaxLines: 2,
+      headerMaxLines: 3,
       softWrapHeader: true,
       onSelectItem: onSelectItem,
     );
