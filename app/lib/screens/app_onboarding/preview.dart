@@ -65,36 +65,38 @@ class Preview {
   Future<void> runCommands() async {
     // delete study subscription and progress
     if (containsQueryPair('cmd', 'reset')) {
-      if (selectedStudyObjectId != null) {
-        final userId = Supabase.instance.client.auth.currentUser!.id;
+      if (extra != null && extra!.isNotEmpty) {
+        final String userId = extra!;
 
-        // Fetch all study subjects and progress records
-        final List<StudySubject> allSubjects =
-            await SupabaseQuery.getAll<StudySubject>();
-        final List<SubjectProgress> allProgress =
-            await SupabaseQuery.getAll<SubjectProgress>();
+        final List<StudySubject> subjects =
+            await SupabaseQuery.getAll<StudySubject>(
+          selectedColumns: [
+            '*',
+            'study!study_subject_studyId_fkey(*)',
+            'subject_progress(*)',
+          ],
+          filters: {'user_id': userId},
+        );
 
-        // Filter subjects and progress related to the current user
-        final List<StudySubject> userSubjects =
-            allSubjects.where((subject) => subject.userId == userId).toList();
-
-        final List<SubjectProgress> userProgress = allProgress
-            .where((progressItem) => progressItem.subjectId == userId)
-            .toList();
-
-        // Delete user's progress records
-        for (final progressItem in userProgress) {
-          await progressItem.delete();
+        for (final subject in subjects) {
+          subject.delete();
         }
 
-        // Delete user's subjects
-        for (final subject in userSubjects) {
-          await subject.delete();
-        }
-
-        // Clear active study reference
         deleteActiveStudyReference();
-        selectedStudyObjectId = null;
+        selectedStudyObjectId = '';
+        return;
+      } else if (selectedStudyObjectId != null) {
+        final StudySubject subject = await SupabaseQuery.getById<StudySubject>(
+          selectedStudyObjectId!,
+          selectedColumns: [
+            '*',
+            'study!study_subject_studyId_fkey(*)',
+            'subject_progress(*)',
+          ],
+        );
+        subject.delete();
+        deleteActiveStudyReference();
+        selectedStudyObjectId = '';
       }
     }
   }

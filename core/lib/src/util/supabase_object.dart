@@ -66,11 +66,15 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject>
 class SupabaseQuery {
   static Future<List<T>> getAll<T extends SupabaseObject>({
     List<String> selectedColumns = const ['*'],
+    Map<String, Object>? filters,
   }) async {
     try {
-      return extractSupabaseList(
-        await env.client.from(tableName(T)).select(selectedColumns.join(',')),
-      );
+      var query =
+          env.client.from(tableName(T)).select(selectedColumns.join(','));
+      filters?.forEach((key, value) {
+        query = query.eq(key, value);
+      });
+      return extractSupabaseList(await query);
     } catch (error, stacktrace) {
       catchSupabaseException(error, stacktrace);
       rethrow;

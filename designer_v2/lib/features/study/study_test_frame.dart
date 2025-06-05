@@ -11,6 +11,7 @@ import 'package:studyu_designer_v2/features/study/study_test_controls.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class PreviewFrame extends ConsumerStatefulWidget {
   const PreviewFrame(
@@ -116,8 +117,11 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
                           frameController!.frameWidget,
                           const SizedBox(height: 8.0),
                           FrameControlsWidget(
-                            onRefresh: () =>
-                                frameController!.refresh(cmd: "reset"),
+                            onRefresh: () {
+                              frameController!.routeInformation.extra =
+                                  Supabase.instance.client.auth.currentUser?.id;
+                              frameController!.refresh(cmd: "reset");
+                            },
                             onOpenNewTab: () => frameController!.openNewPage(),
                             enabled: state.canTest,
                           ),
