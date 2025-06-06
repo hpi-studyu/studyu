@@ -87,7 +87,7 @@ class Preview {
       }
 
       deleteActiveStudyReference();
-      selectedStudyObjectId = '';
+      selectedStudyObjectId = null;
       return;
     }
   }
