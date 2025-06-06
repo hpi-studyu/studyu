@@ -11,6 +11,7 @@ on:
       - 'core/**'
       - 'flutter_common/**'
       - '.github/workflows/deploy-apps.yml'
+      - '.fvmrc'
   workflow_dispatch:
 
 env:
