@@ -359,7 +359,6 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
           .eq('id', id)
           .select()
           .single();
-      // todo delete() does not return?!
       response['study'] = study.toJson();
       return StudySubject.fromJson(response);
     } catch (error, stacktrace) {
