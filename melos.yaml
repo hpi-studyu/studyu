@@ -46,6 +46,12 @@ scripts:
         - 'studyu_core'
         - 'studyu_designer_v2'
 
+  qualitycheck:
+    run: |
+      melos analyze --fatal-infos
+      melos format
+      melos generate
+
   reset:
     run: |
       git clean -x -d -f -q || true

@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/main.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
@@ -34,7 +35,6 @@ class StudyNotifications {
       StreamController<ReceivedNotification>.broadcast();
   final StreamController<String?> selectNotificationStream =
       StreamController<String?>.broadcast();
-  // String? _taskCannotBeCompleted;
 
   static final NotificationValidators validator =
       NotificationValidators(false, false, false);
@@ -44,7 +44,6 @@ class StudyNotifications {
 
   /// Private constructor
   StudyNotifications._create(this.subject, this.context) {
-    // _taskCannotBeCompleted = AppLocalizations.of(context)!.task_cannot_be_completed;
     _initNotificationsPlugin();
     _requestPermissions();
     _isAndroidPermissionGranted();
@@ -209,7 +208,6 @@ class StudyNotifications {
       nowDt,
     );
 
-    //if (taskToRun != null) {
     final isInsidePeriod =
         taskToRun.completionPeriod.contains(StudyUTimeOfDay.now());
     if (!completed && isInsidePeriod) {
@@ -220,21 +218,16 @@ class StudyNotifications {
       );
       navigatorKey.currentState!
           .pushNamedAndRemoveUntil(Routes.loading, (_) => false);
-      // todo error management after null safety
-      /*} else {
-        navigatorKey.currentState!.push(
-          MaterialPageRoute(
-            // todo change error "or not inside period"
-            builder: (_) => DashboardScreen(error: _taskCannotBeCompleted),
-          ),
-        );
-      }*/
     } else {
+      final errorMessage = completed
+          ? AppLocalizations.of(context)!.task_already_completed
+          : isInsidePeriod
+              ? AppLocalizations.of(context)!.task_cannot_be_completed
+              : AppLocalizations.of(context)!.task_outside_period;
+
       navigatorKey.currentState!.push(
-        // todo translate
         MaterialPageRoute(
-          builder: (_) =>
-              const DashboardScreen(error: 'Task could not be found'),
+          builder: (_) => DashboardScreen(error: errorMessage),
         ),
       );
     }

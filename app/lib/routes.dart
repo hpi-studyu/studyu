@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_classes_with_only_static_members
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/app_outdated_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
@@ -40,6 +41,7 @@ class Routes {
   static const String performanceDetails = '/performanceDetails';
 
   static Route<dynamic> unknownRoute(RouteSettings settings) {
+    FlutterNativeSplash.remove();
     return MaterialPageRoute(
       builder: (_) => Scaffold(
         body: SafeArea(
@@ -61,6 +63,9 @@ class Routes {
     Map<String, String> queryParameters,
   ) {
     final uri = Uri.parse(settings.name!);
+    if (uri.path != loading) {
+      FlutterNativeSplash.remove();
+    }
     switch (uri.path) {
       case loading:
         return MaterialPageRoute(

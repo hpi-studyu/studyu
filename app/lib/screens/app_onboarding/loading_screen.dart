@@ -37,13 +37,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await _initPreview(state);
 
     final selectedSubjectId = await getActiveSubjectId();
-    StudyULogger.info('Subject ID: $selectedSubjectId');
     if (!mounted) return;
 
     if (selectedSubjectId == null) {
       await noSubjectFound();
       return;
     }
+    StudyULogger.info(
+      "Retrieving subject with ID: $selectedSubjectId",
+    );
     StudySubject? subject = await _retrieveSubject(selectedSubjectId);
     if (!mounted) return;
     if (subject != null) {
@@ -53,11 +55,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
       state.init(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
+      StudyULogger.warning(
+        "No subject found for ID: $selectedSubjectId. Local data will be cleared.",
+      );
+      SecureStorage.deleteAll();
       await noSubjectFound();
     }
   }
 
   Future<void> noSubjectFound() async {
+    StudyULogger.info(
+      "No subject found, redirecting to welcome screen",
+    );
     await cancelNotifications(context);
     if (mounted) Navigator.pushReplacementNamed(context, Routes.welcome);
   }
@@ -87,7 +96,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           subject = await _fetchRemoteSubject(selectedStudyObjectId);
         }
       } catch (exception) {
-        debugPrint(
+        StudyULogger.warning(
           "Could not login and retrieve the study subject: $exception",
         );
         if (exception is SocketException) {
@@ -105,7 +114,76 @@ class _LoadingScreenState extends State<LoadingScreen> {
           StudyULogger.fatal('Could not login and retrieve the study subject. '
               'One reason for this might be that the study subject is no '
               'longer available and only resides in app backup');
-          throw Exception("Remote subject not found");
+          // throw Exception("Remote subject not found");
+          // Ask the user if they want to delete all secure storage data or try to re-read
+          // show popup dialog to the user
+          if (!mounted) return null;
+          final result = await showDialog<bool>(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return AlertDialog(
+                title: Text(AppLocalizations.of(context)!.loading_error_title),
+                content: Text(
+                  AppLocalizations.of(context)!.loading_error_description,
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text(AppLocalizations.of(context)!.try_again),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.red,
+                    ),
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: Text(AppLocalizations.of(context)!.delete_data),
+                  ),
+                ],
+              );
+            },
+          );
+          if (result == true) {
+            if (!mounted) return null;
+            // Confirm deletion of storage data
+            final deleteResult = await showDialog<bool>(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(AppLocalizations.of(context)!.delete_all_data),
+                  content: Text(AppLocalizations.of(context)!
+                      .delete_all_data_description),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text(AppLocalizations.of(context)!.cancel),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.red,
+                      ),
+                      onPressed: () => Navigator.of(context).pop(true),
+                      child: Text(AppLocalizations.of(context)!.reset_app),
+                    ),
+                  ],
+                );
+              },
+            );
+            if (deleteResult == true) {
+              // Delete all secure storage data
+              StudyULogger.info("Deleting all secure storage data");
+              if (!mounted) return null;
+              await cancelNotifications(context);
+              await SecureStorage.deleteAll();
+              StudyULogger.info("Secure storage data deleted");
+            }
+          }
+          StudyULogger.info("User chose not to delete secure storage data. "
+              "Going back to loading screen");
+          if (mounted) {
+            Navigator.pushReplacementNamed(context, Routes.loading);
+          }
         }
       }
     }

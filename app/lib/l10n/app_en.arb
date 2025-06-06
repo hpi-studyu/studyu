@@ -2,6 +2,12 @@
   "@@locale": "en",
 
   "loading": "Loading",
+  "loading_error_title": "Loading Error",
+  "loading_error_description": "The study data could not be retrieved. Please check your internet connection or try again later. If the problem persists, you can delete all data to reset the app. This will delete all your study data and you will have to rejoin the study.",
+  "try_again": "Try again",
+  "delete_all_data": "Delete all data",
+  "delete_all_data_description": "Do you really want to delete all data? This will delete all your study data and you will have to rejoin the study.",
+  "reset_app": "Reset App",
 
   "what_is_studyu": "What is StudyU?",
   "description_part1": "Imagine reading the sentence: \"Eating after 6 pm decreases sleep quality\"",
@@ -34,7 +40,9 @@
   "no_interventions_available": "No interventions available.",
   "loading_interventions": "Loading interventions",
 
+  "task_already_completed": "You have already completed this task today",
   "task_cannot_be_completed": "The task cannot be completed",
+  "task_outside_period": "The task cannot be completed outside of the intervention period",
   "study_notification_body": "A new task awaits your attention",
 
   "intervention_phase_duration": "Intervention phase duration",
