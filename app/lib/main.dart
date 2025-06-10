@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -36,6 +37,9 @@ GlobalKey<NavigatorState> navigatorKey =
 Future<void> main() async {
   final WidgetsBinding widgetsBinding =
       WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await loadEnv();
   await _configureLocalTimeZone();
