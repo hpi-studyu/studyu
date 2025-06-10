@@ -284,7 +284,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
       // OBSERVATION [i]
       if (preview.selectedRoute == '/observation') {
-        print(state.selectedStudy!.observations.first.id);
         final tasks = <Task>[
           ...state.selectedStudy!.observations
               .where((observation) => observation.id == preview.extra),

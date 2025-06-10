@@ -127,7 +127,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get please_select_interventions_description =>
-      'Die Auswirkungen dieser zwei Maßnahmen werden während der Studie gemessen und verglichen.';
+      'Die Auswirkungen dieser beiden Interventionen werden während der Studie gemessen und miteinander verglichen. Die Interventionen erfolgen in der Reihenfolge, in der Sie sie auswählen. Wenn Sie A vor B wählen, wird A zuerst durchgeführt.';
 
   @override
   String get no_interventions_available => 'Keine Interventionen verfügbar.';
