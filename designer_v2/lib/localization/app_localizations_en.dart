@@ -1426,6 +1426,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navlink_study_test_app_intervention => 'Intervention Selection';
 
   @override
+  String get navlink_study_test_app_intervention_disabled =>
+      'The intervention selection is disabled, as the study has less than three interventions defined. Interventions are selected automatically in this case.';
+
+  @override
   String get navlink_study_test_app_consent => 'Consent';
 
   @override

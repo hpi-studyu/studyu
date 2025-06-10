@@ -299,7 +299,7 @@ abstract class AppLocalizations {
   /// No description provided for @please_select_interventions_description.
   ///
   /// In en, this message translates to:
-  /// **'The effects of these two interventions will be measured and compared during the study.'**
+  /// **'The effects of these two interventions will be measured and compared during the study. Interventions will follow the order you select. Choosing A before B means A comes first'**
   String get please_select_interventions_description;
 
   /// No description provided for @no_interventions_available.
