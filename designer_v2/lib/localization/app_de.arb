@@ -526,6 +526,7 @@
   "navlink_study_test_app_overview": "Studienübersicht",
   "navlink_study_test_app_eligibility": "Teilnehmer-Screening",
   "navlink_study_test_app_intervention": "Interventionsauswahl",
+  "navlink_study_test_app_intervention_disabled": "Die Interventionsauswahl ist deaktiviert, da die Studie weniger als drei Interventionen hat. In diesem Fall werden die Interventionen automatisch ausgewählt.",
   "navlink_study_test_app_consent": "Teilnahme-Einwilligung",
   "navlink_study_test_app_journey": "Studienverlaufsplan",
   "navlink_study_test_app_dashboard": "Tagesübersicht",

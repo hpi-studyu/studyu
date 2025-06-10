@@ -127,7 +127,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get please_select_interventions_description =>
-      'The effects of these two interventions will be measured and compared during the study.';
+      'The effects of these two interventions will be measured and compared during the study. Interventions will follow the order you select. Choosing A before B means A comes first';
 
   @override
   String get no_interventions_available => 'No interventions available.';

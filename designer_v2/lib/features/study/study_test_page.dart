@@ -40,6 +40,10 @@ class StudyTestScreen extends StudyPageWidget {
         showHelp(ref, context);
       }
     });
+    final interventionSelectionDisabled = !canTest ||
+        formViewModel
+                .interventionsFormViewModel.interventionsArray.value!.length <=
+            2;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,16 +87,25 @@ class StudyTestScreen extends StudyPageWidget {
                         );
                       },
               ),
-              TextButton.icon(
-                icon: const Icon(Icons.arrow_forward),
-                label: Text(tr.navlink_study_test_app_intervention),
-                onPressed: (!canTest)
-                    ? null
-                    : () {
-                        frameController.navigate(
-                          route: TestAppRoutes.intervention,
-                        );
-                      },
+              Row(
+                children: [
+                  Tooltip(
+                    message: interventionSelectionDisabled
+                        ? tr.navlink_study_test_app_intervention_disabled
+                        : '',
+                    child: TextButton.icon(
+                      icon: const Icon(Icons.arrow_forward),
+                      label: Text(tr.navlink_study_test_app_intervention),
+                      onPressed: interventionSelectionDisabled
+                          ? null
+                          : () {
+                              frameController.navigate(
+                                route: TestAppRoutes.intervention,
+                              );
+                            },
+                    ),
+                  )
+                ],
               ),
               TextButton.icon(
                 icon: const Icon(Icons.arrow_forward),
