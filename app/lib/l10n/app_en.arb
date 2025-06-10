@@ -36,7 +36,7 @@
   "please_answer_eligibility": "Please answer a few questions to make sure that you can safely participate in this study.",
   "intervention_selection_title": "Interventions",
   "please_select_interventions": "Please select two interventions to apply during the study.",
-  "please_select_interventions_description": "The effects of these two interventions will be measured and compared during the study.",
+  "please_select_interventions_description": "The effects of these two interventions will be measured and compared during the study. Interventions will follow the order you select. Choosing A before B means A comes first",
   "no_interventions_available": "No interventions available.",
   "loading_interventions": "Loading interventions",
 
