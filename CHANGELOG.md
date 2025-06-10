@@ -3,6 +3,113 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-06-10
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.8.0`](#studyu_app---v280)
+ - [`studyu_core` - `v4.5.0`](#studyu_core---v450)
+ - [`studyu_designer_v2` - `v1.10.0`](#studyu_designer_v2---v1100)
+ - [`studyu_flutter_common` - `v1.8.11`](#studyu_flutter_common---v1811)
+
+---
+
+#### `studyu_app` - `v2.8.0`
+
+ - **REFACTOR**: TextualSummarySectionWidget.
+ - **REFACTOR**: print remove dead code.
+ - **FIX**: textual summary widget width.
+ - **FIX**: upgrade deps.
+ - **FIX**: getTemporaryDirectory no longer throws error for web.
+ - **FIX**: double confirmation of data deletion and reload action + translations.
+ - **FIX**: handle secure storage errors with user prompt.
+ - **FIX**: improve notification task error messages.
+ - **FIX**: ios deployment.
+ - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+ - **FIX**: android deployment bump desugar_jdk_libs.
+ - **FIX**: add core and flutter_common local path dependency.
+ - **FIX**: add string_extensions.dart.
+ - **FIX**: colorless gauge translations.
+ - **FIX**: translation.
+ - **FIX**: upgrade deps.
+ - **FIX**: current intervention text split.
+ - **FIX**: deprecated withOpacity.
+ - **FIX**: create fallback dir if _getMultimodalTempDirectory fails.
+ - **FIX**: remove placeholder file creation.
+ - **FIX**: handle errors during app reset process.
+ - **FIX**: handle null cases for staging audio and image files & handle temp directory fail.
+ - **FIX**: migrate code.
+ - **FIX**: localization.
+ - **FIX**: improve baseline name handling in average section widget localization.
+ - **FIX**: update average section widget for better title handling and improve pubspec.lock dependencies.
+ - **FIX**: default for app deployment flutter variables 2.
+ - **FIX**: default for app deployment flutter variables.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: android config.
+ - **FIX**: ios and android configuration.
+ - **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.
+ - **FEAT**: re-create android and ios folders gemfile".
+ - **FEAT**: re-create android and ios folders gemfile.
+ - **FEAT**: re-create android and ios folders.
+ - **FEAT**: implement textual summary section with data processing and UI integration.
+ - **FEAT**: add gauge comparison section with loading state and colorless gauge option.
+ - **FEAT**: enhance textual summary with localized messages for intervention comparisons.
+ - **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.".
+ - **FEAT**: invert colorless gauge display logic in gauge comparison section.
+ - **FEAT**: descriptive stats section widget for app.
+ - **FEAT**: refactor statistical widgets and implement synchronous t-test results.
+ - **FEAT**: report overview.
+ - **FEAT**: report overview.
+ - **FEAT**: add splash screen for app.
+ - **FEAT**: re-create android and ios folders gemfile"".
+
+#### `studyu_core` - `v4.5.0`
+
+ - **FIX**: upgrade deps.
+ - **FEAT**: add Descriptive Stats section to the designer and core.
+ - **FEAT**: add gauge comparison section with form view.
+ - **FEAT**: add textual summary section to report with form view and validation.
+
+#### `studyu_designer_v2` - `v1.10.0`
+
+ - **REFACTOR**: analysis notes.
+ - **REFACTOR**: analysis notes.
+ - **REFACTOR**: incorrect use of static final with lambda function.
+ - **FIX**: upgrade deps.
+ - **FIX**: monitoring completed intervention task total calculation.
+ - **FIX**: add SelectionArea to all side sheets to fix flutter issue [#158095](https://github.com/hpi-studyu/studyu/issues/158095).
+ - **FIX**: replace Hyperlink with TextButton in choice_question_form_view.
+ - **FIX**: https://github.com/dart-lang/sdk/issues/60784.
+ - **FIX**: migrate code.
+ - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+ - **FIX**: add core and flutter_common local path dependency.
+ - **FIX**: remove test report text and fix report description spacing.
+ - **FIX**: zip problems when exporting data and sanitization removal.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: platform localization.
+ - **FIX**: localization.
+ - **FEAT**: add Descriptive Stats section to the designer and core.
+ - **FEAT**: add gauge comparison section with form view.
+ - **FEAT**: add textual summary section to report with form view and validation.
+ - **FEAT**: Enhance password reset functionality with improved validation and notifications.
+ - **FEAT**: Implement password reset functionality in account settings.
+
+#### `studyu_flutter_common` - `v1.8.11`
+
+ - **FIX**: improve error handling in secure storage read method.
+ - **FIX**: enable android encrypted shared preferences for secure storage.
+ - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+ - **FIX**: add core and flutter_common local path dependency.
+
+
 ## 2024-11-19
 
 ### Changes

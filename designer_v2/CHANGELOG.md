@@ -1,3 +1,27 @@
+## 1.10.0
+
+ - **REFACTOR**: analysis notes.
+ - **REFACTOR**: analysis notes.
+ - **REFACTOR**: incorrect use of static final with lambda function.
+ - **FIX**: upgrade deps.
+ - **FIX**: monitoring completed intervention task total calculation.
+ - **FIX**: add SelectionArea to all side sheets to fix flutter issue [#158095](https://github.com/hpi-studyu/studyu/issues/158095).
+ - **FIX**: replace Hyperlink with TextButton in choice_question_form_view.
+ - **FIX**: https://github.com/dart-lang/sdk/issues/60784.
+ - **FIX**: migrate code.
+ - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+ - **FIX**: add core and flutter_common local path dependency.
+ - **FIX**: remove test report text and fix report description spacing.
+ - **FIX**: zip problems when exporting data and sanitization removal.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: platform localization.
+ - **FIX**: localization.
+ - **FEAT**: add Descriptive Stats section to the designer and core.
+ - **FEAT**: add gauge comparison section with form view.
+ - **FEAT**: add textual summary section to report with form view and validation.
+ - **FEAT**: Enhance password reset functionality with improved validation and notifications.
+ - **FEAT**: Implement password reset functionality in account settings.
+
 ## 1.9.4
 
  - **FIX**: linter.

@@ -1,3 +1,10 @@
+## 4.5.0
+
+ - **FIX**: upgrade deps.
+ - **FEAT**: add Descriptive Stats section to the designer and core.
+ - **FEAT**: add gauge comparison section with form view.
+ - **FEAT**: add textual summary section to report with form view and validation.
+
 ## 4.4.9
 
  - **FIX**: upgrade deps and flutter v3.24.5.
