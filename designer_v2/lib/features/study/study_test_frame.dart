@@ -98,6 +98,7 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     _updatePreviewRoute();
     frameController!.activate();
     frameController!.listen();
+    frameController!.refresh(cmd: "reset");
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -123,8 +124,9 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
                           frameController!.frameWidget,
                           const SizedBox(height: 8.0),
                           FrameControlsWidget(
-                            onRefresh: () =>
-                                frameController!.refresh(cmd: "reset"),
+                            onRefresh: () {
+                              frameController!.refresh(cmd: "reset");
+                            },
                             onOpenNewTab: () => frameController!.openNewPage(),
                             enabled: state.canTest,
                           ),
