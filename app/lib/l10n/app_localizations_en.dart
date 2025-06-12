@@ -725,4 +725,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get maximum => 'Maximum';
+
+  @override
+  String get painIndicatorText => 'Pain Level';
+
+  @override
+  String get dialogTitle => 'Select Pain Level';
+
+  @override
+  String get okButton => 'OK';
+
+  @override
+  String get cancelButton => 'Cancel';
+
+  @override
+  String get painLevel_0 => 'No pain';
+
+  @override
+  String get painLevel_2 => 'Hurts a little bit';
+
+  @override
+  String get painLevel_4 => 'Hurts a little more';
+
+  @override
+  String get painLevel_6 => 'Hurts even more';
+
+  @override
+  String get painLevel_8 => 'Hurts a whole lot';
+
+  @override
+  String get painLevel_10 => 'Worst pain possible';
 }

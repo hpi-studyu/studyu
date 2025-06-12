@@ -142,30 +142,41 @@ class BodyPartSelector extends StatelessWidget {
   Widget _buildBody(BuildContext context, SvgData svgData) {
     return AnimatedSwitcher(
       duration: kThemeAnimationDuration,
-      child: SizedBox.expand(
+      child: LayoutBuilder(
         key: ValueKey(Object.hash(bodyParts, side)),
-        // The CanvasTouchDetector now wraps the CustomPaint.
-        child: CanvasTouchDetector(
-          gesturesToOverride: const [GestureType.onTapDown],
-          builder: (context) => CustomPaint(
-            painter: _BodyPainter(
-              // Pass the picture, paths, and other properties to the painter.
-              pictureInfo: svgData.pictureInfo,
-              bodyPartPaths: svgData.paths,
-              bodyParts: bodyParts,
-              onTap: (id) {
-                final currentPain = bodyParts.toMap()[id] ?? 0;
-                _showPainSelectorDialog(context, id, currentPain);
-              },
-              context: context,
-              scale: scale,
-              unselectedColor: unselectedColor ??
-                  Theme.of(context).colorScheme.surfaceContainerHighest,
-              unselectedOutlineColor: unselectedOutlineColor ??
-                  Theme.of(context).colorScheme.onSurfaceVariant,
+        builder: (context, constraints) {
+          final size = Size.square(min(
+              constraints.maxWidth,
+              constraints.maxHeight.isFinite
+                  ? constraints.maxHeight
+                  : constraints.maxWidth));
+
+          return SizedBox(
+            width: size.width,
+            height: size.height,
+            child: CanvasTouchDetector(
+              gesturesToOverride: const [GestureType.onTapDown],
+              builder: (context) => CustomPaint(
+                size: size,
+                painter: _BodyPainter(
+                  pictureInfo: svgData.pictureInfo,
+                  bodyPartPaths: svgData.paths,
+                  bodyParts: bodyParts,
+                  onTap: (id) {
+                    final currentPain = bodyParts.toMap()[id] ?? 0;
+                    _showPainSelectorDialog(context, id, currentPain);
+                  },
+                  context: context,
+                  scale: scale,
+                  unselectedColor: unselectedColor ??
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
+                  unselectedOutlineColor: unselectedOutlineColor ??
+                      Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -373,7 +384,7 @@ class _PainLevelDialogState extends State<PainLevelDialog> {
                 Text(
                   '${widget.scale.painIndicatorText}: $_currentPain',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: painInfo.textColor.withOpacity(0.8),
+                        color: painInfo.textColor.withAlpha(204),
                       ),
                 ),
               ],

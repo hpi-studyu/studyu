@@ -3,11 +3,7 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/questionnaire/pain_selection/body_part_selector.dart';
 import 'package:studyu_app/widgets/questionnaire/pain_selection/body_part_selector_turnable.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
-import 'package:studyu_app/widgets/selectable_button.dart';
 import 'package:studyu_core/core.dart';
-
-/// A custom German configuration for the pain scale.
-/// This can be adapted or replaced with a default or localized version.
 
 class PainQuestionWidget extends QuestionWidget {
   final PainQuestion question;
@@ -20,14 +16,11 @@ class PainQuestionWidget extends QuestionWidget {
 }
 
 class _PainQuestionWidgetState extends State<PainQuestionWidget> {
-  // The state is now a BodyParts object, which holds the pain level for each part.
   BodyParts _bodyParts = const BodyParts();
 
   @override
   void initState() {
     super.initState();
-    // Here you could potentially load an initial state from a previous answer
-    // For example: if (widget.question.answer != null) { ... }
   }
 
   /// This callback is triggered when a user selects or updates a pain level
@@ -39,34 +32,28 @@ class _PainQuestionWidgetState extends State<PainQuestionWidget> {
   }
 
   void _onDone() {
-    widget.onDone!(widget.question.constructAnswer(_bodyParts));
+    if (widget.onDone != null) {
+      widget.onDone!(widget.question.constructAnswer(_bodyParts));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // The main interactive widget for selecting body parts and pain levels.
-        BodyPartSelectorTurnable(
-          bodyParts: _bodyParts,
-          onPainChanged: _onPainChanged,
-          scale: germanPainScale,
-          frontButtonIcon: const Icon(Icons.face_outlined),
-          backButtonIcon: const Icon(Icons.accessibility_new_outlined),
-        ),
-        const SizedBox(height: 16),
-        SelectableButton(
-          onTap: _onDone,
-          child: const Text("Done"),
-        ),
-      ],
+    return BodyPartSelectorTurnable(
+      bodyParts: _bodyParts,
+      onPainChanged: _onPainChanged,
+      scale: _generateLocalizedScale(context),
+      frontButtonIcon: const Icon(Icons.face_outlined),
+      backButtonIcon: const Icon(Icons.accessibility_new_outlined),
     );
   }
 }
 
-WongBakerScale generateLocalizedScale(BuildContext context) {
-  final loc = AppLocalizations.of(context)!;
+WongBakerScale _generateLocalizedScale(BuildContext context) {
+  final loc = AppLocalizations.of(context);
+  if (loc == null) {
+    throw Exception("AppLocalizations not found in context");
+  }
 
   return WongBakerScale(
     painIndicatorText: loc.painIndicatorText,

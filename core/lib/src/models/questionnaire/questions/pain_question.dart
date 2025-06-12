@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/src/models/questionnaire/answer.dart';
 import 'package:studyu_core/src/models/questionnaire/body_parts.dart';
 import 'package:studyu_core/src/models/questionnaire/question.dart';
+import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 
 part 'pain_question.g.dart';
 

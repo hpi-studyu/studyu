@@ -41,6 +41,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         .onChanged((control) => onResponseOptionsChanged(control.controls));
     freeTextResponseOptionsArray
         .onChanged((control) => onResponseOptionsChanged(control.controls));
+    painResponseOptionsArray
+        .onChanged((control) => onResponseOptionsChanged(control.controls));
   }
 
   /// Customized titles (if any) depending on the context of use
@@ -97,6 +99,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         SurveyQuestionType.image: imageResponseOptionsArray,
         SurveyQuestionType.audio: audioResponseOptionsArray,
         SurveyQuestionType.freeText: freeTextResponseOptionsArray,
+        SurveyQuestionType.pain: painResponseOptionsArray,
       }[questionType]!;
 
   List<AbstractControl> get answerOptionsControls =>
@@ -127,6 +130,15 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           .toList();
   late final FormArray<String> imageResponseOptionsArray =
       FormArray(imageOptions);
+
+  //Pain
+  List<AbstractControl<String>> get painOptions =>
+      PainQuestionFormData.kResponseOptions.keys
+          .map((e) => FormControl(value: e, disabled: true))
+          .toList();
+
+  late final FormArray<String> painResponseOptionsArray =
+      FormArray(painOptions);
 
   // Audio
   static const int kDefaultMaxRecordingDurationSeconds = 60;
@@ -336,6 +348,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.freeText: FormGroup({
       'freeTextOptionsArray': freeTextResponseOptionsArray,
     }),
+    SurveyQuestionType.pain: FormGroup({
+      'painOptionsArray': painResponseOptionsArray,
+    }),
   };
 
   late final FormValidationConfigSet _sharedValidationConfig = {
@@ -535,6 +550,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         );
         freeTextTypeControl.value = data.textType;
         customRegexControl.value = data.textTypeExpression;
+      case SurveyQuestionType.pain:
+        break;
     }
   }
 
@@ -611,6 +628,13 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           ], // required
           textType: freeTextTypeControl.value!,
           textTypeExpression: customRegexControl.value,
+        );
+      case SurveyQuestionType.pain:
+        return PainQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
         );
     }
   }

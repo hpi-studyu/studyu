@@ -1417,6 +1417,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Maximum'**
   String get maximum;
+
+  /// No description provided for @painIndicatorText.
+  ///
+  /// In en, this message translates to:
+  /// **'Pain Level'**
+  String get painIndicatorText;
+
+  /// No description provided for @dialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Pain Level'**
+  String get dialogTitle;
+
+  /// No description provided for @okButton.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get okButton;
+
+  /// No description provided for @cancelButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelButton;
+
+  /// No description provided for @painLevel_0.
+  ///
+  /// In en, this message translates to:
+  /// **'No pain'**
+  String get painLevel_0;
+
+  /// No description provided for @painLevel_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Hurts a little bit'**
+  String get painLevel_2;
+
+  /// No description provided for @painLevel_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Hurts a little more'**
+  String get painLevel_4;
+
+  /// No description provided for @painLevel_6.
+  ///
+  /// In en, this message translates to:
+  /// **'Hurts even more'**
+  String get painLevel_6;
+
+  /// No description provided for @painLevel_8.
+  ///
+  /// In en, this message translates to:
+  /// **'Hurts a whole lot'**
+  String get painLevel_8;
+
+  /// No description provided for @painLevel_10.
+  ///
+  /// In en, this message translates to:
+  /// **'Worst pain possible'**
+  String get painLevel_10;
 }
 
 class _AppLocalizationsDelegate

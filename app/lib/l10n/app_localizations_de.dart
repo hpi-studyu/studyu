@@ -732,4 +732,34 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get maximum => 'Maximum';
+
+  @override
+  String get painIndicatorText => 'Schmerzlevel';
+
+  @override
+  String get dialogTitle => 'Schmerzlevel auswählen';
+
+  @override
+  String get okButton => 'OK';
+
+  @override
+  String get cancelButton => 'Abbrechen';
+
+  @override
+  String get painLevel_0 => 'Kein Schmerz';
+
+  @override
+  String get painLevel_2 => 'Tut ein bisschen weh';
+
+  @override
+  String get painLevel_4 => 'Tut etwas mehr weh';
+
+  @override
+  String get painLevel_6 => 'Tut noch mehr weh';
+
+  @override
+  String get painLevel_8 => 'Tut sehr weh';
+
+  @override
+  String get painLevel_10 => 'Stärkster Schmerz';
 }

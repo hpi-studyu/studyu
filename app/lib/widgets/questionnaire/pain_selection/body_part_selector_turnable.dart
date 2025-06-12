@@ -63,6 +63,7 @@ class _BodyPartSelectorTurnableState extends State<BodyPartSelectorTurnable> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -87,18 +88,13 @@ class _BodyPartSelectorTurnableState extends State<BodyPartSelectorTurnable> {
             },
           ),
         ),
-        Expanded(
-          child: Padding(
-            padding: widget.padding,
-            child: BodyPartSelector(
-              side: _side,
-              bodyParts: widget.bodyParts,
-              onPainChanged: widget.onPainChanged,
-              scale: widget.scale,
-              unselectedColor: widget.unselectedColor,
-              unselectedOutlineColor: widget.unselectedOutlineColor,
-            ),
-          ),
+        BodyPartSelector(
+          side: _side,
+          bodyParts: widget.bodyParts,
+          onPainChanged: widget.onPainChanged,
+          scale: widget.scale,
+          unselectedColor: widget.unselectedColor,
+          unselectedOutlineColor: widget.unselectedOutlineColor,
         ),
       ],
     );

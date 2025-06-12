@@ -466,6 +466,33 @@ class AppLocalizationsDe extends AppLocalizations {
   String get question_type_free_text => 'Freitext';
 
   @override
+  String get question_type_pain => 'Body Pain';
+
+  @override
+  String get question_type_pain_description =>
+      'Participants can select one or more body parts on a diagram and assign a pain level to each selected part using the Wong-Baker FACES® Pain Rating Scale (0-10). This is useful for tracking localized pain.';
+
+  @override
+  String get question_type_pain_preview_title => 'In-App Preview';
+
+  @override
+  String get question_type_pain_preview_description =>
+      'Below is a simplified representation of how the pain selection interface will appear to participants in the StudyU app. They will be able to tap on body parts to select them and then assign a pain level.';
+
+  @override
+  String get question_type_pain_front_view => 'Front View';
+
+  @override
+  String get question_type_pain_back_view => 'Back View';
+
+  @override
+  String get question_type_pain_functionality_title => 'Functionality';
+
+  @override
+  String get question_type_pain_functionality_description =>
+      'When a participant taps on a body part, a dialog will appear allowing them to select a pain level from 0 (No Hurt) to 10 (Hurts Worst) using the Wong-Baker FACES® Pain Rating Scale. Each selected body part can have a different pain level. The collected data will include the identified body part(s) and their corresponding pain scores.';
+
+  @override
   String get question_type_bool => 'Ja/Nein';
 
   @override
@@ -482,6 +509,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get form_array_response_options_bool_no => 'No';
+
+  @override
+  String get form_field_response_pain => 'Body Pain';
 
   @override
   String get form_field_response_image => 'Bild';

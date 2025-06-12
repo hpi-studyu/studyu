@@ -8,7 +8,8 @@ enum SurveyQuestionType {
   scale,
   image,
   audio,
-  freeText;
+  freeText,
+  pain;
 
   static SurveyQuestionType of(Question question) {
     final typeMapping = {
@@ -20,6 +21,7 @@ enum SurveyQuestionType {
       FreeTextQuestion.questionType: SurveyQuestionType.freeText,
       ImageCapturingQuestion.questionType: SurveyQuestionType.image,
       AudioRecordingQuestion.questionType: SurveyQuestionType.audio,
+      PainQuestion.questionType: SurveyQuestionType.pain,
     };
     if (!typeMapping.containsKey(question.type)) {
       throw UnimplementedError(
@@ -43,6 +45,8 @@ enum SurveyQuestionType {
         return tr.question_type_audio;
       case SurveyQuestionType.freeText:
         return tr.question_type_free_text;
+      case SurveyQuestionType.pain:
+        return tr.question_type_pain;
     }
   }
 
@@ -60,6 +64,8 @@ enum SurveyQuestionType {
         return Icons.mic;
       case SurveyQuestionType.freeText:
         return Icons.edit_square;
+      case SurveyQuestionType.pain:
+        return Icons.favorite;
     }
   }
 
