@@ -63,8 +63,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   final FormControl<String> questionTextControl = FormControl();
   final FormControl<String> questionInfoTextControl = FormControl();
 
-  @override
-  /*final FormGroup questionConditionalControl = FormGroup({
+  /*@override
+  final FormGroup questionConditionalControl = FormGroup({
     'defaultValue': FormControl(),
     'compositeExpression': compositeExpressionControl,
     /*FormGroup({
@@ -72,6 +72,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       'expressionsArray': FormArray([]), // to be filled by subclass
     }),*/
   });*/
+
+  @override
+  String get currentQuestionId => questionIdControl.value!;
 
   @override
   final FormControl<LogicType> logicTypeControl = FormControl();

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
@@ -19,28 +20,33 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
   Widget build(BuildContext context, FormGroup form) {
     final theme = Theme.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextParagraph(
-          text: 'tr.form_array_question_visibility_logic_description',
-          style: ThemeConfig.bodyTextMuted(theme),
-        ),
-        const SizedBox(height: 16.0),
-        const FormLabel(
-          labelText: 'tr.form_array_question_visibility_logic_title',
-          labelTextStyle: TextStyle(fontWeight: FontWeight.bold),
-          helpText: 'tr.form_array_question_visibility_logic_tooltip',
-        ),
-        const SizedBox(height: 12.0),
-        _buildLogicGroupingControl(),
-        const SizedBox(height: 12.0),
-        _buildConditionsList(),
-        const SizedBox(height: 16.0),
-        _buildAddConditionButton(),
-        const Divider(height: 32.0),
-        //_buildLivePreview(context),
-      ],
+    // Rebuild this widget when the form changes by using ReactiveFormConsumer
+    return ReactiveFormConsumer(
+      builder: (context, formGroup, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextParagraph(
+              text: 'tr.form_array_question_visibility_logic_description',
+              style: ThemeConfig.bodyTextMuted(theme),
+            ),
+            const SizedBox(height: 16.0),
+            const FormLabel(
+              labelText: 'tr.form_array_question_visibility_logic_title',
+              labelTextStyle: TextStyle(fontWeight: FontWeight.bold),
+              helpText: 'tr.form_array_question_visibility_logic_tooltip',
+            ),
+            const SizedBox(height: 12.0),
+            _buildLogicGroupingControl(),
+            const SizedBox(height: 12.0),
+            _buildConditionsList(),
+            const SizedBox(height: 16.0),
+            _buildAddConditionButton(),
+            const Divider(height: 32.0),
+            _buildLivePreview(context),
+          ],
+        );
+      },
     );
   }
 
@@ -109,7 +115,6 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             flex: 2,
             child: ReactiveDropdownField<String>(
               formControl: conditionVm.questionIdControl,
-              // todo use available questions here and don't put them into the CRFVM
               items: conditionVm.availableQuestions
                   .map((option) => DropdownMenuItem(
                         value: option.id,
@@ -124,7 +129,6 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             ),
           ),
           const SizedBox(width: 8),
-          // TODO FIX
           if (conditionVm.selectedQuestion !=
               null) // Only show comparator if question is selected
             Expanded(
@@ -169,9 +173,9 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
       case 'boolean':
         return ReactiveDropdownField<bool>(
           formControl: conditionVm.valueControl as FormControl<bool>,
-          items: [
-            const DropdownMenuItem(value: true, child: Text('tr.true_value')),
-            const DropdownMenuItem(value: false, child: Text('tr.false_value')),
+          items: const [
+            DropdownMenuItem(value: true, child: Text('tr.true_value')),
+            DropdownMenuItem(value: false, child: Text('tr.false_value')),
           ],
           decoration: const InputDecoration(
             labelText: 'tr.field_value',
@@ -198,7 +202,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
         return ReactiveTextField(
           formControl: conditionVm.valueControl as FormControl<num>,
           keyboardType: TextInputType.number,
-          inputFormatters: [
+          inputFormatters: const [
             // Potentially add more robust number input formatter
             // (e.g., allow decimals, handle negative numbers)
           ],
@@ -231,18 +235,29 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     return ElevatedButton.icon(
       onPressed: () => formViewModel.addCondition(allQuestions: allQuestions),
       icon: const Icon(Icons.add),
-      label: Text('tr.button_add_condition'),
+      label: const Text('tr.button_add_condition'),
     );
   }
-/*
+
   Widget _buildLivePreview(BuildContext context) {
     // This is a simplified preview; you'd likely want to lift the logic
     // into the ViewModel and expose a stream or getter for the preview text.
     // For reactive forms, you might listen to form.valueChanges.
     final List<Expression> currentExpressions = [];
+    /*
+    List.generate(
+            formArray.controls.length,
+            (index) => KeyedSubtree(
+              key: ValueKey(formArray.controls[index]),
+              child: _buildSingleConditionRow(
+                  context,
+                  formArray.controls[index].value as ConditionRowFormViewModel,
+                  index),
+            ),
+          ),
+     */
     for (final control in formViewModel.conditionsArray.controls) {
-      final conditionVm =
-          (control as FormGroup).viewModel as ConditionRowFormViewModel;
+      final conditionVm = control.value as ConditionRowFormViewModel;
       final expression = conditionVm.buildExpression();
       if (expression != null) {
         currentExpressions.add(expression);
@@ -257,7 +272,8 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     // LiveConditionPreview (from previous response) needs to be adapted to use the designer's Question model
     return LiveConditionPreview(
       compositeExpression: tempComposite,
-      allQuestions: formViewModel.allQuestions,
+      allQuestions: allQuestions,
+      //allQuestions: formViewModel.allQuestions,
       currentQuestionId: formViewModel.currentQuestionId,
     );
   }
@@ -267,7 +283,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
 
 class LiveConditionPreview extends StatelessWidget {
   final CompositeExpression compositeExpression;
-  final List<designer_q.Question> allQuestions;
+  final List<Question> allQuestions;
   final String currentQuestionId;
 
   const LiveConditionPreview({
@@ -305,22 +321,16 @@ class LiveConditionPreview extends StatelessWidget {
       switch (expression.comparator) {
         case NumericComparator.equal:
           comparatorSymbol = '=';
-          break;
         case NumericComparator.notEqual:
           comparatorSymbol = '!=';
-          break;
         case NumericComparator.greaterThan:
           comparatorSymbol = '>';
-          break;
         case NumericComparator.lessThan:
           comparatorSymbol = '<';
-          break;
         case NumericComparator.greaterThanOrEqual:
           comparatorSymbol = '>=';
-          break;
         case NumericComparator.lessThanOrEqual:
           comparatorSymbol = '<=';
-          break;
       }
       return '${_getQuestionPreviewText(expression.target!)} $comparatorSymbol ${expression.value}';
     } else if (expression is TextExpression) {
@@ -328,18 +338,14 @@ class LiveConditionPreview extends StatelessWidget {
       switch (expression.comparator) {
         case TextComparator.equal:
           comparatorText = '=';
-          break;
         case TextComparator.notEqual:
           comparatorText = '!=';
-          break;
         case TextComparator.contains:
           comparatorText = 'contains';
-          break;
         case TextComparator.doesNotContain:
           comparatorText = 'does not contain';
-          break;
       }
-      return '${_getQuestionPreviewText(expression.target!)} $comparatorText \'${expression.value}\'';
+      return "${_getQuestionPreviewText(expression.target!)} $comparatorText '${expression.value}'";
     } else if (expression is CompositeExpression) {
       if (expression.expressions.isEmpty) {
         return 'always true';
@@ -356,9 +362,9 @@ class LiveConditionPreview extends StatelessWidget {
 
   String _getChoiceText(String questionId, dynamic choiceValue) {
     final question = allQuestions.firstWhereOrNull((q) => q.id == questionId);
-    if (question is designer_q.ChoiceQuestion) {
+    if (question is ChoiceQuestion) {
       final choice =
-          question.choices?.firstWhereOrNull((c) => c.value == choiceValue);
+          question.choices.firstWhereOrNull((c) => c.text == choiceValue);
       return choice?.text ??
           choiceValue.toString(); // Return text or value if not found
     }
@@ -384,7 +390,6 @@ class LiveConditionPreview extends StatelessWidget {
       ),
     );
   }
-}*/
 
   // Uncomment and implement the following methods if needed
   /*

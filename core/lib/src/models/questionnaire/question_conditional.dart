@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/src/models/expressions/types/composite_expression.dart';
 
 part 'question_conditional.g.dart';
 
