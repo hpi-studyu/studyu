@@ -25,6 +25,8 @@ class FormListView<T> extends StatelessWidget {
     this.emptyDescription,
     this.itemsPadding = const EdgeInsets.symmetric(vertical: 8.0),
     this.hideLeadingTrailingWhenEmpty = false,
+    this.reorderable = false,
+    this.onReorder,
     super.key,
   });
 
@@ -45,6 +47,8 @@ class FormListView<T> extends StatelessWidget {
   final Widget? leadingWidget;
   final EdgeInsets itemsPadding;
   final bool hideLeadingTrailingWhenEmpty;
+  final bool reorderable;
+  final void Function(int oldIndex, int newIndex)? onReorder;
 
   @override
   Widget build(BuildContext context) {
@@ -73,23 +77,84 @@ class FormListView<T> extends StatelessWidget {
             description: emptyDescription,
             button: _newItemButton(),
           )
-        else
+        else if (reorderable && items.length > 1)
           ReorderableListView.builder(
+            buildDefaultDragHandles: true,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
-            onReorder: (oldIndex, newIndex) {
-              if (newIndex > oldIndex) {
-                newIndex -= 1;
-              }
-              final item = items.removeAt(oldIndex);
-              items.insert(newIndex, item);
-              // Optionally, call setState or notify listeners if needed
-            },
+            onReorder: onReorder ??
+                (oldIndex, newIndex) {
+                  if (newIndex > oldIndex) {
+                    newIndex -= 1;
+                  }
+                  final item = items.removeAt(oldIndex);
+                  items.insert(newIndex, item);
+                  // Optionally, call setState or notify listeners if needed
+                },
             itemBuilder: (context, index) {
               final item = items[index];
               return Card(
                 key: ValueKey(item),
+                color: Colors.white,
+                elevation: 3,
+                shadowColor: Colors.black.withOpacity(0.15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: InkWell(
+                  onTap: () => onSelectItem(item),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        // Reorderable handle at the beginning with grab cursor
+                        /* MouseRegion(
+                          cursor: SystemMouseCursors.grab,
+                          child: ReorderableDragStartListener(
+                            index: index,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 12.0),
+                              child: Icon(Icons.drag_handle,
+                                  color: Colors.grey[600]),
+                            ),
+                          ),
+                        ), */
+                        if (rowPrefix != null) rowPrefix!(context, item, index),
+                        Expanded(
+                          child: Text(
+                            rowTitle(item),
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                        ),
+                        if (rowSuffix != null) rowSuffix!(context, item, index),
+                        if (getActionsAt(item, index).isNotEmpty)
+                          ActionPopUpMenuButton(
+                            actions: getActionsAt(item, index),
+                          ),
+                        const SizedBox(width: 8.0),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          )
+        else
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item = items[index];
+              return Card(
+                key: ValueKey(item),
+                color: Colors.white,
+                elevation: 3,
+                shadowColor: Colors.black.withOpacity(0.15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 child: InkWell(
                   onTap: () => onSelectItem(item),
                   child: Padding(

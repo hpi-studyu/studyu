@@ -50,13 +50,30 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                         rowTitle: (viewModel) =>
                             viewModel.formData?.title ?? '',
                         sectionTitle: tr.form_array_measurements_surveys,
-                        //sectionTitleDivider: false,
+                        // sectionTitleDivider: false,
                         emptyIcon: Icons.content_paste_off_rounded,
                         emptyTitle:
                             tr.form_array_measurements_surveys_empty_title,
                         emptyDescription: tr
                             .form_array_measurements_surveys_empty_description,
                         hideLeadingTrailingWhenEmpty: true,
+                        reorderable: true,
+                        onReorder: (oldIndex, newIndex) {
+                          if (newIndex > oldIndex) {
+                            newIndex -= 1;
+                          }
+                          // Reorder the view models
+                          final item = formViewModel.measurementViewModels
+                              .removeAt(oldIndex);
+                          formViewModel.measurementViewModels
+                              .insert(newIndex, item);
+                          // Reorder the underlying form array to match
+                          final controlItem = formViewModel.measurementsArray
+                              .removeAt(oldIndex);
+                          formViewModel.measurementsArray
+                              .insert(newIndex, controlItem);
+                          formViewModel.save();
+                        },
                       );
                     },
                   );
