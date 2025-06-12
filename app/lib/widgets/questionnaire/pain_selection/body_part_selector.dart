@@ -371,7 +371,6 @@ class _PainLevelDialogState extends State<PainLevelDialog> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(painInfo.face, style: const TextStyle(fontSize: 64)),
                 const SizedBox(height: 8),
