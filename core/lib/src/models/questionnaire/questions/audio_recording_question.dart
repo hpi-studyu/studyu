@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
 
-
 part 'audio_recording_question.g.dart';
 
 @JsonSerializable()

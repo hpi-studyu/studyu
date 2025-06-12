@@ -4,7 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
 
-
 part 'scale_question.g.dart';
 
 @JsonSerializable()
