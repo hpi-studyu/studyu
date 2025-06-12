@@ -68,6 +68,7 @@ class _BodyPartSelectorTurnableState extends State<BodyPartSelectorTurnable> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: SegmentedButton<BodySide>(
+            showSelectedIcon: false,
             segments: [
               ButtonSegment(
                 icon: widget.frontButtonIcon,
@@ -87,6 +88,9 @@ class _BodyPartSelectorTurnableState extends State<BodyPartSelectorTurnable> {
               });
             },
           ),
+        ),
+        const SizedBox(
+          height: 16,
         ),
         BodyPartSelector(
           side: _side,

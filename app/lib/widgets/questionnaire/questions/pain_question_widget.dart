@@ -39,12 +39,20 @@ class _PainQuestionWidgetState extends State<PainQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BodyPartSelectorTurnable(
-      bodyParts: _bodyParts,
-      onPainChanged: _onPainChanged,
-      scale: _generateLocalizedScale(context),
-      frontButtonIcon: const Icon(Icons.face_outlined),
-      backButtonIcon: const Icon(Icons.accessibility_new_outlined),
+    return Column(
+      children: [
+        BodyPartSelectorTurnable(
+          bodyParts: _bodyParts,
+          onPainChanged: _onPainChanged,
+          scale: _generateLocalizedScale(context),
+          frontButtonIcon: const Icon(Icons.face_outlined),
+          backButtonIcon: const Icon(Icons.accessibility_new_outlined),
+        ),
+        const SizedBox(height: 16),
+        OutlinedButton(
+            onPressed: _onDone,
+            child: Text(AppLocalizations.of(context)!.done)),
+      ],
     );
   }
 }

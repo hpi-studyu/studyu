@@ -371,10 +371,12 @@ class _PainLevelDialogState extends State<PainLevelDialog> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(painInfo.face, style: const TextStyle(fontSize: 64)),
                 const SizedBox(height: 8),
                 Text(
+                  textAlign: TextAlign.center,
                   painInfo.description,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: painInfo.textColor,
@@ -382,6 +384,7 @@ class _PainLevelDialogState extends State<PainLevelDialog> {
                       ),
                 ),
                 Text(
+                  textAlign: TextAlign.center,
                   '${widget.scale.painIndicatorText}: $_currentPain',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: painInfo.textColor.withAlpha(204),
@@ -402,19 +405,6 @@ class _PainLevelDialogState extends State<PainLevelDialog> {
                     _currentPain = value.round();
                   });
                 },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(
-                    11,
-                    (index) => Text(
-                      index.toString(),
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ),
-                ),
               ),
             ],
           ),
