@@ -284,5 +284,15 @@
   "missing_recordings": "Fehlende Aufzeichnungen",
   "average": "Durchschnitt",
   "minimum": "Minimum",
-  "maximum": "Maximum"
+  "maximum": "Maximum",
+  "painIndicatorText": "Schmerzlevel",
+  "dialogTitle": "Schmerzlevel auswählen",
+  "okButton": "OK",
+  "cancelButton": "Abbrechen",
+  "painLevel_0": "Kein Schmerz",
+  "painLevel_2": "Tut ein bisschen weh",
+  "painLevel_4": "Tut etwas mehr weh",
+  "painLevel_6": "Tut noch mehr weh",
+  "painLevel_8": "Tut sehr weh",
+  "painLevel_10": "Stärkster Schmerz"
 }

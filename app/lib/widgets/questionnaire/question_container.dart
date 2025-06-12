@@ -7,6 +7,7 @@ import 'package:studyu_app/widgets/questionnaire/questions/annotated_scale_quest
 import 'package:studyu_app/widgets/questionnaire/questions/boolean_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/choice_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/free_text_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/pain_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/scale_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/visual_analogue_question_widget.dart';
@@ -78,6 +79,11 @@ class _QuestionContainerState extends State<QuestionContainer>
       case final FreeTextQuestion freeTextQuestion:
         return FreeTextQuestionWidget(
           question: freeTextQuestion,
+          onDone: _onDone,
+        );
+      case final PainQuestion painQuestion:
+        return PainQuestionWidget(
+          question: painQuestion,
           onDone: _onDone,
         );
       default:

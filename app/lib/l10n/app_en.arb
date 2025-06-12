@@ -280,5 +280,15 @@
   "missing_recordings": "Missing recordings",
   "average": "Average",
   "minimum": "Minimum",
-    "maximum": "Maximum"
+    "maximum": "Maximum",
+  "painIndicatorText": "Pain Level",
+  "dialogTitle": "Select Pain Level",
+  "okButton": "OK",
+  "cancelButton": "Cancel",
+  "painLevel_0": "No pain",
+  "painLevel_2": "Hurts a little bit",
+  "painLevel_4": "Hurts a little more",
+  "painLevel_6": "Hurts even more",
+  "painLevel_8": "Hurts a whole lot",
+  "painLevel_10": "Worst pain possible"
 }
