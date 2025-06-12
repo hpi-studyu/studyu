@@ -109,7 +109,7 @@ class BodyPartSelector extends StatelessWidget {
   final Color? unselectedColor;
   final Color? unselectedOutlineColor;
 
-  void _showPainSelectorDialog(
+  Future<void> _showPainSelectorDialog(
       BuildContext context, String partId, int currentPain) async {
     final selectedPain = await showDialog<int>(
       context: context,
@@ -160,7 +160,7 @@ class BodyPartSelector extends StatelessWidget {
               context: context,
               scale: scale,
               unselectedColor: unselectedColor ??
-                  Theme.of(context).colorScheme.surfaceVariant,
+                  Theme.of(context).colorScheme.surfaceContainerHighest,
               unselectedOutlineColor: unselectedOutlineColor ??
                   Theme.of(context).colorScheme.onSurfaceVariant,
             ),
@@ -383,7 +383,6 @@ class _PainLevelDialogState extends State<PainLevelDialog> {
             children: [
               Slider(
                 value: _currentPain.toDouble(),
-                min: 0,
                 max: BodyParts.maxPainLevel.toDouble(),
                 divisions: BodyParts.maxPainLevel,
                 label: _currentPain.toString(),

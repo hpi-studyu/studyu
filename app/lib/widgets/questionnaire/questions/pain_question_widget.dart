@@ -58,7 +58,7 @@ class _PainQuestionWidgetState extends State<PainQuestionWidget> {
         const SizedBox(height: 16),
         SelectableButton(
           onTap: _onDone,
-          child: Text("Done"),
+          child: const Text("Done"),
         ),
       ],
     );
@@ -77,33 +77,33 @@ WongBakerScale generateLocalizedScale(BuildContext context) {
       0: PainLevelStyle(
         face: '😄',
         description: loc.painLevel_0,
-        color: Color(0xFF4CAF50),
+        color: const Color(0xFF4CAF50),
       ),
       2: PainLevelStyle(
         face: '😊',
         description: loc.painLevel_2,
-        color: Color(0xFF8BC34A),
+        color: const Color(0xFF8BC34A),
       ),
       4: PainLevelStyle(
         face: '😐',
         description: loc.painLevel_4,
-        color: Color(0xFFFFEB3B),
+        color: const Color(0xFFFFEB3B),
         textColor: Colors.black87,
       ),
       6: PainLevelStyle(
         face: '😕',
         description: loc.painLevel_6,
-        color: Color(0xFFFF9800),
+        color: const Color(0xFFFF9800),
       ),
       8: PainLevelStyle(
         face: '😢',
         description: loc.painLevel_8,
-        color: Color(0xFFF44336),
+        color: const Color(0xFFF44336),
       ),
       10: PainLevelStyle(
         face: '😭',
         description: loc.painLevel_10,
-        color: Color(0xFFB71C1C),
+        color: const Color(0xFFB71C1C),
       ),
     },
   );
