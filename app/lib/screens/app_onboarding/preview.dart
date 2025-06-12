@@ -65,19 +65,30 @@ class Preview {
   Future<void> runCommands() async {
     // delete study subscription and progress
     if (containsQueryPair('cmd', 'reset')) {
-      if (selectedStudyObjectId != null) {
-        final StudySubject subject = await SupabaseQuery.getById<StudySubject>(
-          selectedStudyObjectId!,
-          selectedColumns: [
-            '*',
-            'study!study_subject_studyId_fkey(*)',
-            'subject_progress(*)',
-          ],
-        );
-        subject.delete();
-        deleteActiveStudyReference();
-        selectedStudyObjectId = '';
+      final String userId = Supabase.instance.client.auth.currentUser!.id;
+
+      final List<StudySubject> subjects =
+          await SupabaseQuery.getAll<StudySubject>(
+        selectedColumns: [
+          '*',
+          'study!study_subject_studyId_fkey(*)',
+          'subject_progress(*)',
+        ],
+        filters: {'user_id': userId},
+      );
+
+      for (final subject in subjects) {
+        try {
+          await subject.delete();
+        } catch (e) {
+          print(
+              '[PreviewApp]: Failed deleting subject ${subject.id} for user $userId: $e');
+        }
       }
+
+      deleteActiveStudyReference();
+      selectedStudyObjectId = null;
+      return;
     }
   }
 
@@ -171,7 +182,8 @@ class Preview {
           return subject;
         }
       } catch (e) {
-        print('[PreviewApp]: Failed fetching subject: $e');
+        print(
+            '[PreviewApp]: Failed fetching subject. Maybe subject was reset? Error: $e');
         // todo try sign in again if token expired see loading screen
       }
     }

@@ -125,6 +125,7 @@ class WebController extends PlatformController {
       navigate(route: routeInformation.route, cmd: cmd);
       return;
     }
+
     navigate(cmd: cmd);
     return;
   }
