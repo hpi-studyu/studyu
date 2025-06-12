@@ -79,7 +79,7 @@ class FormListView<T> extends StatelessWidget {
           )
         else if (reorderable && items.length > 1)
           ReorderableListView.builder(
-            buildDefaultDragHandles: true,
+            // buildDefaultDragHandles: true,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
@@ -98,7 +98,7 @@ class FormListView<T> extends StatelessWidget {
                 key: ValueKey(item),
                 color: Colors.white,
                 elevation: 3,
-                shadowColor: Colors.black.withOpacity(0.15),
+                shadowColor: Colors.black.withValues(alpha: 0.15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -151,7 +151,7 @@ class FormListView<T> extends StatelessWidget {
                 key: ValueKey(item),
                 color: Colors.white,
                 elevation: 3,
-                shadowColor: Colors.black.withOpacity(0.15),
+                shadowColor: Colors.black.withValues(alpha: 0.15),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
