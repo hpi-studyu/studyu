@@ -1,1 +1,13 @@
-{}
+{
+  "de": [
+    "question_type_pain",
+    "question_type_pain_description",
+    "question_type_pain_preview_title",
+    "question_type_pain_preview_description",
+    "question_type_pain_front_view",
+    "question_type_pain_back_view",
+    "question_type_pain_functionality_title",
+    "question_type_pain_functionality_description",
+    "form_field_response_pain"
+  ]
+}
