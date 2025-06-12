@@ -41,6 +41,7 @@ class _PainQuestionWidgetState extends State<PainQuestionWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // TODO: information about how to use the selector
         BodyPartSelectorTurnable(
           bodyParts: _bodyParts,
           onPainChanged: _onPainChanged,
