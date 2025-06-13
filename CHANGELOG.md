@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-06-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.9.0`](#studyu_app---v290)
+ - [`studyu_core` - `v4.6.0`](#studyu_core---v460)
+ - [`studyu_designer_v2` - `v1.11.0`](#studyu_designer_v2---v1110)
+ - [`studyu_flutter_common` - `v1.8.12`](#studyu_flutter_common---v1812)
+
+---
+
+#### `studyu_app` - `v2.9.0`
+
+ - **REFACTOR**: remove print.
+ - **FIX**: bump dependencies.
+ - **FIX**: update selectedStudyObjectId to null on study deletion.
+ - **FIX**: study reset process by removing unnecessary user ID handling.
+ - **FIX**: reset subject temp fix.
+ - **FIX**: reset subject progress.
+ - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+
+#### `studyu_core` - `v4.6.0`
+
+ - **FIX**: bump dependencies.
+ - **FIX**: study reset process by removing unnecessary user ID handling.
+ - **FIX**: reset subject temp fix.
+ - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+
+#### `studyu_designer_v2` - `v1.11.0`
+
+ - **FIX**: bump dependencies.
+ - **FIX**: study reset process by removing unnecessary user ID handling.
+ - **FIX**: Disable intervention selection if num of interventions <= 2.
+ - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+ - **FEAT**: reset test preview on enter test page in designer.
+
+#### `studyu_flutter_common` - `v1.8.12`
+
+ - **FIX**: bump dependencies.
+
+
 ## 2025-06-10
 
 ### Changes

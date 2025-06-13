@@ -1,3 +1,11 @@
+## 1.11.0
+
+ - **FIX**: bump dependencies.
+ - **FIX**: study reset process by removing unnecessary user ID handling.
+ - **FIX**: Disable intervention selection if num of interventions <= 2.
+ - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+ - **FEAT**: reset test preview on enter test page in designer.
+
 ## 1.10.0
 
  - **REFACTOR**: analysis notes.

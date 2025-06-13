@@ -1,3 +1,10 @@
+## 4.6.0
+
+ - **FIX**: bump dependencies.
+ - **FIX**: study reset process by removing unnecessary user ID handling.
+ - **FIX**: reset subject temp fix.
+ - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+
 ## 4.5.0
 
  - **FIX**: upgrade deps.

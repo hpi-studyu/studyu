@@ -1,3 +1,7 @@
+## 1.8.12
+
+ - **FIX**: bump dependencies.
+
 ## 1.8.11
 
  - **FIX**: improve error handling in secure storage read method.
