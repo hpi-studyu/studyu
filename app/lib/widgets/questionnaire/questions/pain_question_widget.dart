@@ -46,7 +46,7 @@ class _PainQuestionWidgetState extends State<PainQuestionWidget> {
 
       final hierarchyIds = _getPartHierarchy(parentPart);
       for (final id in hierarchyIds) {
-        newBody = newBody.withPain(id, const BodyPain(painLevel: 0));
+        newBody = newBody.withPain(id, const BodyPain());
       }
 
       if (newPain.painLevel == 0) {
