@@ -3,11 +3,412 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/util/pain_selection/svg_service.dart';
 import 'package:studyu_core/core.dart';
 import 'package:touchable/touchable.dart';
 
-/// Defines the style for a single level on the Wong-Baker pain scale.
+typedef PainEditResult = ({
+  String parentPartId,
+  String childPartId,
+  BodyPain pain
+});
+
+/// A widget that allows for selecting body parts and displays their pain level.
+/// When a body part is tapped, a dialog is shown to select the pain level, type, and specific location.
+class BodyPartSelector extends StatelessWidget {
+  const BodyPartSelector({
+    required this.body,
+    required this.side,
+    this.onPainChanged,
+    this.scale = WongBakerScale.english,
+    this.unselectedColor,
+    this.unselectedOutlineColor,
+    super.key,
+  });
+
+  final Body body;
+
+  final BodySide side;
+
+  final void Function(
+      String parentPartId, String childPartId, BodyPain newPain)? onPainChanged;
+
+  final WongBakerScale scale;
+
+  final Color? unselectedColor;
+
+  final Color? unselectedOutlineColor;
+
+  Future<void> _showPainSelectorDialog(
+    BuildContext context,
+    String partId,
+  ) async {
+    final part = body.allPartsById[partId];
+    if (part == null) {
+      return;
+    }
+
+    final result = await showDialog<PainEditResult>(
+      context: context,
+      builder: (context) => PainEditDialog(
+        tappedPart: part,
+        scale: scale,
+      ),
+    );
+
+    if (result != null && context.mounted) {
+      onPainChanged?.call(result.parentPartId, result.childPartId, result.pain);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final notifier = SvgService.instance.getSide(side);
+    return ValueListenableBuilder<SvgData?>(
+      valueListenable: notifier,
+      builder: (context, svgData, _) {
+        if (svgData == null) {
+          return const Center(child: CircularProgressIndicator.adaptive());
+        } else {
+          return _buildBody(context, svgData);
+        }
+      },
+    );
+  }
+
+  Widget _buildBody(BuildContext context, SvgData svgData) {
+    return AnimatedSwitcher(
+      duration: kThemeAnimationDuration,
+      child: LayoutBuilder(
+        key: ValueKey(Object.hash(body, side)),
+        builder: (context, constraints) {
+          final size = Size.square(min(
+              constraints.maxWidth,
+              constraints.maxHeight.isFinite
+                  ? constraints.maxHeight
+                  : constraints.maxWidth));
+
+          return SizedBox(
+            width: size.width,
+            height: size.height,
+            child: CanvasTouchDetector(
+              gesturesToOverride: const [GestureType.onTapDown],
+              builder: (context) => CustomPaint(
+                size: size,
+                painter: _BodyPainter(
+                  pictureInfo: svgData.pictureInfo,
+                  bodyPartPaths: svgData.paths,
+                  body: body,
+                  onTap: (id) => _showPainSelectorDialog(context, id),
+                  context: context,
+                  scale: scale,
+                  unselectedColor: unselectedColor ??
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
+                  unselectedOutlineColor: unselectedOutlineColor ??
+                      Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _BodyPainter extends CustomPainter {
+  _BodyPainter({
+    required this.pictureInfo,
+    required this.bodyPartPaths,
+    required this.body,
+    required this.onTap,
+    required this.context,
+    required this.scale,
+    required this.unselectedColor,
+    required this.unselectedOutlineColor,
+  });
+
+  final PictureInfo pictureInfo;
+
+  final Map<String, ui.Path> bodyPartPaths;
+  final BuildContext context;
+  final void Function(String) onTap;
+  final Body body;
+  final WongBakerScale scale;
+  final Color unselectedColor;
+  final Color unselectedOutlineColor;
+
+  int getPainLevel(String key) => body.allPartsById[key]?.pain.painLevel ?? 0;
+
+  ({Color fill, Color stroke}) _getPainColors(int painLevel) {
+    if (painLevel == 0) {
+      return (fill: unselectedColor, stroke: unselectedOutlineColor);
+    }
+
+    final scalePoints = scale.levels.keys.where((p) => p > 0).toList()..sort();
+    if (scalePoints.isEmpty) {
+      return (fill: Colors.red, stroke: Colors.white);
+    }
+
+    final firstPainPoint = scalePoints.first;
+    if (painLevel >= scalePoints.last) {
+      final style = scale.levels[scalePoints.last]!;
+      return (fill: style.color, stroke: style.textColor);
+    }
+
+    final lowerBound = scalePoints.lastWhere((p) => p <= painLevel,
+        orElse: () => firstPainPoint);
+    final upperBound =
+        scalePoints.firstWhere((p) => p >= painLevel, orElse: () => lowerBound);
+
+    if (lowerBound == upperBound) {
+      final style = scale.levels[lowerBound]!;
+      return (fill: style.color, stroke: style.textColor);
+    }
+
+    final lowerStyle = scale.levels[lowerBound]!;
+    final upperStyle = scale.levels[upperBound]!;
+    final t = (painLevel - lowerBound) / (upperBound - lowerBound);
+
+    final fillColor = Color.lerp(lowerStyle.color, upperStyle.color, t)!;
+    final strokeColor =
+        Color.lerp(lowerStyle.textColor, upperStyle.textColor, t)!;
+
+    return (fill: fillColor, stroke: strokeColor);
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final viewBox = pictureInfo.size;
+    final double scaleFactor = min(
+      size.width / viewBox.width,
+      size.height / viewBox.height,
+    );
+    final scaledHalfViewBoxSize = viewBox * scaleFactor / 2.0;
+    final halfDesiredSize = size / 2.0;
+    final shift = Offset(
+      halfDesiredSize.width - scaledHalfViewBoxSize.width,
+      halfDesiredSize.height - scaledHalfViewBoxSize.height,
+    );
+    final fittingMatrix = Matrix4.identity()
+      ..translate(shift.dx, shift.dy)
+      ..scale(scaleFactor);
+
+    canvas.save();
+    canvas.transform(fittingMatrix.storage);
+    canvas.clipRect(Rect.fromLTWH(0, 0, viewBox.width, viewBox.height));
+    canvas.drawPicture(pictureInfo.picture);
+    canvas.restore();
+
+    final touchyCanvas = TouchyCanvas(context, canvas);
+
+    for (final entry in bodyPartPaths.entries) {
+      final id = entry.key;
+      final path = entry.value;
+
+      final painLevel = getPainLevel(id);
+      final colors = _getPainColors(painLevel);
+      final bodyPartPath = path.transform(fittingMatrix.storage);
+
+      touchyCanvas.drawPath(
+        bodyPartPath,
+        Paint()
+          ..color = colors.fill
+          ..style = PaintingStyle.fill,
+        onTapDown: (_) => onTap(id),
+      );
+
+      canvas.drawPath(
+        bodyPartPath,
+        Paint()
+          ..color = colors.stroke
+          ..strokeWidth = 2
+          ..style = PaintingStyle.stroke,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
+
+class PainEditDialog extends StatefulWidget {
+  const PainEditDialog({
+    required this.tappedPart,
+    required this.scale,
+    super.key,
+  });
+
+  final BodyPart tappedPart;
+  final WongBakerScale scale;
+
+  @override
+  State<PainEditDialog> createState() => _PainEditDialogState();
+}
+
+class _PainEditDialogState extends State<PainEditDialog> {
+  late int _currentPain;
+  late PainType _selectedPainType;
+  late String _selectedPartId;
+  late List<BodyPart> _selectableParts;
+
+  @override
+  void initState() {
+    super.initState();
+    final mostSpecificPainfulPart = _findMostSpecificPain(widget.tappedPart);
+
+    _currentPain = mostSpecificPainfulPart.pain.painLevel;
+    _selectedPainType = mostSpecificPainfulPart.pain.type;
+    _selectedPartId = mostSpecificPainfulPart.id;
+
+    _selectableParts = _flattenHierarchy(widget.tappedPart);
+  }
+
+  BodyPart _findMostSpecificPain(BodyPart part) {
+    for (final child in part.children) {
+      final result = _findMostSpecificPain(child);
+      if (result.pain.painLevel > 0) {
+        return result;
+      }
+    }
+    return part;
+  }
+
+  List<BodyPart> _flattenHierarchy(BodyPart part) {
+    final list = [part];
+    for (final child in part.children) {
+      list.addAll(_flattenHierarchy(child));
+    }
+    return list;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final scalePoints = widget.scale.levels.keys.toList()..sort();
+    final painLevelKey = scalePoints.lastWhere((p) => p <= _currentPain,
+        orElse: () => scalePoints.first);
+    final painInfo = widget.scale.levels[painLevelKey]!;
+
+    return AlertDialog(
+      title: Text(widget.scale.dialogTitle),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20)
+          .copyWith(top: 20),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: painInfo.color,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  Text(painInfo.face, style: const TextStyle(fontSize: 48)),
+                  const SizedBox(height: 8),
+                  Text(
+                    painInfo.description,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: painInfo.textColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    '${widget.scale.painIndicatorText}: $_currentPain',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: painInfo.textColor.withAlpha(204),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+            Slider(
+              value: _currentPain.toDouble(),
+              max: Body.maxPainLevel.toDouble(),
+              divisions: Body.maxPainLevel,
+              label: _currentPain.toString(),
+              onChanged: (value) {
+                setState(() => _currentPain = value.round());
+              },
+            ),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<PainType>(
+              value: _selectedPainType,
+              decoration: InputDecoration(
+                labelText: loc.painTypeLabel,
+                border: const OutlineInputBorder(),
+              ),
+              items: PainType.values.map((PainType type) {
+                return DropdownMenuItem<PainType>(
+                  value: type,
+                  child:
+                      Text(type.name[0].toUpperCase() + type.name.substring(1)),
+                );
+              }).toList(),
+              onChanged: (PainType? newValue) {
+                if (newValue != null) {
+                  setState(() => _selectedPainType = newValue);
+                }
+              },
+            ),
+            const SizedBox(height: 16),
+            if (_selectableParts.length > 1)
+              DropdownButtonFormField<String>(
+                value: _selectedPartId,
+                isExpanded: true,
+                decoration: InputDecoration(
+                  labelText: loc.bodyPartLabel,
+                  border: const OutlineInputBorder(),
+                ),
+                items: _selectableParts.map((BodyPart part) {
+                  return DropdownMenuItem<String>(
+                    value: part.id,
+                    child: Text(
+                      part.name,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() => _selectedPartId = newValue);
+                  }
+                },
+              ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(widget.scale.cancelButton),
+        ),
+        FilledButton(
+          onPressed: () {
+            final result = (
+              parentPartId: widget.tappedPart.id,
+              childPartId: _selectedPartId,
+              pain: BodyPain(
+                painLevel: _currentPain,
+                type: _selectedPainType,
+              )
+            );
+            Navigator.of(context).pop(result);
+          },
+          child: Text(widget.scale.okButton),
+        ),
+      ],
+    );
+  }
+}
+
 @immutable
 class PainLevelStyle {
   const PainLevelStyle({
@@ -17,23 +418,12 @@ class PainLevelStyle {
     this.textColor = Colors.white,
   });
 
-  /// The emoji representing the pain level.
   final String face;
-
-  /// The text description for the pain level.
   final String description;
-
-  /// The background color for this pain level.
   final Color color;
-
-  /// The text color to be used on top of the background color.
   final Color textColor;
 }
 
-/// Configuration for the Wong-Baker FACES® Pain Rating Scale.
-///
-/// This class allows for full customization of the text and styles used in
-/// the [PainLevelDialog].
 @immutable
 class WongBakerScale {
   const WongBakerScale({
@@ -44,26 +434,16 @@ class WongBakerScale {
     required this.levels,
   });
 
-  /// The title of the pain selection dialog.
   final String dialogTitle;
-
-  /// The text prefix for the pain level display (e.g., "Pain").
   final String painIndicatorText;
-
-  /// The text for the 'OK' button in the dialog.
   final String okButton;
-
-  /// The text for the 'Cancel' button in the dialog.
   final String cancelButton;
-
-  /// A map of pain values (0-10) to their corresponding styles.
   final Map<int, PainLevelStyle> levels;
 
-  /// Default English configuration for the Wong-Baker scale with 6 standard levels.
   static const WongBakerScale english = WongBakerScale(
-    dialogTitle: 'Select Pain Level',
+    dialogTitle: 'Select Pain Details',
     painIndicatorText: 'Pain',
-    okButton: 'OK',
+    okButton: 'Save',
     cancelButton: 'Cancel',
     levels: {
       0: PainLevelStyle(
@@ -86,339 +466,4 @@ class WongBakerScale {
           face: '😭', description: 'Hurts Worst', color: Color(0xFFB71C1C)),
     },
   );
-}
-
-/// A widget that allows for selecting body parts and displays their pain level.
-/// When a body part is tapped, a dialog is shown to select the pain level.
-class BodyPartSelector extends StatelessWidget {
-  /// Creates a [BodyPartSelector].
-  const BodyPartSelector({
-    required this.bodyParts,
-    required this.side,
-    this.onPainChanged,
-    this.scale = WongBakerScale.english,
-    this.unselectedColor,
-    this.unselectedOutlineColor,
-    super.key,
-  });
-
-  final BodyParts bodyParts;
-  final BodySide side;
-  final void Function(String bodyPartId, int painLevel)? onPainChanged;
-  final WongBakerScale scale;
-  final Color? unselectedColor;
-  final Color? unselectedOutlineColor;
-
-  Future<void> _showPainSelectorDialog(
-      BuildContext context, String partId, int currentPain) async {
-    final selectedPain = await showDialog<int>(
-      context: context,
-      builder: (context) =>
-          PainLevelDialog(initialPain: currentPain, scale: scale),
-    );
-
-    if (selectedPain != null) {
-      onPainChanged?.call(partId, selectedPain);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Get the ValueNotifier for SvgData from the service.
-    final notifier = SvgService.instance.getSide(side);
-    return ValueListenableBuilder<SvgData?>(
-      valueListenable: notifier,
-      builder: (context, svgData, _) {
-        if (svgData == null) {
-          return const Center(child: CircularProgressIndicator.adaptive());
-        } else {
-          // Pass the SvgData to our build method.
-          return _buildBody(context, svgData);
-        }
-      },
-    );
-  }
-
-  Widget _buildBody(BuildContext context, SvgData svgData) {
-    return AnimatedSwitcher(
-      duration: kThemeAnimationDuration,
-      child: LayoutBuilder(
-        key: ValueKey(Object.hash(bodyParts, side)),
-        builder: (context, constraints) {
-          final size = Size.square(min(
-              constraints.maxWidth,
-              constraints.maxHeight.isFinite
-                  ? constraints.maxHeight
-                  : constraints.maxWidth));
-
-          return SizedBox(
-            width: size.width,
-            height: size.height,
-            child: CanvasTouchDetector(
-              gesturesToOverride: const [GestureType.onTapDown],
-              builder: (context) => CustomPaint(
-                size: size,
-                painter: _BodyPainter(
-                  pictureInfo: svgData.pictureInfo,
-                  bodyPartPaths: svgData.paths,
-                  bodyParts: bodyParts,
-                  onTap: (id) {
-                    final currentPain = bodyParts.toMap()[id] ?? 0;
-                    _showPainSelectorDialog(context, id, currentPain);
-                  },
-                  context: context,
-                  scale: scale,
-                  unselectedColor: unselectedColor ??
-                      Theme.of(context).colorScheme.surfaceContainerHighest,
-                  unselectedOutlineColor: unselectedOutlineColor ??
-                      Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _BodyPainter extends CustomPainter {
-  _BodyPainter({
-    required this.pictureInfo,
-    required this.bodyPartPaths,
-    required this.bodyParts,
-    required this.onTap,
-    required this.context,
-    required this.scale,
-    required this.unselectedColor,
-    required this.unselectedOutlineColor,
-  });
-
-  // The renderable picture of the entire SVG.
-  final PictureInfo pictureInfo;
-  // The map of extracted paths for interaction.
-  final Map<String, ui.Path> bodyPartPaths;
-  final BuildContext context;
-  final void Function(String) onTap;
-  final BodyParts bodyParts;
-  final WongBakerScale scale;
-  final Color unselectedColor;
-  final Color unselectedOutlineColor;
-
-  int getPainLevel(String key) => bodyParts.toMap()[key] ?? 0;
-
-  ({Color fill, Color stroke}) _getPainColors(int painLevel) {
-    // If there is no pain, use the unselected colors.
-    if (painLevel == 0) {
-      return (fill: unselectedColor, stroke: unselectedOutlineColor);
-    }
-
-    // Get the scale points, excluding 0, to start the gradient from the first pain level.
-    final scalePoints = scale.levels.keys.where((p) => p > 0).toList()..sort();
-
-    // If there are no painful levels defined, default to a selected color.
-    if (scalePoints.isEmpty) {
-      return (fill: Colors.red, stroke: Colors.white);
-    }
-
-    // Find the first level of pain to start the gradient.
-    final firstPainPoint = scalePoints.first;
-
-    // If the pain is at or above the highest defined level, use that level's style.
-    if (painLevel >= scalePoints.last) {
-      final style = scale.levels[scalePoints.last]!;
-      return (fill: style.color, stroke: style.textColor);
-    }
-
-    // Determine the lower and upper bounds for interpolation.
-    final lowerBound = scalePoints.lastWhere((p) => p <= painLevel,
-        orElse: () => firstPainPoint);
-    final upperBound =
-        scalePoints.firstWhere((p) => p >= painLevel, orElse: () => lowerBound);
-
-    if (lowerBound == upperBound) {
-      final style = scale.levels[lowerBound]!;
-      return (fill: style.color, stroke: style.textColor);
-    }
-
-    final lowerStyle = scale.levels[lowerBound]!;
-    final upperStyle = scale.levels[upperBound]!;
-
-    // Calculate the interpolation factor (t).
-    final t = (painLevel - lowerBound) / (upperBound - lowerBound);
-
-    final fillColor = Color.lerp(lowerStyle.color, upperStyle.color, t)!;
-    final strokeColor =
-        Color.lerp(lowerStyle.textColor, upperStyle.textColor, t)!;
-
-    return (fill: fillColor, stroke: strokeColor);
-  }
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    // 1. Calculate the scaling and translation matrix to fit the SVG in the widget.
-    final viewBox = pictureInfo.size;
-    final double scale = min(
-      size.width / viewBox.width,
-      size.height / viewBox.height,
-    );
-    final scaledHalfViewBoxSize = viewBox * scale / 2.0;
-    final halfDesiredSize = size / 2.0;
-    final shift = Offset(
-      halfDesiredSize.width - scaledHalfViewBoxSize.width,
-      halfDesiredSize.height - scaledHalfViewBoxSize.height,
-    );
-    final fittingMatrix = Matrix4.identity()
-      ..translate(shift.dx, shift.dy)
-      ..scale(scale);
-
-    // 2. Draw the main SVG picture. We clip the canvas to the viewbox area to prevent
-    // any overflow.
-    canvas.save();
-    canvas.transform(fittingMatrix.storage);
-    canvas.clipRect(Rect.fromLTWH(0, 0, viewBox.width, viewBox.height));
-    canvas.drawPicture(pictureInfo.picture);
-    canvas.restore();
-
-    // 3. Draw the interactive/highlighted paths on top using TouchyCanvas.
-    final touchyCanvas = TouchyCanvas(context, canvas);
-
-    // Iterate over all the paths we extracted from the SVG.
-    for (final entry in bodyPartPaths.entries) {
-      final id = entry.key;
-      final path = entry.value;
-
-      final painLevel = getPainLevel(id);
-      final colors = _getPainColors(painLevel);
-
-      // Apply the same transformation to our interactive path.
-      final bodyPartPath = path.transform(fittingMatrix.storage);
-
-      // Draw the fill for hit-testing and coloring.
-      touchyCanvas.drawPath(
-        bodyPartPath,
-        Paint()
-          ..color = colors.fill
-          ..style = PaintingStyle.fill,
-        onTapDown: (_) => onTap(id),
-      );
-
-      // Draw the outline.
-      canvas.drawPath(
-        bodyPartPath,
-        Paint()
-          ..color = colors.stroke
-          ..strokeWidth = 2
-          ..style = PaintingStyle.stroke,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
-}
-
-/// A dialog widget that allows users to select a pain level using a
-/// configurable scale.
-class PainLevelDialog extends StatefulWidget {
-  const PainLevelDialog({
-    required this.initialPain,
-    required this.scale,
-    super.key,
-  });
-
-  final int initialPain;
-  final WongBakerScale scale;
-
-  @override
-  State<PainLevelDialog> createState() => _PainLevelDialogState();
-}
-
-class _PainLevelDialogState extends State<PainLevelDialog> {
-  late int _currentPain;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentPain = widget.initialPain;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final scalePoints = widget.scale.levels.keys.toList()..sort();
-    int painLevelKey;
-
-    if (_currentPain == 0) {
-      painLevelKey = scalePoints.contains(0) ? 0 : scalePoints.first;
-    } else {
-      painLevelKey = scalePoints.firstWhere((p) => p >= _currentPain,
-          orElse: () => scalePoints.last);
-    }
-
-    final painInfo = widget.scale.levels[painLevelKey]!;
-
-    return AlertDialog(
-      title: Text(widget.scale.dialogTitle),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20)
-          .copyWith(top: 20),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              color: painInfo.color,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              children: [
-                Text(painInfo.face, style: const TextStyle(fontSize: 64)),
-                const SizedBox(height: 8),
-                Text(
-                  textAlign: TextAlign.center,
-                  painInfo.description,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: painInfo.textColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                Text(
-                  textAlign: TextAlign.center,
-                  '${widget.scale.painIndicatorText}: $_currentPain',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: painInfo.textColor.withAlpha(204),
-                      ),
-                ),
-              ],
-            ),
-          ),
-          Column(
-            children: [
-              Slider(
-                value: _currentPain.toDouble(),
-                max: BodyParts.maxPainLevel.toDouble(),
-                divisions: BodyParts.maxPainLevel,
-                label: _currentPain.toString(),
-                onChanged: (value) {
-                  setState(() {
-                    _currentPain = value.round();
-                  });
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(widget.scale.cancelButton),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(_currentPain),
-          child: Text(widget.scale.okButton),
-        ),
-      ],
-    );
-  }
 }

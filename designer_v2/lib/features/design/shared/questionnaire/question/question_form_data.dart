@@ -623,8 +623,8 @@ class PainQuestionFormData extends QuestionFormData {
     super.questionInfoText,
   });
 
-  static Map<String, BodyParts> get kResponseOptions =>
-      {tr.form_field_response_pain: const BodyParts()};
+  static Map<String, Body> get kResponseOptions =>
+      {tr.form_field_response_pain: const Body()};
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();
@@ -667,7 +667,7 @@ class PainQuestionFormData extends QuestionFormData {
   @override
   Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as PainQuestion;
-    final value = kResponseOptions[responseOption]!;
-    return question.constructAnswer(value);
+    final value = kResponseOptions[responseOption];
+    return question.constructAnswer(value!);
   }
 }

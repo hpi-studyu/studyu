@@ -3,13 +3,11 @@ import 'package:studyu_app/widgets/questionnaire/pain_selection/body_part_select
 import 'package:studyu_core/core.dart';
 
 /// A widget that displays front and back views of a body for selection.
-///
 /// This widget provides a [SegmentedButton] to switch between [BodySide.front]
-/// and [BodySide.back] views.
+/// and [BodySide.back] views, wrapping the [BodyPartSelector].
 class BodyPartSelectorTurnable extends StatefulWidget {
-  /// Creates a [BodyPartSelectorTurnable].
   const BodyPartSelectorTurnable({
-    required this.bodyParts,
+    required this.body,
     super.key,
     this.onPainChanged,
     this.scale = WongBakerScale.english,
@@ -22,11 +20,12 @@ class BodyPartSelectorTurnable extends StatefulWidget {
     this.backButtonIcon = const Icon(Icons.face_retouching_natural),
   });
 
-  /// The current selection of body parts with their pain levels.
-  final BodyParts bodyParts;
+  /// The body object containing the full hierarchy of parts and their pain state.
+  final Body body;
 
-  /// Called when a pain level for a body part is updated via the dialog.
-  final void Function(String bodyPartId, int painLevel)? onPainChanged;
+  /// Called when pain details for a body part are updated via the dialog.
+  final void Function(
+      String parentPartId, String childPartId, BodyPain newPain)? onPainChanged;
 
   /// The configuration for the pain scale, including styles and translations.
   final WongBakerScale scale;
@@ -92,13 +91,16 @@ class _BodyPartSelectorTurnableState extends State<BodyPartSelectorTurnable> {
         const SizedBox(
           height: 16,
         ),
-        BodyPartSelector(
-          side: _side,
-          bodyParts: widget.bodyParts,
-          onPainChanged: widget.onPainChanged,
-          scale: widget.scale,
-          unselectedColor: widget.unselectedColor,
-          unselectedOutlineColor: widget.unselectedOutlineColor,
+        Padding(
+          padding: widget.padding,
+          child: BodyPartSelector(
+            side: _side,
+            body: widget.body,
+            onPainChanged: widget.onPainChanged,
+            scale: widget.scale,
+            unselectedColor: widget.unselectedColor,
+            unselectedOutlineColor: widget.unselectedOutlineColor,
+          ),
         ),
       ],
     );

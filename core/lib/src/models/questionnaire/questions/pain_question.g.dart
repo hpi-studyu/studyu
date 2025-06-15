@@ -13,7 +13,7 @@ PainQuestion _$PainQuestionFromJson(Map<String, dynamic> json) => PainQuestion()
   ..rationale = json['rationale'] as String?
   ..conditional = json['conditional'] == null
       ? null
-      : QuestionConditional<BodyParts>.fromJson(
+      : QuestionConditional<Body>.fromJson(
           json['conditional'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$PainQuestionToJson(PainQuestion instance) =>
