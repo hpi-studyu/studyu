@@ -1307,8 +1307,14 @@ abstract class AppLocalizations {
   /// No description provided for @form_array_question_visibility_logic_title.
   ///
   /// In en, this message translates to:
-  /// **'Visibility logic'**
+  /// **'Visibility Logic'**
   String get form_array_question_visibility_logic_title;
+
+  /// No description provided for @form_array_question_visibility_logic_question_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'This question has visibility logic defined. It will only be shown to the participant if the conditions are met.'**
+  String get form_array_question_visibility_logic_question_tooltip;
 
   /// No description provided for @form_array_question_visibility_logic_description.
   ///
@@ -1319,7 +1325,7 @@ abstract class AppLocalizations {
   /// No description provided for @form_array_question_visibility_logic_tooltip.
   ///
   /// In en, this message translates to:
-  /// **'Define the visibility logic for this question. The question will only be shown to the participant if the conditions are met.'**
+  /// **'Conditions are be based on the responses to other questions in the study. Only questions that follow the current question can be used in the visibility logic.'**
   String get form_array_question_visibility_logic_tooltip;
 
   /// No description provided for @form_array_question_visibility_logic_grouping_title.
@@ -1381,6 +1387,13 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add condition'**
   String get form_array_question_visibility_logic_add_condition_button;
+
+  /// No description provided for @form_array_question_visibility_logic_add_condition_disabled_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'No questions available to add conditions for. Only questions following the current question can be used in the visibility logic.'**
+  String
+      get form_array_question_visibility_logic_add_condition_disabled_tooltip;
 
   /// No description provided for @form_array_question_visibility_logic_is_true.
   ///

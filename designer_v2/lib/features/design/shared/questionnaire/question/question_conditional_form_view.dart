@@ -7,17 +7,25 @@ import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/conditional_question_properties.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ConditionalQuestionFormView extends FormConsumerWidget {
   ConditionalQuestionFormView(
       {required this.formViewModel, required this.allQuestions, super.key}) {
-    ConditionRowFormViewModel.allQuestions = allQuestions;
+    ConditionRowFormViewModel.availableQuestions = availableQuestions;
   }
 
   final IConditionalQuestionProperties formViewModel;
   final List<Question> allQuestions;
+
+  List<Question> get availableQuestions {
+    final currentIndex =
+        allQuestions.indexWhere((q) => q.id == formViewModel.currentQuestionId);
+    if (currentIndex == -1) return allQuestions;
+    return allQuestions.take(currentIndex).toList();
+  }
 
   @override
   Widget build(BuildContext context, FormGroup form) {
@@ -120,27 +128,49 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
         children: [
           Expanded(
             flex: 2,
-            child: ReactiveDropdownField<String>(
-              formControl: conditionVm.questionIdControl,
-              isExpanded: true,
-              items: conditionVm.availableQuestions
-                  .map((option) => DropdownMenuItem(
-                        value: option.id,
-                        child: Text(
-                          option.prompt!,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ))
-                  .toList(),
-              decoration: InputDecoration(
-                labelText:
-                    tr.form_array_question_visibility_logic_question_title,
-                border: const OutlineInputBorder(),
-                isDense: true,
+            child: Tooltip(
+              message: conditionVm.selectedQuestion?.prompt ?? '',
+              child: ReactiveDropdownField<String>(
+                formControl: conditionVm.questionIdControl,
+                isExpanded: true,
+                items: availableQuestions
+                    .asMap()
+                    .map((index, option) => MapEntry(
+                          index,
+                          DropdownMenuItem(
+                            value: option.id,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  SurveyQuestionType.of(option).icon,
+                                  size: 16,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  '${index + 1}.',
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    option.prompt!,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ))
+                    .values
+                    .toList(),
+                decoration: InputDecoration(
+                  labelText:
+                      tr.form_array_question_visibility_logic_question_title,
+                  border: const OutlineInputBorder(),
+                  isDense: true,
+                ),
               ),
-              /*onChanged: (value) {
-                print("Dropdown question changed");
-              },*/
             ),
           ),
           const SizedBox(width: 8),
@@ -227,22 +257,28 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           ),
         );
       case 'choice':
-        return ReactiveDropdownField<dynamic>(
-          formControl: conditionVm.valueControl,
-          isExpanded: true,
-          items: conditionVm.availableChoiceValues
-              .map((option) => DropdownMenuItem(
-                    value: option.value,
-                    child: Text(
-                      option.label,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ))
-              .toList(),
-          decoration: InputDecoration(
-            labelText: tr.form_array_question_visibility_logic_value_title,
-            border: const OutlineInputBorder(),
-            isDense: true,
+        return Tooltip(
+          message: conditionVm.availableChoiceValues
+              .firstWhere(
+                  (option) => option.value == conditionVm.valueControl.value)
+              .label,
+          child: ReactiveDropdownField<dynamic>(
+            formControl: conditionVm.valueControl,
+            isExpanded: true,
+            items: conditionVm.availableChoiceValues
+                .map((option) => DropdownMenuItem(
+                      value: option.value,
+                      child: Text(
+                        option.label,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ))
+                .toList(),
+            decoration: InputDecoration(
+              labelText: tr.form_array_question_visibility_logic_value_title,
+              border: const OutlineInputBorder(),
+              isDense: true,
+            ),
           ),
         );
       case 'scale':
@@ -262,7 +298,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             isDense: true,
           ),
         );
-      case 'text':
+      case 'freeText':
         return ReactiveTextField<dynamic>(
           formControl: conditionVm.valueControl,
           decoration: InputDecoration(
@@ -277,19 +313,18 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
   }
 
   Widget _buildAddConditionButton() {
-    // Get available questions for the condition, excluding the current question
-    final availableQuestions = allQuestions
-        .where((q) => q.id != formViewModel.currentQuestionId)
-        .toList();
-
-    print('Available questions for condition: ${availableQuestions.length}');
-
-    return ElevatedButton.icon(
-      onPressed: availableQuestions.isEmpty
-          ? null
-          : () => formViewModel.addCondition(),
-      icon: const Icon(Icons.add),
-      label: Text(tr.form_array_question_visibility_logic_add_condition_button),
+    return Tooltip(
+      message: availableQuestions.isEmpty
+          ? tr.form_array_question_visibility_logic_add_condition_disabled_tooltip
+          : '',
+      child: ElevatedButton.icon(
+        onPressed: availableQuestions.isEmpty
+            ? null
+            : () => formViewModel.addCondition(),
+        icon: const Icon(Icons.add),
+        label:
+            Text(tr.form_array_question_visibility_logic_add_condition_button),
+      ),
     );
   }
 

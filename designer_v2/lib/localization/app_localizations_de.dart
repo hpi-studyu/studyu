@@ -694,12 +694,16 @@ class AppLocalizationsDe extends AppLocalizations {
       'Sichtbarkeit der Frage';
 
   @override
+  String get form_array_question_visibility_logic_question_tooltip =>
+      'Für diese Frage sind Bedingungen definiert, die die Sichtbarkeit der Frage steuern.';
+
+  @override
   String get form_array_question_visibility_logic_description =>
       'Hier kannst du festlegen, unter welchen Bedingungen die Frage in der StudyU App angezeigt wird. \nDie Logik wird auf die Antwortmöglichkeiten der Frage angewendet, um die Sichtbarkeit zu steuern.';
 
   @override
   String get form_array_question_visibility_logic_tooltip =>
-      'Definiere, unter welchen Bedingungen die Frage in der StudyU App angezeigt wird';
+      'Bedingungen basieren auf den Antworten auf andere Fragen in der Studie. Es können nur Fragen verwendet werden, die hinter der aktuellen Frage liegen, um die Sichtbarkeitslogik zu definieren.';
 
   @override
   String get form_array_question_visibility_logic_grouping_title =>
@@ -713,7 +717,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get from_array_question_visibility_logic_no_conditions =>
-      'Keine Bedingungen definiert bisher';
+      'Keine Bedingungen definiert';
 
   @override
   String get form_array_question_visibility_logic_question_title => 'Frage';
@@ -734,6 +738,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get form_array_question_visibility_logic_add_condition_button =>
       'Bedingung hinzufügen';
+
+  @override
+  String get form_array_question_visibility_logic_add_condition_disabled_tooltip =>
+      'Keine Fragen verfügbar, um Bedingungen zu definieren. Es können nur Fragen verwendet werden, die hinter dieser Frage liegen.';
 
   @override
   String get form_array_question_visibility_logic_is_true => 'ist wahr';

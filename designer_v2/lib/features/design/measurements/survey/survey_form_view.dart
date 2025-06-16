@@ -176,6 +176,20 @@ class _MeasurementSurveyFormViewState
                       tr.form_array_measurement_survey_questions_new,
                   rowTitle: (viewModel) =>
                       viewModel.formData?.questionText ?? '',
+                  rowSuffix: (context, viewModel, rowIdx) {
+                    if (viewModel.formData?.conditional != null) {
+                      return Tooltip(
+                        message: tr
+                            .form_array_question_visibility_logic_question_tooltip,
+                        child: const Icon(
+                          Icons.rule,
+                          size: 16,
+                          color: Colors.grey,
+                        ),
+                      );
+                    }
+                    return const SizedBox();
+                  },
                   sectionTitle: tr.form_array_measurement_survey_questions,
                   emptyIcon: Icons.content_paste_off_rounded,
                   emptyTitle:
@@ -246,18 +260,34 @@ class _MeasurementSurveyFormViewState
     BuildContext context,
     WidgetRef ref,
   ) {
-    final observationalQuestions = widget.formViewModel.study.observations
+    // Get questions only from the current survey
+   /* final currentSurveyQuestions = widget.formViewModel.study.observations
         .whereType<QuestionnaireTask>()
+        .where((obs) => obs.id == widget.formViewModel.measurementId)
         .expand((obs) => obs.questions.questions)
+        .toList();*/
+
+    // Add current unsaved questions from the form
+    final currentUnsavedQuestions = widget
+        .formViewModel.questionFormViewModels.formViewModels
+        .map((vm) => vm.buildFormData().toQuestion())
         .toList();
+
+    // Combine both lists
+    final List<Question> allAvailableQuestions = [
+     // ...currentSurveyQuestions,
+      ...currentUnsavedQuestions,
+    ];
+
     final surveyQuestionFormViewModel =
         ref.watch(surveyQuestionFormViewModelProvider(routeArgs));
+
     showFormSideSheet<QuestionFormViewModel>(
       context: context,
       formViewModel: surveyQuestionFormViewModel,
       tabs: <FormSideSheetTab<QuestionFormViewModel>>[
         FormSideSheetTab(
-          title: tr.navlink_question_visibility_logic,
+          title: tr.navlink_screener_question_content,
           index: 0,
           formViewBuilder: (formViewModel) => SurveyQuestionFormView(
             formViewModel: formViewModel,
@@ -268,7 +298,7 @@ class _MeasurementSurveyFormViewState
           index: 1,
           formViewBuilder: (formViewModel) => ConditionalQuestionFormView(
             formViewModel: formViewModel,
-            allQuestions: observationalQuestions,
+            allQuestions: allAvailableQuestions,
           ),
         ),
       ],

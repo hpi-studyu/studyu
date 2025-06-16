@@ -681,7 +681,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navlink_question_visibility_logic => 'Visibility';
 
   @override
-  String get form_array_question_visibility_logic_title => 'Visibility logic';
+  String get form_array_question_visibility_logic_title => 'Visibility Logic';
+
+  @override
+  String get form_array_question_visibility_logic_question_tooltip =>
+      'This question has visibility logic defined. It will only be shown to the participant if the conditions are met.';
 
   @override
   String get form_array_question_visibility_logic_description =>
@@ -689,7 +693,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get form_array_question_visibility_logic_tooltip =>
-      'Define the visibility logic for this question. The question will only be shown to the participant if the conditions are met.';
+      'Conditions are be based on the responses to other questions in the study. Only questions that follow the current question can be used in the visibility logic.';
 
   @override
   String get form_array_question_visibility_logic_grouping_title =>
@@ -724,6 +728,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get form_array_question_visibility_logic_add_condition_button =>
       'Add condition';
+
+  @override
+  String get form_array_question_visibility_logic_add_condition_disabled_tooltip =>
+      'No questions available to add conditions for. Only questions following the current question can be used in the visibility logic.';
 
   @override
   String get form_array_question_visibility_logic_is_true => 'is true';

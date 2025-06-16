@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:studyu_core/core.dart' as core;
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -12,12 +12,12 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   final valueControl = FormControl<dynamic>();
 
   // todo do not make this static, try to use a provider to get the questions
-  static List<core.Question> allQuestions = [];
+  static List<Question> availableQuestions = [];
   final String currentQuestionId;
 
   ConditionRowFormViewModel({
     required this.currentQuestionId,
-    core.Expression? initialExpression,
+    Expression? initialExpression,
   }) {
     if (initialExpression != null) {
       questionIdControl.value = _extractQuestionId(initialExpression);
@@ -48,16 +48,8 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
     valueControl.valueChanges.listen((_) => callback());
   }*/
 
-// --- Available questions for dropdown (exclude current and all later ones) ---
-  List<core.Question> get availableQuestions {
-    final currentIndex =
-        allQuestions.indexWhere((q) => q.id == currentQuestionId);
-    if (currentIndex == -1) return [];
-    return allQuestions.take(currentIndex).toList();
-  }
-
   // --- Get selected question object ---
-  core.Question? get selectedQuestion {
+  Question? get selectedQuestion {
     return availableQuestions
         .firstWhereOrNull((q) => q.id == questionIdControl.value);
   }
@@ -65,6 +57,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   // --- Get available comparators for selected question ---
   List<FormControlOption<dynamic>> get availableComparators {
     final q = selectedQuestion;
+    print("Selected question: ${q?.id}, type: ${q?.type}");
     if (q == null) return [];
     switch (q.type) {
       case 'boolean':
@@ -79,23 +72,22 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
         ];
       case 'scale':
         return [
-          const FormControlOption(core.NumericComparator.equal, '='),
-          const FormControlOption(core.NumericComparator.notEqual, '≠'),
-          const FormControlOption(core.NumericComparator.greaterThan, '>'),
-          const FormControlOption(core.NumericComparator.lessThan, '<'),
-          const FormControlOption(
-              core.NumericComparator.greaterThanOrEqual, '≥'),
-          const FormControlOption(core.NumericComparator.lessThanOrEqual, '≤'),
+          const FormControlOption(NumericComparator.equal, '='),
+          const FormControlOption(NumericComparator.notEqual, '≠'),
+          const FormControlOption(NumericComparator.greaterThan, '>'),
+          const FormControlOption(NumericComparator.lessThan, '<'),
+          const FormControlOption(NumericComparator.greaterThanOrEqual, '≥'),
+          const FormControlOption(NumericComparator.lessThanOrEqual, '≤'),
         ];
-      case 'text':
+      case 'freeText':
         return [
-          FormControlOption(core.TextComparator.equal,
-              tr.form_array_question_visibility_logic_is),
-          FormControlOption(core.TextComparator.notEqual,
+          FormControlOption(
+              TextComparator.equal, tr.form_array_question_visibility_logic_is),
+          FormControlOption(TextComparator.notEqual,
               tr.form_array_question_visibility_logic_is_not),
-          FormControlOption(core.TextComparator.contains,
+          FormControlOption(TextComparator.contains,
               tr.form_array_question_visibility_logic_contains),
-          FormControlOption(core.TextComparator.doesNotContain,
+          FormControlOption(TextComparator.doesNotContain,
               tr.form_array_question_visibility_logic_does_not_contain),
         ];
       default:
@@ -106,7 +98,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   // --- Get available values for a 'choice' question ---
   List<FormControlOption<dynamic>> get availableChoiceValues {
     if (selectedQuestion?.type == 'choice') {
-      final choiceQuestion = selectedQuestion as core.ChoiceQuestion?;
+      final choiceQuestion = selectedQuestion as ChoiceQuestion?;
       return choiceQuestion?.choices
               .map((choice) => FormControlOption(choice.id, choice.text))
               .toList() ??
@@ -116,53 +108,51 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   }
 
   // --- Extract initial values from Expression ---
-  static String? _extractQuestionId(core.Expression? expression) {
-    if (expression is core.ValueExpression) {
+  static String? _extractQuestionId(Expression? expression) {
+    if (expression is ValueExpression) {
       return expression.target;
-    } else if (expression is core.NotExpression &&
-        expression.expression is core.ValueExpression) {
-      return (expression.expression as core.ValueExpression).target;
+    } else if (expression is NotExpression &&
+        expression.expression is ValueExpression) {
+      return (expression.expression as ValueExpression).target;
     }
     return null;
   }
 
-  static dynamic _extractComparator(core.Expression? expression) {
-    if (expression is core.NumericExpression) {
+  static dynamic _extractComparator(Expression? expression) {
+    if (expression is NumericExpression) {
       return expression.comparator;
-    } else if (expression is core.TextExpression) {
+    } else if (expression is TextExpression) {
       return expression.comparator;
-    } else if (expression is core.ChoiceExpression) {
+    } else if (expression is ChoiceExpression) {
       return '='; // Default for ChoiceExpression if no NotExpression
-    } else if (expression is core.BooleanExpression) {
+    } else if (expression is BooleanExpression) {
       return 'is'; // Default for BooleanExpression if no NotExpression
-    } else if (expression is core.NotExpression) {
-      if (expression.expression is core.ChoiceExpression) {
+    } else if (expression is NotExpression) {
+      if (expression.expression is ChoiceExpression) {
         return '!=';
-      } else if (expression.expression is core.BooleanExpression) {
+      } else if (expression.expression is BooleanExpression) {
         return 'is';
       }
     }
     return null;
   }
 
-  static dynamic _extractValue(core.Expression? expression) {
-    if (expression is core.ValueExpression) {
-      if (expression is core.NumericExpression) return expression.value;
-      if (expression is core.TextExpression) return expression.value;
-      if (expression is core.ChoiceExpression) {
+  static dynamic _extractValue(Expression? expression) {
+    if (expression is ValueExpression) {
+      if (expression is NumericExpression) return expression.value;
+      if (expression is TextExpression) return expression.value;
+      if (expression is ChoiceExpression) {
         return expression.choices.firstOrNull;
       }
-      if (expression is core.BooleanExpression) {
+      if (expression is BooleanExpression) {
         return true;
       }
       return null;
-    } else if (expression is core.NotExpression) {
-      if (expression.expression is core.ChoiceExpression) {
-        return (expression.expression as core.ChoiceExpression)
-            .choices
-            .firstOrNull;
+    } else if (expression is NotExpression) {
+      if (expression.expression is ChoiceExpression) {
+        return (expression.expression as ChoiceExpression).choices.firstOrNull;
       }
-      if (expression.expression is core.BooleanExpression) {
+      if (expression.expression is BooleanExpression) {
         return false;
       }
     }
@@ -170,7 +160,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   }
 
   // --- Build Expression from Form Controls ---
-  core.Expression? buildExpression() {
+  Expression? buildExpression() {
     final questionId = questionIdControl.value;
     final comparator = comparatorControl.value;
     final value = valueControl.value;
@@ -178,31 +168,30 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
 
     if (questionId == null || selectedQ == null) return null;
 
-    core.Expression? baseExpression;
+    Expression? baseExpression;
     switch (selectedQ.type) {
       case 'boolean':
-        baseExpression = core.BooleanExpression()..target = questionId;
+        baseExpression = BooleanExpression()..target = questionId;
         if (value == false) {
-          return core.NotExpression()..expression = baseExpression;
+          return NotExpression()..expression = baseExpression;
         }
         return baseExpression;
       case 'choice':
         if (value == null) return null;
-        baseExpression = core.ChoiceExpression()
+        baseExpression = ChoiceExpression()
           ..target = questionId
           ..choices = {value};
         if (comparator == '!=') {
-          return core.NotExpression()..expression = baseExpression;
+          return NotExpression()..expression = baseExpression;
         }
         return baseExpression;
       case 'scale':
-        if (comparator is! core.NumericComparator || value is! num) return null;
-        return core.NumericExpression(comparator: comparator, value: value)
+        if (comparator is! NumericComparator || value is! num) return null;
+        return NumericExpression(comparator: comparator, value: value)
           ..target = questionId;
-      case 'text':
-        if (comparator is! core.TextComparator || value == null) return null;
-        return core.TextExpression(
-            comparator: comparator, value: value as String)
+      case 'freeText':
+        if (comparator is! TextComparator || value == null) return null;
+        return TextExpression(comparator: comparator, value: value as String)
           ..target = questionId;
       default:
         return null;
