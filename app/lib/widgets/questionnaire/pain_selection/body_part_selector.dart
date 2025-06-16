@@ -1,3 +1,6 @@
+// This code is taken from the package by Tim Lehmann (timcreatedit)
+// Source: https://github.com/timcreatedit/body_part_selector
+// Licensed under the MIT License.
 import 'dart:math';
 import 'dart:ui' as ui;
 

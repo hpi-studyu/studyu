@@ -1,3 +1,7 @@
+// This code is taken from the package by Tim Lehmann (timcreatedit)
+// Source: https://github.com/timcreatedit/body_part_selector
+// Licensed under the MIT License.
+
 import 'package:flutter/material.dart';
 import 'package:studyu_app/widgets/questionnaire/pain_selection/body_part_selector.dart';
 import 'package:studyu_core/core.dart';
