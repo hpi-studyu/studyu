@@ -105,7 +105,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   List<Choice> get validAnswerOptions {
     final List<Choice> options = [];
     for (final optionValue in answerOptionsArray.value ?? []) {
-      if (optionValue is Choice && optionValue.text.trim().isNotEmpty) {
+      if (optionValue is Choice &&
+          optionValue.text != null &&
+          optionValue.text!.trim().isNotEmpty) {
         options.add(optionValue);
       }
     }
@@ -510,6 +512,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         for (final option in data.answerOptions) {
           answerOptionsArray.add(FormControl<Choice>(value: option));
         }
+        break;
       case SurveyQuestionType.scale:
         scaleMinValueControl.value =
             (data as ScaleQuestionFormData).minValue.toInt();
