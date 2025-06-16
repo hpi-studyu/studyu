@@ -10,7 +10,8 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   final comparatorControl = FormControl<dynamic>();
   final valueControl = FormControl<dynamic>();
 
-  static late List<core.Question> allQuestions;
+  // todo do not make this static, try to use a provider to get the questions
+  static List<core.Question> allQuestions = [];
   final String currentQuestionId;
 
   ConditionRowFormViewModel({
