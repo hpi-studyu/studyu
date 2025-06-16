@@ -8,7 +8,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   // --- Controls ---
   final FormControl<String> questionIdControl = FormControl<String>();
   final FormControl<dynamic> comparatorControl = FormControl<dynamic>();
-  final FormControl<dynamic> valueControl = FormControl<dynamic>();
+  FormControl<dynamic> valueControl = FormControl<dynamic>();
 
   final List<core.Question> allQuestions;
   final String currentQuestionId;
@@ -18,17 +18,55 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
     required this.currentQuestionId,
     core.Expression? initialExpression,
   }) {
-    // Initialize controls from initialExpression if provided
     if (initialExpression != null) {
       questionIdControl.value = _extractQuestionId(initialExpression);
       comparatorControl.value = _extractComparator(initialExpression);
-      valueControl.value = _extractValue(initialExpression);
+      final value = _extractValue(initialExpression);
+      if (value != null) {
+        valueControl.value = value;
+      }
     }
   }
 
-  // --- Available questions for dropdown (exclude current) ---
-  List<core.Question> get availableQuestions =>
-      allQuestions.where((q) => q.id != currentQuestionId).toList();
+  void updateValueControlType() {
+    if (selectedQuestion == null) return;
+
+    final newValue = valueControl.value;
+    switch (selectedQuestion!.type) {
+      case 'boolean':
+        if (valueControl is! FormControl<bool>) {
+          final typedControl = FormControl<bool>();
+          if (newValue is bool) {
+            typedControl.value = newValue;
+          }
+          valueControl = typedControl;
+        }
+      case 'scale':
+        if (valueControl is! FormControl<num>) {
+          final typedControl = FormControl<num>();
+          if (newValue is num) {
+            typedControl.value = newValue;
+          }
+          valueControl = typedControl;
+        }
+      case 'text':
+        if (valueControl is! FormControl<String>) {
+          final typedControl = FormControl<String>();
+          if (newValue is String) {
+            typedControl.value = newValue;
+          }
+          valueControl = typedControl;
+        }
+    }
+  }
+
+// --- Available questions for dropdown (exclude current and all later ones) ---
+  List<core.Question> get availableQuestions {
+    final currentIndex =
+        allQuestions.indexWhere((q) => q.id == currentQuestionId);
+    if (currentIndex == -1) return [];
+    return allQuestions.take(currentIndex).toList();
+  }
 
   // --- Get selected question object ---
   core.Question? get selectedQuestion {

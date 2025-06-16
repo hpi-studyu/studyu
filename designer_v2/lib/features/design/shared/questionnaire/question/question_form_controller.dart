@@ -63,21 +63,13 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   final FormControl<String> questionTextControl = FormControl();
   final FormControl<String> questionInfoTextControl = FormControl();
 
-  /*@override
-  final FormGroup questionConditionalControl = FormGroup({
-    'defaultValue': FormControl(),
-    'compositeExpression': compositeExpressionControl,
-    /*FormGroup({
-      'logicType': FormControl(),
-      'expressionsArray': FormArray([]), // to be filled by subclass
-    }),*/
-  });*/
-
   @override
   String get currentQuestionId => questionIdControl.value!;
 
   @override
-  final FormControl<LogicType> logicTypeControl = FormControl();
+  final FormControl<LogicType> logicTypeControl = FormControl<LogicType>(
+    value: LogicType.and,
+  );
 
   @override
   late final FormArray<ConditionRowFormViewModel> conditionsArray =
@@ -607,7 +599,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
-          // conditional: questionConditionalControl.value,
         );
       case SurveyQuestionType.image:
         return ImageQuestionFormData(

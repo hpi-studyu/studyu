@@ -4,6 +4,7 @@ import 'package:studyu_core/src/models/questionnaire/questionnaire_state.dart';
 
 part 'composite_expression.g.dart';
 
+@JsonEnum()
 enum LogicType {
   @JsonValue('and')
   and,

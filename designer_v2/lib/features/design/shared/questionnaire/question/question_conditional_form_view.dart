@@ -9,6 +9,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
+// todo maybe use FormConsumerRefWidget
 class ConditionalQuestionFormView extends FormConsumerWidget {
   const ConditionalQuestionFormView(
       {required this.formViewModel, required this.allQuestions, super.key});
@@ -19,34 +20,30 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
   @override
   Widget build(BuildContext context, FormGroup form) {
     final theme = Theme.of(context);
-
-    // Rebuild this widget when the form changes by using ReactiveFormConsumer
-    return ReactiveFormConsumer(
-      builder: (context, formGroup, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextParagraph(
-              text: 'tr.form_array_question_visibility_logic_description',
-              style: ThemeConfig.bodyTextMuted(theme),
-            ),
-            const SizedBox(height: 16.0),
-            const FormLabel(
-              labelText: 'tr.form_array_question_visibility_logic_title',
-              labelTextStyle: TextStyle(fontWeight: FontWeight.bold),
-              helpText: 'tr.form_array_question_visibility_logic_tooltip',
-            ),
-            const SizedBox(height: 12.0),
-            _buildLogicGroupingControl(),
-            const SizedBox(height: 12.0),
-            _buildConditionsList(),
-            const SizedBox(height: 16.0),
-            _buildAddConditionButton(),
-            const Divider(height: 32.0),
-            _buildLivePreview(context),
-          ],
-        );
-      },
+    print(
+        'Building ConditionalQuestionFormView with ${formViewModel.conditionsArray.controls.length} conditions');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextParagraph(
+          text: 'tr.form_array_question_visibility_logic_description',
+          style: ThemeConfig.bodyTextMuted(theme),
+        ),
+        const SizedBox(height: 16.0),
+        const FormLabel(
+          labelText: 'tr.form_array_question_visibility_logic_title',
+          labelTextStyle: TextStyle(fontWeight: FontWeight.bold),
+          helpText: 'tr.form_array_question_visibility_logic_tooltip',
+        ),
+        const SizedBox(height: 12.0),
+        _buildLogicGroupingControl(),
+        const SizedBox(height: 12.0),
+        _buildConditionsList(),
+        const SizedBox(height: 16.0),
+        _buildAddConditionButton(),
+        const Divider(height: 32.0),
+        _buildLivePreview(context),
+      ],
     );
   }
 
@@ -92,9 +89,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             (index) => KeyedSubtree(
               key: ValueKey(formArray.controls[index]),
               child: _buildSingleConditionRow(
-                  context,
-                  formArray.controls[index].value as ConditionRowFormViewModel,
-                  index),
+                  context, formArray.controls[index].value!, index),
             ),
           ),
         );
@@ -115,10 +110,14 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             flex: 2,
             child: ReactiveDropdownField<String>(
               formControl: conditionVm.questionIdControl,
+              isExpanded: true,
               items: conditionVm.availableQuestions
                   .map((option) => DropdownMenuItem(
                         value: option.id,
-                        child: Text(option.prompt!),
+                        child: Text(
+                          option.prompt!,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ))
                   .toList(),
               decoration: const InputDecoration(
@@ -129,32 +128,55 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             ),
           ),
           const SizedBox(width: 8),
-          if (conditionVm.selectedQuestion !=
-              null) // Only show comparator if question is selected
-            Expanded(
-              child: ReactiveDropdownField<dynamic>(
-                formControl: conditionVm.comparatorControl,
-                items: conditionVm.availableComparators
-                    .map((option) => DropdownMenuItem(
-                          value: option.value,
-                          child: Text(option.label),
-                        ))
-                    .toList(),
-                decoration: const InputDecoration(
-                  labelText: 'tr.field_comparator',
-                  border: OutlineInputBorder(),
-                  isDense: true,
-                ),
-              ),
-            ),
+          // Rebuild comparator when question changes
+          ReactiveValueListenableBuilder<String>(
+            formControl: conditionVm.questionIdControl,
+            builder: (context, _, __) {
+              if (conditionVm.selectedQuestion != null) {
+                return Expanded(
+                  child: ReactiveDropdownField<dynamic>(
+                    formControl: conditionVm.comparatorControl,
+                    isExpanded: true,
+                    items: conditionVm.availableComparators
+                        .map((option) => DropdownMenuItem(
+                              value: option.value,
+                              child: Text(
+                                option.label,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ))
+                        .toList(),
+                    decoration: const InputDecoration(
+                      labelText: 'tr.field_comparator',
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
           const SizedBox(width: 8),
-          if (conditionVm.comparatorControl.value != null &&
-              conditionVm.selectedQuestion !=
-                  null) // Only show value if comparator is selected
-            Expanded(
-              flex: 2,
-              child: _buildValueInputField(context, conditionVm),
-            ),
+          // Rebuild value when question or comparator changes
+          ReactiveValueListenableBuilder<String>(
+            formControl: conditionVm.questionIdControl,
+            builder: (context, _, __) {
+              return ReactiveValueListenableBuilder<dynamic>(
+                formControl: conditionVm.comparatorControl,
+                builder: (context, _, __) {
+                  if (conditionVm.comparatorControl.value != null &&
+                      conditionVm.selectedQuestion != null) {
+                    return Expanded(
+                      flex: 2,
+                      child: _buildValueInputField(context, conditionVm),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.delete_forever),
             onPressed: () => formViewModel.removeCondition(index),
@@ -169,6 +191,9 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     BuildContext context,
     ConditionRowFormViewModel conditionVm,
   ) {
+    // Update value control type before building the input field
+    conditionVm.updateValueControlType();
+
     switch (conditionVm.selectedQuestion!.type) {
       case 'boolean':
         return ReactiveDropdownField<bool>(
@@ -186,10 +211,14 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
       case 'choice':
         return ReactiveDropdownField<dynamic>(
           formControl: conditionVm.valueControl,
+          isExpanded: true,
           items: conditionVm.availableChoiceValues
               .map((option) => DropdownMenuItem(
                     value: option.value,
-                    child: Text(option.label),
+                    child: Text(
+                      option.label,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ))
               .toList(),
           decoration: const InputDecoration(
@@ -199,7 +228,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           ),
         );
       case 'scale':
-        return ReactiveTextField(
+        return ReactiveTextField<num>(
           formControl: conditionVm.valueControl as FormControl<num>,
           keyboardType: TextInputType.number,
           inputFormatters: const [
@@ -217,7 +246,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           ),
         );
       case 'text':
-        return ReactiveTextField(
+        return ReactiveTextField<String>(
           formControl: conditionVm.valueControl as FormControl<String>,
           decoration: const InputDecoration(
             labelText: 'tr.field_value',
@@ -226,8 +255,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           ),
         );
       default:
-        return const SizedBox
-            .shrink(); // Should not happen with proper type handling
+        return const SizedBox.shrink();
     }
   }
 
@@ -240,46 +268,27 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
   }
 
   Widget _buildLivePreview(BuildContext context) {
-    // This is a simplified preview; you'd likely want to lift the logic
-    // into the ViewModel and expose a stream or getter for the preview text.
-    // For reactive forms, you might listen to form.valueChanges.
     final List<Expression> currentExpressions = [];
-    /*
-    List.generate(
-            formArray.controls.length,
-            (index) => KeyedSubtree(
-              key: ValueKey(formArray.controls[index]),
-              child: _buildSingleConditionRow(
-                  context,
-                  formArray.controls[index].value as ConditionRowFormViewModel,
-                  index),
-            ),
-          ),
-     */
     for (final control in formViewModel.conditionsArray.controls) {
-      final conditionVm = control.value as ConditionRowFormViewModel;
-      final expression = conditionVm.buildExpression();
+      final expression = control.value?.buildExpression();
       if (expression != null) {
         currentExpressions.add(expression);
       }
     }
 
     final CompositeExpression tempComposite = CompositeExpression(
+      // Use AND as default if logicType is null
       logicType: formViewModel.logicTypeControl.value ?? LogicType.and,
       expressions: currentExpressions,
     );
 
-    // LiveConditionPreview (from previous response) needs to be adapted to use the designer's Question model
     return LiveConditionPreview(
       compositeExpression: tempComposite,
       allQuestions: allQuestions,
-      //allQuestions: formViewModel.allQuestions,
       currentQuestionId: formViewModel.currentQuestionId,
     );
   }
 }
-
-// --- LiveConditionPreview (adapted for designer_q.Question) ---
 
 class LiveConditionPreview extends StatelessWidget {
   final CompositeExpression compositeExpression;
