@@ -69,8 +69,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   String get currentQuestionId => questionIdControl.value!;
 
   @override
-  final FormControl<LogicType> logicTypeControl = FormControl<LogicType>(
+  late final FormControl<LogicType> logicTypeControl =
+      CustomFormControl<LogicType>(
     value: LogicType.and,
+    onValueChanged: onLogicTypeChanged,
   );
 
   @override
@@ -120,7 +122,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         currentExpressions.add(expression);
       }
     }
-    print('Composite expressions: $currentExpressions');
+    // print('Composite expressions: $currentExpressions');
     if (currentExpressions.isEmpty) {
       return null; // No conditions to form a composite expression
     }
@@ -140,6 +142,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         );*/
   }
 
+  void onLogicTypeChanged(LogicType? value) {
+    updateCondition();
+  }
+
   @override
   void addCondition({Expression? initialExpression}) {
     final conditionVm = ConditionRowFormViewModel(
@@ -154,7 +160,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   @override
   void updateCondition() {
-    print('UPDATING CONDITION with current expressions: $compositeExpression');
+    // print('UPDATING CONDITION with current expressions: $compositeExpression');
     if (compositeExpression == null) {
       questionConditionalControl.updateValue(null);
     } else {
@@ -622,6 +628,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     questionTextControl.value = data.questionText;
     questionTypeControl.value = data.questionType;
     questionInfoTextControl.value = data.questionInfoText ?? '';
+
+    // todo this is suboptimal to insert the data from questionConditionalControl into logicTypeControl and conditionsArray
     questionConditionalControl.value = data.conditional;
     final compositeExpression = questionConditionalControl.value?.condition;
     if (compositeExpression != null) {
