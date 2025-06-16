@@ -1030,4 +1030,52 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get bodyPartLabel => 'Körperteil';
+
+  @override
+  String get painTypeUnspecified => 'Nicht angegeben';
+
+  @override
+  String get painTypeBurning => 'Brennend';
+
+  @override
+  String get painTypeStabbing => 'Stechend';
+
+  @override
+  String get painTypeAching => 'Schmerzhaft';
+
+  @override
+  String get painTypeThrobbing => 'Pochend';
+
+  @override
+  String get painTypeSharp => 'Scharf';
+
+  @override
+  String get painTypeDull => 'Dumpf';
+
+  @override
+  String get painTypeCramping => 'Krampfartig';
+
+  @override
+  String get painTypeRadiating => 'Ausstrahlend';
+
+  @override
+  String get painTypeTingling => 'Kribbelnd';
+
+  @override
+  String get painTypeShooting => 'Einschießend';
+
+  @override
+  String get painTypePulsing => 'Pulsierend';
+
+  @override
+  String get painTypePressure => 'Druck';
+
+  @override
+  String get painTypeTightness => 'Engegefühl';
+
+  @override
+  String get painTypeSoreness => 'Wund';
+
+  @override
+  String get painTypeStiffness => 'Steifheit';
 }

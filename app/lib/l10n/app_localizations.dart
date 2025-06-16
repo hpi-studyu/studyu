@@ -2011,6 +2011,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Body Part'**
   String get bodyPartLabel;
+
+  /// No description provided for @painTypeUnspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Unspecified'**
+  String get painTypeUnspecified;
+
+  /// No description provided for @painTypeBurning.
+  ///
+  /// In en, this message translates to:
+  /// **'Burning'**
+  String get painTypeBurning;
+
+  /// No description provided for @painTypeStabbing.
+  ///
+  /// In en, this message translates to:
+  /// **'Stabbing'**
+  String get painTypeStabbing;
+
+  /// No description provided for @painTypeAching.
+  ///
+  /// In en, this message translates to:
+  /// **'Aching'**
+  String get painTypeAching;
+
+  /// No description provided for @painTypeThrobbing.
+  ///
+  /// In en, this message translates to:
+  /// **'Throbbing'**
+  String get painTypeThrobbing;
+
+  /// No description provided for @painTypeSharp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharp'**
+  String get painTypeSharp;
+
+  /// No description provided for @painTypeDull.
+  ///
+  /// In en, this message translates to:
+  /// **'Dull'**
+  String get painTypeDull;
+
+  /// No description provided for @painTypeCramping.
+  ///
+  /// In en, this message translates to:
+  /// **'Cramping'**
+  String get painTypeCramping;
+
+  /// No description provided for @painTypeRadiating.
+  ///
+  /// In en, this message translates to:
+  /// **'Radiating'**
+  String get painTypeRadiating;
+
+  /// No description provided for @painTypeTingling.
+  ///
+  /// In en, this message translates to:
+  /// **'Tingling'**
+  String get painTypeTingling;
+
+  /// No description provided for @painTypeShooting.
+  ///
+  /// In en, this message translates to:
+  /// **'Shooting'**
+  String get painTypeShooting;
+
+  /// No description provided for @painTypePulsing.
+  ///
+  /// In en, this message translates to:
+  /// **'Pulsing'**
+  String get painTypePulsing;
+
+  /// No description provided for @painTypePressure.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressure'**
+  String get painTypePressure;
+
+  /// No description provided for @painTypeTightness.
+  ///
+  /// In en, this message translates to:
+  /// **'Tightness'**
+  String get painTypeTightness;
+
+  /// No description provided for @painTypeSoreness.
+  ///
+  /// In en, this message translates to:
+  /// **'Soreness'**
+  String get painTypeSoreness;
+
+  /// No description provided for @painTypeStiffness.
+  ///
+  /// In en, this message translates to:
+  /// **'Stiffness'**
+  String get painTypeStiffness;
 }
 
 class _AppLocalizationsDelegate

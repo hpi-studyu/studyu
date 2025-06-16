@@ -1,15 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studyu_core/src/models/questionnaire/pain_type.dart';
 
 part 'body_pain.g.dart';
 
 @JsonSerializable()
 class BodyPain {
   final int painLevel;
-  final PainType type;
+  final PainType? type;
 
   const BodyPain({
     this.painLevel = 0,
-    this.type = PainType.unspecified,
+    this.type,
   });
 
   BodyPain copyWith({
@@ -28,22 +29,22 @@ class BodyPain {
   Map<String, dynamic> toJson() => _$BodyPainToJson(this);
 }
 
-enum PainType {
-  unspecified,
-  burning,
-  stabbing,
-  aching,
-  throbbing,
-  sharp,
-  dull,
-  cramping,
-  radiating,
-  tingling,
-  shooting,
-  pulsing,
-  pressure,
-  tightness,
-  soreness,
-  stiffness,
-  other,
-}
+// enum PainType {
+//   unspecified,
+//   burning,
+//   stabbing,
+//   aching,
+//   throbbing,
+//   sharp,
+//   dull,
+//   cramping,
+//   radiating,
+//   tingling,
+//   shooting,
+//   pulsing,
+//   pressure,
+//   tightness,
+//   soreness,
+//   stiffness,
+//   other,
+// }

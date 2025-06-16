@@ -379,5 +379,21 @@
   "body_right_foot_sole": "Foot Sole / Arch",
   "body_right_toes": "Toes",
   "painTypeLabel": "Pain Type",
-  "bodyPartLabel": "Body Part"
+  "bodyPartLabel": "Body Part",
+  "painTypeUnspecified": "Unspecified",
+  "painTypeBurning": "Burning",
+  "painTypeStabbing": "Stabbing",
+  "painTypeAching": "Aching",
+  "painTypeThrobbing": "Throbbing",
+  "painTypeSharp": "Sharp",
+  "painTypeDull": "Dull",
+  "painTypeCramping": "Cramping",
+  "painTypeRadiating": "Radiating",
+  "painTypeTingling": "Tingling",
+  "painTypeShooting": "Shooting",
+  "painTypePulsing": "Pulsing",
+  "painTypePressure": "Pressure",
+  "painTypeTightness": "Tightness",
+  "painTypeSoreness": "Soreness",
+  "painTypeStiffness": "Stiffness"
 }

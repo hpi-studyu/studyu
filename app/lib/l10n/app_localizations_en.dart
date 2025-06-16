@@ -1022,4 +1022,52 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bodyPartLabel => 'Body Part';
+
+  @override
+  String get painTypeUnspecified => 'Unspecified';
+
+  @override
+  String get painTypeBurning => 'Burning';
+
+  @override
+  String get painTypeStabbing => 'Stabbing';
+
+  @override
+  String get painTypeAching => 'Aching';
+
+  @override
+  String get painTypeThrobbing => 'Throbbing';
+
+  @override
+  String get painTypeSharp => 'Sharp';
+
+  @override
+  String get painTypeDull => 'Dull';
+
+  @override
+  String get painTypeCramping => 'Cramping';
+
+  @override
+  String get painTypeRadiating => 'Radiating';
+
+  @override
+  String get painTypeTingling => 'Tingling';
+
+  @override
+  String get painTypeShooting => 'Shooting';
+
+  @override
+  String get painTypePulsing => 'Pulsing';
+
+  @override
+  String get painTypePressure => 'Pressure';
+
+  @override
+  String get painTypeTightness => 'Tightness';
+
+  @override
+  String get painTypeSoreness => 'Soreness';
+
+  @override
+  String get painTypeStiffness => 'Stiffness';
 }

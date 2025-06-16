@@ -8,31 +8,12 @@ part of 'body_pain.dart';
 
 BodyPain _$BodyPainFromJson(Map<String, dynamic> json) => BodyPain(
       painLevel: (json['painLevel'] as num?)?.toInt() ?? 0,
-      type: $enumDecodeNullable(_$PainTypeEnumMap, json['type']) ??
-          PainType.unspecified,
+      type: json['type'] == null
+          ? null
+          : PainType.fromJson(json['type'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$BodyPainToJson(BodyPain instance) => <String, dynamic>{
       'painLevel': instance.painLevel,
-      'type': _$PainTypeEnumMap[instance.type]!,
+      if (instance.type?.toJson() case final value?) 'type': value,
     };
-
-const _$PainTypeEnumMap = {
-  PainType.unspecified: 'unspecified',
-  PainType.burning: 'burning',
-  PainType.stabbing: 'stabbing',
-  PainType.aching: 'aching',
-  PainType.throbbing: 'throbbing',
-  PainType.sharp: 'sharp',
-  PainType.dull: 'dull',
-  PainType.cramping: 'cramping',
-  PainType.radiating: 'radiating',
-  PainType.tingling: 'tingling',
-  PainType.shooting: 'shooting',
-  PainType.pulsing: 'pulsing',
-  PainType.pressure: 'pressure',
-  PainType.tightness: 'tightness',
-  PainType.soreness: 'soreness',
-  PainType.stiffness: 'stiffness',
-  PainType.other: 'other',
-};

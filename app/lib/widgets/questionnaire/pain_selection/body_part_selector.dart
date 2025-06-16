@@ -249,7 +249,7 @@ class PainEditDialog extends StatefulWidget {
 
 class _PainEditDialogState extends State<PainEditDialog> {
   late int _currentPain;
-  late PainType _selectedPainType;
+  late PainType? _selectedPainType;
   late String _selectedPartId;
   late List<BodyPart> _selectableParts;
 
@@ -291,6 +291,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
     final painLevelKey = scalePoints.lastWhere((p) => p <= _currentPain,
         orElse: () => scalePoints.first);
     final painInfo = widget.scale.levels[painLevelKey]!;
+    final painTypeOptions = _generatePainTypes(context);
 
     return AlertDialog(
       title: Text(widget.scale.dialogTitle),
@@ -345,7 +346,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                 labelText: loc.painTypeLabel,
                 border: const OutlineInputBorder(),
               ),
-              items: PainType.values.map((PainType type) {
+              items: painTypeOptions.map((PainType type) {
                 return DropdownMenuItem<PainType>(
                   value: type,
                   child:
@@ -406,6 +407,60 @@ class _PainEditDialogState extends State<PainEditDialog> {
         ),
       ],
     );
+  }
+
+  List<PainType> _generatePainTypes(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    return [
+      PainType(
+        loc.painTypeUnspecified,
+      ),
+      PainType(
+        loc.painTypeBurning,
+      ),
+      PainType(
+        loc.painTypeStabbing,
+      ),
+      PainType(
+        loc.painTypeAching,
+      ),
+      PainType(
+        loc.painTypeThrobbing,
+      ),
+      PainType(
+        loc.painTypeSharp,
+      ),
+      PainType(
+        loc.painTypeDull,
+      ),
+      PainType(
+        loc.painTypeCramping,
+      ),
+      PainType(
+        loc.painTypeRadiating,
+      ),
+      PainType(
+        loc.painTypeTingling,
+      ),
+      PainType(
+        loc.painTypeShooting,
+      ),
+      PainType(
+        loc.painTypePulsing,
+      ),
+      PainType(
+        loc.painTypePressure,
+      ),
+      PainType(
+        loc.painTypeTightness,
+      ),
+      PainType(
+        loc.painTypeSoreness,
+      ),
+      PainType(
+        loc.painTypeStiffness,
+      ),
+    ];
   }
 }
 

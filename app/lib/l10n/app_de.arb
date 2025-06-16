@@ -383,5 +383,21 @@
   "body_right_foot_sole": "Fußsohle / Fußgewölbe",
   "body_right_toes": "Zehen",
   "painTypeLabel": "Schmerztyp",
-  "bodyPartLabel": "Körperteil"
+  "bodyPartLabel": "Körperteil",
+  "painTypeUnspecified": "Nicht angegeben",
+  "painTypeBurning": "Brennend",
+  "painTypeStabbing": "Stechend",
+  "painTypeAching": "Schmerzhaft",
+  "painTypeThrobbing": "Pochend",
+  "painTypeSharp": "Scharf",
+  "painTypeDull": "Dumpf",
+  "painTypeCramping": "Krampfartig",
+  "painTypeRadiating": "Ausstrahlend",
+  "painTypeTingling": "Kribbelnd",
+  "painTypeShooting": "Einschießend",
+  "painTypePulsing": "Pulsierend",
+  "painTypePressure": "Druck",
+  "painTypeTightness": "Engegefühl",
+  "painTypeSoreness": "Wund",
+  "painTypeStiffness": "Steifheit"
 }
