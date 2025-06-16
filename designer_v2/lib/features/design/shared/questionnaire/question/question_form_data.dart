@@ -170,10 +170,10 @@ class ChoiceQuestionFormData extends QuestionFormData {
   });
 
   final bool isMultipleChoice;
-  final List<Choice> answerOptions;
+  final List<String> answerOptions;
 
   @override
-  List<Choice> get responseOptions => answerOptions;
+  List<String> get responseOptions => answerOptions;
 
   factory ChoiceQuestionFormData.fromDomainModel(
     ChoiceQuestion question,
@@ -185,7 +185,7 @@ class ChoiceQuestionFormData extends QuestionFormData {
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
       isMultipleChoice: question.multiple,
-      answerOptions: question.choices,
+      answerOptions: question.choices.map((choice) => choice.text).toList(),
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -198,7 +198,7 @@ class ChoiceQuestionFormData extends QuestionFormData {
     question.prompt = questionText;
     question.rationale = questionInfoText;
     question.multiple = isMultipleChoice;
-    question.choices = answerOptions;
+    question.choices = answerOptions.map(_buildChoiceForValue).toList();
     return question;
   }
 
@@ -217,10 +217,17 @@ class ChoiceQuestionFormData extends QuestionFormData {
     return data;
   }
 
+  Choice _buildChoiceForValue(String value) {
+    final choiceId = value.toKey();
+    final choice = Choice(choiceId);
+    choice.text = value;
+    return choice;
+  }
+
   @override
   Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as ChoiceQuestion;
-    final choice = responseOption as Choice;
+    final choice = _buildChoiceForValue(responseOption as String);
     return question.constructAnswer([choice]);
   }
 }

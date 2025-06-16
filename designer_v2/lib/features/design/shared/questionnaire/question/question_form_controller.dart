@@ -102,13 +102,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   List<AbstractControl> get answerOptionsControls =>
       answerOptionsArray.controls;
 
-  List<Choice> get validAnswerOptions {
-    final List<Choice> options = [];
+  List<String> get validAnswerOptions {
+    final List<String> options = [];
     for (final optionValue in answerOptionsArray.value ?? []) {
-      if (optionValue is Choice &&
-          optionValue.text != null &&
-          optionValue.text!.trim().isNotEmpty) {
-        options.add(optionValue);
+      if (optionValue != null) {
+        options.add(optionValue as String);
       }
     }
     return options;
@@ -509,10 +507,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         // Unfortunately needed because of how [FormArray.updateValue] is implemented
         // Note: `formArray.value = []` does not remove any controls!
         answerOptionsArray.clear();
-        for (final option in data.answerOptions) {
-          answerOptionsArray.add(FormControl<Choice>(value: option));
-        }
-        break;
+        answerOptionsArray.value = data.answerOptions;
       case SurveyQuestionType.scale:
         scaleMinValueControl.value =
             (data as ScaleQuestionFormData).minValue.toInt();
