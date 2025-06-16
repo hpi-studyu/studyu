@@ -8,10 +8,7 @@ class BodyPain {
   final int painLevel;
   final PainType? type;
 
-  const BodyPain({
-    this.painLevel = 0,
-    this.type,
-  });
+  const BodyPain({this.painLevel = 0, this.type});
 
   BodyPain copyWith({
     int? painLevel,
@@ -28,23 +25,3 @@ class BodyPain {
 
   Map<String, dynamic> toJson() => _$BodyPainToJson(this);
 }
-
-// enum PainType {
-//   unspecified,
-//   burning,
-//   stabbing,
-//   aching,
-//   throbbing,
-//   sharp,
-//   dull,
-//   cramping,
-//   radiating,
-//   tingling,
-//   shooting,
-//   pulsing,
-//   pressure,
-//   tightness,
-//   soreness,
-//   stiffness,
-//   other,
-// }

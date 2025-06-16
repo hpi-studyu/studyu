@@ -252,7 +252,7 @@ class PainEditDialog extends StatefulWidget {
 
 class _PainEditDialogState extends State<PainEditDialog> {
   late int _currentPain;
-  late PainType? _selectedPainType;
+  String? _selectedPainTypeName;
   late String _selectedPartId;
   late List<BodyPart> _selectableParts;
 
@@ -262,7 +262,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
     final mostSpecificPainfulPart = _findMostSpecificPain(widget.tappedPart);
 
     _currentPain = mostSpecificPainfulPart.pain.painLevel;
-    _selectedPainType = mostSpecificPainfulPart.pain.type;
+    _selectedPainTypeName = mostSpecificPainfulPart.pain.type?.name;
     _selectedPartId = mostSpecificPainfulPart.id;
 
     _selectableParts = _flattenHierarchy(widget.tappedPart);
@@ -343,22 +343,22 @@ class _PainEditDialogState extends State<PainEditDialog> {
               },
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField<PainType>(
-              value: _selectedPainType,
+            DropdownButtonFormField<String>(
+              value: _selectedPainTypeName,
               decoration: InputDecoration(
                 labelText: loc.painTypeLabel,
                 border: const OutlineInputBorder(),
               ),
               items: painTypeOptions.map((PainType type) {
-                return DropdownMenuItem<PainType>(
-                  value: type,
+                return DropdownMenuItem<String>(
+                  value: type.name,
                   child:
                       Text(type.name[0].toUpperCase() + type.name.substring(1)),
                 );
               }).toList(),
-              onChanged: (PainType? newValue) {
+              onChanged: (String? newValue) {
                 if (newValue != null) {
-                  setState(() => _selectedPainType = newValue);
+                  setState(() => _selectedPainTypeName = newValue);
                 }
               },
             ),
@@ -372,10 +372,18 @@ class _PainEditDialogState extends State<PainEditDialog> {
                   border: const OutlineInputBorder(),
                 ),
                 items: _selectableParts.map((BodyPart part) {
+                  final String text;
+                  if (part.id == widget.tappedPart.id) {
+                    final unspecified = loc.painTypeUnspecified;
+                    text =
+                        unspecified[0].toUpperCase() + unspecified.substring(1);
+                  } else {
+                    text = part.name;
+                  }
                   return DropdownMenuItem<String>(
                     value: part.id,
                     child: Text(
-                      part.name,
+                      text,
                       overflow: TextOverflow.ellipsis,
                     ),
                   );
@@ -396,12 +404,16 @@ class _PainEditDialogState extends State<PainEditDialog> {
         ),
         FilledButton(
           onPressed: () {
+            final selectedPainType = _selectedPainTypeName != null
+                ? painTypeOptions
+                    .firstWhere((t) => t.name == _selectedPainTypeName)
+                : null;
             final result = (
               parentPartId: widget.tappedPart.id,
               childPartId: _selectedPartId,
               pain: BodyPain(
                 painLevel: _currentPain,
-                type: _selectedPainType,
+                type: selectedPainType,
               )
             );
             Navigator.of(context).pop(result);
