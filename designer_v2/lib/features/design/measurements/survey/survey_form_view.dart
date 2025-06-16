@@ -13,7 +13,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_controls_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
-import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
+import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -164,7 +164,7 @@ class _MeasurementSurveyFormViewState
             return ReactiveFormArray(
               formArray: widget.formViewModel.questionsArray,
               builder: (context, formArray, child) {
-                return FormArrayTable<QuestionFormViewModel>(
+                return FormListView<QuestionFormViewModel>(
                   control: widget.formViewModel.questionsArray,
                   items: widget.formViewModel.questionModels,
                   onSelectItem: (viewModel) =>
@@ -201,6 +201,19 @@ class _MeasurementSurveyFormViewState
                         const SizedBox(width: 16.0),
                       ],
                     );
+                  },
+                  reorderable: widget.formViewModel.questionModels.length > 1,
+                  onReorder: (oldIndex, newIndex) {
+                    if (newIndex > oldIndex) {
+                      newIndex -= 1;
+                    }
+                    final item =
+                        widget.formViewModel.questionModels.removeAt(oldIndex);
+                    widget.formViewModel.questionModels.insert(newIndex, item);
+                    final controlItem =
+                        widget.formViewModel.questionsArray.removeAt(oldIndex);
+                    widget.formViewModel.questionsArray
+                        .insert(newIndex, controlItem);
                   },
                 );
               },

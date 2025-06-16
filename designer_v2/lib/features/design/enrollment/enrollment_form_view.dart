@@ -15,7 +15,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
-import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
+import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -96,7 +96,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                 ReactiveFormArray(
                   formArray: formViewModel.questionsArray,
                   builder: (context, formArray, child) {
-                    return FormArrayTable<ScreenerQuestionFormViewModel>(
+                    return FormListView<ScreenerQuestionFormViewModel>(
                       control: formViewModel.questionsArray,
                       items: formViewModel.questionModels,
                       onSelectItem: (viewModel) {
@@ -168,6 +168,20 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           ],
                         );
                       },
+                      reorderable: true,
+                      onReorder: (oldIndex, newIndex) {
+                        if (newIndex > oldIndex) {
+                          newIndex -= 1;
+                        }
+                        final item =
+                            formViewModel.questionModels.removeAt(oldIndex);
+                        formViewModel.questionModels.insert(newIndex, item);
+                        final controlItem =
+                            formViewModel.questionsArray.removeAt(oldIndex);
+                        formViewModel.questionsArray
+                            .insert(newIndex, controlItem);
+                        formViewModel.save();
+                      },
                     );
                   },
                 ),
@@ -175,7 +189,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                 ReactiveFormArray(
                   formArray: formViewModel.consentItemArray,
                   builder: (context, formArray, child) {
-                    return FormArrayTable<ConsentItemFormViewModel>(
+                    return FormListView<ConsentItemFormViewModel>(
                       control: formViewModel.consentItemArray,
                       items: formViewModel.consentItemModels,
                       onSelectItem: (viewModel) {
@@ -225,6 +239,20 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                             const SizedBox.shrink(),
                         ],
                       ),
+                      reorderable: true,
+                      onReorder: (oldIndex, newIndex) {
+                        if (newIndex > oldIndex) {
+                          newIndex -= 1;
+                        }
+                        final item =
+                            formViewModel.consentItemModels.removeAt(oldIndex);
+                        formViewModel.consentItemModels.insert(newIndex, item);
+                        final controlItem =
+                            formViewModel.consentItemArray.removeAt(oldIndex);
+                        formViewModel.consentItemArray
+                            .insert(newIndex, controlItem);
+                        formViewModel.save();
+                      },
                     );
                   },
                 ),
