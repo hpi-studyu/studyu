@@ -218,7 +218,7 @@ class ChoiceQuestionFormData extends QuestionFormData {
   }
 
   Choice _buildChoiceForValue(String value) {
-    final choiceId = value.toKey();
+    final choiceId = const Uuid().v4();
     final choice = Choice(choiceId);
     choice.text = value;
     return choice;
