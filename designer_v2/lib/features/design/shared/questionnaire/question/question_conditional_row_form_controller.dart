@@ -10,11 +10,10 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   final comparatorControl = FormControl<dynamic>();
   final valueControl = FormControl<dynamic>();
 
-  final List<core.Question> allQuestions;
+  static late List<core.Question> allQuestions;
   final String currentQuestionId;
 
   ConditionRowFormViewModel({
-    required this.allQuestions,
     required this.currentQuestionId,
     core.Expression? initialExpression,
   }) {
@@ -208,10 +207,5 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
     questionIdControl.value = data.questionId;
     comparatorControl.value = data.comparator;
     valueControl.value = data.value;
-  }
-
-  @override
-  String toString() {
-    return 'ConditionRowFormViewModel{questionIdControl: $questionIdControl, comparatorControl: $comparatorControl, valueControl: $valueControl, allQuestions: $allQuestions, currentQuestionId: $currentQuestionId}';
   }
 }

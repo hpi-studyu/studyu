@@ -10,8 +10,10 @@ import 'package:studyu_designer_v2/theme.dart';
 
 // todo convert this back to FormConsumerWidget?
 class ConditionalQuestionFormView extends StatefulWidget {
-  const ConditionalQuestionFormView(
-      {required this.formViewModel, required this.allQuestions, super.key});
+  ConditionalQuestionFormView(
+      {required this.formViewModel, required this.allQuestions, super.key}) {
+    ConditionRowFormViewModel.allQuestions = allQuestions;
+  }
 
   final IConditionalQuestionProperties formViewModel;
   final List<Question> allQuestions;
@@ -296,8 +298,7 @@ class _ConditionalQuestionFormViewState
 
   Widget _buildAddConditionButton() {
     return ElevatedButton.icon(
-      onPressed: () =>
-          widget.formViewModel.addCondition(allQuestions: widget.allQuestions),
+      onPressed: () => widget.formViewModel.addCondition(),
       icon: const Icon(Icons.add),
       label: const Text('tr.button_add_condition'),
     );

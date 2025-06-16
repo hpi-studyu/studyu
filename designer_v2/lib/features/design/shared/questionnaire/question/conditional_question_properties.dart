@@ -10,8 +10,7 @@ abstract class IConditionalQuestionProperties {
   FormArray<ConditionRowFormViewModel> get conditionsArray;
   // FormControl<QuestionConditional<dynamic>?> get questionConditionalControl;
 
-  void addCondition(
-      {required List<Question> allQuestions, Expression? initialExpression});
+  void addCondition({Expression? initialExpression});
   void updateCondition();
   void removeCondition(int index);
 

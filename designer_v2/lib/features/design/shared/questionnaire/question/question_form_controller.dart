@@ -141,10 +141,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   }
 
   @override
-  void addCondition(
-      {required List<Question> allQuestions, Expression? initialExpression}) {
+  void addCondition({Expression? initialExpression}) {
     final conditionVm = ConditionRowFormViewModel(
-      allQuestions: allQuestions,
       currentQuestionId: questionIdControl.value!,
       initialExpression: initialExpression,
     );
@@ -625,6 +623,17 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     questionTypeControl.value = data.questionType;
     questionInfoTextControl.value = data.questionInfoText ?? '';
     questionConditionalControl.value = data.conditional;
+    final compositeExpression = questionConditionalControl.value?.condition;
+    if (compositeExpression != null) {
+      logicTypeControl.value = compositeExpression.logicType;
+      conditionsArray.clear();
+      for (final expression in compositeExpression.expressions) {
+        addCondition(
+          initialExpression: expression,
+        );
+      }
+    }
+
     // Type-specific controls
     switch (data.questionType) {
       case SurveyQuestionType.bool:
