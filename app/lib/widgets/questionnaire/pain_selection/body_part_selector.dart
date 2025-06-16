@@ -252,7 +252,7 @@ class PainEditDialog extends StatefulWidget {
 
 class _PainEditDialogState extends State<PainEditDialog> {
   late int _currentPain;
-  String? _selectedPainTypeName;
+  PainType? _selectedPainType;
   late String _selectedPartId;
   late List<BodyPart> _selectableParts;
   bool _isInit = true;
@@ -261,24 +261,11 @@ class _PainEditDialogState extends State<PainEditDialog> {
   void initState() {
     super.initState();
     final mostSpecificPainfulPart = _findMostSpecificPain(widget.tappedPart);
-
     _currentPain = mostSpecificPainfulPart.pain.painLevel;
-    _selectedPainTypeName = mostSpecificPainfulPart.pain.type?.name;
+    _selectedPainType = mostSpecificPainfulPart.pain.type;
     _selectedPartId = mostSpecificPainfulPart.id;
-
     _selectableParts = _flattenHierarchy(widget.tappedPart);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_isInit) {
-      if (_selectedPainTypeName == null) {
-        final loc = AppLocalizations.of(context)!;
-        _selectedPainTypeName = loc.painTypeUnspecified;
-      }
-      _isInit = false;
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showPainLevelDialog());
   }
 
   BodyPart _findMostSpecificPain(BodyPart part) {
@@ -299,201 +286,276 @@ class _PainEditDialogState extends State<PainEditDialog> {
     return list;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final loc = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
+  Future<void> _showPainLevelDialog() async {
     final scalePoints = widget.scale.levels.keys.toList()..sort();
-    final painLevelKey = scalePoints.lastWhere((p) => p <= _currentPain,
-        orElse: () => scalePoints.first);
-    final painInfo = widget.scale.levels[painLevelKey]!;
-    final painTypeOptions = _generatePainTypes(context);
-
-    return AlertDialog(
-      title: Text(widget.scale.dialogTitle),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20)
-          .copyWith(top: 20),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: painInfo.color,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                children: [
-                  Text(painInfo.face, style: const TextStyle(fontSize: 48)),
-                  const SizedBox(height: 8),
-                  Text(
-                    painInfo.description,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: painInfo.textColor,
-                      fontWeight: FontWeight.bold,
+    int? selectedLevel = _currentPain;
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: Text(widget.scale.dialogTitle),
+              content: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 12,
+                      runSpacing: 12,
+                      children: scalePoints.map((level) {
+                        final style = widget.scale.levels[level]!;
+                        return GestureDetector(
+                          onTap: () {
+                            setStateDialog(() => selectedLevel = level);
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 150),
+                            width: 90,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 8),
+                            decoration: BoxDecoration(
+                              color: selectedLevel == level
+                                  ? style.color
+                                  : style.color.withOpacity(0.7),
+                              borderRadius: BorderRadius.circular(12),
+                              border: selectedLevel == level
+                                  ? Border.all(width: 2, color: Colors.black)
+                                  : null,
+                              boxShadow: selectedLevel == level
+                                  ? [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.08),
+                                        blurRadius: 6,
+                                        offset: const Offset(0, 2),
+                                      )
+                                    ]
+                                  : [],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(style.face,
+                                    style: const TextStyle(fontSize: 36)),
+                                const SizedBox(height: 6),
+                                Text(
+                                  style.description,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: style.textColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${widget.scale.painIndicatorText}: $level',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: style.textColor.withOpacity(0.8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    '${widget.scale.painIndicatorText}: $_currentPain',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: painInfo.textColor.withAlpha(204),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-            Slider(
-              value: _currentPain.toDouble(),
-              max: Body.maxPainLevel.toDouble(),
-              divisions: Body.maxPainLevel,
-              label: _currentPain.toString(),
-              onChanged: (value) {
-                setState(() => _currentPain = value.round());
-              },
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _selectedPainTypeName,
-              decoration: InputDecoration(
-                labelText: loc.painTypeLabel,
-                border: const OutlineInputBorder(),
-              ),
-              items: painTypeOptions.map((PainType type) {
-                return DropdownMenuItem<String>(
-                  value: type.name,
-                  child:
-                      Text(type.name[0].toUpperCase() + type.name.substring(1)),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                if (newValue != null) {
-                  setState(() => _selectedPainTypeName = newValue);
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            if (_selectableParts.length > 1)
-              DropdownButtonFormField<String>(
-                value: _selectedPartId,
-                isExpanded: true,
-                decoration: InputDecoration(
-                  labelText: loc.bodyPartLabel,
-                  border: const OutlineInputBorder(),
+                  ],
                 ),
-                items: _selectableParts.map((BodyPart part) {
-                  final String text;
-                  if (part.id == widget.tappedPart.id) {
-                    final unspecified = loc.painTypeUnspecified;
-                    text =
-                        unspecified[0].toUpperCase() + unspecified.substring(1);
-                  } else {
-                    text = part.name;
-                  }
-                  return DropdownMenuItem<String>(
-                    value: part.id,
-                    child: Text(
-                      text,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    setState(() => _selectedPartId = newValue);
-                  }
-                },
               ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(widget.scale.cancelButton),
-        ),
-        FilledButton(
-          onPressed: () {
-            final PainType? finalPainType;
-            if (_selectedPainTypeName == null ||
-                _selectedPainTypeName == loc.painTypeUnspecified) {
-              finalPainType = null;
-            } else {
-              finalPainType = painTypeOptions
-                  .firstWhere((t) => t.name == _selectedPainTypeName);
-            }
-
-            final result = (
-              parentPartId: widget.tappedPart.id,
-              childPartId: _selectedPartId,
-              pain: BodyPain(
-                painLevel: _currentPain,
-                type: finalPainType,
-              )
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(widget.scale.cancelButton),
+                ),
+                TextButton(
+                  onPressed: selectedLevel != null
+                      ? () {
+                          _currentPain = selectedLevel!;
+                          Navigator.of(context).pop(true);
+                        }
+                      : null,
+                  child: Text(widget.scale.okButton),
+                ),
+              ],
             );
-            Navigator.of(context).pop(result);
           },
-          child: Text(widget.scale.okButton),
-        ),
-      ],
+        );
+      },
     );
+    if (result == true) {
+      if (_currentPain == 0) {
+        _finish();
+        return;
+      }
+      await _showPainTypeDialog();
+    } else if (result == false) {
+      // Cancel/back pressed, just close all dialogs
+      Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> _showPainTypeDialog() async {
+    final loc = AppLocalizations.of(context)!;
+    final painTypeOptions = _generatePainTypes(context);
+    PainType? selectedType = _selectedPainType;
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: Text(loc.painTypeLabel),
+              content: SizedBox(
+                width: 320,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: painTypeOptions.length,
+                  separatorBuilder: (_, __) => const Divider(),
+                  itemBuilder: (context, index) {
+                    final type = painTypeOptions[index];
+                    return ListTile(
+                      leading: _painTypeIcon(type.name),
+                      title: Text(type.name),
+                      selected: selectedType?.name == type.name,
+                      onTap: () {
+                        setStateDialog(() => selectedType = type);
+                      },
+                    );
+                  },
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(loc.back ?? 'Back'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _selectedPainType = selectedType;
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text(loc.done),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+    if (result == true) {
+      await _showBodyAreaDialog();
+    } else if (result == false) {
+      // Back pressed, go to previous dialog
+      await _showPainLevelDialog();
+    }
+  }
+
+  Future<void> _showBodyAreaDialog() async {
+    final loc = AppLocalizations.of(context)!;
+    if (_selectableParts.length <= 1) {
+      _finish();
+      return;
+    }
+    String? selectedId = _selectedPartId;
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: Text(loc.bodyPartLabel),
+              content: SizedBox(
+                width: 320,
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  itemCount: _selectableParts.length,
+                  separatorBuilder: (_, __) => const Divider(),
+                  itemBuilder: (context, index) {
+                    final part = _selectableParts[index];
+                    return ListTile(
+                      title: Text(part.name),
+                      selected: selectedId == part.id,
+                      onTap: () {
+                        setStateDialog(() => selectedId = part.id);
+                      },
+                    );
+                  },
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(loc.back ?? 'Back'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _selectedPartId = selectedId ?? _selectedPartId;
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text(loc.done),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+    if (result == true) {
+      _finish();
+    } else if (result == false) {
+      // Back pressed, go to previous dialog
+      await _showPainTypeDialog();
+    }
+  }
+
+  void _finish() {
+    Navigator.of(context).pop((
+      parentPartId: widget.tappedPart.id,
+      childPartId: _selectedPartId,
+      pain: BodyPain(
+        painLevel: _currentPain,
+        type: _selectedPainType,
+      ),
+    ));
   }
 
   List<PainType> _generatePainTypes(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     return [
-      PainType(
-        loc.painTypeUnspecified,
-      ),
-      PainType(
-        loc.painTypeBurning,
-      ),
-      PainType(
-        loc.painTypeStabbing,
-      ),
-      PainType(
-        loc.painTypeAching,
-      ),
-      PainType(
-        loc.painTypeThrobbing,
-      ),
-      PainType(
-        loc.painTypeSharp,
-      ),
-      PainType(
-        loc.painTypeDull,
-      ),
-      PainType(
-        loc.painTypeCramping,
-      ),
-      PainType(
-        loc.painTypeRadiating,
-      ),
-      PainType(
-        loc.painTypeTingling,
-      ),
-      PainType(
-        loc.painTypeShooting,
-      ),
-      PainType(
-        loc.painTypePulsing,
-      ),
-      PainType(
-        loc.painTypePressure,
-      ),
-      PainType(
-        loc.painTypeTightness,
-      ),
-      PainType(
-        loc.painTypeSoreness,
-      ),
-      PainType(
-        loc.painTypeStiffness,
-      ),
+      PainType(loc.painTypeUnspecified),
+      PainType(loc.painTypeBurning),
+      PainType(loc.painTypeStabbing),
+      PainType(loc.painTypeAching),
+      PainType(loc.painTypeThrobbing),
+      PainType(loc.painTypeSharp),
+      PainType(loc.painTypeDull),
+      PainType(loc.painTypeCramping),
+      PainType(loc.painTypeRadiating),
+      PainType(loc.painTypeTingling),
+      PainType(loc.painTypeShooting),
+      PainType(loc.painTypePulsing),
+      PainType(loc.painTypePressure),
+      PainType(loc.painTypeTightness),
+      PainType(loc.painTypeSoreness),
+      PainType(loc.painTypeStiffness),
     ];
+  }
+
+  Widget _painTypeIcon(String name) {
+    // Placeholder: You can map pain type names to images/assets here
+    // For now, use a generic icon
+    return const Icon(Icons.local_hospital);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // The dialog content is handled by the step dialogs above
+    return const SizedBox.shrink();
   }
 }
 
