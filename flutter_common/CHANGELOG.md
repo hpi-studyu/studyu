@@ -1,3 +1,10 @@
+## 1.8.11
+
+ - **FIX**: improve error handling in secure storage read method.
+ - **FIX**: enable android encrypted shared preferences for secure storage.
+ - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+ - **FIX**: add core and flutter_common local path dependency.
+
 ## 1.8.10
 
  - **FIX**: upgrade deps and flutter v3.24.5.
