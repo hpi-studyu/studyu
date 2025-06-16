@@ -51,7 +51,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
     switch (q.type) {
       case 'boolean':
         return [
-          const FormControlOption(true, 'is'),
+          const FormControlOption('is', 'is'),
         ];
       case 'choice':
         return [
@@ -112,12 +112,12 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
     } else if (expression is core.ChoiceExpression) {
       return '='; // Default for ChoiceExpression if no NotExpression
     } else if (expression is core.BooleanExpression) {
-      return true; // Default for BooleanExpression if no NotExpression
+      return 'is'; // Default for BooleanExpression if no NotExpression
     } else if (expression is core.NotExpression) {
       if (expression.expression is core.ChoiceExpression) {
         return '!=';
       } else if (expression.expression is core.BooleanExpression) {
-        return false; // Represents 'is not' for boolean
+        return 'is';
       }
     }
     return null;
@@ -130,12 +130,18 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
       if (expression is core.ChoiceExpression) {
         return expression.choices.firstOrNull;
       }
+      if (expression is core.BooleanExpression) {
+        return true;
+      }
       return null;
     } else if (expression is core.NotExpression) {
       if (expression.expression is core.ChoiceExpression) {
         return (expression.expression as core.ChoiceExpression)
             .choices
             .firstOrNull;
+      }
+      if (expression.expression is core.BooleanExpression) {
+        return false;
       }
     }
     return null;
