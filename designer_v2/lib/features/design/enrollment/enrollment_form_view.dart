@@ -293,7 +293,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
               ScreenerQuestionLogicFormView(formViewModel: formViewModel),
         ),
         FormSideSheetTab(
-          title: 'Conditions',
+          title: tr.navlink_question_visibility_logic,
           index: 2,
           formViewBuilder: (formViewModel) => ConditionalQuestionFormView(
             formViewModel: formViewModel,

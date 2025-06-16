@@ -3,6 +3,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart' as core;
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   // --- Controls ---
@@ -23,6 +24,22 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
       comparatorControl.value = _extractComparator(initialExpression);
       valueControl.value = _extractValue(initialExpression);
     }
+
+    // Listen for question selection changes
+    questionIdControl.valueChanges.listen((questionId) {
+      if (questionId != null) {
+        final question =
+            availableQuestions.firstWhereOrNull((q) => q.id == questionId);
+        if (question?.type == 'boolean') {
+          // Automatically set 'is' comparator for boolean questions and disable the control
+          comparatorControl.value = 'is';
+          comparatorControl.markAsDisabled();
+        } else {
+          // Enable the control for non-boolean questions
+          comparatorControl.markAsEnabled();
+        }
+      }
+    });
   }
 
   /*void onControlChanged(void Function() callback) {
@@ -52,12 +69,13 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
     switch (q.type) {
       case 'boolean':
         return [
-          const FormControlOption('is', 'is'),
+          FormControlOption('is', tr.form_array_question_visibility_logic_is),
         ];
       case 'choice':
         return [
-          const FormControlOption('=', 'is'),
-          const FormControlOption('!=', 'is not'),
+          FormControlOption('=', tr.form_array_question_visibility_logic_is),
+          FormControlOption(
+              '!=', tr.form_array_question_visibility_logic_is_not),
         ];
       case 'scale':
         return [
@@ -71,11 +89,14 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
         ];
       case 'text':
         return [
-          const FormControlOption(core.TextComparator.equal, 'is'),
-          const FormControlOption(core.TextComparator.notEqual, 'is not'),
-          const FormControlOption(core.TextComparator.contains, 'contains'),
-          const FormControlOption(
-              core.TextComparator.doesNotContain, 'does not contain'),
+          FormControlOption(core.TextComparator.equal,
+              tr.form_array_question_visibility_logic_is),
+          FormControlOption(core.TextComparator.notEqual,
+              tr.form_array_question_visibility_logic_is_not),
+          FormControlOption(core.TextComparator.contains,
+              tr.form_array_question_visibility_logic_contains),
+          FormControlOption(core.TextComparator.doesNotContain,
+              tr.form_array_question_visibility_logic_does_not_contain),
         ];
       default:
         return [];

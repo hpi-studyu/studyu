@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/conditional_question_properties.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ConditionalQuestionFormView extends FormConsumerWidget {
@@ -22,24 +23,22 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
   Widget build(BuildContext context, FormGroup form) {
     final theme = Theme.of(context);
     return ReactiveFormConsumer(builder: (context, form, _) {
-      print(
-          'Building ConditionalQuestionFormView with ${formViewModel.conditionsArray.controls.length} conditions');
-
+      // print('Building ConditionalQuestionFormView with ${formViewModel.conditionsArray.controls.length} conditions');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextParagraph(
-            text: 'tr.form_array_question_visibility_logic_description',
+            text: tr.form_array_question_visibility_logic_description,
             style: ThemeConfig.bodyTextMuted(theme),
           ),
           const SizedBox(height: 16.0),
-          const FormLabel(
-            labelText: 'tr.form_array_question_visibility_logic_title',
-            labelTextStyle: TextStyle(fontWeight: FontWeight.bold),
-            helpText: 'tr.form_array_question_visibility_logic_tooltip',
+          FormLabel(
+            labelText: tr.form_array_question_visibility_logic_title,
+            labelTextStyle: const TextStyle(fontWeight: FontWeight.bold),
+            helpText: tr.form_array_question_visibility_logic_tooltip,
           ),
           const SizedBox(height: 12.0),
-          _buildLogicGroupingControl(),
+          _buildLogicGroupingControl(theme),
           const SizedBox(height: 12.0),
           _buildConditionsList(),
           const SizedBox(height: 16.0),
@@ -48,7 +47,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           StreamBuilder(
             stream: formViewModel.conditionsValueChanges,
             builder: (context, snapshot) {
-              print('Rebuilding live preview due to condition value changes');
+              // print('Rebuilding live preview due to condition value changes');
               return _buildLivePreview(context);
             },
           ),
@@ -57,23 +56,26 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     });
   }
 
-  Widget _buildLogicGroupingControl() {
+  Widget _buildLogicGroupingControl(ThemeData theme) {
     return Row(
       children: [
-        const Text('Combine conditions with:'),
+        Text(tr.form_array_question_visibility_logic_grouping_title,
+            style: ThemeConfig.bodyTextMuted(theme)),
         const SizedBox(width: 8),
         Expanded(
           child: ReactiveRadioListTile<LogicType>(
             formControl: formViewModel.logicTypeControl,
             value: LogicType.and,
-            title: const Text('AND'),
+            title: Text(
+                tr.form_array_question_visibility_logic_grouping_and_title),
           ),
         ),
         Expanded(
           child: ReactiveRadioListTile<LogicType>(
             formControl: formViewModel.logicTypeControl,
             value: LogicType.or,
-            title: const Text('OR'),
+            title:
+                Text(tr.form_array_question_visibility_logic_grouping_or_title),
           ),
         ),
       ],
@@ -88,7 +90,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: TextParagraph(
-              text: "tr.no_conditions_added_yet",
+              text: tr.from_array_question_visibility_logic_no_conditions,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           );
@@ -130,9 +132,10 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
                         ),
                       ))
                   .toList(),
-              decoration: const InputDecoration(
-                labelText: 'tr.field_question',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText:
+                    tr.form_array_question_visibility_logic_question_title,
+                border: const OutlineInputBorder(),
                 isDense: true,
               ),
               /*onChanged: (value) {
@@ -159,9 +162,10 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
                               ),
                             ))
                         .toList(),
-                    decoration: const InputDecoration(
-                      labelText: 'tr.field_comparator',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: tr
+                          .form_array_question_visibility_logic_comparator_title,
+                      border: const OutlineInputBorder(),
                       isDense: true,
                     ),
                   ),
@@ -193,7 +197,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           IconButton(
             icon: const Icon(Icons.delete_forever),
             onPressed: () => formViewModel.removeCondition(index),
-            tooltip: 'tr.delete',
+            tooltip: tr.action_delete,
           ),
         ],
       ),
@@ -208,13 +212,17 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
       case 'boolean':
         return ReactiveDropdownField<dynamic>(
           formControl: conditionVm.valueControl,
-          items: const [
-            DropdownMenuItem(value: true, child: Text('tr.true_value')),
-            DropdownMenuItem(value: false, child: Text('tr.false_value')),
+          items: [
+            DropdownMenuItem(
+                value: true,
+                child: Text(tr.form_array_question_visibility_logic_true)),
+            DropdownMenuItem(
+                value: false,
+                child: Text(tr.form_array_question_visibility_logic_false)),
           ],
-          decoration: const InputDecoration(
-            labelText: 'tr.field_value',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: tr.form_array_question_visibility_logic_value_title,
+            border: const OutlineInputBorder(),
             isDense: true,
           ),
         );
@@ -231,9 +239,9 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
                     ),
                   ))
               .toList(),
-          decoration: const InputDecoration(
-            labelText: 'tr.field_value',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: tr.form_array_question_visibility_logic_value_title,
+            border: const OutlineInputBorder(),
             isDense: true,
           ),
         );
@@ -246,21 +254,20 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             // (e.g., allow decimals, handle negative numbers)
           ],
           validationMessages: {
-            ValidationMessage.number: (error) =>
-                'tr.validation_message_must_be_number',
+            ValidationMessage.number: (error) => tr.validation_number_required,
           },
-          decoration: const InputDecoration(
-            labelText: 'tr.field_value',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: tr.form_array_question_visibility_logic_value_title,
+            border: const OutlineInputBorder(),
             isDense: true,
           ),
         );
       case 'text':
         return ReactiveTextField<dynamic>(
           formControl: conditionVm.valueControl,
-          decoration: const InputDecoration(
-            labelText: 'tr.field_value',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: tr.form_array_question_visibility_logic_value_title,
+            border: const OutlineInputBorder(),
             isDense: true,
           ),
         );
@@ -270,10 +277,19 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
   }
 
   Widget _buildAddConditionButton() {
+    // Get available questions for the condition, excluding the current question
+    final availableQuestions = allQuestions
+        .where((q) => q.id != formViewModel.currentQuestionId)
+        .toList();
+
+    print('Available questions for condition: ${availableQuestions.length}');
+
     return ElevatedButton.icon(
-      onPressed: () => formViewModel.addCondition(),
+      onPressed: availableQuestions.isEmpty
+          ? null
+          : () => formViewModel.addCondition(),
       icon: const Icon(Icons.add),
-      label: const Text('tr.button_add_condition'),
+      label: Text(tr.form_array_question_visibility_logic_add_condition_button),
     );
   }
 
@@ -299,26 +315,26 @@ class LiveConditionPreview extends StatelessWidget {
   });
 
   String _getQuestionPreviewText(String questionId) {
-    if (questionId == currentQuestionId) {
+    /*if (questionId == currentQuestionId) {
       // Use the specific question text from the ViewModel for clarity
-      return 'this question'; // Or formViewModel.currentQuestionTitle
-    }
+      return tr.form_array_question_visibility_logic_this_question;
+    }*/
     final question = allQuestions.firstWhereOrNull((q) => q.id == questionId);
-    return question != null ? 'Q${question.id}' : 'Q<$questionId>';
+    return question != null ? 'Q[${question.prompt}]' : 'Q[$questionId]';
   }
 
   String _formatExpressionForPreview(Expression expression) {
     if (expression is BooleanExpression) {
-      return '${_getQuestionPreviewText(expression.target!)} is true';
+      return '${_getQuestionPreviewText(expression.target!)} ${tr.form_array_question_visibility_logic_is_true}';
     } else if (expression is NotExpression) {
       final innerExp = expression.expression;
       if (innerExp is BooleanExpression) {
-        return '${_getQuestionPreviewText(innerExp.target!)} is false';
+        return '${_getQuestionPreviewText(innerExp.target!)} ${tr.form_array_question_visibility_logic_is_false}';
       } else if (innerExp is ChoiceExpression) {
         // Handle != for choice display
         return '${_getQuestionPreviewText(innerExp.target!)} != [${innerExp.choices.map((c) => _getChoiceText(innerExp.target!, c)).join(', ')}]';
       }
-      return 'NOT (${_formatExpressionForPreview(innerExp)})';
+      return '${tr.form_array_question_visibility_logic_not} (${_formatExpressionForPreview(innerExp)})';
     } else if (expression is ChoiceExpression) {
       return '${_getQuestionPreviewText(expression.target!)} = [${expression.choices.map((c) => _getChoiceText(expression.target!, c)).join(', ')}]';
     } else if (expression is NumericExpression) {
@@ -346,23 +362,25 @@ class LiveConditionPreview extends StatelessWidget {
         case TextComparator.notEqual:
           comparatorText = '!=';
         case TextComparator.contains:
-          comparatorText = 'contains';
+          comparatorText = tr.form_array_question_visibility_logic_contains;
         case TextComparator.doesNotContain:
-          comparatorText = 'does not contain';
+          comparatorText =
+              tr.form_array_question_visibility_logic_does_not_contain;
       }
       return "${_getQuestionPreviewText(expression.target!)} $comparatorText '${expression.value}'";
     } else if (expression is CompositeExpression) {
       if (expression.expressions.isEmpty) {
-        return 'always true';
+        return tr.form_array_question_visibility_logic_always_true;
       }
       final innerParts = expression.expressions
           .map((e) => _formatExpressionForPreview(e))
           .toList();
-      final innerJoiner =
-          expression.logicType == LogicType.and ? ' AND ' : ' OR ';
+      final innerJoiner = expression.logicType == LogicType.and
+          ? ' ${tr.form_array_question_visibility_logic_grouping_and_title} '
+          : ' ${tr.form_array_question_visibility_logic_grouping_or_title} ';
       return '(${innerParts.join(innerJoiner)})';
     }
-    return 'Unknown Expression';
+    return tr.form_array_question_visibility_logic_unknown_expression;
   }
 
   String _getChoiceText(String questionId, dynamic choiceValue) {
@@ -382,16 +400,18 @@ class LiveConditionPreview extends StatelessWidget {
     String previewText;
     if (compositeExpression == null ||
         compositeExpression!.expressions.isEmpty) {
-      previewText = 'Show this question if: (always true)';
+      previewText =
+          '${tr.form_array_question_visibility_logic_preview_description}\n\n(${tr.form_array_question_visibility_logic_always_true})';
     } else {
       final formattedConditions =
           _formatExpressionForPreview(compositeExpression!);
-      previewText = 'Show this question if: $formattedConditions';
+      previewText =
+          '${tr.form_array_question_visibility_logic_preview_description}\n\n$formattedConditions';
     }
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Text(
+      child: SelectableText(
         previewText,
         style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
       ),

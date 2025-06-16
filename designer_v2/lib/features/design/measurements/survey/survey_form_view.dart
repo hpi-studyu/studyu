@@ -257,14 +257,14 @@ class _MeasurementSurveyFormViewState
       formViewModel: surveyQuestionFormViewModel,
       tabs: <FormSideSheetTab<QuestionFormViewModel>>[
         FormSideSheetTab(
-          title: tr.navlink_screener_question_content,
+          title: tr.navlink_question_visibility_logic,
           index: 0,
           formViewBuilder: (formViewModel) => SurveyQuestionFormView(
             formViewModel: formViewModel,
           ),
         ),
         FormSideSheetTab(
-          title: 'Conditions',
+          title: tr.navlink_question_visibility_logic,
           index: 1,
           formViewBuilder: (formViewModel) => ConditionalQuestionFormView(
             formViewModel: formViewModel,
