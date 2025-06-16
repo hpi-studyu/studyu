@@ -313,7 +313,7 @@ class _ConditionalQuestionFormViewState
 }
 
 class LiveConditionPreview extends StatelessWidget {
-  final CompositeExpression compositeExpression;
+  final CompositeExpression? compositeExpression;
   final List<Question> allQuestions;
   final String currentQuestionId;
 
@@ -406,11 +406,12 @@ class LiveConditionPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     // print('Building LiveConditionPreview with ${compositeExpression.toJson()}');
     String previewText;
-    if (compositeExpression.expressions.isEmpty) {
+    if (compositeExpression == null ||
+        compositeExpression!.expressions.isEmpty) {
       previewText = 'Show this question if: (always true)';
     } else {
       final formattedConditions =
-          _formatExpressionForPreview(compositeExpression);
+          _formatExpressionForPreview(compositeExpression!);
       previewText = 'Show this question if: $formattedConditions';
     }
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
@@ -79,21 +80,39 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   //@override
   final FormControl<QuestionConditional<dynamic>?> questionConditionalControl =
       FormControl<QuestionConditional<dynamic>?>();
+  Stream<void> _conditionsValueChangesStream = const Stream<void>.empty();
+  StreamSubscription<void>? _conditionsValueChangesSubscription;
 
   @override
-  Stream<void> get conditionsValueChanges {
+  Stream<void> get conditionsValueChanges =>
+      _conditionsValueChangesStream.isBroadcast
+          ? _conditionsValueChangesStream
+          : _conditionsValueChangesStream.asBroadcastStream();
+
+  void _updateConditionsValueChangesStream() {
+    // Cancel previous subscription if any
+    _conditionsValueChangesSubscription?.cancel();
+
     // Collect all streams from each condition
     final streams = conditionsArray.controls
         .map((control) => control.value!.form.valueChanges)
         .toList();
     if (streams.isEmpty) {
-      return const Stream<void>.empty();
+      _conditionsValueChangesStream = const Stream<void>.empty();
+    } else {
+      _conditionsValueChangesStream =
+          StreamGroup.merge(streams).asBroadcastStream();
+      // Listen to the broadcast stream and call updateCondition
+      _conditionsValueChangesSubscription =
+          _conditionsValueChangesStream.listen((_) {
+        updateCondition();
+        markFormGroupChanged();
+      });
     }
-    return StreamGroup.merge(streams);
   }
 
   @override
-  CompositeExpression get compositeExpression {
+  CompositeExpression? get compositeExpression {
     final List<Expression> currentExpressions = [];
     for (final control in conditionsArray.controls) {
       final expression = control.value?.buildExpression();
@@ -101,9 +120,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         currentExpressions.add(expression);
       }
     }
-
     print('Composite expressions: $currentExpressions');
-
+    if (currentExpressions.isEmpty) {
+      return null; // No conditions to form a composite expression
+    }
     final composite = CompositeExpression(
       logicType: logicTypeControl.value ?? LogicType.and,
       expressions: currentExpressions,
@@ -130,23 +150,31 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     );
     conditionsArray
         .add(FormControl<ConditionRowFormViewModel>(value: conditionVm));
+    _updateConditionsValueChangesStream();
     markFormGroupChanged();
   }
 
-  /*@override
+  @override
   void updateCondition() {
-    print('Updating condition with current expressions: $compositeExpression');
-    /*questionConditionalControl.value =
-        QuestionConditional.withCondition(compositeExpression);*/
-  }*/
+    print('UPDATING CONDITION with current expressions: $compositeExpression');
+    if (compositeExpression == null) {
+      questionConditionalControl.updateValue(null);
+    } else {
+      questionConditionalControl.updateValue(
+        QuestionConditional.withCondition(compositeExpression!),
+      );
+    }
+    markFormGroupChanged();
+  }
 
   @override
   void removeCondition(int index) {
     conditionsArray.removeAt(index);
+    _updateConditionsValueChangesStream();
     markFormGroupChanged();
   }
 
-// Initialize from existing data
+  // Initialize from existing data
   /*void _initializeConditions(QuestionConditional<bool>? initialCondition) {
     conditionsArray.clear();
     if (initialCondition != null) {
@@ -645,10 +673,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   @override
   QuestionFormData buildFormData() {
-    print('buildFormData with ' +
-        QuestionConditional.withCondition(compositeExpression)
-            .toJson()
-            .toString());
     switch (questionType) {
       case SurveyQuestionType.bool:
         return BoolQuestionFormData(
@@ -656,9 +680,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
-          conditional: questionConditionalControl.value ??
-              QuestionConditional.withCondition(
-                  compositeExpression), //questionConditionalControl.value,
+          conditional: questionConditionalControl.value,
         );
       case SurveyQuestionType.choice:
         return ChoiceQuestionFormData(
@@ -668,9 +690,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionType: questionTypeControl.value!,
           // required
           questionInfoText: questionInfoTextControl.value,
-          conditional: questionConditionalControl.value ??
-              QuestionConditional.withCondition(
-                  compositeExpression), //questionConditionalControl.value,
+          conditional: questionConditionalControl.value,
           isMultipleChoice: isMultipleChoiceControl.value!,
           // required
           answerOptions: validAnswerOptions,
@@ -683,9 +703,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionType: questionTypeControl.value!,
           // required
           questionInfoText: questionInfoTextControl.value,
-          conditional: questionConditionalControl.value ??
-              QuestionConditional.withCondition(
-                  compositeExpression), //questionConditionalControl.value,
+          conditional: questionConditionalControl.value,
           minValue: scaleMinValueControl.value!.toDouble(),
           // non-empty formatter
           maxValue: scaleMaxValueControl.value!.toDouble(),
@@ -707,9 +725,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
-          conditional: questionConditionalControl.value ??
-              QuestionConditional.withCondition(
-                  compositeExpression), //questionConditionalControl.value,
+          conditional: questionConditionalControl.value,
           textLengthRange: [
             freeTextLengthControl.value!.start.toInt(),
             freeTextLengthControl.value!.end.toInt(),

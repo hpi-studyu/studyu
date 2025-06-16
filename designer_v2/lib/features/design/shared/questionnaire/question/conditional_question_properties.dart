@@ -4,7 +4,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 
 abstract class IConditionalQuestionProperties {
   String get currentQuestionId;
-  CompositeExpression get compositeExpression;
+  CompositeExpression? get compositeExpression;
 
   FormControl<LogicType> get logicTypeControl;
   FormArray<ConditionRowFormViewModel> get conditionsArray;
@@ -12,7 +12,7 @@ abstract class IConditionalQuestionProperties {
 
   void addCondition(
       {required List<Question> allQuestions, Expression? initialExpression});
-  // void updateCondition();
+  void updateCondition();
   void removeCondition(int index);
 
   Stream<void> get conditionsValueChanges;
