@@ -2,14 +2,14 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/conditional_question_properties.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-// todo convert this back to FormConsumerWidget?
-class ConditionalQuestionFormView extends StatefulWidget {
+class ConditionalQuestionFormView extends FormConsumerWidget {
   ConditionalQuestionFormView(
       {required this.formViewModel, required this.allQuestions, super.key}) {
     ConditionRowFormViewModel.allQuestions = allQuestions;
@@ -19,38 +19,11 @@ class ConditionalQuestionFormView extends StatefulWidget {
   final List<Question> allQuestions;
 
   @override
-  State<ConditionalQuestionFormView> createState() =>
-      _ConditionalQuestionFormViewState();
-}
-
-class _ConditionalQuestionFormViewState
-    extends State<ConditionalQuestionFormView> {
-  /*@override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(ConditionalQuestionFormView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-*/
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, FormGroup form) {
     final theme = Theme.of(context);
     return ReactiveFormConsumer(builder: (context, form, _) {
       print(
-          'Building ConditionalQuestionFormView with ${widget.formViewModel.conditionsArray.controls.length} conditions');
+          'Building ConditionalQuestionFormView with ${formViewModel.conditionsArray.controls.length} conditions');
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +46,7 @@ class _ConditionalQuestionFormViewState
           _buildAddConditionButton(),
           const Divider(height: 32.0),
           StreamBuilder(
-            stream: widget.formViewModel.conditionsValueChanges,
+            stream: formViewModel.conditionsValueChanges,
             builder: (context, snapshot) {
               print('Rebuilding live preview due to condition value changes');
               return _buildLivePreview(context);
@@ -91,14 +64,14 @@ class _ConditionalQuestionFormViewState
         const SizedBox(width: 8),
         Expanded(
           child: ReactiveRadioListTile<LogicType>(
-            formControl: widget.formViewModel.logicTypeControl,
+            formControl: formViewModel.logicTypeControl,
             value: LogicType.and,
             title: const Text('AND'),
           ),
         ),
         Expanded(
           child: ReactiveRadioListTile<LogicType>(
-            formControl: widget.formViewModel.logicTypeControl,
+            formControl: formViewModel.logicTypeControl,
             value: LogicType.or,
             title: const Text('OR'),
           ),
@@ -109,7 +82,7 @@ class _ConditionalQuestionFormViewState
 
   Widget _buildConditionsList() {
     return ReactiveFormArray(
-      formArray: widget.formViewModel.conditionsArray,
+      formArray: formViewModel.conditionsArray,
       builder: (context, formArray, child) {
         if (formArray.controls.isEmpty) {
           return Padding(
@@ -219,7 +192,7 @@ class _ConditionalQuestionFormViewState
           ),
           IconButton(
             icon: const Icon(Icons.delete_forever),
-            onPressed: () => widget.formViewModel.removeCondition(index),
+            onPressed: () => formViewModel.removeCondition(index),
             tooltip: 'tr.delete',
           ),
         ],
@@ -298,7 +271,7 @@ class _ConditionalQuestionFormViewState
 
   Widget _buildAddConditionButton() {
     return ElevatedButton.icon(
-      onPressed: () => widget.formViewModel.addCondition(),
+      onPressed: () => formViewModel.addCondition(),
       icon: const Icon(Icons.add),
       label: const Text('tr.button_add_condition'),
     );
@@ -306,9 +279,9 @@ class _ConditionalQuestionFormViewState
 
   Widget _buildLivePreview(BuildContext context) {
     return LiveConditionPreview(
-      compositeExpression: widget.formViewModel.compositeExpression,
-      allQuestions: widget.allQuestions,
-      currentQuestionId: widget.formViewModel.currentQuestionId,
+      compositeExpression: formViewModel.compositeExpression,
+      allQuestions: allQuestions,
+      currentQuestionId: formViewModel.currentQuestionId,
     );
   }
 }
