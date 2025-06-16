@@ -255,6 +255,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
   String? _selectedPainTypeName;
   late String _selectedPartId;
   late List<BodyPart> _selectableParts;
+  bool _isInit = true;
 
   @override
   void initState() {
@@ -266,6 +267,18 @@ class _PainEditDialogState extends State<PainEditDialog> {
     _selectedPartId = mostSpecificPainfulPart.id;
 
     _selectableParts = _flattenHierarchy(widget.tappedPart);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isInit) {
+      if (_selectedPainTypeName == null) {
+        final loc = AppLocalizations.of(context)!;
+        _selectedPainTypeName = loc.painTypeUnspecified;
+      }
+      _isInit = false;
+    }
   }
 
   BodyPart _findMostSpecificPain(BodyPart part) {
@@ -404,16 +417,21 @@ class _PainEditDialogState extends State<PainEditDialog> {
         ),
         FilledButton(
           onPressed: () {
-            final selectedPainType = _selectedPainTypeName != null
-                ? painTypeOptions
-                    .firstWhere((t) => t.name == _selectedPainTypeName)
-                : null;
+            final PainType? finalPainType;
+            if (_selectedPainTypeName == null ||
+                _selectedPainTypeName == loc.painTypeUnspecified) {
+              finalPainType = null;
+            } else {
+              finalPainType = painTypeOptions
+                  .firstWhere((t) => t.name == _selectedPainTypeName);
+            }
+
             final result = (
               parentPartId: widget.tappedPart.id,
               childPartId: _selectedPartId,
               pain: BodyPain(
                 painLevel: _currentPain,
-                type: selectedPainType,
+                type: finalPainType,
               )
             );
             Navigator.of(context).pop(result);
