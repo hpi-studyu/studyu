@@ -13,6 +13,11 @@ class QuestionConditional<V> {
 
   QuestionConditional();
 
+  QuestionConditional.withCondition(
+    this.condition, {
+    this.defaultValue,
+  });
+
   factory QuestionConditional.fromJson(Map<String, dynamic> json) =>
       _fromJson(json);
 
@@ -46,6 +51,11 @@ class QuestionConditional<V> {
 
   Map<String, dynamic> toJson() =>
       _$QuestionConditionalToJson<V>(this)..[keyDefaultValue] = defaultValue;
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
 }
 
 extension QuestionConditionalCopy on QuestionConditional {

@@ -203,7 +203,12 @@ class ChoiceQuestionFormData extends QuestionFormData {
     question.rationale = questionInfoText;
     question.multiple = isMultipleChoice;
     question.choices = answerOptions.map(_buildChoiceForValue).toList();
-    question.conditional = conditional as QuestionConditional<List<String>>?;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<List<String>>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as List<String>?,
+          );
     return question;
   }
 
@@ -276,7 +281,12 @@ class BoolQuestionFormData extends QuestionFormData {
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
-    question.conditional = conditional as QuestionConditional<bool>?;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<bool>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as bool?,
+          );
     return question;
   }
 
@@ -518,7 +528,12 @@ class ScaleQuestionFormData extends QuestionFormData {
     if (maxLabel != null) {
       question.maxLabel = maxLabel;
     }
-    question.conditional = conditional as QuestionConditional<num>?;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<double>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as double?,
+          );
     return question;
   }
 
@@ -600,7 +615,12 @@ class FreeTextQuestionFormData extends QuestionFormData {
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
-    question.conditional = conditional as QuestionConditional<String>?;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<String>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as String?,
+          );
     return question;
   }
 

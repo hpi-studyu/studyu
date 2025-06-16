@@ -1,4 +1,3 @@
-import 'package:async/async.dart'; // Add this import for StreamGroup
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -9,6 +8,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
+// todo convert this back to FormConsumerWidget?
 class ConditionalQuestionFormView extends StatefulWidget {
   const ConditionalQuestionFormView(
       {required this.formViewModel, required this.allQuestions, super.key});
@@ -26,40 +26,29 @@ class _ConditionalQuestionFormViewState
   /*@override
   void initState() {
     super.initState();
-    print(
-        'Initializing ConditionalQuestionFormView with ${widget.formViewModel.conditionsArray.controls.length} conditions');
-    widget.formViewModel.conditionsArray.onChanged((control) {
-      print('Conditions changed: ${control.value}');
-      for (final condition in widget.formViewModel.conditionsArray.controls) {
-        final conditionVm = condition.value;
-        if (conditionVm is ConditionRowFormViewModel) {
-          conditionVm.valueControl.valueChanges.listen((_) {
-            print(
-                'Condition value changed: ${conditionVm.valueControl.value} for question ${conditionVm.questionIdControl.value}');
-          });
-          /*conditionVm.onControlChanged(() {
-            print(
-                'Condition control changed: ${conditionVm.questionIdControl.value}');
-          });*/
-        }
-      }
-    });
-  }*/
+  }
 
+  @override
+  void didUpdateWidget(ConditionalQuestionFormView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+*/
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ReactiveFormConsumer(builder: (context, form, _) {
       print(
           'Building ConditionalQuestionFormView with ${widget.formViewModel.conditionsArray.controls.length} conditions');
-
-      // Collect all streams from each condition
-      final streams = widget.formViewModel.conditionsArray.controls
-          .map((control) => control.value!.form.valueChanges)
-          .toList();
-      final mergedStream = streams.isNotEmpty
-          ? StreamGroup.merge(streams)
-          : const Stream<void>.empty();
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +71,7 @@ class _ConditionalQuestionFormViewState
           _buildAddConditionButton(),
           const Divider(height: 32.0),
           StreamBuilder(
-            stream: mergedStream,
+            stream: widget.formViewModel.conditionsValueChanges,
             builder: (context, snapshot) {
               print('Rebuilding live preview due to condition value changes');
               return _buildLivePreview(context);
@@ -315,22 +304,8 @@ class _ConditionalQuestionFormViewState
   }
 
   Widget _buildLivePreview(BuildContext context) {
-    final List<Expression> currentExpressions = [];
-    for (final control in widget.formViewModel.conditionsArray.controls) {
-      final expression = control.value?.buildExpression();
-      if (expression != null) {
-        currentExpressions.add(expression);
-      }
-    }
-
-    final CompositeExpression tempComposite = CompositeExpression(
-      // Use AND as default if logicType is null
-      logicType: widget.formViewModel.logicTypeControl.value ?? LogicType.and,
-      expressions: currentExpressions,
-    );
-
     return LiveConditionPreview(
-      compositeExpression: tempComposite,
+      compositeExpression: widget.formViewModel.compositeExpression,
       allQuestions: widget.allQuestions,
       currentQuestionId: widget.formViewModel.currentQuestionId,
     );
@@ -429,7 +404,7 @@ class LiveConditionPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Building LiveConditionPreview with ${compositeExpression.toJson()}');
+    // print('Building LiveConditionPreview with ${compositeExpression.toJson()}');
     String previewText;
     if (compositeExpression.expressions.isEmpty) {
       previewText = 'Show this question if: (always true)';
