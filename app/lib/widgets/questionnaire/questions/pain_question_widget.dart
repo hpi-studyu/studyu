@@ -162,30 +162,30 @@ Body _generateLocalizedBody(BuildContext context) {
           BodyPart(id: 'leftFingers', name: loc.body_left_fingers),
         ]),
       ]),
-      BodyPart(id: 'right_arm', name: loc.body_right_arm, children: [
-        BodyPart(id: 'right_shoulder', name: loc.body_right_shoulder),
+      BodyPart(id: 'rightArm', name: loc.body_right_arm, children: [
+        BodyPart(id: 'rightShoukder', name: loc.body_right_shoulder),
         BodyPart(
-            id: 'right_upper_arm',
+            id: 'rightUpperArm',
             name: loc.body_right_upper_arm,
             children: [
               BodyPart(id: 'rightBicep', name: loc.body_right_bicep),
               BodyPart(id: 'rightTricep', name: loc.body_right_tricep),
             ]),
-        BodyPart(id: 'right_elbow', name: loc.body_right_elbow),
+        BodyPart(id: 'rightElbow', name: loc.body_right_elbow),
         BodyPart(
-            id: 'right_lower_arm',
+            id: 'rightLowerArm',
             name: loc.body_right_lower_arm,
             children: [
               BodyPart(id: 'rightForearm', name: loc.body_right_forearm),
               BodyPart(id: 'rightWrist', name: loc.body_right_wrist),
             ]),
-        BodyPart(id: 'right_hand', name: loc.body_right_hand, children: [
+        BodyPart(id: 'rightHand', name: loc.body_right_hand, children: [
           BodyPart(id: 'rightPalm', name: loc.body_right_palm),
           BodyPart(id: 'rightFingers', name: loc.body_right_fingers),
         ]),
       ]),
     ]),
-    BodyPart(id: 'lower_body', name: loc.body_lower_body, children: [
+    BodyPart(id: 'lowerBody', name: loc.body_lower_body, children: [
       BodyPart(id: 'pelvis', name: loc.body_pelvis, children: [
         BodyPart(id: 'groin', name: loc.body_groin),
         BodyPart(id: 'hips', name: loc.body_hips),
