@@ -28,17 +28,19 @@ class ConditionRowFormData implements IStudyFormData {
 
   @override
   IFormData copy() {
-    // TODO: implement copy
-    throw UnimplementedError();
+    return copyWith();
   }
 
   @override
-  // TODO: implement id
-  FormDataID get id => throw UnimplementedError();
+  FormDataID get id => questionId!;
 
   @override
   Study apply(Study study) {
-    // TODO: implement apply
-    throw UnimplementedError();
+    print('Applying condition row data to study');
+    // This method should apply the condition row data to the given study.
+    // Implementation depends on how conditions are stored in the Study model.
+    // Example (pseudo-implementation):
+    // study.addCondition(questionId, comparator, value);
+    return study;
   }
 }

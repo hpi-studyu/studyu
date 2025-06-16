@@ -6,9 +6,9 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 
 class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   // --- Controls ---
-  final FormControl<String> questionIdControl = FormControl<String>();
-  final FormControl<dynamic> comparatorControl = FormControl<dynamic>();
-  FormControl<dynamic> valueControl = FormControl<dynamic>();
+  final questionIdControl = FormControl<String>();
+  final comparatorControl = FormControl<dynamic>();
+  final valueControl = FormControl<dynamic>();
 
   final List<core.Question> allQuestions;
   final String currentQuestionId;
@@ -21,44 +21,15 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
     if (initialExpression != null) {
       questionIdControl.value = _extractQuestionId(initialExpression);
       comparatorControl.value = _extractComparator(initialExpression);
-      final value = _extractValue(initialExpression);
-      if (value != null) {
-        valueControl.value = value;
-      }
+      valueControl.value = _extractValue(initialExpression);
     }
   }
 
-  void updateValueControlType() {
-    if (selectedQuestion == null) return;
-
-    final newValue = valueControl.value;
-    switch (selectedQuestion!.type) {
-      case 'boolean':
-        if (valueControl is! FormControl<bool>) {
-          final typedControl = FormControl<bool>();
-          if (newValue is bool) {
-            typedControl.value = newValue;
-          }
-          valueControl = typedControl;
-        }
-      case 'scale':
-        if (valueControl is! FormControl<num>) {
-          final typedControl = FormControl<num>();
-          if (newValue is num) {
-            typedControl.value = newValue;
-          }
-          valueControl = typedControl;
-        }
-      case 'text':
-        if (valueControl is! FormControl<String>) {
-          final typedControl = FormControl<String>();
-          if (newValue is String) {
-            typedControl.value = newValue;
-          }
-          valueControl = typedControl;
-        }
-    }
-  }
+  /*void onControlChanged(void Function() callback) {
+    questionIdControl.valueChanges.listen((_) => callback());
+    comparatorControl.valueChanges.listen((_) => callback());
+    valueControl.valueChanges.listen((_) => callback());
+  }*/
 
 // --- Available questions for dropdown (exclude current and all later ones) ---
   List<core.Question> get availableQuestions {
@@ -82,7 +53,6 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
       case 'boolean':
         return [
           const FormControlOption(true, 'is'),
-          const FormControlOption(false, 'is not'),
         ];
       case 'choice':
         return [
@@ -185,7 +155,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
     switch (selectedQ.type) {
       case 'boolean':
         baseExpression = core.BooleanExpression()..target = questionId;
-        if (comparator == false) {
+        if (value == false) {
           return core.NotExpression()..expression = baseExpression;
         }
         return baseExpression;
@@ -221,20 +191,27 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
 
   @override
   ConditionRowFormData buildFormData() {
-    // TODO: implement buildFormData
-    throw UnimplementedError();
+    print("Building form data from controls");
+    return ConditionRowFormData(
+      questionId: questionIdControl.value,
+      comparator: comparatorControl.value,
+      value: valueControl.value,
+    );
   }
 
   @override
-  // TODO: implement titles
   Map<FormMode, String> get titles => throw UnimplementedError();
 
   @override
   void setControlsFrom(ConditionRowFormData data) {
-    // TODO THIS IS NOT CALLED
     print("Setting controls from data: $data");
     questionIdControl.value = data.questionId;
     comparatorControl.value = data.comparator;
     valueControl.value = data.value;
+  }
+
+  @override
+  String toString() {
+    return 'ConditionRowFormViewModel{questionIdControl: $questionIdControl, comparatorControl: $comparatorControl, valueControl: $valueControl, allQuestions: $allQuestions, currentQuestionId: $currentQuestionId}';
   }
 }

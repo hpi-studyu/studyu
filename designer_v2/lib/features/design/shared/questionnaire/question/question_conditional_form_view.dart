@@ -1,16 +1,15 @@
+import 'package:async/async.dart'; // Add this import for StreamGroup
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/conditional_question_properties.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-// todo maybe use FormConsumerRefWidget
-class ConditionalQuestionFormView extends FormConsumerWidget {
+class ConditionalQuestionFormView extends StatefulWidget {
   const ConditionalQuestionFormView(
       {required this.formViewModel, required this.allQuestions, super.key});
 
@@ -18,33 +17,80 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
   final List<Question> allQuestions;
 
   @override
-  Widget build(BuildContext context, FormGroup form) {
-    final theme = Theme.of(context);
+  State<ConditionalQuestionFormView> createState() =>
+      _ConditionalQuestionFormViewState();
+}
+
+class _ConditionalQuestionFormViewState
+    extends State<ConditionalQuestionFormView> {
+  /*@override
+  void initState() {
+    super.initState();
     print(
-        'Building ConditionalQuestionFormView with ${formViewModel.conditionsArray.controls.length} conditions');
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextParagraph(
-          text: 'tr.form_array_question_visibility_logic_description',
-          style: ThemeConfig.bodyTextMuted(theme),
-        ),
-        const SizedBox(height: 16.0),
-        const FormLabel(
-          labelText: 'tr.form_array_question_visibility_logic_title',
-          labelTextStyle: TextStyle(fontWeight: FontWeight.bold),
-          helpText: 'tr.form_array_question_visibility_logic_tooltip',
-        ),
-        const SizedBox(height: 12.0),
-        _buildLogicGroupingControl(),
-        const SizedBox(height: 12.0),
-        _buildConditionsList(),
-        const SizedBox(height: 16.0),
-        _buildAddConditionButton(),
-        const Divider(height: 32.0),
-        _buildLivePreview(context),
-      ],
-    );
+        'Initializing ConditionalQuestionFormView with ${widget.formViewModel.conditionsArray.controls.length} conditions');
+    widget.formViewModel.conditionsArray.onChanged((control) {
+      print('Conditions changed: ${control.value}');
+      for (final condition in widget.formViewModel.conditionsArray.controls) {
+        final conditionVm = condition.value;
+        if (conditionVm is ConditionRowFormViewModel) {
+          conditionVm.valueControl.valueChanges.listen((_) {
+            print(
+                'Condition value changed: ${conditionVm.valueControl.value} for question ${conditionVm.questionIdControl.value}');
+          });
+          /*conditionVm.onControlChanged(() {
+            print(
+                'Condition control changed: ${conditionVm.questionIdControl.value}');
+          });*/
+        }
+      }
+    });
+  }*/
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ReactiveFormConsumer(builder: (context, form, _) {
+      print(
+          'Building ConditionalQuestionFormView with ${widget.formViewModel.conditionsArray.controls.length} conditions');
+
+      // Collect all streams from each condition
+      final streams = widget.formViewModel.conditionsArray.controls
+          .map((control) => control.value!.form.valueChanges)
+          .toList();
+      final mergedStream = streams.isNotEmpty
+          ? StreamGroup.merge(streams)
+          : const Stream<void>.empty();
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextParagraph(
+            text: 'tr.form_array_question_visibility_logic_description',
+            style: ThemeConfig.bodyTextMuted(theme),
+          ),
+          const SizedBox(height: 16.0),
+          const FormLabel(
+            labelText: 'tr.form_array_question_visibility_logic_title',
+            labelTextStyle: TextStyle(fontWeight: FontWeight.bold),
+            helpText: 'tr.form_array_question_visibility_logic_tooltip',
+          ),
+          const SizedBox(height: 12.0),
+          _buildLogicGroupingControl(),
+          const SizedBox(height: 12.0),
+          _buildConditionsList(),
+          const SizedBox(height: 16.0),
+          _buildAddConditionButton(),
+          const Divider(height: 32.0),
+          StreamBuilder(
+            stream: mergedStream,
+            builder: (context, snapshot) {
+              print('Rebuilding live preview due to condition value changes');
+              return _buildLivePreview(context);
+            },
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildLogicGroupingControl() {
@@ -54,14 +100,14 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
         const SizedBox(width: 8),
         Expanded(
           child: ReactiveRadioListTile<LogicType>(
-            formControl: formViewModel.logicTypeControl,
+            formControl: widget.formViewModel.logicTypeControl,
             value: LogicType.and,
             title: const Text('AND'),
           ),
         ),
         Expanded(
           child: ReactiveRadioListTile<LogicType>(
-            formControl: formViewModel.logicTypeControl,
+            formControl: widget.formViewModel.logicTypeControl,
             value: LogicType.or,
             title: const Text('OR'),
           ),
@@ -72,7 +118,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
 
   Widget _buildConditionsList() {
     return ReactiveFormArray(
-      formArray: formViewModel.conditionsArray,
+      formArray: widget.formViewModel.conditionsArray,
       builder: (context, formArray, child) {
         if (formArray.controls.isEmpty) {
           return Padding(
@@ -125,6 +171,9 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
                 border: OutlineInputBorder(),
                 isDense: true,
               ),
+              /*onChanged: (value) {
+                print("Dropdown question changed");
+              },*/
             ),
           ),
           const SizedBox(width: 8),
@@ -179,7 +228,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.delete_forever),
-            onPressed: () => formViewModel.removeCondition(index),
+            onPressed: () => widget.formViewModel.removeCondition(index),
             tooltip: 'tr.delete',
           ),
         ],
@@ -191,13 +240,10 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     BuildContext context,
     ConditionRowFormViewModel conditionVm,
   ) {
-    // Update value control type before building the input field
-    conditionVm.updateValueControlType();
-
     switch (conditionVm.selectedQuestion!.type) {
       case 'boolean':
-        return ReactiveDropdownField<bool>(
-          formControl: conditionVm.valueControl as FormControl<bool>,
+        return ReactiveDropdownField<dynamic>(
+          formControl: conditionVm.valueControl,
           items: const [
             DropdownMenuItem(value: true, child: Text('tr.true_value')),
             DropdownMenuItem(value: false, child: Text('tr.false_value')),
@@ -228,8 +274,8 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           ),
         );
       case 'scale':
-        return ReactiveTextField<num>(
-          formControl: conditionVm.valueControl as FormControl<num>,
+        return ReactiveTextField<dynamic>(
+          formControl: conditionVm.valueControl,
           keyboardType: TextInputType.number,
           inputFormatters: const [
             // Potentially add more robust number input formatter
@@ -246,8 +292,8 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           ),
         );
       case 'text':
-        return ReactiveTextField<String>(
-          formControl: conditionVm.valueControl as FormControl<String>,
+        return ReactiveTextField<dynamic>(
+          formControl: conditionVm.valueControl,
           decoration: const InputDecoration(
             labelText: 'tr.field_value',
             border: OutlineInputBorder(),
@@ -261,7 +307,8 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
 
   Widget _buildAddConditionButton() {
     return ElevatedButton.icon(
-      onPressed: () => formViewModel.addCondition(allQuestions: allQuestions),
+      onPressed: () =>
+          widget.formViewModel.addCondition(allQuestions: widget.allQuestions),
       icon: const Icon(Icons.add),
       label: const Text('tr.button_add_condition'),
     );
@@ -269,7 +316,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
 
   Widget _buildLivePreview(BuildContext context) {
     final List<Expression> currentExpressions = [];
-    for (final control in formViewModel.conditionsArray.controls) {
+    for (final control in widget.formViewModel.conditionsArray.controls) {
       final expression = control.value?.buildExpression();
       if (expression != null) {
         currentExpressions.add(expression);
@@ -278,14 +325,14 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
 
     final CompositeExpression tempComposite = CompositeExpression(
       // Use AND as default if logicType is null
-      logicType: formViewModel.logicTypeControl.value ?? LogicType.and,
+      logicType: widget.formViewModel.logicTypeControl.value ?? LogicType.and,
       expressions: currentExpressions,
     );
 
     return LiveConditionPreview(
       compositeExpression: tempComposite,
-      allQuestions: allQuestions,
-      currentQuestionId: formViewModel.currentQuestionId,
+      allQuestions: widget.allQuestions,
+      currentQuestionId: widget.formViewModel.currentQuestionId,
     );
   }
 }
@@ -317,7 +364,7 @@ class LiveConditionPreview extends StatelessWidget {
     } else if (expression is NotExpression) {
       final innerExp = expression.expression;
       if (innerExp is BooleanExpression) {
-        return '${_getQuestionPreviewText(innerExp.target!)} is not true';
+        return '${_getQuestionPreviewText(innerExp.target!)} is false';
       } else if (innerExp is ChoiceExpression) {
         // Handle != for choice display
         return '${_getQuestionPreviewText(innerExp.target!)} != [${innerExp.choices.map((c) => _getChoiceText(innerExp.target!, c)).join(', ')}]';
@@ -382,6 +429,7 @@ class LiveConditionPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Building LiveConditionPreview with ${compositeExpression.toJson()}');
     String previewText;
     if (compositeExpression.expressions.isEmpty) {
       previewText = 'Show this question if: (always true)';

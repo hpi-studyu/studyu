@@ -46,6 +46,23 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         .onChanged((control) => onResponseOptionsChanged(control.controls));
     freeTextResponseOptionsArray
         .onChanged((control) => onResponseOptionsChanged(control.controls));
+
+    /*conditionsArray.onChanged((control) {
+      print('Conditions changed: ${control.value}');
+      for (final condition in conditionsArray.controls) {
+        final conditionVm = condition.value;
+        if (conditionVm is ConditionRowFormViewModel) {
+          conditionVm.onControlChanged(() {
+            print(
+                'Condition control changed: ${conditionVm.questionIdControl.value}');
+            markFormGroupChanged();
+            onResponseOptionsChanged(conditionsArray.controls);
+          });
+        }
+      }
+      markFormGroupChanged();
+      onResponseOptionsChanged(control.controls);
+    });*/
   }
 
   /// Customized titles (if any) depending on the context of use
@@ -543,6 +560,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     questionTextControl.value = data.questionText;
     questionTypeControl.value = data.questionType;
     questionInfoTextControl.value = data.questionInfoText ?? '';
+    // TODO
     //questionConditionalControl.value = data.conditional;
     // Type-specific controls
     switch (data.questionType) {
@@ -624,6 +642,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionType: questionTypeControl.value!,
           // required
           questionInfoText: questionInfoTextControl.value,
+          // TODO
           //conditional: questionConditionalControl.value,
           isMultipleChoice: isMultipleChoiceControl.value!,
           // required
@@ -637,6 +656,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionType: questionTypeControl.value!,
           // required
           questionInfoText: questionInfoTextControl.value,
+          // TODO
           //conditional: questionConditionalControl.value,
           minValue: scaleMinValueControl.value!.toDouble(),
           // non-empty formatter
@@ -659,6 +679,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
+          // TODO
           //conditional: questionConditionalControl.value,
           textLengthRange: [
             freeTextLengthControl.value!.start.toInt(),
