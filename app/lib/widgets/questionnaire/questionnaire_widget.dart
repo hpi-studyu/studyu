@@ -51,17 +51,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       widget.questions
           .skip(startIndex + 1)
           .forEach((question) => qs.answers.remove(question.id));
-      while (index + 1 < shownQuestions.length) {
-        final end = shownQuestions.length;
-        final lastQuestion = shownQuestions.removeLast();
-        _listKey.currentState!.removeItem(
-          end,
-          (context, animation) => SizeTransition(
-            sizeFactor: animation,
-            child: lastQuestion,
-          ),
-        );
-      }
+      // Instantly remove all downstream questions (no animation)
+      setState(() {
+        shownQuestions.removeRange(index + 1, shownQuestions.length);
+      });
     }
   }
 
