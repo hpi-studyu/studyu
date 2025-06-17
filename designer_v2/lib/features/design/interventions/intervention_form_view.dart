@@ -155,6 +155,7 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                   emptyTitle: tr.form_array_intervention_tasks_empty_title,
                   emptyDescription:
                       tr.form_array_intervention_tasks_empty_description,
+                  hideLeadingTrailingWhenEmpty: true,
                   reorderable: true,
                   onReorder: (oldIndex, newIndex) {
                     if (newIndex > oldIndex) {
