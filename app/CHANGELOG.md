@@ -1,3 +1,17 @@
+## 2.9.1
+
+ - **FIX**: update deps.
+
+## 2.9.0
+
+ - **REFACTOR**: remove print.
+ - **FIX**: bump dependencies.
+ - **FIX**: update selectedStudyObjectId to null on study deletion.
+ - **FIX**: study reset process by removing unnecessary user ID handling.
+ - **FIX**: reset subject temp fix.
+ - **FIX**: reset subject progress.
+ - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+
 ## 2.8.0
 
  - **REFACTOR**: TextualSummarySectionWidget.
