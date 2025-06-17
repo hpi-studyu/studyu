@@ -649,12 +649,17 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     }
 
     int newIndexTemp = newIndex;
-    if (oldIndex < newIndex) {
+
+    if (newIndexTemp > oldIndex) {
       newIndexTemp -= 1;
     }
 
-    final control = choiceResponseOptionsArray.removeAt(oldIndex);
-    choiceResponseOptionsArray.insert(newIndexTemp, control);
+    final item = choiceResponseOptionsArray.removeAt(oldIndex);
+
+    choiceResponseOptionsArray.insert(newIndexTemp, item);
+
+    final controlItem = choiceResponseOptionsArray.removeAt(oldIndex);
+    choiceResponseOptionsArray.insert(newIndexTemp, controlItem);
   }
 
   @override
