@@ -74,7 +74,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
             .indexWhere((question) => question.id == answer.question) +
         1;
     qs.answers[answer.question] = answer;
-    widget.onChange?.call(qs);
 
     final shouldContinue = widget.shouldContinue?.call(qs);
     // only invalidate if there is a conditional question or if answers do not allow to continue
@@ -82,6 +81,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         shouldContinue == false) {
       _invalidateDownstreamAnswers(index);
     }
+    widget.onChange?.call(qs);
 
     // check if index of the next question is in range
     if (widget.questions.length > _nextQuestionIndex) {
