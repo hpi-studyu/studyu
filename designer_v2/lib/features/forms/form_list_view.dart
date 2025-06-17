@@ -55,8 +55,6 @@ class FormListView<T> extends StatelessWidget {
     final theme = Theme.of(context);
     final hasEmptyWidget =
         emptyIcon != null || emptyTitle != null || emptyDescription != null;
-    print(
-        'hideleadingTrailingWhenEmpty: $hideLeadingTrailingWhenEmpty items: ${items.length}');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -35,12 +35,5 @@ class ConditionRowFormData implements IStudyFormData {
   FormDataID get id => questionId!;
 
   @override
-  Study apply(Study study) {
-    print('Applying condition row data to study');
-    // This method should apply the condition row data to the given study.
-    // Implementation depends on how conditions are stored in the Study model.
-    // Example (pseudo-implementation):
-    // study.addCondition(questionId, comparator, value);
-    return study;
-  }
+  Study apply(Study study) => throw UnimplementedError();
 }

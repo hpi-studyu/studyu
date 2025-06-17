@@ -79,7 +79,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   final FormArray<ConditionRowFormViewModel> conditionsArray =
       FormArray<ConditionRowFormViewModel>([]);
 
-  //@override
   final FormControl<QuestionConditional<dynamic>?> questionConditionalControl =
       FormControl<QuestionConditional<dynamic>?>();
   Stream<void> _conditionsValueChangesStream = const Stream<void>.empty();
@@ -160,7 +159,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   @override
   void updateCondition() {
-    // print('UPDATING CONDITION with current expressions: $compositeExpression');
     if (compositeExpression == null) {
       questionConditionalControl.updateValue(null);
     } else {
@@ -629,8 +627,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     questionTypeControl.value = data.questionType;
     questionInfoTextControl.value = data.questionInfoText ?? '';
 
-    // todo this is suboptimal to insert the data from
-    //  questionConditionalControl into logicTypeControl and conditionsArray
+    // todo this is suboptimal to insert the data from questionConditionalControl into logicTypeControl and conditionsArray
     questionConditionalControl.value = data.conditional;
     final compositeExpression = questionConditionalControl.value?.condition;
     if (compositeExpression != null) {

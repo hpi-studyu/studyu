@@ -57,7 +57,6 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   // --- Get available comparators for selected question ---
   List<FormControlOption<dynamic>> get availableComparators {
     final q = selectedQuestion;
-    print("Selected question: ${q?.id}, type: ${q?.type}");
     if (q == null) return [];
     switch (q.type) {
       case 'boolean':
@@ -207,12 +206,13 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
 
   @override
   ConditionRowFormData buildFormData() {
-    print("Building form data from controls");
+    throw UnimplementedError();
+    /*print("Building form data from controls");
     return ConditionRowFormData(
       questionId: questionIdControl.value,
       comparator: comparatorControl.value,
       value: valueControl.value,
-    );
+    );*/
   }
 
   @override
@@ -220,9 +220,10 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
 
   @override
   void setControlsFrom(ConditionRowFormData data) {
-    print("Setting controls from data: $data");
+    throw UnimplementedError();
+    /*print("Setting controls from data: $data");
     questionIdControl.value = data.questionId;
     comparatorControl.value = data.comparator;
-    valueControl.value = data.value;
+    valueControl.value = data.value;*/
   }
 }
