@@ -180,7 +180,7 @@ class FormListView<T> extends StatelessWidget {
               );
             },
           ),
-        if (!hideLeadingTrailingWhenEmpty || items.isNotEmpty)
+        if (!hideLeadingTrailingWhenEmpty && items.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
             child: _newItemButton(),
