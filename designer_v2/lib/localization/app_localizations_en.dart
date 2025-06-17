@@ -771,6 +771,27 @@ class AppLocalizationsEn extends AppLocalizations {
       'this question';
 
   @override
+  String get form_array_question_visibility_logic_contradictory_bool =>
+      'Cannot have contradictory conditions for the same boolean question (true AND false)';
+
+  @override
+  String get form_array_question_visibility_logic_choice_required =>
+      'Please select a value';
+
+  @override
+  String get form_array_question_visibility_logic_number_required =>
+      'Please enter a valid number';
+
+  @override
+  String form_array_question_visibility_logic_number_range(num min, num max) {
+    return 'Value must be between $min and $max';
+  }
+
+  @override
+  String get form_array_question_visibility_logic_text_required =>
+      'Please enter some text';
+
+  @override
   String get validation_number_required => 'The value must be a number';
 
   @override

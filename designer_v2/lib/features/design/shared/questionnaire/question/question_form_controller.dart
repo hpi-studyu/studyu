@@ -9,6 +9,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/conditional_question_properties.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_validator.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
@@ -79,6 +80,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   final FormArray<ConditionRowFormViewModel> conditionsArray =
       FormArray<ConditionRowFormViewModel>([]);
 
+  // todo rewrite ConditionValidator to use questionConditionalControl and add it to _getValidationConfig
   final FormControl<QuestionConditional<dynamic>?> questionConditionalControl =
       FormControl<QuestionConditional<dynamic>?>();
   Stream<void> _conditionsValueChangesStream = const Stream<void>.empty();
@@ -151,14 +153,18 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       currentQuestionId: questionIdControl.value!,
       initialExpression: initialExpression,
     );
-    conditionsArray
-        .add(FormControl<ConditionRowFormViewModel>(value: conditionVm));
+    conditionsArray.add(FormControl<ConditionRowFormViewModel>(
+        value: conditionVm, validators: [ConditionValidator(conditionVm)]));
     _updateConditionsValueChangesStream();
     markFormGroupChanged();
   }
 
   @override
   void updateCondition() {
+    print('Updating condition with composite expression');
+    /*conditionsArray.forEachChild((control) {
+      control.updateValueAndValidity();
+    });*/
     if (compositeExpression == null) {
       questionConditionalControl.updateValue(null);
     } else {

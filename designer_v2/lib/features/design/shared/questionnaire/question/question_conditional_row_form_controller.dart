@@ -23,6 +23,21 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
       questionIdControl.value = _extractQuestionId(initialExpression);
       comparatorControl.value = _extractComparator(initialExpression);
       valueControl.value = _extractValue(initialExpression);
+      //markFormGroupChanged();
+
+      //form.setValidators([ConditionValidator(this)]);
+      //questionIdControl.setValidators([ConditionValidator(this)]);
+      //questionIdControl.updateValueAndValidity();
+
+      /*
+        print("HI");
+        if (questionIdControl.invalid) {
+          print("FAILED1: ${questionIdControl.errors}");
+        }
+        if (form.invalid) {
+          print("FAILED2: ${form.errors}");
+        }
+       */
     }
 
     // Listen for question selection changes
