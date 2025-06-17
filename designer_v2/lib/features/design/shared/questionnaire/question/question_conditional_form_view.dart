@@ -259,9 +259,10 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
       case 'choice':
         return Tooltip(
           message: conditionVm.availableChoiceValues
-              .firstWhere(
-                  (option) => option.value == conditionVm.valueControl.value)
-              .label,
+                  .firstWhereOrNull((option) =>
+                      option.value == conditionVm.valueControl.value)
+                  ?.label ??
+              '',
           child: ReactiveDropdownField<dynamic>(
             formControl: conditionVm.valueControl,
             isExpanded: true,
