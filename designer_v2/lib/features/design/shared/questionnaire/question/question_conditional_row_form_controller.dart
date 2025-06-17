@@ -2,9 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_data.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_validator.dart';
-import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
-import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
@@ -21,7 +18,6 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   ConditionRowFormViewModel({
     required this.currentQuestionId,
     Expression? initialExpression,
-    super.validationSet = StudyFormValidationSet.draft,
   }) {
     if (initialExpression != null) {
       questionIdControl.value = _extractQuestionId(initialExpression);
@@ -43,18 +39,14 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
           comparatorControl.markAsEnabled();
         }
       }
-      markFormGroupChanged();
-
-      print("Form has the following validators: ${form.validators}");
-      form.updateValueAndValidity();
-      print("Form is valid: ${form.valid}");
     });
-
-    // Always set the validator for the form array
-    form.setValidators([
-      ConditionValidator(this),
-    ]);
   }
+
+  /*void onControlChanged(void Function() callback) {
+    questionIdControl.valueChanges.listen((_) => callback());
+    comparatorControl.valueChanges.listen((_) => callback());
+    valueControl.valueChanges.listen((_) => callback());
+  }*/
 
   // --- Get selected question object ---
   Question? get selectedQuestion {
@@ -65,6 +57,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   // --- Get available comparators for selected question ---
   List<FormControlOption<dynamic>> get availableComparators {
     final q = selectedQuestion;
+    print("Selected question: ${q?.id}, type: ${q?.type}");
     if (q == null) return [];
     switch (q.type) {
       case 'boolean':
@@ -214,13 +207,12 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
 
   @override
   ConditionRowFormData buildFormData() {
-    throw UnimplementedError();
-    /*print("Building form data from controls");
+    print("Building form data from controls");
     return ConditionRowFormData(
       questionId: questionIdControl.value,
       comparator: comparatorControl.value,
       value: valueControl.value,
-    );*/
+    );
   }
 
   @override
@@ -228,29 +220,9 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
 
   @override
   void setControlsFrom(ConditionRowFormData data) {
-    throw UnimplementedError();
-    /*print("Setting controls from data: $data");
+    print("Setting controls from data: $data");
     questionIdControl.value = data.questionId;
     comparatorControl.value = data.comparator;
-    valueControl.value = data.value;*/
+    valueControl.value = data.value;
   }
-
-  @override
-  FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [
-          FormControlValidation(
-            control: form,
-            validators: [ConditionValidator(this)],
-            validationMessages: {
-              'contradictoryConditions': (error) =>
-                  tr.form_array_question_visibility_logic_contradictory_bool,
-              'required': (error) =>
-                  tr.form_array_question_visibility_logic_choice_required,
-              'number': (error) =>
-                  tr.form_array_question_visibility_logic_number_required,
-              'range': (error) => error.toString(),
-            },
-          ),
-        ],
-      };
 }

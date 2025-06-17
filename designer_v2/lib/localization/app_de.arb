@@ -295,21 +295,6 @@
   "form_array_question_visibility_logic_preview_description": "Zeige diese Frage nur an, wenn die folgenden Bedingungen erfüllt sind:",
   "form_array_question_visibility_logic_unknown_expression": "Unbekannter Ausdruck",
   "form_array_question_visibility_logic_this_question": "diese Frage",
-  "form_array_question_visibility_logic_contradictory_bool": "Widersprüchliche Bedingungen für die gleiche Ja/Nein-Frage sind nicht erlaubt (wahr UND falsch)",
-  "form_array_question_visibility_logic_choice_required": "Bitte wähle einen Wert aus",
-  "form_array_question_visibility_logic_number_required": "Bitte gib eine gültige Zahl ein",
-  "form_array_question_visibility_logic_number_range": "Der Wert muss zwischen {min} und {max} liegen",
-  "@form_array_question_visibility_logic_number_range": {
-    "placeholders": {
-      "min": {
-        "type": "num"
-      },
-      "max": {
-        "type": "num"
-      }
-    }
-  },
-  "form_array_question_visibility_logic_text_required": "Bitte gib einen Text ein",
   "validation_number_required": "Die Eingabe muss eine Zahl sein",
   "banner_study_readonly_title": "Die Studie kann nicht bearbeitet werden.",
   "banner_study_readonly_description": "Du kannst nur Studien bearbeiten, die du selbst erstellt hast oder die mit dir zur Mitarbeit geteilt wurden. Studien, die bereits gestartet sind, können grundsätzlich nicht mehr verändert werden.",

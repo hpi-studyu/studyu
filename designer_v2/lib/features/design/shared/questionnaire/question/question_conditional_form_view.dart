@@ -452,4 +452,19 @@ class LiveConditionPreview extends StatelessWidget {
       ),
     );
   }
+
+  // Uncomment and implement the following methods if needed
+  /*
+  Widget _buildConditionsList() {
+    // Implement the logic to display the list of conditions
+  }
+
+  Widget _buildAddConditionButton() {
+    // Implement the logic to add a new condition
+  }
+
+  Widget _buildLivePreview(BuildContext context) {
+    // Implement the logic to show a live preview of the conditions
+  }
+  */
 }

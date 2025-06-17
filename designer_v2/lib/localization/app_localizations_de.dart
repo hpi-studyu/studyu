@@ -781,27 +781,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'diese Frage';
 
   @override
-  String get form_array_question_visibility_logic_contradictory_bool =>
-      'Widersprüchliche Bedingungen für die gleiche Ja/Nein-Frage sind nicht erlaubt (wahr UND falsch)';
-
-  @override
-  String get form_array_question_visibility_logic_choice_required =>
-      'Bitte wähle einen Wert aus';
-
-  @override
-  String get form_array_question_visibility_logic_number_required =>
-      'Bitte gib eine gültige Zahl ein';
-
-  @override
-  String form_array_question_visibility_logic_number_range(num min, num max) {
-    return 'Der Wert muss zwischen $min und $max liegen';
-  }
-
-  @override
-  String get form_array_question_visibility_logic_text_required =>
-      'Bitte gib einen Text ein';
-
-  @override
   String get validation_number_required => 'Die Eingabe muss eine Zahl sein';
 
   @override

@@ -297,21 +297,6 @@
   "form_array_question_visibility_logic_preview_description": "Show this question if the following conditions are met:",
   "form_array_question_visibility_logic_unknown_expression": "Unknown Expression",
   "form_array_question_visibility_logic_this_question": "this question",
-  "form_array_question_visibility_logic_contradictory_bool": "Cannot have contradictory conditions for the same boolean question (true AND false)",
-  "form_array_question_visibility_logic_choice_required": "Please select a value",
-  "form_array_question_visibility_logic_number_required": "Please enter a valid number",
-  "form_array_question_visibility_logic_number_range": "Value must be between {min} and {max}",
-  "@form_array_question_visibility_logic_number_range": {
-    "placeholders": {
-      "min": {
-        "type": "num"
-      },
-      "max": {
-        "type": "num"
-      }
-    }
-  },
-  "form_array_question_visibility_logic_text_required": "Please enter some text",
   "validation_number_required": "The value must be a number",
   "banner_study_readonly_title": "This study cannot be edited.",
   "banner_study_readonly_description": "You can only make changes to studies where you are an owner or collaborator. Studies that have been launched cannot be changed by anyone.",

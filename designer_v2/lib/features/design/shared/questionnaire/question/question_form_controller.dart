@@ -9,7 +9,6 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/conditional_question_properties.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_validator.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
@@ -49,11 +48,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         .onChanged((control) => onResponseOptionsChanged(control.controls));
     freeTextResponseOptionsArray
         .onChanged((control) => onResponseOptionsChanged(control.controls));
-
-/*    form.setValidators([
-      ConditionValidator(this),
-    ]);
- */
   }
 
   /// Customized titles (if any) depending on the context of use
@@ -83,8 +77,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   @override
   final FormArray<ConditionRowFormViewModel> conditionsArray =
-      FormArray<ConditionRowFormViewModel>([],
-          validators: [Validators.minLength(1)]);
+      FormArray<ConditionRowFormViewModel>([]);
 
   //@override
   final FormControl<QuestionConditional<dynamic>?> questionConditionalControl =
@@ -159,8 +152,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       currentQuestionId: questionIdControl.value!,
       initialExpression: initialExpression,
     );
-    conditionsArray.add(FormControl<ConditionRowFormViewModel>(
-        value: conditionVm, validators: [ConditionValidator(conditionVm)]));
+    conditionsArray
+        .add(FormControl<ConditionRowFormViewModel>(value: conditionVm));
     _updateConditionsValueChangesStream();
     markFormGroupChanged();
   }
