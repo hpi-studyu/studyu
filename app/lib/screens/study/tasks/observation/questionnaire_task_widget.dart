@@ -94,6 +94,10 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
               });
               switch (response) {
                 case final QuestionnaireState questionnaireState:
+                  // Filter all skipped conditional questions
+                  questionnaireState.answers.removeWhere(
+                    (answer, answerValue) => answerValue.response == null,
+                  );
                   await _addQuestionnaireResult<QuestionnaireState>(
                     questionnaireState,
                     context,
