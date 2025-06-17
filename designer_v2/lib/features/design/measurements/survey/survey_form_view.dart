@@ -261,7 +261,7 @@ class _MeasurementSurveyFormViewState
     WidgetRef ref,
   ) {
     // Get questions only from the current survey
-   /* final currentSurveyQuestions = widget.formViewModel.study.observations
+    /* final currentSurveyQuestions = widget.formViewModel.study.observations
         .whereType<QuestionnaireTask>()
         .where((obs) => obs.id == widget.formViewModel.measurementId)
         .expand((obs) => obs.questions.questions)
@@ -275,7 +275,7 @@ class _MeasurementSurveyFormViewState
 
     // Combine both lists
     final List<Question> allAvailableQuestions = [
-     // ...currentSurveyQuestions,
+      // ...currentSurveyQuestions,
       ...currentUnsavedQuestions,
     ];
 
