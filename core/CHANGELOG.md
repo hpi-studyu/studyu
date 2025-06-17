@@ -1,3 +1,7 @@
+## 4.6.1
+
+ - **FIX**: update deps.
+
 ## 4.6.0
 
  - **FIX**: bump dependencies.

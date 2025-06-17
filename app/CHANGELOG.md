@@ -1,3 +1,7 @@
+## 2.9.1
+
+ - **FIX**: update deps.
+
 ## 2.9.0
 
  - **REFACTOR**: remove print.

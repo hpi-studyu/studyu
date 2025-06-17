@@ -1,3 +1,7 @@
+## 1.8.13
+
+ - **FIX**: update deps.
+
 ## 1.8.12
 
  - **FIX**: bump dependencies.

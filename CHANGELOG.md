@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-06-17
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.9.1`](#studyu_app---v291)
+ - [`studyu_core` - `v4.6.1`](#studyu_core---v461)
+ - [`studyu_designer_v2` - `v1.11.1`](#studyu_designer_v2---v1111)
+ - [`studyu_flutter_common` - `v1.8.13`](#studyu_flutter_common---v1813)
+
+---
+
+#### `studyu_app` - `v2.9.1`
+
+ - **FIX**: update deps.
+
+#### `studyu_core` - `v4.6.1`
+
+ - **FIX**: update deps.
+
+#### `studyu_designer_v2` - `v1.11.1`
+
+ - **FIX**: update deps.
+
+#### `studyu_flutter_common` - `v1.8.13`
+
+ - **FIX**: update deps.
+
+
 ## 2025-06-13
 
 ### Changes

@@ -1,3 +1,7 @@
+## 1.11.1
+
+ - **FIX**: update deps.
+
 ## 1.11.0
 
  - **FIX**: bump dependencies.
