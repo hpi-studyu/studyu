@@ -102,7 +102,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       // check for conditional questions
       if (!widget.questions[_nextQuestionIndex].shouldBeShown(qs)) {
         _onQuestionDone(
-          widget.questions[_nextQuestionIndex].getDefaultAnswer()!,
+          widget.questions[_nextQuestionIndex].getDefaultAnswer() ??
+              Answer.forQuestion(widget.questions[_nextQuestionIndex], null),
           shownQuestions.length,
         );
         return;
