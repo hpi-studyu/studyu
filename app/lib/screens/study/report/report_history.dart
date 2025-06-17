@@ -25,12 +25,16 @@ class ReportHistoryScreen extends StatelessWidget {
         ),
         successBuilder:
             (BuildContext context, List<StudySubject>? pastStudies) {
-          return ListView.builder(
-            itemCount: pastStudies!.length,
-            itemBuilder: (context, index) {
-              return ReportHistoryItem(pastStudies[index]);
-            },
-          );
+          return pastStudies == null || pastStudies.isEmpty
+              ? const Center(
+                  child: Text(
+                      "No reports found")) // AppLocalizations.of(context)!.no_reports_found
+              : ListView.builder(
+                  itemCount: pastStudies.length,
+                  itemBuilder: (context, index) {
+                    return ReportHistoryItem(pastStudies[index]);
+                  },
+                );
         },
       ),
     );
