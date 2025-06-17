@@ -90,9 +90,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       _invalidateDownstreamAnswers(index);
     }
 
-    // do not show later questions if earlier question is edited
-    if (index + 1 != shownQuestions.length) return;
-
     // check if index of the next question is in range
     if (widget.questions.length > _nextQuestionIndex) {
       // we still have questions left
