@@ -1461,6 +1461,36 @@ abstract class AppLocalizations {
   /// **'this question'**
   String get form_array_question_visibility_logic_this_question;
 
+  /// No description provided for @form_array_question_visibility_logic_contradictory_bool.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot have contradictory conditions for the same boolean question (true AND false)'**
+  String get form_array_question_visibility_logic_contradictory_bool;
+
+  /// No description provided for @form_array_question_visibility_logic_choice_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a value'**
+  String get form_array_question_visibility_logic_choice_required;
+
+  /// No description provided for @form_array_question_visibility_logic_number_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid number'**
+  String get form_array_question_visibility_logic_number_required;
+
+  /// No description provided for @form_array_question_visibility_logic_number_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Value must be between {min} and {max}'**
+  String form_array_question_visibility_logic_number_range(num min, num max);
+
+  /// No description provided for @form_array_question_visibility_logic_text_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter some text'**
+  String get form_array_question_visibility_logic_text_required;
+
   /// No description provided for @validation_number_required.
   ///
   /// In en, this message translates to:
