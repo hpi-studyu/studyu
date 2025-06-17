@@ -1,5 +1,5 @@
 name: studyu_app
-version: 2.7.14
+version: 2.9.1
 description: Partake in digital N-of-1 trials with the innovative StudyU Health App
 publish_to: none
 homepage: https://studyu.health
@@ -38,14 +38,14 @@ dependencies:
   quiver: ^3.2.2
   rainbow_color: ^2.0.1
   record: ^6.0.0
-  sentry_flutter: ^8.14.2
-  sentry_logging: ^8.14.2
+  sentry_flutter: ^9.0.0
+  sentry_logging: ^9.0.0
   shared_preferences: ^2.5.3
   statistics: ^1.2.0
-  studyu_core: ^4.4.9
-  studyu_flutter_common: ^1.8.10
-  supabase: ^2.7.0
-  supabase_flutter: ^2.9.0
+  studyu_core: ^4.6.1
+  studyu_flutter_common: ^1.8.13
+  supabase: ^2.8.0
+  supabase_flutter: ^2.9.1
   timeline_tile: ^2.0.0
   timezone: ^0.10.1
   universal_html: ^2.2.4
@@ -62,7 +62,7 @@ dependencies:
 #      ref: fix-android-kotlin
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.14.3
+  flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
