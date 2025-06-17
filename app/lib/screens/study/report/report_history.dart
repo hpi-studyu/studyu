@@ -26,9 +26,9 @@ class ReportHistoryScreen extends StatelessWidget {
         successBuilder:
             (BuildContext context, List<StudySubject>? pastStudies) {
           return pastStudies == null || pastStudies.isEmpty
-              ? const Center(
-                  child: Text(
-                      "No reports found")) // AppLocalizations.of(context)!.no_reports_found
+              ? Center(
+                  child: Text(AppLocalizations.of(context)!.no_reports_found),
+                ) //
               : ListView.builder(
                   itemCount: pastStudies.length,
                   itemBuilder: (context, index) {

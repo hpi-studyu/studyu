@@ -405,6 +405,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get report_history => 'Report history';
 
   @override
+  String get no_reports_found => 'No reports defined yet';
+
+  @override
   String get current_power_level => 'Current status';
 
   @override

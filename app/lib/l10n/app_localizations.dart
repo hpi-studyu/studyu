@@ -830,6 +830,12 @@ abstract class AppLocalizations {
   /// **'Report history'**
   String get report_history;
 
+  /// No description provided for @no_reports_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No reports defined yet'**
+  String get no_reports_found;
+
   /// No description provided for @current_power_level.
   ///
   /// In en, this message translates to:
