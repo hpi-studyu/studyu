@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
@@ -286,9 +287,8 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
         return ReactiveTextField<dynamic>(
           formControl: conditionVm.valueControl,
           keyboardType: TextInputType.number,
-          inputFormatters: const [
-            // Potentially add more robust number input formatter
-            // (e.g., allow decimals, handle negative numbers)
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'^-?\d*\.?\d*')),
           ],
           validationMessages: {
             ValidationMessage.number: (error) => tr.validation_number_required,

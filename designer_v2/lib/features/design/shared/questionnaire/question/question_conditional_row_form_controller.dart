@@ -138,7 +138,10 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
 
   static dynamic _extractValue(Expression? expression) {
     if (expression is ValueExpression) {
-      if (expression is NumericExpression) return expression.value;
+      if (expression is NumericExpression) {
+        // Always store as String for scale to avoid type error in TextField
+        return expression.value.toString();
+      }
       if (expression is TextExpression) return expression.value;
       if (expression is ChoiceExpression) {
         return expression.choices.firstOrNull;
@@ -162,7 +165,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   Expression? buildExpression() {
     final questionId = questionIdControl.value;
     final comparator = comparatorControl.value;
-    final value = valueControl.value;
+    var value = valueControl.value;
     final selectedQ = selectedQuestion;
 
     if (questionId == null || selectedQ == null) return null;
@@ -185,6 +188,9 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
         }
         return baseExpression;
       case 'scale':
+        if (value is String) {
+          value = num.tryParse(value);
+        }
         if (comparator is! NumericComparator || value is! num) return null;
         return NumericExpression(comparator: comparator, value: value)
           ..target = questionId;
