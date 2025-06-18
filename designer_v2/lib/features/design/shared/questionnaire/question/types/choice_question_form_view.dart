@@ -112,7 +112,7 @@ class ChoiceQuestionFormView extends ConsumerWidget {
                       child: Row(
                         children: [
                           ReorderableDragStartListener(
-                              index: index, child: SizedBox.shrink()),
+                              index: index, child: const SizedBox.shrink()),
                           const SizedBox(width: 4.0),
                           choiceOptionRowWidgets[0],
                           const SizedBox(width: 8.0),
