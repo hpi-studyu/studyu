@@ -643,25 +643,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     return withIcons(actions, modelActionIcons);
   }
 
-  void reorderChoiceOption(int oldIndex, int newIndex) {
-    if (formMode == FormMode.readonly) {
-      return;
-    }
-
-    int newIndexTemp = newIndex;
-
-    if (newIndexTemp > oldIndex) {
-      newIndexTemp -= 1;
-    }
-
-    final item = choiceResponseOptionsArray.removeAt(oldIndex);
-
-    choiceResponseOptionsArray.insert(newIndexTemp, item);
-
-    final controlItem = choiceResponseOptionsArray.removeAt(oldIndex);
-    choiceResponseOptionsArray.insert(newIndexTemp, controlItem);
-  }
-
   @override
   void onNewItem() {
     answerOptionsArray.add(FormControl<String>());

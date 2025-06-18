@@ -83,36 +83,48 @@ class ChoiceQuestionFormView extends ConsumerWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: formViewModel.answerOptionsControls.length,
                 onReorder: (oldIndex, newIndex) {
-                  formViewModel.reorderChoiceOption(oldIndex, newIndex);
+                  if (newIndex > oldIndex) {
+                    newIndex -= 1;
+                  }
+
+                  final item =
+                      formViewModel.answerOptionsArray.removeAt(oldIndex);
+                  formViewModel.answerOptionsArray.insert(newIndex, item);
+
+                  formViewModel.save();
                 },
                 itemBuilder: (context, index) {
-                  final control = formViewModel.answerOptionsControls[index]
-                      as FormControl<dynamic>;
+                  final control = formViewModel.answerOptionsControls[index];
                   final actions = formViewModel.availableActions(control);
+
+                  final key = ValueKey(control);
 
                   final choiceOptionRowWidgets =
                       buildChoiceOptionRow(context, control);
 
                   return Card(
-                    key: ValueKey(control),
+                    key: key,
                     color: Colors.transparent,
                     elevation: 0,
-                    child: Row(
-                      children: [
-                        ReorderableDragStartListener(
-                          index: index,
-                          child: const SizedBox.shrink(),
-                        ),
-                        choiceOptionRowWidgets[0],
-                        const SizedBox(width: 8.0),
-                        Expanded(child: choiceOptionRowWidgets[1]),
-                        if (actions.isNotEmpty)
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: ActionMenuInline(actions: actions),
-                          ),
-                      ],
+                    margin: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Row(
+                        children: [
+                          ReorderableDragStartListener(
+                              index: index, child: SizedBox.shrink()),
+                          const SizedBox(width: 4.0),
+                          choiceOptionRowWidgets[0],
+                          const SizedBox(width: 8.0),
+                          Expanded(child: choiceOptionRowWidgets[1]),
+                          if (actions.isNotEmpty)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: ActionMenuInline(actions: actions),
+                            ),
+                        ],
+                      ),
                     ),
                   );
                 },
