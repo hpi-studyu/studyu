@@ -9,6 +9,8 @@ on:
       - 'app/**'
       - 'core/**'
       - 'flutter_common/**'
+      - '.github/workflows/deploy-apps.yml'
+      - '.fvmrc'
   workflow_dispatch:
 
 env:
@@ -67,6 +69,7 @@ jobs:
       - name: Build StudyU app bundle
         run: flutter build appbundle --release --build-number ${{ github.run_number }}
         working-directory: ./app
+
       - name: Fastlane upload
         run: bundle exec fastlane deploy_internal
         working-directory: ./app/android
