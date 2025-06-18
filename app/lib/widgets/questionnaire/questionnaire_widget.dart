@@ -59,6 +59,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _insertQuestion(Question question) {
+    // todo prevent duplicate questions in the shownQuestions list
+    if (shownQuestions.any((q) => q.question.id == question.id)) {
+      return;
+    }
     shownQuestions.add(
       QuestionContainer(
         key: UniqueKey(),
