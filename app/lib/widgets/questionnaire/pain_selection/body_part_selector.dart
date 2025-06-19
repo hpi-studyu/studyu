@@ -255,7 +255,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
   PainType? _selectedPainType;
   late String _selectedPartId;
   late List<BodyPart> _selectableParts;
-  bool _isInit = true;
+  final bool _isInit = true;
 
   @override
   void initState() {
@@ -321,7 +321,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                                   : style.color.withOpacity(0.7),
                               borderRadius: BorderRadius.circular(12),
                               border: selectedLevel == level
-                                  ? Border.all(width: 2, color: Colors.black)
+                                  ? Border.all(width: 2)
                                   : null,
                               boxShadow: selectedLevel == level
                                   ? [
