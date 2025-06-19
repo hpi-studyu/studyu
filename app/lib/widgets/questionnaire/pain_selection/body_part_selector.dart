@@ -255,7 +255,6 @@ class _PainEditDialogState extends State<PainEditDialog> {
   PainType? _selectedPainType;
   late String _selectedPartId;
   late List<BodyPart> _selectableParts;
-  final bool _isInit = true;
 
   @override
   void initState() {
@@ -318,7 +317,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                             decoration: BoxDecoration(
                               color: selectedLevel == level
                                   ? style.color
-                                  : style.color.withOpacity(0.7),
+                                  : style.color.withValues(alpha: 0.7),
                               borderRadius: BorderRadius.circular(12),
                               border: selectedLevel == level
                                   ? Border.all(width: 2)
@@ -326,7 +325,8 @@ class _PainEditDialogState extends State<PainEditDialog> {
                               boxShadow: selectedLevel == level
                                   ? [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.08),
+                                        color: Colors.black
+                                            .withValues(alpha: 0.08),
                                         blurRadius: 6,
                                         offset: const Offset(0, 2),
                                       )
@@ -353,7 +353,8 @@ class _PainEditDialogState extends State<PainEditDialog> {
                                   '${widget.scale.painIndicatorText}: $level',
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: style.textColor.withOpacity(0.8),
+                                    color:
+                                        style.textColor.withValues(alpha: 0.8),
                                   ),
                                 ),
                               ],
@@ -392,7 +393,8 @@ class _PainEditDialogState extends State<PainEditDialog> {
       }
       await _showPainTypeDialog();
     } else if (result == false) {
-      // Cancel/back pressed, just close all dialogs
+      if (!context.mounted) return;
+
       Navigator.of(context).pop();
     }
   }
@@ -408,36 +410,67 @@ class _PainEditDialogState extends State<PainEditDialog> {
         return StatefulBuilder(
           builder: (context, setStateDialog) {
             return AlertDialog(
-              title: Text(loc.painTypeLabel),
-              content: SizedBox(
-                width: 320,
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: painTypeOptions.length,
-                  separatorBuilder: (_, __) => const Divider(),
-                  itemBuilder: (context, index) {
-                    final type = painTypeOptions[index];
-                    return ListTile(
-                      leading: _painTypeIcon(type.name),
-                      title: Text(type.name),
-                      selected: selectedType?.name == type.name,
-                      onTap: () {
-                        setStateDialog(() => selectedType = type);
-                      },
-                    );
-                  },
+              title: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.of(context).pop(false),
+                    tooltip: loc.back,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(loc.painTypeLabel)),
+                ],
+              ),
+              content: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.6,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 12),
+                    Flexible(
+                      child: SizedBox(
+                        width: 320,
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          separatorBuilder: (_, __) => const Divider(),
+                          itemCount: painTypeOptions.length,
+                          itemBuilder: (context, index) {
+                            final type = painTypeOptions[index];
+                            return ListTile(
+                              leading: _painTypeIcon(type.name),
+                              title: Text(type.name),
+                              selected: selectedType?.name == type.name,
+                              onTap: () {
+                                setStateDialog(() => selectedType = type);
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(loc.back ?? 'Back'),
-                ),
-                TextButton(
                   onPressed: () {
-                    _selectedPainType = selectedType;
+                    _selectedPainType = null;
                     Navigator.of(context).pop(true);
                   },
+                  child: Text('Skip'),
+                ),
+                TextButton(
+                  onPressed: selectedType != null
+                      ? () {
+                          _selectedPainType = selectedType;
+                          Navigator.of(context).pop(true);
+                        }
+                      : null,
                   child: Text(loc.done),
                 ),
               ],
@@ -449,7 +482,6 @@ class _PainEditDialogState extends State<PainEditDialog> {
     if (result == true) {
       await _showBodyAreaDialog();
     } else if (result == false) {
-      // Back pressed, go to previous dialog
       await _showPainLevelDialog();
     }
   }
@@ -468,29 +500,58 @@ class _PainEditDialogState extends State<PainEditDialog> {
         return StatefulBuilder(
           builder: (context, setStateDialog) {
             return AlertDialog(
-              title: Text(loc.bodyPartLabel),
-              content: SizedBox(
-                width: 320,
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: _selectableParts.length,
-                  separatorBuilder: (_, __) => const Divider(),
-                  itemBuilder: (context, index) {
-                    final part = _selectableParts[index];
-                    return ListTile(
-                      title: Text(part.name),
-                      selected: selectedId == part.id,
-                      onTap: () {
-                        setStateDialog(() => selectedId = part.id);
-                      },
-                    );
-                  },
+              title: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.of(context).pop(false),
+                    tooltip: loc.back,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(loc.bodyPartLabel)),
+                ],
+              ),
+              content: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.6,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 12),
+                    Flexible(
+                      child: SizedBox(
+                        width: 320,
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: _selectableParts.length,
+                          separatorBuilder: (_, __) => const Divider(),
+                          itemBuilder: (context, index) {
+                            final part = _selectableParts[index];
+                            return ListTile(
+                              title: Text(part.name),
+                              selected: selectedId == part.id,
+                              onTap: () {
+                                setStateDialog(() => selectedId = part.id);
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(loc.back ?? 'Back'),
+                  onPressed: () {
+                    _selectedPartId = widget.tappedPart.id;
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text('Skip'),
                 ),
                 TextButton(
                   onPressed: () {
@@ -508,7 +569,6 @@ class _PainEditDialogState extends State<PainEditDialog> {
     if (result == true) {
       _finish();
     } else if (result == false) {
-      // Back pressed, go to previous dialog
       await _showPainTypeDialog();
     }
   }
@@ -547,14 +607,11 @@ class _PainEditDialogState extends State<PainEditDialog> {
   }
 
   Widget _painTypeIcon(String name) {
-    // Placeholder: You can map pain type names to images/assets here
-    // For now, use a generic icon
     return const Icon(Icons.local_hospital);
   }
 
   @override
   Widget build(BuildContext context) {
-    // The dialog content is handled by the step dialogs above
     return const SizedBox.shrink();
   }
 }
