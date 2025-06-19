@@ -462,7 +462,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                     _selectedPainType = null;
                     Navigator.of(context).pop(true);
                   },
-                  child: Text('Skip'),
+                  child: const Text('Skip'),
                 ),
                 TextButton(
                   onPressed: selectedType != null
@@ -551,7 +551,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                     _selectedPartId = widget.tappedPart.id;
                     Navigator.of(context).pop(true);
                   },
-                  child: Text('Skip'),
+                  child: const Text('Skip'),
                 ),
                 TextButton(
                   onPressed: () {
