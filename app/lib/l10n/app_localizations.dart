@@ -113,7 +113,7 @@ abstract class AppLocalizations {
   /// No description provided for @loading_error_description.
   ///
   /// In en, this message translates to:
-  /// **'The study data could not be retrieved. Please check your internet connection or try again later. If the problem persists, you can delete all data to reset the app. This will delete all your study data and you will have to rejoin the study.'**
+  /// **'The study data could not be retrieved. If you are currently participating in a study, please first contact your study supervisor for assistance. Only contact support if you are not in a study or your supervisor instructs you to do so. Do not delete your data unless told by your supervisor or support. Deleting data will remove all your study data and you will have to rejoin the study.'**
   String get loading_error_description;
 
   /// No description provided for @try_again.
@@ -1439,7 +1439,7 @@ abstract class AppLocalizations {
   /// No description provided for @support_email_sent_description.
   ///
   /// In en, this message translates to:
-  /// **'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply. If you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.'**
+  /// **'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.'**
   String get support_email_sent_description;
 }
 

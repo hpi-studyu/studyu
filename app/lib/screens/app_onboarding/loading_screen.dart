@@ -253,10 +253,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
           title: Text(AppLocalizations.of(context)!.loading_error_title),
           content: Text(
             AppLocalizations.of(context)!.loading_error_description,
+            softWrap: true,
+            textAlign: TextAlign.start,
           ),
           actions: [
-            TextButton(
+            ElevatedButton(
               onPressed: () => Navigator.of(context).pop(false),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
               child: Text(AppLocalizations.of(context)!.contact_support),
             ),
             TextButton(
