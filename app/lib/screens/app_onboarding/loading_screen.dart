@@ -8,6 +8,7 @@ import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/app_onboarding/preview.dart'
     as study_preview;
+import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/cache.dart';
@@ -56,10 +57,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
       StudyULogger.warning(
-        "No subject found for ID: $selectedSubjectId. Local data will be cleared.",
+        "No subject found for ID: $selectedSubjectId.",
       );
-      SecureStorage.deleteAll();
-      await noSubjectFound();
+      await _showSupportOrDeleteDialog();
     }
   }
 
@@ -113,77 +113,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
           // app hangs and is unresponsive
           StudyULogger.fatal('Could not login and retrieve the study subject. '
               'One reason for this might be that the study subject is no '
-              'longer available and only resides in app backup');
+              'longer available and only resides in app backup, or the study '
+              'subject is corrupted.');
           // throw Exception("Remote subject not found");
           // Ask the user if they want to delete all secure storage data or try to re-read
           // show popup dialog to the user
-          if (!mounted) return null;
-          final result = await showDialog<bool>(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) {
-              return AlertDialog(
-                title: Text(AppLocalizations.of(context)!.loading_error_title),
-                content: Text(
-                  AppLocalizations.of(context)!.loading_error_description,
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: Text(AppLocalizations.of(context)!.try_again),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.red,
-                    ),
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: Text(AppLocalizations.of(context)!.delete_data),
-                  ),
-                ],
-              );
-            },
-          );
-          if (result == true) {
-            if (!mounted) return null;
-            // Confirm deletion of storage data
-            final deleteResult = await showDialog<bool>(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text(AppLocalizations.of(context)!.delete_all_data),
-                  content: Text(AppLocalizations.of(context)!
-                      .delete_all_data_description),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: Text(AppLocalizations.of(context)!.cancel),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.red,
-                      ),
-                      onPressed: () => Navigator.of(context).pop(true),
-                      child: Text(AppLocalizations.of(context)!.reset_app),
-                    ),
-                  ],
-                );
-              },
-            );
-            if (deleteResult == true) {
-              // Delete all secure storage data
-              StudyULogger.info("Deleting all secure storage data");
-              if (!mounted) return null;
-              await cancelNotifications(context);
-              await SecureStorage.deleteAll();
-              StudyULogger.info("Secure storage data deleted");
-            }
-          }
-          StudyULogger.info("User chose not to delete secure storage data. "
-              "Going back to loading screen");
-          if (mounted) {
-            Navigator.pushReplacementNamed(context, Routes.loading);
-          }
+          // if (!mounted) return null;
+          await _showSupportOrDeleteDialog();
         }
       }
     }
@@ -320,6 +256,106 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return;
       }
     }
+  }
+
+  Future<void> _showSupportOrDeleteDialog() async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.loading_error_title),
+          content: Text(
+            AppLocalizations.of(context)!.loading_error_description,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              // todo translate
+              child: const Text('Contact Support'),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(AppLocalizations.of(context)!.delete_data),
+            ),
+          ],
+        );
+      },
+    );
+    if (result == true) {
+      if (!mounted) return;
+      // Confirm deletion of storage data
+      final deleteResult = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)!.delete_all_data),
+            content:
+                Text(AppLocalizations.of(context)!.delete_all_data_description),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(AppLocalizations.of(context)!.cancel),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.red,
+                ),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(AppLocalizations.of(context)!.reset_app),
+              ),
+            ],
+          );
+        },
+      );
+      if (deleteResult == true) {
+        // Delete all secure storage data
+        StudyULogger.info("Deleting all secure storage data");
+        if (!mounted) return null;
+        await cancelNotifications(context);
+        await SecureStorage.deleteAll();
+        StudyULogger.info("Secure storage data deleted");
+      }
+    }
+    StudyULogger.info("User chose not to delete secure storage data.");
+    // Try to reload the subject from cache
+    try {
+      // If we have a subject, we can continue
+      final subject = await Cache.loadSubject();
+      StudyULogger.info("Loaded subject from cache: $subject");
+    } catch (e) {
+      // todo can user delete their study subject accidentally by going to welcome screen from contact screen?
+      StudyULogger.warning(
+        "No subject found in cache, showing support screen",
+      );
+      _showSupportDialog();
+    }
+  }
+
+  void _showSupportDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.contact),
+          content: RetryFutureBuilder<Contact>(
+            tryFunction: AppConfig.getAppContact,
+            successBuilder:
+                (BuildContext context, Contact? appSupportContact) =>
+                    ContactWidget(
+              contact: appSupportContact,
+              title: AppLocalizations.of(context)!.app_support,
+              subtitle: AppLocalizations.of(context)!.app_support_text,
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
