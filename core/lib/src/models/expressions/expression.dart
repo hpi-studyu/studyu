@@ -15,6 +15,8 @@ abstract class Expression {
         BooleanExpression.expressionType => BooleanExpression.fromJson(data),
         ChoiceExpression.expressionType => ChoiceExpression.fromJson(data),
         NotExpression.expressionType => NotExpression.fromJson(data),
+        NumericExpression.expressionType => NumericExpression.fromJson(data),
+        TextExpression.expressionType => TextExpression.fromJson(data),
         _ => throw UnknownJsonTypeError(data[keyType])
       };
 

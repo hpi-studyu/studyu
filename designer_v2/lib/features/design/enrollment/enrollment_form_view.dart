@@ -11,6 +11,7 @@ import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_view.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_logic_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
@@ -105,6 +106,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           routeArgs,
                           context,
                           ref,
+                          study.questionnaire,
                         );
                       },
                       getActionsAt: (viewModel, _) =>
@@ -116,6 +118,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           routeArgs,
                           context,
                           ref,
+                          study.questionnaire,
                         );
                       },
                       sectionDescription:
@@ -266,6 +269,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     ScreenerQuestionFormRouteArgs routeArgs,
     BuildContext context,
     WidgetRef ref,
+    StudyUQuestionnaire questionnaire,
   ) {
     final formViewModel =
         ref.watch(screenerQuestionFormViewModelProvider(routeArgs));
@@ -287,6 +291,14 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
           index: 1,
           formViewBuilder: (formViewModel) =>
               ScreenerQuestionLogicFormView(formViewModel: formViewModel),
+        ),
+        FormSideSheetTab(
+          title: tr.navlink_question_visibility_logic,
+          index: 2,
+          formViewBuilder: (formViewModel) => ConditionalQuestionFormView(
+            formViewModel: formViewModel,
+            allQuestions: questionnaire.questions,
+          ),
         ),
       ],
     );

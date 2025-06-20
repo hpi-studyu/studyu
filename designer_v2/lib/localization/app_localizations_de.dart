@@ -367,7 +367,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get study_settings_publish_study_tooltip =>
-      'Andere Forscher und Kliniker können deine Studie begutachten, sie testen und als Entwurf duplizieren.\nDie zur laufenden oder abgeschlossen Studie gehörigen Teilnehmer- und Ergebnisdaten werden nicht \nfür andere freigegeben (die Unterseiten Rekrutieren, Durchführen und Analysieren deiner Studie bleiben \nunzugänglich).';
+      'Andere Forscher und Kliniker können deine Studie begutachten, sie testen und als Entwurf duplizieren.\nDie zur laufenden oder abgeschlossenen Studie gehörigen Teilnehmer- und Ergebnisdaten werden nicht \nfür andere freigegeben (die Unterseiten Rekrutieren, Durchführen und Analysieren deiner Studie bleiben \nunzugänglich).';
 
   @override
   String get study_settings_publish_study_launch_description =>
@@ -687,6 +687,103 @@ class AppLocalizationsDe extends AppLocalizations {
       'Die Eingabe muss dem angegebenen regulären Ausdruck entsprechen.';
 
   @override
+  String get navlink_question_visibility_logic => 'Sichtbarkeit';
+
+  @override
+  String get form_array_question_visibility_logic_title =>
+      'Sichtbarkeit der Frage';
+
+  @override
+  String get form_array_question_visibility_logic_question_tooltip =>
+      'Für diese Frage sind Bedingungen definiert, die die Sichtbarkeit der Frage steuern.';
+
+  @override
+  String get form_array_question_visibility_logic_description =>
+      'Hier kannst du festlegen, unter welchen Bedingungen die Frage in der StudyU App angezeigt wird. \nDie Logik wird auf die Antwortmöglichkeiten der Frage angewendet, um die Sichtbarkeit zu steuern.';
+
+  @override
+  String get form_array_question_visibility_logic_tooltip =>
+      'Bedingungen basieren auf den Antworten auf andere Fragen in der Studie. Es können nur Fragen verwendet werden, die hinter der aktuellen Frage liegen, um die Sichtbarkeitslogik zu definieren.';
+
+  @override
+  String get form_array_question_visibility_logic_grouping_title =>
+      'Verbinde die Logik mit folgendem Operator';
+
+  @override
+  String get form_array_question_visibility_logic_grouping_and_title => 'UND';
+
+  @override
+  String get form_array_question_visibility_logic_grouping_or_title => 'ODER';
+
+  @override
+  String get from_array_question_visibility_logic_no_conditions =>
+      'Keine Bedingungen definiert';
+
+  @override
+  String get form_array_question_visibility_logic_question_title => 'Frage';
+
+  @override
+  String get form_array_question_visibility_logic_comparator_title =>
+      'Operator';
+
+  @override
+  String get form_array_question_visibility_logic_true => 'Wahr';
+
+  @override
+  String get form_array_question_visibility_logic_false => 'Falsch';
+
+  @override
+  String get form_array_question_visibility_logic_value_title => 'Wert';
+
+  @override
+  String get form_array_question_visibility_logic_add_condition_button =>
+      'Bedingung hinzufügen';
+
+  @override
+  String get form_array_question_visibility_logic_add_condition_disabled_tooltip =>
+      'Keine Fragen verfügbar, um Bedingungen zu definieren. Es können nur Fragen verwendet werden, die hinter dieser Frage liegen.';
+
+  @override
+  String get form_array_question_visibility_logic_is_true => 'ist wahr';
+
+  @override
+  String get form_array_question_visibility_logic_is_false => 'ist falsch';
+
+  @override
+  String get form_array_question_visibility_logic_is => 'ist';
+
+  @override
+  String get form_array_question_visibility_logic_is_not => 'ist nicht';
+
+  @override
+  String get form_array_question_visibility_logic_contains => 'enthält';
+
+  @override
+  String get form_array_question_visibility_logic_does_not_contain =>
+      'enthält nicht';
+
+  @override
+  String get form_array_question_visibility_logic_not => 'NICHT';
+
+  @override
+  String get form_array_question_visibility_logic_always_true => 'immer wahr';
+
+  @override
+  String get form_array_question_visibility_logic_preview_description =>
+      'Zeige diese Frage nur an, wenn die folgenden Bedingungen erfüllt sind:';
+
+  @override
+  String get form_array_question_visibility_logic_unknown_expression =>
+      'Unbekannter Ausdruck';
+
+  @override
+  String get form_array_question_visibility_logic_this_question =>
+      'diese Frage';
+
+  @override
+  String get validation_number_required => 'Die Eingabe muss eine Zahl sein';
+
+  @override
   String get banner_study_readonly_title =>
       'Die Studie kann nicht bearbeitet werden.';
 
@@ -916,14 +1013,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get navlink_screener_question_content => 'Inhalt';
 
   @override
-  String get navlink_screener_question_logic => 'Logik';
+  String get navlink_screener_question_logic => 'Screening';
 
   @override
-  String get form_array_screener_question_logic_title => 'Screening-Logik';
+  String get form_array_screener_question_logic_title => 'Screening-Kriterien';
 
   @override
   String get form_array_screener_question_logic_description =>
-      'Definiere, welche Antworten zur Studienteilnahme berechtigen oder disqualifizieren. Um an der Studie teilnehmen zu können, muss für diese Frage mindestens eine qualifizierende Antwort & keine disqualifizierende Antwort ausgewählt werden.';
+      'Definiere, welche Antworten zur Studienteilnahme berechtigen oder disqualifizieren. Um an der Studie teilnehmen zu können, muss für diese Frage mindestens eine qualifizierende Antwort und keine disqualifizierende Antwort ausgewählt werden.';
 
   @override
   String get form_array_screener_question_logic_tooltip =>
@@ -1971,5 +2068,5 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get under_construction_description =>
-      'Hier wird gerade noch dran gearbeitet, bitte hab ein wenig Geduld & komm denächst wieder!';
+      'Hier wird gerade noch dran gearbeitet, bitte hab ein wenig Geduld und komm denächst wieder!';
 }

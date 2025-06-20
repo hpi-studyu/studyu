@@ -11,12 +11,8 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 /// [FormGroup] ancestor in the widget tree (provided by [ReactiveForm])
 /// updates.
 ///
-/// Use this for presentational widgets that render a form & are controlled by
-/// a [FormViewModel].
-///
-/// For convenience, we directly extend Riverpod's [ConsumerStatefulWidget]
-/// instead of [StatefulWidget] so that [ConsumerStatefulWidget.ref] is
-/// accessible.
+/// Use this for presentational widgets that render a form and are controlled
+/// by a [FormViewModel].
 ///
 /// Note: If rebuilding the whole form view results in poor performance,
 /// consider using [ReactiveFormConsumer] selectively.

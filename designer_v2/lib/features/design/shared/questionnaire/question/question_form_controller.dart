@@ -1,10 +1,14 @@
+import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/conditional_question_properties.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
@@ -20,7 +24,9 @@ import 'package:uuid/uuid.dart';
 
 // TODO: refactor break up into separate classes for each type
 class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
-    implements IListActionProvider<FormControl<dynamic>> {
+    implements
+        IListActionProvider<FormControl<dynamic>>,
+        IConditionalQuestionProperties {
   static const defaultQuestionType = SurveyQuestionType.choice;
 
   QuestionFormViewModel({
@@ -29,6 +35,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     super.validationSet = StudyFormValidationSet.draft,
     Map<FormMode, String Function()>? titles,
   }) : _titles = titles {
+    // Existing initializations
     boolResponseOptionsArray
         .onChanged((control) => onResponseOptionsChanged(control.controls));
     choiceResponseOptionsArray
@@ -58,6 +65,130 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   final FormControl<String> questionTextControl = FormControl();
   final FormControl<String> questionInfoTextControl = FormControl();
 
+  @override
+  String get currentQuestionId => questionIdControl.value!;
+
+  @override
+  late final FormControl<LogicType> logicTypeControl =
+      CustomFormControl<LogicType>(
+    value: LogicType.and,
+    onValueChanged: onLogicTypeChanged,
+  );
+
+  @override
+  final FormArray<ConditionRowFormViewModel> conditionsArray =
+      FormArray<ConditionRowFormViewModel>([]);
+
+  final FormControl<QuestionConditional<dynamic>?> questionConditionalControl =
+      FormControl<QuestionConditional<dynamic>?>();
+  Stream<void> _conditionsValueChangesStream = const Stream<void>.empty();
+  StreamSubscription<void>? _conditionsValueChangesSubscription;
+
+  @override
+  Stream<void> get conditionsValueChanges =>
+      _conditionsValueChangesStream.isBroadcast
+          ? _conditionsValueChangesStream
+          : _conditionsValueChangesStream.asBroadcastStream();
+
+  void _updateConditionsValueChangesStream() {
+    // Cancel previous subscription if any
+    _conditionsValueChangesSubscription?.cancel();
+
+    // Collect all streams from each condition
+    final streams = conditionsArray.controls
+        .map((control) => control.value!.form.valueChanges)
+        .toList();
+    if (streams.isEmpty) {
+      _conditionsValueChangesStream = const Stream<void>.empty();
+    } else {
+      _conditionsValueChangesStream =
+          StreamGroup.merge(streams).asBroadcastStream();
+      // Listen to the broadcast stream and call updateCondition
+      _conditionsValueChangesSubscription =
+          _conditionsValueChangesStream.listen((_) {
+        updateCondition();
+        markFormGroupChanged();
+      });
+    }
+  }
+
+  @override
+  CompositeExpression? get compositeExpression {
+    final List<Expression> currentExpressions = [];
+    for (final control in conditionsArray.controls) {
+      final expression = control.value?.buildExpression();
+      if (expression != null) {
+        currentExpressions.add(expression);
+      }
+    }
+    // print('Composite expressions: $currentExpressions');
+    if (currentExpressions.isEmpty) {
+      return null; // No conditions to form a composite expression
+    }
+    final composite = CompositeExpression(
+      logicType: logicTypeControl.value ?? LogicType.and,
+      expressions: currentExpressions,
+    );
+    /*questionConditionalControl.updateValue(
+      QuestionConditional.withCondition(composite),
+      emitEvent: false,
+    );*/
+    return composite;
+    /*return questionConditionalControl.value?.condition ??
+        CompositeExpression(
+          logicType: LogicType.and,
+          expressions: currentExpressions,
+        );*/
+  }
+
+  void onLogicTypeChanged(LogicType? value) {
+    updateCondition();
+  }
+
+  @override
+  void addCondition({Expression? initialExpression}) {
+    final conditionVm = ConditionRowFormViewModel(
+      currentQuestionId: questionIdControl.value!,
+      initialExpression: initialExpression,
+    );
+    conditionsArray
+        .add(FormControl<ConditionRowFormViewModel>(value: conditionVm));
+    _updateConditionsValueChangesStream();
+    markFormGroupChanged();
+  }
+
+  @override
+  void updateCondition() {
+    if (compositeExpression == null) {
+      questionConditionalControl.updateValue(null);
+    } else {
+      questionConditionalControl.updateValue(
+        QuestionConditional.withCondition(compositeExpression!),
+      );
+    }
+    markFormGroupChanged();
+  }
+
+  @override
+  void removeCondition(int index) {
+    conditionsArray.removeAt(index);
+    _updateConditionsValueChangesStream();
+    markFormGroupChanged();
+  }
+
+  // Initialize from existing data
+  /*void _initializeConditions(QuestionConditional<bool>? initialCondition) {
+    conditionsArray.clear();
+    if (initialCondition != null) {
+      CompositeExpression initialComposite;
+      initialComposite = initialCondition.condition;
+      for (final expression in initialComposite.expressions) {
+        addCondition(allQuestions: , initialExpression: expression);
+      }
+      logicTypeControl.value = initialComposite.logicType;
+    }
+  }*/
+
   QuestionID get questionId => questionIdControl.value!;
 
   SurveyQuestionType get questionType =>
@@ -76,6 +207,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     'questionType': questionTypeControl,
     'questionText': questionTextControl,
     'questionInfoText': questionInfoTextControl,
+    'questionConditionalControl': questionConditionalControl,
+    // - From IConditionalQuestionProperties
+    //'logicType': logicTypeControl,
+    // 'conditionsArray': conditionsArray,
   };
 
   // - Form fields (question type-specific)
@@ -492,6 +627,19 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     questionTypeControl.value = data.questionType;
     questionInfoTextControl.value = data.questionInfoText ?? '';
 
+    // todo this is suboptimal to insert the data from questionConditionalControl into logicTypeControl and conditionsArray
+    questionConditionalControl.value = data.conditional;
+    final compositeExpression = questionConditionalControl.value?.condition;
+    if (compositeExpression != null) {
+      logicTypeControl.value = compositeExpression.logicType;
+      conditionsArray.clear();
+      for (final expression in compositeExpression.expressions) {
+        addCondition(
+          initialExpression: expression,
+        );
+      }
+    }
+
     // Type-specific controls
     switch (data.questionType) {
       case SurveyQuestionType.bool:
@@ -547,22 +695,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
-        );
-      case SurveyQuestionType.image:
-        return ImageQuestionFormData(
-          questionId: questionId,
-          questionText: questionTextControl.value!, // required
-          questionType: questionTypeControl.value!, // required
-          questionInfoText: questionInfoTextControl.value,
-        );
-      case SurveyQuestionType.audio:
-        return AudioQuestionFormData(
-          questionId: questionId,
-          questionText: questionTextControl.value!, // required
-          questionType: questionTypeControl.value!, // required
-          questionInfoText: questionInfoTextControl.value,
-          maxRecordingDurationSeconds:
-              maxRecordingDurationSecondsControl.value!,
+          conditional: questionConditionalControl.value,
         );
       case SurveyQuestionType.choice:
         return ChoiceQuestionFormData(
@@ -572,6 +705,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionType: questionTypeControl.value!,
           // required
           questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
           isMultipleChoice: isMultipleChoiceControl.value!,
           // required
           answerOptions: validAnswerOptions,
@@ -584,6 +718,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionType: questionTypeControl.value!,
           // required
           questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
           minValue: scaleMinValueControl.value!.toDouble(),
           // non-empty formatter
           maxValue: scaleMaxValueControl.value!.toDouble(),
@@ -605,12 +740,29 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
           textLengthRange: [
             freeTextLengthControl.value!.start.toInt(),
             freeTextLengthControl.value!.end.toInt(),
           ], // required
           textType: freeTextTypeControl.value!,
           textTypeExpression: customRegexControl.value,
+        );
+      case SurveyQuestionType.image:
+        return ImageQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+        );
+      case SurveyQuestionType.audio:
+        return AudioQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+          maxRecordingDurationSeconds:
+              maxRecordingDurationSecondsControl.value!,
         );
     }
   }

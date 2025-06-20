@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/styling_information.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_controls_view.dart';
@@ -174,6 +176,20 @@ class _MeasurementSurveyFormViewState
                       tr.form_array_measurement_survey_questions_new,
                   rowTitle: (viewModel) =>
                       viewModel.formData?.questionText ?? '',
+                  rowSuffix: (context, viewModel, rowIdx) {
+                    if (viewModel.formData?.conditional != null) {
+                      return Tooltip(
+                        message: tr
+                            .form_array_question_visibility_logic_question_tooltip,
+                        child: const Icon(
+                          Icons.rule,
+                          size: 16,
+                          color: Colors.grey,
+                        ),
+                      );
+                    }
+                    return const SizedBox();
+                  },
                   sectionTitle: tr.form_array_measurement_survey_questions,
                   emptyIcon: Icons.content_paste_off_rounded,
                   emptyTitle:
@@ -244,13 +260,48 @@ class _MeasurementSurveyFormViewState
     BuildContext context,
     WidgetRef ref,
   ) {
+    // Get questions only from the current survey
+    /* final currentSurveyQuestions = widget.formViewModel.study.observations
+        .whereType<QuestionnaireTask>()
+        .where((obs) => obs.id == widget.formViewModel.measurementId)
+        .expand((obs) => obs.questions.questions)
+        .toList();*/
+
+    // Add current unsaved questions from the form
+    final currentUnsavedQuestions = widget
+        .formViewModel.questionFormViewModels.formViewModels
+        .map((vm) => vm.buildFormData().toQuestion())
+        .toList();
+
+    // Combine both lists
+    final List<Question> allAvailableQuestions = [
+      // ...currentSurveyQuestions,
+      ...currentUnsavedQuestions,
+    ];
+
     final surveyQuestionFormViewModel =
         ref.watch(surveyQuestionFormViewModelProvider(routeArgs));
+
     showFormSideSheet<QuestionFormViewModel>(
       context: context,
       formViewModel: surveyQuestionFormViewModel,
-      formViewBuilder: (formViewModel) =>
-          SurveyQuestionFormView(formViewModel: formViewModel),
+      tabs: <FormSideSheetTab<QuestionFormViewModel>>[
+        FormSideSheetTab(
+          title: tr.navlink_screener_question_content,
+          index: 0,
+          formViewBuilder: (formViewModel) => SurveyQuestionFormView(
+            formViewModel: formViewModel,
+          ),
+        ),
+        FormSideSheetTab(
+          title: tr.navlink_question_visibility_logic,
+          index: 1,
+          formViewBuilder: (formViewModel) => ConditionalQuestionFormView(
+            formViewModel: formViewModel,
+            allQuestions: allAvailableQuestions,
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1298,6 +1298,175 @@ abstract class AppLocalizations {
   /// **'The input must match the specified regular expression.'**
   String get free_text_question_type_custom_explanation;
 
+  /// No description provided for @navlink_question_visibility_logic.
+  ///
+  /// In en, this message translates to:
+  /// **'Visibility'**
+  String get navlink_question_visibility_logic;
+
+  /// No description provided for @form_array_question_visibility_logic_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Visibility Logic'**
+  String get form_array_question_visibility_logic_title;
+
+  /// No description provided for @form_array_question_visibility_logic_question_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'This question has visibility logic defined. It will only be shown to the participant if the conditions are met.'**
+  String get form_array_question_visibility_logic_question_tooltip;
+
+  /// No description provided for @form_array_question_visibility_logic_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Define the visibility logic for this question. The question will only be shown to the participant if the conditions are met.'**
+  String get form_array_question_visibility_logic_description;
+
+  /// No description provided for @form_array_question_visibility_logic_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Conditions are be based on the responses to other questions in the study. Only questions that follow the current question can be used in the visibility logic.'**
+  String get form_array_question_visibility_logic_tooltip;
+
+  /// No description provided for @form_array_question_visibility_logic_grouping_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Combine conditions with'**
+  String get form_array_question_visibility_logic_grouping_title;
+
+  /// No description provided for @form_array_question_visibility_logic_grouping_and_title.
+  ///
+  /// In en, this message translates to:
+  /// **'AND'**
+  String get form_array_question_visibility_logic_grouping_and_title;
+
+  /// No description provided for @form_array_question_visibility_logic_grouping_or_title.
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get form_array_question_visibility_logic_grouping_or_title;
+
+  /// No description provided for @from_array_question_visibility_logic_no_conditions.
+  ///
+  /// In en, this message translates to:
+  /// **'No conditions defined yet'**
+  String get from_array_question_visibility_logic_no_conditions;
+
+  /// No description provided for @form_array_question_visibility_logic_question_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Question'**
+  String get form_array_question_visibility_logic_question_title;
+
+  /// No description provided for @form_array_question_visibility_logic_comparator_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Comparator'**
+  String get form_array_question_visibility_logic_comparator_title;
+
+  /// No description provided for @form_array_question_visibility_logic_true.
+  ///
+  /// In en, this message translates to:
+  /// **'True'**
+  String get form_array_question_visibility_logic_true;
+
+  /// No description provided for @form_array_question_visibility_logic_false.
+  ///
+  /// In en, this message translates to:
+  /// **'False'**
+  String get form_array_question_visibility_logic_false;
+
+  /// No description provided for @form_array_question_visibility_logic_value_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get form_array_question_visibility_logic_value_title;
+
+  /// No description provided for @form_array_question_visibility_logic_add_condition_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Add condition'**
+  String get form_array_question_visibility_logic_add_condition_button;
+
+  /// No description provided for @form_array_question_visibility_logic_add_condition_disabled_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'No questions available to add conditions for. Only questions following the current question can be used in the visibility logic.'**
+  String
+      get form_array_question_visibility_logic_add_condition_disabled_tooltip;
+
+  /// No description provided for @form_array_question_visibility_logic_is_true.
+  ///
+  /// In en, this message translates to:
+  /// **'is true'**
+  String get form_array_question_visibility_logic_is_true;
+
+  /// No description provided for @form_array_question_visibility_logic_is_false.
+  ///
+  /// In en, this message translates to:
+  /// **'is false'**
+  String get form_array_question_visibility_logic_is_false;
+
+  /// No description provided for @form_array_question_visibility_logic_is.
+  ///
+  /// In en, this message translates to:
+  /// **'is'**
+  String get form_array_question_visibility_logic_is;
+
+  /// No description provided for @form_array_question_visibility_logic_is_not.
+  ///
+  /// In en, this message translates to:
+  /// **'is not'**
+  String get form_array_question_visibility_logic_is_not;
+
+  /// No description provided for @form_array_question_visibility_logic_contains.
+  ///
+  /// In en, this message translates to:
+  /// **'contains'**
+  String get form_array_question_visibility_logic_contains;
+
+  /// No description provided for @form_array_question_visibility_logic_does_not_contain.
+  ///
+  /// In en, this message translates to:
+  /// **'does not contain'**
+  String get form_array_question_visibility_logic_does_not_contain;
+
+  /// No description provided for @form_array_question_visibility_logic_not.
+  ///
+  /// In en, this message translates to:
+  /// **'NOT'**
+  String get form_array_question_visibility_logic_not;
+
+  /// No description provided for @form_array_question_visibility_logic_always_true.
+  ///
+  /// In en, this message translates to:
+  /// **'always true'**
+  String get form_array_question_visibility_logic_always_true;
+
+  /// No description provided for @form_array_question_visibility_logic_preview_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Show this question if the following conditions are met:'**
+  String get form_array_question_visibility_logic_preview_description;
+
+  /// No description provided for @form_array_question_visibility_logic_unknown_expression.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Expression'**
+  String get form_array_question_visibility_logic_unknown_expression;
+
+  /// No description provided for @form_array_question_visibility_logic_this_question.
+  ///
+  /// In en, this message translates to:
+  /// **'this question'**
+  String get form_array_question_visibility_logic_this_question;
+
+  /// No description provided for @validation_number_required.
+  ///
+  /// In en, this message translates to:
+  /// **'The value must be a number'**
+  String get validation_number_required;
+
   /// No description provided for @banner_study_readonly_title.
   ///
   /// In en, this message translates to:
@@ -1691,7 +1860,7 @@ abstract class AppLocalizations {
   /// No description provided for @navlink_screener_question_logic.
   ///
   /// In en, this message translates to:
-  /// **'Logic'**
+  /// **'Screening'**
   String get navlink_screener_question_logic;
 
   /// No description provided for @form_array_screener_question_logic_title.

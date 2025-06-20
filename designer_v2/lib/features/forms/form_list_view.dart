@@ -55,7 +55,6 @@ class FormListView<T> extends StatelessWidget {
     final theme = Theme.of(context);
     final hasEmptyWidget =
         emptyIcon != null || emptyTitle != null || emptyDescription != null;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

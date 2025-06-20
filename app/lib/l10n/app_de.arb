@@ -144,6 +144,7 @@
 
   "current_report": "Aktueller Bericht",
   "report_history": "Reportverlauf",
+  "no_reports_found": "Keine Berichte gefunden",
   "current_power_level": "Aktueller Status",
   "not_enough_data": "Nicht genügend Daten",
   "barely_enough_data": "Kaum genügend Daten",

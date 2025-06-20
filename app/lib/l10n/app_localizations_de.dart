@@ -408,6 +408,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get report_history => 'Reportverlauf';
 
   @override
+  String get no_reports_found => 'Keine Berichte gefunden';
+
+  @override
   String get current_power_level => 'Aktueller Status';
 
   @override
