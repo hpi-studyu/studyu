@@ -221,9 +221,13 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   late final FormArray<String> choiceResponseOptionsArray = FormArray(
     [for (int i = 0; i < customOptionsInitial; i++) FormControl(value: "")],
   );
+  final List<String> _choiceIds = [];
+  final Map<String, String> _choiceTextToIdMap = {};
   final int customOptionsMin = 2;
   final int customOptionsMax = 10;
   final int customOptionsInitial = 2;
+
+  List<String> get choiceIds => _choiceIds;
 
   FormArray get answerOptionsArray => {
         SurveyQuestionType.bool: boolResponseOptionsArray,
@@ -652,6 +656,16 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       case SurveyQuestionType.choice:
         isMultipleChoiceControl.value =
             (data as ChoiceQuestionFormData).isMultipleChoice;
+        _choiceIds.clear();
+        _choiceIds.addAll(data.choiceIds);
+
+        _choiceTextToIdMap.clear();
+        final options = data.answerOptions;
+        final ids = data.choiceIds;
+        for (int i = 0; i < options.length && i < ids.length; i++) {
+          _choiceTextToIdMap[options[i]] = ids[i];
+        }
+
         // Unfortunately needed because of how [FormArray.updateValue] is implemented
         // Note: `formArray.value = []` does not remove any controls!
         answerOptionsArray.clear();
@@ -698,17 +712,50 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           conditional: questionConditionalControl.value,
         );
       case SurveyQuestionType.choice:
+        final validOptions = validAnswerOptions;
+        final List<String> orderedIds = [];
+
+        final Map<String, List<String>> textToIdsMap = {};
+
+        for (int i = 0; i < validOptions.length; i++) {
+          final option = validOptions[i];
+          if (!textToIdsMap.containsKey(option)) {
+            textToIdsMap[option] = [];
+          }
+
+          if (i < _choiceIds.length) {
+            textToIdsMap[option]!.add(_choiceIds[i]);
+          } else {
+            textToIdsMap[option]!.add(const Uuid().v4());
+          }
+        }
+
+        for (final option in validOptions) {
+          if (textToIdsMap[option]!.isNotEmpty) {
+            orderedIds.add(textToIdsMap[option]!.removeAt(0));
+          } else {
+            orderedIds.add(const Uuid().v4());
+          }
+        }
+
+        _choiceIds.clear();
+        _choiceIds.addAll(orderedIds);
+
+        _choiceTextToIdMap.clear();
+        for (int i = 0; i < validOptions.length; i++) {
+          final key = "${validOptions[i]}_$i";
+          _choiceTextToIdMap[key] = orderedIds[i];
+        }
+
         return ChoiceQuestionFormData(
           questionId: questionId,
-          questionText: questionTextControl.value!,
-          // required
-          questionType: questionTypeControl.value!,
-          // required
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
           conditional: questionConditionalControl.value,
-          isMultipleChoice: isMultipleChoiceControl.value!,
-          // required
-          answerOptions: validAnswerOptions,
+          isMultipleChoice: isMultipleChoiceControl.value!, // required
+          answerOptions: validOptions,
+          choiceIds: orderedIds,
         );
       case SurveyQuestionType.scale:
         return ScaleQuestionFormData(
@@ -798,6 +845,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   @override
   void onNewItem() {
     answerOptionsArray.add(FormControl<String>());
+
+    if (questionType == SurveyQuestionType.choice) {
+      _choiceIds.add(const Uuid().v4());
+    }
   }
 
   @override

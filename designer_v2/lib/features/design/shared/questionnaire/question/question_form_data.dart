@@ -170,10 +170,12 @@ class ChoiceQuestionFormData extends QuestionFormData {
     super.conditional,
     this.isMultipleChoice = false,
     required this.answerOptions,
+    required this.choiceIds,
   });
 
   final bool isMultipleChoice;
   final List<String> answerOptions;
+  final List<String> choiceIds;
 
   @override
   List<String> get responseOptions => answerOptions;
@@ -189,6 +191,7 @@ class ChoiceQuestionFormData extends QuestionFormData {
       questionInfoText: question.rationale ?? '',
       isMultipleChoice: question.multiple,
       answerOptions: question.choices.map((choice) => choice.text).toList(),
+      choiceIds: question.choices.map((choice) => choice.id).toList(),
       conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
@@ -202,7 +205,11 @@ class ChoiceQuestionFormData extends QuestionFormData {
     question.prompt = questionText;
     question.rationale = questionInfoText;
     question.multiple = isMultipleChoice;
-    question.choices = answerOptions.map(_buildChoiceForValue).toList();
+    question.choices = List.generate(answerOptions.length, (index) {
+      final choice = Choice(choiceIds[index]);
+      choice.text = answerOptions[index];
+      return choice;
+    });
     question.conditional = conditional == null
         ? null
         : QuestionConditional<List<String>>.withCondition(
@@ -222,15 +229,15 @@ class ChoiceQuestionFormData extends QuestionFormData {
       questionInfoText: questionInfoText,
       isMultipleChoice: isMultipleChoice,
       answerOptions: [...answerOptions],
+      choiceIds: [...choiceIds],
       conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;
   }
 
-  Choice _buildChoiceForValue(String value) {
-    final choiceId = const Uuid().v4();
-    final choice = Choice(choiceId);
+  Choice _buildChoiceForValue(String value, int index) {
+    final choice = Choice(choiceIds[index]);
     choice.text = value;
     return choice;
   }
@@ -238,7 +245,13 @@ class ChoiceQuestionFormData extends QuestionFormData {
   @override
   Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as ChoiceQuestion;
-    final choice = _buildChoiceForValue(responseOption as String);
+    final index = answerOptions.indexOf(responseOption as String);
+    if (index == -1) {
+      final choice = Choice.withId();
+      choice.text = responseOption;
+      return question.constructAnswer([choice]);
+    }
+    final choice = _buildChoiceForValue(responseOption, index);
     return question.constructAnswer([choice]);
   }
 }
