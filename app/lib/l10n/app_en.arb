@@ -91,6 +91,16 @@
   "profile": "Profile",
   "help": "Help",
   "contact": "Contact",
+  "contact_support": "Contact Support",
+  "support_email_body": "Hello,\n\nI am experiencing a loading error in the StudyU app. My subject ID is: {subjectId}\n\nPlease assist me with this issue.\n\nThank you.",
+  "@support_email_body": {
+    "description": "Body of the support email, includes the subject ID",
+    "placeholders": {
+      "subjectId": {
+        "type": "String"
+      }
+    }
+  },
   "about": "About",
   "settings": "Settings",
   "yes": "yes",

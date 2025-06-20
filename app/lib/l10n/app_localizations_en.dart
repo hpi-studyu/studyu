@@ -274,6 +274,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get contact => 'Contact';
 
   @override
+  String get contact_support => 'Contact Support';
+
+  @override
+  String support_email_body(String subjectId) {
+    return 'Hello,\n\nI am experiencing a loading error in the StudyU app. My subject ID is: $subjectId\n\nPlease assist me with this issue.\n\nThank you.';
+  }
+
+  @override
   String get about => 'About';
 
   @override

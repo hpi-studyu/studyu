@@ -572,6 +572,18 @@ abstract class AppLocalizations {
   /// **'Contact'**
   String get contact;
 
+  /// No description provided for @contact_support.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Support'**
+  String get contact_support;
+
+  /// Body of the support email, includes the subject ID
+  ///
+  /// In en, this message translates to:
+  /// **'Hello,\n\nI am experiencing a loading error in the StudyU app. My subject ID is: {subjectId}\n\nPlease assist me with this issue.\n\nThank you.'**
+  String support_email_body(String subjectId);
+
   /// No description provided for @about.
   ///
   /// In en, this message translates to:

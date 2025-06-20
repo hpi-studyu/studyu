@@ -276,6 +276,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get contact => 'Kontakt';
 
   @override
+  String get contact_support => 'Support kontaktieren';
+
+  @override
+  String support_email_body(String subjectId) {
+    return 'Hallo,\n\nich habe einen Ladefehler in der StudyU App. Meine Subject-ID ist: $subjectId\n\nBitte helfen Sie mir bei diesem Problem.\n\nVielen Dank.';
+  }
+
+  @override
   String get about => 'Über StudyU';
 
   @override

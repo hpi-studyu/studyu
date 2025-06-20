@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -8,13 +6,13 @@ import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/app_onboarding/preview.dart'
     as study_preview;
-import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
@@ -59,7 +57,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       StudyULogger.warning(
         "No subject found for ID: $selectedSubjectId.",
       );
-      await _showSupportOrDeleteDialog();
+      await _showSupportOrDeleteDialog(selectedSubjectId);
     }
   }
 
@@ -99,27 +97,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
         StudyULogger.warning(
           "Could not login and retrieve the study subject: $exception",
         );
-        if (exception is SocketException) {
-          subject = await Cache.loadSubject();
-          StudyULogger.info("Offline mode with cached subject: $subject");
-        } else {
-          // TODO further analyze this. How to recreate:
-          // 1. Participate in a study and wait some time until playstore uploads
-          // a backup of your current subject
-          // 2. Leave the study via the menu to delete all remote data
-          // 3. Uninstall the app and reinstall
-          // 4. Open the app but do not join a study
-          // 5. Restart the app. Either only this error shows up, worst case is
-          // app hangs and is unresponsive
-          StudyULogger.fatal('Could not login and retrieve the study subject. '
-              'One reason for this might be that the study subject is no '
-              'longer available and only resides in app backup, or the study '
-              'subject is corrupted.');
-          // throw Exception("Remote subject not found");
-          // Ask the user if they want to delete all secure storage data or try to re-read
-          // show popup dialog to the user
-          // if (!mounted) return null;
-          await _showSupportOrDeleteDialog();
+        StudyULogger.fatal('Could not login and retrieve the study subject.');
+        // Try to reload the subject from cache
+        try {
+          final subject = await Cache.loadSubject();
+          StudyULogger.info("Loaded subject from cache: $subject");
+        } catch (e) {
+          StudyULogger.warning(
+            "No subject found in cache",
+          );
         }
       }
     }
@@ -258,7 +244,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
-  Future<void> _showSupportOrDeleteDialog() async {
+  Future<void> _showSupportOrDeleteDialog([String? selectedSubjectId]) async {
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -271,8 +257,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              // todo translate
-              child: const Text('Contact Support'),
+              child: Text(AppLocalizations.of(context)!.contact_support),
             ),
             TextButton(
               style: TextButton.styleFrom(
@@ -315,47 +300,35 @@ class _LoadingScreenState extends State<LoadingScreen> {
       if (deleteResult == true) {
         // Delete all secure storage data
         StudyULogger.info("Deleting all secure storage data");
-        if (!mounted) return null;
+        if (!mounted) return;
         await cancelNotifications(context);
         await SecureStorage.deleteAll();
         StudyULogger.info("Secure storage data deleted");
       }
     }
     StudyULogger.info("User chose not to delete secure storage data.");
-    // Try to reload the subject from cache
-    try {
-      // If we have a subject, we can continue
-      final subject = await Cache.loadSubject();
-      StudyULogger.info("Loaded subject from cache: $subject");
-    } catch (e) {
-      // todo can user delete their study subject accidentally by going to welcome screen from contact screen?
-      StudyULogger.warning(
-        "No subject found in cache, showing support screen",
-      );
-      _showSupportDialog();
-    }
+    if (!mounted) return;
+    await _contactSupport(selectedSubjectId);
   }
 
-  void _showSupportDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.contact),
-          content: RetryFutureBuilder<Contact>(
-            tryFunction: AppConfig.getAppContact,
-            successBuilder:
-                (BuildContext context, Contact? appSupportContact) =>
-                    ContactWidget(
-              contact: appSupportContact,
-              title: AppLocalizations.of(context)!.app_support,
-              subtitle: AppLocalizations.of(context)!.app_support_text,
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-        );
+  Future<void> _contactSupport([String? selectedSubjectId]) async {
+    if (!mounted) return;
+    StudyULogger.info(
+        "User chose to contact support with ID: $selectedSubjectId");
+
+    const emailSubject = 'StudyU Support Request - Loading Error';
+    final emailBody = AppLocalizations.of(context)!
+        .support_email_body(selectedSubjectId ?? '');
+    final appContact = await AppConfig.getAppContact();
+    final emailUri = Uri(
+      scheme: 'mailto',
+      path: appContact.email,
+      queryParameters: {
+        'subject': emailSubject,
+        'body': emailBody,
       },
     );
+    await launchUrl(emailUri);
   }
 
   @override

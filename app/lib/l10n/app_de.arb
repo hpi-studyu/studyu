@@ -93,6 +93,16 @@
   "help": "Hilfe",
   "about": "Über StudyU",
   "contact": "Kontakt",
+  "contact_support": "Support kontaktieren",
+  "support_email_body": "Hallo,\n\nich habe einen Ladefehler in der StudyU App. Meine Subject-ID ist: {subjectId}\n\nBitte helfen Sie mir bei diesem Problem.\n\nVielen Dank.",
+  "@support_email_body": {
+    "description": "Text für Support-E-Mail, enthält die Subject-ID",
+    "placeholders": {
+      "subjectId": {
+        "type": "String"
+      }
+    }
+  },
   "settings": "Einstellungen",
 
   "survey": "Umfrage",
