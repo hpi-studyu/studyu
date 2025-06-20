@@ -320,15 +320,24 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final emailBody = AppLocalizations.of(context)!
         .support_email_body(selectedSubjectId ?? '');
     final appContact = await AppConfig.getAppContact();
-    final emailUri = Uri(
-      scheme: 'mailto',
-      path: appContact.email,
-      queryParameters: {
-        'subject': emailSubject,
-        'body': emailBody,
+    final uriString =
+        'mailto:${appContact.email}?subject=${Uri.encodeComponent(emailSubject)}&body=${Uri.encodeComponent(emailBody)}';
+    final emailUri = Uri.parse(uriString);
+    await launchUrl(emailUri);
+
+    // Show non dismissible dialog to inform the user that support has been contacted
+    if (!mounted) return;
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.support_email_sent),
+          content: Text(
+              AppLocalizations.of(context)!.support_email_sent_description),
+        );
       },
     );
-    await launchUrl(emailUri);
   }
 
   @override

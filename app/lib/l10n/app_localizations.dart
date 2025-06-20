@@ -1429,6 +1429,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Maximum'**
   String get maximum;
+
+  /// No description provided for @support_email_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Support Email Sent'**
+  String get support_email_sent;
+
+  /// No description provided for @support_email_sent_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply. If you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.'**
+  String get support_email_sent_description;
 }
 
 class _AppLocalizationsDelegate

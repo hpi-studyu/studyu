@@ -733,4 +733,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get maximum => 'Maximum';
+
+  @override
+  String get support_email_sent => 'Support Email Sent';
+
+  @override
+  String get support_email_sent_description =>
+      'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply. If you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.';
 }
