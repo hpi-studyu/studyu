@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_menu.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
@@ -86,7 +87,6 @@ List<Widget> buildChoiceOptionRow(
   AbstractControl formControl,
 ) {
   final theme = Theme.of(context);
-
   return [
     Center(
       child: Icon(
@@ -95,11 +95,28 @@ List<Widget> buildChoiceOptionRow(
         size: 12.0,
       ),
     ),
-    ReactiveTextField(
-      formControl: formControl as FormControl<dynamic>,
+    ReactiveTextField<Choice>(
+      formControl: formControl as FormControl<Choice>,
+      valueAccessor: ChoiceValueAccessor(formControl),
       decoration: InputDecoration(
         hintText: tr.form_array_response_options_choice_hint,
       ),
     ),
   ];
+}
+
+class ChoiceValueAccessor extends ControlValueAccessor<Choice, String> {
+  final FormControl<Choice>? _control;
+
+  ChoiceValueAccessor([this._control]);
+
+  @override
+  String? modelToViewValue(Choice? modelValue) {
+    return modelValue?.text;
+  }
+
+  @override
+  Choice? viewToModelValue(String? viewValue) {
+    return Choice.withText(id: _control?.value?.id, text: viewValue ?? '');
+  }
 }

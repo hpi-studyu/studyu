@@ -218,8 +218,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   // Multiple Choice
   final FormControl<bool> isMultipleChoiceControl =
       FormControl(validators: [Validators.required], value: false);
-  late final FormArray<String> choiceResponseOptionsArray = FormArray(
-    [for (int i = 0; i < customOptionsInitial; i++) FormControl(value: "")],
+  late final FormArray<Choice> choiceResponseOptionsArray = FormArray(
+    [
+      for (int i = 0; i < customOptionsInitial; i++)
+        FormControl(value: Choice.withId())
+    ],
   );
   final int customOptionsMin = 2;
   final int customOptionsMax = 10;
@@ -237,11 +240,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   List<AbstractControl> get answerOptionsControls =>
       answerOptionsArray.controls;
 
-  List<String> get validAnswerOptions {
-    final List<String> options = [];
+  List<Choice> get validAnswerOptions {
+    final List<Choice> options = [];
     for (final optionValue in answerOptionsArray.value ?? []) {
       if (optionValue != null) {
-        options.add(optionValue as String);
+        options.add(optionValue as Choice);
       }
     }
     return options;
@@ -656,6 +659,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         // Note: `formArray.value = []` does not remove any controls!
         answerOptionsArray.clear();
         answerOptionsArray.value = data.answerOptions;
+      /*for (final option in data.answerOptions) {
+          answerOptionsArray.add(FormControl<Choice>(value: option));
+        }*/
       case SurveyQuestionType.scale:
         scaleMinValueControl.value =
             (data as ScaleQuestionFormData).minValue.toInt();
