@@ -95,13 +95,21 @@ List<Widget> buildChoiceOptionRow(
         size: 12.0,
       ),
     ),
-    ReactiveTextField<Choice>(
-      formControl: formControl as FormControl<Choice>,
-      valueAccessor: ChoiceValueAccessor(formControl),
-      decoration: InputDecoration(
-        hintText: tr.form_array_response_options_choice_hint,
+    if (formControl is FormControl<Choice>)
+      ReactiveTextField<Choice>(
+        formControl: formControl,
+        valueAccessor: ChoiceValueAccessor(formControl),
+        decoration: InputDecoration(
+          hintText: tr.form_array_response_options_choice_hint,
+        ),
+      )
+    else
+      ReactiveTextField<String>(
+        formControl: formControl as FormControl<String>,
+        decoration: InputDecoration(
+          hintText: tr.form_array_response_options_choice_hint,
+        ),
       ),
-    ),
   ];
 }
 
