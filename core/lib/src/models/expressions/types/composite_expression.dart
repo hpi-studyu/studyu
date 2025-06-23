@@ -9,7 +9,10 @@ enum LogicType {
   @JsonValue('and')
   and,
   @JsonValue('or')
-  or,
+  or;
+
+  String toJson() => name;
+  static LogicType fromJson(String json) => values.byName(json);
 }
 
 @JsonSerializable()
