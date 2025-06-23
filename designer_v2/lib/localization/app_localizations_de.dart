@@ -466,7 +466,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get question_type_free_text => 'Freitext';
 
   @override
-  String get question_type_pain => 'Body Pain';
+  String get question_type_pain => 'Pain Tracker';
 
   @override
   String get question_type_pain_description =>
@@ -511,7 +511,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get form_array_response_options_bool_no => 'No';
 
   @override
-  String get form_field_response_pain => 'Body Pain';
+  String get form_field_response_pain => 'Pain Tracker';
 
   @override
   String get form_field_response_image => 'Bild';

@@ -935,7 +935,7 @@ abstract class AppLocalizations {
   /// No description provided for @question_type_pain.
   ///
   /// In en, this message translates to:
-  /// **'Body Pain'**
+  /// **'Pain Tracker'**
   String get question_type_pain;
 
   /// No description provided for @question_type_pain_description.
@@ -1019,7 +1019,7 @@ abstract class AppLocalizations {
   /// No description provided for @form_field_response_pain.
   ///
   /// In en, this message translates to:
-  /// **'Body Pain'**
+  /// **'Pain Tracker'**
   String get form_field_response_pain;
 
   /// No description provided for @form_field_response_image.
