@@ -20,9 +20,9 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
     Expression? initialExpression,
   }) {
     if (initialExpression != null) {
-      questionIdControl.value = _extractQuestionId(initialExpression);
-      comparatorControl.value = _extractComparator(initialExpression);
-      valueControl.value = _extractValue(initialExpression);
+      questionIdControl.value = extractQuestionId(initialExpression);
+      comparatorControl.value = extractComparator(initialExpression);
+      valueControl.value = extractValue(initialExpression);
     }
 
     // Listen for question selection changes
@@ -107,7 +107,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
   }
 
   // --- Extract initial values from Expression ---
-  static String? _extractQuestionId(Expression? expression) {
+  String? extractQuestionId(Expression? expression) {
     if (expression is ValueExpression) {
       return expression.target;
     } else if (expression is NotExpression &&
@@ -117,7 +117,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
     return null;
   }
 
-  static dynamic _extractComparator(Expression? expression) {
+  dynamic extractComparator(Expression? expression) {
     if (expression is NumericExpression) {
       return expression.comparator;
     } else if (expression is TextExpression) {
@@ -136,7 +136,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
     return null;
   }
 
-  static dynamic _extractValue(Expression? expression) {
+  dynamic extractValue(Expression? expression) {
     if (expression is ValueExpression) {
       if (expression is NumericExpression) {
         // Always store as String for scale to avoid type error in TextField
@@ -212,13 +212,11 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
 
   @override
   ConditionRowFormData buildFormData() {
-    throw UnimplementedError();
-    /*print("Building form data from controls");
     return ConditionRowFormData(
       questionId: questionIdControl.value,
       comparator: comparatorControl.value,
       value: valueControl.value,
-    );*/
+    );
   }
 
   @override
@@ -226,10 +224,21 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
 
   @override
   void setControlsFrom(ConditionRowFormData data) {
-    throw UnimplementedError();
-    /*print("Setting controls from data: $data");
     questionIdControl.value = data.questionId;
     comparatorControl.value = data.comparator;
-    valueControl.value = data.value;*/
+    valueControl.value = data.value;
+
+    // Re-run question selection logic
+    final questionId = questionIdControl.value;
+    if (questionId != null) {
+      final question =
+          availableQuestions.firstWhereOrNull((q) => q.id == questionId);
+      if (question?.type == BooleanQuestion.questionType) {
+        comparatorControl.value = 'is';
+        comparatorControl.markAsDisabled();
+      } else {
+        comparatorControl.markAsEnabled();
+      }
+    }
   }
 }

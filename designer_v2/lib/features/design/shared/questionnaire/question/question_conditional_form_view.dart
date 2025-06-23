@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -109,11 +110,20 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
         return Column(
           children: List.generate(
             formArray.controls.length,
-            (index) => KeyedSubtree(
-              key: ValueKey(formArray.controls[index]),
-              child: _buildSingleConditionRow(
-                  context, formArray.controls[index].value!, index),
-            ),
+            (index) {
+              final control = formArray.controls[index]
+                  as FormControl<ConditionRowFormData>;
+              // Create a temporary view model for UI purposes
+              final conditionVm = ConditionRowFormViewModel(
+                currentQuestionId: formViewModel.currentQuestionId,
+              );
+              conditionVm.setControlsFrom(control.value!);
+
+              return KeyedSubtree(
+                key: ValueKey(control),
+                child: _buildSingleConditionRow(context, conditionVm, index),
+              );
+            },
           ),
         );
       },
