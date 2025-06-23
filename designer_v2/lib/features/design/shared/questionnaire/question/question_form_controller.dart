@@ -553,7 +553,6 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     questionTypeControl.value = data.questionType;
     questionInfoTextControl.value = data.questionInfoText ?? '';
 
-    // todo this is suboptimal to insert the data from questionConditionalControl into logicTypeControl and conditionsArray
     questionConditionalControl.value = data.conditional;
     conditionalProperties
         .setControlsFrom(null); // Will read from questionConditionalControl

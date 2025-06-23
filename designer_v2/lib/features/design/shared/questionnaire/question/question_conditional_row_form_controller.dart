@@ -30,7 +30,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
       if (questionId != null) {
         final question =
             availableQuestions.firstWhereOrNull((q) => q.id == questionId);
-        if (question?.type == 'boolean') {
+        if (question?.type == BooleanQuestion.questionType) {
           // Automatically set 'is' comparator for boolean questions and disable the control
           comparatorControl.value = 'is';
           comparatorControl.markAsDisabled();
@@ -59,17 +59,17 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
     final q = selectedQuestion;
     if (q == null) return [];
     switch (q.type) {
-      case 'boolean':
+      case BooleanQuestion.questionType:
         return [
           FormControlOption('is', tr.form_array_question_visibility_logic_is),
         ];
-      case 'choice':
+      case ChoiceQuestion.questionType:
         return [
           FormControlOption('=', tr.form_array_question_visibility_logic_is),
           FormControlOption(
               '!=', tr.form_array_question_visibility_logic_is_not),
         ];
-      case 'scale':
+      case ScaleQuestion.questionType:
         return [
           const FormControlOption(NumericComparator.equal, '='),
           const FormControlOption(NumericComparator.notEqual, '≠'),
@@ -78,7 +78,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
           const FormControlOption(NumericComparator.greaterThanOrEqual, '≥'),
           const FormControlOption(NumericComparator.lessThanOrEqual, '≤'),
         ];
-      case 'freeText':
+      case FreeTextQuestion.questionType:
         return [
           FormControlOption(
               TextComparator.equal, tr.form_array_question_visibility_logic_is),
@@ -96,7 +96,7 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
 
   // --- Get available values for a 'choice' question ---
   List<FormControlOption<dynamic>> get availableChoiceValues {
-    if (selectedQuestion?.type == 'choice') {
+    if (selectedQuestion?.type == ChoiceQuestion.questionType) {
       final choiceQuestion = selectedQuestion as ChoiceQuestion?;
       return choiceQuestion?.choices
               .map((choice) => FormControlOption(choice.id, choice.text))
@@ -172,13 +172,13 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
 
     Expression? baseExpression;
     switch (selectedQ.type) {
-      case 'boolean':
+      case BooleanQuestion.questionType:
         baseExpression = BooleanExpression()..target = questionId;
         if (value == false) {
           return NotExpression()..expression = baseExpression;
         }
         return baseExpression;
-      case 'choice':
+      case ChoiceQuestion.questionType:
         if (value == null) return null;
         baseExpression = ChoiceExpression()
           ..target = questionId
@@ -187,14 +187,14 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
           return NotExpression()..expression = baseExpression;
         }
         return baseExpression;
-      case 'scale':
+      case ScaleQuestion.questionType:
         if (value is String) {
           value = num.tryParse(value);
         }
         if (comparator is! NumericComparator || value is! num) return null;
         return NumericExpression(comparator: comparator, value: value)
           ..target = questionId;
-      case 'freeText':
+      case FreeTextQuestion.questionType:
         if (comparator is! TextComparator || value == null) return null;
         return TextExpression(comparator: comparator, value: value as String)
           ..target = questionId;

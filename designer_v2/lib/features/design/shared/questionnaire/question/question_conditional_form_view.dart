@@ -32,6 +32,8 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
   Widget build(BuildContext context, FormGroup form) {
     final theme = Theme.of(context);
     return ReactiveFormConsumer(builder: (context, form, _) {
+      print(
+          'Building ConditionalQuestionFormView with ${formViewModel.compositeExpression?.toJson()}');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

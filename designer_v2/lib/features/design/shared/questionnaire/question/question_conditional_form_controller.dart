@@ -9,7 +9,7 @@ import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 abstract class IConditionalQuestionProperties {
   String get currentQuestionId;
   CompositeExpression? get compositeExpression;
-  bool get isReadonly; // Added this line
+  bool get isReadonly;
 
   FormControl<LogicType> get logicTypeControl;
   FormArray<ConditionRowFormViewModel> get conditionsArray;
@@ -88,7 +88,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     final composite = compositeExpression;
     if (composite != null) {
       questionConditionalControl.value =
-          QuestionConditional<bool>.withCondition(composite);
+          QuestionConditional.withCondition(composite);
     } else {
       questionConditionalControl.value = null;
     }
@@ -159,6 +159,6 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   dynamic buildFormData() {
     final composite = compositeExpression ??
         CompositeExpression(logicType: LogicType.and, expressions: []);
-    return QuestionConditional<bool>.withCondition(composite);
+    return QuestionConditional.withCondition(composite);
   }
 }
