@@ -154,7 +154,7 @@
   "form_field_question_response_options_description": "Choose the response type that best matches your question and define the response options according to the data you want to collect.",
   "question_type_choice": "Multiple choice",
   "question_type_free_text": "Free text",
-  "question_type_pain": "Body Pain",
+  "question_type_pain": "Pain Tracker",
   "question_type_pain_description": "Participants can select one or more body parts on a diagram and assign a pain level to each selected part using the Wong-Baker FACES® Pain Rating Scale (0-10). This is useful for tracking localized pain.",
   "question_type_pain_preview_title": "In-App Preview",
   "question_type_pain_preview_description": "Below is a simplified representation of how the pain selection interface will appear to participants in the StudyU app. They will be able to tap on body parts to select them and then assign a pain level.",
