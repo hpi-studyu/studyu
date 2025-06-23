@@ -1,39 +1,74 @@
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 
-class ConditionRowFormData implements IStudyFormData {
+class ConditionRowFormData extends IFormData {
+  ConditionRowFormData({
+    required this.questionId,
+    required this.comparator,
+    required this.value,
+  });
+
   final String? questionId;
   final dynamic comparator;
   final dynamic value;
 
-  const ConditionRowFormData({
-    this.questionId,
-    this.comparator,
-    this.value,
-  });
+  Expression? buildExpression() {
+    if (questionId == null) return null;
 
-  // Creates a copy of this ConditionRowFormData with the given fields replaced
-  ConditionRowFormData copyWith({
-    String? questionId,
-    dynamic comparator,
-    dynamic value,
-  }) {
+    // Handle boolean questions
+    if (comparator == 'is') {
+      final baseExpression = BooleanExpression()..target = questionId;
+      if (value == false) {
+        return NotExpression()..expression = baseExpression;
+      }
+      return baseExpression;
+    }
+
+    // Handle choice questions
+    if (comparator == '=' || comparator == '!=') {
+      final baseExpression = ChoiceExpression()
+        ..target = questionId
+        ..choices = {value?.toString() ?? ''};
+      if (comparator == '!=') {
+        return NotExpression()..expression = baseExpression;
+      }
+      return baseExpression;
+    }
+
+    // Handle numeric questions
+    if (comparator is NumericComparator) {
+      final numValue =
+          value is String ? num.tryParse(value as String) : (value as num?);
+      if (numValue == null) return null;
+      return NumericExpression(
+          comparator: comparator as NumericComparator, value: numValue)
+        ..target = questionId;
+    }
+
+    // Handle text questions
+    if (comparator is TextComparator) {
+      if (value == null) return null;
+      return TextExpression(
+          comparator: comparator as TextComparator, value: value.toString())
+        ..target = questionId;
+    }
+
+    return null;
+  }
+
+  @override
+  String toString() =>
+      'ConditionRowFormData(questionId: $questionId, comparator: $comparator, value: $value)';
+
+  @override
+  IFormData copy() {
     return ConditionRowFormData(
-      questionId: questionId ?? this.questionId,
-      comparator: comparator ?? this.comparator,
-      value: value ?? this.value,
+      questionId: questionId,
+      comparator: comparator,
+      value: value,
     );
   }
 
   @override
-  IFormData copy() {
-    return copyWith();
-  }
-
-  @override
-  FormDataID get id => questionId!;
-
-  @override
-  Study apply(Study study) => throw UnimplementedError();
+  FormDataID get id => throw UnimplementedError();
 }
