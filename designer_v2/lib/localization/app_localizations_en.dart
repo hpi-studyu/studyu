@@ -462,7 +462,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get question_type_pain_description =>
-      'Participants can select one or more body parts on a diagram and assign a pain level to each selected part using the Wong-Baker FACES® Pain Rating Scale (0-10). This is useful for tracking localized pain.';
+      'Participants can select one or more body parts on a diagram and assign a pain level to each selected part using a pain scale. This is useful for tracking localized pain.';
 
   @override
   String get question_type_pain_preview_title => 'In-App Preview';
@@ -482,7 +482,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get question_type_pain_functionality_description =>
-      'When a participant taps on a body part, a dialog will appear allowing them to select a pain level from 0 (No Hurt) to 10 (Hurts Worst) using the Wong-Baker FACES® Pain Rating Scale. Each selected body part can have a different pain level. The collected data will include the identified body part(s) and their corresponding pain scores.';
+      'When a participant taps on a body part, a dialog appears where they can select a pain level. Each selected body part can have a different pain level. The collected data includes the identified body parts and their corresponding pain scores.';
 
   @override
   String get question_type_bool => 'Yes/no';

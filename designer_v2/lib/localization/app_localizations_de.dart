@@ -470,7 +470,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get question_type_pain_description =>
-      'Teilnehmer können ein oder mehrere Körperteile auf einem Diagramm auswählen und jedem ausgewählten Teil mit der Wong-Baker FACES® Schmerzskala (0-10) eine Schmerzstufe zuweisen. Dies ist nützlich für die Verfolgung von lokalisierten Schmerzen.';
+      'Teilnehmer können ein oder mehrere Körperteile auf einem Diagramm auswählen und jedem ausgewählten Teil mithilfe einer Schmerzskala eine Schmerzstufe zuweisen. Dies ist nützlich für die Verfolgung von lokalisierten Schmerzen.';
 
   @override
   String get question_type_pain_preview_title => 'In-App-Vorschau';
@@ -490,7 +490,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get question_type_pain_functionality_description =>
-      'Wenn ein Teilnehmer auf ein Körperteil tippt, erscheint ein Dialog, in dem er eine Schmerzstufe von 0 (Kein Schmerz) bis 10 (Stärkster Schmerz) auf der Wong-Baker FACES® Schmerzskala auswählen kann. Jedes ausgewählte Körperteil kann eine andere Schmerzstufe haben. Die gesammelten Daten umfassen die identifizierten Körperteile und ihre entsprechenden Schmerzwerte.';
+      'Wenn ein Teilnehmer auf ein Körperteil tippt, erscheint ein Dialog, in dem er eine Schmerzstufe auswählen kann. Jedes ausgewählte Körperteil kann eine andere Schmerzstufe haben. Die gesammelten Daten umfassen die identifizierten Körperteile und ihre entsprechenden Schmerzwerte.';
 
   @override
   String get question_type_bool => 'Ja/Nein';

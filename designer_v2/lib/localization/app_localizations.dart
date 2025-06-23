@@ -941,7 +941,7 @@ abstract class AppLocalizations {
   /// No description provided for @question_type_pain_description.
   ///
   /// In en, this message translates to:
-  /// **'Participants can select one or more body parts on a diagram and assign a pain level to each selected part using the Wong-Baker FACES® Pain Rating Scale (0-10). This is useful for tracking localized pain.'**
+  /// **'Participants can select one or more body parts on a diagram and assign a pain level to each selected part using a pain scale. This is useful for tracking localized pain.'**
   String get question_type_pain_description;
 
   /// No description provided for @question_type_pain_preview_title.
@@ -977,7 +977,7 @@ abstract class AppLocalizations {
   /// No description provided for @question_type_pain_functionality_description.
   ///
   /// In en, this message translates to:
-  /// **'When a participant taps on a body part, a dialog will appear allowing them to select a pain level from 0 (No Hurt) to 10 (Hurts Worst) using the Wong-Baker FACES® Pain Rating Scale. Each selected body part can have a different pain level. The collected data will include the identified body part(s) and their corresponding pain scores.'**
+  /// **'When a participant taps on a body part, a dialog appears where they can select a pain level. Each selected body part can have a different pain level. The collected data includes the identified body parts and their corresponding pain scores.'**
   String get question_type_pain_functionality_description;
 
   /// No description provided for @question_type_bool.
