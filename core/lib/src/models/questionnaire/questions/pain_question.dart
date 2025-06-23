@@ -1,13 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:studyu_core/src/models/questionnaire/answer.dart';
-import 'package:studyu_core/src/models/questionnaire/body.dart';
-import 'package:studyu_core/src/models/questionnaire/question.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
 
 part 'pain_question.g.dart';
 
 @JsonSerializable()
-class PainQuestion extends Question<Body> {
+class PainQuestion extends Question<List<BodyPart>> {
   static const String questionType = 'pain';
 
   PainQuestion() : super(questionType);
@@ -19,6 +17,7 @@ class PainQuestion extends Question<Body> {
   @override
   Map<String, dynamic> toJson() => _$PainQuestionToJson(this);
 
-  Answer<Body> constructAnswer(Body response) =>
-      Answer.forQuestion(this, response);
+  Answer<List<BodyPart>> constructAnswer(Body response) {
+    return Answer.forQuestion(this, response.painfulParts);
+  }
 }

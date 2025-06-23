@@ -5,6 +5,7 @@ part 'body.g.dart';
 
 @JsonSerializable()
 class Body {
+  @JsonKey(name: 'parts')
   final List<BodyPart> parts;
 
   /// The maximum pain level that can be assigned to a body part.

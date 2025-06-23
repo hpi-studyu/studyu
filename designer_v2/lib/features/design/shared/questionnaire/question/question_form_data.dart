@@ -667,7 +667,7 @@ class PainQuestionFormData extends QuestionFormData {
   @override
   Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as PainQuestion;
-    final value = kResponseOptions[responseOption];
-    return question.constructAnswer(value!);
+    final value = responseOption as Body;
+    return question.constructAnswer(value);
   }
 }
