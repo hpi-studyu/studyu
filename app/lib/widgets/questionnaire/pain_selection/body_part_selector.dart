@@ -264,7 +264,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
     _selectedPainType = mostSpecificPainfulPart.pain.type;
     _selectedPartId = mostSpecificPainfulPart.id;
     _selectableParts = _flattenHierarchy(widget.tappedPart);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showPainLevelDialog());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showBodyAreaDialog());
   }
 
   BodyPart _findMostSpecificPain(BodyPart part) {
@@ -369,7 +369,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text(widget.scale.cancelButton),
+                  child: Text(AppLocalizations.of(context)!.cancelButton),
                 ),
                 TextButton(
                   onPressed: selectedLevel != null
@@ -378,7 +378,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                           Navigator.of(context).pop(true);
                         }
                       : null,
-                  child: Text(widget.scale.okButton),
+                  child: Text(AppLocalizations.of(context)!.done),
                 ),
               ],
             );
@@ -402,7 +402,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
   Future<void> _showPainTypeDialog() async {
     final loc = AppLocalizations.of(context)!;
     final painTypeOptions = _generatePainTypes(context);
-    PainType? selectedType = _selectedPainType;
+    PainType? selectedType = _selectedPainType ?? painTypeOptions.first;
     final result = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
@@ -459,18 +459,9 @@ class _PainEditDialogState extends State<PainEditDialog> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    _selectedPainType = null;
+                    _selectedPainType = selectedType;
                     Navigator.of(context).pop(true);
                   },
-                  child: const Text('Skip'),
-                ),
-                TextButton(
-                  onPressed: selectedType != null
-                      ? () {
-                          _selectedPainType = selectedType;
-                          Navigator.of(context).pop(true);
-                        }
-                      : null,
                   child: Text(loc.done),
                 ),
               ],
@@ -480,7 +471,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
       },
     );
     if (result == true) {
-      await _showBodyAreaDialog();
+      _finish();
     } else if (result == false) {
       await _showPainLevelDialog();
     }
@@ -489,7 +480,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
   Future<void> _showBodyAreaDialog() async {
     final loc = AppLocalizations.of(context)!;
     if (_selectableParts.length <= 1) {
-      _finish();
+      await _showPainLevelDialog();
       return;
     }
     String? selectedId = _selectedPartId;
@@ -500,20 +491,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
         return StatefulBuilder(
           builder: (context, setStateDialog) {
             return AlertDialog(
-              title: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.of(context).pop(false),
-                    tooltip: loc.back,
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(child: Text(loc.bodyPartLabel)),
-                ],
-              ),
+              title: Text(loc.bodyPartLabel),
               content: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxHeight: MediaQuery.of(context).size.height * 0.6,
@@ -547,11 +525,8 @@ class _PainEditDialogState extends State<PainEditDialog> {
               ),
               actions: [
                 TextButton(
-                  onPressed: () {
-                    _selectedPartId = widget.tappedPart.id;
-                    Navigator.of(context).pop(true);
-                  },
-                  child: const Text('Skip'),
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: Text(AppLocalizations.of(context)!.cancelButton),
                 ),
                 TextButton(
                   onPressed: () {
@@ -567,9 +542,10 @@ class _PainEditDialogState extends State<PainEditDialog> {
       },
     );
     if (result == true) {
-      _finish();
-    } else if (result == false) {
-      await _showPainTypeDialog();
+      await _showPainLevelDialog();
+    } else {
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
     }
   }
 
@@ -636,22 +612,16 @@ class WongBakerScale {
   const WongBakerScale({
     required this.dialogTitle,
     required this.painIndicatorText,
-    required this.okButton,
-    required this.cancelButton,
     required this.levels,
   });
 
   final String dialogTitle;
   final String painIndicatorText;
-  final String okButton;
-  final String cancelButton;
   final Map<int, PainLevelStyle> levels;
 
   static const WongBakerScale english = WongBakerScale(
     dialogTitle: 'Select Pain Details',
     painIndicatorText: 'Pain',
-    okButton: 'Save',
-    cancelButton: 'Cancel',
     levels: {
       0: PainLevelStyle(
           face: '😄', description: 'No Hurt', color: Color(0xFF4CAF50)),

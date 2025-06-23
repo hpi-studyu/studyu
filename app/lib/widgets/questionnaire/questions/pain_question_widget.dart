@@ -247,8 +247,6 @@ WongBakerScale _generateLocalizedScale(BuildContext context) {
   return WongBakerScale(
     painIndicatorText: loc.painIndicatorText,
     dialogTitle: loc.dialogTitle,
-    okButton: loc.okButton,
-    cancelButton: loc.cancelButton,
     levels: {
       0: PainLevelStyle(
         face: '😄',
