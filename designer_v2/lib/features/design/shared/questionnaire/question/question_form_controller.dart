@@ -511,6 +511,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   @override
   late final FormGroup form = FormGroup({
     ...questionBaseControls,
+    ..._controlsByQuestionType[questionType]!.controls,
     ...conditionalProperties.form.controls,
   });
 
