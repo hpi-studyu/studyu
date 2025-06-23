@@ -168,7 +168,7 @@
   "question_type_audio": "Audio",
   "form_array_response_options_bool_yes": "Yes",
   "form_array_response_options_bool_no": "No",
-  "form_field_response_pain": "Body Pain",
+  "form_field_response_pain": "Pain Tracker",
   "form_field_response_image": "Image",
   "form_field_response_audio": "Audio",
   "form_field_response_audio_max_duration_label": "Maximum recording duration in seconds",
