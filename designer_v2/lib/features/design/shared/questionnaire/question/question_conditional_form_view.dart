@@ -6,7 +6,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/conditional_question_properties.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -32,7 +32,6 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
   Widget build(BuildContext context, FormGroup form) {
     final theme = Theme.of(context);
     return ReactiveFormConsumer(builder: (context, form, _) {
-      // print('Building ConditionalQuestionFormView with ${formViewModel.conditionsArray.controls.length} conditions');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -56,7 +55,6 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           StreamBuilder(
             stream: formViewModel.conditionsValueChanges,
             builder: (context, snapshot) {
-              // print('Rebuilding live preview due to condition value changes');
               return _buildLivePreview(context);
             },
           ),
@@ -77,6 +75,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             value: LogicType.and,
             title: Text(
                 tr.form_array_question_visibility_logic_grouping_and_title),
+            onChanged: formViewModel.isReadonly ? null : (value) {},
           ),
         ),
         Expanded(
@@ -85,6 +84,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             value: LogicType.or,
             title:
                 Text(tr.form_array_question_visibility_logic_grouping_or_title),
+            onChanged: formViewModel.isReadonly ? null : (value) {},
           ),
         ),
       ],
@@ -240,7 +240,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     ConditionRowFormViewModel conditionVm,
   ) {
     switch (conditionVm.selectedQuestion!.type) {
-      case 'boolean':
+      case BooleanQuestion.questionType:
         return ReactiveDropdownField<dynamic>(
           formControl: conditionVm.valueControl,
           items: [
@@ -257,7 +257,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             isDense: true,
           ),
         );
-      case 'choice':
+      case ChoiceQuestion.questionType:
         return Tooltip(
           message: conditionVm.availableChoiceValues
                   .firstWhereOrNull((option) =>
@@ -283,7 +283,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             ),
           ),
         );
-      case 'scale':
+      case ScaleQuestion.questionType:
         return ReactiveTextField<dynamic>(
           formControl: conditionVm.valueControl,
           keyboardType: TextInputType.number,
@@ -299,7 +299,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             isDense: true,
           ),
         );
-      case 'freeText':
+      case FreeTextQuestion.questionType:
         return ReactiveTextField<dynamic>(
           formControl: conditionVm.valueControl,
           decoration: InputDecoration(
@@ -319,7 +319,7 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           ? tr.form_array_question_visibility_logic_add_condition_disabled_tooltip
           : '',
       child: ElevatedButton.icon(
-        onPressed: availableQuestions.isEmpty
+        onPressed: (availableQuestions.isEmpty || formViewModel.isReadonly)
             ? null
             : () => formViewModel.addCondition(),
         icon: const Icon(Icons.add),

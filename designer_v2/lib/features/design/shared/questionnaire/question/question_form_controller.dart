@@ -1,13 +1,11 @@
-import 'dart:async';
 import 'dart:core';
 import 'dart:math';
 
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/conditional_question_properties.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
@@ -69,112 +67,31 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   String get currentQuestionId => questionIdControl.value!;
 
   @override
-  late final FormControl<LogicType> logicTypeControl =
-      CustomFormControl<LogicType>(
-    value: LogicType.and,
-    onValueChanged: onLogicTypeChanged,
-  );
+  CompositeExpression? get compositeExpression =>
+      conditionalProperties.compositeExpression;
 
   @override
-  final FormArray<ConditionRowFormViewModel> conditionsArray =
-      FormArray<ConditionRowFormViewModel>([]);
+  FormControl<LogicType> get logicTypeControl =>
+      conditionalProperties.logicTypeControl;
 
-  final FormControl<QuestionConditional<dynamic>?> questionConditionalControl =
-      FormControl<QuestionConditional<dynamic>?>();
-  Stream<void> _conditionsValueChangesStream = const Stream<void>.empty();
-  StreamSubscription<void>? _conditionsValueChangesSubscription;
+  @override
+  FormArray<ConditionRowFormViewModel> get conditionsArray =>
+      conditionalProperties.conditionsArray;
 
   @override
   Stream<void> get conditionsValueChanges =>
-      _conditionsValueChangesStream.isBroadcast
-          ? _conditionsValueChangesStream
-          : _conditionsValueChangesStream.asBroadcastStream();
-
-  void _updateConditionsValueChangesStream() {
-    // Cancel previous subscription if any
-    _conditionsValueChangesSubscription?.cancel();
-
-    // Collect all streams from each condition
-    final streams = conditionsArray.controls
-        .map((control) => control.value!.form.valueChanges)
-        .toList();
-    if (streams.isEmpty) {
-      _conditionsValueChangesStream = const Stream<void>.empty();
-    } else {
-      _conditionsValueChangesStream =
-          StreamGroup.merge(streams).asBroadcastStream();
-      // Listen to the broadcast stream and call updateCondition
-      _conditionsValueChangesSubscription =
-          _conditionsValueChangesStream.listen((_) {
-        updateCondition();
-        markFormGroupChanged();
-      });
-    }
-  }
+      conditionalProperties.conditionsValueChanges;
 
   @override
-  CompositeExpression? get compositeExpression {
-    final List<Expression> currentExpressions = [];
-    for (final control in conditionsArray.controls) {
-      final expression = control.value?.buildExpression();
-      if (expression != null) {
-        currentExpressions.add(expression);
-      }
-    }
-    // print('Composite expressions: $currentExpressions');
-    if (currentExpressions.isEmpty) {
-      return null; // No conditions to form a composite expression
-    }
-    final composite = CompositeExpression(
-      logicType: logicTypeControl.value ?? LogicType.and,
-      expressions: currentExpressions,
-    );
-    /*questionConditionalControl.updateValue(
-      QuestionConditional.withCondition(composite),
-      emitEvent: false,
-    );*/
-    return composite;
-    /*return questionConditionalControl.value?.condition ??
-        CompositeExpression(
-          logicType: LogicType.and,
-          expressions: currentExpressions,
-        );*/
-  }
-
-  void onLogicTypeChanged(LogicType? value) {
-    updateCondition();
-  }
+  void addCondition({Expression? initialExpression}) =>
+      conditionalProperties.addCondition(initialExpression: initialExpression);
 
   @override
-  void addCondition({Expression? initialExpression}) {
-    final conditionVm = ConditionRowFormViewModel(
-      currentQuestionId: questionIdControl.value!,
-      initialExpression: initialExpression,
-    );
-    conditionsArray
-        .add(FormControl<ConditionRowFormViewModel>(value: conditionVm));
-    _updateConditionsValueChangesStream();
-    markFormGroupChanged();
-  }
+  void updateCondition() => conditionalProperties.updateCondition();
 
   @override
-  void updateCondition() {
-    if (compositeExpression == null) {
-      questionConditionalControl.updateValue(null);
-    } else {
-      questionConditionalControl.updateValue(
-        QuestionConditional.withCondition(compositeExpression!),
-      );
-    }
-    markFormGroupChanged();
-  }
-
-  @override
-  void removeCondition(int index) {
-    conditionsArray.removeAt(index);
-    _updateConditionsValueChangesStream();
-    markFormGroupChanged();
-  }
+  void removeCondition(int index) =>
+      conditionalProperties.removeCondition(index);
 
   // Initialize from existing data
   /*void _initializeConditions(QuestionConditional<bool>? initialCondition) {
@@ -202,15 +119,16 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           )
           .toList();
 
+  @override
+  final FormControl<QuestionConditional<dynamic>?> questionConditionalControl =
+      FormControl<QuestionConditional<dynamic>?>();
+
   late final Map<String, AbstractControl> questionBaseControls = {
     'questionId': questionIdControl, // hidden
     'questionType': questionTypeControl,
     'questionText': questionTextControl,
     'questionInfoText': questionInfoTextControl,
-    'questionConditionalControl': questionConditionalControl,
-    // - From IConditionalQuestionProperties
-    //'logicType': logicTypeControl,
-    // 'conditionsArray': conditionsArray,
+    'questionConditional': questionConditionalControl,
   };
 
   // - Form fields (question type-specific)
@@ -593,8 +511,13 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   @override
   late final FormGroup form = FormGroup({
     ...questionBaseControls,
-    ..._controlsByQuestionType[questionType]!.controls,
+    ...conditionalProperties.form.controls,
   });
+
+  late final conditionalProperties = ConditionalQuestionFormViewModel(
+    currentQuestionId: questionIdControl.value!,
+    questionConditionalControl: questionConditionalControl,
+  );
 
   void onQuestionTypeChanged(SurveyQuestionType? questionType) {
     _updateFormControls(questionType);
@@ -632,16 +555,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
     // todo this is suboptimal to insert the data from questionConditionalControl into logicTypeControl and conditionsArray
     questionConditionalControl.value = data.conditional;
-    final compositeExpression = questionConditionalControl.value?.condition;
-    if (compositeExpression != null) {
-      logicTypeControl.value = compositeExpression.logicType;
-      conditionsArray.clear();
-      for (final expression in compositeExpression.expressions) {
-        addCondition(
-          initialExpression: expression,
-        );
-      }
-    }
+    conditionalProperties
+        .setControlsFrom(null); // Will read from questionConditionalControl
 
     // Type-specific controls
     switch (data.questionType) {
