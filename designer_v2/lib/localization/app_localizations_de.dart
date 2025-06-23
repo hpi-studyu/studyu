@@ -466,31 +466,31 @@ class AppLocalizationsDe extends AppLocalizations {
   String get question_type_free_text => 'Freitext';
 
   @override
-  String get question_type_pain => 'Pain Tracker';
+  String get question_type_pain => 'Schmerz-Tracker';
 
   @override
   String get question_type_pain_description =>
-      'Participants can select one or more body parts on a diagram and assign a pain level to each selected part using the Wong-Baker FACES® Pain Rating Scale (0-10). This is useful for tracking localized pain.';
+      'Teilnehmer können ein oder mehrere Körperteile auf einem Diagramm auswählen und jedem ausgewählten Teil mit der Wong-Baker FACES® Schmerzskala (0-10) eine Schmerzstufe zuweisen. Dies ist nützlich für die Verfolgung von lokalisierten Schmerzen.';
 
   @override
-  String get question_type_pain_preview_title => 'In-App Preview';
+  String get question_type_pain_preview_title => 'In-App-Vorschau';
 
   @override
   String get question_type_pain_preview_description =>
-      'Below is a simplified representation of how the pain selection interface will appear to participants in the StudyU app. They will be able to tap on body parts to select them and then assign a pain level.';
+      'Unten sehen Sie eine vereinfachte Darstellung, wie die Schmerzauswahl-Oberfläche den Teilnehmern in der StudyU-App angezeigt wird. Sie können auf Körperteile tippen, um sie auszuwählen und dann eine Schmerzstufe zuzuweisen.';
 
   @override
-  String get question_type_pain_front_view => 'Front View';
+  String get question_type_pain_front_view => 'Vorderansicht';
 
   @override
-  String get question_type_pain_back_view => 'Back View';
+  String get question_type_pain_back_view => 'Rückansicht';
 
   @override
-  String get question_type_pain_functionality_title => 'Functionality';
+  String get question_type_pain_functionality_title => 'Funktionalität';
 
   @override
   String get question_type_pain_functionality_description =>
-      'When a participant taps on a body part, a dialog will appear allowing them to select a pain level from 0 (No Hurt) to 10 (Hurts Worst) using the Wong-Baker FACES® Pain Rating Scale. Each selected body part can have a different pain level. The collected data will include the identified body part(s) and their corresponding pain scores.';
+      'Wenn ein Teilnehmer auf ein Körperteil tippt, erscheint ein Dialog, in dem er eine Schmerzstufe von 0 (Kein Schmerz) bis 10 (Stärkster Schmerz) auf der Wong-Baker FACES® Schmerzskala auswählen kann. Jedes ausgewählte Körperteil kann eine andere Schmerzstufe haben. Die gesammelten Daten umfassen die identifizierten Körperteile und ihre entsprechenden Schmerzwerte.';
 
   @override
   String get question_type_bool => 'Ja/Nein';
@@ -511,7 +511,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get form_array_response_options_bool_no => 'No';
 
   @override
-  String get form_field_response_pain => 'Pain Tracker';
+  String get form_field_response_pain => 'Schmerz-Tracker';
 
   @override
   String get form_field_response_image => 'Bild';
