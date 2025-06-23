@@ -14,7 +14,7 @@ class BodyPartSelectorTurnable extends StatefulWidget {
     required this.body,
     super.key,
     this.onPainChanged,
-    this.scale = WongBakerScale.english,
+    this.scale = PainScale.english,
     this.unselectedColor,
     this.unselectedOutlineColor,
     this.padding = const EdgeInsets.all(16),
@@ -32,7 +32,7 @@ class BodyPartSelectorTurnable extends StatefulWidget {
       String parentPartId, String childPartId, BodyPain newPain)? onPainChanged;
 
   /// The configuration for the pain scale, including styles and translations.
-  final WongBakerScale scale;
+  final PainScale scale;
 
   /// The color of body parts with no pain.
   final Color? unselectedColor;

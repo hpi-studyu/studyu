@@ -24,7 +24,7 @@ class BodyPartSelector extends StatelessWidget {
     required this.body,
     required this.side,
     this.onPainChanged,
-    this.scale = WongBakerScale.english,
+    this.scale = PainScale.english,
     this.unselectedColor,
     this.unselectedOutlineColor,
     super.key,
@@ -37,7 +37,7 @@ class BodyPartSelector extends StatelessWidget {
   final void Function(
       String parentPartId, String childPartId, BodyPain newPain)? onPainChanged;
 
-  final WongBakerScale scale;
+  final PainScale scale;
 
   final Color? unselectedColor;
 
@@ -138,7 +138,7 @@ class _BodyPainter extends CustomPainter {
   final BuildContext context;
   final void Function(String) onTap;
   final Body body;
-  final WongBakerScale scale;
+  final PainScale scale;
   final Color unselectedColor;
   final Color unselectedOutlineColor;
 
@@ -244,7 +244,7 @@ class PainEditDialog extends StatefulWidget {
   });
 
   final BodyPart tappedPart;
-  final WongBakerScale scale;
+  final PainScale scale;
 
   @override
   State<PainEditDialog> createState() => _PainEditDialogState();
@@ -608,8 +608,8 @@ class PainLevelStyle {
 }
 
 @immutable
-class WongBakerScale {
-  const WongBakerScale({
+class PainScale {
+  const PainScale({
     required this.dialogTitle,
     required this.painIndicatorText,
     required this.levels,
@@ -619,7 +619,7 @@ class WongBakerScale {
   final String painIndicatorText;
   final Map<int, PainLevelStyle> levels;
 
-  static const WongBakerScale english = WongBakerScale(
+  static const PainScale english = PainScale(
     dialogTitle: 'Select Pain Details',
     painIndicatorText: 'Pain',
     levels: {

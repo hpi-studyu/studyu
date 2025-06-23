@@ -17,7 +17,7 @@ class PainQuestionWidget extends QuestionWidget {
 
 class _PainQuestionWidgetState extends State<PainQuestionWidget> {
   Body? _body;
-  WongBakerScale? _scale;
+  PainScale? _scale;
 
   @override
   void didChangeDependencies() {
@@ -241,10 +241,10 @@ Body _generateLocalizedBody(BuildContext context) {
   ]);
 }
 
-WongBakerScale _generateLocalizedScale(BuildContext context) {
+PainScale _generateLocalizedScale(BuildContext context) {
   final loc = AppLocalizations.of(context)!;
 
-  return WongBakerScale(
+  return PainScale(
     painIndicatorText: loc.painIndicatorText,
     dialogTitle: loc.dialogTitle,
     levels: {
