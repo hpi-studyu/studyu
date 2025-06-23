@@ -65,7 +65,7 @@ enum SurveyQuestionType {
       case SurveyQuestionType.freeText:
         return Icons.edit_square;
       case SurveyQuestionType.pain:
-        return Icons.favorite;
+        return Icons.accessibility;
     }
   }
 
