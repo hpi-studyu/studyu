@@ -25,11 +25,12 @@ class ConditionRowFormData extends IFormData {
     }
 
     // Handle choice questions
-    if (comparator == '=' || comparator == '!=') {
+    if (comparator == NumericComparator.equal ||
+        comparator == NumericComparator.notEqual) {
       final baseExpression = ChoiceExpression()
         ..target = questionId
         ..choices = {value?.toString() ?? ''};
-      if (comparator == '!=') {
+      if (comparator == NumericComparator.notEqual) {
         return NotExpression()..expression = baseExpression;
       }
       return baseExpression;
