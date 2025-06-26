@@ -16,7 +16,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loading_error_description =>
-      'The study data could not be retrieved. Please check your internet connection or try again later. If the problem persists, you can delete all data to reset the app. This will delete all your study data and you will have to rejoin the study.';
+      'The study data could not be retrieved. If you are currently participating in a study, please first contact your study supervisor for assistance. Only contact support if you are not in a study or your supervisor instructs you to do so. Do not delete your data unless told by your supervisor or support. Deleting data will remove all your study data and you will have to rejoin the study.';
 
   @override
   String get try_again => 'Try again';
@@ -272,6 +272,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contact => 'Contact';
+
+  @override
+  String get contact_support => 'Contact Support';
+
+  @override
+  String support_email_body(String subjectId) {
+    return 'Hello,\n\nI am experiencing a loading error in the StudyU app. My subject ID is: $subjectId\n\nPlease assist me with this issue.\n\nThank you.';
+  }
 
   @override
   String get about => 'About';
@@ -728,4 +736,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get maximum => 'Maximum';
+
+  @override
+  String get support_email_sent => 'Support Email Sent';
+
+  @override
+  String get support_email_sent_description =>
+      'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.';
 }

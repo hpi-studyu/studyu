@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -14,6 +12,7 @@ import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
@@ -56,10 +55,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
       StudyULogger.warning(
-        "No subject found for ID: $selectedSubjectId. Local data will be cleared.",
+        "No subject found for ID: $selectedSubjectId.",
       );
-      SecureStorage.deleteAll();
-      await noSubjectFound();
+      await _showSupportOrDeleteDialog(selectedSubjectId);
     }
   }
 
@@ -99,91 +97,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
         StudyULogger.warning(
           "Could not login and retrieve the study subject: $exception",
         );
-        if (exception is SocketException) {
-          subject = await Cache.loadSubject();
-          StudyULogger.info("Offline mode with cached subject: $subject");
-        } else {
-          // TODO further analyze this. How to recreate:
-          // 1. Participate in a study and wait some time until playstore uploads
-          // a backup of your current subject
-          // 2. Leave the study via the menu to delete all remote data
-          // 3. Uninstall the app and reinstall
-          // 4. Open the app but do not join a study
-          // 5. Restart the app. Either only this error shows up, worst case is
-          // app hangs and is unresponsive
-          StudyULogger.fatal('Could not login and retrieve the study subject. '
-              'One reason for this might be that the study subject is no '
-              'longer available and only resides in app backup');
-          // throw Exception("Remote subject not found");
-          // Ask the user if they want to delete all secure storage data or try to re-read
-          // show popup dialog to the user
-          if (!mounted) return null;
-          final result = await showDialog<bool>(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) {
-              return AlertDialog(
-                title: Text(AppLocalizations.of(context)!.loading_error_title),
-                content: Text(
-                  AppLocalizations.of(context)!.loading_error_description,
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: Text(AppLocalizations.of(context)!.try_again),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.red,
-                    ),
-                    onPressed: () => Navigator.of(context).pop(true),
-                    child: Text(AppLocalizations.of(context)!.delete_data),
-                  ),
-                ],
-              );
-            },
+        StudyULogger.fatal('Could not login and retrieve the study subject.');
+        // Try to reload the subject from cache
+        try {
+          final subject = await Cache.loadSubject();
+          StudyULogger.info("Loaded subject from cache: $subject");
+        } catch (e) {
+          StudyULogger.warning(
+            "No subject found in cache",
           );
-          if (result == true) {
-            if (!mounted) return null;
-            // Confirm deletion of storage data
-            final deleteResult = await showDialog<bool>(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text(AppLocalizations.of(context)!.delete_all_data),
-                  content: Text(AppLocalizations.of(context)!
-                      .delete_all_data_description),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(false),
-                      child: Text(AppLocalizations.of(context)!.cancel),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.red,
-                      ),
-                      onPressed: () => Navigator.of(context).pop(true),
-                      child: Text(AppLocalizations.of(context)!.reset_app),
-                    ),
-                  ],
-                );
-              },
-            );
-            if (deleteResult == true) {
-              // Delete all secure storage data
-              StudyULogger.info("Deleting all secure storage data");
-              if (!mounted) return null;
-              await cancelNotifications(context);
-              await SecureStorage.deleteAll();
-              StudyULogger.info("Secure storage data deleted");
-            }
-          }
-          StudyULogger.info("User chose not to delete secure storage data. "
-              "Going back to loading screen");
-          if (mounted) {
-            Navigator.pushReplacementNamed(context, Routes.loading);
-          }
         }
       }
     }
@@ -320,6 +242,108 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return;
       }
     }
+  }
+
+  Future<void> _showSupportOrDeleteDialog([String? selectedSubjectId]) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.loading_error_title),
+          content: Text(
+            AppLocalizations.of(context)!.loading_error_description,
+            softWrap: true,
+            textAlign: TextAlign.start,
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
+              child: Text(AppLocalizations.of(context)!.contact_support),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.red,
+              ),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(AppLocalizations.of(context)!.delete_data),
+            ),
+          ],
+        );
+      },
+    );
+    if (result == true) {
+      if (!mounted) return;
+      // Confirm deletion of storage data
+      final deleteResult = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)!.delete_all_data),
+            content:
+                Text(AppLocalizations.of(context)!.delete_all_data_description),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(AppLocalizations.of(context)!.cancel),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.red,
+                ),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(AppLocalizations.of(context)!.reset_app),
+              ),
+            ],
+          );
+        },
+      );
+      if (deleteResult == true) {
+        // Delete all secure storage data
+        StudyULogger.info("Deleting all secure storage data");
+        if (!mounted) return;
+        await cancelNotifications(context);
+        await SecureStorage.deleteAll();
+        StudyULogger.info("Secure storage data deleted");
+      }
+    }
+    StudyULogger.info("User chose not to delete secure storage data.");
+    if (!mounted) return;
+    await _contactSupport(selectedSubjectId);
+  }
+
+  Future<void> _contactSupport([String? selectedSubjectId]) async {
+    if (!mounted) return;
+    StudyULogger.info(
+        "User chose to contact support with ID: $selectedSubjectId");
+
+    const emailSubject = 'StudyU Support Request - Loading Error';
+    final emailBody = AppLocalizations.of(context)!
+        .support_email_body(selectedSubjectId ?? '');
+    final appContact = await AppConfig.getAppContact();
+    final uriString =
+        'mailto:${appContact.email}?subject=${Uri.encodeComponent(emailSubject)}&body=${Uri.encodeComponent(emailBody)}';
+    final emailUri = Uri.parse(uriString);
+    await launchUrl(emailUri);
+
+    // Show non dismissible dialog to inform the user that support has been contacted
+    if (!mounted) return;
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.support_email_sent),
+          content: Text(
+              AppLocalizations.of(context)!.support_email_sent_description),
+        );
+      },
+    );
   }
 
   @override
