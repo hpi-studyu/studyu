@@ -16,7 +16,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get loading_error_description =>
-      'Die Studiendaten konnten nicht abgerufen werden. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später erneut. Wenn das Problem weiterhin besteht, können Sie alle Daten löschen, um die App zurückzusetzen. Dadurch werden alle Ihre Studiendaten gelöscht und Sie müssen der Studie erneut beitreten.';
+      'Die Studiendaten konnten nicht abgerufen werden. Wenn Sie aktuell an einer Studie teilnehmen, wenden Sie sich bitte zuerst an Ihre Studienleitung. Kontaktieren Sie den Support nur, wenn Sie nicht an einer Studie teilnehmen oder Ihre Studienleitung Sie dazu auffordert. Löschen Sie Ihre Daten nur, wenn Sie von der Studienleitung oder dem Support dazu aufgefordert werden. Das Löschen entfernt alle Ihre Studiendaten und Sie müssen der Studie erneut beitreten.';
 
   @override
   String get try_again => 'Erneut versuchen';
@@ -274,6 +274,14 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get contact => 'Kontakt';
+
+  @override
+  String get contact_support => 'Support kontaktieren';
+
+  @override
+  String support_email_body(String subjectId) {
+    return 'Hallo,\n\nich habe einen Ladefehler in der StudyU App. Meine Subject-ID ist: $subjectId\n\nBitte helfen Sie mir bei diesem Problem.\n\nVielen Dank.';
+  }
 
   @override
   String get about => 'Über StudyU';
@@ -732,4 +740,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get maximum => 'Maximum';
+
+  @override
+  String get support_email_sent => 'Support-E-Mail geöffnet';
+
+  @override
+  String get support_email_sent_description =>
+      'Ihre Support-Anfrage wurde in Ihrer E-Mail-App vorbereitet. Bitte senden Sie die E-Mail, um unser Support-Team zu erreichen und warten Sie auf eine Antwort.\n\nWenn Sie aktuell an einer Studie teilnehmen, dokumentieren Sie Ihre Ergebnisse bitte außerhalb der App, bis das Problem behoben ist. Vielen Dank für Ihr Verständnis.';
 }
