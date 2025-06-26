@@ -3,9 +3,11 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
-class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
+class ConditionRowFormViewModel
+    extends ManagedFormViewModel<ConditionRowFormData> {
   // --- Controls ---
   final questionIdControl = FormControl<String>();
   final comparatorControl = FormControl<dynamic>();
@@ -240,5 +242,11 @@ class ConditionRowFormViewModel extends FormViewModel<ConditionRowFormData> {
         comparatorControl.markAsEnabled();
       }
     }
+  }
+
+  @override
+  ManagedFormViewModel<ConditionRowFormData> createDuplicate() {
+    // TODO: implement createDuplicate
+    throw UnimplementedError();
   }
 }

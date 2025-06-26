@@ -6,6 +6,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 
 abstract class IConditionalQuestionProperties {
   String get currentQuestionId;
@@ -42,13 +43,19 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   );
 
   @override
-  FormArray<ConditionRowFormData> get conditionsArray =>
-      form.control('conditions') as FormArray<ConditionRowFormData>;
+  late final FormArray conditionsArray = FormArray([]);
+
+  late final FormViewModelCollection<ConditionRowFormViewModel,
+          ConditionRowFormData> conditionFormViewModels =
+      FormViewModelCollection([], conditionsArray);
+
+  List<ConditionRowFormViewModel> get conditionModels =>
+      conditionFormViewModels.formViewModels;
 
   @override
   late final FormGroup form = FormGroup({
     'logicType': logicTypeControl,
-    'conditions': FormArray<ConditionRowFormData>([]),
+    'conditions': conditionsArray,
   });
 
   Stream<void> _conditionsValueChangesStream = const Stream<void>.empty();
@@ -64,7 +71,8 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   CompositeExpression? get compositeExpression {
     final List<Expression> currentExpressions = [];
     for (final control in conditionsArray.controls) {
-      final expression = control.value?.buildExpression();
+      final expression =
+          (control.value as ConditionRowFormData?)?.buildExpression();
       if (expression != null) {
         currentExpressions.add(expression);
       }
@@ -93,15 +101,22 @@ class ConditionalQuestionFormViewModel extends FormViewModel
       );
       conditionVm.setControlsFrom(formData);
     }
+    conditionFormViewModels.add(conditionVm);
+    _updateConditionsValueChangesStream();
+  }
 
-    final formData = conditionVm.buildFormData();
-    conditionsArray.add(FormControl<ConditionRowFormData>(
-      value: formData,
-      disabled: formMode == FormMode.readonly,
-    ));
-
+  @override
+  void removeCondition(int index) {
+    conditionFormViewModels
+        .remove(conditionFormViewModels.formViewModels[index]);
     _updateConditionsValueChangesStream();
     markFormGroupChanged();
+  }
+
+  @override
+  void read([dynamic formData]) {
+    conditionFormViewModels.read();
+    super.read(formData);
   }
 
   @override
@@ -113,13 +128,6 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     } else {
       questionConditionalControl.value = null;
     }
-    markFormGroupChanged();
-  }
-
-  @override
-  void removeCondition(int index) {
-    conditionsArray.removeAt(index);
-    _updateConditionsValueChangesStream();
     markFormGroupChanged();
   }
 
@@ -162,18 +170,22 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     if (conditional != null) {
       final compositeExpression = conditional.condition;
       logicTypeControl.value = compositeExpression.logicType;
-      conditionsArray.clear();
+
+      conditionFormViewModels.reset(null);
+
       for (final expression in compositeExpression.expressions) {
         addCondition(initialExpression: expression);
       }
     } else {
       logicTypeControl.value = LogicType.and;
-      conditionsArray.clear();
+      conditionFormViewModels.reset(null);
     }
+    _updateConditionsValueChangesStream();
   }
 
   @override
   QuestionConditional buildFormData() {
+    print('Building QuestionConditional from form data');
     final composite = compositeExpression ??
         CompositeExpression(logicType: LogicType.and, expressions: []);
     return QuestionConditional.withCondition(composite);
