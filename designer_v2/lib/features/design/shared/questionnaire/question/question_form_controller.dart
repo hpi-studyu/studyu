@@ -721,7 +721,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   @override
   void onNewItem() {
-    answerOptionsArray.add(FormControl<String>());
+    answerOptionsArray.add(FormControl<Choice>());
   }
 
   @override
