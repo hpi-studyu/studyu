@@ -393,8 +393,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
       }
       await _showPainTypeDialog();
     } else if (result == false) {
-      if (!context.mounted) return;
-
+      if (!mounted) return;
       Navigator.of(context).pop();
     }
   }
@@ -544,7 +543,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
     if (result == true) {
       await _showPainLevelDialog();
     } else {
-      if (!context.mounted) return;
+      if (!mounted) return;
       Navigator.of(context).pop();
     }
   }
