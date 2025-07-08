@@ -27,12 +27,14 @@ class ConditionRowFormData extends IFormData {
     // Handle choice questions
     if (comparator == '=' || comparator == '!=') {
       final baseExpression = ChoiceExpression()..target = questionId;
-      
+
       // Handle different types of choice values
       if (value is List) {
         // For multiple choice questions - filter out null/empty values
         final List<dynamic> valueList = value as List<dynamic>;
-        final validValues = valueList.where((v) => v != null && v.toString().isNotEmpty).toList();
+        final validValues = valueList
+            .where((v) => v != null && v.toString().isNotEmpty)
+            .toList();
         if (validValues.isEmpty) return null;
         baseExpression.choices = validValues.map((v) => v.toString()).toSet();
       } else {
@@ -40,7 +42,7 @@ class ConditionRowFormData extends IFormData {
         if (value == null || value.toString().isEmpty) return null;
         baseExpression.choices = {value.toString()};
       }
-      
+
       if (comparator == '!=') {
         return NotExpression()..expression = baseExpression;
       }

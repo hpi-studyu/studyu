@@ -75,8 +75,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       conditionalProperties.logicTypeControl;
 
   @override
-  FormArray get conditionsArray =>
-      conditionalProperties.conditionsArray;
+  FormArray get conditionsArray => conditionalProperties.conditionsArray;
 
   @override
   Stream<void> get conditionsValueChanges =>

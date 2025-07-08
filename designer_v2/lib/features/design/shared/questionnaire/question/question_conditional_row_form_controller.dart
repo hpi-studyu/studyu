@@ -44,12 +44,12 @@ class ConditionRowFormViewModel
       // Mark the form as dirty to trigger value propagation
       form.markAsDirty();
     });
-    
+
     // Listen for comparator changes
     comparatorControl.valueChanges.listen((_) {
       form.markAsDirty();
     });
-    
+
     // Listen for value changes
     valueControl.valueChanges.listen((_) {
       form.markAsDirty();
@@ -214,13 +214,13 @@ class ConditionRowFormViewModel
         return baseExpression;
       case ChoiceQuestion.questionType:
         if (value == null) return null;
-        final choiceExpression = ChoiceExpression()
-          ..target = questionId;
-        
+        final choiceExpression = ChoiceExpression()..target = questionId;
+
         // Handle both single and multiple choice values
         if (value is List) {
           // Filter out null/empty values
-          final validValues = value.where((v) => v != null && v.toString().isNotEmpty).toList();
+          final validValues =
+              value.where((v) => v != null && v.toString().isNotEmpty).toList();
           if (validValues.isEmpty) return null;
           choiceExpression.choices = Set.from(validValues);
         } else {
@@ -228,7 +228,7 @@ class ConditionRowFormViewModel
           if (value.toString().isEmpty) return null;
           choiceExpression.choices = {value};
         }
-        
+
         if (comparator == '!=') {
           return NotExpression()..expression = choiceExpression;
         }
