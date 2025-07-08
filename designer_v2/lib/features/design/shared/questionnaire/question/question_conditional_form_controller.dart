@@ -43,7 +43,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   );
 
   @override
-  late final FormArray conditionsArray = FormArray([]);
+  late final FormArray<ConditionRowFormData> conditionsArray = FormArray([]);
 
   late final FormViewModelCollection<ConditionRowFormViewModel,
           ConditionRowFormData> conditionFormViewModels =
@@ -71,8 +71,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   CompositeExpression? get compositeExpression {
     final List<Expression> currentExpressions = [];
     for (final control in conditionsArray.controls) {
-      final expression =
-          (control.value as ConditionRowFormData?)?.buildExpression();
+      final expression = control.value?.buildExpression();
       if (expression != null) {
         currentExpressions.add(expression);
       }
