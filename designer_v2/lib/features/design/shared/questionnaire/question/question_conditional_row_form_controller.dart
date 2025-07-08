@@ -41,6 +41,18 @@ class ConditionRowFormViewModel
           comparatorControl.markAsEnabled();
         }
       }
+      // Mark the form as dirty to trigger value propagation
+      form.markAsDirty();
+    });
+    
+    // Listen for comparator changes
+    comparatorControl.valueChanges.listen((_) {
+      form.markAsDirty();
+    });
+    
+    // Listen for value changes
+    valueControl.valueChanges.listen((_) {
+      form.markAsDirty();
     });
   }
 
@@ -153,7 +165,14 @@ class ConditionRowFormViewModel
       }
       if (expression is TextExpression) return expression.value;
       if (expression is ChoiceExpression) {
-        return expression.choices.firstOrNull;
+        // For choice expressions, check if we need to handle multiple choices
+        if (expression.choices.length > 1) {
+          // Return the whole set for multiple choices
+          return expression.choices.toList();
+        } else {
+          // Return a single value for single choice
+          return expression.choices.firstOrNull;
+        }
       }
       if (expression is BooleanExpression) {
         return true;
@@ -161,7 +180,13 @@ class ConditionRowFormViewModel
       return null;
     } else if (expression is NotExpression) {
       if (expression.expression is ChoiceExpression) {
-        return (expression.expression as ChoiceExpression).choices.firstOrNull;
+        final choiceExp = expression.expression as ChoiceExpression;
+        // Same logic for NotExpression containing ChoiceExpression
+        if (choiceExp.choices.length > 1) {
+          return choiceExp.choices.toList();
+        } else {
+          return choiceExp.choices.firstOrNull;
+        }
       }
       if (expression.expression is BooleanExpression) {
         return false;
@@ -189,13 +214,25 @@ class ConditionRowFormViewModel
         return baseExpression;
       case ChoiceQuestion.questionType:
         if (value == null) return null;
-        baseExpression = ChoiceExpression()
-          ..target = questionId
-          ..choices = {value};
-        if (comparator == '!=') {
-          return NotExpression()..expression = baseExpression;
+        final choiceExpression = ChoiceExpression()
+          ..target = questionId;
+        
+        // Handle both single and multiple choice values
+        if (value is List) {
+          // Filter out null/empty values
+          final validValues = value.where((v) => v != null && v.toString().isNotEmpty).toList();
+          if (validValues.isEmpty) return null;
+          choiceExpression.choices = Set.from(validValues);
+        } else {
+          // Check for null/empty values
+          if (value.toString().isEmpty) return null;
+          choiceExpression.choices = {value};
         }
-        return baseExpression;
+        
+        if (comparator == '!=') {
+          return NotExpression()..expression = choiceExpression;
+        }
+        return choiceExpression;
       case ScaleQuestion.questionType:
         if (value is String) {
           value = num.tryParse(value);

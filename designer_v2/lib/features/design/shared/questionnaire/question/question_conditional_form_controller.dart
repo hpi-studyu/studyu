@@ -103,8 +103,18 @@ class ConditionalQuestionFormViewModel extends FormViewModel
       );
       conditionVm.setControlsFrom(formData);
     }
+    
+    // Add the view model to the collection
     conditionFormViewModels.add(conditionVm);
+    
+    // Update the value change streams
     _updateConditionsValueChangesStream();
+    
+    // Immediately update the condition to make sure changes are propagated
+    updateCondition();
+    
+    print('Added condition, now have ${conditionFormViewModels.formViewModels.length} conditions');
+    print('Form array now has ${conditionsArray.controls.length} controls');
   }
 
   @override
@@ -124,22 +134,52 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   @override
   void updateCondition() {
     final composite = compositeExpression;
-    if (composite != null) {
-      questionConditionalControl.value =
-          QuestionConditional.withCondition(composite);
+    print('Updating condition with composite: ${composite?.toJson()}');
+    
+    // Check if we have any conditions to save
+    if (composite != null && composite.expressions.isNotEmpty) {
+      // Create a new QuestionConditional with the composite expression
+      final conditional = QuestionConditional.withCondition(composite);
+      
+      // Set the value on the parent control
+      questionConditionalControl.value = conditional;
+      
+      // Ensure the parent control is marked as dirty to trigger value propagation
+      questionConditionalControl.markAsDirty();
+      
+      print('Set questionConditionalControl.value: ${questionConditionalControl.value?.condition.toJson()}');
     } else {
+      // No conditions, set to null
       questionConditionalControl.value = null;
+      questionConditionalControl.markAsDirty();
+      print('Set questionConditionalControl.value to null');
     }
+    
+    // Mark this form group as changed too
     markFormGroupChanged();
   }
 
   void _updateConditionsValueChangesStream() {
     _conditionsValueChangesSubscription?.cancel();
 
-    final streams = conditionFormViewModels.formViewModels
-        .map((viewModel) =>
-            viewModel.form.valueChanges.map((formData) => formData).distinct())
-        .toList();
+    // Create streams for all view models' forms and the logic type control
+    final List<Stream> streams = [];
+    
+    // Add the logic type control to the streams
+    streams.add(logicTypeControl.valueChanges.distinct());
+    
+    // Listen to the form array changes
+    streams.add(conditionsArray.valueChanges.distinct());
+    
+    for (final viewModel in conditionFormViewModels.formViewModels) {
+      // Listen to form value changes
+      streams.add(viewModel.form.valueChanges.distinct());
+      
+      // Also listen to each control individually for more granular updates
+      streams.add(viewModel.questionIdControl.valueChanges.distinct());
+      streams.add(viewModel.comparatorControl.valueChanges.distinct());
+      streams.add(viewModel.valueControl.valueChanges.distinct());
+    }
 
     if (streams.isEmpty) {
       _conditionsValueChangesStream = const Stream<void>.empty();
@@ -148,6 +188,8 @@ class ConditionalQuestionFormViewModel extends FormViewModel
           StreamGroup.merge(streams).asBroadcastStream();
       _conditionsValueChangesSubscription =
           _conditionsValueChangesStream.listen((_) {
+        print('Condition value changed, updating condition');
+        // First update the composite expression by building it from all form data
         updateCondition();
       });
     }
