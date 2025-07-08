@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
+import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
@@ -59,12 +60,12 @@ class FormListView<T> extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (leadingWidget != null) leadingWidget!,
-        if (sectionTitle != null)
+        if (sectionTitle != null && !(hasEmptyWidget && items.isEmpty))
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(sectionTitle!, style: theme.textTheme.titleMedium),
+            child: FormSectionHeader(title: sectionTitle!, divider: false),
           ),
-        if (sectionDescription != null)
+        if (sectionDescription != null && !(hasEmptyWidget && items.isEmpty))
           Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: Text(sectionDescription!, style: theme.textTheme.bodyMedium),
