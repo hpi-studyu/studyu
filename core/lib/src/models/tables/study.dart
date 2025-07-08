@@ -251,6 +251,7 @@ class Study extends SupabaseObjectFunctions<Study>
           .neq('status', StudyStatus.closed.name);
       final extracted = SupabaseQuery.extractSupabaseList<Study>(
         List<Map<String, dynamic>>.from(response),
+        throwForNonExtracted: true,
       );
       result = ExtractionSuccess<Study>(extracted);
     } on ExtractionFailedException<Study> catch (error) {
