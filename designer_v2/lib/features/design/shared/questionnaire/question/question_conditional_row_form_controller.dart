@@ -44,6 +44,13 @@ class ConditionRowFormViewModel
     });
   }
 
+  @override
+  late final FormGroup form = FormGroup({
+    'questionId': questionIdControl,
+    'comparator': comparatorControl,
+    'value': valueControl,
+  });
+
   /*void onControlChanged(void Function() callback) {
     questionIdControl.valueChanges.listen((_) => callback());
     comparatorControl.valueChanges.listen((_) => callback());
@@ -206,13 +213,6 @@ class ConditionRowFormViewModel
   }
 
   @override
-  FormGroup get form => FormGroup({
-        'questionId': questionIdControl,
-        'comparator': comparatorControl,
-        'value': valueControl,
-      });
-
-  @override
   ConditionRowFormData buildFormData() {
     return ConditionRowFormData(
       questionId: questionIdControl.value,
@@ -220,9 +220,6 @@ class ConditionRowFormViewModel
       value: valueControl.value,
     );
   }
-
-  @override
-  Map<FormMode, String> get titles => throw UnimplementedError();
 
   @override
   void setControlsFrom(ConditionRowFormData data) {
@@ -246,7 +243,15 @@ class ConditionRowFormViewModel
 
   @override
   ManagedFormViewModel<ConditionRowFormData> createDuplicate() {
-    // TODO: implement createDuplicate
-    throw UnimplementedError();
+    return ConditionRowFormViewModel(
+      currentQuestionId: currentQuestionId,
+    );
   }
+
+  @override
+  Map<FormMode, String> get titles => {
+        FormMode.create: 'Create Condition',
+        FormMode.edit: 'Edit Condition',
+        FormMode.readonly: 'View Condition',
+      };
 }

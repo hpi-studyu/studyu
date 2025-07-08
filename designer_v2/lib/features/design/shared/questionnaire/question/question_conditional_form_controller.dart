@@ -14,8 +14,10 @@ abstract class IConditionalQuestionProperties {
   bool get isReadonly;
 
   FormControl<LogicType> get logicTypeControl;
-  FormArray<ConditionRowFormData> get conditionsArray;
+  FormArray get conditionsArray;
   FormControl<QuestionConditional<dynamic>?> get questionConditionalControl;
+  
+  List<ConditionRowFormViewModel> get conditionModels;
 
   void addCondition({Expression? initialExpression});
   void updateCondition();
@@ -43,12 +45,13 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   );
 
   @override
-  late final FormArray<ConditionRowFormData> conditionsArray = FormArray([]);
+  late final FormArray conditionsArray = FormArray([]);
 
   late final FormViewModelCollection<ConditionRowFormViewModel,
           ConditionRowFormData> conditionFormViewModels =
       FormViewModelCollection([], conditionsArray);
 
+  @override
   List<ConditionRowFormViewModel> get conditionModels =>
       conditionFormViewModels.formViewModels;
 
@@ -70,8 +73,8 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   @override
   CompositeExpression? get compositeExpression {
     final List<Expression> currentExpressions = [];
-    for (final control in conditionsArray.controls) {
-      final expression = control.value?.buildExpression();
+    for (final formViewModel in conditionFormViewModels.formViewModels) {
+      final expression = formViewModel.buildFormData().buildExpression();
       if (expression != null) {
         currentExpressions.add(expression);
       }
@@ -133,9 +136,9 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   void _updateConditionsValueChangesStream() {
     _conditionsValueChangesSubscription?.cancel();
 
-    final streams = conditionsArray.controls
-        .map((control) =>
-            control.valueChanges.map((formData) => formData).distinct())
+    final streams = conditionFormViewModels.formViewModels
+        .map((viewModel) =>
+            viewModel.form.valueChanges.map((formData) => formData).distinct())
         .toList();
 
     if (streams.isEmpty) {

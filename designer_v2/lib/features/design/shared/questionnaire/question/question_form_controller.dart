@@ -6,7 +6,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_controller.dart';
-import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_data.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
@@ -75,7 +75,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       conditionalProperties.logicTypeControl;
 
   @override
-  FormArray<ConditionRowFormData> get conditionsArray =>
+  FormArray get conditionsArray =>
       conditionalProperties.conditionsArray;
 
   @override
@@ -88,6 +88,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   @override
   void updateCondition() => conditionalProperties.updateCondition();
+
+  @override
+  List<ConditionRowFormViewModel> get conditionModels =>
+      conditionalProperties.conditionModels;
 
   @override
   void removeCondition(int index) =>
