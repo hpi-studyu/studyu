@@ -88,7 +88,7 @@ class LiveConditionPreview extends StatelessWidget {
     final question = allQuestions.firstWhereOrNull((q) => q.id == questionId);
     if (question is ChoiceQuestion) {
       final choice =
-          question.choices.firstWhereOrNull((c) => c.text == choiceValue);
+          question.choices.firstWhereOrNull((c) => c.id == choiceValue);
       return choice?.text ??
           choiceValue.toString(); // Return text or value if not found
     }
