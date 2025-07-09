@@ -99,6 +99,9 @@ class ConditionalQuestionFormViewModel extends FormViewModel
       initialExpression: initialExpression,
     );
 
+    // Set the form mode to match the parent form mode
+    conditionVm.formMode = formMode;
+
     if (initialExpression != null) {
       final formData = ConditionRowFormData(
         questionId: conditionVm.extractQuestionId(initialExpression),
@@ -246,6 +249,16 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   }
 
   @override
+  set formMode(FormMode mode) {
+    super.formMode = mode;
+
+    // Propagate form mode to all condition row form controllers
+    for (final conditionViewModel in conditionFormViewModels.formViewModels) {
+      conditionViewModel.formMode = mode;
+    }
+  }
+
+  @override
   Map<FormMode, String> get titles => {
         FormMode.create: 'Create Conditional',
         FormMode.edit: 'Edit Conditional',
@@ -268,7 +281,6 @@ class ConditionalQuestionFormViewModel extends FormViewModel
         for (final expression in compositeExpression.expressions) {
           addCondition(initialExpression: expression);
         }
-
         // Synchronously update the condition after initialization to ensure
         // the parent control reflects the correct state
         updateCondition();

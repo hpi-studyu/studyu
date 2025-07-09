@@ -757,4 +757,12 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   bool get isMidValuesClearedInfoVisible =>
       prevMidValues != scaleMidValueControls.value;
+
+  @override
+  set formMode(FormMode mode) {
+    super.formMode = mode;
+
+    // Propagate form mode to conditional properties
+    conditionalProperties.formMode = mode;
+  }
 }
