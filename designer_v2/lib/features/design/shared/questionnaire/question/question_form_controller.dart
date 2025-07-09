@@ -515,7 +515,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   late final FormGroup form = FormGroup({
     ...questionBaseControls,
     ..._controlsByQuestionType[questionType]!.controls,
-    ...conditionalProperties.form.controls,
+    // Note: conditionalProperties.form.controls are excluded to prevent
+    // transient conditional logic state from affecting isDirty checks
   });
 
   late final conditionalProperties = ConditionalQuestionFormViewModel(

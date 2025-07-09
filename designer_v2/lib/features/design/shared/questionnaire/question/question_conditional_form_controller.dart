@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:async/async.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -38,6 +39,9 @@ class ConditionalQuestionFormViewModel extends FormViewModel
 
   @override
   final FormControl<QuestionConditional<dynamic>?> questionConditionalControl;
+
+  /// Flag to prevent marking form as dirty during programmatic updates
+  bool _isUpdatingProgrammatically = false;
 
   @override
   FormControl<LogicType> logicTypeControl = FormControl<LogicType>(
@@ -110,8 +114,10 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     // Update the value change streams
     _updateConditionsValueChangesStream();
 
-    // Immediately update the condition to make sure changes are propagated
-    updateCondition();
+    // Only update condition if this is a user-initiated add (not from initialization)
+    if (initialExpression == null) {
+      updateCondition();
+    }
 
     print(
         'Added condition, now have ${conditionFormViewModels.formViewModels.length} conditions');
@@ -123,7 +129,9 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     conditionFormViewModels
         .remove(conditionFormViewModels.formViewModels[index]);
     _updateConditionsValueChangesStream();
-    markFormGroupChanged();
+
+    // Update the condition to reflect the removal
+    updateCondition();
   }
 
   @override
@@ -142,23 +150,57 @@ class ConditionalQuestionFormViewModel extends FormViewModel
       // Create a new QuestionConditional with the composite expression
       final conditional = QuestionConditional.withCondition(composite);
 
-      // Set the value on the parent control
-      questionConditionalControl.value = conditional;
+      // Check if the value is actually different to avoid unnecessary updates
+      final currentValue = questionConditionalControl.value;
+      final shouldUpdate = currentValue == null ||
+          jsonEncode(currentValue.condition.toJson()) !=
+              jsonEncode(conditional.condition.toJson());
 
-      // Ensure the parent control is marked as dirty to trigger value propagation
-      questionConditionalControl.markAsDirty();
+      if (shouldUpdate) {
+        if (_isUpdatingProgrammatically) {
+          // During programmatic updates (like initialization), use updateValue to avoid
+          // triggering form dirty state
+          questionConditionalControl.updateValue(conditional, emitEvent: false);
+        } else {
+          // During user-initiated changes, use normal assignment to properly
+          // trigger form change detection
+          questionConditionalControl.value = conditional;
+        }
 
-      print(
-          'Set questionConditionalControl.value: ${questionConditionalControl.value?.condition.toJson()}');
+        print(
+            'Set questionConditionalControl.value: ${questionConditionalControl.value?.condition.toJson()}');
+      }
     } else {
       // No conditions, set to null
-      questionConditionalControl.value = null;
-      questionConditionalControl.markAsDirty();
-      print('Set questionConditionalControl.value to null');
+      final shouldUpdate = questionConditionalControl.value != null;
+
+      if (shouldUpdate) {
+        if (_isUpdatingProgrammatically) {
+          questionConditionalControl.updateValue(null, emitEvent: false);
+        } else {
+          questionConditionalControl.value = null;
+        }
+        print('Set questionConditionalControl.value to null');
+      }
     }
 
-    // Mark this form group as changed too
-    markFormGroupChanged();
+    // Update the form controls to reflect the current state
+    _syncFormControlsWithConditions();
+  }
+
+  /// Synchronizes the form controls with the current conditions state
+  /// This ensures that form.value contains the correct serializable data
+  void _syncFormControlsWithConditions() {
+    // Update the logicType control to reflect current state
+    logicTypeControl.updateValue(
+      logicTypeControl.value ?? LogicType.and,
+      emitEvent: false,
+    );
+
+    // Since the conditional form controls are no longer part of the main form,
+    // we don't need to sync the conditionsArray as it doesn't affect isDirty
+    // The questionConditionalControl is the single source of truth and is
+    // already being updated in updateCondition()
   }
 
   void _updateConditionsValueChangesStream() {
@@ -212,26 +254,42 @@ class ConditionalQuestionFormViewModel extends FormViewModel
 
   @override
   void setControlsFrom(dynamic data) {
-    final conditional = questionConditionalControl.value;
-    if (conditional != null) {
-      final compositeExpression = conditional.condition;
-      logicTypeControl.value = compositeExpression.logicType;
+    // Set flag to indicate this is a programmatic update during initialization
+    _isUpdatingProgrammatically = true;
 
-      conditionFormViewModels.reset(null);
+    try {
+      final conditional = questionConditionalControl.value;
+      if (conditional != null) {
+        final compositeExpression = conditional.condition;
+        logicTypeControl.value = compositeExpression.logicType;
 
-      for (final expression in compositeExpression.expressions) {
-        addCondition(initialExpression: expression);
+        conditionFormViewModels.reset(null);
+
+        for (final expression in compositeExpression.expressions) {
+          addCondition(initialExpression: expression);
+        }
+
+        // Synchronously update the condition after initialization to ensure
+        // the parent control reflects the correct state
+        updateCondition();
+      } else {
+        logicTypeControl.value = LogicType.and;
+        conditionFormViewModels.reset(null);
+
+        // Also update when there are no conditions
+        updateCondition();
       }
-    } else {
-      logicTypeControl.value = LogicType.and;
-      conditionFormViewModels.reset(null);
+      _updateConditionsValueChangesStream();
+    } finally {
+      // Reset the flag
+      _isUpdatingProgrammatically = false;
     }
-    _updateConditionsValueChangesStream();
   }
 
   @override
   QuestionConditional buildFormData() {
     print('Building QuestionConditional from form data');
+
     final composite = compositeExpression ??
         CompositeExpression(logicType: LogicType.and, expressions: []);
     return QuestionConditional.withCondition(composite);
