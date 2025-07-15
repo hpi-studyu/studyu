@@ -348,15 +348,6 @@ class _PainEditDialogState extends State<PainEditDialog> {
                                     color: style.textColor,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${widget.scale.painIndicatorText}: $level',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color:
-                                        style.textColor.withValues(alpha: 0.8),
-                                  ),
-                                ),
                               ],
                             ),
                           ),
