@@ -35,10 +35,7 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   // - Form Fields
 
-  final codeControl = FormControl<String>(
-    asyncValidatorsDebounceTime: 200,
-    touched: true,
-  );
+  final codeControl = FormControl<String>(touched: true);
   final isPreconfiguredScheduleControl = FormControl<bool>(value: false);
   final preconfiguredScheduleTypeControl = FormControl<PhaseSequence>(
     value: PhaseSequence.alternating,
@@ -70,7 +67,10 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
       Validators.maxLength(24),
     ],
     asyncValidators: [
-      Validators.delegateAsync((control) => _uniqueInviteCode(control)),
+      Validators.delegateAsync(
+        (control) => _uniqueInviteCode(control),
+        debounceTime: 200,
+      ),
     ],
     validationMessages: {
       ValidationMessage.required: (error) => tr.form_field_code_required,
