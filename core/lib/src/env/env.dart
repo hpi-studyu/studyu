@@ -18,7 +18,20 @@ void setEnv(
   supabaseUrl = envSupabaseUrl;
   supabaseAnonKey = envSupabaseAnonKey;
   client = supabaseClient;
-  appUrl = envAppUrl;
-  designerUrl = envDesignerUrl;
-  projectGeneratorUrl = envProjectGeneratorUrl;
+  // Remove trailing slashes to prevent double slashes when concatenating path
+  if (envAppUrl != null && envAppUrl.endsWith('/')) {
+    appUrl = envAppUrl.substring(0, envAppUrl.length - 1);
+  } else {
+    appUrl = envAppUrl;
+  }
+  if (envDesignerUrl != null && envDesignerUrl.endsWith('/')) {
+    designerUrl = envDesignerUrl.substring(0, envDesignerUrl.length - 1);
+  } else {
+    designerUrl = envDesignerUrl;
+  }
+  if (envProjectGeneratorUrl != null && envProjectGeneratorUrl.endsWith('/')) {
+    projectGeneratorUrl = envProjectGeneratorUrl.substring(0, envProjectGeneratorUrl.length - 1);
+  } else {
+    projectGeneratorUrl = envProjectGeneratorUrl;
+  }
 }
