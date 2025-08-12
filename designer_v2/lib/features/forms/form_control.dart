@@ -19,9 +19,8 @@ class CustomFormControl<T> extends FormControl<T> {
   }) : super() {
     if (onValueChanged != null) {
       final callback = (_onValueChangedDebouncer != null)
-          ? (T? value) => _onValueChangedDebouncer(
-              callback: () => onValueChanged!(value),
-            )
+          ? (T? value) =>
+                _onValueChangedDebouncer(callback: () => onValueChanged!(value))
           : onValueChanged;
 
       valueChanges.listen(callback);
