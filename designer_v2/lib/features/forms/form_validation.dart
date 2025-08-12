@@ -46,21 +46,20 @@ typedef FormValidationConfig = List<FormControlValidation>;
 /// [FormValidationSetEnum] which is used to look up the validator configuration
 /// to be applied based on the [FormViewModel]'s current
 /// [FormViewModel.validationSet].
-typedef FormValidationConfigSet
-    = Map<FormValidationSetEnum, List<FormControlValidation>>;
+typedef FormValidationConfigSet =
+    Map<FormValidationSetEnum, List<FormControlValidation>>;
 
 /// Extension to get/set control-specific validation messages from the
 /// [AbstractControl] object itself
 extension AbstractControlX on AbstractControl {
   static final Map<AbstractControl, Map<String, ValidationMessageFunction>>
-      _controlValidationMessages = {};
+  _controlValidationMessages = {};
 
   Map<String, ValidationMessageFunction> get validationMessages =>
       _controlValidationMessages[this] ?? {};
   set validationMessages(
     Map<String, ValidationMessageFunction> validationMessages,
-  ) =>
-      _controlValidationMessages[this] = validationMessages;
+  ) => _controlValidationMessages[this] = validationMessages;
 }
 
 List<Tuple<AbstractControl, String>> _collectValidationErrorMessages(

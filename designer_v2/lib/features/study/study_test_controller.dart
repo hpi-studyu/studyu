@@ -34,8 +34,9 @@ class StudyTestController extends _$StudyTestController {
     return StudyTestControllerState(
       studyId: studyId,
       studyRepository: ref.watch(studyRepositoryProvider),
-      studyWithMetadata:
-          ref.watch(studyControllerProvider(studyId)).studyWithMetadata,
+      studyWithMetadata: ref
+          .watch(studyControllerProvider(studyId))
+          .studyWithMetadata,
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
       serializedSession:
@@ -47,10 +48,7 @@ class StudyTestController extends _$StudyTestController {
 
 /// Provide a controller parametrized by [StudyID]
 @riverpod
-PlatformController studyTestPlatformController(
-  Ref ref,
-  StudyID studyId,
-) {
+PlatformController studyTestPlatformController(Ref ref, StudyID studyId) {
   final state = ref.watch(studyTestControllerProvider(studyId));
   PlatformController platformController;
   if (!kIsWeb) {

@@ -3,10 +3,8 @@ import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-typedef CollapsibleSectionBuilder = Widget Function(
-  BuildContext context,
-  bool isCollapsed,
-);
+typedef CollapsibleSectionBuilder =
+    Widget Function(BuildContext context, bool isCollapsed);
 
 /// Simple non-animated & more customizable alternative to [ExpansionPanel]
 /// and [ExpansionTile]
@@ -23,10 +21,10 @@ class Collapsible extends StatefulWidget {
     this.maintainState = true,
     super.key,
   }) : assert(
-          (headerBuilder != null && title == null) ||
-              (headerBuilder == null && title != null),
-          "Must provide either headerBuilder or title",
-        );
+         (headerBuilder != null && title == null) ||
+             (headerBuilder == null && title != null),
+         "Must provide either headerBuilder or title",
+       );
 
   final CollapsibleSectionBuilder contentBuilder;
   final CollapsibleSectionBuilder? headerBuilder;
@@ -46,7 +44,8 @@ class _CollapsibleState extends State<Collapsible> {
     //final defaultTextStyle = DefaultTextStyle.of(context);
     final theme = Theme.of(context);
 
-    final headerWidget = widget.headerBuilder?.call(context, isCollapsed) ??
+    final headerWidget =
+        widget.headerBuilder?.call(context, isCollapsed) ??
         MouseEventsRegion(
           builder: (context, states) {
             final isHovered = states.contains(WidgetState.hovered);
@@ -69,8 +68,9 @@ class _CollapsibleState extends State<Collapsible> {
                     isCollapsed
                         ? Icons.keyboard_arrow_right_rounded
                         : Icons.keyboard_arrow_down_rounded,
-                    color: theme.tabBarTheme.labelColor
-                        ?.withValues(alpha: ThemeConfig.kMuteFadeFactor),
+                    color: theme.tabBarTheme.labelColor?.withValues(
+                      alpha: ThemeConfig.kMuteFadeFactor,
+                    ),
                   ),
                 ],
               ),

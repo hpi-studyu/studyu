@@ -9,9 +9,7 @@ class StudyValidator {
 
   Future<Study> _fetchCurrentStudy() async {
     final studies = await SupabaseQuery.getAll<Study>(selectedColumns: ['*']);
-    studies.removeWhere(
-      (Study s) => s.userId != userID,
-    );
+    studies.removeWhere((Study s) => s.userId != userID);
     expect(studies.length, 1, reason: 'One study should be created');
     final study = studies.single;
     return study;
@@ -52,9 +50,10 @@ class StudyValidator {
 
     final fetchedStudy = await _fetchCurrentStudy();
 
-    final studyDiff =
-        JsonDiffer.fromJson(studyToCompare.toJson(), fetchedStudy.toJson())
-            .diff();
+    final studyDiff = JsonDiffer.fromJson(
+      studyToCompare.toJson(),
+      fetchedStudy.toJson(),
+    ).diff();
 
     final res = bfsDiffNode(studyDiff);
     if (!res) {

@@ -25,10 +25,7 @@ class ReportBadge extends StatelessWidget {
 
     Widget inTooltip(Widget child) {
       if (tooltipMessage.isNotEmpty && showTooltip) {
-        return Tooltip(
-          message: tooltipMessage,
-          child: child,
-        );
+        return Tooltip(message: tooltipMessage, child: child);
       }
       return child;
     }

@@ -111,8 +111,8 @@ class AuthFormController extends _$AuthFormController
     ValidationMessage.email: (_) => tr.form_field_email_invalid,
     ValidationMessage.mustMatch: (_) => tr.form_field_password_mustmatch,
     ValidationMessage.minLength: (error) => tr.form_field_password_minlength(
-          (error as Map)['requiredLength'] as num,
-        ),
+      (error as Map)['requiredLength'] as num,
+    ),
   };
 
   late final FormGroup _loginForm = FormGroup({
@@ -127,23 +127,17 @@ class AuthFormController extends _$AuthFormController
       'passwordConfirmation': passwordConfirmationControl,
       'termsOfService': termsOfServiceControl,
     },
-    validators: [
-      Validators.mustMatch('password', 'passwordConfirmation'),
-    ],
+    validators: [Validators.mustMatch('password', 'passwordConfirmation')],
   );
 
-  late final FormGroup _passwordForgotForm = FormGroup({
-    'email': emailControl,
-  });
+  late final FormGroup _passwordForgotForm = FormGroup({'email': emailControl});
 
   late final FormGroup _passwordRecoveryForm = FormGroup(
     {
       'password': passwordControl,
       'passwordConfirmation': passwordConfirmationControl,
     },
-    validators: [
-      Validators.mustMatch('password', 'passwordConfirmation'),
-    ],
+    validators: [Validators.mustMatch('password', 'passwordConfirmation')],
   );
 
   late final FormGroup _passwordResetForm = FormGroup(
@@ -152,13 +146,11 @@ class AuthFormController extends _$AuthFormController
       'password': passwordControl,
       'passwordConfirmation': passwordConfirmationControl,
     },
-    validators: [
-      Validators.mustMatch('password', 'passwordConfirmation'),
-    ],
+    validators: [Validators.mustMatch('password', 'passwordConfirmation')],
   );
 
   late final Map<AuthFormKey, Map<FormControl, List<Validator<dynamic>>>>
-      _controlValidatorsByForm = {
+  _controlValidatorsByForm = {
     AuthFormKey.signup: {
       emailControl: [Validators.required, Validators.email],
       passwordControl: [Validators.minLength(8)],
@@ -285,8 +277,10 @@ class AuthFormController extends _$AuthFormController
   Future<AuthResponse> _signInWith(String email, String password) async {
     try {
       state = const AsyncValue.loading();
-      final response =
-          await _authRepository.signInWith(email: email, password: password);
+      final response = await _authRepository.signInWith(
+        email: email,
+        password: password,
+      );
       return response;
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
@@ -322,8 +316,9 @@ class AuthFormController extends _$AuthFormController
     if (!form.valid) {
       return Future.value();
     }
-    return resetPasswordForEmail(emailControl.value!)
-        .then((_) => _notificationService.show(Notifications.passwordReset));
+    return resetPasswordForEmail(
+      emailControl.value!,
+    ).then((_) => _notificationService.show(Notifications.passwordReset));
   }
 
   Future<void> recoverPassword() {
@@ -342,8 +337,9 @@ class AuthFormController extends _$AuthFormController
       return false;
     }
 
-    final isOldPasswordValid =
-        await _isOldPasswordValid(oldPasswordControl.value!);
+    final isOldPasswordValid = await _isOldPasswordValid(
+      oldPasswordControl.value!,
+    );
 
     if (!isOldPasswordValid) {
       return false;
@@ -355,8 +351,9 @@ class AuthFormController extends _$AuthFormController
   Future<bool> updateUser(String newPassword) async {
     try {
       state = const AsyncValue.loading();
-      return (await _authRepository.updateUser(newPassword: newPassword))
-              .user !=
+      return (await _authRepository.updateUser(
+            newPassword: newPassword,
+          )).user !=
           null;
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);

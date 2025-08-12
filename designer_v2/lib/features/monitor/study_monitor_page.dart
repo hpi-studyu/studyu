@@ -82,7 +82,8 @@ class StudyMonitorScreen extends StudyPageWidget {
     }
 
     // Normalize the percentages so they add up to 1.0
-    final double sumOfPercentages = activePercentage +
+    final double sumOfPercentages =
+        activePercentage +
         inactivePercentage +
         dropoutPercentage +
         completedPercentage;
@@ -185,10 +186,7 @@ class StudyMonitorScreen extends StudyPageWidget {
       flex: (percentage * 1000).toInt(),
       child: Tooltip(
         message: tooltip,
-        child: Container(
-          height: 20,
-          color: color,
-        ),
+        child: Container(height: 20, color: color),
       ),
     );
   }
@@ -202,11 +200,7 @@ class StudyMonitorScreen extends StudyPageWidget {
       message: tooltip,
       child: Row(
         children: [
-          Container(
-            width: 15,
-            height: 15,
-            color: color,
-          ),
+          Container(width: 15, height: 15, color: color),
           const SizedBox(width: 5),
           Text(text),
         ],
@@ -224,10 +218,7 @@ class StudyMonitorScreen extends StudyPageWidget {
       context: context,
       title: tr.participant_details_title,
       width: 550,
-      body: ParticipantDetailsView(
-        monitorItem: item,
-        study: study,
-      ),
+      body: ParticipantDetailsView(monitorItem: item, study: study),
       actionButtons: [
         retainSizeInAppBar(
           DismissButton(

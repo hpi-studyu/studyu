@@ -13,8 +13,9 @@ String _$apiClientHash() => r'743dbf00a2e1812c940839d579edd2cc43e0366f';
 final apiClientProvider = AutoDisposeProvider<StudyUApiClient>.internal(
   apiClient,
   name: r'apiClientProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$apiClientHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$apiClientHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

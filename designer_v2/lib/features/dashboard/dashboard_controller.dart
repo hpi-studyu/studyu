@@ -62,9 +62,7 @@ class DashboardController extends _$DashboardController
         print("studyRepository.update");
         // Update the controller's state when new studies are available in the repository
         final studies = wrappedModels.map((study) => study.model).toList();
-        state = state.copyWith(
-          studies: () => AsyncValue.data(studies),
-        );
+        state = state.copyWith(studies: () => AsyncValue.data(studies));
       },
       onError: (Object error) {
         state = state.copyWith(
@@ -105,23 +103,21 @@ class DashboardController extends _$DashboardController
   }
 
   void setSorting(StudiesTableColumn sortByColumn, bool ascending) {
-    state =
-        state.copyWith(sortByColumn: sortByColumn, sortAscending: ascending);
+    state = state.copyWith(
+      sortByColumn: sortByColumn,
+      sortAscending: ascending,
+    );
   }
 
   Future<void> filterStudies(String? query) async {
-    state = state.copyWith(
-      query: query,
-    );
+    state = state.copyWith(query: query);
   }
 
   Future<void> sortStudies() async {
     final studies = state.sort(
       pinnedStudies: _userRepository.user.preferences.pinnedStudies,
     );
-    state = state.copyWith(
-      studies: () => AsyncValue.data(studies),
-    );
+    state = state.copyWith(studies: () => AsyncValue.data(studies));
   }
 
   bool isSortingActiveForColumn(StudiesTableColumn column) {
@@ -157,9 +153,9 @@ class DashboardController extends _$DashboardController
       ),
     ].where((action) => action.isAvailable).toList();
 
-    return withIcons(
-      [...pinActions, ..._studyRepository.availableActions(model)],
-      studyActionIcons,
-    );
+    return withIcons([
+      ...pinActions,
+      ..._studyRepository.availableActions(model),
+    ], studyActionIcons);
   }
 }

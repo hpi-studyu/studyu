@@ -37,8 +37,9 @@ class TaskInstance {
           .expand((element) => element),
     ];
     return tasks.firstWhere((task) {
-      if (task.schedule.completionPeriods
-          .any((completionPeriod) => completionPeriod.id == taskInstanceId)) {
+      if (task.schedule.completionPeriods.any(
+        (completionPeriod) => completionPeriod.id == taskInstanceId,
+      )) {
         return true;
       }
       return false;

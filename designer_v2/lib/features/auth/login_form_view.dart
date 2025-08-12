@@ -24,9 +24,7 @@ class LoginForm extends FormConsumerRefWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        EmailTextField(
-          formControl: controller.emailControl,
-        ),
+        EmailTextField(formControl: controller.emailControl),
         const SizedBox(height: 4.0),
         PasswordTextField(
           formControl: controller.passwordControl,

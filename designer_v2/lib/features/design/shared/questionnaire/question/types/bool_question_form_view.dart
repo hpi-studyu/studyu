@@ -28,7 +28,7 @@ class BoolQuestionFormView extends ConsumerWidget {
               ),
             ],
             onSelectItem: (_) => {}, // no-op
-            buildCellsAt: (context, control, _, __) =>
+            buildCellsAt: (context, control, _, _) =>
                 buildChoiceOptionRow(context, control),
             trailingActionsAt: (control, _) => [],
             cellSpacing: 0.0,

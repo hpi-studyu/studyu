@@ -45,8 +45,9 @@ class Badge extends StatelessWidget {
           child: Padding(
             padding: padding,
             child: Row(
-              mainAxisAlignment:
-                  center ? MainAxisAlignment.center : MainAxisAlignment.start,
+              mainAxisAlignment: center
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.start,
               children: [
                 if (icon != null)
                   Icon(
@@ -70,7 +71,7 @@ class Badge extends StatelessWidget {
                         ?.copyWith(
                           fontSize:
                               (theme.textTheme.bodySmall?.fontSize ?? 14.0) *
-                                  0.95,
+                              0.95,
                           color: _getLabelColor(theme),
                           fontWeight: FontWeight.bold,
                         )

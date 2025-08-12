@@ -23,9 +23,7 @@ class PasswordForgotForm extends FormConsumerRefWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        EmailTextField(
-          formControl: controller.emailControl,
-        ),
+        EmailTextField(formControl: controller.emailControl),
         const SizedBox(height: 24.0),
         ReactiveFormConsumer(
           builder: (context, form, child) {

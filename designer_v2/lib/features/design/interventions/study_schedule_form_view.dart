@@ -61,7 +61,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
                 onChanged: formViewModel.sequenceTypeControl.disabled
                     ? null
                     : (PhaseSequence? value) =>
-                        formViewModel.sequenceTypeControl.value = value,
+                          formViewModel.sequenceTypeControl.value = value,
                 value: formViewModel.sequenceTypeControl.value,
                 decoration: InputDecoration(
                   helperText:
@@ -102,8 +102,10 @@ class StudyScheduleFormView extends FormConsumerWidget {
                           ),
                         ),
                       //formControl: formViewModel.phaseDurationControl,
-                      onChanged: (value) => formViewModel
-                          .phaseDurationControl.value = int.parse(value),
+                      onChanged: (value) =>
+                          formViewModel.phaseDurationControl.value = int.parse(
+                            value,
+                          ),
                       keyboardType: TextInputType.number,
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.digitsOnly,
@@ -136,8 +138,10 @@ class StudyScheduleFormView extends FormConsumerWidget {
                     child: TextField(
                       readOnly: formViewModel.numCyclesControl.disabled,
                       //formControl: formViewModel.numCyclesControl,
-                      onChanged: (value) => formViewModel
-                          .numCyclesControl.value = int.parse(value),
+                      onChanged: (value) =>
+                          formViewModel.numCyclesControl.value = int.parse(
+                            value,
+                          ),
                       controller: TextEditingController()
                         ..value = TextEditingValue(
                           text: formViewModel.numCyclesControl.value.toString(),
@@ -180,8 +184,9 @@ class StudyScheduleFormView extends FormConsumerWidget {
                       value: formViewModel.includeBaselineControl.value,
                       onChanged: formViewModel.includeBaselineControl.disabled
                           ? null
-                          : (value) => formViewModel
-                              .includeBaselineControl.value = value,
+                          : (value) =>
+                                formViewModel.includeBaselineControl.value =
+                                    value,
                       //formControl: formViewModel.includeBaselineControl,
                     ),
                   ),

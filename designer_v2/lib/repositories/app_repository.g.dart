@@ -13,8 +13,9 @@ String _$appConfigHash() => r'8c7c21d484b113f9d2edea9b5a474f457f0b2106';
 final appConfigProvider = AutoDisposeFutureProvider<AppConfig>.internal(
   appConfig,
   name: r'appConfigProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$appConfigHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$appConfigHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

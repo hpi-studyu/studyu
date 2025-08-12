@@ -11,9 +11,7 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.what_is_studyu),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.what_is_studyu)),
       body: PageView(
         scrollDirection: Axis.vertical,
         children: <Widget>[
@@ -30,8 +28,11 @@ class AboutScreen extends StatelessWidget {
                       child: Icon(MdiIcons.food, size: 80, color: Colors.black),
                     ),
                     Expanded(
-                      child:
-                          Icon(MdiIcons.equal, size: 80, color: Colors.black),
+                      child: Icon(
+                        MdiIcons.equal,
+                        size: 80,
+                        color: Colors.black,
+                      ),
                     ),
                     Expanded(
                       child: Icon(
@@ -74,8 +75,11 @@ class AboutScreen extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child:
-                          Icon(MdiIcons.help, size: 80, color: Colors.orange),
+                      child: Icon(
+                        MdiIcons.help,
+                        size: 80,
+                        color: Colors.orange,
+                      ),
                     ),
                   ],
                 ),

@@ -50,8 +50,8 @@ class ParticipantSquares extends StatelessWidget {
                       completed: phase.completedTasksPerDay[index],
                       numberOfTheDay:
                           (phaseIndex * study.schedule.phaseDuration) +
-                              index +
-                              1,
+                          index +
+                          1,
                       monitorItem: monitorItem,
                       study: study,
                     ),
@@ -81,23 +81,28 @@ class ParticipantSquares extends StatelessWidget {
             startInx,
             endInx,
           ),
-          completedTasksPerDay:
-              monitorItem.completedTasksPerDay.sublist(startInx, endInx),
+          completedTasksPerDay: monitorItem.completedTasksPerDay.sublist(
+            startInx,
+            endInx,
+          ),
         ),
       );
     }
 
-    final numberOfInterventionPhases = study.schedule.numberOfCycles *
+    final numberOfInterventionPhases =
+        study.schedule.numberOfCycles *
         (study.schedule.sequence == PhaseSequence.customized
             ? study.schedule.sequenceCustom.length
             : StudySchedule.numberOfInterventions);
     for (int i = 0; i < numberOfInterventionPhases; i++) {
       final int phaseDuration = study.schedule.phaseDuration;
       final bool includeBaseline = study.schedule.includeBaseline;
-      final int baselineAdjustmentStart =
-          includeBaseline ? (i + 1) * phaseDuration : i * phaseDuration;
-      final int baselineAdjustmentEnd =
-          includeBaseline ? (i + 2) * phaseDuration : (i + 1) * phaseDuration;
+      final int baselineAdjustmentStart = includeBaseline
+          ? (i + 1) * phaseDuration
+          : i * phaseDuration;
+      final int baselineAdjustmentEnd = includeBaseline
+          ? (i + 2) * phaseDuration
+          : (i + 1) * phaseDuration;
 
       if (baselineAdjustmentStart >= totalCompletedDays) break;
 
@@ -117,8 +122,10 @@ class ParticipantSquares extends StatelessWidget {
         StudyPhase(
           intervention: intervention,
           missedTasksPerDay: monitorItem.missedTasksPerDay.sublist(start, end),
-          completedTasksPerDay:
-              monitorItem.completedTasksPerDay.sublist(start, end),
+          completedTasksPerDay: monitorItem.completedTasksPerDay.sublist(
+            start,
+            end,
+          ),
         ),
       );
     }

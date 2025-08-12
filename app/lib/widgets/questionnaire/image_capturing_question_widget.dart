@@ -49,18 +49,16 @@ class _ImageCapturingQuestionWidgetState
             }
           : null,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 8.0,
-          horizontal: 2.0,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 2.0),
         child: Row(
           children: [
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: Icon(
                 _hasCaptured ? MdiIcons.checkCircleOutline : MdiIcons.camera,
-                color:
-                    _hasCaptured ? Colors.black38 : theme.colorScheme.primary,
+                color: _hasCaptured
+                    ? Colors.black38
+                    : theme.colorScheme.primary,
                 size: 24,
               ),
             ),

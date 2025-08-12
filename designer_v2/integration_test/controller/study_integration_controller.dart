@@ -10,11 +10,11 @@ abstract class StudyIntegrationActions {
   Future<void> fillInfoPage();
   Future<void> fillInterventions(
     List<Intervention> Function(List<Intervention> interventionList)
-        interventionsToCreate,
+    interventionsToCreate,
   );
   Future<void> fillObservations(
     List<Observation> Function(List<Observation> observationList)
-        observationsToCreate,
+    observationsToCreate,
   );
 }
 
@@ -28,10 +28,7 @@ class StudyIntegrationController extends StudyRobots
   late final Study _intermediateMockStudy;
   late final Study mockStudy;
 
-  StudyIntegrationController(
-    super.$,
-    this._mockStudyRef,
-  );
+  StudyIntegrationController(super.$, this._mockStudyRef);
 
   Future<void> init(String userID_) async {
     userID = userID_;
@@ -71,7 +68,7 @@ class StudyIntegrationController extends StudyRobots
   @override
   Future<void> fillInterventions(
     List<Intervention> Function(List<Intervention> interventionList)
-        interventionsToCreate,
+    interventionsToCreate,
   ) async {
     final interventions = interventionsToCreate(mockStudy.interventions);
 
@@ -91,7 +88,7 @@ class StudyIntegrationController extends StudyRobots
   @override
   Future<void> fillObservations(
     List<Observation> Function(List<Observation> observationList)
-        observationsToCreate,
+    observationsToCreate,
   ) async {
     final observations = observationsToCreate(mockStudy.observations);
 

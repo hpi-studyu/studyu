@@ -26,7 +26,8 @@ class TTest {
     }
     if (sampleA.length < 2 || sampleB.length < 2) {
       throw ArgumentError(
-          'Each sample must contain at least 2 values for variance calculation');
+        'Each sample must contain at least 2 values for variance calculation',
+      );
     }
   }
 
@@ -97,7 +98,8 @@ class TTest {
     int nB,
   ) {
     final num numerator = pow((varianceA / nA) + (varianceB / nB), 2);
-    final num denominator = (pow(varianceA / nA, 2) / (nA - 1)) +
+    final num denominator =
+        (pow(varianceA / nA, 2) / (nA - 1)) +
         (pow(varianceB / nB, 2) / (nB - 1));
     return numerator / denominator;
   }
@@ -146,8 +148,10 @@ class TTest {
   double get pValue {
     if (_pValue == null) {
       final num absT = tStatistic.abs();
-      final double positiveTailProbability =
-          _integratePDF(absT, degreesOfFreedom);
+      final double positiveTailProbability = _integratePDF(
+        absT,
+        degreesOfFreedom,
+      );
       _pValue = 2 * positiveTailProbability; // Two-tailed p-value
     }
     return _pValue!;
@@ -163,9 +167,11 @@ class TTest {
     double previousValue =
         _tDistributionPDF(tStatistic, degreesOfFreedom) as double;
 
-    for (double t = tStatistic.toDouble() + stepSize;
-        t < upperLimit;
-        t += stepSize) {
+    for (
+      double t = tStatistic.toDouble() + stepSize;
+      t < upperLimit;
+      t += stepSize
+    ) {
       final double currentValue =
           _tDistributionPDF(t, degreesOfFreedom) as double;
       sum += (previousValue + currentValue) / 2 * stepSize;

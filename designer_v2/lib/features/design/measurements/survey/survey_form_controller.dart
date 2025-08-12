@@ -36,12 +36,15 @@ class MeasurementSurveyFormViewModel
 
   // - Form fields
 
-  final FormControl<MeasurementID> measurementIdControl =
-      FormControl(value: const Uuid().v4()); // hidden
-  final FormControl<MeasurementID> instanceIdControl =
-      FormControl(value: const Uuid().v4()); // hidden
-  final FormControl<String> surveyTitleControl =
-      FormControl(value: MeasurementSurveyFormData.kDefaultTitle);
+  final FormControl<MeasurementID> measurementIdControl = FormControl(
+    value: const Uuid().v4(),
+  ); // hidden
+  final FormControl<MeasurementID> instanceIdControl = FormControl(
+    value: const Uuid().v4(),
+  ); // hidden
+  final FormControl<String> surveyTitleControl = FormControl(
+    value: MeasurementSurveyFormData.kDefaultTitle,
+  );
   final FormControl<String> surveyIntroTextControl = FormControl(value: '');
   final FormControl<String> surveyOutroTextControl = FormControl(value: '');
 
@@ -50,34 +53,30 @@ class MeasurementSurveyFormViewModel
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [titleRequired, atLeastOneQuestion],
-        StudyFormValidationSet.publish: [titleRequired, atLeastOneQuestion],
-        StudyFormValidationSet.test: [titleRequired, atLeastOneQuestion],
-      };
+    StudyFormValidationSet.draft: [titleRequired, atLeastOneQuestion],
+    StudyFormValidationSet.publish: [titleRequired, atLeastOneQuestion],
+    StudyFormValidationSet.test: [titleRequired, atLeastOneQuestion],
+  };
 
   FormControlValidation get titleRequired => FormControlValidation(
-        control: surveyTitleControl,
-        validators: [
-          Validators.required,
-        ],
-        validationMessages: {
-          ValidationMessage.required: (error) =>
-              tr.form_field_measurement_survey_title_required,
-        },
-      );
+    control: surveyTitleControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (error) =>
+          tr.form_field_measurement_survey_title_required,
+    },
+  );
 
   FormControlValidation get atLeastOneQuestion => FormControlValidation(
-        control: questionsArray,
-        validators: [
-          Validators.minLength(1),
-        ],
-        validationMessages: {
-          ValidationMessage.minLength: (error) =>
-              tr.form_array_measurement_survey_questions_minlength(
-                (error as Map)['requiredLength'] as num,
-              ),
-        },
-      );
+    control: questionsArray,
+    validators: [Validators.minLength(1)],
+    validationMessages: {
+      ValidationMessage.minLength: (error) =>
+          tr.form_array_measurement_survey_questions_minlength(
+            (error as Map)['requiredLength'] as num,
+          ),
+    },
+  );
 
   @override
   late final FormGroup form = FormGroup({
@@ -129,10 +128,10 @@ class MeasurementSurveyFormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: breadcrumbsTitle,
-        FormMode.readonly: breadcrumbsTitle,
-        FormMode.edit: breadcrumbsTitle,
-      };
+    FormMode.create: breadcrumbsTitle,
+    FormMode.readonly: breadcrumbsTitle,
+    FormMode.edit: breadcrumbsTitle,
+  };
 
   // - IListActionProvider
 

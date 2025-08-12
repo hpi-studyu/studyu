@@ -72,8 +72,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     this.userId,
     this.selectedInterventionIds,
     this.inviteCode,
-  )   : id = const Uuid().v4(),
-        studyId = study.id;
+  ) : id = const Uuid().v4(),
+      studyId = study.id;
 
   List<String> get interventionOrder =>
       study.schedule.generateInterventionIdsInOrder(selectedInterventionIds);
@@ -117,8 +117,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
 
   // Day after last intervention
   DateTime endDate(DateTime dt) => dt.add(
-        Duration(days: interventionOrder.length * study.schedule.phaseDuration),
-      );
+    Duration(days: interventionOrder.length * study.schedule.phaseDuration),
+  );
 
   int getDayOfStudyFor(DateTime date) {
     return date.differenceInDays(startedAt!);
@@ -136,15 +136,17 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
       return null;
     }
     final interventionId = interventionOrder[index];
-    return selectedInterventions
-        .firstWhereOrNull((intervention) => intervention.id == interventionId);
+    return selectedInterventions.firstWhereOrNull(
+      (intervention) => intervention.id == interventionId,
+    );
   }
 
   List<Intervention> getInterventionsInOrder() {
     return interventionOrder
         .map(
-          (key) => selectedInterventions
-              .firstWhere((intervention) => intervention.id == key),
+          (key) => selectedInterventions.firstWhere(
+            (intervention) => intervention.id == key,
+          ),
         )
         .toList();
   }
@@ -182,7 +184,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   double percentMissedForPhase(int index, DateTime date) {
     if (startOfPhase(index).isAfter(date)) return 0;
 
-    final missedInPhase = min(
+    final missedInPhase =
+        min(
           date.differenceInDays(startOfPhase(index)),
           study.schedule.phaseDuration,
         ) -
@@ -211,15 +214,13 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     CompletionPeriod completionPeriod,
     DateTime dateTime,
   ) {
-    return getTaskProgressForDay(taskId, dateTime).any(
-      (progress) {
-        if (progress.result.periodId == null) {
-          // fallback to support studies without periodIds
-          return progress.completedAt!.isSameDate(dateTime);
-        }
-        return progress.result.periodId == completionPeriod.id;
-      },
-    );
+    return getTaskProgressForDay(taskId, dateTime).any((progress) {
+      if (progress.result.periodId == null) {
+        // fallback to support studies without periodIds
+        return progress.completedAt!.isSameDate(dateTime);
+      }
+      return progress.result.periodId == completionPeriod.id;
+    });
   }
 
   /// Check if a task is fully completed for all task instances
@@ -227,11 +228,14 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   /// completionPeriods on a given day
   bool completedTaskForDay(String taskId, DateTime dateTime) {
     return [
-      ...selectedInterventions.expand((e) => e.tasks),
-      ...study.observations,
-    ].where((task) => task.id == taskId).single.schedule.completionPeriods.any(
-          (period) => completedTaskInstanceForDay(taskId, period, dateTime),
-        );
+          ...selectedInterventions.expand((e) => e.tasks),
+          ...study.observations,
+        ]
+        .where((task) => task.id == taskId)
+        .single
+        .schedule
+        .completionPeriods
+        .any((period) => completedTaskInstanceForDay(taskId, period, dateTime));
   }
 
   int completedTasksFor(Task task) => resultsFor(task.id).length;
@@ -240,8 +244,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   /// returns true if all of of the tasks (interventions & observations)
   /// have been completed on a given day
   bool allTasksCompletedFor(DateTime dateTime) => scheduleFor(dateTime).every(
-        (taskInstance) => completedTaskForDay(taskInstance.task.id, dateTime),
-      );
+    (taskInstance) => completedTaskForDay(taskInstance.task.id, dateTime),
+  );
 
   // Currently the end of the study, as there is no real minimum, just a set study length
   bool get minimumStudyLengthCompleted {
@@ -256,7 +260,8 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   int totalTaskCountFor(Task task) {
     var daysCount = daysPerIntervention;
     if (task is Observation) {
-      daysCount = 2 * daysCount +
+      daysCount =
+          2 * daysCount +
           (study.schedule.includeBaseline ? study.schedule.phaseDuration : 0);
     }
     return daysCount * task.schedule.completionPeriods.length;

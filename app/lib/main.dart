@@ -20,9 +20,11 @@ import 'package:timezone/timezone.dart' as tz;
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
   // ignore: avoid_print
-  print('notification(${notificationResponse.id}) action tapped: '
-      '${notificationResponse.actionId} with'
-      ' payload: ${notificationResponse.payload}');
+  print(
+    'notification(${notificationResponse.id}) action tapped: '
+    '${notificationResponse.actionId} with'
+    ' payload: ${notificationResponse.payload}',
+  );
   if (notificationResponse.input?.isNotEmpty ?? false) {
     // ignore: avoid_print
     print(
@@ -31,8 +33,9 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   }
 }
 
-GlobalKey<NavigatorState> navigatorKey =
-    GlobalKey(debugLabel: 'Main Navigator');
+GlobalKey<NavigatorState> navigatorKey = GlobalKey(
+  debugLabel: 'Main Navigator',
+);
 
 Future<void> main() async {
   final WidgetsBinding widgetsBinding =

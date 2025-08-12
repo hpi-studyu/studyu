@@ -6,9 +6,6 @@ class DisclaimerSection extends GenericSection {
   const DisclaimerSection(super.subject, {super.key, super.onTap});
 
   @override
-  Widget buildContent(BuildContext context) => Column(
-        children: [
-          Text(AppLocalizations.of(context)!.report_disclaimer),
-        ],
-      );
+  Widget buildContent(BuildContext context) =>
+      Column(children: [Text(AppLocalizations.of(context)!.report_disclaimer)]);
 }

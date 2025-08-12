@@ -21,8 +21,10 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
 
   static const defaultResponseOptionValidity = true;
 
-  late final FormArray responseOptionsDisabledArray =
-      FormArray(_copyFormControls(answerOptionsArray.controls), disabled: true);
+  late final FormArray responseOptionsDisabledArray = FormArray(
+    _copyFormControls(answerOptionsArray.controls),
+    disabled: true,
+  );
   late final FormArray<bool> responseOptionsLogicControls = FormArray(
     List.generate(
       answerOptionsArray.controls.length,
@@ -31,16 +33,19 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
   );
   late final FormArray<String> responseOptionsLogicDescriptionControls =
       FormArray(
-    List.generate(answerOptionsArray.controls.length, (index) => FormControl()),
-  );
+        List.generate(
+          answerOptionsArray.controls.length,
+          (index) => FormControl(),
+        ),
+      );
 
   List<AbstractControl> get responseOptionsDisabledControls =>
       responseOptionsDisabledArray.controls;
 
   List<FormControlOption<bool>> get logicControlOptions => [
-        FormControlOption(true, tr.form_screener_question_logic_qualify),
-        FormControlOption(false, tr.form_screener_question_logic_disqualify),
-      ];
+    FormControlOption(true, tr.form_screener_question_logic_qualify),
+    FormControlOption(false, tr.form_screener_question_logic_disqualify),
+  ];
 
   late final _questionBaseControls = {
     ...super.questionBaseControls,
@@ -73,8 +78,9 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
           : defaultResponseOptionValidity;
       return FormControl<bool>(value: newValue);
     }).toList();
-    final newLogicDescriptionControls =
-        responseOptionControls.map((newControl) {
+    final newLogicDescriptionControls = responseOptionControls.map((
+      newControl,
+    ) {
       // Consolidate with previous value (if any)
       final idx = prevResponseOptionControls
           .map((c) => c.value)
@@ -85,8 +91,9 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
           : null;
       return FormControl<String>(value: newValue);
     }).toList();
-    final newResponseOptionsControls =
-        _copyFormControls(responseOptionControls);
+    final newResponseOptionsControls = _copyFormControls(
+      responseOptionControls,
+    );
 
     // Keep disabled controls in sync with actual response option controls
     responseOptionsDisabledArray.clear();
@@ -94,8 +101,9 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
     responseOptionsDisabledArray.markAsDisabled();
 
     // Reset logic controls to new consolidated ones
-    prevResponseOptionValues =
-        prevResponseOptionControls.map((c) => c.value).toList();
+    prevResponseOptionValues = prevResponseOptionControls
+        .map((c) => c.value)
+        .toList();
     responseOptionsLogicControls.clear();
     responseOptionsLogicControls.addAll(newLogicControls);
     responseOptionsLogicDescriptionControls.clear();
@@ -113,8 +121,9 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
     for (final entry in data.responseOptionsValidity.entries) {
       final responseOption = entry.key;
       final responseValidity = entry.value;
-      final logicControl =
-          _findAssociatedLogicControlFor(responseOption: responseOption);
+      final logicControl = _findAssociatedLogicControlFor(
+        responseOption: responseOption,
+      );
       if (logicControl != null) {
         logicControl.value = responseValidity;
       }
@@ -183,6 +192,7 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
   // - IScreenerQuestionLogicFormViewModel
 
   @override
-  bool get isDirtyOptionsBannerVisible => !prevResponseOptionValues
-      .equals(answerOptionsControls.map((c) => c.value).toList());
+  bool get isDirtyOptionsBannerVisible => !prevResponseOptionValues.equals(
+    answerOptionsControls.map((c) => c.value).toList(),
+  );
 }

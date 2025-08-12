@@ -92,8 +92,9 @@ class AccountSettingsDialog extends ConsumerWidget {
 
                                 Navigator.maybePop(context);
 
-                                final notificationService =
-                                    ref.read(notificationServiceProvider);
+                                final notificationService = ref.read(
+                                  notificationServiceProvider,
+                                );
 
                                 notificationService.show(
                                   result

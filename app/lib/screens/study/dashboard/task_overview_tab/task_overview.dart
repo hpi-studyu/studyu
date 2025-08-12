@@ -50,8 +50,10 @@ class _TaskOverviewState extends State<TaskOverview> {
                 const SizedBox(width: 8),
                 Text(
                   taskInstance.completionPeriod.formatted(),
-                  style: theme.textTheme.titleSmall!
-                      .copyWith(fontSize: 16, color: theme.primaryColor),
+                  style: theme.textTheme.titleSmall!.copyWith(
+                    fontSize: 16,
+                    color: theme.primaryColor,
+                  ),
                 ),
               ],
             ),
@@ -95,9 +97,7 @@ class _TaskOverviewState extends State<TaskOverview> {
                       style: theme.textTheme.titleLarge,
                     ),
                   ),
-                  const SizedBox(
-                    width: 5,
-                  ),
+                  const SizedBox(width: 5),
                   Text(
                     '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',
                     style: const TextStyle(color: primaryColor),
@@ -106,8 +106,9 @@ class _TaskOverviewState extends State<TaskOverview> {
               ),
               const SizedBox(height: 8),
               InterventionCardTitle(
-                intervention:
-                    widget.subject!.getInterventionForDate(DateTime.now()),
+                intervention: widget.subject!.getInterventionForDate(
+                  DateTime.now(),
+                ),
               ),
               const SizedBox(height: 8),
               Text(
@@ -118,13 +119,7 @@ class _TaskOverviewState extends State<TaskOverview> {
           ),
         ),
         // Todo: find good way to calculate duration of intervention and display it
-        Expanded(
-          child: ListView(
-            children: [
-              ...buildScheduleToday(context),
-            ],
-          ),
-        ),
+        Expanded(child: ListView(children: [...buildScheduleToday(context)])),
       ],
     );
   }

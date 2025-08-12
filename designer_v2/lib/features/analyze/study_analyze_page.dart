@@ -21,11 +21,7 @@ class StudyAnalyzeScreen extends StudyPageWidget {
         noPrefix: true,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextParagraph(
-              text: tr.banner_text_study_analyze_draft,
-            ),
-          ],
+          children: [TextParagraph(text: tr.banner_text_study_analyze_draft)],
         ),
         style: BannerStyle.info,
       );
@@ -37,8 +33,9 @@ class StudyAnalyzeScreen extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final controller =
-        ref.watch(studyAnalyzeControllerProvider(studyId).notifier);
+    final controller = ref.watch(
+      studyAnalyzeControllerProvider(studyId).notifier,
+    );
     final state = ref.watch(studyAnalyzeControllerProvider(studyId));
 
     return Column(
@@ -48,8 +45,10 @@ class StudyAnalyzeScreen extends StudyPageWidget {
           color: ThemeConfig.containerColor(theme),
           width: double.infinity,
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 18.0, horizontal: 48.0),
+            padding: const EdgeInsets.symmetric(
+              vertical: 18.0,
+              horizontal: 48.0,
+            ),
             child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
@@ -74,9 +73,7 @@ class StudyAnalyzeScreen extends StudyPageWidget {
           width: double.infinity,
           color: theme.colorScheme.secondary.withValues(alpha: 0.03),
           height: 300,
-          child: const Center(
-            child: UnderConstruction(),
-          ),
+          child: const Center(child: UnderConstruction()),
         ),
       ],
     );

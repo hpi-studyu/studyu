@@ -37,8 +37,9 @@ class AppController extends _$AppController {
       (delegate) => delegate.onAppStart(),
       withMinDelay: true,
     );
-    _stateController
-        .add(const AppControllerState(status: AppStatus.initialized));
+    _stateController.add(
+      const AppControllerState(status: AppStatus.initialized),
+    );
   }
 
   Stream getStream() {

@@ -11,12 +11,12 @@ abstract class GenericSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: buildContent(context),
-          ),
-        ),
-      );
+    child: InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: buildContent(context),
+      ),
+    ),
+  );
 }

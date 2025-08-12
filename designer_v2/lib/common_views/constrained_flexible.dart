@@ -23,10 +23,7 @@ class ConstrainedWidthFlexible extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints(
-        minWidth: minWidth,
-        maxWidth: maxWidth,
-      ),
+      constraints: BoxConstraints(minWidth: minWidth, maxWidth: maxWidth),
       child: SizedBox(
         width: _getWidth(outerConstraints.maxWidth),
         child: child,

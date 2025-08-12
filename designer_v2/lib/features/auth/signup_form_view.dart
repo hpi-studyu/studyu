@@ -28,14 +28,10 @@ class SignupForm extends FormConsumerRefWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        EmailTextField(
-          formControl: controller.emailControl,
-        ),
+        EmailTextField(formControl: controller.emailControl),
         //const SizedBox(height: 12.0),
         const SizedBox(height: 4.0),
-        PasswordTextField(
-          formControl: controller.passwordControl,
-        ),
+        PasswordTextField(formControl: controller.passwordControl),
         //const SizedBox(height: 12.0),
         const SizedBox(height: 4.0),
         PasswordTextField(

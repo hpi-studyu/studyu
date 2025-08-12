@@ -10,13 +10,13 @@ class EmailTextField extends StatefulWidget {
     String? labelText,
     String? hintText,
     super.key,
-  })  : assert(
-          (formControlName != null && formControl == null) ||
-              (formControlName == null && formControl != null),
-          "Must provide either formControlName or formControl",
-        ),
-        labelText = labelText ?? tr.form_field_email,
-        hintText = hintText ?? tr.form_field_email_hint;
+  }) : assert(
+         (formControlName != null && formControl == null) ||
+             (formControlName == null && formControl != null),
+         "Must provide either formControlName or formControl",
+       ),
+       labelText = labelText ?? tr.form_field_email,
+       hintText = hintText ?? tr.form_field_email_hint;
 
   final String labelText;
   final String? hintText;
@@ -57,13 +57,13 @@ class PasswordTextField extends StatefulWidget {
     String? labelText,
     String? hintText,
     super.key,
-  })  : assert(
-          (formControlName != null && formControl == null) ||
-              (formControlName == null && formControl != null),
-          "Must provide either formControlName or formControl",
-        ),
-        labelText = labelText ?? tr.form_field_password,
-        hintText = hintText ?? tr.form_field_password_hint;
+  }) : assert(
+         (formControlName != null && formControl == null) ||
+             (formControlName == null && formControl != null),
+         "Must provide either formControlName or formControl",
+       ),
+       labelText = labelText ?? tr.form_field_password,
+       hintText = hintText ?? tr.form_field_password_hint;
 
   final String labelText;
   final String? hintText;
@@ -93,9 +93,8 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
               labelText: widget.labelText,
               hintText: widget.hintText,
               suffixIcon: InkWell(
-                onTap: () => setState(
-                  () => passwordVisibility = !passwordVisibility,
-                ),
+                onTap: () =>
+                    setState(() => passwordVisibility = !passwordVisibility),
                 focusNode: FocusNode(skipTraversal: true),
                 child: Icon(
                   passwordVisibility

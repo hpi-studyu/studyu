@@ -228,13 +228,15 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
     final List<Widget> actionButtons = [];
 
     final theme = Theme.of(context);
-    final controller =
-        ref.watch(studyControllerProvider(widget.studyId).notifier);
+    final controller = ref.watch(
+      studyControllerProvider(widget.studyId).notifier,
+    );
     final state = ref.watch(studyControllerProvider(widget.studyId));
 
     if (state.isPublishVisible) {
-      final formViewModel =
-          ref.watch(studyPublishValidatorProvider(widget.studyId));
+      final formViewModel = ref.watch(
+        studyPublishValidatorProvider(widget.studyId),
+      );
       final publishButton = ReactiveForm(
         formGroup: formViewModel.form,
         child: ReactiveFormConsumer(
@@ -260,8 +262,9 @@ class _StudyScaffoldState extends ConsumerState<StudyScaffold> {
     }
 
     if (state.isClosedVisible) {
-      final formViewModel =
-          ref.watch(studyPublishValidatorProvider(widget.studyId));
+      final formViewModel = ref.watch(
+        studyPublishValidatorProvider(widget.studyId),
+      );
       final closeButton = ReactiveForm(
         formGroup: formViewModel.form,
         child: ReactiveFormConsumer(

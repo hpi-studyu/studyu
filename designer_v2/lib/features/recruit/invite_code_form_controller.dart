@@ -29,9 +29,9 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: tr.form_code_create,
-        FormMode.readonly: tr.form_code_readonly,
-      };
+    FormMode.create: tr.form_code_create,
+    FormMode.readonly: tr.form_code_readonly,
+  };
 
   // - Form Fields
 
@@ -40,58 +40,55 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
     touched: true,
   );
   final isPreconfiguredScheduleControl = FormControl<bool>(value: false);
-  final preconfiguredScheduleTypeControl =
-      FormControl<PhaseSequence>(value: PhaseSequence.alternating);
+  final preconfiguredScheduleTypeControl = FormControl<PhaseSequence>(
+    value: PhaseSequence.alternating,
+  );
   final interventionAControl = FormControl<String>();
   final interventionBControl = FormControl<String>();
 
   // todo add validation for preconfigured schedule if enabled
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [codeValidation],
-        StudyFormValidationSet.test: [codeValidation],
-        StudyFormValidationSet.publish: [codeValidation],
-      };
+    StudyFormValidationSet.draft: [codeValidation],
+    StudyFormValidationSet.test: [codeValidation],
+    StudyFormValidationSet.publish: [codeValidation],
+  };
 
   FormControlValidation get codeRequired => FormControlValidation(
-        control: codeControl,
-        validators: [
-          Validators.required,
-        ],
-        validationMessages: {
-          ValidationMessage.required: (error) => tr.form_field_code_required,
-        },
-      );
+    control: codeControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (error) => tr.form_field_code_required,
+    },
+  );
 
   FormControlValidation get codeValidation => FormControlValidation(
-        control: codeControl,
-        validators: [
-          Validators.required,
-          Validators.minLength(8),
-          Validators.maxLength(24),
-        ],
-        asyncValidators: [
-          Validators.delegateAsync((control) => _uniqueInviteCode(control)),
-        ],
-        validationMessages: {
-          ValidationMessage.required: (error) => tr.form_field_code_required,
-          ValidationMessage.minLength: (error) => tr.form_field_code_minlength(
-                (error as Map)['requiredLength'] as int,
-              ),
-          ValidationMessage.maxLength: (error) => tr.form_field_code_maxlength(
-                (error as Map)['requiredLength'] as int,
-              ),
-          'inviteCodeAlreadyUsed': (_) => tr.form_field_code_alreadyused,
-        },
-      );
+    control: codeControl,
+    validators: [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.maxLength(24),
+    ],
+    asyncValidators: [
+      Validators.delegateAsync((control) => _uniqueInviteCode(control)),
+    ],
+    validationMessages: {
+      ValidationMessage.required: (error) => tr.form_field_code_required,
+      ValidationMessage.minLength: (error) =>
+          tr.form_field_code_minlength((error as Map)['requiredLength'] as int),
+      ValidationMessage.maxLength: (error) =>
+          tr.form_field_code_maxlength((error as Map)['requiredLength'] as int),
+      'inviteCodeAlreadyUsed': (_) => tr.form_field_code_alreadyused,
+    },
+  );
 
-  List<FormControlOption<String>> get interventionControlOptions =>
-      study.interventions
-          .map(
-            (intervention) =>
-                FormControlOption(intervention.id, intervention.name!),
-          )
-          .toList();
+  List<FormControlOption<String>> get interventionControlOptions => study
+      .interventions
+      .map(
+        (intervention) =>
+            FormControlOption(intervention.id, intervention.name!),
+      )
+      .toList();
 
   List<FormControlOption<PhaseSequence>> get preconfiguredScheduleTypeOptions =>
       [
@@ -103,7 +100,8 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 
   bool get isPreconfiguredSchedule => isPreconfiguredScheduleControl.value!;
 
-  List<String>? get preconfiguredSchedule => (isPreconfiguredSchedule &&
+  List<String>? get preconfiguredSchedule =>
+      (isPreconfiguredSchedule &&
           interventionAControl.value != null &&
           interventionBControl.value != null)
       ? [interventionAControl.value!, interventionBControl.value!]
@@ -128,8 +126,9 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
     AbstractControl control,
   ) async {
     final code = control.value as String;
-    final isCodeAlreadyUsed =
-        await inviteCodeRepository.isCodeAlreadyUsed(code);
+    final isCodeAlreadyUsed = await inviteCodeRepository.isCodeAlreadyUsed(
+      code,
+    );
     final error = {'inviteCodeAlreadyUsed': true};
 
     if (isCodeAlreadyUsed) {
@@ -182,13 +181,11 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 @riverpod
-InviteCodeFormViewModel inviteCodeFormViewModel(
-  Ref ref,
-  StudyID studyId,
-) {
+InviteCodeFormViewModel inviteCodeFormViewModel(Ref ref, StudyID studyId) {
   // Reactively bind to and obtain [StudyController]'s current study
-  final study = ref
-      .watch(studyControllerProvider(studyId).select((state) => state.study));
+  final study = ref.watch(
+    studyControllerProvider(studyId).select((state) => state.study),
+  );
   final inviteCodeRepository = ref.watch(inviteCodeRepositoryProvider(studyId));
 
   return InviteCodeFormViewModel(

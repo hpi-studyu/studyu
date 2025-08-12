@@ -35,8 +35,8 @@ class PasswordRecoveryForm extends FormConsumerRefWidget {
           hintText: tr.form_field_password_new_confirm_hint,
           onSubmitted: (_) => form.valid
               ? ref
-                  .read(authFormControllerProvider(formKey).notifier)
-                  .recoverPassword()
+                    .read(authFormControllerProvider(formKey).notifier)
+                    .recoverPassword()
               : null,
         ),
         const SizedBox(height: 24.0),

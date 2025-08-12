@@ -9,27 +9,30 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 Future<void> main() async {
   /// See: https://stackoverflow.com/questions/57879455/flutter-catching-all-unhandled-exceptions
-  await runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  await runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-    await loadEnv();
-    runAsync(prefetchEmojiFont);
+      await loadEnv();
+      runAsync(prefetchEmojiFont);
 
-    FlutterError.onError = (FlutterErrorDetails errorDetails) {
+      FlutterError.onError = (FlutterErrorDetails errorDetails) {
+        // TODO: top-level error handling
+        print("Exception: ${errorDetails.exception}");
+        print("Stack: ${errorDetails.stack}");
+      };
+      // Turn off the # in the URLs on the web
+      usePathUrlStrategy();
+      runApp(
+        // Make dependencies managed by Riverpod available in Widget.build methods
+        // by wrapping the app in a [ProviderScope]
+        const ProviderScope(child: App()),
+      );
+    },
+    (error, stackTrace) {
       // TODO: top-level error handling
-      print("Exception: ${errorDetails.exception}");
-      print("Stack: ${errorDetails.stack}");
-    };
-    // Turn off the # in the URLs on the web
-    usePathUrlStrategy();
-    runApp(
-      // Make dependencies managed by Riverpod available in Widget.build methods
-      // by wrapping the app in a [ProviderScope]
-      const ProviderScope(child: App()),
-    );
-  }, (error, stackTrace) {
-    // TODO: top-level error handling
-    print("Error: $error");
-    print("Stack: $stackTrace");
-  });
+      print("Error: $error");
+      print("Stack: $stackTrace");
+    },
+  );
 }
