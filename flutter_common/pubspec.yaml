@@ -5,7 +5,7 @@ homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.8.0 <4.0.0"
 
 dependencies:
   flutter:
