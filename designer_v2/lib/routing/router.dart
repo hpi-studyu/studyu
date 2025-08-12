@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/common_views/pages/error_page.dart';
@@ -22,7 +23,7 @@ part 'router.g.dart';
 /// route changes in the app. See router_intent.dart for more details.
 
 @riverpod
-GoRouter router(RouterRef ref) {
+GoRouter router(Ref ref) {
   final authRepository = ref.watch(authRepositoryProvider);
   final appController = ref.watch(appControllerProvider.notifier);
   const defaultLocation = studiesRouteName;
@@ -72,7 +73,7 @@ GoRouter router(RouterRef ref) {
       return router.namedLocation(name, queryParameters: qParams);
     }
 
-    if (!isInitialized) {
+    if (!isInitialized()) {
       // Redirect to splash screen while app is pending initialization
       return isOnSplashPage ? null : namedLocForwarded(splashRouteName);
     }
@@ -117,7 +118,7 @@ GoRouter router(RouterRef ref) {
   router = GoRouter(
     refreshListenable: CombinedStreamNotifier([
       // Any stream registered here will trigger the router's redirect logic
-      appController.stream, // initialization events
+      appController.getStream(), // initialization events
       authRepository.watchAuthStateChanges(), // authentication events
     ]),
     routes: RouterConf.routes,

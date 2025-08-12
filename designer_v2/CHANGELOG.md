@@ -1,3 +1,99 @@
+## 1.11.1
+
+ - **FIX**: update deps.
+
+## 1.11.0
+
+ - **FIX**: bump dependencies.
+ - **FIX**: study reset process by removing unnecessary user ID handling.
+ - **FIX**: Disable intervention selection if num of interventions <= 2.
+ - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+ - **FEAT**: reset test preview on enter test page in designer.
+
+## 1.10.0
+
+ - **REFACTOR**: analysis notes.
+ - **REFACTOR**: analysis notes.
+ - **REFACTOR**: incorrect use of static final with lambda function.
+ - **FIX**: upgrade deps.
+ - **FIX**: monitoring completed intervention task total calculation.
+ - **FIX**: add SelectionArea to all side sheets to fix flutter issue [#158095](https://github.com/hpi-studyu/studyu/issues/158095).
+ - **FIX**: replace Hyperlink with TextButton in choice_question_form_view.
+ - **FIX**: https://github.com/dart-lang/sdk/issues/60784.
+ - **FIX**: migrate code.
+ - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+ - **FIX**: add core and flutter_common local path dependency.
+ - **FIX**: remove test report text and fix report description spacing.
+ - **FIX**: zip problems when exporting data and sanitization removal.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: platform localization.
+ - **FIX**: localization.
+ - **FEAT**: add Descriptive Stats section to the designer and core.
+ - **FEAT**: add gauge comparison section with form view.
+ - **FEAT**: add textual summary section to report with form view and validation.
+ - **FEAT**: Enhance password reset functionality with improved validation and notifications.
+ - **FEAT**: Implement password reset functionality in account settings.
+
+## 1.9.4
+
+ - **FIX**: linter.
+ - **FIX**: ensure data source in report is copied during study duplication.
+
+## 1.9.3
+
+ - **FIX**: migrate code.
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+## 1.9.2
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+## 1.9.1
+
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: hotfix to sanitize export contents.
+
+## 1.9.0
+
+ - **FIX**: legend spacing.
+ - **FIX**: legend overflow.
+ - **FIX**: translation.
+ - **FIX**: overflow issues.
+ - **FIX**: participant info max intervention and survey count.
+ - **FIX**: intervention and observation wrong number in table.
+ - **FIX**: sort arrow.
+ - **FIX**: remove bar chart if no participant.
+ - **FIX**: translation.
+ - **FIX**: tooltip message.
+ - **FIX**: remove min visibility.
+ - **FIX**: style consistency for the close button, update style, and add translation.
+ - **FIX**: add close button to launch success dialog (public study).
+ - **FIX**: translation consistency.
+ - **FIX**: remove add participant action button from publish success dialog for public studies.
+ - **FIX**: reset invite codes if study gets published as public.
+ - **FIX**: check for unique invite codes in designer.
+ - **FIX**: upgrade deps.
+ - **FIX**: enable atLeastOneTask for intervention again".
+ - **FIX**: auto-save new study to prevent exception on intervention screen.
+ - **FEAT**: fix translations.
+ - **FEAT**: disable invite code creation for public studies.
+
+## 1.8.3
+
+ - **FIX**: upgrade deps.
+
+## 1.8.2
+
+ - **FIX**: upgrade deps.
+ - **FIX**: added legend for participant activity tooltip.
+ - **FIX**: monitor section header tooltip participants list display fix.
+ - **FIX**: upgrade deps.
+
+## 1.8.1
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 1.8.1-dev.3
 
  - **REFACTOR**: migrated auth_form_controller.dart to riverpod v2.

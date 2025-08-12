@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
-
 import 'package:studyu_designer_v2/theme.dart';
 
 typedef CollapsibleSectionBuilder = Widget Function(
@@ -72,7 +70,7 @@ class _CollapsibleState extends State<Collapsible> {
                         ? Icons.keyboard_arrow_right_rounded
                         : Icons.keyboard_arrow_down_rounded,
                     color: theme.tabBarTheme.labelColor
-                        ?.faded(ThemeConfig.kMuteFadeFactor),
+                        ?.withValues(alpha: ThemeConfig.kMuteFadeFactor),
                   ),
                 ],
               ),

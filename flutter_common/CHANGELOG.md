@@ -1,3 +1,48 @@
+## 1.8.13
+
+ - **FIX**: update deps.
+
+## 1.8.12
+
+ - **FIX**: bump dependencies.
+
+## 1.8.11
+
+ - **FIX**: improve error handling in secure storage read method.
+ - **FIX**: enable android encrypted shared preferences for secure storage.
+ - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+ - **FIX**: add core and flutter_common local path dependency.
+
+## 1.8.10
+
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+## 1.8.9
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+## 1.8.8
+
+ - **FIX**: upgrade to flutter v3.24.2.
+
+## 1.8.7
+
+ - **FIX**: upgrade deps.
+
+## 1.8.6
+
+ - **FIX**: upgrade deps.
+
+## 1.8.5
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+## 1.8.4
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 1.8.4-dev.2
 
  - **FIX**: formatting issues.

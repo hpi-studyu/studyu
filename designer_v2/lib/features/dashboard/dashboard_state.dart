@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -16,6 +17,7 @@ class DashboardState extends Equatable {
     this.sortByColumn = StudiesTableColumn.title,
     this.sortAscending = true,
     required this.currentUser,
+    required this.searchController,
   });
 
   /// The list of studies that can be accessed by the current user
@@ -39,6 +41,9 @@ class DashboardState extends Equatable {
 
   final String query;
 
+  /// Search controller for managing search functionality
+  final SearchController searchController;
+
   /// The currently displayed list of studies as by the selected filter,
   /// selected sort column, and selected sort direction
   ///
@@ -52,9 +57,10 @@ class DashboardState extends Equatable {
       data: (studies) {
         List<Study> updatedStudies =
             studiesFilter.apply(studies: studies, user: currentUser).toList();
-        updatedStudies = filter(studiesToFilter: updatedStudies);
-        updatedStudies =
-            sort(pinnedStudies: pinnedStudies, studiesToSort: updatedStudies);
+        updatedStudies = sort(
+          pinnedStudies: pinnedStudies,
+          studiesToSort: filter(studiesToFilter: updatedStudies),
+        );
         return AsyncValue.data(updatedStudies);
       },
       error: (error, _) => AsyncValue.error(error, StackTrace.current),
@@ -181,6 +187,7 @@ class DashboardState extends Equatable {
     String? query,
     StudiesTableColumn? sortByColumn,
     bool? sortAscending,
+    SearchController? searchController,
   }) {
     return DashboardState(
       studies: studies != null ? studies() : this.studies,
@@ -190,6 +197,7 @@ class DashboardState extends Equatable {
       query: query ?? this.query,
       sortByColumn: sortByColumn ?? this.sortByColumn,
       sortAscending: sortAscending ?? this.sortAscending,
+      searchController: searchController ?? this.searchController,
     );
   }
 

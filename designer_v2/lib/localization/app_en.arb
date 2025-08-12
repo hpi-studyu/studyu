@@ -43,7 +43,9 @@
   "form_field_password_minlength": "Passwords must have a minimum of {minLength} characters",
   "@form_field_password_minlength": {
     "placeholders": {
-      "minLength": {}
+      "minLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_password_new": "New password",
@@ -54,6 +56,12 @@
   "notification_password_reset_success": "Password was reset successfully",
   "notification_credentials_invalid": "Invalid credentials",
   "notification_user_already_registered": "User already registered",
+  "form_field_password_current": "Current password",
+  "form_field_password_current_hint": "Enter current password",
+  "form_field_password_current_invalid": "Current password is invalid",
+  "form_field_reset_password": "Reset password",
+  "change_password": "Change password",
+  "password_change_description": "Enter a new password for your account",
   "@__________________NAV_DRAWER__________________": {},
   "navlink_my_studies": "My Studies",
   "navlink_shared_studies": "Shared With Me",
@@ -70,9 +78,9 @@
   "study_status_closed": "Closed",
   "study_status_closed_description": "This study has been completed.\nNew participants can no longer enroll.",
   "participation_open_who": "Everyone",
-  "participation_open_who_description": "All StudyU users may enroll to the study in the StudyU app.",
+  "participation_open_who_description": "All StudyU users may enroll to the study in the StudyU App.",
   "participation_invite_who": "Invite-only",
-  "participation_invite_who_description": "Only participants with an access code can enroll in the StudyU app.",
+  "participation_invite_who_description": "Only participants with an invite code can enroll in the StudyU App.",
   "participation_open_as_adjective": "open to everyone",
   "participation_invite_as_adjective": "invite-only",
   "participation_open_launch_description": "Once launched, all users of the StudyU platform can enroll in your study as long as they meet your screening criteria.",
@@ -85,7 +93,7 @@
   "phase_sequence_custom_label_help": "Enter a sequence of interventions by using the letters A and B",
   "form_enrollment_option_open": "Open",
   "form_enrollment_option_invite": "Private (Invite-only)",
-  "notification_code_deleted": "Access code deleted",
+  "notification_code_deleted": "Invite code deleted",
   "notification_code_clipboard": "Code copied to clipboard",
   "@__________________DASHBOARD__________________": {},
   "action_button_new_study": "New study",
@@ -116,10 +124,10 @@
   "navlink_unavailable_tooltip": "This page is not available to you",
   "study_settings": "Study settings",
   "study_settings_publish_study": "Publish study",
-  "study_settings_publish_study_tooltip": "Other researchers & clinicians will be able to access, test, review or create a \ncopy of your study design. They won't be able to access any data related to \nin-progress studies such as participants or study results (your study's \nRecruit, Monitor & Analyze pages will be unavailable).",
-  "study_settings_publish_study_launch_description": "To facilitate collaboration among researchers & clinicians, I agree that the my study will be published to the StudyU study registry for others. (Other researchers & clinicians will be able to contact you and review the study design, but they won't be able to access participation or result data unless shared explicitly)",
+  "study_settings_publish_study_tooltip": "Other researchers and clinicians will be able to access, test, review or create a \ncopy of your study design. They won't be able to access any data related to \nin-progress studies such as participants or study results (your study's \nRecruit, Monitor & Analyze pages will be unavailable).",
+  "study_settings_publish_study_launch_description": "To facilitate collaboration among researchers and clinicians, I agree that the my study will be published to the StudyU study registry for others. (Other researchers and clinicians will be able to contact you and review the study design, but they won't be able to access participation or result data unless shared explicitly)",
   "study_settings_publish_results": "Publish results",
-  "study_settings_publish_results_tooltip": "Make your anonymized study results & data available in the study registry. \nOther researchers & clinicians will be able to access, export and \nanalyze the results from your study (the Analyze page will be available). \n This will automatically publish your study design to the registry.",
+  "study_settings_publish_results_tooltip": "Make your anonymized study results & data available in the study registry. \nOther researchers and clinicians will be able to access, export and \nanalyze the results from your study (the Analyze page will be available). \n This will automatically publish your study design to the registry.",
   "action_button_study_launch": "Launch",
   "action_button_study_close": "Close study",
   "notification_study_deleted": "Study was deleted",
@@ -153,10 +161,9 @@
   "form_array_response_options_bool_yes": "Yes",
   "form_array_response_options_bool_no": "No",
   "form_field_response_image": "Image",
-  "form_field_response_choice_multiple": "Select multiple",
-  "form_field_response_image": "Provide directions for capturing image",
-  "form_field_response_audio": "Provide directions for recording audio",
+  "form_field_response_audio": "Audio",
   "form_field_response_audio_max_duration_label": "Maximum recording duration in seconds",
+  "form_field_response_choice_multiple": "Select multiple",
   "form_field_response_choice_multiple_tooltip": "Allow the participant to select multiple response options. Otherwise only a single option can be selected.",
   "form_array_response_options_choice_new": "Add option",
   "form_array_response_options_choice_hint": "Option",
@@ -179,27 +186,35 @@
   "form_array_response_options_choice_countmin": "Your question must have at least {count} non-empty response options",
   "@form_array_response_options_choice_countmin": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_response_options_choice_countmax": "Your question must have at most {count} non-empty response options",
   "@form_array_response_options_choice_countmax": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_response_options_scale_rangevalid_min": "The high value of the scale must be greater than the low value",
   "form_array_response_options_scale_rangevalid_max": "Do not exceed {count} as a maximum difference between the high and low values of the scale",
   "@form_array_response_options_scale_rangevalid_max": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "audio_recording_max_duration_rangevalid_min": "The minimum recording duration is 1 second",
   "audio_recording_max_duration_rangevalid_max": "The maximum recording duration is {count} seconds",
   "@audio_recording_max_duration_rangevalid_max": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "free_text_question_logic_not_supported": "The screener question logic is not yet supported for free text questions.",
@@ -222,13 +237,17 @@
   "free_text_validation_min_length": "The input must be at least {countMin} characters long.",
   "@free_text_validation_min_length": {
     "placeholders": {
-      "countMin": {}
+      "countMin": {
+        "type": "num"
+      }
     }
   },
   "free_text_validation_max_length": "The input must be at most {countMax} characters long.",
   "@free_text_validation_max_length": {
     "placeholders": {
-      "countMax": {}
+      "countMax": {
+        "type": "num"
+      }
     }
   },
   "free_text_validation_pattern": "The input must match the specified format.",
@@ -236,9 +255,15 @@
   "free_text_example_explanation": "Inputs of type {type} with a character length range of {countMin} to {countMax} will be accepted.",
   "@free_text_example_explanation": {
     "placeholders": {
-      "type": {},
-      "countMin": {},
-      "countMax": {}
+      "type": {
+        "type": "String"
+      },
+      "countMin": {
+        "type": "num"
+      },
+      "countMax": {
+        "type": "num"
+      }
     }
   },
   "free_text_question_type_any_explanation": "Any input will be accepted.",
@@ -252,7 +277,7 @@
   "form_section_scheduling": "Scheduling and Compliance",
   "form_section_scheduling_description": "To improve compliance, you can set a limited window of time for participants to complete the task & send a reminder notification at the specified time.",
   "form_field_has_reminder": "App reminder",
-  "form_field_has_reminder_tooltip": "Select this option to send a reminder notification from the StudyU app to the participant's phone at the time specified.",
+  "form_field_has_reminder_tooltip": "Select this option to send a reminder notification from the StudyU App to the participant's phone at the time specified.",
   "form_field_has_reminder_label": "Send notification",
   "form_field_time_of_day_hint": "hh:mm",
   "form_field_time_restriction": "Time restriction",
@@ -260,9 +285,9 @@
   "form_field_time_restriction_start_hint": "From",
   "form_field_time_restriction_end_hint": "To",
   "@__________________STUDYPAGE_DESIGN_INFO__________________": {},
-  "form_study_design_info_description": "Provide general information about your study to participants. If you decide to make your study available in the study registry, this information will be available to other researchers & clinicians as well.",
+  "form_study_design_info_description": "Provide general information about your study to participants. If you decide to make your study available in the study registry, this information will be available to other researchers and clinicians as well.",
   "form_field_study_title": "Study title",
-  "form_field_study_title_tooltip": "Provide the title of the study as it should be displayed in the StudyU app",
+  "form_field_study_title_tooltip": "Provide the title of the study as it should be displayed in the StudyU App",
   "form_field_study_title_required": "The study title must not be empty",
   "form_field_study_title_default": "Unnamed study",
   "form_field_study_description": "Description",
@@ -276,7 +301,7 @@
   "form_field_study_tags_helper": "Select up to {count} tags from the list or add your own.",
   "form_field_study_icon_required": "You must select an icon for your study",
   "form_section_publisher": "Publisher and Contact Information",
-  "form_section_publisher_description": "Participants will be able to contact you via the StudyU app using this information. Other clinicians or researchers will only be able to contact you if you agree to publish your study to the study registry.",
+  "form_section_publisher_description": "Participants will be able to contact you via the StudyU App using this information. Other clinicians or researchers will only be able to contact you if you agree to publish your study to the study registry.",
   "form_field_organization": "Responsible organization",
   "form_field_organization_required": "The responsible organization must not be empty",
   "form_field_review_board": "Institutional Review Board",
@@ -297,13 +322,13 @@
   "form_study_design_enrollment_description": "Define who will be able to participate in your study, the criteria they have to meet and the terms they have to consent to.",
   "form_field_enrollment_type": "Participant pool",
   "form_field_enrollment_type_open_description": "Your study will be open for enrollment to all users of the StudyU platform as long as they match your screening criteria, if any.",
-  "form_field_enrollment_type_invite_description": "Only select participants will be able to enroll in your study using a designated access code. Choose this option if you have a preselected pool of participants.",
+  "form_field_enrollment_type_invite_description": "Only select participants will be able to enroll in your study using a designated invite code. Choose this option if you have a preselected pool of participants.",
   "form_array_screener_questions_title": "Screening criteria",
   "form_array_screener_questions_description": "Optional screener questions can help determine whether a potential participant is qualified to participate in the study. For invite-only studies, you may choose not to add any screening questions if you are manually qualifying & recruiting participants before inviting them to StudyU.",
   "form_array_screener_questions_new": "Add screener question",
   "form_array_screener_questions_test": "Test screener",
   "form_array_consent_items_title": "Participant consent",
-  "form_array_consent_items_description": "Provide the terms that participants have to consent to when enrolling in your study via the StudyU app. You may choose not to add any terms here if you obtain your participants' consent by some other method before recruiting them to your study on StudyU.",
+  "form_array_consent_items_description": "Provide the terms that participants have to consent to when enrolling in your study via the StudyU App. You may choose not to add any terms here if you obtain your participants' consent by some other method before recruiting them to your study on StudyU.",
   "form_array_consent_items_new": "Add consent text",
   "form_array_consent_items_test": "Test consent",
   "form_screener_question_create": "New Screener Question",
@@ -335,7 +360,9 @@
   "form_array_interventions_minlength": "{count,plural, =2{You must define at least two interventions to compare.} other{form_array_interventions_minlength}}",
   "@form_array_interventions_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_interventions": "Intervention phases",
@@ -345,19 +372,21 @@
   "form_field_intervention_title": "Title",
   "form_field_intervention_title_required": "The intervention title must not be empty",
   "form_field_intervention_title_default": "Unnamed intervention",
-  "form_field_intervention_title_tooltip": "Provide the title of the intervention phase as it should be displayed in the StudyU app",
+  "form_field_intervention_title_tooltip": "Provide the title of the intervention phase as it should be displayed in the StudyU App",
   "form_field_intervention_description": "Description",
   "form_field_intervention_description_tooltip": "Enter an explanation text that is shown when the intervention phase starts or when the participant\nclicks on the respective phase in the study plan",
   "form_field_intervention_description_hint": "Describe the intervention phase to participants",
   "form_array_intervention_tasks": "Intervention tasks",
-  "form_array_intervention_tasks_description": "Define one or more tasks that participants should complete during this intervention phase. Every day, participants will be prompted to complete these tasks in the StudyU app.",
+  "form_array_intervention_tasks_description": "Define one or more tasks that participants should complete during this intervention phase. Every day, participants will be prompted to complete these tasks in the StudyU App.",
   "form_array_intervention_tasks_new": "Add intervention task",
   "form_array_intervention_tasks_empty_title": "No intervention tasks defined",
   "form_array_intervention_tasks_empty_description": "You must define at least one task for participants to complete during this intervention phase.",
   "form_array_intervention_tasks_minlength": "{count,plural, =1{You must define at least one task for participants to complete during this intervention phase} other{form_array_intervention_tasks_minlength}}",
   "@form_array_intervention_tasks_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_intervention_task_create": "New Intervention Task",
@@ -365,10 +394,10 @@
   "form_intervention_task_readonly": "View Intervention Task",
   "form_field_intervention_task_title": "Title",
   "form_field_intervention_task_default": "Unnamed task",
-  "form_field_intervention_task_title_tooltip": "Provide the title of the intervention task for the daily prompt in the StudyU app",
+  "form_field_intervention_task_title_tooltip": "Provide the title of the intervention task for the daily prompt in the StudyU App",
   "form_field_intervention_task_title_required": "The intervention task title must not be empty",
   "form_field_intervention_task_description": "Description",
-  "form_field_intervention_task_description_tooltip": "Enter a detailed description that is shown when clicking on the daily prompt in the StudyU app",
+  "form_field_intervention_task_description_tooltip": "Enter a detailed description that is shown when clicking on the daily prompt in the StudyU App",
   "form_field_intervention_task_description_hint": "Give a detailed description of the task to be performed, link to a video instruction, etc.",
   "form_field_intervention_task_mark_as_completed_label": "Require participants to \"Mark as completed\"",
   "form_section_crossover_schedule": "Study schedule",
@@ -381,8 +410,12 @@
   "form_field_crossover_schedule_phase_length_range": "Intervention phases must be between {min} and {max} days long",
   "@form_field_crossover_schedule_phase_length_range": {
     "placeholders": {
-      "min": {},
-      "max": {}
+      "min": {
+        "type": "num"
+      },
+      "max": {
+        "type": "num"
+      }
     }
   },
   "form_field_amount_days": "days",
@@ -391,8 +424,12 @@
   "form_field_crossover_schedule_num_cycles_range": "The number of cycles in your study schedule must be between {min} and {max}",
   "@form_field_crossover_schedule_num_cycles_range": {
     "placeholders": {
-      "min": {},
-      "max": {}
+      "min": {
+        "type": "num"
+      },
+      "max": {
+        "type": "num"
+      }
     }
   },
   "form_field_amount_crossover_schedule_num_cycles": "cycles",
@@ -400,11 +437,13 @@
   "form_field_crossover_schedule_include_baseline_tooltip": "Add an intervention-free baseline phase at the beginning of your study",
   "form_field_crossover_schedule_include_baseline_label": "Include in schedule",
   "@__________________STUDYPAGE_DESIGN_MEASUREMENTS__________________": {},
-  "form_study_design_measurements_description": "Define the data that you want to gather from participants during the study - primarily to evaluate the effect of your interventions. The data will be self-reported by participants in one or more surveys served via the StudyU app on a daily basis. The collected data and results will be available on the Analyze page when the study is launched.",
+  "form_study_design_measurements_description": "Define the data that you want to gather from participants during the study - primarily to evaluate the effect of your interventions. The data will be self-reported by participants in one or more surveys served via the StudyU App on a daily basis. The collected data and results will be available on the Analyze page when the study is launched.",
   "form_array_measurements_minlength": "{count,plural, =1{You need to define at least one survey to determine the effect of your intervention(s).} other{form_array_measurements_minlength}}",
   "@form_array_measurements_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_measurements_surveys": "Surveys",
@@ -414,7 +453,7 @@
   "form_field_measurement_survey_title": "Survey title",
   "form_field_measurement_survey_title_required": "The survey title must not be empty",
   "form_field_measurement_survey_title_default": "Unnamed survey",
-  "form_field_measurement_survey_title_tooltip": "Provide the title of the survey as it should be displayed in the StudyU app",
+  "form_field_measurement_survey_title_tooltip": "Provide the title of the survey as it should be displayed in the StudyU App",
   "form_field_measurement_survey_intro_text": "Intro text",
   "form_field_measurement_survey_intro_text_tooltip": "Enter a text that is shown at the very beginning of the survey",
   "form_field_measurement_survey_intro_text_hint": "e.g. welcome & introduce participants to the survey",
@@ -428,7 +467,9 @@
   "form_array_measurement_survey_questions_minlength": "{count,plural, =1{You need to define at least one question to determine the effect of your intervention(s)} other{form_array_measurement_survey_questions_minlength}}",
   "@form_array_measurement_survey_questions_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "@__________________STUDYPAGE_DESIGN_REPORTS__________________": {},
@@ -444,8 +485,7 @@
   "form_array_reports_empty_title": "No reports defined",
   "form_array_report_items_title": "Reports",
   "form_array_report_items_description": "Define how the report that your participants receive should look like. A report includes various sections, the first of which is the primary section. For each section you can define if the data should be reported as average or via a linear regression of the user's data. You can choose whether the data is reported for individual days, phases or for each intervention. The data source defines which observation the report section is based on.",
-  "form_array_report_items_test": "Test Reports (tba)",
-  "form_array_reports_empty_description": "Define a report for your study participants",
+  "form_array_reports_empty_description": "You need to define at least one report to provide feedback to your participants.",
   "form_array_reports_new": "Add new report",
   "form_field_report_title": "Title",
   "form_field_report_title_tooltip": "Enter a short title for the report.",
@@ -459,6 +499,9 @@
   "form_field_report_improvementDirection_title": "Improvement Direction",
   "form_field_report_improvementDirection_tooltip": "Define the improvement direction",
   "reportSection_type_average": "Average",
+  "reportSection_type_textual_summary": "Textual Summary",
+  "reportSection_type_gauge_comparison": "Gauge Comparison",
+  "reportSection_type_descriptive_statistics": "Descriptive Statistics",
   "form_field_report_average_temporalAggregation_title": "Temporal Aggregation",
   "form_field_report_average_temporalAggregation_tooltip": "Define the temporal aggregation",
   "reportSection_type_temporalAggregation_day": "Day",
@@ -477,6 +520,7 @@
   "form_field_report_data_source_title": "Data Source",
   "form_field_report_data_source_tooltip": "The data source defines which observation the report section is based on. The observation needs to be a question with a numerical result, e.g. a scale question.",
   "form_field_report_data_source_required": "A data source needs to be defined",
+  "form_field_report_select_aggregation": "Select an aggregation value",
   "@__________________STUDYPAGE_TEST__________________": {},
   "study_test_page_description": "In the test mode you can test your study as a participant.",
   "navlink_study_test_help": "How does this work?",
@@ -484,6 +528,7 @@
   "navlink_study_test_app_overview": "Study Overview",
   "navlink_study_test_app_eligibility": "Screener",
   "navlink_study_test_app_intervention": "Intervention Selection",
+  "navlink_study_test_app_intervention_disabled": "The intervention selection is disabled, as the study has less than three interventions defined. Interventions are selected automatically in this case.",
   "navlink_study_test_app_consent": "Consent",
   "navlink_study_test_app_journey": "Schedule",
   "navlink_study_test_app_dashboard": "Daily Dashboard",
@@ -497,50 +542,99 @@
   "dialog_study_test_section_tips_text": "• Use the menu in the top-left to quickly preview and jump to different parts of your study\n• Fast-forward through the participant's schedule by clicking 'next day' on the app's dashboard page\n• Preview what your results will look like by exporting and analyzing the data from your latest test session (via the Analyze tab)\n• To get a fresh experience, you can reset all data and enroll as a new test user",
   "dialog_study_test_download_url_intro": "• You can also",
   "dialog_study_test_download_url": "https://github.com/hpi-studyu/studyu#app-stores",
-  "dialog_study_test_download_url_text": "download the StudyU app",
+  "dialog_study_test_download_url_text": "download the StudyU App",
   "dialog_study_test_download_url_outro": " on your phone for testing",
   "dialog_study_test_section_notice": "⚠️ Please note",
-  "dialog_study_test_section_notice_text": "• All test users and their data will be reset one you launch the study",
+  "dialog_study_test_section_notice_text": "• All test users and their data will be reset once you launch the study",
   "dialog_action_study_test_start": "Start testing",
   "@__________________STUDYPAGE_RECRUIT__________________": {},
   "enrolled_count_tooltip": "{count,plural, =0{Nobody has enrolled in the study with this code yet} =1{{count} participant is enrolled in the study with this code} other{{count} participants are enrolled in the study with this code}}",
   "@enrolled_count_tooltip": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
-  "form_code_create": "New Access Code",
-  "form_code_readonly": "Access Code",
+  "form_code_create": "New Invite Code",
+  "form_code_readonly": "Invite Code",
   "form_field_code": "Code",
-  "form_field_code_tooltip": "TODO",
+  "form_field_code_tooltip": "Enter a unique code that participants can use to enroll in your study",
   "form_field_code_required": "The code must not be empty",
   "form_field_code_minlength": "The code must have at least {minLength} characters",
   "@form_field_code_minlength": {
     "placeholders": {
-      "minLength": {}
+      "minLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_code_maxlength": "The code must have at most {maxLength} characters",
   "@form_field_code_maxlength": {
     "placeholders": {
-      "maxLength": {}
+      "maxLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_code_alreadyused": "This code is already in use",
   "form_field_is_preconfigured_schedule": "Predefined Schedule",
-  "form_field_is_preconfigured_schedule_description": "You can predefine the phases & interventions for any participant who joins your study via this access code. If enabled, these settings will override the default schedule defined in your study design.",
+  "form_field_is_preconfigured_schedule_description": "You can predefine the phases and interventions for any participant who joins your study via this invite code. If enabled, these settings will override the default schedule defined in your study design.",
   "form_field_preconfigured_schedule_type": "Schedule",
   "form_field_preconfigured_schedule_intervention_a": "Intervention A",
   "form_field_preconfigured_schedule_intervention_b": "Intervention B",
   "form_field_preconfigured_schedule_intervention_default": "Default",
   "form_field_preconfigured_schedule_intervention_hint": "Select intervention...",
-  "code_list_section_title": "Access Codes",
+  "code_list_section_title": "Invite codes",
+  "code_public_disabled": "Invite codes disabled",
+  "code_public_disabled_description": "The invite codes are disabled for this study as it is open for public recruitment. All participants can join without an invite code.",
   "code_list_empty_title": "You haven't invited anyone yet",
-  "code_list_empty_description": "Add participants to your study via access codes.",
+  "code_list_empty_description": "Add participants to your study via invite codes.",
   "code_list_header_code": "Code",
   "action_button_code_new": "New code",
+  "@__________________STUDYPAGE_MONITOR__________________": {},
+  "participant_details_title": "Participant details",
+  "participant_details_study_days_overview": "Study days overview",
+  "participant_details_study_days_description": "This section provides an overview of the participant's progress in the study. The color coding indicates the status of the participant's tasks on each day. Hover over each day to see more details about the participant's activity.",
+  "participant_details_color_legend_title": "Legend",
+  "participant_details_color_tooltip_legend_title": "Activity Detail Legend",
+  "participant_details_color_legend_completed_task": "Completed task",
+  "participant_details_color_legend_completed_task_tooltip": "The participant has completed this task",
+  "participant_details_color_legend_missed_task": "Missed task",
+  "participant_details_color_legend_missed_task_tooltip": "The participant has missed this task",
+  "participant_details_color_legend_completed": "Completed all tasks",
+  "participant_details_color_legend_partially_completed": "Some tasks incomplete",
+  "participant_details_color_legend_missed": "Missed all tasks",
+  "participant_details_completed_legend_tooltip": "All intervention and survey tasks have been completed for this day",
+  "participant_details_partially_completed_legend_tooltip": "Not all intervention or survey tasks have been completed for this day",
+  "participant_details_incomplete_legend_tooltip": "No intervention or survey tasks have been completed for this day",
+  "participant_details_progress_empty_title":"No progress data available yet",
+  "participant_details_progress_empty_description":"Once the participant has started the study, you can monitor their progress here.",
+  "monitoring_no_participants_title": "There are no participants in this study yet",
+  "monitoring_no_participants_description": "Once participants have enrolled in your study, you can monitor their progress and view their data here.",
+  "monitoring_participants_title": "Participant overview",
+  "monitoring_total": "Total number of participants",
+  "monitoring_active": "Active",
+  "monitoring_active_tooltip": "Number of participants who are currently in the study",
+  "monitoring_inactive": "Inactive",
+  "monitoring_inactive_tooltip": "Number of participants who have not completed a task for more than 3 days in a row",
+  "monitoring_dropout": "Dropout",
+  "monitoring_dropout_tooltip": "Number of participants who have left the study before the end or are inactive more than 5 days in a row",
+  "monitoring_completed": "Completed",
+  "monitoring_completed_tooltip": "Number of participants who have reached the end of the study",
+  "monitoring_table_column_participant_id": "ID",
+  "monitoring_table_column_invite_code": "Invite code",
+  "monitoring_table_column_enrolled": "Started at",
+  "monitoring_table_column_last_activity": "Last activity",
+  "monitoring_table_column_day_in_study": "Day in study",
+  "monitoring_table_column_completed_intervention_tasks": "Completed intervention tasks",
+  "monitoring_table_column_completed_surveys": "Completed surveys",
+  "monitoring_table_row_tooltip_dropout": "This participant has dropped out of the study and no new activity will be added",
+  "monitoring_table_days_in_study_header_tooltip":"The number of days the participant has been in the study",
+  "monitoring_table_completed_interventions_header_tooltip": "All of intervention tasks have been completed throughout the study",
+  "monitoring_table_completed_surveys_header_tooltip":"A survey is completed, if all of its tasks have been completed for that day",
   "@__________________STUDYPAGE_ANALYZE__________________": {},
-  "banner_text_study_analyze_draft": "Because this study has not been launched yet, this page is currently based on the data generated during study testing (only the latest test session).\nThe data on this page will be reset once you launch the study with real participants.",
+  "banner_text_study_analyze_draft": "Because this study has not been launched yet, this page is currently based on the data generated during study testing.\nThe data on this page will be reset once you launch the study with real participants.",
   "action_button_study_export": "Export data",
   "action_button_study_export_prompt": "Want to run your own analysis?",
   "study_export_unavailable_empty_tooltip": "There is no data available yet",
@@ -552,7 +646,8 @@
   "study_launch_post_launch_intro": "After launching your study:",
   "study_launch_post_launch_summary": "- The study design will be locked and you won’t be able to make any changes\n- All data from test runs will be reset (incl. test users, their tasks and results)",
   "study_launch_success_title": "Your study is live!",
-  "study_launch_success_description": "Next, you can start inviting and enrolling your participants in the StudyU app.",
+  "study_launch_success_description": "Next, you can start inviting and enrolling your participants in the StudyU App.",
+  "study_public_launch_success_description": "Your study is now available for everyone in the StudyU App.",
   "action_button_post_launch_followup": "Add participants",
   "action_button_post_launch_followup_skip": "Skip for now",
   "action_button_study_participation_change": "Change\nparticipation",
@@ -564,37 +659,49 @@
   "date_diff_years": "{count,plural, =1{1 year ago} other{{count} years ago}}",
   "@date_diff_years": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_months": "{count,plural, =1{1 month ago} other{{count} months ago}}",
   "@date_diff_months": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_days": "{count,plural, =1{1 day ago} other{{count} days ago}}",
   "@date_diff_days": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_hours": "{count,plural, =1{1 hour ago} other{{count} hours ago}}",
   "@date_diff_hours": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_minutes": "{count,plural, =1{1 minute ago} other{{count} minutes ago}}",
   "@date_diff_minutes": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_seconds": "{count,plural, =1{1 second ago} other{{count} seconds ago}}",
   "@date_diff_seconds": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_just_now": "Just now",
@@ -608,6 +715,7 @@
   "action_reportPrimary": "Set as primary report",
   "action_study_duplicate_draft": "Copy as draft",
   "action_study_export_results": "Export results",
+  "dialog_continue": "Continue",
   "dialog_close": "Close",
   "dialog_cancel": "Cancel",
   "dialog_save": "Save",

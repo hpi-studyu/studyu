@@ -76,4 +76,4 @@ Henschel F, Manaswini M, Pottbäcker F, Edelman JA, Owoyele B, Danieletto M,
 Golden E, Zweig M, Nadkarni G, Böttinger E (2020).
 StudyU: a platform for designing and conducting innovative digital N-of-1
 trials. arXiv: 2012.1420.  
-[https://arxiv.org/abs/2012.14201](https://arxiv.org/abs/2012.14201).
+[https://arxiv.org/abs/2012.14201](https://arxiv.org/abs/2012.14201)

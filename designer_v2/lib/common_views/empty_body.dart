@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 
 class EmptyBody extends StatelessWidget {
   const EmptyBody({
@@ -58,7 +57,8 @@ class EmptyBody extends StatelessWidget {
               description!,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.textTheme.bodyMedium?.color?.faded(0.9),
+                color:
+                    theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.9),
               ),
             )
           else

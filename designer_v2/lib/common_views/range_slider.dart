@@ -40,7 +40,7 @@ class IndicatorRangeSliderThumbShape<T> extends RangeSliderThumbShape {
 
     // Customize the box style
     final boxPaint = Paint()
-      ..color = const Color(0xff6d7073).withOpacity(0.9)
+      ..color = const Color(0xff6d7073).withValues(alpha: 0.9)
       ..style = PaintingStyle.fill;
 
     final borderPaint = Paint()

@@ -209,7 +209,7 @@ class IconPickerGallery extends StatelessWidget {
           final isHovered = state.contains(WidgetState.hovered);
           return Container(
             color: isHovered
-                ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
+                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
                 : null,
             child: Icon(iconOption.icon, size: iconSize),
           );

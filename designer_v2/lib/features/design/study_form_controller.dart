@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -175,7 +176,7 @@ class StudyFormViewModel extends FormViewModel<Study>
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 @riverpod
 StudyFormViewModel studyFormViewModel(
-  StudyFormViewModelRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   // print("studyFormViewModel");

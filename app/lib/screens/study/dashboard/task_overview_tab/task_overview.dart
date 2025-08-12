@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_box.dart';
 import 'package:studyu_app/screens/study/onboarding/calendar_overview.dart';
@@ -92,12 +92,15 @@ class _TaskOverviewState extends State<TaskOverview> {
               children: [
                 const SizedBox(height: 16),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      AppLocalizations.of(context)!.intervention_current,
-                      style: theme.textTheme.titleLarge,
+                    Flexible(
+                      child: Text(
+                        AppLocalizations.of(context)!.intervention_current,
+                        style: theme.textTheme.titleLarge,
+                      ),
                     ),
-                    // const Spacer(),
+                    const SizedBox(width: 5),
                     // Text(
                     //   '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',
                     //   style: const TextStyle(color: primaryColor),

@@ -66,11 +66,15 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject>
 class SupabaseQuery {
   static Future<List<T>> getAll<T extends SupabaseObject>({
     List<String> selectedColumns = const ['*'],
+    Map<String, Object>? filters,
   }) async {
     try {
-      return extractSupabaseList(
-        await env.client.from(tableName(T)).select(selectedColumns.join(',')),
-      );
+      var query =
+          env.client.from(tableName(T)).select(selectedColumns.join(','));
+      filters?.forEach((key, value) {
+        query = query.eq(key, value);
+      });
+      return extractSupabaseList(await query);
     } catch (error, stacktrace) {
       catchSupabaseException(error, stacktrace);
       rethrow;
@@ -112,8 +116,9 @@ class SupabaseQuery {
   /// If some records could not be extracted, [ExtractionFailedException] is
   /// thrown containing the extracted records and the faulty records.
   static List<T> extractSupabaseList<T extends SupabaseObject>(
-    List<Map<String, dynamic>> response,
-  ) {
+    List<Map<String, dynamic>> response, {
+    bool throwForNonExtracted = false,
+  }) {
     final extracted = <T>[];
     final notExtracted = <JsonWithError>[];
     for (final json in response) {
@@ -127,10 +132,22 @@ class SupabaseQuery {
       }
     }
     if (notExtracted.isNotEmpty) {
-      // If some records could not be extracted, we throw an exception
-      // with the extracted records and the faulty records
-      print("Failed to extract: $notExtracted");
-      throw ExtractionFailedException(extracted, notExtracted);
+      StudyULogger.warning(
+        'Some records could not be extracted: ${notExtracted.length} errors',
+      );
+      StudyULogger.debug(
+        'Not extracted records: ${notExtracted.map((e) => e.json).join(', ')}',
+      );
+      StudyUDiagnostics.captureException(
+        ExtractionFailedException(extracted, notExtracted),
+      );
+      // Only throw if we are supposed to throw for non-extracted records.
+      // Otherwise, we just log the error and return the extracted records.
+      if (throwForNonExtracted) {
+        // If some records could not be extracted, we throw an exception
+        // with the extracted records and the faulty records
+        throw ExtractionFailedException(extracted, notExtracted);
+      }
     }
     return extracted;
   }
@@ -183,6 +200,12 @@ class ExtractionFailedException<T> extends ExtractionResult<T>
   final List<JsonWithError> notExtracted;
 
   ExtractionFailedException(super.extracted, this.notExtracted);
+
+  @override
+  String toString() =>
+      'ExtractionFailedException: ${notExtracted.length} records failed to extract.\n'
+      'Extracted: $extracted\n'
+      'Not Extracted: ${notExtracted.map((e) => 'json: ${e.json}, error: ${e.error}').join('; ')}';
 }
 
 class JsonWithError {

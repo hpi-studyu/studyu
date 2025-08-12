@@ -6,7 +6,7 @@ part of 'study_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$studyControllerHash() => r'03c1b9b529c50b109c9313fdb22cb2d5d896ee7e';
+String _$studyControllerHash() => r'9ac102bee0008ed64dde154c16cbf1b20b7437b7';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -157,6 +157,8 @@ class StudyControllerProvider extends AutoDisposeNotifierProviderImpl<
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyControllerRef
     on AutoDisposeNotifierProviderRef<StudyControllerState> {
   /// The parameter `studyId` of this provider.
@@ -172,4 +174,4 @@ class _StudyControllerProviderElement
   String get studyId => (origin as StudyControllerProvider).studyId;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

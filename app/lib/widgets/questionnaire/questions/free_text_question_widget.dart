@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_core/core.dart';
 
@@ -24,6 +24,11 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.question.lengthRange[0] == 0) {
+        widget.onDone!(widget.question.constructAnswer(""));
+      }
+    });
   }
 
   @override

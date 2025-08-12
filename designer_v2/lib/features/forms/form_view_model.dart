@@ -97,7 +97,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
   ///
   /// If null, the [AbstractControl]s contained in the [form] will be validated
   /// using their default configuration. Otherwise, the default configuration
-  /// is discarded & replaced by the respective [FormValidationConfig].
+  /// is discarded and replaced by the respective [FormValidationConfig].
   FormValidationSetEnum? get validationSet => _validationSet;
   FormValidationSetEnum? _validationSet;
   set validationSet(FormValidationSetEnum? validationSet) {
@@ -277,7 +277,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
     _applyValidationSet(validationSet);
   }
 
-  /// Updates & re-evaluates [AbstractControl.validators] and
+  /// Updates and re-evaluates [AbstractControl.validators] and
   /// [AbstractControl.asyncValidators] for all [FormControl]'s in the
   /// current [form] (or the [FormGroup] itself) with the validators of
   /// the [FormValidationConfig] corresponding to the given [validationSet]

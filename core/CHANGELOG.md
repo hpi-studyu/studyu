@@ -1,3 +1,52 @@
+## 4.6.1
+
+ - **FIX**: update deps.
+
+## 4.6.0
+
+ - **FIX**: bump dependencies.
+ - **FIX**: study reset process by removing unnecessary user ID handling.
+ - **FIX**: reset subject temp fix.
+ - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+
+## 4.5.0
+
+ - **FIX**: upgrade deps.
+ - **FEAT**: add Descriptive Stats section to the designer and core.
+ - **FEAT**: add gauge comparison section with form view.
+ - **FEAT**: add textual summary section to report with form view and validation.
+
+## 4.4.9
+
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+## 4.4.8
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+## 4.4.7
+
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: result history filter.
+
+## 4.4.6
+
+ - **FIX**: upgrade deps.
+
+## 4.4.5
+
+ - **FIX**: upgrade deps.
+
+## 4.4.4
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+## 4.4.3
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 4.4.3-dev.2
 
  - **FIX**: keep eligibility criterion.

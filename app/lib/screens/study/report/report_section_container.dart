@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/report_section_widget.dart';
 import 'package:studyu_app/screens/study/report/sections/average_section_widget.dart';
+import 'package:studyu_app/screens/study/report/sections/descriptive_stats_section_widget.dart';
+import 'package:studyu_app/screens/study/report/sections/gauge_comparison_section_widget.dart';
 import 'package:studyu_app/screens/study/report/sections/linear_regression_section_widget.dart';
+import 'package:studyu_app/screens/study/report/sections/textual_summary_section_widget.dart';
 import 'package:studyu_core/core.dart';
 
 typedef SectionBuilder = ReportSectionWidget Function(
@@ -29,6 +32,21 @@ class ReportSectionContainer extends StatelessWidget {
           AverageSectionWidget(subject, averageSection),
         final LinearRegressionSection linearRegressionSection =>
           LinearRegressionSectionWidget(subject, linearRegressionSection),
+        final TextualSummarySection textualSummarySection =>
+          TextualSummarySectionWidget(
+            subject,
+            textualSummarySection,
+          ),
+        final GaugeComparisonSection gaugeComparisonSection =>
+          GaugeComparisonSectionWidget(
+            subject,
+            gaugeComparisonSection,
+          ),
+        final DescriptiveStatsSection descriptiveStatsSection =>
+          DescriptiveStatsSectionWidget(
+            subject,
+            descriptiveStatsSection,
+          ),
         _ => throw ArgumentError('Section type ${section.type} not supported.'),
       };
 

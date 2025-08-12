@@ -7,38 +7,47 @@ on:
       - "core/**"
       - "designer_v2/**"
       - "flutter_common/**"
+      - '*.gitignore'
+      - 'melos.yaml'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
       - ".github/workflows/all_packages.yml"
       - ".github/workflows/init-workspace/**"
   workflow_dispatch:
+
+env:
+  MELOS_SDK_PATH: 'auto'
 
 concurrency:
   group: ${{ github.ref }}-all-packages
   cancel-in-progress: true
 
 jobs:
-  analyze:
+  static_analysis_fix:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Init workspace
-        uses: ./.github/workflows/init-workspace
-      - name: Run analyze
-        run: melos analyze
+          token: ${{ secrets.READY_TO_MERGE_TOKEN }}
 
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
-      - name: Run format
-        run: melos format --set-exit-if-changed
+
+      - name: Run fix
+        run: melos run fix
+
+      - name: Run quality check
+        run: melos qualitycheck
+
+      - name: Commit changes if any
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: Apply static analysis changes'
+          file_pattern: ':!*.fvmrc'
 
   test:
     runs-on: ubuntu-latest
@@ -47,7 +56,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
+
       - name: Run Test
         run: melos run test --no-select

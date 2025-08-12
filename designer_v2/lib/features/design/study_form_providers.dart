@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
@@ -26,7 +27,7 @@ part 'study_form_providers.g.dart';
 
 @riverpod
 StudyInfoFormViewModel studyInfoFormViewModel(
-  StudyInfoFormViewModelRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   return ref.watch(studyFormViewModelProvider(studyId)).studyInfoFormViewModel;
@@ -36,7 +37,7 @@ StudyInfoFormViewModel studyInfoFormViewModel(
 
 @riverpod
 EnrollmentFormViewModel enrollmentFormViewModel(
-  EnrollmentFormViewModelRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   return ref.watch(studyFormViewModelProvider(studyId)).enrollmentFormViewModel;
@@ -44,7 +45,7 @@ EnrollmentFormViewModel enrollmentFormViewModel(
 
 @riverpod
 ScreenerQuestionFormViewModel screenerQuestionFormViewModel(
-  ScreenerQuestionFormViewModelRef ref,
+  Ref ref,
   ScreenerQuestionFormRouteArgs args,
 ) {
   return ref.watch(enrollmentFormViewModelProvider(args.studyId)).provide(args);
@@ -52,7 +53,7 @@ ScreenerQuestionFormViewModel screenerQuestionFormViewModel(
 
 @riverpod
 ConsentItemFormViewModel consentItemFormViewModel(
-  ConsentItemFormViewModelRef ref,
+  Ref ref,
   ConsentItemFormRouteArgs args,
 ) {
   return ref
@@ -75,7 +76,7 @@ MP23InterventionsFormViewModel interventionsFormViewModel(
 
 @riverpod
 InterventionFormViewModel interventionFormViewModel(
-  InterventionFormViewModelRef ref,
+  Ref ref,
   InterventionFormRouteArgs args,
 ) {
   return ref
@@ -85,7 +86,7 @@ InterventionFormViewModel interventionFormViewModel(
 
 @riverpod
 InterventionTaskFormViewModel interventionTaskFormViewModel(
-  InterventionTaskFormViewModelRef ref,
+  Ref ref,
   InterventionTaskFormRouteArgs args,
 ) {
   return ref.watch(interventionFormViewModelProvider(args)).provide(args);
@@ -95,7 +96,7 @@ InterventionTaskFormViewModel interventionTaskFormViewModel(
 
 @riverpod
 MeasurementsFormViewModel measurementsFormViewModel(
-  MeasurementsFormViewModelRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   return ref
@@ -105,7 +106,7 @@ MeasurementsFormViewModel measurementsFormViewModel(
 
 @riverpod
 MeasurementSurveyFormViewModel surveyFormViewModel(
-  SurveyFormViewModelRef ref,
+  Ref ref,
   MeasurementFormRouteArgs args,
 ) {
   return ref
@@ -115,7 +116,7 @@ MeasurementSurveyFormViewModel surveyFormViewModel(
 
 @riverpod
 QuestionFormViewModel surveyQuestionFormViewModel(
-  SurveyQuestionFormViewModelRef ref,
+  Ref ref,
   SurveyQuestionFormRouteArgs args,
 ) {
   return ref.watch(surveyFormViewModelProvider(args)).provide(args);
@@ -125,7 +126,7 @@ QuestionFormViewModel surveyQuestionFormViewModel(
 
 @riverpod
 ReportsFormViewModel reportsFormViewModel(
-  ReportsFormViewModelRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   return ref.watch(studyFormViewModelProvider(studyId)).reportsFormViewModel;
@@ -133,7 +134,7 @@ ReportsFormViewModel reportsFormViewModel(
 
 @riverpod
 ReportItemFormViewModel reportItemFormViewModel(
-  ReportItemFormViewModelRef ref,
+  Ref ref,
   ReportItemFormRouteArgs args,
 ) {
   return ref
@@ -148,7 +149,7 @@ ReportItemFormViewModel reportItemFormViewModel(
 /// a [StudyFormValidationSet.publish]
 @riverpod
 StudyFormViewModel studyPublishValidator(
-  StudyPublishValidatorRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   final state = ref.watch(studyControllerProvider(studyId));
@@ -165,7 +166,7 @@ StudyFormViewModel studyPublishValidator(
 /// a [StudyFormValidationSet.test]
 @riverpod
 StudyFormViewModel studyTestValidator(
-  StudyTestValidatorRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   final state = ref.watch(studyControllerProvider(studyId));

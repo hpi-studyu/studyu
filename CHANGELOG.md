@@ -3,6 +3,543 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-06-17
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.9.1`](#studyu_app---v291)
+ - [`studyu_core` - `v4.6.1`](#studyu_core---v461)
+ - [`studyu_designer_v2` - `v1.11.1`](#studyu_designer_v2---v1111)
+ - [`studyu_flutter_common` - `v1.8.13`](#studyu_flutter_common---v1813)
+
+---
+
+#### `studyu_app` - `v2.9.1`
+
+ - **FIX**: update deps.
+
+#### `studyu_core` - `v4.6.1`
+
+ - **FIX**: update deps.
+
+#### `studyu_designer_v2` - `v1.11.1`
+
+ - **FIX**: update deps.
+
+#### `studyu_flutter_common` - `v1.8.13`
+
+ - **FIX**: update deps.
+
+
+## 2025-06-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.9.0`](#studyu_app---v290)
+ - [`studyu_core` - `v4.6.0`](#studyu_core---v460)
+ - [`studyu_designer_v2` - `v1.11.0`](#studyu_designer_v2---v1110)
+ - [`studyu_flutter_common` - `v1.8.12`](#studyu_flutter_common---v1812)
+
+---
+
+#### `studyu_app` - `v2.9.0`
+
+ - **REFACTOR**: remove print.
+ - **FIX**: bump dependencies.
+ - **FIX**: update selectedStudyObjectId to null on study deletion.
+ - **FIX**: study reset process by removing unnecessary user ID handling.
+ - **FIX**: reset subject temp fix.
+ - **FIX**: reset subject progress.
+ - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+
+#### `studyu_core` - `v4.6.0`
+
+ - **FIX**: bump dependencies.
+ - **FIX**: study reset process by removing unnecessary user ID handling.
+ - **FIX**: reset subject temp fix.
+ - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+
+#### `studyu_designer_v2` - `v1.11.0`
+
+ - **FIX**: bump dependencies.
+ - **FIX**: study reset process by removing unnecessary user ID handling.
+ - **FIX**: Disable intervention selection if num of interventions <= 2.
+ - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+ - **FEAT**: reset test preview on enter test page in designer.
+
+#### `studyu_flutter_common` - `v1.8.12`
+
+ - **FIX**: bump dependencies.
+
+
+## 2025-06-10
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.8.0`](#studyu_app---v280)
+ - [`studyu_core` - `v4.5.0`](#studyu_core---v450)
+ - [`studyu_designer_v2` - `v1.10.0`](#studyu_designer_v2---v1100)
+ - [`studyu_flutter_common` - `v1.8.11`](#studyu_flutter_common---v1811)
+
+---
+
+#### `studyu_app` - `v2.8.0`
+
+ - **REFACTOR**: TextualSummarySectionWidget.
+ - **REFACTOR**: print remove dead code.
+ - **FIX**: textual summary widget width.
+ - **FIX**: upgrade deps.
+ - **FIX**: getTemporaryDirectory no longer throws error for web.
+ - **FIX**: double confirmation of data deletion and reload action + translations.
+ - **FIX**: handle secure storage errors with user prompt.
+ - **FIX**: improve notification task error messages.
+ - **FIX**: ios deployment.
+ - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+ - **FIX**: android deployment bump desugar_jdk_libs.
+ - **FIX**: add core and flutter_common local path dependency.
+ - **FIX**: add string_extensions.dart.
+ - **FIX**: colorless gauge translations.
+ - **FIX**: translation.
+ - **FIX**: upgrade deps.
+ - **FIX**: current intervention text split.
+ - **FIX**: deprecated withOpacity.
+ - **FIX**: create fallback dir if _getMultimodalTempDirectory fails.
+ - **FIX**: remove placeholder file creation.
+ - **FIX**: handle errors during app reset process.
+ - **FIX**: handle null cases for staging audio and image files & handle temp directory fail.
+ - **FIX**: migrate code.
+ - **FIX**: localization.
+ - **FIX**: improve baseline name handling in average section widget localization.
+ - **FIX**: update average section widget for better title handling and improve pubspec.lock dependencies.
+ - **FIX**: default for app deployment flutter variables 2.
+ - **FIX**: default for app deployment flutter variables.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: android config.
+ - **FIX**: ios and android configuration.
+ - **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.
+ - **FEAT**: re-create android and ios folders gemfile".
+ - **FEAT**: re-create android and ios folders gemfile.
+ - **FEAT**: re-create android and ios folders.
+ - **FEAT**: implement textual summary section with data processing and UI integration.
+ - **FEAT**: add gauge comparison section with loading state and colorless gauge option.
+ - **FEAT**: enhance textual summary with localized messages for intervention comparisons.
+ - **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.".
+ - **FEAT**: invert colorless gauge display logic in gauge comparison section.
+ - **FEAT**: descriptive stats section widget for app.
+ - **FEAT**: refactor statistical widgets and implement synchronous t-test results.
+ - **FEAT**: report overview.
+ - **FEAT**: report overview.
+ - **FEAT**: add splash screen for app.
+ - **FEAT**: re-create android and ios folders gemfile"".
+
+#### `studyu_core` - `v4.5.0`
+
+ - **FIX**: upgrade deps.
+ - **FEAT**: add Descriptive Stats section to the designer and core.
+ - **FEAT**: add gauge comparison section with form view.
+ - **FEAT**: add textual summary section to report with form view and validation.
+
+#### `studyu_designer_v2` - `v1.10.0`
+
+ - **REFACTOR**: analysis notes.
+ - **REFACTOR**: analysis notes.
+ - **REFACTOR**: incorrect use of static final with lambda function.
+ - **FIX**: upgrade deps.
+ - **FIX**: monitoring completed intervention task total calculation.
+ - **FIX**: add SelectionArea to all side sheets to fix flutter issue [#158095](https://github.com/hpi-studyu/studyu/issues/158095).
+ - **FIX**: replace Hyperlink with TextButton in choice_question_form_view.
+ - **FIX**: https://github.com/dart-lang/sdk/issues/60784.
+ - **FIX**: migrate code.
+ - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+ - **FIX**: add core and flutter_common local path dependency.
+ - **FIX**: remove test report text and fix report description spacing.
+ - **FIX**: zip problems when exporting data and sanitization removal.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: platform localization.
+ - **FIX**: localization.
+ - **FEAT**: add Descriptive Stats section to the designer and core.
+ - **FEAT**: add gauge comparison section with form view.
+ - **FEAT**: add textual summary section to report with form view and validation.
+ - **FEAT**: Enhance password reset functionality with improved validation and notifications.
+ - **FEAT**: Implement password reset functionality in account settings.
+
+#### `studyu_flutter_common` - `v1.8.11`
+
+ - **FIX**: improve error handling in secure storage read method.
+ - **FIX**: enable android encrypted shared preferences for secure storage.
+ - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+ - **FIX**: add core and flutter_common local path dependency.
+
+
+## 2024-11-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.14`](#studyu_app---v2714)
+ - [`studyu_designer_v2` - `v1.9.4`](#studyu_designer_v2---v194)
+
+---
+
+#### `studyu_app` - `v2.7.14`
+
+ - **FIX**: linter.
+
+#### `studyu_designer_v2` - `v1.9.4`
+
+ - **FIX**: linter.
+ - **FIX**: ensure data source in report is copied during study duplication.
+
+
+## 2024-11-18
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.13`](#studyu_app---v2713)
+ - [`studyu_core` - `v4.4.9`](#studyu_core---v449)
+ - [`studyu_designer_v2` - `v1.9.3`](#studyu_designer_v2---v193)
+ - [`studyu_flutter_common` - `v1.8.10`](#studyu_flutter_common---v1810)
+
+---
+
+#### `studyu_app` - `v2.7.13`
+
+ - **FIX**: migrate code.
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+#### `studyu_core` - `v4.4.9`
+
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+#### `studyu_designer_v2` - `v1.9.3`
+
+ - **FIX**: migrate code.
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+#### `studyu_flutter_common` - `v1.8.10`
+
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+
+## 2024-10-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.12`](#studyu_app---v2712)
+
+---
+
+#### `studyu_app` - `v2.7.12`
+
+ - **FIX**: notification icon mipmap 2.
+ - **FIX**: notification icon mipmap.
+ - **FIX**: configure AndroidNotificationDetails correctly.
+ - **FIX**: disable R8 full mode for flutter_local_notifications.
+
+
+## 2024-10-03
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.11`](#studyu_app---v2711)
+ - [`studyu_core` - `v4.4.8`](#studyu_core---v448)
+ - [`studyu_designer_v2` - `v1.9.2`](#studyu_designer_v2---v192)
+ - [`studyu_flutter_common` - `v1.8.9`](#studyu_flutter_common---v189)
+
+---
+
+#### `studyu_app` - `v2.7.11`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: notification scheduling.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+ - **FIX**: prompt user to restart after reset.
+ - **FIX**: debug screen.
+
+#### `studyu_core` - `v4.4.8`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+#### `studyu_designer_v2` - `v1.9.2`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+#### `studyu_flutter_common` - `v1.8.9`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+
+
+## 2024-09-05
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.10`](#studyu_app---v2710)
+ - [`studyu_core` - `v4.4.7`](#studyu_core---v447)
+ - [`studyu_designer_v2` - `v1.9.1`](#studyu_designer_v2---v191)
+ - [`studyu_flutter_common` - `v1.8.8`](#studyu_flutter_common---v188)
+
+---
+
+#### `studyu_app` - `v2.7.10`
+
+ - **FIX**: schedule notifications for 7 days.
+ - **FIX**: refactor notification cancelling and add missing translations.
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: maybe prevent blank screen in notification debug view.
+
+#### `studyu_core` - `v4.4.7`
+
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: result history filter.
+
+#### `studyu_designer_v2` - `v1.9.1`
+
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: hotfix to sanitize export contents.
+
+#### `studyu_flutter_common` - `v1.8.8`
+
+ - **FIX**: upgrade to flutter v3.24.2.
+
+
+## 2024-08-12
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.9`](#studyu_app---v279)
+ - [`studyu_core` - `v4.4.6`](#studyu_core---v446)
+ - [`studyu_designer_v2` - `v1.9.0`](#studyu_designer_v2---v190)
+ - [`studyu_flutter_common` - `v1.8.7`](#studyu_flutter_common---v187)
+
+---
+
+#### `studyu_app` - `v2.7.9`
+
+ - **FIX**: upgrade deps.
+
+#### `studyu_core` - `v4.4.6`
+
+ - **FIX**: upgrade deps.
+
+#### `studyu_designer_v2` - `v1.9.0`
+
+ - **FIX**: legend spacing.
+ - **FIX**: legend overflow.
+ - **FIX**: translation.
+ - **FIX**: overflow issues.
+ - **FIX**: participant info max intervention and survey count.
+ - **FIX**: intervention and observation wrong number in table.
+ - **FIX**: sort arrow.
+ - **FIX**: remove bar chart if no participant.
+ - **FIX**: translation.
+ - **FIX**: tooltip message.
+ - **FIX**: remove min visibility.
+ - **FIX**: style consistency for the close button, update style, and add translation.
+ - **FIX**: add close button to launch success dialog (public study).
+ - **FIX**: translation consistency.
+ - **FIX**: remove add participant action button from publish success dialog for public studies.
+ - **FIX**: reset invite codes if study gets published as public.
+ - **FIX**: check for unique invite codes in designer.
+ - **FIX**: upgrade deps.
+ - **FIX**: enable atLeastOneTask for intervention again".
+ - **FIX**: auto-save new study to prevent exception on intervention screen.
+ - **FEAT**: fix translations.
+ - **FEAT**: disable invite code creation for public studies.
+
+#### `studyu_flutter_common` - `v1.8.7`
+
+ - **FIX**: upgrade deps.
+
+
+## 2024-07-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.8`](#studyu_app---v278)
+ - [`studyu_core` - `v4.4.5`](#studyu_core---v445)
+ - [`studyu_designer_v2` - `v1.8.3`](#studyu_designer_v2---v183)
+ - [`studyu_flutter_common` - `v1.8.6`](#studyu_flutter_common---v186)
+
+---
+
+#### `studyu_app` - `v2.7.8`
+
+ - **FIX**: safety check.
+ - **FIX**: outdated cached subject.
+ - **FIX**: upgrade deps.
+
+#### `studyu_core` - `v4.4.5`
+
+ - **FIX**: upgrade deps.
+
+#### `studyu_designer_v2` - `v1.8.3`
+
+ - **FIX**: upgrade deps.
+
+#### `studyu_flutter_common` - `v1.8.6`
+
+ - **FIX**: upgrade deps.
+
+
+## 2024-07-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.7.7`](#studyu_app---v277)
+ - [`studyu_core` - `v4.4.4`](#studyu_core---v444)
+ - [`studyu_designer_v2` - `v1.8.2`](#studyu_designer_v2---v182)
+ - [`studyu_flutter_common` - `v1.8.5`](#studyu_flutter_common---v185)
+
+---
+
+#### `studyu_app` - `v2.7.7`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+#### `studyu_core` - `v4.4.4`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+#### `studyu_designer_v2` - `v1.8.2`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: added legend for participant activity tooltip.
+ - **FIX**: monitor section header tooltip participants list display fix.
+ - **FIX**: upgrade deps.
+
+#### `studyu_flutter_common` - `v1.8.5`
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+
+## 2024-07-14
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`studyu_app` - `v2.7.6`](#studyu_app---v276)
+ - [`studyu_core` - `v4.4.3`](#studyu_core---v443)
+ - [`studyu_designer_v2` - `v1.8.1`](#studyu_designer_v2---v181)
+ - [`studyu_flutter_common` - `v1.8.4`](#studyu_flutter_common---v184)
+
+Packages with other changes:
+
+ - There are no other changes in this release.
+
+Packages graduated to a stable release (see pre-releases prior to the stable version for changelog entries):
+
+ - `studyu_app` - `v2.7.6`
+ - `studyu_core` - `v4.4.3`
+ - `studyu_designer_v2` - `v1.8.1`
+ - `studyu_flutter_common` - `v1.8.4`
+
+---
+
+#### `studyu_app` - `v2.7.6`
+
+#### `studyu_core` - `v4.4.3`
+
+#### `studyu_designer_v2` - `v1.8.1`
+
+#### `studyu_flutter_common` - `v1.8.4`
+
+
 ## 2024-07-01
 
 ### Changes

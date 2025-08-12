@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
@@ -171,6 +171,11 @@ class _AudioRecordingQuestionWidgetState
       final storage = TemporaryStorageHandler(studyId, userId);
       const config = RecordConfig(numChannels: 1);
       _recordedFile = await storage.getStagingAudio();
+
+      if (_recordedFile == null) {
+        throw ArgumentError('Staging audio file is null');
+      }
+
       await _audioRecorder.start(config, path: _recordedFile!.localFilePath);
       _startTimer();
     } catch (e) {

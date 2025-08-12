@@ -9,7 +9,12 @@ on:
       - 'app/**'
       - 'core/**'
       - 'flutter_common/**'
+      - '.github/workflows/deploy-apps.yml'
+      - '.fvmrc'
   workflow_dispatch:
+
+env:
+  MELOS_SDK_PATH: 'auto'
 
 concurrency:
   group: ${{ github.ref }}-deploy-apps
@@ -20,34 +25,38 @@ jobs:
     name: Create Play Store Release
     runs-on: ubuntu-latest
     steps:
-      - name: Await potential publishing on Pub.dev
-        uses: johannesvedder/await-workflow@v1
-        with:
-          workflowId: publish_pubdev.yml
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
+
       - name: Set up ruby env
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3 # do not use head
           bundler-cache: true
+
       - name: Set up java env
         uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: temurin
+
       - name: Bundle install for Android Gemfile
         run: |
           bundle install
         timeout-minutes: 5
         working-directory: ./app/android
-      - name: Set up flutter
-        uses: subosito/flutter-action@v2
+
+      - name: Set up Flutter with FVM
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
-          channel: stable
-          cache: true
+          # todo
+          cache: false
+
       - name: Prepare upload key
         run: |
           echo "$STUDYU_ANDROID_KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
@@ -56,9 +65,11 @@ jobs:
         env:
           STUDYU_ANDROID_KEYSTORE_BASE64: ${{ secrets.STUDYU_ANDROID_KEYSTORE_BASE64 }}
           STUDYU_KEY_PROPERTIES: ${{ secrets.STUDYU_KEY_PROPERTIES }}
+
       - name: Build StudyU app bundle
         run: flutter build appbundle --release --build-number ${{ github.run_number }}
         working-directory: ./app
+
       - name: Fastlane upload
         run: bundle exec fastlane deploy_internal
         working-directory: ./app/android
@@ -67,31 +78,39 @@ jobs:
 
   app-store-release:
     name: Create App Store Release
-    runs-on: macos-14 # macos-latest
+    runs-on: macos-latest
     steps:
-      - name: Await potential publishing on Pub.dev
-        uses: johannesvedder/await-workflow@v1
+      - uses: maxim-lobanov/setup-xcode@v1
         with:
-          workflowId: publish_pubdev.yml
+          xcode-version: latest-stable
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
+
       - name: Set up ruby env
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3 # do not use head
-          bundler-cache: true
+          # todo
+          bundler-cache: false
+
       - name: Bundle install for iOS Gemfile
         run: |
           bundle install
         timeout-minutes: 5
         working-directory: ./app/ios
-      - name: Set up flutter
-        uses: subosito/flutter-action@v2
+
+      - name: Set up Flutter with FVM
+        uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
-          channel: stable
-          cache: true
+          # todo
+          cache: false
+
       - name: Get StudyU app version
         run: |
           # Read the version of study_app from pubspec.yaml and make it CFBundleShortVersionString compatible
@@ -108,9 +127,11 @@ jobs:
             exit 1
           fi
         working-directory: ./app
+
       - name: Build StudyU ios without codesign
         run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }} --build-name ${{ env.STUDYU_APP_VERSION }}
         working-directory: ./app
+
       - name: Fastlane upload
         run: bundle exec fastlane upload_testflight
         working-directory: ./app/ios

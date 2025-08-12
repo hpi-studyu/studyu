@@ -49,7 +49,7 @@ class StudyStatusBadge extends StatelessWidget {
         return inTooltip(
           studybadge.Badge(
             label: status!.string,
-            color: colorScheme.secondary.withOpacity(0.75),
+            color: colorScheme.secondary.withValues(alpha: 0.75),
             type: type,
             icon: prefixIcon,
           ),

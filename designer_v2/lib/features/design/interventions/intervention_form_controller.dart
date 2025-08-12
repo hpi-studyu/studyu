@@ -54,9 +54,15 @@ class InterventionFormViewModel
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [titleRequired, atLeastOneTask],
-        StudyFormValidationSet.publish: [titleRequired, atLeastOneTask],
-        StudyFormValidationSet.test: [titleRequired, atLeastOneTask],
+        StudyFormValidationSet.draft: [
+          titleRequired, /*atLeastOneTask*/
+        ],
+        StudyFormValidationSet.publish: [
+          titleRequired, /*atLeastOneTask*/
+        ],
+        StudyFormValidationSet.test: [
+          titleRequired, /*atLeastOneTask*/
+        ],
       };
 
   FormControlValidation get titleRequired => FormControlValidation(

@@ -4,20 +4,20 @@ on:
   push:
     paths:
       - ".github/workflows/e2e_tests.yml"
+      - ".github/workflows/init-workspace/action.yml"
       - 'designer_v2/**'
       - 'core/**'
       - 'flutter_common/**'
   workflow_dispatch:
 
+env:
+  MELOS_SDK_PATH: 'auto'
+
 jobs:
   drive_web:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - name: Await potential publishing on Pub.dev
-        uses: johannesvedder/await-workflow@v1
-        with:
-          workflowId: 'publish_pubdev.yml'
-
       - name: Checkout code
         uses: actions/checkout@v4
         with:
@@ -68,4 +68,5 @@ jobs:
         run: |
           flutter drive --driver=test_driver/integration_driver.dart \
             --target=integration_test/app_test.dart -d web-server \
+            --web-browser-flag="--disable-web-security" \
             --dart-define="STUDYU_ENV=.env.local"

@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/main.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
@@ -34,17 +35,15 @@ class StudyNotifications {
       StreamController<ReceivedNotification>.broadcast();
   final StreamController<String?> selectNotificationStream =
       StreamController<String?>.broadcast();
-  // String? _taskCannotBeCompleted;
 
   static final NotificationValidators validator =
       NotificationValidators(false, false, false);
 
-  static const bool debug = false; //kDebugMode;
+  static const bool debug = kDebugMode; //kDebugMode;
   static String? scheduledNotificationsDebug;
 
   /// Private constructor
   StudyNotifications._create(this.subject, this.context) {
-    // _taskCannotBeCompleted = AppLocalizations.of(context)!.task_cannot_be_completed;
     _initNotificationsPlugin();
     _requestPermissions();
     _isAndroidPermissionGranted();
@@ -126,36 +125,39 @@ class StudyNotifications {
   void _configureDidReceiveLocalNotificationSubject() {
     didReceiveLocalNotificationStream.stream
         .listen((ReceivedNotification receivedNotification) async {
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) => CupertinoAlertDialog(
-          title: receivedNotification.title != null
-              ? Text(receivedNotification.title!)
-              : null,
-          content: receivedNotification.body != null
-              ? Text(receivedNotification.body!)
-              : null,
-          actions: <Widget>[
-            CupertinoDialogAction(
-              isDefaultAction: true,
-              onPressed: () async {
-                Navigator.of(context, rootNavigator: true).pop();
-                await Navigator.of(context).push(
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) => const DashboardScreen(),
-                  ),
-                );
-              },
-              child: const Text('Ok'),
-            ),
-          ],
-        ),
-      );
+      if (context.mounted) {
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+            title: receivedNotification.title != null
+                ? Text(receivedNotification.title!)
+                : null,
+            content: receivedNotification.body != null
+                ? Text(receivedNotification.body!)
+                : null,
+            actions: <Widget>[
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                onPressed: () async {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  await Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) =>
+                          const DashboardScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      }
     });
   }
 
   void _configureSelectNotificationSubject() {
-    selectNotificationStream.stream.listen((String? payload) async {
+    selectNotificationStream.stream.listen((String? payload) {
       handleNotificationResponse(payload!);
     });
   }
@@ -163,30 +165,14 @@ class StudyNotifications {
   void _initNotificationsPlugin() {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@drawable/ic_notification');
-    final DarwinInitializationSettings initializationSettingsDarwin =
-        DarwinInitializationSettings(
-      onDidReceiveLocalNotification: (
-        int id,
-        String? title,
-        String? body,
-        String? payload,
-      ) async {
-        didReceiveLocalNotificationStream.add(
-          ReceivedNotification(
-            id: id,
-            title: title,
-            body: body,
-            payload: payload,
-          ),
-        );
-      },
-    );
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const DarwinInitializationSettings initializationSettingsDarwin =
+        DarwinInitializationSettings();
     const LinuxInitializationSettings initializationSettingsLinux =
         LinuxInitializationSettings(
       defaultActionName: 'Open notification',
     );
-    final InitializationSettings initializationSettings =
+    const InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsDarwin,
@@ -222,7 +208,6 @@ class StudyNotifications {
       nowDt,
     );
 
-    //if (taskToRun != null) {
     final isInsidePeriod =
         taskToRun.completionPeriod.contains(StudyUTimeOfDay.now());
     if (!completed && isInsidePeriod) {
@@ -233,21 +218,16 @@ class StudyNotifications {
       );
       navigatorKey.currentState!
           .pushNamedAndRemoveUntil(Routes.loading, (_) => false);
-      // todo error management after null safety
-      /*} else {
-        navigatorKey.currentState!.push(
-          MaterialPageRoute(
-            // todo change error "or not inside period"
-            builder: (_) => DashboardScreen(error: _taskCannotBeCompleted),
-          ),
-        );
-      }*/
     } else {
+      final errorMessage = completed
+          ? AppLocalizations.of(context)!.task_already_completed
+          : isInsidePeriod
+              ? AppLocalizations.of(context)!.task_cannot_be_completed
+              : AppLocalizations.of(context)!.task_outside_period;
+
       navigatorKey.currentState!.push(
-        // todo translate
         MaterialPageRoute(
-          builder: (_) =>
-              const DashboardScreen(error: 'Task could not be found'),
+          builder: (_) => DashboardScreen(error: errorMessage),
         ),
       );
     }

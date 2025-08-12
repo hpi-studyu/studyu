@@ -7,7 +7,7 @@ part of 'study_form_controller.dart';
 // **************************************************************************
 
 String _$studyFormViewModelHash() =>
-    r'614ff706b954df7093b09931e7c694d1b3cdbb1a';
+    r'b13f09d7f2332267f64b6a95b74ee5b4cc25852b';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -180,6 +180,8 @@ class StudyFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyFormViewModelRef on AutoDisposeProviderRef<StudyFormViewModel> {
   /// The parameter `studyId` of this provider.
   String get studyId;
@@ -194,4 +196,4 @@ class _StudyFormViewModelProviderElement
   String get studyId => (origin as StudyFormViewModelProvider).studyId;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

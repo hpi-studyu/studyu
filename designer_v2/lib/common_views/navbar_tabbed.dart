@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
@@ -201,7 +200,8 @@ class _TabbedNavbarState<T extends NavbarTab>
         dividerColor: Colors.transparent,
         isScrollable: widget.isScrollable,
         labelPadding: widget.labelPadding,
-        unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.8),
+        unselectedLabelColor:
+            theme.colorScheme.onSurface.withValues(alpha: 0.8),
         unselectedLabelStyle: theme.textTheme.labelLarge,
         indicator: widget.indicator ?? theme.tabBarTheme.indicator,
         indicatorPadding: EdgeInsets.only(right: widget.labelSpacing ?? 0),
@@ -262,7 +262,8 @@ class _TabbedNavbarState<T extends NavbarTab>
                 child: Text(
                   t.title,
                   style: (!t.enabled)
-                      ? TextStyle(color: theme.disabledColor.faded(0.5))
+                      ? TextStyle(
+                          color: theme.disabledColor.withValues(alpha: 0.5))
                       : actualTextStyle,
                 ),
               );

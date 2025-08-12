@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/misc.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
@@ -27,7 +27,7 @@ class QuestionnaireTaskWidget extends StatefulWidget {
 class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   dynamic response;
   late bool responseValidator;
-  DateTime _lastClickTime = DateTime.now();
+  DateTime? _lastClickTime;
   bool _isLoading = false;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -86,12 +86,8 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
               backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
             ),
             onPressed: () async {
-              if (isRedundantClick(_lastClickTime)) {
-                return;
-              }
-              if (!formKey.currentState!.validate()) {
-                return;
-              }
+              if (isRedundantClick(_lastClickTime)) return;
+              if (!formKey.currentState!.validate()) return;
               setState(() {
                 _isLoading = true;
                 _lastClickTime = DateTime.now();

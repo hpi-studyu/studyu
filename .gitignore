@@ -161,3 +161,6 @@ generated/
 
 # Megalinter
 megalinter-reports/
+
+# FVM Version Cache
+.fvm/

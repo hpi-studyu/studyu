@@ -24,14 +24,11 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-  late Future<StudyUUser> user;
-
   @override
   void initState() {
     super.initState();
     final controller = ref.read(dashboardControllerProvider.notifier);
     runAsync(() => controller.setStudiesFilter(widget.filter));
-    user = runAsync(() => ref.watch(userRepositoryProvider).fetchUser());
   }
 
   @override
@@ -74,7 +71,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   child: Container(
                     constraints: const BoxConstraints(maxWidth: 400),
                     child: Search(
-                      searchController: controller.searchController,
+                      searchController: state.searchController,
                       hintText: tr.search,
                       onQueryChanged: (query) =>
                           controller.filterStudies(query),
@@ -86,7 +83,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
           const SizedBox(height: 24.0), // spacing between body elements
           FutureBuilder<StudyUUser>(
-            future: user,
+            future: ref.read(userRepositoryProvider).fetchUser(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return AsyncValueWidget<List<Study>>(

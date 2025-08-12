@@ -5,21 +5,24 @@ description: Initialize workspace for all packages
 runs:
   using: "composite"
   steps:
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
+    - name: Set up Flutter with FVM
+      uses: kuhnroyal/flutter-fvm-config-action/setup@v3
       with:
-        channel: stable
-        # Increase this version manually when we add support for a new Flutter release
-        flutter-version: '3.22.x'
+        # todo
+        cache: false
 
     - name: Install melos
       run: dart pub global activate melos
+      shell: bash
+
+    - name: Install dependencies
+      run: dart pub get
       shell: bash
 
     - name: Bootstrap workspace
       run: melos bootstrap
       shell: bash
 
-    - name: Dart pub root project
-      run: dart pub get
+    - name: Run build runner
+      run: melos generate
       shell: bash

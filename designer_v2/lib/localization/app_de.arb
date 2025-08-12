@@ -43,7 +43,9 @@
   "form_field_password_minlength": "Passwörter müssen mindestens {minLength} Zeichen lang sein",
   "@form_field_password_minlength": {
     "placeholders": {
-      "minLength": {}
+      "minLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_password_new": "Neues Passwort",
@@ -54,6 +56,12 @@
   "notification_password_reset_success": "Passwort erfolgreich zurückgesetzt",
   "notification_credentials_invalid": "Die Zugangsdaten sind ungültig",
   "notification_user_already_registered": "Ein Nutzerkonto mit dieser Email-Addresse existiert bereits",
+  "form_field_password_current": "Aktuelles Passwort",
+  "form_field_password_current_hint": "Aktuelles Passwort eingeben",
+  "form_field_password_current_invalid": "Aktuelles Passwort ist ungültig",
+  "form_field_reset_password": "Passwort zurücksetzen",
+  "change_password": "Passwort ändern",
+  "password_change_description": "Gib ein neues Passwort für dein Konto ein",
   "@__________________DOMAIN__________________": {},
   "study_status_draft": "Entwurf",
   "study_status_draft_description": "Die Studie ist noch in Planung",
@@ -151,6 +159,7 @@
   "form_array_response_options_bool_yes": "Ja",
   "form_array_response_options_bool_no": "No",
   "form_field_response_image": "Bild",
+  "form_field_response_audio": "Audio",
   "form_field_response_audio_max_duration_label": "Maximale Aufnahmedauer in Sekunden",
   "form_field_response_choice_multiple": "Mehrfachauswahl",
   "form_field_response_choice_multiple_tooltip": "Erlaubt die Auswahl von mehreren Antwortoptionen gleichzeitig,\nansonsten kann nur eine einzige Option ausgewählt werden",
@@ -175,27 +184,35 @@
   "form_array_response_options_choice_countmin": "Die Frage muss mindestens {count} gültige Antwortoptionen haben",
   "@form_array_response_options_choice_countmin": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_response_options_choice_countmax": "Die Frage darf nicht mehr als {count} gültige Antwortoptionen haben",
   "@form_array_response_options_choice_countmax": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_response_options_scale_rangevalid_min": "Der Startwert muss kleiner als der Endwert der Skala sein",
   "form_array_response_options_scale_rangevalid_max": "Die Differenz zwischen dem Start- und Endwert der Skala darf maximal {count} betragen",
   "@form_array_response_options_scale_rangevalid_max": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "audio_recording_max_duration_rangevalid_min": "Die minimale Aufnahmedauer beträgt 1 Sekunde",
   "audio_recording_max_duration_rangevalid_max": "Die maximale Aufnahmedauer beträgt {count} Sekunden",
   "@audio_recording_max_duration_rangevalid_max": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "free_text_question_logic_not_supported": "Logik ist für Freitext-Fragen noch nicht verfügbar",
@@ -218,13 +235,17 @@
   "free_text_validation_min_length": "Die Eingabe muss mindestens {countMin} Zeichen lang sein.",
   "@free_text_validation_min_length": {
     "placeholders": {
-      "countMin": {}
+      "countMin": {
+        "type": "num"
+      }
     }
   },
   "free_text_validation_max_length": "Die Eingabe darf höchstens {countMax} Zeichen lang sein.",
   "@free_text_validation_max_length": {
     "placeholders": {
-      "countMax": {}
+      "countMax": {
+        "type": "num"
+      }
     }
   },
   "free_text_validation_pattern": "Die Eingabe muss dem angegebenen Format entsprechen.",
@@ -232,9 +253,15 @@
   "free_text_example_explanation": "Eingaben vom Typ {type} mit einer Zeichenlänge im Bereich von {countMin} bis {countMax} werden akzeptiert.",
   "@free_text_example_explanation": {
     "placeholders": {
-      "type": {},
-      "countMin": {},
-      "countMax": {}
+      "type": {
+        "type": "String"
+      },
+      "countMin": {
+        "type": "num"
+      },
+      "countMax": {
+        "type": "num"
+      }
     }
   },
   "free_text_question_type_any_explanation": "Jede Eingabe wird akzeptiert.",
@@ -331,7 +358,9 @@
   "form_array_interventions_minlength": "{count,plural, =2{Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.} other{form_array_interventions_minlength}}",
   "@form_array_interventions_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_interventions": "Interventionsphasen",
@@ -353,7 +382,9 @@
   "form_array_intervention_tasks_minlength": "{count,plural, =1{Du musst mindestens eine Maßnahme definieren, die während der Interventionsphase erfüllt werden soll} other{form_array_intervention_tasks_minlength}}",
   "@form_array_intervention_tasks_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_intervention_task_create": "Neue Maßnahme",
@@ -377,8 +408,12 @@
   "form_field_crossover_schedule_phase_length_range": "Interventionsphasen müssen zwischen {min} und {max} Tagen lang sein",
   "@form_field_crossover_schedule_phase_length_range": {
     "placeholders": {
-      "min": {},
-      "max": {}
+      "min": {
+        "type": "num"
+      },
+      "max": {
+        "type": "num"
+      }
     }
   },
   "form_field_amount_days": "Tage",
@@ -387,8 +422,12 @@
   "form_field_crossover_schedule_num_cycles_range": "Die Anzahl der Wiederholungen für Interventionsphasen im Versuchsplan muss zwischen {min} und {max} liegen",
   "@form_field_crossover_schedule_num_cycles_range": {
     "placeholders": {
-      "min": {},
-      "max": {}
+      "min": {
+        "type": "num"
+      },
+      "max": {
+        "type": "num"
+      }
     }
   },
   "form_field_amount_crossover_schedule_num_cycles": "Wiederholungen",
@@ -400,7 +439,9 @@
   "form_array_measurements_minlength": "{count,plural, =1{Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.} other{form_array_measurements_minlength}}",
   "@form_array_measurements_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_measurements_surveys": "Fragebögen",
@@ -424,9 +465,60 @@
   "form_array_measurement_survey_questions_minlength": "{count,plural, =1{Es ist mindestens eine Frage erforderlich, um den Effekt der Intervention(en) zu messen.} other{form_array_measurement_survey_questions_minlength}}",
   "@form_array_measurement_survey_questions_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
+  "@__________________STUDYPAGE_DESIGN_REPORTS__________________": {},
+  "report_status_primary": "Primär",
+  "report_status_secondary": "Sekundär",
+  "report_status_primary_description": "Primärbericht",
+  "report_status_secondary_description": "Sekundärbericht",
+  "form_report_create": "Neuer Bericht",
+  "form_report_edit": "Bericht bearbeiten",
+  "form_report_readonly": "Bericht ansehen",
+  "form_field_report_title_required": "Du musst einen Titel für deinen Bericht angeben",
+  "form_field_report_text_required": "Die Beschreibung für deinen Bericht darf nicht leer sein",
+  "form_array_reports_empty_title": "Keine Berichte definiert",
+  "form_array_report_items_title": "Berichte",
+  "form_array_report_items_description": "Definiere, wie der Bericht, den deine Teilnehmer erhalten, aussehen soll. Ein Bericht umfasst verschiedene Abschnitte, wobei der erste der primäre Abschnitt ist. Für jeden Abschnitt kannst du definieren, ob die Daten als Durchschnitt oder über eine lineare Regression der Benutzerdaten berichtet werden sollen. Du kannst wählen, ob die Daten für einzelne Tage, Phasen oder für jede Intervention berichtet werden. Die Datenquelle definiert, auf welcher Beobachtung der Berichtsabschnitt basiert.",
+  "form_array_reports_empty_description": "Du musst mindestens einen Bericht definieren, um deinen Teilnehmern Feedback zu geben.",
+  "form_array_reports_new": "Neuen Bericht hinzufügen",
+  "form_field_report_title": "Titel",
+  "form_field_report_title_tooltip": "Gib einen kurzen Titel für den Bericht ein.",
+  "form_field_report_title_hint": "Kurzen Titel eingeben",
+  "form_field_report_text": "Berichtsbeschreibung",
+  "form_field_report_text_tooltip": "Gib eine Beschreibung für den Bericht ein",
+  "form_field_report_text_hint": "Berichtsbeschreibung eingeben",
+  "form_field_report_section_type": "Berichtstyp",
+  "form_field_report_section_type_tooltip": "Wähle einen Berichtstyp",
+  "form_field_report_section_type_description": "Wähle den Berichtstyp, der zu deinem Bericht passt.",
+  "form_field_report_improvementDirection_title": "Verbesserungsrichtung",
+  "form_field_report_improvementDirection_tooltip": "Definiere die Verbesserungsrichtung",
+  "reportSection_type_average": "Durchschnitt",
+  "reportSection_type_textual_summary": "Textuelle Zusammenfassung",
+  "reportSection_type_gauge_comparison": "Tachometer-Vergleich",
+  "reportSection_type_descriptive_statistics": "Deskriptive Statistik",
+  "form_field_report_average_temporalAggregation_title": "Zeitliche Aggregation",
+  "form_field_report_average_temporalAggregation_tooltip": "Definiere die zeitliche Aggregation",
+  "reportSection_type_temporalAggregation_day": "Tag",
+  "reportSection_type_temporalAggregation_phase": "Phase",
+  "reportSection_type_temporalAggregation_intervention": "Intervention",
+  "form_field_report_temporalAggregation_required": "Ein Wert für die zeitliche Aggregation muss definiert werden",
+  "reportSection_type_linearRegression": "Lineare Regression",
+  "reportSection_type_improvementDirection_positive": "Positiv",
+  "reportSection_type_improvementDirection_negative": "Negativ",
+  "form_field_report_improvementDirection_required": "Eine Verbesserungsrichtung muss definiert werden",
+  "form_field_report_linearRegression_alpha_title": "Alpha-Vertrauensniveau",
+  "form_field_report_linearRegression_alpha_tooltip": "Definiere das Alpha-Vertrauensniveau",
+  "form_field_report_linearRegression_alpha_hint": "Gib einen numerischen Wert ein",
+  "form_field_report_alphaConfidence_required": "Ein Alpha-Vertrauenswert muss definiert werden",
+  "form_field_report_alphaConfidence_number": "Der Alpha-Vertrauenswert muss eine numerische Zahl sein",
+  "form_field_report_data_source_title": "Datenquelle",
+  "form_field_report_data_source_tooltip": "Die Datenquelle definiert, auf welcher Beobachtung der Berichtsabschnitt basiert. Die Beobachtung muss eine Frage mit einem numerischen Ergebnis sein, z.B. eine Skalenfrage.",
+  "form_field_report_data_source_required": "Eine Datenquelle muss definiert werden",
+  "form_field_report_select_aggregation": "Wähle einen Aggregationswert",
   "@__________________STUDYPAGE_TEST__________________": {},
   "study_test_page_description": "Im Testmodus kannst du die Studie aus Teilnehmersicht testen.",
   "navlink_study_test_help": "Wie funktioniert's?",
@@ -434,13 +526,14 @@
   "navlink_study_test_app_overview": "Studienübersicht",
   "navlink_study_test_app_eligibility": "Teilnehmer-Screening",
   "navlink_study_test_app_intervention": "Interventionsauswahl",
+  "navlink_study_test_app_intervention_disabled": "Die Interventionsauswahl ist deaktiviert, da die Studie weniger als drei Interventionen hat. In diesem Fall werden die Interventionen automatisch ausgewählt.",
   "navlink_study_test_app_consent": "Teilnahme-Einwilligung",
   "navlink_study_test_app_journey": "Studienverlaufsplan",
   "navlink_study_test_app_dashboard": "Tagesübersicht",
   "action_button_study_test_reset": "Zurücksetzen",
   "action_button_study_test_open_new_tab": "In neuem Fenster öffnen",
   "banner_study_test_unavailable": "Um den Testmodus nutzen zu können, gib bitte folgende Informationen korrekt & vollständig ein:",
-  "banner_study_preview_unavailable": "Um die Vorschau nutzen zu können, gib bitte folgende Informationen korrekt & vollständig ein:",
+  "banner_study_preview_unavailable": "Um die Vorschau nutzen zu können, gib bitte folgende Informationen korrekt und vollständig ein:",
   "dialog_study_test_help_title": "Teste deine Studie!",
   "dialog_study_test_help_description": "Im Testmodus siehst du deine Studie aus Teilnehmersicht in der StudyU App, sodass du sie für deine Zwecke anpassen & sicherstellen kannst, dass alles wie vorgesehen funktioniert.",
   "dialog_study_test_section_tips": "⭐ Profi-Tipps",
@@ -456,43 +549,92 @@
   "enrolled_count_tooltip": "{count,plural, =0{Bisher hat sich niemand mit diesem Teilnahme-Code zur Studie angemeldet} =1{{count} Teilnehmer hat sich mit diesem Code zur Studie angemeldet} other{{count} Teilnehmer haben sich mit diesem Code zur Studie angemeldet}}",
   "@enrolled_count_tooltip": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_code_create": "Neuer Teilnahmecode",
   "form_code_readonly": "Teilnahmecode",
   "form_field_code": "Code",
-  "form_field_code_tooltip": "TODO",
+  "form_field_code_tooltip": "Gib einen eindeutigen Code ein, den Teilnehmer zur Anmeldung in der StudyU App verwenden können",
   "form_field_code_required": "Der Code darf nicht leer sein",
   "form_field_code_minlength": "Der Code muss mindestens {minLength} Zeichen lang sein",
   "@form_field_code_minlength": {
     "placeholders": {
-      "minLength": {}
+      "minLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_code_maxlength": "Der Code darf maximal {maxLength} Zeichen lang sein",
   "@form_field_code_maxlength": {
     "placeholders": {
-      "maxLength": {}
+      "maxLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_code_alreadyused": "Dieser Code wird bereits verwendet",
   "form_field_is_preconfigured_schedule": "Vordefinierter Zeitplan",
-  "form_field_is_preconfigured_schedule_description": "Du kannst die Phasen und Interventionen für jeden Teilnehmer, der über diesen Code an der Studie teilnimmt, vordefinieren. Die hier festgelegten Einstellungen haben Vorrang gegenüber den Standard-Einstellungen der Studie.",
+  "form_field_is_preconfigured_schedule_description": "Du kannst die Phasen und Interventionen für jeden Teilnehmer vordefinieren, der über diesen Code an der Studie teilnimmt. Die hier festgelegten Einstellungen haben Vorrang gegenüber den Standard-Einstellungen der Studie.",
   "form_field_preconfigured_schedule_type": "Zeitplan",
   "form_field_preconfigured_schedule_intervention_a": "Intervention A",
   "form_field_preconfigured_schedule_intervention_b": "Intervention B",
   "form_field_preconfigured_schedule_intervention_default": "Standard",
   "form_field_preconfigured_schedule_intervention_hint": "Intervention auswählen...",
   "code_list_section_title": "Teilnahmecodes",
+  "code_public_disabled": "Teilnahmecodes deaktiviert",
+  "code_public_disabled_description": "Teilnahmecodes sind für diese Studie deaktiviert, da die öffentliche Rekrutierung für diese Studie aktiviert ist. Alle Teilnehmer können ohne Teilnahmecodes beitreten.",
   "code_list_empty_title": "Noch keine Teilnehmer eingeladen",
   "code_list_empty_description": "Erstelle Teilnahmecodes, mit denen sich Teilnehmer zu deiner Studie in der StudyU App anmelden können.",
   "code_list_header_code": "Code",
   "action_button_code_new": "Neuer Code",
   "notification_code_deleted": "Teilnahmecode gelöscht",
   "notification_code_clipboard": "Code wurde in die Zwischenablage kopiert",
+  "@__________________STUDYPAGE_MONITOR__________________": {},
+  "participant_details_title": "Teilnehmerdetails",
+  "participant_details_study_days_overview": "Übersicht über Studientage",
+  "participant_details_study_days_description": "Dieser Abschnitt bietet einen Überblick über die täglichen Aktivitäten des Teilnehmers in der Studie. Die Farblegende zeigt den Status der täglichen Aufgaben an. Bewege den Mauszeiger über die Studientage, um mehr Details über die tägliche Aktivität des Teilnehmers zu erfahren.",
+  "participant_details_color_legend_title": "Legende",
+  "participant_details_color_tooltip_legend_title": "Aktivitätsdetail Legende",
+  "participant_details_color_legend_completed_task": "Abgeschlossene Aufgabe",
+  "participant_details_color_legend_completed_task_tooltip": "Der Teilnehmer hat diese Aufgabe erledigt",
+  "participant_details_color_legend_missed_task": "Verpasste Aufgabe",
+  "participant_details_color_legend_missed_task_tooltip": "Der Teilnehmer hat diese Aufgabe verpasst",
+  "participant_details_color_legend_completed": "Alle Aufgaben abgeschlossen",
+  "participant_details_color_legend_partially_completed": "Einige Aufgaben unvollständig",
+  "participant_details_color_legend_missed": "Alle Aufgaben verpasst",
+  "participant_details_completed_legend_tooltip": "Alle Interventions- und Umfrageaufgaben wurden abgeschlossen",
+  "participant_details_partially_completed_legend_tooltip": "Nicht alle Interventions- oder Umfrageaufgaben wurden abgeschlossen",
+  "participant_details_incomplete_legend_tooltip": "Keine Interventions- oder Umfrageaufgaben wurden abgeschlossen",
+  "participant_details_progress_empty_title": "Keine Daten verfügbar",
+  "participant_details_progress_empty_description": "Sobald der Teilnehmer mit der Studie beginnt, werden hier tägliche Aktivitäten angezeigt.",
+  "monitoring_no_participants_title": "Es gibt noch keine Teilnehmer in dieser Studie",
+  "monitoring_no_participants_description": "Sobald Teilnehmer in der Studie eingeschrieben sind, kann hier deren Fortschritt überwacht werden.",
+  "monitoring_participants_title": "Teilnehmerübersicht",
+  "monitoring_total": "Gesamtzahl der Teilnehmer",
+  "monitoring_active": "Aktiv",
+  "monitoring_active_tooltip": "Anzahl der Teilnehmer, die derzeit in der Studie sind",
+  "monitoring_inactive": "Inaktiv",
+  "monitoring_inactive_tooltip": "Anzahl der Teilnehmer, die 3 Tage hintereinander keine Aktivität in der Studie gezeigt haben",
+  "monitoring_dropout": "Abgebrochen",
+  "monitoring_dropout_tooltip": "Anzahl der Teilnehmer, die die Studie vorzeitig abgebrochen haben oder für 5 Tage hintereinander keine Aktivität in der Studie gezeigt haben",
+  "monitoring_completed": "Abgeschlossen",
+  "monitoring_completed_tooltip": "Anzahl der Teilnehmer, die das Ende der Studie erreicht haben",
+  "monitoring_table_column_participant_id": "ID",
+  "monitoring_table_column_invite_code": "Einladungscode",
+  "monitoring_table_column_enrolled": "Studienstart",
+  "monitoring_table_column_last_activity": "Letzte Aktivität",
+  "monitoring_table_column_day_in_study": "Studientag",
+  "monitoring_table_column_completed_intervention_tasks": "Abgeschlossene Interventionsaufgaben",
+  "monitoring_table_column_completed_surveys": "Abgeschlossene Fragebögen",
+  "monitoring_table_row_tooltip_dropout": "Dieser Teilnehmer hat die Studie verlassen und es wird keine neue Aktivität hinzugefügt",
+  "monitoring_table_days_in_study_header_tooltip":"Die Anzahl der Tage, die der Teilnehmer in der Studie verbracht hat",
+  "monitoring_table_completed_interventions_header_tooltip": "Alle Interventionsaufgaben wurden während der gesamten Studie abgeschlossen",
+  "monitoring_table_completed_surveys_header_tooltip":"Die Umfrage zählt als abgeschlossen, wenn alle Aufgaben für den Tag erledigt wurden",
   "@__________________STUDYPAGE_ANALYZE__________________": {},
-  "banner_text_study_analyze_draft": "Solange die Studie noch nicht live ist, basieren die Ergebnisse hier auf dem letzten Testlauf der Studie (siehe Testmodus).\nDie Ergebnisdaten werden automatisch zurückgesetzt sobald die Studie mit echten Teilnehmern startet.",
+  "banner_text_study_analyze_draft": "Solange die Studie noch nicht live ist, basieren die Ergebnisse hier auf den Daten aus den Testläufen der Studie.\nDie Ergebnisdaten werden automatisch zurückgesetzt sobald die Studie mit echten Teilnehmern startet.",
   "action_button_study_export": "Daten exportieren",
   "action_button_study_export_prompt": "Möchtest du deine eigene Analyse durchführen?",
   "study_export_unavailable_empty_tooltip": "Es sind noch keine Ergebnisdaten verfügbar",
@@ -505,6 +647,7 @@
   "study_launch_post_launch_summary": "- Der Entwurfsmodus wird gesperrt und du kannst keine Änderungen mehr an der Studie selbst vornehmen\n- Alle nicht die Studie selbst betreffenden Daten werden zurückgesetzt (einschließlich Testnutzern und Testergebnissen)",
   "study_launch_success_title": "Deine Studie ist live!",
   "study_launch_success_description": "Lade als nächstes Teilnehmer zur Anmeldung in der StudyU App ein.",
+  "study_public_launch_success_description": "Deine Studie ist jetzt in der StudyU App für alle öffentlich verfügbar.",
   "action_button_post_launch_followup": "Teilnehmer einladen",
   "action_button_post_launch_followup_skip": "Später vielleicht",
   "action_button_study_participation_change": "Teilnahme\nändern",
@@ -516,37 +659,49 @@
   "date_diff_years": "{count,plural, =1{Vor einem Jahr} other{Vor {count} Jahren}}",
   "@date_diff_years": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_months": "{count,plural, =1{Vor einem Monat} other{Vor {count} Monaten}}",
   "@date_diff_months": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_days": "{count,plural, =1{Vor einem Tag} other{Vor {count} Tagen}}",
   "@date_diff_days": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_hours": "{count,plural, =1{Vor einer Stunde} other{Vor {count} Stunden}}",
   "@date_diff_hours": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_minutes": "{count,plural, =1{Vor einer Minute} other{Vor {count} Minuten}}",
   "@date_diff_minutes": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_seconds": "{count,plural, =1{Vor einer Sekunde} other{Vor {count} Sekunden}}",
   "@date_diff_seconds": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_just_now": "Gerade eben",
@@ -560,6 +715,7 @@
   "action_reportPrimary": "Als Primärauswertung setzen",
   "action_study_duplicate_draft": "Als Entwurf duplizieren",
   "action_study_export_results": "Ergebnisdaten exportieren",
+  "dialog_continue": "Fortfahren",
   "dialog_close": "Schließen",
   "dialog_cancel": "Abbrechen",
   "dialog_save": "Speichern",

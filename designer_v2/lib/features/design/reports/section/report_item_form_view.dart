@@ -6,8 +6,11 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/average_section_form_view.dart';
+import 'package:studyu_designer_v2/features/design/reports/section/types/descriptive_stats_section_form_view.dart';
+import 'package:studyu_designer_v2/features/design/reports/section/types/gauge_comparison_section_form_view.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/linear_regression_section_form_view.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/section_type.dart';
+import 'package:studyu_designer_v2/features/design/reports/section/types/textual_summary_section_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -36,6 +39,21 @@ class ReportItemFormView extends StatelessWidget {
           ),
       ReportSectionType.linearRegression: (_) =>
           LinearRegressionSectionFormView(
+            formViewModel: formViewModel,
+            studyId: studyId,
+            reportSectionColumnWidth: reportSectionColumnWidth,
+          ),
+      ReportSectionType.textualSummary: (_) => TextualSummarySectionFormView(
+            formViewModel: formViewModel,
+            studyId: studyId,
+            reportSectionColumnWidth: reportSectionColumnWidth,
+          ),
+      ReportSectionType.gaugeComparison: (_) => GaugeComparisonSectionFormView(
+          formViewModel: formViewModel,
+          studyId: studyId,
+          reportSectionColumnWidth: reportSectionColumnWidth),
+      ReportSectionType.descriptiveStats: (_) =>
+          DescriptiveStatsSectionFormView(
             formViewModel: formViewModel,
             studyId: studyId,
             reportSectionColumnWidth: reportSectionColumnWidth,
@@ -157,10 +175,14 @@ class ReportItemFormView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16.0),
-        TextParagraph(
-          text: tr.form_field_report_section_type_description,
-          style: ThemeConfig.bodyTextMuted(theme),
-        ),
+        FormTableLayout(columnWidths: reportSectionColumnWidth, rows: [
+          FormTableRow(
+            input: TextParagraph(
+              text: tr.form_field_report_section_type_description,
+              style: ThemeConfig.bodyTextMuted(theme),
+            ),
+          ),
+        ]),
         const SizedBox(height: 16.0),
       ],
     );

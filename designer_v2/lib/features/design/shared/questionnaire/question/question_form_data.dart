@@ -496,8 +496,8 @@ class ScaleQuestionFormData extends QuestionFormData {
       ..maximum = maxValue
       ..step = stepSize
       ..initial = initialValue
-      ..minColor = minColor?.value
-      ..maxColor = maxColor?.value
+      ..minColor = minColor?.toARGB32()
+      ..maxColor = maxColor?.toARGB32()
       ..midAnnotations = midAnnotations;
 
     if (minLabel != null) {

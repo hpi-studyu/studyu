@@ -42,7 +42,7 @@ class AsyncValueWidget<T> extends StatelessWidget {
     return data(unwrappedData);
   }
 
-  Widget _defaultError(e, st) {
+  Widget _defaultError(Object e, StackTrace? st) {
     return Center(child: Text(e.toString()));
   }
 

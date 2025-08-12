@@ -29,7 +29,7 @@ Future<void> main() async {
     );
   }, (error, stackTrace) {
     // TODO: top-level error handling
-    print("Exception: $error");
+    print("Error: $error");
     print("Stack: $stackTrace");
   });
 }

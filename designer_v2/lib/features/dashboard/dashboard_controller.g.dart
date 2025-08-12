@@ -7,7 +7,7 @@ part of 'dashboard_controller.dart';
 // **************************************************************************
 
 String _$dashboardControllerHash() =>
-    r'2310b394163e63741253dd431a9131917a4a0853';
+    r'15015ac4728ffa54a2042274200f3603a4f87d42';
 
 /// See also [DashboardController].
 @ProviderFor(DashboardController)
@@ -24,4 +24,4 @@ final dashboardControllerProvider =
 
 typedef _$DashboardController = AutoDisposeNotifier<DashboardState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

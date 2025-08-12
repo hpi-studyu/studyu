@@ -1,3 +1,116 @@
+## 2.9.1
+
+ - **FIX**: update deps.
+
+## 2.9.0
+
+ - **REFACTOR**: remove print.
+ - **FIX**: bump dependencies.
+ - **FIX**: update selectedStudyObjectId to null on study deletion.
+ - **FIX**: study reset process by removing unnecessary user ID handling.
+ - **FIX**: reset subject temp fix.
+ - **FIX**: reset subject progress.
+ - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+
+## 2.8.0
+
+ - **REFACTOR**: TextualSummarySectionWidget.
+ - **REFACTOR**: print remove dead code.
+ - **FIX**: textual summary widget width.
+ - **FIX**: upgrade deps.
+ - **FIX**: getTemporaryDirectory no longer throws error for web.
+ - **FIX**: double confirmation of data deletion and reload action + translations.
+ - **FIX**: handle secure storage errors with user prompt.
+ - **FIX**: improve notification task error messages.
+ - **FIX**: ios deployment.
+ - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+ - **FIX**: android deployment bump desugar_jdk_libs.
+ - **FIX**: add core and flutter_common local path dependency.
+ - **FIX**: add string_extensions.dart.
+ - **FIX**: colorless gauge translations.
+ - **FIX**: translation.
+ - **FIX**: upgrade deps.
+ - **FIX**: current intervention text split.
+ - **FIX**: deprecated withOpacity.
+ - **FIX**: create fallback dir if _getMultimodalTempDirectory fails.
+ - **FIX**: remove placeholder file creation.
+ - **FIX**: handle errors during app reset process.
+ - **FIX**: handle null cases for staging audio and image files & handle temp directory fail.
+ - **FIX**: migrate code.
+ - **FIX**: localization.
+ - **FIX**: improve baseline name handling in average section widget localization.
+ - **FIX**: update average section widget for better title handling and improve pubspec.lock dependencies.
+ - **FIX**: default for app deployment flutter variables 2.
+ - **FIX**: default for app deployment flutter variables.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: android config.
+ - **FIX**: ios and android configuration.
+ - **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.
+ - **FEAT**: re-create android and ios folders gemfile".
+ - **FEAT**: re-create android and ios folders gemfile.
+ - **FEAT**: re-create android and ios folders.
+ - **FEAT**: implement textual summary section with data processing and UI integration.
+ - **FEAT**: add gauge comparison section with loading state and colorless gauge option.
+ - **FEAT**: enhance textual summary with localized messages for intervention comparisons.
+ - **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.".
+ - **FEAT**: invert colorless gauge display logic in gauge comparison section.
+ - **FEAT**: descriptive stats section widget for app.
+ - **FEAT**: refactor statistical widgets and implement synchronous t-test results.
+ - **FEAT**: report overview.
+ - **FEAT**: report overview.
+ - **FEAT**: add splash screen for app.
+ - **FEAT**: re-create android and ios folders gemfile"".
+
+## 2.7.14
+
+ - **FIX**: linter.
+
+## 2.7.13
+
+ - **FIX**: migrate code.
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
+## 2.7.12
+
+ - **FIX**: notification icon mipmap 2.
+ - **FIX**: notification icon mipmap.
+ - **FIX**: configure AndroidNotificationDetails correctly.
+ - **FIX**: disable R8 full mode for flutter_local_notifications.
+
+## 2.7.11
+
+ - **FIX**: upgrade deps.
+ - **FIX**: notification scheduling.
+ - **FIX**: upgrade fvm to flutter v3.24.3.
+ - **FIX**: prompt user to restart after reset.
+ - **FIX**: debug screen.
+
+## 2.7.10
+
+ - **FIX**: schedule notifications for 7 days.
+ - **FIX**: refactor notification cancelling and add missing translations.
+ - **FIX**: upgrade to flutter v3.24.2.
+ - **FIX**: maybe prevent blank screen in notification debug view.
+
+## 2.7.9
+
+ - **FIX**: upgrade deps.
+
+## 2.7.8
+
+ - **FIX**: safety check.
+ - **FIX**: outdated cached subject.
+ - **FIX**: upgrade deps.
+
+## 2.7.7
+
+ - **FIX**: upgrade deps.
+ - **FIX**: upgrade deps.
+
+## 2.7.6
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 2.7.6-dev.3
 
  - **REFACTOR**: migrate to riverpod code generation 2.

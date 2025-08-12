@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -15,6 +16,7 @@ abstract class StudyUApi {
   Future<void> deleteStudy(Study study);
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
   Future<StudyInvite> fetchStudyInvite(String code);
+  Future<Study> fetchStudyFromInvite(String code);
   Future<void> deleteStudyInvite(StudyInvite invite);
   Future<List<StudySubject>> deleteParticipants(
     Study study,
@@ -141,7 +143,7 @@ class StudyUApiClient extends SupabaseClientDependant
   /// otherwise, all columns are fetched => [studyColumns]
   ///
   ///
-  /// @return List<Study>
+  /// @return List`<Study`>
   @override
   Future<List<Study>> getUserStudies({
     bool withParticipantActivity = false,
@@ -207,6 +209,20 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 
   @override
+  Future<Study> fetchStudyFromInvite(String code) async {
+    await _testDelay();
+    try {
+      final request = await executeRpc(
+        'get_study_record_from_invite',
+        params: {'invite_code': code},
+      );
+      return deserializeObject<Study>(request);
+    } catch (e) {
+      throw StudyInviteNotFoundException();
+    }
+  }
+
+  @override
   Future<StudyInvite> saveStudyInvite(StudyInvite invite) async {
     await _testDelay();
     final request = invite.save(); // upsert will override existing record
@@ -222,7 +238,7 @@ class StudyUApiClient extends SupabaseClientDependant
   }
 
   @override
-  Future<AppConfig> fetchAppConfig() async {
+  Future<AppConfig> fetchAppConfig() {
     final request = AppConfig.getAppConfig();
     return _awaitGuarded(request);
   }
@@ -262,7 +278,9 @@ class StudyUApiClient extends SupabaseClientDependant
       final result = await future;
       return result;
     } on SupabaseQueryError catch (e) {
-      if (onError == null || e.statusCode == null) {
+      if (onError == null ||
+          onError[e.statusCode] == null ||
+          e.statusCode == null) {
         throw _apiException(error: e);
       }
       final errorHandler = onError[e.statusCode]!;
@@ -297,6 +315,6 @@ class StudyUApiClient extends SupabaseClientDependant
 }
 
 @riverpod
-StudyUApiClient apiClient(ApiClientRef ref) => StudyUApiClient(
+StudyUApiClient apiClient(Ref ref) => StudyUApiClient(
       supabaseClient: ref.watch(supabaseClientProvider),
     );

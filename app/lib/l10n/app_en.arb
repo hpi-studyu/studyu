@@ -2,6 +2,12 @@
   "@@locale": "en",
 
   "loading": "Loading",
+  "loading_error_title": "Loading Error",
+  "loading_error_description": "The study data could not be retrieved. If you are currently participating in a study, please first contact your study supervisor for assistance. Only contact support if you are not in a study or your supervisor instructs you to do so. Do not delete your data unless told by your supervisor or support. Deleting data will remove all your study data and you will have to rejoin the study.",
+  "try_again": "Try again",
+  "delete_all_data": "Delete all data",
+  "delete_all_data_description": "Do you really want to delete all data? This will delete all your study data and you will have to rejoin the study.",
+  "reset_app": "Reset App",
 
   "what_is_studyu": "What is StudyU?",
   "description_part1": "Imagine reading the sentence: \"Eating after 6 pm decreases sleep quality\"",
@@ -30,11 +36,13 @@
   "please_answer_eligibility": "Please answer a few questions to make sure that you can safely participate in this study.",
   "intervention_selection_title": "Interventions",
   "please_select_interventions": "Please select two interventions to apply during the study.",
-  "please_select_interventions_description": "The effects of these two interventions will be measured and compared during the study.",
+  "please_select_interventions_description": "The effects of these two interventions will be measured and compared during the study. Interventions will follow the order you select. Choosing A before B means A comes first",
   "no_interventions_available": "No interventions available.",
   "loading_interventions": "Loading interventions",
 
+  "task_already_completed": "You have already completed this task today",
   "task_cannot_be_completed": "The task cannot be completed",
+  "task_outside_period": "The task cannot be completed outside of the intervention period",
   "study_notification_body": "A new task awaits your attention",
 
   "intervention_phase_duration": "Intervention phase duration",
@@ -51,7 +59,10 @@
   "intervention_current": "Current intervention",
   "study_current": "Current study:",
   "opt_out": "Leave study",
-  "delete_data": "Leave study & delete all data",
+  "delete_data": "Leave study and delete all data",
+  "soft_delete_desc": "You will lose your progress in ",
+  "soft_delete_desc_2": " and won't be able to recover it. Previously completed studies will not be deleted.\nYour anonymized data up to this point may still be used for research purposes.",
+  "hard_delete_desc": "You are about to delete all data from your device and our servers. You will not be able to restore your data.\nYour anonymized data will not be available for research purposes anymore.",
 
   "your_journey": "Your Journey",
   "journey_results_available": "Results available",
@@ -80,6 +91,16 @@
   "profile": "Profile",
   "help": "Help",
   "contact": "Contact",
+  "contact_support": "Contact Support",
+  "support_email_body": "Hello,\n\nI am experiencing a loading error in the StudyU app. My subject ID is: {subjectId}\n\nPlease assist me with this issue.\n\nThank you.",
+  "@support_email_body": {
+    "description": "Body of the support email, includes the subject ID",
+    "placeholders": {
+      "subjectId": {
+        "type": "String"
+      }
+    }
+  },
   "about": "About",
   "settings": "Settings",
   "yes": "yes",
@@ -128,6 +149,7 @@
   "video_test": "This is a video test",
   "survey_test": "This is a survey test",
 
+  "current_report": "Current report",
   "report_history": "Report history",
   "current_power_level": "Current status",
   "not_enough_data": "Not enough data",
@@ -192,23 +214,83 @@
   "free_text_min_length_error": "Please enter at least {min} characters",
   "@free_text_min_length_error": {
     "placeholders": {
-      "min": {}
+      "min": {
+        "type": "num"
+      }
     }
   },
   "free_text_max_length_error": "Please enter at most {max} characters",
   "@free_text_max_length_error": {
     "placeholders": {
-      "max": {}
+      "max": {
+        "type": "num"
+      }
     }
   },
   "free_text_alphanumeric_error": "Please enter only alphanumeric characters",
   "free_text_numeric_error": "Please enter only numeric characters",
   "free_text_custom_error": "Please enter only characters matching the pattern {pattern}",
   "@free_text_custom_error": {
-      "placeholders": {
-      "pattern": {}
+    "placeholders": {
+      "pattern": {
+        "type": "String"
       }
+    }
   },
   "app_outdated_message": "A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!",
-  "update_now": "Update now"
+  "update_now": "Update now",
+  "text_summary_section_prefix_higher": "Your ",
+  "text_summary_section_was_higher": " was higher during intervention: ",
+  "text_summary_section_was_lower": " was lower during intervention: ",
+  "text_summary_section_compared_to": " compared to: ",
+  "text_summary_section_and": " and ",
+  "text_summary_section_no_evidence": "There was no evidence for a difference in ",
+  "text_summary_section_between": " between interventions: ",
+  "intervention": "Intervention",
+  "phase": "Phase",
+  "day": "Day",
+  "no_data_available_yet": "No data available yet",
+  "value": "Value",
+  "show_colorless_gauges": "Enable accessible charts",
+  "welchs_t_test_results": "Welch's t-test Results",
+  "sample_a": "Sample A",
+  "sample_b": "Sample B",
+  "sample_size": "n",
+  "mean": "mean",
+  "variance": "var",
+  "t_statistic": "t-statistic",
+  "degrees_of_freedom": "Degrees of freedom",
+  "p_value": "p-value",
+  "result_significant": "Significantly different",
+  "result_not_significant": "Not significantly different",
+  "level_of_significance": "Level of significance",
+  "t_test_outcome_based_on": "The outcome is based on the following values:",
+  "statistical_information": "Statistical Information",
+  "close": "Close",
+  "significance_level_and_p_value": "Significance level and p-value",
+  "descriptive_statistics": "Descriptive statistics",
+  "compare_results_between": "Compare results between {nameA} and {nameB}",
+  "@compare_results_between": {
+    "description": "Label for comparing results between two interventions or samples",
+    "placeholders": {
+      "nameA": {
+        "type": "String"
+      },
+      "nameB": {
+        "type": "String"
+      }
+    }
+  },
+  "missing_observations_note": "Note: Missing observations indicate days when data was not recorded.",
+  "quick_summary": "Quick Summary",
+  "average_score": "Average score",
+  "data_completeness": "Data completeness",
+  "statistic": "Statistic",
+  "total_recordings": "Total recordings",
+  "missing_recordings": "Missing recordings",
+  "average": "Average",
+  "minimum": "Minimum",
+  "maximum": "Maximum",
+  "support_email_sent": "Support Email Sent",
+  "support_email_sent_description": "Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding."
 }

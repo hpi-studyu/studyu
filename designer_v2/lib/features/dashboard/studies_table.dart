@@ -276,12 +276,12 @@ class StudiesTable extends StatelessWidget {
       title,
       sortable: sortable,
       sortingActive: sortingActive,
-      sortAscending: sortAscending,
+      sortAscending: sortAscending(),
       onSort: sortable
           ? () {
               dashboardController.setSorting(
                 column,
-                sortingActive ? !sortAscending : sortAscending,
+                sortingActive ? !sortAscending() : sortAscending(),
               );
             }
           : null,
