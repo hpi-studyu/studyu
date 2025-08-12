@@ -12,11 +12,9 @@ Map<String, int> getInterventionPositions(List<Intervention> interventions) {
 }
 
 class LegendWidget extends StatelessWidget {
-  LegendWidget({
-    super.key,
-    required Legend legend,
-  })  : name = legend.name,
-        color = legend.color;
+  LegendWidget({super.key, required Legend legend})
+    : name = legend.name,
+      color = legend.color;
 
   final String name;
   final Color color;
@@ -30,26 +28,17 @@ class LegendWidget extends StatelessWidget {
         Container(
           width: 10,
           height: 10,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: color,
-          ),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: color),
         ),
         const SizedBox(width: 6),
-        Text(
-          name,
-          style: textTheme.bodyLarge,
-        ),
+        Text(name, style: textTheme.bodyLarge),
       ],
     );
   }
 }
 
 class LegendsListWidget extends StatelessWidget {
-  const LegendsListWidget({
-    super.key,
-    required this.legends,
-  });
+  const LegendsListWidget({super.key, required this.legends});
   final List<Legend> legends;
 
   @override

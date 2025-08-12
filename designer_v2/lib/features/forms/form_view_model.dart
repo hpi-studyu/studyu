@@ -11,11 +11,7 @@ import 'package:studyu_designer_v2/utils/performance.dart';
 import 'package:studyu_designer_v2/utils/tuple.dart';
 import 'package:studyu_designer_v2/utils/typings.dart';
 
-enum FormMode {
-  create,
-  readonly,
-  edit,
-}
+enum FormMode { create, readonly, edit }
 
 class FormInvalidException implements Exception {}
 
@@ -44,9 +40,8 @@ class FormControlOption<T> extends Equatable {
   List<Object?> get props => [value, label, description];
 }
 
-typedef FormControlUpdateFutureBuilder = Future Function(
-  AbstractControl control,
-);
+typedef FormControlUpdateFutureBuilder =
+    Future Function(AbstractControl control);
 
 /// This class represents a form view model.
 ///
@@ -62,9 +57,9 @@ abstract class FormViewModel<T> implements IFormGroupController {
     this.delegate,
     FormValidationSetEnum? validationSet,
     this.autosave = false,
-  })  : _validationSet = validationSet,
-        _formData = formData,
-        _formMode = (formData != null) ? FormMode.edit : FormMode.create {
+  }) : _validationSet = validationSet,
+       _formData = formData,
+       _formMode = (formData != null) ? FormMode.edit : FormMode.create {
     _setFormData(formData);
     initControls();
     _restoreControlsFromFormData();
@@ -121,7 +116,7 @@ abstract class FormViewModel<T> implements IFormGroupController {
   /// Map that stores the default [AbstractControl.validators] and
   /// [AbstractControl.asyncValidators] for each control in the [form]
   final Map<String, Tuple<List<Validator>, List<AsyncValidator>>>
-      _defaultControlValidators = {};
+  _defaultControlValidators = {};
 
   /// Flag indicating whether the current [form] data is different from
   /// the most recently set [formData]
@@ -195,13 +190,17 @@ abstract class FormViewModel<T> implements IFormGroupController {
       final controlName = entry.key;
       final control = entry.value;
       if (!_defaultControlValidators.containsKey(controlName)) {
-        _defaultControlValidators[controlName] =
-            Tuple(control.validators, control.asyncValidators);
+        _defaultControlValidators[controlName] = Tuple(
+          control.validators,
+          control.asyncValidators,
+        );
       }
     }
     if (!_defaultControlValidators.containsKey(_formKey)) {
-      _defaultControlValidators[_formKey] =
-          Tuple(form.validators, form.asyncValidators);
+      _defaultControlValidators[_formKey] = Tuple(
+        form.validators,
+        form.asyncValidators,
+      );
     }
   }
 
@@ -428,14 +427,11 @@ abstract class FormViewModel<T> implements IFormGroupController {
     if (_immediateFormChildrenSubscriptions.isNotEmpty) {
       return;
     }
-    listenToImmediateFormChildren(
-      (control) {
-        final saveFuture = save();
-        _autosaveOperation = CancelableOperation.fromFuture(saveFuture);
-        return saveFuture;
-      },
-      debounce: debounce,
-    );
+    listenToImmediateFormChildren((control) {
+      final saveFuture = save();
+      _autosaveOperation = CancelableOperation.fromFuture(saveFuture);
+      return saveFuture;
+    }, debounce: debounce);
   }
 
   void listenToImmediateFormChildren(
@@ -444,8 +440,10 @@ abstract class FormViewModel<T> implements IFormGroupController {
   }) {
     // Initialize debounce helper if needed
     if (debounce != 0) {
-      _immediateFormChildrenListenerDebouncer ??=
-          Debouncer(milliseconds: debounce, leading: false);
+      _immediateFormChildrenListenerDebouncer ??= Debouncer(
+        milliseconds: debounce,
+        leading: false,
+      );
     }
 
     for (final control in form.controls.values) {

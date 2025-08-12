@@ -61,14 +61,15 @@ class _AudioRecordingQuestionWidgetState
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(
               backgroundColor: _isRecording ? Colors.red.shade600 : null,
-              foregroundColor:
-                  _isRecording ? Colors.white : theme.colorScheme.primary,
+              foregroundColor: _isRecording
+                  ? Colors.white
+                  : theme.colorScheme.primary,
               side: BorderSide(
                 color: _hasRecorded
                     ? Colors.black38
                     : _isRecording
-                        ? Colors.red.shade600
-                        : theme.colorScheme.primary,
+                    ? Colors.red.shade600
+                    : theme.colorScheme.primary,
               ),
             ),
             onPressed: !_hasRecorded
@@ -96,13 +97,13 @@ class _AudioRecordingQuestionWidgetState
                       _hasRecorded
                           ? MdiIcons.checkCircleOutline
                           : _isRecording
-                              ? MdiIcons.stop
-                              : MdiIcons.microphone,
+                          ? MdiIcons.stop
+                          : MdiIcons.microphone,
                       color: _hasRecorded
                           ? Colors.black38
                           : _isRecording
-                              ? Colors.white
-                              : theme.colorScheme.primary,
+                          ? Colors.white
+                          : theme.colorScheme.primary,
                       size: 24,
                     ),
                   ),
@@ -111,8 +112,8 @@ class _AudioRecordingQuestionWidgetState
                     _hasRecorded
                         ? loc.audio_recorded
                         : _isRecording
-                            ? loc.stop_recording
-                            : loc.start_recording,
+                        ? loc.stop_recording
+                        : loc.start_recording,
                     style: const TextStyle(fontSize: 16),
                   ),
                   const Spacer(),
@@ -237,10 +238,8 @@ class _AudioRecordingQuestionWidgetState
     final errorMessage = isPermissionRelated
         ? AppLocalizations.of(context)!.microphone_access_denied
         : AppLocalizations.of(context)!.recording_error;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(errorMessage),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(errorMessage)));
   }
 }

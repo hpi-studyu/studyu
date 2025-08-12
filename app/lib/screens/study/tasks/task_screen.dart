@@ -16,9 +16,7 @@ class TaskScreen extends StatefulWidget {
   static MaterialPageRoute<bool> routeFor({
     required TaskInstance taskInstance,
   }) =>
-      MaterialPageRoute(
-        builder: (_) => TaskScreen(taskInstance: taskInstance),
-      );
+      MaterialPageRoute(builder: (_) => TaskScreen(taskInstance: taskInstance));
 
   const TaskScreen({required this.taskInstance, super.key});
 
@@ -74,10 +72,7 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(taskInstance.task.title ?? '')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: _buildTask(),
-      ),
+      body: Padding(padding: const EdgeInsets.all(16), child: _buildTask()),
     );
   }
 }

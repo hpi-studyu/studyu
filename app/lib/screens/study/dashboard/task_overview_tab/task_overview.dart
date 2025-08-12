@@ -49,8 +49,10 @@ class _TaskOverviewState extends State<TaskOverview> {
                 const SizedBox(width: 8),
                 Text(
                   taskInstance.completionPeriod.formatted(),
-                  style: theme.textTheme.titleSmall!
-                      .copyWith(fontSize: 16, color: theme.primaryColor),
+                  style: theme.textTheme.titleSmall!.copyWith(
+                    fontSize: 16,
+                    color: theme.primaryColor,
+                  ),
                 ),
               ],
             ),

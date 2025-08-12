@@ -44,15 +44,11 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
             ),
             DropdownMenuItem(
               value: TemporalAggregation.phase,
-              child: Text(
-                AppLocalizations.of(context)!.phase,
-              ),
+              child: Text(AppLocalizations.of(context)!.phase),
             ),
             DropdownMenuItem(
               value: TemporalAggregation.day,
-              child: Text(
-                AppLocalizations.of(context)!.day,
-              ),
+              child: Text(AppLocalizations.of(context)!.day),
             ),
           ],
           onChanged: (value) {
@@ -108,17 +104,19 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   List<int> get phasePos {
     final numberOfPhases = widget.subject.interventionOrder.length;
     final phaseDuration = widget.subject.study.schedule.phaseDuration;
-    return Iterable<int>.generate(numberOfPhases)
-        .map((i) => (i + 1) * phaseDuration)
-        .toList();
+    return Iterable<int>.generate(
+      numberOfPhases,
+    ).map((i) => (i + 1) * phaseDuration).toList();
   }
 
   Widget getLegend(BuildContext context, List<DiagramDatum> data) {
     final interventionNames = getInterventionNames(context);
     final legends = {
       for (final entry in data)
-        interventionNames[entry.intervention]!:
-            Legend(interventionNames[entry.intervention]!, getColor(entry)),
+        interventionNames[entry.intervention]!: Legend(
+          interventionNames[entry.intervention]!,
+          getColor(entry),
+        ),
     };
     return LegendsListWidget(legends: legends.values.toList());
   }
@@ -126,7 +124,8 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   Widget getDiagram(BuildContext context, List<DiagramDatum> data) {
     if (data.isEmpty) {
       return Center(
-          child: Text(AppLocalizations.of(context)!.no_data_available_yet));
+        child: Text(AppLocalizations.of(context)!.no_data_available_yet),
+      );
     }
     if (widget.section.aggregate == TemporalAggregation.day) {
       return LineChart(getLineChartData(context, data));
@@ -147,12 +146,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
         bottomTitles: AxisTitles(
           axisNameWidget:
               (widget.section.aggregate != TemporalAggregation.intervention)
-                  ? Text(AppLocalizations.of(context)!.phase)
-                  : const Text(""),
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: getTitles,
-          ),
+              ? Text(AppLocalizations.of(context)!.phase)
+              : const Text(""),
+          sideTitles: SideTitles(showTitles: true, getTitlesWidget: getTitles),
         ),
         topTitles: const AxisTitles(),
       ),
@@ -209,10 +205,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
       lineBarsData.add(
         LineChartBarData(
           spots: spots,
-          belowBarData: BarAreaData(
-            show: true,
-            color: backgroundColor,
-          ),
+          belowBarData: BarAreaData(show: true, color: backgroundColor),
           aboveBarData: BarAreaData(
             show: true,
             color: backgroundColor, // Adjust as needed
@@ -233,15 +226,18 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
       );
     }
 
-    final minX =
-        data.map((datum) => datum.x.toDouble()).reduce((a, b) => a < b ? a : b);
-    final maxX =
-        data.map((datum) => datum.x.toDouble()).reduce((a, b) => a > b ? a : b);
-    final maxY = (data
-                .map((datum) => datum.value.toDouble())
-                .reduce((a, b) => a > b ? a : b) *
-            1.1)
-        .ceilToDouble();
+    final minX = data
+        .map((datum) => datum.x.toDouble())
+        .reduce((a, b) => a < b ? a : b);
+    final maxX = data
+        .map((datum) => datum.x.toDouble())
+        .reduce((a, b) => a > b ? a : b);
+    final maxY =
+        (data
+                    .map((datum) => datum.value.toDouble())
+                    .reduce((a, b) => a > b ? a : b) *
+                1.1)
+            .ceilToDouble();
 
     return LineChartData(
       gridData: const FlGridData(show: false),
@@ -280,17 +276,10 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
             },
           ),
         ),
-        topTitles: const AxisTitles(
-          axisNameWidget: SizedBox.shrink(),
-        ),
-        rightTitles: const AxisTitles(
-          axisNameWidget: SizedBox.shrink(),
-        ),
+        topTitles: const AxisTitles(axisNameWidget: SizedBox.shrink()),
+        rightTitles: const AxisTitles(axisNameWidget: SizedBox.shrink()),
       ),
-      borderData: FlBorderData(
-        show: true,
-        border: Border.all(),
-      ),
+      borderData: FlBorderData(show: true, border: Border.all()),
       lineBarsData: lineBarsData,
       minX: minX,
       maxX: maxX,
@@ -321,10 +310,7 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   }
 
   Widget getTitles(double value, TitleMeta meta) {
-    return SideTitleWidget(
-      meta: meta,
-      child: getValues(value),
-    );
+    return SideTitleWidget(meta: meta, child: getValues(value));
   }
 
   Widget getValues(double value) {
@@ -358,7 +344,8 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
       case TemporalAggregation.phase:
         barCount = widget.subject.interventionOrder.length;
       case TemporalAggregation.intervention:
-        barCount = widget.subject.selectedInterventionIds.length +
+        barCount =
+            widget.subject.selectedInterventionIds.length +
             (widget.subject.study.schedule.includeBaseline ? 1 : 0);
       default:
     }
@@ -432,19 +419,21 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           // if id == "_baseline"
           c = baselineColor;
         } else {
-          c = colors[widget.subject.selectedInterventions
-              .map((e) => e.id)
-              .toList()
-              .indexOf(diagram.intervention)];
+          c =
+              colors[widget.subject.selectedInterventions
+                  .map((e) => e.id)
+                  .toList()
+                  .indexOf(diagram.intervention)];
         }
       case TemporalAggregation.phase:
         if (widget.subject.study.schedule.includeBaseline && diagram.x == 0) {
           c = baselineColor;
         } else {
-          c = colors[widget.subject.selectedInterventions
-              .map((e) => e.id)
-              .toList()
-              .indexOf(diagram.intervention)];
+          c =
+              colors[widget.subject.selectedInterventions
+                  .map((e) => e.id)
+                  .toList()
+                  .indexOf(diagram.intervention)];
         }
       case TemporalAggregation.intervention:
         if (widget.subject.study.schedule.includeBaseline && diagram.x == 2) {
@@ -474,11 +463,14 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   /// Groups data by intervention (excluding baseline data)
   /// and returns a mapping from intervention IDs to a list of values.
   Map<String, List<num>> getInterventionGroups(List<DiagramDatum> data) {
-    final filteredData =
-        data.where((datum) => datum.intervention != '__baseline');
+    final filteredData = data.where(
+      (datum) => datum.intervention != '__baseline',
+    );
     // Group data by intervention
-    final interventionGroups =
-        filteredData.fold<Map<String, List<num>>>({}, (map, datum) {
+    final interventionGroups = filteredData.fold<Map<String, List<num>>>({}, (
+      map,
+      datum,
+    ) {
       map.putIfAbsent(datum.intervention, () => []).add(datum.value);
       return map;
     });
@@ -487,8 +479,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
   }
 
   Iterable<DiagramDatum> aggregateDataBy(TemporalAggregation? aggregate) {
-    final values =
-        widget.section.resultProperty!.retrieveFromResults(widget.subject);
+    final values = widget.section.resultProperty!.retrieveFromResults(
+      widget.subject,
+    );
     final data = values.entries.map(
       (e) => DiagramDatum(
         getDayIndex(e.key),
@@ -526,8 +519,9 @@ class _AverageSectionWidgetState extends State<_AverageSectionStatefulWidget> {
           )
           .map((e) => e.value);
     } else {
-      final order =
-          getInterventionPositions(widget.subject.selectedInterventions);
+      final order = getInterventionPositions(
+        widget.subject.selectedInterventions,
+      );
       return data
           .groupBy((e) => e.intervention)
           .aggregateWithKey(

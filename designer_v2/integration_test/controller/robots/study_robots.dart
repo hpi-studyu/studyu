@@ -13,11 +13,11 @@ abstract class StudyRobots {
   final StudyMeasurementsRobot studyMeasurementsRobot;
 
   StudyRobots(this.$)
-      : appRobot = AppRobot($),
-        authRobot = AuthRobot($),
-        studiesRobot = StudiesRobot($),
-        studyDesignRobot = StudyDesignRobot($),
-        studyInfoRobot = StudyInfoRobot($),
-        studyInterventionsRobot = StudyInterventionsRobot($),
-        studyMeasurementsRobot = StudyMeasurementsRobot($);
+    : appRobot = AppRobot($),
+      authRobot = AuthRobot($),
+      studiesRobot = StudiesRobot($),
+      studyDesignRobot = StudyDesignRobot($),
+      studyInfoRobot = StudyInfoRobot($),
+      studyInterventionsRobot = StudyInterventionsRobot($),
+      studyMeasurementsRobot = StudyMeasurementsRobot($);
 }

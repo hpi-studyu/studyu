@@ -7,11 +7,11 @@ part of 'answer.dart';
 // **************************************************************************
 
 Answer<V> _$AnswerFromJson<V>(Map<String, dynamic> json) => Answer<V>(
-      json['question'] as String,
-      DateTime.parse(json['timestamp'] as String),
-    );
+  json['question'] as String,
+  DateTime.parse(json['timestamp'] as String),
+);
 
 Map<String, dynamic> _$AnswerToJson<V>(Answer<V> instance) => <String, dynamic>{
-      'question': instance.question,
-      'timestamp': instance.timestamp.toIso8601String(),
-    };
+  'question': instance.question,
+  'timestamp': instance.timestamp.toIso8601String(),
+};

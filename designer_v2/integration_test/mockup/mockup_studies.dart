@@ -17,26 +17,24 @@ class MockupStudies {
       ..website = 'test-study.org'
       ..phone = '+491112221122';
 
-    final mockInterventions = List<Intervention>.of(
-      [
-        Intervention.withId()
-          ..name = 'Test Intervention A'
-          ..description = 'Test Intervention Description A'
-          ..tasks = [
-            CheckmarkTask.withId()
-              ..title = 'Task A1'
-              ..header = 'Task A1 Description',
-          ],
-        Intervention.withId()
-          ..name = 'Test Intervention B'
-          ..description = 'Test Intervention Description B'
-          ..tasks = [
-            CheckmarkTask.withId()
-              ..title = 'Task B1'
-              ..header = 'Task B1 Description',
-          ],
-      ],
-    );
+    final mockInterventions = List<Intervention>.of([
+      Intervention.withId()
+        ..name = 'Test Intervention A'
+        ..description = 'Test Intervention Description A'
+        ..tasks = [
+          CheckmarkTask.withId()
+            ..title = 'Task A1'
+            ..header = 'Task A1 Description',
+        ],
+      Intervention.withId()
+        ..name = 'Test Intervention B'
+        ..description = 'Test Intervention Description B'
+        ..tasks = [
+          CheckmarkTask.withId()
+            ..title = 'Task B1'
+            ..header = 'Task B1 Description',
+        ],
+    ]);
 
     final mockQuestionnaireB = StudyUQuestionnaire()
       ..questions = [

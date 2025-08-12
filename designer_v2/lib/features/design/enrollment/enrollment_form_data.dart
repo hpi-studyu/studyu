@@ -37,23 +37,23 @@ class EnrollmentFormData implements IStudyFormData {
     study.questionnaire = questionnaireFormData.toQuestionnaire();
     study.consent = (consentItemsFormData != null)
         ? consentItemsFormData!
-            .map((formData) => formData.toConsentItem())
-            .toList()
+              .map((formData) => formData.toConsentItem())
+              .toList()
         : [];
     // Only update eligibility criteria if they have changed
-    final newEligibilityCriteria =
-        questionnaireFormData.toEligibilityCriteria();
+    final newEligibilityCriteria = questionnaireFormData
+        .toEligibilityCriteria();
     if (study.eligibilityCriteria.length != newEligibilityCriteria.length ||
-        !study.eligibilityCriteria
-            .every((c) => newEligibilityCriteria.contains(c))) {
+        !study.eligibilityCriteria.every(
+          (c) => newEligibilityCriteria.contains(c),
+        )) {
       study.eligibilityCriteria = newEligibilityCriteria;
     }
     return study;
   }
 
   @override
-  String get id =>
-      throw UnimplementedError(); // not needed for top-level form data
+  String get id => throw UnimplementedError(); // not needed for top-level form data
 
   @override
   EnrollmentFormData copy() {

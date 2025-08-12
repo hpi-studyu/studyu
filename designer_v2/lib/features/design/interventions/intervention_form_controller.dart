@@ -24,8 +24,10 @@ class InterventionFormViewModel
     implements
         IFormViewModelDelegate<InterventionTaskFormViewModel>,
         IListActionProvider<InterventionTaskFormViewModel>,
-        IProviderArgsResolver<InterventionTaskFormViewModel,
-            InterventionTaskFormRouteArgs> {
+        IProviderArgsResolver<
+          InterventionTaskFormViewModel,
+          InterventionTaskFormRouteArgs
+        > {
   InterventionFormViewModel({
     required this.study,
     super.delegate,
@@ -37,57 +39,51 @@ class InterventionFormViewModel
 
   // - Form fields
 
-  final FormControl<InterventionID> interventionIdControl =
-      FormControl(value: const Uuid().v4()); // hidden
-  final FormControl<String> interventionTitleControl =
-      FormControl(value: InterventionFormData.kDefaultTitle);
+  final FormControl<InterventionID> interventionIdControl = FormControl(
+    value: const Uuid().v4(),
+  ); // hidden
+  final FormControl<String> interventionTitleControl = FormControl(
+    value: InterventionFormData.kDefaultTitle,
+  );
   final FormControl<IconOption> interventionIconControl = FormControl();
   final FormControl<String> interventionDescriptionControl = FormControl();
 
   final FormArray interventionTasksArray = FormArray([]);
 
-  late final tasksCollection = FormViewModelCollection<
-      InterventionTaskFormViewModel,
-      InterventionTaskFormData>([], interventionTasksArray);
+  late final tasksCollection =
+      FormViewModelCollection<
+        InterventionTaskFormViewModel,
+        InterventionTaskFormData
+      >([], interventionTasksArray);
 
   InterventionID get interventionId => interventionIdControl.value!;
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [
-          titleRequired, /*atLeastOneTask*/
-        ],
-        StudyFormValidationSet.publish: [
-          titleRequired, /*atLeastOneTask*/
-        ],
-        StudyFormValidationSet.test: [
-          titleRequired, /*atLeastOneTask*/
-        ],
-      };
+    StudyFormValidationSet.draft: [titleRequired /*atLeastOneTask*/],
+    StudyFormValidationSet.publish: [titleRequired /*atLeastOneTask*/],
+    StudyFormValidationSet.test: [titleRequired /*atLeastOneTask*/],
+  };
 
   FormControlValidation get titleRequired => FormControlValidation(
-        control: interventionTitleControl,
-        validators: [
-          Validators.required,
-        ],
-        validationMessages: {
-          ValidationMessage.required: (error) =>
-              tr.form_field_intervention_title_required,
-        },
-      );
+    control: interventionTitleControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (error) =>
+          tr.form_field_intervention_title_required,
+    },
+  );
 
   FormControlValidation get atLeastOneTask => FormControlValidation(
-        control: interventionTasksArray,
-        validators: [
-          Validators.minLength(1),
-        ],
-        validationMessages: {
-          ValidationMessage.minLength: (error) =>
-              tr.form_array_intervention_tasks_minlength(
-                (error as Map)['requiredLength'] as num,
-              ),
-        },
-      );
+    control: interventionTasksArray,
+    validators: [Validators.minLength(1)],
+    validationMessages: {
+      ValidationMessage.minLength: (error) =>
+          tr.form_array_intervention_tasks_minlength(
+            (error as Map)['requiredLength'] as num,
+          ),
+    },
+  );
 
   @override
   late final FormGroup form = FormGroup({
@@ -141,10 +137,10 @@ class InterventionFormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: breadcrumbsTitle,
-        FormMode.readonly: breadcrumbsTitle,
-        FormMode.edit: breadcrumbsTitle,
-      };
+    FormMode.create: breadcrumbsTitle,
+    FormMode.readonly: breadcrumbsTitle,
+    FormMode.edit: breadcrumbsTitle,
+  };
 
   // - IListActionProvider
 
@@ -159,16 +155,20 @@ class InterventionFormViewModel
   }
 
   List<ModelAction> availablePopupActions(InterventionTaskFormViewModel model) {
-    final actions =
-        tasksCollection.availablePopupActions(model, isReadOnly: isReadonly);
+    final actions = tasksCollection.availablePopupActions(
+      model,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
   List<ModelAction> availableInlineActions(
     InterventionTaskFormViewModel model,
   ) {
-    final actions =
-        tasksCollection.availableInlineActions(model, isReadOnly: isReadonly);
+    final actions = tasksCollection.availableInlineActions(
+      model,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
@@ -222,8 +222,9 @@ class InterventionFormViewModel
       return viewModel;
     }
 
-    final viewModel =
-        tasksCollection.findWhere((vm) => vm.taskId == args.taskId);
+    final viewModel = tasksCollection.findWhere(
+      (vm) => vm.taskId == args.taskId,
+    );
     if (viewModel == null) {
       throw InterventionTaskNotFoundException(); // TODO handle 404 not found
     }

@@ -69,25 +69,25 @@ class ReactiveIconPicker
     super.focusNode,
     super.key,
   }) : super(
-          builder: (ReactiveFormFieldState<IconOption, IconOption> field) {
-            // Unsupported: showErrors, validationMessages
-            final isDisabled = readOnly || field.control.disabled;
+         builder: (ReactiveFormFieldState<IconOption, IconOption> field) {
+           // Unsupported: showErrors, validationMessages
+           final isDisabled = readOnly || field.control.disabled;
 
-            return IconPicker(
-              iconOptions: iconOptions,
-              isDisabled: isDisabled,
-              focusNode: focusNode,
-              selectedOption: field.value,
-              galleryIconSize: galleryIconSize,
-              selectedIconSize: selectedIconSize,
-              onSelect: (iconOption) {
-                if (isDisabled) return;
-                field.didChange(iconOption);
-                onSelect?.call(field.control);
-              },
-            );
-          },
-        );
+           return IconPicker(
+             iconOptions: iconOptions,
+             isDisabled: isDisabled,
+             focusNode: focusNode,
+             selectedOption: field.value,
+             galleryIconSize: galleryIconSize,
+             selectedIconSize: selectedIconSize,
+             onSelect: (iconOption) {
+               if (isDisabled) return;
+               field.didChange(iconOption);
+               onSelect?.call(field.control);
+             },
+           );
+         },
+       );
 }
 
 class IconPicker extends StatelessWidget {
@@ -158,19 +158,19 @@ class IconPickerField extends StatelessWidget {
         selectedIconSize ?? Theme.of(context).iconTheme.size ?? 16.0;
 
     Future<void> openIconPicker() => showIconPickerDialog(
-          context,
-          iconOptions: iconOptions,
-          galleryIconSize: actualGalleryIconSize,
-          onSelect: onSelect,
-        );
+      context,
+      iconOptions: iconOptions,
+      galleryIconSize: actualGalleryIconSize,
+      onSelect: onSelect,
+    );
 
     if (selectedOption != null && !selectedOption!.isEmpty) {
-      final selectedIcon = selectedOption?.icon ??
+      final selectedIcon =
+          selectedOption?.icon ??
           IconPack.resolveIconByName(
             selectedOption!.name,
             iconPack: iconOptions,
-          )!
-              .icon;
+          )!.icon;
       return IconButton(
         tooltip: tr.iconpicker_nonempty_prompt,
         splashRadius: actualSelectedIconSize,

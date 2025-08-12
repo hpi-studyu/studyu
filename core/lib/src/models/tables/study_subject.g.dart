@@ -6,14 +6,15 @@ part of 'study_subject.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-StudySubject _$StudySubjectFromJson(Map<String, dynamic> json) => StudySubject(
-      json['id'] as String,
-      json['study_id'] as String,
-      json['user_id'] as String,
-      (json['selected_intervention_ids'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-    )
+StudySubject _$StudySubjectFromJson(Map<String, dynamic> json) =>
+    StudySubject(
+        json['id'] as String,
+        json['study_id'] as String,
+        json['user_id'] as String,
+        (json['selected_intervention_ids'] as List<dynamic>)
+            .map((e) => e as String)
+            .toList(),
+      )
       ..startedAt = json['started_at'] == null
           ? null
           : DateTime.parse(json['started_at'] as String)
@@ -25,9 +26,8 @@ Map<String, dynamic> _$StudySubjectToJson(StudySubject instance) =>
       'id': instance.id,
       'study_id': instance.studyId,
       'user_id': instance.userId,
-      if (instance.startedAt?.toIso8601String() case final value?)
-        'started_at': value,
+      'started_at': ?instance.startedAt?.toIso8601String(),
       'selected_intervention_ids': instance.selectedInterventionIds,
-      if (instance.inviteCode case final value?) 'invite_code': value,
+      'invite_code': ?instance.inviteCode,
       'is_deleted': instance.isDeleted,
     };

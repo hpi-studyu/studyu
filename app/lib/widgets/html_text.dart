@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class HtmlText extends StatelessWidget {
-  const HtmlText(
-    this.text, {
-    this.style,
-    this.centered = false,
-    super.key,
-  });
+  const HtmlText(this.text, {this.style, this.centered = false, super.key});
 
   final String? text;
   final TextStyle? style;

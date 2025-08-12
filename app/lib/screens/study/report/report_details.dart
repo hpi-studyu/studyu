@@ -22,9 +22,7 @@ class ReportDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.report_overview,
-        ),
+        title: Text(AppLocalizations.of(context)!.report_overview),
         // TODO add pdf download
         // actions: [
         //   IconButton(

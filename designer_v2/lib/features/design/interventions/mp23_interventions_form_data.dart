@@ -13,8 +13,7 @@ class MP23InterventionsFormData implements IStudyFormData {
   final MP23StudyScheduleFormData studyScheduleData;
 
   @override
-  String get id =>
-      throw UnimplementedError(); // not needed for top-level form data
+  String get id => throw UnimplementedError(); // not needed for top-level form data
 
   factory MP23InterventionsFormData.fromStudy(Study study) {
     return MP23InterventionsFormData(
@@ -36,8 +35,9 @@ class MP23InterventionsFormData implements IStudyFormData {
 
   @override
   Study apply(Study study) {
-    final List<Intervention> interventions =
-        interventionsData.map((formData) => formData.toIntervention()).toList();
+    final List<Intervention> interventions = interventionsData
+        .map((formData) => formData.toIntervention())
+        .toList();
     study.interventions = interventions;
 
     studyScheduleData.apply(study);

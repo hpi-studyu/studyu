@@ -8,12 +8,12 @@ part of 'free_text_question.dart';
 
 FreeTextQuestion _$FreeTextQuestionFromJson(Map<String, dynamic> json) =>
     FreeTextQuestion(
-      textType: $enumDecode(_$FreeTextQuestionTypeEnumMap, json['textType']),
-      lengthRange: (json['lengthRange'] as List<dynamic>)
-          .map((e) => (e as num).toInt())
-          .toList(),
-      customTypeExpression: json['customTypeExpression'] as String?,
-    )
+        textType: $enumDecode(_$FreeTextQuestionTypeEnumMap, json['textType']),
+        lengthRange: (json['lengthRange'] as List<dynamic>)
+            .map((e) => (e as num).toInt())
+            .toList(),
+        customTypeExpression: json['customTypeExpression'] as String?,
+      )
       ..type = json['type'] as String
       ..id = json['id'] as String
       ..prompt = json['prompt'] as String?
@@ -21,20 +21,19 @@ FreeTextQuestion _$FreeTextQuestionFromJson(Map<String, dynamic> json) =>
       ..conditional = json['conditional'] == null
           ? null
           : QuestionConditional<String>.fromJson(
-              json['conditional'] as Map<String, dynamic>);
+              json['conditional'] as Map<String, dynamic>,
+            );
 
 Map<String, dynamic> _$FreeTextQuestionToJson(FreeTextQuestion instance) =>
     <String, dynamic>{
       'type': instance.type,
       'id': instance.id,
-      if (instance.prompt case final value?) 'prompt': value,
-      if (instance.rationale case final value?) 'rationale': value,
-      if (instance.conditional?.toJson() case final value?)
-        'conditional': value,
+      'prompt': ?instance.prompt,
+      'rationale': ?instance.rationale,
+      'conditional': ?instance.conditional?.toJson(),
       'lengthRange': instance.lengthRange,
       'textType': instance.textType.toJson(),
-      if (instance.customTypeExpression case final value?)
-        'customTypeExpression': value,
+      'customTypeExpression': ?instance.customTypeExpression,
     };
 
 const _$FreeTextQuestionTypeEnumMap = {

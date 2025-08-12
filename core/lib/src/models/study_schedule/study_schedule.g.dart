@@ -7,9 +7,7 @@ part of 'study_schedule.dart';
 // **************************************************************************
 
 StudySchedule _$StudyScheduleFromJson(Map<String, dynamic> json) =>
-    StudySchedule(
-      sequenceCustom: json['sequenceCustom'] as String? ?? 'ABAB',
-    )
+    StudySchedule(sequenceCustom: json['sequenceCustom'] as String? ?? 'ABAB')
       ..numberOfCycles = (json['numberOfCycles'] as num).toInt()
       ..phaseDuration = (json['phaseDuration'] as num).toInt()
       ..includeBaseline = json['includeBaseline'] as bool

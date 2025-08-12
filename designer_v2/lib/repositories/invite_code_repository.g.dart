@@ -40,21 +40,15 @@ class InviteCodeRepositoryFamily extends Family<InviteCodeRepository> {
   const InviteCodeRepositoryFamily();
 
   /// See also [inviteCodeRepository].
-  InviteCodeRepositoryProvider call(
-    String studyId,
-  ) {
-    return InviteCodeRepositoryProvider(
-      studyId,
-    );
+  InviteCodeRepositoryProvider call(String studyId) {
+    return InviteCodeRepositoryProvider(studyId);
   }
 
   @override
   InviteCodeRepositoryProvider getProviderOverride(
     covariant InviteCodeRepositoryProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -76,24 +70,19 @@ class InviteCodeRepositoryFamily extends Family<InviteCodeRepository> {
 class InviteCodeRepositoryProvider
     extends AutoDisposeProvider<InviteCodeRepository> {
   /// See also [inviteCodeRepository].
-  InviteCodeRepositoryProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => inviteCodeRepository(
-            ref as InviteCodeRepositoryRef,
-            studyId,
-          ),
-          from: inviteCodeRepositoryProvider,
-          name: r'inviteCodeRepositoryProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$inviteCodeRepositoryHash,
-          dependencies: InviteCodeRepositoryFamily._dependencies,
-          allTransitiveDependencies:
-              InviteCodeRepositoryFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  InviteCodeRepositoryProvider(String studyId)
+    : this._internal(
+        (ref) => inviteCodeRepository(ref as InviteCodeRepositoryRef, studyId),
+        from: inviteCodeRepositoryProvider,
+        name: r'inviteCodeRepositoryProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$inviteCodeRepositoryHash,
+        dependencies: InviteCodeRepositoryFamily._dependencies,
+        allTransitiveDependencies:
+            InviteCodeRepositoryFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   InviteCodeRepositoryProvider._internal(
     super._createNotifier, {
@@ -159,5 +148,6 @@ class _InviteCodeRepositoryProviderElement
   @override
   String get studyId => (origin as InviteCodeRepositoryProvider).studyId;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

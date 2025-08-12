@@ -29,16 +29,16 @@ class ThemeConfig {
       theme.colorScheme.primary;
 
   static TextStyle bodyTextMuted(ThemeData theme) => TextStyle(
-        fontSize: 14.0,
-        height: 1.35,
-        color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 0.65),
-      );
+    fontSize: 14.0,
+    height: 1.35,
+    color: theme.textTheme.bodyLarge?.color?.withValues(alpha: 0.65),
+  );
 
   static TextStyle bodyTextBackground(ThemeData theme) => TextStyle(
-        fontSize: 14.0,
-        height: 1.35,
-        color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
-      );
+    fontSize: 14.0,
+    height: 1.35,
+    color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
+  );
 
   static double iconSplashRadius(ThemeData theme) => 24.0;
 
@@ -84,10 +84,14 @@ class WebTransitionBuilder extends PageTransitionsBuilder {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    final opacityOldTween =
-        Tween(begin: 1.0, end: 0.0).chain(CurveTween(curve: Curves.easeIn));
-    final opacityNewTween =
-        Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: Curves.easeIn));
+    final opacityOldTween = Tween(
+      begin: 1.0,
+      end: 0.0,
+    ).chain(CurveTween(curve: Curves.easeIn));
+    final opacityNewTween = Tween(
+      begin: 0.0,
+      end: 1.0,
+    ).chain(CurveTween(curve: Curves.easeIn));
 
     return FadeTransition(
       opacity: opacityOldTween.animate(secondaryAnimation),
@@ -144,7 +148,9 @@ class ThemeProvider extends InheritedWidget {
   Color blend(Color targetColor) {
     return Color(
       Blend.harmonize(
-          targetColor.toARGB32(), settings.value.sourceColor.toARGB32()),
+        targetColor.toARGB32(),
+        settings.value.sourceColor.toARGB32(),
+      ),
     );
   }
 
@@ -176,9 +182,8 @@ class ThemeProvider extends InheritedWidget {
     );
   }
 
-  ShapeBorder get shapeMedium => RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      );
+  ShapeBorder get shapeMedium =>
+      RoundedRectangleBorder(borderRadius: BorderRadius.circular(8));
 
   CardThemeData cardThemeData() {
     return CardThemeData(
@@ -229,21 +234,13 @@ class ThemeProvider extends InheritedWidget {
       labelColor: colors.primary,
       unselectedLabelColor: colors.onSurfaceVariant,
       indicator: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: colors.primary,
-            width: 2,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: colors.primary, width: 2)),
       ),
     );
   }
 
   BottomAppBarTheme bottomAppBarTheme(ColorScheme colors) {
-    return BottomAppBarTheme(
-      color: colors.surface,
-      elevation: 0,
-    );
+    return BottomAppBarTheme(color: colors.surface, elevation: 0);
   }
 
   BottomNavigationBarThemeData bottomNavigationBarTheme(ColorScheme colors) {
@@ -293,8 +290,9 @@ class ThemeProvider extends InheritedWidget {
       hoverColor: Colors.white,
       focusColor: Colors.white,
       isDense: true,
-      hintStyle:
-          TextStyle(color: colors.onSurfaceVariant.withValues(alpha: 0.4)),
+      hintStyle: TextStyle(
+        color: colors.onSurfaceVariant.withValues(alpha: 0.4),
+      ),
       contentPadding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
@@ -310,21 +308,15 @@ class ThemeProvider extends InheritedWidget {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
-        borderSide: BorderSide(
-          color: colors.primary,
-        ),
+        borderSide: BorderSide(color: colors.primary),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
-        borderSide: BorderSide(
-          color: colors.error,
-        ),
+        borderSide: BorderSide(color: colors.error),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5),
-        borderSide: BorderSide(
-          color: colors.error,
-        ),
+        borderSide: BorderSide(color: colors.error),
       ),
     );
   }
@@ -336,14 +328,14 @@ class ThemeProvider extends InheritedWidget {
 
     return TextTheme(
       labelLarge: TextStyle(
-          fontSize: 14.0, color: colors.onSurface.withValues(alpha: 0.9)),
+        fontSize: 14.0,
+        color: colors.onSurface.withValues(alpha: 0.9),
+      ),
       bodySmall: TextStyle(
         fontSize: 14.0,
         height: 1.35,
         //withOpacity(0.9)
-        color: colors.onSurface.withValues(
-          alpha: 0.9,
-        ),
+        color: colors.onSurface.withValues(alpha: 0.9),
       ), // Form Labels
       titleMedium: TextStyle(
         fontSize: 14.0,
@@ -409,11 +401,7 @@ class ThemeProvider extends InheritedWidget {
   }
 
   IconThemeData iconTheme(ColorScheme colors) {
-    return IconThemeData(
-      color: colors.onSurface,
-      opacity: 0.8,
-      size: 17.0,
-    );
+    return IconThemeData(color: colors.onSurface, opacity: 0.8, size: 17.0);
   }
 
   CheckboxThemeData checkboxTheme(ColorScheme colors) {
@@ -438,8 +426,9 @@ class ThemeProvider extends InheritedWidget {
   RadioThemeData radioTheme(ColorScheme colors) {
     return RadioThemeData(
       splashRadius: 18.0,
-      fillColor:
-          WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+      fillColor: WidgetStateProperty.resolveWith<Color?>((
+        Set<WidgetState> states,
+      ) {
         if (states.contains(WidgetState.disabled)) {
           return null;
         }
@@ -487,8 +476,9 @@ class ThemeProvider extends InheritedWidget {
       tabBarTheme: tabBarThemeData(colorScheme),
       drawerTheme: drawerTheme(colorScheme),
       snackBarTheme: snackBarThemeData(colorScheme),
-      scaffoldBackgroundColor:
-          colorScheme.primaryContainer.withValues(alpha: 0.15),
+      scaffoldBackgroundColor: colorScheme.primaryContainer.withValues(
+        alpha: 0.15,
+      ),
       dividerTheme: dividerTheme(colorScheme),
       //splashColor: colorScheme.secondary.withValues(alpha: 0.4),
       //highlightColor: colorScheme.secondary.withValues(alpha: 0.3),
@@ -553,10 +543,7 @@ class ThemeProvider extends InheritedWidget {
 }
 
 class ThemeSettings {
-  ThemeSettings({
-    required this.sourceColor,
-    required this.themeMode,
-  });
+  ThemeSettings({required this.sourceColor, required this.themeMode});
 
   final Color sourceColor;
   final ThemeMode themeMode;
@@ -567,10 +554,7 @@ Color randomColor() {
 }
 
 // Custom Colors
-const linkColor = CustomColor(
-  name: 'Link Color',
-  color: Color(0xFF00B0FF),
-);
+const linkColor = CustomColor(name: 'Link Color', color: Color(0xFF00B0FF));
 
 class CustomColor {
   const CustomColor({

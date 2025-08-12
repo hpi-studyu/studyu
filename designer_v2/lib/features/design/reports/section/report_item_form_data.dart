@@ -3,10 +3,7 @@ import 'package:studyu_designer_v2/features/forms/form_data.dart';
 import 'package:uuid/uuid.dart';
 
 class ReportItemFormData extends IFormData {
-  ReportItemFormData({
-    required this.isPrimary,
-    required this.section,
-  });
+  ReportItemFormData({required this.isPrimary, required this.section});
 
   late bool isPrimary;
   final ReportSection section;
@@ -28,10 +25,7 @@ class ReportItemFormData extends IFormData {
     }
     for (final ReportSection reportSection in reportSpecification.secondary) {
       reportsFormData.add(
-        ReportItemFormData(
-          isPrimary: false,
-          section: reportSection,
-        ),
+        ReportItemFormData(isPrimary: false, section: reportSection),
       );
     }
     return reportsFormData;
@@ -39,10 +33,7 @@ class ReportItemFormData extends IFormData {
 
   @override
   ReportItemFormData copy() {
-    final copy = ReportItemFormData(
-      isPrimary: false,
-      section: section,
-    );
+    final copy = ReportItemFormData(isPrimary: false, section: section);
     copy.section.id = const Uuid().v4(); // always regenerate id
     return copy;
   }

@@ -30,8 +30,9 @@ class _LanguagePickerState extends ConsumerState<LanguagePicker> {
   @override
   Widget build(BuildContext context) {
     final controller = ref.watch(localeStateNotifierProvider.notifier);
-    final currentLocalization =
-        ref.watch(localeProvider.select((value) => value));
+    final currentLocalization = ref.watch(
+      localeProvider.select((value) => value),
+    );
     switch (widget.languagePickerType) {
       case LanguagePickerType.field:
         final FormGroup localeForm = FormGroup({

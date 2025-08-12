@@ -113,12 +113,16 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
     }
 
     if (widget.backgroundColorLeft != null) {
-      leftWidget =
-          Material(color: widget.backgroundColorLeft, child: leftWidget);
+      leftWidget = Material(
+        color: widget.backgroundColorLeft,
+        child: leftWidget,
+      );
     }
     if (widget.backgroundColorRight != null) {
-      rightWidget =
-          Material(color: widget.backgroundColorRight, child: rightWidget);
+      rightWidget = Material(
+        color: widget.backgroundColorRight,
+        child: rightWidget,
+      );
     }
 
     return LayoutBuilder(
@@ -213,10 +217,7 @@ class _TwoColumnLayoutState extends State<TwoColumnLayout> {
         if (widget.headerWidget != null) {
           body = Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              widget.headerWidget!,
-              body,
-            ],
+            children: [widget.headerWidget!, body],
           );
         }
 

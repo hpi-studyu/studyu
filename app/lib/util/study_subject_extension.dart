@@ -12,10 +12,10 @@ extension StudySubjectExtension on StudySubject {
   }) async {
     final Result<T> resultObject = switch (result) {
       QuestionnaireState() => Result<T>.app(
-          type: 'QuestionnaireState',
-          periodId: periodId,
-          result: result,
-        ),
+        type: 'QuestionnaireState',
+        periodId: periodId,
+        result: result,
+      ),
       bool() => Result<T>.app(type: 'bool', periodId: periodId, result: result),
       _ => Result<T>.app(type: 'unknown', periodId: periodId, result: result),
     };
@@ -39,9 +39,10 @@ extension StudySubjectExtension on StudySubject {
             );
 
             // Replaces Answer<FutureBlobFile> with Answer<String>
-            questionnaireState.answers[answerEntry.key] =
-                Answer<String>(answer.question, answer.timestamp)
-                  ..response = futureBlobFile.futureBlobId;
+            questionnaireState.answers[answerEntry.key] = Answer<String>(
+              answer.question,
+              answer.timestamp,
+            )..response = futureBlobFile.futureBlobId;
           }
         }
       }

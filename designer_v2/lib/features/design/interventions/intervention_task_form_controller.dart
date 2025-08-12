@@ -27,12 +27,15 @@ class InterventionTaskFormViewModel
 
   // - Form fields
 
-  final FormControl<TaskID> taskIdControl =
-      FormControl(value: const Uuid().v4()); // hidden
-  final FormControl<InstanceID> instanceIdControl =
-      FormControl(value: const Uuid().v4()); // hidden
-  final FormControl<String> taskTitleControl =
-      FormControl(value: InterventionTaskFormData.kDefaultTitle);
+  final FormControl<TaskID> taskIdControl = FormControl(
+    value: const Uuid().v4(),
+  ); // hidden
+  final FormControl<InstanceID> instanceIdControl = FormControl(
+    value: const Uuid().v4(),
+  ); // hidden
+  final FormControl<String> taskTitleControl = FormControl(
+    value: InterventionTaskFormData.kDefaultTitle,
+  );
   final FormControl<String> taskDescriptionControl = FormControl();
   final FormControl<bool> markAsCompletedControl = FormControl(value: true);
 
@@ -41,10 +44,10 @@ class InterventionTaskFormViewModel
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [titleRequired],
-        StudyFormValidationSet.publish: [titleRequired],
-        StudyFormValidationSet.test: [titleRequired],
-      };
+    StudyFormValidationSet.draft: [titleRequired],
+    StudyFormValidationSet.publish: [titleRequired],
+    StudyFormValidationSet.test: [titleRequired],
+  };
 
   @override
   late final FormGroup form = FormGroup({
@@ -56,15 +59,13 @@ class InterventionTaskFormViewModel
   });
 
   FormControlValidation get titleRequired => FormControlValidation(
-        control: taskTitleControl,
-        validators: [
-          Validators.required,
-        ],
-        validationMessages: {
-          ValidationMessage.required: (error) =>
-              tr.form_field_intervention_task_title_required,
-        },
-      );
+    control: taskTitleControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (error) =>
+          tr.form_field_intervention_task_title_required,
+    },
+  );
 
   @override
   void setControlsFrom(InterventionTaskFormData data) {
@@ -91,10 +92,10 @@ class InterventionTaskFormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: tr.form_intervention_task_create,
-        FormMode.edit: tr.form_intervention_task_edit,
-        FormMode.readonly: tr.form_intervention_task_readonly,
-      };
+    FormMode.create: tr.form_intervention_task_create,
+    FormMode.edit: tr.form_intervention_task_edit,
+    FormMode.readonly: tr.form_intervention_task_readonly,
+  };
 
   // - ManagedFormViewModel
 

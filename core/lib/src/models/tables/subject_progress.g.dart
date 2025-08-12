@@ -8,19 +8,21 @@ part of 'subject_progress.dart';
 
 SubjectProgress _$SubjectProgressFromJson(Map<String, dynamic> json) =>
     SubjectProgress(
-      subjectId: json['subject_id'] as String,
-      interventionId: json['intervention_id'] as String,
-      taskId: json['task_id'] as String,
-      resultType: json['result_type'] as String,
-      result: Result<dynamic>.fromJson(json['result'] as Map<String, dynamic>),
-    )..completedAt = json['completed_at'] == null
-        ? null
-        : DateTime.parse(json['completed_at'] as String);
+        subjectId: json['subject_id'] as String,
+        interventionId: json['intervention_id'] as String,
+        taskId: json['task_id'] as String,
+        resultType: json['result_type'] as String,
+        result: Result<dynamic>.fromJson(
+          json['result'] as Map<String, dynamic>,
+        ),
+      )
+      ..completedAt = json['completed_at'] == null
+          ? null
+          : DateTime.parse(json['completed_at'] as String);
 
 Map<String, dynamic> _$SubjectProgressToJson(SubjectProgress instance) =>
     <String, dynamic>{
-      if (instance.completedAt?.toIso8601String() case final value?)
-        'completed_at': value,
+      'completed_at': ?instance.completedAt?.toIso8601String(),
       'subject_id': instance.subjectId,
       'intervention_id': instance.interventionId,
       'task_id': instance.taskId,

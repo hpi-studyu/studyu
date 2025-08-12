@@ -32,8 +32,10 @@ class WrappedModel<T> {
   DateTime? lastUpdated;
 
   void markWithError(Object error, {StackTrace? stackTrace}) {
-    asyncValue =
-        AsyncError<T>(error, StackTrace.current).copyWithPrevious(asyncValue);
+    asyncValue = AsyncError<T>(
+      error,
+      StackTrace.current,
+    ).copyWithPrevious(asyncValue);
   }
 
   void markAsLoading() {
@@ -42,8 +44,10 @@ class WrappedModel<T> {
 
   void markAsFetched() {
     if (isDirty) {
-      throw Exception("Dirty model marked as fetched, potentially resulting in "
-          "loss of unsaved changes.");
+      throw Exception(
+        "Dirty model marked as fetched, potentially resulting in "
+        "loss of unsaved changes.",
+      );
     }
     isLocalOnly = false;
     lastFetched = DateTime.now();
@@ -109,7 +113,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   final Map<ModelID, BehaviorSubject<WrappedModel<T>>> modelStreamControllers =
       {};
   final Map<ModelID, BehaviorSubject<ModelEvent<T>>>
-      modelEventsStreamControllers = {};
+  modelEventsStreamControllers = {};
 
   /// Collection of all models of type [T]
   ///

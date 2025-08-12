@@ -19,20 +19,14 @@ class StudyUDiagnostics {
     } else {
       sentryEvent = event;
     }
-    await Sentry.captureEvent(
-      sentryEvent,
-      stackTrace: stackTrace,
-    );
+    await Sentry.captureEvent(sentryEvent, stackTrace: stackTrace);
   }
 
   static Future<void> captureException(
     dynamic exception, {
     StackTrace? stackTrace,
   }) async {
-    await Sentry.captureException(
-      exception,
-      stackTrace: stackTrace,
-    );
+    await Sentry.captureException(exception, stackTrace: stackTrace);
   }
 
   static Future<void> captureMessage(String? message) async {

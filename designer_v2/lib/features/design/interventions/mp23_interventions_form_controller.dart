@@ -22,13 +22,14 @@ import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 class MP23InterventionsFormViewModel
     extends FormViewModel<MP23InterventionsFormData>
-    with
-        MP23StudyScheduleControls
+    with MP23StudyScheduleControls
     implements
         IFormViewModelDelegate<InterventionFormViewModel>,
         IListActionProvider<InterventionFormViewModel>,
-        IProviderArgsResolver<InterventionFormViewModel,
-            InterventionFormRouteArgs> {
+        IProviderArgsResolver<
+          InterventionFormViewModel,
+          InterventionFormRouteArgs
+        > {
   MP23InterventionsFormViewModel({
     required this.study,
     required this.router,
@@ -46,9 +47,9 @@ class MP23InterventionsFormViewModel
   final FormArray interventionsArray = FormArray([]);
   late final interventionsCollection =
       FormViewModelCollection<InterventionFormViewModel, InterventionFormData>(
-    [],
-    interventionsArray,
-  );
+        [],
+        interventionsArray,
+      );
 
   @override
   late final FormGroup form = FormGroup({
@@ -60,31 +61,29 @@ class MP23InterventionsFormViewModel
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [
-          ...studyScheduleValidationConfig[StudyFormValidationSet.draft]!,
-        ],
-        StudyFormValidationSet.publish: [
-          ...studyScheduleValidationConfig[StudyFormValidationSet.publish]!,
-          interventionsRequired,
-        ],
-        StudyFormValidationSet.test: [
-          ...studyScheduleValidationConfig[StudyFormValidationSet.test]!,
-          interventionsRequired,
-        ],
-      };
+    StudyFormValidationSet.draft: [
+      ...studyScheduleValidationConfig[StudyFormValidationSet.draft]!,
+    ],
+    StudyFormValidationSet.publish: [
+      ...studyScheduleValidationConfig[StudyFormValidationSet.publish]!,
+      interventionsRequired,
+    ],
+    StudyFormValidationSet.test: [
+      ...studyScheduleValidationConfig[StudyFormValidationSet.test]!,
+      interventionsRequired,
+    ],
+  };
 
   FormControlValidation get interventionsRequired => FormControlValidation(
-        control: interventionsArray,
-        validators: [
-          Validators.minLength(2),
-        ],
-        validationMessages: {
-          ValidationMessage.minLength: (error) =>
-              tr.form_array_interventions_minlength(
-                (error as Map)['requiredLength'] as num,
-              ),
-        },
-      );
+    control: interventionsArray,
+    validators: [Validators.minLength(2)],
+    validationMessages: {
+      ValidationMessage.minLength: (error) =>
+          tr.form_array_interventions_minlength(
+            (error as Map)['requiredLength'] as num,
+          ),
+    },
+  );
 
   @override
   void setControlsFrom(MP23InterventionsFormData data) {
@@ -181,8 +180,9 @@ class MP23InterventionsFormViewModel
       return viewModel;
     }
 
-    final viewModel = interventionsCollection
-        .findWhere((vm) => vm.interventionId == args.interventionId);
+    final viewModel = interventionsCollection.findWhere(
+      (vm) => vm.interventionId == args.interventionId,
+    );
     if (viewModel == null) {
       throw InterventionNotFoundException(); // TODO handle 404 not found
     }

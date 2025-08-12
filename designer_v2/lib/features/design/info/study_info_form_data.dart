@@ -33,8 +33,7 @@ class StudyInfoFormData implements IStudyFormData {
   }
 
   @override
-  String get id =>
-      throw UnimplementedError(); // not needed for top-level form data
+  String get id => throw UnimplementedError(); // not needed for top-level form data
 
   @override
   StudyInfoFormData copy() {
@@ -96,8 +95,7 @@ class StudyContactInfoFormData implements IStudyFormData {
   }
 
   @override
-  String get id =>
-      throw UnimplementedError(); // not needed for top-level form data
+  String get id => throw UnimplementedError(); // not needed for top-level form data
 
   @override
   StudyInfoFormData copy() {

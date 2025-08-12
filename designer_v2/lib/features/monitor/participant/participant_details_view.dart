@@ -23,9 +23,7 @@ class ParticipantDetailsView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ParticipantInfo(
-          monitorItem: monitorItem,
-        ),
+        ParticipantInfo(monitorItem: monitorItem),
         const SizedBox(height: 8.0),
         const Divider(),
         const SizedBox(height: 8.0),
@@ -37,10 +35,7 @@ class ParticipantDetailsView extends StatelessWidget {
                 text: tr.participant_details_study_days_description,
               ),
               const SizedBox(height: 16.0),
-              ParticipantSquares(
-                monitorItem: monitorItem,
-                study: study,
-              ),
+              ParticipantSquares(monitorItem: monitorItem, study: study),
               const SizedBox(height: 16.0),
               const ParticipantLegend(),
             ],

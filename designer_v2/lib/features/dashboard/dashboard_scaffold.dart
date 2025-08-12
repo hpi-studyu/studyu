@@ -15,12 +15,7 @@ class DashboardScaffold extends StatelessWidget {
     final isCompact = size.width < compactWidthThreshold;
     return Scaffold(
       appBar: isCompact
-          ? AppBar(
-              title: Image.asset(
-                Assets.logoWide,
-                height: 40,
-              ),
-            )
+          ? AppBar(title: Image.asset(Assets.logoWide, height: 40))
           : null,
       drawer: isCompact ? const AppDrawer() : null,
       body: TwoColumnLayout(
@@ -28,10 +23,7 @@ class DashboardScaffold extends StatelessWidget {
             ? const SizedBox.shrink()
             : const AppDrawer(autoCloseDrawer: false),
         rightWidget: body,
-        dividerWidget: const VerticalDivider(
-          width: 1,
-          thickness: 0.3,
-        ),
+        dividerWidget: const VerticalDivider(width: 1, thickness: 0.3),
         scrollLeft: false,
         paddingLeft: null,
       ),

@@ -33,9 +33,7 @@ abstract class _$StudyController
     extends BuildlessAutoDisposeNotifier<StudyControllerState> {
   late final String studyId;
 
-  StudyControllerState build(
-    String studyId,
-  );
+  StudyControllerState build(String studyId);
 }
 
 /// See also [StudyController].
@@ -48,21 +46,15 @@ class StudyControllerFamily extends Family<StudyControllerState> {
   const StudyControllerFamily();
 
   /// See also [StudyController].
-  StudyControllerProvider call(
-    String studyId,
-  ) {
-    return StudyControllerProvider(
-      studyId,
-    );
+  StudyControllerProvider call(String studyId) {
+    return StudyControllerProvider(studyId);
   }
 
   @override
   StudyControllerProvider getProviderOverride(
     covariant StudyControllerProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -81,24 +73,23 @@ class StudyControllerFamily extends Family<StudyControllerState> {
 }
 
 /// See also [StudyController].
-class StudyControllerProvider extends AutoDisposeNotifierProviderImpl<
-    StudyController, StudyControllerState> {
+class StudyControllerProvider
+    extends
+        AutoDisposeNotifierProviderImpl<StudyController, StudyControllerState> {
   /// See also [StudyController].
-  StudyControllerProvider(
-    String studyId,
-  ) : this._internal(
-          () => StudyController()..studyId = studyId,
-          from: studyControllerProvider,
-          name: r'studyControllerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$studyControllerHash,
-          dependencies: StudyControllerFamily._dependencies,
-          allTransitiveDependencies:
-              StudyControllerFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  StudyControllerProvider(String studyId)
+    : this._internal(
+        () => StudyController()..studyId = studyId,
+        from: studyControllerProvider,
+        name: r'studyControllerProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$studyControllerHash,
+        dependencies: StudyControllerFamily._dependencies,
+        allTransitiveDependencies:
+            StudyControllerFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   StudyControllerProvider._internal(
     super._createNotifier, {
@@ -113,12 +104,8 @@ class StudyControllerProvider extends AutoDisposeNotifierProviderImpl<
   final String studyId;
 
   @override
-  StudyControllerState runNotifierBuild(
-    covariant StudyController notifier,
-  ) {
-    return notifier.build(
-      studyId,
-    );
+  StudyControllerState runNotifierBuild(covariant StudyController notifier) {
+    return notifier.build(studyId);
   }
 
   @override
@@ -139,7 +126,7 @@ class StudyControllerProvider extends AutoDisposeNotifierProviderImpl<
 
   @override
   AutoDisposeNotifierProviderElement<StudyController, StudyControllerState>
-      createElement() {
+  createElement() {
     return _StudyControllerProviderElement(this);
   }
 
@@ -166,12 +153,17 @@ mixin StudyControllerRef
 }
 
 class _StudyControllerProviderElement
-    extends AutoDisposeNotifierProviderElement<StudyController,
-        StudyControllerState> with StudyControllerRef {
+    extends
+        AutoDisposeNotifierProviderElement<
+          StudyController,
+          StudyControllerState
+        >
+    with StudyControllerRef {
   _StudyControllerProviderElement(super.provider);
 
   @override
   String get studyId => (origin as StudyControllerProvider).studyId;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -28,8 +28,8 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final sliderRange =
-        (widget.question.maximum - widget.question.minimum).abs();
+    final sliderRange = (widget.question.maximum - widget.question.minimum)
+        .abs();
 
     Color? minColor = widget.question.minColor != null
         ? Color(widget.question.minColor!)
@@ -52,13 +52,14 @@ class _ScaleQuestionWidgetState extends State<ScaleQuestionWidget> {
             minColor,
             maxColor,
             (value! - widget.question.minimum) / sliderRange,
-          )!
-            .withValues(alpha: 1)
+          )!.withValues(alpha: 1)
         : null;
-    final activeTrackColor =
-        isColored ? coloredSliderTheme.activeTrackColor : null;
-    final inactiveTrackColor =
-        isColored ? coloredSliderTheme.inactiveTrackColor : null;
+    final activeTrackColor = isColored
+        ? coloredSliderTheme.activeTrackColor
+        : null;
+    final inactiveTrackColor = isColored
+        ? coloredSliderTheme.inactiveTrackColor
+        : null;
 
     return Column(
       children: [

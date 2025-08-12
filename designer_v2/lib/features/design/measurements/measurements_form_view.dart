@@ -21,8 +21,9 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel =
-            ref.watch(measurementsFormViewModelProvider(studyId));
+        final formViewModel = ref.watch(
+          measurementsFormViewModelProvider(studyId),
+        );
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(

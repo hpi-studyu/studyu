@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 
-typedef FormControlVoidCallback<T> = void Function(
-  AbstractControl<T> formControl,
-);
+typedef FormControlVoidCallback<T> =
+    void Function(AbstractControl<T> formControl);
 
 class FormControlLabel extends StatelessWidget {
   const FormControlLabel({
@@ -25,8 +24,9 @@ class FormControlLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final stateColorStyle =
-        (formControl.disabled) ? TextStyle(color: theme.disabledColor) : null;
+    final stateColorStyle = (formControl.disabled)
+        ? TextStyle(color: theme.disabledColor)
+        : null;
 
     return MouseEventsRegion(
       builder: (context, states) {

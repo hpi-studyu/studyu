@@ -26,20 +26,14 @@ part 'study_form_providers.g.dart';
 // - Study Info
 
 @riverpod
-StudyInfoFormViewModel studyInfoFormViewModel(
-  Ref ref,
-  StudyID studyId,
-) {
+StudyInfoFormViewModel studyInfoFormViewModel(Ref ref, StudyID studyId) {
   return ref.watch(studyFormViewModelProvider(studyId)).studyInfoFormViewModel;
 }
 
 // - Enrollment
 
 @riverpod
-EnrollmentFormViewModel enrollmentFormViewModel(
-  Ref ref,
-  StudyID studyId,
-) {
+EnrollmentFormViewModel enrollmentFormViewModel(Ref ref, StudyID studyId) {
   return ref.watch(studyFormViewModelProvider(studyId)).enrollmentFormViewModel;
 }
 
@@ -95,10 +89,7 @@ InterventionTaskFormViewModel interventionTaskFormViewModel(
 // - Measurements
 
 @riverpod
-MeasurementsFormViewModel measurementsFormViewModel(
-  Ref ref,
-  StudyID studyId,
-) {
+MeasurementsFormViewModel measurementsFormViewModel(Ref ref, StudyID studyId) {
   return ref
       .watch(studyFormViewModelProvider(studyId))
       .measurementsFormViewModel;
@@ -125,10 +116,7 @@ QuestionFormViewModel surveyQuestionFormViewModel(
 // - Reports
 
 @riverpod
-ReportsFormViewModel reportsFormViewModel(
-  Ref ref,
-  StudyID studyId,
-) {
+ReportsFormViewModel reportsFormViewModel(Ref ref, StudyID studyId) {
   return ref.watch(studyFormViewModelProvider(studyId)).reportsFormViewModel;
 }
 
@@ -148,10 +136,7 @@ ReportItemFormViewModel reportItemFormViewModel(
 /// Provides the [StudyFormViewModel] for validation purposes with
 /// a [StudyFormValidationSet.publish]
 @riverpod
-StudyFormViewModel studyPublishValidator(
-  Ref ref,
-  StudyID studyId,
-) {
+StudyFormViewModel studyPublishValidator(Ref ref, StudyID studyId) {
   final state = ref.watch(studyControllerProvider(studyId));
   return StudyFormViewModel(
     router: ref.watch(routerProvider),
@@ -165,10 +150,7 @@ StudyFormViewModel studyPublishValidator(
 /// Provides the [StudyFormViewModel] for validation purposes with
 /// a [StudyFormValidationSet.test]
 @riverpod
-StudyFormViewModel studyTestValidator(
-  Ref ref,
-  StudyID studyId,
-) {
+StudyFormViewModel studyTestValidator(Ref ref, StudyID studyId) {
   final state = ref.watch(studyControllerProvider(studyId));
   return StudyFormViewModel(
     router: ref.watch(routerProvider),

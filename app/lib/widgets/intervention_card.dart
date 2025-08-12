@@ -141,8 +141,9 @@ class InterventionCardDescription extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Text(
         description,
-        style: theme.textTheme.bodyMedium!
-            .copyWith(color: theme.textTheme.bodySmall!.color),
+        style: theme.textTheme.bodyMedium!.copyWith(
+          color: theme.textTheme.bodySmall!.color,
+        ),
       ),
     );
   }
@@ -179,16 +180,16 @@ class _TaskList extends StatelessWidget {
             ],
           ),
         ),
-        const Divider(
-          height: 4,
-        ),
+        const Divider(height: 4),
         Column(
           mainAxisSize: MainAxisSize.min,
           children: tasks
               .map(
                 (task) => Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: Row(
                     children: [
                       Expanded(

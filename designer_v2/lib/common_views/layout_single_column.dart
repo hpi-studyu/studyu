@@ -4,12 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
-enum SingleColumnLayoutType {
-  boundedWide,
-  boundedNarrow,
-  stretched,
-  split,
-}
+enum SingleColumnLayoutType { boundedWide, boundedNarrow, stretched, split }
 
 class SingleColumnLayout extends StatefulWidget {
   static const defaultConstraints = BoxConstraints(
@@ -54,14 +49,8 @@ class SingleColumnLayout extends StatefulWidget {
           header: header,
           stickyHeader: stickyHeader,
           constraints: BoxConstraints(
-            minWidth: min(
-              ThemeConfig.kMinContentWidth,
-              screenSize.width * 0.5,
-            ),
-            maxWidth: min(
-              ThemeConfig.kMaxContentWidth,
-              screenSize.width * 0.5,
-            ),
+            minWidth: min(ThemeConfig.kMinContentWidth, screenSize.width * 0.5),
+            maxWidth: min(ThemeConfig.kMaxContentWidth, screenSize.width * 0.5),
           ),
         );
       case SingleColumnLayoutType.stretched:
@@ -114,10 +103,7 @@ class _SingleColumnLayoutState extends State<SingleColumnLayout> {
     body = Row(
       children: [
         Flexible(
-          child: Container(
-            constraints: widget.constraints,
-            child: body,
-          ),
+          child: Container(constraints: widget.constraints, child: body),
         ),
       ],
     );
@@ -126,8 +112,10 @@ class _SingleColumnLayoutState extends State<SingleColumnLayout> {
       return Scrollbar(
         thumbVisibility: true,
         controller: _scrollController,
-        child:
-            SingleChildScrollView(controller: _scrollController, child: child),
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: child,
+        ),
       );
     }
 
@@ -140,9 +128,7 @@ class _SingleColumnLayoutState extends State<SingleColumnLayout> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             widget.header!,
-            Flexible(
-              child: body,
-            ),
+            Flexible(child: body),
           ],
         );
       }
@@ -151,10 +137,7 @@ class _SingleColumnLayoutState extends State<SingleColumnLayout> {
       if (widget.header != null) {
         body = Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            widget.header!,
-            body,
-          ],
+          children: [widget.header!, body],
         );
       }
       if (widget.scroll) {

@@ -12,8 +12,10 @@ class PrimaryButton extends StatefulWidget {
     this.onPressedFuture,
     this.enabled = true,
     this.showLoadingEarliestAfterMs = 100,
-    this.innerPadding =
-        const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+    this.innerPadding = const EdgeInsets.symmetric(
+      horizontal: 4.0,
+      vertical: 8.0,
+    ),
     this.minimumSize,
     super.key,
   });
@@ -61,8 +63,9 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       minimumSize: widget.minimumSize,
     ).copyWith(elevation: ButtonStyleButton.allOrNull(0.0));
 
-    final tooltipMessage =
-        (!widget.isDisabled) ? widget.tooltip : widget.tooltipDisabled;
+    final tooltipMessage = (!widget.isDisabled)
+        ? widget.tooltip
+        : widget.tooltipDisabled;
 
     void onButtonPressed() {
       widget.onPressed?.call();
@@ -75,13 +78,15 @@ class _PrimaryButtonState extends State<PrimaryButton> {
           }
         });
         Future.delayed(
-            Duration(milliseconds: widget.showLoadingEarliestAfterMs), () {
-          if (mounted) {
-            setState(() {
-              trackedFuture = future;
-            });
-          }
-        });
+          Duration(milliseconds: widget.showLoadingEarliestAfterMs),
+          () {
+            if (mounted) {
+              setState(() {
+                trackedFuture = future;
+              });
+            }
+          },
+        );
       }
     }
 

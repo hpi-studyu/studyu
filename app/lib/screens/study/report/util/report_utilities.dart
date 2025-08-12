@@ -25,7 +25,9 @@ class ReportUtilities {
   /// Aggregates the provided [values] based on the [aggregate] type.
   /// If [aggregate] is null, the data is returned as-is.
   Iterable<DiagramDatum> aggregateDataBy(
-      Map<DateTime, num> values, TemporalAggregation? aggregate) {
+    Map<DateTime, num> values,
+    TemporalAggregation? aggregate,
+  ) {
     final data = convertToDiagramData(values);
 
     // If no aggregation is requested, return the original mapped data.
@@ -34,27 +36,32 @@ class ReportUtilities {
     // Use a switch to determine the aggregation strategy.
     switch (aggregate) {
       case TemporalAggregation.day:
-        return data.groupBy((datum) => datum.x).aggregateWithKey((group, key) {
-          return DiagramDatum(
-            key,
-            foldAggregateMean()(group.map((d) => d.value)),
-            null,
-            group.first.intervention,
-          );
-        }).map((entry) => entry.value);
+        return data
+            .groupBy((datum) => datum.x)
+            .aggregateWithKey((group, key) {
+              return DiagramDatum(
+                key,
+                foldAggregateMean()(group.map((d) => d.value)),
+                null,
+                group.first.intervention,
+              );
+            })
+            .map((entry) => entry.value);
 
       case TemporalAggregation.phase:
         return data
-            .groupBy((datum) =>
-                subject.getInterventionIndexForDate(datum.timestamp!))
+            .groupBy(
+              (datum) => subject.getInterventionIndexForDate(datum.timestamp!),
+            )
             .aggregateWithKey((group, key) {
-          return DiagramDatum(
-            key,
-            foldAggregateMean()(group.map((d) => d.value)),
-            null,
-            group.first.intervention,
-          );
-        }).map((entry) => entry.value);
+              return DiagramDatum(
+                key,
+                foldAggregateMean()(group.map((d) => d.value)),
+                null,
+                group.first.intervention,
+              );
+            })
+            .map((entry) => entry.value);
 
       default:
         // For other aggregation types, group by intervention and use the defined order.
@@ -62,13 +69,14 @@ class ReportUtilities {
         return data
             .groupBy((datum) => datum.intervention)
             .aggregateWithKey((group, key) {
-          return DiagramDatum(
-            order[key]! as num,
-            foldAggregateMean()(group.map((d) => d.value)),
-            null,
-            key,
-          );
-        }).map((entry) => entry.value);
+              return DiagramDatum(
+                order[key]! as num,
+                foldAggregateMean()(group.map((d) => d.value)),
+                null,
+                key,
+              );
+            })
+            .map((entry) => entry.value);
     }
   }
 
@@ -87,11 +95,14 @@ class ReportUtilities {
   /// Groups data by intervention (excluding baseline data)
   /// and returns a mapping from intervention IDs to a list of values.
   Map<String, List<num>> getInterventionGroups(List<DiagramDatum> data) {
-    final filteredData =
-        data.where((datum) => datum.intervention != '__baseline');
+    final filteredData = data.where(
+      (datum) => datum.intervention != '__baseline',
+    );
     // Group data by intervention
-    final interventionGroups =
-        filteredData.fold<Map<String, List<num>>>({}, (map, datum) {
+    final interventionGroups = filteredData.fold<Map<String, List<num>>>({}, (
+      map,
+      datum,
+    ) {
       map.putIfAbsent(datum.intervention, () => []).add(datum.value);
       return map;
     });
@@ -100,8 +111,9 @@ class ReportUtilities {
   }
 
   String getInterventionName(String interventionId) {
-    final intervention = subject.study.interventions
-        .firstWhereOrNull((intervention) => intervention.id == interventionId);
+    final intervention = subject.study.interventions.firstWhereOrNull(
+      (intervention) => intervention.id == interventionId,
+    );
     return intervention?.name ?? '';
   }
 }

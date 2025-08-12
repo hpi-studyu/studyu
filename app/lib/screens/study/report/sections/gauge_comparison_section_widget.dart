@@ -44,16 +44,19 @@ class _GaugeComparisonSectionState
   Future<void> _loadData() async {
     _reportUtilities = ReportUtilities(widget.subject);
 
-    final results =
-        widget.section.resultProperty?.retrieveFromResults(widget.subject);
+    final results = widget.section.resultProperty?.retrieveFromResults(
+      widget.subject,
+    );
 
     if (results == null || results.isEmpty) {
       _interventionValues = {};
     } else {
-      final diagramDatums =
-          _reportUtilities.convertToDiagramData(results).toList();
-      _interventionValues =
-          _reportUtilities.getInterventionGroups(diagramDatums);
+      final diagramDatums = _reportUtilities
+          .convertToDiagramData(results)
+          .toList();
+      _interventionValues = _reportUtilities.getInterventionGroups(
+        diagramDatums,
+      );
     }
 
     if (mounted) {
@@ -73,9 +76,7 @@ class _GaugeComparisonSectionState
       return SizedBox(
         width: double.infinity,
         child: Column(
-          children: [
-            Text(AppLocalizations.of(context)!.no_data_available_yet),
-          ],
+          children: [Text(AppLocalizations.of(context)!.no_data_available_yet)],
         ),
       );
     }
@@ -98,9 +99,7 @@ class _GaugeComparisonSectionState
         ),
         // Conditionally show either colorful or colorless gauges
         GaugesWidget(
-          _reportUtilities.getInterventionName(
-            _interventionValues.keys.first,
-          ),
+          _reportUtilities.getInterventionName(_interventionValues.keys.first),
           _reportUtilities.getInterventionName(
             _interventionValues.keys.elementAt(1),
           ),

@@ -56,7 +56,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
         leftWidget: ReactiveFormConfig(
           validationMessages: AuthFormController.authValidationMessages,
           child: ReactiveForm(
-            formGroup: controller.form,
+            formGroup: controller.getForm()!,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -121,16 +121,18 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                           children: [
                             LanguagePicker(
                               languagePickerType: LanguagePickerType.icon,
-                              iconColor:
-                                  ThemeConfig.bodyTextBackground(theme).color,
+                              iconColor: ThemeConfig.bodyTextBackground(
+                                theme,
+                              ).color,
                               offset: const Offset(0, -60),
                             ),
                             const SizedBox(width: 12.0),
                             Hyperlink(
                               text: tr.imprint,
                               onClick: () => _onClickImprint(appConfig),
-                              linkColor:
-                                  ThemeConfig.bodyTextBackground(theme).color!,
+                              linkColor: ThemeConfig.bodyTextBackground(
+                                theme,
+                              ).color!,
                             ),
                           ],
                         ),
@@ -145,13 +147,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
         rightWidget: const Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Center(
-                child: StudyUJobsToBeDone(),
-              ),
-            ),
-          ],
+          children: [Expanded(child: Center(child: StudyUJobsToBeDone()))],
         ),
         backgroundColorLeft: theme.colorScheme.surface,
         backgroundColorRight: theme.colorScheme.primary,

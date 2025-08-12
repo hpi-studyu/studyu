@@ -69,10 +69,12 @@ class _NotificationDispatcherState
         messengerState = ScaffoldMessenger.of(context);
       }
     } catch (_) {
-      throw Exception("NotificationDispatcher could not obtain reference to "
-          "ScaffoldMessengerState. Make sure the widget is placed below "
-          "a Scaffold or MaterialApp in the widget tree, or provide a reference "
-          "via the scaffoldMessengerKey global key.");
+      throw Exception(
+        "NotificationDispatcher could not obtain reference to "
+        "ScaffoldMessengerState. Make sure the widget is placed below "
+        "a Scaffold or MaterialApp in the widget tree, or provide a reference "
+        "via the scaffoldMessengerKey global key.",
+      );
     }
     return messengerState;
   }
@@ -90,10 +92,11 @@ class _NotificationDispatcherState
       }
     } catch (_) {
       throw Exception(
-          "NotificationDispatcher context could not obtain reference to "
-          "NavigatorState. Make sure the NotificationDispatcher is placed below "
-          "a Navigator in the widget tree, or provide a reference via the "
-          "navigatorKey global key.");
+        "NotificationDispatcher context could not obtain reference to "
+        "NavigatorState. Make sure the NotificationDispatcher is placed below "
+        "a Navigator in the widget tree, or provide a reference via the "
+        "navigatorKey global key.",
+      );
     }
     return navigatorState;
   }
@@ -209,8 +212,9 @@ class _NotificationDispatcherState
             const SizedBox.shrink(),
           Text(
             notification.message!,
-            style: theme.textTheme.titleMedium!
-                .copyWith(color: theme.colorScheme.onPrimary),
+            style: theme.textTheme.titleMedium!.copyWith(
+              color: theme.colorScheme.onPrimary,
+            ),
           ),
         ],
       ),

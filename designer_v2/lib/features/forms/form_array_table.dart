@@ -8,11 +8,8 @@ import 'package:studyu_designer_v2/common_views/standard_table.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 
 typedef FormArrayTableRowLabelProvider<T> = String Function(T item);
-typedef WidgetBuilderAt<T> = Widget Function(
-  BuildContext context,
-  T item,
-  int rowIdx,
-);
+typedef WidgetBuilderAt<T> =
+    Widget Function(BuildContext context, T item, int rowIdx);
 
 class FormArrayTable<T> extends StatelessWidget {
   const FormArrayTable({
@@ -36,9 +33,9 @@ class FormArrayTable<T> extends StatelessWidget {
     this.hideLeadingTrailingWhenEmpty = false,
     super.key,
   }) : assert(
-          sectionTitle == null || leadingWidget == null,
-          "Cannot specify both sectionTitle and leadingWidget",
-        );
+         sectionTitle == null || leadingWidget == null,
+         "Cannot specify both sectionTitle and leadingWidget",
+       );
 
   final AbstractControl control;
 
@@ -77,7 +74,8 @@ class FormArrayTable<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasEmptyWidget =
         emptyIcon != null || emptyTitle != null || emptyDescription != null;
-    final isSection = sectionTitle != null ||
+    final isSection =
+        sectionTitle != null ||
         sectionTitleDivider != null ||
         sectionDescription != null;
 
@@ -197,9 +195,6 @@ class FormArrayTable<T> extends StatelessWidget {
     if (control.disabled) {
       return const SizedBox.shrink();
     }
-    return PrimaryButton(
-      text: onNewItemLabel,
-      onPressed: onNewItem,
-    );
+    return PrimaryButton(text: onNewItemLabel, onPressed: onNewItem);
   }
 }

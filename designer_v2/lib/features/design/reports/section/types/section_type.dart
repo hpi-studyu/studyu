@@ -66,10 +66,10 @@ class TemporalAggregationFormatted {
   final TemporalAggregation _value;
   const TemporalAggregationFormatted(this._value);
 
-  static List<TemporalAggregationFormatted> get values =>
-      TemporalAggregation.values
-          .map((e) => TemporalAggregationFormatted(e))
-          .toList();
+  static List<TemporalAggregationFormatted> get values => TemporalAggregation
+      .values
+      .map((e) => TemporalAggregationFormatted(e))
+      .toList();
   TemporalAggregation get value => TemporalAggregation.values.byName(toJson());
 
   String get string {
@@ -114,10 +114,10 @@ class ImprovementDirectionFormatted {
   final ImprovementDirection _value;
   const ImprovementDirectionFormatted(this._value);
 
-  static List<ImprovementDirectionFormatted> get values =>
-      ImprovementDirection.values
-          .map((e) => ImprovementDirectionFormatted(e))
-          .toList();
+  static List<ImprovementDirectionFormatted> get values => ImprovementDirection
+      .values
+      .map((e) => ImprovementDirectionFormatted(e))
+      .toList();
   ImprovementDirection get value =>
       ImprovementDirection.values.byName(toJson());
 
