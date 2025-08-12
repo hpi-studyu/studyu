@@ -60,7 +60,7 @@ ConsentItemFormViewModel consentItemFormViewModel(
 
 @riverpod
 MP23InterventionsFormViewModel interventionsFormViewModel(
-  InterventionsFormViewModelRef ref,
+  Ref ref,
   StudyID studyId,
 ) {
   return ref

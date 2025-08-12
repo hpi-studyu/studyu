@@ -41,10 +41,7 @@ class BaselineScheduleSegment extends StudyScheduleSegment {
   int duration;
 
   @override
-  @JsonKey(
-    includeFromJson: true,
-    includeToJson: true,
-  )
+  @JsonKey(includeFromJson: true, includeToJson: true)
   final StudyScheduleSegmentType type = StudyScheduleSegmentType.baseline;
 
   @override
@@ -98,10 +95,7 @@ class StudyScheduleSegmentConverter
 @JsonSerializable()
 class AlternatingScheduleSegment extends StudyScheduleSegment {
   @override
-  @JsonKey(
-    includeFromJson: true,
-    includeToJson: true,
-  )
+  @JsonKey(includeFromJson: true, includeToJson: true)
   final StudyScheduleSegmentType type = StudyScheduleSegmentType.alternating;
 
   @override
@@ -143,10 +137,7 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
 @JsonSerializable()
 class ThompsonSamplingScheduleSegment extends StudyScheduleSegment {
   @override
-  @JsonKey(
-    includeFromJson: true,
-    includeToJson: true,
-  )
+  @JsonKey(includeFromJson: true, includeToJson: true)
   final StudyScheduleSegmentType type =
       StudyScheduleSegmentType.thompsonSampling;
 

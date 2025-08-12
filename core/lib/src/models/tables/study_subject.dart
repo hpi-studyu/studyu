@@ -137,20 +137,24 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
     if (dayOfStudy < 0) return null;
 
     // print(progress);
-    final progressUntilDate =
-        progress.where((p) => isBeforeDay(p.completedAt!, date)).toList();
+    final progressUntilDate = progress
+        .where((p) => isBeforeDay(p.completedAt!, date))
+        .toList();
 
     try {
-      final intervention =
-          study.getInterventionForDay(dayOfStudy, progressUntilDate);
+      final intervention = study.getInterventionForDay(
+        dayOfStudy,
+        progressUntilDate,
+      );
       return intervention;
     } catch (e) {
       return null;
     }
-    final interventionId = interventionOrder[index];
+    // todo fix eventually
+    /*final interventionId = interventionOrder[index];
     return selectedInterventions.firstWhereOrNull(
       (intervention) => intervention.id == interventionId,
-    );
+    );*/
   }
 
   List<Intervention> getInterventionsInOrder() {

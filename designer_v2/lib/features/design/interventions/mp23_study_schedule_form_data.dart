@@ -20,7 +20,8 @@ class MP23StudyScheduleFormData implements IStudyFormData {
   ) {
     return MP23StudyScheduleFormData(
       // todo or user schedule.interventions, schedule.observations instead?
-      segments: schedule.segments, interventions: interventions,
+      segments: schedule.segments,
+      interventions: interventions,
       observations: observations,
     );
   }
@@ -41,6 +42,5 @@ class MP23StudyScheduleFormData implements IStudyFormData {
   }
 
   @override
-  FormDataID get id =>
-      throw UnimplementedError(); // not needed for top-level form data
+  FormDataID get id => throw UnimplementedError(); // not needed for top-level form data
 }

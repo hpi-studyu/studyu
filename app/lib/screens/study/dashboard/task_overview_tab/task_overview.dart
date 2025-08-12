@@ -81,8 +81,8 @@ class _TaskOverviewState extends State<TaskOverview> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 8),
-          // ProgressRow(subject: widget.subject),
 
+          // ProgressRow(subject: widget.subject),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Center(child: CalendarOverview(subject: widget.subject)),
@@ -111,8 +111,9 @@ class _TaskOverviewState extends State<TaskOverview> {
                 ),
                 const SizedBox(height: 8),
                 InterventionCardTitle(
-                  intervention:
-                      widget.subject!.getInterventionForDate(DateTime.now()),
+                  intervention: widget.subject!.getInterventionForDate(
+                    DateTime.now(),
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(

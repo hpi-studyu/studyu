@@ -6,7 +6,6 @@ void main() {
     "thompson sampling test",
     () => {
       // test
-
       test("test creation", () {
         final ts = ThompsonSampling(3);
 

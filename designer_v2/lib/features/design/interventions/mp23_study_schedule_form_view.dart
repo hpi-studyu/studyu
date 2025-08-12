@@ -65,16 +65,19 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
           padding: const EdgeInsets.symmetric(horizontal: 40),
           buildDefaultDragHandles: false,
           children: <Widget>[
-            for (int i = 0;
-                i < widget.formViewModel.segmentsControl.controls.length;
-                i++)
+            for (
+              int i = 0;
+              i < widget.formViewModel.segmentsControl.controls.length;
+              i++
+            )
               ExpandableSegementItem(
                 formViewModel: widget.formViewModel,
                 key: Key(i.toString()),
                 index: i,
                 segment: widget.formViewModel.segments[i],
-                segmentControl: widget.formViewModel.segmentsControl.controls[i]
-                    as FormGroup,
+                segmentControl:
+                    widget.formViewModel.segmentsControl.controls[i]
+                        as FormGroup,
                 interventions: widget.formViewModel.interventions,
               ),
           ],
@@ -82,10 +85,12 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
             if (oldIndex < newIndex) {
               newIndex -= 1;
             }
-            final reorderedSegment =
-                widget.formViewModel.segmentsControl.removeAt(oldIndex);
-            widget.formViewModel.segmentsControl
-                .insert(newIndex, reorderedSegment);
+            final reorderedSegment = widget.formViewModel.segmentsControl
+                .removeAt(oldIndex);
+            widget.formViewModel.segmentsControl.insert(
+              newIndex,
+              reorderedSegment,
+            );
             widget.formViewModel.updateSegmentsFromSegmentsControl();
           },
         ),
@@ -107,14 +112,12 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
                     selectedSegmentType = value!;
                   });
                 },
-                items: allSegmentTypes.map(
-                  (StudyScheduleSegmentType type) {
-                    return DropdownMenuItem(
-                      value: type,
-                      child: Text(type.string),
-                    );
-                  },
-                ).toList(),
+                items: allSegmentTypes.map((StudyScheduleSegmentType type) {
+                  return DropdownMenuItem(
+                    value: type,
+                    child: Text(type.string),
+                  );
+                }).toList(),
               ),
               const SizedBox(width: 20),
               // todo localize
@@ -211,9 +214,7 @@ class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
       ReactiveTextField(
         formControl:
             segmentControl.control('duration') as FormControl<dynamic>?,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ],
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           // todo localize
@@ -229,11 +230,10 @@ class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
     return [
       const SizedBox(height: 1, width: 20),
       ReactiveTextField(
-        formControl: segmentControl.control('interventionDuration')
-            as FormControl<dynamic>?,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ],
+        formControl:
+            segmentControl.control('interventionDuration')
+                as FormControl<dynamic>?,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           // todo localize
@@ -244,9 +244,7 @@ class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
       ReactiveTextField(
         formControl:
             segmentControl.control('cycleAmount') as FormControl<dynamic>?,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ],
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           // todo localize
@@ -266,11 +264,10 @@ List<Widget> _getThompsonSamplingControls(
   return [
     const SizedBox(height: 1, width: 20),
     ReactiveTextField(
-      formControl: segmentControl.control('interventionDuration')
-          as FormControl<dynamic>?,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-      ],
+      formControl:
+          segmentControl.control('interventionDuration')
+              as FormControl<dynamic>?,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
         // todo localize
@@ -279,11 +276,10 @@ List<Widget> _getThompsonSamplingControls(
       controller: ZeroValueController(),
     ),
     ReactiveTextField(
-      formControl: segmentControl.control('interventionDrawAmount')
-          as FormControl<dynamic>?,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-      ],
+      formControl:
+          segmentControl.control('interventionDrawAmount')
+              as FormControl<dynamic>?,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
         // todo localize

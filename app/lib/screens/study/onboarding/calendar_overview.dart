@@ -46,7 +46,7 @@ class _CalendarOverviewState extends State<CalendarOverview> {
       [
         const Color.fromRGBO(222, 183, 45, 1),
         const Color.fromRGBO(255, 239, 181, 1),
-      ]
+      ],
     ];
 
     final schedule = widget.subject?.study.mp23Schedule;
@@ -58,7 +58,7 @@ class _CalendarOverviewState extends State<CalendarOverview> {
     final segments = widget.subject!.study.mp23Schedule.segments;
 
     // function for building
-// BuildContext, DateTime, DateTime
+    // BuildContext, DateTime, DateTime
     Widget buildCalendarDay(
       BuildContext context,
       DateTime day,
@@ -104,8 +104,9 @@ class _CalendarOverviewState extends State<CalendarOverview> {
           final intervention = widget.subject!.getInterventionForDate(day)!;
           // final intervention = schedule.getInterventionForDay(nthDay, [])!;
           if (widget.subject != null) {
-            final index =
-                widget.subject!.study.interventions.indexOf(intervention);
+            final index = widget.subject!.study.interventions.indexOf(
+              intervention,
+            );
             colors = colorScheme[index % colorScheme.length];
           }
         } else {
@@ -123,12 +124,15 @@ class _CalendarOverviewState extends State<CalendarOverview> {
         }
       } else if (segment is AlternatingScheduleSegment) {
         colors = colorScheme[0];
-        final interventionOnDay =
-            widget.subject?.study.getInterventionForDay(nthDay, []);
+        final interventionOnDay = widget.subject?.study.getInterventionForDay(
+          nthDay,
+          [],
+        );
 
         if (interventionOnDay != null) {
-          final index =
-              widget.subject!.study.interventions.indexOf(interventionOnDay);
+          final index = widget.subject!.study.interventions.indexOf(
+            interventionOnDay,
+          );
           colors = colorScheme[index % colorScheme.length];
         }
       }
@@ -152,10 +156,7 @@ class _CalendarOverviewState extends State<CalendarOverview> {
             child: Padding(
               padding: EdgeInsets.zero,
               child: Center(
-                child: Text(
-                  text,
-                  style: TextStyle(color: colors[1]),
-                ),
+                child: Text(text, style: TextStyle(color: colors[1])),
               ),
             ),
           ),
@@ -173,9 +174,7 @@ class _CalendarOverviewState extends State<CalendarOverview> {
             lastDay: kLastDay,
             focusedDay: _focusedDay,
             headerStyle: const HeaderStyle(titleCentered: true),
-            availableCalendarFormats: const {
-              CalendarFormat.month: 'Month',
-            },
+            availableCalendarFormats: const {CalendarFormat.month: 'Month'},
             calendarBuilders: CalendarBuilders(
               selectedBuilder: buildCalendarDay,
               todayBuilder: (context, day, focusedDay) =>
@@ -238,8 +237,9 @@ class Label extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: color,
-              border:
-                  borderColor != null ? Border.all(color: borderColor!) : null,
+              border: borderColor != null
+                  ? Border.all(color: borderColor!)
+                  : null,
             ),
           ),
           const SizedBox(width: 8),

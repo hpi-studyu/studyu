@@ -71,6 +71,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) => <String, dynamic>{
   'interventions': instance.interventions.map((e) => e.toJson()).toList(),
   'observations': instance.observations.map((e) => e.toJson()).toList(),
   'schedule': instance.schedule.toJson(),
+  'mp23_schedule': instance.mp23Schedule.toJson(),
   'report_specification': instance.reportSpecification.toJson(),
   'results': instance.results.map((e) => e.toJson()).toList(),
   'collaborator_emails': instance.collaboratorEmails,

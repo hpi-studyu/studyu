@@ -295,8 +295,8 @@ class Study extends SupabaseObjectFunctions<Study>
   int get studyDuration => mp23Schedule.segments.isEmpty
       ? 0
       : mp23Schedule.segments
-          .map((e) => e.getDuration(interventions))
-          .reduce((a, b) => a + b);
+            .map((e) => e.getDuration(interventions))
+            .reduce((a, b) => a + b);
 
   /// Returns the segment for the given day and the nth day of the segment
   (StudyScheduleSegment?, int) getSegmentForDay(int day) {

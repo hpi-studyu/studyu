@@ -28,7 +28,9 @@ class MP23InterventionsFormData implements IStudyFormData {
       // or study.interventions, study.observations
       studyScheduleData: MP23StudyScheduleFormData.fromDomainModel(
         //study.mp23Schedule, study.interventions, study.observations,),
-        study.mp23Schedule, study.interventions, study.observations,
+        study.mp23Schedule,
+        study.interventions,
+        study.observations,
       ),
     );
   }

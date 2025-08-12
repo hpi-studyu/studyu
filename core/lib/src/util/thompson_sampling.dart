@@ -15,11 +15,11 @@ class UnknownMeanUnknownVariance {
   // double _v0;
 
   UnknownMeanUnknownVariance({double alpha = 1, double beta = 1})
-      : _alpha = alpha,
-        _beta = beta,
-        _n = 0,
-        _x = [],
-        _mu0 = 1;
+    : _alpha = alpha,
+      _beta = beta,
+      _n = 0,
+      _x = [],
+      _mu0 = 1;
   // _v0 = beta / (alpha + 1);
 
   void update(double x) {
@@ -45,16 +45,20 @@ class UnknownMeanUnknownVariance {
   }
 
   double sample(Random? random) {
-    double precision =
-        GammaDistribution(_alpha, 1 / _beta).sample(random: random);
+    double precision = GammaDistribution(
+      _alpha,
+      1 / _beta,
+    ).sample(random: random);
 
     if (precision == 0 || _n == 0) {
       precision = 0.001;
     }
 
     final double estimatedVariance = 1 / precision;
-    return NormalDistribution(_mu0, sqrt(estimatedVariance))
-        .sample(random: random);
+    return NormalDistribution(
+      _mu0,
+      sqrt(estimatedVariance),
+    ).sample(random: random);
   }
 }
 
@@ -63,10 +67,7 @@ class ThompsonSampling {
   int _updates = 0;
 
   ThompsonSampling(int arms)
-      : _arms = List.generate(
-          arms,
-          (index) => UnknownMeanUnknownVariance(),
-        );
+    : _arms = List.generate(arms, (index) => UnknownMeanUnknownVariance());
 
   void updateObservations(int armIndex, double newObservation) {
     _arms[armIndex].update(newObservation);

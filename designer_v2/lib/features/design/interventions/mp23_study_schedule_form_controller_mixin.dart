@@ -10,15 +10,13 @@ mixin MP23StudyScheduleControls {
   final List<Intervention> interventions = [];
   final List<Observation> observations = [];
 
-  late final studyScheduleControls = {
-    'segments': segmentsControl,
-  };
+  late final studyScheduleControls = {'segments': segmentsControl};
 
   FormValidationConfigSet get studyScheduleValidationConfig => {
-        StudyFormValidationSet.draft: [],
-        StudyFormValidationSet.publish: [],
-        StudyFormValidationSet.test: [],
-      };
+    StudyFormValidationSet.draft: [],
+    StudyFormValidationSet.publish: [],
+    StudyFormValidationSet.test: [],
+  };
 
   int getTotalDuration() {
     int totalDuration = 0;

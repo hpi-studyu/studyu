@@ -64,7 +64,8 @@ class InterventionCardTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final iconData = MdiIcons.fromString(intervention?.icon ?? 'e') ??
+    final iconData =
+        MdiIcons.fromString(intervention?.icon ?? 'e') ??
         MdiIcons.clipboardOutline;
 
     return ListTile(

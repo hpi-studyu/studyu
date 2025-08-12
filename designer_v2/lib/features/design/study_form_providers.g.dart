@@ -537,7 +537,7 @@ class _ConsentItemFormViewModelProviderElement
 }
 
 String _$interventionsFormViewModelHash() =>
-    r'65e18dc8fa37860c31726352b99ac6c9b5de4bdb';
+    r'80540b6ba2fe8d2987460f212564504a470d0836';
 
 /// See also [interventionsFormViewModel].
 @ProviderFor(interventionsFormViewModel)
@@ -545,7 +545,7 @@ const interventionsFormViewModelProvider = InterventionsFormViewModelFamily();
 
 /// See also [interventionsFormViewModel].
 class InterventionsFormViewModelFamily
-    extends Family<InterventionsFormViewModel> {
+    extends Family<MP23InterventionsFormViewModel> {
   /// See also [interventionsFormViewModel].
   const InterventionsFormViewModelFamily();
 
@@ -578,7 +578,7 @@ class InterventionsFormViewModelFamily
 
 /// See also [interventionsFormViewModel].
 class InterventionsFormViewModelProvider
-    extends AutoDisposeProvider<InterventionsFormViewModel> {
+    extends AutoDisposeProvider<MP23InterventionsFormViewModel> {
   /// See also [interventionsFormViewModel].
   InterventionsFormViewModelProvider(String studyId)
     : this._internal(
@@ -611,7 +611,9 @@ class InterventionsFormViewModelProvider
 
   @override
   Override overrideWith(
-    InterventionsFormViewModel Function(InterventionsFormViewModelRef provider)
+    MP23InterventionsFormViewModel Function(
+      InterventionsFormViewModelRef provider,
+    )
     create,
   ) {
     return ProviderOverride(
@@ -629,7 +631,7 @@ class InterventionsFormViewModelProvider
   }
 
   @override
-  AutoDisposeProviderElement<InterventionsFormViewModel> createElement() {
+  AutoDisposeProviderElement<MP23InterventionsFormViewModel> createElement() {
     return _InterventionsFormViewModelProviderElement(this);
   }
 
@@ -651,13 +653,13 @@ class InterventionsFormViewModelProvider
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin InterventionsFormViewModelRef
-    on AutoDisposeProviderRef<InterventionsFormViewModel> {
+    on AutoDisposeProviderRef<MP23InterventionsFormViewModel> {
   /// The parameter `studyId` of this provider.
   String get studyId;
 }
 
 class _InterventionsFormViewModelProviderElement
-    extends AutoDisposeProviderElement<InterventionsFormViewModel>
+    extends AutoDisposeProviderElement<MP23InterventionsFormViewModel>
     with InterventionsFormViewModelRef {
   _InterventionsFormViewModelProviderElement(super.provider);
 
