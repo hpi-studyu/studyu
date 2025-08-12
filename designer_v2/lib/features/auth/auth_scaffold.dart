@@ -56,7 +56,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
         leftWidget: ReactiveFormConfig(
           validationMessages: AuthFormController.authValidationMessages,
           child: ReactiveForm(
-            formGroup: controller.form,
+            formGroup: controller.getForm()!,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

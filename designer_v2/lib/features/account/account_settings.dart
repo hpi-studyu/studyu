@@ -47,7 +47,7 @@ class AccountSettingsDialog extends ConsumerWidget {
               ReactiveFormConfig(
                 validationMessages: AuthFormController.authValidationMessages,
                 child: ReactiveForm(
-                  formGroup: controller.form,
+                  formGroup: controller.getForm()!,
                   child: Column(
                     children: [
                       Text(
@@ -56,18 +56,19 @@ class AccountSettingsDialog extends ConsumerWidget {
                       ),
                       const SizedBox(height: 16.0),
                       PasswordTextField(
-                        formControl: controller.oldPasswordControl,
+                        formControl: controller.getOldPasswordControl(),
                         labelText: tr.form_field_password_current,
                         hintText: tr.form_field_password_current_hint,
                       ),
                       const SizedBox(height: 12.0),
                       PasswordTextField(
-                        formControl: controller.passwordControl,
+                        formControl: controller.getPasswordControl(),
                         labelText: tr.form_field_password_new,
                         hintText: tr.form_field_password_new_hint,
                       ),
                       PasswordTextField(
-                        formControl: controller.passwordConfirmationControl,
+                        formControl: controller
+                            .getPasswordConfirmationControl(),
                         labelText: tr.form_field_password_new_confirm,
                         hintText: tr.form_field_password_new_confirm_hint,
                       ),

@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
@@ -58,16 +57,15 @@ enum AuthFormKey {
 }
 
 @riverpod
-class AuthFormController extends _$AuthFormController
-    implements IFormGroupController {
+class AuthFormController extends _$AuthFormController {
   @override
   AsyncValue<void> build(AuthFormKey formKeyArg) {
     _authRepository = ref.watch(authRepositoryProvider);
     _notificationService = ref.watch(notificationServiceProvider);
     _router = ref.watch(routerProvider);
 
-    formKey = formKeyArg;
-    resetControlsFor(formKey);
+    setFormKey(formKeyArg);
+    resetControlsFor(getFormKey());
 
     listenSelf((previous, next) {
       print("authFormController.state updated");
@@ -89,7 +87,7 @@ class AuthFormController extends _$AuthFormController
       print("authFormControllerProvider.DISPOSE");
     });
     _readDebugUser();
-    _onChangeFormKey(formKey);
+    _onChangeFormKey(getFormKey());
 
     return const AsyncValue.data(null);
   }
@@ -100,11 +98,23 @@ class AuthFormController extends _$AuthFormController
 
   // - Form controls
 
-  final FormControl<String> emailControl = FormControl();
-  final FormControl<String> oldPasswordControl = FormControl();
-  final FormControl<String> passwordControl = FormControl();
-  final FormControl<String> passwordConfirmationControl = FormControl();
-  final FormControl<bool> termsOfServiceControl = FormControl(value: false);
+  final FormControl<String> _emailControl = FormControl();
+  final FormControl<String> _oldPasswordControl = FormControl();
+  final FormControl<String> _passwordControl = FormControl();
+  final FormControl<String> _passwordConfirmationControl = FormControl();
+  final FormControl<bool> _termsOfServiceControl = FormControl(value: false);
+
+  // Form control access methods
+  FormControl<String> getEmailControl() => _emailControl;
+
+  FormControl<String> getOldPasswordControl() => _oldPasswordControl;
+
+  FormControl<String> getPasswordControl() => _passwordControl;
+
+  FormControl<String> getPasswordConfirmationControl() =>
+      _passwordConfirmationControl;
+
+  FormControl<bool> getTermsOfServiceControl() => _termsOfServiceControl;
 
   static final authValidationMessages = {
     ValidationMessage.required: (_) => tr.form_field_required,
@@ -116,35 +126,37 @@ class AuthFormController extends _$AuthFormController
   };
 
   late final FormGroup _loginForm = FormGroup({
-    'email': emailControl,
-    'password': passwordControl,
+    'email': getEmailControl(),
+    'password': getPasswordControl(),
   });
 
   late final FormGroup _signupForm = FormGroup(
     {
-      'email': emailControl,
-      'password': passwordControl,
-      'passwordConfirmation': passwordConfirmationControl,
-      'termsOfService': termsOfServiceControl,
+      'email': getEmailControl(),
+      'password': getPasswordControl(),
+      'passwordConfirmation': getPasswordConfirmationControl(),
+      'termsOfService': getTermsOfServiceControl(),
     },
     validators: [Validators.mustMatch('password', 'passwordConfirmation')],
   );
 
-  late final FormGroup _passwordForgotForm = FormGroup({'email': emailControl});
+  late final FormGroup _passwordForgotForm = FormGroup({
+    'email': getEmailControl(),
+  });
 
   late final FormGroup _passwordRecoveryForm = FormGroup(
     {
-      'password': passwordControl,
-      'passwordConfirmation': passwordConfirmationControl,
+      'password': getPasswordControl(),
+      'passwordConfirmation': getPasswordConfirmationControl(),
     },
     validators: [Validators.mustMatch('password', 'passwordConfirmation')],
   );
 
   late final FormGroup _passwordResetForm = FormGroup(
     {
-      'oldPassword': oldPasswordControl,
-      'password': passwordControl,
-      'passwordConfirmation': passwordConfirmationControl,
+      'oldPassword': getOldPasswordControl(),
+      'password': getPasswordControl(),
+      'passwordConfirmation': getPasswordConfirmationControl(),
     },
     validators: [Validators.mustMatch('password', 'passwordConfirmation')],
   );
@@ -152,48 +164,52 @@ class AuthFormController extends _$AuthFormController
   late final Map<AuthFormKey, Map<FormControl, List<Validator<dynamic>>>>
   _controlValidatorsByForm = {
     AuthFormKey.signup: {
-      emailControl: [Validators.required, Validators.email],
-      passwordControl: [Validators.minLength(8)],
-      passwordConfirmationControl: [Validators.required],
-      termsOfServiceControl: [Validators.required, Validators.requiredTrue],
+      getEmailControl(): [Validators.required, Validators.email],
+      getPasswordControl(): [Validators.minLength(8)],
+      getPasswordConfirmationControl(): [Validators.required],
+      getTermsOfServiceControl(): [
+        Validators.required,
+        Validators.requiredTrue,
+      ],
     },
     AuthFormKey._signupSubmit: {
-      emailControl: [Validators.required, Validators.email],
-      passwordControl: [Validators.required, Validators.minLength(8)],
-      passwordConfirmationControl: [Validators.required],
-      termsOfServiceControl: [Validators.required, Validators.requiredTrue],
+      getEmailControl(): [Validators.required, Validators.email],
+      getPasswordControl(): [Validators.required, Validators.minLength(8)],
+      getPasswordConfirmationControl(): [Validators.required],
+      getTermsOfServiceControl(): [
+        Validators.required,
+        Validators.requiredTrue,
+      ],
     },
     AuthFormKey._loginSubmit: {
-      emailControl: [Validators.required, Validators.email],
-      passwordControl: [Validators.required],
+      getEmailControl(): [Validators.required, Validators.email],
+      getPasswordControl(): [Validators.required],
     },
     AuthFormKey.passwordForgot: {
-      emailControl: [Validators.required, Validators.email],
+      getEmailControl(): [Validators.required, Validators.email],
     },
     AuthFormKey.passwordRecovery: {
-      passwordControl: [Validators.required, Validators.minLength(8)],
-      passwordConfirmationControl: [Validators.required],
+      getPasswordControl(): [Validators.required, Validators.minLength(8)],
+      getPasswordConfirmationControl(): [Validators.required],
     },
     AuthFormKey.passwordReset: {
-      oldPasswordControl: [Validators.required, Validators.minLength(8)],
-      passwordControl: [Validators.required, Validators.minLength(8)],
-      passwordConfirmationControl: [Validators.required],
+      getOldPasswordControl(): [Validators.required, Validators.minLength(8)],
+      getPasswordControl(): [Validators.required, Validators.minLength(8)],
+      getPasswordConfirmationControl(): [Validators.required],
     },
   };
 
   AuthFormKey _formKey = AuthFormKey.login;
-  AuthFormKey get formKey => _formKey;
 
-  set formKey(AuthFormKey key) {
+  void setFormKey(AuthFormKey key) {
     if (!AuthFormKey.values.contains(key)) {
       throw Exception("Unknown AuthFormKey");
     }
-    _onChangeFormKey(formKey);
+    _onChangeFormKey(_formKey);
     _formKey = key;
   }
 
-  @override
-  FormGroup get form => _getFormFor(formKey)!;
+  AuthFormKey getFormKey() => _formKey;
 
   FormGroup? _getFormFor(AuthFormKey key) {
     switch (key) {
@@ -212,6 +228,9 @@ class AuthFormController extends _$AuthFormController
     }
   }
 
+  // Public method to get form instead of getter
+  FormGroup? getForm() => _getFormFor(getFormKey());
+
   void _onChangeFormKey(AuthFormKey key) {
     resetControlsFor(key);
   }
@@ -226,31 +245,35 @@ class AuthFormController extends _$AuthFormController
         control.markAsUntouched();
       }
     }
-    form.markAsUntouched();
-    form.updateValueAndValidity();
+    getForm()?.markAsUntouched();
+    getForm()?.updateValueAndValidity();
   }
 
   void _forceValidationMessages(AuthFormKey key) {
     _onChangeFormKey(key);
-    for (final control in form.controls.values) {
-      control.markAsTouched();
-      control.updateValueAndValidity();
+    final currentForm = getForm();
+    if (currentForm != null) {
+      for (final control in currentForm.controls.values) {
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      }
+      currentForm.markAsTouched();
+      currentForm.updateValueAndValidity();
     }
-    form.markAsTouched();
-    form.updateValueAndValidity();
   }
 
   Future<AuthResponse> signUp() {
     _forceValidationMessages(AuthFormKey._signupSubmit);
-    if (emailControl.isNullOrEmpty || passwordControl.isNullOrEmpty) {
+    if (getEmailControl().isNullOrEmpty || getPasswordControl().isNullOrEmpty) {
       return Future.value(AuthResponse());
     }
-    return _signUp(emailControl.value!, passwordControl.value!);
+    return _signUp(getEmailControl().value!, getPasswordControl().value!);
   }
 
   Future<AuthResponse> _signUp(String email, String password) async {
     _forceValidationMessages(AuthFormKey._loginSubmit);
-    if (!form.valid) {
+    final currentForm = getForm();
+    if (currentForm == null || !currentForm.valid) {
       return Future.value(AuthResponse());
     }
     try {
@@ -266,12 +289,17 @@ class AuthFormController extends _$AuthFormController
 
   Future<AuthResponse> signIn() async {
     _forceValidationMessages(AuthFormKey._loginSubmit);
-    if (!form.valid ||
-        emailControl.isNullOrEmpty ||
-        passwordControl.isNullOrEmpty) {
+    final currentForm = getForm();
+    if (currentForm == null ||
+        !currentForm.valid ||
+        getEmailControl().isNullOrEmpty ||
+        getPasswordControl().isNullOrEmpty) {
       return Future.value(AuthResponse());
     }
-    return await _signInWith(emailControl.value!, passwordControl.value!);
+    return await _signInWith(
+      getEmailControl().value!,
+      getPasswordControl().value!,
+    );
   }
 
   Future<AuthResponse> _signInWith(String email, String password) async {
@@ -313,19 +341,21 @@ class AuthFormController extends _$AuthFormController
   }
 
   Future<void> sendPasswordResetLink() {
-    if (!form.valid) {
+    final currentForm = getForm();
+    if (currentForm == null || !currentForm.valid) {
       return Future.value();
     }
     return resetPasswordForEmail(
-      emailControl.value!,
+      getEmailControl().value!,
     ).then((_) => _notificationService.show(Notifications.passwordReset));
   }
 
   Future<void> recoverPassword() {
-    if (!form.valid) {
+    final currentForm = getForm();
+    if (currentForm == null || !currentForm.valid) {
       return Future.value();
     }
-    return updateUser(passwordControl.value!)
+    return updateUser(getPasswordControl().value!)
         .then(
           (_) => _notificationService.show(Notifications.passwordResetSuccess),
         )
@@ -333,19 +363,20 @@ class AuthFormController extends _$AuthFormController
   }
 
   Future<bool> resetPassword() async {
-    if (!form.valid) {
+    final currentForm = getForm();
+    if (currentForm == null || !currentForm.valid) {
       return false;
     }
 
     final isOldPasswordValid = await _isOldPasswordValid(
-      oldPasswordControl.value!,
+      getOldPasswordControl().value!,
     );
 
     if (!isOldPasswordValid) {
       return false;
     }
 
-    return updateUser(passwordControl.value!);
+    return updateUser(getPasswordControl().value!);
   }
 
   Future<bool> updateUser(String newPassword) async {
@@ -390,9 +421,10 @@ class AuthFormController extends _$AuthFormController
     const password = String.fromEnvironment('PASSWORD');
     const autoLogin = bool.fromEnvironment('AUTO_LOGIN');
     if (email.isNotEmpty && password.isNotEmpty) {
-      emailControl.value = email;
-      passwordControl.value = password;
-      if (autoLogin && form.valid) await signIn();
+      getEmailControl().value = email;
+      getPasswordControl().value = password;
+      final currentForm = getForm();
+      if (autoLogin && currentForm != null && currentForm.valid) await signIn();
     }
   }
 }
