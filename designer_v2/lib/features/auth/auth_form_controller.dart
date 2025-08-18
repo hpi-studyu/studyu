@@ -106,14 +106,10 @@ class AuthFormController extends _$AuthFormController {
 
   // Form control access methods
   FormControl<String> getEmailControl() => _emailControl;
-
   FormControl<String> getOldPasswordControl() => _oldPasswordControl;
-
   FormControl<String> getPasswordControl() => _passwordControl;
-
   FormControl<String> getPasswordConfirmationControl() =>
       _passwordConfirmationControl;
-
   FormControl<bool> getTermsOfServiceControl() => _termsOfServiceControl;
 
   static final authValidationMessages = {
