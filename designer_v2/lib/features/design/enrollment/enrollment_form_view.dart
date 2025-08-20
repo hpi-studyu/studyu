@@ -54,34 +54,55 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       input: Column(
                         children: formViewModel.enrollmentTypeControlOptions
                             .map<Widget>(
-                              (option) => RadioListTile<Participation>(
+                              (option) => RadioGroup<Participation>(
                                 groupValue:
                                     formViewModel.enrollmentTypeControl.value,
-                                onChanged: formViewModel.isReadonly
-                                    ? null
-                                    : (value) =>
-                                          formViewModel
-                                                  .enrollmentTypeControl
-                                                  .value =
-                                              option.value,
-                                value: option.value,
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      option.value.whoShort,
-                                      style: theme.textTheme.bodyLarge,
-                                    ),
-                                    const SizedBox(height: 2.0),
-                                  ],
-                                ),
-                                subtitle: (option.description) != null
-                                    ? TextParagraph(
-                                        text: option.description,
-                                        selectable: false,
-                                        style: ThemeConfig.bodyTextMuted(theme),
+                                onChanged: (Participation? value) {
+                                  if (!formViewModel.isReadonly &&
+                                      value != null) {
+                                    formViewModel.enrollmentTypeControl.value =
+                                        value;
+                                  }
+                                },
+                                child: Column(
+                                  children: formViewModel
+                                      .enrollmentTypeControlOptions
+                                      .map<Widget>(
+                                        (
+                                          option,
+                                        ) => RadioListTile<Participation>(
+                                          value: option.value,
+                                          enabled: !formViewModel.isReadonly,
+                                          // disables in readonly mode
+                                          title: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                option.value.whoShort,
+                                                style:
+                                                    theme.textTheme.bodyLarge,
+                                              ),
+                                              const SizedBox(height: 2.0),
+                                            ],
+                                          ),
+                                          subtitle: (option.description) != null
+                                              ? TextParagraph(
+                                                  text: option.description,
+                                                  selectable: false,
+                                                  style:
+                                                      ThemeConfig.bodyTextMuted(
+                                                        theme,
+                                                      ),
+                                                )
+                                              : null,
+                                        ),
                                       )
-                                    : null,
+                                      .toList()
+                                      .separatedBy(
+                                        () => const SizedBox(height: 8.0),
+                                      ),
+                                ),
                               ),
                             )
                             .toList()
