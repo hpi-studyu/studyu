@@ -18,6 +18,6 @@ ReportSpecification _$ReportSpecificationFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ReportSpecificationToJson(
   ReportSpecification instance,
 ) => <String, dynamic>{
-  'primary': ?instance.primary?.toJson(),
+  if (instance.primary?.toJson() case final value?) 'primary': value,
   'secondary': instance.secondary.map((e) => e.toJson()).toList(),
 };

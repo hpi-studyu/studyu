@@ -28,8 +28,8 @@ Map<String, dynamic> _$AudioRecordingQuestionToJson(
 ) => <String, dynamic>{
   'type': instance.type,
   'id': instance.id,
-  'prompt': ?instance.prompt,
-  'rationale': ?instance.rationale,
-  'conditional': ?instance.conditional?.toJson(),
+  if (instance.prompt case final value?) 'prompt': value,
+  if (instance.rationale case final value?) 'rationale': value,
+  if (instance.conditional?.toJson() case final value?) 'conditional': value,
   'maxRecordingDurationSeconds': instance.maxRecordingDurationSeconds,
 };

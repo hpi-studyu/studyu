@@ -11,5 +11,5 @@ Result<T> _$ResultFromJson<T>(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ResultToJson<T>(Result<T> instance) => <String, dynamic>{
   'type': instance.type,
-  'periodId': ?instance.periodId,
+  if (instance.periodId case final value?) 'periodId': value,
 };

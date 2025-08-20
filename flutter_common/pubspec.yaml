@@ -6,6 +6,7 @@ repository: https://github.com/hpi-studyu/studyu
 
 environment:
   sdk: ">=3.8.0 <4.0.0"
+resolution: workspace
 
 dependencies:
   flutter:

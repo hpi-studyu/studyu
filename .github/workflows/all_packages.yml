@@ -8,7 +8,6 @@ on:
       - "designer_v2/**"
       - "flutter_common/**"
       - '*.gitignore'
-      - 'melos.yaml'
       - 'pubspec.yaml'
       - 'pubspec.lock'
       - ".github/workflows/all_packages.yml"

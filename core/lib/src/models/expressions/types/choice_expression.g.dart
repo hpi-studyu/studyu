@@ -14,7 +14,7 @@ ChoiceExpression _$ChoiceExpressionFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ChoiceExpressionToJson(ChoiceExpression instance) =>
     <String, dynamic>{
-      'type': ?instance.type,
-      'target': ?instance.target,
+      if (instance.type case final value?) 'type': value,
+      if (instance.target case final value?) 'target': value,
       'choices': instance.choices.toList(),
     };

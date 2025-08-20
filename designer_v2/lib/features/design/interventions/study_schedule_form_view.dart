@@ -62,7 +62,7 @@ class StudyScheduleFormView extends FormConsumerWidget {
                     ? null
                     : (PhaseSequence? value) =>
                           formViewModel.sequenceTypeControl.value = value,
-                value: formViewModel.sequenceTypeControl.value,
+                initialValue: formViewModel.sequenceTypeControl.value,
                 decoration: InputDecoration(
                   helperText:
                       tr.form_field_crossover_schedule_sequence_description,
