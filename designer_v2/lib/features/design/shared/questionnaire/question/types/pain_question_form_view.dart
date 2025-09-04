@@ -15,18 +15,14 @@ class PainQuestionFormView extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextParagraph(
-          text: tr.question_type_pain_description,
-        ),
+        TextParagraph(text: tr.question_type_pain_description),
         const SizedBox(height: 24),
         Text(
           tr.question_type_pain_functionality_title,
           style: theme.textTheme.titleSmall,
         ),
         const SizedBox(height: 8),
-        TextParagraph(
-          text: tr.question_type_pain_functionality_description,
-        ),
+        TextParagraph(text: tr.question_type_pain_functionality_description),
       ],
     );
   }

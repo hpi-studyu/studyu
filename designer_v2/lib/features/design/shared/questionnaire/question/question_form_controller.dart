@@ -47,8 +47,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     freeTextResponseOptionsArray.onChanged(
       (control) => onResponseOptionsChanged(control.controls),
     );
-    painResponseOptionsArray
-        .onChanged((control) => onResponseOptionsChanged(control.controls),
+    painResponseOptionsArray.onChanged(
+      (control) => onResponseOptionsChanged(control.controls),
     );
   }
 
@@ -146,13 +146,15 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   );
 
   //Pain
-  List<AbstractControl<String>> get painOptions =>
-      PainQuestionFormData.kResponseOptions.keys
-          .map((e) => FormControl(value: e, disabled: true))
-          .toList();
+  List<AbstractControl<String>> get painOptions => PainQuestionFormData
+      .kResponseOptions
+      .keys
+      .map((e) => FormControl(value: e, disabled: true))
+      .toList();
 
-  late final FormArray<String> painResponseOptionsArray =
-      FormArray(painOptions);
+  late final FormArray<String> painResponseOptionsArray = FormArray(
+    painOptions,
+  );
 
   // Audio
   static const int kDefaultMaxRecordingDurationSeconds = 60;

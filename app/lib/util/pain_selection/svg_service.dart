@@ -31,10 +31,8 @@ class SvgService {
   /// The [ValueNotifier] for the given [side].
   ///
   /// Its value is null until the SVG is loaded.
-  ValueNotifier<SvgData?> getSide(BodySide side) => side.map(
-        front: _front,
-        back: _back,
-      );
+  ValueNotifier<SvgData?> getSide(BodySide side) =>
+      side.map(front: _front, back: _back);
 
   Future<void> _init() async {
     await Future.wait([

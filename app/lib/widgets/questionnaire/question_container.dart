@@ -80,10 +80,7 @@ class _QuestionContainerState extends State<QuestionContainer>
           onDone: _onDone,
         );
       case final PainQuestion painQuestion:
-        return PainQuestionWidget(
-          question: painQuestion,
-          onDone: _onDone,
-        );
+        return PainQuestionWidget(question: painQuestion, onDone: _onDone);
       default:
         throw ArgumentError(
           'Question type ${widget.question.type} not supported',

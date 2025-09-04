@@ -10,10 +10,7 @@ class BodyPain {
 
   const BodyPain({this.painLevel = 0, this.type});
 
-  BodyPain copyWith({
-    int? painLevel,
-    PainType? type,
-  }) {
+  BodyPain copyWith({int? painLevel, PainType? type}) {
     return BodyPain(
       painLevel: painLevel ?? this.painLevel,
       type: type ?? this.type,

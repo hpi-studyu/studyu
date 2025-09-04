@@ -29,7 +29,11 @@ class BodyPartSelectorTurnable extends StatefulWidget {
 
   /// Called when pain details for a body part are updated via the dialog.
   final void Function(
-      String parentPartId, String childPartId, BodyPain newPain)? onPainChanged;
+    String parentPartId,
+    String childPartId,
+    BodyPain newPain,
+  )?
+  onPainChanged;
 
   /// The configuration for the pain scale, including styles and translations.
   final PainScale scale;
@@ -92,9 +96,7 @@ class _BodyPartSelectorTurnableState extends State<BodyPartSelectorTurnable> {
             },
           ),
         ),
-        const SizedBox(
-          height: 16,
-        ),
+        const SizedBox(height: 16),
         Padding(
           padding: widget.padding,
           child: BodyPartSelector(

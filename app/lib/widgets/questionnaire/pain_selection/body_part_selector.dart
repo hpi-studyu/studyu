@@ -14,7 +14,7 @@ import 'package:touchable/touchable.dart';
 typedef PainEditResult = ({
   String parentPartId,
   String childPartId,
-  BodyPain pain
+  BodyPain pain,
 });
 
 /// A widget that allows for selecting body parts and displays their pain level.
@@ -35,7 +35,11 @@ class BodyPartSelector extends StatelessWidget {
   final BodySide side;
 
   final void Function(
-      String parentPartId, String childPartId, BodyPain newPain)? onPainChanged;
+    String parentPartId,
+    String childPartId,
+    BodyPain newPain,
+  )?
+  onPainChanged;
 
   final PainScale scale;
 
@@ -54,10 +58,7 @@ class BodyPartSelector extends StatelessWidget {
 
     final result = await showDialog<PainEditResult>(
       context: context,
-      builder: (context) => PainEditDialog(
-        tappedPart: part,
-        scale: scale,
-      ),
+      builder: (context) => PainEditDialog(tappedPart: part, scale: scale),
     );
 
     if (result != null && context.mounted) {
@@ -86,11 +87,14 @@ class BodyPartSelector extends StatelessWidget {
       child: LayoutBuilder(
         key: ValueKey(Object.hash(body, side)),
         builder: (context, constraints) {
-          final size = Size.square(min(
+          final size = Size.square(
+            min(
               constraints.maxWidth,
               constraints.maxHeight.isFinite
                   ? constraints.maxHeight
-                  : constraints.maxWidth));
+                  : constraints.maxWidth,
+            ),
+          );
 
           return SizedBox(
             width: size.width,
@@ -106,9 +110,11 @@ class BodyPartSelector extends StatelessWidget {
                   onTap: (id) => _showPainSelectorDialog(context, id),
                   context: context,
                   scale: scale,
-                  unselectedColor: unselectedColor ??
+                  unselectedColor:
+                      unselectedColor ??
                       Theme.of(context).colorScheme.surfaceContainerHighest,
-                  unselectedOutlineColor: unselectedOutlineColor ??
+                  unselectedOutlineColor:
+                      unselectedOutlineColor ??
                       Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
@@ -160,10 +166,14 @@ class _BodyPainter extends CustomPainter {
       return (fill: style.color, stroke: style.textColor);
     }
 
-    final lowerBound = scalePoints.lastWhere((p) => p <= painLevel,
-        orElse: () => firstPainPoint);
-    final upperBound =
-        scalePoints.firstWhere((p) => p >= painLevel, orElse: () => lowerBound);
+    final lowerBound = scalePoints.lastWhere(
+      (p) => p <= painLevel,
+      orElse: () => firstPainPoint,
+    );
+    final upperBound = scalePoints.firstWhere(
+      (p) => p >= painLevel,
+      orElse: () => lowerBound,
+    );
 
     if (lowerBound == upperBound) {
       final style = scale.levels[lowerBound]!;
@@ -175,8 +185,11 @@ class _BodyPainter extends CustomPainter {
     final t = (painLevel - lowerBound) / (upperBound - lowerBound);
 
     final fillColor = Color.lerp(lowerStyle.color, upperStyle.color, t)!;
-    final strokeColor =
-        Color.lerp(lowerStyle.textColor, upperStyle.textColor, t)!;
+    final strokeColor = Color.lerp(
+      lowerStyle.textColor,
+      upperStyle.textColor,
+      t,
+    )!;
 
     return (fill: fillColor, stroke: strokeColor);
   }
@@ -313,7 +326,9 @@ class _PainEditDialogState extends State<PainEditDialog> {
                             duration: const Duration(milliseconds: 150),
                             width: 90,
                             padding: const EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 8),
+                              vertical: 12,
+                              horizontal: 8,
+                            ),
                             decoration: BoxDecoration(
                               color: selectedLevel == level
                                   ? style.color
@@ -325,19 +340,22 @@ class _PainEditDialogState extends State<PainEditDialog> {
                               boxShadow: selectedLevel == level
                                   ? [
                                       BoxShadow(
-                                        color: Colors.black
-                                            .withValues(alpha: 0.08),
+                                        color: Colors.black.withValues(
+                                          alpha: 0.08,
+                                        ),
                                         blurRadius: 6,
                                         offset: const Offset(0, 2),
-                                      )
+                                      ),
                                     ]
                                   : [],
                             ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(style.face,
-                                    style: const TextStyle(fontSize: 36)),
+                                Text(
+                                  style.face,
+                                  style: const TextStyle(fontSize: 36),
+                                ),
                                 const SizedBox(height: 6),
                                 Text(
                                   style.description,
@@ -427,7 +445,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                         width: 320,
                         child: ListView.separated(
                           shrinkWrap: true,
-                          separatorBuilder: (_, __) => const Divider(),
+                          separatorBuilder: (_, _) => const Divider(),
                           itemCount: painTypeOptions.length,
                           itemBuilder: (context, index) {
                             final type = painTypeOptions[index];
@@ -496,7 +514,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
                         child: ListView.separated(
                           shrinkWrap: true,
                           itemCount: _selectableParts.length,
-                          separatorBuilder: (_, __) => const Divider(),
+                          separatorBuilder: (_, _) => const Divider(),
                           itemBuilder: (context, index) {
                             final part = _selectableParts[index];
                             return ListTile(
@@ -543,10 +561,7 @@ class _PainEditDialogState extends State<PainEditDialog> {
     Navigator.of(context).pop((
       parentPartId: widget.tappedPart.id,
       childPartId: _selectedPartId,
-      pain: BodyPain(
-        painLevel: _currentPain,
-        type: _selectedPainType,
-      ),
+      pain: BodyPain(painLevel: _currentPain, type: _selectedPainType),
     ));
   }
 
@@ -614,23 +629,37 @@ class PainScale {
     painIndicatorText: 'Pain',
     levels: {
       0: PainLevelStyle(
-          face: '😄', description: 'No Hurt', color: Color(0xFF4CAF50)),
+        face: '😄',
+        description: 'No Hurt',
+        color: Color(0xFF4CAF50),
+      ),
       2: PainLevelStyle(
-          face: '😊',
-          description: 'Hurts Little Bit',
-          color: Color(0xFFFFCC80),
-          textColor: Colors.black87),
+        face: '😊',
+        description: 'Hurts Little Bit',
+        color: Color(0xFFFFCC80),
+        textColor: Colors.black87,
+      ),
       4: PainLevelStyle(
-          face: '😐',
-          description: 'Hurts Little More',
-          color: Color(0xFFFFA726),
-          textColor: Colors.black87),
+        face: '😐',
+        description: 'Hurts Little More',
+        color: Color(0xFFFFA726),
+        textColor: Colors.black87,
+      ),
       6: PainLevelStyle(
-          face: '😕', description: 'Hurts Even More', color: Color(0xFFFF7043)),
+        face: '😕',
+        description: 'Hurts Even More',
+        color: Color(0xFFFF7043),
+      ),
       8: PainLevelStyle(
-          face: '😢', description: 'Hurts Whole Lot', color: Color(0xFFF44336)),
+        face: '😢',
+        description: 'Hurts Whole Lot',
+        color: Color(0xFFF44336),
+      ),
       10: PainLevelStyle(
-          face: '😭', description: 'Hurts Worst', color: Color(0xFFB71C1C)),
+        face: '😭',
+        description: 'Hurts Worst',
+        color: Color(0xFFB71C1C),
+      ),
     },
   );
 }

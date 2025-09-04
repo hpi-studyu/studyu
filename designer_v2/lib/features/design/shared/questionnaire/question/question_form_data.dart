@@ -629,8 +629,9 @@ class PainQuestionFormData extends QuestionFormData {
     super.questionInfoText,
   });
 
-  static Map<String, Body> get kResponseOptions =>
-      {tr.form_field_response_pain: const Body()};
+  static Map<String, Body> get kResponseOptions => {
+    tr.form_field_response_pain: const Body(),
+  };
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();

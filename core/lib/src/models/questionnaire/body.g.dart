@@ -7,12 +7,13 @@ part of 'body.dart';
 // **************************************************************************
 
 Body _$BodyFromJson(Map<String, dynamic> json) => Body(
-      parts: (json['parts'] as List<dynamic>?)
-              ?.map((e) => BodyPart.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
-    );
+  parts:
+      (json['parts'] as List<dynamic>?)
+          ?.map((e) => BodyPart.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+);
 
 Map<String, dynamic> _$BodyToJson(Body instance) => <String, dynamic>{
-      'parts': instance.parts.map((e) => e.toJson()).toList(),
-    };
+  'parts': instance.parts.map((e) => e.toJson()).toList(),
+};

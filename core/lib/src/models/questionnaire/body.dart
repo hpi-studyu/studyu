@@ -11,69 +11,113 @@ class Body {
   /// The maximum pain level that can be assigned to a body part.
   static const maxPainLevel = 10;
 
-  const Body({
-    this.parts = const [],
-  });
+  const Body({this.parts = const []});
 
   /// Creates a default body structure.
   factory Body.initial() {
-    return const Body(parts: [
-      BodyPart(id: 'head', name: 'Head', children: [
-        BodyPart(id: 'headFront', name: 'Head (Front)', children: [
-          BodyPart(id: 'face', name: 'Face'),
-          BodyPart(id: 'forehead', name: 'Forehead'),
-          BodyPart(id: 'eyes', name: 'Eyes'),
-          BodyPart(id: 'nose', name: 'Nose'),
-          BodyPart(id: 'mouth', name: 'Mouth'),
-        ]),
-        BodyPart(id: 'headBack', name: 'Head (Back)'),
-        BodyPart(id: 'vestibular', name: 'Vestibular System'),
-      ]),
-      BodyPart(id: 'neck', name: 'Neck', children: [
-        BodyPart(id: 'neckFront', name: 'Neck (Front)'),
-        BodyPart(id: 'neckBack', name: 'Neck (Back)'),
-      ]),
-      BodyPart(id: 'torso', name: 'Torso', children: [
-        BodyPart(id: 'chest', name: 'Chest'),
-        BodyPart(id: 'upperBack', name: 'Upper Back'),
-        BodyPart(id: 'abdomen', name: 'Abdomen'),
-        BodyPart(id: 'lowerBack', name: 'Lower Back'),
-      ]),
-      BodyPart(id: 'arms', name: 'Arms', children: [
-        BodyPart(id: 'leftArm', name: 'Left Arm', children: [
-          BodyPart(id: 'leftShoulder', name: 'Left Shoulder'),
-          BodyPart(id: 'leftUpperArm', name: 'Left Upper Arm'),
-          BodyPart(id: 'leftElbow', name: 'Left Elbow'),
-          BodyPart(id: 'leftLowerArm', name: 'Left Lower Arm'),
-          BodyPart(id: 'leftHand', name: 'Left Hand'),
-        ]),
-        BodyPart(id: 'right_arm', name: 'Right Arm', children: [
-          BodyPart(id: 'right_shoulder', name: 'Right Shoulder'),
-          BodyPart(id: 'right_upper_arm', name: 'Right Upper Arm'),
-          BodyPart(id: 'right_elbow', name: 'Right Elbow'),
-          BodyPart(id: 'right_lower_arm', name: 'Right Lower Arm'),
-          BodyPart(id: 'right_hand', name: 'Right Hand'),
-        ]),
-      ]),
-      BodyPart(id: 'lower_body', name: 'Lower Body', children: [
-        BodyPart(id: 'pelvis', name: 'Pelvis'),
-        BodyPart(id: 'buttocks', name: 'Buttocks'),
-      ]),
-      BodyPart(id: 'legs', name: 'Legs', children: [
-        BodyPart(id: 'leftLeg', name: 'Left Leg', children: [
-          BodyPart(id: 'leftUpperLeg', name: 'Left Upper Leg'),
-          BodyPart(id: 'leftKnee', name: 'Left Knee'),
-          BodyPart(id: 'leftLowerLeg', name: 'Left Lower Leg'),
-          BodyPart(id: 'leftFoot', name: 'Left Foot'),
-        ]),
-        BodyPart(id: 'rightLeg', name: 'Right Leg', children: [
-          BodyPart(id: 'rightUpperLeg', name: 'Right Upper Leg'),
-          BodyPart(id: 'rightKnee', name: 'Right Knee'),
-          BodyPart(id: 'rightLowerLeg', name: 'Right Lower Leg'),
-          BodyPart(id: 'rightFoot', name: 'Right Foot'),
-        ]),
-      ]),
-    ]);
+    return const Body(
+      parts: [
+        BodyPart(
+          id: 'head',
+          name: 'Head',
+          children: [
+            BodyPart(
+              id: 'headFront',
+              name: 'Head (Front)',
+              children: [
+                BodyPart(id: 'face', name: 'Face'),
+                BodyPart(id: 'forehead', name: 'Forehead'),
+                BodyPart(id: 'eyes', name: 'Eyes'),
+                BodyPart(id: 'nose', name: 'Nose'),
+                BodyPart(id: 'mouth', name: 'Mouth'),
+              ],
+            ),
+            BodyPart(id: 'headBack', name: 'Head (Back)'),
+            BodyPart(id: 'vestibular', name: 'Vestibular System'),
+          ],
+        ),
+        BodyPart(
+          id: 'neck',
+          name: 'Neck',
+          children: [
+            BodyPart(id: 'neckFront', name: 'Neck (Front)'),
+            BodyPart(id: 'neckBack', name: 'Neck (Back)'),
+          ],
+        ),
+        BodyPart(
+          id: 'torso',
+          name: 'Torso',
+          children: [
+            BodyPart(id: 'chest', name: 'Chest'),
+            BodyPart(id: 'upperBack', name: 'Upper Back'),
+            BodyPart(id: 'abdomen', name: 'Abdomen'),
+            BodyPart(id: 'lowerBack', name: 'Lower Back'),
+          ],
+        ),
+        BodyPart(
+          id: 'arms',
+          name: 'Arms',
+          children: [
+            BodyPart(
+              id: 'leftArm',
+              name: 'Left Arm',
+              children: [
+                BodyPart(id: 'leftShoulder', name: 'Left Shoulder'),
+                BodyPart(id: 'leftUpperArm', name: 'Left Upper Arm'),
+                BodyPart(id: 'leftElbow', name: 'Left Elbow'),
+                BodyPart(id: 'leftLowerArm', name: 'Left Lower Arm'),
+                BodyPart(id: 'leftHand', name: 'Left Hand'),
+              ],
+            ),
+            BodyPart(
+              id: 'right_arm',
+              name: 'Right Arm',
+              children: [
+                BodyPart(id: 'right_shoulder', name: 'Right Shoulder'),
+                BodyPart(id: 'right_upper_arm', name: 'Right Upper Arm'),
+                BodyPart(id: 'right_elbow', name: 'Right Elbow'),
+                BodyPart(id: 'right_lower_arm', name: 'Right Lower Arm'),
+                BodyPart(id: 'right_hand', name: 'Right Hand'),
+              ],
+            ),
+          ],
+        ),
+        BodyPart(
+          id: 'lower_body',
+          name: 'Lower Body',
+          children: [
+            BodyPart(id: 'pelvis', name: 'Pelvis'),
+            BodyPart(id: 'buttocks', name: 'Buttocks'),
+          ],
+        ),
+        BodyPart(
+          id: 'legs',
+          name: 'Legs',
+          children: [
+            BodyPart(
+              id: 'leftLeg',
+              name: 'Left Leg',
+              children: [
+                BodyPart(id: 'leftUpperLeg', name: 'Left Upper Leg'),
+                BodyPart(id: 'leftKnee', name: 'Left Knee'),
+                BodyPart(id: 'leftLowerLeg', name: 'Left Lower Leg'),
+                BodyPart(id: 'leftFoot', name: 'Left Foot'),
+              ],
+            ),
+            BodyPart(
+              id: 'rightLeg',
+              name: 'Right Leg',
+              children: [
+                BodyPart(id: 'rightUpperLeg', name: 'Right Upper Leg'),
+                BodyPart(id: 'rightKnee', name: 'Right Knee'),
+                BodyPart(id: 'rightLowerLeg', name: 'Right Lower Leg'),
+                BodyPart(id: 'rightFoot', name: 'Right Foot'),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   /// Deserializes a JSON map into a [Body] object.
@@ -148,10 +192,7 @@ enum BodySide {
   back;
 
   /// Maps the side to a value of type [T], allowing for a clean switch.
-  T map<T>({
-    required T front,
-    required T back,
-  }) {
+  T map<T>({required T front, required T back}) {
     switch (this) {
       case BodySide.front:
         return front;
