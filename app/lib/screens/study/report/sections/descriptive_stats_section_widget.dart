@@ -44,16 +44,19 @@ class _DescriptiveStatsSectionState
   Future<void> _loadData() async {
     _reportUtilities = ReportUtilities(widget.subject);
 
-    final results =
-        widget.section.resultProperty?.retrieveFromResults(widget.subject);
+    final results = widget.section.resultProperty?.retrieveFromResults(
+      widget.subject,
+    );
 
     if (results == null || results.isEmpty) {
       _interventionValues = {};
     } else {
-      final diagramDatums =
-          _reportUtilities.convertToDiagramData(results).toList();
-      _interventionValues =
-          _reportUtilities.getInterventionGroups(diagramDatums);
+      final diagramDatums = _reportUtilities
+          .convertToDiagramData(results)
+          .toList();
+      _interventionValues = _reportUtilities.getInterventionGroups(
+        diagramDatums,
+      );
     }
 
     if (mounted) {
@@ -77,9 +80,7 @@ class _DescriptiveStatsSectionState
         width: double.infinity,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(AppLocalizations.of(context)!.no_data_available_yet),
-          ],
+          children: [Text(AppLocalizations.of(context)!.no_data_available_yet)],
         ),
       );
     }
@@ -89,8 +90,9 @@ class _DescriptiveStatsSectionState
       children: [
         DescriptiveStatisticsWidget(
           valuesInterventionA: interventionA.value,
-          nameInterventionA:
-              _reportUtilities.getInterventionName(interventionA.key),
+          nameInterventionA: _reportUtilities.getInterventionName(
+            interventionA.key,
+          ),
           valuesInterventionB: interventionB?.value ?? const <num>[],
           nameInterventionB: interventionB?.key != null
               ? _reportUtilities.getInterventionName(interventionB!.key)

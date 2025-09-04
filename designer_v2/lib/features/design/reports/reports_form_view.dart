@@ -57,8 +57,8 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                           .reportItemDelegate
                           .availableActions(viewModel),
                       onNewItem: () {
-                        final routeArgs =
-                            formViewModel.buildNewReportItemFormRouteArgs();
+                        final routeArgs = formViewModel
+                            .buildNewReportItemFormRouteArgs();
                         _showReportItemSidesheetWithArgs(
                           routeArgs,
                           context,
@@ -81,9 +81,9 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                             Text(
                               ''.alphabetLetterFrom(rowIdx).toUpperCase(),
                               style: TextStyle(
-                                color: ThemeConfig.dropdownMenuItemTheme(theme)
-                                    .iconTheme!
-                                    .color,
+                                color: ThemeConfig.dropdownMenuItemTheme(
+                                  theme,
+                                ).iconTheme!.color,
                               ),
                             ),
                             const SizedBox(width: 16.0),

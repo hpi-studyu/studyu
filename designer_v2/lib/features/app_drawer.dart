@@ -129,7 +129,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
           localizedHelpText: () => tr.navlink_public_studies_tooltip,
           onNavigated: () => _updateSelectedRoute(hintEntryIdx: 2),
         ),
-      ]
+      ],
     ];
     bottomEntries = [
       [
@@ -198,8 +198,9 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
             Expanded(
               child: ListTileTheme(
                 selectedColor: theme.colorScheme.primary,
-                selectedTileColor:
-                    theme.colorScheme.primary.withValues(alpha: 0.1),
+                selectedTileColor: theme.colorScheme.primary.withValues(
+                  alpha: 0.1,
+                ),
                 child: ListView(
                   // Important: Remove any padding from the ListView.
                   padding: EdgeInsets.zero,
@@ -239,16 +240,12 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
             onTap: () => ref.read(routerProvider).dispatch(RoutingIntents.root),
             child: Container(
               foregroundDecoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .primary
-                    .withValues(alpha: 0.4),
+                color: Theme.of(
+                  context,
+                ).colorScheme.primary.withValues(alpha: 0.4),
                 backgroundBlendMode: BlendMode.color,
               ),
-              child: Image.asset(
-                Assets.logoWide,
-                fit: BoxFit.cover,
-              ),
+              child: Image.asset(Assets.logoWide, fit: BoxFit.cover),
             ),
           ),
         ),
@@ -309,8 +306,8 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         color: isSelected
             ? null
             : (entry.enabled)
-                ? theme.iconTheme.color!.withValues(alpha: 0.75)
-                : theme.iconTheme.color!.withValues(alpha: 0.3),
+            ? theme.iconTheme.color!.withValues(alpha: 0.75)
+            : theme.iconTheme.color!.withValues(alpha: 0.3),
       ),
       //hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
       title: Text(

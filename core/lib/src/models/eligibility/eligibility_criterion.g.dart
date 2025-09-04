@@ -7,18 +7,15 @@ part of 'eligibility_criterion.dart';
 // **************************************************************************
 
 EligibilityCriterion _$EligibilityCriterionFromJson(
-        Map<String, dynamic> json) =>
-    EligibilityCriterion(
-      json['id'] as String,
-    )
-      ..reason = json['reason'] as String?
-      ..condition =
-          Expression.fromJson(json['condition'] as Map<String, dynamic>);
+  Map<String, dynamic> json,
+) => EligibilityCriterion(json['id'] as String)
+  ..reason = json['reason'] as String?
+  ..condition = Expression.fromJson(json['condition'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$EligibilityCriterionToJson(
-        EligibilityCriterion instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      if (instance.reason case final value?) 'reason': value,
-      'condition': instance.condition.toJson(),
-    };
+  EligibilityCriterion instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  if (instance.reason case final value?) 'reason': value,
+  'condition': instance.condition.toJson(),
+};

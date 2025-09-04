@@ -33,8 +33,9 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text(AppLocalizations.of(context)!.user_did_not_give_consent),
+          content: Text(
+            AppLocalizations.of(context)!.user_did_not_give_consent,
+          ),
           duration: const Duration(seconds: 30),
         ),
       );
@@ -152,8 +153,9 @@ class InterventionTile extends StatelessWidget {
       endChild: TimelineChild(
         child: Text(
           title!,
-          style:
-              theme.textTheme.titleLarge!.copyWith(color: theme.primaryColor),
+          style: theme.textTheme.titleLarge!.copyWith(
+            color: theme.primaryColor,
+          ),
         ),
       ),
       startChild: TimelineChild(
@@ -196,9 +198,7 @@ class TimelineChild extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       constraints: const BoxConstraints(minHeight: 100),
-      child: Center(
-        child: child,
-      ),
+      child: Center(child: child),
     );
   }
 }

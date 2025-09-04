@@ -14,7 +14,8 @@ class HelpIcon extends StatelessWidget {
       message: tooltipText,
       child: MouseEventsRegion(
         builder: (context, states) {
-          final iconColor = theme.iconTheme.color?.withValues(
+          final iconColor =
+              theme.iconTheme.color?.withValues(
                 alpha: (states.contains(WidgetState.hovered)) ? 0.6 : 0.35,
               ) ??
               theme.colorScheme.onSurface.withValues(alpha: 0.3);

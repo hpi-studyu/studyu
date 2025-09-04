@@ -13,7 +13,6 @@ on:
       - 'flutter_common/**'
       - 'pubspec.yaml'
       - 'pubspec.lock'
-      - 'melos.yaml'
       - 'firebase.json'
       - '.firebaserc'
 
@@ -33,7 +32,7 @@ jobs:
         with:
           workflowId: 'publish_pubdev.yml'
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4

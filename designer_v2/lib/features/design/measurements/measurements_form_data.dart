@@ -8,8 +8,7 @@ class MeasurementsFormData implements IStudyFormData {
   final List<MeasurementSurveyFormData> surveyMeasurements;
 
   @override
-  String get id =>
-      throw UnimplementedError(); // not needed for top-level form data
+  String get id => throw UnimplementedError(); // not needed for top-level form data
 
   factory MeasurementsFormData.fromStudy(Study study) {
     return MeasurementsFormData(

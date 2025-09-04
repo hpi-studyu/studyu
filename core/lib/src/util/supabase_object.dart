@@ -11,15 +11,15 @@ abstract class SupabaseObject {
 }
 
 String tableName(Type cls) => switch (cls) {
-      == Study => Study.tableName,
-      == StudySubject => StudySubject.tableName,
-      == SubjectProgress => SubjectProgress.tableName,
-      == AppConfig => AppConfig.tableName,
-      == Repo => Repo.tableName,
-      == StudyInvite => StudyInvite.tableName,
-      == StudyUUser => StudyUUser.tableName,
-      _ => throw ArgumentError('$cls is not a supported Supabase type'),
-    };
+  == Study => Study.tableName,
+  == StudySubject => StudySubject.tableName,
+  == SubjectProgress => SubjectProgress.tableName,
+  == AppConfig => AppConfig.tableName,
+  == Repo => Repo.tableName,
+  == StudyInvite => StudyInvite.tableName,
+  == StudyUUser => StudyUUser.tableName,
+  _ => throw ArgumentError('$cls is not a supported Supabase type'),
+};
 
 abstract class SupabaseObjectFunctions<T extends SupabaseObject>
     implements SupabaseObject {
@@ -36,13 +36,13 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject>
       };
 
   Future<T> delete() async => SupabaseQuery.extractSupabaseSingleRow<T>(
-        await env.client
-            .from(tableName(T))
-            .delete()
-            .primaryKeys(primaryKeys)
-            .select()
-            .single(),
-      );
+    await env.client
+        .from(tableName(T))
+        .delete()
+        .primaryKeys(primaryKeys)
+        .select()
+        .single(),
+  );
 
   /// Save the object to the database.
   /// By default, this will upsert the object, i.e. insert it if it does not exist, or update it if it does.
@@ -69,8 +69,9 @@ class SupabaseQuery {
     Map<String, Object>? filters,
   }) async {
     try {
-      var query =
-          env.client.from(tableName(T)).select(selectedColumns.join(','));
+      var query = env.client
+          .from(tableName(T))
+          .select(selectedColumns.join(','));
       filters?.forEach((key, value) {
         query = query.eq(key, value);
       });

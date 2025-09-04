@@ -25,8 +25,8 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
   bool isStylingInformationDismissed = true;
 
   void onDismissedCallback() => setState(() {
-        isStylingInformationDismissed = !isStylingInformationDismissed;
-      });
+    isStylingInformationDismissed = !isStylingInformationDismissed;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +47,11 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
                     decoration: InputDecoration(
                       hintText: tr.form_field_intervention_task_title,
                     ),
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(200),
-                    ],
+                    inputFormatters: [LengthLimitingTextInputFormatter(200)],
                     validationMessages: widget
-                        .formViewModel.taskTitleControl.validationMessages,
+                        .formViewModel
+                        .taskTitleControl
+                        .validationMessages,
                   ),
                 ),
                 FormTableRow(
@@ -89,11 +89,11 @@ class _InterventionTaskFormViewState extends State<InterventionTaskFormView> {
                       hintText:
                           tr.form_field_intervention_task_description_hint,
                     ),
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(2000),
-                    ],
-                    validationMessages: widget.formViewModel
-                        .taskDescriptionControl.validationMessages,
+                    inputFormatters: [LengthLimitingTextInputFormatter(2000)],
+                    validationMessages: widget
+                        .formViewModel
+                        .taskDescriptionControl
+                        .validationMessages,
                     keyboardType: TextInputType.multiline,
                     minLines: 5,
                     maxLines: 5,

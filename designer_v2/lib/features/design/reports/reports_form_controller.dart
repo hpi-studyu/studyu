@@ -21,8 +21,10 @@ import 'package:studyu_designer_v2/utils/riverpod.dart';
 class ReportsFormViewModel extends FormViewModel<ReportsFormData>
     implements
         IFormViewModelDelegate<ReportItemFormViewModel>,
-        IProviderArgsResolver<ReportItemFormViewModel,
-            ReportItemFormRouteArgs> {
+        IProviderArgsResolver<
+          ReportItemFormViewModel,
+          ReportItemFormRouteArgs
+        > {
   ReportsFormViewModel({
     required this.study,
     required this.router,
@@ -44,19 +46,21 @@ class ReportsFormViewModel extends FormViewModel<ReportsFormData>
   // - Form fields
 
   late final FormArray reportItemArray = FormArray([]);
-  late final FormViewModelCollection<ReportItemFormViewModel,
-          ReportItemFormData> reportItemFormViewModels =
-      FormViewModelCollection([], reportItemArray);
+  late final FormViewModelCollection<
+    ReportItemFormViewModel,
+    ReportItemFormData
+  >
+  reportItemFormViewModels = FormViewModelCollection([], reportItemArray);
 
   List<ReportItemFormViewModel> get reportItemModels =>
       reportItemFormViewModels.formViewModels;
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [], // TODO
-        StudyFormValidationSet.publish: [], // TODO
-        StudyFormValidationSet.test: [], // TODO
-      };
+    StudyFormValidationSet.draft: [], // TODO
+    StudyFormValidationSet.publish: [], // TODO
+    StudyFormValidationSet.test: [], // TODO
+  };
 
   @override
   late final FormGroup form = FormGroup({
@@ -137,8 +141,9 @@ class ReportsFormViewModel extends FormViewModel<ReportsFormData>
       return viewModel;
     }
 
-    final viewModel = reportItemFormViewModels
-        .findWhere((vm) => vm.sectionId == args.sectionId);
+    final viewModel = reportItemFormViewModels.findWhere(
+      (vm) => vm.sectionId == args.sectionId,
+    );
     if (viewModel == null) {
       print("ReportSection not found");
       throw ReportSectionNotFoundException(); // TODO handle 404 not found
@@ -151,8 +156,10 @@ class ReportFormItemDelegate
     implements
         IFormViewModelDelegate<ReportItemFormViewModel>,
         IListActionProvider<ReportItemFormViewModel>,
-        IProviderArgsResolver<ReportItemFormViewModel,
-            ReportItemFormRouteArgs> {
+        IProviderArgsResolver<
+          ReportItemFormViewModel,
+          ReportItemFormRouteArgs
+        > {
   ReportFormItemDelegate({
     required this.formViewModelCollection,
     required this.owner,
@@ -161,7 +168,7 @@ class ReportFormItemDelegate
   });
 
   final FormViewModelCollection<ReportItemFormViewModel, ReportItemFormData>
-      formViewModelCollection;
+  formViewModelCollection;
   final ReportsFormViewModel owner;
   final bool propagateOnSave;
   final FormValidationSetEnum? validationSet;
@@ -198,8 +205,9 @@ class ReportFormItemDelegate
       return viewModel;
     }
 
-    final viewModel = formViewModelCollection
-        .findWhere((vm) => vm.sectionId == args.sectionId);
+    final viewModel = formViewModelCollection.findWhere(
+      (vm) => vm.sectionId == args.sectionId,
+    );
     if (viewModel == null) {
       throw ReportSectionNotFoundException(); // TODO handle 404 not found
     }

@@ -18,8 +18,9 @@ class StudyAnalyzeController extends _$StudyAnalyzeController {
     return StudyAnalyzeControllerState(
       studyId: studyId,
       studyRepository: ref.watch(studyRepositoryProvider),
-      studyWithMetadata:
-          ref.watch(studyControllerProvider(studyId)).studyWithMetadata,
+      studyWithMetadata: ref
+          .watch(studyControllerProvider(studyId))
+          .studyWithMetadata,
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
     );

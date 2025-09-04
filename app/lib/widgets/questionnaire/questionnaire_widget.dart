@@ -56,10 +56,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         final lastQuestion = shownQuestions.removeLast();
         _listKey.currentState!.removeItem(
           end,
-          (context, animation) => SizeTransition(
-            sizeFactor: animation,
-            child: lastQuestion,
-          ),
+          (context, animation) =>
+              SizeTransition(sizeFactor: animation, child: lastQuestion),
         );
       }
     }
@@ -77,8 +75,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _onQuestionDone(Answer answer, int index) {
-    _nextQuestionIndex = widget.questions
-            .indexWhere((question) => question.id == answer.question) +
+    _nextQuestionIndex =
+        widget.questions.indexWhere(
+          (question) => question.id == answer.question,
+        ) +
         1;
     qs.answers[answer.question] = answer;
     widget.onChange?.call(qs);
@@ -108,9 +108,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         return;
       }
       _insertQuestion(widget.questions[_nextQuestionIndex]);
-      _listKey.currentState!.insertItem(
-        shownQuestions.length - 1,
-      );
+      _listKey.currentState!.insertItem(shownQuestions.length - 1);
       _nextQuestionIndex++;
     } else {
       // we ran out of questions
@@ -174,9 +172,7 @@ class HtmlTextBox extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            HtmlText(text),
-          ],
+          children: [HtmlText(text)],
         ),
       ),
     );

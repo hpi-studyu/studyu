@@ -52,7 +52,8 @@ class _BannerBoxState extends State<BannerBox> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bannerColor = _getBackgroundColor(theme);
-    final icon = widget.prefixIcon ??
+    final icon =
+        widget.prefixIcon ??
         Icon(
           _getDefaultIcon(),
           size: (theme.iconTheme.size ?? 14.0) * 1.25,
@@ -82,10 +83,7 @@ class _BannerBoxState extends State<BannerBox> {
                       const SizedBox.shrink()
                     else
                       const SizedBox(width: 24.0),
-                    Opacity(
-                      opacity: 0.85,
-                      child: widget.body,
-                    ),
+                    Opacity(opacity: 0.85, child: widget.body),
                   ],
                 ),
               ),
@@ -94,8 +92,10 @@ class _BannerBoxState extends State<BannerBox> {
                 child: Opacity(
                   opacity: 0.5,
                   child: IconButton(
-                    icon:
-                        Icon(Icons.close_rounded, size: widget.dismissIconSize),
+                    icon: Icon(
+                      Icons.close_rounded,
+                      size: widget.dismissIconSize,
+                    ),
                     splashRadius: widget.dismissIconSize,
                     onPressed: () => setState(() {
                       widget.onDismissed?.call();

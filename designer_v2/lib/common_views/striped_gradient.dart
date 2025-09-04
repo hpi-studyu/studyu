@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class StripedGradient {
-  StripedGradient({
-    required this.colors,
-  });
+  StripedGradient({required this.colors});
 
   final List<Color> colors;
 

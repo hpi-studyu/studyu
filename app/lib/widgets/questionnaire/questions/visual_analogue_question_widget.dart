@@ -67,7 +67,8 @@ class _VisualAnalogueQuestionWidgetState
           onChanged: changed,
           min: widget.question.minimum,
           max: widget.question.maximum,
-          divisions: (widget.question.maximum - widget.question.minimum) ~/
+          divisions:
+              (widget.question.maximum - widget.question.minimum) ~/
               widget.question.step,
         ),
         SizedBox(

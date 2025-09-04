@@ -24,8 +24,9 @@ class TemporaryStorageHandler {
   static Future<Directory?> _getMultimodalTempDirectory() async {
     try {
       final tempAppData = await getTemporaryDirectory();
-      final multimodalTempDirectory =
-          Directory("${tempAppData.path}/multimodal-temp");
+      final multimodalTempDirectory = Directory(
+        "${tempAppData.path}/multimodal-temp",
+      );
 
       if (!await multimodalTempDirectory.exists()) {
         await multimodalTempDirectory.create(recursive: true);
@@ -40,8 +41,9 @@ class TemporaryStorageHandler {
 
   static Future<Directory> _getMultimodalUploadDirectory() async {
     final appData = await getApplicationDocumentsDirectory();
-    final multimodalUploadDirectory =
-        Directory("${appData.path}/multimodal-upload");
+    final multimodalUploadDirectory = Directory(
+      "${appData.path}/multimodal-upload",
+    );
     await multimodalUploadDirectory.create(recursive: true);
     return multimodalUploadDirectory;
   }
@@ -52,14 +54,7 @@ class TemporaryStorageHandler {
   ) async {
     final stagingFile = File(stagingFilePath);
     final uploadDirectory = await _getMultimodalUploadDirectory();
-    final uploadFile = File(
-      path.join(
-        uploadDirectory.path,
-        [
-          blobId,
-        ].join(),
-      ),
-    );
+    final uploadFile = File(path.join(uploadDirectory.path, [blobId].join()));
     await stagingFile.rename(uploadFile.path);
   }
 
@@ -90,8 +85,10 @@ class TemporaryStorageHandler {
       ].join(),
     );
 
-    final futureBlobId =
-        [fileName, TemporaryStorageHandler._audioFileType].join();
+    final futureBlobId = [
+      fileName,
+      TemporaryStorageHandler._audioFileType,
+    ].join();
     return FutureBlobFile(localFilePath, futureBlobId);
   }
 
@@ -112,8 +109,10 @@ class TemporaryStorageHandler {
       ].join(),
     );
 
-    final futureBlobId =
-        [fileName, TemporaryStorageHandler._imageFileType].join();
+    final futureBlobId = [
+      fileName,
+      TemporaryStorageHandler._imageFileType,
+    ].join();
     return FutureBlobFile(localFilePath, futureBlobId);
   }
 
@@ -125,14 +124,15 @@ class TemporaryStorageHandler {
       return;
     }
 
-    for (final file in await temporaryMultimodalDirectory
-        .list()
-        .where(
-          (f) => path
-              .basename(f.path)
-              .startsWith(TemporaryStorageHandler._stagingBaseNamePrefix),
-        )
-        .toList()) {
+    for (final file
+        in await temporaryMultimodalDirectory
+            .list()
+            .where(
+              (f) => path
+                  .basename(f.path)
+                  .startsWith(TemporaryStorageHandler._stagingBaseNamePrefix),
+            )
+            .toList()) {
       await file.delete();
     }
   }

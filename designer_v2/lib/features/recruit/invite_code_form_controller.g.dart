@@ -60,21 +60,15 @@ class InviteCodeFormViewModelFamily extends Family<InviteCodeFormViewModel> {
   /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
   ///
   /// Copied from [inviteCodeFormViewModel].
-  InviteCodeFormViewModelProvider call(
-    String studyId,
-  ) {
-    return InviteCodeFormViewModelProvider(
-      studyId,
-    );
+  InviteCodeFormViewModelProvider call(String studyId) {
+    return InviteCodeFormViewModelProvider(studyId);
   }
 
   @override
   InviteCodeFormViewModelProvider getProviderOverride(
     covariant InviteCodeFormViewModelProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -106,24 +100,20 @@ class InviteCodeFormViewModelProvider
   /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
   ///
   /// Copied from [inviteCodeFormViewModel].
-  InviteCodeFormViewModelProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => inviteCodeFormViewModel(
-            ref as InviteCodeFormViewModelRef,
-            studyId,
-          ),
-          from: inviteCodeFormViewModelProvider,
-          name: r'inviteCodeFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$inviteCodeFormViewModelHash,
-          dependencies: InviteCodeFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              InviteCodeFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  InviteCodeFormViewModelProvider(String studyId)
+    : this._internal(
+        (ref) =>
+            inviteCodeFormViewModel(ref as InviteCodeFormViewModelRef, studyId),
+        from: inviteCodeFormViewModelProvider,
+        name: r'inviteCodeFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$inviteCodeFormViewModelHash,
+        dependencies: InviteCodeFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            InviteCodeFormViewModelFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   InviteCodeFormViewModelProvider._internal(
     super._createNotifier, {
@@ -140,7 +130,7 @@ class InviteCodeFormViewModelProvider
   @override
   Override overrideWith(
     InviteCodeFormViewModel Function(InviteCodeFormViewModelRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -191,5 +181,6 @@ class _InviteCodeFormViewModelProviderElement
   @override
   String get studyId => (origin as InviteCodeFormViewModelProvider).studyId;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

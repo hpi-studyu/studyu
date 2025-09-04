@@ -19,8 +19,9 @@ class CustomFormControl<T> extends FormControl<T> {
   }) : super() {
     if (onValueChanged != null) {
       final callback = (_onValueChangedDebouncer != null)
-          ? (T? value) =>
-              _onValueChangedDebouncer!(callback: () => onValueChanged!(value))
+          ? (T? value) => _onValueChangedDebouncer.call(
+              callback: () => onValueChanged!(value),
+            )
           : onValueChanged;
 
       valueChanges.listen(callback);
@@ -28,9 +29,9 @@ class CustomFormControl<T> extends FormControl<T> {
 
     if (onStatusChanged != null) {
       final callback = (_onStatusChangedDebouncer != null)
-          ? (ControlStatus value) => _onStatusChangedDebouncer!(
-                callback: () => onStatusChanged!(value),
-              )
+          ? (ControlStatus value) => _onStatusChangedDebouncer.call(
+              callback: () => onStatusChanged!(value),
+            )
           : onStatusChanged;
 
       statusChanged.listen(callback);
@@ -39,15 +40,12 @@ class CustomFormControl<T> extends FormControl<T> {
 
   late final Debouncer? _onValueChangedDebouncer =
       (onValueChangedDebounceTime != null)
-          ? Debouncer(milliseconds: onValueChangedDebounceTime!, leading: false)
-          : null;
+      ? Debouncer(milliseconds: onValueChangedDebounceTime!, leading: false)
+      : null;
   late final Debouncer? _onStatusChangedDebouncer =
       (onStatusChangedDebounceTime != null)
-          ? Debouncer(
-              milliseconds: onStatusChangedDebounceTime!,
-              leading: false,
-            )
-          : null;
+      ? Debouncer(milliseconds: onStatusChangedDebounceTime!, leading: false)
+      : null;
 
   @override
   void dispose() {

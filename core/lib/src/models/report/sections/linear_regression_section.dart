@@ -26,7 +26,4 @@ class LinearRegressionSection extends ReportSection {
   Map<String, dynamic> toJson() => _$LinearRegressionSectionToJson(this);
 }
 
-enum ImprovementDirection {
-  positive,
-  negative,
-}
+enum ImprovementDirection { positive, negative }

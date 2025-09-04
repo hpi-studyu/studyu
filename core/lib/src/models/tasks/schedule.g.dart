@@ -15,10 +15,11 @@ Schedule _$ScheduleFromJson(Map<String, dynamic> json) => Schedule()
       .toList();
 
 Map<String, dynamic> _$ScheduleToJson(Schedule instance) => <String, dynamic>{
-      'completionPeriods':
-          instance.completionPeriods.map((e) => e.toJson()).toList(),
-      'reminders': instance.reminders.map((e) => e.toJson()).toList(),
-    };
+  'completionPeriods': instance.completionPeriods
+      .map((e) => e.toJson())
+      .toList(),
+  'reminders': instance.reminders.map((e) => e.toJson()).toList(),
+};
 
 CompletionPeriod _$CompletionPeriodFromJson(Map<String, dynamic> json) =>
     CompletionPeriod(

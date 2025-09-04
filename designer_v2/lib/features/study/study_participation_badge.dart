@@ -24,10 +24,7 @@ class StudyParticipationBadge extends StatelessWidget {
 
     Widget inTooltip(Widget child) {
       if (tooltipMessage.isNotEmpty) {
-        return Tooltip(
-          message: tooltipMessage,
-          child: child,
-        );
+        return Tooltip(message: tooltipMessage, child: child);
       }
       return child;
     }

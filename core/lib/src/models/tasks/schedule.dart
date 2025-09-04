@@ -41,7 +41,7 @@ class CompletionPeriod {
   });
 
   CompletionPeriod.noId({required this.unlockTime, required this.lockTime})
-      : id = const Uuid().v4();
+    : id = const Uuid().v4();
 
   factory CompletionPeriod.fromJson(Map<String, dynamic> json) =>
       _$CompletionPeriodFromJson(json);

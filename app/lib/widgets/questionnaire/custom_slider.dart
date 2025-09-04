@@ -53,8 +53,9 @@ class CustomSlider extends StatelessWidget {
     final divisions = (steps!.maximum - steps!.minimum) ~/ steps!.step;
     //final divisions = steps.annotations.length; // (majorTick - 1) * minorTick + majorTick;
     // final double valueHeight = allocatedHeight * 0.05 < 41 ? 41 : allocatedHeight * 0.05;
-    final double tickHeight =
-        allocatedHeight * 0.0125 < 20 ? 20 : allocatedHeight * 0.0125;
+    final double tickHeight = allocatedHeight * 0.0125 < 20
+        ? 20
+        : allocatedHeight * 0.0125;
     // todo finetune label positions
     final labelOffset = (allocatedWidth / (divisions + 2)) * 0.5;
 
@@ -148,8 +149,9 @@ class CustomSlider extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: labelOffset),
           child: SliderTheme(
             data: SliderThemeData(
-              trackHeight:
-                  allocatedHeight * 0.0125 < 9 ? 9 : allocatedHeight * 0.0125,
+              trackHeight: allocatedHeight * 0.0125 < 9
+                  ? 9
+                  : allocatedHeight * 0.0125,
               inactiveTickMarkColor: isColored ? activeColor : null,
               activeTrackColor: activeColor,
               inactiveTrackColor: inactiveColor,
@@ -158,9 +160,7 @@ class CustomSlider extends StatelessWidget {
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 15.0),
               trackShape: CustomTrackShape(),
               showValueIndicator: ShowValueIndicator.never,
-              valueIndicatorTextStyle: const TextStyle(
-                fontSize: 12,
-              ),
+              valueIndicatorTextStyle: const TextStyle(fontSize: 12),
             ),
             child: Stack(
               alignment: Alignment.center,
@@ -172,9 +172,7 @@ class CustomSlider extends StatelessWidget {
                         : allocatedHeight * 0.0125,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      gradient: LinearGradient(
-                        colors: [minColor!, maxColor!],
-                      ),
+                      gradient: LinearGradient(colors: [minColor!, maxColor!]),
                     ),
                   )
                 else

@@ -26,13 +26,17 @@ import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
     with
-        WithQuestionnaireControls<EnrollmentFormData,
-            ScreenerQuestionFormViewModel>
+        WithQuestionnaireControls<
+          EnrollmentFormData,
+          ScreenerQuestionFormViewModel
+        >
     implements
         IFormViewModelDelegate<ScreenerQuestionFormViewModel>,
         IListActionProvider<ScreenerQuestionFormViewModel>,
-        IProviderArgsResolver<ScreenerQuestionFormViewModel,
-            QuestionFormRouteArgs> {
+        IProviderArgsResolver<
+          ScreenerQuestionFormViewModel,
+          QuestionFormRouteArgs
+        > {
   EnrollmentFormViewModel({
     required this.study,
     required this.router,
@@ -70,19 +74,21 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
           .toList();
 
   late final FormArray consentItemArray = FormArray([]);
-  late final FormViewModelCollection<ConsentItemFormViewModel,
-          ConsentItemFormData> consentItemFormViewModels =
-      FormViewModelCollection([], consentItemArray);
+  late final FormViewModelCollection<
+    ConsentItemFormViewModel,
+    ConsentItemFormData
+  >
+  consentItemFormViewModels = FormViewModelCollection([], consentItemArray);
 
   List<ConsentItemFormViewModel> get consentItemModels =>
       consentItemFormViewModels.formViewModels;
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [], // TODO
-        StudyFormValidationSet.publish: [], // TODO
-        StudyFormValidationSet.test: [], // TODO
-      };
+    StudyFormValidationSet.draft: [], // TODO
+    StudyFormValidationSet.publish: [], // TODO
+    StudyFormValidationSet.test: [], // TODO
+  };
 
   @override
   late final FormGroup form = FormGroup({
@@ -205,10 +211,7 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   void testScreener() {
     router.dispatch(
-      RoutingIntents.studyTest(
-        study.id,
-        appRoute: TestAppRoutes.eligibility,
-      ),
+      RoutingIntents.studyTest(study.id, appRoute: TestAppRoutes.eligibility),
     );
   }
 
@@ -226,10 +229,10 @@ class EnrollmentFormViewModel extends FormViewModel<EnrollmentFormData>
 
   @override
   Map<FormMode, LocalizedStringResolver> get questionTitles => {
-        FormMode.create: () => tr.form_screener_question_create,
-        FormMode.edit: () => tr.form_screener_question_edit,
-        FormMode.readonly: () => tr.form_screener_question_readonly,
-      };
+    FormMode.create: () => tr.form_screener_question_create,
+    FormMode.edit: () => tr.form_screener_question_edit,
+    FormMode.readonly: () => tr.form_screener_question_readonly,
+  };
 
   @override
   ScreenerQuestionFormViewModel provideQuestionFormViewModel(
@@ -248,8 +251,10 @@ class EnrollmentFormConsentItemDelegate
     implements
         IFormViewModelDelegate<ConsentItemFormViewModel>,
         IListActionProvider<ConsentItemFormViewModel>,
-        IProviderArgsResolver<ConsentItemFormViewModel,
-            ConsentItemFormRouteArgs> {
+        IProviderArgsResolver<
+          ConsentItemFormViewModel,
+          ConsentItemFormRouteArgs
+        > {
   EnrollmentFormConsentItemDelegate({
     required this.formViewModels,
     required this.owner,
@@ -258,7 +263,7 @@ class EnrollmentFormConsentItemDelegate
   });
 
   final FormViewModelCollection<ConsentItemFormViewModel, ConsentItemFormData>
-      formViewModels;
+  formViewModels;
   final EnrollmentFormViewModel owner;
   final bool propagateOnSave;
   final FormValidationSetEnum? validationSet;
@@ -297,8 +302,9 @@ class EnrollmentFormConsentItemDelegate
       return viewModel;
     }
 
-    final viewModel =
-        formViewModels.findWhere((vm) => vm.consentId == args.consentId);
+    final viewModel = formViewModels.findWhere(
+      (vm) => vm.consentId == args.consentId,
+    );
     if (viewModel == null) {
       throw ConsentItemNotFoundException(); // TODO handle 404 not found
     }

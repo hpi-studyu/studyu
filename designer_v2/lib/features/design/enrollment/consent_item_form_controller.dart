@@ -18,8 +18,9 @@ class ConsentItemFormViewModel
 
   // - Form fields
 
-  final FormControl<String> consentIdControl =
-      FormControl(value: const Uuid().v4()); // hidden
+  final FormControl<String> consentIdControl = FormControl(
+    value: const Uuid().v4(),
+  ); // hidden
   final FormControl<String> titleControl = FormControl();
   final FormControl<String> descriptionControl = FormControl();
   final FormControl<IconOption> iconControl = FormControl();
@@ -28,31 +29,27 @@ class ConsentItemFormViewModel
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [titleRequired, descriptionRequired],
-        StudyFormValidationSet.publish: [titleRequired, descriptionRequired],
-        StudyFormValidationSet.test: [titleRequired, descriptionRequired],
-      };
+    StudyFormValidationSet.draft: [titleRequired, descriptionRequired],
+    StudyFormValidationSet.publish: [titleRequired, descriptionRequired],
+    StudyFormValidationSet.test: [titleRequired, descriptionRequired],
+  };
 
   FormControlValidation get titleRequired => FormControlValidation(
-        control: titleControl,
-        validators: [
-          Validators.required,
-        ],
-        validationMessages: {
-          ValidationMessage.required: (error) =>
-              tr.form_field_consent_title_required,
-        },
-      );
+    control: titleControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (error) =>
+          tr.form_field_consent_title_required,
+    },
+  );
   FormControlValidation get descriptionRequired => FormControlValidation(
-        control: descriptionControl,
-        validators: [
-          Validators.required,
-        ],
-        validationMessages: {
-          ValidationMessage.required: (error) =>
-              tr.form_field_consent_text_required,
-        },
-      );
+    control: descriptionControl,
+    validators: [Validators.required],
+    validationMessages: {
+      ValidationMessage.required: (error) =>
+          tr.form_field_consent_text_required,
+    },
+  );
 
   @override
   late final FormGroup form = FormGroup({
@@ -82,10 +79,10 @@ class ConsentItemFormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: tr.form_consent_create,
-        FormMode.edit: tr.form_consent_edit,
-        FormMode.readonly: tr.form_consent_readonly,
-      };
+    FormMode.create: tr.form_consent_create,
+    FormMode.edit: tr.form_consent_edit,
+    FormMode.readonly: tr.form_consent_readonly,
+  };
 
   // - ManagedFormViewModel
 

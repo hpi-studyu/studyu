@@ -14,8 +14,9 @@ class StudySettingsDialog extends StudyPageWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final formViewModel =
-        ref.watch(studySettingsFormViewModelProvider(studyId));
+    final formViewModel = ref.watch(
+      studySettingsFormViewModelProvider(studyId),
+    );
 
     return ReactiveForm(
       formGroup: formViewModel.form,

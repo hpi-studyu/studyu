@@ -75,8 +75,9 @@ class _DashboardScreenState extends State<DashboardScreen>
       scheduleToday = subject!.scheduleFor(DateTime.now());
       if (widget.error != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(widget.error!)));
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(widget.error!)));
         });
       }
     }

@@ -23,8 +23,9 @@ class StudyController extends _$StudyController {
       studyRepository: ref.watch(studyRepositoryProvider),
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
-      studyWithMetadata:
-          ref.watch(studyBaseControllerProvider(studyId)).studyWithMetadata,
+      studyWithMetadata: ref
+          .watch(studyBaseControllerProvider(studyId))
+          .studyWithMetadata,
     );
     ref.onDispose(() => _studyEventsSubscription?.cancel());
     syncStudyStatus();
@@ -37,21 +38,22 @@ class StudyController extends _$StudyController {
     if (_studyEventsSubscription != null) {
       _studyEventsSubscription?.cancel();
     }
-    _studyEventsSubscription =
-        state.studyRepository.watchChanges(state.studyId).listen((event) {
-      if (event is IsSaving) {
-        state = state.copyWith(
-          syncState: const AsyncValue.loading(),
-          isDirty: state.isDirty,
-        );
-      } else if (event is IsSaved) {
-        state = state.copyWith(
-          syncState: const AsyncValue.data(null),
-          lastSynced: DateTime.now(),
-          isDirty: false,
-        );
-      }
-    });
+    _studyEventsSubscription = state.studyRepository
+        .watchChanges(state.studyId)
+        .listen((event) {
+          if (event is IsSaving) {
+            state = state.copyWith(
+              syncState: const AsyncValue.loading(),
+              isDirty: state.isDirty,
+            );
+          } else if (event is IsSaved) {
+            state = state.copyWith(
+              syncState: const AsyncValue.data(null),
+              lastSynced: DateTime.now(),
+              isDirty: false,
+            );
+          }
+        });
   }
 
   Future publishStudy({bool toRegistry = false}) {
@@ -60,8 +62,9 @@ class StudyController extends _$StudyController {
 
     // Remove all invites if study is open
     if (study.participation == Participation.open && study.invites != null) {
-      final codeRepository =
-          ref.watch(inviteCodeRepositoryProvider(study.id)).delegate;
+      final codeRepository = ref
+          .watch(inviteCodeRepositoryProvider(study.id))
+          .delegate;
 
       // Create a copy of the invites list to avoid errors during deletion as the original study.invites list is modified within the loop
       for (final StudyInvite invite in List.from(study.invites!)) {

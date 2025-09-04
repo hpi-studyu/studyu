@@ -42,9 +42,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       await noSubjectFound();
       return;
     }
-    StudyULogger.info(
-      "Retrieving subject with ID: $selectedSubjectId",
-    );
+    StudyULogger.info("Retrieving subject with ID: $selectedSubjectId");
     StudySubject? subject = await _retrieveSubject(selectedSubjectId);
     if (!mounted) return;
     if (subject != null) {
@@ -54,17 +52,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
       state.init(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
-      StudyULogger.warning(
-        "No subject found for ID: $selectedSubjectId.",
-      );
+      StudyULogger.warning("No subject found for ID: $selectedSubjectId.");
       await _showSupportOrDeleteDialog(selectedSubjectId);
     }
   }
 
   Future<void> noSubjectFound() async {
-    StudyULogger.info(
-      "No subject found, redirecting to welcome screen",
-    );
+    StudyULogger.info("No subject found, redirecting to welcome screen");
     await cancelNotifications(context);
     if (mounted) Navigator.pushReplacementNamed(context, Routes.welcome);
   }
@@ -103,9 +97,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           final subject = await Cache.loadSubject();
           StudyULogger.info("Loaded subject from cache: $subject");
         } catch (e) {
-          StudyULogger.warning(
-            "No subject found in cache",
-          );
+          StudyULogger.warning("No subject found in cache");
         }
       }
     }
@@ -122,10 +114,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       "Preview: Found query parameters ${widget.queryParameters}",
     );
     final lang = AppLanguage(AppLocalizations.supportedLocales);
-    final preview = study_preview.Preview(
-      widget.queryParameters,
-      lang,
-    );
+    final preview = study_preview.Preview(widget.queryParameters, lang);
     final iFrameHelper = IFrameHelper();
     state.isPreview = true;
     await preview.init();
@@ -164,8 +153,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return;
       }
 
-      state.activeSubject =
-          await preview.getStudySubject(state, createSubject: true);
+      state.activeSubject = await preview.getStudySubject(
+        state,
+        createSubject: true,
+      );
 
       // CONSENT
       if (preview.selectedRoute == Routes.consent) {
@@ -207,8 +198,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       // OBSERVATION [i]
       if (preview.selectedRoute == '/observation') {
         final tasks = <Task>[
-          ...state.selectedStudy!.observations
-              .where((observation) => observation.id == preview.extra),
+          ...state.selectedStudy!.observations.where(
+            (observation) => observation.id == preview.extra,
+          ),
         ];
         if (!mounted) return;
         await Navigator.push<bool>(
@@ -266,9 +258,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
               child: Text(AppLocalizations.of(context)!.contact_support),
             ),
             TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.red,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
               onPressed: () => Navigator.of(context).pop(true),
               child: Text(AppLocalizations.of(context)!.delete_data),
             ),
@@ -285,17 +275,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
         builder: (context) {
           return AlertDialog(
             title: Text(AppLocalizations.of(context)!.delete_all_data),
-            content:
-                Text(AppLocalizations.of(context)!.delete_all_data_description),
+            content: Text(
+              AppLocalizations.of(context)!.delete_all_data_description,
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 child: Text(AppLocalizations.of(context)!.cancel),
               ),
               TextButton(
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.red,
-                ),
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
                 onPressed: () => Navigator.of(context).pop(true),
                 child: Text(AppLocalizations.of(context)!.reset_app),
               ),
@@ -320,11 +309,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> _contactSupport([String? selectedSubjectId]) async {
     if (!mounted) return;
     StudyULogger.info(
-        "User chose to contact support with ID: $selectedSubjectId");
+      "User chose to contact support with ID: $selectedSubjectId",
+    );
 
     const emailSubject = 'StudyU Support Request - Loading Error';
-    final emailBody = AppLocalizations.of(context)!
-        .support_email_body(selectedSubjectId ?? '');
+    final emailBody = AppLocalizations.of(
+      context,
+    )!.support_email_body(selectedSubjectId ?? '');
     final appContact = await AppConfig.getAppContact();
     final uriString =
         'mailto:${appContact.email}?subject=${Uri.encodeComponent(emailSubject)}&body=${Uri.encodeComponent(emailBody)}';
@@ -340,7 +331,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return AlertDialog(
           title: Text(AppLocalizations.of(context)!.support_email_sent),
           content: Text(
-              AppLocalizations.of(context)!.support_email_sent_description),
+            AppLocalizations.of(context)!.support_email_sent_description,
+          ),
         );
       },
     );
@@ -366,7 +358,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-/*if (!signInRes) {
+  /*if (!signInRes) {
         final migrateRes = await migrateParticipantToNewDB(selectedStudyObjectId);
         if (migrateRes) {
           print("Successfully migrated to the new database");
@@ -379,7 +371,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return;
       }*/
 
-/*Future<bool> migrateParticipantToNewDB(String selectedStudyObjectId) async {
+  /*Future<bool> migrateParticipantToNewDB(String selectedStudyObjectId) async {
     if (await SecureStorage.containsKey(userEmailKey) && await SecureStorage.containsKey(userPasswordKey)) {
       try {
         // create new account
