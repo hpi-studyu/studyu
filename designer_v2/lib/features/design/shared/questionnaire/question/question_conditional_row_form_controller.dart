@@ -30,8 +30,9 @@ class ConditionRowFormViewModel
     // Listen for question selection changes
     questionIdControl.valueChanges.listen((questionId) {
       if (questionId != null) {
-        final question =
-            availableQuestions.firstWhereOrNull((q) => q.id == questionId);
+        final question = availableQuestions.firstWhereOrNull(
+          (q) => q.id == questionId,
+        );
         if (question?.type == BooleanQuestion.questionType) {
           // Automatically set 'is' comparator for boolean questions and disable the control
           comparatorControl.value = 'is';
@@ -71,8 +72,9 @@ class ConditionRowFormViewModel
 
   // --- Get selected question object ---
   Question? get selectedQuestion {
-    return availableQuestions
-        .firstWhereOrNull((q) => q.id == questionIdControl.value);
+    return availableQuestions.firstWhereOrNull(
+      (q) => q.id == questionIdControl.value,
+    );
   }
 
   // --- Get available comparators for selected question ---
@@ -88,7 +90,9 @@ class ConditionRowFormViewModel
         return [
           FormControlOption('=', tr.form_array_question_visibility_logic_is),
           FormControlOption(
-              '!=', tr.form_array_question_visibility_logic_is_not),
+            '!=',
+            tr.form_array_question_visibility_logic_is_not,
+          ),
         ];
       case ScaleQuestion.questionType:
         return [
@@ -102,13 +106,21 @@ class ConditionRowFormViewModel
       case FreeTextQuestion.questionType:
         return [
           FormControlOption(
-              TextComparator.equal, tr.form_array_question_visibility_logic_is),
-          FormControlOption(TextComparator.notEqual,
-              tr.form_array_question_visibility_logic_is_not),
-          FormControlOption(TextComparator.contains,
-              tr.form_array_question_visibility_logic_contains),
-          FormControlOption(TextComparator.doesNotContain,
-              tr.form_array_question_visibility_logic_does_not_contain),
+            TextComparator.equal,
+            tr.form_array_question_visibility_logic_is,
+          ),
+          FormControlOption(
+            TextComparator.notEqual,
+            tr.form_array_question_visibility_logic_is_not,
+          ),
+          FormControlOption(
+            TextComparator.contains,
+            tr.form_array_question_visibility_logic_contains,
+          ),
+          FormControlOption(
+            TextComparator.doesNotContain,
+            tr.form_array_question_visibility_logic_does_not_contain,
+          ),
         ];
       default:
         return [];
@@ -219,8 +231,9 @@ class ConditionRowFormViewModel
         // Handle both single and multiple choice values
         if (value is List) {
           // Filter out null/empty values
-          final validValues =
-              value.where((v) => v != null && v.toString().isNotEmpty).toList();
+          final validValues = value
+              .where((v) => v != null && v.toString().isNotEmpty)
+              .toList();
           if (validValues.isEmpty) return null;
           choiceExpression.choices = Set.from(validValues);
         } else {
@@ -267,8 +280,9 @@ class ConditionRowFormViewModel
     // Re-run question selection logic
     final questionId = questionIdControl.value;
     if (questionId != null) {
-      final question =
-          availableQuestions.firstWhereOrNull((q) => q.id == questionId);
+      final question = availableQuestions.firstWhereOrNull(
+        (q) => q.id == questionId,
+      );
       if (question?.type == BooleanQuestion.questionType) {
         comparatorControl.value = 'is';
         comparatorControl.markAsDisabled();
@@ -280,15 +294,13 @@ class ConditionRowFormViewModel
 
   @override
   ManagedFormViewModel<ConditionRowFormData> createDuplicate() {
-    return ConditionRowFormViewModel(
-      currentQuestionId: currentQuestionId,
-    );
+    return ConditionRowFormViewModel(currentQuestionId: currentQuestionId);
   }
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: 'Create Condition',
-        FormMode.edit: 'Edit Condition',
-        FormMode.readonly: 'View Condition',
-      };
+    FormMode.create: 'Create Condition',
+    FormMode.edit: 'Edit Condition',
+    FormMode.readonly: 'View Condition',
+  };
 }

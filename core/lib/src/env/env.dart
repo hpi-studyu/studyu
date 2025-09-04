@@ -30,7 +30,10 @@ void setEnv(
     designerUrl = envDesignerUrl;
   }
   if (envProjectGeneratorUrl != null && envProjectGeneratorUrl.endsWith('/')) {
-    projectGeneratorUrl = envProjectGeneratorUrl.substring(0, envProjectGeneratorUrl.length - 1);
+    projectGeneratorUrl = envProjectGeneratorUrl.substring(
+      0,
+      envProjectGeneratorUrl.length - 1,
+    );
   } else {
     projectGeneratorUrl = envProjectGeneratorUrl;
   }

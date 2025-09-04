@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -743,7 +744,8 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bedingung hinzufügen';
 
   @override
-  String get form_array_question_visibility_logic_add_condition_disabled_tooltip =>
+  String
+  get form_array_question_visibility_logic_add_condition_disabled_tooltip =>
       'Keine Fragen verfügbar, um Bedingungen zu definieren. Es können nur Fragen verwendet werden, die hinter dieser Frage liegen.';
 
   @override

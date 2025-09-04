@@ -164,15 +164,22 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                       newIndex -= 1;
                     }
                     final item = widget
-                        .formViewModel.tasksCollection.formViewModels
+                        .formViewModel
+                        .tasksCollection
+                        .formViewModels
                         .removeAt(oldIndex);
-                    widget.formViewModel.tasksCollection.formViewModels
-                        .insert(newIndex, item);
+                    widget.formViewModel.tasksCollection.formViewModels.insert(
+                      newIndex,
+                      item,
+                    );
                     final controlItem = widget
-                        .formViewModel.interventionTasksArray
+                        .formViewModel
+                        .interventionTasksArray
                         .removeAt(oldIndex);
-                    widget.formViewModel.interventionTasksArray
-                        .insert(newIndex, controlItem);
+                    widget.formViewModel.interventionTasksArray.insert(
+                      newIndex,
+                      controlItem,
+                    );
                   },
                 );
               },

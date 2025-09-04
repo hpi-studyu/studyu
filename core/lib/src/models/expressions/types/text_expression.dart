@@ -22,7 +22,7 @@ class TextExpression extends ValueExpression<String> {
   String value; // The text to compare against
 
   TextExpression({required this.comparator, required this.value})
-      : super(expressionType);
+    : super(expressionType);
 
   factory TextExpression.fromJson(Map<String, dynamic> json) =>
       _$TextExpressionFromJson(json);

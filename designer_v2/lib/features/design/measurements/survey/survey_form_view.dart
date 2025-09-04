@@ -219,13 +219,16 @@ class _MeasurementSurveyFormViewState
                     if (newIndex > oldIndex) {
                       newIndex -= 1;
                     }
-                    final item =
-                        widget.formViewModel.questionModels.removeAt(oldIndex);
+                    final item = widget.formViewModel.questionModels.removeAt(
+                      oldIndex,
+                    );
                     widget.formViewModel.questionModels.insert(newIndex, item);
-                    final controlItem =
-                        widget.formViewModel.questionsArray.removeAt(oldIndex);
-                    widget.formViewModel.questionsArray
-                        .insert(newIndex, controlItem);
+                    final controlItem = widget.formViewModel.questionsArray
+                        .removeAt(oldIndex);
+                    widget.formViewModel.questionsArray.insert(
+                      newIndex,
+                      controlItem,
+                    );
                   },
                 );
               },
@@ -267,7 +270,9 @@ class _MeasurementSurveyFormViewState
 
     // Add current unsaved questions from the form
     final currentUnsavedQuestions = widget
-        .formViewModel.questionFormViewModels.formViewModels
+        .formViewModel
+        .questionFormViewModels
+        .formViewModels
         .map((vm) => vm.buildFormData().toQuestion())
         .toList();
 
@@ -287,9 +292,8 @@ class _MeasurementSurveyFormViewState
         FormSideSheetTab(
           title: tr.navlink_screener_question_content,
           index: 0,
-          formViewBuilder: (formViewModel) => SurveyQuestionFormView(
-            formViewModel: formViewModel,
-          ),
+          formViewBuilder: (formViewModel) =>
+              SurveyQuestionFormView(formViewModel: formViewModel),
         ),
         FormSideSheetTab(
           title: tr.navlink_question_visibility_logic,

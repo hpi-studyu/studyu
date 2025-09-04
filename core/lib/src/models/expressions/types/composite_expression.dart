@@ -21,10 +21,8 @@ class CompositeExpression extends Expression {
   LogicType logicType;
   List<Expression> expressions; // List of sub-expressions
 
-  CompositeExpression({
-    required this.logicType,
-    required this.expressions,
-  }) : super(expressionType);
+  CompositeExpression({required this.logicType, required this.expressions})
+    : super(expressionType);
 
   factory CompositeExpression.fromJson(Map<String, dynamic> json) =>
       _$CompositeExpressionFromJson(json);
@@ -39,8 +37,9 @@ class CompositeExpression extends Expression {
     }
 
     // Evaluate all sub-expressions
-    final evaluatedResults =
-        expressions.map((exp) => exp.evaluate(state)).toList();
+    final evaluatedResults = expressions
+        .map((exp) => exp.evaluate(state))
+        .toList();
 
     // Filter out nulls if you want to ignore expressions that couldn't be evaluated,
     // or handle them as 'false' based on your specific logic.

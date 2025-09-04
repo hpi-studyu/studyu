@@ -51,20 +51,23 @@ class ConditionRowFormData extends IFormData {
 
     // Handle numeric questions
     if (comparator is NumericComparator) {
-      final numValue =
-          value is String ? num.tryParse(value as String) : (value as num?);
+      final numValue = value is String
+          ? num.tryParse(value as String)
+          : (value as num?);
       if (numValue == null) return null;
       return NumericExpression(
-          comparator: comparator as NumericComparator, value: numValue)
-        ..target = questionId;
+        comparator: comparator as NumericComparator,
+        value: numValue,
+      )..target = questionId;
     }
 
     // Handle text questions
     if (comparator is TextComparator) {
       if (value == null) return null;
       return TextExpression(
-          comparator: comparator as TextComparator, value: value.toString())
-        ..target = questionId;
+        comparator: comparator as TextComparator,
+        value: value.toString(),
+      )..target = questionId;
     }
 
     return null;

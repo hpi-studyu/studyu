@@ -51,9 +51,11 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   @override
   late final FormArray conditionsArray = FormArray([]);
 
-  late final FormViewModelCollection<ConditionRowFormViewModel,
-          ConditionRowFormData> conditionFormViewModels =
-      FormViewModelCollection([], conditionsArray);
+  late final FormViewModelCollection<
+    ConditionRowFormViewModel,
+    ConditionRowFormData
+  >
+  conditionFormViewModels = FormViewModelCollection([], conditionsArray);
 
   @override
   List<ConditionRowFormViewModel> get conditionModels =>
@@ -71,8 +73,8 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   @override
   Stream<void> get conditionsValueChanges =>
       _conditionsValueChangesStream.isBroadcast
-          ? _conditionsValueChangesStream
-          : _conditionsValueChangesStream.asBroadcastStream();
+      ? _conditionsValueChangesStream
+      : _conditionsValueChangesStream.asBroadcastStream();
 
   @override
   CompositeExpression? get compositeExpression {
@@ -123,14 +125,16 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     }
 
     print(
-        'Added condition, now have ${conditionFormViewModels.formViewModels.length} conditions');
+      'Added condition, now have ${conditionFormViewModels.formViewModels.length} conditions',
+    );
     print('Form array now has ${conditionsArray.controls.length} controls');
   }
 
   @override
   void removeCondition(int index) {
-    conditionFormViewModels
-        .remove(conditionFormViewModels.formViewModels[index]);
+    conditionFormViewModels.remove(
+      conditionFormViewModels.formViewModels[index],
+    );
     _updateConditionsValueChangesStream();
 
     // Update the condition to reflect the removal
@@ -155,7 +159,8 @@ class ConditionalQuestionFormViewModel extends FormViewModel
 
       // Check if the value is actually different to avoid unnecessary updates
       final currentValue = questionConditionalControl.value;
-      final shouldUpdate = currentValue == null ||
+      final shouldUpdate =
+          currentValue == null ||
           jsonEncode(currentValue.condition.toJson()) !=
               jsonEncode(conditional.condition.toJson());
 
@@ -171,7 +176,8 @@ class ConditionalQuestionFormViewModel extends FormViewModel
         }
 
         print(
-            'Set questionConditionalControl.value: ${questionConditionalControl.value?.condition.toJson()}');
+          'Set questionConditionalControl.value: ${questionConditionalControl.value?.condition.toJson()}',
+        );
       }
     } else {
       // No conditions, set to null
@@ -231,10 +237,12 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     if (streams.isEmpty) {
       _conditionsValueChangesStream = const Stream<void>.empty();
     } else {
-      _conditionsValueChangesStream =
-          StreamGroup.merge(streams).asBroadcastStream();
-      _conditionsValueChangesSubscription =
-          _conditionsValueChangesStream.listen((_) {
+      _conditionsValueChangesStream = StreamGroup.merge(
+        streams,
+      ).asBroadcastStream();
+      _conditionsValueChangesSubscription = _conditionsValueChangesStream.listen((
+        _,
+      ) {
         print('Condition value changed, updating condition');
         // First update the composite expression by building it from all form data
         updateCondition();
@@ -260,10 +268,10 @@ class ConditionalQuestionFormViewModel extends FormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-        FormMode.create: 'Create Conditional',
-        FormMode.edit: 'Edit Conditional',
-        FormMode.readonly: 'View Conditional',
-      };
+    FormMode.create: 'Create Conditional',
+    FormMode.edit: 'Edit Conditional',
+    FormMode.readonly: 'View Conditional',
+  };
 
   @override
   void setControlsFrom(dynamic data) {
@@ -302,7 +310,8 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   QuestionConditional buildFormData() {
     print('Building QuestionConditional from form data');
 
-    final composite = compositeExpression ??
+    final composite =
+        compositeExpression ??
         CompositeExpression(logicType: LogicType.and, expressions: []);
     return QuestionConditional.withCondition(composite);
   }

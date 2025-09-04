@@ -66,13 +66,17 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                           // Reorder the view models
                           final item = formViewModel.measurementViewModels
                               .removeAt(oldIndex);
-                          formViewModel.measurementViewModels
-                              .insert(newIndex, item);
+                          formViewModel.measurementViewModels.insert(
+                            newIndex,
+                            item,
+                          );
                           // Reorder the underlying form array to match
                           final controlItem = formViewModel.measurementsArray
                               .removeAt(oldIndex);
-                          formViewModel.measurementsArray
-                              .insert(newIndex, controlItem);
+                          formViewModel.measurementsArray.insert(
+                            newIndex,
+                            controlItem,
+                          );
                           formViewModel.save();
                         },
                       );

@@ -144,14 +144,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   // - Form fields (question type-specific)
 
   // Multiple Choice
-  final FormControl<bool> isMultipleChoiceControl =
-      FormControl(validators: [Validators.required], value: false);
-  late final FormArray<Choice> choiceResponseOptionsArray = FormArray(
-    [
-      for (int i = 0; i < customOptionsInitial; i++)
-        FormControl(value: Choice.withId())
-    ],
+  final FormControl<bool> isMultipleChoiceControl = FormControl(
+    validators: [Validators.required],
+    value: false,
   );
+  late final FormArray<Choice> choiceResponseOptionsArray = FormArray([
+    for (int i = 0; i < customOptionsInitial; i++)
+      FormControl(value: Choice.withId()),
+  ]);
   final int customOptionsMin = 2;
   final int customOptionsMax = 10;
   final int customOptionsInitial = 2;
@@ -574,8 +574,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     questionInfoTextControl.value = data.questionInfoText ?? '';
 
     questionConditionalControl.value = data.conditional;
-    conditionalProperties
-        .setControlsFrom(null); // Will read from questionConditionalControl
+    conditionalProperties.setControlsFrom(
+      null,
+    ); // Will read from questionConditionalControl
 
     // Type-specific controls
     switch (data.questionType) {

@@ -62,8 +62,9 @@ class CustomSlider extends StatelessWidget {
 
     // Only use annotations if they are present and non-empty
     final bool hasAnnotations = steps!.annotations.isNotEmpty;
-    List<Annotation> annotations =
-        hasAnnotations ? [...steps!.annotations] : [];
+    List<Annotation> annotations = hasAnnotations
+        ? [...steps!.annotations]
+        : [];
 
     // Ensure annotation order is correct for widget generation
     double startPosValue = steps!.minimum;

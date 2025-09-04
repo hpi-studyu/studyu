@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -733,7 +734,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add condition';
 
   @override
-  String get form_array_question_visibility_logic_add_condition_disabled_tooltip =>
+  String
+  get form_array_question_visibility_logic_add_condition_disabled_tooltip =>
       'No questions available to add conditions for. Only questions following the current question can be used in the visibility logic.';
 
   @override

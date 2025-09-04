@@ -83,7 +83,8 @@ class FormListView<T> extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
-            onReorder: onReorder ??
+            onReorder:
+                onReorder ??
                 (oldIndex, newIndex) {
                   if (newIndex > oldIndex) {
                     newIndex -= 1;
@@ -193,9 +194,6 @@ class FormListView<T> extends StatelessWidget {
     if (control.disabled) {
       return const SizedBox.shrink();
     }
-    return PrimaryButton(
-      text: onNewItemLabel,
-      onPressed: onNewItem,
-    );
+    return PrimaryButton(text: onNewItemLabel, onPressed: onNewItem);
   }
 }

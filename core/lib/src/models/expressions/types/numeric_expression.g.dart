@@ -8,9 +8,9 @@ part of 'numeric_expression.dart';
 
 NumericExpression _$NumericExpressionFromJson(Map<String, dynamic> json) =>
     NumericExpression(
-      comparator: $enumDecode(_$NumericComparatorEnumMap, json['comparator']),
-      value: json['value'] as num,
-    )
+        comparator: $enumDecode(_$NumericComparatorEnumMap, json['comparator']),
+        value: json['value'] as num,
+      )
       ..type = json['type'] as String?
       ..target = json['target'] as String?;
 

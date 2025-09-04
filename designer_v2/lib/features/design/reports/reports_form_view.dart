@@ -129,13 +129,16 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                       reorderable: true,
                       onReorder: (oldIndex, newIndex) {
                         if (newIndex > oldIndex) newIndex -= 1;
-                        final item =
-                            formViewModel.reportItemModels.removeAt(oldIndex);
+                        final item = formViewModel.reportItemModels.removeAt(
+                          oldIndex,
+                        );
                         formViewModel.reportItemModels.insert(newIndex, item);
-                        final controlItem =
-                            formViewModel.reportItemArray.removeAt(oldIndex);
-                        formViewModel.reportItemArray
-                            .insert(newIndex, controlItem);
+                        final controlItem = formViewModel.reportItemArray
+                            .removeAt(oldIndex);
+                        formViewModel.reportItemArray.insert(
+                          newIndex,
+                          controlItem,
+                        );
                         formViewModel.save();
                       },
                     );

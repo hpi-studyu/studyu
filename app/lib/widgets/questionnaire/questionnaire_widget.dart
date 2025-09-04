@@ -42,7 +42,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
   void _addQuestionToList(Question question) {
     print(
-        'Inserting question with name: ${question.prompt} and id: ${question.id}');
+      'Inserting question with name: ${question.prompt} and id: ${question.id}',
+    );
     shownQuestions.add(
       QuestionContainer(
         key: UniqueKey(),
@@ -67,31 +68,37 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     }
 
     // Get all questions that are following the question that was just answered
-    final followUpQuestions = widget.questions.sublist(widget.questions.indexOf(
-            widget.questions.firstWhere((q) => q.id == questionIdToCheck)) +
-        1);
+    final followUpQuestions = widget.questions.sublist(
+      widget.questions.indexOf(
+            widget.questions.firstWhere((q) => q.id == questionIdToCheck),
+          ) +
+          1,
+    );
     print(
-        'Questions that follow question $questionIdToCheck: ${followUpQuestions.map((q) => q.id)}');
+      'Questions that follow question $questionIdToCheck: ${followUpQuestions.map((q) => q.id)}',
+    );
     // Check if any of those questions has a conditional that targets the question that was just answered
-    return followUpQuestions.any((q) =>
-        q.conditional?.condition.expressions.any((expression) {
-          return hasExpressionTarget(questionIdToCheck, expression);
-        }) ??
-        false);
+    return followUpQuestions.any(
+      (q) =>
+          q.conditional?.condition.expressions.any((expression) {
+            return hasExpressionTarget(questionIdToCheck, expression);
+          }) ??
+          false,
+    );
   }
 
   Question? _insertQuestion(int index) {
     // Find the next question in the list that should be shown.
     for (int i = index + 1; i < widget.questions.length; i++) {
       print(
-          'Checking if question ${widget.questions[i].prompt} at index $i should be shown.');
+        'Checking if question ${widget.questions[i].prompt} at index $i should be shown.',
+      );
       if (widget.questions[i].shouldBeShown(qs)) {
         print(
-            'Inserting next question: ${widget.questions[i].prompt} at index $i');
-        _addQuestionToList(widget.questions[i]);
-        _listKey.currentState?.insertItem(
-          shownQuestions.length - 1,
+          'Inserting next question: ${widget.questions[i].prompt} at index $i',
         );
+        _addQuestionToList(widget.questions[i]);
+        _listKey.currentState?.insertItem(shownQuestions.length - 1);
 
         return widget.questions[i];
       } else {
@@ -99,12 +106,14 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         final questionToSkip = widget.questions[i];
         if (questionToSkip.getDefaultAnswer() != null) {
           print(
-              'Skipping question ${questionToSkip.prompt} at index $i, inserting default answer.');
+            'Skipping question ${questionToSkip.prompt} at index $i, inserting default answer.',
+          );
           final defaultAnswer = questionToSkip.getDefaultAnswer()!;
           qs.answers[defaultAnswer.question] = defaultAnswer;
         } else {
           print(
-              'Skipping question ${questionToSkip.prompt} at index $i, no default answer available.');
+            'Skipping question ${questionToSkip.prompt} at index $i, no default answer available.',
+          );
         }
       }
     }
@@ -115,31 +124,35 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     print('Resetting questionnaire to question with id: $resetToQuestionId');
 
     // Remove all answers that were given after the resetToQuestionId
-    qs.answers.removeWhere((key, value) =>
-        widget.questions
-            .indexOf(widget.questions.firstWhere((q) => q.id == key)) >
-        widget.questions.indexOf(
-            widget.questions.firstWhere((q) => q.id == resetToQuestionId)));
+    qs.answers.removeWhere(
+      (key, value) =>
+          widget.questions.indexOf(
+            widget.questions.firstWhere((q) => q.id == key),
+          ) >
+          widget.questions.indexOf(
+            widget.questions.firstWhere((q) => q.id == resetToQuestionId),
+          ),
+    );
     print('Answers after reset: ${qs.answers.keys}');
 
     // Remove all shown questions that were added after the resetToQuestionId
-    final resetIndex =
-        shownQuestions.indexWhere((q) => q.question.id == resetToQuestionId);
+    final resetIndex = shownQuestions.indexWhere(
+      (q) => q.question.id == resetToQuestionId,
+    );
     if (resetIndex >= 0 && resetIndex < shownQuestions.length - 1) {
       // Remove from the end to the one after resetIndex
       for (int i = shownQuestions.length - 1; i > resetIndex; i--) {
         final removedQuestion = shownQuestions.removeAt(i);
         _listKey.currentState?.removeItem(
           i,
-          (context, animation) => SizeTransition(
-            sizeFactor: animation,
-            child: removedQuestion,
-          ),
+          (context, animation) =>
+              SizeTransition(sizeFactor: animation, child: removedQuestion),
         );
       }
     }
     print(
-        'Shown questions after reset: ${shownQuestions.map((q) => q.question.id)}');
+      'Shown questions after reset: ${shownQuestions.map((q) => q.question.id)}',
+    );
   }
 
   void _onQuestionDone(Answer answer, int index) {
@@ -149,7 +162,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     if (shouldContinue == false ||
         widget.questions.last.id == answer.question) {
       print(
-          'Questionnaire should not continue or the last question was answered.');
+        'Questionnaire should not continue or the last question was answered.',
+      );
       _finishQuestionnaire(qs);
       return;
     }
@@ -157,7 +171,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     // Check if the question that was answered is the last shown question.
     if (answer.question == shownQuestions.last.question.id) {
       print(
-          'The question answered id: ${answer.question} is the last shown question: ${shownQuestions.last.question.id}');
+        'The question answered id: ${answer.question} is the last shown question: ${shownQuestions.last.question.id}',
+      );
       // If the last question displayed was answered, we can try to insert the next question.
       // Index is incorrect if questions are skipped, use last shown question index instead
       _insertQuestion(widget.questions.indexOf(shownQuestions.last.question));
@@ -166,7 +181,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       // Check if there are questions whose visibility depend on the question that's answer was just edited.
       if (_isConditionalTarget(answer.question)) {
         print(
-            "There are conditional questions that depend on the answered question.");
+          "There are conditional questions that depend on the answered question.",
+        );
         _resetQuestionnaireTo(answer.question);
         // Try to insert the next question after the reset.
         final insertedQuestion = _insertQuestion(index);
@@ -182,16 +198,13 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     // Delay scroll until after the next frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // todo non-optimal solution, but works for now
-      Timer(
-        const Duration(milliseconds: 200),
-        () {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        },
-      );
+      Timer(const Duration(milliseconds: 200), () {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      });
     });
   }
 
@@ -199,7 +212,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   void initState() {
     super.initState();
     print(
-        "Print all question prompts: ${widget.questions.map((q) => q.prompt)}");
+      "Print all question prompts: ${widget.questions.map((q) => q.prompt)}",
+    );
     if (widget.questions.isNotEmpty) {
       _addQuestionToList(widget.questions.first);
     }
@@ -213,22 +227,24 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       initialItemCount: shownQuestions.length,
       itemBuilder: (context, index, animation) {
         print(
-            'shownQuestions length has following ids: ${shownQuestions.map((q) => q.question.id)} and index: $index');
-        return Column(children: [
-          // Header
-          if (index == 0 && widget.header != null && widget.header!.isNotEmpty)
-            HtmlTextBox(widget.header),
-          // Question
-          SizeTransition(
-            sizeFactor: animation,
-            child: shownQuestions[index],
-          ),
-          // Footer
-          if (index == shownQuestions.length &&
-              widget.footer != null &&
-              widget.footer!.isNotEmpty)
-            HtmlTextBox(widget.footer),
-        ]);
+          'shownQuestions length has following ids: ${shownQuestions.map((q) => q.question.id)} and index: $index',
+        );
+        return Column(
+          children: [
+            // Header
+            if (index == 0 &&
+                widget.header != null &&
+                widget.header!.isNotEmpty)
+              HtmlTextBox(widget.header),
+            // Question
+            SizeTransition(sizeFactor: animation, child: shownQuestions[index]),
+            // Footer
+            if (index == shownQuestions.length &&
+                widget.footer != null &&
+                widget.footer!.isNotEmpty)
+              HtmlTextBox(widget.footer),
+          ],
+        );
       },
     );
   }
@@ -247,9 +263,7 @@ class HtmlTextBox extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            HtmlText(text),
-          ],
+          children: [HtmlText(text)],
         ),
       ),
     );

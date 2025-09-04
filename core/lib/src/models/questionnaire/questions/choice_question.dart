@@ -35,7 +35,7 @@ class Choice {
   Choice(this.id);
 
   Choice.withText({String? id, required this.text})
-      : id = id ?? const Uuid().v4();
+    : id = id ?? const Uuid().v4();
 
   Choice.withId() : id = const Uuid().v4();
 

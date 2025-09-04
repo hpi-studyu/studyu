@@ -87,8 +87,9 @@ class LiveConditionPreview extends StatelessWidget {
   String _getChoiceText(String questionId, dynamic choiceValue) {
     final question = allQuestions.firstWhereOrNull((q) => q.id == questionId);
     if (question is ChoiceQuestion) {
-      final choice =
-          question.choices.firstWhereOrNull((c) => c.id == choiceValue);
+      final choice = question.choices.firstWhereOrNull(
+        (c) => c.id == choiceValue,
+      );
       return choice?.text ??
           choiceValue.toString(); // Return text or value if not found
     }
@@ -104,8 +105,9 @@ class LiveConditionPreview extends StatelessWidget {
       previewText =
           '${tr.form_array_question_visibility_logic_preview_description}\n\n(${tr.form_array_question_visibility_logic_always_true})';
     } else {
-      final formattedConditions =
-          _formatExpressionForPreview(compositeExpression!);
+      final formattedConditions = _formatExpressionForPreview(
+        compositeExpression!,
+      );
       previewText =
           '${tr.form_array_question_visibility_logic_preview_description}\n\n$formattedConditions';
     }
@@ -119,8 +121,8 @@ class LiveConditionPreview extends StatelessWidget {
     );
   }
 
-// Uncomment and implement the following methods if needed
-/*
+  // Uncomment and implement the following methods if needed
+  /*
   Widget _buildConditionsList() {
     // Implement the logic to display the list of conditions
   }

@@ -14,8 +14,11 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class ConditionalQuestionFormView extends FormConsumerWidget {
-  ConditionalQuestionFormView(
-      {required this.formViewModel, required this.allQuestions, super.key}) {
+  ConditionalQuestionFormView({
+    required this.formViewModel,
+    required this.allQuestions,
+    super.key,
+  }) {
     ConditionRowFormViewModel.availableQuestions = availableQuestions;
   }
 
@@ -23,8 +26,9 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
   final List<Question> allQuestions;
 
   List<Question> get availableQuestions {
-    final currentIndex =
-        allQuestions.indexWhere((q) => q.id == formViewModel.currentQuestionId);
+    final currentIndex = allQuestions.indexWhere(
+      (q) => q.id == formViewModel.currentQuestionId,
+    );
     if (currentIndex == -1) return allQuestions;
     return allQuestions.take(currentIndex).toList();
   }
@@ -32,56 +36,64 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
   @override
   Widget build(BuildContext context, FormGroup form) {
     final theme = Theme.of(context);
-    return ReactiveFormConsumer(builder: (context, form, _) {
-      print(
-          'Building ConditionalQuestionFormView with ${formViewModel.compositeExpression?.toJson()}');
-      print(
-          'Current conditionsArray: ${formViewModel.conditionsArray.controls.length} controls');
-      print(
-          'Current questionConditionalControl value: ${formViewModel.questionConditionalControl.value?.condition.toJson()}');
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextParagraph(
-            text: tr.form_array_question_visibility_logic_description,
-            style: ThemeConfig.bodyTextMuted(theme),
-          ),
-          const SizedBox(height: 16.0),
-          FormLabel(
-            labelText: tr.form_array_question_visibility_logic_title,
-            labelTextStyle: const TextStyle(fontWeight: FontWeight.bold),
-            helpText: tr.form_array_question_visibility_logic_tooltip,
-          ),
-          const SizedBox(height: 12.0),
-          _buildLogicGroupingControl(theme),
-          const SizedBox(height: 12.0),
-          _buildConditionsList(),
-          const SizedBox(height: 16.0),
-          _buildAddConditionButton(),
-          const Divider(height: 32.0),
-          StreamBuilder(
-            stream: formViewModel.conditionsValueChanges,
-            builder: (context, snapshot) {
-              return _buildLivePreview(context);
-            },
-          ),
-        ],
-      );
-    });
+    return ReactiveFormConsumer(
+      builder: (context, form, _) {
+        print(
+          'Building ConditionalQuestionFormView with ${formViewModel.compositeExpression?.toJson()}',
+        );
+        print(
+          'Current conditionsArray: ${formViewModel.conditionsArray.controls.length} controls',
+        );
+        print(
+          'Current questionConditionalControl value: ${formViewModel.questionConditionalControl.value?.condition.toJson()}',
+        );
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextParagraph(
+              text: tr.form_array_question_visibility_logic_description,
+              style: ThemeConfig.bodyTextMuted(theme),
+            ),
+            const SizedBox(height: 16.0),
+            FormLabel(
+              labelText: tr.form_array_question_visibility_logic_title,
+              labelTextStyle: const TextStyle(fontWeight: FontWeight.bold),
+              helpText: tr.form_array_question_visibility_logic_tooltip,
+            ),
+            const SizedBox(height: 12.0),
+            _buildLogicGroupingControl(theme),
+            const SizedBox(height: 12.0),
+            _buildConditionsList(),
+            const SizedBox(height: 16.0),
+            _buildAddConditionButton(),
+            const Divider(height: 32.0),
+            StreamBuilder(
+              stream: formViewModel.conditionsValueChanges,
+              builder: (context, snapshot) {
+                return _buildLivePreview(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildLogicGroupingControl(ThemeData theme) {
     return Row(
       children: [
-        Text(tr.form_array_question_visibility_logic_grouping_title,
-            style: ThemeConfig.bodyTextMuted(theme)),
+        Text(
+          tr.form_array_question_visibility_logic_grouping_title,
+          style: ThemeConfig.bodyTextMuted(theme),
+        ),
         const SizedBox(width: 8),
         Expanded(
           child: ReactiveRadioListTile<LogicType>(
             formControl: formViewModel.logicTypeControl,
             value: LogicType.and,
             title: Text(
-                tr.form_array_question_visibility_logic_grouping_and_title),
+              tr.form_array_question_visibility_logic_grouping_and_title,
+            ),
             onChanged: formViewModel.isReadonly ? null : (value) {},
           ),
         ),
@@ -89,8 +101,9 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           child: ReactiveRadioListTile<LogicType>(
             formControl: formViewModel.logicTypeControl,
             value: LogicType.or,
-            title:
-                Text(tr.form_array_question_visibility_logic_grouping_or_title),
+            title: Text(
+              tr.form_array_question_visibility_logic_grouping_or_title,
+            ),
             onChanged: formViewModel.isReadonly ? null : (value) {},
           ),
         ),
@@ -112,19 +125,16 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           );
         }
         return Column(
-          children: List.generate(
-            formArray.controls.length,
-            (index) {
-              final control = formArray.controls[index] as FormGroup;
-              // Get the corresponding view model
-              final conditionVm = formViewModel.conditionModels[index];
+          children: List.generate(formArray.controls.length, (index) {
+            final control = formArray.controls[index] as FormGroup;
+            // Get the corresponding view model
+            final conditionVm = formViewModel.conditionModels[index];
 
-              return KeyedSubtree(
-                key: ValueKey(control),
-                child: _buildSingleConditionRow(context, conditionVm, index),
-              );
-            },
-          ),
+            return KeyedSubtree(
+              key: ValueKey(control),
+              child: _buildSingleConditionRow(context, conditionVm, index),
+            );
+          }),
         );
       },
     );
@@ -148,33 +158,35 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
                 isExpanded: true,
                 items: availableQuestions
                     .asMap()
-                    .map((index, option) => MapEntry(
-                          index,
-                          DropdownMenuItem(
-                            value: option.id,
-                            child: Row(
-                              children: [
-                                Icon(
-                                  SurveyQuestionType.of(option).icon,
-                                  size: 16,
-                                  color: Colors.grey,
+                    .map(
+                      (index, option) => MapEntry(
+                        index,
+                        DropdownMenuItem(
+                          value: option.id,
+                          child: Row(
+                            children: [
+                              Icon(
+                                SurveyQuestionType.of(option).icon,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                '${index + 1}.',
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  option.prompt!,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                const SizedBox(width: 8),
-                                Text(
-                                  '${index + 1}.',
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(
-                                    option.prompt!,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ))
+                        ),
+                      ),
+                    )
                     .values
                     .toList(),
                 decoration: InputDecoration(
@@ -190,20 +202,22 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           // Rebuild comparator when question changes
           ReactiveValueListenableBuilder<String>(
             formControl: conditionVm.questionIdControl,
-            builder: (context, _, __) {
+            builder: (context, _, _) {
               if (conditionVm.selectedQuestion != null) {
                 return Expanded(
                   child: ReactiveDropdownField<dynamic>(
                     formControl: conditionVm.comparatorControl,
                     isExpanded: true,
                     items: conditionVm.availableComparators
-                        .map((option) => DropdownMenuItem(
-                              value: option.value,
-                              child: Text(
-                                option.label,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ))
+                        .map(
+                          (option) => DropdownMenuItem(
+                            value: option.value,
+                            child: Text(
+                              option.label,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )
                         .toList(),
                     decoration: InputDecoration(
                       labelText: tr
@@ -221,10 +235,10 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           // Rebuild value when question or comparator changes
           ReactiveValueListenableBuilder<String>(
             formControl: conditionVm.questionIdControl,
-            builder: (context, _, __) {
+            builder: (context, _, _) {
               return ReactiveValueListenableBuilder<dynamic>(
                 formControl: conditionVm.comparatorControl,
-                builder: (context, _, __) {
+                builder: (context, _, _) {
                   if (conditionVm.comparatorControl.value != null &&
                       conditionVm.selectedQuestion != null) {
                     return Expanded(
@@ -257,11 +271,13 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           formControl: conditionVm.valueControl,
           items: [
             DropdownMenuItem(
-                value: true,
-                child: Text(tr.form_array_question_visibility_logic_true)),
+              value: true,
+              child: Text(tr.form_array_question_visibility_logic_true),
+            ),
             DropdownMenuItem(
-                value: false,
-                child: Text(tr.form_array_question_visibility_logic_false)),
+              value: false,
+              child: Text(tr.form_array_question_visibility_logic_false),
+            ),
           ],
           decoration: InputDecoration(
             labelText: tr.form_array_question_visibility_logic_value_title,
@@ -271,22 +287,23 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
         );
       case ChoiceQuestion.questionType:
         return Tooltip(
-          message: conditionVm.availableChoiceValues
-                  .firstWhereOrNull((option) =>
-                      option.value == conditionVm.valueControl.value)
+          message:
+              conditionVm.availableChoiceValues
+                  .firstWhereOrNull(
+                    (option) => option.value == conditionVm.valueControl.value,
+                  )
                   ?.label ??
               '',
           child: ReactiveDropdownField<dynamic>(
             formControl: conditionVm.valueControl,
             isExpanded: true,
             items: conditionVm.availableChoiceValues
-                .map((option) => DropdownMenuItem(
-                      value: option.value,
-                      child: Text(
-                        option.label,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ))
+                .map(
+                  (option) => DropdownMenuItem(
+                    value: option.value,
+                    child: Text(option.label, overflow: TextOverflow.ellipsis),
+                  ),
+                )
                 .toList(),
             decoration: InputDecoration(
               labelText: tr.form_array_question_visibility_logic_value_title,
@@ -335,8 +352,9 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
             ? null
             : () => formViewModel.addCondition(),
         icon: const Icon(Icons.add),
-        label:
-            Text(tr.form_array_question_visibility_logic_add_condition_button),
+        label: Text(
+          tr.form_array_question_visibility_logic_add_condition_button,
+        ),
       ),
     );
   }

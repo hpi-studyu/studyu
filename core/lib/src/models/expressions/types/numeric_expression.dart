@@ -28,7 +28,7 @@ class NumericExpression extends ValueExpression<num> {
   num value; // The value to compare against
 
   NumericExpression({required this.comparator, required this.value})
-      : super(expressionType);
+    : super(expressionType);
 
   factory NumericExpression.fromJson(Map<String, dynamic> json) =>
       _$NumericExpressionFromJson(json);

@@ -78,14 +78,17 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                             newIndex -= 1;
                           }
                           final item = formViewModel
-                              .interventionsCollection.formViewModels
+                              .interventionsCollection
+                              .formViewModels
                               .removeAt(oldIndex);
                           formViewModel.interventionsCollection.formViewModels
                               .insert(newIndex, item);
                           final controlItem = formViewModel.interventionsArray
                               .removeAt(oldIndex);
-                          formViewModel.interventionsArray
-                              .insert(newIndex, controlItem);
+                          formViewModel.interventionsArray.insert(
+                            newIndex,
+                            controlItem,
+                          );
                           formViewModel.save();
                         },
                       );

@@ -8,9 +8,9 @@ part of 'text_expression.dart';
 
 TextExpression _$TextExpressionFromJson(Map<String, dynamic> json) =>
     TextExpression(
-      comparator: $enumDecode(_$TextComparatorEnumMap, json['comparator']),
-      value: json['value'] as String,
-    )
+        comparator: $enumDecode(_$TextComparatorEnumMap, json['comparator']),
+        value: json['value'] as String,
+      )
       ..type = json['type'] as String?
       ..target = json['target'] as String?;
 

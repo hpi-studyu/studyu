@@ -1393,7 +1393,7 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No questions available to add conditions for. Only questions following the current question can be used in the visibility logic.'**
   String
-      get form_array_question_visibility_logic_add_condition_disabled_tooltip;
+  get form_array_question_visibility_logic_add_condition_disabled_tooltip;
 
   /// No description provided for @form_array_question_visibility_logic_is_true.
   ///

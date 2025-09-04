@@ -198,13 +198,16 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                         if (newIndex > oldIndex) {
                           newIndex -= 1;
                         }
-                        final item =
-                            formViewModel.questionModels.removeAt(oldIndex);
+                        final item = formViewModel.questionModels.removeAt(
+                          oldIndex,
+                        );
                         formViewModel.questionModels.insert(newIndex, item);
-                        final controlItem =
-                            formViewModel.questionsArray.removeAt(oldIndex);
-                        formViewModel.questionsArray
-                            .insert(newIndex, controlItem);
+                        final controlItem = formViewModel.questionsArray
+                            .removeAt(oldIndex);
+                        formViewModel.questionsArray.insert(
+                          newIndex,
+                          controlItem,
+                        );
                         formViewModel.save();
                       },
                     );
@@ -269,13 +272,16 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                         if (newIndex > oldIndex) {
                           newIndex -= 1;
                         }
-                        final item =
-                            formViewModel.consentItemModels.removeAt(oldIndex);
+                        final item = formViewModel.consentItemModels.removeAt(
+                          oldIndex,
+                        );
                         formViewModel.consentItemModels.insert(newIndex, item);
-                        final controlItem =
-                            formViewModel.consentItemArray.removeAt(oldIndex);
-                        formViewModel.consentItemArray
-                            .insert(newIndex, controlItem);
+                        final controlItem = formViewModel.consentItemArray
+                            .removeAt(oldIndex);
+                        formViewModel.consentItemArray.insert(
+                          newIndex,
+                          controlItem,
+                        );
                         formViewModel.save();
                       },
                     );

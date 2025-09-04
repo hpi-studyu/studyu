@@ -13,10 +13,7 @@ class QuestionConditional<V> {
 
   QuestionConditional();
 
-  QuestionConditional.withCondition(
-    this.condition, {
-    this.defaultValue,
-  });
+  QuestionConditional.withCondition(this.condition, {this.defaultValue});
 
   factory QuestionConditional.fromJson(Map<String, dynamic> json) =>
       _fromJson(json);
