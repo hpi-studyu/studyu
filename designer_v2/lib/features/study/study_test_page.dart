@@ -18,11 +18,7 @@ import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class StudyTestScreen extends StudyPageWidget {
-  const StudyTestScreen(
-    super.studyId, {
-    this.previewRoute,
-    super.key,
-  });
+  const StudyTestScreen(super.studyId, {this.previewRoute, super.key});
 
   final String? previewRoute;
 
@@ -31,8 +27,9 @@ class StudyTestScreen extends StudyPageWidget {
     final formViewModel = ref.watch(studyTestValidatorProvider(studyId));
     final canTest = !formViewModel.form.hasErrors;
 
-    final frameController =
-        ref.watch(studyTestPlatformControllerProvider(studyId));
+    final frameController = ref.watch(
+      studyTestPlatformControllerProvider(studyId),
+    );
     frameController.generateUrl();
     frameController.activate();
     load().then((hasHelped) {
@@ -40,9 +37,13 @@ class StudyTestScreen extends StudyPageWidget {
         showHelp(ref, context);
       }
     });
-    final interventionSelectionDisabled = !canTest ||
+    final interventionSelectionDisabled =
+        !canTest ||
         formViewModel
-                .interventionsFormViewModel.interventionsArray.value!.length <=
+                .interventionsFormViewModel
+                .interventionsArray
+                .value!
+                .length <=
             2;
 
     return Row(
@@ -104,7 +105,7 @@ class StudyTestScreen extends StudyPageWidget {
                               );
                             },
                     ),
-                  )
+                  ),
                 ],
               ),
               TextButton.icon(
@@ -148,9 +149,7 @@ class StudyTestScreen extends StudyPageWidget {
             ),
           ],
         ),
-        Flexible(
-          child: Container(),
-        ),
+        Flexible(child: Container()),
       ],
     );
   }
@@ -173,9 +172,7 @@ class StudyTestScreen extends StudyPageWidget {
             formGroup: formViewModel.form,
             child: ReactiveFormConsumer(
               builder: (context, form, child) {
-                return TextParagraph(
-                  text: form.validationErrorSummary,
-                );
+                return TextParagraph(text: form.validationErrorSummary);
               },
             ),
           ),

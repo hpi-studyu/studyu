@@ -23,8 +23,9 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel =
-            ref.watch(studyInfoFormViewModelProvider(studyId));
+        final formViewModel = ref.watch(
+          studyInfoFormViewModelProvider(studyId),
+        );
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -86,9 +87,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       keyboardType: TextInputType.multiline,
                       minLines: 5,
                       maxLines: 5,
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(500),
-                      ],
+                      inputFormatters: [LengthLimitingTextInputFormatter(500)],
                     ),
                   ),
                 ],
@@ -112,9 +111,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       decoration: InputDecoration(
                         hintText: tr.form_field_organization,
                       ),
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(100),
-                      ],
+                      inputFormatters: [LengthLimitingTextInputFormatter(100)],
                       validationMessages:
                           formViewModel.organizationControl.validationMessages,
                     ),
@@ -127,9 +124,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       decoration: InputDecoration(
                         hintText: tr.form_field_review_board,
                       ),
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(100),
-                      ],
+                      inputFormatters: [LengthLimitingTextInputFormatter(100)],
                       validationMessages:
                           formViewModel.reviewBoardControl.validationMessages,
                     ),
@@ -142,11 +137,10 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       decoration: InputDecoration(
                         hintText: tr.form_field_review_board_number,
                       ),
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(100),
-                      ],
+                      inputFormatters: [LengthLimitingTextInputFormatter(100)],
                       validationMessages: formViewModel
-                          .reviewBoardNumberControl.validationMessages,
+                          .reviewBoardNumberControl
+                          .validationMessages,
                     ),
                   ),
                   FormTableRow(
@@ -157,9 +151,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       decoration: InputDecoration(
                         hintText: tr.form_field_researchers,
                       ),
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(100),
-                      ],
+                      inputFormatters: [LengthLimitingTextInputFormatter(100)],
                       validationMessages:
                           formViewModel.researchersControl.validationMessages,
                     ),
@@ -172,9 +164,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       decoration: InputDecoration(
                         hintText: tr.form_field_website,
                       ),
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(300),
-                      ],
+                      inputFormatters: [LengthLimitingTextInputFormatter(300)],
                       validationMessages:
                           formViewModel.websiteControl.validationMessages,
                     ),
@@ -187,9 +177,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       decoration: InputDecoration(
                         hintText: tr.form_field_contact_email,
                       ),
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(100),
-                      ],
+                      inputFormatters: [LengthLimitingTextInputFormatter(100)],
                       validationMessages:
                           formViewModel.emailControl.validationMessages,
                     ),
@@ -202,9 +190,7 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
                       decoration: InputDecoration(
                         hintText: tr.form_field_contact_phone,
                       ),
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(50),
-                      ],
+                      inputFormatters: [LengthLimitingTextInputFormatter(50)],
                       validationMessages:
                           formViewModel.phoneControl.validationMessages,
                     ),

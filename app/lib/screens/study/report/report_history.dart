@@ -14,11 +14,7 @@ class ReportHistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.report_history,
-        ),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.report_history)),
       body: RetryFutureBuilder<List<StudySubject>>(
         tryFunction: () => StudySubject.getStudyHistory(
           Supabase.instance.client.auth.currentUser!.id,

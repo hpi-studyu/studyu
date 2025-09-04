@@ -55,8 +55,9 @@ class DashboardState extends Equatable {
   ) {
     return studies.when(
       data: (studies) {
-        List<Study> updatedStudies =
-            studiesFilter.apply(studies: studies, user: currentUser).toList();
+        List<Study> updatedStudies = studiesFilter
+            .apply(studies: studies, user: currentUser)
+            .toList();
         updatedStudies = sort(
           pinnedStudies: pinnedStudies,
           studiesToSort: filter(studiesToFilter: updatedStudies),
@@ -86,11 +87,13 @@ class DashboardState extends Equatable {
     switch (sortByColumn) {
       case StudiesTableColumn.title:
         if (sortAscending) {
-          sortedStudies
-              .sort((study, other) => study.title!.compareTo(other.title!));
+          sortedStudies.sort(
+            (study, other) => study.title!.compareTo(other.title!),
+          );
         } else {
-          sortedStudies
-              .sort((study, other) => other.title!.compareTo(study.title!));
+          sortedStudies.sort(
+            (study, other) => other.title!.compareTo(study.title!),
+          );
         }
       case StudiesTableColumn.status:
         if (sortAscending) {
@@ -191,8 +194,9 @@ class DashboardState extends Equatable {
   }) {
     return DashboardState(
       studies: studies != null ? studies() : this.studies,
-      studiesFilter:
-          studiesFilter != null ? studiesFilter() : this.studiesFilter,
+      studiesFilter: studiesFilter != null
+          ? studiesFilter()
+          : this.studiesFilter,
       currentUser: currentUser != null ? currentUser() : this.currentUser,
       query: query ?? this.query,
       sortByColumn: sortByColumn ?? this.sortByColumn,

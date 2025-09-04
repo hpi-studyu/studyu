@@ -24,19 +24,19 @@ class PasswordRecoveryForm extends FormConsumerRefWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         PasswordTextField(
-          formControl: controller.passwordControl,
+          formControl: controller.getPasswordControl(),
           labelText: tr.form_field_password_new,
           hintText: tr.form_field_password_new_hint,
         ),
         const SizedBox(height: 12.0),
         PasswordTextField(
-          formControl: controller.passwordConfirmationControl,
+          formControl: controller.getPasswordConfirmationControl(),
           labelText: tr.form_field_password_new_confirm,
           hintText: tr.form_field_password_new_confirm_hint,
           onSubmitted: (_) => form.valid
               ? ref
-                  .read(authFormControllerProvider(formKey).notifier)
-                  .recoverPassword()
+                    .read(authFormControllerProvider(formKey).notifier)
+                    .recoverPassword()
               : null,
         ),
         const SizedBox(height: 24.0),

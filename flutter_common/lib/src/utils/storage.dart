@@ -37,9 +37,7 @@ class SupabaseStorage extends LocalStorage {
 
 class SecureStorage {
   static const storage = FlutterSecureStorage(
-    aOptions: AndroidOptions(
-      encryptedSharedPreferences: true,
-    ),
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
   );
 
   static Future<bool> containsKey(String key) async {
@@ -59,9 +57,7 @@ class SecureStorage {
       try {
         return await storage.read(key: key);
       } catch (e) {
-        StudyULogger.error(
-          "Error reading key $key from secure storage: $e",
-        );
+        StudyULogger.error("Error reading key $key from secure storage: $e");
         if (e is PlatformException && e.code == 'BadPaddingException') {
           StudyULogger.error(
             "BadPaddingException: $e. This might indicate that the secure storage is corrupted.",

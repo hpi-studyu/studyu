@@ -13,9 +13,7 @@ class StudySchedule {
   PhaseSequence sequence = PhaseSequence.alternating;
   String sequenceCustom;
 
-  StudySchedule({
-    this.sequenceCustom = 'ABAB',
-  });
+  StudySchedule({this.sequenceCustom = 'ABAB'});
 
   factory StudySchedule.fromJson(Map<String, dynamic> json) =>
       _$StudyScheduleFromJson(json);
@@ -64,8 +62,10 @@ class StudySchedule {
     }
   }
 
-  List<int> _generateAlternatingCycle(int first, int cycle) =>
-      [first, _nextIntervention(first)];
+  List<int> _generateAlternatingCycle(int first, int cycle) => [
+    first,
+    _nextIntervention(first),
+  ];
 
   List<int> _generateCounterBalancedCycle(int first, int cycle) {
     final shift = ((cycle + 1) ~/ 2) % 2;

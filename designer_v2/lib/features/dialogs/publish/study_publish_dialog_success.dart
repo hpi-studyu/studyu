@@ -59,8 +59,9 @@ class PublishSuccessDialog extends StudyPageWidget {
                   children: [
                     PrimaryButton(
                       text: tr.action_button_post_launch_followup,
-                      onPressed: () => Navigator.maybePop(context)
-                          .whenComplete(() => controller.onAddParticipants()),
+                      onPressed: () => Navigator.maybePop(
+                        context,
+                      ).whenComplete(() => controller.onAddParticipants()),
                     ),
                     const SizedBox(height: 8.0),
                     DismissButton(

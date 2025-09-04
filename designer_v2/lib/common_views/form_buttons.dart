@@ -77,12 +77,12 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
             enabled: formViewModel.isValid,
             onPressedFuture: (formViewModel.isValid)
                 ? () => formViewModel.save().then(
-                      // Close the form (side sheet or scaffold route) if future
-                      // completed successfully
-                      (value) {
-                        if (context.mounted) Navigator.maybePop(context);
-                      },
-                    )
+                    // Close the form (side sheet or scaffold route) if future
+                    // completed successfully
+                    (value) {
+                      if (context.mounted) Navigator.maybePop(context);
+                    },
+                  )
                 : null,
           ),
         );
@@ -103,7 +103,8 @@ List<Widget> buildFormButtons(FormViewModel formViewModel, FormMode formMode) {
     ),
   ];
 
-  final defaultActionButtons = {
+  final defaultActionButtons =
+      {
         FormMode.create: modifyActionButtons,
         FormMode.edit: modifyActionButtons,
         FormMode.readonly: readonlyActionButtons,

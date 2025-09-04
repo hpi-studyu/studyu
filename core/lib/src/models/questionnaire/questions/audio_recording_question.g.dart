@@ -7,11 +7,12 @@ part of 'audio_recording_question.dart';
 // **************************************************************************
 
 AudioRecordingQuestion _$AudioRecordingQuestionFromJson(
-        Map<String, dynamic> json) =>
+  Map<String, dynamic> json,
+) =>
     AudioRecordingQuestion(
-      maxRecordingDurationSeconds:
-          (json['maxRecordingDurationSeconds'] as num).toInt(),
-    )
+        maxRecordingDurationSeconds:
+            (json['maxRecordingDurationSeconds'] as num).toInt(),
+      )
       ..type = json['type'] as String
       ..id = json['id'] as String
       ..prompt = json['prompt'] as String?
@@ -19,16 +20,16 @@ AudioRecordingQuestion _$AudioRecordingQuestionFromJson(
       ..conditional = json['conditional'] == null
           ? null
           : QuestionConditional<AudioRecordingQuestion>.fromJson(
-              json['conditional'] as Map<String, dynamic>);
+              json['conditional'] as Map<String, dynamic>,
+            );
 
 Map<String, dynamic> _$AudioRecordingQuestionToJson(
-        AudioRecordingQuestion instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'id': instance.id,
-      if (instance.prompt case final value?) 'prompt': value,
-      if (instance.rationale case final value?) 'rationale': value,
-      if (instance.conditional?.toJson() case final value?)
-        'conditional': value,
-      'maxRecordingDurationSeconds': instance.maxRecordingDurationSeconds,
-    };
+  AudioRecordingQuestion instance,
+) => <String, dynamic>{
+  'type': instance.type,
+  'id': instance.id,
+  if (instance.prompt case final value?) 'prompt': value,
+  if (instance.rationale case final value?) 'rationale': value,
+  if (instance.conditional?.toJson() case final value?) 'conditional': value,
+  'maxRecordingDurationSeconds': instance.maxRecordingDurationSeconds,
+};

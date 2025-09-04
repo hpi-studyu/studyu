@@ -13,8 +13,8 @@ abstract class ManagedFormViewModel<T> extends FormViewModel<T> {
   ManagedFormViewModel<T> createDuplicate();
 }
 
-typedef FormViewModelCollectionIterablePredicate<T extends FormViewModel> = bool
-    Function(T formViewModel);
+typedef FormViewModelCollectionIterablePredicate<T extends FormViewModel> =
+    bool Function(T formViewModel);
 
 class FormViewModelNotFoundException implements Exception {}
 
@@ -23,8 +23,10 @@ class FormViewModelNotFoundException implements Exception {}
 ///
 /// Enables reactive re-rendering of forms containing a [FormArray] that is
 /// derived from a list of [FormViewModel]s
-class FormViewModelCollection<T extends ManagedFormViewModel<D>,
-    D extends IFormData> {
+class FormViewModelCollection<
+  T extends ManagedFormViewModel<D>,
+  D extends IFormData
+> {
   FormViewModelCollection(this.formViewModels, this.formArray);
 
   List<T> formViewModels;

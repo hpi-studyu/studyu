@@ -101,8 +101,11 @@ class FormTableLayout extends StatelessWidget {
         tableRow = TableRow(
           children: [
             Padding(
-              padding:
-                  EdgeInsets.only(top: 8.0, right: 8.0, bottom: bottomSpacing),
+              padding: EdgeInsets.only(
+                top: 8.0,
+                right: 8.0,
+                bottom: bottomSpacing,
+              ),
               child: labelWidget,
             ),
             Padding(
@@ -143,11 +146,8 @@ class FormTableLayout extends StatelessWidget {
     return Table(
       columnWidths:
           (rowLayout != null && rowLayout == FormTableRowLayout.vertical)
-              ? const {
-                  0: FlexColumnWidth(),
-                  1: FixedColumnWidth(0.0),
-                }
-              : columnWidths,
+          ? const {0: FlexColumnWidth(), 1: FixedColumnWidth(0.0)}
+          : columnWidths,
       children: tableRows,
     );
   }
@@ -184,9 +184,7 @@ class FormSectionHeader extends StatelessWidget {
               input: Container(),
             ),
           ],
-          columnWidths: const {
-            0: IntrinsicColumnWidth(),
-          },
+          columnWidths: const {0: IntrinsicColumnWidth()},
         ),
         if (divider) const Divider() else const SizedBox.shrink(),
       ],

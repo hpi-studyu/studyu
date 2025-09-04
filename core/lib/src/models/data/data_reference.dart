@@ -21,8 +21,10 @@ class DataReference<T> {
   String toString() => toJson().toString();
 
   Map<DateTime, T> retrieveFromResults(StudySubject subject) {
-    final Task? sourceTask = subject.study.observations
-            .firstWhereOrNull((task) => task.id == this.task) ??
+    final Task? sourceTask =
+        subject.study.observations.firstWhereOrNull(
+          (task) => task.id == this.task,
+        ) ??
         subject.selectedInterventions
             .expand((i) => i.tasks)
             .firstWhereOrNull((task) => task.id == this.task);

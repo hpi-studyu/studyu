@@ -31,13 +31,16 @@ class StudyNotifications {
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   BuildContext context;
   final StreamController<ReceivedNotification>
-      didReceiveLocalNotificationStream =
+  didReceiveLocalNotificationStream =
       StreamController<ReceivedNotification>.broadcast();
   final StreamController<String?> selectNotificationStream =
       StreamController<String?>.broadcast();
 
-  static final NotificationValidators validator =
-      NotificationValidators(false, false, false);
+  static final NotificationValidators validator = NotificationValidators(
+    false,
+    false,
+    false,
+  );
 
   static const bool debug = kDebugMode; //kDebugMode;
   static String? scheduledNotificationsDebug;
@@ -59,9 +62,9 @@ class StudyNotifications {
     final notifications = StudyNotifications._create(activeSubject, context);
     final NotificationAppLaunchDetails? notificationAppLaunchDetails =
         !kIsWeb && Platform.isLinux
-            ? null
-            : await notifications.flutterLocalNotificationsPlugin
-                .getNotificationAppLaunchDetails();
+        ? null
+        : await notifications.flutterLocalNotificationsPlugin
+              .getNotificationAppLaunchDetails();
     StudyNotifications.validator.didNotificationLaunchApp =
         notificationAppLaunchDetails?.didNotificationLaunchApp ?? false;
     if (StudyNotifications.validator.didNotificationLaunchApp &&
@@ -79,7 +82,8 @@ class StudyNotifications {
       //final bool granted =
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()!
+            AndroidFlutterLocalNotificationsPlugin
+          >()!
           .areNotificationsEnabled();
     }
   }
@@ -88,28 +92,24 @@ class StudyNotifications {
     if (Platform.isIOS || Platform.isMacOS) {
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
-              MacOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
+            MacOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
     } else if (Platform.isAndroid) {
       // todo look into this further if notifications are not received on Android
       final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
+          flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin
+              >();
 
-      /*final bool granted =*/ await androidImplementation
-          ?.requestNotificationsPermission();
+      /*final bool granted =*/
+      await androidImplementation?.requestNotificationsPermission();
 
       final status = await Permission.ignoreBatteryOptimizations.status;
       if (status.isDenied) {
@@ -123,8 +123,9 @@ class StudyNotifications {
   }
 
   void _configureDidReceiveLocalNotificationSubject() {
-    didReceiveLocalNotificationStream.stream
-        .listen((ReceivedNotification receivedNotification) async {
+    didReceiveLocalNotificationStream.stream.listen((
+      ReceivedNotification receivedNotification,
+    ) async {
       if (context.mounted) {
         await showDialog(
           context: context,
@@ -169,38 +170,38 @@ class StudyNotifications {
     const DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings();
     const LinuxInitializationSettings initializationSettingsLinux =
-        LinuxInitializationSettings(
-      defaultActionName: 'Open notification',
-    );
+        LinuxInitializationSettings(defaultActionName: 'Open notification');
     const InitializationSettings initializationSettings =
         InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsDarwin,
-      macOS: initializationSettingsDarwin,
-      linux: initializationSettingsLinux,
-    );
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsDarwin,
+          macOS: initializationSettingsDarwin,
+          linux: initializationSettingsLinux,
+        );
     flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse:
           (NotificationResponse notificationResponse) {
-        switch (notificationResponse.notificationResponseType) {
-          case NotificationResponseType.selectedNotification:
-            selectNotificationStream.add(notificationResponse.payload);
-          case NotificationResponseType.selectedNotificationAction:
-            /*if (notificationResponse.actionId == navigationActionId) {
+            switch (notificationResponse.notificationResponseType) {
+              case NotificationResponseType.selectedNotification:
+                selectNotificationStream.add(notificationResponse.payload);
+              case NotificationResponseType.selectedNotificationAction:
+                /*if (notificationResponse.actionId == navigationActionId) {
               selectNotificationStream.add(notificationResponse.payload);
             }*/
-            break;
-        }
-      },
+                break;
+            }
+          },
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
     );
   }
 
   Future handleNotificationResponse(String taskInstanceId) async {
     final nowDt = DateTime.now();
-    final taskToRun =
-        TaskInstance.fromInstanceId(taskInstanceId, subject: subject);
+    final taskToRun = TaskInstance.fromInstanceId(
+      taskInstanceId,
+      subject: subject,
+    );
 
     final completed = subject!.completedTaskInstanceForDay(
       taskToRun.task.id,
@@ -208,39 +209,33 @@ class StudyNotifications {
       nowDt,
     );
 
-    final isInsidePeriod =
-        taskToRun.completionPeriod.contains(StudyUTimeOfDay.now());
+    final isInsidePeriod = taskToRun.completionPeriod.contains(
+      StudyUTimeOfDay.now(),
+    );
     if (!completed && isInsidePeriod) {
       await navigatorKey.currentState!.push(
-        MaterialPageRoute(
-          builder: (_) => TaskScreen(taskInstance: taskToRun),
-        ),
+        MaterialPageRoute(builder: (_) => TaskScreen(taskInstance: taskToRun)),
       );
-      navigatorKey.currentState!
-          .pushNamedAndRemoveUntil(Routes.loading, (_) => false);
+      navigatorKey.currentState!.pushNamedAndRemoveUntil(
+        Routes.loading,
+        (_) => false,
+      );
     } else {
       final errorMessage = completed
           ? AppLocalizations.of(context)!.task_already_completed
           : isInsidePeriod
-              ? AppLocalizations.of(context)!.task_cannot_be_completed
-              : AppLocalizations.of(context)!.task_outside_period;
+          ? AppLocalizations.of(context)!.task_cannot_be_completed
+          : AppLocalizations.of(context)!.task_outside_period;
 
       navigatorKey.currentState!.push(
-        MaterialPageRoute(
-          builder: (_) => DashboardScreen(error: errorMessage),
-        ),
+        MaterialPageRoute(builder: (_) => DashboardScreen(error: errorMessage)),
       );
     }
   }
 }
 
 class ReceivedNotification {
-  ReceivedNotification({
-    this.id,
-    this.title,
-    this.body,
-    this.payload,
-  });
+  ReceivedNotification({this.id, this.title, this.body, this.payload});
 
   final int? id;
   final String? title;

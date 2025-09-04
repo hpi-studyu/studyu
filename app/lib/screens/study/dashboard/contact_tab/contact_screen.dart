@@ -27,9 +27,7 @@ class _ContactScreenState extends State<ContactScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.contact),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.contact)),
       body: ListView(
         children: <Widget>[
           Container(
@@ -44,11 +42,11 @@ class _ContactScreenState extends State<ContactScreen> {
             successBuilder:
                 (BuildContext context, Contact? appSupportContact) =>
                     ContactWidget(
-              contact: appSupportContact,
-              title: AppLocalizations.of(context)!.app_support,
-              subtitle: AppLocalizations.of(context)!.app_support_text,
-              color: theme.primaryColor,
-            ),
+                      contact: appSupportContact,
+                      title: AppLocalizations.of(context)!.app_support,
+                      subtitle: AppLocalizations.of(context)!.app_support_text,
+                      color: theme.primaryColor,
+                    ),
           ),
           const SizedBox(height: 20),
           ContactWidget(
@@ -98,10 +96,7 @@ class ContactWidget extends StatelessWidget {
 
     return Column(
       children: [
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: titles,
-        ),
+        Column(mainAxisSize: MainAxisSize.min, children: titles),
         ContactItem(
           itemName: AppLocalizations.of(context)!.organization,
           itemValue: contact?.organization,
@@ -111,7 +106,8 @@ class ContactWidget extends StatelessWidget {
         if (contact?.institutionalReviewBoard != null)
           ContactItem(
             itemName: AppLocalizations.of(context)!.irb,
-            itemValue: contact!.institutionalReviewBoard! +
+            itemValue:
+                contact!.institutionalReviewBoard! +
                 (contact?.institutionalReviewBoardNumber != null
                     ? ': ${contact?.institutionalReviewBoardNumber}'
                     : ''),

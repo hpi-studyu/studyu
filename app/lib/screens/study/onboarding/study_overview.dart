@@ -105,22 +105,28 @@ class StudyDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final baselineLength =
-        study!.schedule.includeBaseline ? study!.schedule.phaseDuration : 0;
-    final studyLength = baselineLength +
+    final baselineLength = study!.schedule.includeBaseline
+        ? study!.schedule.phaseDuration
+        : 0;
+    final studyLength =
+        baselineLength +
         study!.schedule.phaseDuration *
             study!.schedule.numberOfCycles *
             StudySchedule.numberOfInterventions;
     return Column(
       children: [
         ListTile(
-          title:
-              Text(AppLocalizations.of(context)!.intervention_phase_duration),
+          title: Text(
+            AppLocalizations.of(context)!.intervention_phase_duration,
+          ),
           subtitle: Text(
             '${study!.schedule.phaseDuration} ${AppLocalizations.of(context)!.days}',
           ),
-          leading:
-              Icon(MdiIcons.clock, color: theme.primaryColor, size: iconSize),
+          leading: Icon(
+            MdiIcons.clock,
+            color: theme.primaryColor,
+            size: iconSize,
+          ),
         ),
         ListTile(
           title: Text(AppLocalizations.of(context)!.study_length),

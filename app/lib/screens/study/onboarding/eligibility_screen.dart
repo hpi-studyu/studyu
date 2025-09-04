@@ -20,11 +20,10 @@ class EligibilityScreen extends StatefulWidget {
 
   static MaterialPageRoute<EligibilityResult> routeFor({
     required Study? study,
-  }) =>
-      MaterialPageRoute(
-        builder: (_) => EligibilityScreen(study: study),
-        settings: const RouteSettings(name: '/eligibilityCheck'),
-      );
+  }) => MaterialPageRoute(
+    builder: (_) => EligibilityScreen(study: study),
+    settings: const RouteSettings(name: '/eligibilityCheck'),
+  );
 
   const EligibilityScreen({required this.study, super.key});
 
@@ -50,15 +49,19 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
 
   bool _checkContinuation(QuestionnaireState qs) {
     final criteria = widget.study!.eligibilityCriteria;
-    EligibilityCriterion? failingResult =
-        criteria.firstWhereOrNull((element) => element.isViolated(qs));
+    EligibilityCriterion? failingResult = criteria.firstWhereOrNull(
+      (element) => element.isViolated(qs),
+    );
     if (failingResult == null) return true;
     // freetext quickfix start
     failingResult = _isFreeTextCriterion(failingResult) ? null : failingResult;
     // freetext quickfix end
     setState(() {
-      activeResult =
-          EligibilityResult(qs, eligible: false, firstFailed: failingResult);
+      activeResult = EligibilityResult(
+        qs,
+        eligible: false,
+        firstFailed: failingResult,
+      );
     });
     return false;
   }
@@ -81,8 +84,9 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
       if (conditionResult) {
         activeResult = EligibilityResult(qs, eligible: conditionResult);
       } else {
-        final firstFailed =
-            criteria.firstWhere((criterion) => criterion.isViolated(qs));
+        final firstFailed = criteria.firstWhere(
+          (criterion) => criterion.isViolated(qs),
+        );
         activeResult = EligibilityResult(
           qs,
           eligible: conditionResult,
@@ -111,54 +115,46 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   Widget _constructPassBanner() => MaterialBanner(
-        leading: Icon(
-          MdiIcons.checkboxMarkedCircle,
-          color: Colors.green,
-          size: 32,
-        ),
-        content: Text(
-          AppLocalizations.of(context)!.eligible_yes,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        actions: [Container()],
-        forceActionsBelow: true,
-        backgroundColor: Colors.green[50],
-      );
+    leading: Icon(MdiIcons.checkboxMarkedCircle, color: Colors.green, size: 32),
+    content: Text(
+      AppLocalizations.of(context)!.eligible_yes,
+      style: Theme.of(context).textTheme.titleMedium,
+    ),
+    actions: [Container()],
+    forceActionsBelow: true,
+    backgroundColor: Colors.green[50],
+  );
 
   Widget _constructFailBanner() => MaterialBanner(
-        leading: Icon(
-          MdiIcons.closeCircle,
-          color: Colors.red,
-          size: 32,
+    leading: Icon(MdiIcons.closeCircle, color: Colors.red, size: 32),
+    content: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          AppLocalizations.of(context)!.eligible_no,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppLocalizations.of(context)!.eligible_no,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 4),
-            if (activeResult?.firstFailed?.reason != null)
-              Text(activeResult!.firstFailed!.reason!)
-            else
-              const SizedBox.shrink(),
-            if (activeResult?.firstFailed?.reason != null)
-              const SizedBox(height: 4)
-            else
-              const SizedBox.shrink(),
-            Text(AppLocalizations.of(context)!.eligible_mistake),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: _finish,
-            child: Text(AppLocalizations.of(context)!.eligible_back),
-          ),
-        ],
-        forceActionsBelow: true,
-        backgroundColor: Colors.red[50],
-      );
+        const SizedBox(height: 4),
+        if (activeResult?.firstFailed?.reason != null)
+          Text(activeResult!.firstFailed!.reason!)
+        else
+          const SizedBox.shrink(),
+        if (activeResult?.firstFailed?.reason != null)
+          const SizedBox(height: 4)
+        else
+          const SizedBox.shrink(),
+        Text(AppLocalizations.of(context)!.eligible_mistake),
+      ],
+    ),
+    actions: [
+      TextButton(
+        onPressed: _finish,
+        child: Text(AppLocalizations.of(context)!.eligible_back),
+      ),
+    ],
+    forceActionsBelow: true,
+    backgroundColor: Colors.red[50],
+  );
 
   Widget _constructResultBanner() =>
       activeResult!.eligible ? _constructPassBanner() : _constructFailBanner();
@@ -168,8 +164,9 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text(AppLocalizations.of(context)!.eligibility_questionnaire_title),
+        title: Text(
+          AppLocalizations.of(context)!.eligibility_questionnaire_title,
+        ),
         leading: Icon(MdiIcons.clipboardList),
       ),
       body: Column(

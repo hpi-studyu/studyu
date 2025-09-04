@@ -6,8 +6,10 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 part 'locale_state.g.dart';
 
-Locale fallbackLocale =
-    Locale(Config.defaultLocale.first, Config.defaultLocale.last);
+Locale fallbackLocale = Locale(
+  Config.defaultLocale.first,
+  Config.defaultLocale.last,
+);
 
 @immutable
 class LocaleState {

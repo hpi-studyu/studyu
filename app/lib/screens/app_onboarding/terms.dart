@@ -127,8 +127,9 @@ class LegalSection extends StatelessWidget {
       children: [
         Text(
           title!,
-          style: theme.textTheme.headlineMedium!
-              .copyWith(color: theme.primaryColor),
+          style: theme.textTheme.headlineMedium!.copyWith(
+            color: theme.primaryColor,
+          ),
         ),
         const SizedBox(height: 20),
         Text(description!),

@@ -22,8 +22,9 @@ class StudyRecruitScreen extends StudyPageWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(studyRecruitControllerProvider(studyId));
-    final controller =
-        ref.watch(studyRecruitControllerProvider(studyId).notifier);
+    final controller = ref.watch(
+      studyRecruitControllerProvider(studyId).notifier,
+    );
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) => study.participation == Participation.invite
@@ -82,9 +83,7 @@ class StudyRecruitScreen extends StudyPageWidget {
               text: tr.banner_study_closed_title,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            TextParagraph(
-              text: tr.banner_study_closed_description,
-            ),
+            TextParagraph(text: tr.banner_study_closed_description),
           ],
         ),
         style: BannerStyle.info,
@@ -116,8 +115,9 @@ class StudyRecruitScreen extends StudyPageWidget {
       onPressed: isStudyClosed
           ? null
           : () {
-              final formViewModel =
-                  ref.watch(inviteCodeFormViewModelProvider(studyId));
+              final formViewModel = ref.watch(
+                inviteCodeFormViewModelProvider(studyId),
+              );
               showFormSideSheet<InviteCodeFormViewModel>(
                 context: context,
                 formViewModel: formViewModel,

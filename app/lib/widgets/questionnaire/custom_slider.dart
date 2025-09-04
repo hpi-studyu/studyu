@@ -52,8 +52,9 @@ class CustomSlider extends StatelessWidget {
         MediaQuery.of(context).size.width - 32; // -32 horizontal padding
 
     final divisions = (steps!.maximum - steps!.minimum) ~/ steps!.step;
-    final double tickHeight =
-        allocatedHeight * 0.0125 < 20 ? 20 : allocatedHeight * 0.0125;
+    final double tickHeight = allocatedHeight * 0.0125 < 20
+        ? 20
+        : allocatedHeight * 0.0125;
     final labelOffset = (allocatedWidth / (divisions + 2)) * 0.5;
 
     final textTheme = Theme.of(context).textTheme;
@@ -150,8 +151,9 @@ class CustomSlider extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: labelOffset),
           child: SliderTheme(
             data: SliderThemeData(
-              trackHeight:
-                  allocatedHeight * 0.0125 < 9 ? 9 : allocatedHeight * 0.0125,
+              trackHeight: allocatedHeight * 0.0125 < 9
+                  ? 9
+                  : allocatedHeight * 0.0125,
               inactiveTickMarkColor: isColored ? activeColor : null,
               activeTrackColor: activeColor,
               inactiveTrackColor: inactiveColor,
@@ -160,9 +162,7 @@ class CustomSlider extends StatelessWidget {
               thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 15.0),
               trackShape: CustomTrackShape(),
               showValueIndicator: ShowValueIndicator.never,
-              valueIndicatorTextStyle: const TextStyle(
-                fontSize: 12,
-              ),
+              valueIndicatorTextStyle: const TextStyle(fontSize: 12),
             ),
             child: Stack(
               alignment: Alignment.center,
@@ -174,9 +174,7 @@ class CustomSlider extends StatelessWidget {
                         : allocatedHeight * 0.0125,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      gradient: LinearGradient(
-                        colors: [minColor!, maxColor!],
-                      ),
+                      gradient: LinearGradient(colors: [minColor!, maxColor!]),
                     ),
                   )
                 else

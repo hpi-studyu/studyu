@@ -40,8 +40,9 @@ extension StudyExportX on Study {
     final List<String> mediaData = [];
 
     final List<SubjectProgress> records = participantsProgress ?? [];
-    records
-        .sort((b, a) => a.completedAt!.compareTo(b.completedAt!)); // descending
+    records.sort(
+      (b, a) => a.completedAt!.compareTo(b.completedAt!),
+    ); // descending
 
     // Key used as a placeholder for values that cannot be resolved by their
     // id anymore (e.g. because the study design has changed meanwhile)
@@ -79,25 +80,31 @@ extension StudyExportX on Study {
       final Map<String, dynamic> rowShared = {
         'participant_id': record.subjectId,
         'participant_started_at': record.startedAt!.toString(),
-        'invite_code': participants!
+        'invite_code':
+            participants!
                 .where((element) => element.id == record.subjectId)
                 .firstWhereOrNull((_) => true)
                 ?.inviteCode ??
             '',
-        'current_day_of_study':
-            record.completedAt!.difference(record.startedAt!).inDays.toString(),
+        'current_day_of_study': record.completedAt!
+            .difference(record.startedAt!)
+            .inDays
+            .toString(),
         'current_intervention_id': record.interventionId,
         'current_intervention_name': intervention?.name ?? invalidKey,
       };
 
-      final isMeasurement =
-          MeasurementResultTypes.values.contains(record.resultType);
-      final isIntervention =
-          InterventionResultTypes.values.contains(record.resultType);
+      final isMeasurement = MeasurementResultTypes.values.contains(
+        record.resultType,
+      );
+      final isIntervention = InterventionResultTypes.values.contains(
+        record.resultType,
+      );
 
       if (isMeasurement) {
-        final measurement =
-            observations.firstWhereOrNull((o) => o.id == record.taskId);
+        final measurement = observations.firstWhereOrNull(
+          (o) => o.id == record.taskId,
+        );
         final Map<String, dynamic> row = {
           'measurement_time': record.completedAt!.toString(),
           'measurement_id': record.taskId,
@@ -133,8 +140,9 @@ extension StudyExportX on Study {
         }
         measurementsData.add(row);
       } else if (isIntervention) {
-        final task =
-            intervention?.tasks.firstWhereOrNull((e) => e.id == record.taskId);
+        final task = intervention?.tasks.firstWhereOrNull(
+          (e) => e.id == record.taskId,
+        );
         final Map<String, dynamic> row = {
           'intervention_task_time': record.completedAt!.toString(),
           'intervention_task_id': record.taskId,

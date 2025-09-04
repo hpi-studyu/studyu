@@ -54,8 +54,10 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
               body: TextParagraph(
                 text: tr.form_array_screener_question_logic_dirty_banner,
               ),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 18.0,
+                vertical: 12.0,
+              ),
               noPrefix: true,
               isDismissed: !formViewModel.isMidValuesClearedInfoVisible,
               dismissIconSize: Theme.of(context).iconTheme.size ?? 14.0,
@@ -95,10 +97,11 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
             ),
           ],
           onSelectItem: (_) => {}, // no-op
-          buildCellsAt: (context, item, rowIdx, __) {
+          buildCellsAt: (context, item, rowIdx, _) {
             final optionControl = item as FormControl<dynamic>;
-            final logicControl = formViewModel.responseOptionsLogicControls
-                .controls[rowIdx] as FormControl<bool>;
+            final logicControl =
+                formViewModel.responseOptionsLogicControls.controls[rowIdx]
+                    as FormControl<bool>;
             return _buildOptionLogicRow(context, optionControl, logicControl);
           },
           cellSpacing: 4.0,
@@ -139,10 +142,6 @@ class ScreenerQuestionLogicFormView extends FormConsumerWidget {
       ),
     );
 
-    return [
-      iconWidget,
-      optionWidget,
-      logicWidget,
-    ];
+    return [iconWidget, optionWidget, logicWidget];
   }
 }

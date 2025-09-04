@@ -33,8 +33,9 @@ GoRouter router(Ref ref) {
     final loginLocation = router.namedLocation(loginRouteName);
     final signupLocation = router.namedLocation(signupRouteName);
     final splashLocation = router.namedLocation(splashRouteName);
-    final passwordRecoveryLocation =
-        router.namedLocation(recoverPasswordRouteName);
+    final passwordRecoveryLocation = router.namedLocation(
+      recoverPasswordRouteName,
+    );
     final isOnDefaultPage =
         state.matchedLocation == router.namedLocation(defaultLocation);
     final isOnLoginPage = state.matchedLocation == loginLocation;
@@ -42,8 +43,9 @@ GoRouter router(Ref ref) {
     final isOnSplashPage = state.matchedLocation == splashLocation;
     final isOnPasswordRecoveryPage =
         state.matchedLocation == passwordRecoveryLocation;
-    final isOnPublicPage = RouterConf.publicRoutes
-        .any((element) => element.path == state.matchedLocation);
+    final isOnPublicPage = RouterConf.publicRoutes.any(
+      (element) => element.path == state.matchedLocation,
+    );
 
     // Read most recent app state on re-evaluation (see refreshListenable)
     final isLoggedIn = authRepository.isLoggedIn;

@@ -22,8 +22,10 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     implements
         IFormViewModelDelegate<MeasurementSurveyFormViewModel>,
         IListActionProvider<MeasurementSurveyFormViewModel>,
-        IProviderArgsResolver<MeasurementSurveyFormViewModel,
-            MeasurementFormRouteArgs> {
+        IProviderArgsResolver<
+          MeasurementSurveyFormViewModel,
+          MeasurementFormRouteArgs
+        > {
   MeasurementsFormViewModel({
     required this.study,
     required this.router,
@@ -39,32 +41,32 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   // - Form fields
 
   final FormArray measurementsArray = FormArray([]);
-  late final surveyMeasurementFormViewModels = FormViewModelCollection<
-      MeasurementSurveyFormViewModel,
-      MeasurementSurveyFormData>([], measurementsArray);
+  late final surveyMeasurementFormViewModels =
+      FormViewModelCollection<
+        MeasurementSurveyFormViewModel,
+        MeasurementSurveyFormData
+      >([], measurementsArray);
 
   List<MeasurementSurveyFormViewModel> get measurementViewModels =>
       surveyMeasurementFormViewModels.formViewModels;
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [],
-        StudyFormValidationSet.publish: [measurementRequired],
-        StudyFormValidationSet.test: [],
-      };
+    StudyFormValidationSet.draft: [],
+    StudyFormValidationSet.publish: [measurementRequired],
+    StudyFormValidationSet.test: [],
+  };
 
   FormControlValidation get measurementRequired => FormControlValidation(
-        control: measurementsArray,
-        validators: [
-          Validators.minLength(1),
-        ],
-        validationMessages: {
-          ValidationMessage.minLength: (error) =>
-              tr.form_array_measurements_minlength(
-                (error as Map)['requiredLength'] as num,
-              ),
-        },
-      );
+    control: measurementsArray,
+    validators: [Validators.minLength(1)],
+    validationMessages: {
+      ValidationMessage.minLength: (error) =>
+          tr.form_array_measurements_minlength(
+            (error as Map)['requiredLength'] as num,
+          ),
+    },
+  );
 
   @override
   late final FormGroup form = FormGroup({
@@ -128,8 +130,10 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   List<ModelAction> availableInlineActions(
     MeasurementSurveyFormViewModel model,
   ) {
-    final actions = surveyMeasurementFormViewModels
-        .availableInlineActions(model, isReadOnly: isReadonly);
+    final actions = surveyMeasurementFormViewModels.availableInlineActions(
+      model,
+      isReadOnly: isReadonly,
+    );
     return withIcons(actions, modelActionIcons);
   }
 
@@ -137,8 +141,9 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   void onSelectItem(MeasurementSurveyFormViewModel item) {
     final studyId = study.id;
     final measurementId = item.measurementId;
-    router
-        .dispatch(RoutingIntents.studyEditMeasurement(studyId, measurementId));
+    router.dispatch(
+      RoutingIntents.studyEditMeasurement(studyId, measurementId),
+    );
   }
 
   @override
@@ -165,8 +170,9 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
       return viewModel;
     }
 
-    final viewModel = surveyMeasurementFormViewModels
-        .findWhere((vm) => vm.measurementId == args.measurementId);
+    final viewModel = surveyMeasurementFormViewModels.findWhere(
+      (vm) => vm.measurementId == args.measurementId,
+    );
     if (viewModel == null) {
       throw MeasurementNotFoundException(); // TODO handle 404 not found
     }

@@ -10,15 +10,13 @@ import 'package:studyu_designer_v2/theme.dart';
 
 /// Signature for a builder that renders the widget corresponding to the
 /// [FormViewModel] of type [T]
-typedef FormViewBuilder<T extends FormViewModel> = Widget Function(
-  T formViewModel,
-);
+typedef FormViewBuilder<T extends FormViewModel> =
+    Widget Function(T formViewModel);
 
 /// Signature for a builder that resolves the [FormViewModel] of type [T]
 /// via a Riverpod [WidgetRef]
-typedef FormViewModelBuilder<T extends FormViewModel> = T Function(
-  WidgetRef ref,
-);
+typedef FormViewModelBuilder<T extends FormViewModel> =
+    T Function(WidgetRef ref);
 
 class FormScaffold<T extends FormViewModel> extends ConsumerStatefulWidget {
   const FormScaffold({
@@ -43,7 +41,8 @@ class FormScaffold<T extends FormViewModel> extends ConsumerStatefulWidget {
 }
 
 class _FormScaffoldState<T extends FormViewModel>
-    extends ConsumerState<FormScaffold<T>> implements PopEntry {
+    extends ConsumerState<FormScaffold<T>>
+    implements PopEntry {
   T get formViewModel => widget.formViewModel;
 
   ModalRoute<dynamic>? _route;
@@ -95,8 +94,10 @@ class _FormScaffoldState<T extends FormViewModel>
 
   @override
   Widget build(BuildContext context) {
-    final defaultActionButtons =
-        buildFormButtons(formViewModel, formViewModel.formMode);
+    final defaultActionButtons = buildFormButtons(
+      formViewModel,
+      formViewModel.formMode,
+    );
 
     // Wraps the whole side sheet in a [ReactiveForm] widget
     Widget inForm(widget) {

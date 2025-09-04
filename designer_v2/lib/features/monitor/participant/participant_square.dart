@@ -34,8 +34,8 @@ class ParticipantSquare extends StatelessWidget {
           color: missed.isEmpty
               ? completeColor
               : (completed.isEmpty
-                  ? incompleteColor
-                  : null), // Set color to null when using gradient
+                    ? incompleteColor
+                    : null), // Set color to null when using gradient
           gradient: completed.isEmpty || missed.isEmpty
               ? null
               : StripedGradient(

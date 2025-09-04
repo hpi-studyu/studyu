@@ -37,10 +37,11 @@ extension ScheduleX on Schedule {
     StudyUTimeOfDay(hour: 23, minute: 59),
   ];
 
-  bool get isTimeRestricted => !(completionPeriods.isEmpty ||
-      (completionPeriods.length == 1 &&
-          completionPeriods[0].unlockTime.equalsTo(unrestrictedTime[0]) &&
-          completionPeriods[0].lockTime.equalsTo(unrestrictedTime[1])));
+  bool get isTimeRestricted =>
+      !(completionPeriods.isEmpty ||
+          (completionPeriods.length == 1 &&
+              completionPeriods[0].unlockTime.equalsTo(unrestrictedTime[0]) &&
+              completionPeriods[0].lockTime.equalsTo(unrestrictedTime[1])));
 
   bool get hasReminder => reminders.isNotEmpty;
 

@@ -40,10 +40,12 @@ class _InterventionSelectionScreenState
           ),
           const SizedBox(height: 8),
           Text(
-            AppLocalizations.of(context)!
-                .please_select_interventions_description,
-            style: theme.textTheme.bodyMedium!
-                .copyWith(color: theme.textTheme.bodySmall!.color),
+            AppLocalizations.of(
+              context,
+            )!.please_select_interventions_description,
+            style: theme.textTheme.bodyMedium!.copyWith(
+              color: theme.textTheme.bodySmall!.color,
+            ),
           ),
         ],
       ),

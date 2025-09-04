@@ -50,7 +50,8 @@ class ActionMenuInline extends StatelessWidget {
               iconSize: iconSize ?? theme.iconTheme.size ?? 16.0,
               icon: Icon(
                 action.icon,
-                color: iconColor?.resolve(state) ??
+                color:
+                    iconColor?.resolve(state) ??
                     (action.isDestructive
                         ? Colors.red
                         : defaultIconColor(state)),
@@ -66,9 +67,7 @@ class ActionMenuInline extends StatelessWidget {
         horizontal: paddingHorizontal ?? 0,
         vertical: paddingVertical ?? 0,
       ),
-      child: Row(
-        children: actionButtons,
-      ),
+      child: Row(children: actionButtons),
     );
   }
 }

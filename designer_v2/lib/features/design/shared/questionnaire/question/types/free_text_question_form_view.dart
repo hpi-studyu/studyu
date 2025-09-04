@@ -35,18 +35,19 @@ class FreeTextQuestionFormView extends ConsumerWidget {
           input: disableOnReadonly(
             child: SliderTheme(
               data: Theme.of(context).sliderTheme.copyWith(
-                    rangeThumbShape: IndicatorRangeSliderThumbShape(
-                      context,
-                      minLength,
-                      maxLength,
-                    ),
-                    showValueIndicator: ShowValueIndicator.never,
-                  ),
+                rangeThumbShape: IndicatorRangeSliderThumbShape(
+                  context,
+                  minLength,
+                  maxLength,
+                ),
+                showValueIndicator: ShowValueIndicator.never,
+              ),
               child: ReactiveRangeSlider<RangeValues>(
                 formControl: formViewModel.freeTextLengthControl,
                 min: QuestionFormViewModel.kDefaultFreeTextMinLength.toDouble(),
                 max: QuestionFormViewModel.kDefaultFreeTextMaxLength.toDouble(),
-                divisions: QuestionFormViewModel.kDefaultFreeTextMaxLength -
+                divisions:
+                    QuestionFormViewModel.kDefaultFreeTextMaxLength -
                     QuestionFormViewModel.kDefaultFreeTextMinLength,
                 labelBuilder: (values) => RangeLabels(
                   values.start.round().toString(),
@@ -66,8 +67,10 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                 .map((e) => DropdownMenuItem(value: e, child: Text(e.string)))
                 .toList(),
             decoration: InputDecoration(
-              helperText: generateLabelHelpTextMap[
-                  formViewModel.freeTextTypeControl.value],
+              helperText:
+                  generateLabelHelpTextMap[formViewModel
+                      .freeTextTypeControl
+                      .value],
             ),
             onChanged: (_) {
               formViewModel.freeTextExampleTextControl.updateValueAndValidity();
@@ -121,9 +124,12 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                       builder: (context, formControl, child) {
                         final borderColor = (formControl.dirty)
                             ? Colors.green
-                            : theme.inputDecorationTheme.enabledBorder
-                                    ?.borderSide.color ??
-                                Colors.yellow;
+                            : theme
+                                      .inputDecorationTheme
+                                      .enabledBorder
+                                      ?.borderSide
+                                      .color ??
+                                  Colors.yellow;
                         return ReactiveTextField(
                           formControl: formViewModel.freeTextExampleTextControl,
                           maxLines: null,
@@ -132,14 +138,10 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                                 ? tr.free_text_example_valid
                                 : tr.free_text_example_default_helper,
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: borderColor,
-                              ),
+                              borderSide: BorderSide(color: borderColor),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: borderColor,
-                              ),
+                              borderSide: BorderSide(color: borderColor),
                             ),
                           ),
                           showErrors: (control) =>

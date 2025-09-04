@@ -46,7 +46,7 @@ class ChoiceQuestionFormView extends ConsumerWidget {
               ],
               onSelectItem: (_) => {},
               // no-op
-              buildCellsAt: (context, control, _, __) =>
+              buildCellsAt: (context, control, _, _) =>
                   buildChoiceOptionRow(context, control),
               trailingActionsAt: (control, _) =>
                   formViewModel.availableActions(control),
@@ -57,7 +57,8 @@ class ChoiceQuestionFormView extends ConsumerWidget {
               rowStyle: StandardTableStyle.plain,
               trailingActionsMenuType: ActionMenuType.inline,
               disableRowInteractions: true,
-              trailingWidget: (formViewModel.isAddOptionButtonVisible &&
+              trailingWidget:
+                  (formViewModel.isAddOptionButtonVisible &&
                       !formViewModel.isReadonly)
                   ? Padding(
                       padding: const EdgeInsets.only(top: 8.0),
@@ -66,8 +67,9 @@ class ChoiceQuestionFormView extends ConsumerWidget {
                         child: TextButton.icon(
                           onPressed: formViewModel.onNewItem,
                           icon: const Icon(Icons.add),
-                          label:
-                              Text(tr.form_array_response_options_choice_new),
+                          label: Text(
+                            tr.form_array_response_options_choice_new,
+                          ),
                         ),
                       ),
                     )

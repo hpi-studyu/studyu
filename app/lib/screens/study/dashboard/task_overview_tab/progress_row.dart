@@ -20,8 +20,9 @@ class _ProgressRowState extends State<ProgressRow> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final currentPhase =
-        widget.subject!.getInterventionIndexForDate(DateTime.now());
+    final currentPhase = widget.subject!.getInterventionIndexForDate(
+      DateTime.now(),
+    );
 
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -44,20 +45,21 @@ class _ProgressRowState extends State<ProgressRow> {
                         : theme.disabledColor,
                   ),
                 ),
-                widget.subject!
-                    .getInterventionsInOrder()
-                    .asMap()
-                    .entries
-                    .map((entry) {
+                widget.subject!.getInterventionsInOrder().asMap().entries.map((
+                  entry,
+                ) {
                   return InterventionSegment(
                     intervention: entry.value,
                     isCurrent: currentPhase == entry.key,
                     isFuture: currentPhase < entry.key,
                     phaseDuration: widget.subject!.study.schedule.phaseDuration,
-                    percentCompleted:
-                        widget.subject!.percentCompletedForPhase(entry.key),
-                    percentMissed: widget.subject!
-                        .percentMissedForPhase(entry.key, DateTime.now()),
+                    percentCompleted: widget.subject!.percentCompletedForPhase(
+                      entry.key,
+                    ),
+                    percentMissed: widget.subject!.percentMissedForPhase(
+                      entry.key,
+                      DateTime.now(),
+                    ),
                   );
                 }),
               ),
@@ -100,11 +102,7 @@ class InterventionSegment extends StatelessWidget {
             height: 40,
             child: Column(
               children: <Widget>[
-                Container(
-                  width: 8,
-                  height: 10,
-                  color: Colors.white,
-                ),
+                Container(width: 8, height: 10, color: Colors.white),
               ],
             ),
           ),
@@ -122,8 +120,10 @@ class InterventionSegment extends StatelessWidget {
         : (isCurrent ? theme.colorScheme.secondary : theme.primaryColor);
 
     final emptyColor = Color.alphaBlend(theme.dividerColor, Colors.white);
-    final activeColor =
-        Color.alphaBlend(theme.colorScheme.secondary, Colors.white);
+    final activeColor = Color.alphaBlend(
+      theme.colorScheme.secondary,
+      Colors.white,
+    );
     final completedColor = Color.alphaBlend(theme.primaryColor, Colors.white);
 
     return Expanded(
@@ -159,9 +159,7 @@ class InterventionSegment extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(completedColor),
             ),
           ),
-          Stack(
-            children: buildSeparators(phaseDuration),
-          ),
+          Stack(children: buildSeparators(phaseDuration)),
           RawMaterialButton(
             onPressed: () {
               showDialog(

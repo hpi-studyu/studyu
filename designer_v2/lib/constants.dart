@@ -3,10 +3,7 @@ class Config {
 
   static const defaultLocale = {'en', 'US'};
 
-  static const supportedLocales = {
-    'en': 'US',
-    'de': 'DE',
-  };
+  static const supportedLocales = {'en': 'US', 'de': 'DE'};
 
   /// Default id for new studies that haven't been saved yet
   static const newStudyId = 'new';

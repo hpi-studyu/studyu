@@ -5,18 +5,19 @@ homepage: https://studyu.health
 repository: https://github.com/hpi-studyu/studyu
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.8.0 <4.0.0"
+resolution: workspace
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_dotenv: ^5.2.1
+  flutter_dotenv: ^6.0.0
   flutter_secure_storage: ^9.2.4
   lint: ^2.8.0
   shared_preferences: ^2.5.3
   studyu_core: ^4.6.1
-  supabase_flutter: ^2.9.1
-  synchronized: ^3.3.1
+  supabase_flutter: ^2.10.0
+  synchronized: ^3.4.0
   uuid: ^4.5.1
 
 dev_dependencies:

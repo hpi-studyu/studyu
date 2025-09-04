@@ -31,8 +31,8 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
   bool isStylingInformationDismissed = true;
 
   void onDismissedCallback() => setState(() {
-        isStylingInformationDismissed = !isStylingInformationDismissed;
-      });
+    isStylingInformationDismissed = !isStylingInformationDismissed;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,16 +54,18 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                       decoration: InputDecoration(
                         hintText: tr.form_field_intervention_title,
                       ),
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(200),
-                      ],
-                      validationMessages: widget.formViewModel
-                          .interventionTitleControl.validationMessages,
+                      inputFormatters: [LengthLimitingTextInputFormatter(200)],
+                      validationMessages: widget
+                          .formViewModel
+                          .interventionTitleControl
+                          .validationMessages,
                     ),
                   ),
                   ReactiveFormConsumer(
                     builder: (context, form, child) {
-                      return (widget.formViewModel.interventionIconControl
+                      return (widget
+                                  .formViewModel
+                                  .interventionIconControl
                                   .value !=
                               null)
                           ? const SizedBox(width: 4.0)
@@ -114,11 +116,11 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                 decoration: InputDecoration(
                   hintText: tr.form_field_intervention_description_hint,
                 ),
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(2000),
-                ],
-                validationMessages: widget.formViewModel
-                    .interventionDescriptionControl.validationMessages,
+                inputFormatters: [LengthLimitingTextInputFormatter(2000)],
+                validationMessages: widget
+                    .formViewModel
+                    .interventionDescriptionControl
+                    .validationMessages,
                 keyboardType: TextInputType.multiline,
                 minLines: 5,
                 maxLines: 5,
@@ -201,8 +203,9 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final interventionTaskFormViewModel =
-        ref.watch(interventionTaskFormViewModelProvider(routeArgs));
+    final interventionTaskFormViewModel = ref.watch(
+      interventionTaskFormViewModelProvider(routeArgs),
+    );
     showFormSideSheet<InterventionTaskFormViewModel>(
       context: context,
       formViewModel: interventionTaskFormViewModel,

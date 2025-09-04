@@ -61,10 +61,12 @@ class Test1 extends StudyBaseTest {
     await studyDesignRobot.navigateToInterventionsScreen();
 
     // Create interventions
-    await controller
-        .fillInterventions((interventionList) => [interventionList.first]);
-    await controller
-        .fillInterventions((interventionList) => [interventionList.last]);
+    await controller.fillInterventions(
+      (interventionList) => [interventionList.first],
+    );
+    await controller.fillInterventions(
+      (interventionList) => [interventionList.last],
+    );
 
     await studyDesignRobot.navigateToMeasurementsScreen();
 

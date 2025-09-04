@@ -17,7 +17,7 @@ abstract class Expression {
         NotExpression.expressionType => NotExpression.fromJson(data),
         NumericExpression.expressionType => NumericExpression.fromJson(data),
         TextExpression.expressionType => TextExpression.fromJson(data),
-        _ => throw UnknownJsonTypeError(data[keyType])
+        _ => throw UnknownJsonTypeError(data[keyType]),
       };
 
   Map<String, dynamic> toJson();

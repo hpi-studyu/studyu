@@ -63,8 +63,9 @@ class Cache {
     if (await SecureStorage.containsKey(cacheSubjectKey)) {
       return StudyUAnalytics.fromJson(
         jsonDecode(
-          (await SecureStorage.read(StudyUAnalytics.keyStudyUAnalytics))!,
-        ) as Map<String, dynamic>,
+              (await SecureStorage.read(StudyUAnalytics.keyStudyUAnalytics))!,
+            )
+            as Map<String, dynamic>,
       );
     }
     return null;
@@ -143,8 +144,9 @@ class Cache {
           ...remoteSubject.progress,
         ];
         final duplicates = <DateTime?>{};
-        finalProgress
-            .retainWhere((element) => duplicates.add(element.completedAt));
+        finalProgress.retainWhere(
+          (element) => duplicates.add(element.completedAt),
+        );
         // replace remote progress with our merge
         remoteSubject.progress = finalProgress;
         await remoteSubject.save(onlyUpdate: true);
