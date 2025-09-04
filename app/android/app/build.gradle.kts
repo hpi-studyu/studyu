@@ -5,8 +5,8 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-import java.util.Properties
-import java.io.FileInputStream
+import java . util . Properties
+        import java . io . FileInputStream
 
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
@@ -34,38 +34,21 @@ android {
     namespace = "health.studyu.app"
     // compileSdk = flutter.compileSdkVersion
     // Start flutter_local_notifications
-    compileSdk = maxOf(flutter.compileSdkVersion, 34)
+    // compileSdk = 35
     // End flutter_local_notifications
-    // temp fix for record_audio package instead of "flutter.ndkVersion"
-    //ndkVersion = flutter.ndkVersion
-    // ndkVersion = "26.1.10909125"
-    ndkVersion = "27.0.12077973"
-
-    defaultConfig {
-        // Start flutter_local_notifications
-        multiDexEnabled = true
-        // End flutter_local_notifications
-        applicationId = "health.studyu.app"
-        // minSdk = flutter.minSdkVersion
-        minSdk = maxOf(flutter.minSdkVersion, 23)
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode
-        versionName = flutterVersionName
-    }
+    compileSdk = 36
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
         // Start flutter_local_notifications
         // Flag to enable support for the new language APIs
         isCoreLibraryDesugaringEnabled = true
         // End flutter_local_notifications
-        // sourceCompatibility = JavaVersion.VERSION_17
-        // targetCompatibility = JavaVersion.VERSION_17
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        // jvmTarget = '17'
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
@@ -77,8 +60,24 @@ android {
             storePassword = keystoreProperties["storePassword"] as String?
         }
     }
+
+    defaultConfig {
+        // Start flutter_local_notifications
+        multiDexEnabled = true
+        // End flutter_local_notifications
+        applicationId = "health.studyu.app"
+        // You can update the following values to match your application needs.
+        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        // minSdk = maxOf(flutter.minSdkVersion, 23)
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
+    }
+
     buildTypes {
         release {
+            // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig =
                 if (keystorePropertiesFile.exists())
