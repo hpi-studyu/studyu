@@ -208,8 +208,8 @@ class _BodyPainter extends CustomPainter {
       halfDesiredSize.height - scaledHalfViewBoxSize.height,
     );
     final fittingMatrix = Matrix4.identity()
-      ..translate(shift.dx, shift.dy)
-      ..scale(scaleFactor);
+      ..translateByDouble(shift.dx, shift.dy, 0.0, 1.0)
+      ..scaleByDouble(scaleFactor, scaleFactor, scaleFactor, 1.0);
 
     canvas.save();
     canvas.transform(fittingMatrix.storage);
