@@ -41,9 +41,9 @@ post_install do |installer|
     flutter_additional_ios_build_settings(target)
 
     # Update all targeted iOS versions in Runner.xcodeproj/project.pbxproj
-    # target.build_configurations.each do |config|
-    #   config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
-    # end
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+    end
 
     # Start flutter package just_audio
     # We do not use the microphone, so we compile out any microphone code
