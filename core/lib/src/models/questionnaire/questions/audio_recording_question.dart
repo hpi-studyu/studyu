@@ -13,10 +13,10 @@ class AudioRecordingQuestion extends Question<AudioRecordingQuestion> {
   final int maxRecordingDurationSeconds;
 
   AudioRecordingQuestion({required this.maxRecordingDurationSeconds})
-      : super(questionType);
+    : super(questionType);
 
   AudioRecordingQuestion.withId(this.maxRecordingDurationSeconds)
-      : super.withId(questionType);
+    : super.withId(questionType);
 
   factory AudioRecordingQuestion.fromJson(Map<String, dynamic> json) =>
       _$AudioRecordingQuestionFromJson(json);

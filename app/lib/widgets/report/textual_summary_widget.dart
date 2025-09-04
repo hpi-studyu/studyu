@@ -62,8 +62,9 @@ class TextualSummaryWidget extends StatelessWidget {
                         ),
                         IconButton(
                           icon: const Icon(Icons.info_outline),
-                          tooltip: AppLocalizations.of(context)!
-                              .significance_level_and_p_value,
+                          tooltip: AppLocalizations.of(
+                            context,
+                          )!.significance_level_and_p_value,
                           onPressed: () =>
                               _showStatisticalInfoDialog(context, tTest),
                         ),

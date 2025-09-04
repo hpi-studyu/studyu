@@ -178,8 +178,8 @@ class StudyUApiClient extends SupabaseClientDependant
     final columns = withParticipantActivity
         ? studyWithParticipantActivityColumns
         : forDashboardDisplay
-            ? studyDisplayColumns
-            : studyColumns;
+        ? studyDisplayColumns
+        : studyColumns;
     final request = getAll<Study>(selectedColumns: columns);
     return _awaitGuarded(request);
   }
@@ -372,6 +372,5 @@ class StudyUApiClient extends SupabaseClientDependant
 }
 
 @riverpod
-StudyUApiClient apiClient(Ref ref) => StudyUApiClient(
-      supabaseClient: ref.watch(supabaseClientProvider),
-    );
+StudyUApiClient apiClient(Ref ref) =>
+    StudyUApiClient(supabaseClient: ref.watch(supabaseClientProvider));

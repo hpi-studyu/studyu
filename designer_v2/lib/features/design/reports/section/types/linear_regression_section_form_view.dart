@@ -52,29 +52,31 @@ class LinearRegressionSectionFormView extends ConsumerWidget {
                   items: ReportItemFormViewModel
                       .improvementDirectionControlOptions
                       .map((option) {
-                    final menuItemTheme =
-                        ThemeConfig.dropdownMenuItemTheme(theme);
-                    final iconTheme =
-                        menuItemTheme.iconTheme ?? theme.iconTheme;
-                    return DropdownMenuItem(
-                      value: option.value,
-                      child: Row(
-                        children: [
-                          if (option.value.icon != null)
-                            Icon(
-                              option.value.icon,
-                              size: iconTheme.size,
-                              color: iconTheme.color,
-                              shadows: iconTheme.shadows,
-                            )
-                          else
-                            const SizedBox.shrink(),
-                          const SizedBox(width: 16.0),
-                          Text(option.label),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                        final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(
+                          theme,
+                        );
+                        final iconTheme =
+                            menuItemTheme.iconTheme ?? theme.iconTheme;
+                        return DropdownMenuItem(
+                          value: option.value,
+                          child: Row(
+                            children: [
+                              if (option.value.icon != null)
+                                Icon(
+                                  option.value.icon,
+                                  size: iconTheme.size,
+                                  color: iconTheme.color,
+                                  shadows: iconTheme.shadows,
+                                )
+                              else
+                                const SizedBox.shrink(),
+                              const SizedBox(width: 16.0),
+                              Text(option.label),
+                            ],
+                          ),
+                        );
+                      })
+                      .toList(),
                 ),
               ),
             ),

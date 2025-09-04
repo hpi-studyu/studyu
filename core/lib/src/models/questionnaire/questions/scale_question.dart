@@ -232,11 +232,7 @@ class ScaleQuestion extends SliderQuestion
 
   @override
   set minimumAnnotation(String newLabel) {
-    _setAnnotationLabel(
-      newLabel: newLabel,
-      atSortedIndex: 0,
-      atValue: minimum,
-    );
+    _setAnnotationLabel(newLabel: newLabel, atSortedIndex: 0, atValue: minimum);
   }
 
   static int getAutostepSize({
@@ -257,9 +253,11 @@ class ScaleQuestion extends SliderQuestion
     );
     final List<int> midValues = [];
 
-    for (int midValue = scaleMinValue + midValueStepSize;
-        midValue < scaleMaxValue;
-        midValue += midValueStepSize) {
+    for (
+      int midValue = scaleMinValue + midValueStepSize;
+      midValue < scaleMaxValue;
+      midValue += midValueStepSize
+    ) {
       midValues.add(midValue);
       if (midValues.length >= numValuesGenerated) {
         break;

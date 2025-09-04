@@ -43,8 +43,9 @@ class _QuestionContainerState extends State<QuestionContainer>
         return ChoiceQuestionWidget(
           question: choiceQuestion,
           onDone: _onDone,
-          multiSelectionText:
-              AppLocalizations.of(context)!.eligible_choice_multi_selection,
+          multiSelectionText: AppLocalizations.of(
+            context,
+          )!.eligible_choice_multi_selection,
         );
       case final BooleanQuestion booleanQuestion:
         return BooleanQuestionWidget(
@@ -52,10 +53,7 @@ class _QuestionContainerState extends State<QuestionContainer>
           onDone: _onDone,
         );
       case final ScaleQuestion scaleQuestion:
-        return ScaleQuestionWidget(
-          question: scaleQuestion,
-          onDone: _onDone,
-        );
+        return ScaleQuestionWidget(question: scaleQuestion, onDone: _onDone);
       case final ImageCapturingQuestion imageCapturingQuestion:
         return ImageCapturingQuestionWidget(
           question: imageCapturingQuestion,

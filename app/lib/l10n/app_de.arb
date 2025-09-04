@@ -3,7 +3,7 @@
 
   "loading": "Laden",
   "loading_error_title": "Ladefehler",
-  "loading_error_description": "Die Studiendaten konnten nicht abgerufen werden. Bitte überprüfen Sie Ihre Internetverbindung oder versuchen Sie es später erneut. Wenn das Problem weiterhin besteht, können Sie alle Daten löschen, um die App zurückzusetzen. Dadurch werden alle Ihre Studiendaten gelöscht und Sie müssen der Studie erneut beitreten.",
+  "loading_error_description": "Die Studiendaten konnten nicht abgerufen werden. Wenn Sie aktuell an einer Studie teilnehmen, wenden Sie sich bitte zuerst an Ihre Studienleitung. Kontaktieren Sie den Support nur, wenn Sie nicht an einer Studie teilnehmen oder Ihre Studienleitung Sie dazu auffordert. Löschen Sie Ihre Daten nur, wenn Sie von der Studienleitung oder dem Support dazu aufgefordert werden. Das Löschen entfernt alle Ihre Studiendaten und Sie müssen der Studie erneut beitreten.",
   "try_again": "Erneut versuchen",
   "delete_all_data": "Alle Daten löschen",
   "delete_all_data_description": "Möchten Sie wirklich alle Daten löschen? Dadurch werden alle Ihre Studiendaten gelöscht und Sie müssen der Studie erneut beitreten.",
@@ -37,7 +37,7 @@
   "please_answer_eligibility": "Bitte beantworten Sie ein paar Fragen um sicherzugehen, dass diese Studie für Sie geeignet ist",
   "intervention_selection_title": "Interventionen",
   "please_select_interventions": "Bitte wählen Sie zwei Interventionen für die Studie aus.",
-  "please_select_interventions_description": "Die Auswirkungen dieser zwei Maßnahmen werden während der Studie gemessen und verglichen.",
+  "please_select_interventions_description": "Die Auswirkungen dieser beiden Interventionen werden während der Studie gemessen und miteinander verglichen. Die Interventionen erfolgen in der Reihenfolge, in der Sie sie auswählen. Wenn Sie A vor B wählen, wird A zuerst durchgeführt.",
   "no_interventions_available": "Keine Interventionen verfügbar.",
   "loading_interventions": "Interventionen laden",
 
@@ -93,6 +93,16 @@
   "help": "Hilfe",
   "about": "Über StudyU",
   "contact": "Kontakt",
+  "contact_support": "Support kontaktieren",
+  "support_email_body": "Hallo,\n\nich habe einen Ladefehler in der StudyU App. Meine Subject-ID ist: {subjectId}\n\nBitte helfen Sie mir bei diesem Problem.\n\nVielen Dank.",
+  "@support_email_body": {
+    "description": "Text für Support-E-Mail, enthält die Subject-ID",
+    "placeholders": {
+      "subjectId": {
+        "type": "String"
+      }
+    }
+  },
   "settings": "Einstellungen",
 
   "survey": "Umfrage",
@@ -286,6 +296,9 @@
   "average": "Durchschnitt",
   "minimum": "Minimum",
   "maximum": "Maximum",
+
+  "support_email_sent": "Support-E-Mail geöffnet",
+  "support_email_sent_description": "Ihre Support-Anfrage wurde in Ihrer E-Mail-App vorbereitet. Bitte senden Sie die E-Mail, um unser Support-Team zu erreichen und warten Sie auf eine Antwort.\n\nWenn Sie aktuell an einer Studie teilnehmen, dokumentieren Sie Ihre Ergebnisse bitte außerhalb der App, bis das Problem behoben ist. Vielen Dank für Ihr Verständnis.",
 
   "sync_fitbit_data": "Fitbit-Daten synchronisieren",
   "fitbit_data_synced": "Fitbit-Daten wurden erfolgreich synchronisiert",

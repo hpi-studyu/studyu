@@ -10,24 +10,16 @@ class Tuple<T1, T2> extends Equatable {
   @override
   List<Object?> get props => [first, second];
 
-  JsonMap toJson() => {
-        "_tuple.0": first,
-        "_tuple.1": second,
-      };
+  JsonMap toJson() => {"_tuple.0": first, "_tuple.1": second};
 
-  static Tuple fromJson(JsonMap json) => Tuple(
-        json["_tuple.0"],
-        json["_tuple.1"],
-      );
+  static Tuple fromJson(JsonMap json) =>
+      Tuple(json["_tuple.0"], json["_tuple.1"]);
 
   Tuple<T1, T2> copy() {
     return copyWith();
   }
 
   Tuple<T1, T2> copyWith({T1? first, T2? second}) {
-    return Tuple(
-      first ?? this.first,
-      second ?? this.second,
-    );
+    return Tuple(first ?? this.first, second ?? this.second);
   }
 }

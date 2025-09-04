@@ -21,26 +21,27 @@ abstract class IFormDataWithSchedule implements IFormData {
 
   Schedule toSchedule() {
     final schedule = Schedule();
-    schedule.reminders =
-        (!hasReminder || reminderTime == null) ? [] : [reminderTime!];
+    schedule.reminders = (!hasReminder || reminderTime == null)
+        ? []
+        : [reminderTime!];
     schedule.completionPeriods =
         (!isTimeLocked || (timeLockStart == null && timeLockEnd == null))
-            ? [
-                CompletionPeriod(
-                  id: instanceId,
-                  // default unrestricted period
-                  unlockTime: ScheduleX.unrestrictedTime[0],
-                  lockTime: ScheduleX.unrestrictedTime[1],
-                ),
-              ]
-            : [
-                CompletionPeriod(
-                  id: instanceId,
-                  // user-defined period
-                  unlockTime: timeLockStart ?? ScheduleX.unrestrictedTime[0],
-                  lockTime: timeLockEnd ?? ScheduleX.unrestrictedTime[1],
-                ),
-              ];
+        ? [
+            CompletionPeriod(
+              id: instanceId,
+              // default unrestricted period
+              unlockTime: ScheduleX.unrestrictedTime[0],
+              lockTime: ScheduleX.unrestrictedTime[1],
+            ),
+          ]
+        : [
+            CompletionPeriod(
+              id: instanceId,
+              // user-defined period
+              unlockTime: timeLockStart ?? ScheduleX.unrestrictedTime[0],
+              lockTime: timeLockEnd ?? ScheduleX.unrestrictedTime[1],
+            ),
+          ];
     return schedule;
   }
 }

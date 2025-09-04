@@ -165,8 +165,9 @@ class Study extends SupabaseObjectFunctions<Study>
 
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
-      study.repo =
-          Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
+      study.repo = Repo.fromJson(
+        (json['repo'] as List)[0] as Map<String, dynamic>,
+      );
     }
 
     final List? invites = json['study_invite'] as List?;
@@ -263,6 +264,7 @@ class Study extends SupabaseObjectFunctions<Study>
           .neq('status', StudyStatus.closed.name);
       final extracted = SupabaseQuery.extractSupabaseList<Study>(
         List<Map<String, dynamic>>.from(response),
+        throwForNonExtracted: true,
       );
       result = ExtractionSuccess<Study>(extracted);
     } on ExtractionFailedException<Study> catch (error) {
@@ -308,17 +310,20 @@ class Study extends SupabaseObjectFunctions<Study>
     final jsonList = List<Map<String, dynamic>>.from(res);
     if (jsonList.isEmpty) return '';
     final tableHeadersSet = jsonList[0].keys.toSet();
-    final flattenedQuestions = jsonList.map((progress) {
-      if (progress['result_type'] == 'QuestionnaireState') {
-        for (final result
-            in List<Map<String, dynamic>>.from(progress['result'] as List)) {
-          progress[result['question'] as String] = result['response'];
-          tableHeadersSet.add(result['question'] as String);
-        }
-        // progress.remove('result');
-      }
-      return progress;
-    }).toList(growable: false);
+    final flattenedQuestions = jsonList
+        .map((progress) {
+          if (progress['result_type'] == 'QuestionnaireState') {
+            for (final result in List<Map<String, dynamic>>.from(
+              progress['result'] as List,
+            )) {
+              progress[result['question'] as String] = result['response'];
+              tableHeadersSet.add(result['question'] as String);
+            }
+            // progress.remove('result');
+          }
+          return progress;
+        })
+        .toList(growable: false);
     final tableHeaders = tableHeadersSet.toList();
     // Convert to List and fill empty cells with empty string
     final resultsTable = [

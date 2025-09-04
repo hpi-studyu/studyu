@@ -19,8 +19,9 @@ class PublishConfirmationDialog extends StudyPageWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(studyControllerProvider(studyId).notifier);
     final state = ref.watch(studyControllerProvider(studyId));
-    final formViewModel =
-        ref.watch(studySettingsFormViewModelProvider(studyId));
+    final formViewModel = ref.watch(
+      studySettingsFormViewModelProvider(studyId),
+    );
     formViewModel.setLaunchDefaults();
 
     final theme = Theme.of(context);
@@ -46,8 +47,9 @@ class PublishConfirmationDialog extends StudyPageWidget {
                             const TextSpan(text: ' '),
                             TextSpan(
                               text: state.studyParticipation!.asAdjective,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             const TextSpan(text: '.'),
                             TextSpan(text: tr.study_launch_participation_outro),
@@ -57,9 +59,9 @@ class PublishConfirmationDialog extends StudyPageWidget {
                       const SizedBox(height: 4.0),
                       SelectableText(
                         state.studyParticipation!.launchDescription,
-                        style: ThemeConfig.bodyTextMuted(theme).copyWith(
-                          fontStyle: FontStyle.italic,
-                        ),
+                        style: ThemeConfig.bodyTextMuted(
+                          theme,
+                        ).copyWith(fontStyle: FontStyle.italic),
                       ),
                     ],
                   ),
@@ -79,8 +81,9 @@ class PublishConfirmationDialog extends StudyPageWidget {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.maybePop(context)
-                          .then((_) => controller.onChangeStudyParticipation());
+                      Navigator.maybePop(
+                        context,
+                      ).then((_) => controller.onChangeStudyParticipation());
                     },
                   ),
                 ),

@@ -16,8 +16,8 @@ class GaugesWidget extends StatelessWidget {
     List<num> valuesInterventionB, {
     this.showColors = true,
     super.key,
-  })  : meanInterventionA = valuesInterventionA.mean,
-        meanInterventionB = valuesInterventionB.mean;
+  }) : meanInterventionA = valuesInterventionA.mean,
+       meanInterventionB = valuesInterventionB.mean;
 
   @override
   Widget build(BuildContext context) {
@@ -160,10 +160,7 @@ class GaugesWidget extends StatelessWidget {
                 ),
                 const TextSpan(
                   text: '/10',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black,
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.black),
                 ),
               ],
             ),
@@ -176,10 +173,7 @@ class GaugesWidget extends StatelessWidget {
               children: <TextSpan>[
                 TextSpan(
                   text: nameIntervention,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
+                  style: const TextStyle(fontSize: 15, color: Colors.black),
                 ),
               ],
             ),

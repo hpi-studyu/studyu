@@ -17,8 +17,8 @@ class Answer<V> {
   Answer(this.question, this.timestamp);
 
   Answer.forQuestion(Question question, this.response)
-      : question = question.id,
-        timestamp = DateTime.now();
+    : question = question.id,
+      timestamp = DateTime.now();
 
   factory Answer.parseJson(Map<String, dynamic> json) =>
       _$AnswerFromJson(json)..response = json[keyResponse] as V;

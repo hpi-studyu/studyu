@@ -23,9 +23,7 @@ abstract class StudyDesignPageWidget extends StudyPageWidget {
               text: tr.banner_study_readonly_title,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            TextParagraph(
-              text: tr.banner_study_readonly_description,
-            ),
+            TextParagraph(text: tr.banner_study_readonly_description),
           ],
         ),
         style: BannerStyle.info,

@@ -16,7 +16,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loading_error_description =>
-      'The study data could not be retrieved. Please check your internet connection or try again later. If the problem persists, you can delete all data to reset the app. This will delete all your study data and you will have to rejoin the study.';
+      'The study data could not be retrieved. If you are currently participating in a study, please first contact your study supervisor for assistance. Only contact support if you are not in a study or your supervisor instructs you to do so. Do not delete your data unless told by your supervisor or support. Deleting data will remove all your study data and you will have to rejoin the study.';
 
   @override
   String get try_again => 'Try again';
@@ -127,7 +127,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get please_select_interventions_description =>
-      'The effects of these two interventions will be measured and compared during the study.';
+      'The effects of these two interventions will be measured and compared during the study. Interventions will follow the order you select. Choosing A before B means A comes first';
 
   @override
   String get no_interventions_available => 'No interventions available.';
@@ -272,6 +272,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contact => 'Contact';
+
+  @override
+  String get contact_support => 'Contact Support';
+
+  @override
+  String support_email_body(String subjectId) {
+    return 'Hello,\n\nI am experiencing a loading error in the StudyU app. My subject ID is: $subjectId\n\nPlease assist me with this issue.\n\nThank you.';
+  }
 
   @override
   String get about => 'About';
@@ -727,40 +735,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get maximum => 'Maximum';
 
   @override
-  String get sync_fitbit_data => 'Sync Fitbit Data';
+  String get support_email_sent => 'Support Email Sent';
 
   @override
-  String get fitbit_data_synced => 'Fitbit data synced successfully';
-
-  @override
-  String get fitbit_data_not_synced =>
-      'Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.';
-
-  @override
-  String error_syncing_fitbit_data(String error) {
-    return 'Error syncing Fitbit data: $error';
-  }
-
-  @override
-  String get fitbit_data_synced_dialog_title => 'Fitbit Data Synced';
-
-  @override
-  String get fitbit_data_synced_info =>
-      'Data was synced for the following data types:';
-
-  @override
-  String fitbit_data_earliest_date(String date) {
-    return 'Earliest date: $date';
-  }
-
-  @override
-  String fitbit_data_latest_date(String date) {
-    return 'Latest date: $date';
-  }
-
-  @override
-  String get fitbit_data_details_btn => 'Details';
-
-  @override
-  String get fitbit_data_close_btn => 'Close';
+  String get support_email_sent_description =>
+      'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.';
 }

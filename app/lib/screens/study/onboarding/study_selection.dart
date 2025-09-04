@@ -29,8 +29,9 @@ Future<void> showAppOutdatedDialog(BuildContext context) async {
   await showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title:
-          Text(AppLocalizations.of(context)!.study_selection_unsupported_title),
+      title: Text(
+        AppLocalizations.of(context)!.study_selection_unsupported_title,
+      ),
       content: Text(AppLocalizations.of(context)!.study_selection_unsupported),
       actions: [
         TextButton(
@@ -90,8 +91,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: AppLocalizations.of(context)!
-                                .study_selection_single,
+                            text: AppLocalizations.of(
+                              context,
+                            )!.study_selection_single,
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
@@ -99,20 +101,23 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                             style: theme.textTheme.titleSmall,
                           ),
                           TextSpan(
-                            text: AppLocalizations.of(context)!
-                                .study_selection_single_why,
-                            style: theme.textTheme.titleSmall!
-                                .copyWith(color: theme.primaryColor),
+                            text: AppLocalizations.of(
+                              context,
+                            )!.study_selection_single_why,
+                            style: theme.textTheme.titleSmall!.copyWith(
+                              color: theme.primaryColor,
+                            ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () => showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      content: Text(
-                                        AppLocalizations.of(context)!
-                                            .study_selection_single_reason,
-                                      ),
-                                    ),
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  content: Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.study_selection_single_reason,
                                   ),
+                                ),
+                              ),
                           ),
                         ],
                       ),
@@ -131,8 +136,9 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
                         size: 32,
                       ),
                       content: Text(
-                        AppLocalizations.of(context)!
-                            .study_selection_hidden_studies,
+                        AppLocalizations.of(
+                          context,
+                        )!.study_selection_hidden_studies,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       actions: const [SizedBox.shrink()],
@@ -146,40 +152,45 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
               Expanded(
                 child: RetryFutureBuilder<ExtractionResult<Study>>(
                   tryFunction: () => publishedStudies,
-                  successBuilder: (
-                    BuildContext context,
-                    ExtractionResult<Study>? extractionResult,
-                  ) {
-                    final studies = extractionResult!.extracted;
-                    if (extractionResult is ExtractionFailedException<Study>) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        if (_hiddenStudies) return;
-                        debugPrint(
-                          '${extractionResult.notExtracted.length} studies could not be extracted.',
-                        );
-                        setState(() {
-                          _hiddenStudies = true;
-                        });
-                      });
-                    }
-                    return ListView.builder(
-                      itemCount: studies.length,
-                      itemBuilder: (context, index) {
-                        final study = studies[index];
-                        return Hero(
-                          tag: 'study_tile_${studies[index].id}',
-                          child: Material(
-                            child: StudyTile.fromStudy(
-                              study: study,
-                              onTap: () async {
-                                await navigateToStudyOverview(context, study);
-                              },
-                            ),
-                          ),
+                  successBuilder:
+                      (
+                        BuildContext context,
+                        ExtractionResult<Study>? extractionResult,
+                      ) {
+                        final studies = extractionResult!.extracted;
+                        if (extractionResult
+                            is ExtractionFailedException<Study>) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (_hiddenStudies) return;
+                            debugPrint(
+                              '${extractionResult.notExtracted.length} studies could not be extracted.',
+                            );
+                            setState(() {
+                              _hiddenStudies = true;
+                            });
+                          });
+                        }
+                        return ListView.builder(
+                          itemCount: studies.length,
+                          itemBuilder: (context, index) {
+                            final study = studies[index];
+                            return Hero(
+                              tag: 'study_tile_${studies[index].id}',
+                              child: Material(
+                                child: StudyTile.fromStudy(
+                                  study: study,
+                                  onTap: () async {
+                                    await navigateToStudyOverview(
+                                      context,
+                                      study,
+                                    );
+                                  },
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
                 ),
               ),
               Padding(
@@ -225,106 +236,107 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.private_study_invite_code),
-        content: TextFormField(
-          controller: _controller,
-          validator: (_) => _errorMessage,
-          autovalidateMode: AutovalidateMode.always,
-          decoration: InputDecoration(
-            labelText: AppLocalizations.of(context)!.invite_code,
-          ),
-        ),
-        actions: [
-          OutlinedButton.icon(
-            icon: const Icon(Icons.arrow_forward),
-            label: Text(AppLocalizations.of(context)!.next),
-            onPressed: () async {
-              Map<String, dynamic>? result;
-              try {
-                result = await Supabase.instance.client
-                    .rpc(
-                      'get_study_from_invite',
-                      params: {'invite_code': _controller.text},
-                    )
-                    .select()
-                    .single();
-              } on PostgrestException catch (error) {
-                print(error.message);
-                setState(() {
-                  _errorMessage = error.message;
-                });
-              }
+    title: Text(AppLocalizations.of(context)!.private_study_invite_code),
+    content: TextFormField(
+      controller: _controller,
+      validator: (_) => _errorMessage,
+      autovalidateMode: AutovalidateMode.always,
+      decoration: InputDecoration(
+        labelText: AppLocalizations.of(context)!.invite_code,
+      ),
+    ),
+    actions: [
+      OutlinedButton.icon(
+        icon: const Icon(Icons.arrow_forward),
+        label: Text(AppLocalizations.of(context)!.next),
+        onPressed: () async {
+          Map<String, dynamic>? result;
+          try {
+            result = await Supabase.instance.client
+                .rpc(
+                  'get_study_from_invite',
+                  params: {'invite_code': _controller.text},
+                )
+                .select()
+                .single();
+          } on PostgrestException catch (error) {
+            print(error.message);
+            setState(() {
+              _errorMessage = error.message;
+            });
+          }
 
-              if (result == null) {
-                setState(() {
-                  _errorMessage =
-                      AppLocalizations.of(context)!.invalid_invite_code;
-                });
-              } else {
-                setState(() {
-                  _errorMessage = null;
-                });
+          if (result == null) {
+            setState(() {
+              _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
+            });
+          } else {
+            setState(() {
+              _errorMessage = null;
+            });
 
-                Map<String, dynamic>? studyResult;
-                try {
-                  studyResult = await Supabase.instance.client.rpc(
+            Map<String, dynamic>? studyResult;
+            try {
+              studyResult = await Supabase.instance.client
+                  .rpc(
                     'get_study_record_from_invite',
                     params: {'invite_code': _controller.text},
-                  ).single();
-                } on PostgrestException catch (error) {
-                  print(error.message);
-                  setState(() {
-                    _errorMessage = error.message;
-                  });
-                }
+                  )
+                  .single();
+            } on PostgrestException catch (error) {
+              print(error.message);
+              setState(() {
+                _errorMessage = error.message;
+              });
+            }
 
-                if (studyResult != null) {
-                  Study study;
-                  try {
-                    study = Study.fromJson(studyResult);
-                    // ignore: avoid_catching_errors
-                  } on ArgumentError catch (error) {
-                    // We are catching ArgumentError because unknown enums throw an ArgumentError
-                    // and UnknownJsonTypeError is a subclass of ArgumentError
-                    debugPrint('Study selection from invite failed: $error');
-                    if (!context.mounted) return;
-                    Navigator.pop(context);
-                    await showAppOutdatedDialog(context);
-                    return;
-                  }
-
-                  if (study.isClosed) {
-                    if (!context.mounted) return;
-                    Navigator.pop(context);
-                    await showStudyClosedDialog(context);
-                    return;
-                  }
-
-                  if (!context.mounted) return;
-                  Navigator.pop(context);
-
-                  if (result.containsKey('preselected_intervention_ids') &&
-                      result['preselected_intervention_ids'] != null) {
-                    final preselectedIds = List<String>.from(
-                      result['preselected_intervention_ids'] as List,
-                    );
-                    await navigateToStudyOverview(
-                      context,
-                      study,
-                      inviteCode: _controller.text,
-                      preselectedIds: preselectedIds,
-                    );
-                  } else {
-                    await navigateToStudyOverview(
-                      context,
-                      study,
-                      inviteCode: _controller.text,
-                    );
-                  }
-                }
+            if (studyResult != null) {
+              Study study;
+              try {
+                study = Study.fromJson(studyResult);
+                // ignore: avoid_catching_errors
+              } on ArgumentError catch (error) {
+                // We are catching ArgumentError because unknown enums throw an ArgumentError
+                // and UnknownJsonTypeError is a subclass of ArgumentError
+                debugPrint('Study selection from invite failed: $error');
+                if (!context.mounted) return;
+                Navigator.pop(context);
+                await showAppOutdatedDialog(context);
+                return;
               }
-            },
-          ),
-        ],
-      );
+
+              if (study.isClosed) {
+                if (!context.mounted) return;
+                Navigator.pop(context);
+                await showStudyClosedDialog(context);
+                return;
+              }
+
+              if (!context.mounted) return;
+              Navigator.pop(context);
+
+              if (result.containsKey('preselected_intervention_ids') &&
+                  result['preselected_intervention_ids'] != null) {
+                final preselectedIds = List<String>.from(
+                  result['preselected_intervention_ids'] as List,
+                );
+                await navigateToStudyOverview(
+                  context,
+                  study,
+                  inviteCode: _controller.text,
+                  preselectedIds: preselectedIds,
+                );
+              } else {
+                await navigateToStudyOverview(
+                  context,
+                  study,
+                  inviteCode: _controller.text,
+                );
+              }
+            }
+          }
+        },
+      ),
+    ],
+  );
 }

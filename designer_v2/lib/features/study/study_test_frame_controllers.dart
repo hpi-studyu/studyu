@@ -125,6 +125,7 @@ class WebController extends PlatformController {
       navigate(route: routeInformation.route, cmd: cmd);
       return;
     }
+
     navigate(cmd: cmd);
     return;
   }
@@ -150,8 +151,10 @@ class WebController extends PlatformController {
     // debugLog("Send updated study to client");
     // Send to all windows for debugging
     // iFrameElement.contentWindow?.postMessage(message, '*');
-    iFrameElement.contentWindow
-        ?.postMessage(message.toJS, (env.appUrl ?? '').toJS);
+    iFrameElement.contentWindow?.postMessage(
+      message.toJS,
+      (env.appUrl ?? '').toJS,
+    );
   }
 }
 

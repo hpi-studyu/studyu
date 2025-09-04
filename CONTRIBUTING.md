@@ -18,7 +18,7 @@
 If you use Android Studio or VS Code, open the root folder of the project. You
 should have new run-configurations/tasks added for running the Flutter apps or
 executing Melos scripts. Use `melos <script>` to run scripts from the
-[`melos.yaml` file](melos.yaml). You can find more information about Melos in
+[`pubspec.yaml` file](pubspec.yaml). You can find more information about Melos in
 the [Melos documentation](https://melos.invertase.dev/)
 
 ## Repository Overview
@@ -84,7 +84,7 @@ and dependencies need to have all files generated, when being imported.
 
 We use the [Effective Dart](https://dart.dev/guides/language/effective-dart)
 guidelines for Dart and Flutter. Run `melos format` to format your code and
-`melos analyze` to check for any issues. For commit messages, we use the
+`dart analyze` to check for any issues. For commit messages, we use the
 [Conventional Commits](https://www.conventionalcommits.org) format. For any new
 features or bug fixes, create a new branch and open a pull request.
 

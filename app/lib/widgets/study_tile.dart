@@ -25,18 +25,18 @@ class StudyTile extends StatelessWidget {
     this.onTap,
     this.contentPadding = const EdgeInsets.all(16),
     super.key,
-  })  : title = study.title,
-        description = study.description,
-        iconName = study.iconName;
+  }) : title = study.title,
+       description = study.description,
+       iconName = study.iconName;
 
   StudyTile.fromUserStudy({
     required StudySubject subject,
     this.onTap,
     this.contentPadding = const EdgeInsets.all(16),
     super.key,
-  })  : title = subject.study.title,
-        description = subject.study.description,
-        iconName = subject.study.iconName;
+  }) : title = subject.study.title,
+       description = subject.study.description,
+       iconName = subject.study.iconName;
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +50,16 @@ class StudyTile extends StatelessWidget {
           title: Center(
             child: Text(
               title!,
-              style: theme.textTheme.titleLarge!
-                  .copyWith(color: theme.primaryColor),
+              style: theme.textTheme.titleLarge!.copyWith(
+                color: theme.primaryColor,
+              ),
             ),
           ),
           subtitle: Center(child: Text(description ?? '')),
-          leading:
-              Icon(MdiIcons.fromString(iconName), color: theme.primaryColor),
+          leading: Icon(
+            MdiIcons.fromString(iconName),
+            color: theme.primaryColor,
+          ),
         ),
       ],
     );

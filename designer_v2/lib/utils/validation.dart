@@ -25,8 +25,9 @@ class CountWhereValidator<T> extends Validator<T> {
     }
     if (control is! FormArray<T>) {
       throw Exception(
-          "CountWhereValidator must be used with AbstractControl of "
-          "type FormArray.");
+        "CountWhereValidator must be used with AbstractControl of "
+        "type FormArray.",
+      );
     }
 
     final List<T?> collection = control.value!;

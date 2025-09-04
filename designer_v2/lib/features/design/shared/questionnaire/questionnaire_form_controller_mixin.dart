@@ -21,9 +21,7 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel>
 
   List<Q> get questionModels => questionFormViewModels.formViewModels;
 
-  late final questionnaireControls = {
-    'questions': questionsArray,
-  };
+  late final questionnaireControls = {'questions': questionsArray};
 
   void setQuestionnaireControlsFrom(QuestionnaireFormData data) {
     if (data.questionsData != null) {
@@ -85,8 +83,9 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel>
       return viewModel;
     }
 
-    final viewModel = questionFormViewModels
-        .findWhere((vm) => vm.questionId == args.questionId);
+    final viewModel = questionFormViewModels.findWhere(
+      (vm) => vm.questionId == args.questionId,
+    );
     if (viewModel == null) {
       throw QuestionNotFoundException(); // TODO handle 404 not found
     }
@@ -95,10 +94,11 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel>
 
   Q provideQuestionFormViewModel(QuestionFormData? formData) {
     return QuestionFormViewModel(
-      formData: formData,
-      delegate: this,
-      validationSet: validationSet,
-      titles: questionTitles.isNotEmpty ? questionTitles : null,
-    ) as Q;
+          formData: formData,
+          delegate: this,
+          validationSet: validationSet,
+          titles: questionTitles.isNotEmpty ? questionTitles : null,
+        )
+        as Q;
   }
 }

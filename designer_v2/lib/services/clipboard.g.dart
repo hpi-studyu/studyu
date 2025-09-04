@@ -12,14 +12,14 @@ String _$clipboardServiceHash() => r'fadcaa4f90d729c5e9b6ac021497e814bc150fff';
 @ProviderFor(clipboardService)
 final clipboardServiceProvider =
     AutoDisposeProvider<IClipboardService>.internal(
-  clipboardService,
-  name: r'clipboardServiceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$clipboardServiceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      clipboardService,
+      name: r'clipboardServiceProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$clipboardServiceHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element

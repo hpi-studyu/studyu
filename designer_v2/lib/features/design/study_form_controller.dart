@@ -57,29 +57,29 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   late final StudyInfoFormViewModel studyInfoFormViewModel =
       StudyInfoFormViewModel(
-    formData: StudyInfoFormData.fromStudy(formData!),
-    delegate: this,
-    study: formData!,
-    validationSet: validationSet,
-  );
+        formData: StudyInfoFormData.fromStudy(formData!),
+        delegate: this,
+        study: formData!,
+        validationSet: validationSet,
+      );
 
   late final EnrollmentFormViewModel enrollmentFormViewModel =
       EnrollmentFormViewModel(
-    formData: EnrollmentFormData.fromStudy(formData!),
-    delegate: this,
-    study: formData!,
-    router: router,
-    validationSet: validationSet,
-  );
+        formData: EnrollmentFormData.fromStudy(formData!),
+        delegate: this,
+        study: formData!,
+        router: router,
+        validationSet: validationSet,
+      );
 
   late final MeasurementsFormViewModel measurementsFormViewModel =
       MeasurementsFormViewModel(
-    formData: MeasurementsFormData.fromStudy(formData!),
-    delegate: this,
-    study: formData!,
-    router: router,
-    validationSet: validationSet,
-  );
+        formData: MeasurementsFormData.fromStudy(formData!),
+        delegate: this,
+        study: formData!,
+        router: router,
+        validationSet: validationSet,
+      );
 
   late final ReportsFormViewModel reportsFormViewModel = ReportsFormViewModel(
     formData: ReportsFormData.fromStudy(formData!),
@@ -91,12 +91,12 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   late final InterventionsFormViewModel interventionsFormViewModel =
       InterventionsFormViewModel(
-    formData: InterventionsFormData.fromStudy(formData!),
-    delegate: this,
-    study: formData!,
-    router: router,
-    validationSet: validationSet,
-  );
+        formData: InterventionsFormData.fromStudy(formData!),
+        delegate: this,
+        study: formData!,
+        router: router,
+        validationSet: validationSet,
+      );
 
   late final FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel =
       FitbitCredentialsFormViewModel(
@@ -106,10 +106,10 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [], // defined in subforms
-        StudyFormValidationSet.publish: [], // defined in subforms
-        StudyFormValidationSet.test: [], // defined in subforms
-      };
+    StudyFormValidationSet.draft: [], // defined in subforms
+    StudyFormValidationSet.publish: [], // defined in subforms
+    StudyFormValidationSet.test: [], // defined in subforms
+  };
 
   @override
   late final FormGroup form = FormGroup({
@@ -186,10 +186,7 @@ class StudyFormViewModel extends FormViewModel<Study>
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 @riverpod
-StudyFormViewModel studyFormViewModel(
-  Ref ref,
-  StudyID studyId,
-) {
+StudyFormViewModel studyFormViewModel(Ref ref, StudyID studyId) {
   // print("studyFormViewModel");
   final state = ref.watch(studyControllerProvider(studyId));
   return StudyFormViewModel(

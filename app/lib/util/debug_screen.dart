@@ -18,11 +18,11 @@ class DebugScreen {
 
     final pendingNotifications = studyNotifications != null
         ? studyNotifications.flutterLocalNotificationsPlugin
-            .pendingNotificationRequests()
+              .pendingNotificationRequests()
         : Future.value([]);
 
-    final pendingNotificationsPlugin =
-        FlutterLocalNotificationsPlugin().pendingNotificationRequests();
+    final pendingNotificationsPlugin = FlutterLocalNotificationsPlugin()
+        .pendingNotificationRequests();
 
     bool? ignoreBatteryOptimizations;
     int? pendingNotificationRes;
@@ -34,9 +34,7 @@ class DebugScreen {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const SelectableText(
-          'Debug Screen',
-        ),
+        title: const SelectableText('Debug Screen'),
         content: Column(
           children: [
             Text(versionString),
@@ -48,7 +46,8 @@ class DebugScreen {
                     path: value.email,
                     queryParameters: {
                       'subject': '[StudyU] Debug Information',
-                      'body': 'version: $versionString\n'
+                      'body':
+                          'version: $versionString\n'
                           'ignoreBatteryOptimizations: ${ignoreBatteryOptimizations ?? 'null'}\n'
                           'pendingNotificationsNumber: ${pendingNotificationRes ?? 'null'}\n'
                           'pendingNotificationsPluginNumber: ${pendingNotificationsPluginRes ?? 'null'}\n'
@@ -106,8 +105,9 @@ class DebugScreen {
                                 ),
                               );
                               await Future.delayed(const Duration(seconds: 1));
-                              await SystemChannels.platform
-                                  .invokeMethod('SystemNavigator.pop');
+                              await SystemChannels.platform.invokeMethod(
+                                'SystemNavigator.pop',
+                              );
                             }
                           } catch (e) {
                             StudyULogger.error(e);
@@ -136,10 +136,7 @@ class DebugScreen {
             ),
             FutureBuilder<bool>(
               future: receivePermission(),
-              builder: (
-                context,
-                AsyncSnapshot<bool> snapshot,
-              ) {
+              builder: (context, AsyncSnapshot<bool> snapshot) {
                 if (snapshot.hasData) {
                   final String data =
                       "ignoreBatteryOptimizations: ${snapshot.data}";
@@ -152,10 +149,7 @@ class DebugScreen {
             ),
             FutureBuilder<List>(
               future: pendingNotifications,
-              builder: (
-                context,
-                AsyncSnapshot<List> snapshot,
-              ) {
+              builder: (context, AsyncSnapshot<List> snapshot) {
                 if (snapshot.hasData) {
                   pendingNotificationRes = snapshot.data!.length;
                   return Text(
@@ -172,23 +166,24 @@ class DebugScreen {
             ),
             FutureBuilder<List<PendingNotificationRequest>>(
               future: pendingNotificationsPlugin,
-              builder: (
-                context,
-                AsyncSnapshot<List<PendingNotificationRequest>> snapshot,
-              ) {
-                if (snapshot.hasData) {
-                  pendingNotificationsPluginRes = snapshot.data!.length;
-                  return Text(
-                    'Local Notifications Plugin Number of Pending Notifications: $pendingNotificationsPluginRes',
-                  );
-                } else if (snapshot.hasError) {
-                  return Text(
-                    'Pending Notifications Plugin: Error: ${snapshot.error}',
-                  );
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              },
+              builder:
+                  (
+                    context,
+                    AsyncSnapshot<List<PendingNotificationRequest>> snapshot,
+                  ) {
+                    if (snapshot.hasData) {
+                      pendingNotificationsPluginRes = snapshot.data!.length;
+                      return Text(
+                        'Local Notifications Plugin Number of Pending Notifications: $pendingNotificationsPluginRes',
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text(
+                        'Pending Notifications Plugin: Error: ${snapshot.error}',
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  },
             ),
             const Text("Scheduled Notifications:"),
             SelectableText(

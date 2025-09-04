@@ -13,14 +13,14 @@ String _$localeStateNotifierHash() =>
 @ProviderFor(LocaleStateNotifier)
 final localeStateNotifierProvider =
     AutoDisposeNotifierProvider<LocaleStateNotifier, LocaleState>.internal(
-  LocaleStateNotifier.new,
-  name: r'localeStateNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$localeStateNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      LocaleStateNotifier.new,
+      name: r'localeStateNotifierProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$localeStateNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$LocaleStateNotifier = AutoDisposeNotifier<LocaleState>;
 // ignore_for_file: type=lint

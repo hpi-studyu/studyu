@@ -15,7 +15,7 @@ abstract class Expression {
         BooleanExpression.expressionType => BooleanExpression.fromJson(data),
         ChoiceExpression.expressionType => ChoiceExpression.fromJson(data),
         NotExpression.expressionType => NotExpression.fromJson(data),
-        _ => throw UnknownJsonTypeError(data[keyType])
+        _ => throw UnknownJsonTypeError(data[keyType]),
       };
 
   Map<String, dynamic> toJson();

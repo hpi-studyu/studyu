@@ -660,7 +660,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String free_text_example_explanation(
-      String type, num countMin, num countMax) {
+    String type,
+    num countMin,
+    num countMax,
+  ) {
     return 'Inputs of type $type with a character length range of $countMin to $countMax will be accepted.';
   }
 
@@ -1433,6 +1436,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get navlink_study_test_app_intervention => 'Intervention Selection';
+
+  @override
+  String get navlink_study_test_app_intervention_disabled =>
+      'The intervention selection is disabled, as the study has less than three interventions defined. Interventions are selected automatically in this case.';
 
   @override
   String get navlink_study_test_app_consent => 'Consent';

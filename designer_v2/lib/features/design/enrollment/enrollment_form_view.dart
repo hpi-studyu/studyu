@@ -32,8 +32,9 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel =
-            ref.watch(enrollmentFormViewModelProvider(studyId));
+        final formViewModel = ref.watch(
+          enrollmentFormViewModelProvider(studyId),
+        );
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: ReactiveFormConsumer(
@@ -53,32 +54,55 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       input: Column(
                         children: formViewModel.enrollmentTypeControlOptions
                             .map<Widget>(
-                              (option) => RadioListTile<Participation>(
+                              (option) => RadioGroup<Participation>(
                                 groupValue:
                                     formViewModel.enrollmentTypeControl.value,
-                                onChanged: formViewModel.isReadonly
-                                    ? null
-                                    : (value) => formViewModel
-                                        .enrollmentTypeControl
-                                        .value = option.value,
-                                value: option.value,
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      option.value.whoShort,
-                                      style: theme.textTheme.bodyLarge,
-                                    ),
-                                    const SizedBox(height: 2.0),
-                                  ],
-                                ),
-                                subtitle: (option.description) != null
-                                    ? TextParagraph(
-                                        text: option.description,
-                                        selectable: false,
-                                        style: ThemeConfig.bodyTextMuted(theme),
+                                onChanged: (Participation? value) {
+                                  if (!formViewModel.isReadonly &&
+                                      value != null) {
+                                    formViewModel.enrollmentTypeControl.value =
+                                        value;
+                                  }
+                                },
+                                child: Column(
+                                  children: formViewModel
+                                      .enrollmentTypeControlOptions
+                                      .map<Widget>(
+                                        (
+                                          option,
+                                        ) => RadioListTile<Participation>(
+                                          value: option.value,
+                                          enabled: !formViewModel.isReadonly,
+                                          // disables in readonly mode
+                                          title: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                option.value.whoShort,
+                                                style:
+                                                    theme.textTheme.bodyLarge,
+                                              ),
+                                              const SizedBox(height: 2.0),
+                                            ],
+                                          ),
+                                          subtitle: (option.description) != null
+                                              ? TextParagraph(
+                                                  text: option.description,
+                                                  selectable: false,
+                                                  style:
+                                                      ThemeConfig.bodyTextMuted(
+                                                        theme,
+                                                      ),
+                                                )
+                                              : null,
+                                        ),
                                       )
-                                    : null,
+                                      .toList()
+                                      .separatedBy(
+                                        () => const SizedBox(height: 8.0),
+                                      ),
+                                ),
                               ),
                             )
                             .toList()
@@ -138,8 +162,9 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                                 icon: const Icon(
                                   Icons.play_circle_outline_rounded,
                                 ),
-                                label:
-                                    Text(tr.form_array_screener_questions_test),
+                                label: Text(
+                                  tr.form_array_screener_questions_test,
+                                ),
                               ),
                             )
                           else
@@ -153,12 +178,12 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                               message: viewModel.questionType.string,
                               child: Icon(
                                 viewModel.questionType.icon,
-                                color: ThemeConfig.dropdownMenuItemTheme(theme)
-                                    .iconTheme!
-                                    .color,
-                                size: ThemeConfig.dropdownMenuItemTheme(theme)
-                                    .iconTheme!
-                                    .size,
+                                color: ThemeConfig.dropdownMenuItemTheme(
+                                  theme,
+                                ).iconTheme!.color,
+                                size: ThemeConfig.dropdownMenuItemTheme(
+                                  theme,
+                                ).iconTheme!.size,
                               ),
                             ),
                             const SizedBox(width: 16.0),
@@ -188,8 +213,8 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           .consentItemDelegate
                           .availableActions(viewModel),
                       onNewItem: () {
-                        final routeArgs =
-                            formViewModel.buildNewConsentItemFormRouteArgs();
+                        final routeArgs = formViewModel
+                            .buildNewConsentItemFormRouteArgs();
                         _showConsentItemSidesheetWithArgs(
                           routeArgs,
                           context,
@@ -239,8 +264,9 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final formViewModel =
-        ref.watch(screenerQuestionFormViewModelProvider(routeArgs));
+    final formViewModel = ref.watch(
+      screenerQuestionFormViewModelProvider(routeArgs),
+    );
 
     showFormSideSheet<ScreenerQuestionFormViewModel>(
       context: context,
@@ -271,8 +297,9 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final formViewModel =
-        ref.watch(consentItemFormViewModelProvider(routeArgs));
+    final formViewModel = ref.watch(
+      consentItemFormViewModelProvider(routeArgs),
+    );
 
     showFormSideSheet<ConsentItemFormViewModel>(
       context: context,

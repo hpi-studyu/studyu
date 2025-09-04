@@ -4,16 +4,15 @@ import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class ReportsFormData implements IStudyFormData {
-  ReportsFormData({
-    required this.reportItems,
-  });
+  ReportsFormData({required this.reportItems});
 
   final List<ReportItemFormData> reportItems;
 
   factory ReportsFormData.fromStudy(Study study) {
     return ReportsFormData(
-      reportItems:
-          ReportItemFormData.fromDomainModel(study.reportSpecification),
+      reportItems: ReportItemFormData.fromDomainModel(
+        study.reportSpecification,
+      ),
     );
   }
 
@@ -36,8 +35,7 @@ class ReportsFormData implements IStudyFormData {
   }
 
   @override
-  String get id =>
-      throw UnimplementedError(); // not needed for top-level form data
+  String get id => throw UnimplementedError(); // not needed for top-level form data
 
   @override
   ReportsFormData copy() {

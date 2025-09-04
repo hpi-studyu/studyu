@@ -29,8 +29,10 @@ Future<int> scheduleReminderForDate(
       reminder.minute,
     );
     if (date.isSameDate(DateTime.now()) &&
-        !StudyUTimeOfDay(hour: date.hour, minute: date.minute)
-            .earlierThan(reminder, exact: true)) {
+        !StudyUTimeOfDay(
+          hour: date.hour,
+          minute: date.minute,
+        ).earlierThan(reminder, exact: true)) {
       /* final String debugStr = 'Skipped #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
       // StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
       if (StudyNotifications.debug) {
@@ -178,10 +180,7 @@ Future<void>? cancelNotifications(BuildContext context) async {
 }
 
 class StudyNotification {
-  StudyNotification(
-    this.taskInstance,
-    this.date,
-  );
+  StudyNotification(this.taskInstance, this.date);
 
   final TaskInstance taskInstance;
   final DateTime date;

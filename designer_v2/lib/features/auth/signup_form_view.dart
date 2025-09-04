@@ -28,18 +28,14 @@ class SignupForm extends FormConsumerRefWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        EmailTextField(
-          formControl: controller.emailControl,
-        ),
+        EmailTextField(formControl: controller.getEmailControl()),
+        //const SizedBox(height: 12.0),
+        const SizedBox(height: 4.0),
+        PasswordTextField(formControl: controller.getPasswordControl()),
         //const SizedBox(height: 12.0),
         const SizedBox(height: 4.0),
         PasswordTextField(
-          formControl: controller.passwordControl,
-        ),
-        //const SizedBox(height: 12.0),
-        const SizedBox(height: 4.0),
-        PasswordTextField(
-          formControl: controller.passwordConfirmationControl,
+          formControl: controller.getPasswordConfirmationControl(),
           labelText: tr.form_field_password_confirm,
           hintText: tr.form_field_password_confirm_hint,
           onSubmitted: (_) => form.valid
@@ -52,8 +48,8 @@ class SignupForm extends FormConsumerRefWidget {
             Align(
               alignment: Alignment.topLeft,
               child: ReactiveCheckbox(
-                key: ObjectKey(controller.termsOfServiceControl),
-                formControl: controller.termsOfServiceControl,
+                key: ObjectKey(controller.getTermsOfServiceControl()),
+                formControl: controller.getTermsOfServiceControl(),
               ),
             ),
             const SizedBox(width: 6.0),
@@ -62,7 +58,7 @@ class SignupForm extends FormConsumerRefWidget {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   FormControlLabel(
-                    formControl: controller.termsOfServiceControl,
+                    formControl: controller.getTermsOfServiceControl(),
                     text: tr.signup_tos_intro,
                   ),
                   Hyperlink(
@@ -74,7 +70,7 @@ class SignupForm extends FormConsumerRefWidget {
                     ),
                   ),
                   FormControlLabel(
-                    formControl: controller.termsOfServiceControl,
+                    formControl: controller.getTermsOfServiceControl(),
                     text: tr.signup_tos_and,
                   ),
                   Hyperlink(
@@ -86,7 +82,7 @@ class SignupForm extends FormConsumerRefWidget {
                     ),
                   ),
                   FormControlLabel(
-                    formControl: controller.termsOfServiceControl,
+                    formControl: controller.getTermsOfServiceControl(),
                     text: tr.signup_tos_outro,
                   ),
                 ],

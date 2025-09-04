@@ -32,8 +32,8 @@ class _MeasurementSurveyFormViewState
   bool isStylingInformationDismissed = true;
 
   void onDismissedCallback() => setState(() {
-        isStylingInformationDismissed = !isStylingInformationDismissed;
-      });
+    isStylingInformationDismissed = !isStylingInformationDismissed;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +51,7 @@ class _MeasurementSurveyFormViewState
                 decoration: InputDecoration(
                   hintText: tr.form_field_measurement_survey_title,
                 ),
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(200),
-                ],
+                inputFormatters: [LengthLimitingTextInputFormatter(200)],
                 validationMessages:
                     widget.formViewModel.surveyTitleControl.validationMessages,
               ),
@@ -93,11 +91,11 @@ class _MeasurementSurveyFormViewState
                 decoration: InputDecoration(
                   hintText: tr.form_field_measurement_survey_intro_text_hint,
                 ),
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(2000),
-                ],
+                inputFormatters: [LengthLimitingTextInputFormatter(2000)],
                 validationMessages: widget
-                    .formViewModel.surveyIntroTextControl.validationMessages,
+                    .formViewModel
+                    .surveyIntroTextControl
+                    .validationMessages,
                 keyboardType: TextInputType.multiline,
                 minLines: 5,
                 maxLines: 5,
@@ -138,11 +136,11 @@ class _MeasurementSurveyFormViewState
                 decoration: InputDecoration(
                   hintText: tr.form_field_measurement_survey_outro_text_hint,
                 ),
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(2000),
-                ],
+                inputFormatters: [LengthLimitingTextInputFormatter(2000)],
                 validationMessages: widget
-                    .formViewModel.surveyOutroTextControl.validationMessages,
+                    .formViewModel
+                    .surveyOutroTextControl
+                    .validationMessages,
                 keyboardType: TextInputType.multiline,
                 minLines: 5,
                 maxLines: 5,
@@ -188,12 +186,12 @@ class _MeasurementSurveyFormViewState
                           message: viewModel.questionType.string,
                           child: Icon(
                             viewModel.questionType.icon,
-                            color: ThemeConfig.dropdownMenuItemTheme(theme)
-                                .iconTheme!
-                                .color,
-                            size: ThemeConfig.dropdownMenuItemTheme(theme)
-                                .iconTheme!
-                                .size,
+                            color: ThemeConfig.dropdownMenuItemTheme(
+                              theme,
+                            ).iconTheme!.color,
+                            size: ThemeConfig.dropdownMenuItemTheme(
+                              theme,
+                            ).iconTheme!.size,
                           ),
                         ),
                         const SizedBox(width: 16.0),
@@ -231,8 +229,9 @@ class _MeasurementSurveyFormViewState
     BuildContext context,
     WidgetRef ref,
   ) {
-    final surveyQuestionFormViewModel =
-        ref.watch(surveyQuestionFormViewModelProvider(routeArgs));
+    final surveyQuestionFormViewModel = ref.watch(
+      surveyQuestionFormViewModelProvider(routeArgs),
+    );
     showFormSideSheet<QuestionFormViewModel>(
       context: context,
       formViewModel: surveyQuestionFormViewModel,

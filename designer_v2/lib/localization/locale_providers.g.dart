@@ -55,8 +55,9 @@ String _$localeHash() => r'9b088ff7f2fc32aeeeb72d3c9d8a37abddb9757e';
 final localeProvider = AutoDisposeProvider<Locale>.internal(
   locale,
   name: r'localeProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$localeHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$localeHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

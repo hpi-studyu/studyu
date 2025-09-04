@@ -63,7 +63,7 @@ import 'app_localizations_en.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -86,16 +86,16 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('de'),
-    Locale('en')
+    Locale('en'),
   ];
 
   /// No description provided for @loading.
@@ -113,7 +113,7 @@ abstract class AppLocalizations {
   /// No description provided for @loading_error_description.
   ///
   /// In en, this message translates to:
-  /// **'The study data could not be retrieved. Please check your internet connection or try again later. If the problem persists, you can delete all data to reset the app. This will delete all your study data and you will have to rejoin the study.'**
+  /// **'The study data could not be retrieved. If you are currently participating in a study, please first contact your study supervisor for assistance. Only contact support if you are not in a study or your supervisor instructs you to do so. Do not delete your data unless told by your supervisor or support. Deleting data will remove all your study data and you will have to rejoin the study.'**
   String get loading_error_description;
 
   /// No description provided for @try_again.
@@ -299,7 +299,7 @@ abstract class AppLocalizations {
   /// No description provided for @please_select_interventions_description.
   ///
   /// In en, this message translates to:
-  /// **'The effects of these two interventions will be measured and compared during the study.'**
+  /// **'The effects of these two interventions will be measured and compared during the study. Interventions will follow the order you select. Choosing A before B means A comes first'**
   String get please_select_interventions_description;
 
   /// No description provided for @no_interventions_available.
@@ -571,6 +571,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Contact'**
   String get contact;
+
+  /// No description provided for @contact_support.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Support'**
+  String get contact_support;
+
+  /// Body of the support email, includes the subject ID
+  ///
+  /// In en, this message translates to:
+  /// **'Hello,\n\nI am experiencing a loading error in the StudyU app. My subject ID is: {subjectId}\n\nPlease assist me with this issue.\n\nThank you.'**
+  String support_email_body(String subjectId);
 
   /// No description provided for @about.
   ///
@@ -1418,65 +1430,17 @@ abstract class AppLocalizations {
   /// **'Maximum'**
   String get maximum;
 
-  /// No description provided for @sync_fitbit_data.
+  /// No description provided for @support_email_sent.
   ///
   /// In en, this message translates to:
-  /// **'Sync Fitbit Data'**
-  String get sync_fitbit_data;
+  /// **'Support Email Sent'**
+  String get support_email_sent;
 
-  /// No description provided for @fitbit_data_synced.
+  /// No description provided for @support_email_sent_description.
   ///
   /// In en, this message translates to:
-  /// **'Fitbit data synced successfully'**
-  String get fitbit_data_synced;
-
-  /// No description provided for @fitbit_data_not_synced.
-  ///
-  /// In en, this message translates to:
-  /// **'Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.'**
-  String get fitbit_data_not_synced;
-
-  /// No description provided for @error_syncing_fitbit_data.
-  ///
-  /// In en, this message translates to:
-  /// **'Error syncing Fitbit data: {error}'**
-  String error_syncing_fitbit_data(String error);
-
-  /// No description provided for @fitbit_data_synced_dialog_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Fitbit Data Synced'**
-  String get fitbit_data_synced_dialog_title;
-
-  /// No description provided for @fitbit_data_synced_info.
-  ///
-  /// In en, this message translates to:
-  /// **'Data was synced for the following data types:'**
-  String get fitbit_data_synced_info;
-
-  /// No description provided for @fitbit_data_earliest_date.
-  ///
-  /// In en, this message translates to:
-  /// **'Earliest date: {date}'**
-  String fitbit_data_earliest_date(String date);
-
-  /// No description provided for @fitbit_data_latest_date.
-  ///
-  /// In en, this message translates to:
-  /// **'Latest date: {date}'**
-  String fitbit_data_latest_date(String date);
-
-  /// No description provided for @fitbit_data_details_btn.
-  ///
-  /// In en, this message translates to:
-  /// **'Details'**
-  String get fitbit_data_details_btn;
-
-  /// No description provided for @fitbit_data_close_btn.
-  ///
-  /// In en, this message translates to:
-  /// **'Close'**
-  String get fitbit_data_close_btn;
+  /// **'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.'**
+  String get support_email_sent_description;
 }
 
 class _AppLocalizationsDelegate
@@ -1506,8 +1470,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

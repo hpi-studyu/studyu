@@ -24,8 +24,9 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel =
-            ref.watch(interventionsFormViewModelProvider(studyId));
+        final formViewModel = ref.watch(
+          interventionsFormViewModelProvider(studyId),
+        );
         final theme = Theme.of(context);
 
         return ReactiveForm(
@@ -53,7 +54,8 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                       return FormArrayTable<InterventionFormViewModel>(
                         control: formViewModel.interventionsArray,
                         items: formViewModel
-                            .interventionsCollection.formViewModels,
+                            .interventionsCollection
+                            .formViewModels,
                         onSelectItem: formViewModel.onSelectItem,
                         getActionsAt: (viewModel, _) =>
                             formViewModel.availablePopupActions(viewModel),

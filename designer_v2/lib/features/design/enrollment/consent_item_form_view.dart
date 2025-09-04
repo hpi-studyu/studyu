@@ -23,8 +23,8 @@ class _ConsentItemFormViewState extends State<ConsentItemFormView> {
   bool isStylingInformationDismissed = true;
 
   void onDismissedCallback() => setState(() {
-        isStylingInformationDismissed = !isStylingInformationDismissed;
-      });
+    isStylingInformationDismissed = !isStylingInformationDismissed;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,9 @@ class _ConsentItemFormViewState extends State<ConsentItemFormView> {
                             LengthLimitingTextInputFormatter(100),
                           ],
                           validationMessages: widget
-                              .formViewModel.titleControl.validationMessages,
+                              .formViewModel
+                              .titleControl
+                              .validationMessages,
                           decoration: InputDecoration(
                             hintText: tr.form_field_consent_title_hint,
                           ),
@@ -99,11 +101,11 @@ class _ConsentItemFormViewState extends State<ConsentItemFormView> {
                   ),
                   input: ReactiveTextField(
                     formControl: widget.formViewModel.descriptionControl,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(10000),
-                    ],
+                    inputFormatters: [LengthLimitingTextInputFormatter(10000)],
                     validationMessages: widget
-                        .formViewModel.descriptionControl.validationMessages,
+                        .formViewModel
+                        .descriptionControl
+                        .validationMessages,
                     keyboardType: TextInputType.multiline,
                     minLines: 10,
                     maxLines: 30,

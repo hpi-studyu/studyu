@@ -21,13 +21,14 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
-    with
-        StudyScheduleControls
+    with StudyScheduleControls
     implements
         IFormViewModelDelegate<InterventionFormViewModel>,
         IListActionProvider<InterventionFormViewModel>,
-        IProviderArgsResolver<InterventionFormViewModel,
-            InterventionFormRouteArgs> {
+        IProviderArgsResolver<
+          InterventionFormViewModel,
+          InterventionFormRouteArgs
+        > {
   InterventionsFormViewModel({
     required this.study,
     required this.router,
@@ -45,9 +46,9 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
   final FormArray interventionsArray = FormArray([]);
   late final interventionsCollection =
       FormViewModelCollection<InterventionFormViewModel, InterventionFormData>(
-    [],
-    interventionsArray,
-  );
+        [],
+        interventionsArray,
+      );
 
   @override
   late final FormGroup form = FormGroup({
@@ -59,31 +60,29 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [
-          ...studyScheduleValidationConfig[StudyFormValidationSet.draft]!,
-        ],
-        StudyFormValidationSet.publish: [
-          ...studyScheduleValidationConfig[StudyFormValidationSet.publish]!,
-          interventionsRequired,
-        ],
-        StudyFormValidationSet.test: [
-          ...studyScheduleValidationConfig[StudyFormValidationSet.test]!,
-          interventionsRequired,
-        ],
-      };
+    StudyFormValidationSet.draft: [
+      ...studyScheduleValidationConfig[StudyFormValidationSet.draft]!,
+    ],
+    StudyFormValidationSet.publish: [
+      ...studyScheduleValidationConfig[StudyFormValidationSet.publish]!,
+      interventionsRequired,
+    ],
+    StudyFormValidationSet.test: [
+      ...studyScheduleValidationConfig[StudyFormValidationSet.test]!,
+      interventionsRequired,
+    ],
+  };
 
   FormControlValidation get interventionsRequired => FormControlValidation(
-        control: interventionsArray,
-        validators: [
-          Validators.minLength(2),
-        ],
-        validationMessages: {
-          ValidationMessage.minLength: (error) =>
-              tr.form_array_interventions_minlength(
-                (error as Map)['requiredLength'] as num,
-              ),
-        },
-      );
+    control: interventionsArray,
+    validators: [Validators.minLength(2)],
+    validationMessages: {
+      ValidationMessage.minLength: (error) =>
+          tr.form_array_interventions_minlength(
+            (error as Map)['requiredLength'] as num,
+          ),
+    },
+  );
 
   @override
   void setControlsFrom(InterventionsFormData data) {
@@ -180,8 +179,9 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
       return viewModel;
     }
 
-    final viewModel = interventionsCollection
-        .findWhere((vm) => vm.interventionId == args.interventionId);
+    final viewModel = interventionsCollection.findWhere(
+      (vm) => vm.interventionId == args.interventionId,
+    );
     if (viewModel == null) {
       throw InterventionNotFoundException(); // TODO handle 404 not found
     }
