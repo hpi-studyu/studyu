@@ -14,18 +14,18 @@ dependencies:
   collection: ^1.19.1
   cross_file: ^0.3.4+2
   cupertino_icons: ^1.0.8
-  fl_chart: ^1.0.0
+  fl_chart: ^1.1.0
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.2
-  flutter_local_notifications: ^19.4.0
+  flutter_local_notifications: ^19.4.1
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.4.6
   flutter_timezone: ^4.1.1
   flutter_web_plugins:
     sdk: flutter
-  flutter_widget_from_html: ^0.17.0
+  flutter_widget_from_html: ^0.17.1
   gauge_indicator: ^0.4.3
   intersperse: ^2.0.0
   intl: ^0.20.2
@@ -35,18 +35,18 @@ dependencies:
   path_provider: ^2.1.5
   pdf: ^3.11.3
   permission_handler: ^12.0.1
-  provider: ^6.1.5
+  provider: ^6.1.5+1
   quiver: ^3.2.2
   rainbow_color: ^2.0.1
-  record: ^6.0.0
+  record: ^6.1.1
   sentry_flutter: ^9.6.0
   sentry_logging: ^9.6.0
   shared_preferences: ^2.5.3
   statistics: ^1.2.0
   studyu_core: ^4.6.1
   studyu_flutter_common: ^1.8.13
-  supabase: ^2.8.0
-  supabase_flutter: ^2.9.1
+  supabase: ^2.9.0
+  supabase_flutter: ^2.10.0
   timeline_tile: ^2.0.0
   timezone: ^0.10.1
   universal_html: ^2.2.4
