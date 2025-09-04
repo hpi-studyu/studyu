@@ -5,7 +5,6 @@ on:
     branches:
       - main
       - dev
-      - feat/fitbit*
     paths:
       - 'app/**'
       - 'core/**'
@@ -67,14 +66,8 @@ jobs:
           STUDYU_ANDROID_KEYSTORE_BASE64: ${{ secrets.STUDYU_ANDROID_KEYSTORE_BASE64 }}
           STUDYU_KEY_PROPERTIES: ${{ secrets.STUDYU_KEY_PROPERTIES }}
 
-      - name: Build StudyU app bundle (prod)
-        if: ${{ !startsWith(github.ref, 'refs/heads/feat/fitbit') }}
+      - name: Build StudyU app bundle
         run: flutter build appbundle --release --build-number ${{ github.run_number }}
-        working-directory: ./app
-
-      - name: Build StudyU app bundle (dev)
-        if: ${{ startsWith(github.ref, 'refs/heads/feat/fitbit') }}
-        run: flutter build appbundle --release --build-number ${{ github.run_number }} --dart-define=STUDYU_ENV=.env.fitbit
         working-directory: ./app
 
       - name: Fastlane upload
@@ -135,14 +128,8 @@ jobs:
           fi
         working-directory: ./app
 
-      - name: Build StudyU ios without codesign (prod
-        if: ${{ !startsWith(github.ref, 'refs/heads/feat/fitbit') }}
+      - name: Build StudyU ios without codesign
         run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }} --build-name ${{ env.STUDYU_APP_VERSION }}
-        working-directory: ./app
-
-      - name: Build StudyU ios without codesign (dev)
-        if: ${{ startsWith(github.ref, 'refs/heads/feat/fitbit') }}
-        run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }} --build-name ${{ env.STUDYU_APP_VERSION }} --dart-define=STUDYU_ENV=.env.fitbit
         working-directory: ./app
 
       - name: Fastlane upload
