@@ -40,8 +40,8 @@ class StudyMonitorItem extends Equatable {
     required this.completedTasksPerDay,
     required this.totalInterventionTasks,
     required this.totalSurveyTasks,
-  })  : assert(missedTasksPerDay.length == currentDayOfStudy),
-        assert(completedTasksPerDay.length == currentDayOfStudy);
+  }) : assert(missedTasksPerDay.length == currentDayOfStudy),
+       assert(completedTasksPerDay.length == currentDayOfStudy);
 
   @override
   List<Object?> get props => [participantId];
@@ -105,13 +105,15 @@ extension StudyMonitoringX on Study {
     for (final participant in participants) {
       final progresses = progressMap[participant.id] ?? [];
       final start = participant.startedAt!;
-      final lastActivityAt =
-          progresses.isNotEmpty ? progresses.first.completedAt! : start;
+      final lastActivityAt = progresses.isNotEmpty
+          ? progresses.first.completedAt!
+          : start;
 
       final daysSinceStart = nowUtc.difference(start).inDays;
       final currentDayOfStudy = min(daysSinceStart, totalDays);
-      final daysInBaseline =
-          schedule.includeBaseline ? schedule.phaseDuration : 0;
+      final daysInBaseline = schedule.includeBaseline
+          ? schedule.phaseDuration
+          : 0;
 
       int completedInterventions = 0;
       int completedSurveys = 0;
@@ -134,7 +136,7 @@ extension StudyMonitoringX on Study {
             final intervention = interventionMap[interventionId];
             if (intervention != null) {
               requiredInterventionTaskIds = {
-                for (final t in intervention.tasks) t.id
+                for (final t in intervention.tasks) t.id,
               };
             }
           }
@@ -146,23 +148,28 @@ extension StudyMonitoringX on Study {
         };
 
         final completedForDay = progresses
-            .where((p) =>
-                p.completedAt!.isAfter(dayStart) &&
-                p.completedAt!.isBefore(dayEnd))
+            .where(
+              (p) =>
+                  p.completedAt!.isAfter(dayStart) &&
+                  p.completedAt!.isBefore(dayEnd),
+            )
             .map((p) => p.taskId)
             .toSet();
 
         final missedForDay = requiredTaskIds.difference(completedForDay);
         missedTasksPerDay.add(missedForDay);
 
-        final completedForDayRequired =
-            requiredTaskIds.intersection(completedForDay);
+        final completedForDayRequired = requiredTaskIds.intersection(
+          completedForDay,
+        );
         completedTasksPerDay.add(completedForDayRequired);
 
-        completedSurveys +=
-            requiredSurveyTaskIds.intersection(completedForDay).length;
-        completedInterventions +=
-            requiredInterventionTaskIds.intersection(completedForDay).length;
+        completedSurveys += requiredSurveyTaskIds
+            .intersection(completedForDay)
+            .length;
+        completedInterventions += requiredInterventionTaskIds
+            .intersection(completedForDay)
+            .length;
       }
 
       final totalSurveys = currentDayOfStudy * totalSurveyTasksPerDay;
@@ -202,13 +209,18 @@ extension StudyMonitoringX on Study {
     }
 
     // Ensure the items list matches the expected categorization order
-    final participantCategories = items.activeParticipants.toList() +
+    final participantCategories =
+        items.activeParticipants.toList() +
         items.inactiveParticipants.toList() +
         items.dropoutParticipants.toList() +
         items.completedParticipants.toList();
 
-    assert(const DeepCollectionEquality.unordered()
-        .equals(items, participantCategories));
+    assert(
+      const DeepCollectionEquality.unordered().equals(
+        items,
+        participantCategories,
+      ),
+    );
 
     return items;
   }
@@ -397,17 +409,20 @@ extension StudyMonitoringX on Study {
 // }
 
 extension ListX on List<StudyMonitorItem> {
-  static final inactiveDate = DateTime.now()
-      .subtract(const Duration(days: Config.participantInactiveDuration));
-  static final dropoutDate = DateTime.now()
-      .subtract(const Duration(days: Config.participantDropoutDuration));
+  static final inactiveDate = DateTime.now().subtract(
+    const Duration(days: Config.participantInactiveDuration),
+  );
+  static final dropoutDate = DateTime.now().subtract(
+    const Duration(days: Config.participantDropoutDuration),
+  );
 
   static bool Function(StudyMonitorItem p) get studyStillRunning =>
       (StudyMonitorItem p) => p.currentDayOfStudy < p.studyDurationInDays;
 
-  static bool Function(StudyMonitorItem p) get inactive => (p) =>
-      p.lastActivityAt.isBefore(inactiveDate) &&
-      p.lastActivityAt.isAfter(dropoutDate);
+  static bool Function(StudyMonitorItem p) get inactive =>
+      (p) =>
+          p.lastActivityAt.isBefore(inactiveDate) &&
+          p.lastActivityAt.isAfter(dropoutDate);
 
   static bool Function(StudyMonitorItem p) get dropout =>
       (p) => p.droppedOut || dropoutByDuration(p) && studyStillRunning(p);
@@ -423,18 +438,16 @@ extension ListX on List<StudyMonitorItem> {
 
   /// Number of participants who are currently inactive in the study for more
   /// than [participantDropoutDuration] days in a row
-  Iterable<StudyMonitorItem> get inactiveParticipants => where(
-        (p) => !dropout(p) && inactive(p) && studyStillRunning(p),
-      );
+  Iterable<StudyMonitorItem> get inactiveParticipants =>
+      where((p) => !dropout(p) && inactive(p) && studyStillRunning(p));
 
   /// Number of participants who dropped out of the study before the study ended
   /// Hint: The is_deleted flag in the study_subject database table marks a
   /// participant as dropped out
   /// Note: If the participant's last activity exceeds
   /// [participantDropoutDuration] days, they will also be counted as a dropout
-  Iterable<StudyMonitorItem> get dropoutParticipants => where(
-        (p) => dropout(p),
-      );
+  Iterable<StudyMonitorItem> get dropoutParticipants =>
+      where((p) => dropout(p));
 
   /// Number of participants who completed the study
   /// Completed means that the participant has reached the end of the study

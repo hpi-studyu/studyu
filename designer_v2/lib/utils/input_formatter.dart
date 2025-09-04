@@ -1,10 +1,7 @@
 import 'package:flutter/services.dart';
 
 class NumericalRangeFormatter extends TextInputFormatter {
-  NumericalRangeFormatter({
-    this.min,
-    this.max,
-  });
+  NumericalRangeFormatter({this.min, this.max});
 
   final int? min;
   final int? max;

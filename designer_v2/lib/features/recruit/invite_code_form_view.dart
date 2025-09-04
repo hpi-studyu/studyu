@@ -57,11 +57,7 @@ class InviteCodeFormView extends FormConsumerWidget {
           text: tr.form_field_is_preconfigured_schedule_description,
         ),
         const SizedBox(height: 24.0),
-        FormTableLayout(
-          rows: [
-            ..._conditionalInterventionRows(context),
-          ],
-        ),
+        FormTableLayout(rows: [..._conditionalInterventionRows(context)]),
       ],
     );
   }

@@ -44,11 +44,7 @@ class _SettingsState extends State<Settings> {
       );
     }
 
-    dropDownItems.add(
-      const DropdownMenuItem(
-        child: Text('System'),
-      ),
-    );
+    dropDownItems.add(const DropdownMenuItem(child: Text('System')));
 
     return Column(
       children: [
@@ -56,9 +52,7 @@ class _SettingsState extends State<Settings> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text('${AppLocalizations.of(context)!.language}:'),
-            const SizedBox(
-              width: 5,
-            ),
+            const SizedBox(width: 5),
             DropdownButton<Locale>(
               value: _selectedValue,
               items: dropDownItems,
@@ -80,13 +74,9 @@ class _SettingsState extends State<Settings> {
               showDuration: const Duration(milliseconds: 10000),
               margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
               message: AppLocalizations.of(context)!.allow_analytics_desc,
-              child: const Icon(
-                Icons.info,
-              ),
+              child: const Icon(Icons.info),
             ),
-            const SizedBox(
-              width: 5,
-            ),
+            const SizedBox(width: 5),
             Switch(
               value: _analyticsValue!,
               onChanged: (value) {
@@ -106,9 +96,7 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.settings),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.settings)),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -210,30 +198,28 @@ class DeleteAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: Text('${AppLocalizations.of(context)!.delete_data}?'),
-        content: Text(
-          AppLocalizations.of(context)!.hard_delete_desc,
-        ),
-        actions: [
-          ElevatedButton.icon(
-            icon: const Icon(Icons.delete),
-            label: Text(AppLocalizations.of(context)!.delete_data),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            onPressed: () async {
-              try {
-                await subject!.delete(); // hard-delete
-                await deleteLocalData();
-                if (context.mounted) await cancelNotifications(context);
-                if (context.mounted) {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    Routes.welcome,
-                    (_) => false,
-                  );
-                }
-              } on SocketException catch (_) {}
-            },
-          ),
-        ],
-      );
+    title: Text('${AppLocalizations.of(context)!.delete_data}?'),
+    content: Text(AppLocalizations.of(context)!.hard_delete_desc),
+    actions: [
+      ElevatedButton.icon(
+        icon: const Icon(Icons.delete),
+        label: Text(AppLocalizations.of(context)!.delete_data),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+        onPressed: () async {
+          try {
+            await subject!.delete(); // hard-delete
+            await deleteLocalData();
+            if (context.mounted) await cancelNotifications(context);
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                Routes.welcome,
+                (_) => false,
+              );
+            }
+          } on SocketException catch (_) {}
+        },
+      ),
+    ],
+  );
 }

@@ -42,9 +42,7 @@ class Preview {
 
     final String session = Uri.decodeComponent(queryParameters!['session']!);
     try {
-      await Supabase.instance.client.auth.recoverSession(
-        session,
-      );
+      await Supabase.instance.client.auth.recoverSession(session);
     } catch (_) {
       return false;
     }
@@ -69,20 +67,21 @@ class Preview {
 
       final List<StudySubject> subjects =
           await SupabaseQuery.getAll<StudySubject>(
-        selectedColumns: [
-          '*',
-          'study!study_subject_studyId_fkey(*)',
-          'subject_progress(*)',
-        ],
-        filters: {'user_id': userId},
-      );
+            selectedColumns: [
+              '*',
+              'study!study_subject_studyId_fkey(*)',
+              'subject_progress(*)',
+            ],
+            filters: {'user_id': userId},
+          );
 
       for (final subject in subjects) {
         try {
           await subject.delete();
         } catch (e) {
           print(
-              '[PreviewApp]: Failed deleting subject ${subject.id} for user $userId: $e');
+            '[PreviewApp]: Failed deleting subject ${subject.id} for user $userId: $e',
+          );
         }
       }
 
@@ -146,21 +145,17 @@ class Preview {
           // If the user has a study object Id, there was already a subject created
           // and we need to find the last one they created for the study
           // with the correct interventions
-          subject = studySubjects.lastWhere(
-            (foundSubject) {
-              // todo baseline
-              foundSubject.study.schedule.includeBaseline = false;
-              return foundSubject.userId ==
-                      Supabase.instance.client.auth.currentUser!.id &&
-                  foundSubject.studyId == study!.id &&
-                  listEquals(
-                    foundSubject.selectedInterventions
-                        .map((i) => i.id)
-                        .toList(),
-                    getInterventionIds(),
-                  );
-            },
-          );
+          subject = studySubjects.lastWhere((foundSubject) {
+            // todo baseline
+            foundSubject.study.schedule.includeBaseline = false;
+            return foundSubject.userId ==
+                    Supabase.instance.client.auth.currentUser!.id &&
+                foundSubject.studyId == study!.id &&
+                listEquals(
+                  foundSubject.selectedInterventions.map((i) => i.id).toList(),
+                  getInterventionIds(),
+                );
+          });
           // We switch the currently selected study subject with the one we found
           // that has fitting interventions in the correct order
           // Therefore, we get different subject entries for different interventions
@@ -183,7 +178,8 @@ class Preview {
         }
       } catch (e) {
         print(
-            '[PreviewApp]: Failed fetching subject. Maybe subject was reset? Error: $e');
+          '[PreviewApp]: Failed fetching subject. Maybe subject was reset? Error: $e',
+        );
         // todo try sign in again if token expired see loading screen
       }
     }
@@ -235,9 +231,7 @@ class Preview {
       final String intId = interventionList.firstWhere((id) => id == extra);
       newInterventionList
         ..add(intId)
-        ..add(
-          interventionList.firstWhere((id) => id != intId),
-        );
+        ..add(interventionList.firstWhere((id) => id != intId));
       assert(newInterventionList.length == 2);
     } else {
       // just take the first two

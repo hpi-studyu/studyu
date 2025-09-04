@@ -7,13 +7,13 @@ class GeneralDetailsSection extends GenericSection {
 
   @override
   Widget buildContent(BuildContext context) => Column(
-        children: [
-          StudyTile(
-            title: subject!.study.title,
-            description: subject!.study.description,
-            iconName: subject!.study.iconName,
-            contentPadding: EdgeInsets.zero,
-          ),
-        ],
-      );
+    children: [
+      StudyTile(
+        title: subject!.study.title,
+        description: subject!.study.description,
+        iconName: subject!.study.iconName,
+        contentPadding: EdgeInsets.zero,
+      ),
+    ],
+  );
 }

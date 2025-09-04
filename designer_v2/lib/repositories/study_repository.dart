@@ -35,11 +35,11 @@ class StudyRepository extends ModelRepository<Study>
     required this.authRepository,
     required this.ref,
   }) : super(
-          StudyRepositoryDelegate(
-            apiClient: apiClient,
-            authRepository: authRepository,
-          ),
-        );
+         StudyRepositoryDelegate(
+           apiClient: apiClient,
+           authRepository: authRepository,
+         ),
+       );
 
   /// Reference to the StudyU API injected via Riverpod
   final StudyUApi apiClient;
@@ -113,8 +113,9 @@ class StudyRepository extends ModelRepository<Study>
   @override
   Future<void> duplicateAndSave(Study model) async {
     final Study completeModel = await apiClient.fetchStudy(model.id);
-    final duplicate =
-        completeModel.duplicateAsDraft(authRepository.currentUser!.id);
+    final duplicate = completeModel.duplicateAsDraft(
+      authRepository.currentUser!.id,
+    );
     await save(duplicate);
   }
 
@@ -219,17 +220,19 @@ class StudyRepository extends ModelRepository<Study>
         type: StudyActionType.delete,
         label: StudyActionType.delete.string,
         onExecute: () {
-          return ref.read(notificationServiceProvider).show(
-            Notifications
-                .studyDeleteConfirmation, // TODO: more severe confirmation for running studies
-            actions: [
-              NotificationAction(
-                label: StudyActionType.delete.string,
-                onSelect: onDeleteCallback,
-                isDestructive: true,
-              ),
-            ],
-          );
+          return ref
+              .read(notificationServiceProvider)
+              .show(
+                Notifications
+                    .studyDeleteConfirmation, // TODO: more severe confirmation for running studies
+                actions: [
+                  NotificationAction(
+                    label: StudyActionType.delete.string,
+                    onSelect: onDeleteCallback,
+                    isDestructive: true,
+                  ),
+                ],
+              );
         },
         isAvailable: model.canDelete(currentUser),
         isDestructive: true,
@@ -287,7 +290,7 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
 
 @riverpod
 StudyRepository studyRepository(Ref ref) => StudyRepository(
-      apiClient: ref.watch(apiClientProvider),
-      authRepository: ref.watch(authRepositoryProvider),
-      ref: ref,
-    );
+  apiClient: ref.watch(apiClientProvider),
+  authRepository: ref.watch(authRepositoryProvider),
+  ref: ref,
+);

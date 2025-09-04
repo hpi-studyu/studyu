@@ -12,9 +12,7 @@ class UnsavedChangesDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return StandardDialog(
       titleText: tr.dialog_unsaved_changes_title,
-      body: TextParagraph(
-        text: tr.dialog_unsaved_changes_description,
-      ),
+      body: TextParagraph(text: tr.dialog_unsaved_changes_description),
       actionButtons: [
         PrimaryButton(
           onPressed: () {

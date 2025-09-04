@@ -31,8 +31,10 @@ abstract class NotificationIntent {
   void register(NotificationAction action) {
     actions ??= [];
     // upsert action by its label
-    final existingIdx =
-        actions!.map((action) => action.label).toList().indexOf(action.label);
+    final existingIdx = actions!
+        .map((action) => action.label)
+        .toList()
+        .indexOf(action.label);
     if (existingIdx != -1) {
       actions![existingIdx] = action;
     } else {

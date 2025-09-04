@@ -23,8 +23,9 @@ class StudyRecruitController extends _$StudyRecruitController
     state = StudyRecruitControllerState(
       studyId: studyId,
       studyRepository: ref.watch(studyRepositoryProvider),
-      studyWithMetadata:
-          ref.watch(studyControllerProvider(studyId)).studyWithMetadata,
+      studyWithMetadata: ref
+          .watch(studyControllerProvider(studyId))
+          .studyWithMetadata,
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
       inviteCodeRepository: ref.watch(inviteCodeRepositoryProvider(studyId)),
@@ -41,16 +42,15 @@ class StudyRecruitController extends _$StudyRecruitController
 
   void _subscribeInvites() {
     print("StudyRecruitController.subscribe");
-    _invitesSubscription =
-        state.inviteCodeRepository.watchAll().listen((wrappedModels) {
+    _invitesSubscription = state.inviteCodeRepository.watchAll().listen((
+      wrappedModels,
+    ) {
       print("StudyRecruitController.listenUpdate");
       // Update the controller's state when new invites are available in the repository
       final invites = wrappedModels.map((invite) => invite.model).toList();
       // Sort invites alphabetically by code
       invites.sort((a, b) => a.code.compareTo(b.code));
-      state = state.copyWith(
-        invites: AsyncValue.data(invites),
-      );
+      state = state.copyWith(invites: AsyncValue.data(invites));
     }); // TODO onError
   }
 

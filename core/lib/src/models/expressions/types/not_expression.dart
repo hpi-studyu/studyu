@@ -14,8 +14,8 @@ class NotExpression extends Expression {
   NotExpression() : super(expressionType);
 
   NotExpression.withId()
-      : expression = BooleanExpression(),
-        super(expressionType);
+    : expression = BooleanExpression(),
+      super(expressionType);
 
   factory NotExpression.fromJson(Map<String, dynamic> json) =>
       _$NotExpressionFromJson(json);

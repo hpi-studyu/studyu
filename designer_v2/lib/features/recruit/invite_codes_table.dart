@@ -40,8 +40,10 @@ class StudyInvitesTable extends StatelessWidget {
         ),
         StandardTableColumn(
           label: tr.code_list_header_code,
-          columnWidth:
-              const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6)),
+          columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(200),
+            FlexColumnWidth(1.6),
+          ),
         ),
         StandardTableColumn(
           label: tr.studies_list_header_participants_enrolled,
@@ -49,13 +51,17 @@ class StudyInvitesTable extends StatelessWidget {
         ),
         StandardTableColumn(
           label: tr.form_field_preconfigured_schedule_intervention_a,
-          columnWidth:
-              const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth()),
+          columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(150),
+            FlexColumnWidth(),
+          ),
         ),
         StandardTableColumn(
           label: tr.form_field_preconfigured_schedule_intervention_b,
-          columnWidth:
-              const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth()),
+          columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(150),
+            FlexColumnWidth(),
+          ),
         ),
         //StandardTableColumn(label: '', columnWidth: const FixedColumnWidth(60)),
       ],
@@ -113,9 +119,7 @@ class StudyInvitesTable extends StatelessWidget {
           children: [
             Text(
               item.code,
-              style: const TextStyle(
-                overflow: TextOverflow.ellipsis,
-              ),
+              style: const TextStyle(overflow: TextOverflow.ellipsis),
               maxLines: 1,
             ),
             // TODO: support inline actions in standard table widget

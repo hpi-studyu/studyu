@@ -7,14 +7,15 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
-typedef SurveyQuestionFormDataFactory = QuestionFormData Function(
-  Question question,
-  List<EligibilityCriterion> eligibilityCriteria,
-);
+typedef SurveyQuestionFormDataFactory =
+    QuestionFormData Function(
+      Question question,
+      List<EligibilityCriterion> eligibilityCriteria,
+    );
 
 abstract class QuestionFormData implements IFormData {
   static Map<SurveyQuestionType, SurveyQuestionFormDataFactory>
-      questionTypeFormDataFactories = {
+  questionTypeFormDataFactories = {
     SurveyQuestionType.scale: (question, eligibilityCriteria) {
       switch (question) {
         // First check for general scale which implements the other interfaces
@@ -98,8 +99,10 @@ abstract class QuestionFormData implements IFormData {
   ) {
     final surveyQuestionType = SurveyQuestionType.of(question);
     if (!questionTypeFormDataFactories.containsKey(surveyQuestionType)) {
-      throw Exception("Failed to create SurveyQuestionFormData for unknown "
-          "SurveyQuestionType: $surveyQuestionType");
+      throw Exception(
+        "Failed to create SurveyQuestionFormData for unknown "
+        "SurveyQuestionType: $surveyQuestionType",
+      );
     }
     return questionTypeFormDataFactories[surveyQuestionType]!(
       question,
@@ -151,7 +154,8 @@ abstract class QuestionFormData implements IFormData {
       // (as of now) if no criterion evaluates to true
       bool responseOptionValidity = false;
       for (final criterion in eligibilityCriteria) {
-        responseOptionValidity = responseOptionValidity ||
+        responseOptionValidity =
+            responseOptionValidity ||
             (criterion.condition.evaluate(questionnaireState) ?? false);
       }
       result[responseOption] = responseOptionValidity;
@@ -246,9 +250,9 @@ class BoolQuestionFormData extends QuestionFormData {
   });
 
   static Map<String, bool> get kResponseOptions => {
-        tr.form_array_response_options_bool_yes: true,
-        tr.form_array_response_options_bool_no: false,
-      };
+    tr.form_array_response_options_bool_yes: true,
+    tr.form_array_response_options_bool_no: false,
+  };
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();
@@ -304,8 +308,9 @@ class ImageQuestionFormData extends QuestionFormData {
     super.questionInfoText,
   });
 
-  static Map<String, FutureBlobFile> get kResponseOptions =>
-      {tr.form_field_response_image: FutureBlobFile("image", "image")};
+  static Map<String, FutureBlobFile> get kResponseOptions => {
+    tr.form_field_response_image: FutureBlobFile("image", "image"),
+  };
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();
@@ -364,8 +369,9 @@ class AudioQuestionFormData extends QuestionFormData {
 
   final int maxRecordingDurationSeconds;
 
-  static Map<String, FutureBlobFile> get kResponseOptions =>
-      {tr.form_field_response_audio: FutureBlobFile("audio", "audio")};
+  static Map<String, FutureBlobFile> get kResponseOptions => {
+    tr.form_field_response_audio: FutureBlobFile("audio", "audio"),
+  };
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();
@@ -434,9 +440,9 @@ class ScaleQuestionFormData extends QuestionFormData {
     this.minColor,
     this.maxColor,
   }) : assert(
-          midValues.length == midLabels.length,
-          "midValues.length and midLabels.length must be equal",
-        );
+         midValues.length == midLabels.length,
+         "midValues.length and midLabels.length must be equal",
+       );
 
   final double minValue;
   final double maxValue;

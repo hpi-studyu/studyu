@@ -45,8 +45,8 @@ class _SurveyQuestionFormViewState
   bool isStylingInformationDismissed = true;
 
   void onDismissedCallback() => setState(() {
-        isStylingInformationDismissed = !isStylingInformationDismissed;
-      });
+    isStylingInformationDismissed = !isStylingInformationDismissed;
+  });
 
   WidgetBuilder get questionTypeBodyBuilder {
     final Map<SurveyQuestionType, WidgetBuilder> questionTypeWidgets = {
@@ -136,8 +136,9 @@ class _SurveyQuestionFormViewState
                 child: ReactiveDropdownField<SurveyQuestionType>(
                   formControl: formViewModel.questionTypeControl,
                   items: formViewModel.questionTypeControlOptions.map((option) {
-                    final menuItemTheme =
-                        ThemeConfig.dropdownMenuItemTheme(theme);
+                    final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(
+                      theme,
+                    );
                     final iconTheme =
                         menuItemTheme.iconTheme ?? theme.iconTheme;
                     return DropdownMenuItem(
@@ -226,9 +227,7 @@ class _SurveyQuestionFormViewState
           ),
           input: ReactiveTextField(
             formControl: formViewModel.questionTextControl,
-            decoration: InputDecoration(
-              hintText: tr.form_field_question,
-            ),
+            decoration: InputDecoration(hintText: tr.form_field_question),
             validationMessages:
                 formViewModel.questionTextControl.validationMessages,
             minLines: 3,

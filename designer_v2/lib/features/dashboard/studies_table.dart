@@ -18,7 +18,7 @@ enum StudiesTableColumn {
   enrolled,
   active,
   completed,
-  action
+  action,
 }
 
 class StudiesTableColumnSize {
@@ -96,16 +96,20 @@ class StudiesTable extends StatelessWidget {
 
         // Calculate the minimum status column width
         int maxStatusLength = "Entwurf".length;
-        maxStatusLength =
-            max(maxStatusLength, tr.studies_list_header_status.length);
+        maxStatusLength = max(
+          maxStatusLength,
+          tr.studies_list_header_status.length,
+        );
         final double statusColumnWidth = maxStatusLength * 11.5;
 
         // Calculate the minimum participation column width
         final int maxParticipationLength = isCompact
             ? "Invite-only".length
             : tr.participation_invite_who.length;
-        maxStatusLength =
-            max(maxStatusLength, tr.studies_list_header_participation.length);
+        maxStatusLength = max(
+          maxStatusLength,
+          tr.studies_list_header_participation.length,
+        );
         final double participationColumnWidth =
             20 + (maxParticipationLength * 7.5);
 
@@ -113,10 +117,12 @@ class StudiesTable extends StatelessWidget {
         final columnDefinitionsMap = {
           StudiesTableColumn.pin: StudiesTableColumnSize.fixedWidth(itemHeight),
           StudiesTableColumn.title: StudiesTableColumnSize.flexWidth(24),
-          StudiesTableColumn.status:
-              StudiesTableColumnSize.fixedWidth(statusColumnWidth),
-          StudiesTableColumn.participation:
-              StudiesTableColumnSize.fixedWidth(participationColumnWidth),
+          StudiesTableColumn.status: StudiesTableColumnSize.fixedWidth(
+            statusColumnWidth,
+          ),
+          StudiesTableColumn.participation: StudiesTableColumnSize.fixedWidth(
+            participationColumnWidth,
+          ),
           StudiesTableColumn.createdAt: isSuperCompact
               ? StudiesTableColumnSize.collapsed()
               : StudiesTableColumnSize.flexWidth(10),
@@ -129,8 +135,9 @@ class StudiesTable extends StatelessWidget {
           StudiesTableColumn.completed: isCompact
               ? StudiesTableColumnSize.collapsed()
               : StudiesTableColumnSize.fixedWidth(statsColumnWidth),
-          StudiesTableColumn.action:
-              StudiesTableColumnSize.fixedWidth(itemHeight),
+          StudiesTableColumn.action: StudiesTableColumnSize.fixedWidth(
+            itemHeight,
+          ),
         };
         final columnDefinitions = columnDefinitionsMap.entries.toList();
 
@@ -141,72 +148,72 @@ class StudiesTable extends StatelessWidget {
               child: Row(
                 children: [
                   columnDefinitions[0].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[0].key),
-                      ),
+                    child: _buildColumnHeader(columnDefinitions[0].key),
+                  ),
                   SizedBox(
                     width: columnDefinitions[0].value.collapsed
                         ? 0
                         : columnSpacing,
                   ),
                   columnDefinitions[1].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[1].key),
-                      ),
+                    child: _buildColumnHeader(columnDefinitions[1].key),
+                  ),
                   SizedBox(
                     width: columnDefinitions[1].value.collapsed
                         ? 0
                         : columnSpacing,
                   ),
                   columnDefinitions[2].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[2].key),
-                      ),
+                    child: _buildColumnHeader(columnDefinitions[2].key),
+                  ),
                   SizedBox(
                     width: columnDefinitions[2].value.collapsed
                         ? 0
                         : columnSpacing,
                   ),
                   columnDefinitions[3].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[3].key),
-                      ),
+                    child: _buildColumnHeader(columnDefinitions[3].key),
+                  ),
                   SizedBox(
                     width: columnDefinitions[3].value.collapsed
                         ? 0
                         : columnSpacing,
                   ),
                   columnDefinitions[4].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[4].key),
-                      ),
+                    child: _buildColumnHeader(columnDefinitions[4].key),
+                  ),
                   SizedBox(
                     width: columnDefinitions[4].value.collapsed
                         ? 0
                         : columnSpacing,
                   ),
                   columnDefinitions[5].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[5].key),
-                      ),
+                    child: _buildColumnHeader(columnDefinitions[5].key),
+                  ),
                   SizedBox(
                     width: columnDefinitions[5].value.collapsed
                         ? 0
                         : columnSpacing,
                   ),
                   columnDefinitions[6].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[6].key),
-                      ),
+                    child: _buildColumnHeader(columnDefinitions[6].key),
+                  ),
                   SizedBox(
                     width: columnDefinitions[6].value.collapsed
                         ? 0
                         : columnSpacing,
                   ),
                   columnDefinitions[7].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[7].key),
-                      ),
+                    child: _buildColumnHeader(columnDefinitions[7].key),
+                  ),
                   SizedBox(
                     width: columnDefinitions[7].value.collapsed
                         ? 0
                         : columnSpacing,
                   ),
                   columnDefinitions[8].value.createContainer(
-                        child: _buildColumnHeader(columnDefinitions[8].key),
-                      ),
+                    child: _buildColumnHeader(columnDefinitions[8].key),
+                  ),
                   SizedBox(
                     width: columnDefinitions[8].value.collapsed
                         ? 0
@@ -268,8 +275,9 @@ class StudiesTable extends StatelessWidget {
     }
 
     final sortAscending = dashboardController.isSortAscending;
-    final sortable = !(column == StudiesTableColumn.pin ||
-        column == StudiesTableColumn.action);
+    final sortable =
+        !(column == StudiesTableColumn.pin ||
+            column == StudiesTableColumn.action);
     final sortingActive = dashboardController.isSortingActiveForColumn(column);
 
     return StudiesTableColumnHeader(

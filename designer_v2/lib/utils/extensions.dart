@@ -30,10 +30,13 @@ extension StringX on String {
       final matchedIncrement = matchedSuffix.group(1);
       final currentIncrement =
           (matchedIncrement == null || matchedIncrement == '')
-              ? 0
-              : int.parse(matchedIncrement);
-      final strWithoutLabel =
-          replaceRange(matchedSuffix.start, matchedSuffix.end, '').trim();
+          ? 0
+          : int.parse(matchedIncrement);
+      final strWithoutLabel = replaceRange(
+        matchedSuffix.start,
+        matchedSuffix.end,
+        '',
+      ).trim();
       return "$strWithoutLabel ${suffixFactory(currentIncrement + 1)}";
     }
     return "$this ${suffixFactory(0)}";

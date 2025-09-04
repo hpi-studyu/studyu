@@ -48,16 +48,13 @@ class AppAnalytics /*extends Analytics*/ {
       runApp(myApp);
       return;
     }
-    await SentryFlutter.init(
-      (options) {
-        options.dsn = studyUAnalytics!.dsn;
-        // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-        // We recommend adjusting this value in production.
-        options.tracesSampleRate = studyUAnalytics.samplingRate ?? 1.0;
-        options.addIntegration(LoggingIntegration());
-      },
-      appRunner: () => runApp(myApp),
-    );
+    await SentryFlutter.init((options) {
+      options.dsn = studyUAnalytics!.dsn;
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+      // We recommend adjusting this value in production.
+      options.tracesSampleRate = studyUAnalytics.samplingRate ?? 1.0;
+      options.addIntegration(LoggingIntegration());
+    }, appRunner: () => runApp(myApp));
     Cache.storeAnalytics(
       StudyUAnalytics(
         studyUAnalytics.enabled,
@@ -81,25 +78,19 @@ class AppAnalytics /*extends Analytics*/ {
   }
 
   Future<void> initBasic() async {
-    Sentry.configureScope(
-      (scope) async {
-        final basicContext = {
-          'selectedStudyObjectId': await getActiveSubjectId(),
-          'isPreview': state.isPreview,
-          'storedEmail': await getFakeUserEmail(),
-        };
-        scope.setContexts('basicState', basicContext);
-      },
-    );
+    Sentry.configureScope((scope) async {
+      final basicContext = {
+        'selectedStudyObjectId': await getActiveSubjectId(),
+        'isPreview': state.isPreview,
+        'storedEmail': await getFakeUserEmail(),
+      };
+      scope.setContexts('basicState', basicContext);
+    });
   }
 
   void initAdvanced() {
     Sentry.configureScope((scope) {
-      scope.setUser(
-        SentryUser(
-          id: subject!.userId,
-        ),
-      );
+      scope.setUser(SentryUser(id: subject!.userId));
       final advancedContext = {
         'subjectId': subject!.id,
         'studyId': state.selectedStudy!.id,

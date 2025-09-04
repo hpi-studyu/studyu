@@ -36,10 +36,7 @@ Future<Object?> showFormSideSheet<T extends FormViewModel>({
 
   // Wraps the whole side sheet in a [ReactiveForm] widget
   Widget wrapInForm(Widget widget) {
-    return ReactiveForm(
-      formGroup: formViewModel.form,
-      child: widget,
-    );
+    return ReactiveForm(formGroup: formViewModel.form, child: widget);
   }
 
   // Bind the [formViewModel] to the [SidesheetTab]s' widget builder
@@ -59,11 +56,9 @@ Future<Object?> showFormSideSheet<T extends FormViewModel>({
     title: formViewModel.title,
     body: formViewBuilder?.call(formViewModel), // inject viewmodel
     tabs: boundTabs,
-    actionButtons: actionButtons ??
-        buildFormButtons(
-          formViewModel,
-          formViewModel.formMode,
-        ),
+    actionButtons:
+        actionButtons ??
+        buildFormButtons(formViewModel, formViewModel.formMode),
     wrapContent: wrapInForm,
     width: width,
     withCloseButton: withCloseButton,

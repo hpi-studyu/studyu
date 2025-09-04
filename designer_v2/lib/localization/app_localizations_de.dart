@@ -696,7 +696,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String free_text_example_explanation(
-      String type, num countMin, num countMax) {
+    String type,
+    num countMin,
+    num countMax,
+  ) {
     return 'Eingaben vom Typ $type mit einer Zeichenlänge im Bereich von $countMin bis $countMax werden akzeptiert.';
   }
 

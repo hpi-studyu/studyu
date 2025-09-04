@@ -48,21 +48,15 @@ class StudyTestPlatformControllerFamily extends Family<PlatformController> {
   /// Provide a controller parametrized by [StudyID]
   ///
   /// Copied from [studyTestPlatformController].
-  StudyTestPlatformControllerProvider call(
-    String studyId,
-  ) {
-    return StudyTestPlatformControllerProvider(
-      studyId,
-    );
+  StudyTestPlatformControllerProvider call(String studyId) {
+    return StudyTestPlatformControllerProvider(studyId);
   }
 
   @override
   StudyTestPlatformControllerProvider getProviderOverride(
     covariant StudyTestPlatformControllerProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -88,24 +82,22 @@ class StudyTestPlatformControllerProvider
   /// Provide a controller parametrized by [StudyID]
   ///
   /// Copied from [studyTestPlatformController].
-  StudyTestPlatformControllerProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => studyTestPlatformController(
-            ref as StudyTestPlatformControllerRef,
-            studyId,
-          ),
-          from: studyTestPlatformControllerProvider,
-          name: r'studyTestPlatformControllerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$studyTestPlatformControllerHash,
-          dependencies: StudyTestPlatformControllerFamily._dependencies,
-          allTransitiveDependencies:
-              StudyTestPlatformControllerFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  StudyTestPlatformControllerProvider(String studyId)
+    : this._internal(
+        (ref) => studyTestPlatformController(
+          ref as StudyTestPlatformControllerRef,
+          studyId,
+        ),
+        from: studyTestPlatformControllerProvider,
+        name: r'studyTestPlatformControllerProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$studyTestPlatformControllerHash,
+        dependencies: StudyTestPlatformControllerFamily._dependencies,
+        allTransitiveDependencies:
+            StudyTestPlatformControllerFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   StudyTestPlatformControllerProvider._internal(
     super._createNotifier, {
@@ -181,9 +173,7 @@ abstract class _$StudyTestController
     extends BuildlessAutoDisposeNotifier<StudyTestControllerState> {
   late final String studyId;
 
-  StudyTestControllerState build(
-    String studyId,
-  );
+  StudyTestControllerState build(String studyId);
 }
 
 /// See also [StudyTestController].
@@ -196,21 +186,15 @@ class StudyTestControllerFamily extends Family<StudyTestControllerState> {
   const StudyTestControllerFamily();
 
   /// See also [StudyTestController].
-  StudyTestControllerProvider call(
-    String studyId,
-  ) {
-    return StudyTestControllerProvider(
-      studyId,
-    );
+  StudyTestControllerProvider call(String studyId) {
+    return StudyTestControllerProvider(studyId);
   }
 
   @override
   StudyTestControllerProvider getProviderOverride(
     covariant StudyTestControllerProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -229,24 +213,26 @@ class StudyTestControllerFamily extends Family<StudyTestControllerState> {
 }
 
 /// See also [StudyTestController].
-class StudyTestControllerProvider extends AutoDisposeNotifierProviderImpl<
-    StudyTestController, StudyTestControllerState> {
+class StudyTestControllerProvider
+    extends
+        AutoDisposeNotifierProviderImpl<
+          StudyTestController,
+          StudyTestControllerState
+        > {
   /// See also [StudyTestController].
-  StudyTestControllerProvider(
-    String studyId,
-  ) : this._internal(
-          () => StudyTestController()..studyId = studyId,
-          from: studyTestControllerProvider,
-          name: r'studyTestControllerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$studyTestControllerHash,
-          dependencies: StudyTestControllerFamily._dependencies,
-          allTransitiveDependencies:
-              StudyTestControllerFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  StudyTestControllerProvider(String studyId)
+    : this._internal(
+        () => StudyTestController()..studyId = studyId,
+        from: studyTestControllerProvider,
+        name: r'studyTestControllerProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$studyTestControllerHash,
+        dependencies: StudyTestControllerFamily._dependencies,
+        allTransitiveDependencies:
+            StudyTestControllerFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   StudyTestControllerProvider._internal(
     super._createNotifier, {
@@ -264,9 +250,7 @@ class StudyTestControllerProvider extends AutoDisposeNotifierProviderImpl<
   StudyTestControllerState runNotifierBuild(
     covariant StudyTestController notifier,
   ) {
-    return notifier.build(
-      studyId,
-    );
+    return notifier.build(studyId);
   }
 
   @override
@@ -286,8 +270,11 @@ class StudyTestControllerProvider extends AutoDisposeNotifierProviderImpl<
   }
 
   @override
-  AutoDisposeNotifierProviderElement<StudyTestController,
-      StudyTestControllerState> createElement() {
+  AutoDisposeNotifierProviderElement<
+    StudyTestController,
+    StudyTestControllerState
+  >
+  createElement() {
     return _StudyTestControllerProviderElement(this);
   }
 
@@ -314,12 +301,17 @@ mixin StudyTestControllerRef
 }
 
 class _StudyTestControllerProviderElement
-    extends AutoDisposeNotifierProviderElement<StudyTestController,
-        StudyTestControllerState> with StudyTestControllerRef {
+    extends
+        AutoDisposeNotifierProviderElement<
+          StudyTestController,
+          StudyTestControllerState
+        >
+    with StudyTestControllerRef {
   _StudyTestControllerProviderElement(super.provider);
 
   @override
   String get studyId => (origin as StudyTestControllerProvider).studyId;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

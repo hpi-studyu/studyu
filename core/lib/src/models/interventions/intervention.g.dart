@@ -6,10 +6,8 @@ part of 'intervention.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Intervention _$InterventionFromJson(Map<String, dynamic> json) => Intervention(
-      json['id'] as String,
-      json['name'] as String?,
-    )
+Intervention _$InterventionFromJson(Map<String, dynamic> json) =>
+    Intervention(json['id'] as String, json['name'] as String?)
       ..description = json['description'] as String?
       ..icon = json['icon'] as String
       ..tasks = (json['tasks'] as List<dynamic>)

@@ -33,11 +33,7 @@ class EmptyBody extends StatelessWidget {
           if (icon != null)
             Padding(
               padding: EdgeInsets.zero,
-              child: Icon(
-                icon,
-                size: 96.0,
-                color: theme.colorScheme.secondary,
-              ),
+              child: Icon(icon, size: 96.0, color: theme.colorScheme.secondary),
             )
           else
             const SizedBox.shrink(),
@@ -57,8 +53,9 @@ class EmptyBody extends StatelessWidget {
               description!,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color:
-                    theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.9),
+                color: theme.textTheme.bodyMedium?.color?.withValues(
+                  alpha: 0.9,
+                ),
               ),
             )
           else

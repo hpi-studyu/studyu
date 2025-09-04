@@ -22,8 +22,9 @@ class WebFrame extends StatelessWidget {
     return PhoneContainer(
       innerContent: HtmlElementView(key: key, viewType: '$studyId$key'),
       borderColor: theme.colorScheme.secondary.withValues(alpha: 0.4),
-      innerContentBackgroundColor:
-          theme.colorScheme.secondary.withValues(alpha: 0.025),
+      innerContentBackgroundColor: theme.colorScheme.secondary.withValues(
+        alpha: 0.025,
+      ),
     );
   }
 }
@@ -46,8 +47,9 @@ class DisabledFrame extends StatelessWidget {
         ),
       ),
       borderColor: theme.colorScheme.secondary.withValues(alpha: 0.3),
-      innerContentBackgroundColor:
-          theme.colorScheme.secondary.withValues(alpha: 0.03),
+      innerContentBackgroundColor: theme.colorScheme.secondary.withValues(
+        alpha: 0.03,
+      ),
     );
   }
 }
@@ -105,8 +107,9 @@ class PhoneContainer extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(borderRadius)),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(borderRadius),
+                    ),
                     border: Border.all(width: borderWidth, color: Colors.white),
                   ),
                 ),
@@ -130,12 +133,7 @@ class MobileFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: SizedBox(
-        height: 600,
-        width: 300,
-      ),
-    );
+    return const Center(child: SizedBox(height: 600, width: 300));
   }
 }
 
@@ -144,12 +142,7 @@ class DesktopFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: SizedBox(
-        height: 600,
-        width: 300,
-      ),
-    );
+    return const Center(child: SizedBox(height: 600, width: 300));
   }
 }
 
@@ -171,9 +164,7 @@ Widget? previewBanner(WidgetRef ref, String studyId) {
           formGroup: formViewModel.form,
           child: ReactiveFormConsumer(
             builder: (context, form, child) {
-              return TextParagraph(
-                text: form.validationErrorSummary,
-              );
+              return TextParagraph(text: form.validationErrorSummary);
             },
           ),
         ),

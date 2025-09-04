@@ -71,8 +71,8 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
     if (!widget.sortingActive) {
       return isHovering
           ? (widget.sortAscending
-              ? hoveredAscendingIcon
-              : hoveredDescendingIcon)
+                ? hoveredAscendingIcon
+                : hoveredDescendingIcon)
           : null;
     }
 

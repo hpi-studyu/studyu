@@ -27,18 +27,20 @@ class Sidesheet extends StatefulWidget {
     this.withCloseButton = false,
     this.ignoreAppBar = true,
     this.collapseSingleTab = false,
-    this.bodyPadding =
-        const EdgeInsets.symmetric(vertical: 32.0, horizontal: 48.0),
+    this.bodyPadding = const EdgeInsets.symmetric(
+      vertical: 32.0,
+      horizontal: 48.0,
+    ),
     this.wrapContent,
     super.key,
-  })  : assert(
-          (body != null && tabs == null) || (body == null && tabs != null),
-          "Must provide either body or tabs to build sidesheet content",
-        ),
-        assert(
-          tabs == null || tabs.length >= 1,
-          "Must provide at least one tab to build sidesheet content",
-        );
+  }) : assert(
+         (body != null && tabs == null) || (body == null && tabs != null),
+         "Must provide either body or tabs to build sidesheet content",
+       ),
+       assert(
+         tabs == null || tabs.length >= 1,
+         "Must provide at least one tab to build sidesheet content",
+       );
 
   final String titleText;
   final Widget? body;
@@ -79,13 +81,14 @@ class _SidesheetState extends State<Sidesheet> {
     final actualWidth = widget.width ?? Sidesheet.kDefaultWidth;
     final exceptionalHeight = !widget.ignoreAppBar
         ? Scaffold.of(context).hasAppBar
-            ? Scaffold.of(context).appBarMaxHeight!
-            : 0
+              ? Scaffold.of(context).appBarMaxHeight!
+              : 0
         : 0;
     final actualHeight = screen.size.height - exceptionalHeight;
 
-    final backgroundColor =
-        ThemeConfig.sidesheetBackgroundColor(Theme.of(context));
+    final backgroundColor = ThemeConfig.sidesheetBackgroundColor(
+      Theme.of(context),
+    );
 
     return Align(
       alignment: Alignment.bottomLeft,
@@ -100,11 +103,7 @@ class _SidesheetState extends State<Sidesheet> {
                 ? Stack(
                     children: [
                       _build(context, widget.body, widget.tabs),
-                      const Positioned(
-                        top: 5,
-                        right: 5,
-                        child: CloseButton(),
-                      ),
+                      const Positioned(top: 5, right: 5, child: CloseButton()),
                     ],
                   )
                 : _build(context, widget.body, widget.tabs),
@@ -120,8 +119,9 @@ class _SidesheetState extends State<Sidesheet> {
     List<SidesheetTab>? tabs,
   ) {
     final theme = Theme.of(context);
-    final backgroundColor =
-        ThemeConfig.sidesheetBackgroundColor(Theme.of(context));
+    final backgroundColor = ThemeConfig.sidesheetBackgroundColor(
+      Theme.of(context),
+    );
 
     final hasTabs = tabs != null;
     final isCollapsed =
@@ -130,8 +130,8 @@ class _SidesheetState extends State<Sidesheet> {
     final innerBody = (body != null)
         ? body
         : (selectedTab != null)
-            ? selectedTab!.builder(context)
-            : const SizedBox.shrink();
+        ? selectedTab!.builder(context)
+        : const SizedBox.shrink();
 
     final actualWrapContent =
         widget.wrapContent ?? (widget) => widget; // default to identity no-op
@@ -144,8 +144,9 @@ class _SidesheetState extends State<Sidesheet> {
       decoration: BoxDecoration(
         border: Border(
           left: BorderSide(
-            color: (theme.dividerTheme.color ?? theme.dividerColor)
-                .withValues(alpha: 0.1),
+            color: (theme.dividerTheme.color ?? theme.dividerColor).withValues(
+              alpha: 0.1,
+            ),
           ),
         ),
       ),
@@ -165,8 +166,9 @@ class _SidesheetState extends State<Sidesheet> {
                 children: [
                   SelectableText(
                     widget.titleText,
-                    style: theme.textTheme.headlineSmall!
-                        .copyWith(fontWeight: FontWeight.normal),
+                    style: theme.textTheme.headlineSmall!.copyWith(
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
                   if (widget.actionButtons != null)
                     Wrap(spacing: 8.0, children: widget.actionButtons!)
@@ -257,7 +259,7 @@ Future<T?> showModalSideSheet<T extends Object?>({
     useRootNavigator: useRootNavigator,
     routeSettings: routeSettings,
     context: context,
-    pageBuilder: (BuildContext context, _, __) => Sidesheet(
+    pageBuilder: (BuildContext context, _, _) => Sidesheet(
       body: body,
       tabs: tabs,
       wrapContent: wrapContent,
@@ -267,10 +269,12 @@ Future<T?> showModalSideSheet<T extends Object?>({
       actionButtons: actionButtons,
       titleText: title,
     ),
-    transitionBuilder: (_, animation, __, child) {
+    transitionBuilder: (_, animation, _, child) {
       return SlideTransition(
-        position: Tween<Offset>(begin: const Offset(-1, 0), end: Offset.zero)
-            .animate(animation),
+        position: Tween<Offset>(
+          begin: const Offset(-1, 0),
+          end: Offset.zero,
+        ).animate(animation),
         child: child,
       );
     },

@@ -49,6 +49,5 @@ class StudyScheduleFormData implements IStudyFormData {
   }
 
   @override
-  FormDataID get id =>
-      throw UnimplementedError(); // not needed for top-level form data
+  FormDataID get id => throw UnimplementedError(); // not needed for top-level form data
 }

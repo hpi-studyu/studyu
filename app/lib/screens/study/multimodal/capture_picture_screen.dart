@@ -97,11 +97,9 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
       }
 
       Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorText),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errorText)));
     }
   }
 
@@ -139,9 +137,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
       debugPrint("Failed to take picture: $e");
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.camera_error),
-        ),
+        SnackBar(content: Text(AppLocalizations.of(context)!.camera_error)),
       );
       setState(() {
         _isTakingPicture = false;
@@ -158,9 +154,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
       StudyULogger.error("Failed to get staging image file");
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.camera_error),
-        ),
+        SnackBar(content: Text(AppLocalizations.of(context)!.camera_error)),
       );
       setState(() {
         _isTakingPicture = false;
@@ -199,9 +193,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
                         children: [
                           const CircularProgressIndicator(),
                           const SizedBox(height: 16),
-                          Text(
-                            AppLocalizations.of(context)!.take_a_photo,
-                          ),
+                          Text(AppLocalizations.of(context)!.take_a_photo),
                         ],
                       ),
                     ),

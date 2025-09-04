@@ -9,8 +9,9 @@ part of 'not_expression.dart';
 NotExpression _$NotExpressionFromJson(Map<String, dynamic> json) =>
     NotExpression()
       ..type = json['type'] as String?
-      ..expression =
-          Expression.fromJson(json['expression'] as Map<String, dynamic>);
+      ..expression = Expression.fromJson(
+        json['expression'] as Map<String, dynamic>,
+      );
 
 Map<String, dynamic> _$NotExpressionToJson(NotExpression instance) =>
     <String, dynamic>{

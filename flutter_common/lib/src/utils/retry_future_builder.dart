@@ -24,11 +24,12 @@ SOFTWARE.
 
 import 'package:flutter/material.dart';
 
-typedef CustomErrorWidgetBuilder = Widget Function(
-  BuildContext context,
-  dynamic error,
-  void Function() reload,
-);
+typedef CustomErrorWidgetBuilder =
+    Widget Function(
+      BuildContext context,
+      dynamic error,
+      void Function() reload,
+    );
 
 class RetryFutureBuilder<T> extends StatefulWidget {
   static RetryFutureBuilderState? of(BuildContext context) =>
