@@ -83,9 +83,9 @@ class _SurveyQuestionFormViewState
     if (formViewModel.questionType == SurveyQuestionType.fitbit &&
         _areFitbitCredentialsInvalid()) {
       return (_) => TextParagraph(
-            text: AppLocalizations.of(context)!.fitbit_credentials_not_set,
-            style: ThemeConfig.bodyTextMuted(Theme.of(context)),
-          );
+        text: AppLocalizations.of(context)!.fitbit_credentials_not_set,
+        style: ThemeConfig.bodyTextMuted(Theme.of(context)),
+      );
     }
 
     final questionType = formViewModel.questionType;

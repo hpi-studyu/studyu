@@ -29,12 +29,12 @@ class FitbitCredentialsRepository
     required this.studyRepository,
     required this.ref,
   }) : super(
-          FitbitCredentialsRepositoryDelegate(
-            study: studyRepository.get(studyId)!.model,
-            apiClient: apiClient,
-            studyRepository: studyRepository,
-          ),
-        );
+         FitbitCredentialsRepositoryDelegate(
+           study: studyRepository.get(studyId)!.model,
+           apiClient: apiClient,
+           studyRepository: studyRepository,
+         ),
+       );
 
   /// The [Study] this repository operates on
   final StudyID studyId;
@@ -60,7 +60,10 @@ class FitbitCredentialsRepository
         type: ModelActionType.clipboard,
         label: ModelActionType.clipboard.string,
         onExecute: () => {
-          ref.read(clipboardServiceProvider).copy(model.studyId).then(
+          ref
+              .read(clipboardServiceProvider)
+              .copy(model.studyId)
+              .then(
                 (value) => ref
                     .read(notificationServiceProvider)
                     .show(Notifications.inviteCodeClipped),

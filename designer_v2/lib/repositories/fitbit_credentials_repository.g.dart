@@ -41,21 +41,15 @@ class FitbitCredentialsRepositoryFamily
   const FitbitCredentialsRepositoryFamily();
 
   /// See also [fitbitCredentialsRepository].
-  FitbitCredentialsRepositoryProvider call(
-    String studyId,
-  ) {
-    return FitbitCredentialsRepositoryProvider(
-      studyId,
-    );
+  FitbitCredentialsRepositoryProvider call(String studyId) {
+    return FitbitCredentialsRepositoryProvider(studyId);
   }
 
   @override
   FitbitCredentialsRepositoryProvider getProviderOverride(
     covariant FitbitCredentialsRepositoryProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -77,24 +71,22 @@ class FitbitCredentialsRepositoryFamily
 class FitbitCredentialsRepositoryProvider
     extends AutoDisposeProvider<FitbitCredentialsRepository> {
   /// See also [fitbitCredentialsRepository].
-  FitbitCredentialsRepositoryProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => fitbitCredentialsRepository(
-            ref as FitbitCredentialsRepositoryRef,
-            studyId,
-          ),
-          from: fitbitCredentialsRepositoryProvider,
-          name: r'fitbitCredentialsRepositoryProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$fitbitCredentialsRepositoryHash,
-          dependencies: FitbitCredentialsRepositoryFamily._dependencies,
-          allTransitiveDependencies:
-              FitbitCredentialsRepositoryFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  FitbitCredentialsRepositoryProvider(String studyId)
+    : this._internal(
+        (ref) => fitbitCredentialsRepository(
+          ref as FitbitCredentialsRepositoryRef,
+          studyId,
+        ),
+        from: fitbitCredentialsRepositoryProvider,
+        name: r'fitbitCredentialsRepositoryProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$fitbitCredentialsRepositoryHash,
+        dependencies: FitbitCredentialsRepositoryFamily._dependencies,
+        allTransitiveDependencies:
+            FitbitCredentialsRepositoryFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   FitbitCredentialsRepositoryProvider._internal(
     super._createNotifier, {
@@ -111,8 +103,9 @@ class FitbitCredentialsRepositoryProvider
   @override
   Override overrideWith(
     FitbitCredentialsRepository Function(
-            FitbitCredentialsRepositoryRef provider)
-        create,
+      FitbitCredentialsRepositoryRef provider,
+    )
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -164,5 +157,6 @@ class _FitbitCredentialsRepositoryProviderElement
   @override
   String get studyId => (origin as FitbitCredentialsRepositoryProvider).studyId;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

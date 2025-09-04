@@ -45,13 +45,9 @@ abstract class StudyUApi {
     StudyFitbitCredentials credentials,
   );
 
-  Future<StudyFitbitCredentials> fetchStudyFitbitCredentials(
-    StudyID studyId,
-  );
+  Future<StudyFitbitCredentials> fetchStudyFitbitCredentials(StudyID studyId);
 
-  Future<void> deleteStudyFitbitCredentials(
-    StudyFitbitCredentials credentials,
-  );
+  Future<void> deleteStudyFitbitCredentials(StudyFitbitCredentials credentials);
 }
 
 typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);

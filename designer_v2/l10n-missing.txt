@@ -1,7 +1,0 @@
-{
-  "de": [
-    "question_type_fitbit",
-    "fitbit_question_title",
-    "fitbit_question_type_empty"
-  ]
-}

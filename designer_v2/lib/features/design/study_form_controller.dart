@@ -100,9 +100,10 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   late final FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel =
       FitbitCredentialsFormViewModel(
-          study: formData!,
-          validationSet: validationSet,
-          fitbitCredentialsRepository: fitbitCredentialsRepository);
+        study: formData!,
+        validationSet: validationSet,
+        fitbitCredentialsRepository: fitbitCredentialsRepository,
+      );
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
@@ -193,8 +194,9 @@ StudyFormViewModel studyFormViewModel(Ref ref, StudyID studyId) {
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
-    fitbitCredentialsRepository:
-        ref.watch(fitbitCredentialsRepositoryProvider(studyId)),
+    fitbitCredentialsRepository: ref.watch(
+      fitbitCredentialsRepositoryProvider(studyId),
+    ),
     formData: state.study.value,
   );
 }

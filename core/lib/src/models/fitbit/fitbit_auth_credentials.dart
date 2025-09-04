@@ -7,15 +7,9 @@ class FitbitAuthCredentials {
   String clientId;
   String clientSecret;
 
-  FitbitAuthCredentials({
-    required this.clientId,
-    required this.clientSecret,
-  });
+  FitbitAuthCredentials({required this.clientId, required this.clientSecret});
 
-  FitbitAuthCredentials copyWith({
-    String? clientId,
-    String? clientSecret,
-  }) {
+  FitbitAuthCredentials copyWith({String? clientId, String? clientSecret}) {
     return FitbitAuthCredentials(
       clientId: clientId ?? this.clientId,
       clientSecret: clientSecret ?? this.clientSecret,

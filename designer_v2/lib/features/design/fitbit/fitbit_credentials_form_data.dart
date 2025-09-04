@@ -21,8 +21,10 @@ class FitbitCredentialsFormData implements IStudyFormData {
 
   @override
   Study apply(Study study) {
-    final credentials =
-        FitbitAuthCredentials(clientId: clientId, clientSecret: clientSecret);
+    final credentials = FitbitAuthCredentials(
+      clientId: clientId,
+      clientSecret: clientSecret,
+    );
 
     study.fitbitCredentials = StudyFitbitCredentials(study.id, credentials);
 

@@ -143,8 +143,9 @@ StudyFormViewModel studyPublishValidator(Ref ref, StudyID studyId) {
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
-    fitbitCredentialsRepository:
-        ref.watch(fitbitCredentialsRepositoryProvider(studyId)),
+    fitbitCredentialsRepository: ref.watch(
+      fitbitCredentialsRepositoryProvider(studyId),
+    ),
     formData: state.study.value,
     validationSet: StudyFormValidationSet.publish,
   );
@@ -159,8 +160,9 @@ StudyFormViewModel studyTestValidator(Ref ref, StudyID studyId) {
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
-    fitbitCredentialsRepository:
-        ref.watch(fitbitCredentialsRepositoryProvider(studyId)),
+    fitbitCredentialsRepository: ref.watch(
+      fitbitCredentialsRepositoryProvider(studyId),
+    ),
     formData: state.study.value,
   );
 }

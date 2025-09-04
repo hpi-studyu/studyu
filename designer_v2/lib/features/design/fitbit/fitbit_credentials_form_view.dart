@@ -29,8 +29,9 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
     return AsyncValueWidget(
       value: state.study,
       data: (study) {
-        final formViewModel =
-            ref.watch(fitbitCredentialsFormViewModelProvider(studyId));
+        final formViewModel = ref.watch(
+          fitbitCredentialsFormViewModelProvider(studyId),
+        );
 
         if (!study.isDraft) {
           return Padding(
@@ -49,8 +50,9 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               TextParagraph(
-                text: AppLocalizations.of(context)!
-                    .fitbit_credentials_instruction,
+                text: AppLocalizations.of(
+                  context,
+                )!.fitbit_credentials_instruction,
               ),
               const SizedBox(height: 12.0),
               InkWell(
@@ -110,16 +112,18 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                   FormTableRow(
                     control: formViewModel.clientIdControl,
                     label: AppLocalizations.of(context)!.client_id,
-                    labelHelpText:
-                        AppLocalizations.of(context)!.client_id_label_help,
+                    labelHelpText: AppLocalizations.of(
+                      context,
+                    )!.client_id_label_help,
                     input: Row(
                       children: [
                         Expanded(
                           child: ReactiveTextField(
                             formControl: formViewModel.clientIdControl,
                             decoration: InputDecoration(
-                              hintText:
-                                  AppLocalizations.of(context)!.client_id_hint,
+                              hintText: AppLocalizations.of(
+                                context,
+                              )!.client_id_hint,
                             ),
                           ),
                         ),
@@ -129,20 +133,20 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                   FormTableRow(
                     control: formViewModel.clientSecretControl,
                     label: AppLocalizations.of(context)!.client_secret,
-                    labelHelpText:
-                        AppLocalizations.of(context)!.client_secret_label_help,
+                    labelHelpText: AppLocalizations.of(
+                      context,
+                    )!.client_secret_label_help,
                     input: ReactiveTextField(
                       formControl: formViewModel.clientSecretControl,
                       decoration: InputDecoration(
-                        hintText:
-                            AppLocalizations.of(context)!.client_secret_hint,
+                        hintText: AppLocalizations.of(
+                          context,
+                        )!.client_secret_hint,
                       ),
                     ),
                   ),
                 ],
-                columnWidths: const {
-                  0: FlexColumnWidth(),
-                },
+                columnWidths: const {0: FlexColumnWidth()},
               ),
             ],
           ),
@@ -167,7 +171,9 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                 Text(
                   AppLocalizations.of(context)!.fitbit_only_participant_title,
                   style: const TextStyle(
-                      fontSize: 16.0, fontWeight: FontWeight.bold),
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -180,11 +186,13 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(AppLocalizations.of(context)!
-                    .fitbit_only_participant_step_1),
+                Text(
+                  AppLocalizations.of(context)!.fitbit_only_participant_step_1,
+                ),
                 const SizedBox(height: 4.0),
-                Text(AppLocalizations.of(context)!
-                    .fitbit_only_participant_step_2),
+                Text(
+                  AppLocalizations.of(context)!.fitbit_only_participant_step_2,
+                ),
               ],
             ),
           ],
@@ -232,44 +240,51 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
                   _buildScreenshot(
                     context,
                     'assets/images/step1.png',
-                    AppLocalizations.of(context)!
-                        .fitbit_credentials_screenshot_step1,
+                    AppLocalizations.of(
+                      context,
+                    )!.fitbit_credentials_screenshot_step1,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step2.png',
-                    AppLocalizations.of(context)!
-                        .fitbit_credentials_screenshot_step2,
+                    AppLocalizations.of(
+                      context,
+                    )!.fitbit_credentials_screenshot_step2,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step3.png',
-                    AppLocalizations.of(context)!
-                        .fitbit_credentials_screenshot_step3,
+                    AppLocalizations.of(
+                      context,
+                    )!.fitbit_credentials_screenshot_step3,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step4.png',
-                    AppLocalizations.of(context)!
-                        .fitbit_credentials_screenshot_step4,
+                    AppLocalizations.of(
+                      context,
+                    )!.fitbit_credentials_screenshot_step4,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step5.png',
-                    AppLocalizations.of(context)!
-                        .fitbit_credentials_screenshot_step5,
+                    AppLocalizations.of(
+                      context,
+                    )!.fitbit_credentials_screenshot_step5,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step6.png',
-                    AppLocalizations.of(context)!
-                        .fitbit_credentials_screenshot_step6,
+                    AppLocalizations.of(
+                      context,
+                    )!.fitbit_credentials_screenshot_step6,
                   ),
                   _buildScreenshot(
                     context,
                     'assets/images/step7.png',
-                    AppLocalizations.of(context)!
-                        .fitbit_credentials_screenshot_step7,
+                    AppLocalizations.of(
+                      context,
+                    )!.fitbit_credentials_screenshot_step7,
                   ),
                 ],
               ),
@@ -327,10 +342,7 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
               ),
             ),
             const SizedBox(height: 8.0),
-            Text(
-              caption,
-              style: const TextStyle(fontSize: 12.0),
-            ),
+            Text(caption, style: const TextStyle(fontSize: 12.0)),
           ],
         ),
       ),
@@ -349,10 +361,7 @@ class StudyDesignFitbitCredentialsFormView extends StudyDesignPageWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              imagePath,
-              fit: BoxFit.contain,
-            ),
+            Image.asset(imagePath, fit: BoxFit.contain),
             const SizedBox(height: 8.0),
             Padding(
               padding: const EdgeInsets.all(8.0),

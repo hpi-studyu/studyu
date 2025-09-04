@@ -9,11 +9,8 @@ class FitbitSleepData extends FitbitData {
   String level;
   DateTime entryDateTime;
 
-  FitbitSleepData(
-    this.level,
-    this.entryDateTime,
-    DateTime dateTime,
-  ) : super(dataType, dateTime);
+  FitbitSleepData(this.level, this.entryDateTime, DateTime dateTime)
+    : super(dataType, dateTime);
 
   factory FitbitSleepData.fromJson(Map<String, dynamic> json) =>
       _$FitbitSleepDataFromJson(json);

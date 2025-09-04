@@ -47,8 +47,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     freeTextResponseOptionsArray.onChanged(
       (control) => onResponseOptionsChanged(control.controls),
     );
-    fitbitResponseOptionsArray
-        .onChanged((control) => onResponseOptionsChanged(control.controls));
+    fitbitResponseOptionsArray.onChanged(
+      (control) => onResponseOptionsChanged(control.controls),
+    );
   }
 
   /// Customized titles (if any) depending on the context of use
@@ -334,13 +335,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   final Map<FitbitQuestionType, FormControl<bool>> fitbitQuestionTypesControl =
       Map.fromEntries(
-    FitbitQuestionType.values.map(
-      (e) => MapEntry(
-        e,
-        FormControl<bool>(value: false),
-      ),
-    ),
-  );
+        FitbitQuestionType.values.map(
+          (e) => MapEntry(e, FormControl<bool>(value: false)),
+        ),
+      );
 
   late final FormArray fitbitResponseOptionsArray = FormArray(
     fitbitQuestionTypesControl.values.toList(),
@@ -430,18 +428,18 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   }
 
   FormControlValidation get fitbitTypeRequired => FormControlValidation(
-        control: fitbitResponseOptionsArray,
-        validators: [
-          CountWhereValidator<dynamic>(
-            (dynamic value) => value == true,
-            minCount: 1,
-          ),
-        ],
-        validationMessages: {
-          CountWhereValidator.kValidationMessageMinCount: (error) =>
-              "At least one Fitbit type must be selected.", //TODO: translations
-        },
-      );
+    control: fitbitResponseOptionsArray,
+    validators: [
+      CountWhereValidator<dynamic>(
+        (dynamic value) => value == true,
+        minCount: 1,
+      ),
+    ],
+    validationMessages: {
+      CountWhereValidator.kValidationMessageMinCount: (error) =>
+          "At least one Fitbit type must be selected.", //TODO: translations
+    },
+  );
 
   FormControlValidation get questionTextRequired => FormControlValidation(
     control: questionTextControl,

@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -740,4 +741,42 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get support_email_sent_description =>
       'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.';
+
+  @override
+  String get sync_fitbit_data => 'Sync Fitbit Data';
+
+  @override
+  String get fitbit_data_synced => 'Fitbit data synced successfully';
+
+  @override
+  String get fitbit_data_not_synced =>
+      'Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.';
+
+  @override
+  String error_syncing_fitbit_data(String error) {
+    return 'Error syncing Fitbit data: $error';
+  }
+
+  @override
+  String get fitbit_data_synced_dialog_title => 'Fitbit Data Synced';
+
+  @override
+  String get fitbit_data_synced_info =>
+      'Data was synced for the following data types:';
+
+  @override
+  String fitbit_data_earliest_date(String date) {
+    return 'Earliest date: $date';
+  }
+
+  @override
+  String fitbit_data_latest_date(String date) {
+    return 'Latest date: $date';
+  }
+
+  @override
+  String get fitbit_data_details_btn => 'Details';
+
+  @override
+  String get fitbit_data_close_btn => 'Close';
 }

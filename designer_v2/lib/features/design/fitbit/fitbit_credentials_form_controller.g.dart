@@ -42,21 +42,15 @@ class FitbitCredentialsFormViewModelFamily
   const FitbitCredentialsFormViewModelFamily();
 
   /// See also [fitbitCredentialsFormViewModel].
-  FitbitCredentialsFormViewModelProvider call(
-    String studyId,
-  ) {
-    return FitbitCredentialsFormViewModelProvider(
-      studyId,
-    );
+  FitbitCredentialsFormViewModelProvider call(String studyId) {
+    return FitbitCredentialsFormViewModelProvider(studyId);
   }
 
   @override
   FitbitCredentialsFormViewModelProvider getProviderOverride(
     covariant FitbitCredentialsFormViewModelProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -78,24 +72,22 @@ class FitbitCredentialsFormViewModelFamily
 class FitbitCredentialsFormViewModelProvider
     extends AutoDisposeProvider<FitbitCredentialsFormViewModel> {
   /// See also [fitbitCredentialsFormViewModel].
-  FitbitCredentialsFormViewModelProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => fitbitCredentialsFormViewModel(
-            ref as FitbitCredentialsFormViewModelRef,
-            studyId,
-          ),
-          from: fitbitCredentialsFormViewModelProvider,
-          name: r'fitbitCredentialsFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$fitbitCredentialsFormViewModelHash,
-          dependencies: FitbitCredentialsFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              FitbitCredentialsFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  FitbitCredentialsFormViewModelProvider(String studyId)
+    : this._internal(
+        (ref) => fitbitCredentialsFormViewModel(
+          ref as FitbitCredentialsFormViewModelRef,
+          studyId,
+        ),
+        from: fitbitCredentialsFormViewModelProvider,
+        name: r'fitbitCredentialsFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$fitbitCredentialsFormViewModelHash,
+        dependencies: FitbitCredentialsFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            FitbitCredentialsFormViewModelFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   FitbitCredentialsFormViewModelProvider._internal(
     super._createNotifier, {
@@ -112,8 +104,9 @@ class FitbitCredentialsFormViewModelProvider
   @override
   Override overrideWith(
     FitbitCredentialsFormViewModel Function(
-            FitbitCredentialsFormViewModelRef provider)
-        create,
+      FitbitCredentialsFormViewModelRef provider,
+    )
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -166,5 +159,6 @@ class _FitbitCredentialsFormViewModelProviderElement
   String get studyId =>
       (origin as FitbitCredentialsFormViewModelProvider).studyId;
 }
+
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -39,8 +39,9 @@ class FitbitQuestionFormView extends ConsumerWidget {
                   child: Row(
                     children: [
                       ReactiveCheckbox(
-                        formControl: formArray.controls[index]
-                            as FormControl<bool>, // Cast control
+                        formControl:
+                            formArray.controls[index]
+                                as FormControl<bool>, // Cast control
                       ),
                       const SizedBox(width: 8),
                       Expanded(
@@ -54,7 +55,7 @@ class FitbitQuestionFormView extends ConsumerWidget {
                             Tooltip(
                               message: _getTranslation(type),
                               child: const Icon(Icons.info_outline),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -69,9 +70,7 @@ class FitbitQuestionFormView extends ConsumerWidget {
     );
   }
 
-  String _getTranslation(
-    FitbitQuestionType type,
-  ) {
+  String _getTranslation(FitbitQuestionType type) {
     return switch (type) {
       FitbitQuestionType.heartrate =>
         tr.fitbit_question_type_heartrate_description,

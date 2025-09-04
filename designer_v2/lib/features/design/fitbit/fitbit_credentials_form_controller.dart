@@ -64,17 +64,15 @@ class FitbitCredentialsFormViewModel
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [],
-        StudyFormValidationSet.publish: [fitbitCredentialsValidation],
-        StudyFormValidationSet.test: [],
-      };
+    StudyFormValidationSet.draft: [],
+    StudyFormValidationSet.publish: [fitbitCredentialsValidation],
+    StudyFormValidationSet.test: [],
+  };
 
   FormControlValidation get fitbitCredentialsValidation =>
       FormControlValidation(
         control: form,
-        validators: [
-          Validators.delegate(_validateFitbitCredentials),
-        ],
+        validators: [Validators.delegate(_validateFitbitCredentials)],
         validationMessages: {
           'fitbitCredentialsRequired': (_) => 'Fitbit credentials are required',
         },
@@ -88,8 +86,9 @@ class FitbitCredentialsFormViewModel
       if (observation.type != 'questionnaire') return false;
 
       final questionnaire = observation as QuestionnaireTask;
-      return questionnaire.questions.questions
-          .any((question) => question is FitbitQuestion);
+      return questionnaire.questions.questions.any(
+        (question) => question is FitbitQuestion,
+      );
     });
 
     if (!hasFitbitQuestion) return null;
@@ -131,11 +130,13 @@ FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel(
   Ref ref,
   StudyID studyId,
 ) {
-  final study = ref
-      .watch(studyControllerProvider(studyId).select((state) => state.study));
+  final study = ref.watch(
+    studyControllerProvider(studyId).select((state) => state.study),
+  );
 
-  final fitbitCredentialsRepository =
-      ref.watch(fitbitCredentialsRepositoryProvider(studyId));
+  final fitbitCredentialsRepository = ref.watch(
+    fitbitCredentialsRepositoryProvider(studyId),
+  );
 
   return FitbitCredentialsFormViewModel(
     study: study.value!,

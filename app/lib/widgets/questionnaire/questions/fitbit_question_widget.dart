@@ -55,9 +55,7 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
       if (data.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.fitbit_data_not_synced,
-            ),
+            content: Text(AppLocalizations.of(context)!.fitbit_data_not_synced),
           ),
         );
         return;
@@ -74,8 +72,9 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context)!
-                .error_syncing_fitbit_data(e.toString()),
+            AppLocalizations.of(
+              context,
+            )!.error_syncing_fitbit_data(e.toString()),
           ),
         ),
       );
@@ -84,7 +83,8 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
   }
 
   Map<String, Map<String, DateTime>> _calculateSyncDates(
-      List<FitbitData> data) {
+    List<FitbitData> data,
+  ) {
     final Map<String, DateTime> earliestDates = {};
     final Map<String, DateTime> latestDates = {};
 
@@ -109,7 +109,8 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-              AppLocalizations.of(context)!.fitbit_data_synced_dialog_title),
+            AppLocalizations.of(context)!.fitbit_data_synced_dialog_title,
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,16 +128,18 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
                       ),
                       Text(
                         AppLocalizations.of(context)!.fitbit_data_earliest_date(
-                            //textual representation of the date
-                            DateFormat.yMMMd()
-                                .add_jm()
-                                .format(earliestDates[type]!)),
+                          //textual representation of the date
+                          DateFormat.yMMMd().add_jm().format(
+                            earliestDates[type]!,
+                          ),
+                        ),
                       ),
                       Text(
                         AppLocalizations.of(context)!.fitbit_data_latest_date(
-                            DateFormat.yMMMd()
-                                .add_jm()
-                                .format(latestDates[type]!)),
+                          DateFormat.yMMMd().add_jm().format(
+                            latestDates[type]!,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -178,14 +181,17 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
         backgroundColor: Theme.of(context).colorScheme.secondary,
         content: Row(
           children: [
-            Icon(Icons.check_circle,
-                color: Theme.of(context).colorScheme.onSecondary),
+            Icon(
+              Icons.check_circle,
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 AppLocalizations.of(context)!.fitbit_data_synced,
-                style:
-                    TextStyle(color: Theme.of(context).colorScheme.onSecondary),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSecondary,
+                ),
               ),
             ),
           ],
@@ -219,9 +225,7 @@ class _FitbitQuestionWidgetState extends State<FitbitQuestionWidget> {
                     color: Theme.of(context).colorScheme.onSecondary,
                   ),
                 )
-              : Text(
-                  AppLocalizations.of(context)!.sync_fitbit_data,
-                ),
+              : Text(AppLocalizations.of(context)!.sync_fitbit_data),
         ),
       ],
     );

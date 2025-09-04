@@ -7,16 +7,17 @@ part of 'study_fitbit_credentials.dart';
 // **************************************************************************
 
 StudyFitbitCredentials _$StudyFitbitCredentialsFromJson(
-        Map<String, dynamic> json) =>
-    StudyFitbitCredentials(
-      json['study_id'] as String,
-      FitbitAuthCredentials.fromJson(
-          json['fitbit_credentials'] as Map<String, dynamic>),
-    );
+  Map<String, dynamic> json,
+) => StudyFitbitCredentials(
+  json['study_id'] as String,
+  FitbitAuthCredentials.fromJson(
+    json['fitbit_credentials'] as Map<String, dynamic>,
+  ),
+);
 
 Map<String, dynamic> _$StudyFitbitCredentialsToJson(
-        StudyFitbitCredentials instance) =>
-    <String, dynamic>{
-      'study_id': instance.studyId,
-      'fitbit_credentials': instance.fitbitCredentials.toJson(),
-    };
+  StudyFitbitCredentials instance,
+) => <String, dynamic>{
+  'study_id': instance.studyId,
+  'fitbit_credentials': instance.fitbitCredentials.toJson(),
+};

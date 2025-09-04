@@ -654,9 +654,7 @@ class FitbitQuestionFormData extends QuestionFormData {
 
   @override
   Question toQuestion() {
-    final question = FitbitQuestion(
-      types: types,
-    );
+    final question = FitbitQuestion(types: types);
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;

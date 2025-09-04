@@ -1441,6 +1441,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.'**
   String get support_email_sent_description;
+
+  /// No description provided for @sync_fitbit_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Fitbit Data'**
+  String get sync_fitbit_data;
+
+  /// No description provided for @fitbit_data_synced.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit data synced successfully'**
+  String get fitbit_data_synced;
+
+  /// No description provided for @fitbit_data_not_synced.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.'**
+  String get fitbit_data_not_synced;
+
+  /// No description provided for @error_syncing_fitbit_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Error syncing Fitbit data: {error}'**
+  String error_syncing_fitbit_data(String error);
+
+  /// No description provided for @fitbit_data_synced_dialog_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit Data Synced'**
+  String get fitbit_data_synced_dialog_title;
+
+  /// No description provided for @fitbit_data_synced_info.
+  ///
+  /// In en, this message translates to:
+  /// **'Data was synced for the following data types:'**
+  String get fitbit_data_synced_info;
+
+  /// No description provided for @fitbit_data_earliest_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest date: {date}'**
+  String fitbit_data_earliest_date(String date);
+
+  /// No description provided for @fitbit_data_latest_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest date: {date}'**
+  String fitbit_data_latest_date(String date);
+
+  /// No description provided for @fitbit_data_details_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get fitbit_data_details_btn;
+
+  /// No description provided for @fitbit_data_close_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get fitbit_data_close_btn;
 }
 
 class _AppLocalizationsDelegate

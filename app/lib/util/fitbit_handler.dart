@@ -241,11 +241,11 @@ class FitbitHandler {
       for (int i = 0; i < days; i++) {
         final url =
             fitbitter.FitbitActivityTimeseriesIntradayAPIURL.dayWithResource(
-          date: startDate.add(Duration(days: i)),
-          fitbitCredentials: credentials,
-          resource: fitbitter.Resource.steps,
-          detailLevel: fitbitter.IntradayDetailLevel.ONE_MINUTE,
-        );
+              date: startDate.add(Duration(days: i)),
+              fitbitCredentials: credentials,
+              resource: fitbitter.Resource.steps,
+              detailLevel: fitbitter.IntradayDetailLevel.ONE_MINUTE,
+            );
 
         StudyULogger.warning(url);
 
@@ -262,14 +262,15 @@ class FitbitHandler {
     } else {
       final url =
           fitbitter.FitbitActivityTimeseriesIntradayAPIURL.dayWithResource(
-        date: startDate,
-        fitbitCredentials: credentials,
-        resource: fitbitter.Resource.steps,
-        detailLevel: fitbitter.IntradayDetailLevel.ONE_MINUTE,
-      );
+            date: startDate,
+            fitbitCredentials: credentials,
+            resource: fitbitter.Resource.steps,
+            detailLevel: fitbitter.IntradayDetailLevel.ONE_MINUTE,
+          );
 
-      final items = await manager.fetch(url)
-          as List<fitbitter.FitbitActivityTimeseriesData>;
+      final items =
+          await manager.fetch(url)
+              as List<fitbitter.FitbitActivityTimeseriesData>;
 
       return items
           .map((item) => FitbitStepData(item.value!, item.dateOfMonitoring!))
@@ -290,7 +291,7 @@ class FitbitHandler {
     for (final type in types) {
       final latest =
           await _findLatestDataEntry(subject, taskId, question.id, type) ??
-              _startOfToday();
+          _startOfToday();
 
       switch (type) {
         case FitbitQuestionType.steps:
