@@ -51,7 +51,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       (control) => onResponseOptionsChanged(control.controls),
     );
     painResponseOptionsArray.onChanged(
-          (control) => onResponseOptionsChanged(control.controls),
+      (control) => onResponseOptionsChanged(control.controls),
     );
   }
 
