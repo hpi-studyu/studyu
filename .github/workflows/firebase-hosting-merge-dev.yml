@@ -7,6 +7,8 @@ on:
     branches:
       - dev
     paths:
+      - '.github/workflows/firebase-hosting-merge-dev.yml'
+      - '.github/workflows/init-workspace/action.yml'
       - 'app/**'
       - 'designer_v2/**'
       - 'core/**'

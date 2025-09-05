@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -13,6 +14,7 @@ class Preview {
   final AppLanguage appLanguage;
   String? selectedRoute;
   String? extra;
+
   bool hasRoute() => selectedRoute != null && selectedRoute!.isNotEmpty;
   Study? study;
   String? selectedStudyObjectId;
@@ -78,6 +80,7 @@ class Preview {
       for (final subject in subjects) {
         try {
           await subject.delete();
+          await FitbitHandler.deleteFitbitCredentials(subject.studyId);
         } catch (e) {
           print(
             '[PreviewApp]: Failed deleting subject ${subject.id} for user $userId: $e',

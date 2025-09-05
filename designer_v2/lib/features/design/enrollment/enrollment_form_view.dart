@@ -277,6 +277,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
           index: 0,
           formViewBuilder: (formViewModel) => SurveyQuestionFormView(
             formViewModel: formViewModel,
+            studyId: studyId,
             isHtmlStyleable: false,
           ),
         ),

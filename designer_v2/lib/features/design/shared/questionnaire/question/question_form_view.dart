@@ -10,11 +10,14 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/audio_recording_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/bool_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/choice_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/fitbit_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/free_text_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/image_capturing_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/scale_question_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
@@ -23,11 +26,13 @@ import 'package:studyu_designer_v2/theme.dart';
 class SurveyQuestionFormView extends ConsumerStatefulWidget {
   const SurveyQuestionFormView({
     required this.formViewModel,
+    required this.studyId,
     this.isHtmlStyleable = true,
     super.key,
   });
 
   final QuestionFormViewModel formViewModel;
+  final String studyId;
   final bool isHtmlStyleable;
 
   @override
@@ -47,6 +52,15 @@ class _SurveyQuestionFormViewState
     isStylingInformationDismissed = !isStylingInformationDismissed;
   });
 
+  bool _areFitbitCredentialsInvalid() {
+    final state = ref.watch(studyControllerProvider(widget.studyId));
+
+    final fitbitCredentials = state.study.value?.fitbitCredentials;
+    return fitbitCredentials == null ||
+        fitbitCredentials.fitbitCredentials.clientId.isEmpty ||
+        fitbitCredentials.fitbitCredentials.clientSecret.isEmpty;
+  }
+
   WidgetBuilder get questionTypeBodyBuilder {
     final Map<SurveyQuestionType, WidgetBuilder> questionTypeWidgets = {
       SurveyQuestionType.choice: (_) =>
@@ -61,7 +75,19 @@ class _SurveyQuestionFormViewState
           AudioRecordingQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.freeText: (_) =>
           FreeTextQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.fitbit: (_) =>
+          FitbitQuestionFormView(formViewModel: formViewModel),
     };
+    //TODO: If question type is fitbit and credentials are not set, show a message to set credentials
+
+    if (formViewModel.questionType == SurveyQuestionType.fitbit &&
+        _areFitbitCredentialsInvalid()) {
+      return (_) => TextParagraph(
+        text: AppLocalizations.of(context)!.fitbit_credentials_not_set,
+        style: ThemeConfig.bodyTextMuted(Theme.of(context)),
+      );
+    }
+
     final questionType = formViewModel.questionType;
 
     if (!questionTypeWidgets.containsKey(questionType)) {

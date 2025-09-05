@@ -7,7 +7,7 @@ part of 'study_form_controller.dart';
 // **************************************************************************
 
 String _$studyFormViewModelHash() =>
-    r'b13f09d7f2332267f64b6a95b74ee5b4cc25852b';
+    r'70dcd42209b60b526435e76e66dd3e22b190e71d';
 
 /// Copied from Dart SDK
 class _SystemHash {
