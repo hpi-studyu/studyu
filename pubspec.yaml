@@ -118,7 +118,11 @@ melos:
     local:designer_v2:
       run: |
         melos exec -c 1 -- \
-          "flutter run -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.local"
+          "flutter run -d chrome --web-port 8081 \
+           --dart-define=STUDYU_ENV=.env.local \
+           --dart-define=EMAIL=user1@studyu.health \
+           --dart-define=PASSWORD=user1pass \
+           --dart-define=AUTO_LOGIN=false"
       packageFilters:
         scope: studyu_designer_v2
       description: Runs StudyU Designer with local environment
