@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -726,7 +727,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get fitbit_question_title => 'Fitbit';
 
   @override
-  String get fitbit_question_type_empty => 'No Fitbit data available';
+  String get fitbit_question_type_empty => 'Keine Fitbit Daten verfügbar';
 
   @override
   String get navlink_question_visibility_logic => 'Sichtbarkeit';
