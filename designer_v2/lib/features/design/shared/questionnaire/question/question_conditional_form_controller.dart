@@ -150,7 +150,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   @override
   void updateCondition() {
     final composite = compositeExpression;
-    print('Updating condition with composite: ${composite?.toJson()}');
+    // print('Updating condition with composite: ${composite?.toJson()}');
 
     // Check if we have any conditions to save
     if (composite != null && composite.expressions.isNotEmpty) {
@@ -175,9 +175,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
           questionConditionalControl.value = conditional;
         }
 
-        print(
-          'Set questionConditionalControl.value: ${questionConditionalControl.value?.condition.toJson()}',
-        );
+        // print('Set questionConditionalControl.value: ${questionConditionalControl.value?.condition.toJson()}',);
       }
     } else {
       // No conditions, set to null
@@ -189,7 +187,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
         } else {
           questionConditionalControl.value = null;
         }
-        print('Set questionConditionalControl.value to null');
+        // print('Set questionConditionalControl.value to null');
       }
     }
 
@@ -243,7 +241,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
       _conditionsValueChangesSubscription = _conditionsValueChangesStream.listen((
         _,
       ) {
-        print('Condition value changed, updating condition');
+        // print('Condition value changed, updating condition');
         // First update the composite expression by building it from all form data
         updateCondition();
       });
@@ -308,7 +306,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
 
   @override
   QuestionConditional buildFormData() {
-    print('Building QuestionConditional from form data');
+    // print('Building QuestionConditional from form data');
 
     final composite =
         compositeExpression ??
