@@ -8,10 +8,16 @@ name: Publish to Pub.dev
 
 on:
   push:
-    tags:
-      - 'studyu_core-v*'
-      - 'studyu_flutter_common-v*'
+    branches:
+      - main
+    # Uncomment the following lines to publish only when a tag matching the pattern is pushed
+    # tags:
+    #  - 'studyu_core-v*'
+    #  - 'studyu_flutter_common-v*'
   workflow_dispatch:
+
+env:
+  MELOS_SDK_PATH: 'auto'
 
 concurrency:
   group: ${{ github.ref }}-publish-pubdev
@@ -24,6 +30,10 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@main
+
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
+
       - name: '>> Dart package core <<'
         uses: k-paxian/dart-package-publisher@master
         with:
@@ -39,6 +49,10 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@main
+
+      - name: Init workspace
+        uses: ./.github/workflows/init-workspace
+
       - name: '>> Dart package flutter_common <<'
         uses: k-paxian/dart-package-publisher@master
         with:
