@@ -716,8 +716,10 @@ class PainQuestionFormData extends QuestionFormData {
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();
 
-  factory PainQuestionFormData.fromDomainModel(PainQuestion question,
-      List<EligibilityCriterion> eligibilityCriteria,) {
+  factory PainQuestionFormData.fromDomainModel(
+    PainQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
     final data = PainQuestionFormData(
       questionId: question.id,
       questionType: SurveyQuestionType.pain,
