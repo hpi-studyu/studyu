@@ -1,38 +1,60 @@
 ## 1.11.1
 
- - **FIX**: update deps.
+- **FIX**: update deps.
 
 ## 1.11.0
 
- - **FIX**: bump dependencies.
- - **FIX**: study reset process by removing unnecessary user ID handling.
- - **FIX**: Disable intervention selection if num of interventions <= 2.
- - **FEAT**: enhance study reset functionality to support user-specific data deletion.
- - **FEAT**: reset test preview on enter test page in designer.
+- **FIX**: bump dependencies.
+- **FIX**: study reset process by removing unnecessary user ID handling.
+- **FIX**: Disable intervention selection if num of interventions <= 2.
+- **FEAT**: enhance study reset functionality to support user-specific data deletion.
+- **FEAT**: reset test preview on enter test page in designer.
 
 ## 1.10.0
 
- - **REFACTOR**: analysis notes.
- - **REFACTOR**: analysis notes.
+- **REFACTOR**: analysis notes.
+- **REFACTOR**: analysis notes.
+- **REFACTOR**: incorrect use of static final with lambda function.
+- **FIX**: upgrade deps.
+- **FIX**: monitoring completed intervention task total calculation.
+- **FIX**: add SelectionArea to all side sheets to fix flutter issue [#158095](https://github.com/hpi-studyu/studyu/issues/158095).
+- **FIX**: replace Hyperlink with TextButton in choice_question_form_view.
+- **FIX**: https://github.com/dart-lang/sdk/issues/60784.
+- **FIX**: migrate code.
+- **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+- **FIX**: add core and flutter_common local path dependency.
+- **FIX**: remove test report text and fix report description spacing.
+- **FIX**: zip problems when exporting data and sanitization removal.
+- **FIX**: auto formatting of localization files.
+- **FIX**: platform localization.
+- **FIX**: localization.
+- **FEAT**: add Descriptive Stats section to the designer and core.
+- **FEAT**: add gauge comparison section with form view.
+- **FEAT**: add textual summary section to report with form view and validation.
+- **FEAT**: Enhance password reset functionality with improved validation and notifications.
+- **FEAT**: Implement password reset functionality in account settings.
+
+## 1.10.0-dev.0
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
  - **REFACTOR**: incorrect use of static final with lambda function.
- - **FIX**: upgrade deps.
- - **FIX**: monitoring completed intervention task total calculation.
- - **FIX**: add SelectionArea to all side sheets to fix flutter issue [#158095](https://github.com/hpi-studyu/studyu/issues/158095).
- - **FIX**: replace Hyperlink with TextButton in choice_question_form_view.
- - **FIX**: https://github.com/dart-lang/sdk/issues/60784.
- - **FIX**: migrate code.
- - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
- - **FIX**: add core and flutter_common local path dependency.
- - **FIX**: remove test report text and fix report description spacing.
- - **FIX**: zip problems when exporting data and sanitization removal.
  - **FIX**: auto formatting of localization files.
  - **FIX**: platform localization.
  - **FIX**: localization.
- - **FEAT**: add Descriptive Stats section to the designer and core.
- - **FEAT**: add gauge comparison section with form view.
- - **FEAT**: add textual summary section to report with form view and validation.
- - **FEAT**: Enhance password reset functionality with improved validation and notifications.
- - **FEAT**: Implement password reset functionality in account settings.
+ - **FIX**: fitbit question form.
+ - **FIX**: form control for fitbit question.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**(questionnaire): add validation for Fitbit question type.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: check if credentials exists when adding fitbit question.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
 
 ## 1.9.4
 

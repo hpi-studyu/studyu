@@ -932,6 +932,54 @@ abstract class AppLocalizations {
   /// **'Free text'**
   String get question_type_free_text;
 
+  /// No description provided for @question_type_pain.
+  ///
+  /// In en, this message translates to:
+  /// **'Pain Tracker'**
+  String get question_type_pain;
+
+  /// No description provided for @question_type_pain_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Participants can select one or more body parts on a diagram and assign a pain level to each selected part using a pain scale. This is useful for tracking localized pain.'**
+  String get question_type_pain_description;
+
+  /// No description provided for @question_type_pain_preview_title.
+  ///
+  /// In en, this message translates to:
+  /// **'In-App Preview'**
+  String get question_type_pain_preview_title;
+
+  /// No description provided for @question_type_pain_preview_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Below is a simplified representation of how the pain selection interface will appear to participants in the StudyU app. They will be able to tap on body parts to select them and then assign a pain level.'**
+  String get question_type_pain_preview_description;
+
+  /// No description provided for @question_type_pain_front_view.
+  ///
+  /// In en, this message translates to:
+  /// **'Front View'**
+  String get question_type_pain_front_view;
+
+  /// No description provided for @question_type_pain_back_view.
+  ///
+  /// In en, this message translates to:
+  /// **'Back View'**
+  String get question_type_pain_back_view;
+
+  /// No description provided for @question_type_pain_functionality_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Functionality'**
+  String get question_type_pain_functionality_title;
+
+  /// No description provided for @question_type_pain_functionality_description.
+  ///
+  /// In en, this message translates to:
+  /// **'When a participant taps on a body part, a dialog appears where they can select a pain level. Each selected body part can have a different pain level. The collected data includes the identified body parts and their corresponding pain scores.'**
+  String get question_type_pain_functionality_description;
+
   /// No description provided for @question_type_bool.
   ///
   /// In en, this message translates to:
@@ -956,6 +1004,12 @@ abstract class AppLocalizations {
   /// **'Audio'**
   String get question_type_audio;
 
+  /// No description provided for @question_type_fitbit.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit'**
+  String get question_type_fitbit;
+
   /// No description provided for @form_array_response_options_bool_yes.
   ///
   /// In en, this message translates to:
@@ -967,6 +1021,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No'**
   String get form_array_response_options_bool_no;
+
+  /// No description provided for @form_field_response_pain.
+  ///
+  /// In en, this message translates to:
+  /// **'Pain Tracker'**
+  String get form_field_response_pain;
 
   /// No description provided for @form_field_response_image.
   ///
@@ -1298,174 +1358,17 @@ abstract class AppLocalizations {
   /// **'The input must match the specified regular expression.'**
   String get free_text_question_type_custom_explanation;
 
-  /// No description provided for @navlink_question_visibility_logic.
+  /// No description provided for @fitbit_question_title.
   ///
   /// In en, this message translates to:
-  /// **'Visibility'**
-  String get navlink_question_visibility_logic;
+  /// **'Fitbit'**
+  String get fitbit_question_title;
 
-  /// No description provided for @form_array_question_visibility_logic_title.
+  /// No description provided for @fitbit_question_type_empty.
   ///
   /// In en, this message translates to:
-  /// **'Visibility Logic'**
-  String get form_array_question_visibility_logic_title;
-
-  /// No description provided for @form_array_question_visibility_logic_question_tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'This question has visibility logic defined. It will only be shown to the participant if the conditions are met.'**
-  String get form_array_question_visibility_logic_question_tooltip;
-
-  /// No description provided for @form_array_question_visibility_logic_description.
-  ///
-  /// In en, this message translates to:
-  /// **'Define the visibility logic for this question. The question will only be shown to the participant if the conditions are met.'**
-  String get form_array_question_visibility_logic_description;
-
-  /// No description provided for @form_array_question_visibility_logic_tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'Conditions are be based on the responses to other questions in the study. Only questions that follow the current question can be used in the visibility logic.'**
-  String get form_array_question_visibility_logic_tooltip;
-
-  /// No description provided for @form_array_question_visibility_logic_grouping_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Combine conditions with'**
-  String get form_array_question_visibility_logic_grouping_title;
-
-  /// No description provided for @form_array_question_visibility_logic_grouping_and_title.
-  ///
-  /// In en, this message translates to:
-  /// **'AND'**
-  String get form_array_question_visibility_logic_grouping_and_title;
-
-  /// No description provided for @form_array_question_visibility_logic_grouping_or_title.
-  ///
-  /// In en, this message translates to:
-  /// **'OR'**
-  String get form_array_question_visibility_logic_grouping_or_title;
-
-  /// No description provided for @from_array_question_visibility_logic_no_conditions.
-  ///
-  /// In en, this message translates to:
-  /// **'No conditions defined yet'**
-  String get from_array_question_visibility_logic_no_conditions;
-
-  /// No description provided for @form_array_question_visibility_logic_question_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Question'**
-  String get form_array_question_visibility_logic_question_title;
-
-  /// No description provided for @form_array_question_visibility_logic_comparator_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Comparator'**
-  String get form_array_question_visibility_logic_comparator_title;
-
-  /// No description provided for @form_array_question_visibility_logic_true.
-  ///
-  /// In en, this message translates to:
-  /// **'True'**
-  String get form_array_question_visibility_logic_true;
-
-  /// No description provided for @form_array_question_visibility_logic_false.
-  ///
-  /// In en, this message translates to:
-  /// **'False'**
-  String get form_array_question_visibility_logic_false;
-
-  /// No description provided for @form_array_question_visibility_logic_value_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Value'**
-  String get form_array_question_visibility_logic_value_title;
-
-  /// No description provided for @form_array_question_visibility_logic_add_condition_button.
-  ///
-  /// In en, this message translates to:
-  /// **'Add condition'**
-  String get form_array_question_visibility_logic_add_condition_button;
-
-  /// No description provided for @form_array_question_visibility_logic_add_condition_disabled_tooltip.
-  ///
-  /// In en, this message translates to:
-  /// **'No questions available to add conditions for. Only questions following the current question can be used in the visibility logic.'**
-  String
-  get form_array_question_visibility_logic_add_condition_disabled_tooltip;
-
-  /// No description provided for @form_array_question_visibility_logic_is_true.
-  ///
-  /// In en, this message translates to:
-  /// **'is true'**
-  String get form_array_question_visibility_logic_is_true;
-
-  /// No description provided for @form_array_question_visibility_logic_is_false.
-  ///
-  /// In en, this message translates to:
-  /// **'is false'**
-  String get form_array_question_visibility_logic_is_false;
-
-  /// No description provided for @form_array_question_visibility_logic_is.
-  ///
-  /// In en, this message translates to:
-  /// **'is'**
-  String get form_array_question_visibility_logic_is;
-
-  /// No description provided for @form_array_question_visibility_logic_is_not.
-  ///
-  /// In en, this message translates to:
-  /// **'is not'**
-  String get form_array_question_visibility_logic_is_not;
-
-  /// No description provided for @form_array_question_visibility_logic_contains.
-  ///
-  /// In en, this message translates to:
-  /// **'contains'**
-  String get form_array_question_visibility_logic_contains;
-
-  /// No description provided for @form_array_question_visibility_logic_does_not_contain.
-  ///
-  /// In en, this message translates to:
-  /// **'does not contain'**
-  String get form_array_question_visibility_logic_does_not_contain;
-
-  /// No description provided for @form_array_question_visibility_logic_not.
-  ///
-  /// In en, this message translates to:
-  /// **'NOT'**
-  String get form_array_question_visibility_logic_not;
-
-  /// No description provided for @form_array_question_visibility_logic_always_true.
-  ///
-  /// In en, this message translates to:
-  /// **'always true'**
-  String get form_array_question_visibility_logic_always_true;
-
-  /// No description provided for @form_array_question_visibility_logic_preview_description.
-  ///
-  /// In en, this message translates to:
-  /// **'Show this question if the following conditions are met:'**
-  String get form_array_question_visibility_logic_preview_description;
-
-  /// No description provided for @form_array_question_visibility_logic_unknown_expression.
-  ///
-  /// In en, this message translates to:
-  /// **'Unknown Expression'**
-  String get form_array_question_visibility_logic_unknown_expression;
-
-  /// No description provided for @form_array_question_visibility_logic_this_question.
-  ///
-  /// In en, this message translates to:
-  /// **'this question'**
-  String get form_array_question_visibility_logic_this_question;
-
-  /// No description provided for @validation_number_required.
-  ///
-  /// In en, this message translates to:
-  /// **'The value must be a number'**
-  String get validation_number_required;
+  /// **'No Fitbit data available'**
+  String get fitbit_question_type_empty;
 
   /// No description provided for @banner_study_readonly_title.
   ///
@@ -1860,7 +1763,7 @@ abstract class AppLocalizations {
   /// No description provided for @navlink_screener_question_logic.
   ///
   /// In en, this message translates to:
-  /// **'Screening'**
+  /// **'Logic'**
   String get navlink_screener_question_logic;
 
   /// No description provided for @form_array_screener_question_logic_title.
@@ -3512,6 +3415,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We are still busy working on this part, check back soon!'**
   String get under_construction_description;
+
+  /// No description provided for @fitbit_credentials_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'To integrate Fitbit data, follow these steps to obtain your Client ID and Client Secret:'**
+  String get fitbit_credentials_instruction;
+
+  /// No description provided for @fitbit_credentials_step1.
+  ///
+  /// In en, this message translates to:
+  /// **'1. Go to the Fitbit Developer Portal.'**
+  String get fitbit_credentials_step1;
+
+  /// No description provided for @fitbit_credentials_step2.
+  ///
+  /// In en, this message translates to:
+  /// **'2. Log in with your Fitbit account or create one if you do not have it.'**
+  String get fitbit_credentials_step2;
+
+  /// No description provided for @fitbit_credentials_step3.
+  ///
+  /// In en, this message translates to:
+  /// **'3. Navigate to the \"Manage\" section and select \"Register an App\".'**
+  String get fitbit_credentials_step3;
+
+  /// No description provided for @fitbit_credentials_step4.
+  ///
+  /// In en, this message translates to:
+  /// **'4. Fill in the required fields such as application name, description, and Redirect URL (use: \"studyu://fitbit/auth\").'**
+  String get fitbit_credentials_step4;
+
+  /// No description provided for @fitbit_credentials_step5.
+  ///
+  /// In en, this message translates to:
+  /// **'5. Select \"Client\" under \"OAuth 2.0 Application Type\" and set \"Access\" to \"Read-Only.\"'**
+  String get fitbit_credentials_step5;
+
+  /// No description provided for @fitbit_credentials_step6.
+  ///
+  /// In en, this message translates to:
+  /// **'6. Submit the form to get your \"Client ID\" and \"Client Secret\".'**
+  String get fitbit_credentials_step6;
+
+  /// No description provided for @fitbit_credentials_step7.
+  ///
+  /// In en, this message translates to:
+  /// **'7. Please fill the following form to obtain access for intraday data. Without this, you cannot obtain any data from Fitbit for your trials.'**
+  String get fitbit_credentials_step7;
+
+  /// No description provided for @fitbit_credentials_step8.
+  ///
+  /// In en, this message translates to:
+  /// **'8. Copy and paste the credentials below.'**
+  String get fitbit_credentials_step8;
+
+  /// No description provided for @fitbit_credentials_success_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Once you enter the credentials, Fitbit integration will be enabled for your study.'**
+  String get fitbit_credentials_success_instruction;
+
+  /// No description provided for @fitbit_credentials_add_question_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'To add a Fitbit question, navigate to the measurements section and create a new Fitbit Question within a measurement.'**
+  String get fitbit_credentials_add_question_instruction;
+
+  /// No description provided for @fitbit_credentials_screenshot_step1.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 1: Developer Portal'**
+  String get fitbit_credentials_screenshot_step1;
+
+  /// No description provided for @fitbit_credentials_screenshot_step2.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 2: Login'**
+  String get fitbit_credentials_screenshot_step2;
+
+  /// No description provided for @fitbit_credentials_screenshot_step3.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 3: Register App'**
+  String get fitbit_credentials_screenshot_step3;
+
+  /// No description provided for @fitbit_credentials_screenshot_step4.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 4: Input Details'**
+  String get fitbit_credentials_screenshot_step4;
+
+  /// No description provided for @fitbit_credentials_screenshot_step5.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 5: Set Access'**
+  String get fitbit_credentials_screenshot_step5;
+
+  /// No description provided for @fitbit_credentials_screenshot_step6.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 6: Get Credentials'**
+  String get fitbit_credentials_screenshot_step6;
+
+  /// No description provided for @fitbit_credentials_screenshot_step7.
+  ///
+  /// In en, this message translates to:
+  /// **'Step 7: Fill Form'**
+  String get fitbit_credentials_screenshot_step7;
+
+  /// No description provided for @fitbit_credentials_cannot_change_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit credentials can\'t be changed'**
+  String get fitbit_credentials_cannot_change_title;
+
+  /// No description provided for @fitbit_credentials_cannot_change_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit credentials can\'t be changed while the study is not in draft mode.'**
+  String get fitbit_credentials_cannot_change_description;
+
+  /// No description provided for @fitbit_only_participant_title.
+  ///
+  /// In en, this message translates to:
+  /// **'If you\'re running this study just for yourself'**
+  String get fitbit_only_participant_title;
+
+  /// No description provided for @fitbit_only_participant_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Since you\'re both creating and participating in this study, you don\'t need to fill out the intraday data request form. Simply follow these easy steps:'**
+  String get fitbit_only_participant_subtitle;
+
+  /// No description provided for @fitbit_only_participant_step_1.
+  ///
+  /// In en, this message translates to:
+  /// **'When creating your Fitbit app, choose \'Personal\' as the app type.'**
+  String get fitbit_only_participant_step_1;
+
+  /// No description provided for @fitbit_only_participant_step_2.
+  ///
+  /// In en, this message translates to:
+  /// **'When syncing data, make sure to use the same Google account that\'s connected to your Fitbit watch and the Fitbit app you\'ve set up.'**
+  String get fitbit_only_participant_step_2;
+
+  /// No description provided for @client_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Client ID'**
+  String get client_id;
+
+  /// No description provided for @client_id_label_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the Client ID from Fitbit Developer Portal.'**
+  String get client_id_label_help;
+
+  /// No description provided for @client_id_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Client ID'**
+  String get client_id_hint;
+
+  /// No description provided for @client_secret.
+  ///
+  /// In en, this message translates to:
+  /// **'Client Secret'**
+  String get client_secret;
+
+  /// No description provided for @client_secret_label_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the Client Secret from Fitbit Developer Portal.'**
+  String get client_secret_label_help;
+
+  /// No description provided for @client_secret_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Client Secret'**
+  String get client_secret_hint;
+
+  /// No description provided for @screenshots_for_guidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Screenshots for Guidance:'**
+  String get screenshots_for_guidance;
+
+  /// No description provided for @fitbit_credentials_not_set.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit credentials are not set. Please navigate to the \'Fitbit\' tab in the study designer to enter your Fitbit client ID and client secret. Once completed, return here to add Fitbit questions.'**
+  String get fitbit_credentials_not_set;
+
+  /// No description provided for @fitbit_question_type_heartrate_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Captures heart rate measured every minute throughout the day.'**
+  String get fitbit_question_type_heartrate_description;
+
+  /// No description provided for @fitbit_question_type_steps_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Records the number of steps taken, measured every minute.'**
+  String get fitbit_question_type_steps_description;
+
+  /// No description provided for @fitbit_question_type_sleep_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Records sleep stages (wake, light, deep, REM) at 30-second to 1-minute intervals during your sleep.'**
+  String get fitbit_question_type_sleep_description;
 }
 
 class _AppLocalizationsDelegate

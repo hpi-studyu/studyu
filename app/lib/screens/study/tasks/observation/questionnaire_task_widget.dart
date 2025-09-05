@@ -71,6 +71,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
             key: formKey,
             child: QuestionnaireWidget(
               widget.task.questions.questions,
+              taskId: widget.task.id,
               header: widget.task.header,
               footer: widget.task.footer,
               onComplete: (qs) => setState(() {

@@ -458,6 +458,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get question_type_free_text => 'Free text';
 
   @override
+  String get question_type_pain => 'Pain Tracker';
+
+  @override
+  String get question_type_pain_description =>
+      'Participants can select one or more body parts on a diagram and assign a pain level to each selected part using a pain scale. This is useful for tracking localized pain.';
+
+  @override
+  String get question_type_pain_preview_title => 'In-App Preview';
+
+  @override
+  String get question_type_pain_preview_description =>
+      'Below is a simplified representation of how the pain selection interface will appear to participants in the StudyU app. They will be able to tap on body parts to select them and then assign a pain level.';
+
+  @override
+  String get question_type_pain_front_view => 'Front View';
+
+  @override
+  String get question_type_pain_back_view => 'Back View';
+
+  @override
+  String get question_type_pain_functionality_title => 'Functionality';
+
+  @override
+  String get question_type_pain_functionality_description =>
+      'When a participant taps on a body part, a dialog appears where they can select a pain level. Each selected body part can have a different pain level. The collected data includes the identified body parts and their corresponding pain scores.';
+
+  @override
   String get question_type_bool => 'Yes/no';
 
   @override
@@ -470,10 +497,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get question_type_audio => 'Audio';
 
   @override
+  String get question_type_fitbit => 'Fitbit';
+
+  @override
   String get form_array_response_options_bool_yes => 'Yes';
 
   @override
   String get form_array_response_options_bool_no => 'No';
+
+  @override
+  String get form_field_response_pain => 'Pain Tracker';
 
   @override
   String get form_field_response_image => 'Image';
@@ -681,101 +714,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'The input must match the specified regular expression.';
 
   @override
-  String get navlink_question_visibility_logic => 'Visibility';
+  String get fitbit_question_title => 'Fitbit';
 
   @override
-  String get form_array_question_visibility_logic_title => 'Visibility Logic';
-
-  @override
-  String get form_array_question_visibility_logic_question_tooltip =>
-      'This question has visibility logic defined. It will only be shown to the participant if the conditions are met.';
-
-  @override
-  String get form_array_question_visibility_logic_description =>
-      'Define the visibility logic for this question. The question will only be shown to the participant if the conditions are met.';
-
-  @override
-  String get form_array_question_visibility_logic_tooltip =>
-      'Conditions are be based on the responses to other questions in the study. Only questions that follow the current question can be used in the visibility logic.';
-
-  @override
-  String get form_array_question_visibility_logic_grouping_title =>
-      'Combine conditions with';
-
-  @override
-  String get form_array_question_visibility_logic_grouping_and_title => 'AND';
-
-  @override
-  String get form_array_question_visibility_logic_grouping_or_title => 'OR';
-
-  @override
-  String get from_array_question_visibility_logic_no_conditions =>
-      'No conditions defined yet';
-
-  @override
-  String get form_array_question_visibility_logic_question_title => 'Question';
-
-  @override
-  String get form_array_question_visibility_logic_comparator_title =>
-      'Comparator';
-
-  @override
-  String get form_array_question_visibility_logic_true => 'True';
-
-  @override
-  String get form_array_question_visibility_logic_false => 'False';
-
-  @override
-  String get form_array_question_visibility_logic_value_title => 'Value';
-
-  @override
-  String get form_array_question_visibility_logic_add_condition_button =>
-      'Add condition';
-
-  @override
-  String
-  get form_array_question_visibility_logic_add_condition_disabled_tooltip =>
-      'No questions available to add conditions for. Only questions following the current question can be used in the visibility logic.';
-
-  @override
-  String get form_array_question_visibility_logic_is_true => 'is true';
-
-  @override
-  String get form_array_question_visibility_logic_is_false => 'is false';
-
-  @override
-  String get form_array_question_visibility_logic_is => 'is';
-
-  @override
-  String get form_array_question_visibility_logic_is_not => 'is not';
-
-  @override
-  String get form_array_question_visibility_logic_contains => 'contains';
-
-  @override
-  String get form_array_question_visibility_logic_does_not_contain =>
-      'does not contain';
-
-  @override
-  String get form_array_question_visibility_logic_not => 'NOT';
-
-  @override
-  String get form_array_question_visibility_logic_always_true => 'always true';
-
-  @override
-  String get form_array_question_visibility_logic_preview_description =>
-      'Show this question if the following conditions are met:';
-
-  @override
-  String get form_array_question_visibility_logic_unknown_expression =>
-      'Unknown Expression';
-
-  @override
-  String get form_array_question_visibility_logic_this_question =>
-      'this question';
-
-  @override
-  String get validation_number_required => 'The value must be a number';
+  String get fitbit_question_type_empty => 'No Fitbit data available';
 
   @override
   String get banner_study_readonly_title => 'This study cannot be edited.';
@@ -1006,7 +948,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navlink_screener_question_content => 'Content';
 
   @override
-  String get navlink_screener_question_logic => 'Screening';
+  String get navlink_screener_question_logic => 'Logic';
 
   @override
   String get form_array_screener_question_logic_title => 'Screening rules';
@@ -2046,4 +1988,132 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get under_construction_description =>
       'We are still busy working on this part, check back soon!';
+
+  @override
+  String get fitbit_credentials_instruction =>
+      'To integrate Fitbit data, follow these steps to obtain your Client ID and Client Secret:';
+
+  @override
+  String get fitbit_credentials_step1 =>
+      '1. Go to the Fitbit Developer Portal.';
+
+  @override
+  String get fitbit_credentials_step2 =>
+      '2. Log in with your Fitbit account or create one if you do not have it.';
+
+  @override
+  String get fitbit_credentials_step3 =>
+      '3. Navigate to the \"Manage\" section and select \"Register an App\".';
+
+  @override
+  String get fitbit_credentials_step4 =>
+      '4. Fill in the required fields such as application name, description, and Redirect URL (use: \"studyu://fitbit/auth\").';
+
+  @override
+  String get fitbit_credentials_step5 =>
+      '5. Select \"Client\" under \"OAuth 2.0 Application Type\" and set \"Access\" to \"Read-Only.\"';
+
+  @override
+  String get fitbit_credentials_step6 =>
+      '6. Submit the form to get your \"Client ID\" and \"Client Secret\".';
+
+  @override
+  String get fitbit_credentials_step7 =>
+      '7. Please fill the following form to obtain access for intraday data. Without this, you cannot obtain any data from Fitbit for your trials.';
+
+  @override
+  String get fitbit_credentials_step8 =>
+      '8. Copy and paste the credentials below.';
+
+  @override
+  String get fitbit_credentials_success_instruction =>
+      'Once you enter the credentials, Fitbit integration will be enabled for your study.';
+
+  @override
+  String get fitbit_credentials_add_question_instruction =>
+      'To add a Fitbit question, navigate to the measurements section and create a new Fitbit Question within a measurement.';
+
+  @override
+  String get fitbit_credentials_screenshot_step1 => 'Step 1: Developer Portal';
+
+  @override
+  String get fitbit_credentials_screenshot_step2 => 'Step 2: Login';
+
+  @override
+  String get fitbit_credentials_screenshot_step3 => 'Step 3: Register App';
+
+  @override
+  String get fitbit_credentials_screenshot_step4 => 'Step 4: Input Details';
+
+  @override
+  String get fitbit_credentials_screenshot_step5 => 'Step 5: Set Access';
+
+  @override
+  String get fitbit_credentials_screenshot_step6 => 'Step 6: Get Credentials';
+
+  @override
+  String get fitbit_credentials_screenshot_step7 => 'Step 7: Fill Form';
+
+  @override
+  String get fitbit_credentials_cannot_change_title =>
+      'Fitbit credentials can\'t be changed';
+
+  @override
+  String get fitbit_credentials_cannot_change_description =>
+      'Fitbit credentials can\'t be changed while the study is not in draft mode.';
+
+  @override
+  String get fitbit_only_participant_title =>
+      'If you\'re running this study just for yourself';
+
+  @override
+  String get fitbit_only_participant_subtitle =>
+      'Since you\'re both creating and participating in this study, you don\'t need to fill out the intraday data request form. Simply follow these easy steps:';
+
+  @override
+  String get fitbit_only_participant_step_1 =>
+      'When creating your Fitbit app, choose \'Personal\' as the app type.';
+
+  @override
+  String get fitbit_only_participant_step_2 =>
+      'When syncing data, make sure to use the same Google account that\'s connected to your Fitbit watch and the Fitbit app you\'ve set up.';
+
+  @override
+  String get client_id => 'Client ID';
+
+  @override
+  String get client_id_label_help =>
+      'Enter the Client ID from Fitbit Developer Portal.';
+
+  @override
+  String get client_id_hint => 'Client ID';
+
+  @override
+  String get client_secret => 'Client Secret';
+
+  @override
+  String get client_secret_label_help =>
+      'Enter the Client Secret from Fitbit Developer Portal.';
+
+  @override
+  String get client_secret_hint => 'Client Secret';
+
+  @override
+  String get screenshots_for_guidance => 'Screenshots for Guidance:';
+
+  @override
+  String get fitbit_credentials_not_set =>
+      'Fitbit credentials are not set. Please navigate to the \'Fitbit\' tab in the study designer to enter your Fitbit client ID and client secret. Once completed, return here to add Fitbit questions.';
+
+  @override
+  String get fitbit_question_type_heartrate_description =>
+      'Captures heart rate measured every minute throughout the day.';
+
+  @override
+  String get fitbit_question_type_steps_description =>
+      'Records the number of steps taken, measured every minute.';
+
+  @override
+  String get fitbit_question_type_sleep_description =>
+      'Records sleep stages (wake, light, deep, REM) at 30-second to 1-minute intervals during your sleep.';
 }

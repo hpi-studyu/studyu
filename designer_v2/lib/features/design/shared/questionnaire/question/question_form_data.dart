@@ -66,6 +66,17 @@ abstract class QuestionFormData implements IFormData {
           question as FreeTextQuestion,
           eligibilityCriteria,
         ),
+    SurveyQuestionType.fitbit: (question, eligibilityCriteria) {
+      return FitbitQuestionFormData.fromDomainModel(
+        question as FitbitQuestion,
+        eligibilityCriteria,
+      );
+    },
+    SurveyQuestionType.pain: (question, eligibilityCriteria) =>
+        PainQuestionFormData.fromDomainModel(
+          question as PainQuestion,
+          eligibilityCriteria,
+        ),
   };
 
   QuestionFormData({
@@ -644,5 +655,137 @@ class FreeTextQuestionFormData extends QuestionFormData {
     final question = toQuestion() as FreeTextQuestion;
     final value = responseOption as String;
     return question.constructAnswer(value);
+  }
+}
+
+class FitbitQuestionFormData extends QuestionFormData {
+  FitbitQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    required this.types,
+    super.questionInfoText,
+  });
+
+  List<FitbitQuestionType> types;
+
+  @override
+  List<String> get responseOptions =>
+      FitbitQuestionType.values.map((type) => type.toJson()).toList();
+
+  factory FitbitQuestionFormData.fromDomainModel(
+    FitbitQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = FitbitQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.fitbit,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+      types: question.types,
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question = FitbitQuestion(types: types);
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    return question;
+  }
+
+  @override
+  FitbitQuestionFormData copy() {
+    final data = FitbitQuestionFormData(
+      questionId: const Uuid().v4(), // always regenerate id
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+      types: types,
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  List<FitbitData> _buildQuestionValue(String value) {
+    final fitbitType = FitbitQuestionType.fromJson(value);
+
+    switch (fitbitType) {
+      case FitbitQuestionType.heartrate:
+        return [FitbitHeartData(0, DateTime.now())];
+      case FitbitQuestionType.steps:
+        return [FitbitStepData(0, DateTime.now())];
+      case FitbitQuestionType.sleep:
+        return [FitbitSleepData('deep', DateTime.now(), DateTime.now())];
+    }
+  }
+
+  @override
+  Answer constructAnswerFor(dynamic responseOption) {
+    final question = toQuestion() as FitbitQuestion;
+    final fitbitData = _buildQuestionValue(responseOption as String);
+
+    return question.constructAnswer(fitbitData);
+  }
+}
+
+class PainQuestionFormData extends QuestionFormData {
+  PainQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    super.questionInfoText,
+  });
+
+  static Map<String, Body> get kResponseOptions => {
+    tr.form_field_response_pain: const Body(),
+  };
+
+  @override
+  List<String> get responseOptions => kResponseOptions.keys.toList();
+
+  factory PainQuestionFormData.fromDomainModel(
+    PainQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = PainQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.pain,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question = PainQuestion();
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    return question;
+  }
+
+  @override
+  PainQuestionFormData copy() {
+    final data = PainQuestionFormData(
+      questionId: const Uuid().v4(), // always regenerate id
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(dynamic responseOption) {
+    final question = toQuestion() as PainQuestion;
+    final value = kResponseOptions[responseOption];
+    return question.constructAnswer(value!);
   }
 }

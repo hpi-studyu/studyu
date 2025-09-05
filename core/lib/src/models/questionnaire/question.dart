@@ -35,6 +35,8 @@ abstract class Question<V> {
             AudioRecordingQuestion.questionType =>
               AudioRecordingQuestion.fromJson(data),
             FreeTextQuestion.questionType => FreeTextQuestion.fromJson(data),
+            FitbitQuestion.questionType => FitbitQuestion.fromJson(data),
+            PainQuestion.questionType => PainQuestion.fromJson(data),
             _ => throw UnknownJsonTypeError(data[keyType]),
           }
           as Question<V>;

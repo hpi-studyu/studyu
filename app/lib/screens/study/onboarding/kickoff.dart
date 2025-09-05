@@ -25,6 +25,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       final now = DateTime.now();
       subject!.startedAt = DateTime(now.year, now.month, now.day + 1).toUtc();
       subject = await subject!.save();
+      subject = await _fetchRemoteSubject(subject!.id);
       if (!context.mounted) return;
       context.read<AppState>().activeSubject = subject;
       context.read<AppState>().init(context);
@@ -40,6 +41,19 @@ class _KickoffScreen extends State<KickoffScreen> {
     } catch (e) {
       StudyULogger.fatal('Failed creating subject: $e');
     }
+  }
+
+  Future<StudySubject?> _fetchRemoteSubject(String selectedStudyObjectId) {
+    StudyULogger.debug('Fetching subject with ID: $selectedStudyObjectId');
+    return SupabaseQuery.getById<StudySubject>(
+      selectedStudyObjectId,
+      selectedColumns: [
+        '*',
+        // Retrieve the related study along with its fitbit credentials
+        'study!study_subject_studyId_fkey(*, study_fitbit_credentials:study_fitbit_credentials_studyId_fkey(*))',
+        'subject_progress(*)',
+      ],
+    );
   }
 
   @override
