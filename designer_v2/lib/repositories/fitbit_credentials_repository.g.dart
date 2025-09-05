@@ -7,7 +7,7 @@ part of 'fitbit_credentials_repository.dart';
 // **************************************************************************
 
 String _$fitbitCredentialsRepositoryHash() =>
-    r'c0dac1377c3feaad0d316fc6474342d364f2d0c2';
+    r'b8531fc750bbd629e6b2ad8feab93da7082b0ca7';
 
 /// Copied from Dart SDK
 class _SystemHash {
