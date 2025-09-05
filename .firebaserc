@@ -1,8 +1,7 @@
 {
   "projects": {
     "default": "studyu-e37af",
-    "dev": "studyu-dev",
-    "fitbit": "studyu-fitbit"
+    "dev": "studyu-dev"
   },
   "targets": {
     "studyu-e37af": {
@@ -24,16 +23,6 @@
           "studyu-dev-designer"
         ]
       }
-    },
-    "studyu-fitbit": {
-      "hosting": {
-       "app": [
-         "studyu-fitbit-app"
-       ],
-       "designer-v2": [
-         "studyu-fitbit-designer"
-       ]
-     }
     }
   },
   "etags": {}
