@@ -22,6 +22,7 @@ import 'package:studyu_designer_v2/features/auth/signup_form_view.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_view.dart';
+import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_view.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_view.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_view.dart';
@@ -292,6 +293,24 @@ class RouterConf {
             selectedTab: StudyNav.edit(studyId),
             selectedTabSubnav: StudyDesignNav.reports(studyId),
             body: StudyDesignReportsFormView(studyId),
+            layoutType: SingleColumnLayoutType.boundedNarrow,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: "/studies/:${RouteParams.studyId}/edit/fitbitCredentials",
+      name: studyEditFitbitCredentialsRouteName,
+      pageBuilder: (context, state) {
+        final studyId = state.pathParameters[RouteParams.studyId]!;
+        return MaterialPage(
+          key: RouterKeys.studyKey,
+          child: StudyScaffold(
+            studyId: studyId,
+            tabsSubnav: StudyDesignNav.tabs(studyId),
+            selectedTab: StudyNav.edit(studyId),
+            selectedTabSubnav: StudyDesignNav.fitbitCredentials(studyId),
+            body: StudyDesignFitbitCredentialsFormView(studyId),
             layoutType: SingleColumnLayoutType.boundedNarrow,
           ),
         );

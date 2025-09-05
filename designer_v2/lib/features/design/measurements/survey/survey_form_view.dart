@@ -235,8 +235,10 @@ class _MeasurementSurveyFormViewState
     showFormSideSheet<QuestionFormViewModel>(
       context: context,
       formViewModel: surveyQuestionFormViewModel,
-      formViewBuilder: (formViewModel) =>
-          SurveyQuestionFormView(formViewModel: formViewModel),
+      formViewBuilder: (formViewModel) => SurveyQuestionFormView(
+        formViewModel: formViewModel,
+        studyId: routeArgs.studyId,
+      ),
     );
   }
 }

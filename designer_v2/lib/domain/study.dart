@@ -109,6 +109,7 @@ extension StudyDuplicateX on Study {
     copy.registryPublished = false;
     copy.results = [];
     copy.collaboratorEmails = [];
+    copy.fitbitCredentials = null;
     copy.createdAt = DateTime.now();
 
     // Generate a new random UUIDs

@@ -47,8 +47,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     freeTextResponseOptionsArray.onChanged(
       (control) => onResponseOptionsChanged(control.controls),
     );
-    painResponseOptionsArray.onChanged(
+    fitbitResponseOptionsArray.onChanged(
       (control) => onResponseOptionsChanged(control.controls),
+    );
+    painResponseOptionsArray.onChanged(
+          (control) => onResponseOptionsChanged(control.controls),
     );
   }
 
@@ -109,6 +112,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.image: imageResponseOptionsArray,
     SurveyQuestionType.audio: audioResponseOptionsArray,
     SurveyQuestionType.freeText: freeTextResponseOptionsArray,
+    SurveyQuestionType.fitbit: fitbitResponseOptionsArray,
     SurveyQuestionType.pain: painResponseOptionsArray,
   }[questionType]!;
 
@@ -342,6 +346,19 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     freeTextLengthMax.value = freeTextLengthControl.value!.end.toInt();
   }
 
+  // Fitbit
+
+  final Map<FitbitQuestionType, FormControl<bool>> fitbitQuestionTypesControl =
+      Map.fromEntries(
+        FitbitQuestionType.values.map(
+          (e) => MapEntry(e, FormControl<bool>(value: false)),
+        ),
+      );
+
+  late final FormArray fitbitResponseOptionsArray = FormArray(
+    fitbitQuestionTypesControl.values.toList(),
+  );
+
   // - Form fields (question type-specific) - end
 
   late final Map<SurveyQuestionType, FormGroup> _controlsByQuestionType = {
@@ -373,6 +390,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.freeText: FormGroup({
       'freeTextOptionsArray': freeTextResponseOptionsArray,
     }),
+    SurveyQuestionType.fitbit: FormGroup({
+      'fitbitOptionsArray': fitbitResponseOptionsArray,
+    }),
     SurveyQuestionType.pain: FormGroup({
       'painOptionsArray': painResponseOptionsArray,
     }),
@@ -397,6 +417,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       StudyFormValidationSet.draft: [maxRecordingDurationValid],
       StudyFormValidationSet.publish: [maxRecordingDurationValid],
     },
+    SurveyQuestionType.fitbit: {
+      StudyFormValidationSet.draft: [fitbitTypeRequired],
+      StudyFormValidationSet.publish: [fitbitTypeRequired],
+    },
   };
 
   @override
@@ -420,6 +444,20 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       ..._validationConfigsByQuestionType[questionType]?[validationSet] ?? [],
     ];
   }
+
+  FormControlValidation get fitbitTypeRequired => FormControlValidation(
+    control: fitbitResponseOptionsArray,
+    validators: [
+      CountWhereValidator<dynamic>(
+        (dynamic value) => value == true,
+        minCount: 1,
+      ),
+    ],
+    validationMessages: {
+      CountWhereValidator.kValidationMessageMinCount: (error) =>
+          "At least one Fitbit type must be selected.", //TODO: translations
+    },
+  );
 
   FormControlValidation get questionTextRequired => FormControlValidation(
     control: questionTextControl,
@@ -571,6 +609,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         );
         freeTextTypeControl.value = data.textType;
         customRegexControl.value = data.textTypeExpression;
+      case SurveyQuestionType.fitbit:
+        fitbitQuestionTypesControl.forEach((key, value) {
+          value.value = (data as FitbitQuestionFormData).types.contains(key);
+        });
       case SurveyQuestionType.pain:
         break;
     }
@@ -649,6 +691,17 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           ], // required
           textType: freeTextTypeControl.value!,
           textTypeExpression: customRegexControl.value,
+        );
+      case SurveyQuestionType.fitbit:
+        return FitbitQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+          types: fitbitQuestionTypesControl.entries
+              .where((e) => e.value.value!)
+              .map((e) => e.key)
+              .toList(),
         );
       case SurveyQuestionType.pain:
         return PainQuestionFormData(

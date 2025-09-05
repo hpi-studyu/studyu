@@ -1,20 +1,32 @@
 ## 4.6.1
 
- - **FIX**: update deps.
+- **FIX**: update deps.
 
 ## 4.6.0
 
- - **FIX**: bump dependencies.
- - **FIX**: study reset process by removing unnecessary user ID handling.
- - **FIX**: reset subject temp fix.
- - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+- **FIX**: bump dependencies.
+- **FIX**: study reset process by removing unnecessary user ID handling.
+- **FIX**: reset subject temp fix.
+- **FEAT**: enhance study reset functionality to support user-specific data deletion.
 
 ## 4.5.0
 
- - **FIX**: upgrade deps.
- - **FEAT**: add Descriptive Stats section to the designer and core.
- - **FEAT**: add gauge comparison section with form view.
- - **FEAT**: add textual summary section to report with form view and validation.
+- **FIX**: upgrade deps.
+- **FEAT**: add Descriptive Stats section to the designer and core.
+- **FEAT**: add gauge comparison section with form view.
+- **FEAT**: add textual summary section to report with form view and validation.
+
+## 4.5.0-dev.0
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
 
 ## 4.4.9
 

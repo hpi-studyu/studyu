@@ -6,6 +6,7 @@ import 'package:studyu_app/widgets/questionnaire/question_header.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/annotated_scale_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/boolean_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/choice_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/fitbit_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/free_text_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/pain_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
@@ -17,11 +18,13 @@ class QuestionContainer extends StatefulWidget {
   final Function(Answer, int) onDone;
   final Question question;
   final int index;
+  final String? taskId;
 
   const QuestionContainer({
     required this.onDone,
     required this.question,
     required this.index,
+    this.taskId,
     super.key,
   });
 
@@ -78,6 +81,12 @@ class _QuestionContainerState extends State<QuestionContainer>
         return FreeTextQuestionWidget(
           question: freeTextQuestion,
           onDone: _onDone,
+        );
+      case final FitbitQuestion fitbitQuestion:
+        return FitbitQuestionWidget(
+          question: fitbitQuestion,
+          onDone: _onDone,
+          taskId: widget.taskId!,
         );
       case final PainQuestion painQuestion:
         return PainQuestionWidget(question: painQuestion, onDone: _onDone);

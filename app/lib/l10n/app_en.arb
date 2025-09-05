@@ -239,6 +239,7 @@
   },
   "app_outdated_message": "A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!",
   "update_now": "Update now",
+
   "text_summary_section_prefix_higher": "Your ",
   "text_summary_section_was_higher": " was higher during intervention: ",
   "text_summary_section_was_lower": " was lower during intervention: ",
@@ -293,6 +294,38 @@
   "maximum": "Maximum",
   "support_email_sent": "Support Email Sent",
   "support_email_sent_description": "Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.",
+
+  "sync_fitbit_data": "Sync Fitbit Data",
+  "fitbit_data_synced": "Fitbit data synced successfully",
+  "fitbit_data_not_synced": "Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.",
+  "error_syncing_fitbit_data": "Error syncing Fitbit data: {error}",
+  "@error_syncing_fitbit_data": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fitbit_data_synced_dialog_title": "Fitbit Data Synced",
+  "fitbit_data_synced_info": "Data was synced for the following data types:",
+  "fitbit_data_earliest_date": "Earliest date: {date}",
+  "fitbit_data_latest_date": "Latest date: {date}",
+  "fitbit_data_details_btn": "Details",
+  "fitbit_data_close_btn": "Close",
+  "@fitbit_data_earliest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@fitbit_data_latest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "painIndicatorText": "Pain Level",
   "dialogTitle": "Select Pain Level",
   "okButton": "OK",
@@ -409,3 +442,4 @@
   "painTypeSoreness": "Soreness",
   "painTypeStiffness": "Stiffness"
 }
+

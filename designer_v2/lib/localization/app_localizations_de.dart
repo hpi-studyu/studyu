@@ -505,6 +505,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get question_type_audio => 'Audio';
 
   @override
+  String get question_type_fitbit => 'Fitbit';
+
+  @override
   String get form_array_response_options_bool_yes => 'Ja';
 
   @override
@@ -718,6 +721,12 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get free_text_question_type_custom_explanation =>
       'Die Eingabe muss dem angegebenen regulären Ausdruck entsprechen.';
+
+  @override
+  String get fitbit_question_title => 'Fitbit';
+
+  @override
+  String get fitbit_question_type_empty => 'No Fitbit data available';
 
   @override
   String get banner_study_readonly_title =>
@@ -2005,4 +2014,138 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get under_construction_description =>
       'Hier wird gerade noch dran gearbeitet, bitte hab ein wenig Geduld & komm denächst wieder!';
+
+  @override
+  String get fitbit_credentials_instruction =>
+      'Um Fitbit-Daten zu integrieren, folgen Sie diesen Schritten, um Ihre Client-ID und Ihren Client-Secret zu erhalten:';
+
+  @override
+  String get fitbit_credentials_step1 =>
+      '1. Gehen Sie zum Fitbit Developer Portal.';
+
+  @override
+  String get fitbit_credentials_step2 =>
+      '2. Melden Sie sich mit Ihrem Fitbit-Konto an oder erstellen Sie eins, falls Sie noch keines haben.';
+
+  @override
+  String get fitbit_credentials_step3 =>
+      '3. Navigieren Sie zum Abschnitt \"Verwalten\" und wählen Sie \"App registrieren\".';
+
+  @override
+  String get fitbit_credentials_step4 =>
+      '4. Füllen Sie die erforderlichen Felder wie Anwendungsname, Beschreibung und Redirect-URL (verwenden Sie: \"studyu://fitbit/auth\") aus.';
+
+  @override
+  String get fitbit_credentials_step5 =>
+      '5. Wählen Sie unter \"OAuth 2.0 Application Type\" die Option \"Client\" und setzen Sie den Zugriff auf \"Nur Lesen\".';
+
+  @override
+  String get fitbit_credentials_step6 =>
+      '6. Senden Sie das Formular ab, um Ihre \"Client ID\" und \"Client Secret\" zu erhalten.';
+
+  @override
+  String get fitbit_credentials_step7 =>
+      '7. Bitte füllen Sie das folgende Formular aus, um Zugang zu Intraday-Daten zu erhalten. Ohne diesen Schritt können Sie keine Daten von Fitbit für Ihre Versuche abrufen.';
+
+  @override
+  String get fitbit_credentials_step8 =>
+      '8. Kopieren Sie die unten stehenden Zugangsdaten und fügen Sie sie ein.';
+
+  @override
+  String get fitbit_credentials_success_instruction =>
+      'Sobald Sie die Zugangsdaten eingegeben haben, wird die Fitbit-Integration für Ihre Studie aktiviert.';
+
+  @override
+  String get fitbit_credentials_add_question_instruction =>
+      'Um eine Fitbit-Frage hinzuzufügen, navigieren Sie zum Bereich Messungen und erstellen Sie innerhalb einer Messung eine neue Fitbit-Frage.';
+
+  @override
+  String get fitbit_credentials_screenshot_step1 =>
+      'Schritt 1: Developer Portal';
+
+  @override
+  String get fitbit_credentials_screenshot_step2 => 'Schritt 2: Login';
+
+  @override
+  String get fitbit_credentials_screenshot_step3 =>
+      'Schritt 3: App registrieren';
+
+  @override
+  String get fitbit_credentials_screenshot_step4 =>
+      'Schritt 4: Details eingeben';
+
+  @override
+  String get fitbit_credentials_screenshot_step5 =>
+      'Schritt 5: Zugriff einstellen';
+
+  @override
+  String get fitbit_credentials_screenshot_step6 =>
+      'Schritt 6: Zugangsdaten erhalten';
+
+  @override
+  String get fitbit_credentials_screenshot_step7 =>
+      'Schritt 7: Formular ausfüllen';
+
+  @override
+  String get fitbit_credentials_cannot_change_title =>
+      'Fitbit-Anmeldedaten können nicht geändert werden';
+
+  @override
+  String get fitbit_credentials_cannot_change_description =>
+      'Fitbit-Anmeldedaten können nicht geändert werden, wenn die Studie nicht im Entwurfsmodus ist.';
+
+  @override
+  String get fitbit_only_participant_title =>
+      'Wenn du diese Studie nur für dich selbst durchführst';
+
+  @override
+  String get fitbit_only_participant_subtitle =>
+      'Da du sowohl Ersteller als auch einziger Teilnehmer dieser Studie bist, brauchst du das Formular für den Zugriff auf Intraday-Daten nicht auszufüllen. Befolge einfach diese Schritte:';
+
+  @override
+  String get fitbit_only_participant_step_1 =>
+      'Wähle beim Erstellen deiner Fitbit-App als Anwendungstyp „Persönlich“.';
+
+  @override
+  String get fitbit_only_participant_step_2 =>
+      'Verwende beim Synchronisieren deiner Daten unbedingt dasselbe Google-Konto, das du mit deiner Fitbit-Uhr und der von dir eingerichteten Fitbit-App verbunden hast.';
+
+  @override
+  String get client_id => 'Client ID';
+
+  @override
+  String get client_id_label_help =>
+      'Geben Sie die Client-ID aus dem Fitbit Developer Portal ein.';
+
+  @override
+  String get client_id_hint => 'Client ID';
+
+  @override
+  String get client_secret => 'Client Secret';
+
+  @override
+  String get client_secret_label_help =>
+      'Geben Sie den Client Secret aus dem Fitbit Developer Portal ein.';
+
+  @override
+  String get client_secret_hint => 'Client Secret';
+
+  @override
+  String get screenshots_for_guidance => 'Screenshots zur Anleitung:';
+
+  @override
+  String get fitbit_credentials_not_set =>
+      'Fitbit-Anmeldedaten sind nicht gesetzt. Bitte navigieren Sie zum \'Fitbit\'-Tab im Studien-Designer, um Ihre Fitbit-Client-ID und Ihr Client-Secret einzugeben. Sobald dies abgeschlossen ist, kehren Sie hierher zurück, um Fitbit-Fragen hinzuzufügen.';
+
+  @override
+  String get fitbit_question_type_heartrate_description =>
+      'Erfasst die Herzfrequenz, gemessen jede Minute über den Tag verteilt.';
+
+  @override
+  String get fitbit_question_type_steps_description =>
+      'Zeichnet die Anzahl der gegangenen Schritte auf, gemessen jede Minute.';
+
+  @override
+  String get fitbit_question_type_sleep_description =>
+      'Erfasst Schlafstadien (Wach, Leichtschlaf, Tiefschlaf, REM) in 30-Sekunden- bis 1-Minuten-Intervallen während des Schlafs.';
 }

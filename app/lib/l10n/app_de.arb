@@ -243,6 +243,7 @@
   },
   "app_outdated_message": "Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!",
   "update_now": "Jetzt aktualisieren",
+
   "text_summary_section_prefix_higher": "Dein ",
   "text_summary_section_was_higher": " war höher während der Intervention: ",
   "text_summary_section_was_lower": " war niedriger während der Intervention: ",
@@ -295,8 +296,41 @@
   "average": "Durchschnitt",
   "minimum": "Minimum",
   "maximum": "Maximum",
+
   "support_email_sent": "Support-E-Mail geöffnet",
   "support_email_sent_description": "Ihre Support-Anfrage wurde in Ihrer E-Mail-App vorbereitet. Bitte senden Sie die E-Mail, um unser Support-Team zu erreichen und warten Sie auf eine Antwort.\n\nWenn Sie aktuell an einer Studie teilnehmen, dokumentieren Sie Ihre Ergebnisse bitte außerhalb der App, bis das Problem behoben ist. Vielen Dank für Ihr Verständnis.",
+
+  "sync_fitbit_data": "Fitbit-Daten synchronisieren",
+  "fitbit_data_synced": "Fitbit-Daten wurden erfolgreich synchronisiert",
+  "fitbit_data_not_synced": "Fitbit-Daten konnten nicht synchronisiert werden. Bitte stellen Sie sicher, dass Sie Ihre Fitbit-Daten in der Fitbit-App synchronisiert haben.",
+  "error_syncing_fitbit_data": "Fehler beim Synchronisieren der Fitbit-Daten: {error}",
+  "@error_syncing_fitbit_data": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fitbit_data_synced_dialog_title": "Fitbit-Daten synchronisiert",
+  "fitbit_data_synced_info": "Daten wurden für die folgenden Datentypen synchronisiert:",
+  "fitbit_data_earliest_date": "Frühestes Datum: {date}",
+  "fitbit_data_latest_date": "Spätestes Datum: {date}",
+  "fitbit_data_details_btn": "Details",
+  "fitbit_data_close_btn": "Schließen",
+  "@fitbit_data_earliest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@fitbit_data_latest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "painIndicatorText": "Schmerzlevel",
   "dialogTitle": "Schmerzlevel auswählen",
   "okButton": "OK",
