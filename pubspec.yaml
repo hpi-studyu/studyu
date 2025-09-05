@@ -64,7 +64,7 @@ melos:
       run: |
         melos format
         melos generate
-        dart analyze
+        # dart analyze # fixes error with custom_lint for riverpod_generator
         flutter analyze
 
     reset:
