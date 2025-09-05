@@ -16,9 +16,6 @@ on:
     #  - 'studyu_flutter_common-v*'
   workflow_dispatch:
 
-env:
-  MELOS_SDK_PATH: 'auto'
-
 concurrency:
   group: ${{ github.ref }}-publish-pubdev
   cancel-in-progress: true
@@ -30,10 +27,6 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@main
-
-      - name: Init workspace
-        uses: ./.github/workflows/init-workspace
-
       - name: '>> Dart package core <<'
         uses: k-paxian/dart-package-publisher@master
         with:
@@ -49,10 +42,6 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@main
-
-      - name: Init workspace
-        uses: ./.github/workflows/init-workspace
-
       - name: '>> Dart package flutter_common <<'
         uses: k-paxian/dart-package-publisher@master
         with:
