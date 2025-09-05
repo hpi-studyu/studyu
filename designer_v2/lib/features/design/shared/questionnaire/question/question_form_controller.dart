@@ -766,7 +766,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
           maxRecordingDurationSeconds:
-          maxRecordingDurationSecondsControl.value!,
+              maxRecordingDurationSecondsControl.value!,
         );
       case SurveyQuestionType.fitbit:
         return FitbitQuestionFormData(

@@ -292,9 +292,10 @@ class _MeasurementSurveyFormViewState
         FormSideSheetTab(
           title: tr.navlink_screener_question_content,
           index: 0,
-          formViewBuilder: (formViewModel) =>
-              SurveyQuestionFormView(formViewModel: formViewModel,
-        studyId: routeArgs.studyId,),
+          formViewBuilder: (formViewModel) => SurveyQuestionFormView(
+            formViewModel: formViewModel,
+            studyId: routeArgs.studyId,
+          ),
         ),
         FormSideSheetTab(
           title: tr.navlink_question_visibility_logic,
