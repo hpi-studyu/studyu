@@ -84,12 +84,14 @@ abstract class QuestionFormData implements IFormData {
     required this.questionText,
     required this.questionType,
     this.questionInfoText,
+    this.conditional,
   });
 
   final QuestionID questionId;
   final String questionText;
   final String? questionInfoText;
   final SurveyQuestionType questionType;
+  final QuestionConditional? conditional;
 
   /// Mapping from response option => qualifying/disqualifying
   late final Map<dynamic, bool> responseOptionsValidity;
@@ -180,15 +182,16 @@ class ChoiceQuestionFormData extends QuestionFormData {
     required super.questionText,
     required super.questionType,
     super.questionInfoText,
+    super.conditional,
     this.isMultipleChoice = false,
     required this.answerOptions,
   });
 
   final bool isMultipleChoice;
-  final List<String> answerOptions;
+  final List<Choice> answerOptions;
 
   @override
-  List<String> get responseOptions => answerOptions;
+  List<Choice> get responseOptions => answerOptions;
 
   factory ChoiceQuestionFormData.fromDomainModel(
     ChoiceQuestion question,
@@ -200,7 +203,8 @@ class ChoiceQuestionFormData extends QuestionFormData {
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
       isMultipleChoice: question.multiple,
-      answerOptions: question.choices.map((choice) => choice.text).toList(),
+      answerOptions: question.choices,
+      conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -213,7 +217,13 @@ class ChoiceQuestionFormData extends QuestionFormData {
     question.prompt = questionText;
     question.rationale = questionInfoText;
     question.multiple = isMultipleChoice;
-    question.choices = answerOptions.map(_buildChoiceForValue).toList();
+    question.choices = answerOptions;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<List<String>>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as List<String>?,
+          );
     return question;
   }
 
@@ -227,22 +237,16 @@ class ChoiceQuestionFormData extends QuestionFormData {
       questionInfoText: questionInfoText,
       isMultipleChoice: isMultipleChoice,
       answerOptions: [...answerOptions],
+      conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;
   }
 
-  Choice _buildChoiceForValue(String value) {
-    final choiceId = value.toKey();
-    final choice = Choice(choiceId);
-    choice.text = value;
-    return choice;
-  }
-
   @override
   Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as ChoiceQuestion;
-    final choice = _buildChoiceForValue(responseOption as String);
+    final choice = responseOption as Choice;
     return question.constructAnswer([choice]);
   }
 }
@@ -253,6 +257,7 @@ class BoolQuestionFormData extends QuestionFormData {
     required super.questionText,
     required super.questionType,
     super.questionInfoText,
+    super.conditional,
   });
 
   static Map<String, bool> get kResponseOptions => {
@@ -272,6 +277,7 @@ class BoolQuestionFormData extends QuestionFormData {
       questionType: SurveyQuestionType.bool,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
+      conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -283,6 +289,12 @@ class BoolQuestionFormData extends QuestionFormData {
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<bool>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as bool?,
+          );
     return question;
   }
 
@@ -293,6 +305,7 @@ class BoolQuestionFormData extends QuestionFormData {
       questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
+      conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;
@@ -435,6 +448,7 @@ class ScaleQuestionFormData extends QuestionFormData {
     required super.questionText,
     required super.questionType,
     super.questionInfoText,
+    super.conditional,
     required this.minValue,
     this.minLabel,
     required this.maxValue,
@@ -498,6 +512,7 @@ class ScaleQuestionFormData extends QuestionFormData {
       initialValue: question.initial,
       minColor: (question.minColor != null) ? Color(question.minColor!) : null,
       maxColor: (question.maxColor != null) ? Color(question.maxColor!) : null,
+      conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -523,6 +538,12 @@ class ScaleQuestionFormData extends QuestionFormData {
     if (maxLabel != null) {
       question.maxLabel = maxLabel;
     }
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<double>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as double?,
+          );
     return question;
   }
 
@@ -544,6 +565,7 @@ class ScaleQuestionFormData extends QuestionFormData {
       maxColor: maxColor,
       midLabels: midLabels,
       midValues: midValues,
+      conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;
@@ -561,10 +583,11 @@ class FreeTextQuestionFormData extends QuestionFormData {
     required super.questionId,
     required super.questionText,
     required super.questionType,
+    super.questionInfoText,
+    super.conditional,
     required this.textLengthRange,
     required this.textType,
     required this.textTypeExpression,
-    super.questionInfoText,
   });
 
   List<int> textLengthRange;
@@ -586,6 +609,7 @@ class FreeTextQuestionFormData extends QuestionFormData {
       textLengthRange: question.lengthRange,
       textType: question.textType,
       textTypeExpression: question.customTypeExpression,
+      conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -601,6 +625,12 @@ class FreeTextQuestionFormData extends QuestionFormData {
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<String>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as String?,
+          );
     return question;
   }
 
@@ -614,6 +644,7 @@ class FreeTextQuestionFormData extends QuestionFormData {
       textLengthRange: textLengthRange,
       textType: textType,
       textTypeExpression: textTypeExpression,
+      conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;

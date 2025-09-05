@@ -59,7 +59,7 @@ enum SurveyQuestionType {
       case SurveyQuestionType.choice:
         return Icons.format_list_bulleted_rounded;
       case SurveyQuestionType.bool:
-        return Icons.rule_rounded; // Icons.contrast
+        return Icons.check_box_rounded;
       case SurveyQuestionType.scale:
         return Icons.tune_rounded;
       case SurveyQuestionType.image:

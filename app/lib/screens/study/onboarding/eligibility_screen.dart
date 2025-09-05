@@ -41,7 +41,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     activeResult = null;
   }
 
-  void _invalidateResponse(QuestionnaireState qs) {
+  void _invalidateResponse() {
     setState(() {
       activeResult = null;
     });
@@ -66,7 +66,11 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     return false;
   }
 
-  void _evaluateResponse(QuestionnaireState qs) {
+  void _evaluateResponse(QuestionnaireState? qs) {
+    if (qs == null) {
+      _invalidateResponse();
+      return;
+    }
     final criteria = widget.study!.eligibilityCriteria;
     setState(() {
       final conditionResult = criteria.every((criterion) {
@@ -178,7 +182,6 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
             child: QuestionnaireWidget(
               widget.study!.questionnaire.questions,
               title: widget.study!.title,
-              onChange: _invalidateResponse,
               onComplete: _evaluateResponse,
               shouldContinue: _checkContinuation,
             ),

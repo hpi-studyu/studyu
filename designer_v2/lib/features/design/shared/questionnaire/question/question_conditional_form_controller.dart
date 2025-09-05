@@ -1,0 +1,318 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:async/async.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_data.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
+
+abstract class IConditionalQuestionProperties {
+  String get currentQuestionId;
+  CompositeExpression? get compositeExpression;
+  bool get isReadonly;
+
+  FormControl<LogicType> get logicTypeControl;
+  FormArray get conditionsArray;
+  FormControl<QuestionConditional<dynamic>?> get questionConditionalControl;
+
+  List<ConditionRowFormViewModel> get conditionModels;
+
+  void addCondition({Expression? initialExpression});
+  void updateCondition();
+  void removeCondition(int index);
+
+  Stream<void> get conditionsValueChanges;
+}
+
+class ConditionalQuestionFormViewModel extends FormViewModel
+    implements IConditionalQuestionProperties {
+  ConditionalQuestionFormViewModel({
+    required this.currentQuestionId,
+    required this.questionConditionalControl,
+  });
+
+  @override
+  final String currentQuestionId;
+
+  @override
+  final FormControl<QuestionConditional<dynamic>?> questionConditionalControl;
+
+  /// Flag to prevent marking form as dirty during programmatic updates
+  bool _isUpdatingProgrammatically = false;
+
+  @override
+  FormControl<LogicType> logicTypeControl = FormControl<LogicType>(
+    value: LogicType.and,
+  );
+
+  @override
+  late final FormArray conditionsArray = FormArray([]);
+
+  late final FormViewModelCollection<
+    ConditionRowFormViewModel,
+    ConditionRowFormData
+  >
+  conditionFormViewModels = FormViewModelCollection([], conditionsArray);
+
+  @override
+  List<ConditionRowFormViewModel> get conditionModels =>
+      conditionFormViewModels.formViewModels;
+
+  @override
+  late final FormGroup form = FormGroup({
+    'logicType': logicTypeControl,
+    'conditions': conditionsArray,
+  });
+
+  Stream<void> _conditionsValueChangesStream = const Stream<void>.empty();
+  StreamSubscription<void>? _conditionsValueChangesSubscription;
+
+  @override
+  Stream<void> get conditionsValueChanges =>
+      _conditionsValueChangesStream.isBroadcast
+      ? _conditionsValueChangesStream
+      : _conditionsValueChangesStream.asBroadcastStream();
+
+  @override
+  CompositeExpression? get compositeExpression {
+    final List<Expression> currentExpressions = [];
+    for (final formViewModel in conditionFormViewModels.formViewModels) {
+      final expression = formViewModel.buildFormData().buildExpression();
+      if (expression != null) {
+        currentExpressions.add(expression);
+      }
+    }
+    if (currentExpressions.isEmpty) {
+      return null;
+    }
+    return CompositeExpression(
+      logicType: logicTypeControl.value ?? LogicType.and,
+      expressions: currentExpressions,
+    );
+  }
+
+  @override
+  void addCondition({Expression? initialExpression}) {
+    final conditionVm = ConditionRowFormViewModel(
+      currentQuestionId: currentQuestionId,
+      initialExpression: initialExpression,
+    );
+
+    // Set the form mode to match the parent form mode
+    conditionVm.formMode = formMode;
+
+    if (initialExpression != null) {
+      final formData = ConditionRowFormData(
+        questionId: conditionVm.extractQuestionId(initialExpression),
+        comparator: conditionVm.extractComparator(initialExpression),
+        value: conditionVm.extractValue(initialExpression),
+      );
+      conditionVm.setControlsFrom(formData);
+    }
+
+    // Add the view model to the collection
+    conditionFormViewModels.add(conditionVm);
+
+    // Update the value change streams
+    _updateConditionsValueChangesStream();
+
+    // Only update condition if this is a user-initiated add (not from initialization)
+    if (initialExpression == null) {
+      updateCondition();
+    }
+
+    print(
+      'Added condition, now have ${conditionFormViewModels.formViewModels.length} conditions',
+    );
+    print('Form array now has ${conditionsArray.controls.length} controls');
+  }
+
+  @override
+  void removeCondition(int index) {
+    conditionFormViewModels.remove(
+      conditionFormViewModels.formViewModels[index],
+    );
+    _updateConditionsValueChangesStream();
+
+    // Update the condition to reflect the removal
+    updateCondition();
+  }
+
+  @override
+  void read([dynamic formData]) {
+    conditionFormViewModels.read();
+    super.read(formData);
+  }
+
+  @override
+  void updateCondition() {
+    final composite = compositeExpression;
+    print('Updating condition with composite: ${composite?.toJson()}');
+
+    // Check if we have any conditions to save
+    if (composite != null && composite.expressions.isNotEmpty) {
+      // Create a new QuestionConditional with the composite expression
+      final conditional = QuestionConditional.withCondition(composite);
+
+      // Check if the value is actually different to avoid unnecessary updates
+      final currentValue = questionConditionalControl.value;
+      final shouldUpdate =
+          currentValue == null ||
+          jsonEncode(currentValue.condition.toJson()) !=
+              jsonEncode(conditional.condition.toJson());
+
+      if (shouldUpdate) {
+        if (_isUpdatingProgrammatically) {
+          // During programmatic updates (like initialization), use updateValue to avoid
+          // triggering form dirty state
+          questionConditionalControl.updateValue(conditional, emitEvent: false);
+        } else {
+          // During user-initiated changes, use normal assignment to properly
+          // trigger form change detection
+          questionConditionalControl.value = conditional;
+        }
+
+        print(
+          'Set questionConditionalControl.value: ${questionConditionalControl.value?.condition.toJson()}',
+        );
+      }
+    } else {
+      // No conditions, set to null
+      final shouldUpdate = questionConditionalControl.value != null;
+
+      if (shouldUpdate) {
+        if (_isUpdatingProgrammatically) {
+          questionConditionalControl.updateValue(null, emitEvent: false);
+        } else {
+          questionConditionalControl.value = null;
+        }
+        print('Set questionConditionalControl.value to null');
+      }
+    }
+
+    // Update the form controls to reflect the current state
+    _syncFormControlsWithConditions();
+  }
+
+  /// Synchronizes the form controls with the current conditions state
+  /// This ensures that form.value contains the correct serializable data
+  void _syncFormControlsWithConditions() {
+    // Update the logicType control to reflect current state
+    logicTypeControl.updateValue(
+      logicTypeControl.value ?? LogicType.and,
+      emitEvent: false,
+    );
+
+    // Since the conditional form controls are no longer part of the main form,
+    // we don't need to sync the conditionsArray as it doesn't affect isDirty
+    // The questionConditionalControl is the single source of truth and is
+    // already being updated in updateCondition()
+  }
+
+  void _updateConditionsValueChangesStream() {
+    _conditionsValueChangesSubscription?.cancel();
+
+    // Create streams for all view models' forms and the logic type control
+    final List<Stream> streams = [];
+
+    // Add the logic type control to the streams
+    streams.add(logicTypeControl.valueChanges.distinct());
+
+    // Listen to the form array changes
+    streams.add(conditionsArray.valueChanges.distinct());
+
+    for (final viewModel in conditionFormViewModels.formViewModels) {
+      // Listen to form value changes
+      streams.add(viewModel.form.valueChanges.distinct());
+
+      // Also listen to each control individually for more granular updates
+      streams.add(viewModel.questionIdControl.valueChanges.distinct());
+      streams.add(viewModel.comparatorControl.valueChanges.distinct());
+      streams.add(viewModel.valueControl.valueChanges.distinct());
+    }
+
+    if (streams.isEmpty) {
+      _conditionsValueChangesStream = const Stream<void>.empty();
+    } else {
+      _conditionsValueChangesStream = StreamGroup.merge(
+        streams,
+      ).asBroadcastStream();
+      _conditionsValueChangesSubscription = _conditionsValueChangesStream.listen((
+        _,
+      ) {
+        print('Condition value changed, updating condition');
+        // First update the composite expression by building it from all form data
+        updateCondition();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _conditionsValueChangesSubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
+  set formMode(FormMode mode) {
+    super.formMode = mode;
+
+    // Propagate form mode to all condition row form controllers
+    for (final conditionViewModel in conditionFormViewModels.formViewModels) {
+      conditionViewModel.formMode = mode;
+    }
+  }
+
+  @override
+  Map<FormMode, String> get titles => {
+    FormMode.create: 'Create Conditional',
+    FormMode.edit: 'Edit Conditional',
+    FormMode.readonly: 'View Conditional',
+  };
+
+  @override
+  void setControlsFrom(dynamic data) {
+    // Set flag to indicate this is a programmatic update during initialization
+    _isUpdatingProgrammatically = true;
+
+    try {
+      final conditional = questionConditionalControl.value;
+      if (conditional != null) {
+        final compositeExpression = conditional.condition;
+        logicTypeControl.value = compositeExpression.logicType;
+
+        conditionFormViewModels.reset(null);
+
+        for (final expression in compositeExpression.expressions) {
+          addCondition(initialExpression: expression);
+        }
+        // Synchronously update the condition after initialization to ensure
+        // the parent control reflects the correct state
+        updateCondition();
+      } else {
+        logicTypeControl.value = LogicType.and;
+        conditionFormViewModels.reset(null);
+
+        // Also update when there are no conditions
+        updateCondition();
+      }
+      _updateConditionsValueChangesStream();
+    } finally {
+      // Reset the flag
+      _isUpdatingProgrammatically = false;
+    }
+  }
+
+  @override
+  QuestionConditional buildFormData() {
+    print('Building QuestionConditional from form data');
+
+    final composite =
+        compositeExpression ??
+        CompositeExpression(logicType: LogicType.and, expressions: []);
+    return QuestionConditional.withCondition(composite);
+  }
+}

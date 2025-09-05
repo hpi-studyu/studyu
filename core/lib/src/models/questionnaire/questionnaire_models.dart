@@ -5,6 +5,7 @@ export 'body_part.dart';
 export 'future_blob_file.dart';
 export 'pain_type.dart';
 export 'question.dart';
+export 'question_conditional.dart';
 export 'questionnaire.dart';
 export 'questionnaire_state.dart';
 export 'questions/questions.dart';

@@ -11,10 +11,11 @@ import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_view.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_logic_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
-import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
+import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -119,7 +120,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                 ReactiveFormArray(
                   formArray: formViewModel.questionsArray,
                   builder: (context, formArray, child) {
-                    return FormArrayTable<ScreenerQuestionFormViewModel>(
+                    return FormListView<ScreenerQuestionFormViewModel>(
                       control: formViewModel.questionsArray,
                       items: formViewModel.questionModels,
                       onSelectItem: (viewModel) {
@@ -129,6 +130,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           routeArgs,
                           context,
                           ref,
+                          study.questionnaire,
                         );
                       },
                       getActionsAt: (viewModel, _) =>
@@ -140,6 +142,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           routeArgs,
                           context,
                           ref,
+                          study.questionnaire,
                         );
                       },
                       sectionDescription:
@@ -190,6 +193,23 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           ],
                         );
                       },
+                      reorderable: true,
+                      onReorder: (oldIndex, newIndex) {
+                        if (newIndex > oldIndex) {
+                          newIndex -= 1;
+                        }
+                        final item = formViewModel.questionModels.removeAt(
+                          oldIndex,
+                        );
+                        formViewModel.questionModels.insert(newIndex, item);
+                        final controlItem = formViewModel.questionsArray
+                            .removeAt(oldIndex);
+                        formViewModel.questionsArray.insert(
+                          newIndex,
+                          controlItem,
+                        );
+                        formViewModel.save();
+                      },
                     );
                   },
                 ),
@@ -197,7 +217,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                 ReactiveFormArray(
                   formArray: formViewModel.consentItemArray,
                   builder: (context, formArray, child) {
-                    return FormArrayTable<ConsentItemFormViewModel>(
+                    return FormListView<ConsentItemFormViewModel>(
                       control: formViewModel.consentItemArray,
                       items: formViewModel.consentItemModels,
                       onSelectItem: (viewModel) {
@@ -247,6 +267,23 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                             const SizedBox.shrink(),
                         ],
                       ),
+                      reorderable: true,
+                      onReorder: (oldIndex, newIndex) {
+                        if (newIndex > oldIndex) {
+                          newIndex -= 1;
+                        }
+                        final item = formViewModel.consentItemModels.removeAt(
+                          oldIndex,
+                        );
+                        formViewModel.consentItemModels.insert(newIndex, item);
+                        final controlItem = formViewModel.consentItemArray
+                            .removeAt(oldIndex);
+                        formViewModel.consentItemArray.insert(
+                          newIndex,
+                          controlItem,
+                        );
+                        formViewModel.save();
+                      },
                     );
                   },
                 ),
@@ -263,6 +300,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     ScreenerQuestionFormRouteArgs routeArgs,
     BuildContext context,
     WidgetRef ref,
+    StudyUQuestionnaire questionnaire,
   ) {
     final formViewModel = ref.watch(
       screenerQuestionFormViewModelProvider(routeArgs),
@@ -286,6 +324,14 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
           index: 1,
           formViewBuilder: (formViewModel) =>
               ScreenerQuestionLogicFormView(formViewModel: formViewModel),
+        ),
+        FormSideSheetTab(
+          title: tr.navlink_question_visibility_logic,
+          index: 2,
+          formViewBuilder: (formViewModel) => ConditionalQuestionFormView(
+            formViewModel: formViewModel,
+            allQuestions: questionnaire.questions,
+          ),
         ),
       ],
     );

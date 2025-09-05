@@ -151,6 +151,7 @@
 
   "current_report": "Current report",
   "report_history": "Report history",
+  "no_reports_found": "No reports defined yet",
   "current_power_level": "Current status",
   "not_enough_data": "Not enough data",
   "barely_enough_data": "Barely enough data",

@@ -43,7 +43,7 @@ jobs:
         run: melos qualitycheck
 
       - name: Commit changes if any
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: 'chore: Apply static analysis changes'
           file_pattern: ':!*.fvmrc'

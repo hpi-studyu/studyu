@@ -720,6 +720,103 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fitbit_question_type_empty => 'No Fitbit data available';
 
   @override
+  String get navlink_question_visibility_logic => 'Visibility';
+
+  @override
+  String get form_array_question_visibility_logic_title => 'Visibility Logic';
+
+  @override
+  String get form_array_question_visibility_logic_question_tooltip =>
+      'This question has visibility logic defined. It will only be shown to the participant if the conditions are met.';
+
+  @override
+  String get form_array_question_visibility_logic_description =>
+      'Define the visibility logic for this question. The question will only be shown to the participant if the conditions are met.';
+
+  @override
+  String get form_array_question_visibility_logic_tooltip =>
+      'Conditions are be based on the responses to other questions in the study. Only questions that follow the current question can be used in the visibility logic.';
+
+  @override
+  String get form_array_question_visibility_logic_grouping_title =>
+      'Combine conditions with';
+
+  @override
+  String get form_array_question_visibility_logic_grouping_and_title => 'AND';
+
+  @override
+  String get form_array_question_visibility_logic_grouping_or_title => 'OR';
+
+  @override
+  String get from_array_question_visibility_logic_no_conditions =>
+      'No conditions defined yet';
+
+  @override
+  String get form_array_question_visibility_logic_question_title => 'Question';
+
+  @override
+  String get form_array_question_visibility_logic_comparator_title =>
+      'Comparator';
+
+  @override
+  String get form_array_question_visibility_logic_true => 'True';
+
+  @override
+  String get form_array_question_visibility_logic_false => 'False';
+
+  @override
+  String get form_array_question_visibility_logic_value_title => 'Value';
+
+  @override
+  String get form_array_question_visibility_logic_add_condition_button =>
+      'Add condition';
+
+  @override
+  String
+  get form_array_question_visibility_logic_add_condition_disabled_tooltip =>
+      'No questions available to add conditions for. Only questions following the current question can be used in the visibility logic.';
+
+  @override
+  String get form_array_question_visibility_logic_is_true => 'is true';
+
+  @override
+  String get form_array_question_visibility_logic_is_false => 'is false';
+
+  @override
+  String get form_array_question_visibility_logic_is => 'is';
+
+  @override
+  String get form_array_question_visibility_logic_is_not => 'is not';
+
+  @override
+  String get form_array_question_visibility_logic_contains => 'contains';
+
+  @override
+  String get form_array_question_visibility_logic_does_not_contain =>
+      'does not contain';
+
+  @override
+  String get form_array_question_visibility_logic_not => 'NOT';
+
+  @override
+  String get form_array_question_visibility_logic_always_true => 'always true';
+
+  @override
+  String get form_array_question_visibility_logic_preview_description =>
+      'Show this question if the following conditions are met:';
+
+  @override
+  String get form_array_question_visibility_logic_unknown_expression =>
+      'Unknown Expression';
+
+  @override
+  String get form_array_question_visibility_logic_this_question =>
+      'this question';
+
+  @override
+  String get validation_number_required => 'The value must be a number';
+
+  @override
   String get banner_study_readonly_title => 'This study cannot be edited.';
 
   @override
@@ -948,7 +1045,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navlink_screener_question_content => 'Content';
 
   @override
-  String get navlink_screener_question_logic => 'Logic';
+  String get navlink_screener_question_logic => 'Screening';
 
   @override
   String get form_array_screener_question_logic_title => 'Screening rules';

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/question.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
@@ -20,7 +22,9 @@ import 'package:uuid/uuid.dart';
 
 // TODO: refactor break up into separate classes for each type
 class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
-    implements IListActionProvider<FormControl<dynamic>> {
+    implements
+        IListActionProvider<FormControl<dynamic>>,
+        IConditionalQuestionProperties {
   static const defaultQuestionType = SurveyQuestionType.choice;
 
   QuestionFormViewModel({
@@ -29,6 +33,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     super.validationSet = StudyFormValidationSet.draft,
     Map<FormMode, String Function()>? titles,
   }) : _titles = titles {
+    // Existing initializations
     boolResponseOptionsArray.onChanged(
       (control) => onResponseOptionsChanged(control.controls),
     );
@@ -71,6 +76,52 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   final FormControl<String> questionTextControl = FormControl();
   final FormControl<String> questionInfoTextControl = FormControl();
 
+  @override
+  String get currentQuestionId => questionIdControl.value!;
+
+  @override
+  CompositeExpression? get compositeExpression =>
+      conditionalProperties.compositeExpression;
+
+  @override
+  FormControl<LogicType> get logicTypeControl =>
+      conditionalProperties.logicTypeControl;
+
+  @override
+  FormArray get conditionsArray => conditionalProperties.conditionsArray;
+
+  @override
+  Stream<void> get conditionsValueChanges =>
+      conditionalProperties.conditionsValueChanges;
+
+  @override
+  void addCondition({Expression? initialExpression}) =>
+      conditionalProperties.addCondition(initialExpression: initialExpression);
+
+  @override
+  void updateCondition() => conditionalProperties.updateCondition();
+
+  @override
+  List<ConditionRowFormViewModel> get conditionModels =>
+      conditionalProperties.conditionModels;
+
+  @override
+  void removeCondition(int index) =>
+      conditionalProperties.removeCondition(index);
+
+  // Initialize from existing data
+  /*void _initializeConditions(QuestionConditional<bool>? initialCondition) {
+    conditionsArray.clear();
+    if (initialCondition != null) {
+      CompositeExpression initialComposite;
+      initialComposite = initialCondition.condition;
+      for (final expression in initialComposite.expressions) {
+        addCondition(allQuestions: , initialExpression: expression);
+      }
+      logicTypeControl.value = initialComposite.logicType;
+    }
+  }*/
+
   QuestionID get questionId => questionIdControl.value!;
 
   SurveyQuestionType get questionType =>
@@ -84,11 +135,16 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           )
           .toList();
 
+  @override
+  final FormControl<QuestionConditional<dynamic>?> questionConditionalControl =
+      FormControl<QuestionConditional<dynamic>?>();
+
   late final Map<String, AbstractControl> questionBaseControls = {
     'questionId': questionIdControl, // hidden
     'questionType': questionTypeControl,
     'questionText': questionTextControl,
     'questionInfoText': questionInfoTextControl,
+    'questionConditional': questionConditionalControl,
   };
 
   // - Form fields (question type-specific)
@@ -98,8 +154,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     validators: [Validators.required],
     value: false,
   );
-  late final FormArray<String> choiceResponseOptionsArray = FormArray([
-    for (int i = 0; i < customOptionsInitial; i++) FormControl(value: ""),
+  late final FormArray<Choice> choiceResponseOptionsArray = FormArray([
+    for (int i = 0; i < customOptionsInitial; i++)
+      FormControl(value: Choice.withId()),
   ]);
   final int customOptionsMin = 2;
   final int customOptionsMax = 10;
@@ -119,11 +176,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   List<AbstractControl> get answerOptionsControls =>
       answerOptionsArray.controls;
 
-  List<String> get validAnswerOptions {
-    final List<String> options = [];
+  List<Choice> get validAnswerOptions {
+    final List<Choice> options = [];
     for (final optionValue in answerOptionsArray.value ?? []) {
       if (optionValue != null) {
-        options.add(optionValue as String);
+        options.add(optionValue as Choice);
       }
     }
     return options;
@@ -529,7 +586,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   late final FormGroup form = FormGroup({
     ...questionBaseControls,
     ..._controlsByQuestionType[questionType]!.controls,
+    // Note: conditionalProperties.form.controls are excluded to prevent
+    // transient conditional logic state from affecting isDirty checks
   });
+
+  late final conditionalProperties = ConditionalQuestionFormViewModel(
+    currentQuestionId: questionIdControl.value!,
+    questionConditionalControl: questionConditionalControl,
+  );
 
   void onQuestionTypeChanged(SurveyQuestionType? questionType) {
     _updateFormControls(questionType);
@@ -565,6 +629,11 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     questionTypeControl.value = data.questionType;
     questionInfoTextControl.value = data.questionInfoText ?? '';
 
+    questionConditionalControl.value = data.conditional;
+    conditionalProperties.setControlsFrom(
+      null,
+    ); // Will read from questionConditionalControl
+
     // Type-specific controls
     switch (data.questionType) {
       case SurveyQuestionType.bool:
@@ -581,6 +650,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         // Note: `formArray.value = []` does not remove any controls!
         answerOptionsArray.clear();
         answerOptionsArray.value = data.answerOptions;
+      /*for (final option in data.answerOptions) {
+          answerOptionsArray.add(FormControl<Choice>(value: option));
+        }*/
       case SurveyQuestionType.scale:
         scaleMinValueControl.value = (data as ScaleQuestionFormData).minValue
             .toInt();
@@ -627,22 +699,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
-        );
-      case SurveyQuestionType.image:
-        return ImageQuestionFormData(
-          questionId: questionId,
-          questionText: questionTextControl.value!, // required
-          questionType: questionTypeControl.value!, // required
-          questionInfoText: questionInfoTextControl.value,
-        );
-      case SurveyQuestionType.audio:
-        return AudioQuestionFormData(
-          questionId: questionId,
-          questionText: questionTextControl.value!, // required
-          questionType: questionTypeControl.value!, // required
-          questionInfoText: questionInfoTextControl.value,
-          maxRecordingDurationSeconds:
-              maxRecordingDurationSecondsControl.value!,
+          conditional: questionConditionalControl.value,
         );
       case SurveyQuestionType.choice:
         return ChoiceQuestionFormData(
@@ -652,6 +709,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionType: questionTypeControl.value!,
           // required
           questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
           isMultipleChoice: isMultipleChoiceControl.value!,
           // required
           answerOptions: validAnswerOptions,
@@ -664,6 +722,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionType: questionTypeControl.value!,
           // required
           questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
           minValue: scaleMinValueControl.value!.toDouble(),
           // non-empty formatter
           maxValue: scaleMaxValueControl.value!.toDouble(),
@@ -685,12 +744,29 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
           textLengthRange: [
             freeTextLengthControl.value!.start.toInt(),
             freeTextLengthControl.value!.end.toInt(),
           ], // required
           textType: freeTextTypeControl.value!,
           textTypeExpression: customRegexControl.value,
+        );
+      case SurveyQuestionType.image:
+        return ImageQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+        );
+      case SurveyQuestionType.audio:
+        return AudioQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+          maxRecordingDurationSeconds:
+              maxRecordingDurationSecondsControl.value!,
         );
       case SurveyQuestionType.fitbit:
         return FitbitQuestionFormData(
@@ -743,7 +819,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   @override
   void onNewItem() {
-    answerOptionsArray.add(FormControl<String>());
+    answerOptionsArray.add(FormControl<Choice>());
   }
 
   @override
@@ -778,4 +854,12 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
 
   bool get isMidValuesClearedInfoVisible =>
       prevMidValues != scaleMidValueControls.value;
+
+  @override
+  set formMode(FormMode mode) {
+    super.formMode = mode;
+
+    // Propagate form mode to conditional properties
+    conditionalProperties.formMode = mode;
+  }
 }

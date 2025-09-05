@@ -31,6 +31,7 @@ class PreviewFrame extends ConsumerStatefulWidget {
 
 class _PreviewFrameState extends ConsumerState<PreviewFrame> {
   PlatformController? frameController;
+  bool _frameError = false;
 
   @override
   void initState() {
@@ -44,11 +45,17 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
       studyFormViewModelProvider(widget.studyId),
     );
     formViewModelCurrent.form.valueChanges.listen((event) {
-      if (frameController != null) {
+      if (frameController != null && !_frameError) {
         final formJson = jsonEncode(
           formViewModelCurrent.buildFormData().toJson(),
         );
-        frameController!.send(formJson);
+        try {
+          frameController!.send(formJson);
+        } catch (e) {
+          setState(() {
+            _frameError = true;
+          });
+        }
       }
     });
   }
@@ -108,7 +115,7 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
                   formGroup: formViewModel.form,
                   child: ReactiveFormConsumer(
                     builder: (context, form, child) {
-                      if (formViewModel.form.hasErrors) {
+                      if (formViewModel.form.hasErrors || _frameError) {
                         return const DisabledFrame();
                       }
                       return Column(
