@@ -50,6 +50,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     fitbitResponseOptionsArray.onChanged(
       (control) => onResponseOptionsChanged(control.controls),
     );
+    painResponseOptionsArray.onChanged(
+      (control) => onResponseOptionsChanged(control.controls),
+    );
   }
 
   /// Customized titles (if any) depending on the context of use
@@ -110,6 +113,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.audio: audioResponseOptionsArray,
     SurveyQuestionType.freeText: freeTextResponseOptionsArray,
     SurveyQuestionType.fitbit: fitbitResponseOptionsArray,
+    SurveyQuestionType.pain: painResponseOptionsArray,
   }[questionType]!;
 
   List<AbstractControl> get answerOptionsControls =>
@@ -143,6 +147,17 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
       .toList();
   late final FormArray<String> imageResponseOptionsArray = FormArray(
     imageOptions,
+  );
+
+  //Pain
+  List<AbstractControl<String>> get painOptions => PainQuestionFormData
+      .kResponseOptions
+      .keys
+      .map((e) => FormControl(value: e, disabled: true))
+      .toList();
+
+  late final FormArray<String> painResponseOptionsArray = FormArray(
+    painOptions,
   );
 
   // Audio
@@ -378,6 +393,9 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.fitbit: FormGroup({
       'fitbitOptionsArray': fitbitResponseOptionsArray,
     }),
+    SurveyQuestionType.pain: FormGroup({
+      'painOptionsArray': painResponseOptionsArray,
+    }),
   };
 
   late final FormValidationConfigSet _sharedValidationConfig = {
@@ -595,6 +613,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         fitbitQuestionTypesControl.forEach((key, value) {
           value.value = (data as FitbitQuestionFormData).types.contains(key);
         });
+      case SurveyQuestionType.pain:
+        break;
     }
   }
 
@@ -682,6 +702,13 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
               .where((e) => e.value.value!)
               .map((e) => e.key)
               .toList(),
+        );
+      case SurveyQuestionType.pain:
+        return PainQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
         );
     }
   }

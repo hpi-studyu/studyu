@@ -13,6 +13,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/fitbit_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/free_text_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/image_capturing_question_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/pain_question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/scale_question_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
@@ -77,6 +78,8 @@ class _SurveyQuestionFormViewState
           FreeTextQuestionFormView(formViewModel: formViewModel),
       SurveyQuestionType.fitbit: (_) =>
           FitbitQuestionFormView(formViewModel: formViewModel),
+      SurveyQuestionType.pain: (_) =>
+          PainQuestionFormView(formViewModel: formViewModel),
     };
     //TODO: If question type is fitbit and credentials are not set, show a message to set credentials
 

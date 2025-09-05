@@ -786,4 +786,350 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get fitbit_data_close_btn => 'Schließen';
+
+  @override
+  String get painIndicatorText => 'Schmerzlevel';
+
+  @override
+  String get dialogTitle => 'Schmerzlevel auswählen';
+
+  @override
+  String get okButton => 'OK';
+
+  @override
+  String get cancelButton => 'Abbrechen';
+
+  @override
+  String get painLevel_0 => 'Kein Schmerz';
+
+  @override
+  String get painLevel_2 => 'Tut ein bisschen weh';
+
+  @override
+  String get painLevel_4 => 'Tut etwas mehr weh';
+
+  @override
+  String get painLevel_6 => 'Tut noch mehr weh';
+
+  @override
+  String get painLevel_8 => 'Tut sehr weh';
+
+  @override
+  String get painLevel_10 => 'Stärkster Schmerz';
+
+  @override
+  String get body_head => 'Kopf';
+
+  @override
+  String get body_head_front => 'Kopf (Vorne)';
+
+  @override
+  String get body_face => 'Gesicht';
+
+  @override
+  String get body_forehead => 'Stirn';
+
+  @override
+  String get body_eyes => 'Augen';
+
+  @override
+  String get body_nose => 'Nase';
+
+  @override
+  String get body_mouth => 'Mund';
+
+  @override
+  String get body_head_back => 'Kopf (Hinten)';
+
+  @override
+  String get body_inner_ear_balance => 'Innenohr / Gleichgewicht';
+
+  @override
+  String get body_neck => 'Nacken';
+
+  @override
+  String get body_neck_front => 'Hals (Vorne)';
+
+  @override
+  String get body_neck_back => 'Nacken (Hinten)';
+
+  @override
+  String get body_torso => 'Oberkörper';
+
+  @override
+  String get body_chest => 'Brust';
+
+  @override
+  String get body_left_chest => 'Linke Brust';
+
+  @override
+  String get body_right_chest => 'Rechte Brust';
+
+  @override
+  String get body_breastbone => 'Brustbein';
+
+  @override
+  String get body_upper_back => 'Oberer Rücken';
+
+  @override
+  String get body_left_shoulder_blade => 'Linkes Schulterblatt';
+
+  @override
+  String get body_right_shoulder_blade => 'Rechtes Schulterblatt';
+
+  @override
+  String get body_spine_upper_middle =>
+      'Wirbelsäule (Oberer/Mittlerer Bereich)';
+
+  @override
+  String get body_abdomen => 'Bauch';
+
+  @override
+  String get body_upper_abdomen => 'Oberbauch';
+
+  @override
+  String get body_lower_abdomen => 'Unterbauch';
+
+  @override
+  String get body_left_side_abdomen => 'Linke Seite (Bauch)';
+
+  @override
+  String get body_right_side_abdomen => 'Rechte Seite (Bauch)';
+
+  @override
+  String get body_lower_back => 'Unterer Rücken';
+
+  @override
+  String get body_spine_lower => 'Wirbelsäule (Unterer Bereich)';
+
+  @override
+  String get body_left_flank => 'Linke Flanke (Seite)';
+
+  @override
+  String get body_right_flank => 'Rechte Flanke (Seite)';
+
+  @override
+  String get body_arms => 'Arme';
+
+  @override
+  String get body_left_arm => 'Linker Arm';
+
+  @override
+  String get body_left_shoulder => 'Linke Schulter';
+
+  @override
+  String get body_left_upper_arm => 'Linker Oberarm';
+
+  @override
+  String get body_left_bicep => 'Linker Bizeps';
+
+  @override
+  String get body_left_tricep => 'Linker Trizeps';
+
+  @override
+  String get body_left_elbow => 'Linker Ellbogen';
+
+  @override
+  String get body_left_lower_arm => 'Linker Unterarm';
+
+  @override
+  String get body_left_forearm => 'Linker Unterarm';
+
+  @override
+  String get body_left_wrist => 'Linkes Handgelenk';
+
+  @override
+  String get body_left_hand => 'Linke Hand';
+
+  @override
+  String get body_left_palm => 'Linke Handfläche';
+
+  @override
+  String get body_left_fingers => 'Linke Finger';
+
+  @override
+  String get body_right_arm => 'Rechter Arm';
+
+  @override
+  String get body_right_shoulder => 'Rechte Schulter';
+
+  @override
+  String get body_right_upper_arm => 'Rechter Oberarm';
+
+  @override
+  String get body_right_bicep => 'Rechter Bizeps';
+
+  @override
+  String get body_right_tricep => 'Rechter Trizeps';
+
+  @override
+  String get body_right_elbow => 'Rechter Ellbogen';
+
+  @override
+  String get body_right_lower_arm => 'Rechter Unterarm';
+
+  @override
+  String get body_right_forearm => 'Rechter Unterarm';
+
+  @override
+  String get body_right_wrist => 'Rechtes Handgelenk';
+
+  @override
+  String get body_right_hand => 'Rechte Hand';
+
+  @override
+  String get body_right_palm => 'Rechte Handfläche';
+
+  @override
+  String get body_right_fingers => 'Rechte Finger';
+
+  @override
+  String get body_lower_body => 'Unterkörper';
+
+  @override
+  String get body_pelvis => 'Becken';
+
+  @override
+  String get body_groin => 'Leiste';
+
+  @override
+  String get body_hips => 'Hüften';
+
+  @override
+  String get body_buttocks => 'Gesäß';
+
+  @override
+  String get body_legs => 'Beine';
+
+  @override
+  String get body_left_leg => 'Linkes Bein';
+
+  @override
+  String get body_left_upper_leg => 'Linker Oberschenkel';
+
+  @override
+  String get body_left_thigh_front => 'Oberschenkel (Vorne)';
+
+  @override
+  String get body_left_thigh_back => 'Oberschenkel (Hinten)';
+
+  @override
+  String get body_left_knee => 'Linkes Knie';
+
+  @override
+  String get body_left_lower_leg => 'Linker Unterschenkel';
+
+  @override
+  String get body_left_shin => 'Schienbein';
+
+  @override
+  String get body_left_calf => 'Wade';
+
+  @override
+  String get body_left_ankle => 'Linker Knöchel';
+
+  @override
+  String get body_left_foot => 'Linker Fuß';
+
+  @override
+  String get body_left_heel => 'Ferse';
+
+  @override
+  String get body_left_foot_sole => 'Fußsohle / Fußgewölbe';
+
+  @override
+  String get body_left_toes => 'Zehen';
+
+  @override
+  String get body_right_leg => 'Rechtes Bein';
+
+  @override
+  String get body_right_upper_leg => 'Rechter Oberschenkel';
+
+  @override
+  String get body_right_thigh_front => 'Oberschenkel (Vorne)';
+
+  @override
+  String get body_right_thigh_back => 'Oberschenkel (Hinten)';
+
+  @override
+  String get body_right_knee => 'Rechtes Knie';
+
+  @override
+  String get body_right_lower_leg => 'Rechter Unterschenkel';
+
+  @override
+  String get body_right_shin => 'Schienbein';
+
+  @override
+  String get body_right_calf => 'Wade';
+
+  @override
+  String get body_right_ankle => 'Rechter Knöchel';
+
+  @override
+  String get body_right_foot => 'Rechter Fuß';
+
+  @override
+  String get body_right_heel => 'Ferse';
+
+  @override
+  String get body_right_foot_sole => 'Fußsohle / Fußgewölbe';
+
+  @override
+  String get body_right_toes => 'Zehen';
+
+  @override
+  String get painTypeLabel => 'Schmerztyp';
+
+  @override
+  String get bodyPartLabel => 'Körperteil';
+
+  @override
+  String get painTypeUnspecified => 'Nicht angegeben';
+
+  @override
+  String get painTypeBurning => 'Brennend';
+
+  @override
+  String get painTypeStabbing => 'Stechend';
+
+  @override
+  String get painTypeAching => 'Schmerzhaft';
+
+  @override
+  String get painTypeThrobbing => 'Pochend';
+
+  @override
+  String get painTypeSharp => 'Scharf';
+
+  @override
+  String get painTypeDull => 'Dumpf';
+
+  @override
+  String get painTypeCramping => 'Krampfartig';
+
+  @override
+  String get painTypeRadiating => 'Ausstrahlend';
+
+  @override
+  String get painTypeTingling => 'Kribbelnd';
+
+  @override
+  String get painTypeShooting => 'Einschießend';
+
+  @override
+  String get painTypePulsing => 'Pulsierend';
+
+  @override
+  String get painTypePressure => 'Druck';
+
+  @override
+  String get painTypeTightness => 'Engegefühl';
+
+  @override
+  String get painTypeSoreness => 'Wund';
+
+  @override
+  String get painTypeStiffness => 'Steifheit';
 }

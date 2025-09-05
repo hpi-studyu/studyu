@@ -466,6 +466,33 @@ class AppLocalizationsDe extends AppLocalizations {
   String get question_type_free_text => 'Freitext';
 
   @override
+  String get question_type_pain => 'Schmerz-Tracker';
+
+  @override
+  String get question_type_pain_description =>
+      'Teilnehmer können ein oder mehrere Körperteile auf einem Diagramm auswählen und jedem ausgewählten Teil mithilfe einer Schmerzskala eine Schmerzstufe zuweisen. Dies ist nützlich für die Verfolgung von lokalisierten Schmerzen.';
+
+  @override
+  String get question_type_pain_preview_title => 'In-App-Vorschau';
+
+  @override
+  String get question_type_pain_preview_description =>
+      'Unten sehen Sie eine vereinfachte Darstellung, wie die Schmerzauswahl-Oberfläche den Teilnehmern in der StudyU-App angezeigt wird. Sie können auf Körperteile tippen, um sie auszuwählen und dann eine Schmerzstufe zuzuweisen.';
+
+  @override
+  String get question_type_pain_front_view => 'Vorderansicht';
+
+  @override
+  String get question_type_pain_back_view => 'Rückansicht';
+
+  @override
+  String get question_type_pain_functionality_title => 'Funktionalität';
+
+  @override
+  String get question_type_pain_functionality_description =>
+      'Wenn ein Teilnehmer auf ein Körperteil tippt, erscheint ein Dialog, in dem er eine Schmerzstufe auswählen kann. Jedes ausgewählte Körperteil kann eine andere Schmerzstufe haben. Die gesammelten Daten umfassen die identifizierten Körperteile und ihre entsprechenden Schmerzwerte.';
+
+  @override
   String get question_type_bool => 'Ja/Nein';
 
   @override
@@ -485,6 +512,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get form_array_response_options_bool_no => 'No';
+
+  @override
+  String get form_field_response_pain => 'Schmerz-Tracker';
 
   @override
   String get form_field_response_image => 'Bild';

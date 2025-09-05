@@ -458,6 +458,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get question_type_free_text => 'Free text';
 
   @override
+  String get question_type_pain => 'Pain Tracker';
+
+  @override
+  String get question_type_pain_description =>
+      'Participants can select one or more body parts on a diagram and assign a pain level to each selected part using a pain scale. This is useful for tracking localized pain.';
+
+  @override
+  String get question_type_pain_preview_title => 'In-App Preview';
+
+  @override
+  String get question_type_pain_preview_description =>
+      'Below is a simplified representation of how the pain selection interface will appear to participants in the StudyU app. They will be able to tap on body parts to select them and then assign a pain level.';
+
+  @override
+  String get question_type_pain_front_view => 'Front View';
+
+  @override
+  String get question_type_pain_back_view => 'Back View';
+
+  @override
+  String get question_type_pain_functionality_title => 'Functionality';
+
+  @override
+  String get question_type_pain_functionality_description =>
+      'When a participant taps on a body part, a dialog appears where they can select a pain level. Each selected body part can have a different pain level. The collected data includes the identified body parts and their corresponding pain scores.';
+
+  @override
   String get question_type_bool => 'Yes/no';
 
   @override
@@ -477,6 +504,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get form_array_response_options_bool_no => 'No';
+
+  @override
+  String get form_field_response_pain => 'Pain Tracker';
 
   @override
   String get form_field_response_image => 'Image';

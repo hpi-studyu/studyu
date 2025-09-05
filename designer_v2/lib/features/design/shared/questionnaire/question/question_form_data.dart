@@ -72,6 +72,11 @@ abstract class QuestionFormData implements IFormData {
         eligibilityCriteria,
       );
     },
+    SurveyQuestionType.pain: (question, eligibilityCriteria) =>
+        PainQuestionFormData.fromDomainModel(
+          question as PainQuestion,
+          eligibilityCriteria,
+        ),
   };
 
   QuestionFormData({
@@ -693,5 +698,63 @@ class FitbitQuestionFormData extends QuestionFormData {
     final fitbitData = _buildQuestionValue(responseOption as String);
 
     return question.constructAnswer(fitbitData);
+  }
+}
+
+class PainQuestionFormData extends QuestionFormData {
+  PainQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    super.questionInfoText,
+  });
+
+  static Map<String, Body> get kResponseOptions => {
+    tr.form_field_response_pain: const Body(),
+  };
+
+  @override
+  List<String> get responseOptions => kResponseOptions.keys.toList();
+
+  factory PainQuestionFormData.fromDomainModel(
+    PainQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = PainQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.pain,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question = PainQuestion();
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    return question;
+  }
+
+  @override
+  PainQuestionFormData copy() {
+    final data = PainQuestionFormData(
+      questionId: const Uuid().v4(), // always regenerate id
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(dynamic responseOption) {
+    final question = toQuestion() as PainQuestion;
+    final value = kResponseOptions[responseOption];
+    return question.constructAnswer(value!);
   }
 }

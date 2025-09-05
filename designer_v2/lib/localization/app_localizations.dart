@@ -932,6 +932,54 @@ abstract class AppLocalizations {
   /// **'Free text'**
   String get question_type_free_text;
 
+  /// No description provided for @question_type_pain.
+  ///
+  /// In en, this message translates to:
+  /// **'Pain Tracker'**
+  String get question_type_pain;
+
+  /// No description provided for @question_type_pain_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Participants can select one or more body parts on a diagram and assign a pain level to each selected part using a pain scale. This is useful for tracking localized pain.'**
+  String get question_type_pain_description;
+
+  /// No description provided for @question_type_pain_preview_title.
+  ///
+  /// In en, this message translates to:
+  /// **'In-App Preview'**
+  String get question_type_pain_preview_title;
+
+  /// No description provided for @question_type_pain_preview_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Below is a simplified representation of how the pain selection interface will appear to participants in the StudyU app. They will be able to tap on body parts to select them and then assign a pain level.'**
+  String get question_type_pain_preview_description;
+
+  /// No description provided for @question_type_pain_front_view.
+  ///
+  /// In en, this message translates to:
+  /// **'Front View'**
+  String get question_type_pain_front_view;
+
+  /// No description provided for @question_type_pain_back_view.
+  ///
+  /// In en, this message translates to:
+  /// **'Back View'**
+  String get question_type_pain_back_view;
+
+  /// No description provided for @question_type_pain_functionality_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Functionality'**
+  String get question_type_pain_functionality_title;
+
+  /// No description provided for @question_type_pain_functionality_description.
+  ///
+  /// In en, this message translates to:
+  /// **'When a participant taps on a body part, a dialog appears where they can select a pain level. Each selected body part can have a different pain level. The collected data includes the identified body parts and their corresponding pain scores.'**
+  String get question_type_pain_functionality_description;
+
   /// No description provided for @question_type_bool.
   ///
   /// In en, this message translates to:
@@ -973,6 +1021,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No'**
   String get form_array_response_options_bool_no;
+
+  /// No description provided for @form_field_response_pain.
+  ///
+  /// In en, this message translates to:
+  /// **'Pain Tracker'**
+  String get form_field_response_pain;
 
   /// No description provided for @form_field_response_image.
   ///
