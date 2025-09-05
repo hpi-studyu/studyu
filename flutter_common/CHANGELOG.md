@@ -1,3 +1,11 @@
+## 1.9.0
+
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: update deps.
+ - **FIX**: update Supabase public anon key in development environment.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+
 ## 1.9.0-dev.1
 
  - **FIX**: update Supabase public anon key in development environment.

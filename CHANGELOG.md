@@ -3,6 +3,227 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-09-05
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.10.0`](#studyu_app---v2100)
+ - [`studyu_core` - `v4.7.0`](#studyu_core---v470)
+ - [`studyu_designer_v2` - `v1.12.0`](#studyu_designer_v2---v1120)
+ - [`studyu_flutter_common` - `v1.9.0`](#studyu_flutter_common---v190)
+
+---
+
+#### `studyu_app` - `v2.10.0`
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**: improve code formatting and readability in body-related files.
+ - **REFACTOR**: add localization support for Fitbit data sync messages and improve code formatting.
+ - **REFACTOR**: improve code formatting and readability in localization and conditional question files.
+ - **REFACTOR**: cleanup.
+ - **REFACTOR**(fitbit): sleep data fetching logic.
+ - **FIX**: uncomment platform definition in Podfile.
+ - **FIX**: regenerate ios and android folders.
+ - **FIX**: update app deps.
+ - **FIX**: replace translate and scale methods with their double counterparts in body_part_selector.dart.
+ - **FIX**: passing taskId to fitbit_question_widget.dart.
+ - **FIX**: update Fitbit integration and callback URLs.
+ - **FIX**: uncomment iOS deployment target configuration in Podfile.
+ - **FIX**: update Flutter version to 3.35.2 and add l10n-missing.txt file.
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: remove unnecessary pain level text display in PainEditDialog.
+ - **FIX**: update PRODUCT_BUNDLE_IDENTIFIER for Fitbit app.
+ - **FIX**: proper onDone handling for fitbit_question_widget.dart.
+ - **FIX**: regenerate ios and android folders.
+ - **FIX**: improve error messages and user guidance in loading screen.
+ - **FIX**: show dialog after email sending.
+ - **FIX**: show dialog after email sending.
+ - **FIX**: improve error handling and user support options in loading screen.
+ - **FIX**: questionnaire screen refactor.
+ - **FIX**: update Flutter SDK version to 3.35.3 and dependencies in pubspec.lock.
+ - **FIX**: localization.
+ - **FIX**: prevent duplicate questions.
+ - **FIX**: scales without annotations are displayed now.
+ - **FIX**: update deps.
+ - **FIX**: only show complete button if all shown questions are answered.
+ - **FIX**: translate reports not found.
+ - **FIX**: broken question animation.
+ - **FIX**: later conditional questions not shown.
+ - **FIX**: add null answer if there is no default answer.
+ - **FIX**: maybe fix reports bug.
+ - **FIX**: ios and android configuration.
+ - **FIX**: android config.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: body part ids & german translations for body parts.
+ - **FIX**: default for app deployment flutter variables.
+ - **FIX**: default for app deployment flutter variables 2.
+ - **FIX**: do not store null answers.
+ - **FEAT**: add pain selection question and body part selection widgets.
+ - **FEAT**: web configuration for fitbitter package.
+ - **FEAT**: make fitbit syncing process more transparent.
+ - **FEAT**: implement pain selection question inside designer.
+ - **FEAT**: add pain type and body part children support.
+ - **FEAT**: pain type model.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: make body pain type and part selection optional.
+ - **FEAT**: re-create android and ios folders gemfile"".
+ - **FEAT**: initialize pain type selection in body part selector.
+ - **FEAT**: re-create android and ios folders gemfile".
+ - **FEAT**: re-create android and ios folders gemfile.
+ - **FEAT**: re-create android and ios folders.
+ - **FEAT**: refactor pain selection dialog to use PainType model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: enhance Fitbit credential handling to include permission scopes.
+ - **FEAT**: update Fitbit redirect URL and callback scheme.
+ - **FEAT**: fetching remote subject with Fitbit credentials on onboarding.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: Add Fitbit credential deletion on study removal.
+ - **FEAT**(fitbit): refactor _findLatestDataEntry function in fitbit_handler.dart.
+ - **FEAT**: change dialog sequence of pain tracking.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**: add sleep data fetching.
+ - **FEAT**: rename WongBakerScale to PainScale for consistency.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: integrate Pods project and add localization for Fitbit questions.
+ - **FEAT**: sync Fitbit data on button press.
+ - **FEAT**: update Info.plist for localization and app permissions.
+ - **FEAT**: update pain type in body pain and selector.
+
+#### `studyu_core` - `v4.7.0`
+
+ - **REFACTOR**: improve code formatting and readability in body-related files.
+ - **REFACTOR**: add localization support for Fitbit data sync messages and improve code formatting.
+ - **REFACTOR**: improve code formatting and readability in localization and conditional question files.
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: remove trailing slashes from environment URLs to prevent double slashes in paths.
+ - **FIX**: update conditional logic to use NumericComparator for better clarity.
+ - **FIX**: pain question error on save.
+ - **FIX**: make LogicType json compatible.
+ - **FIX**: preserve ids for choices.
+ - **FIX**: only throw ExtractionFailedException for study screen.
+ - **FIX**: streams and dynamic cast bugs.
+ - **FIX**: update conditionArray on changes correctly, only include latter questions.
+ - **FIX**: rebuild form, enable preview, use currentQuestionId.
+ - **FIX**: update deps.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update pain type in body pain and selector.
+ - **FEAT**: pain type model.
+ - **FEAT**: add pain type and body part children support.
+ - **FEAT**: implement pain selection question inside designer.
+ - **FEAT**: add pain selection question and body part selection widgets.
+ - **FEAT**: initial version for conditional questions.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
+
+#### `studyu_designer_v2` - `v1.12.0`
+
+ - **REFACTOR**: incorrect use of static final with lambda function.
+ - **REFACTOR**: add localization support for Fitbit data sync messages and improve code formatting.
+ - **REFACTOR**: improve code formatting and readability in localization and conditional question files.
+ - **REFACTOR**: propagate form mode to condition view models for consistent state management.
+ - **REFACTOR**: introduce LiveConditionPreview component for enhanced condition visualization.
+ - **REFACTOR**: update answer options type in question form controller.
+ - **REFACTOR**: simplify condition handling by updating types and improving view model integration.
+ - **REFACTOR**: enhance conditional question handling with FormViewModelCollection.
+ - **REFACTOR**: implement ConditionalQuestionFormViewModel.
+ - **REFACTOR**: improve code formatting and readability in body-related files.
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: update if logictype changes.
+ - **FIX**: migrate enrollment form view to use RadioGroup for better control handling and readability.
+ - **FIX**: refactor auth form controller to streamline form control access methods.
+ - **FIX**: enhance condition handling and value propagation in questionnaire forms.
+ - **FIX**: refactor auth form controller to use getter methods for form controls and improve form handling.
+ - **FIX**: update section title and description rendering logic to handle empty states.
+ - **FIX**: specify type for conditionsArray and simplify expression building.
+ - **FIX**: handle response option in answer construction correctly.
+ - **FIX**: upgrade invite code form controller by adjusting debounce time and simplifying control initialization.
+ - **FIX**: update conditional logic to use NumericComparator for better clarity.
+ - **FIX**: pain question error on save.
+ - **FIX**: update conditional question handling to use ConditionRowFormData.
+ - **FIX**: add dynamic controls to form based on question type.
+ - **FIX**: update question type checks to use constants for better maintainability.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: add conditional rendering for choice input fields for booleans.
+ - **FIX**: preserve ids for choices.
+ - **FIX**: scale condition.
+ - **FIX**: duplicate add intervention button.
+ - **FIX**: duplicate add intervention button.
+ - **FIX**: tooltip no element bug.
+ - **FIX**: translation and QoL fixes.
+ - **FIX**: translation and QoL fixes.
+ - **FIX**: static allQuestions default workaround.
+ - **FIX**: extract boolean correctly.
+ - **FIX**: refactor ConditionalQuestionFormView back to FormConsumerWidget.
+ - **FIX**: ConditionalQuestionFormView use static allQuestions.
+ - **FIX**: use a UUID for choices".
+ - **FIX**: updateCondition correctly.
+ - **FIX**: use a UUID for choices.
+ - **FIX**: streams and dynamic cast bugs.
+ - **FIX**: update conditionArray on changes correctly, only include latter questions.
+ - **FIX**: warnings.
+ - **FIX**: handle frame errors in study test frame.
+ - **FIX**: rebuild form, enable preview, use currentQuestionId.
+ - **FIX**: localization.
+ - **FIX**: add fitbit question json type to question model.
+ - **FIX**: platform localization.
+ - **FIX**: form control for fitbit question.
+ - **FIX**: fitbit question form.
+ - **FIX**: update choice selection logic to use choice ID instead of text.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: require fitbit credentials if fitbit question is present.
+ - **FIX**: prevent transient conditional logic state from affecting isDirty checks.
+ - **FIX**: update deps.
+ - **FEAT**: initial version for conditional questions.
+ - **FEAT**: add descriptions for Fitbit question types in the designer.
+ - **FEAT**: implement pain selection question inside designer.
+ - **FEAT**: add form list view.
+ - **FEAT**: fitbit credentials base for study model.
+ - **FEAT**: add pain type and body part children support.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: live preview update.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**(questionnaire): add validation for Fitbit question type.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: check if credentials exists when adding fitbit question.
+ - **FEAT**: update body pain response label to "Pain Tracker".
+ - **FEAT**: update pain question icon to accessibility.
+ - **FEAT**: update body pain response label to "Pain Tracker".
+ - **FEAT**: replace FormArrayTables with FormListView only reorder if items > 1.
+ - **DOCS**: fix FormConsumerWidget documentation.
+
+#### `studyu_flutter_common` - `v1.9.0`
+
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: update deps.
+ - **FIX**: update Supabase public anon key in development environment.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+
+
 ## 2025-06-17
 
 ### Changes

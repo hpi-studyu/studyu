@@ -1,3 +1,81 @@
+## 2.10.0
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**: improve code formatting and readability in body-related files.
+ - **REFACTOR**: add localization support for Fitbit data sync messages and improve code formatting.
+ - **REFACTOR**: improve code formatting and readability in localization and conditional question files.
+ - **REFACTOR**: cleanup.
+ - **REFACTOR**(fitbit): sleep data fetching logic.
+ - **FIX**: uncomment platform definition in Podfile.
+ - **FIX**: regenerate ios and android folders.
+ - **FIX**: update app deps.
+ - **FIX**: replace translate and scale methods with their double counterparts in body_part_selector.dart.
+ - **FIX**: passing taskId to fitbit_question_widget.dart.
+ - **FIX**: update Fitbit integration and callback URLs.
+ - **FIX**: uncomment iOS deployment target configuration in Podfile.
+ - **FIX**: update Flutter version to 3.35.2 and add l10n-missing.txt file.
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: remove unnecessary pain level text display in PainEditDialog.
+ - **FIX**: update PRODUCT_BUNDLE_IDENTIFIER for Fitbit app.
+ - **FIX**: proper onDone handling for fitbit_question_widget.dart.
+ - **FIX**: regenerate ios and android folders.
+ - **FIX**: improve error messages and user guidance in loading screen.
+ - **FIX**: show dialog after email sending.
+ - **FIX**: show dialog after email sending.
+ - **FIX**: improve error handling and user support options in loading screen.
+ - **FIX**: questionnaire screen refactor.
+ - **FIX**: update Flutter SDK version to 3.35.3 and dependencies in pubspec.lock.
+ - **FIX**: localization.
+ - **FIX**: prevent duplicate questions.
+ - **FIX**: scales without annotations are displayed now.
+ - **FIX**: update deps.
+ - **FIX**: only show complete button if all shown questions are answered.
+ - **FIX**: translate reports not found.
+ - **FIX**: broken question animation.
+ - **FIX**: later conditional questions not shown.
+ - **FIX**: add null answer if there is no default answer.
+ - **FIX**: maybe fix reports bug.
+ - **FIX**: ios and android configuration.
+ - **FIX**: android config.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: body part ids & german translations for body parts.
+ - **FIX**: default for app deployment flutter variables.
+ - **FIX**: default for app deployment flutter variables 2.
+ - **FIX**: do not store null answers.
+ - **FEAT**: add pain selection question and body part selection widgets.
+ - **FEAT**: web configuration for fitbitter package.
+ - **FEAT**: make fitbit syncing process more transparent.
+ - **FEAT**: implement pain selection question inside designer.
+ - **FEAT**: add pain type and body part children support.
+ - **FEAT**: pain type model.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: make body pain type and part selection optional.
+ - **FEAT**: re-create android and ios folders gemfile"".
+ - **FEAT**: initialize pain type selection in body part selector.
+ - **FEAT**: re-create android and ios folders gemfile".
+ - **FEAT**: re-create android and ios folders gemfile.
+ - **FEAT**: re-create android and ios folders.
+ - **FEAT**: refactor pain selection dialog to use PainType model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: enhance Fitbit credential handling to include permission scopes.
+ - **FEAT**: update Fitbit redirect URL and callback scheme.
+ - **FEAT**: fetching remote subject with Fitbit credentials on onboarding.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: Add Fitbit credential deletion on study removal.
+ - **FEAT**(fitbit): refactor _findLatestDataEntry function in fitbit_handler.dart.
+ - **FEAT**: change dialog sequence of pain tracking.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**: add sleep data fetching.
+ - **FEAT**: rename WongBakerScale to PainScale for consistency.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: integrate Pods project and add localization for Fitbit questions.
+ - **FEAT**: sync Fitbit data on button press.
+ - **FEAT**: update Info.plist for localization and app permissions.
+ - **FEAT**: update pain type in body pain and selector.
+
 ## 2.9.1
 
 - **FIX**: update deps.

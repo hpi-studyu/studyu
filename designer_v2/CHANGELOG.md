@@ -1,3 +1,85 @@
+## 1.12.0
+
+ - **REFACTOR**: incorrect use of static final with lambda function.
+ - **REFACTOR**: add localization support for Fitbit data sync messages and improve code formatting.
+ - **REFACTOR**: improve code formatting and readability in localization and conditional question files.
+ - **REFACTOR**: propagate form mode to condition view models for consistent state management.
+ - **REFACTOR**: introduce LiveConditionPreview component for enhanced condition visualization.
+ - **REFACTOR**: update answer options type in question form controller.
+ - **REFACTOR**: simplify condition handling by updating types and improving view model integration.
+ - **REFACTOR**: enhance conditional question handling with FormViewModelCollection.
+ - **REFACTOR**: implement ConditionalQuestionFormViewModel.
+ - **REFACTOR**: improve code formatting and readability in body-related files.
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: update if logictype changes.
+ - **FIX**: migrate enrollment form view to use RadioGroup for better control handling and readability.
+ - **FIX**: refactor auth form controller to streamline form control access methods.
+ - **FIX**: enhance condition handling and value propagation in questionnaire forms.
+ - **FIX**: refactor auth form controller to use getter methods for form controls and improve form handling.
+ - **FIX**: update section title and description rendering logic to handle empty states.
+ - **FIX**: specify type for conditionsArray and simplify expression building.
+ - **FIX**: handle response option in answer construction correctly.
+ - **FIX**: upgrade invite code form controller by adjusting debounce time and simplifying control initialization.
+ - **FIX**: update conditional logic to use NumericComparator for better clarity.
+ - **FIX**: pain question error on save.
+ - **FIX**: update conditional question handling to use ConditionRowFormData.
+ - **FIX**: add dynamic controls to form based on question type.
+ - **FIX**: update question type checks to use constants for better maintainability.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: add conditional rendering for choice input fields for booleans.
+ - **FIX**: preserve ids for choices.
+ - **FIX**: scale condition.
+ - **FIX**: duplicate add intervention button.
+ - **FIX**: duplicate add intervention button.
+ - **FIX**: tooltip no element bug.
+ - **FIX**: translation and QoL fixes.
+ - **FIX**: translation and QoL fixes.
+ - **FIX**: static allQuestions default workaround.
+ - **FIX**: extract boolean correctly.
+ - **FIX**: refactor ConditionalQuestionFormView back to FormConsumerWidget.
+ - **FIX**: ConditionalQuestionFormView use static allQuestions.
+ - **FIX**: use a UUID for choices".
+ - **FIX**: updateCondition correctly.
+ - **FIX**: use a UUID for choices.
+ - **FIX**: streams and dynamic cast bugs.
+ - **FIX**: update conditionArray on changes correctly, only include latter questions.
+ - **FIX**: warnings.
+ - **FIX**: handle frame errors in study test frame.
+ - **FIX**: rebuild form, enable preview, use currentQuestionId.
+ - **FIX**: localization.
+ - **FIX**: add fitbit question json type to question model.
+ - **FIX**: platform localization.
+ - **FIX**: form control for fitbit question.
+ - **FIX**: fitbit question form.
+ - **FIX**: update choice selection logic to use choice ID instead of text.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: require fitbit credentials if fitbit question is present.
+ - **FIX**: prevent transient conditional logic state from affecting isDirty checks.
+ - **FIX**: update deps.
+ - **FEAT**: initial version for conditional questions.
+ - **FEAT**: add descriptions for Fitbit question types in the designer.
+ - **FEAT**: implement pain selection question inside designer.
+ - **FEAT**: add form list view.
+ - **FEAT**: fitbit credentials base for study model.
+ - **FEAT**: add pain type and body part children support.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: live preview update.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**(questionnaire): add validation for Fitbit question type.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: check if credentials exists when adding fitbit question.
+ - **FEAT**: update body pain response label to "Pain Tracker".
+ - **FEAT**: update pain question icon to accessibility.
+ - **FEAT**: update body pain response label to "Pain Tracker".
+ - **FEAT**: replace FormArrayTables with FormListView only reorder if items > 1.
+ - **DOCS**: fix FormConsumerWidget documentation.
+
 ## 1.11.1
 
 - **FIX**: update deps.
