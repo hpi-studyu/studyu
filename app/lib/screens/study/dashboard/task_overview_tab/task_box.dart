@@ -52,7 +52,8 @@ class _TaskBoxState extends State<TaskBox> {
     final isInsidePeriod = widget.taskInstance.completionPeriod.contains(
       StudyUTimeOfDay.now(),
     );
-    final isTaskOpen = !completed && isInsidePeriod || isPreview || kDebugMode;
+    final appState = context.read<AppState>();
+    final isTaskOpen = !completed && isInsidePeriod || isPreview || kDebugMode || appState.isDebugModeEnabled;
     return Card(
       elevation: 2,
       child: InkWell(
