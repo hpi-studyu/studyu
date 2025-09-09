@@ -52,69 +52,48 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       control: formViewModel.enrollmentTypeControl,
                       label: tr.form_field_enrollment_type,
                       labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      input: Column(
-                        children: formViewModel.enrollmentTypeControlOptions
-                            .map<Widget>(
-                              (option) => RadioGroup<Participation>(
-                                groupValue:
-                                    formViewModel.enrollmentTypeControl.value,
-                                onChanged: (Participation? value) {
-                                  if (!formViewModel.isReadonly &&
-                                      value != null) {
-                                    formViewModel.enrollmentTypeControl.value =
-                                        value;
-                                  }
-                                },
-                                child: Column(
-                                  children: formViewModel
-                                      .enrollmentTypeControlOptions
-                                      .map<Widget>(
-                                        (
-                                          option,
-                                        ) => RadioListTile<Participation>(
-                                          value: option.value,
-                                          enabled: !formViewModel.isReadonly,
-                                          // disables in readonly mode
-                                          title: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                option.value.whoShort,
-                                                style:
-                                                    theme.textTheme.bodyLarge,
-                                              ),
-                                              const SizedBox(height: 2.0),
-                                            ],
-                                          ),
-                                          subtitle: (option.description) != null
-                                              ? TextParagraph(
-                                                  text: option.description,
-                                                  selectable: false,
-                                                  style:
-                                                      ThemeConfig.bodyTextMuted(
-                                                        theme,
-                                                      ),
-                                                )
-                                              : null,
-                                        ),
-                                      )
-                                      .toList()
-                                      .separatedBy(
-                                        () => const SizedBox(height: 8.0),
+                      input: RadioGroup<Participation>(
+                        groupValue: formViewModel.enrollmentTypeControl.value,
+                        onChanged: (Participation? value) {
+                          if (!formViewModel.isReadonly && value != null) {
+                            formViewModel.enrollmentTypeControl.value = value;
+                          }
+                        },
+                        child: Column(
+                          children: formViewModel.enrollmentTypeControlOptions
+                              .map<Widget>(
+                                (option) => RadioListTile<Participation>(
+                                  value: option.value,
+                                  enabled: !formViewModel.isReadonly,
+                                  // disables in readonly mode
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        option.value.whoShort,
+                                        style: theme.textTheme.bodyLarge,
                                       ),
+                                      const SizedBox(height: 2.0),
+                                    ],
+                                  ),
+                                  subtitle: (option.description) != null
+                                      ? TextParagraph(
+                                          text: option.description,
+                                          selectable: false,
+                                          style: ThemeConfig.bodyTextMuted(
+                                            theme,
+                                          ),
+                                        )
+                                      : null,
                                 ),
-                              ),
-                            )
-                            .toList()
-                            .separatedBy(() => const SizedBox(height: 8.0)),
+                              )
+                              .toList()
+                              .separatedBy(() => const SizedBox(height: 8.0)),
+                        ),
                       ),
                     ),
                   ],
-                  columnWidths: const {
-                    0: FixedColumnWidth(130.0),
-                    1: FlexColumnWidth(),
-                  },
                 ),
                 const SizedBox(height: 32.0),
                 ReactiveFormArray(
