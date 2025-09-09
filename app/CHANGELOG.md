@@ -1,3 +1,9 @@
+## 2.10.2
+
+ - **FIX**: same conditional question was inserted on answer change.
+ - **FIX**: last conditional question did not finish.
+ - **FIX**: choice button support multiline now.
+
 ## 2.10.1
 
  - **FIX**: disabled eligibility check free text hotfix.

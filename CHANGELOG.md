@@ -15,6 +15,29 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`studyu_app` - `v2.10.2`](#studyu_app---v2102)
+
+---
+
+#### `studyu_app` - `v2.10.2`
+
+ - **FIX**: same conditional question was inserted on answer change.
+ - **FIX**: last conditional question did not finish.
+ - **FIX**: choice button support multiline now.
+
+
+## 2025-09-09
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`studyu_app` - `v2.10.1`](#studyu_app---v2101)
  - [`studyu_designer_v2` - `v1.12.1`](#studyu_designer_v2---v1121)
 
