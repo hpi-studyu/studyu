@@ -16,11 +16,19 @@ opt_out_usage
 default_platform(:android)
 
 platform :android do
-  desc "Deploy a new version to Google Play"
-  lane :deploy_internal do
-    upload_to_play_store(
-      track: 'internal',
-      aab: '../build/app/outputs/bundle/release/app-release.aab',
-    )
-  end
+desc "Deploy a new version to Google Play"
+lane :deploy_internal do
+  upload_to_play_store(
+    track: 'internal',
+    aab: '../build/app/outputs/bundle/release/app-release.aab',
+  )
+end
+
+desc "Deploy a debug build to internal testing"
+lane :deploy_debug_internal do
+  upload_to_play_store(
+    track: 'internal',
+    aab: '../build/app/outputs/bundle/debug/app-debug.aab',
+  )
+end
 end
