@@ -135,9 +135,29 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   void _onQuestionDone(Answer answer, int index) {
     qs.answers[answer.question] = answer;
     final shouldContinue = widget.shouldContinue?.call(qs);
-    // Check if the last question was answered or if the questionnaire should not continue.
-    if (shouldContinue == false ||
-        widget.questions.last.id == answer.question) {
+
+    // Check if there are any more questions that should be shown
+    final currentQuestionIndex = widget.questions.indexWhere(
+      (q) => q.id == answer.question,
+    );
+    bool hasMoreQuestions = false;
+
+    // Look for any remaining questions that should be shown
+    for (int i = currentQuestionIndex + 1; i < widget.questions.length; i++) {
+      if (widget.questions[i].shouldBeShown(qs)) {
+        hasMoreQuestions = true;
+        break;
+      }
+    }
+
+    /*final finished = shouldContinue == false || !hasMoreQuestions;
+    print(
+      'Question answered: ${answer.question}, shouldContinue: $shouldContinue, hasMoreQuestions: $hasMoreQuestions, finished: $finished',
+    );*/
+
+    // Check if the questionnaire should not continue or if there are no more questions to show
+    if (shouldContinue == false || !hasMoreQuestions) {
+      // print('Questionnaire finished with response: $qs');
       _finishQuestionnaire(qs);
       return;
     }
