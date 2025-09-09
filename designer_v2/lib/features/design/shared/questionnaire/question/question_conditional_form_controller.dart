@@ -124,10 +124,8 @@ class ConditionalQuestionFormViewModel extends FormViewModel
       updateCondition();
     }
 
-    print(
-      'Added condition, now have ${conditionFormViewModels.formViewModels.length} conditions',
-    );
-    print('Form array now has ${conditionsArray.controls.length} controls');
+    // print('Added condition, now have ${conditionFormViewModels.formViewModels.length} conditions',);
+    // print('Form array now has ${conditionsArray.controls.length} controls');
   }
 
   @override
