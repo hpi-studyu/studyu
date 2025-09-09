@@ -48,6 +48,14 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
   }
 
   bool _checkContinuation(QuestionnaireState qs) {
+    // Invalidate any existing result when checking continuation
+    // This ensures the banner disappears when answers change
+    if (activeResult != null) {
+      setState(() {
+        activeResult = null;
+      });
+    }
+
     final criteria = widget.study!.eligibilityCriteria;
     final EligibilityCriterion? failingResult = criteria.firstWhereOrNull(
       (element) => element.isViolated(qs),
