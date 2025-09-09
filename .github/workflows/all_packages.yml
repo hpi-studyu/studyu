@@ -46,7 +46,10 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: 'chore: Apply static analysis changes'
-          file_pattern: ':!*.fvmrc'
+          file_pattern: |
+            .
+            ':!l10n-missing.txt'
+            ':!*.fvmrc'
 
   test:
     runs-on: ubuntu-latest
