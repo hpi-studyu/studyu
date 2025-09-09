@@ -24,8 +24,6 @@ class _SettingsState extends State<Settings> {
   Locale? _selectedValue;
   bool? _analyticsValue;
   StudySubject? subject;
-  int _tapCount = 0;
-  bool _showDebugSettings = false;
 
   @override
   void initState() {
@@ -95,141 +93,49 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  void _handleTitleTap() {
-    setState(() {
-      _tapCount++;
-    });
-
-    if (_tapCount >= 7) {
-      setState(() {
-        _showDebugSettings = true;
-        _tapCount = 0;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Debug study mode settings unlocked'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
-  }
-
-  Widget _buildDebugModeSettings(BuildContext context) {
-    final appState = context.watch<AppState>();
-    
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.fast_forward, color: Colors.orange, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  'Debug Study Mode',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.orange,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                const Text('Enable Next Day button: '),
-                Switch(
-                  value: appState.isDebugModeEnabled,
-                  onChanged: (value) async {
-                    await appState.setDebugModeEnabled(value);
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'When enabled, a "Next Day" button will appear on the dashboard to fast-forward the study.',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Tap the settings title 7 times to show/hide these controls',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: GestureDetector(
-          onTap: _handleTitleTap,
-          child: Text(AppLocalizations.of(context)!.settings),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 24),
-              getDropdownRow(context),
-              if (_showDebugSettings) _buildDebugModeSettings(context),
-              const SizedBox(height: 24),
-              Center(
-                child: Text(
-                  '${AppLocalizations.of(context)!.study_current} ${subject!.study.title}',
-                  style: theme.textTheme.titleLarge,
-                  textAlign: TextAlign.center,
-                ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.settings)),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            getDropdownRow(context),
+            const SizedBox(height: 24),
+            Text(
+              '${AppLocalizations.of(context)!.study_current} ${subject!.study.title}',
+              style: theme.textTheme.titleLarge,
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton.icon(
+              icon: Icon(MdiIcons.exitToApp),
+              label: Text(AppLocalizations.of(context)!.opt_out),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange[800],
               ),
-              const SizedBox(height: 8),
-              Center(
-                child: ElevatedButton.icon(
-                  icon: Icon(MdiIcons.exitToApp),
-                  label: Text(AppLocalizations.of(context)!.opt_out),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange[800],
-                  ),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) => OptOutAlertDialog(subject: subject),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 24),
-              Center(
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.delete),
-                  label: Text(AppLocalizations.of(context)!.delete_data),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) => DeleteAlertDialog(subject: subject),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => OptOutAlertDialog(subject: subject),
+                );
+              },
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.delete),
+              label: Text(AppLocalizations.of(context)!.delete_data),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (_) => DeleteAlertDialog(subject: subject),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
