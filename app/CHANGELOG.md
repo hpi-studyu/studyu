@@ -1,3 +1,7 @@
+## 2.10.1
+
+ - **FIX**: disabled eligibility check free text hotfix.
+
 ## 2.10.0
 
  - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.

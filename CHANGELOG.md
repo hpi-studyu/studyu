@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-09-09
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.10.1`](#studyu_app---v2101)
+ - [`studyu_designer_v2` - `v1.12.1`](#studyu_designer_v2---v1121)
+
+---
+
+#### `studyu_app` - `v2.10.1`
+
+ - **FIX**: disabled eligibility check free text hotfix.
+
+#### `studyu_designer_v2` - `v1.12.1`
+
+ - **REFACTOR**: simplify enrollment type input structure in enrollment form.
+
+
 ## 2025-09-05
 
 ### Changes

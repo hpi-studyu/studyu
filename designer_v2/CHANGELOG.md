@@ -1,3 +1,7 @@
+## 1.12.1
+
+ - **REFACTOR**: simplify enrollment type input structure in enrollment form.
+
 ## 1.12.0
 
  - **REFACTOR**: incorrect use of static final with lambda function.
