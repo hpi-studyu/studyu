@@ -171,7 +171,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       if (_isConditionalTarget(answer.question)) {
         _resetQuestionnaireTo(answer.question);
         // Try to insert the next question after the reset.
-        final insertedQuestion = _insertQuestion(index);
+        final answeredQuestionIndex = widget.questions.indexWhere(
+          (q) => q.id == answer.question,
+        );
+        final insertedQuestion = _insertQuestion(answeredQuestionIndex);
         if (insertedQuestion != null) {
           // If a question was inserted, the questionnaire is not finished yet.
           _finishQuestionnaire(null);
