@@ -29,6 +29,17 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
       newAvailableQuestions,
     )) {
       formViewModel.cleanupInvalidConditions();
+      for (final conditionModel in formViewModel.conditionModels) {
+        conditionModel.refreshAvailableQuestions();
+      }
+    }
+
+    if (oldAvailableQuestions.isEmpty && newAvailableQuestions.isNotEmpty) {
+      formViewModel.initializeDeferredConditions();
+    }
+
+    if (newAvailableQuestions.isNotEmpty) {
+      formViewModel.initializeDeferredConditions();
     }
   }
 

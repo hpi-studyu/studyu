@@ -113,6 +113,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   void cleanupInvalidConditions() =>
       conditionalProperties.cleanupInvalidConditions();
 
+  @override
+  void initializeDeferredConditions() =>
+      conditionalProperties.initializeDeferredConditions();
+
   // Initialize from existing data
   /*void _initializeConditions(QuestionConditional<bool>? initialCondition) {
     conditionsArray.clear();

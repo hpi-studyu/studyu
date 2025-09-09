@@ -13,9 +13,41 @@ class ConditionRowFormViewModel
   final comparatorControl = FormControl<dynamic>();
   final valueControl = FormControl<dynamic>();
 
+  void _updateValueForQuestionType() {
+    final question = selectedQuestion;
+    if (question == null) return;
+
+    final currentValue = valueControl.value;
+
+    if (currentValue is bool && comparatorControl.value != null) {
+      switch (question.type) {
+        case ScaleQuestion.questionType:
+          valueControl.value = currentValue.toString();
+          break;
+        case FreeTextQuestion.questionType:
+          valueControl.value = currentValue.toString();
+          break;
+        case BooleanQuestion.questionType:
+          break;
+        case ChoiceQuestion.questionType:
+          valueControl.value = null;
+          break;
+        default:
+          valueControl.value = null;
+      }
+    }
+  }
+
   // todo do not make this static, try to use a provider to get the questions
   static List<Question> availableQuestions = [];
   final String currentQuestionId;
+
+  void refreshAvailableQuestions() {
+    final question = selectedQuestion;
+    if (question != null) {
+      _updateValueForQuestionType();
+    }
+  }
 
   ConditionRowFormViewModel({
     required this.currentQuestionId,
@@ -25,6 +57,7 @@ class ConditionRowFormViewModel
       questionIdControl.value = extractQuestionId(initialExpression);
       comparatorControl.value = extractComparator(initialExpression);
       valueControl.value = extractValue(initialExpression);
+      _updateValueForQuestionType();
     }
 
     // Listen for question selection changes
@@ -37,10 +70,14 @@ class ConditionRowFormViewModel
           // Automatically set 'is' comparator for boolean questions and disable the control
           comparatorControl.value = 'is';
           comparatorControl.markAsDisabled();
+          valueControl.value = true;
         } else {
           // Enable the control for non-boolean questions
           comparatorControl.markAsEnabled();
+          comparatorControl.value = null;
+          valueControl.value = null;
         }
+        _updateValueForQuestionType();
       }
       // Mark the form as dirty to trigger value propagation
       form.markAsDirty();
@@ -289,6 +326,7 @@ class ConditionRowFormViewModel
       } else {
         comparatorControl.markAsEnabled();
       }
+      _updateValueForQuestionType();
     }
   }
 
