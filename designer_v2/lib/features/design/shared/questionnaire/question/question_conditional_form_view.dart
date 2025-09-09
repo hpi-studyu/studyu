@@ -19,7 +19,17 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     required this.allQuestions,
     super.key,
   }) {
-    ConditionRowFormViewModel.availableQuestions = availableQuestions;
+    final newAvailableQuestions = availableQuestions;
+    final oldAvailableQuestions = ConditionRowFormViewModel.availableQuestions;
+
+    ConditionRowFormViewModel.availableQuestions = newAvailableQuestions;
+
+    if (_hasQuestionsListChanged(
+      oldAvailableQuestions,
+      newAvailableQuestions,
+    )) {
+      formViewModel.cleanupInvalidConditions();
+    }
   }
 
   final IConditionalQuestionProperties formViewModel;
@@ -31,6 +41,20 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     );
     if (currentIndex == -1) return allQuestions;
     return allQuestions.take(currentIndex).toList();
+  }
+
+  bool _hasQuestionsListChanged(
+    List<Question> oldQuestions,
+    List<Question> newQuestions,
+  ) {
+    if (oldQuestions.length != newQuestions.length) {
+      return true;
+    }
+
+    final oldIds = oldQuestions.map((q) => q.id).toSet();
+    final newIds = newQuestions.map((q) => q.id).toSet();
+
+    return !oldIds.containsAll(newIds) || !newIds.containsAll(oldIds);
   }
 
   @override

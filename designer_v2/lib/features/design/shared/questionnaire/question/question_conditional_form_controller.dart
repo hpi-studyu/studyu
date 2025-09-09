@@ -23,6 +23,7 @@ abstract class IConditionalQuestionProperties {
   void addCondition({Expression? initialExpression});
   void updateCondition();
   void removeCondition(int index);
+  void cleanupInvalidConditions();
 
   Stream<void> get conditionsValueChanges;
 }
@@ -282,7 +283,11 @@ class ConditionalQuestionFormViewModel extends FormViewModel
 
         conditionFormViewModels.reset(null);
 
-        for (final expression in compositeExpression.expressions) {
+        final validExpressions = _filterValidExpressions(
+          compositeExpression.expressions,
+        );
+
+        for (final expression in validExpressions) {
           addCondition(initialExpression: expression);
         }
         // Synchronously update the condition after initialization to ensure
@@ -299,6 +304,53 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     } finally {
       // Reset the flag
       _isUpdatingProgrammatically = false;
+    }
+  }
+
+  List<Expression> _filterValidExpressions(List<Expression> expressions) {
+    final availableQuestionIds = ConditionRowFormViewModel.availableQuestions
+        .map((q) => q.id)
+        .toSet();
+
+    return expressions.where((expression) {
+      final questionId = _extractQuestionIdFromExpression(expression);
+      return questionId != null && availableQuestionIds.contains(questionId);
+    }).toList();
+  }
+
+  String? _extractQuestionIdFromExpression(Expression expression) {
+    if (expression is ValueExpression) {
+      return expression.target;
+    } else if (expression is NotExpression &&
+        expression.expression is ValueExpression) {
+      return (expression.expression as ValueExpression).target;
+    }
+    return null;
+  }
+
+  @override
+  void cleanupInvalidConditions() {
+    final availableQuestionIds = ConditionRowFormViewModel.availableQuestions
+        .map((q) => q.id)
+        .toSet();
+
+    final indicesToRemove = <int>[];
+
+    for (int i = 0; i < conditionFormViewModels.formViewModels.length; i++) {
+      final conditionVm = conditionFormViewModels.formViewModels[i];
+      final questionId = conditionVm.questionIdControl.value;
+
+      if (questionId == null || !availableQuestionIds.contains(questionId)) {
+        indicesToRemove.add(i);
+      }
+    }
+
+    for (int i = indicesToRemove.length - 1; i >= 0; i--) {
+      removeCondition(indicesToRemove[i]);
+    }
+
+    if (indicesToRemove.isNotEmpty) {
+      updateCondition();
     }
   }
 

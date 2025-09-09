@@ -109,6 +109,10 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   void removeCondition(int index) =>
       conditionalProperties.removeCondition(index);
 
+  @override
+  void cleanupInvalidConditions() =>
+      conditionalProperties.cleanupInvalidConditions();
+
   // Initialize from existing data
   /*void _initializeConditions(QuestionConditional<bool>? initialCondition) {
     conditionsArray.clear();
