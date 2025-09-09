@@ -23,15 +23,12 @@ class ConditionRowFormViewModel
       switch (question.type) {
         case ScaleQuestion.questionType:
           valueControl.value = currentValue.toString();
-          break;
         case FreeTextQuestion.questionType:
           valueControl.value = currentValue.toString();
-          break;
         case BooleanQuestion.questionType:
           break;
         case ChoiceQuestion.questionType:
           valueControl.value = null;
-          break;
         default:
           valueControl.value = null;
       }

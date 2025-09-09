@@ -314,8 +314,10 @@ class ConditionalQuestionFormViewModel extends FormViewModel
 
   List<Expression>? _deferredExpressions;
 
+  @override
   void initializeDeferredConditions() {
-    if (_deferredExpressions != null && ConditionRowFormViewModel.availableQuestions.isNotEmpty) {
+    if (_deferredExpressions != null &&
+        ConditionRowFormViewModel.availableQuestions.isNotEmpty) {
       _isUpdatingProgrammatically = true;
       try {
         conditionFormViewModels.reset(null);
