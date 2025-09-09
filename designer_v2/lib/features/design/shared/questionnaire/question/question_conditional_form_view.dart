@@ -38,15 +38,6 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     final theme = Theme.of(context);
     return ReactiveFormConsumer(
       builder: (context, form, _) {
-        print(
-          'Building ConditionalQuestionFormView with ${formViewModel.compositeExpression?.toJson()}',
-        );
-        print(
-          'Current conditionsArray: ${formViewModel.conditionsArray.controls.length} controls',
-        );
-        print(
-          'Current questionConditionalControl value: ${formViewModel.questionConditionalControl.value?.condition.toJson()}',
-        );
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
