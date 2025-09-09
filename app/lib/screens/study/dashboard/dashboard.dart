@@ -13,6 +13,7 @@ import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overview.dart';
 import 'package:studyu_app/screens/study/report/report_details.dart';
 import 'package:studyu_app/util/debug_screen.dart';
+import 'package:studyu_app/widgets/debug_time_badge.dart';
 import 'package:studyu_core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -40,7 +41,9 @@ class _DashboardScreenState extends State<DashboardScreen>
   List<TaskInstance>? scheduleToday;
 
   bool get showNextDay =>
-      (kDebugMode || context.read<AppState>().isPreview) &&
+      (kDebugMode ||
+          context.read<AppState>().isPreview ||
+          context.read<AppState>().isDebugModeEnabled) &&
       !subject!.completedStudy;
 
   @override
@@ -102,164 +105,168 @@ class _DashboardScreenState extends State<DashboardScreen>
       return const SizedBox.shrink();
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        // Removes back button. We currently keep navigation stack to make developing easier
-        automaticallyImplyLeading: false,
-        title: Text(AppLocalizations.of(context)!.dashboard),
-        actions: [
-          IconButton(
-            tooltip: AppLocalizations.of(context)!.contact,
-            icon: Icon(MdiIcons.faceAgent),
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.contact);
-            },
-          ),
-          IconButton(
-            tooltip: AppLocalizations.of(context)!.current_report,
-            icon: Icon(MdiIcons.chartBar),
-            onPressed: () => Navigator.push(
-              context,
-              ReportDetailsScreen.routeFor(subject: subject!),
+    return DebugTimeBadgeWrapper(
+      child: Scaffold(
+        appBar: AppBar(
+          // Removes back button. We currently keep navigation stack to make developing easier
+          automaticallyImplyLeading: false,
+          title: Text(AppLocalizations.of(context)!.dashboard),
+          actions: [
+            IconButton(
+              tooltip: AppLocalizations.of(context)!.contact,
+              icon: Icon(MdiIcons.faceAgent),
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.contact);
+              },
             ),
-          ),
-          PopupMenuButton<OverflowMenuItem>(
-            onSelected: (value) {
-              if (value.routeName != null) {
-                Navigator.pushNamed(context, value.routeName!);
-              } else {
-                value.onTap?.call();
-              }
-            },
-            itemBuilder: (context) {
-              return [
-                OverflowMenuItem(
-                  AppLocalizations.of(context)!.report_history,
-                  MdiIcons.history,
-                  routeName: Routes.reportHistory,
-                ),
-                OverflowMenuItem(
-                  AppLocalizations.of(context)!.faq,
-                  MdiIcons.frequentlyAskedQuestions,
-                  routeName: Routes.faq,
-                ),
-                OverflowMenuItem(
-                  AppLocalizations.of(context)!.settings,
-                  Icons.settings,
-                  routeName: Routes.appSettings,
-                ),
-                OverflowMenuItem(
-                  AppLocalizations.of(context)!.what_is_studyu,
-                  MdiIcons.helpCircleOutline,
-                  routeName: Routes.about,
-                ),
-                OverflowMenuItem(
-                  AppLocalizations.of(context)!.about,
-                  MdiIcons.informationOutline,
-                  onTap: () async {
-                    final iconAuthors = ['Kiranshastry'];
-                    final PackageInfo packageInfo =
-                        await PackageInfo.fromPlatform();
-                    if (!context.mounted) return;
-                    showAboutDialog(
-                      context: context,
-                      applicationIcon: GestureDetector(
-                        onDoubleTap: () {
-                          DebugScreen.showDebugScreen(context);
-                        },
-                        child: const Image(
-                          image: AssetImage('assets/icon/icon.png'),
-                          height: 32,
-                        ),
-                      ),
-                      applicationVersion:
-                          '${packageInfo.version} - ${packageInfo.buildNumber}',
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            style: const TextStyle(color: Colors.black),
-                            children: [
-                              const TextSpan(text: 'Icons from '),
-                              TextSpan(
-                                style: const TextStyle(color: Colors.blue),
-                                text: 'www.flaticon.com',
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    launchUrl(
-                                      Uri.parse('https://www.flaticon.com/'),
-                                    );
-                                  },
-                              ),
-                              const TextSpan(text: ' made by'),
-                            ],
+            IconButton(
+              tooltip: AppLocalizations.of(context)!.current_report,
+              icon: Icon(MdiIcons.chartBar),
+              onPressed: () => Navigator.push(
+                context,
+                ReportDetailsScreen.routeFor(subject: subject!),
+              ),
+            ),
+            PopupMenuButton<OverflowMenuItem>(
+              onSelected: (value) {
+                if (value.routeName != null) {
+                  Navigator.pushNamed(context, value.routeName!);
+                } else {
+                  value.onTap?.call();
+                }
+              },
+              itemBuilder: (context) {
+                return [
+                  OverflowMenuItem(
+                    AppLocalizations.of(context)!.report_history,
+                    MdiIcons.history,
+                    routeName: Routes.reportHistory,
+                  ),
+                  OverflowMenuItem(
+                    AppLocalizations.of(context)!.faq,
+                    MdiIcons.frequentlyAskedQuestions,
+                    routeName: Routes.faq,
+                  ),
+                  OverflowMenuItem(
+                    AppLocalizations.of(context)!.settings,
+                    Icons.settings,
+                    routeName: Routes.appSettings,
+                  ),
+                  OverflowMenuItem(
+                    AppLocalizations.of(context)!.what_is_studyu,
+                    MdiIcons.helpCircleOutline,
+                    routeName: Routes.about,
+                  ),
+                  OverflowMenuItem(
+                    AppLocalizations.of(context)!.about,
+                    MdiIcons.informationOutline,
+                    onTap: () async {
+                      final iconAuthors = ['Kiranshastry'];
+                      final PackageInfo packageInfo =
+                          await PackageInfo.fromPlatform();
+                      if (!context.mounted) return;
+                      showAboutDialog(
+                        context: context,
+                        applicationIcon: GestureDetector(
+                          onDoubleTap: () {
+                            DebugScreen.showDebugScreen(context);
+                          },
+                          child: const Image(
+                            image: AssetImage('assets/icon/icon.png'),
+                            height: 32,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Column(
-                          children: iconAuthors
-                              .map(
-                                (author) => InkWell(
-                                  onTap: () {
-                                    launchUrl(
-                                      Uri.parse(
-                                        'https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}',
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    author,
-                                    style: const TextStyle(color: Colors.blue),
-                                  ),
+                        applicationVersion:
+                            '${packageInfo.version} - ${packageInfo.buildNumber}',
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              style: const TextStyle(color: Colors.black),
+                              children: [
+                                const TextSpan(text: 'Icons from '),
+                                TextSpan(
+                                  style: const TextStyle(color: Colors.blue),
+                                  text: 'www.flaticon.com',
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      launchUrl(
+                                        Uri.parse('https://www.flaticon.com/'),
+                                      );
+                                    },
                                 ),
-                              )
-                              .toList(),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ].map((choice) {
-                return PopupMenuItem<OverflowMenuItem>(
-                  value: choice,
-                  child: Row(
-                    children: [
-                      Icon(choice.icon, color: Colors.black),
-                      const SizedBox(width: 8),
-                      Text(choice.name),
-                    ],
+                                const TextSpan(text: ' made by'),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Column(
+                            children: iconAuthors
+                                .map(
+                                  (author) => InkWell(
+                                    onTap: () {
+                                      launchUrl(
+                                        Uri.parse(
+                                          'https://www.flaticon.com/authors/${author.replaceAll(RegExp(r'\s|_'), '-')}',
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      author,
+                                      style: const TextStyle(
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ],
+                      );
+                    },
                   ),
-                );
-              }).toList();
-            },
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: showNextDay
-            ? EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 10)
-            : EdgeInsets.zero,
-        child: _buildBody(),
-      ),
-      bottomSheet: showNextDay
-          ? Container(
-              margin: const EdgeInsets.only(left: 16, bottom: 8),
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.fast_forward_rounded),
-                onPressed: () async {
-                  try {
-                    await subject!.setStartDateBackBy(days: 1);
-                    setState(() {
-                      scheduleToday = subject!.scheduleFor(DateTime.now());
-                    });
-                  } on SocketException catch (_) {}
-                },
-                label: Text(AppLocalizations.of(context)!.next_day),
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Theme.of(context).colorScheme.primary,
+                ].map((choice) {
+                  return PopupMenuItem<OverflowMenuItem>(
+                    value: choice,
+                    child: Row(
+                      children: [
+                        Icon(choice.icon, color: Colors.black),
+                        const SizedBox(width: 8),
+                        Text(choice.name),
+                      ],
+                    ),
+                  );
+                }).toList();
+              },
+            ),
+          ],
+        ),
+        body: Padding(
+          padding: showNextDay
+              ? EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 10)
+              : EdgeInsets.zero,
+          child: _buildBody(),
+        ),
+        bottomSheet: showNextDay
+            ? Container(
+                margin: const EdgeInsets.only(left: 16, bottom: 8),
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.fast_forward_rounded),
+                  onPressed: () async {
+                    try {
+                      await subject!.setStartDateBackBy(days: 1);
+                      setState(() {
+                        scheduleToday = subject!.scheduleFor(DateTime.now());
+                      });
+                    } on SocketException catch (_) {}
+                  },
+                  label: Text(AppLocalizations.of(context)!.next_day),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
-              ),
-            )
-          : null,
+              )
+            : null,
+      ),
     );
   }
 
