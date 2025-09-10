@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1156,7 +1155,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get preview_mode_results_not_saved =>
-      'Aufgabe im Vorschau-Modus abgeschlossen - Ergebnisse werden zum Schutz der Studienintegrität nicht gespeichert.';
+      'Ergebnisse werden zum Schutz der Studienintegrität nicht gespeichert.';
 
   @override
   String get ok => 'OK';
