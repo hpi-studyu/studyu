@@ -126,7 +126,7 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                             const SizedBox.shrink(),*/
                         ],
                       ),
-                      reorderable: true,
+                      reorderable: !formViewModel.isReadonly,
                       onReorder: (oldIndex, newIndex) {
                         if (newIndex > oldIndex) newIndex -= 1;
                         final item = formViewModel.reportItemModels.removeAt(

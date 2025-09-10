@@ -172,7 +172,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           ],
                         );
                       },
-                      reorderable: true,
+                      reorderable: !formViewModel.isReadonly,
                       onReorder: (oldIndex, newIndex) {
                         if (newIndex > oldIndex) {
                           newIndex -= 1;
@@ -246,7 +246,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                             const SizedBox.shrink(),
                         ],
                       ),
-                      reorderable: true,
+                      reorderable: !formViewModel.isReadonly,
                       onReorder: (oldIndex, newIndex) {
                         if (newIndex > oldIndex) {
                           newIndex -= 1;
