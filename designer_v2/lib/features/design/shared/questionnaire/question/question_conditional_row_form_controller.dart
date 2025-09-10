@@ -19,7 +19,7 @@ class ConditionRowFormViewModel
 
     final currentValue = valueControl.value;
 
-    if (currentValue is bool && comparatorControl.value != null) {
+    if (currentValue is bool) {
       switch (question.type) {
         case ScaleQuestion.questionType:
           valueControl.value = currentValue.toString();
