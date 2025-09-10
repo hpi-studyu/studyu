@@ -34,10 +34,6 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
       }
     }
 
-    if (oldAvailableQuestions.isEmpty && newAvailableQuestions.isNotEmpty) {
-      formViewModel.initializeDeferredConditions();
-    }
-
     if (newAvailableQuestions.isNotEmpty) {
       formViewModel.initializeDeferredConditions();
     }
