@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-09-10
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.11.0`](#studyu_app---v2110)
+ - [`studyu_designer_v2` - `v1.13.0`](#studyu_designer_v2---v1130)
+
+---
+
+#### `studyu_app` - `v2.11.0`
+
+ - **FIX**: add preview mode active/inactive state messages.
+ - **FIX**: replace GestureDetector with InkWell for application icon in about dialog.
+ - **FIX**: improve question insertion and scrolling behavior in questionnaire.
+ - **FIX**: invalidate existing result on continuation check to update eligibility banner.
+ - **FIX**: suppress mouse tracker assertion error on web platform.
+ - **FEAT**: add preview mode functionality for app and localization support.
+ - **FEAT**: add debug mode functionality for study progression".
+ - **FEAT**: add debug mode functionality for study progression.
+
+#### `studyu_designer_v2` - `v1.13.0`
+
+ - **FIX**: after study cloning redirect to clone directly.
+ - **FIX**: after study cloning show my studies as active in app drawer.
+ - **FIX**: update validators for boolean questions in conditional forms.
+ - **FIX**: simplify conditional check for boolean values in question forms.
+ - **FIX**: prevent reordering of questions in readonly forms.
+ - **FIX**: remove redundant deferred conditions initialization check.
+ - **FIX**: fix study data loss on study duplication with dashboard.
+ - **FIX**: disable reorder action for readonly forms.
+ - **FIX**: disable delete action for readonly condition forms.
+ - **FIX**: solves [#737](https://github.com/hpi-studyu/studyu/issues/737).
+ - **FEAT**: implement deferred conditions initialization in question forms.
+
+
 ## 2025-09-09
 
 ### Changes

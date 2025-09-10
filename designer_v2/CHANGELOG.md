@@ -1,3 +1,17 @@
+## 1.13.0
+
+ - **FIX**: after study cloning redirect to clone directly.
+ - **FIX**: after study cloning show my studies as active in app drawer.
+ - **FIX**: update validators for boolean questions in conditional forms.
+ - **FIX**: simplify conditional check for boolean values in question forms.
+ - **FIX**: prevent reordering of questions in readonly forms.
+ - **FIX**: remove redundant deferred conditions initialization check.
+ - **FIX**: fix study data loss on study duplication with dashboard.
+ - **FIX**: disable reorder action for readonly forms.
+ - **FIX**: disable delete action for readonly condition forms.
+ - **FIX**: solves [#737](https://github.com/hpi-studyu/studyu/issues/737).
+ - **FEAT**: implement deferred conditions initialization in question forms.
+
 ## 1.12.1
 
  - **REFACTOR**: simplify enrollment type input structure in enrollment form.

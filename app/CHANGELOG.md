@@ -1,3 +1,14 @@
+## 2.11.0
+
+ - **FIX**: add preview mode active/inactive state messages.
+ - **FIX**: replace GestureDetector with InkWell for application icon in about dialog.
+ - **FIX**: improve question insertion and scrolling behavior in questionnaire.
+ - **FIX**: invalidate existing result on continuation check to update eligibility banner.
+ - **FIX**: suppress mouse tracker assertion error on web platform.
+ - **FEAT**: add preview mode functionality for app and localization support.
+ - **FEAT**: add debug mode functionality for study progression".
+ - **FEAT**: add debug mode functionality for study progression.
+
 ## 2.10.2
 
  - **FIX**: same conditional question was inserted on answer change.
