@@ -150,22 +150,22 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       }
     }
 
-    /*final finished = shouldContinue == false || !hasMoreQuestions;
-    print(
-      'Question answered: ${answer.question}, shouldContinue: $shouldContinue, hasMoreQuestions: $hasMoreQuestions, finished: $finished',
-    );*/
-
     // Check if the questionnaire should not continue or if there are no more questions to show
     if (shouldContinue == false || !hasMoreQuestions) {
-      // print('Questionnaire finished with response: $qs');
       _finishQuestionnaire(qs);
       return;
     }
+
+    bool questionWasInserted = false;
+
     // Check if the question that was answered is the last shown question.
     if (answer.question == shownQuestions.last.question.id) {
       // If the last question displayed was answered, we can try to insert the next question.
       // Index is incorrect if questions are skipped, use last shown question index instead
-      _insertQuestion(widget.questions.indexOf(shownQuestions.last.question));
+      final insertedQuestion = _insertQuestion(
+        widget.questions.indexOf(shownQuestions.last.question),
+      );
+      questionWasInserted = insertedQuestion != null;
     } else {
       // Check if there are questions whose visibility depend on the question that's answer was just edited.
       if (_isConditionalTarget(answer.question)) {
@@ -178,22 +178,56 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         if (insertedQuestion != null) {
           // If a question was inserted, the questionnaire is not finished yet.
           _finishQuestionnaire(null);
+          questionWasInserted = true;
         }
       }
     }
 
-    // Scroll to the newly added question.
-    // Delay scroll until after the next frame
+    // Only scroll if a new question was actually inserted
+    if (questionWasInserted) {
+      _scrollToBottom();
+    }
+  }
+
+  void _scrollToBottom() {
+    // Wait for the AnimatedList insertion animation to complete
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // todo non-optimal solution, but works for now
-      Timer(const Duration(milliseconds: 200), () {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
+      // Use a longer delay to ensure the AnimatedList animation is complete
+      Timer(const Duration(milliseconds: 400), () {
+        _performScrollWithRetry();
       });
     });
+  }
+
+  void _performScrollWithRetry({int retryCount = 0}) {
+    if (!_scrollController.hasClients) return;
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+
+    // If we're already at the bottom or very close, no need to scroll
+    if (maxScroll - currentScroll < 10) return;
+
+    _scrollController
+        .animateTo(
+          maxScroll,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        )
+        .then((_) {
+          // Check if we actually reached the bottom after scrolling
+          if (retryCount < 2 && _scrollController.hasClients) {
+            final newMaxScroll = _scrollController.position.maxScrollExtent;
+            final newCurrentScroll = _scrollController.position.pixels;
+
+            // If there's still more content to scroll to, retry
+            if (newMaxScroll - newCurrentScroll > 10) {
+              Timer(const Duration(milliseconds: 100), () {
+                _performScrollWithRetry(retryCount: retryCount + 1);
+              });
+            }
+          }
+        });
   }
 
   @override
