@@ -73,7 +73,7 @@ jobs:
 
       - name: Build StudyU app bundle (dev)
         if: ${{ !startsWith(github.ref, 'refs/heads/main') }}
-        run: flutter build appbundle --debug --build-number ${{ github.run_number }} --dart-define=STUDYU_ENV=.env.dev
+        run: flutter build appbundle --release --build-number ${{ github.run_number }} --dart-define=STUDYU_ENV=.env.dev
         working-directory: ./app
 
       - name: Fastlane upload
@@ -141,7 +141,7 @@ jobs:
 
       - name: Build StudyU ios without codesign (dev)
         if: ${{ !startsWith(github.ref, 'refs/heads/main') }}
-        run: flutter build ios --debug --no-codesign --build-number ${{ github.run_number }} --build-name ${{ env.STUDYU_APP_VERSION }} --dart-define=STUDYU_ENV=.env.dev
+        run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }} --build-name ${{ env.STUDYU_APP_VERSION }} --dart-define=STUDYU_ENV=.env.dev
         working-directory: ./app
 
       - name: Fastlane upload
