@@ -165,7 +165,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     if (!context.mounted) return;
                     showAboutDialog(
                       context: context,
-                      applicationIcon: GestureDetector(
+                      applicationIcon: InkWell(
                         onDoubleTap: () {
                           DebugScreen.showDebugScreen(context);
                         },

@@ -21,8 +21,9 @@ class DebugScreen {
               .pendingNotificationRequests()
         : Future.value([]);
 
-    final pendingNotificationsPlugin = FlutterLocalNotificationsPlugin()
-        .pendingNotificationRequests();
+    final pendingNotificationsPlugin = studyNotifications != null
+        ? FlutterLocalNotificationsPlugin().pendingNotificationRequests()
+        : Future.value(<PendingNotificationRequest>[]);
 
     final packageInfo = await PackageInfo.fromPlatform();
     final versionString =
