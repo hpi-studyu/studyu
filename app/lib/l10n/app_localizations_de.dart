@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1135,4 +1136,21 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get painTypeStiffness => 'Steifheit';
+
+  @override
+  String get preview_mode => 'Vorschau-Modus';
+
+  @override
+  String get preview_mode_active => 'Vorschau-Modus aktiv';
+
+  @override
+  String get preview_mode_description =>
+      'Sie befinden sich derzeit im Vorschau-Modus. Dies ermöglicht Ihnen:\n\n• Schneller Vorlauf durch Studientage mit der \"Nächster Tag\" Schaltfläche\n• Mehrfaches Abschließen von Aufgaben ohne Einschränkungen\n• Erleben des vollständigen Studienablaufs ohne Beeinflussung echter Daten\n\nWichtig: Ergebnisse und Daten aus dem Vorschau-Modus werden nicht gespeichert oder mit tatsächlichen Teilnehmerergebnissen aus laufenden Studien vermischt.';
+
+  @override
+  String get preview_mode_results_not_saved =>
+      'Aufgabe im Vorschau-Modus abgeschlossen - Ergebnisse werden zum Schutz der Studienintegrität nicht gespeichert.';
+
+  @override
+  String get ok => 'OK';
 }
