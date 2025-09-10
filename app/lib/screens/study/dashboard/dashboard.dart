@@ -303,7 +303,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 },
                 label: Text(AppLocalizations.of(context)!.next_day),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
+                  side: const BorderSide(color: Colors.orange, width: 2.0),
                   foregroundColor: Theme.of(context).colorScheme.primary,
                 ),
               ),
