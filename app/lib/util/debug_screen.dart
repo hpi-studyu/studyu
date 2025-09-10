@@ -117,7 +117,7 @@ class _DebugDialog extends StatefulWidget {
     required this.versionString,
   });
 
-  final dynamic studyNotifications;
+  final StudyNotifications? studyNotifications;
   final Future<List> pendingNotifications;
   final Future<List<PendingNotificationRequest>> pendingNotificationsPlugin;
   final String versionString;
