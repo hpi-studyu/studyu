@@ -14,7 +14,10 @@ abstract class StudyUApi {
 
   Future<Study> fetchStudy(StudyID studyId);
 
-  Future<List<Study>> getUserStudies();
+  Future<List<Study>> getUserStudies({
+    bool withParticipantActivity = false,
+    bool forDashboardDisplay = true,
+  });
 
   Future<void> deleteStudy(Study study);
 

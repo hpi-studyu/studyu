@@ -254,7 +254,7 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
 
   @override
   Future<List<Study>> fetchAll() {
-    return apiClient.getUserStudies();
+    return apiClient.getUserStudies(forDashboardDisplay: false);
   }
 
   @override
