@@ -214,7 +214,9 @@ class _MeasurementSurveyFormViewState
                       ],
                     );
                   },
-                  reorderable: widget.formViewModel.questionModels.length > 1 && !widget.formViewModel.isReadonly,
+                  reorderable:
+                      widget.formViewModel.questionModels.length > 1 &&
+                      !widget.formViewModel.isReadonly,
                   onReorder: (oldIndex, newIndex) {
                     if (newIndex > oldIndex) {
                       newIndex -= 1;
