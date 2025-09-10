@@ -102,6 +102,8 @@ class _DashboardScreenState extends State<DashboardScreen>
       return const SizedBox.shrink();
     }
 
+    final isPreviewMode = context.read<AppState>().isPreview;
+
     return Scaffold(
       appBar: AppBar(
         // Removes back button. We currently keep navigation stack to make developing easier
@@ -163,7 +165,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     if (!context.mounted) return;
                     showAboutDialog(
                       context: context,
-                      applicationIcon: GestureDetector(
+                      applicationIcon: InkWell(
                         onDoubleTap: () {
                           DebugScreen.showDebugScreen(context);
                         },
@@ -234,11 +236,57 @@ class _DashboardScreenState extends State<DashboardScreen>
           ),
         ],
       ),
-      body: Padding(
-        padding: showNextDay
-            ? EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 10)
-            : EdgeInsets.zero,
-        child: _buildBody(),
+      body: Column(
+        children: [
+          // Preview mode banner
+          if (isPreviewMode)
+            GestureDetector(
+              onTap: () => _showPreviewModeInfo(context),
+              child: Container(
+                width: double.infinity,
+                color: Colors.orange.shade100,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.preview,
+                      color: Colors.orange.shade800,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.preview_mode_active,
+                        style: TextStyle(
+                          color: Colors.orange.shade900,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.orange.shade800,
+                      size: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          // Main content
+          Expanded(
+            child: Padding(
+              padding: showNextDay
+                  ? EdgeInsets.only(
+                      bottom: MediaQuery.of(context).size.height / 10,
+                    )
+                  : EdgeInsets.zero,
+              child: _buildBody(),
+            ),
+          ),
+        ],
       ),
       bottomSheet: showNextDay
           ? Container(
@@ -255,11 +303,38 @@ class _DashboardScreenState extends State<DashboardScreen>
                 },
                 label: Text(AppLocalizations.of(context)!.next_day),
                 style: ElevatedButton.styleFrom(
+                  side: const BorderSide(color: Colors.orange, width: 2.0),
                   foregroundColor: Theme.of(context).colorScheme.primary,
                 ),
               ),
             )
           : null,
+    );
+  }
+
+  void _showPreviewModeInfo(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.preview, color: Colors.orange),
+              const SizedBox(width: 8),
+              Text(AppLocalizations.of(context)!.preview_mode),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Text(AppLocalizations.of(context)!.preview_mode_description),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(AppLocalizations.of(context)!.ok),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -303,14 +378,13 @@ class StudyFinishedPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const fontSize = 30.0;
-    const textStyle = TextStyle(fontSize: fontSize);
     final theme = Theme.of(context);
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(32, 32, 32, 32),
+        padding: const EdgeInsets.fromLTRB(16, 32, 16, 32),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               AppLocalizations.of(context)!.completed_study,
@@ -324,20 +398,20 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: () =>
                   Navigator.pushNamed(context, Routes.reportHistory),
-              icon: Icon(MdiIcons.history, size: fontSize),
+              icon: Icon(MdiIcons.history, size: 24),
               label: Text(
                 AppLocalizations.of(context)!.report_history,
-                style: textStyle,
+                style: const TextStyle(fontSize: 16),
               ),
             ),
             space,
             OutlinedButton.icon(
               onPressed: () =>
                   Navigator.pushNamed(context, Routes.studySelection),
-              icon: Icon(MdiIcons.clipboardArrowRightOutline, size: fontSize),
+              icon: Icon(MdiIcons.clipboardArrowRightOutline, size: 24),
               label: Text(
                 AppLocalizations.of(context)!.study_selection,
-                style: textStyle,
+                style: const TextStyle(fontSize: 16),
               ),
             ),
           ],

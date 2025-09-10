@@ -2197,6 +2197,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stiffness'**
   String get painTypeStiffness;
+
+  /// No description provided for @preview_mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview Mode'**
+  String get preview_mode;
+
+  /// No description provided for @preview_mode_active.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview Mode Active'**
+  String get preview_mode_active;
+
+  /// No description provided for @preview_mode_description.
+  ///
+  /// In en, this message translates to:
+  /// **'You are currently in preview mode. This allows you to:\n\n• Fast-forward through study days using the \"Next Day\" button\n• Complete tasks multiple times without restrictions\n• Experience the full study flow without affecting real data\n\nImportant: Results and data from preview mode are not stored or mixed with actual participant results from running studies.'**
+  String get preview_mode_description;
+
+  /// No description provided for @preview_mode_results_not_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Task completed in preview mode - results are not saved to protect study data integrity.'**
+  String get preview_mode_results_not_saved;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
 }
 
 class _AppLocalizationsDelegate

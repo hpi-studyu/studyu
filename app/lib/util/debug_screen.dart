@@ -21,177 +21,22 @@ class DebugScreen {
               .pendingNotificationRequests()
         : Future.value([]);
 
-    final pendingNotificationsPlugin = FlutterLocalNotificationsPlugin()
-        .pendingNotificationRequests();
+    final pendingNotificationsPlugin = studyNotifications != null
+        ? FlutterLocalNotificationsPlugin().pendingNotificationRequests()
+        : Future.value(<PendingNotificationRequest>[]);
 
-    bool? ignoreBatteryOptimizations;
-    int? pendingNotificationRes;
-    int? pendingNotificationsPluginRes;
     final packageInfo = await PackageInfo.fromPlatform();
     final versionString =
         'Version: ${packageInfo.version} - ${packageInfo.buildNumber}';
     if (!context.mounted) return;
+
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const SelectableText('Debug Screen'),
-        content: Column(
-          children: [
-            Text(versionString),
-            ElevatedButton(
-              onPressed: () {
-                AppConfig.getAppContact().then((value) {
-                  final Uri emailLaunchUri = Uri(
-                    scheme: 'mailto',
-                    path: value.email,
-                    queryParameters: {
-                      'subject': '[StudyU] Debug Information',
-                      'body':
-                          'version: $versionString\n'
-                          'ignoreBatteryOptimizations: ${ignoreBatteryOptimizations ?? 'null'}\n'
-                          'pendingNotificationsNumber: ${pendingNotificationRes ?? 'null'}\n'
-                          'pendingNotificationsPluginNumber: ${pendingNotificationsPluginRes ?? 'null'}\n'
-                          'scheduledNotificationsDebug: ${StudyNotifications.scheduledNotificationsDebug}',
-                    },
-                  );
-                  launchUrl(emailLaunchUri);
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-              ),
-              child: const Text('Send debug information via email'),
-            ),
-            if (context.read<AppState>().studyNotifications != null)
-              ElevatedButton(
-                onPressed: () {
-                  testNotification(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
-                ),
-                child: const Text('Receive test notification'),
-              ),
-            ElevatedButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => AlertDialog(
-                    title: const Text('Reset App?'),
-                    content: const Text(
-                      'This will delete all data and reset the app.',
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          try {
-                            await _deleteCacheDir();
-                            await _deleteAppDir();
-                            await SecureStorage.deleteAll();
-                            if (context.mounted) {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'App reset successfully! Please restart the app.',
-                                  ),
-                                ),
-                              );
-                              await Future.delayed(const Duration(seconds: 1));
-                              await SystemChannels.platform.invokeMethod(
-                                'SystemNavigator.pop',
-                              );
-                            }
-                          } catch (e) {
-                            StudyULogger.error(e);
-                            if (context.mounted) {
-                              Navigator.of(context).pop();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Error while resetting the app. Please try again.',
-                                  ),
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        child: const Text('Reset'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.error,
-              ),
-              child: const Text('Reset App'),
-            ),
-            FutureBuilder<bool>(
-              future: receivePermission(),
-              builder: (context, AsyncSnapshot<bool> snapshot) {
-                if (snapshot.hasData) {
-                  final String data =
-                      "ignoreBatteryOptimizations: ${snapshot.data}";
-                  ignoreBatteryOptimizations = snapshot.data;
-                  return Text(data);
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              },
-            ),
-            FutureBuilder<List>(
-              future: pendingNotifications,
-              builder: (context, AsyncSnapshot<List> snapshot) {
-                if (snapshot.hasData) {
-                  pendingNotificationRes = snapshot.data!.length;
-                  return Text(
-                    'Number of Pending Notifications: $pendingNotificationRes',
-                  );
-                } else if (snapshot.hasError) {
-                  return Text(
-                    'Pending Notifications: Error: ${snapshot.error}',
-                  );
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              },
-            ),
-            FutureBuilder<List<PendingNotificationRequest>>(
-              future: pendingNotificationsPlugin,
-              builder:
-                  (
-                    context,
-                    AsyncSnapshot<List<PendingNotificationRequest>> snapshot,
-                  ) {
-                    if (snapshot.hasData) {
-                      pendingNotificationsPluginRes = snapshot.data!.length;
-                      return Text(
-                        'Local Notifications Plugin Number of Pending Notifications: $pendingNotificationsPluginRes',
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text(
-                        'Pending Notifications Plugin: Error: ${snapshot.error}',
-                      );
-                    } else {
-                      return const CircularProgressIndicator();
-                    }
-                  },
-            ),
-            const Text("Scheduled Notifications:"),
-            SelectableText(
-              StudyNotifications.scheduledNotificationsDebug ?? 'No data',
-            ),
-          ],
-        ),
-        scrollable: true,
+      builder: (_) => _DebugDialog(
+        studyNotifications: studyNotifications,
+        pendingNotifications: pendingNotifications,
+        pendingNotificationsPlugin: pendingNotificationsPlugin,
+        versionString: versionString,
       ),
     );
   }
@@ -210,11 +55,9 @@ class DebugScreen {
       return;
     }
     await studyNotifications.flutterLocalNotificationsPlugin.show(
-      /*******************/
       99,
       'StudyU Test Notification',
       'This notification confirms that you receive StudyU notifications',
-      /*******************/
       notificationDetails,
     );
   }
@@ -235,5 +78,258 @@ class DebugScreen {
     if (appDir.existsSync()) {
       appDir.deleteSync(recursive: true);
     }
+  }
+
+  static Future<void> resetApp(BuildContext context) async {
+    try {
+      await _deleteCacheDir();
+      await _deleteAppDir();
+      await SecureStorage.deleteAll();
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('App reset successfully! Please restart the app.'),
+          ),
+        );
+        await Future.delayed(const Duration(seconds: 1));
+        await SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+      }
+    } catch (e) {
+      StudyULogger.error(e);
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error while resetting the app. Please try again.'),
+          ),
+        );
+      }
+    }
+  }
+}
+
+class _DebugDialog extends StatefulWidget {
+  const _DebugDialog({
+    required this.studyNotifications,
+    required this.pendingNotifications,
+    required this.pendingNotificationsPlugin,
+    required this.versionString,
+  });
+
+  final StudyNotifications? studyNotifications;
+  final Future<List> pendingNotifications;
+  final Future<List<PendingNotificationRequest>> pendingNotificationsPlugin;
+  final String versionString;
+
+  @override
+  State<_DebugDialog> createState() => __DebugDialogState();
+}
+
+class __DebugDialogState extends State<_DebugDialog> {
+  bool? ignoreBatteryOptimizations;
+  int? pendingNotificationCount;
+  int? pendingNotificationsPluginCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const SelectableText('Debug Screen'),
+      content: Column(
+        children: [
+          _buildVersionInfo(),
+          const SizedBox(height: 16),
+          _buildEmailButton(),
+          const SizedBox(height: 8),
+          _buildTestNotificationButton(),
+          const SizedBox(height: 8),
+          _buildResetAppButton(),
+          const SizedBox(height: 16),
+          _buildPreviewModeSwitch(),
+          const SizedBox(height: 16),
+          _buildBatteryOptimizationInfo(),
+          const SizedBox(height: 8),
+          _buildPendingNotificationsInfo(),
+          const SizedBox(height: 8),
+          _buildPendingNotificationsPluginInfo(),
+          const SizedBox(height: 16),
+          _buildScheduledNotificationsInfo(),
+        ],
+      ),
+      scrollable: true,
+    );
+  }
+
+  Widget _buildVersionInfo() {
+    return Text(widget.versionString);
+  }
+
+  Widget _buildEmailButton() {
+    return ElevatedButton(
+      onPressed: () => _sendDebugEmail(),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      child: const Text('Send debug information via email'),
+    );
+  }
+
+  Widget _buildTestNotificationButton() {
+    if (context.read<AppState>().studyNotifications == null) {
+      return const SizedBox.shrink();
+    }
+
+    return ElevatedButton(
+      onPressed: () => DebugScreen.testNotification(context),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+      ),
+      child: const Text('Receive test notification'),
+    );
+  }
+
+  Widget _buildResetAppButton() {
+    return ElevatedButton(
+      onPressed: () => _showResetConfirmationDialog(),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).colorScheme.error,
+      ),
+      child: const Text('Reset App'),
+    );
+  }
+
+  Widget _buildBatteryOptimizationInfo() {
+    return FutureBuilder<bool>(
+      future: DebugScreen.receivePermission(),
+      builder: (context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.hasData) {
+          ignoreBatteryOptimizations = snapshot.data;
+          return Text("ignoreBatteryOptimizations: ${snapshot.data}");
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+  Widget _buildPendingNotificationsInfo() {
+    return FutureBuilder<List>(
+      future: widget.pendingNotifications,
+      builder: (context, AsyncSnapshot<List> snapshot) {
+        if (snapshot.hasData) {
+          pendingNotificationCount = snapshot.data!.length;
+          return Text(
+            'Number of Pending Notifications: $pendingNotificationCount',
+          );
+        } else if (snapshot.hasError) {
+          return Text('Pending Notifications: Error: ${snapshot.error}');
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+  Widget _buildPendingNotificationsPluginInfo() {
+    return FutureBuilder<List<PendingNotificationRequest>>(
+      future: widget.pendingNotificationsPlugin,
+      builder: (context, AsyncSnapshot<List<PendingNotificationRequest>> snapshot) {
+        if (snapshot.hasData) {
+          pendingNotificationsPluginCount = snapshot.data!.length;
+          return Text(
+            'Local Notifications Plugin Number of Pending Notifications: $pendingNotificationsPluginCount',
+          );
+        } else if (snapshot.hasError) {
+          return Text('Pending Notifications Plugin: Error: ${snapshot.error}');
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+  Widget _buildScheduledNotificationsInfo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Scheduled Notifications:"),
+        SelectableText(
+          StudyNotifications.scheduledNotificationsDebug ?? 'No data',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPreviewModeSwitch() {
+    return SwitchListTile(
+      title: const Text('Preview Mode'),
+      value: context.read<AppState>().isPreview,
+      onChanged: (value) {
+        // Update the preview mode state using the proper method
+        context.read<AppState>().updatePreviewMode(value);
+
+        // Close the debug dialog and navigate back to dashboard
+        Navigator.of(context).pop(); // Close debug dialog
+
+        // If we're in settings, also close the settings screen to get back to dashboard
+        // This will ensure we get back to the main dashboard which uses showNextDay
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      },
+    );
+  }
+
+  void _sendDebugEmail() {
+    AppConfig.getAppContact().then((value) {
+      final debugInfo = _buildDebugInfoString();
+      final Uri emailLaunchUri = Uri(
+        scheme: 'mailto',
+        path: value.email,
+        queryParameters: {
+          'subject': '[StudyU] Debug Information',
+          'body': debugInfo,
+        },
+      );
+      launchUrl(emailLaunchUri);
+    });
+  }
+
+  String _buildDebugInfoString() {
+    final buffer = StringBuffer();
+    buffer.writeln('Version: ${widget.versionString}');
+    buffer.writeln(
+      'Ignore Battery Optimizations: ${ignoreBatteryOptimizations ?? 'null'}',
+    );
+    buffer.writeln(
+      'Pending Notifications Number: ${pendingNotificationCount ?? 'null'}',
+    );
+    buffer.writeln(
+      'Pending Notifications Plugin Number: ${pendingNotificationsPluginCount ?? 'null'}',
+    );
+    buffer.writeln('Preview Mode: ${context.read<AppState>().isPreview}');
+    buffer.writeln('Scheduled Notifications Debug:');
+    buffer.write(StudyNotifications.scheduledNotificationsDebug ?? 'No data');
+
+    return buffer.toString();
+  }
+
+  void _showResetConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Reset App?'),
+        content: const Text('This will delete all data and reset the app.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => DebugScreen.resetApp(context),
+            child: const Text('Reset'),
+          ),
+        ],
+      ),
+    );
   }
 }

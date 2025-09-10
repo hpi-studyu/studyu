@@ -86,11 +86,20 @@ Future<void> handleTaskCompletion(
   try {
     if (state.trackParticipantProgress) {
       await completionCallback(activeSubject);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)!.preview_mode_results_not_saved,
+          ),
+          duration: const Duration(seconds: 3),
+        ),
+      );
     }
   } on SocketException {
     await Cache.storeSubject(activeSubject);
   } catch (exception) {
-    debugPrint("Could not save results");
+    debugPrint("Could not save results: $exception");
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
