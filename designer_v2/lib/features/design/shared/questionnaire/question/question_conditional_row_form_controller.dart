@@ -67,12 +67,16 @@ class ConditionRowFormViewModel
           // Automatically set 'is' comparator for boolean questions and disable the control
           comparatorControl.value = 'is';
           comparatorControl.markAsDisabled();
-          valueControl.value = true;
+          valueControl.value = null;
+          // Add required validator for boolean questions
+          valueControl.setValidators([Validators.required]);
         } else {
           // Enable the control for non-boolean questions
           comparatorControl.markAsEnabled();
           comparatorControl.value = null;
           valueControl.value = null;
+          // Clear validators for non-boolean questions
+          valueControl.clearValidators();
         }
         _updateValueForQuestionType();
       }
@@ -253,6 +257,7 @@ class ConditionRowFormViewModel
     Expression? baseExpression;
     switch (selectedQ.type) {
       case BooleanQuestion.questionType:
+        if (value == null) return null;
         baseExpression = BooleanExpression()..target = questionId;
         if (value == false) {
           return NotExpression()..expression = baseExpression;
@@ -320,8 +325,12 @@ class ConditionRowFormViewModel
       if (question?.type == BooleanQuestion.questionType) {
         comparatorControl.value = 'is';
         comparatorControl.markAsDisabled();
+        // Add required validator for boolean questions
+        valueControl.setValidators([Validators.required]);
       } else {
         comparatorControl.markAsEnabled();
+        // Clear validators for non-boolean questions
+        valueControl.clearValidators();
       }
       _updateValueForQuestionType();
     }
