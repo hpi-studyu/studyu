@@ -58,7 +58,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                         emptyDescription: tr
                             .form_array_measurements_surveys_empty_description,
                         hideLeadingTrailingWhenEmpty: true,
-                        reorderable: true,
+                        reorderable: !formViewModel.isReadonly,
                         onReorder: (oldIndex, newIndex) {
                           if (newIndex > oldIndex) {
                             newIndex -= 1;

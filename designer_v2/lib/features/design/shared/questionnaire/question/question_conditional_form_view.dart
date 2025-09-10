@@ -29,6 +29,13 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
       newAvailableQuestions,
     )) {
       formViewModel.cleanupInvalidConditions();
+      for (final conditionModel in formViewModel.conditionModels) {
+        conditionModel.refreshAvailableQuestions();
+      }
+    }
+
+    if (newAvailableQuestions.isNotEmpty) {
+      formViewModel.initializeDeferredConditions();
     }
   }
 
@@ -268,7 +275,9 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.delete_forever),
-            onPressed: () => formViewModel.removeCondition(index),
+            onPressed: formViewModel.isReadonly
+                ? null
+                : () => formViewModel.removeCondition(index),
             tooltip: tr.action_delete,
           ),
         ],

@@ -24,6 +24,7 @@ abstract class IConditionalQuestionProperties {
   void updateCondition();
   void removeCondition(int index);
   void cleanupInvalidConditions();
+  void initializeDeferredConditions();
 
   Stream<void> get conditionsValueChanges;
 }
@@ -283,12 +284,16 @@ class ConditionalQuestionFormViewModel extends FormViewModel
 
         conditionFormViewModels.reset(null);
 
-        final validExpressions = _filterValidExpressions(
-          compositeExpression.expressions,
-        );
+        if (ConditionRowFormViewModel.availableQuestions.isEmpty) {
+          _deferredExpressions = compositeExpression.expressions;
+        } else {
+          final validExpressions = _filterValidExpressions(
+            compositeExpression.expressions,
+          );
 
-        for (final expression in validExpressions) {
-          addCondition(initialExpression: expression);
+          for (final expression in validExpressions) {
+            addCondition(initialExpression: expression);
+          }
         }
         // Synchronously update the condition after initialization to ensure
         // the parent control reflects the correct state
@@ -304,6 +309,30 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     } finally {
       // Reset the flag
       _isUpdatingProgrammatically = false;
+    }
+  }
+
+  List<Expression>? _deferredExpressions;
+
+  @override
+  void initializeDeferredConditions() {
+    if (_deferredExpressions != null &&
+        ConditionRowFormViewModel.availableQuestions.isNotEmpty) {
+      _isUpdatingProgrammatically = true;
+      try {
+        conditionFormViewModels.reset(null);
+
+        final validExpressions = _filterValidExpressions(_deferredExpressions!);
+        for (final expression in validExpressions) {
+          addCondition(initialExpression: expression);
+        }
+
+        _deferredExpressions = null; // Clear deferred expressions
+        updateCondition();
+        _updateConditionsValueChangesStream();
+      } finally {
+        _isUpdatingProgrammatically = false;
+      }
     }
   }
 

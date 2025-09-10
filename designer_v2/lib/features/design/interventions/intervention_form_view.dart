@@ -158,7 +158,7 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                   emptyDescription:
                       tr.form_array_intervention_tasks_empty_description,
                   hideLeadingTrailingWhenEmpty: true,
-                  reorderable: true,
+                  reorderable: !widget.formViewModel.isReadonly,
                   onReorder: (oldIndex, newIndex) {
                     if (newIndex > oldIndex) {
                       newIndex -= 1;
