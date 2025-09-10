@@ -5,6 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
@@ -275,6 +276,16 @@ class __DebugDialogState extends State<_DebugDialog> {
         // If we're in settings, also close the settings screen to get back to dashboard
         // This will ensure we get back to the main dashboard which uses showNextDay
         Navigator.of(context).popUntil((route) => route.isFirst);
+        print('Preview mode is now ${value ? 'active' : 'inactive'}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              context.read<AppState>().isPreview
+                  ? AppLocalizations.of(context)!.preview_mode_active_state
+                  : AppLocalizations.of(context)!.preview_mode_inactive_state,
+            ),
+          ),
+        );
       },
     );
   }

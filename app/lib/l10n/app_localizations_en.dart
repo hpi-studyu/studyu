@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1132,6 +1133,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get preview_mode_active => 'Preview Mode Active';
+
+  @override
+  String get preview_mode_active_state => 'Preview mode is now active.';
+
+  @override
+  String get preview_mode_inactive_state => 'Preview mode is now inactive.';
 
   @override
   String get preview_mode_description =>

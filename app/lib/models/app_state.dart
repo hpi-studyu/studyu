@@ -52,7 +52,7 @@ class AppState with ChangeNotifier {
   /// to the active subject's study. Notifies listeners of the change.
   void updatePreviewMode(bool preview) {
     isPreview = preview;
-    selectedStudy = activeSubject!.study;
+    selectedStudy = activeSubject?.study;
     notifyListeners();
   }
 }

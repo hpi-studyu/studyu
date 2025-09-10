@@ -2210,6 +2210,18 @@ abstract class AppLocalizations {
   /// **'Preview Mode Active'**
   String get preview_mode_active;
 
+  /// No description provided for @preview_mode_active_state.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview mode is now active.'**
+  String get preview_mode_active_state;
+
+  /// No description provided for @preview_mode_inactive_state.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview mode is now inactive.'**
+  String get preview_mode_inactive_state;
+
   /// No description provided for @preview_mode_description.
   ///
   /// In en, this message translates to:
