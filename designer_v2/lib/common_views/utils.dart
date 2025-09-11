@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
@@ -57,5 +58,23 @@ Widget interventionPrefix(int rowIdx, ThemeData theme) {
       ),
       const SizedBox(width: 16.0),
     ],
+  );
+}
+
+Widget versionText({TextStyle? textStyle}) {
+  return FutureBuilder<PackageInfo>(
+    future: PackageInfo.fromPlatform(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Container();
+      }
+
+      final packageInfo = snapshot.data;
+
+      return SelectableText(
+        'Version ${packageInfo?.version} - ${packageInfo?.buildNumber}',
+        style: textStyle,
+      );
+    },
   );
 }
