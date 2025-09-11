@@ -24,7 +24,7 @@ class ChoiceQuestion extends Question<List<String>> {
   Map<String, dynamic> toJson() => _$ChoiceQuestionToJson(this);
 
   Answer<List<String>> constructAnswer(List<Choice> selected) =>
-      Answer.forQuestion(this, selected.map((choice) => choice.id).toList());
+      Answer.forQuestion(this, selected.map((choice) => choice.text).toList());
 }
 
 @JsonSerializable()
