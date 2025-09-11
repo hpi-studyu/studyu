@@ -34,24 +34,22 @@ class StudyExportData {
 extension StudyExportX on Study {
   // TODO: add missing records from generated schedule
 
-  static String _formatQuestionResponse(dynamic response, Question? question) {
+  static dynamic _formatQuestionResponse(dynamic response, Question? question) {
     if (question is ChoiceQuestion && response is List<String>) {
       return _formatChoiceResponse(response, question);
     }
     return response.toString();
   }
 
-  static String _formatChoiceResponse(
+  static List<Map<String, String>> _formatChoiceResponse(
     List<String> choiceIds,
     ChoiceQuestion question,
   ) {
-    final choiceObjects = choiceIds.map((id) {
+    return choiceIds.map((id) {
       final choice = question.choices.firstWhereOrNull((c) => c.id == id);
       final text = choice?.text ?? id;
-      return '{"id": "$id", "text": "$text"}';
+      return {'id': id, 'text': text};
     }).toList();
-
-    return '[${choiceObjects.join(', ')}]';
   }
 
   StudyExportData get exportData {
@@ -158,7 +156,7 @@ extension StudyExportX on Study {
             row[surveyAnsweredColumn] = true;
             for (final mediaIndex in mediaIndices) {
               if (mediaIndex == questionId) {
-                mediaData.add(responseValue);
+                mediaData.add(responseValue.toString());
               }
             }
           }
