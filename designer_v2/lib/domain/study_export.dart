@@ -41,13 +41,16 @@ extension StudyExportX on Study {
     return response.toString();
   }
 
-  static String _formatChoiceResponse(List<String> choiceIds, ChoiceQuestion question) {
+  static String _formatChoiceResponse(
+    List<String> choiceIds,
+    ChoiceQuestion question,
+  ) {
     final choiceObjects = choiceIds.map((id) {
       final choice = question.choices.firstWhereOrNull((c) => c.id == id);
       final text = choice?.text ?? id;
       return '{"id": "$id", "text": "$text"}';
     }).toList();
-    
+
     return '[${choiceObjects.join(', ')}]';
   }
 
