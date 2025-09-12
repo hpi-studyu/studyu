@@ -66,13 +66,17 @@ Widget versionText({TextStyle? textStyle}) {
     future: PackageInfo.fromPlatform(),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return Container();
+        return const SizedBox.shrink();
       }
 
       final packageInfo = snapshot.data;
 
+      if (packageInfo == null) {
+        return const SizedBox.shrink();
+      }
+
       return SelectableText(
-        'Version ${packageInfo?.version} - ${packageInfo?.buildNumber}',
+        'Version ${packageInfo.version} - ${packageInfo.buildNumber}',
         style: textStyle,
       );
     },
