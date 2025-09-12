@@ -109,6 +109,7 @@ class _DashboardScreenState extends State<DashboardScreen>
         // Removes back button. We currently keep navigation stack to make developing easier
         automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.dashboard),
+        forceMaterialTransparency: true,
         actions: [
           IconButton(
             tooltip: AppLocalizations.of(context)!.contact,
