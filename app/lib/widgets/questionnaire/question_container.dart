@@ -19,12 +19,14 @@ class QuestionContainer extends StatefulWidget {
   final Question question;
   final int index;
   final String? taskId;
+  final GlobalKey? containerKey;
 
   const QuestionContainer({
     required this.onDone,
     required this.question,
     required this.index,
     this.taskId,
+    this.containerKey,
     super.key,
   });
 
@@ -103,6 +105,7 @@ class _QuestionContainerState extends State<QuestionContainer>
     final questionBody = getQuestionBody(context);
 
     return Card(
+      key: widget.containerKey,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
         child: Column(

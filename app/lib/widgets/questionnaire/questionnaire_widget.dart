@@ -34,6 +34,7 @@ class QuestionnaireWidget extends StatefulWidget {
 
 class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   final List<QuestionContainer> shownQuestions = <QuestionContainer>[];
+  final List<GlobalKey> questionKeys = <GlobalKey>[];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final _scrollController = ScrollController();
 
@@ -43,9 +44,12 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       widget.onComplete?.call(result);
 
   void _addQuestionToList(Question question) {
+    final containerKey = GlobalKey();
+    questionKeys.add(containerKey);
     shownQuestions.add(
       QuestionContainer(
         key: UniqueKey(),
+        containerKey: containerKey,
         question: question,
         onDone: _onQuestionDone,
         index: shownQuestions.length,
@@ -123,6 +127,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       // Remove from the end to the one after resetIndex
       for (int i = shownQuestions.length - 1; i > resetIndex; i--) {
         final removedQuestion = shownQuestions.removeAt(i);
+        questionKeys.removeAt(i);
         _listKey.currentState?.removeItem(
           i,
           (context, animation) =>
@@ -156,6 +161,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       return;
     }
 
+    _processQuestionCompletion(answer, index);
+  }
+
+  void _processQuestionCompletion(Answer answer, int index) {
     bool questionWasInserted = false;
 
     // Check if the question that was answered is the last shown question.
@@ -183,51 +192,75 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       }
     }
 
-    // Only scroll if a new question was actually inserted
     if (questionWasInserted) {
-      _scrollToBottom();
+      _scrollToNewQuestion();
     }
   }
 
-  void _scrollToBottom() {
+  void _scrollToNewQuestion() {
     // Wait for the AnimatedList insertion animation to complete
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Use a longer delay to ensure the AnimatedList animation is complete
       Timer(const Duration(milliseconds: 400), () {
-        _performScrollWithRetry();
+        _performScrollToNewQuestion();
       });
     });
   }
 
-  void _performScrollWithRetry({int retryCount = 0}) {
-    if (!_scrollController.hasClients) return;
+  int _findNextInteractiveQuestionIndex() {
+    for (int i = 0; i < shownQuestions.length; i++) {
+      final questionId = shownQuestions[i].question.id;
+      if (!qs.answers.containsKey(questionId)) {
+        return i;
+      }
+    }
+    return shownQuestions.length - 1;
+  }
 
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.position.pixels;
+  void _performScrollToNewQuestion({int retryCount = 0}) {
+    if (!_scrollController.hasClients || questionKeys.isEmpty) return;
 
-    // If we're already at the bottom or very close, no need to scroll
-    if (maxScroll - currentScroll < 10) return;
+    final targetQuestionIndex = _findNextInteractiveQuestionIndex();
+    final targetQuestionKey = questionKeys[targetQuestionIndex];
+    final renderObject = targetQuestionKey.currentContext?.findRenderObject();
 
-    _scrollController
-        .animateTo(
-          maxScroll,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        )
-        .then((_) {
-          // Check if we actually reached the bottom after scrolling
-          if (retryCount < 2 && _scrollController.hasClients) {
-            final newMaxScroll = _scrollController.position.maxScrollExtent;
-            final newCurrentScroll = _scrollController.position.pixels;
+    if (renderObject is RenderBox) {
+      final scrollViewRenderObject =
+          _scrollController.position.context.storageContext.findRenderObject()
+              as RenderBox?;
 
-            // If there's still more content to scroll to, retry
-            if (newMaxScroll - newCurrentScroll > 10) {
-              Timer(const Duration(milliseconds: 100), () {
-                _performScrollWithRetry(retryCount: retryCount + 1);
-              });
-            }
-          }
-        });
+      if (scrollViewRenderObject != null) {
+        final questionPosition = renderObject.localToGlobal(
+          Offset.zero,
+          ancestor: scrollViewRenderObject,
+        );
+
+        final currentScrollPosition = _scrollController.position.pixels;
+        final targetScrollPosition =
+            currentScrollPosition + questionPosition.dy;
+
+        final maxScroll = _scrollController.position.maxScrollExtent;
+        final finalScrollPosition = targetScrollPosition.clamp(0.0, maxScroll);
+
+        _scrollController
+            .animateTo(
+              finalScrollPosition,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            )
+            .then((_) {
+              if (retryCount < 2 && _scrollController.hasClients) {
+                Timer(const Duration(milliseconds: 100), () {
+                  _performScrollToNewQuestion(retryCount: retryCount + 1);
+                });
+              }
+            });
+      }
+    } else if (retryCount < 3) {
+      Timer(const Duration(milliseconds: 100), () {
+        _performScrollToNewQuestion(retryCount: retryCount + 1);
+      });
+    }
   }
 
   @override

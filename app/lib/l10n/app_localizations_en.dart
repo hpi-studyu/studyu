@@ -1149,4 +1149,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get submit => 'Submit';
 }
