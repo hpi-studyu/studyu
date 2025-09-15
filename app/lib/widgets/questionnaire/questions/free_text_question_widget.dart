@@ -112,7 +112,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
               TextButton(
                 onPressed: _handleSkip,
                 child: Text(
-                  AppLocalizations.of(context)!.next,
+                  AppLocalizations.of(context)!.skip,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                   ),
