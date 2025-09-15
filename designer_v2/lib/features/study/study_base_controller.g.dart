@@ -7,7 +7,7 @@ part of 'study_base_controller.dart';
 // **************************************************************************
 
 String _$studyBaseControllerHash() =>
-    r'07ad929fddc43bbe9e369e03fe600ac8206eb71a';
+    r'459b9ed13b98fd028dda25984c1d5de13007a59c';
 
 /// Copied from Dart SDK
 class _SystemHash {
