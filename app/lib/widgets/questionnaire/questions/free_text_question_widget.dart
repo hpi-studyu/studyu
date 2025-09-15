@@ -71,11 +71,11 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           },
           validator: (value) {
             final minLength = question.lengthRange.first;
-            
+
             if (value!.isEmpty && minLength == 0) {
               return null;
             }
-            
+
             if (value.length < minLength) {
               return AppLocalizations.of(
                 context,
@@ -85,11 +85,11 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
                 context,
               )!.free_text_max_length_error(question.lengthRange.last);
             }
-            
+
             if (value.isEmpty && minLength == 0) {
               return null;
             }
-            
+
             switch (question.textType) {
               case FreeTextQuestionType.any:
                 return null;
