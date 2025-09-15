@@ -26,6 +26,7 @@ class StudyBaseController<T extends StudyControllerBaseState>
       currentUser: ref.watch(authRepositoryProvider).currentUser,
       studyWithMetadata: null,
     );
+    ref.onDispose(() => _studySubscription?.cancel());
     subscribeStudy(studyId);
     return state;
   }
