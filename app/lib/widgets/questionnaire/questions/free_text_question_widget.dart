@@ -70,15 +70,26 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             _hasInteracted = true;
           },
           validator: (value) {
-            if (value!.length < question.lengthRange.first) {
+            final minLength = question.lengthRange.first;
+            
+            if (value!.isEmpty && minLength == 0) {
+              return null;
+            }
+            
+            if (value.length < minLength) {
               return AppLocalizations.of(
                 context,
-              )!.free_text_min_length_error(question.lengthRange.first);
+              )!.free_text_min_length_error(minLength);
             } else if (value.length > question.lengthRange.last) {
               return AppLocalizations.of(
                 context,
               )!.free_text_max_length_error(question.lengthRange.last);
             }
+            
+            if (value.isEmpty && minLength == 0) {
+              return null;
+            }
+            
             switch (question.textType) {
               case FreeTextQuestionType.any:
                 return null;
