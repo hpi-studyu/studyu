@@ -2240,12 +2240,6 @@ abstract class AppLocalizations {
   /// **'OK'**
   String get ok;
 
-  /// No description provided for @skip.
-  ///
-  /// In en, this message translates to:
-  /// **'Skip'**
-  String get skip;
-
   /// No description provided for @submit.
   ///
   /// In en, this message translates to:
