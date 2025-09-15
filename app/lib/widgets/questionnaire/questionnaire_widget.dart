@@ -161,6 +161,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       return;
     }
 
+    _processQuestionCompletion(answer, index);
+  }
+
+  void _processQuestionCompletion(Answer answer, int index) {
     bool questionWasInserted = false;
 
     // Check if the question that was answered is the last shown question.
@@ -188,7 +192,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       }
     }
 
-    // Only scroll if a new question was actually inserted
     if (questionWasInserted) {
       _scrollToNewQuestion();
     }
@@ -204,11 +207,22 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     });
   }
 
+  int _findNextInteractiveQuestionIndex() {
+    for (int i = 0; i < shownQuestions.length; i++) {
+      final questionId = shownQuestions[i].question.id;
+      if (!qs.answers.containsKey(questionId)) {
+        return i;
+      }
+    }
+    return shownQuestions.length - 1;
+  }
+
   void _performScrollToNewQuestion({int retryCount = 0}) {
     if (!_scrollController.hasClients || questionKeys.isEmpty) return;
 
-    final lastQuestionKey = questionKeys.last;
-    final renderObject = lastQuestionKey.currentContext?.findRenderObject();
+    final targetQuestionIndex = _findNextInteractiveQuestionIndex();
+    final targetQuestionKey = questionKeys[targetQuestionIndex];
+    final renderObject = targetQuestionKey.currentContext?.findRenderObject();
 
     if (renderObject is RenderBox) {
       final scrollViewRenderObject =
