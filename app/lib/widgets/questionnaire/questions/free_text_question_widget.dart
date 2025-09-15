@@ -33,11 +33,19 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     super.dispose();
   }
 
-  void _handleAnswerChange(String value) {
-    if (_formFieldKey.currentState!.validate()) {
+  void _handleSubmit() {
+    final value = _textFieldController.text;
+
+    if (value.isEmpty && widget.question.lengthRange[0] == 0) {
       setState(() {
         widget.onDone!(widget.question.constructAnswer(value));
       });
+    } else {
+      if (_formFieldKey.currentState!.validate()) {
+        setState(() {
+          widget.onDone!(widget.question.constructAnswer(value));
+        });
+      }
     }
   }
 
@@ -45,10 +53,6 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     if (!_hasInteracted) {
       _hasInteracted = true;
     }
-  }
-
-  void _handleSkip() {
-    _handleAnswerChange("");
   }
 
   @override
@@ -64,7 +68,6 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           onTap: _handleInteraction,
           onChanged: (value) {
             _hasInteracted = true;
-            _handleAnswerChange(value);
           },
           validator: (value) {
             if (value!.length < question.lengthRange.first) {
@@ -104,23 +107,16 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             }
           },
         ),
-        if (question.lengthRange[0] == 0) ...[
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: _handleSkip,
-                child: Text(
-                  AppLocalizations.of(context)!.skip,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            OutlinedButton(
+              onPressed: _handleSubmit,
+              child: Text(AppLocalizations.of(context)!.submit),
+            ),
+          ],
+        ),
       ],
     );
   }
