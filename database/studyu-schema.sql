@@ -509,8 +509,8 @@ DECLARE
   old_value TEXT;
 BEGIN
 
-  -- The user 'postgres' should be able to update any record, e.g. when using Supabase Studio
-  IF CURRENT_USER = 'postgres' THEN
+  -- The user 'supabase_admin' should be able to update any record, e.g. when using Supabase Studio
+  IF CURRENT_USER = 'supabase_admin' THEN
     RETURN NEW;
   END IF;
 
