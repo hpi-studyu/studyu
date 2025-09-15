@@ -37,7 +37,8 @@ class FreeTextQuestionFormView extends ConsumerWidget {
               children: [
                 Expanded(
                   child: ReactiveTextField(
-                    formControl: formViewModel.freeTextLengthMin as FormControl<int>,
+                    formControl:
+                        formViewModel.freeTextLengthMin as FormControl<int>,
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly,
@@ -75,7 +76,8 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                 const SizedBox(width: 12.0),
                 Expanded(
                   child: ReactiveTextField(
-                    formControl: formViewModel.freeTextLengthMax as FormControl<int>,
+                    formControl:
+                        formViewModel.freeTextLengthMax as FormControl<int>,
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
                       FilteringTextInputFormatter.digitsOnly,
