@@ -55,7 +55,11 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
           (choice) => SelectableButton(
             selected: selected.contains(choice),
             onTap: () => tapped(choice),
-            child: Text(choice.text),
+            child: Text(
+              choice.text,
+              softWrap: true,
+              textAlign: TextAlign.center,
+            ),
           ),
         )
         .toList();

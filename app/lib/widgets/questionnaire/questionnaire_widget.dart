@@ -43,9 +43,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       widget.onComplete?.call(result);
 
   void _addQuestionToList(Question question) {
-    print(
-      'Inserting question with name: ${question.prompt} and id: ${question.id}',
-    );
     shownQuestions.add(
       QuestionContainer(
         key: UniqueKey(),
@@ -59,7 +56,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
   bool _isConditionalTarget(String questionIdToCheck) {
     bool hasExpressionTarget(String target, Expression expression) {
-      print('Checking if expression $expression targets question $target');
       if (expression is ValueExpression) {
         return expression.target == target;
       } else if (expression is NotExpression) {
@@ -77,9 +73,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
           ) +
           1,
     );
-    print(
-      'Questions that follow question $questionIdToCheck: ${followUpQuestions.map((q) => q.id)}',
-    );
     // Check if any of those questions has a conditional that targets the question that was just answered
     return followUpQuestions.any(
       (q) =>
@@ -93,13 +86,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   Question? _insertQuestion(int index) {
     // Find the next question in the list that should be shown.
     for (int i = index + 1; i < widget.questions.length; i++) {
-      print(
-        'Checking if question ${widget.questions[i].prompt} at index $i should be shown.',
-      );
       if (widget.questions[i].shouldBeShown(qs)) {
-        print(
-          'Inserting next question: ${widget.questions[i].prompt} at index $i',
-        );
         _addQuestionToList(widget.questions[i]);
         _listKey.currentState?.insertItem(shownQuestions.length - 1);
 
@@ -108,24 +95,15 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         // If the next question should not be shown, add default answer or skip it.
         final questionToSkip = widget.questions[i];
         if (questionToSkip.getDefaultAnswer() != null) {
-          print(
-            'Skipping question ${questionToSkip.prompt} at index $i, inserting default answer.',
-          );
           final defaultAnswer = questionToSkip.getDefaultAnswer()!;
           qs.answers[defaultAnswer.question] = defaultAnswer;
-        } else {
-          print(
-            'Skipping question ${questionToSkip.prompt} at index $i, no default answer available.',
-          );
-        }
+        } else {}
       }
     }
     return null;
   }
 
   void _resetQuestionnaireTo(String resetToQuestionId) {
-    print('Resetting questionnaire to question with id: $resetToQuestionId');
-
     // Remove all answers that were given after the resetToQuestionId
     qs.answers.removeWhere(
       (key, value) =>
@@ -136,7 +114,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
             widget.questions.firstWhere((q) => q.id == resetToQuestionId),
           ),
     );
-    print('Answers after reset: ${qs.answers.keys}');
 
     // Remove all shown questions that were added after the resetToQuestionId
     final resetIndex = shownQuestions.indexWhere(
@@ -153,70 +130,109 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         );
       }
     }
-    print(
-      'Shown questions after reset: ${shownQuestions.map((q) => q.question.id)}',
-    );
   }
 
   void _onQuestionDone(Answer answer, int index) {
     qs.answers[answer.question] = answer;
     final shouldContinue = widget.shouldContinue?.call(qs);
-    // Check if the last question was answered or if the questionnaire should not continue.
-    if (shouldContinue == false ||
-        widget.questions.last.id == answer.question) {
-      print(
-        'Questionnaire should not continue or the last question was answered.',
-      );
+
+    // Check if there are any more questions that should be shown
+    final currentQuestionIndex = widget.questions.indexWhere(
+      (q) => q.id == answer.question,
+    );
+    bool hasMoreQuestions = false;
+
+    // Look for any remaining questions that should be shown
+    for (int i = currentQuestionIndex + 1; i < widget.questions.length; i++) {
+      if (widget.questions[i].shouldBeShown(qs)) {
+        hasMoreQuestions = true;
+        break;
+      }
+    }
+
+    // Check if the questionnaire should not continue or if there are no more questions to show
+    if (shouldContinue == false || !hasMoreQuestions) {
       _finishQuestionnaire(qs);
       return;
     }
-    print('Question answered: ${answer.question} at index $index');
+
+    bool questionWasInserted = false;
+
     // Check if the question that was answered is the last shown question.
     if (answer.question == shownQuestions.last.question.id) {
-      print(
-        'The question answered id: ${answer.question} is the last shown question: ${shownQuestions.last.question.id}',
-      );
       // If the last question displayed was answered, we can try to insert the next question.
       // Index is incorrect if questions are skipped, use last shown question index instead
-      _insertQuestion(widget.questions.indexOf(shownQuestions.last.question));
+      final insertedQuestion = _insertQuestion(
+        widget.questions.indexOf(shownQuestions.last.question),
+      );
+      questionWasInserted = insertedQuestion != null;
     } else {
-      print('A previous question with id ${answer.question} was answered');
       // Check if there are questions whose visibility depend on the question that's answer was just edited.
       if (_isConditionalTarget(answer.question)) {
-        print(
-          "There are conditional questions that depend on the answered question.",
-        );
         _resetQuestionnaireTo(answer.question);
         // Try to insert the next question after the reset.
-        final insertedQuestion = _insertQuestion(index);
+        final answeredQuestionIndex = widget.questions.indexWhere(
+          (q) => q.id == answer.question,
+        );
+        final insertedQuestion = _insertQuestion(answeredQuestionIndex);
         if (insertedQuestion != null) {
           // If a question was inserted, the questionnaire is not finished yet.
           _finishQuestionnaire(null);
+          questionWasInserted = true;
         }
       }
     }
-    print("scrollController position: ${_scrollController.position}");
 
-    // Scroll to the newly added question.
-    // Delay scroll until after the next frame
+    // Only scroll if a new question was actually inserted
+    if (questionWasInserted) {
+      _scrollToBottom();
+    }
+  }
+
+  void _scrollToBottom() {
+    // Wait for the AnimatedList insertion animation to complete
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // todo non-optimal solution, but works for now
-      Timer(const Duration(milliseconds: 200), () {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
+      // Use a longer delay to ensure the AnimatedList animation is complete
+      Timer(const Duration(milliseconds: 400), () {
+        _performScrollWithRetry();
       });
     });
+  }
+
+  void _performScrollWithRetry({int retryCount = 0}) {
+    if (!_scrollController.hasClients) return;
+
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+
+    // If we're already at the bottom or very close, no need to scroll
+    if (maxScroll - currentScroll < 10) return;
+
+    _scrollController
+        .animateTo(
+          maxScroll,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        )
+        .then((_) {
+          // Check if we actually reached the bottom after scrolling
+          if (retryCount < 2 && _scrollController.hasClients) {
+            final newMaxScroll = _scrollController.position.maxScrollExtent;
+            final newCurrentScroll = _scrollController.position.pixels;
+
+            // If there's still more content to scroll to, retry
+            if (newMaxScroll - newCurrentScroll > 10) {
+              Timer(const Duration(milliseconds: 100), () {
+                _performScrollWithRetry(retryCount: retryCount + 1);
+              });
+            }
+          }
+        });
   }
 
   @override
   void initState() {
     super.initState();
-    print(
-      "Print all question prompts: ${widget.questions.map((q) => q.prompt)}",
-    );
     if (widget.questions.isNotEmpty) {
       _addQuestionToList(widget.questions.first);
     }
@@ -229,9 +245,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       controller: _scrollController,
       initialItemCount: shownQuestions.length,
       itemBuilder: (context, index, animation) {
-        print(
-          'shownQuestions length has following ids: ${shownQuestions.map((q) => q.question.id)} and index: $index',
-        );
         return Column(
           children: [
             // Header

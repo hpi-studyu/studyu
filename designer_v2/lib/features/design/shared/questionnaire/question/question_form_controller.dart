@@ -109,6 +109,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   void removeCondition(int index) =>
       conditionalProperties.removeCondition(index);
 
+  @override
+  void cleanupInvalidConditions() =>
+      conditionalProperties.cleanupInvalidConditions();
+
+  @override
+  void initializeDeferredConditions() =>
+      conditionalProperties.initializeDeferredConditions();
+
   // Initialize from existing data
   /*void _initializeConditions(QuestionConditional<bool>? initialCondition) {
     conditionsArray.clear();
@@ -384,7 +392,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
   }
 
   static const int kDefaultFreeTextMinLength = 0;
-  static const int kDefaultFreeTextMaxLength = 120;
+  static const int kDefaultFreeTextMaxLength = 1000;
 
   late final FormControl<RangeValues> freeTextLengthControl =
       CustomFormControl<RangeValues>(

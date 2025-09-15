@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/assets.dart';
 import 'package:studyu_designer_v2/common_views/icons.dart';
 import 'package:studyu_designer_v2/features/account/account_settings.dart';
@@ -20,6 +21,7 @@ class DrawerEntry {
     this.localizedHelpText,
     this.enabled = true,
   });
+
   final LocalizedStringResolver localizedTitle;
   final IconData? icon;
   final LocalizedStringResolver? localizedHelpText;
@@ -48,6 +50,7 @@ class GoRouterDrawerEntry extends DrawerEntry {
     required this.intent,
     this.onNavigated,
   });
+
   final RoutingIntent intent;
   final void Function()? onNavigated;
 
@@ -95,13 +98,21 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   List<DrawerEntry> get allEntries =>
       [...topEntries, ...bottomEntries].expand((e) => e).toList();
 
-  /// Index of the currently selected [[NavigationGoRouterEntry]]
+  /// Index of the currently selected navigation entry
   /// Defaults to -1 if none of the entries is currently selected
   int _selectedIdx = -1;
+
+  /// Flag to ensure router listener is only set up once
+  bool _routerListenerSetUp = false;
+
+  /// Router reference for cleanup in dispose
+  GoRouter? _router;
 
   @override
   void initState() {
     super.initState();
+
+    // Initialize navigation entries
     topEntries = [
       [
         GoRouterDrawerEntry(
@@ -131,6 +142,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
         ),
       ],
     ];
+
     bottomEntries = [
       [
         DrawerEntry(
@@ -159,7 +171,37 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    // Set up router listener to detect route changes
+    if (!_routerListenerSetUp) {
+      _router = ref.read(routerProvider);
+
+      // Listen to route information changes directly from the router
+      _router!.routeInformationProvider.addListener(_onRouteChanged);
+
+      _routerListenerSetUp = true;
+    }
+
+    // Update the selected route when dependencies change
     _updateSelectedRoute();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the route listener
+    if (_routerListenerSetUp && _router != null) {
+      _router!.routeInformationProvider.removeListener(_onRouteChanged);
+    }
+    super.dispose();
+  }
+
+  void _onRouteChanged() {
+    // Schedule update for next frame to ensure route change is complete
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _updateSelectedRoute();
+      }
+    });
   }
 
   void _updateSelectedRoute({int? hintEntryIdx}) {
@@ -169,19 +211,23 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
 
   int _getCurrentRouteIndex() {
     final currentRouteSettings = readCurrentRouteSettingsFrom(context);
+
     final idx = allEntries.indexWhere((e) {
       if (e is! GoRouterDrawerEntry) {
         return false;
       }
       return e.intent.matches(currentRouteSettings);
     });
+
     return idx;
   }
 
   void setSelectedIdx(int index) {
-    setState(() {
-      _selectedIdx = index;
-    });
+    if (_selectedIdx != index) {
+      setState(() {
+        _selectedIdx = index;
+      });
+    }
   }
 
   @override
@@ -222,8 +268,6 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   }
 
   Widget _buildLogo(BuildContext context) {
-    // final textTheme = Theme.of(context).textTheme;
-
     return Container(
       constraints: BoxConstraints(
         minHeight: widget.logoSectionMinHeight,
@@ -272,7 +316,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
       widgets.add(const Divider(height: 1));
       widgets.add(const SizedBox(height: 8));
     }
-    // Slice off the last section divider
+    // Remove the last section divider
     return widgets.sublist(0, widgets.length - 3);
   }
 
@@ -309,7 +353,7 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
             ? theme.iconTheme.color!.withValues(alpha: 0.75)
             : theme.iconTheme.color!.withValues(alpha: 0.3),
       ),
-      //hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
+      // hoverColor: theme.colorScheme.primaryContainer.withOpacity(0.3),
       title: Text(
         entry.title,
         style: isSelected ? const TextStyle(fontWeight: FontWeight.bold) : null,

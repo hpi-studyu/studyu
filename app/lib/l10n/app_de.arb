@@ -446,5 +446,13 @@
   "painTypePressure": "Druck",
   "painTypeTightness": "Engegefühl",
   "painTypeSoreness": "Wund",
-  "painTypeStiffness": "Steifheit"
+  "painTypeStiffness": "Steifheit",
+
+  "preview_mode": "Vorschau-Modus",
+  "preview_mode_active": "Vorschau-Modus aktiv",
+  "preview_mode_active_state": "Der Vorschau-Modus ist jetzt aktiv.",
+  "preview_mode_inactive_state": "Der Vorschau-Modus ist jetzt inaktiv.",
+  "preview_mode_description": "Sie befinden sich derzeit im Vorschau-Modus. Dies ermöglicht Ihnen:\n\n• Schneller Vorlauf durch Studientage mit der \"Nächster Tag\" Schaltfläche\n• Mehrfaches Abschließen von Aufgaben ohne Einschränkungen\n• Erleben des vollständigen Studienablaufs ohne Beeinflussung echter Daten\n\nWichtig: Ergebnisse und Daten aus dem Vorschau-Modus werden nicht gespeichert oder mit tatsächlichen Teilnehmerergebnissen aus laufenden Studien vermischt.",
+  "preview_mode_results_not_saved": "Ergebnisse werden zum Schutz der Studienintegrität nicht gespeichert.",
+  "ok": "OK"
 }

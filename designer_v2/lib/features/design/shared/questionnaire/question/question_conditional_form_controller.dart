@@ -23,6 +23,8 @@ abstract class IConditionalQuestionProperties {
   void addCondition({Expression? initialExpression});
   void updateCondition();
   void removeCondition(int index);
+  void cleanupInvalidConditions();
+  void initializeDeferredConditions();
 
   Stream<void> get conditionsValueChanges;
 }
@@ -124,10 +126,8 @@ class ConditionalQuestionFormViewModel extends FormViewModel
       updateCondition();
     }
 
-    print(
-      'Added condition, now have ${conditionFormViewModels.formViewModels.length} conditions',
-    );
-    print('Form array now has ${conditionsArray.controls.length} controls');
+    // print('Added condition, now have ${conditionFormViewModels.formViewModels.length} conditions',);
+    // print('Form array now has ${conditionsArray.controls.length} controls');
   }
 
   @override
@@ -150,7 +150,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   @override
   void updateCondition() {
     final composite = compositeExpression;
-    print('Updating condition with composite: ${composite?.toJson()}');
+    // print('Updating condition with composite: ${composite?.toJson()}');
 
     // Check if we have any conditions to save
     if (composite != null && composite.expressions.isNotEmpty) {
@@ -175,9 +175,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
           questionConditionalControl.value = conditional;
         }
 
-        print(
-          'Set questionConditionalControl.value: ${questionConditionalControl.value?.condition.toJson()}',
-        );
+        // print('Set questionConditionalControl.value: ${questionConditionalControl.value?.condition.toJson()}',);
       }
     } else {
       // No conditions, set to null
@@ -189,7 +187,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
         } else {
           questionConditionalControl.value = null;
         }
-        print('Set questionConditionalControl.value to null');
+        // print('Set questionConditionalControl.value to null');
       }
     }
 
@@ -243,7 +241,7 @@ class ConditionalQuestionFormViewModel extends FormViewModel
       _conditionsValueChangesSubscription = _conditionsValueChangesStream.listen((
         _,
       ) {
-        print('Condition value changed, updating condition');
+        // print('Condition value changed, updating condition');
         // First update the composite expression by building it from all form data
         updateCondition();
       });
@@ -286,8 +284,16 @@ class ConditionalQuestionFormViewModel extends FormViewModel
 
         conditionFormViewModels.reset(null);
 
-        for (final expression in compositeExpression.expressions) {
-          addCondition(initialExpression: expression);
+        if (ConditionRowFormViewModel.availableQuestions.isEmpty) {
+          _deferredExpressions = compositeExpression.expressions;
+        } else {
+          final validExpressions = _filterValidExpressions(
+            compositeExpression.expressions,
+          );
+
+          for (final expression in validExpressions) {
+            addCondition(initialExpression: expression);
+          }
         }
         // Synchronously update the condition after initialization to ensure
         // the parent control reflects the correct state
@@ -306,9 +312,80 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     }
   }
 
+  List<Expression>? _deferredExpressions;
+
+  @override
+  void initializeDeferredConditions() {
+    if (_deferredExpressions != null &&
+        ConditionRowFormViewModel.availableQuestions.isNotEmpty) {
+      _isUpdatingProgrammatically = true;
+      try {
+        conditionFormViewModels.reset(null);
+
+        final validExpressions = _filterValidExpressions(_deferredExpressions!);
+        for (final expression in validExpressions) {
+          addCondition(initialExpression: expression);
+        }
+
+        _deferredExpressions = null; // Clear deferred expressions
+        updateCondition();
+        _updateConditionsValueChangesStream();
+      } finally {
+        _isUpdatingProgrammatically = false;
+      }
+    }
+  }
+
+  List<Expression> _filterValidExpressions(List<Expression> expressions) {
+    final availableQuestionIds = ConditionRowFormViewModel.availableQuestions
+        .map((q) => q.id)
+        .toSet();
+
+    return expressions.where((expression) {
+      final questionId = _extractQuestionIdFromExpression(expression);
+      return questionId != null && availableQuestionIds.contains(questionId);
+    }).toList();
+  }
+
+  String? _extractQuestionIdFromExpression(Expression expression) {
+    if (expression is ValueExpression) {
+      return expression.target;
+    } else if (expression is NotExpression &&
+        expression.expression is ValueExpression) {
+      return (expression.expression as ValueExpression).target;
+    }
+    return null;
+  }
+
+  @override
+  void cleanupInvalidConditions() {
+    final availableQuestionIds = ConditionRowFormViewModel.availableQuestions
+        .map((q) => q.id)
+        .toSet();
+
+    final indicesToRemove = <int>[];
+
+    for (int i = 0; i < conditionFormViewModels.formViewModels.length; i++) {
+      final conditionVm = conditionFormViewModels.formViewModels[i];
+      final questionId = conditionVm.questionIdControl.value;
+
+      if (questionId == null || !availableQuestionIds.contains(questionId)) {
+        indicesToRemove.add(i);
+      }
+    }
+
+    for (int i = indicesToRemove.length - 1; i >= 0; i--) {
+      removeCondition(indicesToRemove[i]);
+    }
+
+    if (indicesToRemove.isNotEmpty) {
+      updateCondition();
+    }
+  }
+
   @override
   QuestionConditional buildFormData() {
-    print('Building QuestionConditional from form data');
+    // print('Building QuestionConditional from form data');
 
     final composite =
         compositeExpression ??

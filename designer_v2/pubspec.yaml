@@ -1,5 +1,5 @@
 name: studyu_designer_v2
-version: 1.12.0
+version: 1.13.0
 description: Implement digital N-of-1 studies seamlessly with the StudyU Health Designer
 publish_to: none
 homepage: https://studyu.health
@@ -29,6 +29,7 @@ dependencies:
   intl: ^0.20.2
   material_color_utilities: ^0.11.1 # integration_test
   material_design_icons_flutter: ^7.0.7296
+  package_info_plus: ^8.3.1
   pointer_interceptor: ^0.10.1+2
   reactive_color_picker: ^2.2.2
   reactive_forms: ^18.1.1

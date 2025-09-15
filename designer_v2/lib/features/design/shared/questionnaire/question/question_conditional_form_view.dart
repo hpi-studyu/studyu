@@ -19,7 +19,24 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     required this.allQuestions,
     super.key,
   }) {
-    ConditionRowFormViewModel.availableQuestions = availableQuestions;
+    final newAvailableQuestions = availableQuestions;
+    final oldAvailableQuestions = ConditionRowFormViewModel.availableQuestions;
+
+    ConditionRowFormViewModel.availableQuestions = newAvailableQuestions;
+
+    if (_hasQuestionsListChanged(
+      oldAvailableQuestions,
+      newAvailableQuestions,
+    )) {
+      formViewModel.cleanupInvalidConditions();
+      for (final conditionModel in formViewModel.conditionModels) {
+        conditionModel.refreshAvailableQuestions();
+      }
+    }
+
+    if (newAvailableQuestions.isNotEmpty) {
+      formViewModel.initializeDeferredConditions();
+    }
   }
 
   final IConditionalQuestionProperties formViewModel;
@@ -33,20 +50,25 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     return allQuestions.take(currentIndex).toList();
   }
 
+  bool _hasQuestionsListChanged(
+    List<Question> oldQuestions,
+    List<Question> newQuestions,
+  ) {
+    if (oldQuestions.length != newQuestions.length) {
+      return true;
+    }
+
+    final oldIds = oldQuestions.map((q) => q.id).toSet();
+    final newIds = newQuestions.map((q) => q.id).toSet();
+
+    return !oldIds.containsAll(newIds) || !newIds.containsAll(oldIds);
+  }
+
   @override
   Widget build(BuildContext context, FormGroup form) {
     final theme = Theme.of(context);
     return ReactiveFormConsumer(
       builder: (context, form, _) {
-        print(
-          'Building ConditionalQuestionFormView with ${formViewModel.compositeExpression?.toJson()}',
-        );
-        print(
-          'Current conditionsArray: ${formViewModel.conditionsArray.controls.length} controls',
-        );
-        print(
-          'Current questionConditionalControl value: ${formViewModel.questionConditionalControl.value?.condition.toJson()}',
-        );
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -253,7 +275,9 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.delete_forever),
-            onPressed: () => formViewModel.removeCondition(index),
+            onPressed: formViewModel.isReadonly
+                ? null
+                : () => formViewModel.removeCondition(index),
             tooltip: tr.action_delete,
           ),
         ],

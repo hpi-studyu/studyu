@@ -22,7 +22,7 @@ jobs:
 
         - name: Restore ignored files
           run: |
-            git checkout -- **/l10n-missing.txt
+            git checkout -- {l10n-missing.txt,**/l10n-missing.txt} 2>/dev/null || echo "No l10n-missing.txt files to restore"
 
         - name: Commit changes if any
           uses: stefanzweifel/git-auto-commit-action@v6

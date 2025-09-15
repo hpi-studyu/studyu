@@ -41,6 +41,17 @@ Future<void> main() async {
   final WidgetsBinding widgetsBinding =
       WidgetsFlutterBinding.ensureInitialized();
 
+  if (kIsWeb) {
+    FlutterError.onError = (FlutterErrorDetails details) {
+      if (details.exception is AssertionError &&
+          details.exception.toString().contains('_debugDuringDeviceUpdate')) {
+        debugPrint('Mouse tracker assertion suppressed: ${details.exception}');
+        return;
+      }
+      FlutterError.presentError(details);
+    };
+  }
+
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);

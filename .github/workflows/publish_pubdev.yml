@@ -8,9 +8,12 @@ name: Publish to Pub.dev
 
 on:
   push:
-    tags:
-      - 'studyu_core-v*'
-      - 'studyu_flutter_common-v*'
+    branches:
+      - main
+    # Uncomment the following lines to publish only when a tag matching the pattern is pushed
+    # tags:
+    #  - 'studyu_core-v*'
+    #  - 'studyu_flutter_common-v*'
   workflow_dispatch:
 
 concurrency:

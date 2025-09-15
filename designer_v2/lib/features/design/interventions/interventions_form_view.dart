@@ -72,7 +72,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                         hideLeadingTrailingWhenEmpty: true,
                         rowPrefix: (context, viewModel, rowIdx) =>
                             interventionPrefix(rowIdx, theme),
-                        reorderable: true,
+                        reorderable: !formViewModel.isReadonly,
                         onReorder: (oldIndex, newIndex) {
                           if (newIndex > oldIndex) {
                             newIndex -= 1;

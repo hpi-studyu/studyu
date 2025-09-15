@@ -196,7 +196,7 @@ FitbitCredentialsRepository fitbitCredentialsRepository(
   Ref ref,
   StudyID studyId,
 ) {
-  print("fitbitCredentialsRepositoryProvider($studyId");
+  // print("fitbitCredentialsRepositoryProvider($studyId");
   // Initialize repository for a given study
   final repository = FitbitCredentialsRepository(
     studyId: studyId,
@@ -207,7 +207,7 @@ FitbitCredentialsRepository fitbitCredentialsRepository(
   );
   // Bind lifecycle to Riverpod
   ref.onDispose(() {
-    print("fitbitCredentialsRepositoryProvider($studyId.DISPOSE");
+    // print("fitbitCredentialsRepositoryProvider($studyId.DISPOSE");
     repository.dispose();
   });
   return repository;

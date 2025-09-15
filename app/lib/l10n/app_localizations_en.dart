@@ -1126,4 +1126,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get painTypeStiffness => 'Stiffness';
+
+  @override
+  String get preview_mode => 'Preview Mode';
+
+  @override
+  String get preview_mode_active => 'Preview Mode Active';
+
+  @override
+  String get preview_mode_active_state => 'Preview mode is now active.';
+
+  @override
+  String get preview_mode_inactive_state => 'Preview mode is now inactive.';
+
+  @override
+  String get preview_mode_description =>
+      'You are currently in preview mode. This allows you to:\n\n• Fast-forward through study days using the \"Next Day\" button\n• Complete tasks multiple times without restrictions\n• Experience the full study flow without affecting real data\n\nImportant: Results and data from preview mode are not stored or mixed with actual participant results from running studies.';
+
+  @override
+  String get preview_mode_results_not_saved =>
+      'Task completed in preview mode - results are not saved to protect study data integrity.';
+
+  @override
+  String get ok => 'OK';
 }
