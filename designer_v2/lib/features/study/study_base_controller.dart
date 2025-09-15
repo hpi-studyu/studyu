@@ -43,6 +43,9 @@ class StudyBaseController<T extends StudyControllerBaseState>
   }
 
   void onStudySubscriptionUpdate(WrappedModel<Study> wrappedModel) {
+    print(
+      "onStudySubscriptionUpdate ${wrappedModel.model.id} with interventions: ${wrappedModel.model.interventions.length} and observations: ${wrappedModel.model.observations.length}",
+    );
     final studyId = wrappedModel.model.id;
     _redirectNewToActualStudyID(studyId);
     state = StudyControllerBaseState(
