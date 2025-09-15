@@ -1,3 +1,14 @@
+## 1.14.0
+
+ - **REFACTOR**: print empty version instead of null.
+ - **FIX**: refactor clamping logic for free text length inputs to use final variables.
+ - **FIX**: enhance free text length input handling with clamped values and improved layout.
+ - **FIX**: free_text_question could not be added.
+ - **FIX**: Increase max length for free text input to 1000.
+ - **FIX**: update question response formatting to return structured choice data.
+ - **FIX**: enhance question response formatting to include choice text.
+ - **FEAT**: add version to designer.
+
 ## 1.13.0
 
  - **FIX**: after study cloning redirect to clone directly.
