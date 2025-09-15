@@ -33,27 +33,43 @@ class FreeTextQuestionFormView extends ConsumerWidget {
           label: tr.free_text_range_label,
           labelHelpText: tr.free_text_range_label_helper,
           input: disableOnReadonly(
-            child: SliderTheme(
-              data: Theme.of(context).sliderTheme.copyWith(
-                rangeThumbShape: IndicatorRangeSliderThumbShape(
-                  context,
-                  minLength,
-                  maxLength,
-                ),
-                showValueIndicator: ShowValueIndicator.never,
-              ),
-              child: ReactiveRangeSlider<RangeValues>(
-                formControl: formViewModel.freeTextLengthControl,
-                min: QuestionFormViewModel.kDefaultFreeTextMinLength.toDouble(),
-                max: QuestionFormViewModel.kDefaultFreeTextMaxLength.toDouble(),
-                divisions:
-                    QuestionFormViewModel.kDefaultFreeTextMaxLength -
-                    QuestionFormViewModel.kDefaultFreeTextMinLength,
-                labelBuilder: (values) => RangeLabels(
-                  values.start.round().toString(),
-                  values.end.round().toString(),
-                ),
-              ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth <= 0) {
+                  return const SizedBox.shrink();
+                }
+                return Container(
+                  width: constraints.maxWidth,
+                  constraints: const BoxConstraints(
+                    minHeight: 60,
+                    maxHeight: 80,
+                  ),
+                  child: SliderTheme(
+                    data: Theme.of(context).sliderTheme.copyWith(
+                      rangeThumbShape: IndicatorRangeSliderThumbShape(
+                        context,
+                        minLength,
+                        maxLength,
+                      ),
+                      showValueIndicator: ShowValueIndicator.never,
+                    ),
+                    child: ReactiveRangeSlider<RangeValues>(
+                      formControl: formViewModel.freeTextLengthControl,
+                      min: QuestionFormViewModel.kDefaultFreeTextMinLength
+                          .toDouble(),
+                      max: QuestionFormViewModel.kDefaultFreeTextMaxLength
+                          .toDouble(),
+                      divisions:
+                          QuestionFormViewModel.kDefaultFreeTextMaxLength -
+                          QuestionFormViewModel.kDefaultFreeTextMinLength,
+                      labelBuilder: (values) => RangeLabels(
+                        values.start.round().toString(),
+                        values.end.round().toString(),
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ),
