@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:flutter/services.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/forms/form_control.dart';
-import 'package:studyu_designer_v2/utils/input_formatter.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
+import 'package:studyu_designer_v2/utils/input_formatter.dart';
 
 class FreeTextQuestionFormView extends ConsumerWidget {
   const FreeTextQuestionFormView({required this.formViewModel, super.key});
@@ -51,7 +51,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                       final currentMax = formViewModel.freeTextLengthMax.value;
                       if (min == null) return;
 
-                      var newMin = min.clamp(
+                      final newMin = min.clamp(
                         QuestionFormViewModel.kDefaultFreeTextMinLength,
                         QuestionFormViewModel.kDefaultFreeTextMaxLength,
                       );
@@ -89,7 +89,7 @@ class FreeTextQuestionFormView extends ConsumerWidget {
                       final currentMin = formViewModel.freeTextLengthMin.value;
                       if (max == null) return;
 
-                      var newMax = max.clamp(
+                      final newMax = max.clamp(
                         QuestionFormViewModel.kDefaultFreeTextMinLength,
                         QuestionFormViewModel.kDefaultFreeTextMaxLength,
                       );
