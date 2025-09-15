@@ -1,3 +1,12 @@
+## 2.11.1
+
+ - **FIX**: improve validation logic for free text input handling with minimum length checks.
+ - **FIX**: add submit button and update localization for free text question widget.
+ - **FIX**: add skip button text for free text question widget.
+ - **FIX**: improve free text question interaction and validation handling.
+ - **FIX**: implement smooth scrolling to newly added questions in questionnaire.
+ - **FIX**(app): disable color change of appbar on dashboard scrolling.
+
 ## 2.11.0
 
  - **FIX**: add preview mode active/inactive state messages.

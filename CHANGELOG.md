@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-09-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.11.1`](#studyu_app---v2111)
+ - [`studyu_designer_v2` - `v1.14.0`](#studyu_designer_v2---v1140)
+
+---
+
+#### `studyu_app` - `v2.11.1`
+
+ - **FIX**: improve validation logic for free text input handling with minimum length checks.
+ - **FIX**: add submit button and update localization for free text question widget.
+ - **FIX**: add skip button text for free text question widget.
+ - **FIX**: improve free text question interaction and validation handling.
+ - **FIX**: implement smooth scrolling to newly added questions in questionnaire.
+ - **FIX**(app): disable color change of appbar on dashboard scrolling.
+
+#### `studyu_designer_v2` - `v1.14.0`
+
+ - **REFACTOR**: print empty version instead of null.
+ - **FIX**: refactor clamping logic for free text length inputs to use final variables.
+ - **FIX**: enhance free text length input handling with clamped values and improved layout.
+ - **FIX**: free_text_question could not be added.
+ - **FIX**: Increase max length for free text input to 1000.
+ - **FIX**: update question response formatting to return structured choice data.
+ - **FIX**: enhance question response formatting to include choice text.
+ - **FEAT**: add version to designer.
+
+
 ## 2025-09-10
 
 ### Changes
