@@ -50,8 +50,7 @@ jobs:
             .
             ':!**l10n-missing.txt'
             ':!*.fvmrc'
-            'app_localizations_de.dart'
-            'app_localizations_en.dart'
+            ':!**/app_localizations_*.dart'
 
   test:
     runs-on: ubuntu-latest
