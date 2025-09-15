@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:reactive_range_slider/reactive_range_slider.dart';
+import 'package:flutter/services.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
-import 'package:studyu_designer_v2/common_views/range_slider.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/types/question_type.dart';
 import 'package:studyu_designer_v2/features/forms/form_control.dart';
+import 'package:studyu_designer_v2/utils/input_formatter.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
@@ -33,43 +33,84 @@ class FreeTextQuestionFormView extends ConsumerWidget {
           label: tr.free_text_range_label,
           labelHelpText: tr.free_text_range_label_helper,
           input: disableOnReadonly(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                if (constraints.maxWidth <= 0) {
-                  return const SizedBox.shrink();
-                }
-                return Container(
-                  width: constraints.maxWidth,
-                  constraints: const BoxConstraints(
-                    minHeight: 60,
-                    maxHeight: 80,
-                  ),
-                  child: SliderTheme(
-                    data: Theme.of(context).sliderTheme.copyWith(
-                      rangeThumbShape: IndicatorRangeSliderThumbShape(
-                        context,
-                        minLength,
-                        maxLength,
+            child: Row(
+              children: [
+                Expanded(
+                  child: ReactiveTextField(
+                    formControl: formViewModel.freeTextLengthMin as FormControl<int>,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                      NumericalRangeFormatter(
+                        min: QuestionFormViewModel.kDefaultFreeTextMinLength,
+                        max: QuestionFormViewModel.kDefaultFreeTextMaxLength,
                       ),
-                      showValueIndicator: ShowValueIndicator.never,
-                    ),
-                    child: ReactiveRangeSlider<RangeValues>(
-                      formControl: formViewModel.freeTextLengthControl,
-                      min: QuestionFormViewModel.kDefaultFreeTextMinLength
-                          .toDouble(),
-                      max: QuestionFormViewModel.kDefaultFreeTextMaxLength
-                          .toDouble(),
-                      divisions:
-                          QuestionFormViewModel.kDefaultFreeTextMaxLength -
-                          QuestionFormViewModel.kDefaultFreeTextMinLength,
-                      labelBuilder: (values) => RangeLabels(
-                        values.start.round().toString(),
-                        values.end.round().toString(),
-                      ),
-                    ),
+                    ],
+                    onChanged: (_) {
+                      final min = formViewModel.freeTextLengthMin.value;
+                      final currentMax = formViewModel.freeTextLengthMax.value;
+                      if (min == null) return;
+
+                      var newMin = min.clamp(
+                        QuestionFormViewModel.kDefaultFreeTextMinLength,
+                        QuestionFormViewModel.kDefaultFreeTextMaxLength,
+                      );
+                      var newMax = (currentMax ?? newMin).clamp(
+                        QuestionFormViewModel.kDefaultFreeTextMinLength,
+                        QuestionFormViewModel.kDefaultFreeTextMaxLength,
+                      );
+
+                      if (newMin > newMax) {
+                        newMax = newMin;
+                        formViewModel.freeTextLengthMax.value = newMax;
+                      }
+
+                      formViewModel.freeTextLengthControl.value = RangeValues(
+                        newMin.toDouble(),
+                        newMax.toDouble(),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+                const SizedBox(width: 12.0),
+                Expanded(
+                  child: ReactiveTextField(
+                    formControl: formViewModel.freeTextLengthMax as FormControl<int>,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly,
+                      NumericalRangeFormatter(
+                        min: QuestionFormViewModel.kDefaultFreeTextMinLength,
+                        max: QuestionFormViewModel.kDefaultFreeTextMaxLength,
+                      ),
+                    ],
+                    onChanged: (_) {
+                      final max = formViewModel.freeTextLengthMax.value;
+                      final currentMin = formViewModel.freeTextLengthMin.value;
+                      if (max == null) return;
+
+                      var newMax = max.clamp(
+                        QuestionFormViewModel.kDefaultFreeTextMinLength,
+                        QuestionFormViewModel.kDefaultFreeTextMaxLength,
+                      );
+                      var newMin = (currentMin ?? newMax).clamp(
+                        QuestionFormViewModel.kDefaultFreeTextMinLength,
+                        QuestionFormViewModel.kDefaultFreeTextMaxLength,
+                      );
+
+                      if (newMax < newMin) {
+                        newMin = newMax;
+                        formViewModel.freeTextLengthMin.value = newMin;
+                      }
+
+                      formViewModel.freeTextLengthControl.value = RangeValues(
+                        newMin.toDouble(),
+                        newMax.toDouble(),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ),
