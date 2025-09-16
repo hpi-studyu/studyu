@@ -42,7 +42,7 @@ class StudyBaseController<T extends StudyControllerBaseState>
     final studyRepository = state.studyRepository;
     final existingStudy = studyRepository.get(studyId);
     if (existingStudy != null) {
-      studyRepository.remove(studyId);
+      studyRepository.markForRefresh(studyId);
     }
 
     _studySubscription = studyRepository

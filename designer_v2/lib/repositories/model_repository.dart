@@ -24,6 +24,7 @@ class WrappedModel<T> {
 
   AsyncValue<T> asyncValue = AsyncValue<T>.loading();
 
+  bool isMarkedForRefresh = false;
   bool isLocalOnly = true;
   bool isDirty = false;
   bool isDeleted = false;
@@ -167,8 +168,10 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       final model = await delegate.fetch(modelId);
       wrappedModel = upsertLocally(model);
       wrappedModel.markAsFetched();
+      wrappedModel.isMarkedForRefresh = false; // Clear the refresh flag
       emitModelEvent(IsFetched(modelId, model));
     } catch (e, stackTrace) {
+      print("Error fetching model $modelId: $e with $stackTrace");
       // Associate error with existing object if possible, otherwise bubble up
       if (existingWrappedModel != null) {
         existingWrappedModel.markWithError(e);
@@ -305,11 +308,22 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     } else {
       // Subscribe to existing model (may not be fetched yet)
       wrappedModel = get(modelId, strict: !fetchOnSubscribe);
+      if (wrappedModel?.isMarkedForRefresh ?? false) {
+        print("Model $modelId marked for refresh, refetching");
+        wrappedModel = null; // force refetch
+        //wrappedModel!.markAsLoading();
+        //_allModels.remove(modelId);
+        // emitUpdate();
+      }
     }
 
     WrappedModel<T>? selectModel(List<WrappedModel<T>> event) {
       for (final wrappedModel in event) {
         if (getKey(wrappedModel.model) == modelId) {
+          if (wrappedModel.isMarkedForRefresh) {
+            print("Model $modelId marked for refresh, refetching");
+            return null; // force refetch
+          }
           return wrappedModel;
         }
       }
@@ -324,14 +338,21 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     );
 
     if (fetchOnSubscribe) {
-      if (!(wrappedModel != null && wrappedModel.isLocalOnly)) {
+      if (!(wrappedModel != null && wrappedModel.isLocalOnly) ||
+          wrappedModel.isMarkedForRefresh) {
+        print("Fetching model $modelId on subscribe");
         fetch(modelId).catchError((Object e) {
           if (!modelController.isClosed) {
             modelController.addError(e);
           }
+          print("Error fetching model $modelId: $e");
           return e as WrappedModel<T>;
         });
       }
+    }
+    print("return modelController for model $modelId");
+    if (wrappedModel?.isMarkedForRefresh ?? false) {
+      wrappedModel?.isMarkedForRefresh = false;
     }
     return modelController;
   }
@@ -413,6 +434,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   WrappedModel<T> upsertLocally(T newModel, {bool emitUpdate = false}) {
     final newModelId = getKey(newModel);
     if (_allModels.containsKey(newModelId)) {
+      // print("Upserting existing model $newModelId locally");
       // Model already exists, replace with the new object
       final wrapped = _allModels[newModelId]!;
       wrapped.model = newModel;
@@ -467,15 +489,11 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     delegate.onError(e, stackTrace);
   }
 
-  /// Remove a specific model from cache and close its stream controller
-  void remove(ModelID modelId) {
-    _allModels.remove(modelId);
-    // Close and remove the specific stream controller for this model
-    final controller = modelStreamControllers.remove(modelId);
-    controller?.close();
-    final eventController = modelEventsStreamControllers.remove(modelId);
-    eventController?.close();
-    emitUpdate();
+  void markForRefresh(ModelID modelId) {
+    final wrappedModel = get(modelId);
+    if (wrappedModel != null) {
+      wrappedModel.isMarkedForRefresh = true;
+    }
   }
 
   @override
