@@ -191,7 +191,6 @@ class StudyFormViewModel extends FormViewModel<Study>
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 @riverpod
 StudyFormViewModel studyFormViewModel(Ref ref, StudyID studyId) {
-  // print("studyFormViewModel");
   final state = ref.watch(studyControllerProvider(studyId));
   return StudyFormViewModel(
     router: ref.watch(routerProvider),
