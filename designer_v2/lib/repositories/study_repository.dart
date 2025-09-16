@@ -111,13 +111,12 @@ class StudyRepository extends ModelRepository<Study>
   /// Since the Study object in the dashboard is fetched with limited columns (no intervention or measurement data),
   /// we need to fetch the full columns in order to duplicate it correctly.
   @override
-  Future<Study> duplicateAndSave(Study model) async {
+  Future<void> duplicateAndSave(Study model) async {
     final Study completeModel = await apiClient.fetchStudy(model.id);
     final duplicate = completeModel.duplicateAsDraft(
       authRepository.currentUser!.id,
     );
     await save(duplicate);
-    return duplicate;
   }
 
   @override
@@ -177,10 +176,10 @@ class StudyRepository extends ModelRepository<Study>
         type: StudyActionType.duplicateDraft,
         label: StudyActionType.duplicateDraft.string,
         onExecute: () async {
-          final duplicatedStudy = await duplicateAndSave(model);
-          return ref
-              .read(routerProvider)
-              .dispatch(RoutingIntents.studyEdit(duplicatedStudy.id));
+          return await duplicateAndSave(model).then(
+            (value) =>
+                ref.read(routerProvider).dispatch(RoutingIntents.studies),
+          );
         },
         isAvailable:
             model.status != StudyStatus.draft && model.canCopy(currentUser),
@@ -189,10 +188,10 @@ class StudyRepository extends ModelRepository<Study>
         type: StudyActionType.duplicate,
         label: StudyActionType.duplicate.string,
         onExecute: () async {
-          final duplicatedStudy = await duplicateAndSave(model);
-          return ref
-              .read(routerProvider)
-              .dispatch(RoutingIntents.studyEdit(duplicatedStudy.id));
+          return await duplicateAndSave(model).then(
+            (value) =>
+                ref.read(routerProvider).dispatch(RoutingIntents.studies),
+          );
         },
         isAvailable:
             model.status == StudyStatus.draft && model.canCopy(currentUser),
