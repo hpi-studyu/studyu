@@ -260,21 +260,11 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
 
   @override
   Future<Study> fetch(ModelID modelId) {
-    apiClient
-        .fetchStudy(modelId)
-        .then(
-          (value) => print(
-            "FETCHED STUDY $modelId with interventions: ${value.interventions.length} and observations: ${value.observations.length}",
-          ),
-        );
     return apiClient.fetchStudy(modelId);
   }
 
   @override
   Future<Study> save(Study model) {
-    print(
-      "SAVING STUDY ${model.id} with interventions: ${model.interventions.length} and observations: ${model.observations.length}",
-    );
     return apiClient.saveStudy(model);
   }
 
