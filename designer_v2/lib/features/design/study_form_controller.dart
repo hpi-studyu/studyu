@@ -118,6 +118,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     'enrollment': enrollmentFormViewModel.form,
     'measurements': measurementsFormViewModel.form,
     'interventions': interventionsFormViewModel.form,
+    'reports': reportsFormViewModel.form,
     'fitbit': fitbitCredentialsFormViewModel.form,
   });
 
@@ -145,6 +146,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     enrollmentFormViewModel.buildFormData().apply(studyCopy);
     measurementsFormViewModel.buildFormData().apply(studyCopy);
     interventionsFormViewModel.buildFormData().apply(studyCopy);
+    reportsFormViewModel.buildFormData().apply(studyCopy);
     return studyCopy;
   }
 
@@ -157,6 +159,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     enrollmentFormViewModel.dispose();
     interventionsFormViewModel.dispose();
     measurementsFormViewModel.dispose();
+    reportsFormViewModel.dispose();
     super.dispose();
   }
 
