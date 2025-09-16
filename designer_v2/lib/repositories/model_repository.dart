@@ -467,6 +467,17 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     delegate.onError(e, stackTrace);
   }
 
+  /// Remove a specific model from cache and close its stream controller
+  void remove(ModelID modelId) {
+    _allModels.remove(modelId);
+    // Close and remove the specific stream controller for this model
+    final controller = modelStreamControllers.remove(modelId);
+    controller?.close();
+    final eventController = modelEventsStreamControllers.remove(modelId);
+    eventController?.close();
+    emitUpdate();
+  }
+
   @override
   void dispose() {
     _allModelsStreamController.close();

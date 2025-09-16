@@ -37,8 +37,16 @@ class StudyBaseController<T extends StudyControllerBaseState>
     if (_studySubscription != null) {
       _studySubscription!.cancel();
     }
-    _studySubscription = state.studyRepository
-        .watch(studyId)
+
+    // Force fresh fetch by removing from cache before subscribing
+    final studyRepository = state.studyRepository;
+    final existingStudy = studyRepository.get(studyId);
+    if (existingStudy != null) {
+      studyRepository.remove(studyId);
+    }
+
+    _studySubscription = studyRepository
+        .watch(studyId, fetchOnSubscribe: true)
         .listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
   }
 
