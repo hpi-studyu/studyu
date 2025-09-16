@@ -275,7 +275,6 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     // Note: we don't use Stream.fromFuture here because it automatically
     // closes the stream when the future resolves
     if (fetchOnSubscribe) {
-      print("Fetching all models of type $T");
       fetchAll();
     }
     return _allModelsStreamController;
