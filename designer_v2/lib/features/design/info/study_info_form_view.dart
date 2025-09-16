@@ -31,6 +31,8 @@ class StudyDesignInfoFormView extends StudyDesignPageWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Text("Interventions: ${study.interventions.length}"),
+              Text("Observations: ${study.observations.length}"),
               TextParagraph(text: tr.form_study_design_info_description),
               const SizedBox(height: 24.0),
               FormTableLayout(
