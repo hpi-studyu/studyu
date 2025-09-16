@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:studyu_designer_v2/assets.dart';
 import 'package:studyu_designer_v2/common_views/icons.dart';
 import 'package:studyu_designer_v2/features/account/account_settings.dart';
@@ -104,6 +105,9 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   /// Flag to ensure router listener is only set up once
   bool _routerListenerSetUp = false;
 
+  /// Router reference for cleanup in dispose
+  GoRouter? _router;
+
   @override
   void initState() {
     super.initState();
@@ -170,10 +174,10 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
 
     // Set up router listener to detect route changes
     if (!_routerListenerSetUp) {
-      final router = ref.read(routerProvider);
+      _router = ref.read(routerProvider);
 
       // Listen to route information changes directly from the router
-      router.routeInformationProvider.addListener(_onRouteChanged);
+      _router!.routeInformationProvider.addListener(_onRouteChanged);
 
       _routerListenerSetUp = true;
     }
@@ -185,9 +189,8 @@ class _AppDrawerState extends ConsumerState<AppDrawer> {
   @override
   void dispose() {
     // Clean up the route listener
-    if (_routerListenerSetUp) {
-      final router = ref.read(routerProvider);
-      router.routeInformationProvider.removeListener(_onRouteChanged);
+    if (_routerListenerSetUp && _router != null) {
+      _router!.routeInformationProvider.removeListener(_onRouteChanged);
     }
     super.dispose();
   }
