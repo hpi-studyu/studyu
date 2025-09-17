@@ -290,7 +290,8 @@ List<Widget> _getThompsonSamplingControls(
     // todo localize
     const Text("Deciding metric"),
     DropdownButtonFormField<String>(
-      value: (segmentControl.control('observationId').value as String).isEmpty
+      initialValue:
+          (segmentControl.control('observationId').value as String).isEmpty
           ? null
           : (segmentControl.control('observationId').value as String),
       items: formViewModel.observations
@@ -313,7 +314,8 @@ List<Widget> _getThompsonSamplingControls(
     ),
     // for the observation list all questions
     DropdownButtonFormField<String>(
-      value: (segmentControl.control('observationId').value as String).isEmpty
+      initialValue:
+          (segmentControl.control('observationId').value as String).isEmpty
           ? null
           : (segmentControl.control('observationId').value as String),
       items: formViewModel.observations
