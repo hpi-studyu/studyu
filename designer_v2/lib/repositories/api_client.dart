@@ -11,24 +11,46 @@ part 'api_client.g.dart';
 
 abstract class StudyUApi {
   Future<Study> saveStudy(Study study);
+
   Future<Study> fetchStudy(StudyID studyId);
-  Future<List<Study>> getUserStudies();
+
+  Future<List<Study>> getUserStudies({
+    bool withParticipantActivity = false,
+    bool forDashboardDisplay = true,
+  });
+
   Future<void> deleteStudy(Study study);
+
   Future<StudyInvite> saveStudyInvite(StudyInvite invite);
+
   Future<StudyInvite> fetchStudyInvite(String code);
+
   Future<Study> fetchStudyFromInvite(String code);
+
   Future<void> deleteStudyInvite(StudyInvite invite);
+
   Future<List<StudySubject>> deleteParticipants(
     Study study,
     List<StudySubject> participants,
   );
+
   /*
   Future<List<SubjectProgress>> deleteStudyProgress(
       Study study, List<SubjectProgress> records);
    */
   Future<AppConfig> fetchAppConfig();
+
   Future<StudyUUser> fetchUser(String userId);
+
   Future<StudyUUser> saveUser(StudyUUser user);
+
+  Future<StudyFitbitCredentials> saveStudyFitbitCredentials(
+    StudyFitbitCredentials credentials,
+  );
+
+  Future<StudyFitbitCredentials> fetchStudyFitbitCredentials(StudyID studyId);
+
+  Future<void> deleteStudyFitbitCredentials(StudyFitbitCredentials credentials);
 }
 
 typedef SupabaseQueryExceptionHandler = void Function(SupabaseQueryError error);
@@ -76,6 +98,7 @@ class StudyUApiClient extends SupabaseClientDependant
     '*',
     'repo(*)',
     'study_invite!study_invite_studyId_fkey(*)',
+    'study_fitbit_credentials!study_fitbit_credentials_studyId_fkey(*)',
     'study_participant_count',
     'study_ended_count',
     'active_subject_count',
@@ -261,6 +284,39 @@ class StudyUApiClient extends SupabaseClientDependant
     await _testDelay();
     final request = user.save();
     return _awaitGuarded<StudyUUser>(request);
+  }
+
+  @override
+  Future<StudyFitbitCredentials> saveStudyFitbitCredentials(
+    StudyFitbitCredentials credentials,
+  ) async {
+    await _testDelay();
+    final request = credentials.save();
+    return _awaitGuarded<StudyFitbitCredentials>(request);
+  }
+
+  @override
+  Future<StudyFitbitCredentials> fetchStudyFitbitCredentials(
+    StudyID studyId,
+  ) async {
+    await _testDelay();
+    final request = getById<StudyFitbitCredentials>(studyId);
+    return _awaitGuarded(
+      request,
+      onError: {
+        PostgrestErrorCodes.isNotSingleItem: (e) =>
+            throw StudyNotFoundException(),
+      },
+    );
+  }
+
+  @override
+  Future<void> deleteStudyFitbitCredentials(
+    StudyFitbitCredentials credentials,
+  ) async {
+    await _testDelay();
+    final request = credentials.delete();
+    return _awaitGuarded<void>(request);
   }
 
   /// Helper that tries to complete the given Supabase query [future] while

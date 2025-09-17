@@ -842,6 +842,12 @@ abstract class AppLocalizations {
   /// **'Report history'**
   String get report_history;
 
+  /// No description provided for @no_reports_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No reports defined yet'**
+  String get no_reports_found;
+
   /// No description provided for @current_power_level.
   ///
   /// In en, this message translates to:
@@ -1441,6 +1447,804 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.'**
   String get support_email_sent_description;
+
+  /// No description provided for @sync_fitbit_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Sync Fitbit Data'**
+  String get sync_fitbit_data;
+
+  /// No description provided for @fitbit_data_synced.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit data synced successfully'**
+  String get fitbit_data_synced;
+
+  /// No description provided for @fitbit_data_not_synced.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.'**
+  String get fitbit_data_not_synced;
+
+  /// No description provided for @error_syncing_fitbit_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Error syncing Fitbit data: {error}'**
+  String error_syncing_fitbit_data(String error);
+
+  /// No description provided for @fitbit_data_synced_dialog_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Fitbit Data Synced'**
+  String get fitbit_data_synced_dialog_title;
+
+  /// No description provided for @fitbit_data_synced_info.
+  ///
+  /// In en, this message translates to:
+  /// **'Data was synced for the following data types:'**
+  String get fitbit_data_synced_info;
+
+  /// No description provided for @fitbit_data_earliest_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Earliest date: {date}'**
+  String fitbit_data_earliest_date(String date);
+
+  /// No description provided for @fitbit_data_latest_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest date: {date}'**
+  String fitbit_data_latest_date(String date);
+
+  /// No description provided for @fitbit_data_details_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get fitbit_data_details_btn;
+
+  /// No description provided for @fitbit_data_close_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get fitbit_data_close_btn;
+
+  /// No description provided for @painIndicatorText.
+  ///
+  /// In en, this message translates to:
+  /// **'Pain Level'**
+  String get painIndicatorText;
+
+  /// No description provided for @dialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Pain Level'**
+  String get dialogTitle;
+
+  /// No description provided for @okButton.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get okButton;
+
+  /// No description provided for @cancelButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelButton;
+
+  /// No description provided for @painLevel_0.
+  ///
+  /// In en, this message translates to:
+  /// **'No pain'**
+  String get painLevel_0;
+
+  /// No description provided for @painLevel_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Hurts a little bit'**
+  String get painLevel_2;
+
+  /// No description provided for @painLevel_4.
+  ///
+  /// In en, this message translates to:
+  /// **'Hurts a little more'**
+  String get painLevel_4;
+
+  /// No description provided for @painLevel_6.
+  ///
+  /// In en, this message translates to:
+  /// **'Hurts even more'**
+  String get painLevel_6;
+
+  /// No description provided for @painLevel_8.
+  ///
+  /// In en, this message translates to:
+  /// **'Hurts a whole lot'**
+  String get painLevel_8;
+
+  /// No description provided for @painLevel_10.
+  ///
+  /// In en, this message translates to:
+  /// **'Worst pain possible'**
+  String get painLevel_10;
+
+  /// No description provided for @body_head.
+  ///
+  /// In en, this message translates to:
+  /// **'Head'**
+  String get body_head;
+
+  /// No description provided for @body_head_front.
+  ///
+  /// In en, this message translates to:
+  /// **'Head (Front)'**
+  String get body_head_front;
+
+  /// No description provided for @body_face.
+  ///
+  /// In en, this message translates to:
+  /// **'Face'**
+  String get body_face;
+
+  /// No description provided for @body_forehead.
+  ///
+  /// In en, this message translates to:
+  /// **'Forehead'**
+  String get body_forehead;
+
+  /// No description provided for @body_eyes.
+  ///
+  /// In en, this message translates to:
+  /// **'Eyes'**
+  String get body_eyes;
+
+  /// No description provided for @body_nose.
+  ///
+  /// In en, this message translates to:
+  /// **'Nose'**
+  String get body_nose;
+
+  /// No description provided for @body_mouth.
+  ///
+  /// In en, this message translates to:
+  /// **'Mouth'**
+  String get body_mouth;
+
+  /// No description provided for @body_head_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Head (Back)'**
+  String get body_head_back;
+
+  /// No description provided for @body_inner_ear_balance.
+  ///
+  /// In en, this message translates to:
+  /// **'Inner Ear / Balance'**
+  String get body_inner_ear_balance;
+
+  /// No description provided for @body_neck.
+  ///
+  /// In en, this message translates to:
+  /// **'Neck'**
+  String get body_neck;
+
+  /// No description provided for @body_neck_front.
+  ///
+  /// In en, this message translates to:
+  /// **'Neck (Front)'**
+  String get body_neck_front;
+
+  /// No description provided for @body_neck_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Neck (Back)'**
+  String get body_neck_back;
+
+  /// No description provided for @body_torso.
+  ///
+  /// In en, this message translates to:
+  /// **'Torso'**
+  String get body_torso;
+
+  /// No description provided for @body_chest.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get body_chest;
+
+  /// No description provided for @body_left_chest.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Chest'**
+  String get body_left_chest;
+
+  /// No description provided for @body_right_chest.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Chest'**
+  String get body_right_chest;
+
+  /// No description provided for @body_breastbone.
+  ///
+  /// In en, this message translates to:
+  /// **'Breastbone'**
+  String get body_breastbone;
+
+  /// No description provided for @body_upper_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Upper Back'**
+  String get body_upper_back;
+
+  /// No description provided for @body_left_shoulder_blade.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Shoulder Blade'**
+  String get body_left_shoulder_blade;
+
+  /// No description provided for @body_right_shoulder_blade.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Shoulder Blade'**
+  String get body_right_shoulder_blade;
+
+  /// No description provided for @body_spine_upper_middle.
+  ///
+  /// In en, this message translates to:
+  /// **'Spine (Upper/Middle)'**
+  String get body_spine_upper_middle;
+
+  /// No description provided for @body_abdomen.
+  ///
+  /// In en, this message translates to:
+  /// **'Abdomen'**
+  String get body_abdomen;
+
+  /// No description provided for @body_upper_abdomen.
+  ///
+  /// In en, this message translates to:
+  /// **'Upper Abdomen'**
+  String get body_upper_abdomen;
+
+  /// No description provided for @body_lower_abdomen.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower Abdomen'**
+  String get body_lower_abdomen;
+
+  /// No description provided for @body_left_side_abdomen.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Side (Abdomen)'**
+  String get body_left_side_abdomen;
+
+  /// No description provided for @body_right_side_abdomen.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Side (Abdomen)'**
+  String get body_right_side_abdomen;
+
+  /// No description provided for @body_lower_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower Back'**
+  String get body_lower_back;
+
+  /// No description provided for @body_spine_lower.
+  ///
+  /// In en, this message translates to:
+  /// **'Spine (Lower)'**
+  String get body_spine_lower;
+
+  /// No description provided for @body_left_flank.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Flank (Side)'**
+  String get body_left_flank;
+
+  /// No description provided for @body_right_flank.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Flank (Side)'**
+  String get body_right_flank;
+
+  /// No description provided for @body_arms.
+  ///
+  /// In en, this message translates to:
+  /// **'Arms'**
+  String get body_arms;
+
+  /// No description provided for @body_left_arm.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Arm'**
+  String get body_left_arm;
+
+  /// No description provided for @body_left_shoulder.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Shoulder'**
+  String get body_left_shoulder;
+
+  /// No description provided for @body_left_upper_arm.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Upper Arm'**
+  String get body_left_upper_arm;
+
+  /// No description provided for @body_left_bicep.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Bicep'**
+  String get body_left_bicep;
+
+  /// No description provided for @body_left_tricep.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Tricep'**
+  String get body_left_tricep;
+
+  /// No description provided for @body_left_elbow.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Elbow'**
+  String get body_left_elbow;
+
+  /// No description provided for @body_left_lower_arm.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Lower Arm'**
+  String get body_left_lower_arm;
+
+  /// No description provided for @body_left_forearm.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Forearm'**
+  String get body_left_forearm;
+
+  /// No description provided for @body_left_wrist.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Wrist'**
+  String get body_left_wrist;
+
+  /// No description provided for @body_left_hand.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Hand'**
+  String get body_left_hand;
+
+  /// No description provided for @body_left_palm.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Palm'**
+  String get body_left_palm;
+
+  /// No description provided for @body_left_fingers.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Fingers'**
+  String get body_left_fingers;
+
+  /// No description provided for @body_right_arm.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Arm'**
+  String get body_right_arm;
+
+  /// No description provided for @body_right_shoulder.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Shoulder'**
+  String get body_right_shoulder;
+
+  /// No description provided for @body_right_upper_arm.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Upper Arm'**
+  String get body_right_upper_arm;
+
+  /// No description provided for @body_right_bicep.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Bicep'**
+  String get body_right_bicep;
+
+  /// No description provided for @body_right_tricep.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Tricep'**
+  String get body_right_tricep;
+
+  /// No description provided for @body_right_elbow.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Elbow'**
+  String get body_right_elbow;
+
+  /// No description provided for @body_right_lower_arm.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Lower Arm'**
+  String get body_right_lower_arm;
+
+  /// No description provided for @body_right_forearm.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Forearm'**
+  String get body_right_forearm;
+
+  /// No description provided for @body_right_wrist.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Wrist'**
+  String get body_right_wrist;
+
+  /// No description provided for @body_right_hand.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Hand'**
+  String get body_right_hand;
+
+  /// No description provided for @body_right_palm.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Palm'**
+  String get body_right_palm;
+
+  /// No description provided for @body_right_fingers.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Fingers'**
+  String get body_right_fingers;
+
+  /// No description provided for @body_lower_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower Body'**
+  String get body_lower_body;
+
+  /// No description provided for @body_pelvis.
+  ///
+  /// In en, this message translates to:
+  /// **'Pelvis'**
+  String get body_pelvis;
+
+  /// No description provided for @body_groin.
+  ///
+  /// In en, this message translates to:
+  /// **'Groin'**
+  String get body_groin;
+
+  /// No description provided for @body_hips.
+  ///
+  /// In en, this message translates to:
+  /// **'Hips'**
+  String get body_hips;
+
+  /// No description provided for @body_buttocks.
+  ///
+  /// In en, this message translates to:
+  /// **'Buttocks'**
+  String get body_buttocks;
+
+  /// No description provided for @body_legs.
+  ///
+  /// In en, this message translates to:
+  /// **'Legs'**
+  String get body_legs;
+
+  /// No description provided for @body_left_leg.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Leg'**
+  String get body_left_leg;
+
+  /// No description provided for @body_left_upper_leg.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Upper Leg'**
+  String get body_left_upper_leg;
+
+  /// No description provided for @body_left_thigh_front.
+  ///
+  /// In en, this message translates to:
+  /// **'Thigh (Front)'**
+  String get body_left_thigh_front;
+
+  /// No description provided for @body_left_thigh_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Thigh (Back)'**
+  String get body_left_thigh_back;
+
+  /// No description provided for @body_left_knee.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Knee'**
+  String get body_left_knee;
+
+  /// No description provided for @body_left_lower_leg.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Lower Leg'**
+  String get body_left_lower_leg;
+
+  /// No description provided for @body_left_shin.
+  ///
+  /// In en, this message translates to:
+  /// **'Shin'**
+  String get body_left_shin;
+
+  /// No description provided for @body_left_calf.
+  ///
+  /// In en, this message translates to:
+  /// **'Calf'**
+  String get body_left_calf;
+
+  /// No description provided for @body_left_ankle.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Ankle'**
+  String get body_left_ankle;
+
+  /// No description provided for @body_left_foot.
+  ///
+  /// In en, this message translates to:
+  /// **'Left Foot'**
+  String get body_left_foot;
+
+  /// No description provided for @body_left_heel.
+  ///
+  /// In en, this message translates to:
+  /// **'Heel'**
+  String get body_left_heel;
+
+  /// No description provided for @body_left_foot_sole.
+  ///
+  /// In en, this message translates to:
+  /// **'Foot Sole / Arch'**
+  String get body_left_foot_sole;
+
+  /// No description provided for @body_left_toes.
+  ///
+  /// In en, this message translates to:
+  /// **'Toes'**
+  String get body_left_toes;
+
+  /// No description provided for @body_right_leg.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Leg'**
+  String get body_right_leg;
+
+  /// No description provided for @body_right_upper_leg.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Upper Leg'**
+  String get body_right_upper_leg;
+
+  /// No description provided for @body_right_thigh_front.
+  ///
+  /// In en, this message translates to:
+  /// **'Thigh (Front)'**
+  String get body_right_thigh_front;
+
+  /// No description provided for @body_right_thigh_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Thigh (Back)'**
+  String get body_right_thigh_back;
+
+  /// No description provided for @body_right_knee.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Knee'**
+  String get body_right_knee;
+
+  /// No description provided for @body_right_lower_leg.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Lower Leg'**
+  String get body_right_lower_leg;
+
+  /// No description provided for @body_right_shin.
+  ///
+  /// In en, this message translates to:
+  /// **'Shin'**
+  String get body_right_shin;
+
+  /// No description provided for @body_right_calf.
+  ///
+  /// In en, this message translates to:
+  /// **'Calf'**
+  String get body_right_calf;
+
+  /// No description provided for @body_right_ankle.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Ankle'**
+  String get body_right_ankle;
+
+  /// No description provided for @body_right_foot.
+  ///
+  /// In en, this message translates to:
+  /// **'Right Foot'**
+  String get body_right_foot;
+
+  /// No description provided for @body_right_heel.
+  ///
+  /// In en, this message translates to:
+  /// **'Heel'**
+  String get body_right_heel;
+
+  /// No description provided for @body_right_foot_sole.
+  ///
+  /// In en, this message translates to:
+  /// **'Foot Sole / Arch'**
+  String get body_right_foot_sole;
+
+  /// No description provided for @body_right_toes.
+  ///
+  /// In en, this message translates to:
+  /// **'Toes'**
+  String get body_right_toes;
+
+  /// No description provided for @painTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Pain Type'**
+  String get painTypeLabel;
+
+  /// No description provided for @bodyPartLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Body Part'**
+  String get bodyPartLabel;
+
+  /// No description provided for @painTypeUnspecified.
+  ///
+  /// In en, this message translates to:
+  /// **'Unspecified'**
+  String get painTypeUnspecified;
+
+  /// No description provided for @painTypeBurning.
+  ///
+  /// In en, this message translates to:
+  /// **'Burning'**
+  String get painTypeBurning;
+
+  /// No description provided for @painTypeStabbing.
+  ///
+  /// In en, this message translates to:
+  /// **'Stabbing'**
+  String get painTypeStabbing;
+
+  /// No description provided for @painTypeAching.
+  ///
+  /// In en, this message translates to:
+  /// **'Aching'**
+  String get painTypeAching;
+
+  /// No description provided for @painTypeThrobbing.
+  ///
+  /// In en, this message translates to:
+  /// **'Throbbing'**
+  String get painTypeThrobbing;
+
+  /// No description provided for @painTypeSharp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sharp'**
+  String get painTypeSharp;
+
+  /// No description provided for @painTypeDull.
+  ///
+  /// In en, this message translates to:
+  /// **'Dull'**
+  String get painTypeDull;
+
+  /// No description provided for @painTypeCramping.
+  ///
+  /// In en, this message translates to:
+  /// **'Cramping'**
+  String get painTypeCramping;
+
+  /// No description provided for @painTypeRadiating.
+  ///
+  /// In en, this message translates to:
+  /// **'Radiating'**
+  String get painTypeRadiating;
+
+  /// No description provided for @painTypeTingling.
+  ///
+  /// In en, this message translates to:
+  /// **'Tingling'**
+  String get painTypeTingling;
+
+  /// No description provided for @painTypeShooting.
+  ///
+  /// In en, this message translates to:
+  /// **'Shooting'**
+  String get painTypeShooting;
+
+  /// No description provided for @painTypePulsing.
+  ///
+  /// In en, this message translates to:
+  /// **'Pulsing'**
+  String get painTypePulsing;
+
+  /// No description provided for @painTypePressure.
+  ///
+  /// In en, this message translates to:
+  /// **'Pressure'**
+  String get painTypePressure;
+
+  /// No description provided for @painTypeTightness.
+  ///
+  /// In en, this message translates to:
+  /// **'Tightness'**
+  String get painTypeTightness;
+
+  /// No description provided for @painTypeSoreness.
+  ///
+  /// In en, this message translates to:
+  /// **'Soreness'**
+  String get painTypeSoreness;
+
+  /// No description provided for @painTypeStiffness.
+  ///
+  /// In en, this message translates to:
+  /// **'Stiffness'**
+  String get painTypeStiffness;
+
+  /// No description provided for @preview_mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview Mode'**
+  String get preview_mode;
+
+  /// No description provided for @preview_mode_active.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview Mode Active'**
+  String get preview_mode_active;
+
+  /// No description provided for @preview_mode_active_state.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview mode is now active.'**
+  String get preview_mode_active_state;
+
+  /// No description provided for @preview_mode_inactive_state.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview mode is now inactive.'**
+  String get preview_mode_inactive_state;
+
+  /// No description provided for @preview_mode_description.
+  ///
+  /// In en, this message translates to:
+  /// **'You are currently in preview mode. This allows you to:\n\n• Fast-forward through study days using the \"Next Day\" button\n• Complete tasks multiple times without restrictions\n• Experience the full study flow without affecting real data\n\nImportant: Results and data from preview mode are not stored or mixed with actual participant results from running studies.'**
+  String get preview_mode_description;
+
+  /// No description provided for @preview_mode_results_not_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Task completed in preview mode - results are not saved to protect study data integrity.'**
+  String get preview_mode_results_not_saved;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
 }
 
 class _AppLocalizationsDelegate

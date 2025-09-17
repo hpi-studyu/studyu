@@ -45,4 +45,14 @@ class AppState with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  /// Updates the preview mode state for the debug mode of the app
+  ///
+  /// Sets [isPreview] to the given value and updates [selectedStudy]
+  /// to the active subject's study. Notifies listeners of the change.
+  void updatePreviewMode(bool preview) {
+    isPreview = preview;
+    selectedStudy = activeSubject?.study;
+    notifyListeners();
+  }
 }

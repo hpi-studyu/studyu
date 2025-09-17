@@ -26,10 +26,12 @@ Map<String, dynamic> _$AverageSectionToJson(AverageSection instance) =>
     <String, dynamic>{
       'type': instance.type,
       'id': instance.id,
-      'title': ?instance.title,
-      'description': ?instance.description,
-      'aggregate': ?_$TemporalAggregationEnumMap[instance.aggregate],
-      'resultProperty': ?instance.resultProperty?.toJson(),
+      if (instance.title case final value?) 'title': value,
+      if (instance.description case final value?) 'description': value,
+      if (_$TemporalAggregationEnumMap[instance.aggregate] case final value?)
+        'aggregate': value,
+      if (instance.resultProperty?.toJson() case final value?)
+        'resultProperty': value,
     };
 
 const _$TemporalAggregationEnumMap = {

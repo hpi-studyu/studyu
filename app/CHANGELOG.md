@@ -1,65 +1,208 @@
+## 2.11.1
+
+ - **FIX**: improve validation logic for free text input handling with minimum length checks.
+ - **FIX**: add submit button and update localization for free text question widget.
+ - **FIX**: add skip button text for free text question widget.
+ - **FIX**: improve free text question interaction and validation handling.
+ - **FIX**: implement smooth scrolling to newly added questions in questionnaire.
+ - **FIX**(app): disable color change of appbar on dashboard scrolling.
+
+## 2.11.0
+
+ - **FIX**: add preview mode active/inactive state messages.
+ - **FIX**: replace GestureDetector with InkWell for application icon in about dialog.
+ - **FIX**: improve question insertion and scrolling behavior in questionnaire.
+ - **FIX**: invalidate existing result on continuation check to update eligibility banner.
+ - **FIX**: suppress mouse tracker assertion error on web platform.
+ - **FEAT**: add preview mode functionality for app and localization support.
+ - **FEAT**: add debug mode functionality for study progression".
+ - **FEAT**: add debug mode functionality for study progression.
+
+## 2.10.2
+
+ - **FIX**: same conditional question was inserted on answer change.
+ - **FIX**: last conditional question did not finish.
+ - **FIX**: choice button support multiline now.
+
+## 2.10.1
+
+ - **FIX**: disabled eligibility check free text hotfix.
+
+## 2.10.0
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**: improve code formatting and readability in body-related files.
+ - **REFACTOR**: add localization support for Fitbit data sync messages and improve code formatting.
+ - **REFACTOR**: improve code formatting and readability in localization and conditional question files.
+ - **REFACTOR**: cleanup.
+ - **REFACTOR**(fitbit): sleep data fetching logic.
+ - **FIX**: uncomment platform definition in Podfile.
+ - **FIX**: regenerate ios and android folders.
+ - **FIX**: update app deps.
+ - **FIX**: replace translate and scale methods with their double counterparts in body_part_selector.dart.
+ - **FIX**: passing taskId to fitbit_question_widget.dart.
+ - **FIX**: update Fitbit integration and callback URLs.
+ - **FIX**: uncomment iOS deployment target configuration in Podfile.
+ - **FIX**: update Flutter version to 3.35.2 and add l10n-missing.txt file.
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: remove unnecessary pain level text display in PainEditDialog.
+ - **FIX**: update PRODUCT_BUNDLE_IDENTIFIER for Fitbit app.
+ - **FIX**: proper onDone handling for fitbit_question_widget.dart.
+ - **FIX**: regenerate ios and android folders.
+ - **FIX**: improve error messages and user guidance in loading screen.
+ - **FIX**: show dialog after email sending.
+ - **FIX**: show dialog after email sending.
+ - **FIX**: improve error handling and user support options in loading screen.
+ - **FIX**: questionnaire screen refactor.
+ - **FIX**: update Flutter SDK version to 3.35.3 and dependencies in pubspec.lock.
+ - **FIX**: localization.
+ - **FIX**: prevent duplicate questions.
+ - **FIX**: scales without annotations are displayed now.
+ - **FIX**: update deps.
+ - **FIX**: only show complete button if all shown questions are answered.
+ - **FIX**: translate reports not found.
+ - **FIX**: broken question animation.
+ - **FIX**: later conditional questions not shown.
+ - **FIX**: add null answer if there is no default answer.
+ - **FIX**: maybe fix reports bug.
+ - **FIX**: ios and android configuration.
+ - **FIX**: android config.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: body part ids & german translations for body parts.
+ - **FIX**: default for app deployment flutter variables.
+ - **FIX**: default for app deployment flutter variables 2.
+ - **FIX**: do not store null answers.
+ - **FEAT**: add pain selection question and body part selection widgets.
+ - **FEAT**: web configuration for fitbitter package.
+ - **FEAT**: make fitbit syncing process more transparent.
+ - **FEAT**: implement pain selection question inside designer.
+ - **FEAT**: add pain type and body part children support.
+ - **FEAT**: pain type model.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: make body pain type and part selection optional.
+ - **FEAT**: re-create android and ios folders gemfile"".
+ - **FEAT**: initialize pain type selection in body part selector.
+ - **FEAT**: re-create android and ios folders gemfile".
+ - **FEAT**: re-create android and ios folders gemfile.
+ - **FEAT**: re-create android and ios folders.
+ - **FEAT**: refactor pain selection dialog to use PainType model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: enhance Fitbit credential handling to include permission scopes.
+ - **FEAT**: update Fitbit redirect URL and callback scheme.
+ - **FEAT**: fetching remote subject with Fitbit credentials on onboarding.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: Add Fitbit credential deletion on study removal.
+ - **FEAT**(fitbit): refactor _findLatestDataEntry function in fitbit_handler.dart.
+ - **FEAT**: change dialog sequence of pain tracking.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**: add sleep data fetching.
+ - **FEAT**: rename WongBakerScale to PainScale for consistency.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: integrate Pods project and add localization for Fitbit questions.
+ - **FEAT**: sync Fitbit data on button press.
+ - **FEAT**: update Info.plist for localization and app permissions.
+ - **FEAT**: update pain type in body pain and selector.
+
 ## 2.9.1
 
- - **FIX**: update deps.
+- **FIX**: update deps.
 
 ## 2.9.0
 
- - **REFACTOR**: remove print.
- - **FIX**: bump dependencies.
- - **FIX**: update selectedStudyObjectId to null on study deletion.
- - **FIX**: study reset process by removing unnecessary user ID handling.
- - **FIX**: reset subject temp fix.
- - **FIX**: reset subject progress.
- - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+- **REFACTOR**: remove print.
+- **FIX**: bump dependencies.
+- **FIX**: update selectedStudyObjectId to null on study deletion.
+- **FIX**: study reset process by removing unnecessary user ID handling.
+- **FIX**: reset subject temp fix.
+- **FIX**: reset subject progress.
+- **FEAT**: enhance study reset functionality to support user-specific data deletion.
 
 ## 2.8.0
 
- - **REFACTOR**: TextualSummarySectionWidget.
- - **REFACTOR**: print remove dead code.
- - **FIX**: textual summary widget width.
- - **FIX**: upgrade deps.
- - **FIX**: getTemporaryDirectory no longer throws error for web.
- - **FIX**: double confirmation of data deletion and reload action + translations.
- - **FIX**: handle secure storage errors with user prompt.
- - **FIX**: improve notification task error messages.
- - **FIX**: ios deployment.
- - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
- - **FIX**: android deployment bump desugar_jdk_libs.
- - **FIX**: add core and flutter_common local path dependency.
- - **FIX**: add string_extensions.dart.
- - **FIX**: colorless gauge translations.
- - **FIX**: translation.
- - **FIX**: upgrade deps.
- - **FIX**: current intervention text split.
- - **FIX**: deprecated withOpacity.
- - **FIX**: create fallback dir if _getMultimodalTempDirectory fails.
- - **FIX**: remove placeholder file creation.
- - **FIX**: handle errors during app reset process.
- - **FIX**: handle null cases for staging audio and image files & handle temp directory fail.
- - **FIX**: migrate code.
- - **FIX**: localization.
- - **FIX**: improve baseline name handling in average section widget localization.
- - **FIX**: update average section widget for better title handling and improve pubspec.lock dependencies.
+- **REFACTOR**: TextualSummarySectionWidget.
+- **REFACTOR**: print remove dead code.
+- **FIX**: textual summary widget width.
+- **FIX**: upgrade deps.
+- **FIX**: getTemporaryDirectory no longer throws error for web.
+- **FIX**: double confirmation of data deletion and reload action + translations.
+- **FIX**: handle secure storage errors with user prompt.
+- **FIX**: improve notification task error messages.
+- **FIX**: ios deployment.
+- **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+- **FIX**: android deployment bump desugar_jdk_libs.
+- **FIX**: add core and flutter_common local path dependency.
+- **FIX**: add string_extensions.dart.
+- **FIX**: colorless gauge translations.
+- **FIX**: translation.
+- **FIX**: upgrade deps.
+- **FIX**: current intervention text split.
+- **FIX**: deprecated withOpacity.
+- **FIX**: create fallback dir if _getMultimodalTempDirectory fails.
+- **FIX**: remove placeholder file creation.
+- **FIX**: handle errors during app reset process.
+- **FIX**: handle null cases for staging audio and image files & handle temp directory fail.
+- **FIX**: migrate code.
+- **FIX**: localization.
+- **FIX**: improve baseline name handling in average section widget localization.
+- **FIX**: update average section widget for better title handling and improve pubspec.lock dependencies.
+- **FIX**: default for app deployment flutter variables 2.
+- **FIX**: default for app deployment flutter variables.
+- **FIX**: auto formatting of localization files.
+- **FIX**: android config.
+- **FIX**: ios and android configuration.
+- **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.
+- **FEAT**: re-create android and ios folders gemfile".
+- **FEAT**: re-create android and ios folders gemfile.
+- **FEAT**: re-create android and ios folders.
+- **FEAT**: implement textual summary section with data processing and UI integration.
+- **FEAT**: add gauge comparison section with loading state and colorless gauge option.
+- **FEAT**: enhance textual summary with localized messages for intervention comparisons.
+- **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.".
+- **FEAT**: invert colorless gauge display logic in gauge comparison section.
+- **FEAT**: descriptive stats section widget for app.
+- **FEAT**: refactor statistical widgets and implement synchronous t-test results.
+- **FEAT**: report overview.
+- **FEAT**: report overview.
+- **FEAT**: add splash screen for app.
+- **FEAT**: re-create android and ios folders gemfile"".
+
+## 2.8.0-dev.0
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**(fitbit): sleep data fetching logic.
  - **FIX**: default for app deployment flutter variables 2.
  - **FIX**: default for app deployment flutter variables.
  - **FIX**: auto formatting of localization files.
  - **FIX**: android config.
  - **FIX**: ios and android configuration.
- - **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.
+ - **FIX**: localization.
+ - **FIX**: proper onDone handling for fitbit_question_widget.dart.
+ - **FIX**: update Fitbit integration and callback URLs.
+ - **FIX**: passing taskId to fitbit_question_widget.dart.
+ - **FIX**: current intervention text split.
+ - **FEAT**: re-create android and ios folders gemfile"".
  - **FEAT**: re-create android and ios folders gemfile".
  - **FEAT**: re-create android and ios folders gemfile.
  - **FEAT**: re-create android and ios folders.
- - **FEAT**: implement textual summary section with data processing and UI integration.
- - **FEAT**: add gauge comparison section with loading state and colorless gauge option.
- - **FEAT**: enhance textual summary with localized messages for intervention comparisons.
- - **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.".
- - **FEAT**: invert colorless gauge display logic in gauge comparison section.
- - **FEAT**: descriptive stats section widget for app.
- - **FEAT**: refactor statistical widgets and implement synchronous t-test results.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: enhance Fitbit credential handling to include permission scopes.
+ - **FEAT**: update Fitbit redirect URL and callback scheme.
+ - **FEAT**: fetching remote subject with Fitbit credentials on onboarding.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: Add Fitbit credential deletion on study removal.
+ - **FEAT**(fitbit): refactor _findLatestDataEntry function in fitbit_handler.dart.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**: add sleep data fetching.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sync Fitbit data on button press.
+ - **FEAT**: add FitbitHandler.
  - **FEAT**: report overview.
  - **FEAT**: report overview.
- - **FEAT**: add splash screen for app.
- - **FEAT**: re-create android and ios folders gemfile"".
 
 ## 2.7.14
 

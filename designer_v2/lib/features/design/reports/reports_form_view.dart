@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/features/design/reports/section/report_item_f
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
-import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
+import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -41,7 +41,7 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                 ReactiveFormArray(
                   formArray: formViewModel.reportItemArray,
                   builder: (context, formArray, child) {
-                    return FormArrayTable<ReportItemFormViewModel>(
+                    return FormListView<ReportItemFormViewModel>(
                       control: formViewModel.reportItemArray,
                       items: formViewModel.reportItemModels,
                       onSelectItem: (viewModel) {
@@ -69,7 +69,7 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                           viewModel.formData?.section.title ?? '',
                       //rowTitle: (viewModel) => viewModel.formData?.title ?? '',
                       //sectionDescription: tr.form_array_report_items_description,
-                      sectionTitleDivider: false,
+                      // sectionTitleDivider: false,
                       emptyIcon: Icons.content_paste_off_rounded,
                       emptyTitle: tr.form_array_reports_empty_title,
                       emptyDescription: tr.form_array_reports_empty_description,
@@ -126,6 +126,21 @@ class StudyDesignReportsFormView extends StudyDesignPageWidget {
                             const SizedBox.shrink(),*/
                         ],
                       ),
+                      reorderable: !formViewModel.isReadonly,
+                      onReorder: (oldIndex, newIndex) {
+                        if (newIndex > oldIndex) newIndex -= 1;
+                        final item = formViewModel.reportItemModels.removeAt(
+                          oldIndex,
+                        );
+                        formViewModel.reportItemModels.insert(newIndex, item);
+                        final controlItem = formViewModel.reportItemArray
+                            .removeAt(oldIndex);
+                        formViewModel.reportItemArray.insert(
+                          newIndex,
+                          controlItem,
+                        );
+                        formViewModel.save();
+                      },
                     );
                   },
                 ),

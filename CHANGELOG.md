@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 2025-06-17
+## 2025-09-15
 
 ### Changes
 
@@ -15,28 +15,379 @@ Packages with breaking changes:
 
 Packages with other changes:
 
- - [`studyu_app` - `v2.9.1`](#studyu_app---v291)
- - [`studyu_core` - `v4.6.1`](#studyu_core---v461)
- - [`studyu_designer_v2` - `v1.11.1`](#studyu_designer_v2---v1111)
- - [`studyu_flutter_common` - `v1.8.13`](#studyu_flutter_common---v1813)
+ - [`studyu_app` - `v2.11.1`](#studyu_app---v2111)
+ - [`studyu_designer_v2` - `v1.14.0`](#studyu_designer_v2---v1140)
+
+---
+
+#### `studyu_app` - `v2.11.1`
+
+ - **FIX**: improve validation logic for free text input handling with minimum length checks.
+ - **FIX**: add submit button and update localization for free text question widget.
+ - **FIX**: add skip button text for free text question widget.
+ - **FIX**: improve free text question interaction and validation handling.
+ - **FIX**: implement smooth scrolling to newly added questions in questionnaire.
+ - **FIX**(app): disable color change of appbar on dashboard scrolling.
+
+#### `studyu_designer_v2` - `v1.14.0`
+
+ - **REFACTOR**: print empty version instead of null.
+ - **FIX**: refactor clamping logic for free text length inputs to use final variables.
+ - **FIX**: enhance free text length input handling with clamped values and improved layout.
+ - **FIX**: free_text_question could not be added.
+ - **FIX**: Increase max length for free text input to 1000.
+ - **FIX**: update question response formatting to return structured choice data.
+ - **FIX**: enhance question response formatting to include choice text.
+ - **FEAT**: add version to designer.
+
+
+## 2025-09-10
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.11.0`](#studyu_app---v2110)
+ - [`studyu_designer_v2` - `v1.13.0`](#studyu_designer_v2---v1130)
+
+---
+
+#### `studyu_app` - `v2.11.0`
+
+ - **FIX**: add preview mode active/inactive state messages.
+ - **FIX**: replace GestureDetector with InkWell for application icon in about dialog.
+ - **FIX**: improve question insertion and scrolling behavior in questionnaire.
+ - **FIX**: invalidate existing result on continuation check to update eligibility banner.
+ - **FIX**: suppress mouse tracker assertion error on web platform.
+ - **FEAT**: add preview mode functionality for app and localization support.
+ - **FEAT**: add debug mode functionality for study progression".
+ - **FEAT**: add debug mode functionality for study progression.
+
+#### `studyu_designer_v2` - `v1.13.0`
+
+ - **FIX**: after study cloning redirect to clone directly.
+ - **FIX**: after study cloning show my studies as active in app drawer.
+ - **FIX**: update validators for boolean questions in conditional forms.
+ - **FIX**: simplify conditional check for boolean values in question forms.
+ - **FIX**: prevent reordering of questions in readonly forms.
+ - **FIX**: remove redundant deferred conditions initialization check.
+ - **FIX**: fix study data loss on study duplication with dashboard.
+ - **FIX**: disable reorder action for readonly forms.
+ - **FIX**: disable delete action for readonly condition forms.
+ - **FIX**: solves [#737](https://github.com/hpi-studyu/studyu/issues/737).
+ - **FEAT**: implement deferred conditions initialization in question forms.
+
+
+## 2025-09-09
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.10.2`](#studyu_app---v2102)
+
+---
+
+#### `studyu_app` - `v2.10.2`
+
+ - **FIX**: same conditional question was inserted on answer change.
+ - **FIX**: last conditional question did not finish.
+ - **FIX**: choice button support multiline now.
+
+
+## 2025-09-09
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.10.1`](#studyu_app---v2101)
+ - [`studyu_designer_v2` - `v1.12.1`](#studyu_designer_v2---v1121)
+
+---
+
+#### `studyu_app` - `v2.10.1`
+
+ - **FIX**: disabled eligibility check free text hotfix.
+
+#### `studyu_designer_v2` - `v1.12.1`
+
+ - **REFACTOR**: simplify enrollment type input structure in enrollment form.
+
+
+## 2025-09-05
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.10.0`](#studyu_app---v2100)
+ - [`studyu_core` - `v4.7.0`](#studyu_core---v470)
+ - [`studyu_designer_v2` - `v1.12.0`](#studyu_designer_v2---v1120)
+ - [`studyu_flutter_common` - `v1.9.0`](#studyu_flutter_common---v190)
+
+---
+
+#### `studyu_app` - `v2.10.0`
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**: improve code formatting and readability in body-related files.
+ - **REFACTOR**: add localization support for Fitbit data sync messages and improve code formatting.
+ - **REFACTOR**: improve code formatting and readability in localization and conditional question files.
+ - **REFACTOR**: cleanup.
+ - **REFACTOR**(fitbit): sleep data fetching logic.
+ - **FIX**: uncomment platform definition in Podfile.
+ - **FIX**: regenerate ios and android folders.
+ - **FIX**: update app deps.
+ - **FIX**: replace translate and scale methods with their double counterparts in body_part_selector.dart.
+ - **FIX**: passing taskId to fitbit_question_widget.dart.
+ - **FIX**: update Fitbit integration and callback URLs.
+ - **FIX**: uncomment iOS deployment target configuration in Podfile.
+ - **FIX**: update Flutter version to 3.35.2 and add l10n-missing.txt file.
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: remove unnecessary pain level text display in PainEditDialog.
+ - **FIX**: update PRODUCT_BUNDLE_IDENTIFIER for Fitbit app.
+ - **FIX**: proper onDone handling for fitbit_question_widget.dart.
+ - **FIX**: regenerate ios and android folders.
+ - **FIX**: improve error messages and user guidance in loading screen.
+ - **FIX**: show dialog after email sending.
+ - **FIX**: show dialog after email sending.
+ - **FIX**: improve error handling and user support options in loading screen.
+ - **FIX**: questionnaire screen refactor.
+ - **FIX**: update Flutter SDK version to 3.35.3 and dependencies in pubspec.lock.
+ - **FIX**: localization.
+ - **FIX**: prevent duplicate questions.
+ - **FIX**: scales without annotations are displayed now.
+ - **FIX**: update deps.
+ - **FIX**: only show complete button if all shown questions are answered.
+ - **FIX**: translate reports not found.
+ - **FIX**: broken question animation.
+ - **FIX**: later conditional questions not shown.
+ - **FIX**: add null answer if there is no default answer.
+ - **FIX**: maybe fix reports bug.
+ - **FIX**: ios and android configuration.
+ - **FIX**: android config.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: body part ids & german translations for body parts.
+ - **FIX**: default for app deployment flutter variables.
+ - **FIX**: default for app deployment flutter variables 2.
+ - **FIX**: do not store null answers.
+ - **FEAT**: add pain selection question and body part selection widgets.
+ - **FEAT**: web configuration for fitbitter package.
+ - **FEAT**: make fitbit syncing process more transparent.
+ - **FEAT**: implement pain selection question inside designer.
+ - **FEAT**: add pain type and body part children support.
+ - **FEAT**: pain type model.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: make body pain type and part selection optional.
+ - **FEAT**: re-create android and ios folders gemfile"".
+ - **FEAT**: initialize pain type selection in body part selector.
+ - **FEAT**: re-create android and ios folders gemfile".
+ - **FEAT**: re-create android and ios folders gemfile.
+ - **FEAT**: re-create android and ios folders.
+ - **FEAT**: refactor pain selection dialog to use PainType model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: enhance Fitbit credential handling to include permission scopes.
+ - **FEAT**: update Fitbit redirect URL and callback scheme.
+ - **FEAT**: fetching remote subject with Fitbit credentials on onboarding.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: Add Fitbit credential deletion on study removal.
+ - **FEAT**(fitbit): refactor _findLatestDataEntry function in fitbit_handler.dart.
+ - **FEAT**: change dialog sequence of pain tracking.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**: add sleep data fetching.
+ - **FEAT**: rename WongBakerScale to PainScale for consistency.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: integrate Pods project and add localization for Fitbit questions.
+ - **FEAT**: sync Fitbit data on button press.
+ - **FEAT**: update Info.plist for localization and app permissions.
+ - **FEAT**: update pain type in body pain and selector.
+
+#### `studyu_core` - `v4.7.0`
+
+ - **REFACTOR**: improve code formatting and readability in body-related files.
+ - **REFACTOR**: add localization support for Fitbit data sync messages and improve code formatting.
+ - **REFACTOR**: improve code formatting and readability in localization and conditional question files.
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: remove trailing slashes from environment URLs to prevent double slashes in paths.
+ - **FIX**: update conditional logic to use NumericComparator for better clarity.
+ - **FIX**: pain question error on save.
+ - **FIX**: make LogicType json compatible.
+ - **FIX**: preserve ids for choices.
+ - **FIX**: only throw ExtractionFailedException for study screen.
+ - **FIX**: streams and dynamic cast bugs.
+ - **FIX**: update conditionArray on changes correctly, only include latter questions.
+ - **FIX**: rebuild form, enable preview, use currentQuestionId.
+ - **FIX**: update deps.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update pain type in body pain and selector.
+ - **FEAT**: pain type model.
+ - **FEAT**: add pain type and body part children support.
+ - **FEAT**: implement pain selection question inside designer.
+ - **FEAT**: add pain selection question and body part selection widgets.
+ - **FEAT**: initial version for conditional questions.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
+
+#### `studyu_designer_v2` - `v1.12.0`
+
+ - **REFACTOR**: incorrect use of static final with lambda function.
+ - **REFACTOR**: add localization support for Fitbit data sync messages and improve code formatting.
+ - **REFACTOR**: improve code formatting and readability in localization and conditional question files.
+ - **REFACTOR**: propagate form mode to condition view models for consistent state management.
+ - **REFACTOR**: introduce LiveConditionPreview component for enhanced condition visualization.
+ - **REFACTOR**: update answer options type in question form controller.
+ - **REFACTOR**: simplify condition handling by updating types and improving view model integration.
+ - **REFACTOR**: enhance conditional question handling with FormViewModelCollection.
+ - **REFACTOR**: implement ConditionalQuestionFormViewModel.
+ - **REFACTOR**: improve code formatting and readability in body-related files.
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: update if logictype changes.
+ - **FIX**: migrate enrollment form view to use RadioGroup for better control handling and readability.
+ - **FIX**: refactor auth form controller to streamline form control access methods.
+ - **FIX**: enhance condition handling and value propagation in questionnaire forms.
+ - **FIX**: refactor auth form controller to use getter methods for form controls and improve form handling.
+ - **FIX**: update section title and description rendering logic to handle empty states.
+ - **FIX**: specify type for conditionsArray and simplify expression building.
+ - **FIX**: handle response option in answer construction correctly.
+ - **FIX**: upgrade invite code form controller by adjusting debounce time and simplifying control initialization.
+ - **FIX**: update conditional logic to use NumericComparator for better clarity.
+ - **FIX**: pain question error on save.
+ - **FIX**: update conditional question handling to use ConditionRowFormData.
+ - **FIX**: add dynamic controls to form based on question type.
+ - **FIX**: update question type checks to use constants for better maintainability.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: add conditional rendering for choice input fields for booleans.
+ - **FIX**: preserve ids for choices.
+ - **FIX**: scale condition.
+ - **FIX**: duplicate add intervention button.
+ - **FIX**: duplicate add intervention button.
+ - **FIX**: tooltip no element bug.
+ - **FIX**: translation and QoL fixes.
+ - **FIX**: translation and QoL fixes.
+ - **FIX**: static allQuestions default workaround.
+ - **FIX**: extract boolean correctly.
+ - **FIX**: refactor ConditionalQuestionFormView back to FormConsumerWidget.
+ - **FIX**: ConditionalQuestionFormView use static allQuestions.
+ - **FIX**: use a UUID for choices".
+ - **FIX**: updateCondition correctly.
+ - **FIX**: use a UUID for choices.
+ - **FIX**: streams and dynamic cast bugs.
+ - **FIX**: update conditionArray on changes correctly, only include latter questions.
+ - **FIX**: warnings.
+ - **FIX**: handle frame errors in study test frame.
+ - **FIX**: rebuild form, enable preview, use currentQuestionId.
+ - **FIX**: localization.
+ - **FIX**: add fitbit question json type to question model.
+ - **FIX**: platform localization.
+ - **FIX**: form control for fitbit question.
+ - **FIX**: fitbit question form.
+ - **FIX**: update choice selection logic to use choice ID instead of text.
+ - **FIX**: auto formatting of localization files.
+ - **FIX**: require fitbit credentials if fitbit question is present.
+ - **FIX**: prevent transient conditional logic state from affecting isDirty checks.
+ - **FIX**: update deps.
+ - **FEAT**: initial version for conditional questions.
+ - **FEAT**: add descriptions for Fitbit question types in the designer.
+ - **FEAT**: implement pain selection question inside designer.
+ - **FEAT**: add form list view.
+ - **FEAT**: fitbit credentials base for study model.
+ - **FEAT**: add pain type and body part children support.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: live preview update.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**(questionnaire): add validation for Fitbit question type.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: check if credentials exists when adding fitbit question.
+ - **FEAT**: update body pain response label to "Pain Tracker".
+ - **FEAT**: update pain question icon to accessibility.
+ - **FEAT**: update body pain response label to "Pain Tracker".
+ - **FEAT**: replace FormArrayTables with FormListView only reorder if items > 1.
+ - **DOCS**: fix FormConsumerWidget documentation.
+
+#### `studyu_flutter_common` - `v1.9.0`
+
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: update deps.
+ - **FIX**: update Supabase public anon key in development environment.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+
+
+## 2025-06-17
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- [`studyu_app` - `v2.9.1`](#studyu_app---v291)
+- [`studyu_core` - `v4.6.1`](#studyu_core---v461)
+- [`studyu_designer_v2` - `v1.11.1`](#studyu_designer_v2---v1111)
+- [`studyu_flutter_common` - `v1.8.13`](#studyu_flutter_common---v1813)
 
 ---
 
 #### `studyu_app` - `v2.9.1`
 
- - **FIX**: update deps.
+- **FIX**: update deps.
 
 #### `studyu_core` - `v4.6.1`
 
- - **FIX**: update deps.
+- **FIX**: update deps.
 
 #### `studyu_designer_v2` - `v1.11.1`
 
- - **FIX**: update deps.
+- **FIX**: update deps.
 
 #### `studyu_flutter_common` - `v1.8.13`
 
- - **FIX**: update deps.
+- **FIX**: update deps.
 
 
 ## 2025-06-13
@@ -47,48 +398,154 @@ Packages with other changes:
 
 Packages with breaking changes:
 
- - There are no breaking changes in this release.
+- There are no breaking changes in this release.
 
 Packages with other changes:
 
- - [`studyu_app` - `v2.9.0`](#studyu_app---v290)
- - [`studyu_core` - `v4.6.0`](#studyu_core---v460)
- - [`studyu_designer_v2` - `v1.11.0`](#studyu_designer_v2---v1110)
- - [`studyu_flutter_common` - `v1.8.12`](#studyu_flutter_common---v1812)
+- [`studyu_app` - `v2.9.0`](#studyu_app---v290)
+- [`studyu_core` - `v4.6.0`](#studyu_core---v460)
+- [`studyu_designer_v2` - `v1.11.0`](#studyu_designer_v2---v1110)
+- [`studyu_flutter_common` - `v1.8.12`](#studyu_flutter_common---v1812)
 
 ---
 
 #### `studyu_app` - `v2.9.0`
 
- - **REFACTOR**: remove print.
- - **FIX**: bump dependencies.
- - **FIX**: update selectedStudyObjectId to null on study deletion.
- - **FIX**: study reset process by removing unnecessary user ID handling.
- - **FIX**: reset subject temp fix.
- - **FIX**: reset subject progress.
- - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+- **REFACTOR**: remove print.
+- **FIX**: bump dependencies.
+- **FIX**: update selectedStudyObjectId to null on study deletion.
+- **FIX**: study reset process by removing unnecessary user ID handling.
+- **FIX**: reset subject temp fix.
+- **FIX**: reset subject progress.
+- **FEAT**: enhance study reset functionality to support user-specific data deletion.
 
 #### `studyu_core` - `v4.6.0`
 
- - **FIX**: bump dependencies.
- - **FIX**: study reset process by removing unnecessary user ID handling.
- - **FIX**: reset subject temp fix.
- - **FEAT**: enhance study reset functionality to support user-specific data deletion.
+- **FIX**: bump dependencies.
+- **FIX**: study reset process by removing unnecessary user ID handling.
+- **FIX**: reset subject temp fix.
+- **FEAT**: enhance study reset functionality to support user-specific data deletion.
 
 #### `studyu_designer_v2` - `v1.11.0`
 
- - **FIX**: bump dependencies.
- - **FIX**: study reset process by removing unnecessary user ID handling.
- - **FIX**: Disable intervention selection if num of interventions <= 2.
- - **FEAT**: enhance study reset functionality to support user-specific data deletion.
- - **FEAT**: reset test preview on enter test page in designer.
+- **FIX**: bump dependencies.
+- **FIX**: study reset process by removing unnecessary user ID handling.
+- **FIX**: Disable intervention selection if num of interventions <= 2.
+- **FEAT**: enhance study reset functionality to support user-specific data deletion.
+- **FEAT**: reset test preview on enter test page in designer.
 
 #### `studyu_flutter_common` - `v1.8.12`
 
- - **FIX**: bump dependencies.
+- **FIX**: bump dependencies.
 
 
 ## 2025-06-10
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- [`studyu_app` - `v2.8.0`](#studyu_app---v280)
+- [`studyu_core` - `v4.5.0`](#studyu_core---v450)
+- [`studyu_designer_v2` - `v1.10.0`](#studyu_designer_v2---v1100)
+- [`studyu_flutter_common` - `v1.8.11`](#studyu_flutter_common---v1811)
+
+---
+
+#### `studyu_app` - `v2.8.0`
+
+- **REFACTOR**: TextualSummarySectionWidget.
+- **REFACTOR**: print remove dead code.
+- **FIX**: textual summary widget width.
+- **FIX**: upgrade deps.
+- **FIX**: getTemporaryDirectory no longer throws error for web.
+- **FIX**: double confirmation of data deletion and reload action + translations.
+- **FIX**: handle secure storage errors with user prompt.
+- **FIX**: improve notification task error messages.
+- **FIX**: ios deployment.
+- **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+- **FIX**: android deployment bump desugar_jdk_libs.
+- **FIX**: add core and flutter_common local path dependency.
+- **FIX**: add string_extensions.dart.
+- **FIX**: colorless gauge translations.
+- **FIX**: translation.
+- **FIX**: upgrade deps.
+- **FIX**: current intervention text split.
+- **FIX**: deprecated withOpacity.
+- **FIX**: create fallback dir if _getMultimodalTempDirectory fails.
+- **FIX**: remove placeholder file creation.
+- **FIX**: handle errors during app reset process.
+- **FIX**: handle null cases for staging audio and image files & handle temp directory fail.
+- **FIX**: migrate code.
+- **FIX**: localization.
+- **FIX**: improve baseline name handling in average section widget localization.
+- **FIX**: update average section widget for better title handling and improve pubspec.lock dependencies.
+- **FIX**: default for app deployment flutter variables 2.
+- **FIX**: default for app deployment flutter variables.
+- **FIX**: auto formatting of localization files.
+- **FIX**: android config.
+- **FIX**: ios and android configuration.
+- **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.
+- **FEAT**: re-create android and ios folders gemfile".
+- **FEAT**: re-create android and ios folders gemfile.
+- **FEAT**: re-create android and ios folders.
+- **FEAT**: implement textual summary section with data processing and UI integration.
+- **FEAT**: add gauge comparison section with loading state and colorless gauge option.
+- **FEAT**: enhance textual summary with localized messages for intervention comparisons.
+- **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.".
+- **FEAT**: invert colorless gauge display logic in gauge comparison section.
+- **FEAT**: descriptive stats section widget for app.
+- **FEAT**: refactor statistical widgets and implement synchronous t-test results.
+- **FEAT**: report overview.
+- **FEAT**: report overview.
+- **FEAT**: add splash screen for app.
+- **FEAT**: re-create android and ios folders gemfile"".
+
+#### `studyu_core` - `v4.5.0`
+
+- **FIX**: upgrade deps.
+- **FEAT**: add Descriptive Stats section to the designer and core.
+- **FEAT**: add gauge comparison section with form view.
+- **FEAT**: add textual summary section to report with form view and validation.
+
+#### `studyu_designer_v2` - `v1.10.0`
+
+- **REFACTOR**: analysis notes.
+- **REFACTOR**: analysis notes.
+- **REFACTOR**: incorrect use of static final with lambda function.
+- **FIX**: upgrade deps.
+- **FIX**: monitoring completed intervention task total calculation.
+- **FIX**: add SelectionArea to all side sheets to fix flutter issue [#158095](https://github.com/hpi-studyu/studyu/issues/158095).
+- **FIX**: replace Hyperlink with TextButton in choice_question_form_view.
+- **FIX**: https://github.com/dart-lang/sdk/issues/60784.
+- **FIX**: migrate code.
+- **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+- **FIX**: add core and flutter_common local path dependency.
+- **FIX**: remove test report text and fix report description spacing.
+- **FIX**: zip problems when exporting data and sanitization removal.
+- **FIX**: auto formatting of localization files.
+- **FIX**: platform localization.
+- **FIX**: localization.
+- **FEAT**: add Descriptive Stats section to the designer and core.
+- **FEAT**: add gauge comparison section with form view.
+- **FEAT**: add textual summary section to report with form view and validation.
+- **FEAT**: Enhance password reset functionality with improved validation and notifications.
+- **FEAT**: Implement password reset functionality in account settings.
+
+#### `studyu_flutter_common` - `v1.8.11`
+
+- **FIX**: improve error handling in secure storage read method.
+- **FIX**: enable android encrypted shared preferences for secure storage.
+- **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+- **FIX**: add core and flutter_common local path dependency.
+
+## 2025-03-17
 
 ### Changes
 
@@ -100,99 +557,106 @@ Packages with breaking changes:
 
 Packages with other changes:
 
- - [`studyu_app` - `v2.8.0`](#studyu_app---v280)
- - [`studyu_core` - `v4.5.0`](#studyu_core---v450)
- - [`studyu_designer_v2` - `v1.10.0`](#studyu_designer_v2---v1100)
- - [`studyu_flutter_common` - `v1.8.11`](#studyu_flutter_common---v1811)
+ - [`studyu_app` - `v2.8.0-dev.0`](#studyu_app---v280-dev0)
+ - [`studyu_designer_v2` - `v1.10.0-dev.0`](#studyu_designer_v2---v1100-dev0)
+ - [`studyu_flutter_common` - `v1.9.0-dev.1`](#studyu_flutter_common---v190-dev1)
 
 ---
 
-#### `studyu_app` - `v2.8.0`
+#### `studyu_app` - `v2.8.0-dev.0`
 
- - **REFACTOR**: TextualSummarySectionWidget.
- - **REFACTOR**: print remove dead code.
- - **FIX**: textual summary widget width.
- - **FIX**: upgrade deps.
- - **FIX**: getTemporaryDirectory no longer throws error for web.
- - **FIX**: double confirmation of data deletion and reload action + translations.
- - **FIX**: handle secure storage errors with user prompt.
- - **FIX**: improve notification task error messages.
- - **FIX**: ios deployment.
- - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
- - **FIX**: android deployment bump desugar_jdk_libs.
- - **FIX**: add core and flutter_common local path dependency.
- - **FIX**: add string_extensions.dart.
- - **FIX**: colorless gauge translations.
- - **FIX**: translation.
- - **FIX**: upgrade deps.
- - **FIX**: current intervention text split.
- - **FIX**: deprecated withOpacity.
- - **FIX**: create fallback dir if _getMultimodalTempDirectory fails.
- - **FIX**: remove placeholder file creation.
- - **FIX**: handle errors during app reset process.
- - **FIX**: handle null cases for staging audio and image files & handle temp directory fail.
- - **FIX**: migrate code.
- - **FIX**: localization.
- - **FIX**: improve baseline name handling in average section widget localization.
- - **FIX**: update average section widget for better title handling and improve pubspec.lock dependencies.
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **REFACTOR**(fitbit): sleep data fetching logic.
  - **FIX**: default for app deployment flutter variables 2.
  - **FIX**: default for app deployment flutter variables.
  - **FIX**: auto formatting of localization files.
  - **FIX**: android config.
  - **FIX**: ios and android configuration.
- - **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.
+ - **FIX**: localization.
+ - **FIX**: proper onDone handling for fitbit_question_widget.dart.
+ - **FIX**: update Fitbit integration and callback URLs.
+ - **FIX**: passing taskId to fitbit_question_widget.dart.
+ - **FIX**: current intervention text split.
+ - **FEAT**: re-create android and ios folders gemfile"".
  - **FEAT**: re-create android and ios folders gemfile".
  - **FEAT**: re-create android and ios folders gemfile.
  - **FEAT**: re-create android and ios folders.
- - **FEAT**: implement textual summary section with data processing and UI integration.
- - **FEAT**: add gauge comparison section with loading state and colorless gauge option.
- - **FEAT**: enhance textual summary with localized messages for intervention comparisons.
- - **FEAT**(designer): reset feature on test mode now resets all subject data that belongs to the editor.".
- - **FEAT**: invert colorless gauge display logic in gauge comparison section.
- - **FEAT**: descriptive stats section widget for app.
- - **FEAT**: refactor statistical widgets and implement synchronous t-test results.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: enhance Fitbit credential handling to include permission scopes.
+ - **FEAT**: update Fitbit redirect URL and callback scheme.
+ - **FEAT**: fetching remote subject with Fitbit credentials on onboarding.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: Add Fitbit credential deletion on study removal.
+ - **FEAT**(fitbit): refactor _findLatestDataEntry function in fitbit_handler.dart.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**: add sleep data fetching.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sync Fitbit data on button press.
+ - **FEAT**: add FitbitHandler.
  - **FEAT**: report overview.
  - **FEAT**: report overview.
- - **FEAT**: add splash screen for app.
- - **FEAT**: re-create android and ios folders gemfile"".
 
-#### `studyu_core` - `v4.5.0`
+#### `studyu_designer_v2` - `v1.10.0-dev.0`
 
- - **FIX**: upgrade deps.
- - **FEAT**: add Descriptive Stats section to the designer and core.
- - **FEAT**: add gauge comparison section with form view.
- - **FEAT**: add textual summary section to report with form view and validation.
-
-#### `studyu_designer_v2` - `v1.10.0`
-
- - **REFACTOR**: analysis notes.
- - **REFACTOR**: analysis notes.
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
  - **REFACTOR**: incorrect use of static final with lambda function.
- - **FIX**: upgrade deps.
- - **FIX**: monitoring completed intervention task total calculation.
- - **FIX**: add SelectionArea to all side sheets to fix flutter issue [#158095](https://github.com/hpi-studyu/studyu/issues/158095).
- - **FIX**: replace Hyperlink with TextButton in choice_question_form_view.
- - **FIX**: https://github.com/dart-lang/sdk/issues/60784.
- - **FIX**: migrate code.
- - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
- - **FIX**: add core and flutter_common local path dependency.
- - **FIX**: remove test report text and fix report description spacing.
- - **FIX**: zip problems when exporting data and sanitization removal.
  - **FIX**: auto formatting of localization files.
  - **FIX**: platform localization.
  - **FIX**: localization.
- - **FEAT**: add Descriptive Stats section to the designer and core.
- - **FEAT**: add gauge comparison section with form view.
- - **FEAT**: add textual summary section to report with form view and validation.
- - **FEAT**: Enhance password reset functionality with improved validation and notifications.
- - **FEAT**: Implement password reset functionality in account settings.
+ - **FIX**: fitbit question form.
+ - **FIX**: form control for fitbit question.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: update Fitbit credentials form and AndroidManifest of app.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**(questionnaire): add validation for Fitbit question type.
+ - **FEAT**: add validation for Fitbit credentials in forms.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: add FitbitHandler.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: check if credentials exists when adding fitbit question.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
 
-#### `studyu_flutter_common` - `v1.8.11`
+#### `studyu_flutter_common` - `v1.9.0-dev.1`
 
- - **FIX**: improve error handling in secure storage read method.
- - **FIX**: enable android encrypted shared preferences for secure storage.
- - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
- - **FIX**: add core and flutter_common local path dependency.
+ - **FIX**: update Supabase public anon key in development environment.
+
+
+## 2025-03-13
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_core` - `v4.5.0-dev.0`](#studyu_core---v450-dev0)
+ - [`studyu_flutter_common` - `v1.9.0-dev.0`](#studyu_flutter_common---v190-dev0)
+
+---
+
+#### `studyu_core` - `v4.5.0-dev.0`
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
+
+#### `studyu_flutter_common` - `v1.9.0-dev.0`
+
+ - **FEAT**: update Fitbit credentials form and related dependencies.
 
 
 ## 2024-11-19

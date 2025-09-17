@@ -6,7 +6,9 @@ import 'package:studyu_app/widgets/questionnaire/question_header.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/annotated_scale_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/boolean_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/choice_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/fitbit_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/free_text_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/pain_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/scale_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/visual_analogue_question_widget.dart';
@@ -16,11 +18,15 @@ class QuestionContainer extends StatefulWidget {
   final Function(Answer, int) onDone;
   final Question question;
   final int index;
+  final String? taskId;
+  final GlobalKey? containerKey;
 
   const QuestionContainer({
     required this.onDone,
     required this.question,
     required this.index,
+    this.taskId,
+    this.containerKey,
     super.key,
   });
 
@@ -78,6 +84,14 @@ class _QuestionContainerState extends State<QuestionContainer>
           question: freeTextQuestion,
           onDone: _onDone,
         );
+      case final FitbitQuestion fitbitQuestion:
+        return FitbitQuestionWidget(
+          question: fitbitQuestion,
+          onDone: _onDone,
+          taskId: widget.taskId!,
+        );
+      case final PainQuestion painQuestion:
+        return PainQuestionWidget(question: painQuestion, onDone: _onDone);
       default:
         throw ArgumentError(
           'Question type ${widget.question.type} not supported',
@@ -91,6 +105,7 @@ class _QuestionContainerState extends State<QuestionContainer>
     final questionBody = getQuestionBody(context);
 
     return Card(
+      key: widget.containerKey,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
         child: Column(

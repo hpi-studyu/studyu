@@ -87,6 +87,9 @@ class Study extends SupabaseObjectFunctions<Study>
   late bool registryPublished = false;
 
   @JsonKey(includeToJson: false, includeFromJson: false)
+  StudyFitbitCredentials? fitbitCredentials;
+
+  @JsonKey(includeToJson: false, includeFromJson: false)
   int participantCount = 0;
   @JsonKey(includeToJson: false, includeFromJson: false)
   int endedCount = 0;
@@ -155,9 +158,16 @@ class Study extends SupabaseObjectFunctions<Study>
     final study = _$StudyFromJson(json);
 
     final mp23ScheduleJson = json['mp23_schedule'] as Map<String, dynamic>?;
-
     if (mp23ScheduleJson != null) {
       study.mp23Schedule = MP23StudySchedule.fromJson(mp23ScheduleJson);
+    }
+
+    final fitbitCredentials =
+        json['study_fitbit_credentials'] as Map<String, dynamic>?;
+    if (fitbitCredentials != null && fitbitCredentials.isNotEmpty) {
+      study.fitbitCredentials = StudyFitbitCredentials.fromJson(
+        json['study_fitbit_credentials'] as Map<String, dynamic>,
+      );
     }
 
     final List? repo = json['repo'] as List?;

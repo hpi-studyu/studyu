@@ -110,32 +110,53 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                     constraints: BoxConstraints(
                       maxWidth: widget.leftPanelMinWidth - 12 * 2,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
                       children: [
-                        SelectableText(
-                          "© HPI Digital Health Cluster ${DateTime.now().year}",
-                          style: ThemeConfig.bodyTextBackground(theme),
-                        ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            LanguagePicker(
-                              languagePickerType: LanguagePickerType.icon,
-                              iconColor: ThemeConfig.bodyTextBackground(
-                                theme,
-                              ).color,
-                              offset: const Offset(0, -60),
+                            SelectableText(
+                              "© HPI Digital Health Cluster ${DateTime.now().year}",
+                              style: ThemeConfig.bodyTextBackground(theme),
                             ),
-                            const SizedBox(width: 12.0),
-                            Hyperlink(
-                              text: tr.imprint,
-                              onClick: () => _onClickImprint(appConfig),
-                              linkColor: ThemeConfig.bodyTextBackground(
-                                theme,
-                              ).color!,
+                            Row(
+                              children: [
+                                LanguagePicker(
+                                  languagePickerType: LanguagePickerType.icon,
+                                  iconColor: ThemeConfig.bodyTextBackground(
+                                    theme,
+                                  ).color,
+                                  offset: const Offset(0, -60),
+                                ),
+                                const SizedBox(width: 12.0),
+                                Hyperlink(
+                                  text: tr.imprint,
+                                  onClick: () => _onClickImprint(appConfig),
+                                  linkColor: ThemeConfig.bodyTextBackground(
+                                    theme,
+                                  ).color!,
+                                ),
+                              ],
                             ),
                           ],
                         ),
+                        /*
+                        // Version info disabled for now
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            versionText(
+                              textStyle: TextStyle(
+                                color: ThemeConfig.bodyTextBackground(
+                                  theme,
+                                ).color,
+                                fontSize: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall!.fontSize,
+                              ),
+                            ),
+                          ],
+                        ), */
                       ],
                     ),
                   ),

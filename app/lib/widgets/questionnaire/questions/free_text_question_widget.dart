@@ -20,15 +20,11 @@ class FreeTextQuestionWidget extends QuestionWidget {
 class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   final _textFieldController = TextEditingController();
   final _formFieldKey = GlobalKey<FormFieldState>();
+  bool _hasInteracted = false;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.question.lengthRange[0] == 0) {
-        widget.onDone!(widget.question.constructAnswer(""));
-      }
-    });
   }
 
   @override
@@ -37,55 +33,102 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     super.dispose();
   }
 
+  void _handleSubmit() {
+    final value = _textFieldController.text;
+
+    if (value.isEmpty && widget.question.lengthRange[0] == 0) {
+      setState(() {
+        widget.onDone!(widget.question.constructAnswer(value));
+      });
+    } else {
+      if (_formFieldKey.currentState!.validate()) {
+        setState(() {
+          widget.onDone!(widget.question.constructAnswer(value));
+        });
+      }
+    }
+  }
+
+  void _handleInteraction() {
+    if (!_hasInteracted) {
+      _hasInteracted = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final question = widget.question;
-    return TextFormField(
-      key: _formFieldKey,
-      controller: _textFieldController,
-      maxLines: null,
-      onChanged: (value) {
-        if (_formFieldKey.currentState!.validate()) {
-          setState(() {
-            widget.onDone!(widget.question.constructAnswer(value));
-          });
-        }
-      },
-      validator: (value) {
-        if (value!.length < question.lengthRange.first) {
-          return AppLocalizations.of(
-            context,
-          )!.free_text_min_length_error(question.lengthRange.first);
-        } else if (value.length > question.lengthRange.last) {
-          return AppLocalizations.of(
-            context,
-          )!.free_text_max_length_error(question.lengthRange.last);
-        }
-        switch (question.textType) {
-          case FreeTextQuestionType.any:
-            return null;
-          case FreeTextQuestionType.alphanumeric:
-            if (RegExp(alphanumericPattern).hasMatch(value)) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        TextFormField(
+          key: _formFieldKey,
+          controller: _textFieldController,
+          maxLines: null,
+          onTap: _handleInteraction,
+          onChanged: (value) {
+            _hasInteracted = true;
+          },
+          validator: (value) {
+            final minLength = question.lengthRange.first;
+
+            if (value!.isEmpty && minLength == 0) {
               return null;
-            } else {
-              return AppLocalizations.of(context)!.free_text_alphanumeric_error;
             }
-          case FreeTextQuestionType.numeric:
-            if (RegExp(r'^-?[0-9]+$').hasMatch(value)) {
-              return null;
-            } else {
-              return AppLocalizations.of(context)!.free_text_numeric_error;
-            }
-          case FreeTextQuestionType.custom:
-            if (RegExp(question.customTypeExpression!).hasMatch(value)) {
-              return null;
-            } else {
+
+            if (value.length < minLength) {
               return AppLocalizations.of(
                 context,
-              )!.free_text_custom_error(question.customTypeExpression!);
+              )!.free_text_min_length_error(minLength);
+            } else if (value.length > question.lengthRange.last) {
+              return AppLocalizations.of(
+                context,
+              )!.free_text_max_length_error(question.lengthRange.last);
             }
-        }
-      },
+
+            if (value.isEmpty && minLength == 0) {
+              return null;
+            }
+
+            switch (question.textType) {
+              case FreeTextQuestionType.any:
+                return null;
+              case FreeTextQuestionType.alphanumeric:
+                if (RegExp(alphanumericPattern).hasMatch(value)) {
+                  return null;
+                } else {
+                  return AppLocalizations.of(
+                    context,
+                  )!.free_text_alphanumeric_error;
+                }
+              case FreeTextQuestionType.numeric:
+                if (RegExp(r'^-?[0-9]+$').hasMatch(value)) {
+                  return null;
+                } else {
+                  return AppLocalizations.of(context)!.free_text_numeric_error;
+                }
+              case FreeTextQuestionType.custom:
+                if (RegExp(question.customTypeExpression!).hasMatch(value)) {
+                  return null;
+                } else {
+                  return AppLocalizations.of(
+                    context,
+                  )!.free_text_custom_error(question.customTypeExpression!);
+                }
+            }
+          },
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            OutlinedButton(
+              onPressed: _handleSubmit,
+              child: Text(AppLocalizations.of(context)!.submit),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

@@ -41,20 +41,28 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     activeResult = null;
   }
 
-  void _invalidateResponse(QuestionnaireState qs) {
+  void _invalidateResponse() {
     setState(() {
       activeResult = null;
     });
   }
 
   bool _checkContinuation(QuestionnaireState qs) {
+    // Invalidate any existing result when checking continuation
+    // This ensures the banner disappears when answers change
+    if (activeResult != null) {
+      setState(() {
+        activeResult = null;
+      });
+    }
+
     final criteria = widget.study!.eligibilityCriteria;
-    EligibilityCriterion? failingResult = criteria.firstWhereOrNull(
+    final EligibilityCriterion? failingResult = criteria.firstWhereOrNull(
       (element) => element.isViolated(qs),
     );
     if (failingResult == null) return true;
     // freetext quickfix start
-    failingResult = _isFreeTextCriterion(failingResult) ? null : failingResult;
+    // failingResult = _isFreeTextCriterion(failingResult) ? null : failingResult;
     // freetext quickfix end
     setState(() {
       activeResult = EligibilityResult(
@@ -66,26 +74,31 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     return false;
   }
 
-  void _evaluateResponse(QuestionnaireState qs) {
+  void _evaluateResponse(QuestionnaireState? qs) {
+    if (qs == null) {
+      _invalidateResponse();
+      return;
+    }
     final criteria = widget.study!.eligibilityCriteria;
     setState(() {
-      final conditionResult = criteria.every((criterion) {
+      final isEligible = criteria.every((criterion) {
         // freetext quickfix start
-        if (_isFreeTextCriterion(criterion)) {
+        /*if (_isFreeTextCriterion(criterion)) {
+          print('Criterion is free text, automatically satisfying it.');
           return true;
-        }
+        }*/
         // freetext quickfix end
         return criterion.isSatisfied(qs);
       });
-      if (conditionResult) {
-        activeResult = EligibilityResult(qs, eligible: conditionResult);
+      if (isEligible) {
+        activeResult = EligibilityResult(qs, eligible: isEligible);
       } else {
         final firstFailed = criteria.firstWhere(
           (criterion) => criterion.isViolated(qs),
         );
         activeResult = EligibilityResult(
           qs,
-          eligible: conditionResult,
+          eligible: isEligible,
           firstFailed: firstFailed,
         );
       }
@@ -94,7 +107,8 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
 
   // todo quickfix until other question types are implemented (see DesignerV2's QuestionFormData)
   // make all free text questions eligible
-  bool _isFreeTextCriterion(EligibilityCriterion criterion) {
+  // does not work
+  /*bool _isFreeTextCriterion(EligibilityCriterion criterion) {
     return widget.study?.questionnaire.questions.any((element) {
           if (criterion.condition.type == ChoiceExpression.expressionType) {
             final ChoiceExpression choiceExpression =
@@ -104,7 +118,7 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           return false;
         }) ??
         false;
-  }
+  }*/
 
   void _finish() {
     Navigator.pop(context, activeResult);
@@ -178,7 +192,6 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
             child: QuestionnaireWidget(
               widget.study!.questionnaire.questions,
               title: widget.study!.title,
-              onChange: _invalidateResponse,
               onComplete: _evaluateResponse,
               shouldContinue: _checkContinuation,
             ),

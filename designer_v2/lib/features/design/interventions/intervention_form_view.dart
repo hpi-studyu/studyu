@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/features/design/interventions/intervention_fo
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
-import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
+import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -140,7 +140,7 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
             return ReactiveFormArray(
               formArray: widget.formViewModel.interventionTasksArray,
               builder: (context, formArray, child) {
-                return FormArrayTable<InterventionTaskFormViewModel>(
+                return FormListView<InterventionTaskFormViewModel>(
                   control: widget.formViewModel.interventionTasksArray,
                   items: widget.formViewModel.tasksCollection.formViewModels,
                   onSelectItem: (viewModel) =>
@@ -157,6 +157,30 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                   emptyTitle: tr.form_array_intervention_tasks_empty_title,
                   emptyDescription:
                       tr.form_array_intervention_tasks_empty_description,
+                  hideLeadingTrailingWhenEmpty: true,
+                  reorderable: !widget.formViewModel.isReadonly,
+                  onReorder: (oldIndex, newIndex) {
+                    if (newIndex > oldIndex) {
+                      newIndex -= 1;
+                    }
+                    final item = widget
+                        .formViewModel
+                        .tasksCollection
+                        .formViewModels
+                        .removeAt(oldIndex);
+                    widget.formViewModel.tasksCollection.formViewModels.insert(
+                      newIndex,
+                      item,
+                    );
+                    final controlItem = widget
+                        .formViewModel
+                        .interventionTasksArray
+                        .removeAt(oldIndex);
+                    widget.formViewModel.interventionTasksArray.insert(
+                      newIndex,
+                      controlItem,
+                    );
+                  },
                 );
               },
             );

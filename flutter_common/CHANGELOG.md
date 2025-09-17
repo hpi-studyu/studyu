@@ -1,17 +1,33 @@
+## 1.9.0
+
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: update deps.
+ - **FIX**: update Supabase public anon key in development environment.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+
+## 1.9.0-dev.1
+
+ - **FIX**: update Supabase public anon key in development environment.
+
+## 1.9.0-dev.0
+
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+
 ## 1.8.13
 
- - **FIX**: update deps.
+- **FIX**: update deps.
 
 ## 1.8.12
 
- - **FIX**: bump dependencies.
+- **FIX**: bump dependencies.
 
 ## 1.8.11
 
- - **FIX**: improve error handling in secure storage read method.
- - **FIX**: enable android encrypted shared preferences for secure storage.
- - **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
- - **FIX**: add core and flutter_common local path dependency.
+- **FIX**: improve error handling in secure storage read method.
+- **FIX**: enable android encrypted shared preferences for secure storage.
+- **FIX**: only main deployment and github deployment depends on core + flutter_common packages.
+- **FIX**: add core and flutter_common local path dependency.
 
 ## 1.8.10
 

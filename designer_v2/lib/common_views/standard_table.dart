@@ -72,7 +72,7 @@ class StandardTable<T> extends StatefulWidget {
     super.key,
   }) {
     if (trailingActionsColumn == null) {
-      this.inputTrailingActionsColumn = StandardTableColumn(
+      inputTrailingActionsColumn = StandardTableColumn(
         label: '',
         columnWidth: const MaxColumnWidth(
           IntrinsicColumnWidth(),
@@ -80,14 +80,14 @@ class StandardTable<T> extends StatefulWidget {
         ),
       );
     } else {
-      this.inputTrailingActionsColumn = trailingActionsColumn;
+      inputTrailingActionsColumn = trailingActionsColumn;
     }
     // Insert trailing column for actions menu
     if (trailingActionsAt != null) {
-      this.inputColumns = [...?columns];
-      this.inputColumns.add(this.inputTrailingActionsColumn);
+      inputColumns = [...?columns];
+      inputColumns.add(inputTrailingActionsColumn);
     } else {
-      this.inputColumns = columns ?? [];
+      inputColumns = columns ?? [];
     }
   }
 

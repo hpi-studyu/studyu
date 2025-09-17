@@ -26,8 +26,9 @@ Map<String, dynamic> _$StudySubjectToJson(StudySubject instance) =>
       'id': instance.id,
       'study_id': instance.studyId,
       'user_id': instance.userId,
-      'started_at': ?instance.startedAt?.toIso8601String(),
+      if (instance.startedAt?.toIso8601String() case final value?)
+        'started_at': value,
       'selected_intervention_ids': instance.selectedInterventionIds,
-      'invite_code': ?instance.inviteCode,
+      if (instance.inviteCode case final value?) 'invite_code': value,
       'is_deleted': instance.isDeleted,
     };

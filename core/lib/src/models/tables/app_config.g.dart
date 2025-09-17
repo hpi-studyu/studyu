@@ -29,5 +29,5 @@ Map<String, dynamic> _$AppConfigToJson(AppConfig instance) => <String, dynamic>{
   'designer_terms': instance.designerTerms,
   'imprint': instance.imprint,
   'contact': instance.contact.toJson(),
-  'analytics': ?instance.analytics?.toJson(),
+  if (instance.analytics?.toJson() case final value?) 'analytics': value,
 };

@@ -19,5 +19,6 @@ Map<String, dynamic> _$StudyInviteToJson(StudyInvite instance) =>
     <String, dynamic>{
       'code': instance.code,
       'study_id': instance.studyId,
-      'preselected_intervention_ids': ?instance.preselectedInterventionIds,
+      if (instance.preselectedInterventionIds case final value?)
+        'preselected_intervention_ids': value,
     };

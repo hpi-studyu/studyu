@@ -16,6 +16,6 @@ Map<String, dynamic> _$EligibilityCriterionToJson(
   EligibilityCriterion instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'reason': ?instance.reason,
+  if (instance.reason case final value?) 'reason': value,
   'condition': instance.condition.toJson(),
 };

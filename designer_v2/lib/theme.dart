@@ -45,10 +45,11 @@ class ThemeConfig {
   static Color sidesheetBackgroundColor(ThemeData theme) =>
       theme.scaffoldBackgroundColor.withValues(alpha: 0.15);
 
-  static InputDecorationTheme dropdownInputDecorationTheme(ThemeData theme) =>
-      theme.inputDecorationTheme.copyWith(
-        contentPadding: const EdgeInsets.fromLTRB(14.0, 14.0, 14.0, 14.0),
-      );
+  static InputDecorationThemeData dropdownInputDecorationTheme(
+    ThemeData theme,
+  ) => theme.inputDecorationTheme.copyWith(
+    contentPadding: const EdgeInsets.fromLTRB(14.0, 14.0, 14.0, 14.0),
+  );
 
   static DropdownMenuItemTheme dropdownMenuItemTheme(ThemeData theme) =>
       DropdownMenuItemTheme(
@@ -239,8 +240,8 @@ class ThemeProvider extends InheritedWidget {
     );
   }
 
-  BottomAppBarTheme bottomAppBarTheme(ColorScheme colors) {
-    return BottomAppBarTheme(color: colors.surface, elevation: 0);
+  BottomAppBarThemeData bottomAppBarThemeData(ColorScheme colors) {
+    return BottomAppBarThemeData(color: colors.surface, elevation: 0);
   }
 
   BottomNavigationBarThemeData bottomNavigationBarTheme(ColorScheme colors) {
@@ -470,7 +471,7 @@ class ThemeProvider extends InheritedWidget {
       appBarTheme: appBarTheme(colorScheme),
       cardTheme: cardThemeData(),
       listTileTheme: listTileTheme(colorScheme),
-      bottomAppBarTheme: bottomAppBarTheme(colorScheme),
+      bottomAppBarTheme: bottomAppBarThemeData(colorScheme),
       bottomNavigationBarTheme: bottomNavigationBarTheme(colorScheme),
       navigationRailTheme: navigationRailTheme(colorScheme),
       tabBarTheme: tabBarThemeData(colorScheme),
@@ -502,7 +503,7 @@ class ThemeProvider extends InheritedWidget {
       appBarTheme: appBarTheme(colorScheme),
       cardTheme: cardThemeData(),
       listTileTheme: listTileTheme(colorScheme),
-      bottomAppBarTheme: bottomAppBarTheme(colorScheme),
+      bottomAppBarTheme: bottomAppBarThemeData(colorScheme),
       bottomNavigationBarTheme: bottomNavigationBarTheme(colorScheme),
       navigationRailTheme: navigationRailTheme(colorScheme),
       tabBarTheme: tabBarThemeData(colorScheme),

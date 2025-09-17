@@ -15,6 +15,6 @@ NotExpression _$NotExpressionFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$NotExpressionToJson(NotExpression instance) =>
     <String, dynamic>{
-      'type': ?instance.type,
+      if (instance.type case final value?) 'type': value,
       'expression': instance.expression.toJson(),
     };

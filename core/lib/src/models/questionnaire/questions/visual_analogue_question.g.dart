@@ -32,9 +32,9 @@ Map<String, dynamic> _$VisualAnalogueQuestionToJson(
 ) => <String, dynamic>{
   'type': instance.type,
   'id': instance.id,
-  'prompt': ?instance.prompt,
-  'rationale': ?instance.rationale,
-  'conditional': ?instance.conditional?.toJson(),
+  if (instance.prompt case final value?) 'prompt': value,
+  if (instance.rationale case final value?) 'rationale': value,
+  if (instance.conditional?.toJson() case final value?) 'conditional': value,
   'minimum': instance.minimum,
   'maximum': instance.maximum,
   'step': instance.step,

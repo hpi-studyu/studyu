@@ -24,7 +24,8 @@ Map<String, dynamic> _$GaugeComparisonSectionToJson(
 ) => <String, dynamic>{
   'type': instance.type,
   'id': instance.id,
-  'title': ?instance.title,
-  'description': ?instance.description,
-  'resultProperty': ?instance.resultProperty?.toJson(),
+  if (instance.title case final value?) 'title': value,
+  if (instance.description case final value?) 'description': value,
+  if (instance.resultProperty?.toJson() case final value?)
+    'resultProperty': value,
 };

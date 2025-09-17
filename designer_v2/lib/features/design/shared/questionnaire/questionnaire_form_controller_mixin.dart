@@ -1,4 +1,5 @@
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/questionnaire_form_data.dart';
@@ -29,6 +30,26 @@ mixin WithQuestionnaireControls<D, Q extends QuestionFormViewModel>
           .map((data) => provideQuestionFormViewModel(data))
           .toList();
       questionFormViewModels.reset(viewModels);
+
+      _initializeAvailableQuestionsForConditionals(viewModels);
+    }
+  }
+
+  void _initializeAvailableQuestionsForConditionals(
+    List<Q> questionViewModels,
+  ) {
+    final questions = questionViewModels
+        .map((vm) => vm.buildFormData().toQuestion())
+        .toList();
+
+    if (questions.isNotEmpty) {
+      ConditionRowFormViewModel.availableQuestions = questions;
+
+      for (final vm in questionViewModels) {
+        if (vm.questionConditionalControl.value != null) {
+          vm.initializeDeferredConditions();
+        }
+      }
     }
   }
 

@@ -71,16 +71,16 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
             key: formKey,
             child: QuestionnaireWidget(
               widget.task.questions.questions,
+              taskId: widget.task.id,
               header: widget.task.header,
               footer: widget.task.footer,
-              onChange: _responseValidator,
               onComplete: (qs) => setState(() {
                 response = qs;
               }),
             ),
           ),
         ),
-        if (response != null && responseValidator)
+        if (response != null)
           ElevatedButton.icon(
             style: ButtonStyle(
               backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
@@ -94,6 +94,10 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
               });
               switch (response) {
                 case final QuestionnaireState questionnaireState:
+                  // Filter all skipped conditional questions
+                  questionnaireState.answers.removeWhere(
+                    (answer, answerValue) => answerValue.response == null,
+                  );
                   await _addQuestionnaireResult<QuestionnaireState>(
                     questionnaireState,
                     context,
@@ -112,17 +116,5 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
           const SizedBox.shrink(),
       ],
     );
-  }
-
-  void _responseValidator(QuestionnaireState qs) {
-    if (qs.answers.length == widget.task.questions.questions.length) {
-      setState(() {
-        responseValidator = true;
-      });
-    } else {
-      setState(() {
-        responseValidator = false;
-      });
-    }
   }
 }

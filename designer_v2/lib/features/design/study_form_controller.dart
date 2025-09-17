@@ -8,6 +8,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_data.dart';
+import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_data.dart';
 import 'package:studyu_designer_v2/features/design/interventions/mp23_interventions_form_controller.dart';
@@ -22,6 +23,7 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/repositories/fitbit_credentials_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 
@@ -33,6 +35,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     required this.router,
     required this.studyRepository,
     required this.authRepository,
+    required this.fitbitCredentialsRepository,
     required super.formData, // Study
     super.validationSet = StudyFormValidationSet.draft,
   }) {
@@ -46,6 +49,7 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
+  final IFitbitCredentialsRepository fitbitCredentialsRepository;
   final GoRouter router;
 
   bool get isStudyReadonly =>
@@ -94,6 +98,13 @@ class StudyFormViewModel extends FormViewModel<Study>
         validationSet: validationSet,
       );
 
+  late final FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel =
+      FitbitCredentialsFormViewModel(
+        study: formData!,
+        validationSet: validationSet,
+        fitbitCredentialsRepository: fitbitCredentialsRepository,
+      );
+
   @override
   FormValidationConfigSet get sharedValidationConfig => {
     StudyFormValidationSet.draft: [], // defined in subforms
@@ -107,6 +118,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     'enrollment': enrollmentFormViewModel.form,
     'measurements': measurementsFormViewModel.form,
     'interventions': interventionsFormViewModel.form,
+    'fitbit': fitbitCredentialsFormViewModel.form,
   });
 
   @override
@@ -117,6 +129,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     measurementsFormViewModel.read();
     interventionsFormViewModel.read();
     reportsFormViewModel.read();
+    fitbitCredentialsFormViewModel.read();
     super.read(formData);
   }
 
@@ -181,6 +194,9 @@ StudyFormViewModel studyFormViewModel(Ref ref, StudyID studyId) {
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
+    fitbitCredentialsRepository: ref.watch(
+      fitbitCredentialsRepositoryProvider(studyId),
+    ),
     formData: state.study.value,
   );
 }

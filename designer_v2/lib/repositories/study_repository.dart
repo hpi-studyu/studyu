@@ -111,12 +111,13 @@ class StudyRepository extends ModelRepository<Study>
   /// Since the Study object in the dashboard is fetched with limited columns (no intervention or measurement data),
   /// we need to fetch the full columns in order to duplicate it correctly.
   @override
-  Future<void> duplicateAndSave(Study model) async {
+  Future<Study> duplicateAndSave(Study model) async {
     final Study completeModel = await apiClient.fetchStudy(model.id);
     final duplicate = completeModel.duplicateAsDraft(
       authRepository.currentUser!.id,
     );
     await save(duplicate);
+    return duplicate;
   }
 
   @override
@@ -176,10 +177,10 @@ class StudyRepository extends ModelRepository<Study>
         type: StudyActionType.duplicateDraft,
         label: StudyActionType.duplicateDraft.string,
         onExecute: () async {
-          return await duplicateAndSave(model).then(
-            (value) =>
-                ref.read(routerProvider).dispatch(RoutingIntents.studies),
-          );
+          final duplicatedStudy = await duplicateAndSave(model);
+          return ref
+              .read(routerProvider)
+              .dispatch(RoutingIntents.studyEdit(duplicatedStudy.id));
         },
         isAvailable:
             model.status != StudyStatus.draft && model.canCopy(currentUser),
@@ -188,10 +189,10 @@ class StudyRepository extends ModelRepository<Study>
         type: StudyActionType.duplicate,
         label: StudyActionType.duplicate.string,
         onExecute: () async {
-          return await duplicateAndSave(model).then(
-            (value) =>
-                ref.read(routerProvider).dispatch(RoutingIntents.studies),
-          );
+          final duplicatedStudy = await duplicateAndSave(model);
+          return ref
+              .read(routerProvider)
+              .dispatch(RoutingIntents.studyEdit(duplicatedStudy.id));
         },
         isAvailable:
             model.status == StudyStatus.draft && model.canCopy(currentUser),
@@ -254,7 +255,7 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
 
   @override
   Future<List<Study>> fetchAll() {
-    return apiClient.getUserStudies();
+    return apiClient.getUserStudies(forDashboardDisplay: false);
   }
 
   @override

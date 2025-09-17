@@ -18,6 +18,7 @@ String tableName(Type cls) => switch (cls) {
   == Repo => Repo.tableName,
   == StudyInvite => StudyInvite.tableName,
   == StudyUUser => StudyUUser.tableName,
+  == StudyFitbitCredentials => StudyFitbitCredentials.tableName,
   _ => throw ArgumentError('$cls is not a supported Supabase type'),
 };
 
@@ -32,6 +33,7 @@ abstract class SupabaseObjectFunctions<T extends SupabaseObject>
         == Repo => Repo.fromJson(json) as T,
         == StudyInvite => StudyInvite.fromJson(json) as T,
         == StudyUUser => StudyUUser.fromJson(json) as T,
+        == StudyFitbitCredentials => StudyFitbitCredentials.fromJson(json) as T,
         _ => throw ArgumentError('$T is not a supported Supabase type'),
       };
 

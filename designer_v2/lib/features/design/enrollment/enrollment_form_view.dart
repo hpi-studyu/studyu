@@ -11,10 +11,11 @@ import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_view.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_logic_form_view.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
-import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
+import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -51,54 +52,54 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                       control: formViewModel.enrollmentTypeControl,
                       label: tr.form_field_enrollment_type,
                       labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      input: Column(
-                        children: formViewModel.enrollmentTypeControlOptions
-                            .map<Widget>(
-                              (option) => RadioListTile<Participation>(
-                                groupValue:
-                                    formViewModel.enrollmentTypeControl.value,
-                                onChanged: formViewModel.isReadonly
-                                    ? null
-                                    : (value) =>
-                                          formViewModel
-                                                  .enrollmentTypeControl
-                                                  .value =
-                                              option.value,
-                                value: option.value,
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      option.value.whoShort,
-                                      style: theme.textTheme.bodyLarge,
-                                    ),
-                                    const SizedBox(height: 2.0),
-                                  ],
+                      input: RadioGroup<Participation>(
+                        groupValue: formViewModel.enrollmentTypeControl.value,
+                        onChanged: (Participation? value) {
+                          if (!formViewModel.isReadonly && value != null) {
+                            formViewModel.enrollmentTypeControl.value = value;
+                          }
+                        },
+                        child: Column(
+                          children: formViewModel.enrollmentTypeControlOptions
+                              .map<Widget>(
+                                (option) => RadioListTile<Participation>(
+                                  value: option.value,
+                                  enabled: !formViewModel.isReadonly,
+                                  // disables in readonly mode
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        option.value.whoShort,
+                                        style: theme.textTheme.bodyLarge,
+                                      ),
+                                      const SizedBox(height: 2.0),
+                                    ],
+                                  ),
+                                  subtitle: (option.description) != null
+                                      ? TextParagraph(
+                                          text: option.description,
+                                          selectable: false,
+                                          style: ThemeConfig.bodyTextMuted(
+                                            theme,
+                                          ),
+                                        )
+                                      : null,
                                 ),
-                                subtitle: (option.description) != null
-                                    ? TextParagraph(
-                                        text: option.description,
-                                        selectable: false,
-                                        style: ThemeConfig.bodyTextMuted(theme),
-                                      )
-                                    : null,
-                              ),
-                            )
-                            .toList()
-                            .separatedBy(() => const SizedBox(height: 8.0)),
+                              )
+                              .toList()
+                              .separatedBy(() => const SizedBox(height: 8.0)),
+                        ),
                       ),
                     ),
                   ],
-                  columnWidths: const {
-                    0: FixedColumnWidth(130.0),
-                    1: FlexColumnWidth(),
-                  },
                 ),
                 const SizedBox(height: 32.0),
                 ReactiveFormArray(
                   formArray: formViewModel.questionsArray,
                   builder: (context, formArray, child) {
-                    return FormArrayTable<ScreenerQuestionFormViewModel>(
+                    return FormListView<ScreenerQuestionFormViewModel>(
                       control: formViewModel.questionsArray,
                       items: formViewModel.questionModels,
                       onSelectItem: (viewModel) {
@@ -108,6 +109,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           routeArgs,
                           context,
                           ref,
+                          study.questionnaire,
                         );
                       },
                       getActionsAt: (viewModel, _) =>
@@ -119,6 +121,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           routeArgs,
                           context,
                           ref,
+                          study.questionnaire,
                         );
                       },
                       sectionDescription:
@@ -169,6 +172,23 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                           ],
                         );
                       },
+                      reorderable: !formViewModel.isReadonly,
+                      onReorder: (oldIndex, newIndex) {
+                        if (newIndex > oldIndex) {
+                          newIndex -= 1;
+                        }
+                        final item = formViewModel.questionModels.removeAt(
+                          oldIndex,
+                        );
+                        formViewModel.questionModels.insert(newIndex, item);
+                        final controlItem = formViewModel.questionsArray
+                            .removeAt(oldIndex);
+                        formViewModel.questionsArray.insert(
+                          newIndex,
+                          controlItem,
+                        );
+                        formViewModel.save();
+                      },
                     );
                   },
                 ),
@@ -176,7 +196,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                 ReactiveFormArray(
                   formArray: formViewModel.consentItemArray,
                   builder: (context, formArray, child) {
-                    return FormArrayTable<ConsentItemFormViewModel>(
+                    return FormListView<ConsentItemFormViewModel>(
                       control: formViewModel.consentItemArray,
                       items: formViewModel.consentItemModels,
                       onSelectItem: (viewModel) {
@@ -226,6 +246,23 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
                             const SizedBox.shrink(),
                         ],
                       ),
+                      reorderable: !formViewModel.isReadonly,
+                      onReorder: (oldIndex, newIndex) {
+                        if (newIndex > oldIndex) {
+                          newIndex -= 1;
+                        }
+                        final item = formViewModel.consentItemModels.removeAt(
+                          oldIndex,
+                        );
+                        formViewModel.consentItemModels.insert(newIndex, item);
+                        final controlItem = formViewModel.consentItemArray
+                            .removeAt(oldIndex);
+                        formViewModel.consentItemArray.insert(
+                          newIndex,
+                          controlItem,
+                        );
+                        formViewModel.save();
+                      },
                     );
                   },
                 ),
@@ -242,6 +279,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
     ScreenerQuestionFormRouteArgs routeArgs,
     BuildContext context,
     WidgetRef ref,
+    StudyUQuestionnaire questionnaire,
   ) {
     final formViewModel = ref.watch(
       screenerQuestionFormViewModelProvider(routeArgs),
@@ -256,6 +294,7 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
           index: 0,
           formViewBuilder: (formViewModel) => SurveyQuestionFormView(
             formViewModel: formViewModel,
+            studyId: studyId,
             isHtmlStyleable: false,
           ),
         ),
@@ -264,6 +303,14 @@ class StudyDesignEnrollmentFormView extends StudyDesignPageWidget {
           index: 1,
           formViewBuilder: (formViewModel) =>
               ScreenerQuestionLogicFormView(formViewModel: formViewModel),
+        ),
+        FormSideSheetTab(
+          title: tr.navlink_question_visibility_logic,
+          index: 2,
+          formViewBuilder: (formViewModel) => ConditionalQuestionFormView(
+            formViewModel: formViewModel,
+            allQuestions: questionnaire.questions,
+          ),
         ),
       ],
     );

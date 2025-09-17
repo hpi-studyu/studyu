@@ -19,11 +19,13 @@ Contact _$ContactFromJson(Map<String, dynamic> json) => Contact()
 
 Map<String, dynamic> _$ContactToJson(Contact instance) => <String, dynamic>{
   'organization': instance.organization,
-  'institutionalReviewBoard': ?instance.institutionalReviewBoard,
-  'institutionalReviewBoardNumber': ?instance.institutionalReviewBoardNumber,
-  'researchers': ?instance.researchers,
+  if (instance.institutionalReviewBoard case final value?)
+    'institutionalReviewBoard': value,
+  if (instance.institutionalReviewBoardNumber case final value?)
+    'institutionalReviewBoardNumber': value,
+  if (instance.researchers case final value?) 'researchers': value,
   'email': instance.email,
   'website': instance.website,
   'phone': instance.phone,
-  'additionalInfo': ?instance.additionalInfo,
+  if (instance.additionalInfo case final value?) 'additionalInfo': value,
 };
