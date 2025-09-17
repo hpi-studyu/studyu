@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/common_views/studyu_logo.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/studyu_jtbd.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -140,10 +141,8 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                             ),
                           ],
                         ),
-                        /*
-                        // Version info disabled for now
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             versionText(
                               textStyle: TextStyle(
@@ -156,7 +155,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                               ),
                             ),
                           ],
-                        ), */
+                        ),
                       ],
                     ),
                   ),
