@@ -309,7 +309,6 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       // Subscribe to existing model (may not be fetched yet)
       wrappedModel = get(modelId, strict: !fetchOnSubscribe);
       if (wrappedModel?.isMarkedForRefresh ?? false) {
-        print("Model $modelId marked for refresh, refetching");
         wrappedModel = null; // force refetch
         //wrappedModel!.markAsLoading();
         //_allModels.remove(modelId);
@@ -321,7 +320,6 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       for (final wrappedModel in event) {
         if (getKey(wrappedModel.model) == modelId) {
           if (wrappedModel.isMarkedForRefresh) {
-            print("Model $modelId marked for refresh, refetching");
             return null; // force refetch
           }
           return wrappedModel;
@@ -340,17 +338,14 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     if (fetchOnSubscribe) {
       if (!(wrappedModel != null && wrappedModel.isLocalOnly) ||
           wrappedModel.isMarkedForRefresh) {
-        print("Fetching model $modelId on subscribe");
         fetch(modelId).catchError((Object e) {
           if (!modelController.isClosed) {
             modelController.addError(e);
           }
-          print("Error fetching model $modelId: $e");
           return e as WrappedModel<T>;
         });
       }
     }
-    print("return modelController for model $modelId");
     if (wrappedModel?.isMarkedForRefresh ?? false) {
       wrappedModel?.isMarkedForRefresh = false;
     }
