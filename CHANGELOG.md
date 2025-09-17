@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-09-17
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_flutter_common` - `v1.9.1`](#studyu_flutter_common---v191)
+
+---
+
+#### `studyu_flutter_common` - `v1.9.1`
+
+ - **FIX**: update Supabase configuration and remove debug print statements from model repository.
+
+
 ## 2025-09-15
 
 ### Changes
