@@ -29,7 +29,7 @@ dependencies:
   intl: ^0.20.2
   material_color_utilities: ^0.11.1 # integration_test
   material_design_icons_flutter: ^7.0.7296
-  package_info_plus: ^8.3.1
+  package_info_plus: ^9.0.0
   pointer_interceptor: ^0.10.1+2
   reactive_color_picker: ^2.2.2
   reactive_forms: ^18.1.1
@@ -39,8 +39,8 @@ dependencies:
   rxdart: ^0.28.0
   studyu_core: ^4.7.0
   studyu_flutter_common: ^1.9.1
-  supabase: ^2.9.0
-  supabase_flutter: ^2.10.0
+  supabase: ^2.9.1
+  supabase_flutter: ^2.10.1
   url_launcher: ^6.3.2
   uuid: ^4.5.1
   web: ^1.1.1
