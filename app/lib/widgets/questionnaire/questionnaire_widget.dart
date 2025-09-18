@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:studyu_app/widgets/html_text.dart';
@@ -140,9 +141,11 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _onQuestionDone(Answer answer, int index) {
-    print(
-      "QuestionnaireWidget: Answer received for question ${answer.question} - $answer",
-    );
+    if (kDebugMode) {
+      debugPrint(
+        "QuestionnaireWidget: Answer received for question ${answer.question} - $answer",
+      );
+    }
     qs.answers[answer.question] = answer;
     final shouldContinue = widget.shouldContinue?.call(qs);
 
@@ -301,9 +304,11 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       });
     } else {
       // Could not find render object after retries
-      print(
-        "QuestionnaireWidget: Unable to find render object for question at index $targetQuestionIndex",
-      );
+      if (kDebugMode) {
+        debugPrint(
+          "QuestionnaireWidget: Unable to find render object for question at index $targetQuestionIndex",
+        );
+      }
     }
   }
 
