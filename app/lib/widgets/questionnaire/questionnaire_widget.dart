@@ -147,13 +147,27 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     final currentQuestionIndex = widget.questions.indexWhere(
       (q) => q.id == answer.question,
     );
+
+    // Check if this is a modification to an earlier question (not the last shown question)
+    final isModificationToEarlierQuestion =
+        answer.question != shownQuestions.last.question.id;
+
+    // Check if there are questions whose visibility depend on this question
+    final hasConditionalDependencies = _isConditionalTarget(answer.question);
+
     bool hasMoreQuestions = false;
 
-    // Look for any remaining questions that should be shown
-    for (int i = currentQuestionIndex + 1; i < widget.questions.length; i++) {
-      if (widget.questions[i].shouldBeShown(qs)) {
-        hasMoreQuestions = true;
-        break;
+    // If this is a modification to an earlier question with conditional dependencies,
+    // we need to continue processing to handle the reset and re-evaluation
+    if (isModificationToEarlierQuestion && hasConditionalDependencies) {
+      hasMoreQuestions = true;
+    } else {
+      // Look for any remaining questions that should be shown
+      for (int i = currentQuestionIndex + 1; i < widget.questions.length; i++) {
+        if (widget.questions[i].shouldBeShown(qs)) {
+          hasMoreQuestions = true;
+          break;
+        }
       }
     }
 
