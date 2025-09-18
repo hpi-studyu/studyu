@@ -59,6 +59,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
         keyContext,
         duration: const Duration(milliseconds: 200),
         curve: Curves.decelerate,
+        alignment: 0.5, // Center the text field in the viewport
       );
     }
   }
