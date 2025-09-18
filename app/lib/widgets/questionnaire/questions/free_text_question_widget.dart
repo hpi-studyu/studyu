@@ -47,8 +47,8 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     if (_focusNode.hasFocus) {
       _ensureTextFieldVisible();
     } else {
-      // When focus is lost (keyboard dismissed), auto-submit if there's content
-      _handleAutoSubmit();
+      // When focus is lost (keyboard dismissed), submit
+      _handleSubmit();
     }
   }
 
@@ -65,12 +65,12 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     }
   }
 
-  void _handleSubmit() {
+  void _dismissKeyboard() {
     // Dismiss the keyboard
     FocusScope.of(context).unfocus();
   }
 
-  void _handleAutoSubmit() {
+  void _handleSubmit() {
     final value = _textFieldController.text;
     _validateAndSubmit(value);
   }
@@ -146,7 +146,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             _debouncedValidation();
           },
           onFieldSubmitted: (value) {
-            _handleSubmit();
+            _dismissKeyboard();
           },
           validator: (value) {
             final minLength = question.lengthRange.first;
@@ -202,7 +202,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             OutlinedButton(
-              onPressed: _handleSubmit,
+              onPressed: _dismissKeyboard,
               child: Text(AppLocalizations.of(context)!.submit),
             ),
           ],
