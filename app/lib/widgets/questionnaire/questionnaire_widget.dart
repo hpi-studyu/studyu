@@ -290,11 +290,41 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
               }
             });
       }
-    } else if (retryCount < 3) {
+    } else if (retryCount < 5) {
       Timer(const Duration(milliseconds: 100), () {
-        _performScrollToNewQuestion(retryCount: retryCount + 1);
+        _scrollToMakeTargetVisible(targetQuestionKey).then((_) {
+          _isProgrammaticScroll = false;
+          Timer(const Duration(milliseconds: 100), () {
+            _performScrollToNewQuestion(retryCount: retryCount + 1);
+          });
+        });
       });
+    } else {
+      // Could not find render object after retries
+      print(
+        "QuestionnaireWidget: Unable to find render object for question at index $targetQuestionIndex",
+      );
     }
+  }
+
+  Future<void> _scrollToMakeTargetVisible(GlobalKey targetKey) {
+    // Fallback: scroll incrementally until the target question becomes visible
+    final viewportHeight = _scrollController.position.viewportDimension;
+    final scrollIncrement = viewportHeight * 0.5;
+    final currentPosition = _scrollController.position.pixels;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    // Return if already at max scroll
+    if (currentPosition >= maxScroll) return Future.value();
+    final newPosition = (currentPosition + scrollIncrement).clamp(
+      0.0,
+      maxScroll,
+    );
+    _isProgrammaticScroll = true;
+    return _scrollController.animateTo(
+      newPosition,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
