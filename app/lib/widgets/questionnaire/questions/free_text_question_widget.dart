@@ -46,6 +46,9 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   void _onFocusChange() {
     if (_focusNode.hasFocus) {
       _ensureTextFieldVisible();
+    } else {
+      // When focus is lost (keyboard dismissed), auto-submit if there's content
+      _handleAutoSubmit();
     }
   }
 
@@ -63,13 +66,19 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   }
 
   void _handleSubmit() {
-    final value = _textFieldController.text;
-
     // Dismiss the keyboard
     FocusScope.of(context).unfocus();
+  }
 
-    // Always validate first, then handle the result
-    if (_formFieldKey.currentState!.validate()) {
+  void _handleAutoSubmit() {
+    final value = _textFieldController.text;
+
+    _validateAndSubmit(value);
+  }
+
+  void _validateAndSubmit(String value) {
+    if (_formFieldKey.currentState?.validate() == true) {
+      print("Submitting free text answer: $value");
       widget.onDone?.call(widget.question.constructAnswer(value));
     }
   }
