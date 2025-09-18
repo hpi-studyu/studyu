@@ -146,73 +146,82 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     qs.answers[answer.question] = answer;
     final shouldContinue = widget.shouldContinue?.call(qs);
 
+    // Check if the questionnaire should not continue
+    if (shouldContinue == false) {
+      _finishQuestionnaire(qs);
+      return;
+    }
+
+    // Check if there are questions whose visibility depend on this question
+    final hasConditionalDependencies = _isConditionalTarget(answer.question);
+
+    // If this question has conditional dependencies, always process them first
+    if (hasConditionalDependencies) {
+      _handleConditionalQuestionChange(answer, index);
+      return;
+    }
+
     // Check if there are any more questions that should be shown
     final currentQuestionIndex = widget.questions.indexWhere(
       (q) => q.id == answer.question,
     );
 
-    // Check if this is a modification to an earlier question (not the last shown question)
-    final isModificationToEarlierQuestion =
-        answer.question != shownQuestions.last.question.id;
-
-    // Check if there are questions whose visibility depend on this question
-    final hasConditionalDependencies = _isConditionalTarget(answer.question);
-
     bool hasMoreQuestions = false;
-
-    // If this is a modification to an earlier question with conditional dependencies,
-    // we need to continue processing to handle the reset and re-evaluation
-    if (isModificationToEarlierQuestion && hasConditionalDependencies) {
-      hasMoreQuestions = true;
-    } else {
-      // Look for any remaining questions that should be shown
-      for (int i = currentQuestionIndex + 1; i < widget.questions.length; i++) {
-        if (widget.questions[i].shouldBeShown(qs)) {
-          hasMoreQuestions = true;
-          break;
-        }
+    for (int i = currentQuestionIndex + 1; i < widget.questions.length; i++) {
+      if (widget.questions[i].shouldBeShown(qs)) {
+        hasMoreQuestions = true;
+        break;
       }
     }
 
-    // Check if the questionnaire should not continue or if there are no more questions to show
-    if (shouldContinue == false || !hasMoreQuestions) {
+    // If no more questions, finish the questionnaire
+    if (!hasMoreQuestions) {
       _finishQuestionnaire(qs);
       return;
     }
 
-    _processQuestionCompletion(answer, index);
-  }
-
-  void _processQuestionCompletion(Answer answer, int index) {
-    bool questionWasInserted = false;
-
-    // Check if the question that was answered is the last shown question.
+    // Try to insert the next question for normal progression
     if (answer.question == shownQuestions.last.question.id) {
-      // If the last question displayed was answered, we can try to insert the next question.
-      // Index is incorrect if questions are skipped, use last shown question index instead
       final insertedQuestion = _insertQuestion(
         widget.questions.indexOf(shownQuestions.last.question),
       );
-      questionWasInserted = insertedQuestion != null;
-    } else {
-      // Check if there are questions whose visibility depend on the question that's answer was just edited.
-      if (_isConditionalTarget(answer.question)) {
-        _resetQuestionnaireTo(answer.question);
-        // Try to insert the next question after the reset.
-        final answeredQuestionIndex = widget.questions.indexWhere(
-          (q) => q.id == answer.question,
-        );
-        final insertedQuestion = _insertQuestion(answeredQuestionIndex);
-        if (insertedQuestion != null) {
-          // If a question was inserted, the questionnaire is not finished yet.
-          _finishQuestionnaire(null);
-          questionWasInserted = true;
-        }
+      if (insertedQuestion != null) {
+        _scrollToNewQuestion();
+      }
+    }
+  }
+
+  void _handleConditionalQuestionChange(Answer answer, int index) {
+    // Reset questionnaire to remove any questions that should no longer be shown
+    _resetQuestionnaireTo(answer.question);
+
+    // Check if there are any questions that should now be shown
+    final currentQuestionIndex = widget.questions.indexWhere(
+      (q) => q.id == answer.question,
+    );
+
+    bool hasQuestionsToShow = false;
+    for (int i = currentQuestionIndex + 1; i < widget.questions.length; i++) {
+      if (widget.questions[i].shouldBeShown(qs)) {
+        hasQuestionsToShow = true;
+        break;
       }
     }
 
-    if (questionWasInserted) {
-      _scrollToNewQuestion();
+    if (hasQuestionsToShow) {
+      // Try to insert the next question that should be shown
+      final insertedQuestion = _insertQuestion(currentQuestionIndex);
+      if (insertedQuestion != null) {
+        // A new question was inserted, reset completion state
+        _finishQuestionnaire(null);
+        _scrollToNewQuestion();
+      } else {
+        // No question was inserted but should have been - finish questionnaire
+        _finishQuestionnaire(qs);
+      }
+    } else {
+      // No more questions to show - finish questionnaire
+      _finishQuestionnaire(qs);
     }
   }
 
