@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_app/widgets/questionnaire/question_container.dart';
 import 'package:studyu_core/core.dart';
@@ -290,13 +291,9 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _onScroll() {
-    // Only dismiss keyboard for user-initiated scrolls
-    if (!_isProgrammaticScroll &&
-        _scrollController.position.activity?.isScrolling == true) {
-      // Check if this is a user drag/fling and not a programmatic animation
-      final activity = _scrollController.position.activity;
-      if (activity is DragScrollActivity ||
-          activity is BallisticScrollActivity) {
+    if (!_isProgrammaticScroll && _scrollController.hasClients) {
+      if (_scrollController.position.userScrollDirection !=
+          ScrollDirection.idle) {
         FocusScope.of(context).unfocus();
       }
     }
