@@ -23,7 +23,6 @@ class FreeTextQuestionWidget extends QuestionWidget {
 class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   final _textFieldController = TextEditingController();
   final _formFieldKey = GlobalKey<FormFieldState>();
-  final _scrollController = ScrollController();
   final _focusNode = FocusNode();
   bool _hasInteracted = false;
   Timer? _debounceTimer;
@@ -38,7 +37,6 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   @override
   void dispose() {
     _textFieldController.dispose();
-    _scrollController.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
     _debounceTimer?.cancel();
@@ -120,94 +118,89 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   @override
   Widget build(BuildContext context) {
     final question = widget.question;
-    return SingleChildScrollView(
-      controller: _scrollController,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextFormField(
-            key: _formFieldKey,
-            controller: _textFieldController,
-            maxLines: null,
-            focusNode: _focusNode,
-            keyboardType: _getKeyboardType(),
-            inputFormatters: _getInputFormatters(),
-            textInputAction: TextInputAction.done,
-            autovalidateMode: _autovalidateMode,
-            onTap: () {
-              _handleInteraction();
-              _ensureTextFieldVisible();
-            },
-            onChanged: (value) {
-              _handleInteraction();
-              _debouncedValidation();
-            },
-            onFieldSubmitted: (value) {
-              _handleSubmit();
-            },
-            validator: (value) {
-              final minLength = question.lengthRange.first;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        TextFormField(
+          key: _formFieldKey,
+          controller: _textFieldController,
+          maxLines: null,
+          focusNode: _focusNode,
+          keyboardType: _getKeyboardType(),
+          inputFormatters: _getInputFormatters(),
+          textInputAction: TextInputAction.done,
+          autovalidateMode: _autovalidateMode,
+          onTap: () {
+            _handleInteraction();
+            _ensureTextFieldVisible();
+          },
+          onChanged: (value) {
+            _handleInteraction();
+            _debouncedValidation();
+          },
+          onFieldSubmitted: (value) {
+            _handleSubmit();
+          },
+          validator: (value) {
+            final minLength = question.lengthRange.first;
 
-              if (value!.isEmpty && minLength == 0) {
+            if (value!.isEmpty && minLength == 0) {
+              return null;
+            }
+
+            if (value.length < minLength) {
+              return AppLocalizations.of(
+                context,
+              )!.free_text_min_length_error(minLength);
+            } else if (value.length > question.lengthRange.last) {
+              return AppLocalizations.of(
+                context,
+              )!.free_text_max_length_error(question.lengthRange.last);
+            }
+
+            if (value.isEmpty && minLength == 0) {
+              return null;
+            }
+
+            switch (question.textType) {
+              case FreeTextQuestionType.any:
                 return null;
-              }
-
-              if (value.length < minLength) {
-                return AppLocalizations.of(
-                  context,
-                )!.free_text_min_length_error(minLength);
-              } else if (value.length > question.lengthRange.last) {
-                return AppLocalizations.of(
-                  context,
-                )!.free_text_max_length_error(question.lengthRange.last);
-              }
-
-              if (value.isEmpty && minLength == 0) {
-                return null;
-              }
-
-              switch (question.textType) {
-                case FreeTextQuestionType.any:
+              case FreeTextQuestionType.alphanumeric:
+                if (RegExp(alphanumericPattern).hasMatch(value)) {
                   return null;
-                case FreeTextQuestionType.alphanumeric:
-                  if (RegExp(alphanumericPattern).hasMatch(value)) {
-                    return null;
-                  } else {
-                    return AppLocalizations.of(
-                      context,
-                    )!.free_text_alphanumeric_error;
-                  }
-                case FreeTextQuestionType.numeric:
-                  if (RegExp(r'^-?[0-9]+$').hasMatch(value)) {
-                    return null;
-                  } else {
-                    return AppLocalizations.of(
-                      context,
-                    )!.free_text_numeric_error;
-                  }
-                case FreeTextQuestionType.custom:
-                  if (RegExp(question.customTypeExpression!).hasMatch(value)) {
-                    return null;
-                  } else {
-                    return AppLocalizations.of(
-                      context,
-                    )!.free_text_custom_error(question.customTypeExpression!);
-                  }
-              }
-            },
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              OutlinedButton(
-                onPressed: _handleSubmit,
-                child: Text(AppLocalizations.of(context)!.submit),
-              ),
-            ],
-          ),
-        ],
-      ),
+                } else {
+                  return AppLocalizations.of(
+                    context,
+                  )!.free_text_alphanumeric_error;
+                }
+              case FreeTextQuestionType.numeric:
+                if (RegExp(r'^-?[0-9]+$').hasMatch(value)) {
+                  return null;
+                } else {
+                  return AppLocalizations.of(context)!.free_text_numeric_error;
+                }
+              case FreeTextQuestionType.custom:
+                if (RegExp(question.customTypeExpression!).hasMatch(value)) {
+                  return null;
+                } else {
+                  return AppLocalizations.of(
+                    context,
+                  )!.free_text_custom_error(question.customTypeExpression!);
+                }
+            }
+          },
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            OutlinedButton(
+              onPressed: _handleSubmit,
+              child: Text(AppLocalizations.of(context)!.submit),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

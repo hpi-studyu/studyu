@@ -37,6 +37,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   final List<GlobalKey> questionKeys = <GlobalKey>[];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final _scrollController = ScrollController();
+  bool _isProgrammaticScroll = false;
 
   final QuestionnaireState qs = QuestionnaireState();
 
@@ -242,6 +243,9 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         final maxScroll = _scrollController.position.maxScrollExtent;
         final finalScrollPosition = targetScrollPosition.clamp(0.0, maxScroll);
 
+        // Mark as programmatic scroll
+        _isProgrammaticScroll = true;
+
         _scrollController
             .animateTo(
               finalScrollPosition,
@@ -249,6 +253,9 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
               curve: Curves.easeInOut,
             )
             .then((_) {
+              // Reset flag after scroll completes
+              _isProgrammaticScroll = false;
+
               if (retryCount < 2 && _scrollController.hasClients) {
                 Timer(const Duration(milliseconds: 100), () {
                   _performScrollToNewQuestion(retryCount: retryCount + 1);
@@ -266,8 +273,32 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   @override
   void initState() {
     super.initState();
+
+    // Add scroll listener to dismiss keyboard when scrolling
+    _scrollController.addListener(_onScroll);
+
     if (widget.questions.isNotEmpty) {
       _addQuestionToList(widget.questions.first);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    // Only dismiss keyboard for user-initiated scrolls
+    if (!_isProgrammaticScroll &&
+        _scrollController.position.activity?.isScrolling == true) {
+      // Check if this is a user drag/fling and not a programmatic animation
+      final activity = _scrollController.position.activity;
+      if (activity is DragScrollActivity ||
+          activity is BallisticScrollActivity) {
+        FocusScope.of(context).unfocus();
+      }
     }
   }
 
