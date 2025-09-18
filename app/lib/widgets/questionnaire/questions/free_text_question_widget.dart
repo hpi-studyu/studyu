@@ -25,6 +25,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   final _formFieldKey = GlobalKey<FormFieldState>();
   final _focusNode = FocusNode();
   bool _hasInteracted = false;
+  bool _hasSubmitted = false;
   Timer? _debounceTimer;
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
 
@@ -47,8 +48,8 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     if (_focusNode.hasFocus) {
       _ensureTextFieldVisible();
     } else {
-      // When focus is lost (keyboard dismissed), submit
-      _handleSubmit();
+      // When focus is lost, handle auto-submit if applicable
+      _handleAutoSubmit();
     }
   }
 
@@ -65,19 +66,30 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     }
   }
 
-  void _dismissKeyboard() {
-    // Dismiss the keyboard
-    FocusScope.of(context).unfocus();
+  void _handleAutoSubmit() {
+    if (_hasInteracted && !_hasSubmitted) {
+      _handleSubmit();
+    } else {
+      FocusScope.of(context).unfocus();
+      // Reset interaction and submission state for potential future edits
+      _hasInteracted = false;
+      _hasSubmitted = false;
+      setState(() {
+        _autovalidateMode = AutovalidateMode.disabled;
+      });
+    }
   }
 
-  void _handleSubmit() {
-    final value = _textFieldController.text;
-    _validateAndSubmit(value);
+  void _handleSubmit([String? value]) {
+    FocusScope.of(context).unfocus();
+    final text = value ?? _textFieldController.text;
+    _validateAndSubmit(text);
   }
 
   void _validateAndSubmit(String value) {
     if (_formFieldKey.currentState?.validate() == true) {
       widget.onDone?.call(widget.question.constructAnswer(value));
+      _hasSubmitted = true;
     }
   }
 
@@ -146,7 +158,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             _debouncedValidation();
           },
           onFieldSubmitted: (value) {
-            _dismissKeyboard();
+            _handleSubmit(value);
           },
           validator: (value) {
             final minLength = question.lengthRange.first;
@@ -202,7 +214,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             OutlinedButton(
-              onPressed: _dismissKeyboard,
+              onPressed: _handleSubmit,
               child: Text(AppLocalizations.of(context)!.submit),
             ),
           ],
