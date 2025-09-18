@@ -72,13 +72,11 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
 
   void _handleAutoSubmit() {
     final value = _textFieldController.text;
-
     _validateAndSubmit(value);
   }
 
   void _validateAndSubmit(String value) {
     if (_formFieldKey.currentState?.validate() == true) {
-      print("Submitting free text answer: $value");
       widget.onDone?.call(widget.question.constructAnswer(value));
     }
   }

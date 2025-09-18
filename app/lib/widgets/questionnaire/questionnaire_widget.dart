@@ -140,6 +140,9 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _onQuestionDone(Answer answer, int index) {
+    print(
+      "QuestionnaireWidget: Answer received for question ${answer.question} - $answer",
+    );
     qs.answers[answer.question] = answer;
     final shouldContinue = widget.shouldContinue?.call(qs);
 
