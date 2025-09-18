@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -24,6 +26,8 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   final _scrollController = ScrollController();
   final _focusNode = FocusNode();
   bool _hasInteracted = false;
+  Timer? _debounceTimer;
+  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
 
   @override
   void initState() {
@@ -37,6 +41,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     _scrollController.dispose();
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();
+    _debounceTimer?.cancel();
     super.dispose();
   }
 
@@ -73,7 +78,19 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   void _handleInteraction() {
     if (!_hasInteracted) {
       _hasInteracted = true;
+      setState(() {
+        _autovalidateMode = AutovalidateMode.always;
+      });
     }
+  }
+
+  void _debouncedValidation() {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 300), () {
+      if (mounted && _hasInteracted) {
+        _formFieldKey.currentState?.validate();
+      }
+    });
   }
 
   TextInputType _getKeyboardType() {
@@ -115,12 +132,14 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             keyboardType: _getKeyboardType(),
             inputFormatters: _getInputFormatters(),
             textInputAction: TextInputAction.done,
+            autovalidateMode: _autovalidateMode,
             onTap: () {
               _handleInteraction();
               _ensureTextFieldVisible();
             },
             onChanged: (value) {
-              _hasInteracted = true;
+              _handleInteraction();
+              _debouncedValidation();
             },
             onFieldSubmitted: (value) {
               _handleSubmit();
