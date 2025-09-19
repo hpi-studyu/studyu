@@ -461,10 +461,10 @@ packages:
     dependency: transitive
     description:
       name: data
-      sha256: "31df76adc44c6259d11c94d22bab946cbbb02e394972afadd3aa108d92465927"
+      sha256: "01b2314569cc0c02599e27e3b60131502a5ce6b95b8480b63010891f6c6e3ef0"
       url: "https://pub.dev"
     source: hosted
-    version: "0.12.0"
+    version: "0.15.1"
   data_serializer:
     dependency: transitive
     description:
