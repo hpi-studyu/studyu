@@ -25,11 +25,13 @@ class ChoiceQuestionWidget extends QuestionWidget {
 
 class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
   late List<Choice> selected;
+  late bool confirmButtonTouched;
 
   @override
   void initState() {
     super.initState();
     selected = [];
+    confirmButtonTouched = false;
   }
 
   void tapped(Choice choice) {
@@ -41,10 +43,17 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
         selected.add(choice);
       }
     });
-    if (!widget.question.multiple) confirm();
+
+    // Auto-submit for single choice questions or multi-choice on subsequent answers
+    if (!widget.question.multiple || confirmButtonTouched) {
+      confirm();
+    }
   }
 
   void confirm() {
+    setState(() {
+      confirmButtonTouched = true;
+    });
     widget.onDone(widget.question.constructAnswer(selected));
   }
 
@@ -64,7 +73,7 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
         )
         .toList();
 
-    if (widget.question.multiple) {
+    if (widget.question.multiple && !confirmButtonTouched) {
       choiceWidgets.add(
         OutlinedButton(
           onPressed: confirm,

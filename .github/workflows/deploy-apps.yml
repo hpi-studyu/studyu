@@ -79,6 +79,7 @@ jobs:
       - name: Fastlane upload
         run: bundle exec fastlane deploy_internal
         working-directory: ./app/android
+        timeout-minutes: 30
         env:
           PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
 
@@ -148,6 +149,7 @@ jobs:
       - name: Fastlane upload
         run: bundle exec fastlane upload_testflight
         working-directory: ./app/ios
+        timeout-minutes: 30
         env:
           FASTLANE_APP_IOS_KEY_ID: ${{ secrets.FASTLANE_APP_IOS_KEY_ID }}
           FASTLANE_APP_IOS_ISSUER_ID: ${{ secrets.FASTLANE_APP_IOS_ISSUER_ID }}
