@@ -164,3 +164,6 @@ megalinter-reports/
 
 # FVM Version Cache
 .fvm/
+
+# No localization file on workspace level
+l10n-missing.txt

@@ -31,14 +31,26 @@ class UserRepository implements IUserRepository {
   final IAuthRepository authRepository;
   final Ref ref;
   StudyUUser? _user;
+  Future<StudyUUser>? _fetchFuture;
+
   @override
   StudyUUser get user => _user!;
 
   @override
   Future<StudyUUser> fetchUser() async {
     if (_user != null) return user;
+
+    // If a fetch is already in progress, return the same future
+    if (_fetchFuture != null) {
+      return _fetchFuture!;
+    }
+
     final userId = ref.read(authRepositoryProvider).currentUser!.id;
-    _user = await apiClient.fetchUser(userId);
+
+    _fetchFuture = apiClient.fetchUser(userId);
+    _user = await _fetchFuture;
+    _fetchFuture = null; // Clear the future once completed
+
     return user;
   }
 

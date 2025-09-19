@@ -1,5 +1,5 @@
 name: studyu_designer_v2
-version: 1.14.0
+version: 1.15.0
 description: Implement digital N-of-1 studies seamlessly with the StudyU Health Designer
 publish_to: none
 homepage: https://studyu.health
@@ -38,7 +38,7 @@ dependencies:
   riverpod_annotation: ^2.6.1
   rxdart: ^0.28.0
   studyu_core: ^4.7.0
-  studyu_flutter_common: ^1.9.0
+  studyu_flutter_common: ^1.9.2
   supabase: ^2.9.0
   supabase_flutter: ^2.10.0
   url_launcher: ^6.3.2

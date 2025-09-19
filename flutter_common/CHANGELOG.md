@@ -1,3 +1,11 @@
+## 1.9.2
+
+ - **FIX**: update Supabase configuration and remove debug print statements from model repository.
+
+## 1.9.1
+
+ - **FIX**: update Supabase configuration and remove debug print statements from model repository.
+
 ## 1.9.0
 
  - **FIX**: upgrade package dependencies.

@@ -68,15 +68,12 @@ Widget versionText({TextStyle? textStyle}) {
       if (snapshot.connectionState == ConnectionState.waiting) {
         return const SizedBox.shrink();
       }
-
       final packageInfo = snapshot.data;
-
       if (packageInfo == null) {
         return const SizedBox.shrink();
       }
-
       return SelectableText(
-        'Version ${packageInfo.version} - ${packageInfo.buildNumber}',
+        'Version ${packageInfo.version}${packageInfo.buildNumber.isNotEmpty ? ' - ${packageInfo.buildNumber}' : ''}',
         style: textStyle,
       );
     },

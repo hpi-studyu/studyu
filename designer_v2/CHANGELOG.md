@@ -1,3 +1,20 @@
+## 1.15.0
+
+ - **REFACTOR**: ref error in app_drawer.
+ - **REFACTOR**: remove debug print statement from model fetching.
+ - **REFACTOR**: remove double fetching of study.
+ - **REFACTOR**: comment out watchAllChanges method in model_repository.
+ - **REFACTOR**: comment out duplicateAndSaveFromRemote method in model_repository.
+ - **FIX**: update Supabase configuration and remove debug print statements from model repository.
+ - **FIX**: add model refresh mechanism to study repository instead of removing the model.
+ - **FIX**: after study cloning redirect to clone directly".
+ - **FIX**: optimize user fetching to prevent duplicate user requests.
+ - **FIX**: add reports form data application in study copy.
+ - **FIX**: implement model removal from cache to fetch complete study when coming from dashboard.
+ - **FIX**: enable dashboard display for fetched user studies.
+ - **FIX**: cancel study subscription on dispose.
+ - **FEAT**: improve version display logic and display on auth pages.
+
 ## 1.14.0
 
  - **REFACTOR**: print empty version instead of null.

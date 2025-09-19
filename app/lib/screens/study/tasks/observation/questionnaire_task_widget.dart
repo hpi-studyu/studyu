@@ -75,6 +75,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
               header: widget.task.header,
               footer: widget.task.footer,
               onComplete: (qs) => setState(() {
+                print('Questionnaire completed with response: $qs');
                 response = qs;
               }),
             ),

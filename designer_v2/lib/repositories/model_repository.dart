@@ -24,6 +24,7 @@ class WrappedModel<T> {
 
   AsyncValue<T> asyncValue = AsyncValue<T>.loading();
 
+  bool isMarkedForRefresh = false;
   bool isLocalOnly = true;
   bool isDirty = false;
   bool isDeleted = false;
@@ -72,14 +73,16 @@ abstract class IModelRepository<T> implements IModelActionProvider<T> {
   Future<WrappedModel<T>?> save(T model); // upsert
   Future<void> delete(ModelID modelId);
   Future<void> duplicateAndSave(T model);
-  Future<void> duplicateAndSaveFromRemote(ModelID modelId);
+
+  // Future<void> duplicateAndSaveFromRemote(ModelID modelId);
   Stream<WrappedModel<T>> watch(
     ModelID modelId, {
     bool fetchOnSubscribe = true,
   });
   Stream<List<WrappedModel<T>>> watchAll({bool fetchOnSubscribe = true});
   Stream<ModelEvent<T>> watchChanges(ModelID modelId);
-  Stream<ModelEvent<T>> watchAllChanges();
+
+  // Stream<ModelEvent<T>> watchAllChanges();
   Future<WrappedModel<T>?> ensurePersisted(ModelID modelId);
   void dispose();
 }
@@ -165,8 +168,10 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       final model = await delegate.fetch(modelId);
       wrappedModel = upsertLocally(model);
       wrappedModel.markAsFetched();
+      wrappedModel.isMarkedForRefresh = false; // Clear the refresh flag
       emitModelEvent(IsFetched(modelId, model));
     } catch (e, stackTrace) {
+      print("Error fetching model $modelId: $e with $stackTrace");
       // Associate error with existing object if possible, otherwise bubble up
       if (existingWrappedModel != null) {
         existingWrappedModel.markWithError(e);
@@ -260,13 +265,13 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     return save(duplicateModel);
   }
 
-  @override
+  /*@override
   Future<void> duplicateAndSaveFromRemote(ModelID modelId) async {
     WrappedModel<T>? wrappedModel = get(modelId);
     wrappedModel ??= await fetch(modelId);
     final duplicateModel = delegate.createDuplicate(wrappedModel.model);
     await save(duplicateModel);
-  }
+  }*/
 
   @override
   Stream<List<WrappedModel<T>>> watchAll({bool fetchOnSubscribe = true}) {
@@ -303,11 +308,20 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     } else {
       // Subscribe to existing model (may not be fetched yet)
       wrappedModel = get(modelId, strict: !fetchOnSubscribe);
+      if (wrappedModel?.isMarkedForRefresh ?? false) {
+        wrappedModel = null; // force refetch
+        //wrappedModel!.markAsLoading();
+        //_allModels.remove(modelId);
+        // emitUpdate();
+      }
     }
 
     WrappedModel<T>? selectModel(List<WrappedModel<T>> event) {
       for (final wrappedModel in event) {
         if (getKey(wrappedModel.model) == modelId) {
+          if (wrappedModel.isMarkedForRefresh) {
+            return null; // force refetch
+          }
           return wrappedModel;
         }
       }
@@ -322,7 +336,8 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
     );
 
     if (fetchOnSubscribe) {
-      if (!(wrappedModel != null && wrappedModel.isLocalOnly)) {
+      if (!(wrappedModel != null && wrappedModel.isLocalOnly) ||
+          wrappedModel.isMarkedForRefresh) {
         fetch(modelId).catchError((Object e) {
           if (!modelController.isClosed) {
             modelController.addError(e);
@@ -331,13 +346,16 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
         });
       }
     }
+    if (wrappedModel?.isMarkedForRefresh ?? false) {
+      wrappedModel?.isMarkedForRefresh = false;
+    }
     return modelController;
   }
 
-  @override
+  /* @override
   Stream<ModelEvent<T>> watchAllChanges() {
     return _allModelEventsStreamController;
-  }
+  } */
 
   @override
   Stream<ModelEvent<T>> watchChanges(ModelID modelId) {
@@ -411,6 +429,7 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
   WrappedModel<T> upsertLocally(T newModel, {bool emitUpdate = false}) {
     final newModelId = getKey(newModel);
     if (_allModels.containsKey(newModelId)) {
+      // print("Upserting existing model $newModelId locally");
       // Model already exists, replace with the new object
       final wrapped = _allModels[newModelId]!;
       wrapped.model = newModel;
@@ -463,6 +482,13 @@ abstract class ModelRepository<T> extends IModelRepository<T> {
       controller.addError(e, stackTrace);
     }
     delegate.onError(e, stackTrace);
+  }
+
+  void markForRefresh(ModelID modelId) {
+    final wrappedModel = get(modelId);
+    if (wrappedModel != null) {
+      wrappedModel.isMarkedForRefresh = true;
+    }
   }
 
   @override

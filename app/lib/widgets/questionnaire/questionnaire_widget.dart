@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_app/widgets/questionnaire/question_container.dart';
 import 'package:studyu_core/core.dart';
@@ -37,6 +39,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   final List<GlobalKey> questionKeys = <GlobalKey>[];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final _scrollController = ScrollController();
+  bool _isProgrammaticScroll = false;
 
   final QuestionnaireState qs = QuestionnaireState();
 
@@ -138,16 +141,35 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   }
 
   void _onQuestionDone(Answer answer, int index) {
+    if (kDebugMode) {
+      debugPrint(
+        "QuestionnaireWidget: Answer received for question ${answer.question} - $answer",
+      );
+    }
     qs.answers[answer.question] = answer;
     final shouldContinue = widget.shouldContinue?.call(qs);
+
+    // Check if the questionnaire should not continue
+    if (shouldContinue == false) {
+      _finishQuestionnaire(qs);
+      return;
+    }
+
+    // Check if there are questions whose visibility depend on this question
+    final hasConditionalDependencies = _isConditionalTarget(answer.question);
+
+    // If this question has conditional dependencies, always process them first
+    if (hasConditionalDependencies) {
+      _handleConditionalQuestionChange(answer, index);
+      return;
+    }
 
     // Check if there are any more questions that should be shown
     final currentQuestionIndex = widget.questions.indexWhere(
       (q) => q.id == answer.question,
     );
-    bool hasMoreQuestions = false;
 
-    // Look for any remaining questions that should be shown
+    bool hasMoreQuestions = false;
     for (int i = currentQuestionIndex + 1; i < widget.questions.length; i++) {
       if (widget.questions[i].shouldBeShown(qs)) {
         hasMoreQuestions = true;
@@ -155,45 +177,54 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       }
     }
 
-    // Check if the questionnaire should not continue or if there are no more questions to show
-    if (shouldContinue == false || !hasMoreQuestions) {
+    // If no more questions, finish the questionnaire
+    if (!hasMoreQuestions) {
       _finishQuestionnaire(qs);
       return;
     }
 
-    _processQuestionCompletion(answer, index);
-  }
-
-  void _processQuestionCompletion(Answer answer, int index) {
-    bool questionWasInserted = false;
-
-    // Check if the question that was answered is the last shown question.
+    // Try to insert the next question for normal progression
     if (answer.question == shownQuestions.last.question.id) {
-      // If the last question displayed was answered, we can try to insert the next question.
-      // Index is incorrect if questions are skipped, use last shown question index instead
       final insertedQuestion = _insertQuestion(
         widget.questions.indexOf(shownQuestions.last.question),
       );
-      questionWasInserted = insertedQuestion != null;
-    } else {
-      // Check if there are questions whose visibility depend on the question that's answer was just edited.
-      if (_isConditionalTarget(answer.question)) {
-        _resetQuestionnaireTo(answer.question);
-        // Try to insert the next question after the reset.
-        final answeredQuestionIndex = widget.questions.indexWhere(
-          (q) => q.id == answer.question,
-        );
-        final insertedQuestion = _insertQuestion(answeredQuestionIndex);
-        if (insertedQuestion != null) {
-          // If a question was inserted, the questionnaire is not finished yet.
-          _finishQuestionnaire(null);
-          questionWasInserted = true;
-        }
+      if (insertedQuestion != null) {
+        _scrollToNewQuestion();
+      }
+    }
+  }
+
+  void _handleConditionalQuestionChange(Answer answer, int index) {
+    // Reset questionnaire to remove any questions that should no longer be shown
+    _resetQuestionnaireTo(answer.question);
+
+    // Check if there are any questions that should now be shown
+    final currentQuestionIndex = widget.questions.indexWhere(
+      (q) => q.id == answer.question,
+    );
+
+    bool hasQuestionsToShow = false;
+    for (int i = currentQuestionIndex + 1; i < widget.questions.length; i++) {
+      if (widget.questions[i].shouldBeShown(qs)) {
+        hasQuestionsToShow = true;
+        break;
       }
     }
 
-    if (questionWasInserted) {
-      _scrollToNewQuestion();
+    if (hasQuestionsToShow) {
+      // Try to insert the next question that should be shown
+      final insertedQuestion = _insertQuestion(currentQuestionIndex);
+      if (insertedQuestion != null) {
+        // A new question was inserted, reset completion state
+        _finishQuestionnaire(null);
+        _scrollToNewQuestion();
+      } else {
+        // No question was inserted but should have been - finish questionnaire
+        _finishQuestionnaire(qs);
+      }
+    } else {
+      // No more questions to show - finish questionnaire
+      _finishQuestionnaire(qs);
     }
   }
 
@@ -242,6 +273,9 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         final maxScroll = _scrollController.position.maxScrollExtent;
         final finalScrollPosition = targetScrollPosition.clamp(0.0, maxScroll);
 
+        // Mark as programmatic scroll
+        _isProgrammaticScroll = true;
+
         _scrollController
             .animateTo(
               finalScrollPosition,
@@ -249,6 +283,9 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
               curve: Curves.easeInOut,
             )
             .then((_) {
+              // Reset flag after scroll completes
+              _isProgrammaticScroll = false;
+
               if (retryCount < 2 && _scrollController.hasClients) {
                 Timer(const Duration(milliseconds: 100), () {
                   _performScrollToNewQuestion(retryCount: retryCount + 1);
@@ -256,18 +293,70 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
               }
             });
       }
-    } else if (retryCount < 3) {
+    } else if (retryCount < 5) {
       Timer(const Duration(milliseconds: 100), () {
-        _performScrollToNewQuestion(retryCount: retryCount + 1);
+        _scrollToMakeTargetVisible(targetQuestionKey).then((_) {
+          _isProgrammaticScroll = false;
+          Timer(const Duration(milliseconds: 100), () {
+            _performScrollToNewQuestion(retryCount: retryCount + 1);
+          });
+        });
       });
+    } else {
+      // Could not find render object after retries
+      if (kDebugMode) {
+        debugPrint(
+          "QuestionnaireWidget: Unable to find render object for question at index $targetQuestionIndex",
+        );
+      }
     }
+  }
+
+  Future<void> _scrollToMakeTargetVisible(GlobalKey targetKey) {
+    // Fallback: scroll incrementally until the target question becomes visible
+    final viewportHeight = _scrollController.position.viewportDimension;
+    final scrollIncrement = viewportHeight * 0.5;
+    final currentPosition = _scrollController.position.pixels;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    // Return if already at max scroll
+    if (currentPosition >= maxScroll) return Future.value();
+    final newPosition = (currentPosition + scrollIncrement).clamp(
+      0.0,
+      maxScroll,
+    );
+    _isProgrammaticScroll = true;
+    return _scrollController.animateTo(
+      newPosition,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
   void initState() {
     super.initState();
+
+    // Add scroll listener to dismiss keyboard when scrolling
+    _scrollController.addListener(_onScroll);
+
     if (widget.questions.isNotEmpty) {
       _addQuestionToList(widget.questions.first);
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_isProgrammaticScroll && _scrollController.hasClients) {
+      if (_scrollController.position.userScrollDirection !=
+          ScrollDirection.idle) {
+        FocusScope.of(context).unfocus();
+      }
     }
   }
 
