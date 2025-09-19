@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
+import 'package:studyu_designer_v2/features/advanced_filters/advanced_filters_entry_button.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_scaffold.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
@@ -13,6 +14,7 @@ import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
+
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({required this.filter, super.key});
@@ -65,17 +67,41 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 style: theme.textTheme.headlineMedium,
               ),
               const SizedBox(width: 28.0),
+              // Expanded(
+              //   child: Align(
+              //     alignment: Alignment.centerRight,
+              //     child: Container(
+              //       constraints: const BoxConstraints(maxWidth: 400),
+              //       child: Search(
+              //         searchController: state.searchController,
+              //         hintText: tr.search,
+              //         onQueryChanged: (query) =>
+              //             controller.filterStudies(query),
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
               Expanded(
-                child: Align(
+                  child: Align(
                   alignment: Alignment.centerRight,
-                  child: Container(
-                    constraints: const BoxConstraints(maxWidth: 400),
-                    child: Search(
-                      searchController: state.searchController,
-                      hintText: tr.search,
-                      onQueryChanged: (query) =>
-                          controller.filterStudies(query),
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // New Advanced Filters entry point
+                      const AdvancedFiltersEntryButton(),
+                      const SizedBox(width: 12),
+                      // Existing Search box
+                      Container(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: Search(
+                          searchController: state.searchController,
+                          hintText: tr.search,
+                          onQueryChanged: (query) =>
+                              controller.filterStudies(query),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
