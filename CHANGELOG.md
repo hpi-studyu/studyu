@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-09-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.12.0`](#studyu_app---v2120)
+ - [`studyu_designer_v2` - `v1.15.0`](#studyu_designer_v2---v1150)
+ - [`studyu_flutter_common` - `v1.9.2`](#studyu_flutter_common---v192)
+
+---
+
+#### `studyu_app` - `v2.12.0`
+
+ - **REFACTOR**: refine free text question widget to improve submission handling on focus loss.
+ - **FIX**: improve scrolling behavior in questionnaire widget if questions were out of screen.
+ - **FIX**: improve handling of conditional question dependencies in questionnaire widget.
+ - **FIX**: improve free text question widget to handle auto-submit on focus loss.
+ - **FIX**: enhance choice question widget to support auto-submit on confirm button touch.
+ - **FIX**: handle conditional dependencies for earlier question modifications in questionnaire widget.
+ - **FIX**: improve free text question widget by refining keyboard dismissal logic during user scroll.
+ - **FEAT**: implement auto-submit on focus loss for free text question widget.
+ - **FEAT**: improve free text question widget by removing unnecessary scroll controller and enhancing keyboard dismissal on user scroll.
+ - **FEAT**: center text field in viewport for improved layout.
+ - **FEAT**: improve free text question widget with debounced validation and autovalidation.
+ - **FEAT**: enhance free text question widget with improved keyboard handling and validation.
+
+#### `studyu_designer_v2` - `v1.15.0`
+
+ - **REFACTOR**: ref error in app_drawer.
+ - **REFACTOR**: remove debug print statement from model fetching.
+ - **REFACTOR**: remove double fetching of study.
+ - **REFACTOR**: comment out watchAllChanges method in model_repository.
+ - **REFACTOR**: comment out duplicateAndSaveFromRemote method in model_repository.
+ - **FIX**: update Supabase configuration and remove debug print statements from model repository.
+ - **FIX**: add model refresh mechanism to study repository instead of removing the model.
+ - **FIX**: after study cloning redirect to clone directly".
+ - **FIX**: optimize user fetching to prevent duplicate user requests.
+ - **FIX**: add reports form data application in study copy.
+ - **FIX**: implement model removal from cache to fetch complete study when coming from dashboard.
+ - **FIX**: enable dashboard display for fetched user studies.
+ - **FIX**: cancel study subscription on dispose.
+ - **FEAT**: improve version display logic and display on auth pages.
+
+#### `studyu_flutter_common` - `v1.9.2`
+
+ - **FIX**: update Supabase configuration and remove debug print statements from model repository.
+
+
 ## 2025-09-17
 
 ### Changes
