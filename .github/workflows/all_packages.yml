@@ -48,7 +48,6 @@ jobs:
           commit_message: 'chore: Apply static analysis changes'
           file_pattern: |
             .
-            ':!l10n-missing.txt'
             ':!**l10n-missing.txt'
             ':!*.fvmrc'
             ':!**/app_localizations_*.dart'
