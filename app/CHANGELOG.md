@@ -1,3 +1,7 @@
+## 2.12.1
+
+ - **FIX**: app starting issues due to storage reading.
+
 ## 2.12.0
 
  - **REFACTOR**: refine free text question widget to improve submission handling on focus loss.
