@@ -73,7 +73,7 @@ jobs:
 
       - name: Build StudyU app bundle (dev)
         if: ${{ !startsWith(github.ref, 'refs/heads/main') }}
-        run: flutter build appbundle --release --build-number ${{ github.run_number }}
+        run: flutter build appbundle --release --build-number ${{ github.run_number }} --dart-define=STUDYU_ENV=.env.dev
         working-directory: ./app
 
       - name: Fastlane upload
