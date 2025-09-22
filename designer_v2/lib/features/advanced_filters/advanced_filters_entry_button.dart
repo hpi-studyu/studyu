@@ -45,7 +45,7 @@ void openAdvancedFilters(BuildContext context, WidgetRef ref) {
 Future<void> showModalSideSheet({
   required BuildContext context,
   required Widget child,
-  double width = 420,
+  double width = 560,
 }) {
   return showGeneralDialog(
     context: context,
