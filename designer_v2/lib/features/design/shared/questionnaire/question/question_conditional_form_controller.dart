@@ -8,6 +8,7 @@ import 'package:studyu_designer_v2/features/design/shared/questionnaire/question
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_row_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 abstract class IConditionalQuestionProperties {
   String get currentQuestionId;
@@ -266,9 +267,9 @@ class ConditionalQuestionFormViewModel extends FormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-    FormMode.create: 'Create Conditional',
-    FormMode.edit: 'Edit Conditional',
-    FormMode.readonly: 'View Conditional',
+    FormMode.create: tr.form_mode_visibility_create,
+    FormMode.edit: tr.form_mode_visibility_edit,
+    FormMode.readonly: tr.form_mode_visibility_readonly,
   };
 
   @override

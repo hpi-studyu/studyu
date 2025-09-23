@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -822,6 +823,15 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get form_array_question_visibility_logic_this_question =>
       'diese Frage';
+
+  @override
+  String get form_mode_visibility_create => 'Bedingung erstellen';
+
+  @override
+  String get form_mode_visibility_edit => 'Bedingung bearbeiten';
+
+  @override
+  String get form_mode_visibility_readonly => 'Bedingung anzeigen';
 
   @override
   String get validation_number_required => 'Die Eingabe muss eine Zahl sein';
