@@ -19,14 +19,24 @@ class QuestionnaireFormData implements IFormData {
               // Collect all eligibility criteria for this question
               eligibilityCriteria
                   .where(
-                    (c) =>
-                        (c.condition as ValueExpression).target == question.id,
+                    (c) => _expressionTargetsQuestion(c.condition, question.id),
                   )
                   .toList(),
             ),
           )
           .toList(),
     );
+  }
+
+  static bool _expressionTargetsQuestion(Expression expression, String questionId) {
+    if (expression is ValueExpression) {
+      return expression.target == questionId;
+    } else if (expression is NotExpression) {
+      return _expressionTargetsQuestion(expression.expression, questionId);
+    } else if (expression is CompositeExpression) {
+      return expression.expressions.any((expr) => _expressionTargetsQuestion(expr, questionId));
+    }
+    return false;
   }
 
   StudyUQuestionnaire toQuestionnaire() {

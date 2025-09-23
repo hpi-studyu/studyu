@@ -596,11 +596,29 @@ abstract class AppLocalizations {
   /// **'Code copied to clipboard'**
   String get notification_code_clipboard;
 
+  /// No description provided for @notification_study_schema_export_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Study schema downloaded.'**
+  String get notification_study_schema_export_success;
+
+  /// No description provided for @notification_study_schema_import_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Study imported from schema.'**
+  String get notification_study_schema_import_success;
+
   /// No description provided for @action_button_new_study.
   ///
   /// In en, this message translates to:
   /// **'New study'**
   String get action_button_new_study;
+
+  /// No description provided for @action_button_import_study.
+  ///
+  /// In en, this message translates to:
+  /// **'Import study'**
+  String get action_button_import_study;
 
   /// No description provided for @search.
   ///
@@ -3471,6 +3489,12 @@ abstract class AppLocalizations {
   /// **'Export results'**
   String get action_study_export_results;
 
+  /// No description provided for @action_study_export_schema.
+  ///
+  /// In en, this message translates to:
+  /// **'Export study schema'**
+  String get action_study_export_schema;
+
   /// No description provided for @dialog_continue.
   ///
   /// In en, this message translates to:
@@ -3482,6 +3506,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Close'**
   String get dialog_close;
+
+  /// No description provided for @dialog_import_study_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Import study schema'**
+  String get dialog_import_study_title;
+
+  /// No description provided for @dialog_import_study_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a JSON schema exported from the Designer to create a new study.'**
+  String get dialog_import_study_description;
+
+  /// No description provided for @dialog_import_study_input_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Study schema (JSON)'**
+  String get dialog_import_study_input_label;
+
+  /// No description provided for @dialog_import_study_input_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'version 1'**
+  String get dialog_import_study_input_hint;
+
+  /// No description provided for @dialog_import_study_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get dialog_import_study_confirm;
+
+  /// No description provided for @dialog_import_study_error_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste a JSON schema to import.'**
+  String get dialog_import_study_error_empty;
 
   /// No description provided for @dialog_cancel.
   ///

@@ -13,6 +13,7 @@ enum StudyActionType {
   duplicate,
   duplicateDraft,
   addCollaborator,
+  exportSchema,
   export,
   delete,
 }
@@ -35,6 +36,8 @@ extension StudyActionTypeFormatted on StudyActionType {
         return tr.action_study_duplicate_draft;
       case StudyActionType.addCollaborator:
         return "[StudyActionType.addCollaborator]"; // todo not implemented yet
+      case StudyActionType.exportSchema:
+        return tr.action_study_export_schema;
       case StudyActionType.export:
         return tr.action_study_export_results;
     }

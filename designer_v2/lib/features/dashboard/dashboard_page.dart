@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
+import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_scaffold.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
@@ -12,6 +13,7 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
+import 'package:studyu_designer_v2/services/simplified_study_service.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -40,6 +42,99 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
   }
 
+  Future<void> _showImportDialog(BuildContext context) async {
+    final studyService = ref.read(simplifiedStudyServiceProvider);
+    final dashboardController = ref.read(dashboardControllerProvider.notifier);
+    final textController = TextEditingController();
+    String? errorText;
+    var isLoading = false;
+
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (dialogContext, setState) {
+            return AlertDialog(
+              title: Text(tr.dialog_import_study_title),
+              content: SizedBox(
+                width: 520,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(tr.dialog_import_study_description),
+                    const SizedBox(height: 12.0),
+                    TextField(
+                      controller: textController,
+                      maxLines: 14,
+                      decoration: InputDecoration(
+                        labelText: tr.dialog_import_study_input_label,
+                        hintText: tr.dialog_import_study_input_hint,
+                        errorText: errorText,
+                        alignLabelWithHint: true,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isLoading
+                      ? null
+                      : () {
+                          Navigator.of(dialogContext).pop();
+                        },
+                  child: Text(tr.dialog_cancel),
+                ),
+                FilledButton(
+                  onPressed: isLoading
+                      ? null
+                      : () async {
+                          final raw = textController.text.trim();
+                          if (raw.isEmpty) {
+                            setState(() {
+                              errorText = tr.dialog_import_study_error_empty;
+                            });
+                            return;
+                          }
+                          setState(() {
+                            errorText = null;
+                            isLoading = true;
+                          });
+                          final navigator = Navigator.of(dialogContext);
+                          try {
+                            final importedStudy = await studyService
+                                .importStudyFromJson(raw);
+                            if (!mounted || !navigator.mounted) {
+                              return;
+                            }
+                            navigator.pop();
+                            dashboardController.onSelectStudy(importedStudy);
+                          } catch (error) {
+                            setState(() {
+                              errorText = error is FormatException
+                                  ? error.message
+                                  : error.toString();
+                              isLoading = false;
+                            });
+                          }
+                        },
+                  child: isLoading
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text(tr.dialog_import_study_confirm),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -57,6 +152,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: PrimaryButton(
                   text: tr.action_button_new_study,
                   onPressed: controller.onClickNewStudy,
+                ),
+              ),
+              const SizedBox(width: 12.0),
+              SizedBox(
+                height: 36.0,
+                child: SecondaryButton(
+                  text: tr.action_button_import_study,
+                  icon: Icons.file_upload_outlined,
+                  onPressed: () => _showImportDialog(context),
                 ),
               ),
               const SizedBox(width: 28.0),

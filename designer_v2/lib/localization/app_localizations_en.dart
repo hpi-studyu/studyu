@@ -277,7 +277,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notification_code_clipboard => 'Code copied to clipboard';
 
   @override
+  String get notification_study_schema_export_success =>
+      'Study schema downloaded.';
+
+  @override
+  String get notification_study_schema_import_success =>
+      'Study imported from schema.';
+
+  @override
   String get action_button_new_study => 'New study';
+
+  @override
+  String get action_button_import_study => 'Import study';
 
   @override
   String get search => 'Search';
@@ -2028,10 +2039,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_study_export_results => 'Export results';
 
   @override
+  String get action_study_export_schema => 'Export study schema';
+
+  @override
   String get dialog_continue => 'Continue';
 
   @override
   String get dialog_close => 'Close';
+
+  @override
+  String get dialog_import_study_title => 'Import study schema';
+
+  @override
+  String get dialog_import_study_description =>
+      'Paste a JSON schema exported from the Designer to create a new study.';
+
+  @override
+  String get dialog_import_study_input_label => 'Study schema (JSON)';
+
+  @override
+  String get dialog_import_study_input_hint => 'version 1';
+
+  @override
+  String get dialog_import_study_confirm => 'Import';
+
+  @override
+  String get dialog_import_study_error_empty =>
+      'Paste a JSON schema to import.';
 
   @override
   String get dialog_cancel => 'Cancel';

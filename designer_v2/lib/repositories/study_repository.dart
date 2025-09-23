@@ -14,6 +14,7 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
+import 'package:studyu_designer_v2/services/simplified_study_service.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
@@ -207,6 +208,16 @@ class StudyRepository extends ModelRepository<Study>
         isAvailable: study.isOwner(authRepository.currentUser!),
       ),
        */
+      ModelAction(
+        type: StudyActionType.exportSchema,
+        label: StudyActionType.exportSchema.string,
+        onExecute: () {
+          runAsync(
+            () => ref.read(simplifiedStudyServiceProvider).exportStudy(model),
+          );
+        },
+        isAvailable: model.canEdit(currentUser),
+      ),
       ModelAction(
         type: StudyActionType.export,
         label: StudyActionType.export.string,

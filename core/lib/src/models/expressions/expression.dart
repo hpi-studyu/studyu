@@ -14,6 +14,9 @@ abstract class Expression {
       switch (data[keyType]) {
         BooleanExpression.expressionType => BooleanExpression.fromJson(data),
         ChoiceExpression.expressionType => ChoiceExpression.fromJson(data),
+        CompositeExpression.expressionType => CompositeExpression.fromJson(
+          data,
+        ),
         NotExpression.expressionType => NotExpression.fromJson(data),
         NumericExpression.expressionType => NumericExpression.fromJson(data),
         TextExpression.expressionType => TextExpression.fromJson(data),

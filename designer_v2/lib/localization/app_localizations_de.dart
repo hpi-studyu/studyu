@@ -283,7 +283,18 @@ class AppLocalizationsDe extends AppLocalizations {
       'Code wurde in die Zwischenablage kopiert';
 
   @override
+  String get notification_study_schema_export_success =>
+      'Studienschema wurde heruntergeladen.';
+
+  @override
+  String get notification_study_schema_import_success =>
+      'Studie aus Schema importiert.';
+
+  @override
   String get action_button_new_study => 'Neue Studie';
+
+  @override
+  String get action_button_import_study => 'Studie importieren';
 
   @override
   String get search => 'Suche';
@@ -2054,10 +2065,33 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_study_export_results => 'Ergebnisdaten exportieren';
 
   @override
+  String get action_study_export_schema => 'Studienschema exportieren';
+
+  @override
   String get dialog_continue => 'Fortfahren';
 
   @override
   String get dialog_close => 'Schließen';
+
+  @override
+  String get dialog_import_study_title => 'Studie importieren';
+
+  @override
+  String get dialog_import_study_description =>
+      'Füge ein aus dem Designer exportiertes JSON-Schema ein, um eine neue Studie zu erstellen.';
+
+  @override
+  String get dialog_import_study_input_label => 'Studienschema (JSON)';
+
+  @override
+  String get dialog_import_study_input_hint => 'version: 1';
+
+  @override
+  String get dialog_import_study_confirm => 'Importieren';
+
+  @override
+  String get dialog_import_study_error_empty =>
+      'Bitte füge ein JSON-Schema ein.';
 
   @override
   String get dialog_cancel => 'Abbrechen';
