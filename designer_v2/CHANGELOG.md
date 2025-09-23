@@ -1,3 +1,7 @@
+## 1.15.1
+
+ - Update a dependency to the latest release.
+
 ## 1.15.0
 
  - **REFACTOR**: ref error in app_drawer.

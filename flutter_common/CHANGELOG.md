@@ -1,3 +1,8 @@
+## 1.9.3
+
+ - **FIX**: comment out encryptedSharedPreferences option in SecureStorage.
+ - **FIX**: downgrade flutter_secure_storage to version 9.2.2 to address critical bugs.
+
 ## 1.9.2
 
  - **FIX**: update Supabase configuration and remove debug print statements from model repository.
