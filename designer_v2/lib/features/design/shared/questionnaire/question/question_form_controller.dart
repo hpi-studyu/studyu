@@ -766,6 +766,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
         );
       case SurveyQuestionType.audio:
         return AudioQuestionFormData(
@@ -773,6 +774,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
           maxRecordingDurationSeconds:
               maxRecordingDurationSecondsControl.value!,
         );
@@ -782,6 +784,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
           types: fitbitQuestionTypesControl.entries
               .where((e) => e.value.value!)
               .map((e) => e.key)
@@ -793,6 +796,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
           questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
         );
     }
   }
