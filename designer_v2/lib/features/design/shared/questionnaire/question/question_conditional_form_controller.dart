@@ -46,6 +46,16 @@ class ConditionalQuestionFormViewModel extends FormViewModel
   /// Flag to prevent marking form as dirty during programmatic updates
   bool _isUpdatingProgrammatically = false;
 
+  /// Debouncing timer to prevent excessive updates
+  Timer? _updateDebounceTimer;
+  static const Duration _updateDebounceDelay = Duration(milliseconds: 300);
+
+  /// Cache the last serialized condition to avoid unnecessary updates
+  String? _lastSerializedCondition;
+
+  /// Flag to prevent recursive updates
+  bool _isUpdatingCondition = false;
+
   @override
   FormControl<LogicType> logicTypeControl = FormControl<LogicType>(
     value: LogicType.and,
@@ -150,50 +160,99 @@ class ConditionalQuestionFormViewModel extends FormViewModel
 
   @override
   void updateCondition() {
-    final composite = compositeExpression;
-    // print('Updating condition with composite: ${composite?.toJson()}');
-
-    // Check if we have any conditions to save
-    if (composite != null && composite.expressions.isNotEmpty) {
-      // Create a new QuestionConditional with the composite expression
-      final conditional = QuestionConditional.withCondition(composite);
-
-      // Check if the value is actually different to avoid unnecessary updates
-      final currentValue = questionConditionalControl.value;
-      final shouldUpdate =
-          currentValue == null ||
-          jsonEncode(currentValue.condition.toJson()) !=
-              jsonEncode(conditional.condition.toJson());
-
-      if (shouldUpdate) {
-        if (_isUpdatingProgrammatically) {
-          // During programmatic updates (like initialization), use updateValue to avoid
-          // triggering form dirty state
-          questionConditionalControl.updateValue(conditional, emitEvent: false);
-        } else {
-          // During user-initiated changes, use normal assignment to properly
-          // trigger form change detection
-          questionConditionalControl.value = conditional;
-        }
-
-        // print('Set questionConditionalControl.value: ${questionConditionalControl.value?.condition.toJson()}',);
-      }
-    } else {
-      // No conditions, set to null
-      final shouldUpdate = questionConditionalControl.value != null;
-
-      if (shouldUpdate) {
-        if (_isUpdatingProgrammatically) {
-          questionConditionalControl.updateValue(null, emitEvent: false);
-        } else {
-          questionConditionalControl.value = null;
-        }
-        // print('Set questionConditionalControl.value to null');
-      }
+    // Prevent recursive updates
+    if (_isUpdatingCondition) {
+      return;
     }
 
-    // Update the form controls to reflect the current state
-    _syncFormControlsWithConditions();
+    // Cancel any pending debounced update
+    _updateDebounceTimer?.cancel();
+
+    // For programmatic updates (like initialization), update immediately
+    if (_isUpdatingProgrammatically) {
+      _updateConditionImmediate();
+      return;
+    }
+
+    // For user-initiated updates, use debouncing
+    _updateDebounceTimer = Timer(_updateDebounceDelay, () {
+      _updateConditionImmediate();
+    });
+  }
+
+  void _updateConditionImmediate() {
+    if (_isUpdatingCondition) {
+      return;
+    }
+
+    _isUpdatingCondition = true;
+    try {
+      final composite = compositeExpression;
+
+      // Serialize the composite to check for actual changes
+      final newSerializedCondition = composite?.toJson() != null
+          ? jsonEncode(composite!.toJson())
+          : null;
+
+      // Skip update if the condition hasn't actually changed
+      if (newSerializedCondition == _lastSerializedCondition) {
+        return;
+      }
+
+      // Cache the new serialized condition
+      _lastSerializedCondition = newSerializedCondition;
+
+      // print('Updating condition with composite: ${composite?.toJson()}');
+
+      // Check if we have any conditions to save
+      if (composite != null && composite.expressions.isNotEmpty) {
+        // Create a new QuestionConditional with the composite expression
+        final conditional = QuestionConditional.withCondition(composite);
+
+        // Check if the value is actually different to avoid unnecessary updates
+        final currentValue = questionConditionalControl.value;
+        final shouldUpdate =
+            currentValue == null ||
+            jsonEncode(currentValue.condition.toJson()) !=
+                jsonEncode(conditional.condition.toJson());
+
+        // print('updateCondition: shouldUpdate = $shouldUpdate, currentValue = ${currentValue?.toJson()}, _isUpdatingProgrammatically = $_isUpdatingProgrammatically, questionConditionalControl.value = ${questionConditionalControl.value?.toJson()}');
+
+        if (shouldUpdate) {
+          if (_isUpdatingProgrammatically) {
+            // During programmatic updates (like initialization), use updateValue to avoid
+            // triggering form dirty state
+            questionConditionalControl.updateValue(
+              conditional,
+              emitEvent: false,
+            );
+          } else {
+            // During user-initiated changes, use normal assignment to properly
+            // trigger form change detection
+            questionConditionalControl.value = conditional;
+          }
+
+          // print('Set questionConditionalControl.value: ${questionConditionalControl.value?.condition.toJson()}',);
+        }
+      } else {
+        // No conditions, set to null
+        final shouldUpdate = questionConditionalControl.value != null;
+
+        if (shouldUpdate) {
+          if (_isUpdatingProgrammatically) {
+            questionConditionalControl.updateValue(null, emitEvent: false);
+          } else {
+            questionConditionalControl.value = null;
+          }
+          // print('Set questionConditionalControl.value to null');
+        }
+      }
+
+      // Update the form controls to reflect the current state
+      _syncFormControlsWithConditions();
+    } finally {
+      _isUpdatingCondition = false;
+    }
   }
 
   /// Synchronizes the form controls with the current conditions state
@@ -224,13 +283,15 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     streams.add(conditionsArray.valueChanges.distinct());
 
     for (final viewModel in conditionFormViewModels.formViewModels) {
-      // Listen to form value changes
-      streams.add(viewModel.form.valueChanges.distinct());
+      // Combine all control changes for this view model into a single stream
+      // This reduces the number of individual streams and prevents cascading updates
+      final combinedStream = StreamGroup.merge([
+        viewModel.questionIdControl.valueChanges.distinct(),
+        viewModel.comparatorControl.valueChanges.distinct(),
+        viewModel.valueControl.valueChanges.distinct(),
+      ]);
 
-      // Also listen to each control individually for more granular updates
-      streams.add(viewModel.questionIdControl.valueChanges.distinct());
-      streams.add(viewModel.comparatorControl.valueChanges.distinct());
-      streams.add(viewModel.valueControl.valueChanges.distinct());
+      streams.add(combinedStream);
     }
 
     if (streams.isEmpty) {
@@ -238,19 +299,21 @@ class ConditionalQuestionFormViewModel extends FormViewModel
     } else {
       _conditionsValueChangesStream = StreamGroup.merge(
         streams,
-      ).asBroadcastStream();
-      _conditionsValueChangesSubscription = _conditionsValueChangesStream.listen((
-        _,
-      ) {
-        // print('Condition value changed, updating condition');
-        // First update the composite expression by building it from all form data
-        updateCondition();
-      });
+      ).distinct().asBroadcastStream();
+
+      _conditionsValueChangesSubscription = _conditionsValueChangesStream.listen(
+        (_) {
+          // print('Condition value changed, updating condition');
+          // Use the debounced update method which will handle timing internally
+          updateCondition();
+        },
+      );
     }
   }
 
   @override
   void dispose() {
+    _updateDebounceTimer?.cancel();
     _conditionsValueChangesSubscription?.cancel();
     super.dispose();
   }
