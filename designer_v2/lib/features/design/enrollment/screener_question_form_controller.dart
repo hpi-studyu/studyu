@@ -1,4 +1,5 @@
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/screener_question_logic_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_data.dart';
@@ -146,14 +147,21 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
     return data;
   }
 
-  List<FormControl> _copyFormControls(List<AbstractControl> controls) {
+  List<AbstractControl> _copyFormControls(List<AbstractControl> controls) {
     return controls
-        .map(
-          (control) => FormControl<String>(
-            value: control.value?.toString() ?? '',
+        .map((control) {
+          final Object? value = control.value;
+          if (value is Choice) {
+            return FormControl<String>(
+              value: value.text,
+              disabled: control.disabled,
+            );
+          }
+          return FormControl<String>(
+            value: value?.toString() ?? '',
             disabled: control.disabled,
-          ),
-        )
+          );
+        })
         .toList();
   }
 
