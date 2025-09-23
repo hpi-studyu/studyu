@@ -16,7 +16,6 @@ class SimplifiedStudyConverter {
       'forms': _exportForms(study, context),
       'interventions': _exportInterventions(study),
       'consent': _exportConsent(study),
-      'reporting': _exportReporting(study, context),
     };
   }
 
@@ -36,7 +35,6 @@ class SimplifiedStudyConverter {
     _importForms(schema['forms'], study, context);
     _importInterventions(schema['interventions'], study);
     _importConsent(schema['consent'], study);
-    _importReporting(schema['reporting'], study, context);
 
     return study;
   }
@@ -971,154 +969,6 @@ class SimplifiedStudyConverter {
         ..iconName = map['icon'] as String? ?? 'textBoxCheck';
     }).toList();
   }
-
-  // ---------------------------------------------------------------------------
-  // Reporting
-  // ---------------------------------------------------------------------------
-
-  static Map<String, dynamic> _exportReporting(
-    Study study,
-    _ExportContext context,
-  ) {
-    Map<String, dynamic>? exportSection(ReportSection? section) {
-      if (section == null) return null;
-      final base = {
-        'type': section.type,
-        if (section.title != null) 'title': section.title,
-        if (section.description != null) 'description': section.description,
-      };
-
-      if (section is AverageSection) {
-        return {
-          ...base,
-          if (section.aggregate != null) 'aggregate': section.aggregate!.name,
-          if (section.resultProperty != null)
-            'result': context.exportDataReference(section.resultProperty!),
-        };
-      }
-      if (section is LinearRegressionSection) {
-        return {
-          ...base,
-          'alpha': section.alpha,
-          if (section.improvement != null)
-            'improvement': section.improvement!.name,
-          if (section.resultProperty != null)
-            'result': context.exportDataReference(section.resultProperty!),
-        };
-      }
-      if (section is TextualSummarySection) {
-        return {
-          ...base,
-          if (section.resultProperty != null)
-            'result': context.exportDataReference(section.resultProperty!),
-        };
-      }
-      if (section is GaugeComparisonSection) {
-        return {
-          ...base,
-          if (section.resultProperty != null)
-            'result': context.exportDataReference(section.resultProperty!),
-        };
-      }
-      if (section is DescriptiveStatsSection) {
-        return {
-          ...base,
-          if (section.resultProperty != null)
-            'result': context.exportDataReference(section.resultProperty!),
-        };
-      }
-      return base;
-    }
-
-    return {
-      if (study.reportSpecification.primary != null)
-        'primary': exportSection(study.reportSpecification.primary),
-      'secondary': [
-        for (final section in study.reportSpecification.secondary)
-          exportSection(section),
-      ].whereType<Map<String, dynamic>>().toList(),
-    };
-  }
-
-  static void _importReporting(
-    dynamic data,
-    Study study,
-    _ImportContext context,
-  ) {
-    if (data is! Map<String, dynamic>) {
-      study.reportSpecification = ReportSpecification();
-      return;
-    }
-
-    final spec = ReportSpecification();
-    spec.primary = _importReportSection(data['primary'], context);
-    spec.secondary = (data['secondary'] as List? ?? [])
-        .map((entry) => _importReportSection(entry, context))
-        .whereType<ReportSection>()
-        .toList();
-    study.reportSpecification = spec;
-  }
-
-  static ReportSection? _importReportSection(
-    dynamic section,
-    _ImportContext context,
-  ) {
-    if (section is! Map<String, dynamic>) return null;
-    final type = section['type'] as String?;
-    if (type == null) return null;
-
-    switch (type) {
-      case AverageSection.sectionType:
-        final aggregateName = section['aggregate'] as String?;
-        final report = AverageSection.withId()
-          ..aggregate = aggregateName == null
-              ? null
-              : TemporalAggregation.values.firstWhereOrNull(
-                  (element) => element.name == aggregateName,
-                )
-          ..resultProperty = context.importDataReference(section['result']);
-        return report
-          ..title = section['title'] as String?
-          ..description = section['description'] as String?;
-      case LinearRegressionSection.sectionType:
-        final improvementName = section['improvement'] as String?;
-        final report = LinearRegressionSection.withId()
-          ..alpha = (section['alpha'] as num?)?.toDouble() ?? 0.05
-          ..improvement = improvementName == null
-              ? null
-              : ImprovementDirection.values.firstWhereOrNull(
-                  (element) => element.name == improvementName,
-                )
-          ..resultProperty = context.importDataReference(section['result']);
-        return report
-          ..title = section['title'] as String?
-          ..description = section['description'] as String?;
-      case TextualSummarySection.sectionType:
-        final report = TextualSummarySection.withId()
-          ..resultProperty = context.importDataReference(section['result']);
-        return report
-          ..title = section['title'] as String?
-          ..description = section['description'] as String?;
-      case GaugeComparisonSection.sectionType:
-        final report = GaugeComparisonSection.withId()
-          ..resultProperty = context.importDataReference(section['result']);
-        return report
-          ..title = section['title'] as String?
-          ..description = section['description'] as String?;
-      case DescriptiveStatsSection.sectionType:
-        final report = DescriptiveStatsSection.withId()
-          ..resultProperty = context.importDataReference(section['result']);
-        return report
-          ..title = section['title'] as String?
-          ..description = section['description'] as String?;
-      default:
-        return null;
-    }
-  }
-
-  // ---------------------------------------------------------------------------
-  // Helpers
-  // ---------------------------------------------------------------------------
 
   static void _resolveConditionals(Study study, _ImportContext context) {
     for (final data in context.conditionalData) {
