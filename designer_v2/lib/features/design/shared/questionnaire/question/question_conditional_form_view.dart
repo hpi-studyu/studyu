@@ -49,6 +49,15 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
     PainQuestion.questionType,
   ];
 
+  // Question types that cannot be depended upon by other questions
+  // (others can't reference these in their conditions)
+  static const List<String> nonDependableQuestionTypes = [
+    ImageCapturingQuestion.questionType,
+    AudioRecordingQuestion.questionType,
+    FitbitQuestion.questionType,
+    PainQuestion.questionType,
+  ];
+
   List<Question> get availableQuestions {
     final currentIndex = allQuestions.indexWhere(
       (q) => q.id == formViewModel.currentQuestionId,
@@ -57,8 +66,9 @@ class ConditionalQuestionFormView extends FormConsumerWidget {
         ? allQuestions
         : allQuestions.take(currentIndex).toList();
 
+    // Filter out questions that cannot be depended upon by other questions
     return questionsBeforeCurrent
-        .where((q) => !ignoredQuestionTypes.contains(q.type))
+        .where((q) => !nonDependableQuestionTypes.contains(q.type))
         .toList();
   }
 
