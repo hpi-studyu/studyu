@@ -720,47 +720,60 @@ class SimplifiedStudyConverter {
     Map<String, dynamic> logic,
     _ImportContext context,
   ) {
+    // For backward compatibility, flatten complex logic to simple ValueExpression
+    // This ensures compatibility with original dev branch
     if (logic.containsKey('all')) {
-      final expressions = (logic['all'] as List)
-          .map(
-            (child) => _logicToExpressionWithNaturalLanguage(
-              child as Map<String, dynamic>,
-              context,
-            ),
-          )
-          .whereType<Expression>()
-          .toList();
-      return CompositeExpression(
-        logicType: LogicType.and,
-        expressions: expressions,
-      );
+      final conditions = logic['all'] as List;
+      if (conditions.isNotEmpty) {
+        // Use only the first condition to maintain compatibility
+        return _logicToExpressionWithNaturalLanguage(
+          conditions[0] as Map<String, dynamic>,
+          context,
+        );
+      }
+      return null;
     }
 
     if (logic.containsKey('any')) {
-      final expressions = (logic['any'] as List)
-          .map(
-            (child) => _logicToExpressionWithNaturalLanguage(
-              child as Map<String, dynamic>,
-              context,
-            ),
-          )
-          .whereType<Expression>()
-          .toList();
-      return CompositeExpression(
-        logicType: LogicType.or,
-        expressions: expressions,
-      );
+      final conditions = logic['any'] as List;
+      if (conditions.isNotEmpty) {
+        // Use only the first condition to maintain compatibility
+        return _logicToExpressionWithNaturalLanguage(
+          conditions[0] as Map<String, dynamic>,
+          context,
+        );
+      }
+      return null;
     }
 
     if (logic.containsKey('not')) {
-      final expression = _logicToExpressionWithNaturalLanguage(
-        logic['not'] as Map<String, dynamic>,
-        context,
-      );
-      if (expression == null) return null;
-      final notExpression = NotExpression();
-      notExpression.expression = expression;
-      return notExpression;
+      // For 'not' conditions, we need to flip the operator to maintain compatibility
+      final innerLogic = logic['not'] as Map<String, dynamic>;
+      final flippedLogic = Map<String, dynamic>.from(innerLogic);
+      
+      // Flip common operators to avoid NotExpression
+      if (flippedLogic.containsKey('operator')) {
+        final operator = flippedLogic['operator'] as String;
+        switch (operator) {
+          case 'eq':
+            flippedLogic['operator'] = 'neq';
+            break;
+          case 'neq':
+            flippedLogic['operator'] = 'eq';
+            break;
+          case 'isTrue':
+            flippedLogic['operator'] = 'isFalse';
+            break;
+          case 'isFalse':
+            flippedLogic['operator'] = 'isTrue';
+            break;
+          default:
+            // For operators we can't flip, return null to avoid NotExpression
+            return null;
+        }
+      }
+      
+      return _logicToExpressionWithNaturalLanguage(flippedLogic, context);
     }
 
     final questionPrompt = logic['question'] as String?;
@@ -777,10 +790,9 @@ class SimplifiedStudyConverter {
         final expression = BooleanExpression()..target = question.id;
         return expression;
       case 'isFalse':
-        final expression = BooleanExpression()..target = question.id;
-        final notExpression = NotExpression();
-        notExpression.expression = expression;
-        return notExpression;
+        // For backward compatibility, represent 'isFalse' as 'isTrue' with inverted logic
+        // Since we can't use NotExpression, return null to skip this condition
+        return null;
       case 'includesAny':
         final exp = ChoiceExpression()..target = question.id;
         if (value is List && question is ChoiceQuestion) {
@@ -1143,8 +1155,10 @@ class SimplifiedStudyConverter {
       final eligibilityRules = context.eligibilityData!['eligibilityRules'] as Map<String, dynamic>?;
       if (eligibilityRules != null) {
         final expressions = _extractIndividualExpressions(eligibilityRules, context);
-        study.eligibilityCriteria = expressions.map((expression) {
+        study.eligibilityCriteria = expressions.whereType<ValueExpression>().map((expression) {
           final criterion = EligibilityCriterion.withId();
+          // EligibilityCriterion expects a single Expression (not CompositeExpression)
+          // This matches the native UI pattern where each criterion has one simple condition
           criterion.condition = expression;
           return criterion;
         }).toList();
@@ -1158,28 +1172,68 @@ class SimplifiedStudyConverter {
     dynamic defaultValue,
     _ImportContext context,
   ) {
+    // If no conditional logic and no default value, return null (no conditional)
     if (displayIf == null && defaultValue == null) {
       return null;
     }
 
-    final expression = displayIf != null
-        ? _logicToExpressionWithNaturalLanguage(displayIf, context)
-        : null;
-
-    final CompositeExpression finalExpression;
-    if (expression == null) {
-      finalExpression = CompositeExpression(
-        logicType: LogicType.and,
-        expressions: [],
-      );
-    } else if (expression is CompositeExpression) {
-      finalExpression = expression;
-    } else {
-      finalExpression = CompositeExpression(
-        logicType: LogicType.and,
-        expressions: [expression],
-      );
+    // If only default value without display logic, create unconditional with default
+    if (displayIf == null) {
+      if (question is BooleanQuestion) {
+        final conditional = QuestionConditional<bool>();
+        conditional.defaultValue = _coerceBool(defaultValue);
+        return conditional;
+      }
+      if (question is ChoiceQuestion) {
+        final conditional = QuestionConditional<List<String>>();
+        conditional.defaultValue = _coerceChoiceList(defaultValue);
+        return conditional;
+      }
+      if (question is SliderQuestion) {
+        final conditional = QuestionConditional<num>();
+        conditional.defaultValue = defaultValue is num ? defaultValue : null;
+        return conditional;
+      }
+      if (question is FreeTextQuestion) {
+        final conditional = QuestionConditional<String>();
+        conditional.defaultValue = defaultValue?.toString();
+        return conditional;
+      }
+      return QuestionConditional();
     }
+
+    final expression = _logicToExpressionWithNaturalLanguage(displayIf, context);
+
+    // If we couldn't create a valid expression, create conditional with only default value
+    if (expression == null || expression is! ValueExpression) {
+      if (question is BooleanQuestion) {
+        final conditional = QuestionConditional<bool>();
+        conditional.defaultValue = _coerceBool(defaultValue);
+        return conditional;
+      }
+      if (question is ChoiceQuestion) {
+        final conditional = QuestionConditional<List<String>>();
+        conditional.defaultValue = _coerceChoiceList(defaultValue);
+        return conditional;
+      }
+      if (question is SliderQuestion) {
+        final conditional = QuestionConditional<num>();
+        conditional.defaultValue = defaultValue is num ? defaultValue : null;
+        return conditional;
+      }
+      if (question is FreeTextQuestion) {
+        final conditional = QuestionConditional<String>();
+        conditional.defaultValue = defaultValue?.toString();
+        return conditional;
+      }
+      return QuestionConditional();
+    }
+
+    // Create CompositeExpression with single ValueExpression (native UI pattern)
+    final finalExpression = CompositeExpression(
+      logicType: LogicType.and,
+      expressions: [expression],
+    );
 
     if (question is BooleanQuestion) {
       final defaultBool = _coerceBool(defaultValue);
