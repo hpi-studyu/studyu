@@ -1,3 +1,70 @@
+## 4.7.0
+
+ - **REFACTOR**: improve code formatting and readability in body-related files.
+ - **REFACTOR**: add localization support for Fitbit data sync messages and improve code formatting.
+ - **REFACTOR**: improve code formatting and readability in localization and conditional question files.
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: upgrade package dependencies.
+ - **FIX**: update dependencies and versions in pubspec.yaml and pubspec.lock.
+ - **FIX**: remove trailing slashes from environment URLs to prevent double slashes in paths.
+ - **FIX**: update conditional logic to use NumericComparator for better clarity.
+ - **FIX**: pain question error on save.
+ - **FIX**: make LogicType json compatible.
+ - **FIX**: preserve ids for choices.
+ - **FIX**: only throw ExtractionFailedException for study screen.
+ - **FIX**: streams and dynamic cast bugs.
+ - **FIX**: update conditionArray on changes correctly, only include latter questions.
+ - **FIX**: rebuild form, enable preview, use currentQuestionId.
+ - **FIX**: update deps.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update pain type in body pain and selector.
+ - **FEAT**: pain type model.
+ - **FEAT**: add pain type and body part children support.
+ - **FEAT**: implement pain selection question inside designer.
+ - **FEAT**: add pain selection question and body part selection widgets.
+ - **FEAT**: initial version for conditional questions.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
+
+## 4.6.1
+
+- **FIX**: update deps.
+
+## 4.6.0
+
+- **FIX**: bump dependencies.
+- **FIX**: study reset process by removing unnecessary user ID handling.
+- **FIX**: reset subject temp fix.
+- **FEAT**: enhance study reset functionality to support user-specific data deletion.
+
+## 4.5.0
+
+- **FIX**: upgrade deps.
+- **FEAT**: add Descriptive Stats section to the designer and core.
+- **FEAT**: add gauge comparison section with form view.
+- **FEAT**: add textual summary section to report with form view and validation.
+
+## 4.5.0-dev.0
+
+ - **REFACTOR**: rename core FitbitCredentials to FitbitAuthCredentials.
+ - **FIX**: add fitbit question json type to question model.
+ - **FEAT**: update Fitbit credentials form and related dependencies.
+ - **FEAT**: fitbit_credentials table and integration.
+ - **FEAT**: update Fitbit data handling and syncing process.
+ - **FEAT**(fitbit): update sleep data model and sleep fetch.
+ - **FEAT**: sleep and step data.
+ - **FEAT**: fitbit questionnaire form.
+ - **FEAT**: fitbit credentials base for study model.
+
+## 4.4.9
+
+ - **FIX**: upgrade deps and flutter v3.24.5.
+
 ## 4.4.8
 
  - **FIX**: upgrade deps.

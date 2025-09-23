@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
@@ -40,10 +40,12 @@ class _InterventionSelectionScreenState
           ),
           const SizedBox(height: 8),
           Text(
-            AppLocalizations.of(context)!
-                .please_select_interventions_description,
-            style: theme.textTheme.bodyMedium!
-                .copyWith(color: theme.textTheme.bodySmall!.color),
+            AppLocalizations.of(
+              context,
+            )!.please_select_interventions_description,
+            style: theme.textTheme.bodyMedium!.copyWith(
+              color: theme.textTheme.bodySmall!.color,
+            ),
           ),
         ],
       ),

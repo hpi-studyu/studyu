@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/progress_row.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_box.dart';
@@ -50,8 +50,10 @@ class _TaskOverviewState extends State<TaskOverview> {
                 const SizedBox(width: 8),
                 Text(
                   taskInstance.completionPeriod.formatted(),
-                  style: theme.textTheme.titleSmall!
-                      .copyWith(fontSize: 16, color: theme.primaryColor),
+                  style: theme.textTheme.titleSmall!.copyWith(
+                    fontSize: 16,
+                    color: theme.primaryColor,
+                  ),
                 ),
               ],
             ),
@@ -87,14 +89,15 @@ class _TaskOverviewState extends State<TaskOverview> {
             children: [
               const SizedBox(height: 16),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
+                  Flexible(
                     child: Text(
                       AppLocalizations.of(context)!.intervention_current,
                       style: theme.textTheme.titleLarge,
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 5),
                   Text(
                     '${widget.subject!.daysLeftForPhase(widget.subject!.getInterventionIndexForDate(DateTime.now()))} ${AppLocalizations.of(context)!.days_left}',
                     style: const TextStyle(color: primaryColor),
@@ -103,8 +106,9 @@ class _TaskOverviewState extends State<TaskOverview> {
               ),
               const SizedBox(height: 8),
               InterventionCardTitle(
-                intervention:
-                    widget.subject!.getInterventionForDate(DateTime.now()),
+                intervention: widget.subject!.getInterventionForDate(
+                  DateTime.now(),
+                ),
               ),
               const SizedBox(height: 8),
               Text(
@@ -115,13 +119,7 @@ class _TaskOverviewState extends State<TaskOverview> {
           ),
         ),
         // Todo: find good way to calculate duration of intervention and display it
-        Expanded(
-          child: ListView(
-            children: [
-              ...buildScheduleToday(context),
-            ],
-          ),
-        ),
+        Expanded(child: ListView(children: [...buildScheduleToday(context)])),
       ],
     );
   }

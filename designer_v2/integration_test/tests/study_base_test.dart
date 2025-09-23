@@ -13,7 +13,7 @@ abstract class StudyBaseTest extends StudyRobots {
   final StudyIntegrationController controller;
 
   StudyBaseTest.go(super.$, this.selectedMockupStudy)
-      : controller = StudyIntegrationController($, selectedMockupStudy);
+    : controller = StudyIntegrationController($, selectedMockupStudy);
 
   Future<void> init() async {
     final email = randomTest
@@ -22,8 +22,8 @@ abstract class StudyBaseTest extends StudyRobots {
     const password = 'password';
 
     await super.$.pumpWidgetAndSettle(
-          const ExcludeSemantics(child: ProviderScope(child: App())),
-        );
+      const ExcludeSemantics(child: ProviderScope(child: App())),
+    );
 
     await execute(email, password);
     await finish();

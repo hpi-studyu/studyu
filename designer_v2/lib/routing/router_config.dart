@@ -22,6 +22,7 @@ import 'package:studyu_designer_v2/features/auth/signup_form_view.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_page.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_view.dart';
+import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_view.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_view.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_view.dart';
@@ -75,10 +76,7 @@ class RouterConf {
       name: loginRouteName,
       pageBuilder: (context, state) => const MaterialPage(
         key: RouterKeys.authKey,
-        child: AuthScaffold(
-          formKey: AuthFormKey.login,
-          body: LoginForm(),
-        ),
+        child: AuthScaffold(formKey: AuthFormKey.login, body: LoginForm()),
       ),
     ),
     GoRoute(
@@ -86,10 +84,7 @@ class RouterConf {
       name: signupRouteName,
       pageBuilder: (context, state) => const MaterialPage(
         key: RouterKeys.authKey,
-        child: AuthScaffold(
-          formKey: AuthFormKey.signup,
-          body: SignupForm(),
-        ),
+        child: AuthScaffold(formKey: AuthFormKey.signup, body: SignupForm()),
       ),
     ),
     GoRoute(
@@ -138,22 +133,22 @@ class RouterConf {
       name: studyRouteName,
       redirect: (BuildContext context, GoRouterState state) =>
           router.namedLocation(
-        'studyEdit',
-        pathParameters: {
-          RouteParams.studyId: state.pathParameters[RouteParams.studyId]!,
-        },
-      ),
+            'studyEdit',
+            pathParameters: {
+              RouteParams.studyId: state.pathParameters[RouteParams.studyId]!,
+            },
+          ),
     ),
     GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit",
       name: studyEditRouteName,
       redirect: (BuildContext context, GoRouterState state) =>
           router.namedLocation(
-        'studyEditInfo',
-        pathParameters: {
-          RouteParams.studyId: state.pathParameters[RouteParams.studyId]!,
-        },
-      ),
+            'studyEditInfo',
+            pathParameters: {
+              RouteParams.studyId: state.pathParameters[RouteParams.studyId]!,
+            },
+          ),
     ),
     GoRoute(
       path: "/studies/:${RouteParams.studyId}/edit/info",
@@ -223,8 +218,9 @@ class RouterConf {
                 formViewModelBuilder: (ref) =>
                     ref.watch(interventionFormViewModelProvider(routeArgs)),
                 formViewBuilder: (formViewModel) => TwoColumnLayout.split(
-                  leftWidget:
-                      InterventionFormView(formViewModel: formViewModel),
+                  leftWidget: InterventionFormView(
+                    formViewModel: formViewModel,
+                  ),
                   rightWidget: InterventionPreview(routeArgs: routeArgs),
                   flexLeft: 7,
                   constraintsLeft: const BoxConstraints(minWidth: 500.0),
@@ -269,8 +265,9 @@ class RouterConf {
                 formViewModelBuilder: (ref) =>
                     ref.watch(surveyFormViewModelProvider(routeArgs)),
                 formViewBuilder: (formViewModel) => TwoColumnLayout.split(
-                  leftWidget:
-                      MeasurementSurveyFormView(formViewModel: formViewModel),
+                  leftWidget: MeasurementSurveyFormView(
+                    formViewModel: formViewModel,
+                  ),
                   rightWidget: SurveyPreview(routeArgs: routeArgs),
                   flexLeft: 7,
                   constraintsLeft: const BoxConstraints(minWidth: 500.0),
@@ -296,6 +293,24 @@ class RouterConf {
             selectedTab: StudyNav.edit(studyId),
             selectedTabSubnav: StudyDesignNav.reports(studyId),
             body: StudyDesignReportsFormView(studyId),
+            layoutType: SingleColumnLayoutType.boundedNarrow,
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: "/studies/:${RouteParams.studyId}/edit/fitbitCredentials",
+      name: studyEditFitbitCredentialsRouteName,
+      pageBuilder: (context, state) {
+        final studyId = state.pathParameters[RouteParams.studyId]!;
+        return MaterialPage(
+          key: RouterKeys.studyKey,
+          child: StudyScaffold(
+            studyId: studyId,
+            tabsSubnav: StudyDesignNav.tabs(studyId),
+            selectedTab: StudyNav.edit(studyId),
+            selectedTabSubnav: StudyDesignNav.fitbitCredentials(studyId),
+            body: StudyDesignFitbitCredentialsFormView(studyId),
             layoutType: SingleColumnLayoutType.boundedNarrow,
           ),
         );
@@ -407,8 +422,9 @@ class RouterConf {
       if (subRoutes.isEmpty) return null;
       for (final GoRoute route in subRoutes) {
         if (route.name == name) return route;
-        final GoRoute? newRoute =
-            searchRouteNames(List<GoRoute>.from(route.routes));
+        final GoRoute? newRoute = searchRouteNames(
+          List<GoRoute>.from(route.routes),
+        );
         if (newRoute != null) return newRoute;
       }
       return null;
@@ -427,10 +443,7 @@ abstract class StudyFormRouteArgs {
 }
 
 abstract class QuestionFormRouteArgs extends StudyFormRouteArgs {
-  QuestionFormRouteArgs({
-    required this.questionId,
-    required super.studyId,
-  });
+  QuestionFormRouteArgs({required this.questionId, required super.studyId});
 
   final QuestionID questionId;
 }
@@ -443,10 +456,7 @@ class ScreenerQuestionFormRouteArgs extends QuestionFormRouteArgs {
 }
 
 class ConsentItemFormRouteArgs extends StudyFormRouteArgs {
-  ConsentItemFormRouteArgs({
-    required super.studyId,
-    required this.consentId,
-  });
+  ConsentItemFormRouteArgs({required super.studyId, required this.consentId});
 
   final ConsentID consentId;
 }
@@ -492,10 +502,7 @@ class InterventionTaskFormRouteArgs extends InterventionFormRouteArgs {
 }
 
 class ReportItemFormRouteArgs extends StudyFormRouteArgs {
-  ReportItemFormRouteArgs({
-    required super.studyId,
-    required this.sectionId,
-  });
+  ReportItemFormRouteArgs({required super.studyId, required this.sectionId});
 
   final SectionID sectionId;
 }

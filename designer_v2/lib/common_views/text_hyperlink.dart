@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,9 +20,9 @@ class Hyperlink extends StatefulWidget {
     this.iconSize,
     super.key,
   }) : assert(
-          (url != null && onClick == null) || (url == null && onClick != null),
-          "Must provide either url or onClick handler",
-        );
+         (url != null && onClick == null) || (url == null && onClick != null),
+         "Must provide either url or onClick handler",
+       );
 
   final String text;
   final String? url;
@@ -56,10 +55,12 @@ class _HyperlinkState extends State<Hyperlink> {
         final isHovered = states.contains(WidgetState.hovered);
 
         final visitedColor = widget.visitedColor ?? widget.linkColor;
-        final visitedHoverColor = widget.hoverColor ??
-            visitedColor.faded(ThemeConfig.kHoverFadeFactor);
-        final hoverColor = widget.hoverColor ??
-            widget.linkColor.faded(ThemeConfig.kHoverFadeFactor);
+        final visitedHoverColor =
+            widget.hoverColor ??
+            visitedColor.withValues(alpha: ThemeConfig.kHoverFadeFactor);
+        final hoverColor =
+            widget.hoverColor ??
+            widget.linkColor.withValues(alpha: ThemeConfig.kHoverFadeFactor);
 
         final actualColor = isVisited
             ? (isHovered ? visitedHoverColor : visitedColor)
@@ -67,8 +68,9 @@ class _HyperlinkState extends State<Hyperlink> {
 
         final textTheme =
             theme.textTheme.titleSmall ?? theme.textTheme.bodyLarge;
-        TextStyle? actualStyle =
-            textTheme?.copyWith(color: actualColor).merge(widget.style);
+        TextStyle? actualStyle = textTheme
+            ?.copyWith(color: actualColor)
+            .merge(widget.style);
 
         if (isVisited) {
           actualStyle = actualStyle?.merge(widget.visitedStyle);

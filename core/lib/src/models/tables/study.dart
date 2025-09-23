@@ -14,6 +14,7 @@ enum StudyStatus {
   closed;
 
   String toJson() => name;
+
   static StudyStatus fromJson(String json) => values.byName(json);
 }
 
@@ -22,6 +23,7 @@ enum Participation {
   invite;
 
   String toJson() => name;
+
   static Participation fromJson(String json) => values.byName(json);
 }
 
@@ -31,6 +33,7 @@ enum ResultSharing {
   organization;
 
   String toJson() => name;
+
   static ResultSharing fromJson(String json) => values.byName(json);
 }
 
@@ -79,6 +82,9 @@ class Study extends SupabaseObjectFunctions<Study>
   late List<String> collaboratorEmails = [];
   @JsonKey(name: 'registry_published', defaultValue: false)
   late bool registryPublished = false;
+
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  StudyFitbitCredentials? fitbitCredentials;
 
   @JsonKey(includeToJson: false, includeFromJson: false)
   int participantCount = 0;
@@ -148,10 +154,20 @@ class Study extends SupabaseObjectFunctions<Study>
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
 
+    //fitbitCredentials
+    final fitbitCredentials =
+        json['study_fitbit_credentials'] as Map<String, dynamic>?;
+    if (fitbitCredentials != null && fitbitCredentials.isNotEmpty) {
+      study.fitbitCredentials = StudyFitbitCredentials.fromJson(
+        json['study_fitbit_credentials'] as Map<String, dynamic>,
+      );
+    }
+
     final List? repo = json['repo'] as List?;
     if (repo != null && repo.isNotEmpty) {
-      study.repo =
-          Repo.fromJson((json['repo'] as List)[0] as Map<String, dynamic>);
+      study.repo = Repo.fromJson(
+        (json['repo'] as List)[0] as Map<String, dynamic>,
+      );
     }
 
     final List? invites = json['study_invite'] as List?;
@@ -209,7 +225,7 @@ class Study extends SupabaseObjectFunctions<Study>
   Map<String, dynamic> toJson() => _$StudyToJson(this);
 
   // TODO: Add null checks in fromJson to allow selecting columns
-  static Future<List<Study>> getResearcherDashboardStudies() async =>
+  static Future<List<Study>> getResearcherDashboardStudies() =>
       SupabaseQuery.getAll<Study>(
         selectedColumns: [
           '*',
@@ -248,6 +264,7 @@ class Study extends SupabaseObjectFunctions<Study>
           .neq('status', StudyStatus.closed.name);
       final extracted = SupabaseQuery.extractSupabaseList<Study>(
         List<Map<String, dynamic>>.from(response),
+        throwForNonExtracted: true,
       );
       result = ExtractionSuccess<Study>(extracted);
     } on ExtractionFailedException<Study> catch (error) {
@@ -293,17 +310,20 @@ class Study extends SupabaseObjectFunctions<Study>
     final jsonList = List<Map<String, dynamic>>.from(res);
     if (jsonList.isEmpty) return '';
     final tableHeadersSet = jsonList[0].keys.toSet();
-    final flattenedQuestions = jsonList.map((progress) {
-      if (progress['result_type'] == 'QuestionnaireState') {
-        for (final result
-            in List<Map<String, dynamic>>.from(progress['result'] as List)) {
-          progress[result['question'] as String] = result['response'];
-          tableHeadersSet.add(result['question'] as String);
-        }
-        // progress.remove('result');
-      }
-      return progress;
-    }).toList(growable: false);
+    final flattenedQuestions = jsonList
+        .map((progress) {
+          if (progress['result_type'] == 'QuestionnaireState') {
+            for (final result in List<Map<String, dynamic>>.from(
+              progress['result'] as List,
+            )) {
+              progress[result['question'] as String] = result['response'];
+              tableHeadersSet.add(result['question'] as String);
+            }
+            // progress.remove('result');
+          }
+          return progress;
+        })
+        .toList(growable: false);
     final tableHeaders = tableHeadersSet.toList();
     // Convert to List and fill empty cells with empty string
     final resultsTable = [
@@ -320,7 +340,9 @@ class Study extends SupabaseObjectFunctions<Study>
   // - Status
 
   bool get isDraft => status == StudyStatus.draft;
+
   bool get isRunning => status == StudyStatus.running;
+
   bool get isClosed => status == StudyStatus.closed;
 
   bool isReadonly(User user) {

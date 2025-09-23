@@ -2,6 +2,12 @@
   "@@locale": "en",
 
   "loading": "Loading",
+  "loading_error_title": "Loading Error",
+  "loading_error_description": "The study data could not be retrieved. If you are currently participating in a study, please first contact your study supervisor for assistance. Only contact support if you are not in a study or your supervisor instructs you to do so. Do not delete your data unless told by your supervisor or support. Deleting data will remove all your study data and you will have to rejoin the study.",
+  "try_again": "Try again",
+  "delete_all_data": "Delete all data",
+  "delete_all_data_description": "Do you really want to delete all data? This will delete all your study data and you will have to rejoin the study.",
+  "reset_app": "Reset App",
 
   "what_is_studyu": "What is StudyU?",
   "description_part1": "Imagine reading the sentence: \"Eating after 6 pm decreases sleep quality\"",
@@ -30,11 +36,13 @@
   "please_answer_eligibility": "Please answer a few questions to make sure that you can safely participate in this study.",
   "intervention_selection_title": "Interventions",
   "please_select_interventions": "Please select two interventions to apply during the study.",
-  "please_select_interventions_description": "The effects of these two interventions will be measured and compared during the study.",
+  "please_select_interventions_description": "The effects of these two interventions will be measured and compared during the study. Interventions will follow the order you select. Choosing A before B means A comes first",
   "no_interventions_available": "No interventions available.",
   "loading_interventions": "Loading interventions",
 
+  "task_already_completed": "You have already completed this task today",
   "task_cannot_be_completed": "The task cannot be completed",
+  "task_outside_period": "The task cannot be completed outside of the intervention period",
   "study_notification_body": "A new task awaits your attention",
 
   "intervention_phase_duration": "Intervention phase duration",
@@ -83,6 +91,16 @@
   "profile": "Profile",
   "help": "Help",
   "contact": "Contact",
+  "contact_support": "Contact Support",
+  "support_email_body": "Hello,\n\nI am experiencing a loading error in the StudyU app. My subject ID is: {subjectId}\n\nPlease assist me with this issue.\n\nThank you.",
+  "@support_email_body": {
+    "description": "Body of the support email, includes the subject ID",
+    "placeholders": {
+      "subjectId": {
+        "type": "String"
+      }
+    }
+  },
   "about": "About",
   "settings": "Settings",
   "yes": "yes",
@@ -131,7 +149,9 @@
   "video_test": "This is a video test",
   "survey_test": "This is a survey test",
 
+  "current_report": "Current report",
   "report_history": "Report history",
+  "no_reports_found": "No reports defined yet",
   "current_power_level": "Current status",
   "not_enough_data": "Not enough data",
   "barely_enough_data": "Barely enough data",
@@ -195,23 +215,240 @@
   "free_text_min_length_error": "Please enter at least {min} characters",
   "@free_text_min_length_error": {
     "placeholders": {
-      "min": {}
+      "min": {
+        "type": "num"
+      }
     }
   },
   "free_text_max_length_error": "Please enter at most {max} characters",
   "@free_text_max_length_error": {
     "placeholders": {
-      "max": {}
+      "max": {
+        "type": "num"
+      }
     }
   },
   "free_text_alphanumeric_error": "Please enter only alphanumeric characters",
   "free_text_numeric_error": "Please enter only numeric characters",
   "free_text_custom_error": "Please enter only characters matching the pattern {pattern}",
   "@free_text_custom_error": {
-      "placeholders": {
-      "pattern": {}
+    "placeholders": {
+      "pattern": {
+        "type": "String"
       }
+    }
   },
   "app_outdated_message": "A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!",
-  "update_now": "Update now"
+  "update_now": "Update now",
+
+  "text_summary_section_prefix_higher": "Your ",
+  "text_summary_section_was_higher": " was higher during intervention: ",
+  "text_summary_section_was_lower": " was lower during intervention: ",
+  "text_summary_section_compared_to": " compared to: ",
+  "text_summary_section_and": " and ",
+  "text_summary_section_no_evidence": "There was no evidence for a difference in ",
+  "text_summary_section_between": " between interventions: ",
+  "intervention": "Intervention",
+  "phase": "Phase",
+  "day": "Day",
+  "no_data_available_yet": "No data available yet",
+  "value": "Value",
+  "show_colorless_gauges": "Enable accessible charts",
+  "welchs_t_test_results": "Welch's t-test Results",
+  "sample_a": "Sample A",
+  "sample_b": "Sample B",
+  "sample_size": "n",
+  "mean": "mean",
+  "variance": "var",
+  "t_statistic": "t-statistic",
+  "degrees_of_freedom": "Degrees of freedom",
+  "p_value": "p-value",
+  "result_significant": "Significantly different",
+  "result_not_significant": "Not significantly different",
+  "level_of_significance": "Level of significance",
+  "t_test_outcome_based_on": "The outcome is based on the following values:",
+  "statistical_information": "Statistical Information",
+  "close": "Close",
+  "significance_level_and_p_value": "Significance level and p-value",
+  "descriptive_statistics": "Descriptive statistics",
+  "compare_results_between": "Compare results between {nameA} and {nameB}",
+  "@compare_results_between": {
+    "description": "Label for comparing results between two interventions or samples",
+    "placeholders": {
+      "nameA": {
+        "type": "String"
+      },
+      "nameB": {
+        "type": "String"
+      }
+    }
+  },
+  "missing_observations_note": "Note: Missing observations indicate days when data was not recorded.",
+  "quick_summary": "Quick Summary",
+  "average_score": "Average score",
+  "data_completeness": "Data completeness",
+  "statistic": "Statistic",
+  "total_recordings": "Total recordings",
+  "missing_recordings": "Missing recordings",
+  "average": "Average",
+  "minimum": "Minimum",
+  "maximum": "Maximum",
+  "support_email_sent": "Support Email Sent",
+  "support_email_sent_description": "Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.",
+
+  "sync_fitbit_data": "Sync Fitbit Data",
+  "fitbit_data_synced": "Fitbit data synced successfully",
+  "fitbit_data_not_synced": "Fitbit data could not be synced. Please be sure that you have synced your Fitbit data with the Fitbit app.",
+  "error_syncing_fitbit_data": "Error syncing Fitbit data: {error}",
+  "@error_syncing_fitbit_data": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "fitbit_data_synced_dialog_title": "Fitbit Data Synced",
+  "fitbit_data_synced_info": "Data was synced for the following data types:",
+  "fitbit_data_earliest_date": "Earliest date: {date}",
+  "fitbit_data_latest_date": "Latest date: {date}",
+  "fitbit_data_details_btn": "Details",
+  "fitbit_data_close_btn": "Close",
+  "@fitbit_data_earliest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "@fitbit_data_latest_date": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "painIndicatorText": "Pain Level",
+  "dialogTitle": "Select Pain Level",
+  "okButton": "OK",
+  "cancelButton": "Cancel",
+  "painLevel_0": "No pain",
+  "painLevel_2": "Hurts a little bit",
+  "painLevel_4": "Hurts a little more",
+  "painLevel_6": "Hurts even more",
+  "painLevel_8": "Hurts a whole lot",
+  "painLevel_10": "Worst pain possible",
+  "body_head": "Head",
+  "body_head_front": "Head (Front)",
+  "body_face": "Face",
+  "body_forehead": "Forehead",
+  "body_eyes": "Eyes",
+  "body_nose": "Nose",
+  "body_mouth": "Mouth",
+  "body_head_back": "Head (Back)",
+  "body_inner_ear_balance": "Inner Ear / Balance",
+  "body_neck": "Neck",
+  "body_neck_front": "Neck (Front)",
+  "body_neck_back": "Neck (Back)",
+  "body_torso": "Torso",
+  "body_chest": "Chest",
+  "body_left_chest": "Left Chest",
+  "body_right_chest": "Right Chest",
+  "body_breastbone": "Breastbone",
+  "body_upper_back": "Upper Back",
+  "body_left_shoulder_blade": "Left Shoulder Blade",
+  "body_right_shoulder_blade": "Right Shoulder Blade",
+  "body_spine_upper_middle": "Spine (Upper/Middle)",
+  "body_abdomen": "Abdomen",
+  "body_upper_abdomen": "Upper Abdomen",
+  "body_lower_abdomen": "Lower Abdomen",
+  "body_left_side_abdomen": "Left Side (Abdomen)",
+  "body_right_side_abdomen": "Right Side (Abdomen)",
+  "body_lower_back": "Lower Back",
+  "body_spine_lower": "Spine (Lower)",
+  "body_left_flank": "Left Flank (Side)",
+  "body_right_flank": "Right Flank (Side)",
+  "body_arms": "Arms",
+  "body_left_arm": "Left Arm",
+  "body_left_shoulder": "Left Shoulder",
+  "body_left_upper_arm": "Left Upper Arm",
+  "body_left_bicep": "Left Bicep",
+  "body_left_tricep": "Left Tricep",
+  "body_left_elbow": "Left Elbow",
+  "body_left_lower_arm": "Left Lower Arm",
+  "body_left_forearm": "Left Forearm",
+  "body_left_wrist": "Left Wrist",
+  "body_left_hand": "Left Hand",
+  "body_left_palm": "Left Palm",
+  "body_left_fingers": "Left Fingers",
+  "body_right_arm": "Right Arm",
+  "body_right_shoulder": "Right Shoulder",
+  "body_right_upper_arm": "Right Upper Arm",
+  "body_right_bicep": "Right Bicep",
+  "body_right_tricep": "Right Tricep",
+  "body_right_elbow": "Right Elbow",
+  "body_right_lower_arm": "Right Lower Arm",
+  "body_right_forearm": "Right Forearm",
+  "body_right_wrist": "Right Wrist",
+  "body_right_hand": "Right Hand",
+  "body_right_palm": "Right Palm",
+  "body_right_fingers": "Right Fingers",
+  "body_lower_body": "Lower Body",
+  "body_pelvis": "Pelvis",
+  "body_groin": "Groin",
+  "body_hips": "Hips",
+  "body_buttocks": "Buttocks",
+  "body_legs": "Legs",
+  "body_left_leg": "Left Leg",
+  "body_left_upper_leg": "Left Upper Leg",
+  "body_left_thigh_front": "Thigh (Front)",
+  "body_left_thigh_back": "Thigh (Back)",
+  "body_left_knee": "Left Knee",
+  "body_left_lower_leg": "Left Lower Leg",
+  "body_left_shin": "Shin",
+  "body_left_calf": "Calf",
+  "body_left_ankle": "Left Ankle",
+  "body_left_foot": "Left Foot",
+  "body_left_heel": "Heel",
+  "body_left_foot_sole": "Foot Sole / Arch",
+  "body_left_toes": "Toes",
+  "body_right_leg": "Right Leg",
+  "body_right_upper_leg": "Right Upper Leg",
+  "body_right_thigh_front": "Thigh (Front)",
+  "body_right_thigh_back": "Thigh (Back)",
+  "body_right_knee": "Right Knee",
+  "body_right_lower_leg": "Right Lower Leg",
+  "body_right_shin": "Shin",
+  "body_right_calf": "Calf",
+  "body_right_ankle": "Right Ankle",
+  "body_right_foot": "Right Foot",
+  "body_right_heel": "Heel",
+  "body_right_foot_sole": "Foot Sole / Arch",
+  "body_right_toes": "Toes",
+  "painTypeLabel": "Pain Type",
+  "bodyPartLabel": "Body Part",
+  "painTypeUnspecified": "Unspecified",
+  "painTypeBurning": "Burning",
+  "painTypeStabbing": "Stabbing",
+  "painTypeAching": "Aching",
+  "painTypeThrobbing": "Throbbing",
+  "painTypeSharp": "Sharp",
+  "painTypeDull": "Dull",
+  "painTypeCramping": "Cramping",
+  "painTypeRadiating": "Radiating",
+  "painTypeTingling": "Tingling",
+  "painTypeShooting": "Shooting",
+  "painTypePulsing": "Pulsing",
+  "painTypePressure": "Pressure",
+  "painTypeTightness": "Tightness",
+  "painTypeSoreness": "Soreness",
+  "painTypeStiffness": "Stiffness",
+
+  "preview_mode": "Preview Mode",
+  "preview_mode_active": "Preview Mode Active",
+  "preview_mode_active_state": "Preview mode is now active.",
+  "preview_mode_inactive_state": "Preview mode is now inactive.",
+  "preview_mode_description": "You are currently in preview mode. This allows you to:\n\n• Fast-forward through study days using the \"Next Day\" button\n• Complete tasks multiple times without restrictions\n• Experience the full study flow without affecting real data\n\nImportant: Results and data from preview mode are not stored or mixed with actual participant results from running studies.",
+  "preview_mode_results_not_saved": "Task completed in preview mode - results are not saved to protect study data integrity.",
+  "ok": "OK",
+  "submit" : "Submit"
 }

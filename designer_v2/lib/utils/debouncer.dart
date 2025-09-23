@@ -89,7 +89,9 @@ class Throttler extends ExecutionLimiter {
     if (ExecutionLimiter._timer?.isActive ?? false) return;
     ExecutionLimiter._timer?.cancel();
     callback();
-    ExecutionLimiter._timer =
-        Timer(Duration(milliseconds: milliseconds), () {});
+    ExecutionLimiter._timer = Timer(
+      Duration(milliseconds: milliseconds),
+      () {},
+    );
   }
 }

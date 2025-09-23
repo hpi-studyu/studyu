@@ -8,9 +8,12 @@ name: Publish to Pub.dev
 
 on:
   push:
-    tags:
-      - 'studyu_core-v*'
-      - 'studyu_flutter_common-v*'
+    branches:
+      - main
+    # Uncomment the following lines to publish only when a tag matching the pattern is pushed
+    # tags:
+    #  - 'studyu_core-v*'
+    #  - 'studyu_flutter_common-v*'
   workflow_dispatch:
 
 concurrency:
@@ -18,8 +21,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  publishing:
-    name: 'Publish to Pub.dev'
+  publish_core:
+    name: 'Publish studyu_core to Pub.dev'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
@@ -32,6 +35,13 @@ jobs:
           relativePath: core
           # dryRunOnly: true
 
+  publish_flutter_common:
+    name: 'Publish studyu_flutter_common to Pub.dev'
+    needs: publish_core
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@main
       - name: '>> Dart package flutter_common <<'
         uses: k-paxian/dart-package-publisher@master
         with:

@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/sidesheet/sidesheet_form.dart';
 import 'package:studyu_designer_v2/common_views/styling_information.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_conditional_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_view.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_controls_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
-import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
+import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -32,8 +34,8 @@ class _MeasurementSurveyFormViewState
   bool isStylingInformationDismissed = true;
 
   void onDismissedCallback() => setState(() {
-        isStylingInformationDismissed = !isStylingInformationDismissed;
-      });
+    isStylingInformationDismissed = !isStylingInformationDismissed;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +53,7 @@ class _MeasurementSurveyFormViewState
                 decoration: InputDecoration(
                   hintText: tr.form_field_measurement_survey_title,
                 ),
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(200),
-                ],
+                inputFormatters: [LengthLimitingTextInputFormatter(200)],
                 validationMessages:
                     widget.formViewModel.surveyTitleControl.validationMessages,
               ),
@@ -93,11 +93,11 @@ class _MeasurementSurveyFormViewState
                 decoration: InputDecoration(
                   hintText: tr.form_field_measurement_survey_intro_text_hint,
                 ),
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(2000),
-                ],
+                inputFormatters: [LengthLimitingTextInputFormatter(2000)],
                 validationMessages: widget
-                    .formViewModel.surveyIntroTextControl.validationMessages,
+                    .formViewModel
+                    .surveyIntroTextControl
+                    .validationMessages,
                 keyboardType: TextInputType.multiline,
                 minLines: 5,
                 maxLines: 5,
@@ -138,11 +138,11 @@ class _MeasurementSurveyFormViewState
                 decoration: InputDecoration(
                   hintText: tr.form_field_measurement_survey_outro_text_hint,
                 ),
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(2000),
-                ],
+                inputFormatters: [LengthLimitingTextInputFormatter(2000)],
                 validationMessages: widget
-                    .formViewModel.surveyOutroTextControl.validationMessages,
+                    .formViewModel
+                    .surveyOutroTextControl
+                    .validationMessages,
                 keyboardType: TextInputType.multiline,
                 minLines: 5,
                 maxLines: 5,
@@ -162,7 +162,7 @@ class _MeasurementSurveyFormViewState
             return ReactiveFormArray(
               formArray: widget.formViewModel.questionsArray,
               builder: (context, formArray, child) {
-                return FormArrayTable<QuestionFormViewModel>(
+                return FormListView<QuestionFormViewModel>(
                   control: widget.formViewModel.questionsArray,
                   items: widget.formViewModel.questionModels,
                   onSelectItem: (viewModel) =>
@@ -174,6 +174,20 @@ class _MeasurementSurveyFormViewState
                       tr.form_array_measurement_survey_questions_new,
                   rowTitle: (viewModel) =>
                       viewModel.formData?.questionText ?? '',
+                  rowSuffix: (context, viewModel, rowIdx) {
+                    if (viewModel.formData?.conditional != null) {
+                      return Tooltip(
+                        message: tr
+                            .form_array_question_visibility_logic_question_tooltip,
+                        child: const Icon(
+                          Icons.rule,
+                          size: 16,
+                          color: Colors.grey,
+                        ),
+                      );
+                    }
+                    return const SizedBox();
+                  },
                   sectionTitle: tr.form_array_measurement_survey_questions,
                   emptyIcon: Icons.content_paste_off_rounded,
                   emptyTitle:
@@ -188,16 +202,34 @@ class _MeasurementSurveyFormViewState
                           message: viewModel.questionType.string,
                           child: Icon(
                             viewModel.questionType.icon,
-                            color: ThemeConfig.dropdownMenuItemTheme(theme)
-                                .iconTheme!
-                                .color,
-                            size: ThemeConfig.dropdownMenuItemTheme(theme)
-                                .iconTheme!
-                                .size,
+                            color: ThemeConfig.dropdownMenuItemTheme(
+                              theme,
+                            ).iconTheme!.color,
+                            size: ThemeConfig.dropdownMenuItemTheme(
+                              theme,
+                            ).iconTheme!.size,
                           ),
                         ),
                         const SizedBox(width: 16.0),
                       ],
+                    );
+                  },
+                  reorderable:
+                      widget.formViewModel.questionModels.length > 1 &&
+                      !widget.formViewModel.isReadonly,
+                  onReorder: (oldIndex, newIndex) {
+                    if (newIndex > oldIndex) {
+                      newIndex -= 1;
+                    }
+                    final item = widget.formViewModel.questionModels.removeAt(
+                      oldIndex,
+                    );
+                    widget.formViewModel.questionModels.insert(newIndex, item);
+                    final controlItem = widget.formViewModel.questionsArray
+                        .removeAt(oldIndex);
+                    widget.formViewModel.questionsArray.insert(
+                      newIndex,
+                      controlItem,
                     );
                   },
                 );
@@ -231,13 +263,51 @@ class _MeasurementSurveyFormViewState
     BuildContext context,
     WidgetRef ref,
   ) {
-    final surveyQuestionFormViewModel =
-        ref.watch(surveyQuestionFormViewModelProvider(routeArgs));
+    // Get questions only from the current survey
+    /* final currentSurveyQuestions = widget.formViewModel.study.observations
+        .whereType<QuestionnaireTask>()
+        .where((obs) => obs.id == widget.formViewModel.measurementId)
+        .expand((obs) => obs.questions.questions)
+        .toList();*/
+
+    // Add current unsaved questions from the form
+    final currentUnsavedQuestions = widget
+        .formViewModel
+        .questionFormViewModels
+        .formViewModels
+        .map((vm) => vm.buildFormData().toQuestion())
+        .toList();
+
+    // Combine both lists
+    final List<Question> allAvailableQuestions = [
+      // ...currentSurveyQuestions,
+      ...currentUnsavedQuestions,
+    ];
+
+    final surveyQuestionFormViewModel = ref.watch(
+      surveyQuestionFormViewModelProvider(routeArgs),
+    );
     showFormSideSheet<QuestionFormViewModel>(
       context: context,
       formViewModel: surveyQuestionFormViewModel,
-      formViewBuilder: (formViewModel) =>
-          SurveyQuestionFormView(formViewModel: formViewModel),
+      tabs: <FormSideSheetTab<QuestionFormViewModel>>[
+        FormSideSheetTab(
+          title: tr.navlink_screener_question_content,
+          index: 0,
+          formViewBuilder: (formViewModel) => SurveyQuestionFormView(
+            formViewModel: formViewModel,
+            studyId: routeArgs.studyId,
+          ),
+        ),
+        FormSideSheetTab(
+          title: tr.navlink_question_visibility_logic,
+          index: 1,
+          formViewBuilder: (formViewModel) => ConditionalQuestionFormView(
+            formViewModel: formViewModel,
+            allQuestions: allAvailableQuestions,
+          ),
+        ),
+      ],
     );
   }
 }

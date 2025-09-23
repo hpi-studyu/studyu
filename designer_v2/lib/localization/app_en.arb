@@ -43,7 +43,9 @@
   "form_field_password_minlength": "Passwords must have a minimum of {minLength} characters",
   "@form_field_password_minlength": {
     "placeholders": {
-      "minLength": {}
+      "minLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_password_new": "New password",
@@ -54,6 +56,12 @@
   "notification_password_reset_success": "Password was reset successfully",
   "notification_credentials_invalid": "Invalid credentials",
   "notification_user_already_registered": "User already registered",
+  "form_field_password_current": "Current password",
+  "form_field_password_current_hint": "Enter current password",
+  "form_field_password_current_invalid": "Current password is invalid",
+  "form_field_reset_password": "Reset password",
+  "change_password": "Change password",
+  "password_change_description": "Enter a new password for your account",
   "@__________________NAV_DRAWER__________________": {},
   "navlink_my_studies": "My Studies",
   "navlink_shared_studies": "Shared With Me",
@@ -146,12 +154,22 @@
   "form_field_question_response_options_description": "Choose the response type that best matches your question and define the response options according to the data you want to collect.",
   "question_type_choice": "Multiple choice",
   "question_type_free_text": "Free text",
+  "question_type_pain": "Pain Tracker",
+  "question_type_pain_description": "Participants can select one or more body parts on a diagram and assign a pain level to each selected part using a pain scale. This is useful for tracking localized pain.",
+  "question_type_pain_preview_title": "In-App Preview",
+  "question_type_pain_preview_description": "Below is a simplified representation of how the pain selection interface will appear to participants in the StudyU app. They will be able to tap on body parts to select them and then assign a pain level.",
+  "question_type_pain_front_view": "Front View",
+  "question_type_pain_back_view": "Back View",
+  "question_type_pain_functionality_title": "Functionality",
+  "question_type_pain_functionality_description": "When a participant taps on a body part, a dialog appears where they can select a pain level. Each selected body part can have a different pain level. The collected data includes the identified body parts and their corresponding pain scores.",
   "question_type_bool": "Yes/no",
   "question_type_scale": "Scale",
   "question_type_image": "Image",
   "question_type_audio": "Audio",
+  "question_type_fitbit": "Fitbit",
   "form_array_response_options_bool_yes": "Yes",
   "form_array_response_options_bool_no": "No",
+  "form_field_response_pain": "Pain Tracker",
   "form_field_response_image": "Image",
   "form_field_response_audio": "Audio",
   "form_field_response_audio_max_duration_label": "Maximum recording duration in seconds",
@@ -178,27 +196,35 @@
   "form_array_response_options_choice_countmin": "Your question must have at least {count} non-empty response options",
   "@form_array_response_options_choice_countmin": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_response_options_choice_countmax": "Your question must have at most {count} non-empty response options",
   "@form_array_response_options_choice_countmax": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_response_options_scale_rangevalid_min": "The high value of the scale must be greater than the low value",
   "form_array_response_options_scale_rangevalid_max": "Do not exceed {count} as a maximum difference between the high and low values of the scale",
   "@form_array_response_options_scale_rangevalid_max": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "audio_recording_max_duration_rangevalid_min": "The minimum recording duration is 1 second",
   "audio_recording_max_duration_rangevalid_max": "The maximum recording duration is {count} seconds",
   "@audio_recording_max_duration_rangevalid_max": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "free_text_question_logic_not_supported": "The screener question logic is not yet supported for free text questions.",
@@ -221,13 +247,17 @@
   "free_text_validation_min_length": "The input must be at least {countMin} characters long.",
   "@free_text_validation_min_length": {
     "placeholders": {
-      "countMin": {}
+      "countMin": {
+        "type": "num"
+      }
     }
   },
   "free_text_validation_max_length": "The input must be at most {countMax} characters long.",
   "@free_text_validation_max_length": {
     "placeholders": {
-      "countMax": {}
+      "countMax": {
+        "type": "num"
+      }
     }
   },
   "free_text_validation_pattern": "The input must match the specified format.",
@@ -235,15 +265,51 @@
   "free_text_example_explanation": "Inputs of type {type} with a character length range of {countMin} to {countMax} will be accepted.",
   "@free_text_example_explanation": {
     "placeholders": {
-      "type": {},
-      "countMin": {},
-      "countMax": {}
+      "type": {
+        "type": "String"
+      },
+      "countMin": {
+        "type": "num"
+      },
+      "countMax": {
+        "type": "num"
+      }
     }
   },
   "free_text_question_type_any_explanation": "Any input will be accepted.",
   "free_text_question_type_alphanumeric_explanation": "Alphanumeric input includes letters and numbers only.",
   "free_text_question_type_numeric_explanation": "Numeric input includes numbers without special characters.",
   "free_text_question_type_custom_explanation": "The input must match the specified regular expression.",
+  "fitbit_question_title": "Fitbit",
+  "fitbit_question_type_empty": "No Fitbit data available",
+  "navlink_question_visibility_logic": "Visibility",
+  "form_array_question_visibility_logic_title": "Visibility Logic",
+  "form_array_question_visibility_logic_question_tooltip": "This question has visibility logic defined. It will only be shown to the participant if the conditions are met.",
+  "form_array_question_visibility_logic_description": "Define the visibility logic for this question. The question will only be shown to the participant if the conditions are met.",
+  "form_array_question_visibility_logic_tooltip": "Conditions are be based on the responses to other questions in the study. Only questions that follow the current question can be used in the visibility logic.",
+  "form_array_question_visibility_logic_grouping_title": "Combine conditions with",
+  "form_array_question_visibility_logic_grouping_and_title": "AND",
+  "form_array_question_visibility_logic_grouping_or_title": "OR",
+  "from_array_question_visibility_logic_no_conditions": "No conditions defined yet",
+  "form_array_question_visibility_logic_question_title": "Question",
+  "form_array_question_visibility_logic_comparator_title": "Comparator",
+  "form_array_question_visibility_logic_true": "True",
+  "form_array_question_visibility_logic_false": "False",
+  "form_array_question_visibility_logic_value_title": "Value",
+  "form_array_question_visibility_logic_add_condition_button": "Add condition",
+  "form_array_question_visibility_logic_add_condition_disabled_tooltip": "No questions available to add conditions for. Only questions following the current question can be used in the visibility logic.",
+  "form_array_question_visibility_logic_is_true": "is true",
+  "form_array_question_visibility_logic_is_false": "is false",
+  "form_array_question_visibility_logic_is": "is",
+  "form_array_question_visibility_logic_is_not": "is not",
+  "form_array_question_visibility_logic_contains": "contains",
+  "form_array_question_visibility_logic_does_not_contain": "does not contain",
+  "form_array_question_visibility_logic_not": "NOT",
+  "form_array_question_visibility_logic_always_true": "always true",
+  "form_array_question_visibility_logic_preview_description": "Show this question if the following conditions are met:",
+  "form_array_question_visibility_logic_unknown_expression": "Unknown Expression",
+  "form_array_question_visibility_logic_this_question": "this question",
+  "validation_number_required": "The value must be a number",
   "banner_study_readonly_title": "This study cannot be edited.",
   "banner_study_readonly_description": "You can only make changes to studies where you are an owner or collaborator. Studies that have been launched cannot be changed by anyone.",
   "banner_study_closed_title": "This study is closed.",
@@ -311,7 +377,7 @@
   "form_screener_question_logic_qualify": "Qualify",
   "form_screener_question_logic_disqualify": "Disqualify",
   "navlink_screener_question_content": "Content",
-  "navlink_screener_question_logic": "Logic",
+  "navlink_screener_question_logic": "Screening",
   "form_array_screener_question_logic_title": "Screening rules",
   "form_array_screener_question_logic_description": "Define which responses qualify or disqualify participants from enrolling in your study. To qualify as a participant, at least one of the qualifying response options and none of the disqualifying ones must be selected for this question in the screening survey.",
   "form_array_screener_question_logic_tooltip": "Define which response options are qualifying or disqualifying when selected by the participant.",
@@ -334,7 +400,9 @@
   "form_array_interventions_minlength": "{count,plural, =2{You must define at least two interventions to compare.} other{form_array_interventions_minlength}}",
   "@form_array_interventions_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_interventions": "Intervention phases",
@@ -356,7 +424,9 @@
   "form_array_intervention_tasks_minlength": "{count,plural, =1{You must define at least one task for participants to complete during this intervention phase} other{form_array_intervention_tasks_minlength}}",
   "@form_array_intervention_tasks_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_intervention_task_create": "New Intervention Task",
@@ -380,8 +450,12 @@
   "form_field_crossover_schedule_phase_length_range": "Intervention phases must be between {min} and {max} days long",
   "@form_field_crossover_schedule_phase_length_range": {
     "placeholders": {
-      "min": {},
-      "max": {}
+      "min": {
+        "type": "num"
+      },
+      "max": {
+        "type": "num"
+      }
     }
   },
   "form_field_amount_days": "days",
@@ -390,8 +464,12 @@
   "form_field_crossover_schedule_num_cycles_range": "The number of cycles in your study schedule must be between {min} and {max}",
   "@form_field_crossover_schedule_num_cycles_range": {
     "placeholders": {
-      "min": {},
-      "max": {}
+      "min": {
+        "type": "num"
+      },
+      "max": {
+        "type": "num"
+      }
     }
   },
   "form_field_amount_crossover_schedule_num_cycles": "cycles",
@@ -403,7 +481,9 @@
   "form_array_measurements_minlength": "{count,plural, =1{You need to define at least one survey to determine the effect of your intervention(s).} other{form_array_measurements_minlength}}",
   "@form_array_measurements_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_array_measurements_surveys": "Surveys",
@@ -427,7 +507,9 @@
   "form_array_measurement_survey_questions_minlength": "{count,plural, =1{You need to define at least one question to determine the effect of your intervention(s)} other{form_array_measurement_survey_questions_minlength}}",
   "@form_array_measurement_survey_questions_minlength": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "@__________________STUDYPAGE_DESIGN_REPORTS__________________": {},
@@ -443,7 +525,6 @@
   "form_array_reports_empty_title": "No reports defined",
   "form_array_report_items_title": "Reports",
   "form_array_report_items_description": "Define how the report that your participants receive should look like. A report includes various sections, the first of which is the primary section. For each section you can define if the data should be reported as average or via a linear regression of the user's data. You can choose whether the data is reported for individual days, phases or for each intervention. The data source defines which observation the report section is based on.",
-  "form_array_report_items_test": "Test Reports (tba)",
   "form_array_reports_empty_description": "You need to define at least one report to provide feedback to your participants.",
   "form_array_reports_new": "Add new report",
   "form_field_report_title": "Title",
@@ -458,6 +539,9 @@
   "form_field_report_improvementDirection_title": "Improvement Direction",
   "form_field_report_improvementDirection_tooltip": "Define the improvement direction",
   "reportSection_type_average": "Average",
+  "reportSection_type_textual_summary": "Textual Summary",
+  "reportSection_type_gauge_comparison": "Gauge Comparison",
+  "reportSection_type_descriptive_statistics": "Descriptive Statistics",
   "form_field_report_average_temporalAggregation_title": "Temporal Aggregation",
   "form_field_report_average_temporalAggregation_tooltip": "Define the temporal aggregation",
   "reportSection_type_temporalAggregation_day": "Day",
@@ -476,6 +560,7 @@
   "form_field_report_data_source_title": "Data Source",
   "form_field_report_data_source_tooltip": "The data source defines which observation the report section is based on. The observation needs to be a question with a numerical result, e.g. a scale question.",
   "form_field_report_data_source_required": "A data source needs to be defined",
+  "form_field_report_select_aggregation": "Select an aggregation value",
   "@__________________STUDYPAGE_TEST__________________": {},
   "study_test_page_description": "In the test mode you can test your study as a participant.",
   "navlink_study_test_help": "How does this work?",
@@ -483,6 +568,7 @@
   "navlink_study_test_app_overview": "Study Overview",
   "navlink_study_test_app_eligibility": "Screener",
   "navlink_study_test_app_intervention": "Intervention Selection",
+  "navlink_study_test_app_intervention_disabled": "The intervention selection is disabled, as the study has less than three interventions defined. Interventions are selected automatically in this case.",
   "navlink_study_test_app_consent": "Consent",
   "navlink_study_test_app_journey": "Schedule",
   "navlink_study_test_app_dashboard": "Daily Dashboard",
@@ -505,7 +591,9 @@
   "enrolled_count_tooltip": "{count,plural, =0{Nobody has enrolled in the study with this code yet} =1{{count} participant is enrolled in the study with this code} other{{count} participants are enrolled in the study with this code}}",
   "@enrolled_count_tooltip": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "form_code_create": "New Invite Code",
@@ -516,13 +604,17 @@
   "form_field_code_minlength": "The code must have at least {minLength} characters",
   "@form_field_code_minlength": {
     "placeholders": {
-      "minLength": {}
+      "minLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_code_maxlength": "The code must have at most {maxLength} characters",
   "@form_field_code_maxlength": {
     "placeholders": {
-      "maxLength": {}
+      "maxLength": {
+        "type": "num"
+      }
     }
   },
   "form_field_code_alreadyused": "This code is already in use",
@@ -575,12 +667,12 @@
   "monitoring_table_column_enrolled": "Started at",
   "monitoring_table_column_last_activity": "Last activity",
   "monitoring_table_column_day_in_study": "Day in study",
-  "monitoring_table_column_completed_interventions": "Completed interventions",
+  "monitoring_table_column_completed_intervention_tasks": "Completed intervention tasks",
   "monitoring_table_column_completed_surveys": "Completed surveys",
   "monitoring_table_row_tooltip_dropout": "This participant has dropped out of the study and no new activity will be added",
-  "monitoring_table_days_in_study_header_tooltip":"The number of days the participant has been in the study",
-  "monitoring_table_completed_interventions_header_tooltip": "An intervention is completed, if all of its tasks have been completed for that day",
-  "monitoring_table_completed_surveys_header_tooltip":"A survey is completed, if all of its tasks have been completed for that day",
+  "monitoring_table_days_in_study_header_tooltip": "The number of days the participant has been in the study",
+  "monitoring_table_completed_interventions_header_tooltip": "All of intervention tasks have been completed throughout the study",
+  "monitoring_table_completed_surveys_header_tooltip": "A survey is completed, if all of its tasks have been completed for that day",
   "@__________________STUDYPAGE_ANALYZE__________________": {},
   "banner_text_study_analyze_draft": "Because this study has not been launched yet, this page is currently based on the data generated during study testing.\nThe data on this page will be reset once you launch the study with real participants.",
   "action_button_study_export": "Export data",
@@ -607,37 +699,49 @@
   "date_diff_years": "{count,plural, =1{1 year ago} other{{count} years ago}}",
   "@date_diff_years": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_months": "{count,plural, =1{1 month ago} other{{count} months ago}}",
   "@date_diff_months": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_days": "{count,plural, =1{1 day ago} other{{count} days ago}}",
   "@date_diff_days": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_hours": "{count,plural, =1{1 hour ago} other{{count} hours ago}}",
   "@date_diff_hours": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_minutes": "{count,plural, =1{1 minute ago} other{{count} minutes ago}}",
   "@date_diff_minutes": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_diff_seconds": "{count,plural, =1{1 second ago} other{{count} seconds ago}}",
   "@date_diff_seconds": {
     "placeholders": {
-      "count": {}
+      "count": {
+        "type": "num"
+      }
     }
   },
   "date_just_now": "Just now",
@@ -669,5 +773,40 @@
   "dialog_action_unsaved_changes_stay": "Stay",
   "dialog_action_unsaved_changes_discard": "Discard changes",
   "under_construction": "Under construction",
-  "under_construction_description": "We are still busy working on this part, check back soon!"
+  "under_construction_description": "We are still busy working on this part, check back soon!",
+  "fitbit_credentials_instruction": "To integrate Fitbit data, follow these steps to obtain your Client ID and Client Secret:",
+  "fitbit_credentials_step1": "1. Go to the Fitbit Developer Portal.",
+  "fitbit_credentials_step2": "2. Log in with your Fitbit account or create one if you do not have it.",
+  "fitbit_credentials_step3": "3. Navigate to the \"Manage\" section and select \"Register an App\".",
+  "fitbit_credentials_step4": "4. Fill in the required fields such as application name, description, and Redirect URL (use: \"studyu://fitbit/auth\").",
+  "fitbit_credentials_step5": "5. Select \"Client\" under \"OAuth 2.0 Application Type\" and set \"Access\" to \"Read-Only.\"",
+  "fitbit_credentials_step6": "6. Submit the form to get your \"Client ID\" and \"Client Secret\".",
+  "fitbit_credentials_step7": "7. Please fill the following form to obtain access for intraday data. Without this, you cannot obtain any data from Fitbit for your trials.",
+  "fitbit_credentials_step8": "8. Copy and paste the credentials below.",
+  "fitbit_credentials_success_instruction": "Once you enter the credentials, Fitbit integration will be enabled for your study.",
+  "fitbit_credentials_add_question_instruction": "To add a Fitbit question, navigate to the measurements section and create a new Fitbit Question within a measurement.",
+  "fitbit_credentials_screenshot_step1": "Step 1: Developer Portal",
+  "fitbit_credentials_screenshot_step2": "Step 2: Login",
+  "fitbit_credentials_screenshot_step3": "Step 3: Register App",
+  "fitbit_credentials_screenshot_step4": "Step 4: Input Details",
+  "fitbit_credentials_screenshot_step5": "Step 5: Set Access",
+  "fitbit_credentials_screenshot_step6": "Step 6: Get Credentials",
+  "fitbit_credentials_screenshot_step7": "Step 7: Fill Form",
+  "fitbit_credentials_cannot_change_title": "Fitbit credentials can't be changed",
+  "fitbit_credentials_cannot_change_description": "Fitbit credentials can't be changed while the study is not in draft mode.",
+  "fitbit_only_participant_title": "If you're running this study just for yourself",
+  "fitbit_only_participant_subtitle": "Since you're both creating and participating in this study, you don't need to fill out the intraday data request form. Simply follow these easy steps:",
+  "fitbit_only_participant_step_1": "When creating your Fitbit app, choose 'Personal' as the app type.",
+  "fitbit_only_participant_step_2": "When syncing data, make sure to use the same Google account that's connected to your Fitbit watch and the Fitbit app you've set up.",
+  "client_id": "Client ID",
+  "client_id_label_help": "Enter the Client ID from Fitbit Developer Portal.",
+  "client_id_hint": "Client ID",
+  "client_secret": "Client Secret",
+  "client_secret_label_help": "Enter the Client Secret from Fitbit Developer Portal.",
+  "client_secret_hint": "Client Secret",
+  "screenshots_for_guidance": "Screenshots for Guidance:",
+  "fitbit_credentials_not_set": "Fitbit credentials are not set. Please navigate to the 'Fitbit' tab in the study designer to enter your Fitbit client ID and client secret. Once completed, return here to add Fitbit questions.",
+  "fitbit_question_type_heartrate_description": "Captures heart rate measured every minute throughout the day.",
+  "fitbit_question_type_steps_description": "Records the number of steps taken, measured every minute.",
+  "fitbit_question_type_sleep_description": "Records sleep stages (wake, light, deep, REM) at 30-second to 1-minute intervals during your sleep."
 }

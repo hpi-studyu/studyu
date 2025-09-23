@@ -11,7 +11,7 @@ import 'package:studyu_designer_v2/features/design/interventions/intervention_fo
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_task_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
-import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
+import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
@@ -31,8 +31,8 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
   bool isStylingInformationDismissed = true;
 
   void onDismissedCallback() => setState(() {
-        isStylingInformationDismissed = !isStylingInformationDismissed;
-      });
+    isStylingInformationDismissed = !isStylingInformationDismissed;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,16 +54,18 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                       decoration: InputDecoration(
                         hintText: tr.form_field_intervention_title,
                       ),
-                      inputFormatters: [
-                        LengthLimitingTextInputFormatter(200),
-                      ],
-                      validationMessages: widget.formViewModel
-                          .interventionTitleControl.validationMessages,
+                      inputFormatters: [LengthLimitingTextInputFormatter(200)],
+                      validationMessages: widget
+                          .formViewModel
+                          .interventionTitleControl
+                          .validationMessages,
                     ),
                   ),
                   ReactiveFormConsumer(
                     builder: (context, form, child) {
-                      return (widget.formViewModel.interventionIconControl
+                      return (widget
+                                  .formViewModel
+                                  .interventionIconControl
                                   .value !=
                               null)
                           ? const SizedBox(width: 4.0)
@@ -114,11 +116,11 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                 decoration: InputDecoration(
                   hintText: tr.form_field_intervention_description_hint,
                 ),
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(2000),
-                ],
-                validationMessages: widget.formViewModel
-                    .interventionDescriptionControl.validationMessages,
+                inputFormatters: [LengthLimitingTextInputFormatter(2000)],
+                validationMessages: widget
+                    .formViewModel
+                    .interventionDescriptionControl
+                    .validationMessages,
                 keyboardType: TextInputType.multiline,
                 minLines: 5,
                 maxLines: 5,
@@ -138,7 +140,7 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
             return ReactiveFormArray(
               formArray: widget.formViewModel.interventionTasksArray,
               builder: (context, formArray, child) {
-                return FormArrayTable<InterventionTaskFormViewModel>(
+                return FormListView<InterventionTaskFormViewModel>(
                   control: widget.formViewModel.interventionTasksArray,
                   items: widget.formViewModel.tasksCollection.formViewModels,
                   onSelectItem: (viewModel) =>
@@ -155,6 +157,30 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
                   emptyTitle: tr.form_array_intervention_tasks_empty_title,
                   emptyDescription:
                       tr.form_array_intervention_tasks_empty_description,
+                  hideLeadingTrailingWhenEmpty: true,
+                  reorderable: !widget.formViewModel.isReadonly,
+                  onReorder: (oldIndex, newIndex) {
+                    if (newIndex > oldIndex) {
+                      newIndex -= 1;
+                    }
+                    final item = widget
+                        .formViewModel
+                        .tasksCollection
+                        .formViewModels
+                        .removeAt(oldIndex);
+                    widget.formViewModel.tasksCollection.formViewModels.insert(
+                      newIndex,
+                      item,
+                    );
+                    final controlItem = widget
+                        .formViewModel
+                        .interventionTasksArray
+                        .removeAt(oldIndex);
+                    widget.formViewModel.interventionTasksArray.insert(
+                      newIndex,
+                      controlItem,
+                    );
+                  },
                 );
               },
             );
@@ -184,8 +210,9 @@ class _InterventionFormViewState extends ConsumerState<InterventionFormView> {
     BuildContext context,
     WidgetRef ref,
   ) {
-    final interventionTaskFormViewModel =
-        ref.watch(interventionTaskFormViewModelProvider(routeArgs));
+    final interventionTaskFormViewModel = ref.watch(
+      interventionTaskFormViewModelProvider(routeArgs),
+    );
     showFormSideSheet<InterventionTaskFormViewModel>(
       context: context,
       formViewModel: interventionTaskFormViewModel,

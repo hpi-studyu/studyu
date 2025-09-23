@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -16,6 +17,7 @@ class DashboardState extends Equatable {
     this.sortByColumn = StudiesTableColumn.title,
     this.sortAscending = true,
     required this.currentUser,
+    required this.searchController,
   });
 
   /// The list of studies that can be accessed by the current user
@@ -39,6 +41,9 @@ class DashboardState extends Equatable {
 
   final String query;
 
+  /// Search controller for managing search functionality
+  final SearchController searchController;
+
   /// The currently displayed list of studies as by the selected filter,
   /// selected sort column, and selected sort direction
   ///
@@ -50,8 +55,9 @@ class DashboardState extends Equatable {
   ) {
     return studies.when(
       data: (studies) {
-        List<Study> updatedStudies =
-            studiesFilter.apply(studies: studies, user: currentUser).toList();
+        List<Study> updatedStudies = studiesFilter
+            .apply(studies: studies, user: currentUser)
+            .toList();
         updatedStudies = sort(
           pinnedStudies: pinnedStudies,
           studiesToSort: filter(studiesToFilter: updatedStudies),
@@ -81,11 +87,13 @@ class DashboardState extends Equatable {
     switch (sortByColumn) {
       case StudiesTableColumn.title:
         if (sortAscending) {
-          sortedStudies
-              .sort((study, other) => study.title!.compareTo(other.title!));
+          sortedStudies.sort(
+            (study, other) => study.title!.compareTo(other.title!),
+          );
         } else {
-          sortedStudies
-              .sort((study, other) => other.title!.compareTo(study.title!));
+          sortedStudies.sort(
+            (study, other) => other.title!.compareTo(study.title!),
+          );
         }
       case StudiesTableColumn.status:
         if (sortAscending) {
@@ -182,15 +190,18 @@ class DashboardState extends Equatable {
     String? query,
     StudiesTableColumn? sortByColumn,
     bool? sortAscending,
+    SearchController? searchController,
   }) {
     return DashboardState(
       studies: studies != null ? studies() : this.studies,
-      studiesFilter:
-          studiesFilter != null ? studiesFilter() : this.studiesFilter,
+      studiesFilter: studiesFilter != null
+          ? studiesFilter()
+          : this.studiesFilter,
       currentUser: currentUser != null ? currentUser() : this.currentUser,
       query: query ?? this.query,
       sortByColumn: sortByColumn ?? this.sortByColumn,
       sortAscending: sortAscending ?? this.sortAscending,
+      searchController: searchController ?? this.searchController,
     );
   }
 

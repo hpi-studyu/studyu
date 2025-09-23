@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:record/record.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
@@ -61,14 +61,15 @@ class _AudioRecordingQuestionWidgetState
           child: OutlinedButton(
             style: OutlinedButton.styleFrom(
               backgroundColor: _isRecording ? Colors.red.shade600 : null,
-              foregroundColor:
-                  _isRecording ? Colors.white : theme.colorScheme.primary,
+              foregroundColor: _isRecording
+                  ? Colors.white
+                  : theme.colorScheme.primary,
               side: BorderSide(
                 color: _hasRecorded
                     ? Colors.black38
                     : _isRecording
-                        ? Colors.red.shade600
-                        : theme.colorScheme.primary,
+                    ? Colors.red.shade600
+                    : theme.colorScheme.primary,
               ),
             ),
             onPressed: !_hasRecorded
@@ -96,13 +97,13 @@ class _AudioRecordingQuestionWidgetState
                       _hasRecorded
                           ? MdiIcons.checkCircleOutline
                           : _isRecording
-                              ? MdiIcons.stop
-                              : MdiIcons.microphone,
+                          ? MdiIcons.stop
+                          : MdiIcons.microphone,
                       color: _hasRecorded
                           ? Colors.black38
                           : _isRecording
-                              ? Colors.white
-                              : theme.colorScheme.primary,
+                          ? Colors.white
+                          : theme.colorScheme.primary,
                       size: 24,
                     ),
                   ),
@@ -111,8 +112,8 @@ class _AudioRecordingQuestionWidgetState
                     _hasRecorded
                         ? loc.audio_recorded
                         : _isRecording
-                            ? loc.stop_recording
-                            : loc.start_recording,
+                        ? loc.stop_recording
+                        : loc.start_recording,
                     style: const TextStyle(fontSize: 16),
                   ),
                   const Spacer(),
@@ -171,6 +172,11 @@ class _AudioRecordingQuestionWidgetState
       final storage = TemporaryStorageHandler(studyId, userId);
       const config = RecordConfig(numChannels: 1);
       _recordedFile = await storage.getStagingAudio();
+
+      if (_recordedFile == null) {
+        throw ArgumentError('Staging audio file is null');
+      }
+
       await _audioRecorder.start(config, path: _recordedFile!.localFilePath);
       _startTimer();
     } catch (e) {
@@ -232,10 +238,8 @@ class _AudioRecordingQuestionWidgetState
     final errorMessage = isPermissionRelated
         ? AppLocalizations.of(context)!.microphone_access_denied
         : AppLocalizations.of(context)!.recording_error;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(errorMessage),
-      ),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(errorMessage)));
   }
 }

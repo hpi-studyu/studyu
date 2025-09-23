@@ -66,108 +66,107 @@ class ReactiveCustomColorPicker<T> extends ReactiveFormField<T, Color> {
     List<Color>? colorHistory,
     ValueChanged<List<Color>>? onHistoryChanged,
   }) : super(
-          builder: (field) {
-            void showColorDialog(
-              BuildContext context, {
-              required Color pickerColor,
-              required ValueChanged<Color> onColorChanged,
-            }) {
-              showDialog<Color>(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    titlePadding: EdgeInsets.zero,
-                    contentPadding: EdgeInsets.zero,
-                    content: SingleChildScrollView(
-                      child: ColorPicker(
-                        pickerColor: pickerColor,
-                        onColorChanged: onColorChanged,
-                        paletteType: paletteType,
-                        enableAlpha: enableAlpha,
-                        pickerHsvColor: pickerHsvColor,
-                        labelTypes: labelTypes,
-                        displayThumbColor: displayThumbColor,
-                        portraitOnly: portraitOnly,
-                        colorPickerWidth: colorPickerWidth,
-                        pickerAreaHeightPercent: pickerAreaHeightPercent,
-                        pickerAreaBorderRadius: pickerAreaBorderRadius,
-                        hexInputBar: hexInputBar,
-                        hexInputController: hexInputController,
-                        colorHistory: colorHistory,
-                        onHistoryChanged: onHistoryChanged,
-                      ),
-                    ),
-                  );
-                },
-              );
-            }
+         builder: (field) {
+           void showColorDialog(
+             BuildContext context, {
+             required Color pickerColor,
+             required ValueChanged<Color> onColorChanged,
+           }) {
+             showDialog<Color>(
+               context: context,
+               builder: (BuildContext context) {
+                 return AlertDialog(
+                   titlePadding: EdgeInsets.zero,
+                   contentPadding: EdgeInsets.zero,
+                   content: SingleChildScrollView(
+                     child: ColorPicker(
+                       pickerColor: pickerColor,
+                       onColorChanged: onColorChanged,
+                       paletteType: paletteType,
+                       enableAlpha: enableAlpha,
+                       pickerHsvColor: pickerHsvColor,
+                       labelTypes: labelTypes,
+                       displayThumbColor: displayThumbColor,
+                       portraitOnly: portraitOnly,
+                       colorPickerWidth: colorPickerWidth,
+                       pickerAreaHeightPercent: pickerAreaHeightPercent,
+                       pickerAreaBorderRadius: pickerAreaBorderRadius,
+                       hexInputBar: hexInputBar,
+                       hexInputController: hexInputController,
+                       colorHistory: colorHistory,
+                       onHistoryChanged: onHistoryChanged,
+                     ),
+                   ),
+                 );
+               },
+             );
+           }
 
-            final isEmptyValue =
-                field.value == null || field.value.toString().isEmpty;
+           final isEmptyValue =
+               field.value == null || field.value.toString().isEmpty;
 
-            final InputDecoration effectiveDecoration = (decoration ??
-                    const InputDecoration())
-                .applyDefaults(Theme.of(field.context).inputDecorationTheme);
+           final InputDecoration effectiveDecoration =
+               (decoration ?? const InputDecoration()).applyDefaults(
+                 Theme.of(field.context).inputDecorationTheme,
+               );
 
-            final iconColor = (field.value?.computeLuminance() ?? 0) < 0.2
-                ? contrastIconColorDark
-                : contrastIconColorLight;
+           final iconColor = (field.value?.computeLuminance() ?? 0) < 0.2
+               ? contrastIconColorDark
+               : contrastIconColorLight;
 
-            return IgnorePointer(
-              ignoring: !field.control.enabled,
-              child: Opacity(
-                opacity: field.control.enabled ? 1 : disabledOpacity,
-                child: Listener(
-                  onPointerDown: (_) => field.control.markAsTouched(),
-                  child: InputDecorator(
-                    decoration: effectiveDecoration.copyWith(
-                      errorText: field.errorText,
-                      enabled: field.control.enabled,
-                      fillColor: field.value,
-                      filled: field.value != null,
-                      suffixIcon: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            color: iconColor,
-                            icon: const Icon(Icons.edit),
-                            onPressed: () {
-                              showColorDialog(
-                                field.context,
-                                pickerColor: field.value ?? Colors.transparent,
-                                onColorChanged: (color) {
-                                  // Convert between non-serializable [Color]
-                                  // superclass that color_picker expects &
-                                  // the [SerializableColor] type of the control
-                                  field.didChange(
-                                    SerializableColor(color.value),
-                                  );
-                                },
-                              );
-                            },
-                            splashRadius: 0.01,
-                          ),
-                          if (field.value != null)
-                            IconButton(
-                              color: iconColor,
-                              icon: const Icon(Icons.clear),
-                              onPressed: () {
-                                field.didChange(null);
-                              },
-                              splashRadius: 0.01,
-                            ),
-                        ],
-                      ),
-                    ),
-                    isEmpty:
-                        isEmptyValue && effectiveDecoration.hintText == null,
-                    child: Container(
-                      color: field.value,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        );
+           return IgnorePointer(
+             ignoring: !field.control.enabled,
+             child: Opacity(
+               opacity: field.control.enabled ? 1 : disabledOpacity,
+               child: Listener(
+                 onPointerDown: (_) => field.control.markAsTouched(),
+                 child: InputDecorator(
+                   decoration: effectiveDecoration.copyWith(
+                     errorText: field.errorText,
+                     enabled: field.control.enabled,
+                     fillColor: field.value,
+                     filled: field.value != null,
+                     suffixIcon: Row(
+                       mainAxisAlignment: MainAxisAlignment.end,
+                       children: [
+                         IconButton(
+                           color: iconColor,
+                           icon: const Icon(Icons.edit),
+                           onPressed: () {
+                             showColorDialog(
+                               field.context,
+                               pickerColor: field.value ?? Colors.transparent,
+                               onColorChanged: (color) {
+                                 // Convert between non-serializable [Color]
+                                 // superclass that color_picker expects &
+                                 // the [SerializableColor] type of the control
+                                 field.didChange(
+                                   SerializableColor(color.toARGB32()),
+                                 );
+                               },
+                             );
+                           },
+                           splashRadius: 0.01,
+                         ),
+                         if (field.value != null)
+                           IconButton(
+                             color: iconColor,
+                             icon: const Icon(Icons.clear),
+                             onPressed: () {
+                               field.didChange(null);
+                             },
+                             splashRadius: 0.01,
+                           ),
+                       ],
+                     ),
+                   ),
+                   isEmpty:
+                       isEmptyValue && effectiveDecoration.hintText == null,
+                   child: Container(color: field.value),
+                 ),
+               ),
+             ),
+           );
+         },
+       );
 }

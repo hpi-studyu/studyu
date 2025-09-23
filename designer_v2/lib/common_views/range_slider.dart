@@ -40,7 +40,7 @@ class IndicatorRangeSliderThumbShape<T> extends RangeSliderThumbShape {
 
     // Customize the box style
     final boxPaint = Paint()
-      ..color = const Color(0xff6d7073).withOpacity(0.9)
+      ..color = const Color(0xff6d7073).withValues(alpha: 0.9)
       ..style = PaintingStyle.fill;
 
     final borderPaint = Paint()
@@ -52,8 +52,10 @@ class IndicatorRangeSliderThumbShape<T> extends RangeSliderThumbShape {
 
     // Calculate text size and position
     final text = value.toString();
-    final textSpan =
-        TextSpan(text: text, style: const TextStyle(color: Colors.white));
+    final textSpan = TextSpan(
+      text: text,
+      style: const TextStyle(color: Colors.white),
+    );
     final textPainter = TextPainter(
       text: textSpan,
       textDirection: textDirection ?? TextDirection.ltr,
@@ -68,13 +70,18 @@ class IndicatorRangeSliderThumbShape<T> extends RangeSliderThumbShape {
     final textOffset = center + Offset(-textPainter.width / 2, 15);
 
     // Draw the rounded rectangle box with border centered around the text
-    final boxOffset = textOffset +
+    final boxOffset =
+        textOffset +
         Offset(
           textPainter.width / 2 - boxWidth / 2,
           textPainter.height / 2 - boxHeight / 2,
         );
-    final boxRect =
-        Rect.fromLTWH(boxOffset.dx, boxOffset.dy, boxWidth, boxHeight);
+    final boxRect = Rect.fromLTWH(
+      boxOffset.dx,
+      boxOffset.dy,
+      boxWidth,
+      boxHeight,
+    );
     canvas.drawRRect(RRect.fromRectAndRadius(boxRect, borderRadius), boxPaint);
     canvas.drawRRect(
       RRect.fromRectAndRadius(boxRect, borderRadius),

@@ -43,7 +43,8 @@ class StandardDialog extends StatelessWidget {
     final dialogWidth = width ?? MediaQuery.of(context).size.width * 0.4;
     //final dialogHeight = height ?? MediaQuery.of(context).size.height * 0.4;
 
-    final Widget? titleWidget = title ??
+    final Widget? titleWidget =
+        title ??
         ((titleText != null)
             ? SelectableText(
                 titleText!,
@@ -101,9 +102,7 @@ class StandardDialog extends StatelessWidget {
                       SizedBox(height: padding.top * 2 / 3)
                     else
                       const SizedBox.shrink(),
-                    Expanded(
-                      child: SingleChildScrollView(child: body),
-                    ),
+                    Expanded(child: SingleChildScrollView(child: body)),
                     SizedBox(height: padding.bottom * 3 / 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,

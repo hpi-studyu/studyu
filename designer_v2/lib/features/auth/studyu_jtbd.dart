@@ -16,8 +16,9 @@ class StudyUJobsToBeDone extends StatelessWidget {
             padding: EdgeInsets.zero,
             child: Text(
               tr.navlink_learn,
-              style: theme.textTheme.displayLarge
-                  ?.copyWith(color: Colors.white.withOpacity(1.5 * 0.04)),
+              style: theme.textTheme.displayLarge?.copyWith(
+                color: Colors.white.withValues(alpha: 1.5 * 0.04),
+              ),
               softWrap: false,
               overflow: TextOverflow.clip,
             ),
@@ -26,8 +27,9 @@ class StudyUJobsToBeDone extends StatelessWidget {
             padding: const EdgeInsets.only(left: 1 * 48.0),
             child: Text(
               tr.navlink_study_design,
-              style: theme.textTheme.displayLarge
-                  ?.copyWith(color: Colors.white.withOpacity(4 * 0.04)),
+              style: theme.textTheme.displayLarge?.copyWith(
+                color: Colors.white.withValues(alpha: 4 * 0.04),
+              ),
               softWrap: false,
               overflow: TextOverflow.clip,
             ),
@@ -36,8 +38,9 @@ class StudyUJobsToBeDone extends StatelessWidget {
             padding: const EdgeInsets.only(left: 2 * 48.0),
             child: Text(
               tr.navlink_study_test,
-              style: theme.textTheme.displayLarge
-                  ?.copyWith(color: Colors.white.withOpacity(3 * 0.04)),
+              style: theme.textTheme.displayLarge?.copyWith(
+                color: Colors.white.withValues(alpha: 3 * 0.04),
+              ),
               softWrap: false,
               overflow: TextOverflow.clip,
             ),
@@ -46,8 +49,9 @@ class StudyUJobsToBeDone extends StatelessWidget {
             padding: const EdgeInsets.only(left: 3 * 48.0),
             child: Text(
               tr.navlink_study_monitor,
-              style: theme.textTheme.displayLarge
-                  ?.copyWith(color: Colors.white.withOpacity(2 * 0.04)),
+              style: theme.textTheme.displayLarge?.copyWith(
+                color: Colors.white.withValues(alpha: 2 * 0.04),
+              ),
               softWrap: false,
               overflow: TextOverflow.clip,
             ),
@@ -56,8 +60,9 @@ class StudyUJobsToBeDone extends StatelessWidget {
             padding: const EdgeInsets.only(left: 4 * 48.0),
             child: Text(
               tr.navlink_study_analyze,
-              style: theme.textTheme.displayLarge
-                  ?.copyWith(color: Colors.white.withOpacity(4 * 0.04)),
+              style: theme.textTheme.displayLarge?.copyWith(
+                color: Colors.white.withValues(alpha: 4 * 0.04),
+              ),
               softWrap: false,
               overflow: TextOverflow.clip,
             ),
@@ -66,8 +71,9 @@ class StudyUJobsToBeDone extends StatelessWidget {
             padding: const EdgeInsets.only(left: 5 * 48.0),
             child: Text(
               tr.navlink_share,
-              style: theme.textTheme.displayLarge
-                  ?.copyWith(color: Colors.white.withOpacity(3 * 0.04)),
+              style: theme.textTheme.displayLarge?.copyWith(
+                color: Colors.white.withValues(alpha: 3 * 0.04),
+              ),
               softWrap: false,
               overflow: TextOverflow.clip,
             ),

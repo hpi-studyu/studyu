@@ -1,8 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
 
-import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
-
 part 'audio_recording_question.g.dart';
 
 @JsonSerializable()
@@ -13,10 +11,10 @@ class AudioRecordingQuestion extends Question<AudioRecordingQuestion> {
   final int maxRecordingDurationSeconds;
 
   AudioRecordingQuestion({required this.maxRecordingDurationSeconds})
-      : super(questionType);
+    : super(questionType);
 
   AudioRecordingQuestion.withId(this.maxRecordingDurationSeconds)
-      : super.withId(questionType);
+    : super.withId(questionType);
 
   factory AudioRecordingQuestion.fromJson(Map<String, dynamic> json) =>
       _$AudioRecordingQuestionFromJson(json);

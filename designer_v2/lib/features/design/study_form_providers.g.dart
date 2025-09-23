@@ -7,7 +7,7 @@ part of 'study_form_providers.dart';
 // **************************************************************************
 
 String _$studyInfoFormViewModelHash() =>
-    r'7f98d180b98a3f7fb550fa61cf9e0b60a0839f1e';
+    r'5c8e15ba88d7868835fab650519ae93111c380aa';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -40,21 +40,15 @@ class StudyInfoFormViewModelFamily extends Family<StudyInfoFormViewModel> {
   const StudyInfoFormViewModelFamily();
 
   /// See also [studyInfoFormViewModel].
-  StudyInfoFormViewModelProvider call(
-    String studyId,
-  ) {
-    return StudyInfoFormViewModelProvider(
-      studyId,
-    );
+  StudyInfoFormViewModelProvider call(String studyId) {
+    return StudyInfoFormViewModelProvider(studyId);
   }
 
   @override
   StudyInfoFormViewModelProvider getProviderOverride(
     covariant StudyInfoFormViewModelProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -76,24 +70,20 @@ class StudyInfoFormViewModelFamily extends Family<StudyInfoFormViewModel> {
 class StudyInfoFormViewModelProvider
     extends AutoDisposeProvider<StudyInfoFormViewModel> {
   /// See also [studyInfoFormViewModel].
-  StudyInfoFormViewModelProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => studyInfoFormViewModel(
-            ref as StudyInfoFormViewModelRef,
-            studyId,
-          ),
-          from: studyInfoFormViewModelProvider,
-          name: r'studyInfoFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$studyInfoFormViewModelHash,
-          dependencies: StudyInfoFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              StudyInfoFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  StudyInfoFormViewModelProvider(String studyId)
+    : this._internal(
+        (ref) =>
+            studyInfoFormViewModel(ref as StudyInfoFormViewModelRef, studyId),
+        from: studyInfoFormViewModelProvider,
+        name: r'studyInfoFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$studyInfoFormViewModelHash,
+        dependencies: StudyInfoFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            StudyInfoFormViewModelFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   StudyInfoFormViewModelProvider._internal(
     super._createNotifier, {
@@ -144,6 +134,8 @@ class StudyInfoFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyInfoFormViewModelRef
     on AutoDisposeProviderRef<StudyInfoFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -160,7 +152,7 @@ class _StudyInfoFormViewModelProviderElement
 }
 
 String _$enrollmentFormViewModelHash() =>
-    r'f89c53ecf3f90e317a1fbab38a89ae095dc29cca';
+    r'd41cdb067044c6a683bb9e3cbf7260561a681657';
 
 /// See also [enrollmentFormViewModel].
 @ProviderFor(enrollmentFormViewModel)
@@ -172,21 +164,15 @@ class EnrollmentFormViewModelFamily extends Family<EnrollmentFormViewModel> {
   const EnrollmentFormViewModelFamily();
 
   /// See also [enrollmentFormViewModel].
-  EnrollmentFormViewModelProvider call(
-    String studyId,
-  ) {
-    return EnrollmentFormViewModelProvider(
-      studyId,
-    );
+  EnrollmentFormViewModelProvider call(String studyId) {
+    return EnrollmentFormViewModelProvider(studyId);
   }
 
   @override
   EnrollmentFormViewModelProvider getProviderOverride(
     covariant EnrollmentFormViewModelProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -208,24 +194,20 @@ class EnrollmentFormViewModelFamily extends Family<EnrollmentFormViewModel> {
 class EnrollmentFormViewModelProvider
     extends AutoDisposeProvider<EnrollmentFormViewModel> {
   /// See also [enrollmentFormViewModel].
-  EnrollmentFormViewModelProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => enrollmentFormViewModel(
-            ref as EnrollmentFormViewModelRef,
-            studyId,
-          ),
-          from: enrollmentFormViewModelProvider,
-          name: r'enrollmentFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$enrollmentFormViewModelHash,
-          dependencies: EnrollmentFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              EnrollmentFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  EnrollmentFormViewModelProvider(String studyId)
+    : this._internal(
+        (ref) =>
+            enrollmentFormViewModel(ref as EnrollmentFormViewModelRef, studyId),
+        from: enrollmentFormViewModelProvider,
+        name: r'enrollmentFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$enrollmentFormViewModelHash,
+        dependencies: EnrollmentFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            EnrollmentFormViewModelFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   EnrollmentFormViewModelProvider._internal(
     super._createNotifier, {
@@ -242,7 +224,7 @@ class EnrollmentFormViewModelProvider
   @override
   Override overrideWith(
     EnrollmentFormViewModel Function(EnrollmentFormViewModelRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -277,6 +259,8 @@ class EnrollmentFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin EnrollmentFormViewModelRef
     on AutoDisposeProviderRef<EnrollmentFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -293,7 +277,7 @@ class _EnrollmentFormViewModelProviderElement
 }
 
 String _$screenerQuestionFormViewModelHash() =>
-    r'3c5615d74c376a66c14dc44738595d0c5a6f972a';
+    r'59315db1776e5f6fcc23580a90b137c08d5e6b7f';
 
 /// See also [screenerQuestionFormViewModel].
 @ProviderFor(screenerQuestionFormViewModel)
@@ -310,18 +294,14 @@ class ScreenerQuestionFormViewModelFamily
   ScreenerQuestionFormViewModelProvider call(
     ScreenerQuestionFormRouteArgs args,
   ) {
-    return ScreenerQuestionFormViewModelProvider(
-      args,
-    );
+    return ScreenerQuestionFormViewModelProvider(args);
   }
 
   @override
   ScreenerQuestionFormViewModelProvider getProviderOverride(
     covariant ScreenerQuestionFormViewModelProvider provider,
   ) {
-    return call(
-      provider.args,
-    );
+    return call(provider.args);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -343,24 +323,22 @@ class ScreenerQuestionFormViewModelFamily
 class ScreenerQuestionFormViewModelProvider
     extends AutoDisposeProvider<ScreenerQuestionFormViewModel> {
   /// See also [screenerQuestionFormViewModel].
-  ScreenerQuestionFormViewModelProvider(
-    ScreenerQuestionFormRouteArgs args,
-  ) : this._internal(
-          (ref) => screenerQuestionFormViewModel(
-            ref as ScreenerQuestionFormViewModelRef,
-            args,
-          ),
-          from: screenerQuestionFormViewModelProvider,
-          name: r'screenerQuestionFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$screenerQuestionFormViewModelHash,
-          dependencies: ScreenerQuestionFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              ScreenerQuestionFormViewModelFamily._allTransitiveDependencies,
-          args: args,
-        );
+  ScreenerQuestionFormViewModelProvider(ScreenerQuestionFormRouteArgs args)
+    : this._internal(
+        (ref) => screenerQuestionFormViewModel(
+          ref as ScreenerQuestionFormViewModelRef,
+          args,
+        ),
+        from: screenerQuestionFormViewModelProvider,
+        name: r'screenerQuestionFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$screenerQuestionFormViewModelHash,
+        dependencies: ScreenerQuestionFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            ScreenerQuestionFormViewModelFamily._allTransitiveDependencies,
+        args: args,
+      );
 
   ScreenerQuestionFormViewModelProvider._internal(
     super._createNotifier, {
@@ -377,8 +355,9 @@ class ScreenerQuestionFormViewModelProvider
   @override
   Override overrideWith(
     ScreenerQuestionFormViewModel Function(
-            ScreenerQuestionFormViewModelRef provider)
-        create,
+      ScreenerQuestionFormViewModelRef provider,
+    )
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -413,6 +392,8 @@ class ScreenerQuestionFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ScreenerQuestionFormViewModelRef
     on AutoDisposeProviderRef<ScreenerQuestionFormViewModel> {
   /// The parameter `args` of this provider.
@@ -430,7 +411,7 @@ class _ScreenerQuestionFormViewModelProviderElement
 }
 
 String _$consentItemFormViewModelHash() =>
-    r'002af4b4fb26f4815e747107f93a6bdad9bee823';
+    r'2e27c1f83cafe5e2e578b9f5421915d299540c1f';
 
 /// See also [consentItemFormViewModel].
 @ProviderFor(consentItemFormViewModel)
@@ -442,21 +423,15 @@ class ConsentItemFormViewModelFamily extends Family<ConsentItemFormViewModel> {
   const ConsentItemFormViewModelFamily();
 
   /// See also [consentItemFormViewModel].
-  ConsentItemFormViewModelProvider call(
-    ConsentItemFormRouteArgs args,
-  ) {
-    return ConsentItemFormViewModelProvider(
-      args,
-    );
+  ConsentItemFormViewModelProvider call(ConsentItemFormRouteArgs args) {
+    return ConsentItemFormViewModelProvider(args);
   }
 
   @override
   ConsentItemFormViewModelProvider getProviderOverride(
     covariant ConsentItemFormViewModelProvider provider,
   ) {
-    return call(
-      provider.args,
-    );
+    return call(provider.args);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -478,24 +453,20 @@ class ConsentItemFormViewModelFamily extends Family<ConsentItemFormViewModel> {
 class ConsentItemFormViewModelProvider
     extends AutoDisposeProvider<ConsentItemFormViewModel> {
   /// See also [consentItemFormViewModel].
-  ConsentItemFormViewModelProvider(
-    ConsentItemFormRouteArgs args,
-  ) : this._internal(
-          (ref) => consentItemFormViewModel(
-            ref as ConsentItemFormViewModelRef,
-            args,
-          ),
-          from: consentItemFormViewModelProvider,
-          name: r'consentItemFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$consentItemFormViewModelHash,
-          dependencies: ConsentItemFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              ConsentItemFormViewModelFamily._allTransitiveDependencies,
-          args: args,
-        );
+  ConsentItemFormViewModelProvider(ConsentItemFormRouteArgs args)
+    : this._internal(
+        (ref) =>
+            consentItemFormViewModel(ref as ConsentItemFormViewModelRef, args),
+        from: consentItemFormViewModelProvider,
+        name: r'consentItemFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$consentItemFormViewModelHash,
+        dependencies: ConsentItemFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            ConsentItemFormViewModelFamily._allTransitiveDependencies,
+        args: args,
+      );
 
   ConsentItemFormViewModelProvider._internal(
     super._createNotifier, {
@@ -512,7 +483,7 @@ class ConsentItemFormViewModelProvider
   @override
   Override overrideWith(
     ConsentItemFormViewModel Function(ConsentItemFormViewModelRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -547,6 +518,8 @@ class ConsentItemFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ConsentItemFormViewModelRef
     on AutoDisposeProviderRef<ConsentItemFormViewModel> {
   /// The parameter `args` of this provider.
@@ -564,7 +537,7 @@ class _ConsentItemFormViewModelProviderElement
 }
 
 String _$interventionsFormViewModelHash() =>
-    r'8e986de5d8f0a8983792dc91512d21c85344025d';
+    r'65e18dc8fa37860c31726352b99ac6c9b5de4bdb';
 
 /// See also [interventionsFormViewModel].
 @ProviderFor(interventionsFormViewModel)
@@ -577,21 +550,15 @@ class InterventionsFormViewModelFamily
   const InterventionsFormViewModelFamily();
 
   /// See also [interventionsFormViewModel].
-  InterventionsFormViewModelProvider call(
-    String studyId,
-  ) {
-    return InterventionsFormViewModelProvider(
-      studyId,
-    );
+  InterventionsFormViewModelProvider call(String studyId) {
+    return InterventionsFormViewModelProvider(studyId);
   }
 
   @override
   InterventionsFormViewModelProvider getProviderOverride(
     covariant InterventionsFormViewModelProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -613,24 +580,22 @@ class InterventionsFormViewModelFamily
 class InterventionsFormViewModelProvider
     extends AutoDisposeProvider<InterventionsFormViewModel> {
   /// See also [interventionsFormViewModel].
-  InterventionsFormViewModelProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => interventionsFormViewModel(
-            ref as InterventionsFormViewModelRef,
-            studyId,
-          ),
-          from: interventionsFormViewModelProvider,
-          name: r'interventionsFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$interventionsFormViewModelHash,
-          dependencies: InterventionsFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              InterventionsFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  InterventionsFormViewModelProvider(String studyId)
+    : this._internal(
+        (ref) => interventionsFormViewModel(
+          ref as InterventionsFormViewModelRef,
+          studyId,
+        ),
+        from: interventionsFormViewModelProvider,
+        name: r'interventionsFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$interventionsFormViewModelHash,
+        dependencies: InterventionsFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            InterventionsFormViewModelFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   InterventionsFormViewModelProvider._internal(
     super._createNotifier, {
@@ -647,7 +612,7 @@ class InterventionsFormViewModelProvider
   @override
   Override overrideWith(
     InterventionsFormViewModel Function(InterventionsFormViewModelRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -683,6 +648,8 @@ class InterventionsFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin InterventionsFormViewModelRef
     on AutoDisposeProviderRef<InterventionsFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -699,7 +666,7 @@ class _InterventionsFormViewModelProviderElement
 }
 
 String _$interventionFormViewModelHash() =>
-    r'c4bbeccc4b19cc3abceb394a213201496c776f75';
+    r'1f661e24b1bfeee6e51a68cb156789bbd0b6fc9c';
 
 /// See also [interventionFormViewModel].
 @ProviderFor(interventionFormViewModel)
@@ -712,21 +679,15 @@ class InterventionFormViewModelFamily
   const InterventionFormViewModelFamily();
 
   /// See also [interventionFormViewModel].
-  InterventionFormViewModelProvider call(
-    InterventionFormRouteArgs args,
-  ) {
-    return InterventionFormViewModelProvider(
-      args,
-    );
+  InterventionFormViewModelProvider call(InterventionFormRouteArgs args) {
+    return InterventionFormViewModelProvider(args);
   }
 
   @override
   InterventionFormViewModelProvider getProviderOverride(
     covariant InterventionFormViewModelProvider provider,
   ) {
-    return call(
-      provider.args,
-    );
+    return call(provider.args);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -748,24 +709,22 @@ class InterventionFormViewModelFamily
 class InterventionFormViewModelProvider
     extends AutoDisposeProvider<InterventionFormViewModel> {
   /// See also [interventionFormViewModel].
-  InterventionFormViewModelProvider(
-    InterventionFormRouteArgs args,
-  ) : this._internal(
-          (ref) => interventionFormViewModel(
-            ref as InterventionFormViewModelRef,
-            args,
-          ),
-          from: interventionFormViewModelProvider,
-          name: r'interventionFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$interventionFormViewModelHash,
-          dependencies: InterventionFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              InterventionFormViewModelFamily._allTransitiveDependencies,
-          args: args,
-        );
+  InterventionFormViewModelProvider(InterventionFormRouteArgs args)
+    : this._internal(
+        (ref) => interventionFormViewModel(
+          ref as InterventionFormViewModelRef,
+          args,
+        ),
+        from: interventionFormViewModelProvider,
+        name: r'interventionFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$interventionFormViewModelHash,
+        dependencies: InterventionFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            InterventionFormViewModelFamily._allTransitiveDependencies,
+        args: args,
+      );
 
   InterventionFormViewModelProvider._internal(
     super._createNotifier, {
@@ -782,7 +741,7 @@ class InterventionFormViewModelProvider
   @override
   Override overrideWith(
     InterventionFormViewModel Function(InterventionFormViewModelRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -817,6 +776,8 @@ class InterventionFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin InterventionFormViewModelRef
     on AutoDisposeProviderRef<InterventionFormViewModel> {
   /// The parameter `args` of this provider.
@@ -834,7 +795,7 @@ class _InterventionFormViewModelProviderElement
 }
 
 String _$interventionTaskFormViewModelHash() =>
-    r'58c02adfdf31d7529b49bed1b884d3042f032db0';
+    r'1b6cdb9b40dcb77121ec70113867a8f4ab2628a8';
 
 /// See also [interventionTaskFormViewModel].
 @ProviderFor(interventionTaskFormViewModel)
@@ -851,18 +812,14 @@ class InterventionTaskFormViewModelFamily
   InterventionTaskFormViewModelProvider call(
     InterventionTaskFormRouteArgs args,
   ) {
-    return InterventionTaskFormViewModelProvider(
-      args,
-    );
+    return InterventionTaskFormViewModelProvider(args);
   }
 
   @override
   InterventionTaskFormViewModelProvider getProviderOverride(
     covariant InterventionTaskFormViewModelProvider provider,
   ) {
-    return call(
-      provider.args,
-    );
+    return call(provider.args);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -884,24 +841,22 @@ class InterventionTaskFormViewModelFamily
 class InterventionTaskFormViewModelProvider
     extends AutoDisposeProvider<InterventionTaskFormViewModel> {
   /// See also [interventionTaskFormViewModel].
-  InterventionTaskFormViewModelProvider(
-    InterventionTaskFormRouteArgs args,
-  ) : this._internal(
-          (ref) => interventionTaskFormViewModel(
-            ref as InterventionTaskFormViewModelRef,
-            args,
-          ),
-          from: interventionTaskFormViewModelProvider,
-          name: r'interventionTaskFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$interventionTaskFormViewModelHash,
-          dependencies: InterventionTaskFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              InterventionTaskFormViewModelFamily._allTransitiveDependencies,
-          args: args,
-        );
+  InterventionTaskFormViewModelProvider(InterventionTaskFormRouteArgs args)
+    : this._internal(
+        (ref) => interventionTaskFormViewModel(
+          ref as InterventionTaskFormViewModelRef,
+          args,
+        ),
+        from: interventionTaskFormViewModelProvider,
+        name: r'interventionTaskFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$interventionTaskFormViewModelHash,
+        dependencies: InterventionTaskFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            InterventionTaskFormViewModelFamily._allTransitiveDependencies,
+        args: args,
+      );
 
   InterventionTaskFormViewModelProvider._internal(
     super._createNotifier, {
@@ -918,8 +873,9 @@ class InterventionTaskFormViewModelProvider
   @override
   Override overrideWith(
     InterventionTaskFormViewModel Function(
-            InterventionTaskFormViewModelRef provider)
-        create,
+      InterventionTaskFormViewModelRef provider,
+    )
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -954,6 +910,8 @@ class InterventionTaskFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin InterventionTaskFormViewModelRef
     on AutoDisposeProviderRef<InterventionTaskFormViewModel> {
   /// The parameter `args` of this provider.
@@ -971,7 +929,7 @@ class _InterventionTaskFormViewModelProviderElement
 }
 
 String _$measurementsFormViewModelHash() =>
-    r'21fe7b97a1c4d44406c44ecc0ac3ba4bcb8dd8c0';
+    r'a92c30b523d67c47db86b09bee1d176d8fccc2a5';
 
 /// See also [measurementsFormViewModel].
 @ProviderFor(measurementsFormViewModel)
@@ -984,21 +942,15 @@ class MeasurementsFormViewModelFamily
   const MeasurementsFormViewModelFamily();
 
   /// See also [measurementsFormViewModel].
-  MeasurementsFormViewModelProvider call(
-    String studyId,
-  ) {
-    return MeasurementsFormViewModelProvider(
-      studyId,
-    );
+  MeasurementsFormViewModelProvider call(String studyId) {
+    return MeasurementsFormViewModelProvider(studyId);
   }
 
   @override
   MeasurementsFormViewModelProvider getProviderOverride(
     covariant MeasurementsFormViewModelProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1020,24 +972,22 @@ class MeasurementsFormViewModelFamily
 class MeasurementsFormViewModelProvider
     extends AutoDisposeProvider<MeasurementsFormViewModel> {
   /// See also [measurementsFormViewModel].
-  MeasurementsFormViewModelProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => measurementsFormViewModel(
-            ref as MeasurementsFormViewModelRef,
-            studyId,
-          ),
-          from: measurementsFormViewModelProvider,
-          name: r'measurementsFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$measurementsFormViewModelHash,
-          dependencies: MeasurementsFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              MeasurementsFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  MeasurementsFormViewModelProvider(String studyId)
+    : this._internal(
+        (ref) => measurementsFormViewModel(
+          ref as MeasurementsFormViewModelRef,
+          studyId,
+        ),
+        from: measurementsFormViewModelProvider,
+        name: r'measurementsFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$measurementsFormViewModelHash,
+        dependencies: MeasurementsFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            MeasurementsFormViewModelFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   MeasurementsFormViewModelProvider._internal(
     super._createNotifier, {
@@ -1054,7 +1004,7 @@ class MeasurementsFormViewModelProvider
   @override
   Override overrideWith(
     MeasurementsFormViewModel Function(MeasurementsFormViewModelRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -1090,6 +1040,8 @@ class MeasurementsFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin MeasurementsFormViewModelRef
     on AutoDisposeProviderRef<MeasurementsFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -1106,7 +1058,7 @@ class _MeasurementsFormViewModelProviderElement
 }
 
 String _$surveyFormViewModelHash() =>
-    r'5639e7eecf4014f6359bf8a9d81554b6cc604955';
+    r'2cc4aef41c732ff379675a5ce4d5969a04c737ad';
 
 /// See also [surveyFormViewModel].
 @ProviderFor(surveyFormViewModel)
@@ -1118,21 +1070,15 @@ class SurveyFormViewModelFamily extends Family<MeasurementSurveyFormViewModel> {
   const SurveyFormViewModelFamily();
 
   /// See also [surveyFormViewModel].
-  SurveyFormViewModelProvider call(
-    MeasurementFormRouteArgs args,
-  ) {
-    return SurveyFormViewModelProvider(
-      args,
-    );
+  SurveyFormViewModelProvider call(MeasurementFormRouteArgs args) {
+    return SurveyFormViewModelProvider(args);
   }
 
   @override
   SurveyFormViewModelProvider getProviderOverride(
     covariant SurveyFormViewModelProvider provider,
   ) {
-    return call(
-      provider.args,
-    );
+    return call(provider.args);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1154,24 +1100,19 @@ class SurveyFormViewModelFamily extends Family<MeasurementSurveyFormViewModel> {
 class SurveyFormViewModelProvider
     extends AutoDisposeProvider<MeasurementSurveyFormViewModel> {
   /// See also [surveyFormViewModel].
-  SurveyFormViewModelProvider(
-    MeasurementFormRouteArgs args,
-  ) : this._internal(
-          (ref) => surveyFormViewModel(
-            ref as SurveyFormViewModelRef,
-            args,
-          ),
-          from: surveyFormViewModelProvider,
-          name: r'surveyFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$surveyFormViewModelHash,
-          dependencies: SurveyFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              SurveyFormViewModelFamily._allTransitiveDependencies,
-          args: args,
-        );
+  SurveyFormViewModelProvider(MeasurementFormRouteArgs args)
+    : this._internal(
+        (ref) => surveyFormViewModel(ref as SurveyFormViewModelRef, args),
+        from: surveyFormViewModelProvider,
+        name: r'surveyFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$surveyFormViewModelHash,
+        dependencies: SurveyFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            SurveyFormViewModelFamily._allTransitiveDependencies,
+        args: args,
+      );
 
   SurveyFormViewModelProvider._internal(
     super._createNotifier, {
@@ -1188,7 +1129,7 @@ class SurveyFormViewModelProvider
   @override
   Override overrideWith(
     MeasurementSurveyFormViewModel Function(SurveyFormViewModelRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -1223,6 +1164,8 @@ class SurveyFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SurveyFormViewModelRef
     on AutoDisposeProviderRef<MeasurementSurveyFormViewModel> {
   /// The parameter `args` of this provider.
@@ -1240,7 +1183,7 @@ class _SurveyFormViewModelProviderElement
 }
 
 String _$surveyQuestionFormViewModelHash() =>
-    r'8359acab6df34eec28b3523b6e0c22cbfa001b66';
+    r'd2b779f1b025110501edde497b421a479b1e059d';
 
 /// See also [surveyQuestionFormViewModel].
 @ProviderFor(surveyQuestionFormViewModel)
@@ -1252,21 +1195,15 @@ class SurveyQuestionFormViewModelFamily extends Family<QuestionFormViewModel> {
   const SurveyQuestionFormViewModelFamily();
 
   /// See also [surveyQuestionFormViewModel].
-  SurveyQuestionFormViewModelProvider call(
-    SurveyQuestionFormRouteArgs args,
-  ) {
-    return SurveyQuestionFormViewModelProvider(
-      args,
-    );
+  SurveyQuestionFormViewModelProvider call(SurveyQuestionFormRouteArgs args) {
+    return SurveyQuestionFormViewModelProvider(args);
   }
 
   @override
   SurveyQuestionFormViewModelProvider getProviderOverride(
     covariant SurveyQuestionFormViewModelProvider provider,
   ) {
-    return call(
-      provider.args,
-    );
+    return call(provider.args);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1288,24 +1225,22 @@ class SurveyQuestionFormViewModelFamily extends Family<QuestionFormViewModel> {
 class SurveyQuestionFormViewModelProvider
     extends AutoDisposeProvider<QuestionFormViewModel> {
   /// See also [surveyQuestionFormViewModel].
-  SurveyQuestionFormViewModelProvider(
-    SurveyQuestionFormRouteArgs args,
-  ) : this._internal(
-          (ref) => surveyQuestionFormViewModel(
-            ref as SurveyQuestionFormViewModelRef,
-            args,
-          ),
-          from: surveyQuestionFormViewModelProvider,
-          name: r'surveyQuestionFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$surveyQuestionFormViewModelHash,
-          dependencies: SurveyQuestionFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              SurveyQuestionFormViewModelFamily._allTransitiveDependencies,
-          args: args,
-        );
+  SurveyQuestionFormViewModelProvider(SurveyQuestionFormRouteArgs args)
+    : this._internal(
+        (ref) => surveyQuestionFormViewModel(
+          ref as SurveyQuestionFormViewModelRef,
+          args,
+        ),
+        from: surveyQuestionFormViewModelProvider,
+        name: r'surveyQuestionFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$surveyQuestionFormViewModelHash,
+        dependencies: SurveyQuestionFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            SurveyQuestionFormViewModelFamily._allTransitiveDependencies,
+        args: args,
+      );
 
   SurveyQuestionFormViewModelProvider._internal(
     super._createNotifier, {
@@ -1322,7 +1257,7 @@ class SurveyQuestionFormViewModelProvider
   @override
   Override overrideWith(
     QuestionFormViewModel Function(SurveyQuestionFormViewModelRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -1357,6 +1292,8 @@ class SurveyQuestionFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin SurveyQuestionFormViewModelRef
     on AutoDisposeProviderRef<QuestionFormViewModel> {
   /// The parameter `args` of this provider.
@@ -1374,7 +1311,7 @@ class _SurveyQuestionFormViewModelProviderElement
 }
 
 String _$reportsFormViewModelHash() =>
-    r'6deed30173a2c97c7a9096cce168b7bb5890b933';
+    r'570680561e1f2f5cc5c740b221ef2a0d8405bc6f';
 
 /// See also [reportsFormViewModel].
 @ProviderFor(reportsFormViewModel)
@@ -1386,21 +1323,15 @@ class ReportsFormViewModelFamily extends Family<ReportsFormViewModel> {
   const ReportsFormViewModelFamily();
 
   /// See also [reportsFormViewModel].
-  ReportsFormViewModelProvider call(
-    String studyId,
-  ) {
-    return ReportsFormViewModelProvider(
-      studyId,
-    );
+  ReportsFormViewModelProvider call(String studyId) {
+    return ReportsFormViewModelProvider(studyId);
   }
 
   @override
   ReportsFormViewModelProvider getProviderOverride(
     covariant ReportsFormViewModelProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1422,24 +1353,19 @@ class ReportsFormViewModelFamily extends Family<ReportsFormViewModel> {
 class ReportsFormViewModelProvider
     extends AutoDisposeProvider<ReportsFormViewModel> {
   /// See also [reportsFormViewModel].
-  ReportsFormViewModelProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => reportsFormViewModel(
-            ref as ReportsFormViewModelRef,
-            studyId,
-          ),
-          from: reportsFormViewModelProvider,
-          name: r'reportsFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$reportsFormViewModelHash,
-          dependencies: ReportsFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              ReportsFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  ReportsFormViewModelProvider(String studyId)
+    : this._internal(
+        (ref) => reportsFormViewModel(ref as ReportsFormViewModelRef, studyId),
+        from: reportsFormViewModelProvider,
+        name: r'reportsFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$reportsFormViewModelHash,
+        dependencies: ReportsFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            ReportsFormViewModelFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   ReportsFormViewModelProvider._internal(
     super._createNotifier, {
@@ -1490,6 +1416,8 @@ class ReportsFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ReportsFormViewModelRef on AutoDisposeProviderRef<ReportsFormViewModel> {
   /// The parameter `studyId` of this provider.
   String get studyId;
@@ -1505,7 +1433,7 @@ class _ReportsFormViewModelProviderElement
 }
 
 String _$reportItemFormViewModelHash() =>
-    r'c2244f6b47445b8c54b061be046e6dd472e1afd6';
+    r'34aad4103b63c267100cf7465127254feef5b90f';
 
 /// See also [reportItemFormViewModel].
 @ProviderFor(reportItemFormViewModel)
@@ -1517,21 +1445,15 @@ class ReportItemFormViewModelFamily extends Family<ReportItemFormViewModel> {
   const ReportItemFormViewModelFamily();
 
   /// See also [reportItemFormViewModel].
-  ReportItemFormViewModelProvider call(
-    ReportItemFormRouteArgs args,
-  ) {
-    return ReportItemFormViewModelProvider(
-      args,
-    );
+  ReportItemFormViewModelProvider call(ReportItemFormRouteArgs args) {
+    return ReportItemFormViewModelProvider(args);
   }
 
   @override
   ReportItemFormViewModelProvider getProviderOverride(
     covariant ReportItemFormViewModelProvider provider,
   ) {
-    return call(
-      provider.args,
-    );
+    return call(provider.args);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1553,24 +1475,20 @@ class ReportItemFormViewModelFamily extends Family<ReportItemFormViewModel> {
 class ReportItemFormViewModelProvider
     extends AutoDisposeProvider<ReportItemFormViewModel> {
   /// See also [reportItemFormViewModel].
-  ReportItemFormViewModelProvider(
-    ReportItemFormRouteArgs args,
-  ) : this._internal(
-          (ref) => reportItemFormViewModel(
-            ref as ReportItemFormViewModelRef,
-            args,
-          ),
-          from: reportItemFormViewModelProvider,
-          name: r'reportItemFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$reportItemFormViewModelHash,
-          dependencies: ReportItemFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              ReportItemFormViewModelFamily._allTransitiveDependencies,
-          args: args,
-        );
+  ReportItemFormViewModelProvider(ReportItemFormRouteArgs args)
+    : this._internal(
+        (ref) =>
+            reportItemFormViewModel(ref as ReportItemFormViewModelRef, args),
+        from: reportItemFormViewModelProvider,
+        name: r'reportItemFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$reportItemFormViewModelHash,
+        dependencies: ReportItemFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            ReportItemFormViewModelFamily._allTransitiveDependencies,
+        args: args,
+      );
 
   ReportItemFormViewModelProvider._internal(
     super._createNotifier, {
@@ -1587,7 +1505,7 @@ class ReportItemFormViewModelProvider
   @override
   Override overrideWith(
     ReportItemFormViewModel Function(ReportItemFormViewModelRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -1622,6 +1540,8 @@ class ReportItemFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin ReportItemFormViewModelRef
     on AutoDisposeProviderRef<ReportItemFormViewModel> {
   /// The parameter `args` of this provider.
@@ -1639,7 +1559,7 @@ class _ReportItemFormViewModelProviderElement
 }
 
 String _$studyPublishValidatorHash() =>
-    r'7052ac418dfb864a61546db1c713351194f2a684';
+    r'd9c70611fbc6b66b9642cdeaf334708af0ab5222';
 
 /// Provides the [StudyFormViewModel] for validation purposes with
 /// a [StudyFormValidationSet.publish]
@@ -1663,21 +1583,15 @@ class StudyPublishValidatorFamily extends Family<StudyFormViewModel> {
   /// a [StudyFormValidationSet.publish]
   ///
   /// Copied from [studyPublishValidator].
-  StudyPublishValidatorProvider call(
-    String studyId,
-  ) {
-    return StudyPublishValidatorProvider(
-      studyId,
-    );
+  StudyPublishValidatorProvider call(String studyId) {
+    return StudyPublishValidatorProvider(studyId);
   }
 
   @override
   StudyPublishValidatorProvider getProviderOverride(
     covariant StudyPublishValidatorProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1705,24 +1619,20 @@ class StudyPublishValidatorProvider
   /// a [StudyFormValidationSet.publish]
   ///
   /// Copied from [studyPublishValidator].
-  StudyPublishValidatorProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => studyPublishValidator(
-            ref as StudyPublishValidatorRef,
-            studyId,
-          ),
-          from: studyPublishValidatorProvider,
-          name: r'studyPublishValidatorProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$studyPublishValidatorHash,
-          dependencies: StudyPublishValidatorFamily._dependencies,
-          allTransitiveDependencies:
-              StudyPublishValidatorFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  StudyPublishValidatorProvider(String studyId)
+    : this._internal(
+        (ref) =>
+            studyPublishValidator(ref as StudyPublishValidatorRef, studyId),
+        from: studyPublishValidatorProvider,
+        name: r'studyPublishValidatorProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$studyPublishValidatorHash,
+        dependencies: StudyPublishValidatorFamily._dependencies,
+        allTransitiveDependencies:
+            StudyPublishValidatorFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   StudyPublishValidatorProvider._internal(
     super._createNotifier, {
@@ -1773,6 +1683,8 @@ class StudyPublishValidatorProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyPublishValidatorRef on AutoDisposeProviderRef<StudyFormViewModel> {
   /// The parameter `studyId` of this provider.
   String get studyId;
@@ -1788,7 +1700,7 @@ class _StudyPublishValidatorProviderElement
 }
 
 String _$studyTestValidatorHash() =>
-    r'207988e121f40ffd2b4b055283baaf78c7a07d2d';
+    r'65449adc240cad1215c97c4b1ad9facd55ee6001';
 
 /// Provides the [StudyFormViewModel] for validation purposes with
 /// a [StudyFormValidationSet.test]
@@ -1812,21 +1724,15 @@ class StudyTestValidatorFamily extends Family<StudyFormViewModel> {
   /// a [StudyFormValidationSet.test]
   ///
   /// Copied from [studyTestValidator].
-  StudyTestValidatorProvider call(
-    String studyId,
-  ) {
-    return StudyTestValidatorProvider(
-      studyId,
-    );
+  StudyTestValidatorProvider call(String studyId) {
+    return StudyTestValidatorProvider(studyId);
   }
 
   @override
   StudyTestValidatorProvider getProviderOverride(
     covariant StudyTestValidatorProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -1854,24 +1760,19 @@ class StudyTestValidatorProvider
   /// a [StudyFormValidationSet.test]
   ///
   /// Copied from [studyTestValidator].
-  StudyTestValidatorProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => studyTestValidator(
-            ref as StudyTestValidatorRef,
-            studyId,
-          ),
-          from: studyTestValidatorProvider,
-          name: r'studyTestValidatorProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$studyTestValidatorHash,
-          dependencies: StudyTestValidatorFamily._dependencies,
-          allTransitiveDependencies:
-              StudyTestValidatorFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  StudyTestValidatorProvider(String studyId)
+    : this._internal(
+        (ref) => studyTestValidator(ref as StudyTestValidatorRef, studyId),
+        from: studyTestValidatorProvider,
+        name: r'studyTestValidatorProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$studyTestValidatorHash,
+        dependencies: StudyTestValidatorFamily._dependencies,
+        allTransitiveDependencies:
+            StudyTestValidatorFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   StudyTestValidatorProvider._internal(
     super._createNotifier, {
@@ -1922,6 +1823,8 @@ class StudyTestValidatorProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyTestValidatorRef on AutoDisposeProviderRef<StudyFormViewModel> {
   /// The parameter `studyId` of this provider.
   String get studyId;
@@ -1935,5 +1838,6 @@ class _StudyTestValidatorProviderElement
   @override
   String get studyId => (origin as StudyTestValidatorProvider).studyId;
 }
+
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

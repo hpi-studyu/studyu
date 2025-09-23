@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
@@ -42,8 +42,9 @@ class _ConsentScreenState extends State<ConsentScreen> {
   }
 
   Future<List<pw.Widget>> generatePdfContent() async {
-    final ttf =
-        pw.Font.ttf(await rootBundle.load('assets/fonts/Roboto-Regular.ttf'));
+    final ttf = pw.Font.ttf(
+      await rootBundle.load('assets/fonts/Roboto-Regular.ttf'),
+    );
     return consentList
         .map(
           (consentItem) => [
@@ -82,11 +83,13 @@ class _ConsentScreenState extends State<ConsentScreen> {
                   context: context,
                   builder: (context) => AlertDialog(
                     elevation: 24,
-                    title:
-                        Text(AppLocalizations.of(context)!.save_not_supported),
+                    title: Text(
+                      AppLocalizations.of(context)!.save_not_supported,
+                    ),
                     content: Text(
-                      AppLocalizations.of(context)!
-                          .save_not_supported_description,
+                      AppLocalizations.of(
+                        context,
+                      )!.save_not_supported_description,
                     ),
                   ),
                 );
@@ -126,25 +129,25 @@ class _ConsentScreenState extends State<ConsentScreen> {
                         text: AppLocalizations.of(context)!.please_give_consent,
                         style: theme.textTheme.titleMedium,
                       ),
+                      TextSpan(text: ' ', style: theme.textTheme.titleMedium),
                       TextSpan(
-                        text: ' ',
-                        style: theme.textTheme.titleMedium,
-                      ),
-                      TextSpan(
-                        text: AppLocalizations.of(context)!
-                            .please_give_consent_why,
-                        style: theme.textTheme.titleSmall!
-                            .copyWith(color: theme.primaryColor),
+                        text: AppLocalizations.of(
+                          context,
+                        )!.please_give_consent_why,
+                        style: theme.textTheme.titleSmall!.copyWith(
+                          color: theme.primaryColor,
+                        ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  content: Text(
-                                    AppLocalizations.of(context)!
-                                        .please_give_consent_reason,
-                                  ),
-                                ),
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              content: Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.please_give_consent_reason,
                               ),
+                            ),
+                          ),
                       ),
                     ],
                   ),
@@ -154,10 +157,10 @@ class _ConsentScreenState extends State<ConsentScreen> {
                     shrinkWrap: true,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                    ),
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
                     itemCount: consentList.length,
                     itemBuilder: (context, index) {
                       return ConsentCard(
@@ -216,9 +219,7 @@ class ConsentCard extends StatelessWidget {
       color: isChecked! ? Colors.blue[100] : Colors.grey[50],
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(
-          color: theme.primaryColor,
-        ),
+        side: BorderSide(color: theme.primaryColor),
       ),
       child: InkWell(
         splashColor: theme.colorScheme.secondary.withAlpha(100),

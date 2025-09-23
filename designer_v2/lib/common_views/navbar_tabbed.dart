@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
@@ -25,10 +24,8 @@ class NavbarTab {
   final bool enabled;
 }
 
-typedef OnTabSelectCallback<T extends NavbarTab> = void Function(
-  int tabIdx,
-  T tab,
-);
+typedef OnTabSelectCallback<T extends NavbarTab> =
+    void Function(int tabIdx, T tab);
 
 class TabbedNavbar<T extends NavbarTab> extends ConsumerStatefulWidget {
   const TabbedNavbar({
@@ -201,7 +198,9 @@ class _TabbedNavbarState<T extends NavbarTab>
         dividerColor: Colors.transparent,
         isScrollable: widget.isScrollable,
         labelPadding: widget.labelPadding,
-        unselectedLabelColor: theme.colorScheme.onSurface.withOpacity(0.8),
+        unselectedLabelColor: theme.colorScheme.onSurface.withValues(
+          alpha: 0.8,
+        ),
         unselectedLabelStyle: theme.textTheme.labelLarge,
         indicator: widget.indicator ?? theme.tabBarTheme.indicator,
         indicatorPadding: EdgeInsets.only(right: widget.labelSpacing ?? 0),
@@ -223,7 +222,8 @@ class _TabbedNavbarState<T extends NavbarTab>
 
   Widget _buildTabContent(BuildContext context, T t) {
     final theme = Theme.of(context);
-    final indicatorHeight = (theme.tabBarTheme.indicator! as BoxDecoration)
+    final indicatorHeight =
+        (theme.tabBarTheme.indicator! as BoxDecoration)
             .border
             ?.dimensions
             .vertical ??
@@ -231,9 +231,7 @@ class _TabbedNavbarState<T extends NavbarTab>
 
     return Container(
       decoration: (!t.enabled)
-          ? BoxDecoration(
-              color: widget.disabledBackgroundColor,
-            )
+          ? BoxDecoration(color: widget.disabledBackgroundColor)
           : null,
       height: (widget.height != null) ? widget.height! - indicatorHeight : null,
       child: Row(
@@ -245,9 +243,11 @@ class _TabbedNavbarState<T extends NavbarTab>
 
               TextStyle actualTextStyle = isSelected
                   ? theme.tabBarTheme.labelStyle ??
-                      TextStyle(color: theme.tabBarTheme.labelColor)
+                        TextStyle(color: theme.tabBarTheme.labelColor)
                   : theme.tabBarTheme.unselectedLabelStyle ??
-                      TextStyle(color: theme.tabBarTheme.unselectedLabelColor);
+                        TextStyle(
+                          color: theme.tabBarTheme.unselectedLabelColor,
+                        );
 
               final mergeColorStyle = TextStyle(
                 color: isSelected
@@ -262,7 +262,9 @@ class _TabbedNavbarState<T extends NavbarTab>
                 child: Text(
                   t.title,
                   style: (!t.enabled)
-                      ? TextStyle(color: theme.disabledColor.faded(0.5))
+                      ? TextStyle(
+                          color: theme.disabledColor.withValues(alpha: 0.5),
+                        )
                       : actualTextStyle,
                 ),
               );
@@ -272,9 +274,7 @@ class _TabbedNavbarState<T extends NavbarTab>
           MouseEventsRegion(
             builder: (context, states) {
               // wrap spacer in mouse region to disable pointer mouse cursor
-              return Container(
-                width: widget.labelSpacing,
-              );
+              return Container(width: widget.labelSpacing);
             },
           ),
         ],

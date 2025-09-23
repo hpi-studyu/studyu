@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -13,6 +14,7 @@ class Preview {
   final AppLanguage appLanguage;
   String? selectedRoute;
   String? extra;
+
   bool hasRoute() => selectedRoute != null && selectedRoute!.isNotEmpty;
   Study? study;
   String? selectedStudyObjectId;
@@ -42,9 +44,7 @@ class Preview {
 
     final String session = Uri.decodeComponent(queryParameters!['session']!);
     try {
-      await Supabase.instance.client.auth.recoverSession(
-        session,
-      );
+      await Supabase.instance.client.auth.recoverSession(session);
     } catch (_) {
       return false;
     }
@@ -65,19 +65,32 @@ class Preview {
   Future<void> runCommands() async {
     // delete study subscription and progress
     if (containsQueryPair('cmd', 'reset')) {
-      if (selectedStudyObjectId != null) {
-        final StudySubject subject = await SupabaseQuery.getById<StudySubject>(
-          selectedStudyObjectId!,
-          selectedColumns: [
-            '*',
-            'study!study_subject_studyId_fkey(*)',
-            'subject_progress(*)',
-          ],
-        );
-        subject.delete();
-        deleteActiveStudyReference();
-        selectedStudyObjectId = '';
+      final String userId = Supabase.instance.client.auth.currentUser!.id;
+
+      final List<StudySubject> subjects =
+          await SupabaseQuery.getAll<StudySubject>(
+            selectedColumns: [
+              '*',
+              'study!study_subject_studyId_fkey(*)',
+              'subject_progress(*)',
+            ],
+            filters: {'user_id': userId},
+          );
+
+      for (final subject in subjects) {
+        try {
+          await subject.delete();
+          await FitbitHandler.deleteFitbitCredentials(subject.studyId);
+        } catch (e) {
+          print(
+            '[PreviewApp]: Failed deleting subject ${subject.id} for user $userId: $e',
+          );
+        }
       }
+
+      deleteActiveStudyReference();
+      selectedStudyObjectId = null;
+      return;
     }
   }
 
@@ -135,21 +148,17 @@ class Preview {
           // If the user has a study object Id, there was already a subject created
           // and we need to find the last one they created for the study
           // with the correct interventions
-          subject = studySubjects.lastWhere(
-            (foundSubject) {
-              // todo baseline
-              foundSubject.study.schedule.includeBaseline = false;
-              return foundSubject.userId ==
-                      Supabase.instance.client.auth.currentUser!.id &&
-                  foundSubject.studyId == study!.id &&
-                  listEquals(
-                    foundSubject.selectedInterventions
-                        .map((i) => i.id)
-                        .toList(),
-                    getInterventionIds(),
-                  );
-            },
-          );
+          subject = studySubjects.lastWhere((foundSubject) {
+            // todo baseline
+            foundSubject.study.schedule.includeBaseline = false;
+            return foundSubject.userId ==
+                    Supabase.instance.client.auth.currentUser!.id &&
+                foundSubject.studyId == study!.id &&
+                listEquals(
+                  foundSubject.selectedInterventions.map((i) => i.id).toList(),
+                  getInterventionIds(),
+                );
+          });
           // We switch the currently selected study subject with the one we found
           // that has fitting interventions in the correct order
           // Therefore, we get different subject entries for different interventions
@@ -171,7 +180,9 @@ class Preview {
           return subject;
         }
       } catch (e) {
-        print('[PreviewApp]: Failed fetching subject: $e');
+        print(
+          '[PreviewApp]: Failed fetching subject. Maybe subject was reset? Error: $e',
+        );
         // todo try sign in again if token expired see loading screen
       }
     }
@@ -223,9 +234,7 @@ class Preview {
       final String intId = interventionList.firstWhere((id) => id == extra);
       newInterventionList
         ..add(intId)
-        ..add(
-          interventionList.firstWhere((id) => id != intId),
-        );
+        ..add(interventionList.firstWhere((id) => id != intId));
       assert(newInterventionList.length == 2);
     } else {
       // just take the first two

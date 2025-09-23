@@ -6,8 +6,11 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/report_item_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/average_section_form_view.dart';
+import 'package:studyu_designer_v2/features/design/reports/section/types/descriptive_stats_section_form_view.dart';
+import 'package:studyu_designer_v2/features/design/reports/section/types/gauge_comparison_section_form_view.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/linear_regression_section_form_view.dart';
 import 'package:studyu_designer_v2/features/design/reports/section/types/section_type.dart';
+import 'package:studyu_designer_v2/features/design/reports/section/types/textual_summary_section_form_view.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -23,19 +26,35 @@ class ReportItemFormView extends StatelessWidget {
   final StudyID studyId;
 
   Map<int, TableColumnWidth> get reportSectionColumnWidth => const {
-        0: FixedColumnWidth(180.0),
-        1: FlexColumnWidth(),
-      };
+    0: FixedColumnWidth(180.0),
+    1: FlexColumnWidth(),
+  };
 
   WidgetBuilder get sectionTypeBodyBuilder {
     final Map<ReportSectionType, WidgetBuilder> sectionTypeWidgets = {
       ReportSectionType.average: (_) => AverageSectionFormView(
+        formViewModel: formViewModel,
+        studyId: studyId,
+        reportSectionColumnWidth: reportSectionColumnWidth,
+      ),
+      ReportSectionType.linearRegression: (_) =>
+          LinearRegressionSectionFormView(
             formViewModel: formViewModel,
             studyId: studyId,
             reportSectionColumnWidth: reportSectionColumnWidth,
           ),
-      ReportSectionType.linearRegression: (_) =>
-          LinearRegressionSectionFormView(
+      ReportSectionType.textualSummary: (_) => TextualSummarySectionFormView(
+        formViewModel: formViewModel,
+        studyId: studyId,
+        reportSectionColumnWidth: reportSectionColumnWidth,
+      ),
+      ReportSectionType.gaugeComparison: (_) => GaugeComparisonSectionFormView(
+        formViewModel: formViewModel,
+        studyId: studyId,
+        reportSectionColumnWidth: reportSectionColumnWidth,
+      ),
+      ReportSectionType.descriptiveStats: (_) =>
+          DescriptiveStatsSectionFormView(
             formViewModel: formViewModel,
             studyId: studyId,
             reportSectionColumnWidth: reportSectionColumnWidth,
@@ -45,8 +64,9 @@ class ReportItemFormView extends StatelessWidget {
 
     if (!sectionTypeWidgets.containsKey(sectionType)) {
       throw Exception(
-          "Failed to build widget for ReportSectionType $sectionType "
-          "because there is no registered WidgetBuilder");
+        "Failed to build widget for ReportSectionType $sectionType "
+        "because there is no registered WidgetBuilder",
+      );
     }
     final builder = sectionTypeWidgets[sectionType]!;
     return builder;
@@ -54,15 +74,15 @@ class ReportItemFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ReactiveFormConsumer(
-        builder: (context, formGroup, child) => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildSectionText(context),
-            _buildSectionTypeHeader(context),
-            sectionTypeBodyBuilder(context),
-          ],
-        ),
-      );
+    builder: (context, formGroup, child) => Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildSectionText(context),
+        _buildSectionTypeHeader(context),
+        sectionTypeBodyBuilder(context),
+      ],
+    ),
+  );
 
   FormTableLayout _buildSectionText(BuildContext context) {
     return FormTableLayout(
@@ -74,9 +94,7 @@ class ReportItemFormView extends StatelessWidget {
           labelHelpText: tr.form_field_report_title_tooltip,
           input: ReactiveTextField(
             formControl: formViewModel.titleControl,
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(100),
-            ],
+            inputFormatters: [LengthLimitingTextInputFormatter(100)],
             validationMessages: formViewModel.titleControl.validationMessages,
             decoration: InputDecoration(
               hintText: tr.form_field_report_title_hint,
@@ -89,9 +107,7 @@ class ReportItemFormView extends StatelessWidget {
           labelHelpText: tr.form_field_report_text_tooltip,
           input: ReactiveTextField(
             formControl: formViewModel.descriptionControl,
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(10000),
-            ],
+            inputFormatters: [LengthLimitingTextInputFormatter(10000)],
             validationMessages:
                 formViewModel.descriptionControl.validationMessages,
             keyboardType: TextInputType.multiline,
@@ -126,10 +142,12 @@ class ReportItemFormView extends StatelessWidget {
                 ),
                 child: ReactiveDropdownField<ReportSectionType>(
                   formControl: formViewModel.sectionTypeControl,
-                  items: ReportItemFormViewModel.sectionTypeControlOptions
-                      .map((option) {
-                    final menuItemTheme =
-                        ThemeConfig.dropdownMenuItemTheme(theme);
+                  items: ReportItemFormViewModel.sectionTypeControlOptions.map((
+                    option,
+                  ) {
+                    final menuItemTheme = ThemeConfig.dropdownMenuItemTheme(
+                      theme,
+                    );
                     final iconTheme =
                         menuItemTheme.iconTheme ?? theme.iconTheme;
                     return DropdownMenuItem(
@@ -157,9 +175,16 @@ class ReportItemFormView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16.0),
-        TextParagraph(
-          text: tr.form_field_report_section_type_description,
-          style: ThemeConfig.bodyTextMuted(theme),
+        FormTableLayout(
+          columnWidths: reportSectionColumnWidth,
+          rows: [
+            FormTableRow(
+              input: TextParagraph(
+                text: tr.form_field_report_section_type_description,
+                style: ThemeConfig.bodyTextMuted(theme),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 16.0),
       ],

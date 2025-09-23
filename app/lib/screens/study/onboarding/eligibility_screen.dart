@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/questionnaire/questionnaire_widget.dart';
@@ -20,11 +20,10 @@ class EligibilityScreen extends StatefulWidget {
 
   static MaterialPageRoute<EligibilityResult> routeFor({
     required Study? study,
-  }) =>
-      MaterialPageRoute(
-        builder: (_) => EligibilityScreen(study: study),
-        settings: const RouteSettings(name: '/eligibilityCheck'),
-      );
+  }) => MaterialPageRoute(
+    builder: (_) => EligibilityScreen(study: study),
+    settings: const RouteSettings(name: '/eligibilityCheck'),
+  );
 
   const EligibilityScreen({required this.study, super.key});
 
@@ -42,46 +41,64 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     activeResult = null;
   }
 
-  void _invalidateResponse(QuestionnaireState qs) {
+  void _invalidateResponse() {
     setState(() {
       activeResult = null;
     });
   }
 
   bool _checkContinuation(QuestionnaireState qs) {
+    // Invalidate any existing result when checking continuation
+    // This ensures the banner disappears when answers change
+    if (activeResult != null) {
+      setState(() {
+        activeResult = null;
+      });
+    }
+
     final criteria = widget.study!.eligibilityCriteria;
-    EligibilityCriterion? failingResult =
-        criteria.firstWhereOrNull((element) => element.isViolated(qs));
+    final EligibilityCriterion? failingResult = criteria.firstWhereOrNull(
+      (element) => element.isViolated(qs),
+    );
     if (failingResult == null) return true;
     // freetext quickfix start
-    failingResult = _isFreeTextCriterion(failingResult) ? null : failingResult;
+    // failingResult = _isFreeTextCriterion(failingResult) ? null : failingResult;
     // freetext quickfix end
     setState(() {
-      activeResult =
-          EligibilityResult(qs, eligible: false, firstFailed: failingResult);
+      activeResult = EligibilityResult(
+        qs,
+        eligible: false,
+        firstFailed: failingResult,
+      );
     });
     return false;
   }
 
-  void _evaluateResponse(QuestionnaireState qs) {
+  void _evaluateResponse(QuestionnaireState? qs) {
+    if (qs == null) {
+      _invalidateResponse();
+      return;
+    }
     final criteria = widget.study!.eligibilityCriteria;
     setState(() {
-      final conditionResult = criteria.every((criterion) {
+      final isEligible = criteria.every((criterion) {
         // freetext quickfix start
-        if (_isFreeTextCriterion(criterion)) {
+        /*if (_isFreeTextCriterion(criterion)) {
+          print('Criterion is free text, automatically satisfying it.');
           return true;
-        }
+        }*/
         // freetext quickfix end
         return criterion.isSatisfied(qs);
       });
-      if (conditionResult) {
-        activeResult = EligibilityResult(qs, eligible: conditionResult);
+      if (isEligible) {
+        activeResult = EligibilityResult(qs, eligible: isEligible);
       } else {
-        final firstFailed =
-            criteria.firstWhere((criterion) => criterion.isViolated(qs));
+        final firstFailed = criteria.firstWhere(
+          (criterion) => criterion.isViolated(qs),
+        );
         activeResult = EligibilityResult(
           qs,
-          eligible: conditionResult,
+          eligible: isEligible,
           firstFailed: firstFailed,
         );
       }
@@ -90,7 +107,8 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
 
   // todo quickfix until other question types are implemented (see DesignerV2's QuestionFormData)
   // make all free text questions eligible
-  bool _isFreeTextCriterion(EligibilityCriterion criterion) {
+  // does not work
+  /*bool _isFreeTextCriterion(EligibilityCriterion criterion) {
     return widget.study?.questionnaire.questions.any((element) {
           if (criterion.condition.type == ChoiceExpression.expressionType) {
             final ChoiceExpression choiceExpression =
@@ -100,61 +118,53 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
           return false;
         }) ??
         false;
-  }
+  }*/
 
   void _finish() {
     Navigator.pop(context, activeResult);
   }
 
   Widget _constructPassBanner() => MaterialBanner(
-        leading: Icon(
-          MdiIcons.checkboxMarkedCircle,
-          color: Colors.green,
-          size: 32,
-        ),
-        content: Text(
-          AppLocalizations.of(context)!.eligible_yes,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        actions: [Container()],
-        forceActionsBelow: true,
-        backgroundColor: Colors.green[50],
-      );
+    leading: Icon(MdiIcons.checkboxMarkedCircle, color: Colors.green, size: 32),
+    content: Text(
+      AppLocalizations.of(context)!.eligible_yes,
+      style: Theme.of(context).textTheme.titleMedium,
+    ),
+    actions: [Container()],
+    forceActionsBelow: true,
+    backgroundColor: Colors.green[50],
+  );
 
   Widget _constructFailBanner() => MaterialBanner(
-        leading: Icon(
-          MdiIcons.closeCircle,
-          color: Colors.red,
-          size: 32,
+    leading: Icon(MdiIcons.closeCircle, color: Colors.red, size: 32),
+    content: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          AppLocalizations.of(context)!.eligible_no,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              AppLocalizations.of(context)!.eligible_no,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 4),
-            if (activeResult?.firstFailed?.reason != null)
-              Text(activeResult!.firstFailed!.reason!)
-            else
-              const SizedBox.shrink(),
-            if (activeResult?.firstFailed?.reason != null)
-              const SizedBox(height: 4)
-            else
-              const SizedBox.shrink(),
-            Text(AppLocalizations.of(context)!.eligible_mistake),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: _finish,
-            child: Text(AppLocalizations.of(context)!.eligible_back),
-          ),
-        ],
-        forceActionsBelow: true,
-        backgroundColor: Colors.red[50],
-      );
+        const SizedBox(height: 4),
+        if (activeResult?.firstFailed?.reason != null)
+          Text(activeResult!.firstFailed!.reason!)
+        else
+          const SizedBox.shrink(),
+        if (activeResult?.firstFailed?.reason != null)
+          const SizedBox(height: 4)
+        else
+          const SizedBox.shrink(),
+        Text(AppLocalizations.of(context)!.eligible_mistake),
+      ],
+    ),
+    actions: [
+      TextButton(
+        onPressed: _finish,
+        child: Text(AppLocalizations.of(context)!.eligible_back),
+      ),
+    ],
+    forceActionsBelow: true,
+    backgroundColor: Colors.red[50],
+  );
 
   Widget _constructResultBanner() =>
       activeResult!.eligible ? _constructPassBanner() : _constructFailBanner();
@@ -164,8 +174,9 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text(AppLocalizations.of(context)!.eligibility_questionnaire_title),
+        title: Text(
+          AppLocalizations.of(context)!.eligibility_questionnaire_title,
+        ),
         leading: Icon(MdiIcons.clipboardList),
       ),
       body: Column(
@@ -181,7 +192,6 @@ class _EligibilityScreenState extends State<EligibilityScreen> {
             child: QuestionnaireWidget(
               widget.study!.questionnaire.questions,
               title: widget.study!.title,
-              onChange: _invalidateResponse,
               onComplete: _evaluateResponse,
               shouldContinue: _checkContinuation,
             ),

@@ -11,9 +11,11 @@ on:
       - 'flutter_common/**'
       - 'pubspec.yaml'
       - 'pubspec.lock'
-      - 'melos.yaml'
       - 'firebase.json'
       - '.firebaserc'
+
+env:
+  MELOS_SDK_PATH: 'auto'
 
 concurrency:
   group: ${{ github.ref }}-pr
@@ -24,12 +26,8 @@ jobs:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     steps:
-      - name: Await potential publishing on Pub.dev
-        uses: johannesvedder/await-workflow@v1
-        with:
-          workflowId: 'publish_pubdev.yml'
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v4
@@ -39,9 +37,41 @@ jobs:
         uses: ./.github/workflows/init-workspace
       - name: Enable web support
         run: flutter config --enable-web
+      - name: Get StudyU versions
+        run: |
+          # Flutter command needs to be run to clear the initial welcome message
+          flutter config --no-analytics
+          
+          # --- studyu_app ---
+          cd app/
+          app_version=$(flutter pub deps --json | jq -r '.packages[] | select(.name == "studyu_app").version')
+          echo "STUDYU_APP_VERSION=$app_version" >> "$GITHUB_ENV"
+          cd ..
+          
+          # --- studyu_designer_v2 ---
+          cd designer_v2/
+          designer_version=$(flutter pub deps --json | jq -r '.packages[] | select(.name == "studyu_designer_v2").version')
+          echo "STUDYU_DESIGNER_VERSION=$designer_version" >> "$GITHUB_ENV"
+          cd ..
       - name: Build Web
         run: melos run build:web:dev --no-select
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Stamp version info into web builds
+        run: |
+          # --- Stamp version info into app build ---
+          jq '. + {version:$version,build_number:$buildNumber}' \
+            --arg version "$STUDYU_APP_VERSION" \
+            --arg buildNumber "${{ github.run_number }}" \
+            app/build/web/version.json > app_version.json
+          mv app_version.json app/build/web/version.json
+          
+          # --- Stamp version info into designer_v2 build ---
+          jq '. + {version:$version,build_number:$buildNumber}' \
+            --arg version "$STUDYU_DESIGNER_VERSION" \
+            --arg buildNumber "${{ github.run_number }}" \
+            designer_v2/build/web/version.json > designer_version.json
+          mv designer_version.json designer_v2/build/web/version.json
+      - name: Deploy to Firebase Hosting (preview)
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_STUDYU_DEV }}'

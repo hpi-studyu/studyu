@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_core/core.dart';
 
@@ -132,8 +132,9 @@ class InterventionCardDescription extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
       child: Text(
         description,
-        style: theme.textTheme.bodyMedium!
-            .copyWith(color: theme.textTheme.bodySmall!.color),
+        style: theme.textTheme.bodyMedium!.copyWith(
+          color: theme.textTheme.bodySmall!.color,
+        ),
       ),
     );
   }
@@ -170,16 +171,16 @@ class _TaskList extends StatelessWidget {
             ],
           ),
         ),
-        const Divider(
-          height: 4,
-        ),
+        const Divider(height: 4),
         Column(
           mainAxisSize: MainAxisSize.min,
           children: tasks
               .map(
                 (task) => Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   child: Row(
                     children: [
                       Expanded(

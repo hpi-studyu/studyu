@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
@@ -24,10 +25,12 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
   static const defaultPublishedToRegistry = true;
   static const defaultPublishedToRegistryResults = false;
 
-  final FormControl<bool> isPublishedToRegistryControl =
-      FormControl(value: defaultPublishedToRegistry);
-  final FormControl<bool> isPublishedToRegistryResultsControl =
-      FormControl(value: defaultPublishedToRegistryResults);
+  final FormControl<bool> isPublishedToRegistryControl = FormControl(
+    value: defaultPublishedToRegistry,
+  );
+  final FormControl<bool> isPublishedToRegistryResultsControl = FormControl(
+    value: defaultPublishedToRegistryResults,
+  );
 
   @override
   late final FormGroup form = FormGroup({
@@ -89,10 +92,7 @@ class StudySettingsFormViewModel extends FormViewModel<Study> {
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 @riverpod
-StudySettingsFormViewModel studySettingsFormViewModel(
-  StudySettingsFormViewModelRef ref,
-  String studyId,
-) {
+StudySettingsFormViewModel studySettingsFormViewModel(Ref ref, String studyId) {
   final state = ref.watch(studyControllerProvider(studyId));
   final formViewModel = StudySettingsFormViewModel(
     studyRepository: ref.watch(studyRepositoryProvider),

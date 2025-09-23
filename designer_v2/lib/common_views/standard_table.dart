@@ -11,17 +11,16 @@ import 'package:studyu_designer_v2/utils/model_action.dart';
 
 typedef OnSelectHandler<T> = void Function(T item);
 
-typedef StandardTableRowBuilder = TableRow Function(
-  BuildContext context,
-  List<StandardTableColumn> columns,
-);
+typedef StandardTableRowBuilder =
+    TableRow Function(BuildContext context, List<StandardTableColumn> columns);
 
-typedef StandardTableCellsBuilder<T> = List<Widget> Function(
-  BuildContext context,
-  T item,
-  int rowIdx,
-  Set<WidgetState> states,
-);
+typedef StandardTableCellsBuilder<T> =
+    List<Widget> Function(
+      BuildContext context,
+      T item,
+      int rowIdx,
+      Set<WidgetState> states,
+    );
 
 enum StandardTableStyle { plain, material }
 
@@ -73,20 +72,22 @@ class StandardTable<T> extends StatefulWidget {
     super.key,
   }) {
     if (trailingActionsColumn == null) {
-      this.inputTrailingActionsColumn = StandardTableColumn(
+      inputTrailingActionsColumn = StandardTableColumn(
         label: '',
-        columnWidth:
-            const MaxColumnWidth(IntrinsicColumnWidth(), FixedColumnWidth(65)),
+        columnWidth: const MaxColumnWidth(
+          IntrinsicColumnWidth(),
+          FixedColumnWidth(65),
+        ),
       );
     } else {
-      this.inputTrailingActionsColumn = trailingActionsColumn;
+      inputTrailingActionsColumn = trailingActionsColumn;
     }
     // Insert trailing column for actions menu
     if (trailingActionsAt != null) {
-      this.inputColumns = [...?columns];
-      this.inputColumns.add(this.inputTrailingActionsColumn);
+      inputColumns = [...?columns];
+      inputColumns.add(inputTrailingActionsColumn);
     } else {
-      this.inputColumns = columns ?? [];
+      inputColumns = columns ?? [];
     }
   }
 
@@ -187,8 +188,9 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
     }
 
     final headerRow = _buildHeaderRow();
-    final List<TableRow> tableHeaderRows =
-        (widget.showTableHeader) ? [headerRow, paddingRow, paddingRow] : [];
+    final List<TableRow> tableHeaderRows = (widget.showTableHeader)
+        ? [headerRow, paddingRow, paddingRow]
+        : [];
     final tableDataRows = _tableRows(theme);
 
     Widget tableWidget = Table(
@@ -364,7 +366,9 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
                       maxLines: widget.headerMaxLines,
                       softWrap: widget.softWrapHeader,
                       style: theme.textTheme.bodySmall!.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.8),
+                        color: theme.colorScheme.onSurface.withValues(
+                          alpha: 0.8,
+                        ),
                       ),
                     ),
                   ),
@@ -461,10 +465,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       bool isTrailing = false,
       bool disableOnTap = false,
     }) {
-      final content = Align(
-        alignment: alignment,
-        child: child,
-      );
+      final content = Align(alignment: alignment, child: child);
       final styledCell = Material(
         color: rowColor,
         child: Padding(
@@ -479,10 +480,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
             widget.cellSpacing,
           ),
           child: (widget.minRowHeight != null)
-              ? SizedBox(
-                  height: widget.minRowHeight,
-                  child: content,
-                )
+              ? SizedBox(height: widget.minRowHeight, child: content)
               : content,
         ),
       );
@@ -497,16 +495,17 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       StandardTableColumn column,
     ) {
       if (column.tooltip != null) {
-        return Tooltip(
-          message: column.tooltip,
-          child: cellWidget,
-        );
+        return Tooltip(message: column.tooltip, child: cellWidget);
       }
       return cellWidget;
     }
 
-    final List<Widget> rawCells =
-        widget.buildCellsAt(context, item, rowIdx, states);
+    final List<Widget> rawCells = widget.buildCellsAt(
+      context,
+      item,
+      rowIdx,
+      states,
+    );
 
     if (widget.trailingActionsAt != null) {
       // Insert additional table cell to hold actions menu
@@ -523,11 +522,7 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
       final cellColumnConfig = widget.inputColumns[i];
 
       Widget cell = rawCells[i];
-      cell = decorateCell(
-        cell,
-        isLeading: isLeading,
-        isTrailing: isTrailing,
-      );
+      cell = decorateCell(cell, isLeading: isLeading, isTrailing: isTrailing);
       cell = applyColumnConfiguration(cell, cellColumnConfig);
       dataCells.add(cell);
     }
@@ -539,52 +534,49 @@ class _StandardTableState<T> extends State<StandardTable<T>> {
             decoration: BoxDecoration(
               border: Border.all(
                 color: rowIsPressed
-                    ? theme.colorScheme.primary.withOpacity(0.7)
-                    : theme.colorScheme.primaryContainer.withOpacity(0.9),
+                    ? theme.colorScheme.primary.withValues(alpha: 0.7)
+                    : theme.colorScheme.primaryContainer.withValues(alpha: 0.9),
               ),
               borderRadius: const BorderRadius.all(Radius.circular(4)),
               boxShadow: [
                 BoxShadow(
                   color: rowIsPressed
-                      ? theme.colorScheme.primary.withOpacity(0.15)
+                      ? theme.colorScheme.primary.withValues(alpha: 0.15)
                       : (rowIsHovered
-                          ? theme.colorScheme.onSurface.withOpacity(0.2)
-                          : theme.colorScheme.onSurface.withOpacity(0.1)),
+                            ? theme.colorScheme.onSurface.withValues(alpha: 0.2)
+                            : theme.colorScheme.onSurface.withValues(
+                                alpha: 0.1,
+                              )),
                   blurRadius: rowIsHovered ? 3 : 2,
-                  offset:
-                      rowIsHovered ? const Offset(1, 1) : const Offset(0, 1),
+                  offset: rowIsHovered
+                      ? const Offset(1, 1)
+                      : const Offset(0, 1),
                 ),
               ],
               color: theme.colorScheme.onPrimary,
             ),
           )
-        : TableRow(
-            key: ObjectKey(item),
-            children: dataCells,
-          );
+        : TableRow(key: ObjectKey(item), children: dataCells);
   }
 
   Widget _buildActionMenu(BuildContext context, List<ModelAction> actions) {
     final Widget actionMenuWidget;
 
     if (widget.trailingActionsMenuType == ActionMenuType.inline) {
-      actionMenuWidget = ActionMenuInline(
-        actions: actions,
-      );
+      actionMenuWidget = ActionMenuInline(actions: actions);
     } else {
       final theme = Theme.of(context);
       actionMenuWidget = ActionPopUpMenuButton(
         actions: actions,
-        triggerIconColor: ThemeConfig.bodyTextMuted(theme).color?.faded(0.6),
+        triggerIconColor: ThemeConfig.bodyTextMuted(
+          theme,
+        ).color?.withValues(alpha: 0.6),
         triggerIconColorHover: theme.colorScheme.primary,
         disableSplashEffect: true,
         position: PopupMenuPosition.over,
       );
     }
 
-    return Align(
-      alignment: Alignment.centerRight,
-      child: actionMenuWidget,
-    );
+    return Align(alignment: Alignment.centerRight, child: actionMenuWidget);
   }
 }

@@ -1,18 +1,18 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
-import 'package:studyu_app/screens/app_onboarding/preview.dart';
+import 'package:studyu_app/screens/app_onboarding/preview.dart'
+    as study_preview;
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
@@ -36,13 +36,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
     await _initPreview(state);
 
     final selectedSubjectId = await getActiveSubjectId();
-    StudyULogger.info('Subject ID: $selectedSubjectId');
     if (!mounted) return;
 
     if (selectedSubjectId == null) {
       await noSubjectFound();
       return;
     }
+    StudyULogger.info("Retrieving subject with ID: $selectedSubjectId");
     StudySubject? subject = await _retrieveSubject(selectedSubjectId);
     if (!mounted) return;
     if (subject != null) {
@@ -52,11 +52,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
       state.init(context);
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
-      await noSubjectFound();
+      StudyULogger.warning("No subject found for ID: $selectedSubjectId.");
+      await _showSupportOrDeleteDialog(selectedSubjectId);
     }
   }
 
   Future<void> noSubjectFound() async {
+    StudyULogger.info("No subject found, redirecting to welcome screen");
     await cancelNotifications(context);
     if (mounted) Navigator.pushReplacementNamed(context, Routes.welcome);
   }
@@ -66,7 +68,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
       selectedStudyObjectId,
       selectedColumns: [
         '*',
-        'study!study_subject_studyId_fkey(*)',
+        // Retrieve the related study along with its fitbit credentials
+        'study!study_subject_studyId_fkey(*, study_fitbit_credentials:study_fitbit_credentials_studyId_fkey(*))',
         'subject_progress(*)',
       ],
     );
@@ -86,25 +89,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
           subject = await _fetchRemoteSubject(selectedStudyObjectId);
         }
       } catch (exception) {
-        debugPrint(
+        StudyULogger.warning(
           "Could not login and retrieve the study subject: $exception",
         );
-        if (exception is SocketException) {
-          subject = await Cache.loadSubject();
-          StudyULogger.info("Offline mode with cached subject: $subject");
-        } else {
-          // TODO further analyze this. How to recreate:
-          // 1. Participate in a study and wait some time until playstore uploads
-          // a backup of your current subject
-          // 2. Leave the study via the menu to delete all remote data
-          // 3. Uninstall the app and reinstall
-          // 4. Open the app but do not join a study
-          // 5. Restart the app. Either only this error shows up, worst case is
-          // app hangs and is unresponsive
-          StudyULogger.fatal('Could not login and retrieve the study subject. '
-              'One reason for this might be that the study subject is no '
-              'longer available and only resides in app backup');
-          throw Exception("Remote subject not found");
+        StudyULogger.fatal('Could not login and retrieve the study subject.');
+        // Try to reload the subject from cache
+        try {
+          final subject = await Cache.loadSubject();
+          StudyULogger.info("Loaded subject from cache: $subject");
+        } catch (e) {
+          StudyULogger.warning("No subject found in cache");
         }
       }
     }
@@ -121,10 +115,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       "Preview: Found query parameters ${widget.queryParameters}",
     );
     final lang = AppLanguage(AppLocalizations.supportedLocales);
-    final preview = Preview(
-      widget.queryParameters,
-      lang,
-    );
+    final preview = study_preview.Preview(widget.queryParameters, lang);
     final iFrameHelper = IFrameHelper();
     state.isPreview = true;
     await preview.init();
@@ -163,8 +154,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return;
       }
 
-      state.activeSubject =
-          await preview.getStudySubject(state, createSubject: true);
+      state.activeSubject = await preview.getStudySubject(
+        state,
+        createSubject: true,
+      );
 
       // CONSENT
       if (preview.selectedRoute == Routes.consent) {
@@ -205,10 +198,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
       // OBSERVATION [i]
       if (preview.selectedRoute == '/observation') {
-        print(state.selectedStudy!.observations.first.id);
         final tasks = <Task>[
-          ...state.selectedStudy!.observations
-              .where((observation) => observation.id == preview.extra),
+          ...state.selectedStudy!.observations.where(
+            (observation) => observation.id == preview.extra,
+          ),
         ];
         if (!mounted) return;
         await Navigator.push<bool>(
@@ -244,6 +237,108 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
+  Future<void> _showSupportOrDeleteDialog([String? selectedSubjectId]) async {
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.loading_error_title),
+          content: Text(
+            AppLocalizations.of(context)!.loading_error_description,
+            softWrap: true,
+            textAlign: TextAlign.start,
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
+              child: Text(AppLocalizations.of(context)!.contact_support),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(AppLocalizations.of(context)!.delete_data),
+            ),
+          ],
+        );
+      },
+    );
+    if (result == true) {
+      if (!mounted) return;
+      // Confirm deletion of storage data
+      final deleteResult = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context)!.delete_all_data),
+            content: Text(
+              AppLocalizations.of(context)!.delete_all_data_description,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(AppLocalizations.of(context)!.cancel),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(AppLocalizations.of(context)!.reset_app),
+              ),
+            ],
+          );
+        },
+      );
+      if (deleteResult == true) {
+        // Delete all secure storage data
+        StudyULogger.info("Deleting all secure storage data");
+        if (!mounted) return;
+        await cancelNotifications(context);
+        await SecureStorage.deleteAll();
+        StudyULogger.info("Secure storage data deleted");
+      }
+    }
+    StudyULogger.info("User chose not to delete secure storage data.");
+    if (!mounted) return;
+    await _contactSupport(selectedSubjectId);
+  }
+
+  Future<void> _contactSupport([String? selectedSubjectId]) async {
+    if (!mounted) return;
+    StudyULogger.info(
+      "User chose to contact support with ID: $selectedSubjectId",
+    );
+
+    const emailSubject = 'StudyU Support Request - Loading Error';
+    final emailBody = AppLocalizations.of(
+      context,
+    )!.support_email_body(selectedSubjectId ?? '');
+    final appContact = await AppConfig.getAppContact();
+    final uriString =
+        'mailto:${appContact.email}?subject=${Uri.encodeComponent(emailSubject)}&body=${Uri.encodeComponent(emailBody)}';
+    final emailUri = Uri.parse(uriString);
+    await launchUrl(emailUri);
+
+    // Show non dismissible dialog to inform the user that support has been contacted
+    if (!mounted) return;
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(AppLocalizations.of(context)!.support_email_sent),
+          content: Text(
+            AppLocalizations.of(context)!.support_email_sent_description,
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -264,7 +359,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     );
   }
 
-/*if (!signInRes) {
+  /*if (!signInRes) {
         final migrateRes = await migrateParticipantToNewDB(selectedStudyObjectId);
         if (migrateRes) {
           print("Successfully migrated to the new database");
@@ -277,7 +372,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return;
       }*/
 
-/*Future<bool> migrateParticipantToNewDB(String selectedStudyObjectId) async {
+  /*Future<bool> migrateParticipantToNewDB(String selectedStudyObjectId) async {
     if (await SecureStorage.containsKey(userEmailKey) && await SecureStorage.containsKey(userPasswordKey)) {
       try {
         // create new account

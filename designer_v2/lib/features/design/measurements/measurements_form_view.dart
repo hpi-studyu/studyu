@@ -7,7 +7,7 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
-import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
+import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
@@ -21,8 +21,9 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel =
-            ref.watch(measurementsFormViewModelProvider(studyId));
+        final formViewModel = ref.watch(
+          measurementsFormViewModelProvider(studyId),
+        );
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -39,7 +40,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                   return ReactiveFormArray(
                     formArray: formViewModel.measurementsArray,
                     builder: (context, formArray, child) {
-                      return FormArrayTable<MeasurementSurveyFormViewModel>(
+                      return FormListView<MeasurementSurveyFormViewModel>(
                         control: formViewModel.measurementsArray,
                         items: formViewModel.measurementViewModels,
                         onSelectItem: formViewModel.onSelectItem,
@@ -50,13 +51,34 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                         rowTitle: (viewModel) =>
                             viewModel.formData?.title ?? '',
                         sectionTitle: tr.form_array_measurements_surveys,
-                        sectionTitleDivider: false,
+                        // sectionTitleDivider: false,
                         emptyIcon: Icons.content_paste_off_rounded,
                         emptyTitle:
                             tr.form_array_measurements_surveys_empty_title,
                         emptyDescription: tr
                             .form_array_measurements_surveys_empty_description,
                         hideLeadingTrailingWhenEmpty: true,
+                        reorderable: !formViewModel.isReadonly,
+                        onReorder: (oldIndex, newIndex) {
+                          if (newIndex > oldIndex) {
+                            newIndex -= 1;
+                          }
+                          // Reorder the view models
+                          final item = formViewModel.measurementViewModels
+                              .removeAt(oldIndex);
+                          formViewModel.measurementViewModels.insert(
+                            newIndex,
+                            item,
+                          );
+                          // Reorder the underlying form array to match
+                          final controlItem = formViewModel.measurementsArray
+                              .removeAt(oldIndex);
+                          formViewModel.measurementsArray.insert(
+                            newIndex,
+                            controlItem,
+                          );
+                          formViewModel.save();
+                        },
                       );
                     },
                   );

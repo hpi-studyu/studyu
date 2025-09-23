@@ -26,8 +26,9 @@ class QuestionnaireTask extends Observation {
     String property,
     List<SubjectProgress> sourceResults,
   ) {
-    final Question? targetQuestion =
-        questions.questions.firstWhereOrNull((q) => q.id == property);
+    final Question? targetQuestion = questions.questions.firstWhereOrNull(
+      (q) => q.id == property,
+    );
     if (targetQuestion == null) {
       throw ArgumentError(
         "Questionnaire '$id' does not have a question with '$property'.",
@@ -37,17 +38,18 @@ class QuestionnaireTask extends Observation {
       sourceResults.map(
         (e) => MapEntry(
           e.completedAt!,
-          (e.result as Result<QuestionnaireState>)
-              .result
-              .getAnswer<T>(property),
+          (e.result as Result<QuestionnaireState>).result.getAnswer<T>(
+            property,
+          ),
         ),
       ),
     );
   }
 
   @override
-  Map<String, Type> getAvailableProperties() =>
-      {for (final q in questions.questions) q.id: q.getAnswerType()};
+  Map<String, Type> getAvailableProperties() => {
+    for (final q in questions.questions) q.id: q.getAnswerType(),
+  };
 
   @override
   String? getHumanReadablePropertyName(String property) =>

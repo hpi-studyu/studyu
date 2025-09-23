@@ -36,10 +36,7 @@ class StudyStatusBadge extends StatelessWidget {
 
     Widget inTooltip(Widget child) {
       if (tooltipMessage.isNotEmpty && showTooltip) {
-        return Tooltip(
-          message: tooltipMessage,
-          child: child,
-        );
+        return Tooltip(message: tooltipMessage, child: child);
       }
       return child;
     }
@@ -49,7 +46,7 @@ class StudyStatusBadge extends StatelessWidget {
         return inTooltip(
           studybadge.Badge(
             label: status!.string,
-            color: colorScheme.secondary.withOpacity(0.75),
+            color: colorScheme.secondary.withValues(alpha: 0.75),
             type: type,
             icon: prefixIcon,
           ),

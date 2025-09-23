@@ -19,7 +19,7 @@ class StudyUUser extends SupabaseObjectFunctions<StudyUUser> {
   Preferences preferences;
 
   StudyUUser({required this.id, required this.email, Preferences? preferences})
-      : preferences = preferences ?? Preferences();
+    : preferences = preferences ?? Preferences();
 
   factory StudyUUser.fromJson(Map<String, dynamic> json) =>
       _$StudyUUserFromJson(json);

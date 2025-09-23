@@ -3,8 +3,9 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/util/temporary_storage_handler.dart';
+import 'package:studyu_core/core.dart';
 
 class CapturePictureScreen extends StatefulWidget {
   final String userId;
@@ -96,11 +97,9 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
       }
 
       Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorText),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errorText)));
     }
   }
 
@@ -138,9 +137,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
       debugPrint("Failed to take picture: $e");
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.camera_error),
-        ),
+        SnackBar(content: Text(AppLocalizations.of(context)!.camera_error)),
       );
       setState(() {
         _isTakingPicture = false;
@@ -152,6 +149,19 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
     final imageFile = File(image.path);
     final storage = TemporaryStorageHandler(widget.studyId, widget.userId);
     final stagingImageFile = await storage.getStagingImage();
+
+    if (stagingImageFile == null) {
+      StudyULogger.error("Failed to get staging image file");
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.camera_error)),
+      );
+      setState(() {
+        _isTakingPicture = false;
+      });
+      return;
+    }
+
     await imageFile.rename(stagingImageFile.localFilePath);
 
     if (!mounted) return;
@@ -170,11 +180,11 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
                 CameraPreview(cameraController),
                 if (_isTakingPicture)
                   Container(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.black.withValues(alpha: 0.5),
                     alignment: Alignment.center,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).dialogBackgroundColor,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       padding: const EdgeInsets.all(20.0),
@@ -183,9 +193,7 @@ class _CapturePictureScreenState extends State<CapturePictureScreen>
                         children: [
                           const CircularProgressIndicator(),
                           const SizedBox(height: 16),
-                          Text(
-                            AppLocalizations.of(context)!.take_a_photo,
-                          ),
+                          Text(AppLocalizations.of(context)!.take_a_photo),
                         ],
                       ),
                     ),

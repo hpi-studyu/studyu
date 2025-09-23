@@ -10,7 +10,7 @@ import 'package:studyu_designer_v2/features/design/interventions/intervention_fo
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_view.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
-import 'package:studyu_designer_v2/features/forms/form_array_table.dart';
+import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -24,8 +24,9 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
     return AsyncValueWidget<Study>(
       value: state.study,
       data: (study) {
-        final formViewModel =
-            ref.watch(interventionsFormViewModelProvider(studyId));
+        final formViewModel = ref.watch(
+          interventionsFormViewModelProvider(studyId),
+        );
         final theme = Theme.of(context);
 
         return ReactiveForm(
@@ -50,10 +51,11 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                   return ReactiveFormArray(
                     formArray: formViewModel.interventionsArray,
                     builder: (context, formArray, child) {
-                      return FormArrayTable<InterventionFormViewModel>(
+                      return FormListView<InterventionFormViewModel>(
                         control: formViewModel.interventionsArray,
                         items: formViewModel
-                            .interventionsCollection.formViewModels,
+                            .interventionsCollection
+                            .formViewModels,
                         onSelectItem: formViewModel.onSelectItem,
                         getActionsAt: (viewModel, _) =>
                             formViewModel.availablePopupActions(viewModel),
@@ -62,7 +64,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                         rowTitle: (viewModel) =>
                             viewModel.formData?.title ?? '',
                         sectionTitle: tr.form_array_interventions,
-                        sectionTitleDivider: false,
+                        // sectionTitleDivider: false,
                         emptyIcon: Icons.content_paste_off_rounded,
                         emptyTitle: tr.form_array_interventions_empty_title,
                         emptyDescription:
@@ -70,6 +72,25 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
                         hideLeadingTrailingWhenEmpty: true,
                         rowPrefix: (context, viewModel, rowIdx) =>
                             interventionPrefix(rowIdx, theme),
+                        reorderable: !formViewModel.isReadonly,
+                        onReorder: (oldIndex, newIndex) {
+                          if (newIndex > oldIndex) {
+                            newIndex -= 1;
+                          }
+                          final item = formViewModel
+                              .interventionsCollection
+                              .formViewModels
+                              .removeAt(oldIndex);
+                          formViewModel.interventionsCollection.formViewModels
+                              .insert(newIndex, item);
+                          final controlItem = formViewModel.interventionsArray
+                              .removeAt(oldIndex);
+                          formViewModel.interventionsArray.insert(
+                            newIndex,
+                            controlItem,
+                          );
+                          formViewModel.save();
+                        },
                       );
                     },
                   );

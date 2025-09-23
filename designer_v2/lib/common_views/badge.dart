@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 
 enum BadgeType { filled, outlined, outlineFill, plain }
 
@@ -46,14 +45,15 @@ class Badge extends StatelessWidget {
           child: Padding(
             padding: padding,
             child: Row(
-              mainAxisAlignment:
-                  center ? MainAxisAlignment.center : MainAxisAlignment.start,
+              mainAxisAlignment: center
+                  ? MainAxisAlignment.center
+                  : MainAxisAlignment.start,
               children: [
                 if (icon != null)
                   Icon(
                     icon,
                     size: iconSize ?? ((theme.iconTheme.size ?? 14.0) * 0.8),
-                    color: _getLabelColor(theme)?.faded(0.65),
+                    color: _getLabelColor(theme)?.withValues(alpha: 0.65),
                   )
                 else
                   const SizedBox.shrink(),
@@ -71,7 +71,7 @@ class Badge extends StatelessWidget {
                         ?.copyWith(
                           fontSize:
                               (theme.textTheme.bodySmall?.fontSize ?? 14.0) *
-                                  0.95,
+                              0.95,
                           color: _getLabelColor(theme),
                           fontWeight: FontWeight.bold,
                         )
@@ -87,13 +87,13 @@ class Badge extends StatelessWidget {
   }
 
   Color? _getBackgroundColor(ThemeData theme) {
-    final actualColor = color ?? theme.colorScheme.secondary;
+    final actualColor = color ?? theme.colorScheme.primary;
 
     switch (type) {
       case BadgeType.filled:
         return actualColor;
       case BadgeType.outlineFill:
-        return actualColor.faded(0.1);
+        return actualColor.withValues(alpha: 0.1);
       case BadgeType.outlined:
         return null;
       case BadgeType.plain:
@@ -108,9 +108,9 @@ class Badge extends StatelessWidget {
       case BadgeType.filled:
         return Colors.transparent;
       case BadgeType.outlineFill:
-        return actualColor.faded(0.1);
+        return actualColor.withValues(alpha: 0.1);
       case BadgeType.outlined:
-        return actualColor.faded(0.1);
+        return actualColor.withValues(alpha: 0.1);
       case BadgeType.plain:
         return Colors.transparent;
     }
@@ -121,13 +121,13 @@ class Badge extends StatelessWidget {
 
     switch (type) {
       case BadgeType.filled:
-        return theme.textTheme.labelLarge?.color?.withOpacity(0.6);
+        return theme.textTheme.labelLarge?.color?.withValues(alpha: 0.6);
       case BadgeType.outlineFill:
-        return actualColor.faded(0.8);
+        return actualColor.withValues(alpha: 0.8);
       case BadgeType.outlined:
-        return actualColor.faded(0.8);
+        return actualColor.withValues(alpha: 0.8);
       case BadgeType.plain:
-        return actualColor.faded(0.8);
+        return actualColor.withValues(alpha: 0.8);
     }
   }
 }

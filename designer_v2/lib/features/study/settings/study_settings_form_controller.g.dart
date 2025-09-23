@@ -7,7 +7,7 @@ part of 'study_settings_form_controller.dart';
 // **************************************************************************
 
 String _$studySettingsFormViewModelHash() =>
-    r'499d2fa25006ac8781e60bcd208a2cb6c05cacb9';
+    r'1a715736574e86988baa3f7f776a5dc5b2658607';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -61,21 +61,15 @@ class StudySettingsFormViewModelFamily
   /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
   ///
   /// Copied from [studySettingsFormViewModel].
-  StudySettingsFormViewModelProvider call(
-    String studyId,
-  ) {
-    return StudySettingsFormViewModelProvider(
-      studyId,
-    );
+  StudySettingsFormViewModelProvider call(String studyId) {
+    return StudySettingsFormViewModelProvider(studyId);
   }
 
   @override
   StudySettingsFormViewModelProvider getProviderOverride(
     covariant StudySettingsFormViewModelProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -107,24 +101,22 @@ class StudySettingsFormViewModelProvider
   /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
   ///
   /// Copied from [studySettingsFormViewModel].
-  StudySettingsFormViewModelProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => studySettingsFormViewModel(
-            ref as StudySettingsFormViewModelRef,
-            studyId,
-          ),
-          from: studySettingsFormViewModelProvider,
-          name: r'studySettingsFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$studySettingsFormViewModelHash,
-          dependencies: StudySettingsFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              StudySettingsFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  StudySettingsFormViewModelProvider(String studyId)
+    : this._internal(
+        (ref) => studySettingsFormViewModel(
+          ref as StudySettingsFormViewModelRef,
+          studyId,
+        ),
+        from: studySettingsFormViewModelProvider,
+        name: r'studySettingsFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$studySettingsFormViewModelHash,
+        dependencies: StudySettingsFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            StudySettingsFormViewModelFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   StudySettingsFormViewModelProvider._internal(
     super._createNotifier, {
@@ -141,7 +133,7 @@ class StudySettingsFormViewModelProvider
   @override
   Override overrideWith(
     StudySettingsFormViewModel Function(StudySettingsFormViewModelRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -177,6 +169,8 @@ class StudySettingsFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudySettingsFormViewModelRef
     on AutoDisposeProviderRef<StudySettingsFormViewModel> {
   /// The parameter `studyId` of this provider.
@@ -191,5 +185,6 @@ class _StudySettingsFormViewModelProviderElement
   @override
   String get studyId => (origin as StudySettingsFormViewModelProvider).studyId;
 }
+
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

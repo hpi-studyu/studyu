@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
 
 class StudiesTableColumnHeader extends StatefulWidget {
@@ -42,7 +41,7 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                 overflow: TextOverflow.fade,
                 softWrap: false,
                 style: theme.textTheme.bodySmall!.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.8),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                 ),
               ),
             ),
@@ -72,8 +71,8 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
     if (!widget.sortingActive) {
       return isHovering
           ? (widget.sortAscending
-              ? hoveredAscendingIcon
-              : hoveredDescendingIcon)
+                ? hoveredAscendingIcon
+                : hoveredDescendingIcon)
           : null;
     }
 

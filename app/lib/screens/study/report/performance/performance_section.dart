@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rainbow_color/rainbow_color.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/report/generic_section.dart';
 import 'package:studyu_core/core.dart';
 
@@ -20,8 +20,9 @@ class PerformanceSection extends GenericSection {
         .where((intervention) => intervention.id != Study.baselineID)
         .toList();
     final interventionProgress = interventions.map((intervention) {
-      final countableInterventions =
-          getCountableObservationAmount(intervention);
+      final countableInterventions = getCountableObservationAmount(
+        intervention,
+      );
       return min<double>(
         countableInterventions == 0 ? 0 : countableInterventions / maximum,
         1,
@@ -29,9 +30,7 @@ class PerformanceSection extends GenericSection {
     }).toList();
     return interventions.length != 2 ||
             subject!.study.reportSpecification.primary == null
-        ? Center(
-            child: Text(AppLocalizations.of(context)!.performance),
-          )
+        ? Center(child: Text(AppLocalizations.of(context)!.performance))
         : Column(
             children: [
               Padding(
@@ -50,9 +49,7 @@ class PerformanceSection extends GenericSection {
                   if (index.isEven) {
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        interventions[i].name!,
-                      ),
+                      child: Text(interventions[i].name!),
                     );
                   } else {
                     return Padding(
@@ -89,10 +86,9 @@ class PerformanceSection extends GenericSection {
     }
 
     var countable = 0;
-    subject!
-        .getResultsByDate(interventionId: intervention.id)
-        .values
-        .forEach((progress) {
+    subject!.getResultsByDate(interventionId: intervention.id).values.forEach((
+      progress,
+    ) {
       if (progress
               .where(
                 (result) => intervention.tasks.any(
@@ -103,8 +99,9 @@ class PerformanceSection extends GenericSection {
           interventionsPerDay) {
         countable += progress
             .where(
-              (result) => subject!.study.observations
-                  .any((observation) => observation.id == result.taskId),
+              (result) => subject!.study.observations.any(
+                (observation) => observation.id == result.taskId,
+              ),
             )
             .length;
       }
@@ -149,15 +146,16 @@ class PerformanceBar extends StatelessWidget {
       rangeStart: 0,
       rangeEnd: 1,
     );
-    final fullSpectrum = List<double>.generate(3, (index) => index * 0.5)
-        .map<Color>((index) => rainbow[index].withOpacity(0.4))
-        .toList();
-    final colorSamples =
-        List<double>.generate(11, (index) => index * 0.1 * progress)
-            .map<Color>((index) => rainbow[index])
-            .toList();
+    final fullSpectrum = List<double>.generate(
+      3,
+      (index) => index * 0.5,
+    ).map<Color>((index) => rainbow[index].withValues(alpha: 0.4)).toList();
+    final colorSamples = List<double>.generate(
+      11,
+      (index) => index * 0.1 * progress,
+    ).map<Color>((index) => rainbow[index]).toList();
 
-    final spacing = (minimum! * 1000).floor();
+    //final spacing = (minimum! * 1000).floor();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,9 +170,7 @@ class PerformanceBar extends StatelessWidget {
               children: [
                 DecoratedBox(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: fullSpectrum,
-                    ),
+                    gradient: LinearGradient(colors: fullSpectrum),
                   ),
                 ),
                 Row(
@@ -186,24 +182,21 @@ class PerformanceBar extends StatelessWidget {
                         widthFactor: progress,
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: colorSamples,
-                            ),
+                            gradient: LinearGradient(colors: colorSamples),
                           ),
                         ),
                       ),
                     ),
-                    Container(
-                      width: 2,
-                      color: Colors.grey[600],
-                    ),
+                    Container(width: 2, color: Colors.grey[600]),
                   ],
                 ),
               ],
             ),
           ),
         ),
-        if (minimum != null && minimum! >= 0 && minimum! <= 1)
+
+        /// Removing the minimum indicator since it is discussed as confusing in the meeting
+        /*if (minimum != null && minimum! >= 0 && minimum! <= 1)
           Column(
             children: [
               Row(
@@ -237,7 +230,7 @@ class PerformanceBar extends StatelessWidget {
                 ],
               ),
             ],
-          ),
+          ),*/
       ],
     );
   }

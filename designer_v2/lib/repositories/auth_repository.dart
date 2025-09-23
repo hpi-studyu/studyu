@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_designer_v2/features/app_controller.dart';
@@ -41,8 +42,9 @@ class AuthRepository implements IAuthRepository {
   /// Broadcasts null if the user is logged out
   final BehaviorSubject<User?> _authStateStreamController =
       BehaviorSubject.seeded(null);
-  late final _authStateSuppressedController =
-      SuppressedBehaviorSubject(_authStateStreamController);
+  late final _authStateSuppressedController = SuppressedBehaviorSubject(
+    _authStateStreamController,
+  );
 
   /// Private subscription for synchronizing with [SupabaseClient] auth state
   late final StreamSubscription<AuthState> _authSubscription;
@@ -52,9 +54,7 @@ class AuthRepository implements IAuthRepository {
   @override
   Session? get session => authClient.currentSession;
 
-  AuthRepository({
-    required this.supabaseClient,
-  }) {
+  AuthRepository({required this.supabaseClient}) {
     _registerAuthListener();
   }
 
@@ -112,8 +112,8 @@ class AuthRepository implements IAuthRepository {
   @override
   BehaviorSubject<User?> watchAuthStateChanges({bool emitLastEvent = true}) =>
       emitLastEvent
-          ? _authStateStreamController
-          : _authStateSuppressedController.subject;
+      ? _authStateStreamController
+      : _authStateSuppressedController.subject;
 
   @override
   Future<AuthResponse> signUp({
@@ -165,7 +165,7 @@ class AuthRepository implements IAuthRepository {
 }
 
 @riverpod
-AuthRepository authRepository(AuthRepositoryRef ref) {
+AuthRepository authRepository(Ref ref) {
   final authRepository = AuthRepository(
     supabaseClient: ref.watch(supabaseClientProvider),
   );

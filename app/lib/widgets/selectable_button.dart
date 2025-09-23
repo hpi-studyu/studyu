@@ -23,11 +23,12 @@ class SelectableButton extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: 48,
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
           foregroundColor: _getTextColor(theme),
           backgroundColor: _getFillColor(theme),
+          minimumSize: const Size(double.infinity, 48),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         ),
         onPressed: onTap,
         child: child,

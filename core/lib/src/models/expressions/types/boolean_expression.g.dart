@@ -11,16 +11,8 @@ BooleanExpression _$BooleanExpressionFromJson(Map<String, dynamic> json) =>
       ..type = json['type'] as String?
       ..target = json['target'] as String?;
 
-Map<String, dynamic> _$BooleanExpressionToJson(BooleanExpression instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('type', instance.type);
-  writeNotNull('target', instance.target);
-  return val;
-}
+Map<String, dynamic> _$BooleanExpressionToJson(BooleanExpression instance) =>
+    <String, dynamic>{
+      if (instance.type case final value?) 'type': value,
+      if (instance.target case final value?) 'target': value,
+    };

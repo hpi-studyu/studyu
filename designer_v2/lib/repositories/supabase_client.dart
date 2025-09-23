@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/env.dart' as env;
@@ -41,8 +42,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
     Map<String, Object> selectionCriteria,
   ) async {
     try {
-      final data = await this
-          .supabaseClient
+      final data = await this.supabaseClient
           .from(tableName(T))
           .delete()
           .match(selectionCriteria);
@@ -61,8 +61,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
     List<String> selectedColumns = const ['*'],
   }) async {
     try {
-      final data = await this
-          .supabaseClient
+      final data = await this.supabaseClient
           .from(tableName(T))
           .select(selectedColumns.join(','));
       return deserializeList<T>(data);
@@ -78,7 +77,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
   Future<T> getById<T extends SupabaseObject>(
     String id, {
     List<String> selectedColumns = const ['*'],
-  }) async {
+  }) {
     return getByColumn('id', id, selectedColumns: selectedColumns);
   }
 
@@ -88,8 +87,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
     List<String> selectedColumns = const ['*'],
   }) async {
     try {
-      final data = await this
-          .supabaseClient
+      final data = await this.supabaseClient
           .from(tableName(T))
           .select(selectedColumns.join(','))
           .eq(colName, value)
@@ -104,10 +102,7 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
     }
   }
 
-  Future executeRpc(
-    String functionName, {
-    Map<String, dynamic>? params,
-  }) async {
+  Future executeRpc(String functionName, {Map<String, dynamic>? params}) async {
     try {
       return await this.supabaseClient.rpc(functionName, params: params);
     } on PostgrestException catch (error) {
@@ -123,8 +118,9 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 
   List<T> deserializeList<T extends SupabaseObject>(dynamic data) {
     return List<T>.from(
-      List<Map<String, dynamic>>.from(data as List)
-          .map((json) => SupabaseObjectFunctions.fromJson<T>(json)),
+      List<Map<String, dynamic>>.from(
+        data as List,
+      ).map((json) => SupabaseObjectFunctions.fromJson<T>(json)),
     );
   }
 
@@ -135,5 +131,4 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 
 // Re-expose the global client object via Riverpod
 @riverpod
-SupabaseClient supabaseClient(AutoDisposeProviderRef<SupabaseClient> ref) =>
-    env.client;
+SupabaseClient supabaseClient(Ref<SupabaseClient> ref) => env.client;

@@ -10,7 +10,7 @@ jobs:
         contents: write
       steps:
         - name: Checkout code
-          uses: actions/checkout@v4
+          uses: actions/checkout@v5
           with:
             fetch-depth: 0
             token: ${{ secrets.READY_TO_MERGE_TOKEN }}
@@ -22,9 +22,9 @@ jobs:
 
         - name: Restore ignored files
           run: |
-            git checkout -- **/l10n-missing.txt
+            git checkout -- {l10n-missing.txt,**/l10n-missing.txt} 2>/dev/null || echo "No l10n-missing.txt files to restore"
 
         - name: Commit changes if any
-          uses: stefanzweifel/git-auto-commit-action@v5
+          uses: stefanzweifel/git-auto-commit-action@v6
           with:
             commit_message: 'lint: Apply final newline changes'

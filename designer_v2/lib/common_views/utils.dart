@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
@@ -42,7 +43,7 @@ extension ColorX on Color {
   /// multiplied by [alphaScaleFactor] (ranging from 0 to 1).
   Color faded(double alphaScaleFactor) {
     assert(alphaScaleFactor >= 0.0 && alphaScaleFactor <= 1.0);
-    return withAlpha((alphaScaleFactor * alpha).round());
+    return withAlpha((alphaScaleFactor * a).round());
   }
 }
 
@@ -57,5 +58,24 @@ Widget interventionPrefix(int rowIdx, ThemeData theme) {
       ),
       const SizedBox(width: 16.0),
     ],
+  );
+}
+
+Widget versionText({TextStyle? textStyle}) {
+  return FutureBuilder<PackageInfo>(
+    future: PackageInfo.fromPlatform(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const SizedBox.shrink();
+      }
+      final packageInfo = snapshot.data;
+      if (packageInfo == null) {
+        return const SizedBox.shrink();
+      }
+      return SelectableText(
+        'Version ${packageInfo.version}${packageInfo.buildNumber.isNotEmpty ? ' - ${packageInfo.buildNumber}' : ''}',
+        style: textStyle,
+      );
+    },
   );
 }

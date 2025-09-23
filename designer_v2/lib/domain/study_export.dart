@@ -34,14 +34,33 @@ class StudyExportData {
 extension StudyExportX on Study {
   // TODO: add missing records from generated schedule
 
+  static dynamic _formatQuestionResponse(dynamic response, Question? question) {
+    if (question is ChoiceQuestion && response is List<String>) {
+      return _formatChoiceResponse(response, question);
+    }
+    return response.toString();
+  }
+
+  static List<Map<String, String>> _formatChoiceResponse(
+    List<String> choiceIds,
+    ChoiceQuestion question,
+  ) {
+    return choiceIds.map((id) {
+      final choice = question.choices.firstWhereOrNull((c) => c.id == id);
+      final text = choice?.text ?? id;
+      return {'id': id, 'text': text};
+    }).toList();
+  }
+
   StudyExportData get exportData {
     final List<Map<String, dynamic>> measurementsData = [];
     final List<Map<String, dynamic>> interventionsData = [];
     final List<String> mediaData = [];
 
     final List<SubjectProgress> records = participantsProgress ?? [];
-    records
-        .sort((b, a) => a.completedAt!.compareTo(b.completedAt!)); // descending
+    records.sort(
+      (b, a) => a.completedAt!.compareTo(b.completedAt!),
+    ); // descending
 
     // Key used as a placeholder for values that cannot be resolved by their
     // id anymore (e.g. because the study design has changed meanwhile)
@@ -51,6 +70,7 @@ extension StudyExportX on Study {
     final Map<String, dynamic> surveyColumns = {};
     final Map<String, String> responseColumnById = {};
     final Map<String, String> surveyAnsweredColumnById = {};
+    final Map<String, Question> questionById = {};
     final mediaIndices = [];
 
     for (var i = 1; i < observations.length + 1; i++) {
@@ -67,6 +87,7 @@ extension StudyExportX on Study {
         surveyColumns['survey${i}_question${j}_text'] = question.prompt;
         surveyColumns['survey${i}_question${j}_response'] = '';
         responseColumnById[question.id] = 'survey${i}_question${j}_response';
+        questionById[question.id] = question;
         if (question.type == AudioRecordingQuestion.questionType ||
             question.type == ImageCapturingQuestion.questionType) {
           mediaIndices.add(question.id);
@@ -79,25 +100,31 @@ extension StudyExportX on Study {
       final Map<String, dynamic> rowShared = {
         'participant_id': record.subjectId,
         'participant_started_at': record.startedAt!.toString(),
-        'invite_code': participants!
+        'invite_code':
+            participants!
                 .where((element) => element.id == record.subjectId)
                 .firstWhereOrNull((_) => true)
                 ?.inviteCode ??
             '',
-        'current_day_of_study':
-            record.completedAt!.difference(record.startedAt!).inDays.toString(),
+        'current_day_of_study': record.completedAt!
+            .difference(record.startedAt!)
+            .inDays
+            .toString(),
         'current_intervention_id': record.interventionId,
         'current_intervention_name': intervention?.name ?? invalidKey,
       };
 
-      final isMeasurement =
-          MeasurementResultTypes.values.contains(record.resultType);
-      final isIntervention =
-          InterventionResultTypes.values.contains(record.resultType);
+      final isMeasurement = MeasurementResultTypes.values.contains(
+        record.resultType,
+      );
+      final isIntervention = InterventionResultTypes.values.contains(
+        record.resultType,
+      );
 
       if (isMeasurement) {
-        final measurement =
-            observations.firstWhereOrNull((o) => o.id == record.taskId);
+        final measurement = observations.firstWhereOrNull(
+          (o) => o.id == record.taskId,
+        );
         final Map<String, dynamic> row = {
           'measurement_time': record.completedAt!.toString(),
           'measurement_id': record.taskId,
@@ -121,20 +148,24 @@ extension StudyExportX on Study {
             if (questionResponseColumn == null) {
               continue; // skip unresolvable questions (e.g. because study design has changed)
             }
-            final responseValue = questionAnswerPair.response.toString();
+            final responseValue = StudyExportX._formatQuestionResponse(
+              questionAnswerPair.response,
+              questionById[questionId],
+            );
             row[questionResponseColumn] = responseValue;
             row[surveyAnsweredColumn] = true;
             for (final mediaIndex in mediaIndices) {
               if (mediaIndex == questionId) {
-                mediaData.add(responseValue);
+                mediaData.add(responseValue.toString());
               }
             }
           }
         }
         measurementsData.add(row);
       } else if (isIntervention) {
-        final task =
-            intervention?.tasks.firstWhereOrNull((e) => e.id == record.taskId);
+        final task = intervention?.tasks.firstWhereOrNull(
+          (e) => e.id == record.taskId,
+        );
         final Map<String, dynamic> row = {
           'intervention_task_time': record.completedAt!.toString(),
           'intervention_task_id': record.taskId,

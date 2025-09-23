@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -7,6 +8,7 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/enrollment_form_data.dart';
+import 'package:studyu_designer_v2/features/design/fitbit/fitbit_credentials_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/info/study_info_form_data.dart';
 import 'package:studyu_designer_v2/features/design/interventions/interventions_form_controller.dart';
@@ -21,6 +23,7 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
+import 'package:studyu_designer_v2/repositories/fitbit_credentials_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 
@@ -32,6 +35,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     required this.router,
     required this.studyRepository,
     required this.authRepository,
+    required this.fitbitCredentialsRepository,
     required super.formData, // Study
     super.validationSet = StudyFormValidationSet.draft,
   }) {
@@ -45,6 +49,7 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   final IStudyRepository studyRepository;
   final IAuthRepository authRepository;
+  final IFitbitCredentialsRepository fitbitCredentialsRepository;
   final GoRouter router;
 
   bool get isStudyReadonly =>
@@ -52,29 +57,29 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   late final StudyInfoFormViewModel studyInfoFormViewModel =
       StudyInfoFormViewModel(
-    formData: StudyInfoFormData.fromStudy(formData!),
-    delegate: this,
-    study: formData!,
-    validationSet: validationSet,
-  );
+        formData: StudyInfoFormData.fromStudy(formData!),
+        delegate: this,
+        study: formData!,
+        validationSet: validationSet,
+      );
 
   late final EnrollmentFormViewModel enrollmentFormViewModel =
       EnrollmentFormViewModel(
-    formData: EnrollmentFormData.fromStudy(formData!),
-    delegate: this,
-    study: formData!,
-    router: router,
-    validationSet: validationSet,
-  );
+        formData: EnrollmentFormData.fromStudy(formData!),
+        delegate: this,
+        study: formData!,
+        router: router,
+        validationSet: validationSet,
+      );
 
   late final MeasurementsFormViewModel measurementsFormViewModel =
       MeasurementsFormViewModel(
-    formData: MeasurementsFormData.fromStudy(formData!),
-    delegate: this,
-    study: formData!,
-    router: router,
-    validationSet: validationSet,
-  );
+        formData: MeasurementsFormData.fromStudy(formData!),
+        delegate: this,
+        study: formData!,
+        router: router,
+        validationSet: validationSet,
+      );
 
   late final ReportsFormViewModel reportsFormViewModel = ReportsFormViewModel(
     formData: ReportsFormData.fromStudy(formData!),
@@ -86,19 +91,26 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   late final InterventionsFormViewModel interventionsFormViewModel =
       InterventionsFormViewModel(
-    formData: InterventionsFormData.fromStudy(formData!),
-    delegate: this,
-    study: formData!,
-    router: router,
-    validationSet: validationSet,
-  );
+        formData: InterventionsFormData.fromStudy(formData!),
+        delegate: this,
+        study: formData!,
+        router: router,
+        validationSet: validationSet,
+      );
+
+  late final FitbitCredentialsFormViewModel fitbitCredentialsFormViewModel =
+      FitbitCredentialsFormViewModel(
+        study: formData!,
+        validationSet: validationSet,
+        fitbitCredentialsRepository: fitbitCredentialsRepository,
+      );
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
-        StudyFormValidationSet.draft: [], // defined in subforms
-        StudyFormValidationSet.publish: [], // defined in subforms
-        StudyFormValidationSet.test: [], // defined in subforms
-      };
+    StudyFormValidationSet.draft: [], // defined in subforms
+    StudyFormValidationSet.publish: [], // defined in subforms
+    StudyFormValidationSet.test: [], // defined in subforms
+  };
 
   @override
   late final FormGroup form = FormGroup({
@@ -106,6 +118,8 @@ class StudyFormViewModel extends FormViewModel<Study>
     'enrollment': enrollmentFormViewModel.form,
     'measurements': measurementsFormViewModel.form,
     'interventions': interventionsFormViewModel.form,
+    'reports': reportsFormViewModel.form,
+    'fitbit': fitbitCredentialsFormViewModel.form,
   });
 
   @override
@@ -116,6 +130,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     measurementsFormViewModel.read();
     interventionsFormViewModel.read();
     reportsFormViewModel.read();
+    fitbitCredentialsFormViewModel.read();
     super.read(formData);
   }
 
@@ -131,6 +146,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     enrollmentFormViewModel.buildFormData().apply(studyCopy);
     measurementsFormViewModel.buildFormData().apply(studyCopy);
     interventionsFormViewModel.buildFormData().apply(studyCopy);
+    reportsFormViewModel.buildFormData().apply(studyCopy);
     return studyCopy;
   }
 
@@ -143,6 +159,7 @@ class StudyFormViewModel extends FormViewModel<Study>
     enrollmentFormViewModel.dispose();
     interventionsFormViewModel.dispose();
     measurementsFormViewModel.dispose();
+    reportsFormViewModel.dispose();
     super.dispose();
   }
 
@@ -173,16 +190,15 @@ class StudyFormViewModel extends FormViewModel<Study>
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 @riverpod
-StudyFormViewModel studyFormViewModel(
-  StudyFormViewModelRef ref,
-  StudyID studyId,
-) {
-  // print("studyFormViewModel");
+StudyFormViewModel studyFormViewModel(Ref ref, StudyID studyId) {
   final state = ref.watch(studyControllerProvider(studyId));
   return StudyFormViewModel(
     router: ref.watch(routerProvider),
     studyRepository: ref.watch(studyRepositoryProvider),
     authRepository: ref.watch(authRepositoryProvider),
+    fitbitCredentialsRepository: ref.watch(
+      fitbitCredentialsRepositoryProvider(studyId),
+    ),
     formData: state.study.value,
   );
 }

@@ -8,9 +8,7 @@ import 'package:flutter/material.dart';
 /// See https://github.com/flutter/flutter/issues/42586
 void prefetchEmojiFont() {
   final ParagraphBuilder pb = ParagraphBuilder(
-    ParagraphStyle(
-      locale: WidgetsBinding.instance.platformDispatcher.locale,
-    ),
+    ParagraphStyle(locale: WidgetsBinding.instance.platformDispatcher.locale),
   );
   pb.addText('\ud83d\ude01'); // smiley face emoji
   pb.build().layout(const ParagraphConstraints(width: 100));
@@ -19,15 +17,12 @@ void prefetchEmojiFont() {
 Future<T> runInBackground<T>(T Function() func) async {
   final p = ReceivePort();
 
-  await Isolate.spawn(
-    (SendPort sendPort) {
-      final result = func();
-      if (result != null) {
-        Isolate.exit(sendPort, result);
-      }
-    },
-    p.sendPort,
-  );
+  await Isolate.spawn((SendPort sendPort) {
+    final result = func();
+    if (result != null) {
+      Isolate.exit(sendPort, result);
+    }
+  }, p.sendPort);
 
   return await p.first as T;
 }

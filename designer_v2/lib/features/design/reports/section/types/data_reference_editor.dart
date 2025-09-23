@@ -28,17 +28,16 @@ class DataReferenceEditor<T> {
   }
 
   FormTableRow buildFormTableRow(ThemeData theme) => FormTableRow(
-        label: tr.form_field_report_data_source_title,
-        labelHelpText: tr.form_field_report_data_source_tooltip,
-        // TODO: extract custom dropdown component with theme + focus fix
-        input: Theme(
-          data: theme.copyWith(
-            inputDecorationTheme:
-                ThemeConfig.dropdownInputDecorationTheme(theme),
-          ),
-          child: buildReactiveDropdownField,
-        ),
-      );
+    label: tr.form_field_report_data_source_title,
+    labelHelpText: tr.form_field_report_data_source_tooltip,
+    // TODO: extract custom dropdown component with theme + focus fix
+    input: Theme(
+      data: theme.copyWith(
+        inputDecorationTheme: ThemeConfig.dropdownInputDecorationTheme(theme),
+      ),
+      child: buildReactiveDropdownField,
+    ),
+  );
 
   List<DropdownMenuItem<DataReferenceIdentifier>> _dataReferenceItems() {
     final items = <DropdownMenuItem<DataReferenceIdentifier>>[];

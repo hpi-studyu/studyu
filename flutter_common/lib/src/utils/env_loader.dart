@@ -12,8 +12,24 @@ String envFilePath() {
 }
 
 String? getEnv(String name) {
-  return dotenv.env[name] ??
-      (bool.hasEnvironment(name) ? String.fromEnvironment(name) : null);
+  final value = dotenv.env[name];
+  if (value != null && value.isNotEmpty) {
+    // print('Loaded env $name=$value');
+    return value;
+  }
+
+  try {
+    final fallback = String.fromEnvironment(name);
+    if (fallback.isNotEmpty) {
+      print('Loaded $name from --dart-define: $fallback');
+      return fallback;
+    }
+  } catch (e) {
+    // Silently ignore if not available
+    print('No environment value for $name');
+  }
+
+  return null;
 }
 
 Future<void> loadEnv() async {
@@ -24,15 +40,12 @@ Future<void> loadEnv() async {
   final envDesignerUrl = getEnv('STUDYU_DESIGNER_URL');
   final envProjectGeneratorUrl = getEnv('STUDYU_PROJECT_GENERATOR_URL');
 
-  // TODO Remove this after migration phase is over
-  await SecureStorage.migrateSharedPreferencesToSecureStorage();
+  // await SecureStorage.migrateSharedPreferencesToSecureStorage();
 
   await Supabase.initialize(
     url: supabaseUrl!,
     anonKey: supabaseAnonKey!,
-    authOptions: FlutterAuthClientOptions(
-      localStorage: SupabaseStorage(),
-    ),
+    authOptions: FlutterAuthClientOptions(localStorage: SupabaseStorage()),
     debug: true,
   );
   env.setEnv(

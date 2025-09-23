@@ -9,19 +9,12 @@ part of 'not_expression.dart';
 NotExpression _$NotExpressionFromJson(Map<String, dynamic> json) =>
     NotExpression()
       ..type = json['type'] as String?
-      ..expression =
-          Expression.fromJson(json['expression'] as Map<String, dynamic>);
+      ..expression = Expression.fromJson(
+        json['expression'] as Map<String, dynamic>,
+      );
 
-Map<String, dynamic> _$NotExpressionToJson(NotExpression instance) {
-  final val = <String, dynamic>{};
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('type', instance.type);
-  val['expression'] = instance.expression.toJson();
-  return val;
-}
+Map<String, dynamic> _$NotExpressionToJson(NotExpression instance) =>
+    <String, dynamic>{
+      if (instance.type case final value?) 'type': value,
+      'expression': instance.expression.toJson(),
+    };

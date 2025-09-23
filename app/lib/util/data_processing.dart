@@ -17,17 +17,16 @@ class GroupedIterable<K, V> extends Iterable<MapEntry<K, Iterable<V>>> {
 
   Iterable<MapEntry<K, R>> aggregateWithKey<R>(
     KeyedAggregator<K, V, R> aggregator,
-  ) =>
-      map((entry) => MapEntry(entry.key, aggregator(entry.value, entry.key)));
+  ) => map((entry) => MapEntry(entry.key, aggregator(entry.value, entry.key)));
 }
 
 FoldAggregator<V, V> foldAggregateMin<V extends Comparable>() =>
     (values) => values.reduce((a, b) => a.compareTo(b) < 0 ? a : b);
 
 FoldAggregator<V, V> foldAggregateMedian<V extends Comparable>() => (values) {
-      final list = values.toList(growable: false)..sort();
-      return list[list.length ~/ 2];
-    };
+  final list = values.toList(growable: false)..sort();
+  return list[list.length ~/ 2];
+};
 
 FoldAggregator<V, V> foldAggregateMax<V extends Comparable>() =>
     (values) => values.reduce((a, b) => a.compareTo(b) > 0 ? a : b);

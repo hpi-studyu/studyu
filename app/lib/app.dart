@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/main.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
@@ -27,11 +27,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
@@ -51,13 +46,12 @@ class _MyAppState extends State<MyApp> {
               return Routes.generateRoute(settings, widget.queryParameters);
             },
             onUnknownRoute: Routes.unknownRoute,
-            navigatorObservers: [
-              SentryNavigatorObserver(),
-            ],
+            navigatorObservers: [SentryNavigatorObserver()],
             localeListResolutionCallback: (locales, supportedLocales) {
               // print('device locales=$locales supported locales=$supportedLocales');
-              final supportedLanguageCodes =
-                  supportedLocales.map((e) => e.languageCode);
+              final supportedLanguageCodes = supportedLocales.map(
+                (e) => e.languageCode,
+              );
               if (locales != null) {
                 for (final locale in locales) {
                   if (supportedLanguageCodes.contains(locale.languageCode)) {

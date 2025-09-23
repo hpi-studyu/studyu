@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_menu.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/standard_table.dart';
-import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/features/design/shared/questionnaire/question/question_form_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
@@ -46,7 +46,7 @@ class ChoiceQuestionFormView extends ConsumerWidget {
               ],
               onSelectItem: (_) => {},
               // no-op
-              buildCellsAt: (context, control, _, __) =>
+              buildCellsAt: (context, control, _, _) =>
                   buildChoiceOptionRow(context, control),
               trailingActionsAt: (control, _) =>
                   formViewModel.availableActions(control),
@@ -57,17 +57,19 @@ class ChoiceQuestionFormView extends ConsumerWidget {
               rowStyle: StandardTableStyle.plain,
               trailingActionsMenuType: ActionMenuType.inline,
               disableRowInteractions: true,
-              trailingWidget: (formViewModel.isAddOptionButtonVisible &&
+              trailingWidget:
+                  (formViewModel.isAddOptionButtonVisible &&
                       !formViewModel.isReadonly)
                   ? Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Opacity(
                         opacity: ThemeConfig.kMuteFadeFactor,
-                        child: Hyperlink(
-                          text:
-                              "+ ${tr.form_array_response_options_choice_new}",
-                          visitedColor: null,
-                          onClick: formViewModel.onNewItem,
+                        child: TextButton.icon(
+                          onPressed: formViewModel.onNewItem,
+                          icon: const Icon(Icons.add),
+                          label: Text(
+                            tr.form_array_response_options_choice_new,
+                          ),
                         ),
                       ),
                     )
@@ -87,7 +89,6 @@ List<Widget> buildChoiceOptionRow(
   AbstractControl formControl,
 ) {
   final theme = Theme.of(context);
-
   return [
     Center(
       child: Icon(
@@ -96,11 +97,36 @@ List<Widget> buildChoiceOptionRow(
         size: 12.0,
       ),
     ),
-    ReactiveTextField(
-      formControl: formControl as FormControl<dynamic>,
-      decoration: InputDecoration(
-        hintText: tr.form_array_response_options_choice_hint,
+    if (formControl is FormControl<Choice>)
+      ReactiveTextField<Choice>(
+        formControl: formControl,
+        valueAccessor: ChoiceValueAccessor(formControl),
+        decoration: InputDecoration(
+          hintText: tr.form_array_response_options_choice_hint,
+        ),
+      )
+    else
+      ReactiveTextField<String>(
+        formControl: formControl as FormControl<String>,
+        decoration: InputDecoration(
+          hintText: tr.form_array_response_options_choice_hint,
+        ),
       ),
-    ),
   ];
+}
+
+class ChoiceValueAccessor extends ControlValueAccessor<Choice, String> {
+  final FormControl<Choice>? _control;
+
+  ChoiceValueAccessor([this._control]);
+
+  @override
+  String? modelToViewValue(Choice? modelValue) {
+    return modelValue?.text;
+  }
+
+  @override
+  Choice? viewToModelValue(String? viewValue) {
+    return Choice.withText(id: _control?.value?.id, text: viewValue ?? '');
+  }
 }

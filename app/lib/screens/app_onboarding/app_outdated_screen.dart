@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:studyu_app/constants.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppOutdatedScreen extends StatelessWidget {

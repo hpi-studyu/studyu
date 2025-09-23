@@ -5,8 +5,11 @@ import 'package:studyu_designer_v2/utils/typings.dart';
 
 /// Extension that implements a set of standard actions for elements of a
 /// [FormViewModelCollection]
-extension FormViewModelCollectionActions<T extends ManagedFormViewModel<D>,
-    D extends IFormData> on FormViewModelCollection<T, D> {
+extension FormViewModelCollectionActions<
+  T extends ManagedFormViewModel<D>,
+  D extends IFormData
+>
+    on FormViewModelCollection<T, D> {
   // implements IListActionProvider<T>
 
   List<ModelAction> availableActions(
@@ -59,17 +62,19 @@ extension FormViewModelCollectionActions<T extends ManagedFormViewModel<D>,
     T formViewModel, {
     bool isReadOnly = false,
   }) {
-    return availableActions(formViewModel, isReadOnly: isReadOnly)
-        .where((action) => action.type != ModelActionType.edit)
-        .toList();
+    return availableActions(
+      formViewModel,
+      isReadOnly: isReadOnly,
+    ).where((action) => action.type != ModelActionType.edit).toList();
   }
 
   List<ModelAction> availableInlineActions(
     T formViewModel, {
     bool isReadOnly = false,
   }) {
-    return availableActions(formViewModel, isReadOnly: isReadOnly)
-        .where((action) => action.type == ModelActionType.edit)
-        .toList();
+    return availableActions(
+      formViewModel,
+      isReadOnly: isReadOnly,
+    ).where((action) => action.type == ModelActionType.edit).toList();
   }
 }

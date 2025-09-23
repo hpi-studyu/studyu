@@ -38,53 +38,67 @@ class StudyMonitorTable extends ConsumerWidget {
         StandardTableColumn(
           sortable: true,
           label: tr.monitoring_table_column_participant_id,
-          columnWidth:
-              const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1.6)),
+          columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(150),
+            FlexColumnWidth(1.6),
+          ),
         ),
         StandardTableColumn(
           sortable: true,
           label: tr.monitoring_table_column_invite_code,
-          columnWidth:
-              const MaxColumnWidth(FixedColumnWidth(200), FlexColumnWidth(1.6)),
+          columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(200),
+            FlexColumnWidth(1.6),
+          ),
         ),
         StandardTableColumn(
           sortable: true,
           label: tr.monitoring_table_column_enrolled,
-          columnWidth:
-              const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1.6)),
+          columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(150),
+            FlexColumnWidth(1.6),
+          ),
         ),
         StandardTableColumn(
           sortable: true,
           label: tr.monitoring_table_column_last_activity,
-          columnWidth:
-              const MaxColumnWidth(FixedColumnWidth(150), FlexColumnWidth(1.6)),
+          columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(150),
+            FlexColumnWidth(1.6),
+          ),
         ),
         StandardTableColumn(
           sortable: true,
           label: tr.monitoring_table_column_day_in_study,
           tooltip: tr.monitoring_table_days_in_study_header_tooltip,
-          columnWidth:
-              const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.6)),
+          columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(125),
+            FlexColumnWidth(1.6),
+          ),
         ),
         StandardTableColumn(
           sortable: true,
-          label: tr.monitoring_table_column_completed_interventions,
+          label: tr.monitoring_table_column_completed_intervention_tasks,
           tooltip: tr.monitoring_table_completed_interventions_header_tooltip,
-          columnWidth:
-              const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.6)),
+          columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(125),
+            FlexColumnWidth(1.6),
+          ),
         ),
         StandardTableColumn(
           sortable: true,
           label: tr.monitoring_table_column_completed_surveys,
           tooltip: tr.monitoring_table_completed_surveys_header_tooltip,
-          columnWidth:
-              const MaxColumnWidth(FixedColumnWidth(125), FlexColumnWidth(1.7)),
+          columnWidth: const MaxColumnWidth(
+            FixedColumnWidth(125),
+            FlexColumnWidth(1.7),
+          ),
         ),
       ],
       buildCellsAt: _buildRow,
       rowSpacing: 5.0,
       minRowHeight: 30.0,
-      headerMaxLines: 2,
+      headerMaxLines: 3,
       softWrapHeader: true,
       onSelectItem: onSelectItem,
     );
@@ -111,8 +125,10 @@ class StudyMonitorTable extends ConsumerWidget {
           style: ThemeConfig.bodyTextMuted(theme),
         ),
       Tooltip(
-        message: item.startedAt
-            .toLocalizedString(locale: languageCode, showTime: false),
+        message: item.startedAt.toLocalizedString(
+          locale: languageCode,
+          showTime: false,
+        ),
         child: Text(item.startedAt.toTimeAgoString()),
       ),
       Tooltip(
@@ -126,8 +142,11 @@ class StudyMonitorTable extends ConsumerWidget {
                   const SizedBox(width: 5.0),
                   Tooltip(
                     message: tr.monitoring_table_row_tooltip_dropout,
-                    child:
-                        const Icon(Icons.close, color: Colors.red, size: 16.0),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.red,
+                      size: 16.0,
+                    ),
                   ),
                 ],
               ),
@@ -144,11 +163,7 @@ class StudyMonitorTable extends ConsumerWidget {
         item.completedInterventions,
         item.totalInterventionTasks,
       ),
-      _buildProgressCell(
-        context,
-        item.completedSurveys,
-        item.totalSurveyTasks,
-      ),
+      _buildProgressCell(context, item.completedSurveys, item.totalSurveyTasks),
     ];
   }
 
@@ -159,7 +174,7 @@ class StudyMonitorTable extends ConsumerWidget {
         SizedBox.expand(
           child: LinearProgressIndicator(
             value: total <= 0 ? 0 : progress / total,
-            backgroundColor: theme.primaryColor.withOpacity(0.7),
+            backgroundColor: theme.primaryColor.withValues(alpha: 0.7),
             valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
           ),
         ),

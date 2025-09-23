@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/cache.dart';
@@ -25,6 +25,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       final now = DateTime.now();
       subject!.startedAt = DateTime(now.year, now.month, now.day + 1).toUtc();
       subject = await subject!.save();
+      subject = await _fetchRemoteSubject(subject!.id);
       if (!context.mounted) return;
       context.read<AppState>().activeSubject = subject;
       context.read<AppState>().init(context);
@@ -42,6 +43,19 @@ class _KickoffScreen extends State<KickoffScreen> {
     }
   }
 
+  Future<StudySubject?> _fetchRemoteSubject(String selectedStudyObjectId) {
+    StudyULogger.debug('Fetching subject with ID: $selectedStudyObjectId');
+    return SupabaseQuery.getById<StudySubject>(
+      selectedStudyObjectId,
+      selectedColumns: [
+        '*',
+        // Retrieve the related study along with its fitbit credentials
+        'study!study_subject_studyId_fkey(*, study_fitbit_credentials:study_fitbit_credentials_studyId_fkey(*))',
+        'subject_progress(*)',
+      ],
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -55,11 +69,7 @@ class _KickoffScreen extends State<KickoffScreen> {
           width: 64,
           child: CircularProgressIndicator(),
         )
-      : Icon(
-          MdiIcons.checkboxMarkedCircle,
-          color: Colors.green,
-          size: 64,
-        );
+      : Icon(MdiIcons.checkboxMarkedCircle, color: Colors.green, size: 64);
 
   String _getStatusText(BuildContext context) => !ready
       ? AppLocalizations.of(context)!.setting_up_study

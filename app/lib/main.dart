@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -18,9 +20,11 @@ import 'package:timezone/timezone.dart' as tz;
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
   // ignore: avoid_print
-  print('notification(${notificationResponse.id}) action tapped: '
-      '${notificationResponse.actionId} with'
-      ' payload: ${notificationResponse.payload}');
+  print(
+    'notification(${notificationResponse.id}) action tapped: '
+    '${notificationResponse.actionId} with'
+    ' payload: ${notificationResponse.payload}',
+  );
   if (notificationResponse.input?.isNotEmpty ?? false) {
     // ignore: avoid_print
     print(
@@ -29,11 +33,28 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
   }
 }
 
-GlobalKey<NavigatorState> navigatorKey =
-    GlobalKey(debugLabel: 'Main Navigator');
+GlobalKey<NavigatorState> navigatorKey = GlobalKey(
+  debugLabel: 'Main Navigator',
+);
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final WidgetsBinding widgetsBinding =
+      WidgetsFlutterBinding.ensureInitialized();
+
+  if (kIsWeb) {
+    FlutterError.onError = (FlutterErrorDetails details) {
+      if (details.exception is AssertionError &&
+          details.exception.toString().contains('_debugDuringDeviceUpdate')) {
+        debugPrint('Mouse tracker assertion suppressed: ${details.exception}');
+        return;
+      }
+      FlutterError.presentError(details);
+    };
+  }
+
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await loadEnv();
   await _configureLocalTimeZone();
   final queryParameters = Uri.base.queryParameters;

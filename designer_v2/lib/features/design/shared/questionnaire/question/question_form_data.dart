@@ -7,14 +7,15 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:uuid/uuid.dart';
 
-typedef SurveyQuestionFormDataFactory = QuestionFormData Function(
-  Question question,
-  List<EligibilityCriterion> eligibilityCriteria,
-);
+typedef SurveyQuestionFormDataFactory =
+    QuestionFormData Function(
+      Question question,
+      List<EligibilityCriterion> eligibilityCriteria,
+    );
 
 abstract class QuestionFormData implements IFormData {
   static Map<SurveyQuestionType, SurveyQuestionFormDataFactory>
-      questionTypeFormDataFactories = {
+  questionTypeFormDataFactories = {
     SurveyQuestionType.scale: (question, eligibilityCriteria) {
       switch (question) {
         // First check for general scale which implements the other interfaces
@@ -65,6 +66,17 @@ abstract class QuestionFormData implements IFormData {
           question as FreeTextQuestion,
           eligibilityCriteria,
         ),
+    SurveyQuestionType.fitbit: (question, eligibilityCriteria) {
+      return FitbitQuestionFormData.fromDomainModel(
+        question as FitbitQuestion,
+        eligibilityCriteria,
+      );
+    },
+    SurveyQuestionType.pain: (question, eligibilityCriteria) =>
+        PainQuestionFormData.fromDomainModel(
+          question as PainQuestion,
+          eligibilityCriteria,
+        ),
   };
 
   QuestionFormData({
@@ -72,12 +84,14 @@ abstract class QuestionFormData implements IFormData {
     required this.questionText,
     required this.questionType,
     this.questionInfoText,
+    this.conditional,
   });
 
   final QuestionID questionId;
   final String questionText;
   final String? questionInfoText;
   final SurveyQuestionType questionType;
+  final QuestionConditional? conditional;
 
   /// Mapping from response option => qualifying/disqualifying
   late final Map<dynamic, bool> responseOptionsValidity;
@@ -93,8 +107,10 @@ abstract class QuestionFormData implements IFormData {
   ) {
     final surveyQuestionType = SurveyQuestionType.of(question);
     if (!questionTypeFormDataFactories.containsKey(surveyQuestionType)) {
-      throw Exception("Failed to create SurveyQuestionFormData for unknown "
-          "SurveyQuestionType: $surveyQuestionType");
+      throw Exception(
+        "Failed to create SurveyQuestionFormData for unknown "
+        "SurveyQuestionType: $surveyQuestionType",
+      );
     }
     return questionTypeFormDataFactories[surveyQuestionType]!(
       question,
@@ -146,7 +162,8 @@ abstract class QuestionFormData implements IFormData {
       // (as of now) if no criterion evaluates to true
       bool responseOptionValidity = false;
       for (final criterion in eligibilityCriteria) {
-        responseOptionValidity = responseOptionValidity ||
+        responseOptionValidity =
+            responseOptionValidity ||
             (criterion.condition.evaluate(questionnaireState) ?? false);
       }
       result[responseOption] = responseOptionValidity;
@@ -165,15 +182,16 @@ class ChoiceQuestionFormData extends QuestionFormData {
     required super.questionText,
     required super.questionType,
     super.questionInfoText,
+    super.conditional,
     this.isMultipleChoice = false,
     required this.answerOptions,
   });
 
   final bool isMultipleChoice;
-  final List<String> answerOptions;
+  final List<Choice> answerOptions;
 
   @override
-  List<String> get responseOptions => answerOptions;
+  List<Choice> get responseOptions => answerOptions;
 
   factory ChoiceQuestionFormData.fromDomainModel(
     ChoiceQuestion question,
@@ -185,7 +203,8 @@ class ChoiceQuestionFormData extends QuestionFormData {
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
       isMultipleChoice: question.multiple,
-      answerOptions: question.choices.map((choice) => choice.text).toList(),
+      answerOptions: question.choices,
+      conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -198,7 +217,13 @@ class ChoiceQuestionFormData extends QuestionFormData {
     question.prompt = questionText;
     question.rationale = questionInfoText;
     question.multiple = isMultipleChoice;
-    question.choices = answerOptions.map(_buildChoiceForValue).toList();
+    question.choices = answerOptions;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<List<String>>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as List<String>?,
+          );
     return question;
   }
 
@@ -212,22 +237,16 @@ class ChoiceQuestionFormData extends QuestionFormData {
       questionInfoText: questionInfoText,
       isMultipleChoice: isMultipleChoice,
       answerOptions: [...answerOptions],
+      conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;
   }
 
-  Choice _buildChoiceForValue(String value) {
-    final choiceId = value.toKey();
-    final choice = Choice(choiceId);
-    choice.text = value;
-    return choice;
-  }
-
   @override
   Answer constructAnswerFor(dynamic responseOption) {
     final question = toQuestion() as ChoiceQuestion;
-    final choice = _buildChoiceForValue(responseOption as String);
+    final choice = responseOption as Choice;
     return question.constructAnswer([choice]);
   }
 }
@@ -238,12 +257,13 @@ class BoolQuestionFormData extends QuestionFormData {
     required super.questionText,
     required super.questionType,
     super.questionInfoText,
+    super.conditional,
   });
 
   static Map<String, bool> get kResponseOptions => {
-        tr.form_array_response_options_bool_yes: true,
-        tr.form_array_response_options_bool_no: false,
-      };
+    tr.form_array_response_options_bool_yes: true,
+    tr.form_array_response_options_bool_no: false,
+  };
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();
@@ -257,6 +277,7 @@ class BoolQuestionFormData extends QuestionFormData {
       questionType: SurveyQuestionType.bool,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
+      conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -268,6 +289,12 @@ class BoolQuestionFormData extends QuestionFormData {
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<bool>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as bool?,
+          );
     return question;
   }
 
@@ -278,6 +305,7 @@ class BoolQuestionFormData extends QuestionFormData {
       questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
+      conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;
@@ -299,8 +327,9 @@ class ImageQuestionFormData extends QuestionFormData {
     super.questionInfoText,
   });
 
-  static Map<String, FutureBlobFile> get kResponseOptions =>
-      {tr.form_field_response_image: FutureBlobFile("image", "image")};
+  static Map<String, FutureBlobFile> get kResponseOptions => {
+    tr.form_field_response_image: FutureBlobFile("image", "image"),
+  };
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();
@@ -359,8 +388,9 @@ class AudioQuestionFormData extends QuestionFormData {
 
   final int maxRecordingDurationSeconds;
 
-  static Map<String, FutureBlobFile> get kResponseOptions =>
-      {tr.form_field_response_audio: FutureBlobFile("audio", "audio")};
+  static Map<String, FutureBlobFile> get kResponseOptions => {
+    tr.form_field_response_audio: FutureBlobFile("audio", "audio"),
+  };
 
   @override
   List<String> get responseOptions => kResponseOptions.keys.toList();
@@ -418,6 +448,7 @@ class ScaleQuestionFormData extends QuestionFormData {
     required super.questionText,
     required super.questionType,
     super.questionInfoText,
+    super.conditional,
     required this.minValue,
     this.minLabel,
     required this.maxValue,
@@ -429,9 +460,9 @@ class ScaleQuestionFormData extends QuestionFormData {
     this.minColor,
     this.maxColor,
   }) : assert(
-          midValues.length == midLabels.length,
-          "midValues.length and midLabels.length must be equal",
-        );
+         midValues.length == midLabels.length,
+         "midValues.length and midLabels.length must be equal",
+       );
 
   final double minValue;
   final double maxValue;
@@ -481,6 +512,7 @@ class ScaleQuestionFormData extends QuestionFormData {
       initialValue: question.initial,
       minColor: (question.minColor != null) ? Color(question.minColor!) : null,
       maxColor: (question.maxColor != null) ? Color(question.maxColor!) : null,
+      conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -496,8 +528,8 @@ class ScaleQuestionFormData extends QuestionFormData {
       ..maximum = maxValue
       ..step = stepSize
       ..initial = initialValue
-      ..minColor = minColor?.value
-      ..maxColor = maxColor?.value
+      ..minColor = minColor?.toARGB32()
+      ..maxColor = maxColor?.toARGB32()
       ..midAnnotations = midAnnotations;
 
     if (minLabel != null) {
@@ -506,6 +538,12 @@ class ScaleQuestionFormData extends QuestionFormData {
     if (maxLabel != null) {
       question.maxLabel = maxLabel;
     }
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<double>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as double?,
+          );
     return question;
   }
 
@@ -527,6 +565,7 @@ class ScaleQuestionFormData extends QuestionFormData {
       maxColor: maxColor,
       midLabels: midLabels,
       midValues: midValues,
+      conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;
@@ -544,10 +583,11 @@ class FreeTextQuestionFormData extends QuestionFormData {
     required super.questionId,
     required super.questionText,
     required super.questionType,
+    super.questionInfoText,
+    super.conditional,
     required this.textLengthRange,
     required this.textType,
     required this.textTypeExpression,
-    super.questionInfoText,
   });
 
   List<int> textLengthRange;
@@ -569,6 +609,7 @@ class FreeTextQuestionFormData extends QuestionFormData {
       textLengthRange: question.lengthRange,
       textType: question.textType,
       textTypeExpression: question.customTypeExpression,
+      conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -584,6 +625,12 @@ class FreeTextQuestionFormData extends QuestionFormData {
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<String>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as String?,
+          );
     return question;
   }
 
@@ -597,6 +644,7 @@ class FreeTextQuestionFormData extends QuestionFormData {
       textLengthRange: textLengthRange,
       textType: textType,
       textTypeExpression: textTypeExpression,
+      conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;
@@ -607,5 +655,137 @@ class FreeTextQuestionFormData extends QuestionFormData {
     final question = toQuestion() as FreeTextQuestion;
     final value = responseOption as String;
     return question.constructAnswer(value);
+  }
+}
+
+class FitbitQuestionFormData extends QuestionFormData {
+  FitbitQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    required this.types,
+    super.questionInfoText,
+  });
+
+  List<FitbitQuestionType> types;
+
+  @override
+  List<String> get responseOptions =>
+      FitbitQuestionType.values.map((type) => type.toJson()).toList();
+
+  factory FitbitQuestionFormData.fromDomainModel(
+    FitbitQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = FitbitQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.fitbit,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+      types: question.types,
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question = FitbitQuestion(types: types);
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    return question;
+  }
+
+  @override
+  FitbitQuestionFormData copy() {
+    final data = FitbitQuestionFormData(
+      questionId: const Uuid().v4(), // always regenerate id
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+      types: types,
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  List<FitbitData> _buildQuestionValue(String value) {
+    final fitbitType = FitbitQuestionType.fromJson(value);
+
+    switch (fitbitType) {
+      case FitbitQuestionType.heartrate:
+        return [FitbitHeartData(0, DateTime.now())];
+      case FitbitQuestionType.steps:
+        return [FitbitStepData(0, DateTime.now())];
+      case FitbitQuestionType.sleep:
+        return [FitbitSleepData('deep', DateTime.now(), DateTime.now())];
+    }
+  }
+
+  @override
+  Answer constructAnswerFor(dynamic responseOption) {
+    final question = toQuestion() as FitbitQuestion;
+    final fitbitData = _buildQuestionValue(responseOption as String);
+
+    return question.constructAnswer(fitbitData);
+  }
+}
+
+class PainQuestionFormData extends QuestionFormData {
+  PainQuestionFormData({
+    required super.questionId,
+    required super.questionText,
+    required super.questionType,
+    super.questionInfoText,
+  });
+
+  static Map<String, Body> get kResponseOptions => {
+    tr.form_field_response_pain: const Body(),
+  };
+
+  @override
+  List<String> get responseOptions => kResponseOptions.keys.toList();
+
+  factory PainQuestionFormData.fromDomainModel(
+    PainQuestion question,
+    List<EligibilityCriterion> eligibilityCriteria,
+  ) {
+    final data = PainQuestionFormData(
+      questionId: question.id,
+      questionType: SurveyQuestionType.pain,
+      questionText: question.prompt ?? '',
+      questionInfoText: question.rationale ?? '',
+    );
+    data.setResponseOptionsValidityFrom(eligibilityCriteria);
+    return data;
+  }
+
+  @override
+  Question toQuestion() {
+    final question = PainQuestion();
+    question.id = questionId;
+    question.prompt = questionText;
+    question.rationale = questionInfoText;
+    return question;
+  }
+
+  @override
+  PainQuestionFormData copy() {
+    final data = PainQuestionFormData(
+      questionId: const Uuid().v4(), // always regenerate id
+      questionType: questionType,
+      questionText: questionText.withDuplicateLabel(),
+      questionInfoText: questionInfoText,
+    );
+    data.responseOptionsValidity = responseOptionsValidity;
+    return data;
+  }
+
+  @override
+  Answer constructAnswerFor(dynamic responseOption) {
+    final question = toQuestion() as PainQuestion;
+    final value = kResponseOptions[responseOption];
+    return question.constructAnswer(value!);
   }
 }

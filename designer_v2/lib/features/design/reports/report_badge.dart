@@ -25,10 +25,7 @@ class ReportBadge extends StatelessWidget {
 
     Widget inTooltip(Widget child) {
       if (tooltipMessage.isNotEmpty && showTooltip) {
-        return Tooltip(
-          message: tooltipMessage,
-          child: child,
-        );
+        return Tooltip(message: tooltipMessage, child: child);
       }
       return child;
     }
@@ -47,7 +44,7 @@ class ReportBadge extends StatelessWidget {
         return inTooltip(
           study_badge.Badge(
             label: status!.string,
-            color: colorScheme.secondary.withOpacity(0.75),
+            color: colorScheme.secondary.withValues(alpha: 0.75),
             type: study_badge.BadgeType.outlineFill,
             icon: prefixIcon,
           ),

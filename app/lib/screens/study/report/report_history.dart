@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/report/report_details.dart';
 import 'package:studyu_core/core.dart';
@@ -14,24 +14,26 @@ class ReportHistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.report_history,
-        ),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.report_history)),
       body: RetryFutureBuilder<List<StudySubject>>(
         tryFunction: () => StudySubject.getStudyHistory(
           Supabase.instance.client.auth.currentUser!.id,
         ),
         successBuilder:
             (BuildContext context, List<StudySubject>? pastStudies) {
-          return ListView.builder(
-            itemCount: pastStudies!.length,
-            itemBuilder: (context, index) {
-              return ReportHistoryItem(pastStudies[index]);
+              return pastStudies == null || pastStudies.isEmpty
+                  ? Center(
+                      child: Text(
+                        AppLocalizations.of(context)!.no_reports_found,
+                      ),
+                    ) //
+                  : ListView.builder(
+                      itemCount: pastStudies.length,
+                      itemBuilder: (context, index) {
+                        return ReportHistoryItem(pastStudies[index]);
+                      },
+                    );
             },
-          );
-        },
       ),
     );
   }

@@ -71,7 +71,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   child: Container(
                     constraints: const BoxConstraints(maxWidth: 400),
                     child: Search(
-                      searchController: controller.searchController,
+                      searchController: state.searchController,
                       hintText: tr.search,
                       onQueryChanged: (query) =>
                           controller.filterStudies(query),
@@ -96,31 +96,33 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   data: (visibleStudies) => StudiesTable(
                     studies: visibleStudies,
                     pinnedStudies: snapshot.data!.preferences.pinnedStudies,
-                    dashboardController:
-                        ref.watch(dashboardControllerProvider.notifier),
+                    dashboardController: ref.watch(
+                      dashboardControllerProvider.notifier,
+                    ),
                     onSelect: controller.onSelectStudy,
                     getActions: controller.availableActions,
-                    emptyWidget: (widget.filter == null ||
+                    emptyWidget:
+                        (widget.filter == null ||
                             widget.filter == StudiesFilter.owned)
                         ? (state.query.isNotEmpty)
-                            ? Padding(
-                                padding: const EdgeInsets.only(top: 24.0),
-                                child: EmptyBody(
-                                  icon: Icons.content_paste_search_rounded,
-                                  title: tr.studies_not_found,
-                                  description: tr.modify_query,
-                                ),
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.only(top: 24.0),
-                                child: EmptyBody(
-                                  icon: Icons.content_paste_search_rounded,
-                                  title: tr.studies_empty,
-                                  description: tr.studies_empty_description,
-                                  // "...or create a new draft copy from an already published study!",
-                                  /* button: PrimaryButton(text: "From template",); */
-                                ),
-                              )
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 24.0),
+                                  child: EmptyBody(
+                                    icon: Icons.content_paste_search_rounded,
+                                    title: tr.studies_not_found,
+                                    description: tr.modify_query,
+                                  ),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.only(top: 24.0),
+                                  child: EmptyBody(
+                                    icon: Icons.content_paste_search_rounded,
+                                    title: tr.studies_empty,
+                                    description: tr.studies_empty_description,
+                                    // "...or create a new draft copy from an already published study!",
+                                    /* button: PrimaryButton(text: "From template",); */
+                                  ),
+                                )
                         : const SizedBox.shrink(),
                   ),
                 );

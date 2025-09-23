@@ -8,7 +8,9 @@ enum SurveyQuestionType {
   scale,
   image,
   audio,
-  freeText;
+  freeText,
+  fitbit,
+  pain;
 
   static SurveyQuestionType of(Question question) {
     final typeMapping = {
@@ -20,6 +22,8 @@ enum SurveyQuestionType {
       FreeTextQuestion.questionType: SurveyQuestionType.freeText,
       ImageCapturingQuestion.questionType: SurveyQuestionType.image,
       AudioRecordingQuestion.questionType: SurveyQuestionType.audio,
+      FitbitQuestion.questionType: SurveyQuestionType.fitbit,
+      PainQuestion.questionType: SurveyQuestionType.pain,
     };
     if (!typeMapping.containsKey(question.type)) {
       throw UnimplementedError(
@@ -43,8 +47,10 @@ enum SurveyQuestionType {
         return tr.question_type_audio;
       case SurveyQuestionType.freeText:
         return tr.question_type_free_text;
-      default:
-        return "[Invalid SurveyQuestionType]";
+      case SurveyQuestionType.fitbit:
+        return tr.question_type_fitbit;
+      case SurveyQuestionType.pain:
+        return tr.question_type_pain;
     }
   }
 
@@ -53,7 +59,7 @@ enum SurveyQuestionType {
       case SurveyQuestionType.choice:
         return Icons.format_list_bulleted_rounded;
       case SurveyQuestionType.bool:
-        return Icons.rule_rounded; // Icons.contrast
+        return Icons.check_box_rounded;
       case SurveyQuestionType.scale:
         return Icons.tune_rounded;
       case SurveyQuestionType.image:
@@ -62,8 +68,10 @@ enum SurveyQuestionType {
         return Icons.mic;
       case SurveyQuestionType.freeText:
         return Icons.edit_square;
-      default:
-        return null;
+      case SurveyQuestionType.fitbit:
+        return Icons.fitbit;
+      case SurveyQuestionType.pain:
+        return Icons.accessibility;
     }
   }
 
@@ -82,8 +90,6 @@ extension FreeTextQuestionTypeExtension on FreeTextQuestionType {
         return tr.free_text_question_type_numeric;
       case FreeTextQuestionType.custom:
         return tr.free_text_question_type_custom;
-      default:
-        return "[Invalid FreeTextQuestionType]";
     }
   }
 }

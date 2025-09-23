@@ -7,7 +7,7 @@ part of 'study_base_controller.dart';
 // **************************************************************************
 
 String _$studyBaseControllerHash() =>
-    r'b6b47d4bf2d14f973df3669ed97ea27f62778c4b';
+    r'e2811f660e2b1086b07c702a0da8915d891e2004';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,9 +34,7 @@ abstract class _$StudyBaseController
     extends BuildlessAutoDisposeNotifier<StudyControllerBaseState> {
   late final String studyId;
 
-  StudyControllerBaseState build(
-    String studyId,
-  );
+  StudyControllerBaseState build(String studyId);
 }
 
 /// See also [StudyBaseController].
@@ -49,21 +47,15 @@ class StudyBaseControllerFamily extends Family<StudyControllerBaseState> {
   const StudyBaseControllerFamily();
 
   /// See also [StudyBaseController].
-  StudyBaseControllerProvider call(
-    String studyId,
-  ) {
-    return StudyBaseControllerProvider(
-      studyId,
-    );
+  StudyBaseControllerProvider call(String studyId) {
+    return StudyBaseControllerProvider(studyId);
   }
 
   @override
   StudyBaseControllerProvider getProviderOverride(
     covariant StudyBaseControllerProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -82,24 +74,26 @@ class StudyBaseControllerFamily extends Family<StudyControllerBaseState> {
 }
 
 /// See also [StudyBaseController].
-class StudyBaseControllerProvider extends AutoDisposeNotifierProviderImpl<
-    StudyBaseController, StudyControllerBaseState> {
+class StudyBaseControllerProvider
+    extends
+        AutoDisposeNotifierProviderImpl<
+          StudyBaseController,
+          StudyControllerBaseState
+        > {
   /// See also [StudyBaseController].
-  StudyBaseControllerProvider(
-    String studyId,
-  ) : this._internal(
-          () => StudyBaseController()..studyId = studyId,
-          from: studyBaseControllerProvider,
-          name: r'studyBaseControllerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$studyBaseControllerHash,
-          dependencies: StudyBaseControllerFamily._dependencies,
-          allTransitiveDependencies:
-              StudyBaseControllerFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  StudyBaseControllerProvider(String studyId)
+    : this._internal(
+        () => StudyBaseController()..studyId = studyId,
+        from: studyBaseControllerProvider,
+        name: r'studyBaseControllerProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$studyBaseControllerHash,
+        dependencies: StudyBaseControllerFamily._dependencies,
+        allTransitiveDependencies:
+            StudyBaseControllerFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   StudyBaseControllerProvider._internal(
     super._createNotifier, {
@@ -117,9 +111,7 @@ class StudyBaseControllerProvider extends AutoDisposeNotifierProviderImpl<
   StudyControllerBaseState runNotifierBuild(
     covariant StudyBaseController notifier,
   ) {
-    return notifier.build(
-      studyId,
-    );
+    return notifier.build(studyId);
   }
 
   @override
@@ -139,8 +131,11 @@ class StudyBaseControllerProvider extends AutoDisposeNotifierProviderImpl<
   }
 
   @override
-  AutoDisposeNotifierProviderElement<StudyBaseController,
-      StudyControllerBaseState> createElement() {
+  AutoDisposeNotifierProviderElement<
+    StudyBaseController,
+    StudyControllerBaseState
+  >
+  createElement() {
     return _StudyBaseControllerProviderElement(this);
   }
 
@@ -158,6 +153,8 @@ class StudyBaseControllerProvider extends AutoDisposeNotifierProviderImpl<
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyBaseControllerRef
     on AutoDisposeNotifierProviderRef<StudyControllerBaseState> {
   /// The parameter `studyId` of this provider.
@@ -165,12 +162,17 @@ mixin StudyBaseControllerRef
 }
 
 class _StudyBaseControllerProviderElement
-    extends AutoDisposeNotifierProviderElement<StudyBaseController,
-        StudyControllerBaseState> with StudyBaseControllerRef {
+    extends
+        AutoDisposeNotifierProviderElement<
+          StudyBaseController,
+          StudyControllerBaseState
+        >
+    with StudyBaseControllerRef {
   _StudyBaseControllerProviderElement(super.provider);
 
   @override
   String get studyId => (origin as StudyBaseControllerProvider).studyId;
 }
+
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

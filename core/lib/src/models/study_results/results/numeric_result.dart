@@ -26,20 +26,23 @@ class NumericResult extends StudyResult {
   List<String> getHeaders(Study studySpec) {
     final schedule = studySpec.schedule;
     final numberOfDays = schedule.getNumberOfPhases() * schedule.phaseDuration;
-    return Iterable<int>.generate(numberOfDays)
-        .map((e) => e.toString())
-        .toList();
+    return Iterable<int>.generate(
+      numberOfDays,
+    ).map((e) => e.toString()).toList();
   }
 
   @override
   List getValues(StudySubject subject) {
-    final resultSet = resultProperty.retrieveFromResults(subject).map<int, num>(
+    final resultSet = resultProperty
+        .retrieveFromResults(subject)
+        .map<int, num>(
           (key, value) => MapEntry(subject.getDayOfStudyFor(key), value),
         );
-    final numberOfDays = subject.study.schedule.getNumberOfPhases() *
+    final numberOfDays =
+        subject.study.schedule.getNumberOfPhases() *
         subject.study.schedule.phaseDuration;
-    return Iterable<int>.generate(numberOfDays)
-        .map((day) => resultSet[day])
-        .toList();
+    return Iterable<int>.generate(
+      numberOfDays,
+    ).map((day) => resultSet[day]).toList();
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/widgets/intervention_card.dart';
 import 'package:studyu_core/core.dart';
@@ -46,10 +46,12 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      AppLocalizations.of(context)!
-                          .performance_overview_interventions,
-                      style: theme.textTheme.titleLarge!
-                          .copyWith(color: theme.primaryColor),
+                      AppLocalizations.of(
+                        context,
+                      )!.performance_overview_interventions,
+                      style: theme.textTheme.titleLarge!.copyWith(
+                        color: theme.primaryColor,
+                      ),
                     ),
                   ),
                 ),
@@ -67,10 +69,12 @@ class PerformanceDetailsScreen extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      AppLocalizations.of(context)!
-                          .performance_overview_observations,
-                      style: theme.textTheme.titleLarge!
-                          .copyWith(color: theme.primaryColor),
+                      AppLocalizations.of(
+                        context,
+                      )!.performance_overview_observations,
+                      style: theme.textTheme.titleLarge!.copyWith(
+                        color: theme.primaryColor,
+                      ),
                     ),
                   ),
                 ),
@@ -181,10 +185,7 @@ class PerformanceBar extends StatelessWidget {
         Stack(
           alignment: Alignment.center,
           children: [
-            LinearProgressIndicator(
-              minHeight: 20,
-              value: completed / total,
-            ),
+            LinearProgressIndicator(minHeight: 20, value: completed / total),
             Center(
               child: Text(
                 '${(completed / total * 100).toStringAsFixed(2).replaceAll('.00', '')} %',

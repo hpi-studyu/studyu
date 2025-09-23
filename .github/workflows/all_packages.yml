@@ -8,25 +8,27 @@ on:
       - "designer_v2/**"
       - "flutter_common/**"
       - '*.gitignore'
-      - 'melos.yaml'
       - 'pubspec.yaml'
       - 'pubspec.lock'
       - ".github/workflows/all_packages.yml"
       - ".github/workflows/init-workspace/**"
   workflow_dispatch:
 
+env:
+  MELOS_SDK_PATH: 'auto'
+
 concurrency:
   group: ${{ github.ref }}-all-packages
   cancel-in-progress: true
 
 jobs:
-  static_analysis:
+  static_analysis_fix:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           token: ${{ secrets.READY_TO_MERGE_TOKEN }}
@@ -34,34 +36,32 @@ jobs:
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
 
-      - name: Run generate
-        run: melos run generate
+      - name: Run fix
+        run: melos run fix
 
-      # - name: Run fix # remove until flutter_gen issue is fixed
-      #   run: melos run fix
-
-      - name: Run bootstrap
-        run: melos bootstrap
-
-      - name: Run format
-        run: melos format
-
-      - name: Run analyze
-        run: melos analyze --fatal-infos
+      - name: Run quality check
+        run: melos qualitycheck
 
       - name: Commit changes if any
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: 'chore: Apply static analysis changes'
+          file_pattern: |
+            .
+            ':!**l10n-missing.txt'
+            ':!*.fvmrc'
+            ':!**/app_localizations_*.dart'
 
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
+
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
+
       - name: Run Test
         run: melos run test --no-select

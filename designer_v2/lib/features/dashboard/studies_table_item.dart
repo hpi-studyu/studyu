@@ -3,7 +3,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
-import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/features/study/study_participation_badge.dart';
 import 'package:studyu_designer_v2/features/study/study_status_badge.dart';
@@ -54,11 +53,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
     }
 
     Icon icon(IconData iconData) {
-      return Icon(
-        iconData,
-        color: Colors.grey,
-        size: 25,
-      );
+      return Icon(iconData, color: Colors.grey, size: 25);
     }
 
     Widget getRespectivePinIcon(Set<WidgetState> state) {
@@ -79,7 +74,9 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
             shape: RoundedRectangleBorder(
               borderRadius: const BorderRadius.all(Radius.circular(4)),
               side: BorderSide(
-                color: theme.colorScheme.primaryContainer.withOpacity(0.9),
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.9,
+                ),
                 width: isHovering ? 1.5 : 0.75,
               ),
             ),
@@ -99,8 +96,10 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                     widget.columnSizes[0].createContainer(
                       height: widget.itemHeight,
                       child: MouseEventsRegion(
-                        onTap: () => widget.onPinnedChanged
-                            ?.call(widget.study, !widget.isPinned),
+                        onTap: () => widget.onPinnedChanged?.call(
+                          widget.study,
+                          !widget.isPinned,
+                        ),
                         onEnter: (_) => setState(() => isHoveringPin = true),
                         onExit: (_) => setState(() => isHoveringPin = false),
                         builder: (context, mouseEventState) {
@@ -163,8 +162,9 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                     widget.columnSizes[5].createContainer(
                       child: Text(
                         widget.study.participantCount.toString(),
-                        style:
-                            mutedTextStyleIfZero(widget.study.participantCount),
+                        style: mutedTextStyleIfZero(
+                          widget.study.participantCount,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -221,7 +221,9 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
       alignment: Alignment.centerRight,
       child: ActionPopUpMenuButton(
         actions: actions,
-        triggerIconColor: ThemeConfig.bodyTextMuted(theme).color?.faded(0.6),
+        triggerIconColor: ThemeConfig.bodyTextMuted(
+          theme,
+        ).color?.withValues(alpha: 0.6),
         triggerIconColorHover: theme.colorScheme.primary,
         disableSplashEffect: true,
         position: PopupMenuPosition.over,

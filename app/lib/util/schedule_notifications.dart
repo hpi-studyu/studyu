@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/util/notifications.dart';
 import 'package:studyu_core/core.dart';
@@ -29,8 +29,10 @@ Future<int> scheduleReminderForDate(
       reminder.minute,
     );
     if (date.isSameDate(DateTime.now()) &&
-        !StudyUTimeOfDay(hour: date.hour, minute: date.minute)
-            .earlierThan(reminder, exact: true)) {
+        !StudyUTimeOfDay(
+          hour: date.hour,
+          minute: date.minute,
+        ).earlierThan(reminder, exact: true)) {
       /* final String debugStr = 'Skipped #$currentId: $reminderTime, ${task.title}, ${studyNotification.taskInstance.id}';
       // StudyNotifications.scheduledNotificationsDebug += '\n\n$debugStr';
       if (StudyNotifications.debug) {
@@ -55,8 +57,6 @@ Future<int> scheduleReminderForDate(
       reminderTime,
       notificationDetails,
       payload: studyNotification.taskInstance.id,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.wallClockTime,
       // exactAllowWhileIdle only works if the exact alarm permission has been granted
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
@@ -96,14 +96,14 @@ const notificationDetails = NotificationDetails(
 );
 
 Future<void> scheduleNotifications(BuildContext context) async {
-  if (StudyNotifications.debug) {
+  /*if (StudyNotifications.debug) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Schedule Notifications'),
       ),
     );
     print('Schedule Notifications');
-  }
+  }*/
   // Notifications not supported on web
   if (kIsWeb) return;
   final appState = context.read<AppState>();
@@ -171,31 +171,16 @@ Future<void>? cancelNotifications(BuildContext context) async {
 
   await notificationsPlugin?.cancelAll();
   await FlutterLocalNotificationsPlugin().cancelAll();
-  final list1 = await notificationsPlugin?.pendingNotificationRequests() ?? [];
-  final list2 =
-      await FlutterLocalNotificationsPlugin().pendingNotificationRequests();
   StudyNotifications.scheduledNotificationsDebug = 'cleared';
   if (context.mounted) context.read<AppState>().studyNotifications = null;
   if (StudyNotifications.debug) {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Notifications cancelled and pending notifications are empty: ${list1.isEmpty && list2.isEmpty}',
-          ),
-        ),
-      );
-    }
-    print('Notifications cancelled');
+    StudyULogger.debug('Notifications cancelled');
   }
   return Future.value();
 }
 
 class StudyNotification {
-  StudyNotification(
-    this.taskInstance,
-    this.date,
-  );
+  StudyNotification(this.taskInstance, this.date);
 
   final TaskInstance taskInstance;
   final DateTime date;

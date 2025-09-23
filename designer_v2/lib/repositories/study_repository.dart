@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
@@ -34,11 +35,11 @@ class StudyRepository extends ModelRepository<Study>
     required this.authRepository,
     required this.ref,
   }) : super(
-          StudyRepositoryDelegate(
-            apiClient: apiClient,
-            authRepository: authRepository,
-          ),
-        );
+         StudyRepositoryDelegate(
+           apiClient: apiClient,
+           authRepository: authRepository,
+         ),
+       );
 
   /// Reference to the StudyU API injected via Riverpod
   final StudyUApi apiClient;
@@ -47,7 +48,7 @@ class StudyRepository extends ModelRepository<Study>
   final IAuthRepository authRepository;
 
   /// Reference to Riverpod's context to resolve dependencies in callbacks
-  final ProviderRef ref;
+  final Ref ref;
 
   final VoidCallback? sortCallback;
 
@@ -57,7 +58,7 @@ class StudyRepository extends ModelRepository<Study>
   }
 
   @override
-  Future<void> deleteParticipants(Study study) async {
+  Future<void> deleteParticipants(Study study) {
     final wrappedModel = get(study.id);
     if (wrappedModel == null) {
       throw ModelNotFoundException();
@@ -84,7 +85,7 @@ class StudyRepository extends ModelRepository<Study>
   }
 
   @override
-  Future<void> launch(Study study) async {
+  Future<void> launch(Study study) {
     final wrappedModel = get(study.id);
     if (wrappedModel == null) {
       throw ModelNotFoundException();
@@ -112,13 +113,14 @@ class StudyRepository extends ModelRepository<Study>
   @override
   Future<void> duplicateAndSave(Study model) async {
     final Study completeModel = await apiClient.fetchStudy(model.id);
-    final duplicate =
-        completeModel.duplicateAsDraft(authRepository.currentUser!.id);
+    final duplicate = completeModel.duplicateAsDraft(
+      authRepository.currentUser!.id,
+    );
     await save(duplicate);
   }
 
   @override
-  Future<void> close(Study study) async {
+  Future<void> close(Study study) {
     final wrappedModel = get(study.id);
     if (wrappedModel == null) {
       throw ModelNotFoundException();
@@ -173,8 +175,8 @@ class StudyRepository extends ModelRepository<Study>
         // same as "Copy" but for non-drafts
         type: StudyActionType.duplicateDraft,
         label: StudyActionType.duplicateDraft.string,
-        onExecute: () {
-          return duplicateAndSave(model).then(
+        onExecute: () async {
+          return await duplicateAndSave(model).then(
             (value) =>
                 ref.read(routerProvider).dispatch(RoutingIntents.studies),
           );
@@ -185,8 +187,8 @@ class StudyRepository extends ModelRepository<Study>
       ModelAction(
         type: StudyActionType.duplicate,
         label: StudyActionType.duplicate.string,
-        onExecute: () {
-          return duplicateAndSave(model).then(
+        onExecute: () async {
+          return await duplicateAndSave(model).then(
             (value) =>
                 ref.read(routerProvider).dispatch(RoutingIntents.studies),
           );
@@ -218,17 +220,19 @@ class StudyRepository extends ModelRepository<Study>
         type: StudyActionType.delete,
         label: StudyActionType.delete.string,
         onExecute: () {
-          return ref.read(notificationServiceProvider).show(
-            Notifications
-                .studyDeleteConfirmation, // TODO: more severe confirmation for running studies
-            actions: [
-              NotificationAction(
-                label: StudyActionType.delete.string,
-                onSelect: onDeleteCallback,
-                isDestructive: true,
-              ),
-            ],
-          );
+          return ref
+              .read(notificationServiceProvider)
+              .show(
+                Notifications
+                    .studyDeleteConfirmation, // TODO: more severe confirmation for running studies
+                actions: [
+                  NotificationAction(
+                    label: StudyActionType.delete.string,
+                    onSelect: onDeleteCallback,
+                    isDestructive: true,
+                  ),
+                ],
+              );
         },
         isAvailable: model.canDelete(currentUser),
         isDestructive: true,
@@ -250,7 +254,7 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
 
   @override
   Future<List<Study>> fetchAll() {
-    return apiClient.getUserStudies();
+    return apiClient.getUserStudies(forDashboardDisplay: true);
   }
 
   @override
@@ -285,8 +289,8 @@ class StudyRepositoryDelegate extends IModelRepositoryDelegate<Study> {
 }
 
 @riverpod
-StudyRepository studyRepository(StudyRepositoryRef ref) => StudyRepository(
-      apiClient: ref.watch(apiClientProvider),
-      authRepository: ref.watch(authRepositoryProvider),
-      ref: ref,
-    );
+StudyRepository studyRepository(Ref ref) => StudyRepository(
+  apiClient: ref.watch(apiClientProvider),
+  authRepository: ref.watch(authRepositoryProvider),
+  ref: ref,
+);

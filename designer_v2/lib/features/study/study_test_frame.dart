@@ -13,17 +13,13 @@ import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 
 class PreviewFrame extends ConsumerStatefulWidget {
-  const PreviewFrame(
-    this.studyId, {
-    this.routeArgs,
-    this.route,
-    super.key,
-  }) : assert(
-          (routeArgs != null && route == null) ||
-              (routeArgs == null && route != null) ||
-              (routeArgs == null && route == null),
-          "Must not specify both routeArgs and route",
-        );
+  const PreviewFrame(this.studyId, {this.routeArgs, this.route, super.key})
+    : assert(
+        (routeArgs != null && route == null) ||
+            (routeArgs == null && route != null) ||
+            (routeArgs == null && route == null),
+        "Must not specify both routeArgs and route",
+      );
 
   final StudyID studyId;
   final StudyFormRouteArgs? routeArgs;
@@ -35,6 +31,7 @@ class PreviewFrame extends ConsumerStatefulWidget {
 
 class _PreviewFrameState extends ConsumerState<PreviewFrame> {
   PlatformController? frameController;
+  bool _frameError = false;
 
   @override
   void initState() {
@@ -44,13 +41,21 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
 
   void _subscribeStudyChanges() {
     // debugLog('Subscribing to form changes in test frame');
-    final formViewModelCurrent =
-        ref.read(studyFormViewModelProvider(widget.studyId));
+    final formViewModelCurrent = ref.read(
+      studyFormViewModelProvider(widget.studyId),
+    );
     formViewModelCurrent.form.valueChanges.listen((event) {
-      if (frameController != null) {
-        final formJson =
-            jsonEncode(formViewModelCurrent.buildFormData().toJson());
-        frameController!.send(formJson);
+      if (frameController != null && !_frameError) {
+        final formJson = jsonEncode(
+          formViewModelCurrent.buildFormData().toJson(),
+        );
+        try {
+          frameController!.send(formJson);
+        } catch (e) {
+          setState(() {
+            _frameError = true;
+          });
+        }
       }
     });
   }
@@ -86,11 +91,13 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
     final formViewModel = ref.watch(studyTestValidatorProvider(widget.studyId));
 
     // Rebuild iframe component and url
-    frameController =
-        ref.watch(studyTestPlatformControllerProvider(widget.studyId));
+    frameController = ref.watch(
+      studyTestPlatformControllerProvider(widget.studyId),
+    );
     _updatePreviewRoute();
     frameController!.activate();
     frameController!.listen();
+    frameController!.refresh(cmd: "reset");
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -108,7 +115,7 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
                   formGroup: formViewModel.form,
                   child: ReactiveFormConsumer(
                     builder: (context, form, child) {
-                      if (formViewModel.form.hasErrors) {
+                      if (formViewModel.form.hasErrors || _frameError) {
                         return const DisabledFrame();
                       }
                       return Column(
@@ -116,8 +123,9 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
                           frameController!.frameWidget,
                           const SizedBox(height: 8.0),
                           FrameControlsWidget(
-                            onRefresh: () =>
-                                frameController!.refresh(cmd: "reset"),
+                            onRefresh: () {
+                              frameController!.refresh(cmd: "reset");
+                            },
                             onOpenNewTab: () => frameController!.openNewPage(),
                             enabled: state.canTest,
                           ),

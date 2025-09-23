@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'clipboard.g.dart';
@@ -16,6 +17,6 @@ class ClipboardService implements IClipboardService {
 }
 
 @riverpod
-IClipboardService clipboardService(ClipboardServiceRef ref) {
+IClipboardService clipboardService(Ref ref) {
   return ClipboardService();
 }

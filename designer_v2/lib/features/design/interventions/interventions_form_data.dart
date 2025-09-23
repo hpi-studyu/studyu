@@ -13,8 +13,7 @@ class InterventionsFormData implements IStudyFormData {
   final StudyScheduleFormData studyScheduleData;
 
   @override
-  String get id =>
-      throw UnimplementedError(); // not needed for top-level form data
+  String get id => throw UnimplementedError(); // not needed for top-level form data
 
   factory InterventionsFormData.fromStudy(Study study) {
     return InterventionsFormData(
@@ -30,8 +29,9 @@ class InterventionsFormData implements IStudyFormData {
 
   @override
   Study apply(Study study) {
-    final List<Intervention> interventions =
-        interventionsData.map((formData) => formData.toIntervention()).toList();
+    final List<Intervention> interventions = interventionsData
+        .map((formData) => formData.toIntervention())
+        .toList();
     study.interventions = interventions;
 
     studyScheduleData.apply(study);

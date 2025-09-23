@@ -12,7 +12,9 @@ class SurveyPreview extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ColoredBox(
-      color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.25),
+      color: Theme.of(
+        context,
+      ).colorScheme.primaryContainer.withValues(alpha: 0.25),
       child: Column(
         children: [
           Stack(

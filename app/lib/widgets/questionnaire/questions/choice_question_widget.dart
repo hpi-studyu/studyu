@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_app/widgets/selectable_button.dart';
 import 'package:studyu_core/core.dart';
@@ -25,11 +25,13 @@ class ChoiceQuestionWidget extends QuestionWidget {
 
 class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
   late List<Choice> selected;
+  late bool confirmButtonTouched;
 
   @override
   void initState() {
     super.initState();
     selected = [];
+    confirmButtonTouched = false;
   }
 
   void tapped(Choice choice) {
@@ -41,10 +43,17 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
         selected.add(choice);
       }
     });
-    if (!widget.question.multiple) confirm();
+
+    // Auto-submit for single choice questions or multi-choice on subsequent answers
+    if (!widget.question.multiple || confirmButtonTouched) {
+      confirm();
+    }
   }
 
   void confirm() {
+    setState(() {
+      confirmButtonTouched = true;
+    });
     widget.onDone(widget.question.constructAnswer(selected));
   }
 
@@ -55,12 +64,16 @@ class _ChoiceQuestionWidgetState extends State<ChoiceQuestionWidget> {
           (choice) => SelectableButton(
             selected: selected.contains(choice),
             onTap: () => tapped(choice),
-            child: Text(choice.text),
+            child: Text(
+              choice.text,
+              softWrap: true,
+              textAlign: TextAlign.center,
+            ),
           ),
         )
         .toList();
 
-    if (widget.question.multiple) {
+    if (widget.question.multiple && !confirmButtonTouched) {
       choiceWidgets.add(
         OutlinedButton(
           onPressed: confirm,

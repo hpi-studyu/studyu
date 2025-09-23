@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -60,12 +61,19 @@ class Cache {
   }
 
   static Future<StudyUAnalytics?> loadAnalytics() async {
-    if (await SecureStorage.containsKey(cacheSubjectKey)) {
-      return StudyUAnalytics.fromJson(
-        jsonDecode(
-          (await SecureStorage.read(StudyUAnalytics.keyStudyUAnalytics))!,
-        ) as Map<String, dynamic>,
-      );
+    try {
+      if (await SecureStorage.containsKey(StudyUAnalytics.keyStudyUAnalytics)) {
+        final analyticsData = await SecureStorage.read(
+          StudyUAnalytics.keyStudyUAnalytics,
+        );
+        if (analyticsData != null) {
+          return StudyUAnalytics.fromJson(
+            jsonDecode(analyticsData) as Map<String, dynamic>,
+          );
+        }
+      }
+    } catch (e) {
+      StudyULogger.warning("Failed to load analytics from cache: $e");
     }
     return null;
   }
@@ -143,8 +151,9 @@ class Cache {
           ...remoteSubject.progress,
         ];
         final duplicates = <DateTime?>{};
-        finalProgress
-            .retainWhere((element) => duplicates.add(element.completedAt));
+        finalProgress.retainWhere(
+          (element) => duplicates.add(element.completedAt),
+        );
         // replace remote progress with our merge
         remoteSubject.progress = finalProgress;
         await remoteSubject.save(onlyUpdate: true);

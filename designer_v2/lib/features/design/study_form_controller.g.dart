@@ -7,7 +7,7 @@ part of 'study_form_controller.dart';
 // **************************************************************************
 
 String _$studyFormViewModelHash() =>
-    r'614ff706b954df7093b09931e7c694d1b3cdbb1a';
+    r'70dcd42209b60b526435e76e66dd3e22b190e71d';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -64,21 +64,15 @@ class StudyFormViewModelFamily extends Family<StudyFormViewModel> {
   /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
   ///
   /// Copied from [studyFormViewModel].
-  StudyFormViewModelProvider call(
-    String studyId,
-  ) {
-    return StudyFormViewModelProvider(
-      studyId,
-    );
+  StudyFormViewModelProvider call(String studyId) {
+    return StudyFormViewModelProvider(studyId);
   }
 
   @override
   StudyFormViewModelProvider getProviderOverride(
     covariant StudyFormViewModelProvider provider,
   ) {
-    return call(
-      provider.studyId,
-    );
+    return call(provider.studyId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -112,24 +106,19 @@ class StudyFormViewModelProvider
   /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
   ///
   /// Copied from [studyFormViewModel].
-  StudyFormViewModelProvider(
-    String studyId,
-  ) : this._internal(
-          (ref) => studyFormViewModel(
-            ref as StudyFormViewModelRef,
-            studyId,
-          ),
-          from: studyFormViewModelProvider,
-          name: r'studyFormViewModelProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$studyFormViewModelHash,
-          dependencies: StudyFormViewModelFamily._dependencies,
-          allTransitiveDependencies:
-              StudyFormViewModelFamily._allTransitiveDependencies,
-          studyId: studyId,
-        );
+  StudyFormViewModelProvider(String studyId)
+    : this._internal(
+        (ref) => studyFormViewModel(ref as StudyFormViewModelRef, studyId),
+        from: studyFormViewModelProvider,
+        name: r'studyFormViewModelProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$studyFormViewModelHash,
+        dependencies: StudyFormViewModelFamily._dependencies,
+        allTransitiveDependencies:
+            StudyFormViewModelFamily._allTransitiveDependencies,
+        studyId: studyId,
+      );
 
   StudyFormViewModelProvider._internal(
     super._createNotifier, {
@@ -180,6 +169,8 @@ class StudyFormViewModelProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin StudyFormViewModelRef on AutoDisposeProviderRef<StudyFormViewModel> {
   /// The parameter `studyId` of this provider.
   String get studyId;
@@ -193,5 +184,6 @@ class _StudyFormViewModelProviderElement
   @override
   String get studyId => (origin as StudyFormViewModelProvider).studyId;
 }
+
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

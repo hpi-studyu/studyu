@@ -6,10 +6,7 @@ import 'package:studyu_designer_v2/localization/locale_providers.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 
 class ParticipantInfo extends ConsumerWidget {
-  const ParticipantInfo({
-    required this.monitorItem,
-    super.key,
-  });
+  const ParticipantInfo({required this.monitorItem, super.key});
 
   final StudyMonitorItem monitorItem;
 
@@ -30,8 +27,10 @@ class ParticipantInfo extends ConsumerWidget {
           ),
           _buildInfoRow(
             tr.monitoring_table_column_enrolled,
-            monitorItem.startedAt
-                .toLocalizedString(locale: languageCode, showTime: false),
+            monitorItem.startedAt.toLocalizedString(
+              locale: languageCode,
+              showTime: false,
+            ),
           ),
           _buildInfoRow(
             tr.monitoring_table_column_last_activity,
@@ -43,7 +42,7 @@ class ParticipantInfo extends ConsumerWidget {
             '${monitorItem.currentDayOfStudy}/${monitorItem.studyDurationInDays}',
           ),
           _buildInfoRow(
-            tr.monitoring_table_column_completed_interventions,
+            tr.monitoring_table_column_completed_intervention_tasks,
             '${monitorItem.completedInterventions}/${monitorItem.totalInterventionTasks}',
           ),
           _buildInfoRow(
@@ -59,10 +58,7 @@ class ParticipantInfo extends ConsumerWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '$label: ',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
+        Text('$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
         Text(value),
       ],
     );

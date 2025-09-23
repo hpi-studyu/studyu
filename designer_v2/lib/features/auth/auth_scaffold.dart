@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/common_views/studyu_logo.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/common_views/utils.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/studyu_jtbd.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -56,7 +57,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
         leftWidget: ReactiveFormConfig(
           validationMessages: AuthFormController.authValidationMessages,
           child: ReactiveForm(
-            formGroup: controller.form,
+            formGroup: controller.getForm()!,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -110,27 +111,48 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
                     constraints: BoxConstraints(
                       maxWidth: widget.leftPanelMinWidth - 12 * 2,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Column(
                       children: [
-                        SelectableText(
-                          "© HPI Digital Health Cluster ${DateTime.now().year}",
-                          style: ThemeConfig.bodyTextBackground(theme),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SelectableText(
+                              "© HPI Digital Health Cluster ${DateTime.now().year}",
+                              style: ThemeConfig.bodyTextBackground(theme),
+                            ),
+                            Row(
+                              children: [
+                                LanguagePicker(
+                                  languagePickerType: LanguagePickerType.icon,
+                                  iconColor: ThemeConfig.bodyTextBackground(
+                                    theme,
+                                  ).color,
+                                  offset: const Offset(0, -60),
+                                ),
+                                const SizedBox(width: 12.0),
+                                Hyperlink(
+                                  text: tr.imprint,
+                                  onClick: () => _onClickImprint(appConfig),
+                                  linkColor: ThemeConfig.bodyTextBackground(
+                                    theme,
+                                  ).color!,
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            LanguagePicker(
-                              languagePickerType: LanguagePickerType.icon,
-                              iconColor:
-                                  ThemeConfig.bodyTextBackground(theme).color,
-                              offset: const Offset(0, -60),
-                            ),
-                            const SizedBox(width: 12.0),
-                            Hyperlink(
-                              text: tr.imprint,
-                              onClick: () => _onClickImprint(appConfig),
-                              linkColor:
-                                  ThemeConfig.bodyTextBackground(theme).color!,
+                            versionText(
+                              textStyle: TextStyle(
+                                color: ThemeConfig.bodyTextBackground(
+                                  theme,
+                                ).color,
+                                fontSize: Theme.of(
+                                  context,
+                                ).textTheme.bodySmall!.fontSize,
+                              ),
                             ),
                           ],
                         ),
@@ -145,15 +167,9 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
         rightWidget: const Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Center(
-                child: StudyUJobsToBeDone(),
-              ),
-            ),
-          ],
+          children: [Expanded(child: Center(child: StudyUJobsToBeDone()))],
         ),
-        backgroundColorLeft: ThemeConfig.bodyBackgroundColor(theme),
+        backgroundColorLeft: theme.colorScheme.surface,
         backgroundColorRight: theme.colorScheme.primary,
         constraintsLeft: BoxConstraints(minWidth: widget.leftPanelMinWidth),
         scrollLeft: false,

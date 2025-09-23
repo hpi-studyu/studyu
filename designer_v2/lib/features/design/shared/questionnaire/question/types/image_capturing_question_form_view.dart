@@ -15,9 +15,7 @@ class ImageCapturingQuestionFormView extends ConsumerWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-        ),
+        Padding(padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16)),
       ],
     );
   }

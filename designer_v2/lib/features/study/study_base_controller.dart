@@ -26,18 +26,27 @@ class StudyBaseController<T extends StudyControllerBaseState>
       currentUser: ref.watch(authRepositoryProvider).currentUser,
       studyWithMetadata: null,
     );
+    ref.onDispose(() => _studySubscription?.cancel());
     subscribeStudy(studyId);
     return state;
   }
 
-  StreamSubscription<WrappedModel<Study>>? studySubscription;
+  StreamSubscription<WrappedModel<Study>>? _studySubscription;
 
   void subscribeStudy(StudyID studyId) {
-    if (studySubscription != null) {
-      studySubscription!.cancel();
+    if (_studySubscription != null) {
+      _studySubscription!.cancel();
     }
-    studySubscription = state.studyRepository
-        .watch(studyId)
+
+    // Force fresh fetch by removing from cache before subscribing
+    final studyRepository = state.studyRepository;
+    final existingStudy = studyRepository.get(studyId);
+    if (existingStudy != null) {
+      studyRepository.markForRefresh(studyId);
+    }
+
+    _studySubscription = studyRepository
+        .watch(studyId, fetchOnSubscribe: true)
         .listen(onStudySubscriptionUpdate, onError: onStudySubscriptionError);
   }
 

@@ -4,8 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
 
-import 'package:studyu_core/src/models/questionnaire/question_conditional.dart';
-
 part 'scale_question.g.dart';
 
 @JsonSerializable()
@@ -232,11 +230,7 @@ class ScaleQuestion extends SliderQuestion
 
   @override
   set minimumAnnotation(String newLabel) {
-    _setAnnotationLabel(
-      newLabel: newLabel,
-      atSortedIndex: 0,
-      atValue: minimum,
-    );
+    _setAnnotationLabel(newLabel: newLabel, atSortedIndex: 0, atValue: minimum);
   }
 
   static int getAutostepSize({
@@ -257,9 +251,11 @@ class ScaleQuestion extends SliderQuestion
     );
     final List<int> midValues = [];
 
-    for (int midValue = scaleMinValue + midValueStepSize;
-        midValue < scaleMaxValue;
-        midValue += midValueStepSize) {
+    for (
+      int midValue = scaleMinValue + midValueStepSize;
+      midValue < scaleMaxValue;
+      midValue += midValueStepSize
+    ) {
       midValues.add(midValue);
       if (midValues.length >= numValuesGenerated) {
         break;

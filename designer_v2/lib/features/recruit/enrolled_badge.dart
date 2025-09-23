@@ -4,10 +4,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class EnrolledBadge extends StatelessWidget {
-  const EnrolledBadge({
-    required this.enrolledCount,
-    super.key,
-  });
+  const EnrolledBadge({required this.enrolledCount, super.key});
 
   final int enrolledCount;
 

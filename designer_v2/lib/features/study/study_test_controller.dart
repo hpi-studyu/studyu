@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
@@ -33,8 +34,9 @@ class StudyTestController extends _$StudyTestController {
     return StudyTestControllerState(
       studyId: studyId,
       studyRepository: ref.watch(studyRepositoryProvider),
-      studyWithMetadata:
-          ref.watch(studyControllerProvider(studyId)).studyWithMetadata,
+      studyWithMetadata: ref
+          .watch(studyControllerProvider(studyId))
+          .studyWithMetadata,
       router: ref.watch(routerProvider),
       currentUser: ref.watch(authRepositoryProvider).currentUser,
       serializedSession:
@@ -46,10 +48,7 @@ class StudyTestController extends _$StudyTestController {
 
 /// Provide a controller parametrized by [StudyID]
 @riverpod
-PlatformController studyTestPlatformController(
-  StudyTestPlatformControllerRef ref,
-  StudyID studyId,
-) {
+PlatformController studyTestPlatformController(Ref ref, StudyID studyId) {
   final state = ref.watch(studyTestControllerProvider(studyId));
   PlatformController platformController;
   if (!kIsWeb) {

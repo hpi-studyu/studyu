@@ -1,12 +1,11 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
-
-import 'dart:html' as html;
-import 'dart:js' as js;
-import 'dart:ui_web' as ui_web;
+import 'dart:js_interop' as js;
+import 'dart:js_interop_unsafe';
+import 'dart:ui_web' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/features/study/study_test_frame_views.dart';
+import 'package:web/web.dart' as web;
 
 class RouteInformation {
   String? route;
@@ -42,7 +41,7 @@ abstract class PlatformController {
 }
 
 class WebController extends PlatformController {
-  late html.IFrameElement iFrameElement;
+  late web.HTMLIFrameElement iFrameElement;
 
   WebController(super.baseSrc, super.studyId) {
     super.frameWidget = Container();
@@ -60,12 +59,12 @@ class WebController extends PlatformController {
 
   @override
   void registerViews(Key key) {
-    iFrameElement = html.IFrameElement()
+    iFrameElement = web.HTMLIFrameElement()
       ..id = 'studyu_app_preview'
       ..src = previewSrc
       ..style.border = 'none';
 
-    ui_web.platformViewRegistry.registerViewFactory(
+    ui.platformViewRegistry.registerViewFactory(
       '$studyId$key',
       (int viewId) => iFrameElement
         ..style.width = '100%'
@@ -126,20 +125,21 @@ class WebController extends PlatformController {
       navigate(route: routeInformation.route, cmd: cmd);
       return;
     }
+
     navigate(cmd: cmd);
     return;
   }
 
   @override
   void openNewPage() {
-    js.context.callMethod('open', [previewSrc]);
+    js.globalContext.callMethod('open'.toJS, previewSrc.toJS);
   }
 
   @override
   void listen() {
-    html.window.onMessage.listen((event) {
+    web.window.onMessage.listen((event) {
       final data = event.data;
-      if (data == 'routeFinished') {
+      if (data == 'routeFinished'.toJS) {
         // debugLog("Preview route finished");
         refresh();
       }
@@ -151,7 +151,10 @@ class WebController extends PlatformController {
     // debugLog("Send updated study to client");
     // Send to all windows for debugging
     // iFrameElement.contentWindow?.postMessage(message, '*');
-    iFrameElement.contentWindow?.postMessage(message, env.appUrl ?? '');
+    iFrameElement.contentWindow?.postMessage(
+      message.toJS,
+      (env.appUrl ?? '').toJS,
+    );
   }
 }
 

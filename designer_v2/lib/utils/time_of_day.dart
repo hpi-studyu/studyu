@@ -7,16 +7,13 @@ class Time extends TimeOfDay {
   const Time({required super.hour, required super.minute});
 
   Time.fromTimeOfDay(TimeOfDay timeOfDay)
-      : super(hour: timeOfDay.hour, minute: timeOfDay.minute);
+    : super(hour: timeOfDay.hour, minute: timeOfDay.minute);
 
-  JsonMap toJson() => {
-        "hour": super.hour,
-        "minute": super.minute,
-      };
+  JsonMap toJson() => {"hour": super.hour, "minute": super.minute};
   Time fromJson(JsonMap json) => Time(
-        hour: int.parse(json["hour"].toString()),
-        minute: int.parse(json["minute"].toString()),
-      );
+    hour: int.parse(json["hour"].toString()),
+    minute: int.parse(json["minute"].toString()),
+  );
 }
 
 /// Control value accessor that converts between data types [Time] and [String]

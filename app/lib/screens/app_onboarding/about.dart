@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
 
@@ -11,9 +11,7 @@ class AboutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.what_is_studyu),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.what_is_studyu)),
       body: PageView(
         scrollDirection: Axis.vertical,
         children: <Widget>[
@@ -30,8 +28,11 @@ class AboutScreen extends StatelessWidget {
                       child: Icon(MdiIcons.food, size: 80, color: Colors.black),
                     ),
                     Expanded(
-                      child:
-                          Icon(MdiIcons.equal, size: 80, color: Colors.black),
+                      child: Icon(
+                        MdiIcons.equal,
+                        size: 80,
+                        color: Colors.black,
+                      ),
                     ),
                     Expanded(
                       child: Icon(
@@ -74,8 +75,11 @@ class AboutScreen extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child:
-                          Icon(MdiIcons.help, size: 80, color: Colors.orange),
+                      child: Icon(
+                        MdiIcons.help,
+                        size: 80,
+                        color: Colors.orange,
+                      ),
                     ),
                   ],
                 ),

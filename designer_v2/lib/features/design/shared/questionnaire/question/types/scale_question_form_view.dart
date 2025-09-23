@@ -20,10 +20,7 @@ abstract class IScaleQuestionFormViewModel {
 }
 
 class ScaleQuestionFormView extends ConsumerStatefulWidget {
-  const ScaleQuestionFormView({
-    required this.formViewModel,
-    super.key,
-  });
+  const ScaleQuestionFormView({required this.formViewModel, super.key});
 
   final QuestionFormViewModel formViewModel;
 
@@ -37,7 +34,7 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
 
   late bool isMinMaxColorsVisible =
       formViewModel.scaleMinColorControl.value != null ||
-          formViewModel.scaleMaxColorControl.value != null;
+      formViewModel.scaleMaxColorControl.value != null;
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +94,7 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
     final theme = Theme.of(context);
     return Column(
       children: [
-        FormSectionHeader(
-          title: tr.navlink_question_visuals,
-          divider: false,
-        ),
+        FormSectionHeader(title: tr.navlink_question_visuals, divider: false),
         const SizedBox(height: 16.0),
         TextParagraph(
           text: tr.navlink_question_visuals_description,
@@ -165,7 +159,7 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
               child: Hyperlink(
                 text: "+ ${tr.form_field_response_scale_color_add}",
                 onClick: () => control.value = SerializableColor(
-                  ThemeConfig.colorPickerInitialColor(theme).value,
+                  ThemeConfig.colorPickerInitialColor(theme).toARGB32(),
                 ),
                 visitedColor: null,
               ),
@@ -230,10 +224,12 @@ class _ScaleQuestionFormViewState extends ConsumerState<ScaleQuestionFormView> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(formArray.controls.length, (i) {
-                final valueControl = formViewModel
-                    .scaleMidValueControls.controls[i] as FormControl;
-                final labelControl = formViewModel
-                    .scaleMidLabelControls.controls[i] as FormControl;
+                final valueControl =
+                    formViewModel.scaleMidValueControls.controls[i]
+                        as FormControl;
+                final labelControl =
+                    formViewModel.scaleMidLabelControls.controls[i]
+                        as FormControl;
 
                 return _buildLabelValueControlsPair(
                   labelControl: labelControl,
