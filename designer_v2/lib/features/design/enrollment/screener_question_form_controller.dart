@@ -148,21 +148,19 @@ class ScreenerQuestionFormViewModel extends QuestionFormViewModel
   }
 
   List<AbstractControl> _copyFormControls(List<AbstractControl> controls) {
-    return controls
-        .map((control) {
-          final Object? value = control.value;
-          if (value is Choice) {
-            return FormControl<String>(
-              value: value.text,
-              disabled: control.disabled,
-            );
-          }
-          return FormControl<String>(
-            value: value?.toString() ?? '',
-            disabled: control.disabled,
-          );
-        })
-        .toList();
+    return controls.map((control) {
+      final Object? value = control.value;
+      if (value is Choice) {
+        return FormControl<String>(
+          value: value.text,
+          disabled: control.disabled,
+        );
+      }
+      return FormControl<String>(
+        value: value?.toString() ?? '',
+        disabled: control.disabled,
+      );
+    }).toList();
   }
 
   AbstractControl? _findAssociatedLogicControlFor({
