@@ -28,6 +28,15 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v5
 
+      # Remove workspace resolution lines from packages
+      - name: Remove workspace resolution
+        run: |
+          echo "Removing 'resolution: workspace' from core/pubspec.yaml"
+          sed -i '/^resolution: workspace$/d' core/pubspec.yaml
+          
+          echo "Removing core from root workspace"
+          sed -i '/- core/d' pubspec.yaml
+
       - name: '>> Dart package core <<'
         uses: k-paxian/dart-package-publisher@master
         with:
@@ -43,6 +52,15 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v5
+
+      # Remove workspace resolution lines from packages
+      - name: Remove workspace resolution
+        run: |
+          echo "Removing 'resolution: workspace' from flutter_common/pubspec.yaml"
+          sed -i '/^resolution: workspace$/d' flutter_common/pubspec.yaml
+          
+          echo "Removing flutter_common from root workspace"
+          sed -i '/- flutter_common/d' pubspec.yaml
 
       - name: '>> Dart package flutter_common <<'
         uses: k-paxian/dart-package-publisher@master
