@@ -74,7 +74,8 @@ Future<void> loadEnv() async {
 
 List<String> loadSupabaseUrls() {
   final urlsEnv = getEnv('STUDYU_SUPABASE_URLS');
-  @Deprecated('Use STUDYU_SUPABASE_URLS instead')
+  // Deprecated: Use STUDYU_SUPABASE_URLS instead
+  // Will be removed in future versions
   final urlEnv = getEnv('STUDYU_SUPABASE_URL', optional: true);
 
   List<String> urls = [];
