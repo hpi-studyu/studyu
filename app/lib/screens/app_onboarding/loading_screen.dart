@@ -95,7 +95,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         StudyULogger.fatal('Could not login and retrieve the study subject.');
         // Try to reload the subject from cache
         try {
-          final subject = await Cache.loadSubject();
+          subject = await Cache.loadSubject();
           StudyULogger.info("Loaded subject from cache: $subject");
         } catch (e) {
           StudyULogger.warning("No subject found in cache");
