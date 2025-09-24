@@ -1,3 +1,8 @@
+## 2.12.2
+
+ - **FIX**(app): offline mode was not working.
+ - **FIX**: migrate FlutterTimezone.
+
 ## 2.12.1
 
  - **FIX**: app starting issues due to storage reading.
