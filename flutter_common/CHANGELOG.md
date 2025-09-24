@@ -1,3 +1,7 @@
+## 1.9.5
+
+ - **FIX**: offline mode was not working.
+
 ## 1.9.4
 
  - **FIX**: support multiple Supabase URLs and improve connection handling.

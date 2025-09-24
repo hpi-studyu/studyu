@@ -15,6 +15,39 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`studyu_app` - `v2.12.3`](#studyu_app---v2123)
+ - [`studyu_flutter_common` - `v1.9.5`](#studyu_flutter_common---v195)
+ - [`studyu_designer_v2` - `v1.15.3`](#studyu_designer_v2---v1153)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `studyu_designer_v2` - `v1.15.3`
+
+---
+
+#### `studyu_app` - `v2.12.3`
+
+ - **FIX**: offline mode was not working.
+
+#### `studyu_flutter_common` - `v1.9.5`
+
+ - **FIX**: offline mode was not working.
+
+
+## 2025-09-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`studyu_app` - `v2.12.2`](#studyu_app---v2122)
  - [`studyu_designer_v2` - `v1.15.2`](#studyu_designer_v2---v1152)
  - [`studyu_flutter_common` - `v1.9.4`](#studyu_flutter_common---v194)

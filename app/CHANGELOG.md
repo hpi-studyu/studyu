@@ -1,3 +1,7 @@
+## 2.12.3
+
+ - **FIX**: offline mode was not working.
+
 ## 2.12.2
 
  - **FIX**: migrate FlutterTimezone.
