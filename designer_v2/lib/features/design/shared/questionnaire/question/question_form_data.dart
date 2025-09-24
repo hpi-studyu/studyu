@@ -324,6 +324,7 @@ class ImageQuestionFormData extends QuestionFormData {
     required super.questionId,
     required super.questionText,
     required super.questionType,
+    super.conditional,
     super.questionInfoText,
   });
 
@@ -343,6 +344,7 @@ class ImageQuestionFormData extends QuestionFormData {
       questionType: SurveyQuestionType.image,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
+      conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -354,6 +356,12 @@ class ImageQuestionFormData extends QuestionFormData {
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<ImageCapturingQuestion>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as ImageCapturingQuestion?,
+          );
     return question;
   }
 
@@ -364,6 +372,7 @@ class ImageQuestionFormData extends QuestionFormData {
       questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
+      conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;
@@ -383,6 +392,7 @@ class AudioQuestionFormData extends QuestionFormData {
     required super.questionText,
     required super.questionType,
     super.questionInfoText,
+    super.conditional,
     required this.maxRecordingDurationSeconds,
   });
 
@@ -404,6 +414,7 @@ class AudioQuestionFormData extends QuestionFormData {
       questionType: SurveyQuestionType.audio,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
+      conditional: question.conditional,
       maxRecordingDurationSeconds: question.maxRecordingDurationSeconds,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
@@ -418,6 +429,12 @@ class AudioQuestionFormData extends QuestionFormData {
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<AudioRecordingQuestion>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as AudioRecordingQuestion?,
+          );
     return question;
   }
 
@@ -428,6 +445,7 @@ class AudioQuestionFormData extends QuestionFormData {
       questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
+      conditional: conditional?.deepCopy(),
       maxRecordingDurationSeconds: maxRecordingDurationSeconds,
     );
     data.responseOptionsValidity = responseOptionsValidity;
@@ -664,6 +682,7 @@ class FitbitQuestionFormData extends QuestionFormData {
     required super.questionText,
     required super.questionType,
     required this.types,
+    super.conditional,
     super.questionInfoText,
   });
 
@@ -683,6 +702,7 @@ class FitbitQuestionFormData extends QuestionFormData {
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
       types: question.types,
+      conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -694,6 +714,12 @@ class FitbitQuestionFormData extends QuestionFormData {
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<FitbitQuestion>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as FitbitQuestion,
+          );
     return question;
   }
 
@@ -705,6 +731,7 @@ class FitbitQuestionFormData extends QuestionFormData {
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
       types: types,
+      conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;
@@ -738,6 +765,7 @@ class PainQuestionFormData extends QuestionFormData {
     required super.questionText,
     required super.questionType,
     super.questionInfoText,
+    super.conditional,
   });
 
   static Map<String, Body> get kResponseOptions => {
@@ -756,6 +784,7 @@ class PainQuestionFormData extends QuestionFormData {
       questionType: SurveyQuestionType.pain,
       questionText: question.prompt ?? '',
       questionInfoText: question.rationale ?? '',
+      conditional: question.conditional,
     );
     data.setResponseOptionsValidityFrom(eligibilityCriteria);
     return data;
@@ -767,6 +796,12 @@ class PainQuestionFormData extends QuestionFormData {
     question.id = questionId;
     question.prompt = questionText;
     question.rationale = questionInfoText;
+    question.conditional = conditional == null
+        ? null
+        : QuestionConditional<List<BodyPart>>.withCondition(
+            conditional!.condition,
+            defaultValue: conditional?.defaultValue as List<BodyPart>?,
+          );
     return question;
   }
 
@@ -777,6 +812,7 @@ class PainQuestionFormData extends QuestionFormData {
       questionType: questionType,
       questionText: questionText.withDuplicateLabel(),
       questionInfoText: questionInfoText,
+      conditional: conditional?.deepCopy(),
     );
     data.responseOptionsValidity = responseOptionsValidity;
     return data;
