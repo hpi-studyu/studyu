@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-09-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.12.2`](#studyu_app---v2122)
+ - [`studyu_designer_v2` - `v1.15.2`](#studyu_designer_v2---v1152)
+ - [`studyu_flutter_common` - `v1.9.4`](#studyu_flutter_common---v194)
+
+---
+
+#### `studyu_app` - `v2.12.2`
+
+ - **FIX**: migrate FlutterTimezone.
+
+#### `studyu_designer_v2` - `v1.15.2`
+
+ - **PERF**: Improve update performance using debouncer.
+ - **FIX**: add conditional property to question form data and controller.
+ - **FIX**: filter out non-dependable question types from available questions.
+ - **FIX**: update conditional form titles to use localized strings.
+ - **FIX**: filter out ignored question types from available questions.
+ - **FIX**: update form control copying logic to handle Choice type values.
+
+#### `studyu_flutter_common` - `v1.9.4`
+
+ - **FIX**: support multiple Supabase URLs and improve connection handling.
+ - **FIX**: update Supabase URL for production environment.
+
+
 ## 2025-09-22
 
 ### Changes

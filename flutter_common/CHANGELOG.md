@@ -1,3 +1,8 @@
+## 1.9.4
+
+ - **FIX**: support multiple Supabase URLs and improve connection handling.
+ - **FIX**: update Supabase URL for production environment.
+
 ## 1.9.3
 
  - **FIX**: comment out encryptedSharedPreferences option in SecureStorage.
