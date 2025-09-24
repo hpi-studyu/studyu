@@ -55,7 +55,12 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await loadEnv();
+  try {
+    await loadEnv();
+  } catch (error) {
+    // device could be offline
+    debugPrint('Error loading env: $error');
+  }
   await _configureLocalTimeZone();
   final queryParameters = Uri.base.queryParameters;
   // Turn off the # in the URLs on the web

@@ -28,7 +28,7 @@ String? getEnv(String name, {bool optional = false}) {
   } catch (e) {
     if (!optional) {
       print('No environment value for $name');
-      // rethrow;
+      // todo handle environment error in the UI
     }
   }
 
@@ -130,6 +130,8 @@ Future<String> findWorkingSupabaseUrl(
       debugPrint("⚠️ Failed to connect to $url: $e");
     }
   }
-
-  throw Exception("No Supabase URL worked!");
+  debugPrint(
+    "❌ Could not connect to any Supabase URL, will reset to the first one",
+  );
+  return supabaseUrls.first;
 }
