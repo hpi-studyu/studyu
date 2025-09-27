@@ -1,314 +1,186 @@
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/domain/study_export_context.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/utils/extensions.dart';
 
-/// Handles the export of Study objects to LLM-friendly JSON schemas.
-/// 
-/// This class contains all the logic for converting StudyU Study objects
-/// into simplified JSON representations that can be easily consumed by
-/// Large Language Models for study generation and editing.
-class StudyExport {
-  StudyExport._();
+abstract class ResultTypes {}
 
-  /// Converts a [Study] object to a simplified JSON schema.
-  /// 
-  /// Creates a structured JSON representation with natural language references
-  /// instead of UUIDs. The schema includes metadata, schedule, screening forms,
-  /// observation forms, interventions, and consent information.
-  /// 
-  /// Returns a Map containing the complete study schema with version information.
-  static Map<String, dynamic> toSchema(Study study) {
-    final context = StudyExportContext();
-    return {
-      'version': 1,
-      'metadata': _exportMetadata(study),
-      'studySchedule': _exportStudySchedule(study.schedule),
-      'screening': _exportScreeningForm(study, context),
-      'observations': _exportObservationForms(study, context),
-      'interventions': _exportInterventions(study),
-      'consent': _exportConsent(study),
-    };
-  }
-
-  /// Exports study metadata including title, description, and contact information.
-  static Map<String, dynamic> _exportMetadata(Study study) {
-    return {
-      'title': study.title,
-      'description': study.description,
-      'participation': study.participation.name,
-      'resultSharing': study.resultSharing.name,
-      'icon': study.iconName,
-      'contact': {
-        'email': study.contact.email,
-        'phone': study.contact.phone,
-        'website': study.contact.website,
-        'institutionalReviewBoard': study.contact.institutionalReviewBoard ?? '',
-        'institutionalReviewBoardNumber': study.contact.institutionalReviewBoardNumber ?? '',
-        'researchers': study.contact.researchers ?? '',
-      },
-    };
-  }
-
-  static Map<String, dynamic> _exportStudySchedule(StudySchedule schedule) {
-    return {
-      'numberOfCycles': schedule.numberOfCycles,
-      'phaseDuration': schedule.phaseDuration,
-      'includeBaseline': schedule.includeBaseline,
-      'sequence': schedule.sequence.name,
-      'sequenceCustom': schedule.sequenceCustom,
-    };
-  }
-
-  static List<Map<String, dynamic>> _exportObservationForms(
-    Study study,
-    StudyExportContext context,
-  ) {
-    final observations = <Map<String, dynamic>>[];
-
-    for (final observation in study.observations) {
-      if (observation is! QuestionnaireTask) continue;
-      observations.add(_exportObservationForm(observation, context));
-    }
-
-    return observations;
-  }
-
-  static Map<String, dynamic> _exportScreeningForm(
-    Study study,
-    StudyExportContext context,
-  ) {
-    final questions = <Map<String, dynamic>>[];
-
-    for (var i = 0; i < study.questionnaire.questions.length; i++) {
-      final question = study.questionnaire.questions[i];
-      final exported = _exportQuestion(question, index: i);
-      questions.add(exported);
-      context.registerQuestion('screening', question.prompt ?? 'question_\${i + 1}', question);
-    }
-
-    Map<String, dynamic>? eligibilityRules;
-    if (study.eligibilityCriteria.isNotEmpty) {
-      final rules = study.eligibilityCriteria
-          .map(
-            (criterion) => _expressionToLogic(
-              criterion.condition,
-              questions: study.questionnaire.questions,
-            ),
-          )
-          .whereType<Map<String, dynamic>>()
-          .toList();
-      if (rules.isNotEmpty) {
-        eligibilityRules = {'all': rules};
-      }
-    }
-
-    return {
-      'title': study.title,
-      'description': study.description,
-      'questions': questions,
-      if (eligibilityRules != null) 'eligibilityRules': eligibilityRules,
-    };
-  }
-
-  static Map<String, dynamic> _exportObservationForm(
-    QuestionnaireTask observation,
-    StudyExportContext context,
-  ) {
-    final formTitle = observation.title ?? 'observation';
-    context.formKeyByObservationId[observation.id] = formTitle;
-
-    final questions = <Map<String, dynamic>>[];
-
-    for (var i = 0; i < observation.questions.questions.length; i++) {
-      final question = observation.questions.questions[i];
-      final exported = _exportQuestion(question, index: i);
-      questions.add(exported);
-      context.registerQuestion(formTitle, question.prompt ?? 'question_\${i + 1}', question);
-    }
-
-    return {
-      'title': observation.title,
-      'description': observation.header ?? observation.footer,
-      'schedule': _exportSchedule(observation.schedule),
-      'questions': questions,
-    };
-  }
-
-  static Map<String, dynamic> _exportQuestion(
-    Question question, {
-    required int index,
-  }) {
-    final map = <String, dynamic>{
-      'type': question.type,
-      'prompt': question.prompt,
-      if (question.rationale != null) 'rationale': question.rationale,
-    };
-
-    final conditional = question.conditional;
-    if (conditional != null) {
-      if (conditional.condition.expressions.isNotEmpty) {
-        final logic = _expressionToLogic(
-          conditional.condition,
-          questions: [],
-        );
-        if (logic != null) {
-          map['displayIf'] = logic;
-        }
-      }
-      if (conditional.defaultValue != null) {
-        map['defaultValue'] = conditional.defaultValue;
-      }
-    }
-
-    if (question is BooleanQuestion) {
-      // Boolean questions have no additional settings
-    } else if (question is ChoiceQuestion) {
-      map['choices'] = question.choices.map((choice) => choice.text).toList();
-    } else if (question is ScaleQuestion) {
-      map['min'] = question.minimum;
-      map['max'] = question.maximum;
-      map['step'] = question.step;
-      map['defaultValue'] = question.initial;
-    } else if (question is AnnotatedScaleQuestion) {
-      map['min'] = question.minimum;
-      map['max'] = question.maximum;
-      map['step'] = question.step;
-      map['defaultValue'] = question.initial;
-      map['annotations'] = question.annotations
-          .map((annotation) => {
-                'value': annotation.value,
-                'label': annotation.annotation,
-              })
-          .toList();
-    } else if (question is VisualAnalogueQuestion) {
-      map['min'] = question.minimum;
-      map['max'] = question.maximum;
-      map['step'] = question.step;
-      map['defaultValue'] = question.initial;
-    } else if (question is FreeTextQuestion) {
-      // Free text questions have no additional settings
-    }
-
-    return map;
-  }
-
-  static Map<String, dynamic> _exportSchedule(Schedule schedule) {
-    return {
-      'completionWindows': [
-        for (final period in schedule.completionPeriods)
-          {
-            'start': period.unlockTime.toString(),
-            'end': period.lockTime.toString(),
-          },
-      ],
-      'reminders': [
-        for (final reminder in schedule.reminders) reminder.toString(),
-      ],
-    };
-  }
-
-  static List<Map<String, dynamic>> _exportInterventions(Study study) {
-    return study.interventions.map((intervention) {
-      final tasks = <Map<String, dynamic>>[];
-
-      for (final task in intervention.tasks) {
-        if (task is CheckmarkTask) {
-          tasks.add({
-            'type': 'checkmark',
-            'title': task.title,
-            'header': task.header,
-            'footer': task.footer,
-            'schedule': _exportSchedule(task.schedule),
-          });
-        }
-      }
-
-      return {
-        'name': intervention.name,
-        'description': intervention.description,
-        'icon': intervention.icon,
-        'tasks': tasks,
-      };
-    }).toList();
-  }
-
-  static List<Map<String, dynamic>> _exportConsent(Study study) {
-    return study.consent.map((item) {
-      return {
-        'title': item.title,
-        'description': item.description,
-        'icon': item.iconName,
-      };
-    }).toList();
-  }
-
-  static Map<String, dynamic>? _expressionToLogic(
-    Expression expression, {
-    required List<Question> questions,
-  }) {
-    if (expression is CompositeExpression) {
-      final convertedExpressions = expression.expressions
-          .map((expr) => _expressionToLogic(expr, questions: questions))
-          .whereType<Map<String, dynamic>>()
-          .toList();
-
-      if (convertedExpressions.isEmpty) return null;
-
-      if (expression.logicType == LogicType.and) {
-        return {'all': convertedExpressions};
-      } else {
-        return {'any': convertedExpressions};
-      }
-    }
-
-    if (expression is NotExpression) {
-      final innerLogic = _expressionToLogic(expression.expression, questions: questions);
-      if (innerLogic == null) return null;
-      return {'not': innerLogic};
-    }
-
-    if (expression is BooleanExpression) {
-      final question = questions.cast<Question?>().firstWhere(
-        (q) => q?.id == expression.target,
-        orElse: () => null,
-      );
-      if (question?.prompt == null) return null;
-
-      return {
-        'question': question!.prompt,
-        'operator': 'isTrue',
-      };
-    }
-
-    if (expression is ChoiceExpression) {
-      final question = questions.cast<Question?>().firstWhere(
-        (q) => q?.id == expression.target,
-        orElse: () => null,
-      );
-      if (question?.prompt == null || question is! ChoiceQuestion) return null;
-
-      final choiceTexts = expression.choices
-          .map((choiceId) {
-            final choice = question.choices.cast<Choice?>().firstWhere(
-              (c) => c?.id == choiceId,
-              orElse: () => null,
-            );
-            return choice?.text;
-          })
-          .whereType<String>()
-          .toList();
-
-      if (choiceTexts.isEmpty) return null;
-
-      return {
-        'question': question.prompt,
-        'operator': 'includesAny',
-        'value': choiceTexts,
-      };
-    }
-
-    return null;
-  }
+class MeasurementResultTypes extends ResultTypes {
+  static const String questionnaire = 'QuestionnaireState';
+  static List<String> get values => [questionnaire];
 }
 
+class InterventionResultTypes extends ResultTypes {
+  static const String checkmarkTask = 'bool';
+  static List<String> get values => [checkmarkTask];
+}
 
+class StudyExportData {
+  StudyExportData({
+    required this.study,
+    required this.measurementsData,
+    required this.interventionsData,
+    required this.mediaData,
+  });
 
+  final Study study;
+  final List<Map<String, dynamic>> measurementsData;
+  final List<Map<String, dynamic>> interventionsData;
+  final List<String> mediaData;
+
+  bool get isEmpty => measurementsData.isEmpty && interventionsData.isEmpty;
+}
+
+extension StudyExportX on Study {
+  // TODO: add missing records from generated schedule
+
+  static dynamic _formatQuestionResponse(dynamic response, Question? question) {
+    if (question is ChoiceQuestion && response is List<String>) {
+      return _formatChoiceResponse(response, question);
+    }
+    return response.toString();
+  }
+
+  static List<Map<String, String>> _formatChoiceResponse(
+    List<String> choiceIds,
+    ChoiceQuestion question,
+  ) {
+    return choiceIds.map((id) {
+      final choice = question.choices.firstWhereOrNull((c) => c.id == id);
+      final text = choice?.text ?? id;
+      return {'id': id, 'text': text};
+    }).toList();
+  }
+
+  StudyExportData get exportData {
+    final List<Map<String, dynamic>> measurementsData = [];
+    final List<Map<String, dynamic>> interventionsData = [];
+    final List<String> mediaData = [];
+
+    final List<SubjectProgress> records = participantsProgress ?? [];
+    records.sort(
+      (b, a) => a.completedAt!.compareTo(b.completedAt!),
+    ); // descending
+
+    // Key used as a placeholder for values that cannot be resolved by their
+    // id anymore (e.g. because the study design has changed meanwhile)
+    final invalidKey = 'N/A'.hardcoded;
+
+    // Build columns dynamically for each question in each survey
+    final Map<String, dynamic> surveyColumns = {};
+    final Map<String, String> responseColumnById = {};
+    final Map<String, String> surveyAnsweredColumnById = {};
+    final Map<String, Question> questionById = {};
+    final mediaIndices = [];
+
+    for (var i = 1; i < observations.length + 1; i++) {
+      final surveyMeasurement = observations[i - 1] as QuestionnaireTask;
+      final surveyQuestions = surveyMeasurement.questions.questions;
+      surveyColumns['survey${i}_id'] = surveyMeasurement.id;
+      surveyColumns['survey${i}_name'] = surveyMeasurement.title;
+      surveyColumns['is_survey$i'] = false;
+      surveyAnsweredColumnById[surveyMeasurement.id] = 'is_survey$i';
+
+      for (var j = 1; j < surveyQuestions.length + 1; j++) {
+        final question = surveyQuestions[j - 1];
+        surveyColumns['survey${i}_question${j}_id'] = question.id;
+        surveyColumns['survey${i}_question${j}_text'] = question.prompt;
+        surveyColumns['survey${i}_question${j}_response'] = '';
+        responseColumnById[question.id] = 'survey${i}_question${j}_response';
+        questionById[question.id] = question;
+        if (question.type == AudioRecordingQuestion.questionType ||
+            question.type == ImageCapturingQuestion.questionType) {
+          mediaIndices.add(question.id);
+        }
+      }
+    }
+
+    for (final record in records) {
+      final intervention = getIntervention(record.interventionId);
+      final Map<String, dynamic> rowShared = {
+        'participant_id': record.subjectId,
+        'participant_started_at': record.startedAt!.toString(),
+        'invite_code':
+            participants!
+                .where((element) => element.id == record.subjectId)
+                .firstWhereOrNull((_) => true)
+                ?.inviteCode ??
+            '',
+        'current_day_of_study': record.completedAt!
+            .difference(record.startedAt!)
+            .inDays
+            .toString(),
+        'current_intervention_id': record.interventionId,
+        'current_intervention_name': intervention?.name ?? invalidKey,
+      };
+
+      final isMeasurement = MeasurementResultTypes.values.contains(
+        record.resultType,
+      );
+      final isIntervention = InterventionResultTypes.values.contains(
+        record.resultType,
+      );
+
+      if (isMeasurement) {
+        final measurement = observations.firstWhereOrNull(
+          (o) => o.id == record.taskId,
+        );
+        final Map<String, dynamic> row = {
+          'measurement_time': record.completedAt!.toString(),
+          'measurement_id': record.taskId,
+          'measurement_name': measurement?.title ?? invalidKey,
+          ...rowShared,
+        };
+
+        if (record.resultType == MeasurementResultTypes.questionnaire) {
+          // Add survey + question columns
+          row.addAll(surveyColumns);
+
+          // Populate question columns with submitted response data
+          final submittedSurvey = record.result.result as QuestionnaireState;
+          final submittedQuestionAnswerPairs = submittedSurvey.answers.values;
+
+          for (final questionAnswerPair in submittedQuestionAnswerPairs) {
+            final questionId = questionAnswerPair.question;
+            final questionResponseColumn = responseColumnById[questionId];
+            final surveyAnsweredColumn =
+                surveyAnsweredColumnById[record.taskId]!;
+            if (questionResponseColumn == null) {
+              continue; // skip unresolvable questions (e.g. because study design has changed)
+            }
+            final responseValue = StudyExportX._formatQuestionResponse(
+              questionAnswerPair.response,
+              questionById[questionId],
+            );
+            row[questionResponseColumn] = responseValue;
+            row[surveyAnsweredColumn] = true;
+            for (final mediaIndex in mediaIndices) {
+              if (mediaIndex == questionId) {
+                mediaData.add(responseValue.toString());
+              }
+            }
+          }
+        }
+        measurementsData.add(row);
+      } else if (isIntervention) {
+        final task = intervention?.tasks.firstWhereOrNull(
+          (e) => e.id == record.taskId,
+        );
+        final Map<String, dynamic> row = {
+          'intervention_task_time': record.completedAt!.toString(),
+          'intervention_task_id': record.taskId,
+          'intervention_task_name': task?.title ?? invalidKey,
+          'is_completed': true, // TODO add missed task from generated schedule
+          ...rowShared,
+        };
+        interventionsData.add(row);
+      }
+    }
+    return StudyExportData(
+      study: this,
+      measurementsData: measurementsData,
+      interventionsData: interventionsData,
+      mediaData: mediaData,
+    );
+  }
+}
