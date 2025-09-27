@@ -13,7 +13,8 @@ class SimplifiedStudyConverter {
       'version': schemaVersion,
       'metadata': _exportMetadata(study),
       'studySchedule': _exportStudySchedule(study.schedule),
-      'forms': _exportForms(study, context),
+      'screening': _exportScreeningForm(study, context),
+      'observations': _exportObservations(study, context),
       'interventions': _exportInterventions(study),
       'consent': _exportConsent(study),
     };
@@ -32,9 +33,12 @@ class SimplifiedStudyConverter {
       study.schedule,
     );
 
-    _importForms(schema['forms'], study, context);
+    _importScreeningForm(schema['screening'], study, context);
+    _importObservations(schema['observations'], study, context);
     _importInterventions(schema['interventions'], study);
     _importConsent(schema['consent'], study);
+
+    _resolveConditionals(study, context);
 
     return study;
   }
@@ -124,25 +128,6 @@ class SimplifiedStudyConverter {
   // Forms (questions + eligibility)
   // ---------------------------------------------------------------------------
 
-  static List<Map<String, dynamic>> _exportForms(
-    Study study,
-    _ExportContext context,
-  ) {
-    final forms = <Map<String, dynamic>>[];
-
-    if (study.questionnaire.questions.isNotEmpty ||
-        study.eligibilityCriteria.isNotEmpty) {
-      forms.add(_exportScreeningForm(study, context));
-    }
-
-    for (final observation in study.observations) {
-      if (observation is! QuestionnaireTask) continue;
-      forms.add(_exportObservationForm(observation, context));
-    }
-
-    return forms;
-  }
-
   static Map<String, dynamic> _exportScreeningForm(
     Study study,
     _ExportContext context,
@@ -173,12 +158,25 @@ class SimplifiedStudyConverter {
     }
 
     return {
-      'purpose': 'screening',
       'title': study.title,
       'description': study.description,
       'questions': questions,
       if (eligibilityRules != null) 'eligibilityRules': eligibilityRules,
     };
+  }
+
+  static List<Map<String, dynamic>> _exportObservations(
+    Study study,
+    _ExportContext context,
+  ) {
+    final observations = <Map<String, dynamic>>[];
+
+    for (final observation in study.observations) {
+      if (observation is! QuestionnaireTask) continue;
+      observations.add(_exportObservationForm(observation, context));
+    }
+
+    return observations;
   }
 
   static Map<String, dynamic> _exportObservationForm(
@@ -198,7 +196,6 @@ class SimplifiedStudyConverter {
     }
 
     return {
-      'purpose': 'observation',
       'title': observation.title,
       'description': observation.header ?? observation.footer,
       'schedule': _exportSchedule(observation.schedule),
@@ -311,30 +308,15 @@ class SimplifiedStudyConverter {
     };
   }
 
-  static void _importForms(
-    dynamic formsJson,
-    Study study,
-    _ImportContext context,
-  ) {
-    if (formsJson is! List) return;
-
-    for (final formJson in formsJson.cast<Map<String, dynamic>>()) {
-      final purpose = formJson['purpose'] as String? ?? 'custom';
-      if (purpose == 'screening') {
-        _importScreeningForm(formJson, study, context);
-      } else {
-        _importObservationForm(formJson, study, context);
-      }
-    }
-    
-    _resolveConditionals(study, context);
-  }
 
   static void _importScreeningForm(
-    Map<String, dynamic> form,
+    dynamic screeningData,
     Study study,
     _ImportContext context,
   ) {
+    if (screeningData is! Map<String, dynamic>) return;
+    
+    final form = screeningData;
     final formName = 'screening';
     final questionsData = _importQuestions(form);
     study.questionnaire.questions = questionsData;
@@ -346,6 +328,18 @@ class SimplifiedStudyConverter {
 
     context.addConditionalData(formName, form);
     context.addEligibilityData(form);
+  }
+
+  static void _importObservations(
+    dynamic observationsData,
+    Study study,
+    _ImportContext context,
+  ) {
+    if (observationsData is! List) return;
+
+    for (final observationJson in observationsData.cast<Map<String, dynamic>>()) {
+      _importObservationForm(observationJson, study, context);
+    }
   }
 
   static void _importObservationForm(

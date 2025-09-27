@@ -109,6 +109,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               return;
                             }
                             navigator.pop();
+                            // Add a small delay to ensure database propagation
+                            await Future.delayed(const Duration(milliseconds: 100));
                             dashboardController.onSelectStudy(importedStudy);
                           } catch (error) {
                             setState(() {

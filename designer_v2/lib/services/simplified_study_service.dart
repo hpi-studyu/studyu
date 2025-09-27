@@ -58,6 +58,15 @@ class SimplifiedStudyService {
     final study = SimplifiedStudyConverter.fromSchema(payload, ownerId: userId);
     final savedWrapped = await _studyRepository.save(study);
     final savedStudy = savedWrapped?.model ?? study;
+    
+    // Ensure the study is available in the repository by fetching it
+    try {
+      await _studyRepository.fetch(savedStudy.id);
+    } catch (_) {
+      // If fetch fails, we'll still proceed with the saved study
+      // The UI will handle the race condition with the delay
+    }
+    
     _notifications.show(Notifications.studyImportSuccess);
     return savedStudy;
   }
