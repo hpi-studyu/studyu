@@ -317,7 +317,7 @@ class SimplifiedStudyConverter {
     if (screeningData is! Map<String, dynamic>) return;
     
     final form = screeningData;
-    final formName = 'screening';
+    const formName = 'screening';
     final questionsData = _importQuestions(form);
     study.questionnaire.questions = questionsData;
 
@@ -749,18 +749,13 @@ class SimplifiedStudyConverter {
         switch (operator) {
           case 'eq':
             flippedLogic['operator'] = 'neq';
-            break;
           case 'neq':
             flippedLogic['operator'] = 'eq';
-            break;
           case 'isTrue':
             flippedLogic['operator'] = 'isFalse';
-            break;
           case 'isFalse':
             flippedLogic['operator'] = 'isTrue';
-            break;
           default:
-            // For operators we can't flip, return null to avoid NotExpression
             return null;
         }
       }

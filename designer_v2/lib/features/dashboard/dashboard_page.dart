@@ -26,11 +26,17 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  static const Duration _databaseConsistencyDelay = Duration(milliseconds: 100);
+
   @override
   void initState() {
     super.initState();
     final controller = ref.read(dashboardControllerProvider.notifier);
     runAsync(() => controller.setStudiesFilter(widget.filter));
+  }
+
+  Future<void> _ensureDatabaseConsistency() async {
+    await Future.delayed(_databaseConsistencyDelay);
   }
 
   @override
@@ -109,8 +115,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               return;
                             }
                             navigator.pop();
-                            // Add a small delay to ensure database propagation
-                            await Future.delayed(const Duration(milliseconds: 100));
+                            await _ensureDatabaseConsistency();
                             dashboardController.onSelectStudy(importedStudy);
                           } catch (error) {
                             setState(() {

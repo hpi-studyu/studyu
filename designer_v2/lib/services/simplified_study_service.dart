@@ -26,48 +26,74 @@ class SimplifiedStudyService {
       ref.read(notificationServiceProvider);
 
   Future<void> exportStudy(Study study) async {
-    Study exportSource = study;
-    try {
-      final wrapped = await _studyRepository.fetch(study.id);
-      exportSource = wrapped.model;
-    } catch (_) {
-      // Fallback to the provided study when the full fetch is not available.
-    }
-
+    final exportSource = await _getExportSource(study);
     final schema = SimplifiedStudyConverter.toSchema(exportSource);
     final json = prettyJson(schema);
-    final filename = '${(exportSource.title ?? 'study').toKey()}_schema'
-        .ensureSuffix('.json');
+    final filename = _generateExportFilename(exportSource);
+    
     downloadFile(fileContent: json, filename: filename);
     _notifications.show(Notifications.studyExportSchemaSuccess);
   }
 
+  Future<Study> _getExportSource(Study study) async {
+    try {
+      final wrapped = await _studyRepository.fetch(study.id);
+      return wrapped.model;
+    } catch (_) {
+      return study;
+    }
+  }
+
+  String _generateExportFilename(Study study) {
+    const defaultStudyName = 'study';
+    const fileExtension = '.json';
+    const schemaSuffix = '_schema';
+    
+    return '${(study.title ?? defaultStudyName).toKey()}$schemaSuffix'
+        .ensureSuffix(fileExtension);
+  }
+
   Future<Study> importStudyFromJson(String rawJson) async {
+    final userId = _validateAuthenticatedUser();
+    final payload = _parseJsonPayload(rawJson);
+    
+    final study = SimplifiedStudyConverter.fromSchema(payload, ownerId: userId);
+    final savedStudy = await _saveAndCacheStudy(study);
+    
+    _notifications.show(Notifications.studyImportSuccess);
+    return savedStudy;
+  }
+
+  String _validateAuthenticatedUser() {
     final userId = _authRepository.currentUser?.id;
     if (userId == null) {
       throw const FormatException('No authenticated user available');
     }
+    return userId;
+  }
 
-    Map<String, dynamic> payload;
+  Map<String, dynamic> _parseJsonPayload(String rawJson) {
     try {
-      payload = jsonDecode(rawJson) as Map<String, dynamic>;
+      return jsonDecode(rawJson) as Map<String, dynamic>;
     } catch (error) {
       throw FormatException('Invalid study JSON: $error');
     }
+  }
 
-    final study = SimplifiedStudyConverter.fromSchema(payload, ownerId: userId);
+  Future<Study> _saveAndCacheStudy(Study study) async {
     final savedWrapped = await _studyRepository.save(study);
     final savedStudy = savedWrapped?.model ?? study;
     
-    // Ensure the study is available in the repository by fetching it
-    try {
-      await _studyRepository.fetch(savedStudy.id);
-    } catch (_) {
-      // If fetch fails, we'll still proceed with the saved study
-      // The UI will handle the race condition with the delay
-    }
+    await _warmRepositoryCache(savedStudy.id);
     
-    _notifications.show(Notifications.studyImportSuccess);
     return savedStudy;
+  }
+
+  Future<void> _warmRepositoryCache(String studyId) async {
+    try {
+      await _studyRepository.fetch(studyId);
+    } on Exception {
+      return;
+    }
   }
 }
