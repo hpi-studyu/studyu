@@ -12,7 +12,6 @@ import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
@@ -53,7 +52,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
       Navigator.pushReplacementNamed(context, Routes.dashboard);
     } else {
       StudyULogger.warning("No subject found for ID: $selectedSubjectId.");
-      await _showSupportOrDeleteDialog(selectedSubjectId);
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(
+        context,
+        Routes.appErrorScreen,
+        arguments: selectedSubjectId,
+      );
     }
   }
 
@@ -235,108 +239,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
         return;
       }
     }
-  }
-
-  Future<void> _showSupportOrDeleteDialog([String? selectedSubjectId]) async {
-    final result = await showDialog<bool>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.loading_error_title),
-          content: Text(
-            AppLocalizations.of(context)!.loading_error_description,
-            softWrap: true,
-            textAlign: TextAlign.start,
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-              ),
-              child: Text(AppLocalizations.of(context)!.contact_support),
-            ),
-            TextButton(
-              style: TextButton.styleFrom(foregroundColor: Colors.red),
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(AppLocalizations.of(context)!.delete_data),
-            ),
-          ],
-        );
-      },
-    );
-    if (result == true) {
-      if (!mounted) return;
-      // Confirm deletion of storage data
-      final deleteResult = await showDialog<bool>(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(AppLocalizations.of(context)!.delete_all_data),
-            content: Text(
-              AppLocalizations.of(context)!.delete_all_data_description,
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text(AppLocalizations.of(context)!.cancel),
-              ),
-              TextButton(
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text(AppLocalizations.of(context)!.reset_app),
-              ),
-            ],
-          );
-        },
-      );
-      if (deleteResult == true) {
-        // Delete all secure storage data
-        StudyULogger.info("Deleting all secure storage data");
-        if (!mounted) return;
-        await cancelNotifications(context);
-        await SecureStorage.deleteAll();
-        StudyULogger.info("Secure storage data deleted");
-      }
-    }
-    StudyULogger.info("User chose not to delete secure storage data.");
-    if (!mounted) return;
-    await _contactSupport(selectedSubjectId);
-  }
-
-  Future<void> _contactSupport([String? selectedSubjectId]) async {
-    if (!mounted) return;
-    StudyULogger.info(
-      "User chose to contact support with ID: $selectedSubjectId",
-    );
-
-    const emailSubject = 'StudyU Support Request - Loading Error';
-    final emailBody = AppLocalizations.of(
-      context,
-    )!.support_email_body(selectedSubjectId ?? '');
-    final appContact = await AppConfig.getAppContact();
-    final uriString =
-        'mailto:${appContact.email}?subject=${Uri.encodeComponent(emailSubject)}&body=${Uri.encodeComponent(emailBody)}';
-    final emailUri = Uri.parse(uriString);
-    await launchUrl(emailUri);
-
-    // Show non dismissible dialog to inform the user that support has been contacted
-    if (!mounted) return;
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(AppLocalizations.of(context)!.support_email_sent),
-          content: Text(
-            AppLocalizations.of(context)!.support_email_sent_description,
-          ),
-        );
-      },
-    );
   }
 
   @override

@@ -14,6 +14,7 @@ import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase/supabase.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -69,6 +70,12 @@ Future<void> main() async {
   String initialRoute = Routes.loading;
   try {
     appConfig = await AppConfig.getAppConfig();
+  } on PostgrestException catch (e) {
+    debugPrint('Postgres exception: $e');
+    if (e.code == 'PGRST301') {
+      // Unauthorized - likely due to wrong supabase environment variables
+      initialRoute = Routes.appErrorScreen;
+    }
   } catch (error) {
     // device could be offline
     debugPrint('Error fetching app config: $error');

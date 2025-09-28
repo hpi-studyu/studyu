@@ -3,3 +3,4 @@ const String playStoreUrl =
 const String appstoreUrl = 'https://itunes.apple.com/app/id1571991198';
 const String fitbitRedirectUrl = 'studyu://fitbit/auth';
 const String fitbitCallbackScheme = 'studyu';
+const String developerEmail = 'stefan.konigorski@hpi.de';
