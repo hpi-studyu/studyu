@@ -47,6 +47,9 @@ Future<void> loadEnv() async {
     'STUDYU_PROJECT_GENERATOR_URL',
     optional: true,
   );
+  final envPlayStoreUrl = getEnv('STUDYU_PLAY_STORE_URL', optional: true);
+  final envAppstoreUrl = getEnv('STUDYU_APPSTORE_URL', optional: true);
+  final envDeveloperEmail = getEnv('STUDYU_DEVELOPER_EMAIL', optional: true);
 
   // await SecureStorage.migrateSharedPreferencesToSecureStorage();
 
@@ -69,6 +72,9 @@ Future<void> loadEnv() async {
     envAppUrl: envAppUrl,
     envDesignerUrl: envDesignerUrl,
     envProjectGeneratorUrl: envProjectGeneratorUrl,
+    envPlayStoreUrl: envPlayStoreUrl,
+    envAppstoreUrl: envAppstoreUrl,
+    envDeveloperEmail: envDeveloperEmail,
     supabaseClient: Supabase.instance.client,
   );
 }

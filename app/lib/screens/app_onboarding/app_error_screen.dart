@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:studyu_app/constants.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_core/env.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -169,7 +169,7 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
     }
 
     // Get contact email with fallback to developer email
-    String contactEmail;
+    String? contactEmail;
     try {
       final appContact = await AppConfig.getAppContact();
       contactEmail = appContact.email;
@@ -178,6 +178,15 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
         'Failed to get app contact, using developer email fallback: $e',
       );
       contactEmail = developerEmail;
+    }
+
+    if (contactEmail == null || contactEmail.isEmpty) {
+      StudyULogger.error('No contact email available.');
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.no_contact_email)),
+      );
+      return;
     }
 
     final uriString =
