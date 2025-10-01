@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/domain/converters/study_export_extension.dart';
 import 'package:studyu_designer_v2/domain/simplified_study_converter.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/study_repository.dart';
@@ -27,10 +28,10 @@ class SimplifiedStudyService {
 
   Future<void> exportStudy(Study study) async {
     final exportSource = await _getExportSource(study);
-    final schema = SimplifiedStudyConverter.toSchema(exportSource);
+    final schema = exportSource.toExportSchema();
     final json = prettyJson(schema);
     final filename = _generateExportFilename(exportSource);
-    
+
     downloadFile(fileContent: json, filename: filename);
     _notifications.show(Notifications.studyExportSchemaSuccess);
   }
@@ -48,7 +49,7 @@ class SimplifiedStudyService {
     const defaultStudyName = 'study';
     const fileExtension = '.json';
     const schemaSuffix = '_schema';
-    
+
     return '${(study.title ?? defaultStudyName).toKey()}$schemaSuffix'
         .ensureSuffix(fileExtension);
   }
@@ -56,10 +57,10 @@ class SimplifiedStudyService {
   Future<Study> importStudyFromJson(String rawJson) async {
     final userId = _validateAuthenticatedUser();
     final payload = _parseJsonPayload(rawJson);
-    
+
     final study = SimplifiedStudyConverter.fromSchema(payload, ownerId: userId);
     final savedStudy = await _saveAndCacheStudy(study);
-    
+
     _notifications.show(Notifications.studyImportSuccess);
     return savedStudy;
   }
@@ -83,9 +84,11 @@ class SimplifiedStudyService {
   Future<Study> _saveAndCacheStudy(Study study) async {
     final savedWrapped = await _studyRepository.save(study);
     final savedStudy = savedWrapped?.model ?? study;
-    
+
+    // Add delay to allow database propagation before fetching
+    await Future.delayed(const Duration(milliseconds: 500));
     await _warmRepositoryCache(savedStudy.id);
-    
+
     return savedStudy;
   }
 
