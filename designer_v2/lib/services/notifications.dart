@@ -25,6 +25,18 @@ class Notifications {
   static final inviteCodeClipped = SnackbarIntent(
     message: tr.notification_code_clipboard,
   );
+  static final studyProtocolExported = SnackbarIntent(
+    message: tr.notification_study_protocol_exported,
+  );
+  static final studyProtocolExportFailed = SnackbarIntent(
+    message: tr.notification_study_protocol_export_failed,
+  );
+  static final studyProtocolImported = SnackbarIntent(
+    message: tr.notification_study_protocol_imported,
+  );
+  static final studyProtocolImportFailed = SnackbarIntent(
+    message: tr.notification_study_protocol_import_failed,
+  );
   static final studyDeleteConfirmation = AlertIntent(
     title: tr.dialog_study_delete_title,
     message: tr.dialog_study_delete_description,

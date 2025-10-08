@@ -9,6 +9,8 @@ Map<StudyActionType, IconData> studyActionIcons = {
   StudyActionType.duplicate: Icons.file_copy_rounded,
   StudyActionType.duplicateDraft: Icons.file_copy_rounded,
   StudyActionType.addCollaborator: Icons.person_add_rounded,
+  StudyActionType.exportProtocol: Icons.file_download_outlined,
+  StudyActionType.importProtocol: Icons.upload_rounded,
   StudyActionType.export: Icons.download_rounded,
   StudyActionType.delete: Icons.delete_rounded,
 };

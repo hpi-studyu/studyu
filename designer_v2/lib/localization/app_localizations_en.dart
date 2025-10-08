@@ -383,6 +383,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notification_study_deleted => 'Study was deleted';
 
   @override
+  String get notification_study_protocol_exported => 'Study design exported.';
+
+  @override
+  String get notification_study_protocol_export_failed =>
+      'Failed to export study design.';
+
+  @override
+  String get notification_study_protocol_imported => 'Study design imported.';
+
+  @override
+  String get notification_study_protocol_import_failed =>
+      'Failed to import study design. Please check the file format.';
+
+  @override
   String get notification_study_closed => 'Study was closed';
 
   @override
@@ -2034,7 +2048,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_study_duplicate_draft => 'Copy as draft';
 
   @override
+  String get action_study_export_protocol => 'Export study design';
+
+  @override
+  String get action_study_import_protocol => 'Import study design';
+
+  @override
   String get action_study_export_results => 'Export results';
+
+  @override
+  String get dialog_study_protocol_import_title => 'Import study design';
+
+  @override
+  String get dialog_study_protocol_import_description =>
+      'Paste the study JSON that matches the StudyU schema. When you apply the import the current study design will be replaced.';
+
+  @override
+  String get form_field_study_protocol_import_hint => 'Paste JSON here';
+
+  @override
+  String get validation_study_protocol_import_empty =>
+      'Please paste the JSON payload before importing.';
+
+  @override
+  String get validation_study_protocol_import_invalid =>
+      'The JSON payload is invalid. Please check the structure and try again.';
 
   @override
   String get dialog_continue => 'Continue';

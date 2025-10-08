@@ -390,6 +390,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get notification_study_deleted => 'Die Studie wurde gelöscht';
 
   @override
+  String get notification_study_protocol_exported =>
+      'Studiendesign exportiert.';
+
+  @override
+  String get notification_study_protocol_export_failed =>
+      'Studiendesign konnte nicht exportiert werden.';
+
+  @override
+  String get notification_study_protocol_imported =>
+      'Studiendesign importiert.';
+
+  @override
+  String get notification_study_protocol_import_failed =>
+      'Studiendesign konnte nicht importiert werden. Bitte prüfen Sie das Dateiformat.';
+
+  @override
   String get notification_study_closed => 'Die Studie wurde geschlossen';
 
   @override
@@ -2060,7 +2076,31 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_study_duplicate_draft => 'Als Entwurf duplizieren';
 
   @override
+  String get action_study_export_protocol => 'Studiendesign exportieren';
+
+  @override
+  String get action_study_import_protocol => 'Studiendesign importieren';
+
+  @override
   String get action_study_export_results => 'Ergebnisdaten exportieren';
+
+  @override
+  String get dialog_study_protocol_import_title => 'Studiendesign importieren';
+
+  @override
+  String get dialog_study_protocol_import_description =>
+      'Fügen Sie das JSON-Studiendesign ein, das dem StudyU-Schema entspricht. Beim Import wird das aktuelle Studiendesign ersetzt.';
+
+  @override
+  String get form_field_study_protocol_import_hint => 'JSON hier einfügen';
+
+  @override
+  String get validation_study_protocol_import_empty =>
+      'Bitte fügen Sie das JSON ein, bevor Sie importieren.';
+
+  @override
+  String get validation_study_protocol_import_invalid =>
+      'Das JSON ist ungültig. Bitte prüfen Sie die Struktur und versuchen Sie es erneut.';
 
   @override
   String get dialog_continue => 'Fortfahren';

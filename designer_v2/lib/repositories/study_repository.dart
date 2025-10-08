@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
+import 'package:studyu_designer_v2/domain/study_protocol_serializer.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 import 'package:studyu_designer_v2/repositories/model_repository.dart';
@@ -17,6 +20,7 @@ import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
+import 'package:studyu_designer_v2/utils/file_download.dart';
 
 part 'study_repository.g.dart';
 
@@ -196,6 +200,22 @@ class StudyRepository extends ModelRepository<Study>
         isAvailable:
             model.status == StudyStatus.draft && model.canCopy(currentUser),
       ),
+      ModelAction(
+        type: StudyActionType.importProtocol,
+        label: StudyActionType.importProtocol.string,
+        onExecute: () {
+          runAsync(() => _importStudyProtocol(model));
+        },
+        isAvailable: model.canEdit(currentUser),
+      ),
+      ModelAction(
+        type: StudyActionType.exportProtocol,
+        label: StudyActionType.exportProtocol.string,
+        onExecute: () {
+          runAsync(() => _exportStudyProtocol(model));
+        },
+        isAvailable: model.canEdit(currentUser),
+      ),
       /*
       TODO re-implement this properly
       ModelAction(
@@ -240,6 +260,184 @@ class StudyRepository extends ModelRepository<Study>
     ];
 
     return actions.where((action) => action.isAvailable).toList();
+  }
+
+  Future<void> _exportStudyProtocol(Study model) async {
+    try {
+      final study = await apiClient.fetchStudy(model.id);
+      final payload = StudyProtocolSerializer.exportStudy(study);
+      final content = StudyProtocolSerializer.encodePretty(payload);
+      final filename = '${_slugify(study.title ?? 'study')}_protocol.json'
+          .toLowerCase();
+      downloadFile(fileContent: content, filename: filename);
+      ref
+          .read(notificationServiceProvider)
+          .show(Notifications.studyProtocolExported);
+    } catch (error, stackTrace) {
+      emitError(modelStreamControllers[model.id], error, stackTrace);
+      ref
+          .read(notificationServiceProvider)
+          .show(Notifications.studyProtocolExportFailed);
+    }
+  }
+
+  Future<void> _importStudyProtocol(Study model) async {
+    ref
+        .read(notificationServiceProvider)
+        .show(
+          AlertIntent(
+            title: tr.dialog_study_protocol_import_title,
+            customContent: _StudyProtocolImportContent(
+              description: tr.dialog_study_protocol_import_description,
+              hintText: tr.form_field_study_protocol_import_hint,
+              onSubmit: (value) => _handleImportedProtocol(model, value),
+            ),
+            dismissOnAction: false,
+          ),
+        );
+  }
+
+  Future<String?> _handleImportedProtocol(Study model, String content) async {
+    final trimmed = content.trim();
+    if (trimmed.isEmpty) {
+      return tr.validation_study_protocol_import_empty;
+    }
+
+    try {
+      final data = StudyProtocolSerializer.decode(trimmed);
+      final study = await apiClient.fetchStudy(model.id);
+      StudyProtocolSerializer.applyToStudy(study, data);
+      await save(study, runOptimistically: false);
+      ref
+          .read(notificationServiceProvider)
+          .show(Notifications.studyProtocolImported);
+      return null;
+    } on FormatException catch (_) {
+      return tr.validation_study_protocol_import_invalid;
+    } catch (error, stackTrace) {
+      emitError(modelStreamControllers[model.id], error, stackTrace);
+      ref
+          .read(notificationServiceProvider)
+          .show(Notifications.studyProtocolImportFailed);
+      return tr.validation_study_protocol_import_invalid;
+    }
+  }
+
+  String _slugify(String value) {
+    final normalized = value.toLowerCase().trim();
+    final sanitized = normalized.replaceAll(RegExp(r'[^a-z0-9]+'), '-');
+    final collapsed = sanitized.replaceAll(RegExp('-{2,}'), '-');
+    final trimmed = collapsed.replaceAll(RegExp(r'^-+|-+$'), '');
+    return trimmed.isEmpty ? 'study' : trimmed;
+  }
+}
+
+class _StudyProtocolImportContent extends StatefulWidget {
+  const _StudyProtocolImportContent({
+    required this.description,
+    required this.hintText,
+    required this.onSubmit,
+  });
+
+  final String description;
+  final String hintText;
+  final Future<String?> Function(String content) onSubmit;
+
+  @override
+  State<_StudyProtocolImportContent> createState() =>
+      _StudyProtocolImportContentState();
+}
+
+class _StudyProtocolImportContentState
+    extends State<_StudyProtocolImportContent> {
+  String? _error;
+  bool _isSubmitting = false;
+  late final TextEditingController _controller;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.description, style: theme.textTheme.bodyMedium),
+        const SizedBox(height: 12),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 560),
+          child: TextField(
+            controller: _controller,
+            maxLines: 12,
+            minLines: 6,
+            decoration: InputDecoration(
+              hintText: widget.hintText,
+              border: const OutlineInputBorder(),
+              errorText: _error,
+              contentPadding: const EdgeInsets.all(12),
+            ),
+            keyboardType: TextInputType.multiline,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              onPressed: _isSubmitting
+                  ? null
+                  : () => Navigator.of(context).maybePop(),
+              child: Text(tr.dialog_cancel),
+            ),
+            const SizedBox(width: 8),
+            FilledButton(
+              onPressed: _isSubmitting ? null : _onSubmitPressed,
+              child: _isSubmitting
+                  ? SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: theme.colorScheme.onPrimary,
+                      ),
+                    )
+                  : Text(tr.action_study_import_protocol),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<void> _onSubmitPressed() async {
+    setState(() {
+      _error = null;
+      _isSubmitting = true;
+    });
+    final result = await widget.onSubmit(_controller.text);
+    if (!mounted) return;
+
+    if (result == null) {
+      setState(() => _isSubmitting = false);
+      Navigator.of(context).maybePop();
+    } else {
+      setState(() {
+        _error = result;
+        _isSubmitting = false;
+      });
+    }
   }
 }
 

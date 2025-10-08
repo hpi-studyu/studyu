@@ -800,6 +800,30 @@ abstract class AppLocalizations {
   /// **'Study was deleted'**
   String get notification_study_deleted;
 
+  /// No description provided for @notification_study_protocol_exported.
+  ///
+  /// In en, this message translates to:
+  /// **'Study design exported.'**
+  String get notification_study_protocol_exported;
+
+  /// No description provided for @notification_study_protocol_export_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to export study design.'**
+  String get notification_study_protocol_export_failed;
+
+  /// No description provided for @notification_study_protocol_imported.
+  ///
+  /// In en, this message translates to:
+  /// **'Study design imported.'**
+  String get notification_study_protocol_imported;
+
+  /// No description provided for @notification_study_protocol_import_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to import study design. Please check the file format.'**
+  String get notification_study_protocol_import_failed;
+
   /// No description provided for @notification_study_closed.
   ///
   /// In en, this message translates to:
@@ -3483,11 +3507,53 @@ abstract class AppLocalizations {
   /// **'Copy as draft'**
   String get action_study_duplicate_draft;
 
+  /// No description provided for @action_study_export_protocol.
+  ///
+  /// In en, this message translates to:
+  /// **'Export study design'**
+  String get action_study_export_protocol;
+
+  /// No description provided for @action_study_import_protocol.
+  ///
+  /// In en, this message translates to:
+  /// **'Import study design'**
+  String get action_study_import_protocol;
+
   /// No description provided for @action_study_export_results.
   ///
   /// In en, this message translates to:
   /// **'Export results'**
   String get action_study_export_results;
+
+  /// No description provided for @dialog_study_protocol_import_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Import study design'**
+  String get dialog_study_protocol_import_title;
+
+  /// No description provided for @dialog_study_protocol_import_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste the study JSON that matches the StudyU schema. When you apply the import the current study design will be replaced.'**
+  String get dialog_study_protocol_import_description;
+
+  /// No description provided for @form_field_study_protocol_import_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste JSON here'**
+  String get form_field_study_protocol_import_hint;
+
+  /// No description provided for @validation_study_protocol_import_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Please paste the JSON payload before importing.'**
+  String get validation_study_protocol_import_empty;
+
+  /// No description provided for @validation_study_protocol_import_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'The JSON payload is invalid. Please check the structure and try again.'**
+  String get validation_study_protocol_import_invalid;
 
   /// No description provided for @dialog_continue.
   ///
