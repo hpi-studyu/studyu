@@ -125,7 +125,7 @@ class StudyProtocolSerializer {
     final exported = <Map<String, dynamic>>[];
     for (var index = 0; index < questions.length; index++) {
       final question = questions[index];
-      final handle = '${baseHandle}${index + 1}';
+      final handle = '$baseHandle${index + 1}';
       registry?.registerQuestion(question.id, handle);
 
       final questionJson = Map<String, dynamic>.from(question.toJson());

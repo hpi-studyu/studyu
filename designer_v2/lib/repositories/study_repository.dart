@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
-import 'package:studyu_designer_v2/domain/study_protocol_serializer.dart';
 import 'package:studyu_designer_v2/domain/study_export.dart';
+import 'package:studyu_designer_v2/domain/study_protocol_serializer.dart';
 import 'package:studyu_designer_v2/features/analyze/study_export_zip.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
@@ -17,10 +17,10 @@ import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
+import 'package:studyu_designer_v2/utils/file_download.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
-import 'package:studyu_designer_v2/utils/file_download.dart';
 
 part 'study_repository.g.dart';
 
@@ -325,7 +325,7 @@ class StudyRepository extends ModelRepository<Study>
 
   String _slugify(String value) {
     final normalized = value.toLowerCase().trim();
-    final sanitized = normalized.replaceAll(RegExp(r'[^a-z0-9]+'), '-');
+    final sanitized = normalized.replaceAll(RegExp('[^a-z0-9]+'), '-');
     final collapsed = sanitized.replaceAll(RegExp('-{2,}'), '-');
     final trimmed = collapsed.replaceAll(RegExp(r'^-+|-+$'), '');
     return trimmed.isEmpty ? 'study' : trimmed;
