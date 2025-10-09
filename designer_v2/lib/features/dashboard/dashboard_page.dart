@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
+import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_scaffold.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
@@ -57,6 +58,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 child: PrimaryButton(
                   text: tr.action_button_new_study,
                   onPressed: controller.onClickNewStudy,
+                ),
+              ),
+              const SizedBox(width: 12.0),
+              SizedBox(
+                height: 36.0,
+                child: SecondaryButton(
+                  text: tr.action_study_import_protocol,
+                  onPressed: controller.onClickImportStudy,
                 ),
               ),
               const SizedBox(width: 28.0),

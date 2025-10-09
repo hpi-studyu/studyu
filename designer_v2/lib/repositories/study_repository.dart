@@ -28,6 +28,7 @@ abstract class IStudyRepository implements ModelRepository<Study> {
   Future<void> launch(Study study);
   Future<void> deleteParticipants(Study study);
   Future<void> close(Study study);
+  Future<void> promptImportStudy();
   // Future<void> deleteProgress(Study study);
 }
 
@@ -201,14 +202,6 @@ class StudyRepository extends ModelRepository<Study>
             model.status == StudyStatus.draft && model.canCopy(currentUser),
       ),
       ModelAction(
-        type: StudyActionType.importProtocol,
-        label: StudyActionType.importProtocol.string,
-        onExecute: () {
-          runAsync(() => _importStudyProtocol(model));
-        },
-        isAvailable: model.canEdit(currentUser),
-      ),
-      ModelAction(
         type: StudyActionType.exportProtocol,
         label: StudyActionType.exportProtocol.string,
         onExecute: () {
@@ -281,7 +274,8 @@ class StudyRepository extends ModelRepository<Study>
     }
   }
 
-  Future<void> _importStudyProtocol(Study model) async {
+  @override
+  Future<void> promptImportStudy() async {
     ref
         .read(notificationServiceProvider)
         .show(
@@ -290,22 +284,23 @@ class StudyRepository extends ModelRepository<Study>
             customContent: _StudyProtocolImportContent(
               description: tr.dialog_study_protocol_import_description,
               hintText: tr.form_field_study_protocol_import_hint,
-              onSubmit: (value) => _handleImportedProtocol(model, value),
+              onSubmit: _handleImportedProtocol,
             ),
             dismissOnAction: false,
           ),
         );
   }
 
-  Future<String?> _handleImportedProtocol(Study model, String content) async {
+  Future<String?> _handleImportedProtocol(String content) async {
     final trimmed = content.trim();
     if (trimmed.isEmpty) {
       return tr.validation_study_protocol_import_empty;
     }
 
+    Study? study;
     try {
       final data = StudyProtocolSerializer.decode(trimmed);
-      final study = await apiClient.fetchStudy(model.id);
+      study = StudyTemplates.emptyDraft(authRepository.currentUser!.id);
       StudyProtocolSerializer.applyToStudy(study, data);
       await save(study, runOptimistically: false);
       ref
@@ -315,7 +310,11 @@ class StudyRepository extends ModelRepository<Study>
     } on FormatException catch (_) {
       return tr.validation_study_protocol_import_invalid;
     } catch (error, stackTrace) {
-      emitError(modelStreamControllers[model.id], error, stackTrace);
+      emitError(
+        study != null ? modelStreamControllers[study.id] : null,
+        error,
+        stackTrace,
+      );
       ref
           .read(notificationServiceProvider)
           .show(Notifications.studyProtocolImportFailed);

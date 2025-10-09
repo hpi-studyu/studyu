@@ -16,6 +16,7 @@ import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/routing/router.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
+import 'package:studyu_designer_v2/utils/performance.dart';
 
 part 'dashboard_controller.g.dart';
 
@@ -90,6 +91,10 @@ class DashboardController extends _$DashboardController
     final Study newStudy = _studyRepository.delegate.createNewInstance();
     newStudy.save();
     _router.dispatch(RoutingIntents.studyEdit(newStudy.id));
+  }
+
+  void onClickImportStudy() {
+    runAsync(_studyRepository.promptImportStudy);
   }
 
   Future<void> pinStudy(String modelId) async {
