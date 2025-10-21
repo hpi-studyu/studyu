@@ -2,11 +2,18 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
+import 'package:studyu_designer_v2/features/advanced_filters/advanced_filters_apply.dart';
 
 import 'package:studyu_designer_v2/features/advanced_filters/created_at_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
+import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import './advanced_filters_controller.dart';
 import '../../domain/advanced_filters_model.dart';
 import './advanced_filters_state.dart'; // <-- for kFieldMeta + types
+
+
 
 class FilterBuilderContainer extends ConsumerWidget {
   const FilterBuilderContainer({super.key});
@@ -18,8 +25,13 @@ class FilterBuilderContainer extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Filter builder', style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 12),
+        Row(
+          children: [
+            Text('Filter builder', style: Theme.of(context).textTheme.titleLarge),
+            const Spacer(),
+            MatchesCount(), // 👈 live counter
+          ],
+        ),
         _GroupView(group: draft.root, depth: 0),
         const SizedBox(height: 12),
         Row(
@@ -64,6 +76,171 @@ class FilterBuilderContainer extends ConsumerWidget {
       ],
     );
   }
+}
+
+
+/// Shows a tooltip "Matches: N" for THIS condition only (ignoring other nodes).
+/// Shows a tooltip "Matches: N" for THIS condition only (ignoring other nodes).
+class ConditionPreviewCount extends ConsumerStatefulWidget {
+  const ConditionPreviewCount({super.key, required this.node});
+  final ConditionNode node;
+
+  @override
+  ConsumerState<ConditionPreviewCount> createState() => ConditionPreviewCountState();
+}
+
+class ConditionPreviewCountState extends ConsumerState<ConditionPreviewCount> {
+  int? count;
+  bool loading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = loading
+        ? 'Matching…'
+        : (count == null ? 'Matches: –' : 'Matches: $count');
+
+    return MouseRegion(
+      onEnter: (_) => computeCount(),
+      child: Tooltip(
+        message: text,
+        waitDuration: const Duration(milliseconds: 200),
+        child: IconButton(
+          tooltip: text,
+          iconSize: 20,
+          padding: const EdgeInsets.all(4),
+          constraints: const BoxConstraints(minWidth: 28, minHeight: 28),
+          icon: const Icon(Icons.filter_alt_outlined),
+          onPressed: computeCount, // click also recomputes
+        ),
+      ),
+    );
+  }
+
+  Future<void> computeCount() async {
+    if (loading) return;
+    setState(() => loading = true);
+
+    try {
+      // 1) Get user (for meId/meEmail)
+      final user = await ref.read(userRepositoryProvider).fetchUser();
+      // If you already added these helpers elsewhere in this file, reuse them.
+      final meId = tryGetUserId(user);
+      final meEmail = tryGetUserEmail(user);
+
+      // 2) Base list same as dashboard uses (pinned + search query)
+      final dashState = ref.read(dashboardControllerProvider);
+      final pinned = user.preferences.pinnedStudies;
+      final query = dashState.query;
+
+      final asyncVisible = dashState.displayedStudies(pinned, query);
+      final visible = asyncVisible.maybeWhen(
+        data: (list) => list,
+        orElse: () => <Study>[],
+      );
+
+      // 3) Build a temporary draft with ONLY this condition
+      final tempDraft = FilterDraft(
+        root: GroupNode(
+          id: 'preview_${widget.node.id}',
+          op: LogicalOp.and,
+          children: [widget.node],
+        ),
+      );
+
+      // 4) Compile and count
+      final predicate = compileToPredicate(
+        tempDraft,
+        meId: meId,
+        meEmail: meEmail,
+      );
+      final n = visible.where(predicate).length;
+
+      if (mounted) setState(() => count = n);
+    } catch (_) {
+      if (mounted) setState(() => count = null);
+    } finally {
+      if (mounted) setState(() => loading = false);
+    }
+  }
+}
+
+
+class MatchesCount extends ConsumerWidget {
+  const MatchesCount({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final draft = ref.watch(filterBuilderProvider);                  // current builder draft
+    final dashState = ref.watch(dashboardControllerProvider);        // dashboard state (provides displayedStudies)
+
+    return FutureBuilder<StudyUUser>(
+      future: ref.read(userRepositoryProvider).fetchUser(),
+      builder: (context, snapUser) {
+        if (snapUser.connectionState != ConnectionState.done) {
+          return const SizedBox(
+            height: 20,
+            child: Center(
+              child: SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2)),
+            ),
+          );
+        }
+        if (!snapUser.hasData) {
+          return const Text('Matches: –'); // fallback if user failed to load
+        }
+
+        final user = snapUser.data!;
+        final meId = tryGetUserId(user);
+        final meEmail = tryGetUserEmail(user);
+
+        final pinned = user.preferences.pinnedStudies;
+        final query = dashState.query;
+
+        // Base list (already filtered by search, pin scope, etc.)
+        final asyncVisible = dashState.displayedStudies(pinned, query);
+
+        // Render based on AsyncValue state
+        return asyncVisible.when(
+          loading: () => const SizedBox(
+            height: 20,
+            child: Center(
+              child: SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2)),
+            ),
+          ),
+          error: (err, _) => const Text('Matches: –'),
+          data: (visibleStudies) {
+            // If the draft is empty, show total currently visible
+            if (draft.root.children.isEmpty) {
+              return Text('Matches: ${visibleStudies.length}',
+                  style: Theme.of(context).textTheme.bodyMedium);
+            }
+
+            // Compile draft → predicate and count
+            final predicate = compileToPredicate(
+              draft,
+              meId: meId,
+              meEmail: meEmail,
+            );
+            final count = visibleStudies.where(predicate).length;
+
+            return Text('Matches: $count',
+                style: Theme.of(context).textTheme.bodyMedium);
+          },
+        );
+      },
+    );
+  }
+}
+
+// Small helpers (same behavior as in dashboard_page)
+String? tryGetUserId(dynamic user) {
+  try { return user.id as String?; } catch (_) {}
+  try { return user.uid as String?; } catch (_) {}
+  return null;
+}
+
+String? tryGetUserEmail(dynamic user) {
+  try { return user.email as String?; } catch (_) {}
+  return null;
 }
 
 class _GroupView extends ConsumerWidget {
@@ -218,6 +395,8 @@ class _ConditionRow extends ConsumerWidget {
             icon: const Icon(Icons.delete),
             onPressed: () => ctrl.removeNode(node.id),
           );
+          final previewBtn = ConditionPreviewCount(node: node);
+
 
           if (narrow) {
             return Column(
@@ -229,7 +408,17 @@ class _ConditionRow extends ConsumerWidget {
                       padding: const EdgeInsets.only(bottom: 8),
                       child: w,
                     )),
-                Align(alignment: Alignment.centerRight, child: deleteBtn),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      previewBtn,
+                      const SizedBox(width: 4),
+                      deleteBtn,
+                    ],
+                  ),
+                ),
               ],
             );
           }
@@ -239,15 +428,26 @@ class _ConditionRow extends ConsumerWidget {
             scrollDirection: Axis.horizontal,
             child: ConstrainedBox(
               constraints: BoxConstraints(minWidth: constraints.maxWidth),
+              // child: Row(
+              //   crossAxisAlignment: CrossAxisAlignment.center,
+              //   children: [
+              //     fieldDropdown, const SizedBox(width: 8),
+              //     opDropdown, const SizedBox(width: 8),
+              //     ...valueEditors, const SizedBox(width: 8),
+              //     deleteBtn,
+              //   ],
+              // ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   fieldDropdown, const SizedBox(width: 8),
                   opDropdown, const SizedBox(width: 8),
                   ...valueEditors, const SizedBox(width: 8),
+                  previewBtn, const SizedBox(width: 4),
                   deleteBtn,
                 ],
               ),
+
             ),
           );
         },
