@@ -390,4 +390,209 @@ ON public.study_subject
 FOR SELECT
 USING (public.has_results_public(id));
 
+--------------------------------------------------------------------
+-- Performance improvements
+--------------------------------------------------------------------
+
+-- Drop the duplicate UNIQUE constraint on study.id with CASCADE to update foreign key references
+-- The PRIMARY KEY already provides uniqueness
+ALTER TABLE public.study DROP CONSTRAINT IF EXISTS study_id_key CASCADE;
+
+
+-- Remove duplicate unique constraint on study_invite.code
+-- The PRIMARY KEY already provides uniqueness
+ALTER TABLE public.study_invite DROP CONSTRAINT IF EXISTS study_invite_code_unique;
+
+
+-- Drop the existing policy
+DROP POLICY IF EXISTS "Study creators can do everything with repos from their studies" ON public.repo;
+
+-- Recreate with optimized subquery
+CREATE POLICY "Study creators can do everything with repos from their studies"
+ON public.repo
+USING (
+  (SELECT auth.uid()) = (
+    SELECT study.user_id
+    FROM public.study
+    WHERE repo.study_id = study.id
+  )
+);
+
+
+--------------------------------------------------------------------
+-- Optimize RLS policies to cache auth.uid() calls
+-- Wrap auth.uid() in subqueries to avoid per-row evaluation
+--------------------------------------------------------------------
+
+-- Optimize: Study creators can do everything with repos from their studies
+DROP POLICY IF EXISTS "Study creators can do everything with repos from their studies" ON public.repo;
+CREATE POLICY "Study creators can do everything with repos from their studies"
+ON public.repo
+USING (
+  (SELECT auth.uid()) = (
+    SELECT study.user_id
+    FROM public.study
+    WHERE repo.study_id = study.id
+  )
+);
+
+-- Optimize: Editors can view their studies
+DROP POLICY IF EXISTS "Editors can view their studies" ON public.study;
+CREATE POLICY "Editors can view their studies"
+ON public.study
+FOR SELECT
+USING ((SELECT auth.uid()) = user_id);
+
+-- Optimize: Editors can do everything with their studies
+DROP POLICY IF EXISTS "Editors can do everything with their studies" ON public.study;
+CREATE POLICY "Editors can do everything with their studies"
+ON public.study
+USING (public.can_edit((SELECT auth.uid()), study.*));
+
+-- Optimize: Study subjects can view their joined study
+DROP POLICY IF EXISTS "Study subjects can view their joined study" ON public.study;
+CREATE POLICY "Study subjects can view their joined study"
+ON public.study
+FOR SELECT
+USING (public.is_study_subject_of((SELECT auth.uid()), id));
+
+-- Optimize: Editors can manage their own invite-only study invite codes
+DROP POLICY IF EXISTS "Editors can manage their own invite-only study invite codes" ON public.study_invite;
+CREATE POLICY "Editors can manage their own invite-only study invite codes"
+ON public.study_invite
+USING (
+  (
+    SELECT public.can_edit((SELECT auth.uid()), study.*) AS can_edit
+    FROM public.study
+    WHERE study.id = study_invite.study_id
+    AND study.participation = 'invite'::public.participation
+  )
+);
+
+-- Optimize: Editors can read their own open-study invite codes
+DROP POLICY IF EXISTS "Editors can read their own open-study invite codes" ON public.study_invite;
+CREATE POLICY "Editors can read their own open-study invite codes"
+ON public.study_invite
+FOR SELECT
+USING (
+  (
+    SELECT public.can_edit((SELECT auth.uid()), study.*) AS can_edit
+    FROM public.study
+    WHERE study.id = study_invite.study_id
+    AND study.participation = 'open'::public.participation
+  )
+);
+
+-- Optimize: Editors can delete their own open-study invite codes
+DROP POLICY IF EXISTS "Editors can delete their own open-study invite codes" ON public.study_invite;
+CREATE POLICY "Editors can delete their own open-study invite codes"
+ON public.study_invite
+FOR DELETE
+USING (
+  (
+    SELECT public.can_edit((SELECT auth.uid()), study.*) AS can_edit
+    FROM public.study
+    WHERE study.id = study_invite.study_id
+    AND study.participation = 'open'::public.participation
+  )
+);
+
+-- Optimize: Users can do everything with their subjects
+DROP POLICY IF EXISTS "Users can do everything with their subjects" ON public.study_subject;
+CREATE POLICY "Users can do everything with their subjects"
+ON public.study_subject
+USING ((SELECT auth.uid()) = user_id);
+
+-- Optimize: Editors can do everything with their study subjects
+DROP POLICY IF EXISTS "Editors can do everything with their study subjects" ON public.study_subject;
+CREATE POLICY "Editors can do everything with their study subjects"
+ON public.study_subject
+USING (
+  (
+    SELECT public.can_edit((SELECT auth.uid()), study.*) AS can_edit
+    FROM public.study
+    WHERE study.id = study_subject.study_id
+  )
+);
+
+-- Optimize: Editors can see subjects from their studies
+DROP POLICY IF EXISTS "Editors can see subjects from their studies" ON public.study_subject;
+CREATE POLICY "Editors can see subjects from their studies"
+ON public.study_subject
+FOR SELECT
+USING (
+  (
+    SELECT public.can_edit((SELECT auth.uid()), study.*) AS can_edit
+    FROM public.study
+    WHERE study.id = study_subject.study_id
+  )
+);
+
+-- Optimize: Editors can see their study subjects progress
+DROP POLICY IF EXISTS "Editors can see their study subjects progress" ON public.subject_progress;
+CREATE POLICY "Editors can see their study subjects progress"
+ON public.subject_progress
+FOR SELECT
+USING (
+  (
+    SELECT public.can_edit((SELECT auth.uid()), study.*) AS can_edit
+    FROM public.study, public.study_subject
+    WHERE study.id = study_subject.study_id
+    AND study_subject.id = subject_progress.subject_id
+  )
+);
+
+-- Optimize: Users can do everything with their progress
+DROP POLICY IF EXISTS "Users can do everything with their progress" ON public.subject_progress;
+CREATE POLICY "Users can do everything with their progress"
+ON public.subject_progress
+USING (
+  (SELECT auth.uid()) = (
+    SELECT study_subject.user_id
+    FROM public.study_subject
+    WHERE study_subject.id = subject_progress.subject_id
+  )
+);
+
+-- Optimize: Enable read access for study participants for fitbit credentials and owners
+DROP POLICY IF EXISTS "Enable read access for study participants for fitbit credentials and owners" ON public.study_fitbit_credentials;
+CREATE POLICY "Enable read access for study participants for fitbit credentials and owners"
+ON public.study_fitbit_credentials
+FOR SELECT
+USING (
+  (
+    SELECT public.can_edit((SELECT auth.uid()), study)
+    FROM public.study
+    WHERE study.id = study_fitbit_credentials.study_id
+  )
+  OR public.is_study_subject_of((SELECT auth.uid()), study_fitbit_credentials.study_id)
+);
+
+-- Optimize: Study owners can manage their own fitbit credentials
+DROP POLICY IF EXISTS "Study owners can manage their own fitbit credentials" ON public.study_fitbit_credentials;
+CREATE POLICY "Study owners can manage their own fitbit credentials"
+ON public.study_fitbit_credentials
+FOR ALL
+USING (
+  (
+    SELECT public.can_edit((SELECT auth.uid()), study)
+    FROM public.study
+    WHERE study.id = study_fitbit_credentials.study_id
+  )
+)
+WITH CHECK (
+  (
+    SELECT public.can_edit((SELECT auth.uid()), study)
+    FROM public.study
+    WHERE study.id = study_fitbit_credentials.study_id
+  )
+);
+
+-- Optimize: Allow users to manage their own user
+DROP POLICY IF EXISTS "Allow users to manage their own user" ON public."user";
+CREATE POLICY "Allow users to manage their own user"
+ON public."user"
+FOR ALL
+USING ((SELECT auth.uid()) = id);
+
 COMMIT;
