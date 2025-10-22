@@ -51,8 +51,8 @@ Below is an example for an environment file such as
 `flutter_common/lib/envs/.env`.
 
 ```shell
-STUDYU_SUPABASE_URL=https://efeapuvwaxtxnlkzlajv.supabase.co
-STUDYU_SUPABASE_PUBLIC_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYyNTUwODMyOCwiZXhwIjoxOTQxMDg0MzI4fQ.PUirsx5Zzhj3akaStc5Djid0aAVza3ELoZ5XUTqM91A
+STUDYU_SUPABASE_URLS=https://project-id.supabase.co,https://backup-database-url.supabase.co
+STUDYU_SUPABASE_PUBLIC_ANON_KEY=your-public-anon-key
 STUDYU_PROJECT_GENERATOR_URL=https://studyu-project-generator-2zro3rzera-ew.a.run.app
 STUDYU_APP_URL="https://app.studyu.health/"
 STUDYU_DESIGNER_URL="https://designer.studyu.health/"
