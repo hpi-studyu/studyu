@@ -3,6 +3,133 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-09-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.12.2`](#studyu_app---v2122)
+ - [`studyu_designer_v2` - `v1.15.2`](#studyu_designer_v2---v1152)
+ - [`studyu_flutter_common` - `v1.10.0`](#studyu_flutter_common---v1100)
+
+---
+
+#### `studyu_app` - `v2.12.2`
+
+ - **FIX**(app): offline mode was not working.
+ - **FIX**: migrate FlutterTimezone.
+
+#### `studyu_designer_v2` - `v1.15.2`
+
+ - **PERF**: Improve update performance using debouncer.
+ - **FIX**: add conditional property to question form data and controller.
+ - **FIX**: filter out non-dependable question types from available questions.
+ - **FIX**: update conditional form titles to use localized strings.
+ - **FIX**: filter out ignored question types from available questions.
+ - **FIX**: update form control copying logic to handle Choice type values.
+
+#### `studyu_flutter_common` - `v1.10.0`
+
+ - **FIX**: update Supabase URL for production environment.
+ - **FEAT**(flutter_common): support multiple Supabase URLs and improve connection handling.
+
+
+## 2025-09-22
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.12.1`](#studyu_app---v2121)
+ - [`studyu_flutter_common` - `v1.9.3`](#studyu_flutter_common---v193)
+ - [`studyu_designer_v2` - `v1.15.1`](#studyu_designer_v2---v1151)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `studyu_designer_v2` - `v1.15.1`
+
+---
+
+#### `studyu_app` - `v2.12.1`
+
+ - **FIX**: app starting issues due to storage reading.
+
+#### `studyu_flutter_common` - `v1.9.3`
+
+ - **FIX**: comment out encryptedSharedPreferences option in SecureStorage.
+ - **FIX**: downgrade flutter_secure_storage to version 9.2.2 to address critical bugs.
+
+
+## 2025-09-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.12.0`](#studyu_app---v2120)
+ - [`studyu_designer_v2` - `v1.15.0`](#studyu_designer_v2---v1150)
+ - [`studyu_flutter_common` - `v1.9.2`](#studyu_flutter_common---v192)
+
+---
+
+#### `studyu_app` - `v2.12.0`
+
+ - **REFACTOR**: refine free text question widget to improve submission handling on focus loss.
+ - **FIX**: improve scrolling behavior in questionnaire widget if questions were out of screen.
+ - **FIX**: improve handling of conditional question dependencies in questionnaire widget.
+ - **FIX**: improve free text question widget to handle auto-submit on focus loss.
+ - **FIX**: enhance choice question widget to support auto-submit on confirm button touch.
+ - **FIX**: handle conditional dependencies for earlier question modifications in questionnaire widget.
+ - **FIX**: improve free text question widget by refining keyboard dismissal logic during user scroll.
+ - **FEAT**: implement auto-submit on focus loss for free text question widget.
+ - **FEAT**: improve free text question widget by removing unnecessary scroll controller and enhancing keyboard dismissal on user scroll.
+ - **FEAT**: center text field in viewport for improved layout.
+ - **FEAT**: improve free text question widget with debounced validation and autovalidation.
+ - **FEAT**: enhance free text question widget with improved keyboard handling and validation.
+
+#### `studyu_designer_v2` - `v1.15.0`
+
+ - **REFACTOR**: ref error in app_drawer.
+ - **REFACTOR**: remove debug print statement from model fetching.
+ - **REFACTOR**: remove double fetching of study.
+ - **REFACTOR**: comment out watchAllChanges method in model_repository.
+ - **REFACTOR**: comment out duplicateAndSaveFromRemote method in model_repository.
+ - **FIX**: update Supabase configuration and remove debug print statements from model repository.
+ - **FIX**: add model refresh mechanism to study repository instead of removing the model.
+ - **FIX**: after study cloning redirect to clone directly".
+ - **FIX**: optimize user fetching to prevent duplicate user requests.
+ - **FIX**: add reports form data application in study copy.
+ - **FIX**: implement model removal from cache to fetch complete study when coming from dashboard.
+ - **FIX**: enable dashboard display for fetched user studies.
+ - **FIX**: cancel study subscription on dispose.
+ - **FEAT**: improve version display logic and display on auth pages.
+
+#### `studyu_flutter_common` - `v1.9.2`
+
+ - **FIX**: update Supabase configuration and remove debug print statements from model repository.
+
+
 ## 2025-09-17
 
 ### Changes

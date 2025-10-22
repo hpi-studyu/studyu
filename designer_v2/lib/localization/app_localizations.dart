@@ -1533,6 +1533,24 @@ abstract class AppLocalizations {
   /// **'this question'**
   String get form_array_question_visibility_logic_this_question;
 
+  /// No description provided for @form_mode_visibility_create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Condition'**
+  String get form_mode_visibility_create;
+
+  /// No description provided for @form_mode_visibility_edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Condition'**
+  String get form_mode_visibility_edit;
+
+  /// No description provided for @form_mode_visibility_readonly.
+  ///
+  /// In en, this message translates to:
+  /// **'View Condition'**
+  String get form_mode_visibility_readonly;
+
   /// No description provided for @validation_number_required.
   ///
   /// In en, this message translates to:

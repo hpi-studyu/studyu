@@ -26,14 +26,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@main
+        uses: actions/checkout@v5
+
+      # Remove workspace resolution lines from packages, until k-paxian/dart-package-publisher supports them
+      - name: Remove workspace resolution
+        run: |
+          echo "Removing 'resolution: workspace' from core/pubspec.yaml"
+          sed -i '/^resolution: workspace$/d' core/pubspec.yaml
+          
+          echo "Removing core from root workspace"
+          sed -i '/- core/d' pubspec.yaml
+
       - name: '>> Dart package core <<'
         uses: k-paxian/dart-package-publisher@master
         with:
           accessToken: ${{ secrets.OAUTH_ACCESS_TOKEN }}
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: core
-          # dryRunOnly: true
+          flutter: false
 
   publish_flutter_common:
     name: 'Publish studyu_flutter_common to Pub.dev'
@@ -41,7 +51,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@main
+        uses: actions/checkout@v5
+
+      # Remove workspace resolution lines from packages, until k-paxian/dart-package-publisher supports them
+      - name: Remove workspace resolution
+        run: |
+          echo "Removing 'resolution: workspace' from flutter_common/pubspec.yaml"
+          sed -i '/^resolution: workspace$/d' flutter_common/pubspec.yaml
+          
+          echo "Removing flutter_common from root workspace"
+          sed -i '/- flutter_common/d' pubspec.yaml
+
       - name: '>> Dart package flutter_common <<'
         uses: k-paxian/dart-package-publisher@master
         with:
@@ -49,4 +69,4 @@ jobs:
           refreshToken: ${{ secrets.OAUTH_REFRESH_TOKEN }}
           relativePath: flutter_common
           flutter: true
-          # dryRunOnly: true
+          force: true # until strict dependency on flutter_secure_storage has been resolved

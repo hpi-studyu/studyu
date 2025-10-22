@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
+import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/app_outdated_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
@@ -22,6 +23,7 @@ class Routes {
   static const String loading = '/loading';
   static const String preview = '/preview';
   static const String appOutdated = '/appOutdated';
+  static const String appErrorScreen = '/appError';
   static const String dashboard = '/dashboard';
   static const String welcome = '/welcome';
   static const String about = '/about';
@@ -80,6 +82,12 @@ class Routes {
       case appOutdated:
         return MaterialPageRoute(
           builder: (_) => const AppOutdatedScreen(),
+          settings: settings,
+        );
+      case appErrorScreen:
+        final selectedSubjectId = settings.arguments as String?;
+        return MaterialPageRoute(
+          builder: (_) => AppErrorScreen(selectedSubjectId: selectedSubjectId),
           settings: settings,
         );
       case dashboard:

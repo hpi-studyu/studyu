@@ -814,6 +814,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'this question';
 
   @override
+  String get form_mode_visibility_create => 'Create Condition';
+
+  @override
+  String get form_mode_visibility_edit => 'Edit Condition';
+
+  @override
+  String get form_mode_visibility_readonly => 'View Condition';
+
+  @override
   String get validation_number_required => 'The value must be a number';
 
   @override

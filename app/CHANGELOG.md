@@ -1,3 +1,27 @@
+## 2.12.2
+
+ - **FIX**(app): offline mode was not working.
+ - **FIX**: migrate FlutterTimezone.
+
+## 2.12.1
+
+ - **FIX**: app starting issues due to storage reading.
+
+## 2.12.0
+
+ - **REFACTOR**: refine free text question widget to improve submission handling on focus loss.
+ - **FIX**: improve scrolling behavior in questionnaire widget if questions were out of screen.
+ - **FIX**: improve handling of conditional question dependencies in questionnaire widget.
+ - **FIX**: improve free text question widget to handle auto-submit on focus loss.
+ - **FIX**: enhance choice question widget to support auto-submit on confirm button touch.
+ - **FIX**: handle conditional dependencies for earlier question modifications in questionnaire widget.
+ - **FIX**: improve free text question widget by refining keyboard dismissal logic during user scroll.
+ - **FEAT**: implement auto-submit on focus loss for free text question widget.
+ - **FEAT**: improve free text question widget by removing unnecessary scroll controller and enhancing keyboard dismissal on user scroll.
+ - **FEAT**: center text field in viewport for improved layout.
+ - **FEAT**: improve free text question widget with debounced validation and autovalidation.
+ - **FEAT**: enhance free text question widget with improved keyboard handling and validation.
+
 ## 2.11.1
 
  - **FIX**: improve validation logic for free text input handling with minimum length checks.

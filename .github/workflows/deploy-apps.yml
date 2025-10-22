@@ -67,18 +67,19 @@ jobs:
           STUDYU_KEY_PROPERTIES: ${{ secrets.STUDYU_KEY_PROPERTIES }}
 
       - name: Build StudyU app bundle (prod)
-        if: ${{ startsWith(github.ref, 'refs/heads/main') }}
+        if: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/staging') }}
         run: flutter build appbundle --release --build-number ${{ github.run_number }}
         working-directory: ./app
 
       - name: Build StudyU app bundle (dev)
-        if: ${{ !startsWith(github.ref, 'refs/heads/main') }}
+        if: ${{ !startsWith(github.ref, 'refs/heads/main') && !startsWith(github.ref, 'refs/heads/staging') }}
         run: flutter build appbundle --release --build-number ${{ github.run_number }} --dart-define=STUDYU_ENV=.env.dev
         working-directory: ./app
 
       - name: Fastlane upload
         run: bundle exec fastlane deploy_internal
         working-directory: ./app/android
+        timeout-minutes: 30
         env:
           PLAY_CREDS_JSON: ${{ secrets.PLAY_CREDS_JSON }}
 
@@ -135,19 +136,20 @@ jobs:
           fi
         working-directory: ./app
 
-      - name: Build StudyU ios without codesign (prod)
-        if: ${{ startsWith(github.ref, 'refs/heads/main') }}
+      - name: Build StudyU for iOS without codesign (prod)
+        if: ${{ startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/staging') }}
         run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }} --build-name ${{ env.STUDYU_APP_VERSION }}
         working-directory: ./app
 
-      - name: Build StudyU ios without codesign (dev)
-        if: ${{ !startsWith(github.ref, 'refs/heads/main') }}
+      - name: Build StudyU for iOS without codesign (dev)
+        if: ${{ !startsWith(github.ref, 'refs/heads/main') && !startsWith(github.ref, 'refs/heads/staging') }}
         run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }} --build-name ${{ env.STUDYU_APP_VERSION }} --dart-define=STUDYU_ENV=.env.dev
         working-directory: ./app
 
       - name: Fastlane upload
         run: bundle exec fastlane upload_testflight
         working-directory: ./app/ios
+        timeout-minutes: 30
         env:
           FASTLANE_APP_IOS_KEY_ID: ${{ secrets.FASTLANE_APP_IOS_KEY_ID }}
           FASTLANE_APP_IOS_ISSUER_ID: ${{ secrets.FASTLANE_APP_IOS_ISSUER_ID }}
