@@ -58,7 +58,7 @@ CREATE OR REPLACE FUNCTION public.has_results_public(psubject_id uuid) RETURNS b
     RETURN (
      SELECT EXISTS(
      SELECT 1
-      FROM study, study_subject
+      FROM public.study, public.study_subject
       WHERE (study_subject.study_id = study.id AND psubject_id = study_subject.id AND study.result_sharing = 'public'::public.result_sharing))
     );
   END;
@@ -227,7 +227,7 @@ RETURNS boolean
 BEGIN
   RETURN (
     SELECT
-      (DATE(now()) - last_completed_task (psubject_id)) <= days_active);
+      (DATE(now()) - public.last_completed_task (psubject_id)) <= days_active);
 END;
 $$;
 
@@ -242,7 +242,7 @@ BEGIN
         SELECT
             DATE(completed_at)
         FROM
-            subject_progress
+            public.subject_progress
         WHERE
             subject_id = psubject_id
         ORDER BY
@@ -422,7 +422,8 @@ USING (
 -- Ensure the updated_at trigger exists for the "study" table
 -- 1. Create or replace the trigger function
 CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+set search_path = '' AS $$
 BEGIN
   NEW.updated_at := NOW();
   RETURN NEW;
