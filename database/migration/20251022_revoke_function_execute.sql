@@ -256,17 +256,6 @@ WITH CHECK (
   )
 );
 
--- handle_new_user does not need SECURITY DEFINER privileges
-CREATE OR REPLACE FUNCTION public.handle_new_user() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-begin
-  insert into public.user (id, email)
-  values (new.id, new.email);
-  return new;
-end;
-$$;
-
 REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM authenticated;
 REVOKE EXECUTE ON FUNCTION public.allow_updating_only_study() FROM authenticated;
 
