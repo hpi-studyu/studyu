@@ -250,14 +250,13 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
         icon: const Icon(Icons.arrow_forward),
         label: Text(AppLocalizations.of(context)!.next),
         onPressed: () async {
-          Map<String, dynamic>? result;
+          Map<String, dynamic>? studyResult;
           try {
-            result = await Supabase.instance.client
+            studyResult = await Supabase.instance.client
                 .rpc(
-                  'get_study_from_invite',
+                  'get_study_record_from_invite',
                   params: {'invite_code': _controller.text},
                 )
-                .select()
                 .single();
           } on PostgrestException catch (error) {
             print(error.message);
@@ -266,7 +265,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
             });
           }
 
-          if (result == null) {
+          if (studyResult == null) {
             setState(() {
               _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
             });
@@ -275,64 +274,53 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
               _errorMessage = null;
             });
 
-            Map<String, dynamic>? studyResult;
+            Study study;
             try {
-              studyResult = await Supabase.instance.client
-                  .rpc(
-                    'get_study_record_from_invite',
-                    params: {'invite_code': _controller.text},
-                  )
-                  .single();
-            } on PostgrestException catch (error) {
-              print(error.message);
-              setState(() {
-                _errorMessage = error.message;
-              });
-            }
-
-            if (studyResult != null) {
-              Study study;
-              try {
-                study = Study.fromJson(studyResult);
-                // ignore: avoid_catching_errors
-              } on ArgumentError catch (error) {
-                // We are catching ArgumentError because unknown enums throw an ArgumentError
-                // and UnknownJsonTypeError is a subclass of ArgumentError
-                debugPrint('Study selection from invite failed: $error');
-                if (!context.mounted) return;
-                Navigator.pop(context);
-                await showAppOutdatedDialog(context);
-                return;
-              }
-
-              if (study.isClosed) {
-                if (!context.mounted) return;
-                Navigator.pop(context);
-                await showStudyClosedDialog(context);
-                return;
-              }
-
+              study = Study.fromJson(studyResult);
+              // ignore: avoid_catching_errors
+            } on ArgumentError catch (error) {
+              debugPrint('Study selection from invite failed: $error');
               if (!context.mounted) return;
               Navigator.pop(context);
+              await showAppOutdatedDialog(context);
+              return;
+            }
 
-              if (result.containsKey('preselected_intervention_ids') &&
-                  result['preselected_intervention_ids'] != null) {
-                final preselectedIds = List<String>.from(
-                  result['preselected_intervention_ids'] as List,
-                );
-                await navigateToStudyOverview(
-                  context,
-                  study,
-                  inviteCode: _controller.text,
-                  preselectedIds: preselectedIds,
-                );
-              } else {
-                await navigateToStudyOverview(
-                  context,
-                  study,
-                  inviteCode: _controller.text,
-                );
-              }
+            if (study.isClosed) {
+              if (!context.mounted) return;
+              Navigator.pop(context);
+              await showStudyClosedDialog(context);
+              return;
+            }
+
+            if (!context.mounted) return;
+            Navigator.pop(context);
+
+            // Get preselected_intervention_ids from study_invite table
+            final inviteResult = await Supabase.instance.client
+                .from('study_invite')
+                .select('preselected_intervention_ids')
+                .eq('code', _controller.text)
+                .maybeSingle();
+            if (!context.mounted) return;
+            if (inviteResult != null &&
+                inviteResult.containsKey('preselected_intervention_ids') &&
+                inviteResult['preselected_intervention_ids'] != null) {
+              final preselectedIds = List<String>.from(
+                inviteResult['preselected_intervention_ids'] as List,
+              );
+              await navigateToStudyOverview(
+                context,
+                study,
+                inviteCode: _controller.text,
+                preselectedIds: preselectedIds,
+              );
+            } else {
+              await navigateToStudyOverview(
+                context,
+                study,
+                inviteCode: _controller.text,
+              );
             }
           }
         },

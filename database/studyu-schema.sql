@@ -129,7 +129,7 @@ CREATE FUNCTION public.active_subject_count(study public.study) RETURNS integer
             count(1)::int
         FROM (
             SELECT
-                is_active_subject (study_subject.id, 3) -- TODO: Let research decide when User is not active anymore
+                is_active_subject (study_subject.id, 3) -- TODO: Let researcher decide when User is not active anymore
             FROM
                 study_subject
             WHERE
