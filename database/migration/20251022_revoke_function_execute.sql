@@ -418,6 +418,25 @@ USING (
   )
 );
 
+-- Remove dependency on moddatetime extension
+-- Ensure the updated_at trigger exists for the "study" table
+-- 1. Create or replace the trigger function
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at := NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 2. Drop the existing trigger if it exists (from moddatetime or old version)
+DROP TRIGGER IF EXISTS handle_updated_at ON public.study;
+
+-- 3. Create the new trigger using our custom function
+CREATE TRIGGER handle_updated_at
+BEFORE UPDATE ON public.study
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
 
 --------------------------------------------------------------------
 -- Optimize RLS policies to cache auth.uid() calls
