@@ -297,9 +297,9 @@
   "average": "Durchschnitt",
   "minimum": "Minimum",
   "maximum": "Maximum",
-
   "support_email_sent": "Support-E-Mail geöffnet",
   "support_email_sent_description": "Ihre Support-Anfrage wurde in Ihrer E-Mail-App vorbereitet. Bitte senden Sie die E-Mail, um unser Support-Team zu erreichen und warten Sie auf eine Antwort.\n\nWenn Sie aktuell an einer Studie teilnehmen, dokumentieren Sie Ihre Ergebnisse bitte außerhalb der App, bis das Problem behoben ist. Vielen Dank für Ihr Verständnis.",
+	"no_contact_email": "Keine Kontakt-E-Mail-Adresse angegeben. Bitte wenden Sie sich an Ihre Studienleitung.",
 
   "sync_fitbit_data": "Fitbit-Daten synchronisieren",
   "fitbit_data_synced": "Fitbit-Daten wurden erfolgreich synchronisiert",

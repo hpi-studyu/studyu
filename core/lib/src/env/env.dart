@@ -6,6 +6,9 @@ late final String supabaseAnonKey;
 late final String? appUrl;
 late final String? designerUrl;
 late final String? projectGeneratorUrl;
+late final String? playStoreUrl;
+late final String? appstoreUrl;
+late final String? developerEmail;
 
 void setEnv(
   String envSupabaseUrl,
@@ -14,6 +17,9 @@ void setEnv(
   String? envAppUrl,
   String? envDesignerUrl,
   String? envProjectGeneratorUrl,
+  String? envPlayStoreUrl,
+  String? envAppstoreUrl,
+  String? envDeveloperEmail,
 }) {
   supabaseUrl = envSupabaseUrl;
   supabaseAnonKey = envSupabaseAnonKey;
@@ -37,4 +43,8 @@ void setEnv(
   } else {
     projectGeneratorUrl = envProjectGeneratorUrl;
   }
+
+  playStoreUrl = envPlayStoreUrl;
+  appstoreUrl = envAppstoreUrl;
+  developerEmail = envDeveloperEmail;
 }
