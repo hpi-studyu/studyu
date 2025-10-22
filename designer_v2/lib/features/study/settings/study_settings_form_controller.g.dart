@@ -6,185 +6,113 @@ part of 'study_settings_form_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$studySettingsFormViewModelHash() =>
-    r'1a715736574e86988baa3f7f776a5dc5b2658607';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 /// Provides the [FormViewModel] responsible for managing the study settings.
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-///
-/// Copied from [studySettingsFormViewModel].
+
 @ProviderFor(studySettingsFormViewModel)
-const studySettingsFormViewModelProvider = StudySettingsFormViewModelFamily();
+const studySettingsFormViewModelProvider = StudySettingsFormViewModelFamily._();
 
 /// Provides the [FormViewModel] responsible for managing the study settings.
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-///
-/// Copied from [studySettingsFormViewModel].
-class StudySettingsFormViewModelFamily
-    extends Family<StudySettingsFormViewModel> {
-  /// Provides the [FormViewModel] responsible for managing the study settings.
-  ///
-  /// Note: This is not safe to use in widgets (or other providers) that are built
-  /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-  ///
-  /// Copied from [studySettingsFormViewModel].
-  const StudySettingsFormViewModelFamily();
 
+final class StudySettingsFormViewModelProvider
+    extends
+        $FunctionalProvider<
+          StudySettingsFormViewModel,
+          StudySettingsFormViewModel,
+          StudySettingsFormViewModel
+        >
+    with $Provider<StudySettingsFormViewModel> {
   /// Provides the [FormViewModel] responsible for managing the study settings.
   ///
   /// Note: This is not safe to use in widgets (or other providers) that are built
   /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-  ///
-  /// Copied from [studySettingsFormViewModel].
-  StudySettingsFormViewModelProvider call(String studyId) {
-    return StudySettingsFormViewModelProvider(studyId);
+  const StudySettingsFormViewModelProvider._({
+    required StudySettingsFormViewModelFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'studySettingsFormViewModelProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$studySettingsFormViewModelHash();
+
+  @override
+  String toString() {
+    return r'studySettingsFormViewModelProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  StudySettingsFormViewModelProvider getProviderOverride(
-    covariant StudySettingsFormViewModelProvider provider,
-  ) {
-    return call(provider.studyId);
+  $ProviderElement<StudySettingsFormViewModel> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  StudySettingsFormViewModel create(Ref ref) {
+    final argument = this.argument as String;
+    return studySettingsFormViewModel(ref, argument);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'studySettingsFormViewModelProvider';
-}
-
-/// Provides the [FormViewModel] responsible for managing the study settings.
-///
-/// Note: This is not safe to use in widgets (or other providers) that are built
-/// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-///
-/// Copied from [studySettingsFormViewModel].
-class StudySettingsFormViewModelProvider
-    extends AutoDisposeProvider<StudySettingsFormViewModel> {
-  /// Provides the [FormViewModel] responsible for managing the study settings.
-  ///
-  /// Note: This is not safe to use in widgets (or other providers) that are built
-  /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-  ///
-  /// Copied from [studySettingsFormViewModel].
-  StudySettingsFormViewModelProvider(String studyId)
-    : this._internal(
-        (ref) => studySettingsFormViewModel(
-          ref as StudySettingsFormViewModelRef,
-          studyId,
-        ),
-        from: studySettingsFormViewModelProvider,
-        name: r'studySettingsFormViewModelProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$studySettingsFormViewModelHash,
-        dependencies: StudySettingsFormViewModelFamily._dependencies,
-        allTransitiveDependencies:
-            StudySettingsFormViewModelFamily._allTransitiveDependencies,
-        studyId: studyId,
-      );
-
-  StudySettingsFormViewModelProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.studyId,
-  }) : super.internal();
-
-  final String studyId;
-
-  @override
-  Override overrideWith(
-    StudySettingsFormViewModel Function(StudySettingsFormViewModelRef provider)
-    create,
-  ) {
-    return ProviderOverride(
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(StudySettingsFormViewModel value) {
+    return $ProviderOverride(
       origin: this,
-      override: StudySettingsFormViewModelProvider._internal(
-        (ref) => create(ref as StudySettingsFormViewModelRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        studyId: studyId,
-      ),
+      providerOverride: $SyncValueProvider<StudySettingsFormViewModel>(value),
     );
-  }
-
-  @override
-  AutoDisposeProviderElement<StudySettingsFormViewModel> createElement() {
-    return _StudySettingsFormViewModelProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
     return other is StudySettingsFormViewModelProvider &&
-        other.studyId == studyId;
+        other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin StudySettingsFormViewModelRef
-    on AutoDisposeProviderRef<StudySettingsFormViewModel> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
-}
+String _$studySettingsFormViewModelHash() =>
+    r'1a715736574e86988baa3f7f776a5dc5b2658607';
 
-class _StudySettingsFormViewModelProviderElement
-    extends AutoDisposeProviderElement<StudySettingsFormViewModel>
-    with StudySettingsFormViewModelRef {
-  _StudySettingsFormViewModelProviderElement(super.provider);
+/// Provides the [FormViewModel] responsible for managing the study settings.
+///
+/// Note: This is not safe to use in widgets (or other providers) that are built
+/// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
+
+final class StudySettingsFormViewModelFamily extends $Family
+    with $FunctionalFamilyOverride<StudySettingsFormViewModel, String> {
+  const StudySettingsFormViewModelFamily._()
+    : super(
+        retry: null,
+        name: r'studySettingsFormViewModelProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Provides the [FormViewModel] responsible for managing the study settings.
+  ///
+  /// Note: This is not safe to use in widgets (or other providers) that are built
+  /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
+
+  StudySettingsFormViewModelProvider call(String studyId) =>
+      StudySettingsFormViewModelProvider._(argument: studyId, from: this);
 
   @override
-  String get studyId => (origin as StudySettingsFormViewModelProvider).studyId;
+  String toString() => r'studySettingsFormViewModelProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

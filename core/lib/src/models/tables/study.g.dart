@@ -54,8 +54,8 @@ Study _$StudyFromJson(
 
 Map<String, dynamic> _$StudyToJson(Study instance) => <String, dynamic>{
   'id': instance.id,
-  if (instance.title case final value?) 'title': value,
-  if (instance.description case final value?) 'description': value,
+  'title': ?instance.title,
+  'description': ?instance.description,
   'user_id': instance.userId,
   'participation': instance.participation.toJson(),
   'result_sharing': instance.resultSharing.toJson(),

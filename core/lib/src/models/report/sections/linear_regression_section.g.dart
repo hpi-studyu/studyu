@@ -29,13 +29,11 @@ Map<String, dynamic> _$LinearRegressionSectionToJson(
 ) => <String, dynamic>{
   'type': instance.type,
   'id': instance.id,
-  if (instance.title case final value?) 'title': value,
-  if (instance.description case final value?) 'description': value,
-  if (instance.resultProperty?.toJson() case final value?)
-    'resultProperty': value,
+  'title': ?instance.title,
+  'description': ?instance.description,
+  'resultProperty': ?instance.resultProperty?.toJson(),
   'alpha': instance.alpha,
-  if (_$ImprovementDirectionEnumMap[instance.improvement] case final value?)
-    'improvement': value,
+  'improvement': ?_$ImprovementDirectionEnumMap[instance.improvement],
 };
 
 const _$ImprovementDirectionEnumMap = {

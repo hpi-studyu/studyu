@@ -6,184 +6,117 @@ part of 'study_form_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$studyFormViewModelHash() =>
-    r'70dcd42209b60b526435e76e66dd3e22b190e71d';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 /// Provides the [FormViewModel] that is responsible for displaying and
 /// editing the study design form.
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-///
-/// Copied from [studyFormViewModel].
+
 @ProviderFor(studyFormViewModel)
-const studyFormViewModelProvider = StudyFormViewModelFamily();
+const studyFormViewModelProvider = StudyFormViewModelFamily._();
 
 /// Provides the [FormViewModel] that is responsible for displaying and
 /// editing the study design form.
 ///
 /// Note: This is not safe to use in widgets (or other providers) that are built
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-///
-/// Copied from [studyFormViewModel].
-class StudyFormViewModelFamily extends Family<StudyFormViewModel> {
-  /// Provides the [FormViewModel] that is responsible for displaying and
-  /// editing the study design form.
-  ///
-  /// Note: This is not safe to use in widgets (or other providers) that are built
-  /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-  ///
-  /// Copied from [studyFormViewModel].
-  const StudyFormViewModelFamily();
 
+final class StudyFormViewModelProvider
+    extends
+        $FunctionalProvider<
+          StudyFormViewModel,
+          StudyFormViewModel,
+          StudyFormViewModel
+        >
+    with $Provider<StudyFormViewModel> {
   /// Provides the [FormViewModel] that is responsible for displaying and
   /// editing the study design form.
   ///
   /// Note: This is not safe to use in widgets (or other providers) that are built
   /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-  ///
-  /// Copied from [studyFormViewModel].
-  StudyFormViewModelProvider call(String studyId) {
-    return StudyFormViewModelProvider(studyId);
+  const StudyFormViewModelProvider._({
+    required StudyFormViewModelFamily super.from,
+    required StudyID super.argument,
+  }) : super(
+         retry: null,
+         name: r'studyFormViewModelProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$studyFormViewModelHash();
+
+  @override
+  String toString() {
+    return r'studyFormViewModelProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  StudyFormViewModelProvider getProviderOverride(
-    covariant StudyFormViewModelProvider provider,
-  ) {
-    return call(provider.studyId);
+  $ProviderElement<StudyFormViewModel> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  StudyFormViewModel create(Ref ref) {
+    final argument = this.argument as StudyID;
+    return studyFormViewModel(ref, argument);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'studyFormViewModelProvider';
-}
-
-/// Provides the [FormViewModel] that is responsible for displaying and
-/// editing the study design form.
-///
-/// Note: This is not safe to use in widgets (or other providers) that are built
-/// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-///
-/// Copied from [studyFormViewModel].
-class StudyFormViewModelProvider
-    extends AutoDisposeProvider<StudyFormViewModel> {
-  /// Provides the [FormViewModel] that is responsible for displaying and
-  /// editing the study design form.
-  ///
-  /// Note: This is not safe to use in widgets (or other providers) that are built
-  /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-  ///
-  /// Copied from [studyFormViewModel].
-  StudyFormViewModelProvider(String studyId)
-    : this._internal(
-        (ref) => studyFormViewModel(ref as StudyFormViewModelRef, studyId),
-        from: studyFormViewModelProvider,
-        name: r'studyFormViewModelProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$studyFormViewModelHash,
-        dependencies: StudyFormViewModelFamily._dependencies,
-        allTransitiveDependencies:
-            StudyFormViewModelFamily._allTransitiveDependencies,
-        studyId: studyId,
-      );
-
-  StudyFormViewModelProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.studyId,
-  }) : super.internal();
-
-  final String studyId;
-
-  @override
-  Override overrideWith(
-    StudyFormViewModel Function(StudyFormViewModelRef provider) create,
-  ) {
-    return ProviderOverride(
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(StudyFormViewModel value) {
+    return $ProviderOverride(
       origin: this,
-      override: StudyFormViewModelProvider._internal(
-        (ref) => create(ref as StudyFormViewModelRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        studyId: studyId,
-      ),
+      providerOverride: $SyncValueProvider<StudyFormViewModel>(value),
     );
   }
 
   @override
-  AutoDisposeProviderElement<StudyFormViewModel> createElement() {
-    return _StudyFormViewModelProviderElement(this);
-  }
-
-  @override
   bool operator ==(Object other) {
-    return other is StudyFormViewModelProvider && other.studyId == studyId;
+    return other is StudyFormViewModelProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin StudyFormViewModelRef on AutoDisposeProviderRef<StudyFormViewModel> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
-}
+String _$studyFormViewModelHash() =>
+    r'70dcd42209b60b526435e76e66dd3e22b190e71d';
 
-class _StudyFormViewModelProviderElement
-    extends AutoDisposeProviderElement<StudyFormViewModel>
-    with StudyFormViewModelRef {
-  _StudyFormViewModelProviderElement(super.provider);
+/// Provides the [FormViewModel] that is responsible for displaying and
+/// editing the study design form.
+///
+/// Note: This is not safe to use in widgets (or other providers) that are built
+/// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
+
+final class StudyFormViewModelFamily extends $Family
+    with $FunctionalFamilyOverride<StudyFormViewModel, StudyID> {
+  const StudyFormViewModelFamily._()
+    : super(
+        retry: null,
+        name: r'studyFormViewModelProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Provides the [FormViewModel] that is responsible for displaying and
+  /// editing the study design form.
+  ///
+  /// Note: This is not safe to use in widgets (or other providers) that are built
+  /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
+
+  StudyFormViewModelProvider call(StudyID studyId) =>
+      StudyFormViewModelProvider._(argument: studyId, from: this);
 
   @override
-  String get studyId => (origin as StudyFormViewModelProvider).studyId;
+  String toString() => r'studyFormViewModelProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

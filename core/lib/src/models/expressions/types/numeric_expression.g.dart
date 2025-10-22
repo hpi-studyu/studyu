@@ -16,8 +16,8 @@ NumericExpression _$NumericExpressionFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$NumericExpressionToJson(NumericExpression instance) =>
     <String, dynamic>{
-      if (instance.type case final value?) 'type': value,
-      if (instance.target case final value?) 'target': value,
+      'type': ?instance.type,
+      'target': ?instance.target,
       'comparator': _$NumericComparatorEnumMap[instance.comparator]!,
       'value': instance.value,
     };

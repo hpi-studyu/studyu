@@ -6,159 +6,93 @@ part of 'fitbit_credentials_form_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fitbitCredentialsFormViewModelHash() =>
-    r'd975b7edada5bd981f787fc25f4cdbadada6a79d';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [fitbitCredentialsFormViewModel].
 @ProviderFor(fitbitCredentialsFormViewModel)
 const fitbitCredentialsFormViewModelProvider =
-    FitbitCredentialsFormViewModelFamily();
+    FitbitCredentialsFormViewModelFamily._();
 
-/// See also [fitbitCredentialsFormViewModel].
-class FitbitCredentialsFormViewModelFamily
-    extends Family<FitbitCredentialsFormViewModel> {
-  /// See also [fitbitCredentialsFormViewModel].
-  const FitbitCredentialsFormViewModelFamily();
+final class FitbitCredentialsFormViewModelProvider
+    extends
+        $FunctionalProvider<
+          FitbitCredentialsFormViewModel,
+          FitbitCredentialsFormViewModel,
+          FitbitCredentialsFormViewModel
+        >
+    with $Provider<FitbitCredentialsFormViewModel> {
+  const FitbitCredentialsFormViewModelProvider._({
+    required FitbitCredentialsFormViewModelFamily super.from,
+    required StudyID super.argument,
+  }) : super(
+         retry: null,
+         name: r'fitbitCredentialsFormViewModelProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [fitbitCredentialsFormViewModel].
-  FitbitCredentialsFormViewModelProvider call(String studyId) {
-    return FitbitCredentialsFormViewModelProvider(studyId);
+  @override
+  String debugGetCreateSourceHash() => _$fitbitCredentialsFormViewModelHash();
+
+  @override
+  String toString() {
+    return r'fitbitCredentialsFormViewModelProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  FitbitCredentialsFormViewModelProvider getProviderOverride(
-    covariant FitbitCredentialsFormViewModelProvider provider,
-  ) {
-    return call(provider.studyId);
+  $ProviderElement<FitbitCredentialsFormViewModel> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  FitbitCredentialsFormViewModel create(Ref ref) {
+    final argument = this.argument as StudyID;
+    return fitbitCredentialsFormViewModel(ref, argument);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'fitbitCredentialsFormViewModelProvider';
-}
-
-/// See also [fitbitCredentialsFormViewModel].
-class FitbitCredentialsFormViewModelProvider
-    extends AutoDisposeProvider<FitbitCredentialsFormViewModel> {
-  /// See also [fitbitCredentialsFormViewModel].
-  FitbitCredentialsFormViewModelProvider(String studyId)
-    : this._internal(
-        (ref) => fitbitCredentialsFormViewModel(
-          ref as FitbitCredentialsFormViewModelRef,
-          studyId,
-        ),
-        from: fitbitCredentialsFormViewModelProvider,
-        name: r'fitbitCredentialsFormViewModelProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$fitbitCredentialsFormViewModelHash,
-        dependencies: FitbitCredentialsFormViewModelFamily._dependencies,
-        allTransitiveDependencies:
-            FitbitCredentialsFormViewModelFamily._allTransitiveDependencies,
-        studyId: studyId,
-      );
-
-  FitbitCredentialsFormViewModelProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.studyId,
-  }) : super.internal();
-
-  final String studyId;
-
-  @override
-  Override overrideWith(
-    FitbitCredentialsFormViewModel Function(
-      FitbitCredentialsFormViewModelRef provider,
-    )
-    create,
-  ) {
-    return ProviderOverride(
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FitbitCredentialsFormViewModel value) {
+    return $ProviderOverride(
       origin: this,
-      override: FitbitCredentialsFormViewModelProvider._internal(
-        (ref) => create(ref as FitbitCredentialsFormViewModelRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        studyId: studyId,
+      providerOverride: $SyncValueProvider<FitbitCredentialsFormViewModel>(
+        value,
       ),
     );
   }
 
   @override
-  AutoDisposeProviderElement<FitbitCredentialsFormViewModel> createElement() {
-    return _FitbitCredentialsFormViewModelProviderElement(this);
-  }
-
-  @override
   bool operator ==(Object other) {
     return other is FitbitCredentialsFormViewModelProvider &&
-        other.studyId == studyId;
+        other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin FitbitCredentialsFormViewModelRef
-    on AutoDisposeProviderRef<FitbitCredentialsFormViewModel> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
-}
+String _$fitbitCredentialsFormViewModelHash() =>
+    r'd975b7edada5bd981f787fc25f4cdbadada6a79d';
 
-class _FitbitCredentialsFormViewModelProviderElement
-    extends AutoDisposeProviderElement<FitbitCredentialsFormViewModel>
-    with FitbitCredentialsFormViewModelRef {
-  _FitbitCredentialsFormViewModelProviderElement(super.provider);
+final class FitbitCredentialsFormViewModelFamily extends $Family
+    with $FunctionalFamilyOverride<FitbitCredentialsFormViewModel, StudyID> {
+  const FitbitCredentialsFormViewModelFamily._()
+    : super(
+        retry: null,
+        name: r'fitbitCredentialsFormViewModelProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  FitbitCredentialsFormViewModelProvider call(StudyID studyId) =>
+      FitbitCredentialsFormViewModelProvider._(argument: studyId, from: this);
 
   @override
-  String get studyId =>
-      (origin as FitbitCredentialsFormViewModelProvider).studyId;
+  String toString() => r'fitbitCredentialsFormViewModelProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

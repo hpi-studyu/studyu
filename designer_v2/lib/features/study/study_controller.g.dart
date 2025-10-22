@@ -6,164 +6,103 @@ part of 'study_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$studyControllerHash() => r'9ac102bee0008ed64dde154c16cbf1b20b7437b7';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$StudyController
-    extends BuildlessAutoDisposeNotifier<StudyControllerState> {
-  late final String studyId;
-
-  StudyControllerState build(String studyId);
-}
-
-/// See also [StudyController].
 @ProviderFor(StudyController)
-const studyControllerProvider = StudyControllerFamily();
+const studyControllerProvider = StudyControllerFamily._();
 
-/// See also [StudyController].
-class StudyControllerFamily extends Family<StudyControllerState> {
-  /// See also [StudyController].
-  const StudyControllerFamily();
+final class StudyControllerProvider
+    extends $NotifierProvider<StudyController, StudyControllerState> {
+  const StudyControllerProvider._({
+    required StudyControllerFamily super.from,
+    required StudyID super.argument,
+  }) : super(
+         retry: null,
+         name: r'studyControllerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [StudyController].
-  StudyControllerProvider call(String studyId) {
-    return StudyControllerProvider(studyId);
+  @override
+  String debugGetCreateSourceHash() => _$studyControllerHash();
+
+  @override
+  String toString() {
+    return r'studyControllerProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  StudyControllerProvider getProviderOverride(
-    covariant StudyControllerProvider provider,
-  ) {
-    return call(provider.studyId);
-  }
+  StudyController create() => StudyController();
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'studyControllerProvider';
-}
-
-/// See also [StudyController].
-class StudyControllerProvider
-    extends
-        AutoDisposeNotifierProviderImpl<StudyController, StudyControllerState> {
-  /// See also [StudyController].
-  StudyControllerProvider(String studyId)
-    : this._internal(
-        () => StudyController()..studyId = studyId,
-        from: studyControllerProvider,
-        name: r'studyControllerProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$studyControllerHash,
-        dependencies: StudyControllerFamily._dependencies,
-        allTransitiveDependencies:
-            StudyControllerFamily._allTransitiveDependencies,
-        studyId: studyId,
-      );
-
-  StudyControllerProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.studyId,
-  }) : super.internal();
-
-  final String studyId;
-
-  @override
-  StudyControllerState runNotifierBuild(covariant StudyController notifier) {
-    return notifier.build(studyId);
-  }
-
-  @override
-  Override overrideWith(StudyController Function() create) {
-    return ProviderOverride(
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(StudyControllerState value) {
+    return $ProviderOverride(
       origin: this,
-      override: StudyControllerProvider._internal(
-        () => create()..studyId = studyId,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        studyId: studyId,
-      ),
+      providerOverride: $SyncValueProvider<StudyControllerState>(value),
     );
   }
 
   @override
-  AutoDisposeNotifierProviderElement<StudyController, StudyControllerState>
-  createElement() {
-    return _StudyControllerProviderElement(this);
-  }
-
-  @override
   bool operator ==(Object other) {
-    return other is StudyControllerProvider && other.studyId == studyId;
+    return other is StudyControllerProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin StudyControllerRef
-    on AutoDisposeNotifierProviderRef<StudyControllerState> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
-}
+String _$studyControllerHash() => r'9ac102bee0008ed64dde154c16cbf1b20b7437b7';
 
-class _StudyControllerProviderElement
-    extends
-        AutoDisposeNotifierProviderElement<
+final class StudyControllerFamily extends $Family
+    with
+        $ClassFamilyOverride<
           StudyController,
-          StudyControllerState
-        >
-    with StudyControllerRef {
-  _StudyControllerProviderElement(super.provider);
+          StudyControllerState,
+          StudyControllerState,
+          StudyControllerState,
+          StudyID
+        > {
+  const StudyControllerFamily._()
+    : super(
+        retry: null,
+        name: r'studyControllerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  StudyControllerProvider call(StudyID studyId) =>
+      StudyControllerProvider._(argument: studyId, from: this);
 
   @override
-  String get studyId => (origin as StudyControllerProvider).studyId;
+  String toString() => r'studyControllerProvider';
 }
 
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$StudyController extends $Notifier<StudyControllerState> {
+  late final _$args = ref.$arg as StudyID;
+  StudyID get studyId => _$args;
+
+  StudyControllerState build(StudyID studyId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref = this.ref as $Ref<StudyControllerState, StudyControllerState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<StudyControllerState, StudyControllerState>,
+              StudyControllerState,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
