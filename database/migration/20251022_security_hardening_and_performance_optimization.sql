@@ -597,19 +597,19 @@ ALTER TABLE public.study
 
 -- 3. Recreate the foreign keys referencing the PRIMARY KEY (study_pkey)
 ALTER TABLE public.repo
-    ADD CONSTRAINT "repo_studyid_fkey"
+    ADD CONSTRAINT "repo_studyId_fkey"
         FOREIGN KEY (study_id) REFERENCES public.study(id);
 
 ALTER TABLE public.study_invite
-    ADD CONSTRAINT "study_invite_studyid_fkey"
+    ADD CONSTRAINT "study_invite_studyId_fkey"
         FOREIGN KEY (study_id) REFERENCES public.study(id);
 
 ALTER TABLE public.study_fitbit_credentials
-    ADD CONSTRAINT "study_fitbit_credentials_studyid_fkey"
+    ADD CONSTRAINT "study_fitbit_credentials_studyId_fkey"
         FOREIGN KEY (study_id) REFERENCES public.study(id);
 
 ALTER TABLE public.study_subject
-    ADD CONSTRAINT "study_subject_studyid_fkey"
+    ADD CONSTRAINT "study_subject_studyId_fkey"
         FOREIGN KEY (study_id) REFERENCES public.study(id);
 
 -- Remove duplicate unique constraint on study_invite.code
