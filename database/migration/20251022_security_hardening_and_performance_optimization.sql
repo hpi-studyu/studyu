@@ -539,119 +539,8 @@ REVOKE EXECUTE ON FUNCTION public.allow_updating_only_study() FROM authenticated
 -- ----------------------------------------------------------------------------
 DROP FUNCTION public.get_study_from_invite(text);
 
-
 -- ============================================================================
--- SECTION 3: FIX RLS POLICIES
--- ============================================================================
---
--- Updates policies to use has_results_public function correctly.
--- Previous policies had naming conflicts - both subject_progress and
--- study_subject had identically named policies, which isn't allowed.
--- ============================================================================
-
-DROP POLICY "Enable read access for all users if results are public" ON public.subject_progress;
-DROP POLICY "Enable read access for all users if results are public" ON public.study_subject;
-
--- Allow anyone to read progress data if the subject has public results
-CREATE POLICY "Read access on progress for all if results are public"
-ON public.subject_progress
-FOR SELECT
-USING (public.has_results_public(subject_id));
-
--- Allow anyone to read subject data if the subject has public results
-CREATE POLICY "Read access on subjects for all if results are public"
-ON public.study_subject
-FOR SELECT
-USING (public.has_results_public(id));
-
--- Migrate row level policies to be used by authenticated users only
-
-ALTER POLICY "Allow users to manage their own user"
-ON public."user"
-TO authenticated;
-
-ALTER POLICY "Editors can delete their own open-study invite codes"
-ON public."study_invite"
-TO authenticated;
-
-ALTER POLICY "Editors can do everything with their studies"
-ON public."study"
-TO authenticated;
-
-ALTER POLICY "Editors can do everything with their study subjects"
-ON public."study_subject"
-TO authenticated;
-
-ALTER POLICY "Editors can manage their own invite-only study invite codes"
-ON public."study_invite"
-TO authenticated;
-
-ALTER POLICY "Editors can read their own open-study invite codes"
-ON public."study_invite"
-TO authenticated;
-
-ALTER POLICY "Editors can see subjects from their studies"
-ON public."study_subject"
-TO authenticated;
-
-ALTER POLICY "Editors can see their study subjects progress"
-ON public."subject_progress"
-TO authenticated;
-
-ALTER POLICY "Editors can view their studies"
-ON public."study"
-TO authenticated;
-
-ALTER POLICY "Read access on subjects for all if results are public"
-ON public."study_subject"
-TO authenticated;
-
-ALTER POLICY "Read access on progress for all if results are public"
-ON public."subject_progress"
-TO authenticated;
-
-ALTER POLICY "Enable read access for study participants for fitbit credential"
-ON public."study_fitbit_credentials"
-TO authenticated;
-
-ALTER POLICY "Invite code must match study_id"
-ON public."study_subject"
-TO authenticated;
-
-ALTER POLICY "Joining a closed study should not be possible"
-ON public."study_subject"
-TO authenticated;
-
-ALTER POLICY "Repo is viewable by everyone"
-ON public."repo"
-TO authenticated;
-
-ALTER POLICY "Study creators can do everything with repos from their studies"
-ON public."repo"
-TO authenticated;
-
-ALTER POLICY "Study owners can manage their own fitbit credentials"
-ON public."study_fitbit_credentials"
-TO authenticated;
-
-ALTER POLICY "Study subjects can view their joined study"
-ON public."study"
-TO authenticated;
-
-ALTER POLICY "Study visibility"
-ON public."study"
-TO authenticated;
-
-ALTER POLICY "Users can do everything with their progress"
-ON public."subject_progress"
-TO authenticated;
-
-ALTER POLICY "Users can do everything with their subjects"
-ON public."study_subject"
-TO authenticated;
-
--- ============================================================================
--- SECTION 4: PERFORMANCE IMPROVEMENTS
+-- SECTION 3: PERFORMANCE IMPROVEMENTS
 -- ============================================================================
 
 -- ----------------------------------------------------------------------------
@@ -730,7 +619,7 @@ EXECUTE FUNCTION update_updated_at_column();
 
 
 -- ============================================================================
--- SECTION 5: OPTIMIZE RLS POLICIES FOR PERFORMANCE
+-- SECTION 4: OPTIMIZE RLS POLICIES FOR PERFORMANCE
 -- ============================================================================
 --
 -- PERFORMANCE OPTIMIZATION: Cache auth.uid() calls in RLS policies
@@ -956,6 +845,116 @@ COMMENT ON COLUMN public.study.published IS
 
 COMMENT ON FUNCTION public.active_subject_count(public.study) IS
 'TODO: Let research decide when user is not active anymore. Currently set to hardcoded number in days.';
+
+-- ============================================================================
+-- SECTION 5: FIX RLS POLICIES
+-- ============================================================================
+--
+-- Updates policies to use has_results_public function correctly.
+-- Previous policies had naming conflicts - both subject_progress and
+-- study_subject had identically named policies, which isn't allowed.
+-- ============================================================================
+
+DROP POLICY "Enable read access for all users if results are public" ON public.subject_progress;
+DROP POLICY "Enable read access for all users if results are public" ON public.study_subject;
+
+-- Allow anyone to read progress data if the subject has public results
+CREATE POLICY "Read access on progress for all if results are public"
+ON public.subject_progress
+FOR SELECT
+USING (public.has_results_public(subject_id));
+
+-- Allow anyone to read subject data if the subject has public results
+CREATE POLICY "Read access on subjects for all if results are public"
+ON public.study_subject
+FOR SELECT
+USING (public.has_results_public(id));
+
+-- Migrate row level policies to be used by authenticated users only
+
+ALTER POLICY "Allow users to manage their own user"
+ON public."user"
+TO authenticated;
+
+ALTER POLICY "Editors can delete their own open-study invite codes"
+ON public."study_invite"
+TO authenticated;
+
+ALTER POLICY "Editors can do everything with their studies"
+ON public."study"
+TO authenticated;
+
+ALTER POLICY "Editors can do everything with their study subjects"
+ON public."study_subject"
+TO authenticated;
+
+ALTER POLICY "Editors can manage their own invite-only study invite codes"
+ON public."study_invite"
+TO authenticated;
+
+ALTER POLICY "Editors can read their own open-study invite codes"
+ON public."study_invite"
+TO authenticated;
+
+ALTER POLICY "Editors can see subjects from their studies"
+ON public."study_subject"
+TO authenticated;
+
+ALTER POLICY "Editors can see their study subjects progress"
+ON public."subject_progress"
+TO authenticated;
+
+ALTER POLICY "Editors can view their studies"
+ON public."study"
+TO authenticated;
+
+ALTER POLICY "Read access on subjects for all if results are public"
+ON public."study_subject"
+TO authenticated;
+
+ALTER POLICY "Read access on progress for all if results are public"
+ON public."subject_progress"
+TO authenticated;
+
+ALTER POLICY "Enable read access for study participants for fitbit credential"
+ON public."study_fitbit_credentials"
+TO authenticated;
+
+ALTER POLICY "Invite code must match study_id"
+ON public."study_subject"
+TO authenticated;
+
+ALTER POLICY "Joining a closed study should not be possible"
+ON public."study_subject"
+TO authenticated;
+
+ALTER POLICY "Repo is viewable by everyone"
+ON public."repo"
+TO authenticated;
+
+ALTER POLICY "Study creators can do everything with repos from their studies"
+ON public."repo"
+TO authenticated;
+
+ALTER POLICY "Study owners can manage their own fitbit credentials"
+ON public."study_fitbit_credentials"
+TO authenticated;
+
+ALTER POLICY "Study subjects can view their joined study"
+ON public."study"
+TO authenticated;
+
+ALTER POLICY "Study visibility"
+ON public."study"
+TO authenticated;
+
+ALTER POLICY "Users can do everything with their progress"
+ON public."subject_progress"
+TO authenticated;
+
+ALTER POLICY "Users can do everything with their subjects"
+ON public."study_subject"
+TO authenticated;
 
 -- ============================================================================
 -- END OF MIGRATION

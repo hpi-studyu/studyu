@@ -732,14 +732,6 @@ CREATE POLICY "Editors can view their studies" ON "public"."study" FOR SELECT TO
 
 
 
-CREATE POLICY "Read access on subjects for all if results are public" ON "public"."study_subject" FOR SELECT TO "authenticated" USING ("public"."has_results_public"("id"));
-
-
-
-CREATE POLICY "Read access on progress for all if results are public" ON "public"."subject_progress" FOR SELECT TO "authenticated" USING ("public"."has_results_public"("subject_id"));
-
-
-
 CREATE POLICY "Enable read access for study participants for fitbit credential" ON "public"."study_fitbit_credentials" FOR SELECT TO "authenticated" USING ((( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
    FROM "public"."study"
   WHERE ("study"."id" = "study_fitbit_credentials"."study_id")) OR "public"."is_study_subject_of"(( SELECT "auth"."uid"() AS "uid"), "study_id")));
@@ -753,6 +745,14 @@ CREATE POLICY "Invite code must match study_id" ON "public"."study_subject" AS R
 CREATE POLICY "Joining a closed study should not be possible" ON "public"."study_subject" AS RESTRICTIVE FOR INSERT TO "authenticated" WITH CHECK ((NOT (EXISTS ( SELECT 1
    FROM "public"."study"
   WHERE (("study"."id" = "study_subject"."study_id") AND ("study"."status" = 'closed'::"public"."study_status"))))));
+
+
+
+CREATE POLICY "Read access on progress for all if results are public" ON "public"."subject_progress" FOR SELECT TO "authenticated" USING ("public"."has_results_public"("subject_id"));
+
+
+
+CREATE POLICY "Read access on subjects for all if results are public" ON "public"."study_subject" FOR SELECT TO "authenticated" USING ("public"."has_results_public"("id"));
 
 
 
