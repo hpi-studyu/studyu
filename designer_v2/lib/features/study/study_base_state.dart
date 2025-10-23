@@ -35,10 +35,7 @@ class StudyControllerBaseState extends Equatable {
   }
 
   Study? get studyValue {
-    final data = study.maybeWhen(
-      data: (value) => value,
-      orElse: () => null,
-    );
+    final data = study.maybeWhen(data: (value) => value, orElse: () => null);
     return data ?? studyWithMetadata?.model;
   }
 

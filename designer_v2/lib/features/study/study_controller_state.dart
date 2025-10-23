@@ -21,8 +21,7 @@ class StudyControllerState extends StudyControllerBaseState
     this.lastSynced,
   });
 
-  bool get isPublished =>
-      studyValue?.status == StudyStatus.running;
+  bool get isPublished => studyValue?.status == StudyStatus.running;
 
   bool get isClosed => studyValue?.status == StudyStatus.closed;
 
