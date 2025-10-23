@@ -81,6 +81,10 @@ CREATE TABLE IF NOT EXISTS "public"."study" (
 ALTER TABLE "public"."study" OWNER TO "postgres";
 
 
+COMMENT ON COLUMN "public"."study"."published" IS 'Deprecated: Use "status" column to track publication state.';
+
+
+
 COMMENT ON COLUMN "public"."study"."user_id" IS 'UserId of study creator';
 
 
@@ -101,6 +105,10 @@ $$;
 
 
 ALTER FUNCTION "public"."active_subject_count"("study" "public"."study") OWNER TO "postgres";
+
+
+COMMENT ON FUNCTION "public"."active_subject_count"("study" "public"."study") IS 'TODO: Let research decide when user is not active anymore. Currently set to hardcoded number in days.';
+
 
 
 CREATE OR REPLACE FUNCTION "public"."allow_updating_only_study"() RETURNS "trigger"
@@ -808,6 +816,9 @@ ALTER TABLE "public"."subject_progress" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."user" ENABLE ROW LEVEL SECURITY;
 
 
+-- ----------------------------------------------------------------------------
+-- Manually added code below this line should be preserved on re-generation
+-- ----------------------------------------------------------------------------
 
 CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
@@ -846,6 +857,10 @@ REVOKE EXECUTE ON FUNCTION public.allow_updating_only_study() FROM public, anon;
 -- MORE REVOKING
 REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM authenticated;
 REVOKE EXECUTE ON FUNCTION public.allow_updating_only_study() FROM authenticated;
+
+-- ----------------------------------------------------------------------------
+-- End of manually added code
+-- ----------------------------------------------------------------------------
 
 RESET ALL;
 

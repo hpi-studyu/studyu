@@ -947,6 +947,16 @@ ON public."user"
 FOR ALL
 USING ((SELECT auth.uid()) = id);
 
+-- ----------------------------------------------------------------------------
+-- Comments
+-- ----------------------------------------------------------------------------
+
+COMMENT ON COLUMN public.study.published IS
+	'Deprecated: Use "status" column to track publication state.';
+
+COMMENT ON FUNCTION public.active_subject_count(public.study) IS
+'TODO: Let research decide when user is not active anymore. Currently set to hardcoded number in days.';
+
 -- ============================================================================
 -- END OF MIGRATION
 -- ============================================================================
