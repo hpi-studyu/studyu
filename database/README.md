@@ -84,51 +84,11 @@ The raw dump file needs several manual modifications before it can be used as `s
    -- etc.
    ```
 
-4. **Add auth trigger**: Add the trigger that creates user records on signup:
-   ```sql
-   CREATE TRIGGER on_auth_user_created 
-   AFTER INSERT ON auth.users 
-   FOR EACH ROW 
-   EXECUTE FUNCTION public.handle_new_user();
-   ```
+4. **Add auth trigger**: Add the trigger that creates user records on signup. See existing
+   schema for reference.
 
 5. **Add privilege revocations**: Add all `REVOKE EXECUTE ON FUNCTION` statements to restrict
-   function access:
-   ```sql
-   -- REVOKING EXECUTE PRIVILEGES
-
-   -- Functions used in RLS policies
-   REVOKE EXECUTE ON FUNCTION public.can_edit(uuid, public.study) FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.is_study_subject_of(uuid, uuid) FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.has_results_public(uuid) FROM public, anon;
-
-   -- Computed field functions (PostgREST calls these with elevated privileges)
-   REVOKE EXECUTE ON FUNCTION public.active_subject_count(public.study) FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.has_study_ended(public.study_subject) FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.study_active_days(public.study) FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.study_ended_count(public.study) FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.study_length(public.study) FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.study_missed_days(public.study) FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.study_participant_count(public.study) FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.study_total_tasks(public.study_subject) FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.subject_current_day(public.study_subject) FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.subject_total_active_days(public.study_subject) FROM public, anon;
-
-   -- Utility functions
-   REVOKE EXECUTE ON FUNCTION public.is_active_subject(uuid, integer) FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.last_completed_task(uuid) FROM public, anon;
-
-   -- RPC/API functions
-   REVOKE EXECUTE ON FUNCTION public.get_study_record_from_invite(text) FROM public, anon;
-
-   -- Trigger functions
-   REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM public, anon;
-   REVOKE EXECUTE ON FUNCTION public.allow_updating_only_study() FROM public, anon;
-
-   -- Additional revocations for authenticated users
-   REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM authenticated;
-   REVOKE EXECUTE ON FUNCTION public.allow_updating_only_study() FROM authenticated;
-   ```
+   function access. See existing schema for reference.
 
 6. **Add RESET ALL**: Add `RESET ALL;` before the final `COMMIT;` to reset any session settings
 

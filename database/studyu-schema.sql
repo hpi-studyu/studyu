@@ -671,7 +671,7 @@ ALTER TABLE ONLY "public"."study"
 
 
 
-CREATE POLICY "Allow users to manage their own user" ON "public"."user" USING ((( SELECT "auth"."uid"() AS "uid") = "id"));
+CREATE POLICY "Allow users to manage their own user" ON "public"."user" TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "id"));
 
 
 
@@ -679,86 +679,86 @@ CREATE POLICY "Config is viewable by everyone" ON "public"."app_config" FOR SELE
 
 
 
-CREATE POLICY "Editors can delete their own open-study invite codes" ON "public"."study_invite" FOR DELETE USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
+CREATE POLICY "Editors can delete their own open-study invite codes" ON "public"."study_invite" FOR DELETE TO "authenticated" USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
    FROM "public"."study"
   WHERE (("study"."id" = "study_invite"."study_id") AND ("study"."participation" = 'open'::"public"."participation"))));
 
 
 
-CREATE POLICY "Editors can do everything with their studies" ON "public"."study" USING ("public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*));
+CREATE POLICY "Editors can do everything with their studies" ON "public"."study" TO "authenticated" USING ("public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*));
 
 
 
-CREATE POLICY "Editors can do everything with their study subjects" ON "public"."study_subject" USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
+CREATE POLICY "Editors can do everything with their study subjects" ON "public"."study_subject" TO "authenticated" USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
    FROM "public"."study"
   WHERE ("study"."id" = "study_subject"."study_id")));
 
 
 
-CREATE POLICY "Editors can manage their own invite-only study invite codes" ON "public"."study_invite" USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
+CREATE POLICY "Editors can manage their own invite-only study invite codes" ON "public"."study_invite" TO "authenticated" USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
    FROM "public"."study"
   WHERE (("study"."id" = "study_invite"."study_id") AND ("study"."participation" = 'invite'::"public"."participation"))));
 
 
 
-CREATE POLICY "Editors can read their own open-study invite codes" ON "public"."study_invite" FOR SELECT USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
+CREATE POLICY "Editors can read their own open-study invite codes" ON "public"."study_invite" FOR SELECT TO "authenticated" USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
    FROM "public"."study"
   WHERE (("study"."id" = "study_invite"."study_id") AND ("study"."participation" = 'open'::"public"."participation"))));
 
 
 
-CREATE POLICY "Editors can see subjects from their studies" ON "public"."study_subject" FOR SELECT USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
+CREATE POLICY "Editors can see subjects from their studies" ON "public"."study_subject" FOR SELECT TO "authenticated" USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
    FROM "public"."study"
   WHERE ("study"."id" = "study_subject"."study_id")));
 
 
 
-CREATE POLICY "Editors can see their study subjects progress" ON "public"."subject_progress" FOR SELECT USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
+CREATE POLICY "Editors can see their study subjects progress" ON "public"."subject_progress" FOR SELECT TO "authenticated" USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
    FROM "public"."study",
     "public"."study_subject"
   WHERE (("study"."id" = "study_subject"."study_id") AND ("study_subject"."id" = "subject_progress"."subject_id"))));
 
 
 
-CREATE POLICY "Editors can view their studies" ON "public"."study" FOR SELECT USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
+CREATE POLICY "Editors can view their studies" ON "public"."study" FOR SELECT TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 
 
-CREATE POLICY "Enable read access for all users if results are public (study s" ON "public"."study_subject" FOR SELECT USING ("public"."has_results_public"("id"));
+CREATE POLICY "Enable read access for all users if results are public (study s" ON "public"."study_subject" FOR SELECT TO "authenticated" USING ("public"."has_results_public"("id"));
 
 
 
-CREATE POLICY "Enable read access for all users if results are public (subject" ON "public"."subject_progress" FOR SELECT USING ("public"."has_results_public"("subject_id"));
+CREATE POLICY "Enable read access for all users if results are public (subject" ON "public"."subject_progress" FOR SELECT TO "authenticated" USING ("public"."has_results_public"("subject_id"));
 
 
 
-CREATE POLICY "Enable read access for study participants for fitbit credential" ON "public"."study_fitbit_credentials" FOR SELECT USING ((( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
+CREATE POLICY "Enable read access for study participants for fitbit credential" ON "public"."study_fitbit_credentials" FOR SELECT TO "authenticated" USING ((( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
    FROM "public"."study"
   WHERE ("study"."id" = "study_fitbit_credentials"."study_id")) OR "public"."is_study_subject_of"(( SELECT "auth"."uid"() AS "uid"), "study_id")));
 
 
 
-CREATE POLICY "Invite code must match study_id" ON "public"."study_subject" AS RESTRICTIVE FOR INSERT WITH CHECK ((("invite_code" IS NULL) OR ("study_id" IN ( SELECT ("public"."get_study_record_from_invite"("study_subject"."invite_code"))."id" AS "id"))));
+CREATE POLICY "Invite code must match study_id" ON "public"."study_subject" AS RESTRICTIVE FOR INSERT TO "authenticated" WITH CHECK ((("invite_code" IS NULL) OR ("study_id" IN ( SELECT ("public"."get_study_record_from_invite"("study_subject"."invite_code"))."id" AS "id"))));
 
 
 
-CREATE POLICY "Joining a closed study should not be possible" ON "public"."study_subject" AS RESTRICTIVE FOR INSERT WITH CHECK ((NOT (EXISTS ( SELECT 1
+CREATE POLICY "Joining a closed study should not be possible" ON "public"."study_subject" AS RESTRICTIVE FOR INSERT TO "authenticated" WITH CHECK ((NOT (EXISTS ( SELECT 1
    FROM "public"."study"
   WHERE (("study"."id" = "study_subject"."study_id") AND ("study"."status" = 'closed'::"public"."study_status"))))));
 
 
 
-CREATE POLICY "Repo is viewable by everyone" ON "public"."repo" FOR SELECT USING (true);
+CREATE POLICY "Repo is viewable by everyone" ON "public"."repo" FOR SELECT TO "authenticated" USING (true);
 
 
 
-CREATE POLICY "Study creators can do everything with repos from their studies" ON "public"."repo" USING ((( SELECT "auth"."uid"() AS "uid") = ( SELECT "study"."user_id"
+CREATE POLICY "Study creators can do everything with repos from their studies" ON "public"."repo" TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = ( SELECT "study"."user_id"
    FROM "public"."study"
   WHERE ("repo"."study_id" = "study"."id"))));
 
 
 
-CREATE POLICY "Study owners can manage their own fitbit credentials" ON "public"."study_fitbit_credentials" USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
+CREATE POLICY "Study owners can manage their own fitbit credentials" ON "public"."study_fitbit_credentials" TO "authenticated" USING (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
    FROM "public"."study"
   WHERE ("study"."id" = "study_fitbit_credentials"."study_id"))) WITH CHECK (( SELECT "public"."can_edit"(( SELECT "auth"."uid"() AS "uid"), "study".*) AS "can_edit"
    FROM "public"."study"
@@ -766,21 +766,21 @@ CREATE POLICY "Study owners can manage their own fitbit credentials" ON "public"
 
 
 
-CREATE POLICY "Study subjects can view their joined study" ON "public"."study" FOR SELECT USING ("public"."is_study_subject_of"(( SELECT "auth"."uid"() AS "uid"), "id"));
+CREATE POLICY "Study subjects can view their joined study" ON "public"."study" FOR SELECT TO "authenticated" USING ("public"."is_study_subject_of"(( SELECT "auth"."uid"() AS "uid"), "id"));
 
 
 
-CREATE POLICY "Study visibility" ON "public"."study" FOR SELECT USING (((("status" = 'running'::"public"."study_status") OR ("status" = 'closed'::"public"."study_status")) AND (("registry_published" = true) OR ("participation" = 'open'::"public"."participation") OR ("result_sharing" = 'public'::"public"."result_sharing"))));
+CREATE POLICY "Study visibility" ON "public"."study" FOR SELECT TO "authenticated" USING (((("status" = 'running'::"public"."study_status") OR ("status" = 'closed'::"public"."study_status")) AND (("registry_published" = true) OR ("participation" = 'open'::"public"."participation") OR ("result_sharing" = 'public'::"public"."result_sharing"))));
 
 
 
-CREATE POLICY "Users can do everything with their progress" ON "public"."subject_progress" USING ((( SELECT "auth"."uid"() AS "uid") = ( SELECT "study_subject"."user_id"
+CREATE POLICY "Users can do everything with their progress" ON "public"."subject_progress" TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = ( SELECT "study_subject"."user_id"
    FROM "public"."study_subject"
   WHERE ("study_subject"."id" = "subject_progress"."subject_id"))));
 
 
 
-CREATE POLICY "Users can do everything with their subjects" ON "public"."study_subject" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
+CREATE POLICY "Users can do everything with their subjects" ON "public"."study_subject" TO "authenticated" USING ((( SELECT "auth"."uid"() AS "uid") = "user_id"));
 
 
 
@@ -815,7 +815,8 @@ CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXEC
 
 -- Functions used in RLS policies
 REVOKE EXECUTE ON FUNCTION public.can_edit(uuid, public.study) FROM public, anon;
-REVOKE EXECUTE ON FUNCTION public.is_study_subject_of(uuid, uuid) FROM public, anon;
+-- anon is needed for RLS on the study table
+REVOKE EXECUTE ON FUNCTION public.is_study_subject_of(uuid, uuid) FROM public;
 REVOKE EXECUTE ON FUNCTION public.has_results_public(uuid) FROM public, anon;
 
 -- Computed field functions (PostgREST calls these with elevated privileges)

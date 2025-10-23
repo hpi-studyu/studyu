@@ -48,7 +48,8 @@ BEGIN;
 -- Functions used in RLS policies
 -- These are called during policy evaluation and don't need public access
 REVOKE EXECUTE ON FUNCTION public.can_edit(uuid, public.study) FROM public, anon;
-REVOKE EXECUTE ON FUNCTION public.is_study_subject_of(uuid, uuid) FROM public, anon;
+-- anon is needed for RLS on the study table
+REVOKE EXECUTE ON FUNCTION public.is_study_subject_of(uuid, uuid) FROM public;
 REVOKE EXECUTE ON FUNCTION public.get_study_from_invite(text) FROM public, anon;
 REVOKE EXECUTE ON FUNCTION public.has_results_public(uuid) FROM public, anon;
 REVOKE EXECUTE ON FUNCTION public.user_email(uuid) FROM public, anon;
@@ -540,7 +541,7 @@ DROP FUNCTION public.get_study_from_invite(text);
 
 
 -- ============================================================================
--- SECTION 3: FIX RLS POLICIES FOR PUBLIC RESULTS
+-- SECTION 3: FIX RLS POLICIES
 -- ============================================================================
 --
 -- Updates policies to use has_results_public function correctly.
@@ -563,6 +564,91 @@ ON public.study_subject
 FOR SELECT
 USING (public.has_results_public(id));
 
+-- Migrate row level policies to be used by authenticated users only
+
+ALTER POLICY "Allow users to manage their own user"
+ON public."user"
+TO authenticated;
+
+ALTER POLICY "Editors can delete their own open-study invite codes"
+ON public."study_invite"
+TO authenticated;
+
+ALTER POLICY "Editors can do everything with their studies"
+ON public."study"
+TO authenticated;
+
+ALTER POLICY "Editors can do everything with their study subjects"
+ON public."study_subject"
+TO authenticated;
+
+ALTER POLICY "Editors can manage their own invite-only study invite codes"
+ON public."study_invite"
+TO authenticated;
+
+ALTER POLICY "Editors can read their own open-study invite codes"
+ON public."study_invite"
+TO authenticated;
+
+ALTER POLICY "Editors can see subjects from their studies"
+ON public."study_subject"
+TO authenticated;
+
+ALTER POLICY "Editors can see their study subjects progress"
+ON public."subject_progress"
+TO authenticated;
+
+ALTER POLICY "Editors can view their studies"
+ON public."study"
+TO authenticated;
+
+ALTER POLICY "Enable read access for all users if results are public (study s"
+ON public."study_subject"
+TO authenticated;
+
+ALTER POLICY "Enable read access for all users if results are public (subject"
+ON public."subject_progress"
+TO authenticated;
+
+ALTER POLICY "Enable read access for study participants for fitbit credential"
+ON public."study_fitbit_credentials"
+TO authenticated;
+
+ALTER POLICY "Invite code must match study_id"
+ON public."study_subject"
+TO authenticated;
+
+ALTER POLICY "Joining a closed study should not be possible"
+ON public."study_subject"
+TO authenticated;
+
+ALTER POLICY "Repo is viewable by everyone"
+ON public."repo"
+TO authenticated;
+
+ALTER POLICY "Study creators can do everything with repos from their studies"
+ON public."repo"
+TO authenticated;
+
+ALTER POLICY "Study owners can manage their own fitbit credentials"
+ON public."study_fitbit_credentials"
+TO authenticated;
+
+ALTER POLICY "Study subjects can view their joined study"
+ON public."study"
+TO authenticated;
+
+ALTER POLICY "Study visibility"
+ON public."study"
+TO authenticated;
+
+ALTER POLICY "Users can do everything with their progress"
+ON public."subject_progress"
+TO authenticated;
+
+ALTER POLICY "Users can do everything with their subjects"
+ON public."study_subject"
+TO authenticated;
 
 -- ============================================================================
 -- SECTION 4: PERFORMANCE IMPROVEMENTS
