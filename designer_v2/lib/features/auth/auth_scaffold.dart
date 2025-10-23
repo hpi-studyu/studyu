@@ -41,6 +41,7 @@ class AuthScaffold extends ConsumerStatefulWidget {
 
 class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
   AuthFormKey get formKey => widget.formKey;
+  static const double _compactBreakpoint = 1000.0;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
       backgroundColor: Colors.white,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final isCompact = constraints.maxWidth < 800;
+          final isCompact = constraints.maxWidth < _compactBreakpoint;
 
           if (isCompact) {
             return _buildCompactLayout(
@@ -159,7 +160,9 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: widget.leftPanelMinWidth),
+                constraints: BoxConstraints(
+                  maxWidth: widget.leftContentMinWidth,
+                ),
                 child: _buildFooter(
                   theme: theme,
                   appConfig: appConfig,
@@ -241,7 +244,7 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
     final legalNoticeLink = Hyperlink(
       text: tr.imprint,
       onClick: () => _onClickImprint(appConfig),
-      linkColor: textColor!,
+      linkColor: textColor ?? Colors.black,
     );
 
     final languageSwitcher = LanguagePicker(
