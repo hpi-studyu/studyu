@@ -264,8 +264,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
               _errorMessage = error.message;
             });
           }
-
-          if (studyResult == null) {
+          if (studyResult == null || studyResult['id'] == null) {
             setState(() {
               _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
             });
