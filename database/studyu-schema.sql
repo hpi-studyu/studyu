@@ -53,12 +53,11 @@ SET default_table_access_method = "heap";
 
 
 CREATE TABLE IF NOT EXISTS "public"."study" (
-    "id" "uuid" DEFAULT "gen_random_uuid"() PRIMARY KEY,
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "contact" "jsonb" NOT NULL,
     "title" "text" NOT NULL,
     "description" "text" NOT NULL,
     "icon_name" "text" NOT NULL,
-    -- 'published' is deprecated; use 'status' instead to track publication state.
     "published" boolean DEFAULT false NOT NULL,
     "status" "public"."study_status" DEFAULT 'draft'::"public"."study_status" NOT NULL,
     "registry_published" boolean DEFAULT false NOT NULL,
