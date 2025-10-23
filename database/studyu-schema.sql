@@ -732,11 +732,11 @@ CREATE POLICY "Editors can view their studies" ON "public"."study" FOR SELECT TO
 
 
 
-CREATE POLICY "Enable read access for all users if results are public (study s" ON "public"."study_subject" FOR SELECT TO "authenticated" USING ("public"."has_results_public"("id"));
+CREATE POLICY "Read access on subjects for all if results are public" ON "public"."study_subject" FOR SELECT TO "authenticated" USING ("public"."has_results_public"("id"));
 
 
 
-CREATE POLICY "Enable read access for all users if results are public (subject" ON "public"."subject_progress" FOR SELECT TO "authenticated" USING ("public"."has_results_public"("subject_id"));
+CREATE POLICY "Read access on progress for all if results are public" ON "public"."subject_progress" FOR SELECT TO "authenticated" USING ("public"."has_results_public"("subject_id"));
 
 
 

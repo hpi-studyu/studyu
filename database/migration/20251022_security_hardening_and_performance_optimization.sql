@@ -553,13 +553,13 @@ DROP POLICY "Enable read access for all users if results are public" ON public.s
 DROP POLICY "Enable read access for all users if results are public" ON public.study_subject;
 
 -- Allow anyone to read progress data if the subject has public results
-CREATE POLICY "Enable read access for all users if results are public (subject progress)"
+CREATE POLICY "Read access on progress for all if results are public"
 ON public.subject_progress
 FOR SELECT
 USING (public.has_results_public(subject_id));
 
 -- Allow anyone to read subject data if the subject has public results
-CREATE POLICY "Enable read access for all users if results are public (study subject)"
+CREATE POLICY "Read access on subjects for all if results are public"
 ON public.study_subject
 FOR SELECT
 USING (public.has_results_public(id));
@@ -602,11 +602,11 @@ ALTER POLICY "Editors can view their studies"
 ON public."study"
 TO authenticated;
 
-ALTER POLICY "Enable read access for all users if results are public (study s"
+ALTER POLICY "Read access on subjects for all if results are public"
 ON public."study_subject"
 TO authenticated;
 
-ALTER POLICY "Enable read access for all users if results are public (subject"
+ALTER POLICY "Read access on progress for all if results are public"
 ON public."subject_progress"
 TO authenticated;
 
