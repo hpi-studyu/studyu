@@ -12,13 +12,12 @@ part 'study_settings_form_controller.g.dart';
 class StudySettingsFormViewModel extends FormViewModel<Study> {
   StudySettingsFormViewModel({
     required this.studyRepository,
-    required this.study,
-  }) : super(formData: study.value) {
+    required Study initialStudy,
+  }) : super(formData: initialStudy) {
     // defer registering listeners so that controls can be initialized properly
     runAsync(keepControlsSynced);
   }
 
-  final AsyncValue<Study> study;
   final IStudyRepository studyRepository;
 
   static const defaultPublishedToRegistry = true;
@@ -95,7 +94,7 @@ StudySettingsFormViewModel studySettingsFormViewModel(Ref ref, String studyId) {
   final state = ref.watch(studyControllerProvider(studyId));
   final formViewModel = StudySettingsFormViewModel(
     studyRepository: ref.watch(studyRepositoryProvider),
-    study: state.study,
+    initialStudy: state.studyValueRequired,
   );
   ref.onDispose(() {
     print("studySettingsFormViewModelProvider.DISPOSE");

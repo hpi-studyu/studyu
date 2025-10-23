@@ -87,7 +87,7 @@ final class InviteCodeFormViewModelProvider
 }
 
 String _$inviteCodeFormViewModelHash() =>
-    r'dc764c80c619d39935e0c00fc7ca353f81213557';
+    r'5969813e69fd802ade043cd7bab5f00ce6981fab';
 
 /// Provide a controller parametrized by [StudyID]
 ///

@@ -198,6 +198,6 @@ StudyFormViewModel studyFormViewModel(Ref ref, StudyID studyId) {
     fitbitCredentialsRepository: ref.watch(
       fitbitCredentialsRepositoryProvider(studyId),
     ),
-    formData: state.study.value,
+    formData: state.studyValueRequired,
   );
 }

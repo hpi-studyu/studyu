@@ -87,7 +87,7 @@ final class StudySettingsFormViewModelProvider
 }
 
 String _$studySettingsFormViewModelHash() =>
-    r'1a715736574e86988baa3f7f776a5dc5b2658607';
+    r'55e809cbdc32d665203afa436e11046be1b6acd6';
 
 /// Provides the [FormViewModel] responsible for managing the study settings.
 ///

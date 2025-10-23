@@ -37,7 +37,7 @@ class WrappedModel<T> {
   }
 
   void markAsLoading() {
-    asyncValue = AsyncValue<T>.loading();
+    asyncValue = AsyncValue<T>.data(_model);
   }
 
   void markAsFetched() {
