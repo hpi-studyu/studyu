@@ -396,8 +396,40 @@ USING (public.has_results_public(id));
 
 -- Drop the duplicate UNIQUE constraint on study.id with CASCADE to update foreign key references
 -- The PRIMARY KEY already provides uniqueness
-ALTER TABLE public.study DROP CONSTRAINT IF EXISTS study_id_key CASCADE;
 
+-- 1. Drop the foreign keys that depend on the duplicate unique constraint
+ALTER TABLE public.repo
+    DROP CONSTRAINT "repo_studyId_fkey";
+
+ALTER TABLE public.study_invite
+    DROP CONSTRAINT "study_invite_studyId_fkey";
+
+ALTER TABLE public.study_fitbit_credentials
+    DROP CONSTRAINT "study_fitbit_credentials_studyId_fkey";
+
+ALTER TABLE public.study_subject
+    DROP CONSTRAINT "study_subject_studyId_fkey";
+
+-- 2. Drop the redundant UNIQUE constraint on study.id
+ALTER TABLE public.study
+    DROP CONSTRAINT "study_id_key";
+
+-- 3. Recreate the foreign keys referencing the PRIMARY KEY (study_pkey)
+ALTER TABLE public.repo
+    ADD CONSTRAINT "repo_studyid_fkey"
+        FOREIGN KEY (study_id) REFERENCES public.study(id);
+
+ALTER TABLE public.study_invite
+    ADD CONSTRAINT "study_invite_studyid_fkey"
+        FOREIGN KEY (study_id) REFERENCES public.study(id);
+
+ALTER TABLE public.study_fitbit_credentials
+    ADD CONSTRAINT "study_fitbit_credentials_studyid_fkey"
+        FOREIGN KEY (study_id) REFERENCES public.study(id);
+
+ALTER TABLE public.study_subject
+    ADD CONSTRAINT "study_subject_studyid_fkey"
+        FOREIGN KEY (study_id) REFERENCES public.study(id);
 
 -- Remove duplicate unique constraint on study_invite.code
 -- The PRIMARY KEY already provides uniqueness
