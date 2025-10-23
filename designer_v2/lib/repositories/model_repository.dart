@@ -33,14 +33,24 @@ class WrappedModel<T> {
   DateTime? lastUpdated;
 
   void markWithError(Object error, {StackTrace? stackTrace}) {
-    asyncValue = AsyncError<T>(
-      error,
-      StackTrace.current,
-    ).copyWithPrevious(asyncValue);
+    asyncValue = asyncValue.whenData((data) {
+      return AsyncValue<T>.error(error, stackTrace ?? StackTrace.current);
+    }).maybeWhen(
+      orElse: () => AsyncValue<T>.error(error, stackTrace ?? StackTrace.current),
+      data: (prevData) => AsyncValue<T>.error(
+        error,
+        stackTrace ?? StackTrace.current,
+      ),
+    );
   }
 
   void markAsLoading() {
-    asyncValue = AsyncLoading<T>().copyWithPrevious(asyncValue);
+    asyncValue = asyncValue.whenData((data) {
+      return AsyncValue<T>.loading();
+    }).maybeWhen(
+      orElse: () => AsyncValue<T>.loading(),
+      data: (prevData) => AsyncValue<T>.loading(),
+    );
   }
 
   void markAsFetched() {
