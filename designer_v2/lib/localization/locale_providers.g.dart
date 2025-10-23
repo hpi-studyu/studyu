@@ -149,4 +149,4 @@ final class LocaleProvider extends $FunctionalProvider<Locale, Locale, Locale>
   }
 }
 
-String _$localeHash() => r'9b088ff7f2fc32aeeeb72d3c9d8a37abddb9757e';
+String _$localeHash() => r'83740ea99a0e1028ccb6d1d8119dc1448888164e';

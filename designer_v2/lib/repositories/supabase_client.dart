@@ -131,4 +131,4 @@ mixin SupabaseQueryMixin on SupabaseClientDependant {
 
 // Re-expose the global client object via Riverpod
 @riverpod
-SupabaseClient supabaseClient(Ref<SupabaseClient> ref) => env.client;
+SupabaseClient supabaseClient(Ref ref) => env.client;

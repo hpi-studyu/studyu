@@ -28,5 +28,5 @@ List<Locale> supportedLocales(Ref ref) {
 /// Provides the current locale, and automatically updates when the locale changes.
 @riverpod
 Locale locale(Ref ref) {
-  return ref.watch(localeStateNotifierProvider).locale;
+  return ref.watch(localeStateProvider).locale;
 }
