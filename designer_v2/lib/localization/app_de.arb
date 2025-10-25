@@ -399,7 +399,7 @@
   "form_field_consent_text_hint": "Gib den Text ein, der gelesen & bestätigt werden muss",
   "form_field_consent_text_required": "Die Einwilligungserklärung darf nicht leer sein",
   "@__________________STUDYPAGE_DESIGN_INTERVENTIONS_________________": {},
-  "form_study_design_interventions_description": "Auf dieser Seite legst du die in der Studie zu untersuchenden Interventionen und deren zeitliche Abfolge fest. In N-of-1 Studien durchläuft der gleiche Teilnehmer eine festgelegte Abfolge von Interventionsphasen in einem oder mehreren Durchläufen (diese Art von Versuchsaufbau wird auch als Cross-over Studie bezeichnet). Jede Interventionsphase besteht aus einer oder mehreren Maßnahmen, die während der jeweils aktiven Phasen vom Teilnehmer erfüllt werden müssen.\n\nBitte beachte: wenn du mehr als zwei Interventionsphasen festlegst, können Teilnehmer bei der Anmeldung zur Studie zwei beliebige Interventionen auswählen, die im weiteren Verlauf miteinander verglichen werden.",
+  "form_study_design_interventions_description": "Auf dieser Seite legst du die in der Studie zu untersuchenden Interventionen und deren zeitliche Abfolge fest. In N-of-1 Studien durchläuft der gleiche Teilnehmer eine festgelegte Abfolge von Interventionsphasen in einem oder mehreren Durchläufen (diese Art von Studienplan wird auch als Cross-over Studie bezeichnet). Jede Interventionsphase besteht aus einer oder mehreren Maßnahmen, die während der jeweils aktiven Phasen vom Teilnehmer erfüllt werden müssen.\n\nBitte beachte: wenn du mehr als zwei Interventionsphasen festlegst, können Teilnehmer bei der Anmeldung zur Studie zwei beliebige Interventionen auswählen, die im weiteren Verlauf miteinander verglichen werden.",
   "link_n_of_1_learn_more": "Mehr über N-of-1 Studien erfahren",
   "link_n_of_1_learn_more_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3118090/pdf/nihms297482.pdf",
   "form_array_interventions_minlength": "{count,plural, =2{Du brauchst mindestens einen Fragebogen, um den Effekt der Intervention(en) zu messen.} other{form_array_interventions_minlength}}",
@@ -445,13 +445,13 @@
   "form_field_intervention_task_description_tooltip": "Gib wahlweise eine ausführliche Erklärung ein, die als Beschreibung zur täglichen Aufforderung in der StudyU angezeigt wird",
   "form_field_intervention_task_description_hint": "Beschreibe die Maßnahme ausführlich, zB. kannst du ein Video verlinken",
   "form_field_intervention_task_mark_as_completed_label": "Teilnehmer müssen die Maßnahme \"Als bestätigt markieren\"",
-  "form_section_crossover_schedule": "Versuchsplan",
-  "navlink_crossover_schedule_test": "Versuchsplan testen",
+  "form_section_crossover_schedule": "Studienplan",
+  "navlink_crossover_schedule_test": "Studienplan testen",
   "form_field_crossover_schedule_sequence": "Abfolge der Phasen",
-  "form_field_crossover_schedule_sequence_tooltip": "Wähle wie die Interventionsphasen im Versuchsplan zeitlich angeordnet werden",
+  "form_field_crossover_schedule_sequence_tooltip": "Wähle wie die Interventionsphasen im Studienplan zeitlich angeordnet werden",
   "form_field_crossover_schedule_sequence_description": "Die hier festgelegte Abfolge gilt standardmäßig für alle Teilnehmer. Für Studien mit ausgewählten Teilnehmern kann die Abfolge im Teilnahmecode individuell überschrieben werden.",
   "form_field_crossover_schedule_phase_length": "Phasenlänge",
-  "form_field_crossover_schedule_phase_length_tooltip": "Lege fest wie lange ein einziger Durchlauf einer Interventionsphase dauert",
+  "form_field_crossover_schedule_phase_length_tooltip": "Anzahl der Tage, die eine einzelne Phase dauert. Eine Phase ist ein durchgehender Interventionsblock (z. B. 7 Tage A oder B).",
   "form_field_crossover_schedule_phase_length_range": "Interventionsphasen müssen zwischen {min} und {max} Tagen lang sein",
   "@form_field_crossover_schedule_phase_length_range": {
     "placeholders": {
@@ -465,8 +465,8 @@
   },
   "form_field_amount_days": "Tage",
   "form_field_crossover_schedule_num_cycles": "Anzahl Wiederholungen",
-  "form_field_crossover_schedule_num_cycles_tooltip": "Lege fest wie oft jede Interventionsphase im Versuchsplan durchlaufen wird",
-  "form_field_crossover_schedule_num_cycles_range": "Die Anzahl der Wiederholungen für Interventionsphasen im Versuchsplan muss zwischen {min} und {max} liegen",
+  "form_field_crossover_schedule_num_cycles_tooltip": "Alternierend / Ausgeglichen / Zufällig:\nAnzahl der Zyklen (Phasenpaare), die wiederholt werden. Ein Zyklus = zwei Phasen (z. B. AB oder BA).\n\nBenutzerdefiniert:\nAnzahl der Wiederholungen der gesamten benutzerdefinierten Sequenz. Ein Zyklus = die gesamte von Ihnen definierte Sequenz (z. B. ABBAA).",
+  "form_field_crossover_schedule_num_cycles_range": "Die Anzahl der Wiederholungen für Interventionsphasen im Studienplan muss zwischen {min} und {max} liegen",
   "@form_field_crossover_schedule_num_cycles_range": {
     "placeholders": {
       "min": {
@@ -822,5 +822,26 @@
   "fitbit_credentials_not_set": "Fitbit-Anmeldedaten sind nicht gesetzt. Bitte navigieren Sie zum 'Fitbit'-Tab im Studien-Designer, um Ihre Fitbit-Client-ID und Ihr Client-Secret einzugeben. Sobald dies abgeschlossen ist, kehren Sie hierher zurück, um Fitbit-Fragen hinzuzufügen.",
   "fitbit_question_type_heartrate_description": "Erfasst die Herzfrequenz, gemessen jede Minute über den Tag verteilt.",
   "fitbit_question_type_steps_description": "Zeichnet die Anzahl der gegangenen Schritte auf, gemessen jede Minute.",
-  "fitbit_question_type_sleep_description": "Erfasst Schlafstadien (Wach, Leichtschlaf, Tiefschlaf, REM) in 30-Sekunden- bis 1-Minuten-Intervallen während des Schlafs."
+  "fitbit_question_type_sleep_description": "Erfasst Schlafstadien (Wach, Leichtschlaf, Tiefschlaf, REM) in 30-Sekunden- bis 1-Minuten-Intervallen während des Schlafs.",
+  "html_styling_banner_description": "Sie können grundlegende HTML-Tags verwenden, um den Inhalt der mit 'styleable' markierten Felder zu formatieren. Einige Beispiele sind:",
+  "html_styling_bold_example": "Text fett formatieren",
+  "html_styling_bold_code": "<b>Fetter Text</b>",
+  "html_styling_italic_example": "Text kursiv formatieren",
+  "html_styling_italic_code": "<i>Kursiver Text</i>",
+  "html_styling_underline_example": "Text unterstreichen",
+  "html_styling_underline_code": "<u>Unterstrichener Text</u>",
+  "html_styling_link_example": "Klickbare Links hinzufügen",
+  "html_styling_link_code": "<a href=\"https://example.com\">Link-Text</a>",
+  "html_styling_linebreak_example": "Zeilenumbrüche einfügen",
+  "html_styling_linebreak_code": "Zeile 1<br>Zeile 2",
+  "html_styling_more_info": "Weitere Informationen finden Sie in der",
+  "html_styling_documentation_link": "HTML-Dokumentation",
+  "study_schedule_learn_more": "Mehr über die Erstellung von Studienplänen erfahren",
+  "study_schedule_banner_explanation": "Wir verwenden die folgende Terminologie:\n\nJede Studie besteht aus unterschiedlichen Interventionsphasen (= Interventionsperioden = Interventionsblöcke) von bestimmter Länge.\nZum Beispiel kann eine Studie 4 Phasen mit jeweils 7 Tagen enthalten und somit insgesamt 28 Tage dauern.\nEs kann eine zusätzliche Baseline-Phase geben, die die gleiche Länge wie jede Phase hat.\nDas bedeutet, eine Studie mit 4 Phasen von jeweils 7 Tagen und einer zusätzlichen Baseline-Phase dauert insgesamt 35 Tage.\n\nDie Phasen können unterschiedlichen Sequenzen folgen.\nWir betrachten zwei Interventionen, A und B.\nDiese können einer alternierenden, ausgeglichenen, zufälligen oder benutzerdefinierten Reihenfolge folgen.\n\nWir definieren einen Zyklus von Phasen als ein Paar von Behandlungsphasen für die alternierende, ausgeglichene und zufällige Reihenfolge.\nDas Zufallsdesign erzeugt entweder eine alternierende oder eine ausgeglichene Sequenz.\nEin Zyklus der jeweiligen Designs ergibt AB (alternierend), AB (ausgeglichen) oder AB bzw. BA (zufällig).\nZwei Zyklen ergeben ABAB (alternierend), ABBA (ausgeglichen) oder ABAB bzw. ABBA (zufällig).\n\nBeim benutzerdefinierten Design kann eine eigene Sequenz definiert werden, z.B. ABBAA.\nHier entspricht ein Zyklus der gesamten benutzerdefinierten Sequenz, d.h. 2 Zyklen der Sequenz ABBAA ergeben ABBAAABBAA.",
+  "study_schedule_banner_description": "Entwerfen Sie effektive Crossover-Studien, indem Sie die verschiedenen Sequenztypen und ihre Auswirkungen auf Ihre Studienergebnisse verstehen.",
+  "study_schedule_alternating_description": "Alternierend: Jeder Teilnehmer folgt einem ABAB-Muster und wechselt zwischen Interventionen in einer vorhersagbaren Sequenz.",
+  "study_schedule_balanced_description": "Ausgeglichen: Teilnehmer werden zufällig ABAB- oder BABA-Sequenzen zugeordnet, um Reihenfolgeneffekte zu reduzieren.",
+  "study_schedule_random_description": "Zufällig: Die Sequenz ist für jeden Zyklus vollständig randomisiert und bietet maximale Variabilität.",
+  "study_schedule_custom_description": "Benutzerdefiniert: Definieren Sie Ihr eigenes Sequenzmuster, um spezifische Studienanforderungen zu erfüllen."
 }
+

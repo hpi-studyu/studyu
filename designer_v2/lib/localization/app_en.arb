@@ -453,7 +453,7 @@
   "form_field_crossover_schedule_sequence_tooltip": "Choose the pattern for how intervention phases are sequenced in the study schedule",
   "form_field_crossover_schedule_sequence_description": "This is the default sequence of interventions for each participant. You may override this sequencing individually for each participant in invite-only studies.",
   "form_field_crossover_schedule_phase_length": "Phase length",
-  "form_field_crossover_schedule_phase_length_tooltip": "Set the number of days it takes to complete one phase in the study schedule",
+  "form_field_crossover_schedule_phase_length_tooltip": "Number of days it takes to complete a single phase. A phase is one continuous intervention block (e.g., 7 days of A or B).",
   "form_field_crossover_schedule_phase_length_range": "Intervention phases must be between {min} and {max} days long",
   "@form_field_crossover_schedule_phase_length_range": {
     "placeholders": {
@@ -467,7 +467,7 @@
   },
   "form_field_amount_days": "days",
   "form_field_crossover_schedule_num_cycles": "Number of cycles",
-  "form_field_crossover_schedule_num_cycles_tooltip": "Define the number of repetitions for each phase in the study schedule",
+  "form_field_crossover_schedule_num_cycles_tooltip": "Alternating / Counterbalanced / Random:\nNumber of cycles (pairs of phases) to repeat. One cycle = two phases (e.g., AB or BA).\n\nCustom:\nNumber of times the full custom sequence is repeated. One cycle = the entire sequence you defined (e.g., ABBAA).",
   "form_field_crossover_schedule_num_cycles_range": "The number of cycles in your study schedule must be between {min} and {max}",
   "@form_field_crossover_schedule_num_cycles_range": {
     "placeholders": {
@@ -822,5 +822,26 @@
   "fitbit_credentials_not_set": "Fitbit credentials are not set. Please navigate to the 'Fitbit' tab in the study designer to enter your Fitbit client ID and client secret. Once completed, return here to add Fitbit questions.",
   "fitbit_question_type_heartrate_description": "Captures heart rate measured every minute throughout the day.",
   "fitbit_question_type_steps_description": "Records the number of steps taken, measured every minute.",
-  "fitbit_question_type_sleep_description": "Records sleep stages (wake, light, deep, REM) at 30-second to 1-minute intervals during your sleep."
+  "fitbit_question_type_sleep_description": "Records sleep stages (wake, light, deep, REM) at 30-second to 1-minute intervals during your sleep.",
+  "html_styling_banner_description": "You can use basic HTML tags to style the content of the fields marked with styleable. Some examples are:",
+  "html_styling_bold_example": "Make your text bold",
+  "html_styling_bold_code": "<b>Bold text</b>",
+  "html_styling_italic_example": "Make your text italic",
+  "html_styling_italic_code": "<i>Italic text</i>",
+  "html_styling_underline_example": "Underline your text",
+  "html_styling_underline_code": "<u>Underlined text</u>",
+  "html_styling_link_example": "Add clickable links",
+  "html_styling_link_code": "<a href=\"https://example.com\">Link text</a>",
+  "html_styling_linebreak_example": "Insert line breaks",
+  "html_styling_linebreak_code": "Line 1<br>Line 2",
+  "html_styling_more_info": "For more information, see the",
+  "html_styling_documentation_link": "HTML documentation",
+  "study_schedule_learn_more": "Learn more about designing a study schedule",
+  "study_schedule_banner_explanation": "We use the following terminology:\n\nEach trial consists of different intervention phases (= intervention periods = intervention blocks) of a certain length.\nFor example, a trial may contain 4 phases of 7 days each, and hence last for 28 days in total.\nThere may be an additional baseline phase, which is fixed to have the same length as each phase.\nThat means a trial with 4 phases of 7 days each and an additional baseline period will last for 35 days in total.\n\nThe phases may follow different sequences.\nWe consider two interventions, A and B.\nThey can follow an alternating, counterbalanced, random, or custom design.\n\nWe define one cycle of phases as a pair of treatment phases for the alternating, counterbalanced, and random designs.\nThe random design yields either an alternating or counterbalanced sequence.\nOne cycle of the respective designs yields AB (alternating), AB (counterbalanced), or AB/BA (random).\nTwo cycles yield ABAB (alternating), ABBA (counterbalanced), or ABAB/ABBA (random).\n\nIn the custom design, a custom sequence can be defined, e.g., ABBAA.\nHere, one cycle refers to the full custom sequence, i.e., 2 cycles of ABBAA would yield ABBAAABBAA.",
+  "study_schedule_banner_description": "Design effective N-of-1 trials by understanding the different sequence types and how they affect your study results.",
+  "study_schedule_alternating_description": "Alternating: Each participant follows an ABAB pattern, switching between interventions in a predictable sequence.",
+  "study_schedule_balanced_description": "Balanced: Participants are randomly assigned to either ABAB or BABA sequences to reduce order effects.",
+  "study_schedule_random_description": "Random: The sequence is completely randomized for each cycle, providing maximum variability.",
+  "study_schedule_custom_description": "Custom: Define your own sequence pattern to meet specific study requirements."
 }
+

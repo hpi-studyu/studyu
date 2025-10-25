@@ -41,6 +41,7 @@ class AuthScaffold extends ConsumerStatefulWidget {
 
 class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
   AuthFormKey get formKey => widget.formKey;
+  static const double _compactBreakpoint = 1000.0;
 
   @override
   Widget build(BuildContext context) {
@@ -51,132 +52,257 @@ class _AuthScaffoldState extends ConsumerState<AuthScaffold> {
     return Scaffold(
       key: RouterKeys.authKey,
       backgroundColor: Colors.white,
-      body: TwoColumnLayout(
-        flexLeft: 6,
-        flexRight: 7,
-        leftWidget: ReactiveFormConfig(
-          validationMessages: AuthFormController.authValidationMessages,
-          child: ReactiveForm(
-            formGroup: controller.getForm()!,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  constraints: const BoxConstraints(maxHeight: 88.0),
-                  child: const StudyULogo(),
-                ),
-                const SizedBox(height: 32.0),
-                Flexible(
-                  child: Padding(
-                    // adjust for whitespace in logo
-                    padding: const EdgeInsets.only(left: 12.0),
-                    child: Container(
-                      constraints: BoxConstraints(
-                        maxWidth: widget.leftContentMinWidth - 24.0,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isCompact = constraints.maxWidth < _compactBreakpoint;
+
+          if (isCompact) {
+            return _buildCompactLayout(
+              context: context,
+              theme: theme,
+              controller: controller,
+              appConfig: appConfig,
+            );
+          }
+
+          return _buildWideLayout(
+            theme: theme,
+            controller: controller,
+            appConfig: appConfig,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildWideLayout({
+    required ThemeData theme,
+    required AuthFormController controller,
+    required AppConfig? appConfig,
+  }) {
+    return TwoColumnLayout(
+      flexLeft: 6,
+      flexRight: 7,
+      leftWidget: _buildWidePanel(
+        theme: theme,
+        controller: controller,
+        appConfig: appConfig,
+      ),
+      rightWidget: const Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [Expanded(child: Center(child: StudyUJobsToBeDone()))],
+      ),
+      backgroundColorLeft: theme.colorScheme.surface,
+      backgroundColorRight: theme.colorScheme.primary,
+      constraintsLeft: BoxConstraints(minWidth: widget.leftPanelMinWidth),
+      scrollLeft: false,
+      scrollRight: false,
+      stretchHeight: true,
+      paddingLeft: widget.leftPanelPadding,
+    );
+  }
+
+  Widget _buildWidePanel({
+    required ThemeData theme,
+    required AuthFormController controller,
+    required AppConfig? appConfig,
+  }) {
+    return ReactiveFormConfig(
+      validationMessages: AuthFormController.authValidationMessages,
+      child: ReactiveForm(
+        formGroup: controller.getForm()!,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              constraints: const BoxConstraints(maxHeight: 88.0),
+              child: const StudyULogo(),
+            ),
+            const SizedBox(height: 32.0),
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 12.0),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: widget.leftContentMinWidth - 24.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SelectableText(
+                        formKey.title,
+                        style: theme.textTheme.displaySmall,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SelectableText(
-                            formKey.title,
-                            style: theme.textTheme.displaySmall,
+                      const SizedBox(height: 8.0),
+                      if (formKey.description != null)
+                        TextParagraph(
+                          text: formKey.description,
+                          style: ThemeConfig.bodyTextMuted(theme),
+                        )
+                      else
+                        const SizedBox.shrink(),
+                      const SizedBox(height: 24.0),
+                      Flexible(
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 24.0),
+                            child: widget.body,
                           ),
-                          const SizedBox(height: 8.0),
-                          if (formKey.description != null)
-                            TextParagraph(
-                              text: formKey.description,
-                              style: ThemeConfig.bodyTextMuted(theme),
-                            )
-                          else
-                            const SizedBox.shrink(),
-                          const SizedBox(height: 24.0),
-                          Flexible(
-                            child: SingleChildScrollView(
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 24.0),
-                                child: widget.body,
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 24.0),
-                Padding(
-                  // adjust for whitespace in logo
-                  padding: const EdgeInsets.only(left: 12.0),
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: widget.leftPanelMinWidth - 12 * 2,
-                    ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SelectableText(
-                              "© HPI Digital Health Cluster ${DateTime.now().year}",
-                              style: ThemeConfig.bodyTextBackground(theme),
-                            ),
-                            Row(
-                              children: [
-                                LanguagePicker(
-                                  languagePickerType: LanguagePickerType.icon,
-                                  iconColor: ThemeConfig.bodyTextBackground(
-                                    theme,
-                                  ).color,
-                                  offset: const Offset(0, -60),
-                                ),
-                                const SizedBox(width: 12.0),
-                                Hyperlink(
-                                  text: tr.imprint,
-                                  onClick: () => _onClickImprint(appConfig),
-                                  linkColor: ThemeConfig.bodyTextBackground(
-                                    theme,
-                                  ).color!,
-                                ),
-                              ],
-                            ),
-                          ],
+              ),
+            ),
+            const SizedBox(height: 24.0),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: widget.leftContentMinWidth,
+                ),
+                child: _buildFooter(
+                  theme: theme,
+                  appConfig: appConfig,
+                  isCompact: false,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCompactLayout({
+    required BuildContext context,
+    required ThemeData theme,
+    required AuthFormController controller,
+    required AppConfig? appConfig,
+  }) {
+    return SafeArea(
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 520.0),
+              child: ReactiveFormConfig(
+                validationMessages: AuthFormController.authValidationMessages,
+                child: ReactiveForm(
+                  formGroup: controller.getForm()!,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 16.0),
+                      const Center(
+                        child: SizedBox(height: 72.0, child: StudyULogo()),
+                      ),
+                      const SizedBox(height: 32.0),
+                      SelectableText(
+                        formKey.title,
+                        style: theme.textTheme.displaySmall,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8.0),
+                      if (formKey.description != null)
+                        SelectableText(
+                          formKey.description!,
+                          style: ThemeConfig.bodyTextMuted(theme),
+                          textAlign: TextAlign.center,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            versionText(
-                              textStyle: TextStyle(
-                                color: ThemeConfig.bodyTextBackground(
-                                  theme,
-                                ).color,
-                                fontSize: Theme.of(
-                                  context,
-                                ).textTheme.bodySmall!.fontSize,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                      const SizedBox(height: 24.0),
+                      widget.body,
+                      const SizedBox(height: 32.0),
+                      _buildFooter(
+                        theme: theme,
+                        appConfig: appConfig,
+                        isCompact: true,
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ),
-        rightWidget: const Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Expanded(child: Center(child: StudyUJobsToBeDone()))],
-        ),
-        backgroundColorLeft: theme.colorScheme.surface,
-        backgroundColorRight: theme.colorScheme.primary,
-        constraintsLeft: BoxConstraints(minWidth: widget.leftPanelMinWidth),
-        scrollLeft: false,
-        scrollRight: false,
-        stretchHeight: true,
-        paddingLeft: widget.leftPanelPadding,
       ),
+    );
+  }
+
+  Widget _buildFooter({
+    required ThemeData theme,
+    required AppConfig? appConfig,
+    required bool isCompact,
+  }) {
+    final footerTextStyle = ThemeConfig.bodyTextBackground(theme);
+    final textColor = footerTextStyle.color;
+
+    final legalNoticeLink = Hyperlink(
+      text: tr.imprint,
+      onClick: () => _onClickImprint(appConfig),
+      linkColor: textColor ?? Colors.black,
+    );
+
+    final languageSwitcher = LanguagePicker(
+      languagePickerType: LanguagePickerType.icon,
+      iconColor: textColor,
+      offset: const Offset(0, -60),
+    );
+
+    final versionLabel = versionText(
+      textStyle: TextStyle(
+        color: textColor,
+        fontSize: theme.textTheme.bodySmall!.fontSize,
+      ),
+    );
+
+    if (isCompact) {
+      return Column(
+        children: [
+          SelectableText(
+            "© HPI Digital Health Cluster ${DateTime.now().year}",
+            style: footerTextStyle,
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16.0),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 12.0,
+            runSpacing: 12.0,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [languageSwitcher, legalNoticeLink],
+          ),
+          const SizedBox(height: 16.0),
+          Center(child: versionLabel),
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: SelectableText(
+                "© HPI Digital Health Cluster ${DateTime.now().year}",
+                style: footerTextStyle,
+              ),
+            ),
+            Wrap(
+              spacing: 12.0,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [languageSwitcher, legalNoticeLink],
+            ),
+          ],
+        ),
+        const SizedBox(height: 12.0),
+        Align(alignment: Alignment.centerRight, child: versionLabel),
+      ],
     );
   }
 

@@ -1138,7 +1138,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get form_study_design_interventions_description =>
-      'Auf dieser Seite legst du die in der Studie zu untersuchenden Interventionen und deren zeitliche Abfolge fest. In N-of-1 Studien durchläuft der gleiche Teilnehmer eine festgelegte Abfolge von Interventionsphasen in einem oder mehreren Durchläufen (diese Art von Versuchsaufbau wird auch als Cross-over Studie bezeichnet). Jede Interventionsphase besteht aus einer oder mehreren Maßnahmen, die während der jeweils aktiven Phasen vom Teilnehmer erfüllt werden müssen.\n\nBitte beachte: wenn du mehr als zwei Interventionsphasen festlegst, können Teilnehmer bei der Anmeldung zur Studie zwei beliebige Interventionen auswählen, die im weiteren Verlauf miteinander verglichen werden.';
+      'Auf dieser Seite legst du die in der Studie zu untersuchenden Interventionen und deren zeitliche Abfolge fest. In N-of-1 Studien durchläuft der gleiche Teilnehmer eine festgelegte Abfolge von Interventionsphasen in einem oder mehreren Durchläufen (diese Art von Studienplan wird auch als Cross-over Studie bezeichnet). Jede Interventionsphase besteht aus einer oder mehreren Maßnahmen, die während der jeweils aktiven Phasen vom Teilnehmer erfüllt werden müssen.\n\nBitte beachte: wenn du mehr als zwei Interventionsphasen festlegst, können Teilnehmer bei der Anmeldung zur Studie zwei beliebige Interventionen auswählen, die im weiteren Verlauf miteinander verglichen werden.';
 
   @override
   String get link_n_of_1_learn_more => 'Mehr über N-of-1 Studien erfahren';
@@ -1268,17 +1268,17 @@ class AppLocalizationsDe extends AppLocalizations {
       'Teilnehmer müssen die Maßnahme \"Als bestätigt markieren\"';
 
   @override
-  String get form_section_crossover_schedule => 'Versuchsplan';
+  String get form_section_crossover_schedule => 'Studienplan';
 
   @override
-  String get navlink_crossover_schedule_test => 'Versuchsplan testen';
+  String get navlink_crossover_schedule_test => 'Studienplan testen';
 
   @override
   String get form_field_crossover_schedule_sequence => 'Abfolge der Phasen';
 
   @override
   String get form_field_crossover_schedule_sequence_tooltip =>
-      'Wähle wie die Interventionsphasen im Versuchsplan zeitlich angeordnet werden';
+      'Wähle wie die Interventionsphasen im Studienplan zeitlich angeordnet werden';
 
   @override
   String get form_field_crossover_schedule_sequence_description =>
@@ -1289,7 +1289,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get form_field_crossover_schedule_phase_length_tooltip =>
-      'Lege fest wie lange ein einziger Durchlauf einer Interventionsphase dauert';
+      'Anzahl der Tage, die eine einzelne Phase dauert. Eine Phase ist ein durchgehender Interventionsblock (z. B. 7 Tage A oder B).';
 
   @override
   String form_field_crossover_schedule_phase_length_range(num min, num max) {
@@ -1305,11 +1305,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get form_field_crossover_schedule_num_cycles_tooltip =>
-      'Lege fest wie oft jede Interventionsphase im Versuchsplan durchlaufen wird';
+      'Alternierend / Ausgeglichen / Zufällig:\nAnzahl der Zyklen (Phasenpaare), die wiederholt werden. Ein Zyklus = zwei Phasen (z. B. AB oder BA).\n\nBenutzerdefiniert:\nAnzahl der Wiederholungen der gesamten benutzerdefinierten Sequenz. Ein Zyklus = die gesamte von Ihnen definierte Sequenz (z. B. ABBAA).';
 
   @override
   String form_field_crossover_schedule_num_cycles_range(num min, num max) {
-    return 'Die Anzahl der Wiederholungen für Interventionsphasen im Versuchsplan muss zwischen $min und $max liegen';
+    return 'Die Anzahl der Wiederholungen für Interventionsphasen im Studienplan muss zwischen $min und $max liegen';
   }
 
   @override
@@ -2295,4 +2295,74 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get fitbit_question_type_sleep_description =>
       'Erfasst Schlafstadien (Wach, Leichtschlaf, Tiefschlaf, REM) in 30-Sekunden- bis 1-Minuten-Intervallen während des Schlafs.';
+
+  @override
+  String get html_styling_banner_description =>
+      'Sie können grundlegende HTML-Tags verwenden, um den Inhalt der mit \'styleable\' markierten Felder zu formatieren. Einige Beispiele sind:';
+
+  @override
+  String get html_styling_bold_example => 'Text fett formatieren';
+
+  @override
+  String get html_styling_bold_code => '<b>Fetter Text</b>';
+
+  @override
+  String get html_styling_italic_example => 'Text kursiv formatieren';
+
+  @override
+  String get html_styling_italic_code => '<i>Kursiver Text</i>';
+
+  @override
+  String get html_styling_underline_example => 'Text unterstreichen';
+
+  @override
+  String get html_styling_underline_code => '<u>Unterstrichener Text</u>';
+
+  @override
+  String get html_styling_link_example => 'Klickbare Links hinzufügen';
+
+  @override
+  String get html_styling_link_code =>
+      '<a href=\"https://example.com\">Link-Text</a>';
+
+  @override
+  String get html_styling_linebreak_example => 'Zeilenumbrüche einfügen';
+
+  @override
+  String get html_styling_linebreak_code => 'Zeile 1<br>Zeile 2';
+
+  @override
+  String get html_styling_more_info =>
+      'Weitere Informationen finden Sie in der';
+
+  @override
+  String get html_styling_documentation_link => 'HTML-Dokumentation';
+
+  @override
+  String get study_schedule_learn_more =>
+      'Mehr über die Erstellung von Studienplänen erfahren';
+
+  @override
+  String get study_schedule_banner_explanation =>
+      'Wir verwenden die folgende Terminologie:\n\nJede Studie besteht aus unterschiedlichen Interventionsphasen (= Interventionsperioden = Interventionsblöcke) von bestimmter Länge.\nZum Beispiel kann eine Studie 4 Phasen mit jeweils 7 Tagen enthalten und somit insgesamt 28 Tage dauern.\nEs kann eine zusätzliche Baseline-Phase geben, die die gleiche Länge wie jede Phase hat.\nDas bedeutet, eine Studie mit 4 Phasen von jeweils 7 Tagen und einer zusätzlichen Baseline-Phase dauert insgesamt 35 Tage.\n\nDie Phasen können unterschiedlichen Sequenzen folgen.\nWir betrachten zwei Interventionen, A und B.\nDiese können einer alternierenden, ausgeglichenen, zufälligen oder benutzerdefinierten Reihenfolge folgen.\n\nWir definieren einen Zyklus von Phasen als ein Paar von Behandlungsphasen für die alternierende, ausgeglichene und zufällige Reihenfolge.\nDas Zufallsdesign erzeugt entweder eine alternierende oder eine ausgeglichene Sequenz.\nEin Zyklus der jeweiligen Designs ergibt AB (alternierend), AB (ausgeglichen) oder AB bzw. BA (zufällig).\nZwei Zyklen ergeben ABAB (alternierend), ABBA (ausgeglichen) oder ABAB bzw. ABBA (zufällig).\n\nBeim benutzerdefinierten Design kann eine eigene Sequenz definiert werden, z.B. ABBAA.\nHier entspricht ein Zyklus der gesamten benutzerdefinierten Sequenz, d.h. 2 Zyklen der Sequenz ABBAA ergeben ABBAAABBAA.';
+
+  @override
+  String get study_schedule_banner_description =>
+      'Entwerfen Sie effektive Crossover-Studien, indem Sie die verschiedenen Sequenztypen und ihre Auswirkungen auf Ihre Studienergebnisse verstehen.';
+
+  @override
+  String get study_schedule_alternating_description =>
+      'Alternierend: Jeder Teilnehmer folgt einem ABAB-Muster und wechselt zwischen Interventionen in einer vorhersagbaren Sequenz.';
+
+  @override
+  String get study_schedule_balanced_description =>
+      'Ausgeglichen: Teilnehmer werden zufällig ABAB- oder BABA-Sequenzen zugeordnet, um Reihenfolgeneffekte zu reduzieren.';
+
+  @override
+  String get study_schedule_random_description =>
+      'Zufällig: Die Sequenz ist für jeden Zyklus vollständig randomisiert und bietet maximale Variabilität.';
+
+  @override
+  String get study_schedule_custom_description =>
+      'Benutzerdefiniert: Definieren Sie Ihr eigenes Sequenzmuster, um spezifische Studienanforderungen zu erfüllen.';
 }
