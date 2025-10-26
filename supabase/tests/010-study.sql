@@ -284,7 +284,7 @@ INSERT INTO public.study (
 --
 
 -- plan tests in advance, this ensures the proper number of tests have been run.
-SELECT plan(19);
+SELECT plan(17);
 
 -- UNRESTRICTED TESTS
 
@@ -299,7 +299,7 @@ SELECT is(count(*)::int, 3, 'Check if users were created and can be accessed') F
 
 SELECT tests.clear_authentication();
 SELECT is(count(*)::int, 0, 'Check if users cannot be accessed anonymously') FROM public.user;
-SELECT is(status, 'running', 'Check if all anonymously accessed studies are running') FROM public.study;
+SELECT is(count(*)::int, 0, 'Check if studies cannot be accessed anonymously') FROM public.study;
 
 -- CREATOR 1 TESTS
 
