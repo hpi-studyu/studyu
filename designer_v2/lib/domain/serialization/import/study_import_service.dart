@@ -87,8 +87,9 @@ class StudyImportService {
     ExportImportRegistry registry,
   ) {
     if (questionJson['conditional'] is Map) {
-      final conditionalMap =
-          Map<String, dynamic>.from(questionJson['conditional'] as Map);
+      final conditionalMap = Map<String, dynamic>.from(
+        questionJson['conditional'] as Map,
+      );
       if (conditionalMap['condition'] is Map) {
         conditionalMap['condition'] = ExpressionConverter.toIds(
           Map<String, dynamic>.from(conditionalMap['condition'] as Map),
@@ -225,7 +226,8 @@ class StudyImportService {
         for (final choiceEntry in choices) {
           final choiceJson = Map<String, dynamic>.from(choiceEntry as Map);
           final choiceHandle = _asString(choiceJson['id']);
-          choiceJson['id'] = registry.choiceHandleToId[choiceHandle] ?? _uuid.v4();
+          choiceJson['id'] =
+              registry.choiceHandleToId[choiceHandle] ?? _uuid.v4();
           convertedChoices.add(choiceJson);
         }
         questionJson['choices'] = convertedChoices;

@@ -39,10 +39,8 @@ class ToHandlesStrategy implements ExpressionConversionStrategy {
       if (expressions is List) {
         result['expressions'] = expressions
             .map(
-              (entry) => convert(
-                Map<String, dynamic>.from(entry as Map),
-                registry,
-              ),
+              (entry) =>
+                  convert(Map<String, dynamic>.from(entry as Map), registry),
             )
             .toList();
       }
@@ -103,10 +101,8 @@ class ToIdsStrategy implements ExpressionConversionStrategy {
       if (expressions is List) {
         result['expressions'] = expressions
             .map(
-              (entry) => convert(
-                Map<String, dynamic>.from(entry as Map),
-                registry,
-              ),
+              (entry) =>
+                  convert(Map<String, dynamic>.from(entry as Map), registry),
             )
             .toList();
       }

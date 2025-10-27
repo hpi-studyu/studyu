@@ -82,8 +82,9 @@ class StudyExportService {
     ExportImportRegistry? registry,
   ) {
     if (questionJson['conditional'] is Map && registry != null) {
-      final conditionalMap =
-          Map<String, dynamic>.from(questionJson['conditional'] as Map);
+      final conditionalMap = Map<String, dynamic>.from(
+        questionJson['conditional'] as Map,
+      );
       if (conditionalMap['condition'] is Map) {
         conditionalMap['condition'] = ExpressionConverter.toHandles(
           Map<String, dynamic>.from(conditionalMap['condition'] as Map),
@@ -117,7 +118,10 @@ class StudyExportService {
       for (var i = 0; i < choices.length; i++) {
         final choiceJson = Map<String, dynamic>.from(choices[i] as Map);
         final choiceHandle = HandleGenerator.forChoice(handle, i);
-        registry?.registerChoiceExport(_asString(choiceJson['id']), choiceHandle);
+        registry?.registerChoiceExport(
+          _asString(choiceJson['id']),
+          choiceHandle,
+        );
         choiceJson['id'] = choiceHandle;
         newChoices.add(choiceJson);
       }
