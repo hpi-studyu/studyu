@@ -130,7 +130,23 @@ class StudyProtocolSerializer {
 
       final questionJson = Map<String, dynamic>.from(question.toJson());
       questionJson['id'] = handle;
-      questionJson.remove('conditional');
+
+      // Export conditional if present, converting expression handles
+      if (questionJson['conditional'] is Map && registry != null) {
+        final conditionalMap =
+            Map<String, dynamic>.from(questionJson['conditional'] as Map);
+        if (conditionalMap['condition'] is Map) {
+          conditionalMap['condition'] = _convertExpressionToHandles(
+            Map<String, dynamic>.from(conditionalMap['condition'] as Map),
+            registry,
+          );
+          questionJson['conditional'] = conditionalMap;
+        }
+      } else if (questionJson['conditional'] is Map && registry == null) {
+        // If no registry available (e.g., observation questions),
+        // keep conditional but without handle conversion
+        // This maintains the conditional for observation questions
+      }
 
       if (question is ChoiceQuestion) {
         final newChoices = <Map<String, dynamic>>[];
@@ -251,9 +267,13 @@ class StudyProtocolSerializer {
       }
 
       if (observation is QuestionnaireTask) {
+        // Create a registry for this observation's questions
+        // so conditionals can reference questions within the same observation
+        final observationRegistry = _ExportRegistry();
         observationJson['questions'] = _exportQuestions(
           observation.questions.questions,
           baseHandle: '${handle}_q',
+          registry: observationRegistry,
         );
       }
 
@@ -363,7 +383,21 @@ class StudyProtocolSerializer {
       questionHandleToId[handle] = newQuestionId;
 
       questionJson['id'] = newQuestionId;
-      questionJson.remove('conditional');
+
+      // Import conditional if present, converting handles back to IDs
+      // Conditional is optional - skip if not present
+      if (questionJson['conditional'] is Map) {
+        final conditionalMap =
+            Map<String, dynamic>.from(questionJson['conditional'] as Map);
+        if (conditionalMap['condition'] is Map) {
+          conditionalMap['condition'] = _convertExpressionHandlesToIds(
+            Map<String, dynamic>.from(conditionalMap['condition'] as Map),
+            questionHandleToId,
+            choiceHandleToId,
+          );
+          questionJson['conditional'] = conditionalMap;
+        }
+      }
 
       if (questionJson['choices'] is List) {
         final choicesJson = questionJson['choices'] as List;
@@ -528,18 +562,56 @@ class StudyProtocolSerializer {
   }
 
   static List<dynamic> _convertQuestionHandlesForImport(List<dynamic> entries) {
-    final converted = <Map<String, dynamic>>[];
+    // First pass: build handle-to-ID mappings for all questions and choices
+    final questionHandleToId = <String, String>{};
+    final choiceHandleToId = <String, String>{};
+    final tempQuestions = <Map<String, dynamic>>[];
+
     for (final entry in entries) {
       final questionJson = Map<String, dynamic>.from(entry as Map);
-      questionJson['id'] = _uuid.v4();
-      questionJson.remove('conditional');
+      final handle = _asString(questionJson['id']);
+      final newQuestionId = _uuid.v4();
+      questionHandleToId[handle] = newQuestionId;
+      questionJson['id'] = newQuestionId;
+
+      // Map choice handles if present
+      if (questionJson['choices'] is List) {
+        final choices = questionJson['choices'] as List;
+        for (final choiceEntry in choices) {
+          final choiceJson = Map<String, dynamic>.from(choiceEntry as Map);
+          final choiceHandle = _asString(choiceJson['id']);
+          final newChoiceId = _uuid.v4();
+          choiceHandleToId[choiceHandle] = newChoiceId;
+        }
+      }
+      tempQuestions.add(questionJson);
+    }
+
+    // Second pass: convert conditionals and choices using the mappings
+    final converted = <Map<String, dynamic>>[];
+    for (final questionJson in tempQuestions) {
+      // Convert conditional if present
+      if (questionJson['conditional'] is Map) {
+        final conditionalMap =
+            Map<String, dynamic>.from(questionJson['conditional'] as Map);
+        if (conditionalMap['condition'] is Map) {
+          conditionalMap['condition'] = _convertExpressionHandlesToIds(
+            Map<String, dynamic>.from(conditionalMap['condition'] as Map),
+            questionHandleToId,
+            choiceHandleToId,
+          );
+          questionJson['conditional'] = conditionalMap;
+        }
+      }
 
       if (questionJson['choices'] is List) {
         final choices = questionJson['choices'] as List;
         final convertedChoices = <Map<String, dynamic>>[];
         for (final choiceEntry in choices) {
           final choiceJson = Map<String, dynamic>.from(choiceEntry as Map);
-          choiceJson['id'] = _uuid.v4();
+          final choiceHandle = _asString(choiceJson['id']);
+          // Use the already-mapped ID from first pass
+          choiceJson['id'] = choiceHandleToId[choiceHandle] ?? _uuid.v4();
           convertedChoices.add(choiceJson);
         }
         questionJson['choices'] = convertedChoices;
