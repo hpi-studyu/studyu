@@ -133,8 +133,9 @@ class StudyProtocolSerializer {
 
       // Export conditional if present, converting expression handles
       if (questionJson['conditional'] is Map && registry != null) {
-        final conditionalMap =
-            Map<String, dynamic>.from(questionJson['conditional'] as Map);
+        final conditionalMap = Map<String, dynamic>.from(
+          questionJson['conditional'] as Map,
+        );
         if (conditionalMap['condition'] is Map) {
           conditionalMap['condition'] = _convertExpressionToHandles(
             Map<String, dynamic>.from(conditionalMap['condition'] as Map),
@@ -387,8 +388,9 @@ class StudyProtocolSerializer {
       // Import conditional if present, converting handles back to IDs
       // Conditional is optional - skip if not present
       if (questionJson['conditional'] is Map) {
-        final conditionalMap =
-            Map<String, dynamic>.from(questionJson['conditional'] as Map);
+        final conditionalMap = Map<String, dynamic>.from(
+          questionJson['conditional'] as Map,
+        );
         if (conditionalMap['condition'] is Map) {
           conditionalMap['condition'] = _convertExpressionHandlesToIds(
             Map<String, dynamic>.from(conditionalMap['condition'] as Map),
@@ -592,8 +594,9 @@ class StudyProtocolSerializer {
     for (final questionJson in tempQuestions) {
       // Convert conditional if present
       if (questionJson['conditional'] is Map) {
-        final conditionalMap =
-            Map<String, dynamic>.from(questionJson['conditional'] as Map);
+        final conditionalMap = Map<String, dynamic>.from(
+          questionJson['conditional'] as Map,
+        );
         if (conditionalMap['condition'] is Map) {
           conditionalMap['condition'] = _convertExpressionHandlesToIds(
             Map<String, dynamic>.from(conditionalMap['condition'] as Map),
