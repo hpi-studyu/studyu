@@ -22,7 +22,9 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA mockup GRANT EXECUTE ON FUNCTIONS TO anon, au
 CREATE OR REPLACE FUNCTION mockup.create_user(
     email text,
     password text
-) RETURNS uuid AS $$
+) RETURNS uuid
+set search_path = ''
+AS $$
   declare
   user_id uuid;
   encrypted_pw text;
@@ -52,7 +54,9 @@ $$ LANGUAGE plpgsql;
 */
 CREATE OR REPLACE FUNCTION mockup.get_user(
     email_needle text
-) RETURNS json AS $$
+) RETURNS json
+set search_path = ''
+AS $$
      DECLARE
          supabase_user json;
      BEGIN
