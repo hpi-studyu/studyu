@@ -29,7 +29,7 @@ class LanguagePicker extends ConsumerStatefulWidget {
 class _LanguagePickerState extends ConsumerState<LanguagePicker> {
   @override
   Widget build(BuildContext context) {
-    final controller = ref.watch(localeStateNotifierProvider.notifier);
+    final controller = ref.watch(localeStateProvider.notifier);
     final currentLocalization = ref.watch(
       localeProvider.select((value) => value),
     );

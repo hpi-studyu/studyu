@@ -6,148 +6,89 @@ part of 'invite_code_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$inviteCodeRepositoryHash() =>
-    r'301a627858ddb89e3c4a291bb9ebd09d6b933513';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [inviteCodeRepository].
 @ProviderFor(inviteCodeRepository)
-const inviteCodeRepositoryProvider = InviteCodeRepositoryFamily();
+const inviteCodeRepositoryProvider = InviteCodeRepositoryFamily._();
 
-/// See also [inviteCodeRepository].
-class InviteCodeRepositoryFamily extends Family<InviteCodeRepository> {
-  /// See also [inviteCodeRepository].
-  const InviteCodeRepositoryFamily();
+final class InviteCodeRepositoryProvider
+    extends
+        $FunctionalProvider<
+          InviteCodeRepository,
+          InviteCodeRepository,
+          InviteCodeRepository
+        >
+    with $Provider<InviteCodeRepository> {
+  const InviteCodeRepositoryProvider._({
+    required InviteCodeRepositoryFamily super.from,
+    required StudyID super.argument,
+  }) : super(
+         retry: null,
+         name: r'inviteCodeRepositoryProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [inviteCodeRepository].
-  InviteCodeRepositoryProvider call(String studyId) {
-    return InviteCodeRepositoryProvider(studyId);
+  @override
+  String debugGetCreateSourceHash() => _$inviteCodeRepositoryHash();
+
+  @override
+  String toString() {
+    return r'inviteCodeRepositoryProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  InviteCodeRepositoryProvider getProviderOverride(
-    covariant InviteCodeRepositoryProvider provider,
-  ) {
-    return call(provider.studyId);
+  $ProviderElement<InviteCodeRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  InviteCodeRepository create(Ref ref) {
+    final argument = this.argument as StudyID;
+    return inviteCodeRepository(ref, argument);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'inviteCodeRepositoryProvider';
-}
-
-/// See also [inviteCodeRepository].
-class InviteCodeRepositoryProvider
-    extends AutoDisposeProvider<InviteCodeRepository> {
-  /// See also [inviteCodeRepository].
-  InviteCodeRepositoryProvider(String studyId)
-    : this._internal(
-        (ref) => inviteCodeRepository(ref as InviteCodeRepositoryRef, studyId),
-        from: inviteCodeRepositoryProvider,
-        name: r'inviteCodeRepositoryProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$inviteCodeRepositoryHash,
-        dependencies: InviteCodeRepositoryFamily._dependencies,
-        allTransitiveDependencies:
-            InviteCodeRepositoryFamily._allTransitiveDependencies,
-        studyId: studyId,
-      );
-
-  InviteCodeRepositoryProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.studyId,
-  }) : super.internal();
-
-  final String studyId;
-
-  @override
-  Override overrideWith(
-    InviteCodeRepository Function(InviteCodeRepositoryRef provider) create,
-  ) {
-    return ProviderOverride(
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(InviteCodeRepository value) {
+    return $ProviderOverride(
       origin: this,
-      override: InviteCodeRepositoryProvider._internal(
-        (ref) => create(ref as InviteCodeRepositoryRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        studyId: studyId,
-      ),
+      providerOverride: $SyncValueProvider<InviteCodeRepository>(value),
     );
   }
 
   @override
-  AutoDisposeProviderElement<InviteCodeRepository> createElement() {
-    return _InviteCodeRepositoryProviderElement(this);
-  }
-
-  @override
   bool operator ==(Object other) {
-    return other is InviteCodeRepositoryProvider && other.studyId == studyId;
+    return other is InviteCodeRepositoryProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin InviteCodeRepositoryRef on AutoDisposeProviderRef<InviteCodeRepository> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
-}
+String _$inviteCodeRepositoryHash() =>
+    r'301a627858ddb89e3c4a291bb9ebd09d6b933513';
 
-class _InviteCodeRepositoryProviderElement
-    extends AutoDisposeProviderElement<InviteCodeRepository>
-    with InviteCodeRepositoryRef {
-  _InviteCodeRepositoryProviderElement(super.provider);
+final class InviteCodeRepositoryFamily extends $Family
+    with $FunctionalFamilyOverride<InviteCodeRepository, StudyID> {
+  const InviteCodeRepositoryFamily._()
+    : super(
+        retry: null,
+        name: r'inviteCodeRepositoryProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  InviteCodeRepositoryProvider call(StudyID studyId) =>
+      InviteCodeRepositoryProvider._(argument: studyId, from: this);
 
   @override
-  String get studyId => (origin as InviteCodeRepositoryProvider).studyId;
+  String toString() => r'inviteCodeRepositoryProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

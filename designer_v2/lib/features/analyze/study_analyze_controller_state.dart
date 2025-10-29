@@ -12,10 +12,10 @@ class StudyAnalyzeControllerState extends StudyControllerBaseState {
     required super.studyWithMetadata,
   });
 
-  bool get canExport => study.value?.canExport(currentUser!) ?? false;
+  bool get canExport => studyValue?.canExport(currentUser!) ?? false;
 
   String get exportDisabledReason =>
-      study.value?.exportDisabledReason(currentUser!) ?? '';
+      studyValue?.exportDisabledReason(currentUser!) ?? '';
 
   @override
   StudyAnalyzeControllerState copyWith({

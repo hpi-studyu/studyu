@@ -17,5 +17,5 @@ Map<String, dynamic> _$StudyUAnalyticsToJson(StudyUAnalytics instance) =>
     <String, dynamic>{
       'enabled': instance.enabled,
       'dsn': instance.dsn,
-      if (instance.samplingRate case final value?) 'samplingRate': value,
+      'samplingRate': ?instance.samplingRate,
     };

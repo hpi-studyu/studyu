@@ -17,7 +17,7 @@ CompositeExpression _$CompositeExpressionFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$CompositeExpressionToJson(
   CompositeExpression instance,
 ) => <String, dynamic>{
-  if (instance.type case final value?) 'type': value,
+  'type': ?instance.type,
   'logicType': instance.logicType.toJson(),
   'expressions': instance.expressions.map((e) => e.toJson()).toList(),
 };

@@ -6,312 +6,201 @@ part of 'study_test_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$studyTestPlatformControllerHash() =>
-    r'8e61d8677426d6b048c028bc9117134f179b79b6';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
+@ProviderFor(StudyTestController)
+const studyTestControllerProvider = StudyTestControllerFamily._();
 
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
+final class StudyTestControllerProvider
+    extends $NotifierProvider<StudyTestController, StudyTestControllerState> {
+  const StudyTestControllerProvider._({
+    required StudyTestControllerFamily super.from,
+    required StudyID super.argument,
+  }) : super(
+         retry: null,
+         name: r'studyTestControllerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$studyTestControllerHash();
+
+  @override
+  String toString() {
+    return r'studyTestControllerProvider'
+        ''
+        '($argument)';
   }
 
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// Provide a controller parametrized by [StudyID]
-///
-/// Copied from [studyTestPlatformController].
-@ProviderFor(studyTestPlatformController)
-const studyTestPlatformControllerProvider = StudyTestPlatformControllerFamily();
-
-/// Provide a controller parametrized by [StudyID]
-///
-/// Copied from [studyTestPlatformController].
-class StudyTestPlatformControllerFamily extends Family<PlatformController> {
-  /// Provide a controller parametrized by [StudyID]
-  ///
-  /// Copied from [studyTestPlatformController].
-  const StudyTestPlatformControllerFamily();
-
-  /// Provide a controller parametrized by [StudyID]
-  ///
-  /// Copied from [studyTestPlatformController].
-  StudyTestPlatformControllerProvider call(String studyId) {
-    return StudyTestPlatformControllerProvider(studyId);
-  }
-
+  @$internal
   @override
-  StudyTestPlatformControllerProvider getProviderOverride(
-    covariant StudyTestPlatformControllerProvider provider,
-  ) {
-    return call(provider.studyId);
-  }
+  StudyTestController create() => StudyTestController();
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'studyTestPlatformControllerProvider';
-}
-
-/// Provide a controller parametrized by [StudyID]
-///
-/// Copied from [studyTestPlatformController].
-class StudyTestPlatformControllerProvider
-    extends AutoDisposeProvider<PlatformController> {
-  /// Provide a controller parametrized by [StudyID]
-  ///
-  /// Copied from [studyTestPlatformController].
-  StudyTestPlatformControllerProvider(String studyId)
-    : this._internal(
-        (ref) => studyTestPlatformController(
-          ref as StudyTestPlatformControllerRef,
-          studyId,
-        ),
-        from: studyTestPlatformControllerProvider,
-        name: r'studyTestPlatformControllerProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$studyTestPlatformControllerHash,
-        dependencies: StudyTestPlatformControllerFamily._dependencies,
-        allTransitiveDependencies:
-            StudyTestPlatformControllerFamily._allTransitiveDependencies,
-        studyId: studyId,
-      );
-
-  StudyTestPlatformControllerProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.studyId,
-  }) : super.internal();
-
-  final String studyId;
-
-  @override
-  Override overrideWith(
-    PlatformController Function(StudyTestPlatformControllerRef provider) create,
-  ) {
-    return ProviderOverride(
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(StudyTestControllerState value) {
+    return $ProviderOverride(
       origin: this,
-      override: StudyTestPlatformControllerProvider._internal(
-        (ref) => create(ref as StudyTestPlatformControllerRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        studyId: studyId,
-      ),
+      providerOverride: $SyncValueProvider<StudyTestControllerState>(value),
     );
   }
 
   @override
-  AutoDisposeProviderElement<PlatformController> createElement() {
-    return _StudyTestPlatformControllerProviderElement(this);
-  }
-
-  @override
   bool operator ==(Object other) {
-    return other is StudyTestPlatformControllerProvider &&
-        other.studyId == studyId;
+    return other is StudyTestControllerProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin StudyTestPlatformControllerRef
-    on AutoDisposeProviderRef<PlatformController> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
-}
-
-class _StudyTestPlatformControllerProviderElement
-    extends AutoDisposeProviderElement<PlatformController>
-    with StudyTestPlatformControllerRef {
-  _StudyTestPlatformControllerProviderElement(super.provider);
-
-  @override
-  String get studyId => (origin as StudyTestPlatformControllerProvider).studyId;
 }
 
 String _$studyTestControllerHash() =>
     r'de261192453a0cf58ca8fa1c996a71d09bc4778c';
 
-abstract class _$StudyTestController
-    extends BuildlessAutoDisposeNotifier<StudyTestControllerState> {
-  late final String studyId;
-
-  StudyTestControllerState build(String studyId);
-}
-
-/// See also [StudyTestController].
-@ProviderFor(StudyTestController)
-const studyTestControllerProvider = StudyTestControllerFamily();
-
-/// See also [StudyTestController].
-class StudyTestControllerFamily extends Family<StudyTestControllerState> {
-  /// See also [StudyTestController].
-  const StudyTestControllerFamily();
-
-  /// See also [StudyTestController].
-  StudyTestControllerProvider call(String studyId) {
-    return StudyTestControllerProvider(studyId);
-  }
-
-  @override
-  StudyTestControllerProvider getProviderOverride(
-    covariant StudyTestControllerProvider provider,
-  ) {
-    return call(provider.studyId);
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'studyTestControllerProvider';
-}
-
-/// See also [StudyTestController].
-class StudyTestControllerProvider
-    extends
-        AutoDisposeNotifierProviderImpl<
+final class StudyTestControllerFamily extends $Family
+    with
+        $ClassFamilyOverride<
           StudyTestController,
-          StudyTestControllerState
+          StudyTestControllerState,
+          StudyTestControllerState,
+          StudyTestControllerState,
+          StudyID
         > {
-  /// See also [StudyTestController].
-  StudyTestControllerProvider(String studyId)
-    : this._internal(
-        () => StudyTestController()..studyId = studyId,
-        from: studyTestControllerProvider,
+  const StudyTestControllerFamily._()
+    : super(
+        retry: null,
         name: r'studyTestControllerProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$studyTestControllerHash,
-        dependencies: StudyTestControllerFamily._dependencies,
-        allTransitiveDependencies:
-            StudyTestControllerFamily._allTransitiveDependencies,
-        studyId: studyId,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
       );
 
-  StudyTestControllerProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.studyId,
-  }) : super.internal();
-
-  final String studyId;
+  StudyTestControllerProvider call(StudyID studyId) =>
+      StudyTestControllerProvider._(argument: studyId, from: this);
 
   @override
-  StudyTestControllerState runNotifierBuild(
-    covariant StudyTestController notifier,
-  ) {
-    return notifier.build(studyId);
+  String toString() => r'studyTestControllerProvider';
+}
+
+abstract class _$StudyTestController
+    extends $Notifier<StudyTestControllerState> {
+  late final _$args = ref.$arg as StudyID;
+  StudyID get studyId => _$args;
+
+  StudyTestControllerState build(StudyID studyId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref =
+        this.ref as $Ref<StudyTestControllerState, StudyTestControllerState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<StudyTestControllerState, StudyTestControllerState>,
+              StudyTestControllerState,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+/// Provide a controller parametrized by [StudyID]
+
+@ProviderFor(studyTestPlatformController)
+const studyTestPlatformControllerProvider =
+    StudyTestPlatformControllerFamily._();
+
+/// Provide a controller parametrized by [StudyID]
+
+final class StudyTestPlatformControllerProvider
+    extends
+        $FunctionalProvider<
+          PlatformController,
+          PlatformController,
+          PlatformController
+        >
+    with $Provider<PlatformController> {
+  /// Provide a controller parametrized by [StudyID]
+  const StudyTestPlatformControllerProvider._({
+    required StudyTestPlatformControllerFamily super.from,
+    required StudyID super.argument,
+  }) : super(
+         retry: null,
+         name: r'studyTestPlatformControllerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$studyTestPlatformControllerHash();
+
+  @override
+  String toString() {
+    return r'studyTestPlatformControllerProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  Override overrideWith(StudyTestController Function() create) {
-    return ProviderOverride(
+  $ProviderElement<PlatformController> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  PlatformController create(Ref ref) {
+    final argument = this.argument as StudyID;
+    return studyTestPlatformController(ref, argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PlatformController value) {
+    return $ProviderOverride(
       origin: this,
-      override: StudyTestControllerProvider._internal(
-        () => create()..studyId = studyId,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        studyId: studyId,
-      ),
+      providerOverride: $SyncValueProvider<PlatformController>(value),
     );
   }
 
   @override
-  AutoDisposeNotifierProviderElement<
-    StudyTestController,
-    StudyTestControllerState
-  >
-  createElement() {
-    return _StudyTestControllerProviderElement(this);
-  }
-
-  @override
   bool operator ==(Object other) {
-    return other is StudyTestControllerProvider && other.studyId == studyId;
+    return other is StudyTestPlatformControllerProvider &&
+        other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, studyId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin StudyTestControllerRef
-    on AutoDisposeNotifierProviderRef<StudyTestControllerState> {
-  /// The parameter `studyId` of this provider.
-  String get studyId;
-}
+String _$studyTestPlatformControllerHash() =>
+    r'8e61d8677426d6b048c028bc9117134f179b79b6';
 
-class _StudyTestControllerProviderElement
-    extends
-        AutoDisposeNotifierProviderElement<
-          StudyTestController,
-          StudyTestControllerState
-        >
-    with StudyTestControllerRef {
-  _StudyTestControllerProviderElement(super.provider);
+/// Provide a controller parametrized by [StudyID]
+
+final class StudyTestPlatformControllerFamily extends $Family
+    with $FunctionalFamilyOverride<PlatformController, StudyID> {
+  const StudyTestPlatformControllerFamily._()
+    : super(
+        retry: null,
+        name: r'studyTestPlatformControllerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Provide a controller parametrized by [StudyID]
+
+  StudyTestPlatformControllerProvider call(StudyID studyId) =>
+      StudyTestPlatformControllerProvider._(argument: studyId, from: this);
 
   @override
-  String get studyId => (origin as StudyTestControllerProvider).studyId;
+  String toString() => r'studyTestPlatformControllerProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

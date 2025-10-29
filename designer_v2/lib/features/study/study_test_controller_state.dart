@@ -20,7 +20,7 @@ class StudyTestControllerState extends StudyControllerBaseState {
   bool get canTest => serializedSession.isNotEmpty;
 
   String get appUrl {
-    if (!canTest || !study.hasValue) {
+    if (!canTest || studyValue == null) {
       return '';
     }
     String appUrl = env.appUrl ?? '';
