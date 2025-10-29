@@ -37,6 +37,9 @@ class WrappedModel<T> {
   }
 
   void markAsLoading() {
+    // Riverpod made copyWithPrevious internal in v3.0.0-dev.17 (2025-08-01).
+    // To prevent circular progress indicators on every update in the designer,
+    // we manually preserve the previous value here.
     asyncValue = AsyncValue<T>.data(_model);
   }
 
