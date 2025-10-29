@@ -56,7 +56,7 @@ class _SurveyQuestionFormViewState
   bool _areFitbitCredentialsInvalid() {
     final state = ref.watch(studyControllerProvider(widget.studyId));
 
-    final fitbitCredentials = state.study.value?.fitbitCredentials;
+    final fitbitCredentials = state.studyValue?.fitbitCredentials;
     return fitbitCredentials == null ||
         fitbitCredentials.fitbitCredentials.clientId.isEmpty ||
         fitbitCredentials.fitbitCredentials.clientSecret.isEmpty;

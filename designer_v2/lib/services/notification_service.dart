@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:studyu_designer_v2/services/notification_types.dart';

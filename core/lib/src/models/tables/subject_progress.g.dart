@@ -22,8 +22,7 @@ SubjectProgress _$SubjectProgressFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$SubjectProgressToJson(SubjectProgress instance) =>
     <String, dynamic>{
-      if (instance.completedAt?.toIso8601String() case final value?)
-        'completed_at': value,
+      'completed_at': ?instance.completedAt?.toIso8601String(),
       'subject_id': instance.subjectId,
       'intervention_id': instance.interventionId,
       'task_id': instance.taskId,

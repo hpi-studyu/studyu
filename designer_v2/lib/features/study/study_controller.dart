@@ -57,7 +57,7 @@ class StudyController extends _$StudyController {
   }
 
   Future publishStudy({bool toRegistry = false}) {
-    final study = state.study.value!;
+    final study = state.studyValueRequired;
     study.registryPublished = toRegistry;
 
     // Remove all invites if study is open
@@ -76,7 +76,7 @@ class StudyController extends _$StudyController {
   }
 
   Future closeStudy() {
-    final study = state.study.value!;
+    final study = state.studyValueRequired;
     return ref.read(studyRepositoryProvider).close(study);
   }
 

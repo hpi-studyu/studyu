@@ -17,6 +17,7 @@ class PublishSuccessDialog extends StudyPageWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(studyControllerProvider(studyId).notifier);
     final state = ref.watch(studyControllerProvider(studyId));
+    final study = state.studyValueRequired;
     final theme = Theme.of(context);
 
     return StandardDialog(
@@ -32,14 +33,14 @@ class PublishSuccessDialog extends StudyPageWidget {
               ),
             ),
             title: tr.study_launch_success_title,
-            description: state.study.value!.participation == Participation.open
+            description: study.participation == Participation.open
                 ? tr.study_public_launch_success_description
                 : tr.study_launch_success_description,
           ),
           const SizedBox(height: 8.0),
         ],
       ),
-      actionButtons: state.study.value!.participation == Participation.open
+      actionButtons: study.participation == Participation.open
           ? [
               Expanded(
                 child: Column(
