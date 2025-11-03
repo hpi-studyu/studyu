@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
@@ -183,13 +182,11 @@ class InviteCodeFormViewModel extends FormViewModel<StudyInvite> {
 @riverpod
 InviteCodeFormViewModel inviteCodeFormViewModel(Ref ref, StudyID studyId) {
   // Reactively bind to and obtain [StudyController]'s current study
-  final study = ref.watch(
-    studyControllerProvider(studyId).select((state) => state.study),
-  );
+  final state = ref.watch(studyControllerProvider(studyId));
   final inviteCodeRepository = ref.watch(inviteCodeRepositoryProvider(studyId));
 
   return InviteCodeFormViewModel(
-    study: study.value!,
+    study: state.studyValueRequired,
     inviteCodeRepository: inviteCodeRepository,
   );
 }

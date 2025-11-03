@@ -55,11 +55,11 @@ class StudyRecruitController extends _$StudyRecruitController
   }
 
   Intervention? getIntervention(String interventionId) {
-    return state.study.value!.getIntervention(interventionId);
+    return state.studyValueRequired.getIntervention(interventionId);
   }
 
   int getParticipantCountForInvite(StudyInvite invite) {
-    return state.study.value!.getParticipantCountForInvite(invite);
+    return state.studyValueRequired.getParticipantCountForInvite(invite);
   }
 
   // - IModelActionProvider

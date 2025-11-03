@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/enrollment/consent_item_form_controller.dart';
@@ -146,7 +145,7 @@ StudyFormViewModel studyPublishValidator(Ref ref, StudyID studyId) {
     fitbitCredentialsRepository: ref.watch(
       fitbitCredentialsRepositoryProvider(studyId),
     ),
-    formData: state.study.value,
+    formData: state.studyValueRequired,
     validationSet: StudyFormValidationSet.publish,
   );
 }
@@ -163,6 +162,6 @@ StudyFormViewModel studyTestValidator(Ref ref, StudyID studyId) {
     fitbitCredentialsRepository: ref.watch(
       fitbitCredentialsRepositoryProvider(studyId),
     ),
-    formData: state.study.value,
+    formData: state.studyValueRequired,
   );
 }

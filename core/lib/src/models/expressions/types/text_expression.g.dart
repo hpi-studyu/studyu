@@ -16,8 +16,8 @@ TextExpression _$TextExpressionFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$TextExpressionToJson(TextExpression instance) =>
     <String, dynamic>{
-      if (instance.type case final value?) 'type': value,
-      if (instance.target case final value?) 'target': value,
+      'type': ?instance.type,
+      'target': ?instance.target,
       'comparator': _$TextComparatorEnumMap[instance.comparator]!,
       'value': instance.value,
     };

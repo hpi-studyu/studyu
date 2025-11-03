@@ -15,5 +15,5 @@ BodyPain _$BodyPainFromJson(Map<String, dynamic> json) => BodyPain(
 
 Map<String, dynamic> _$BodyPainToJson(BodyPain instance) => <String, dynamic>{
   'painLevel': instance.painLevel,
-  if (instance.type?.toJson() case final value?) 'type': value,
+  'type': ?instance.type?.toJson(),
 };

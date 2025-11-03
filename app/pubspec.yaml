@@ -10,7 +10,7 @@ environment:
 resolution: workspace
 
 dependencies:
-  camera: ^0.11.2
+  camera: ^0.11.3
   collection: ^1.19.1
   cross_file: ^0.3.4+2
   cupertino_icons: ^1.0.8
@@ -23,10 +23,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_file_dialog: ^3.0.2
-  flutter_local_notifications: ^19.4.2
+  flutter_local_notifications: ^19.5.0
   flutter_localizations:
     sdk: flutter
-  flutter_native_splash: ^2.4.6
+  flutter_native_splash: ^2.4.7
   flutter_svg: ^2.2.1
   flutter_timezone: ^5.0.0
   flutter_web_plugins:
@@ -45,15 +45,15 @@ dependencies:
   provider: ^6.1.5+1
   quiver: ^3.2.2
   rainbow_color: ^2.0.1
-  record: ^6.1.1
-  sentry_flutter: ^9.6.0
-  sentry_logging: ^9.6.0
+  record: ^6.1.2
+  sentry_flutter: ^9.7.0
+  sentry_logging: ^9.7.0
   shared_preferences: ^2.5.3
   statistics: ^1.2.0
   studyu_core: ^4.7.0
   studyu_flutter_common: ^1.10.0
-  supabase: ^2.9.1
-  supabase_flutter: ^2.10.1
+  supabase: ^2.10.0
+  supabase_flutter: ^2.10.3
   timeline_tile: ^2.0.0
   timezone: ^0.10.1
   touchable: ^1.0.2

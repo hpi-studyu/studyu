@@ -21,14 +21,12 @@ class StudyControllerState extends StudyControllerBaseState
     this.lastSynced,
   });
 
-  bool get isPublished =>
-      study.value != null && study.value!.status == StudyStatus.running;
+  bool get isPublished => studyValue?.status == StudyStatus.running;
 
-  bool get isClosed =>
-      study.value != null && study.value!.status == StudyStatus.closed;
+  bool get isClosed => studyValue?.status == StudyStatus.closed;
 
   List<ModelAction> get studyActions {
-    final studyVal = study.value;
+    final studyVal = studyValue;
     if (studyVal == null) {
       return [];
     }
@@ -56,34 +54,44 @@ class StudyControllerState extends StudyControllerBaseState
   // - IStudyNavViewModel
 
   @override
-  bool get isEditTabEnabled =>
-      study.value == null ||
-      (study.value != null &&
-          (study.value!.canEdit(super.currentUser) ||
-              study.value!.publishedToRegistry ||
-              study.value!.publishedToRegistryResults));
+  bool get isEditTabEnabled {
+    final studyVal = studyValue;
+    if (studyVal == null) {
+      return true;
+    }
+    return studyVal.canEdit(super.currentUser) ||
+        studyVal.publishedToRegistry ||
+        studyVal.publishedToRegistryResults;
+  }
 
   @override
   bool get isTestTabEnabled => isEditTabEnabled;
 
   @override
-  bool get isRecruitTabEnabled =>
-      study.value == null ||
-      (study.value != null && study.value!.canEdit(super.currentUser));
+  bool get isRecruitTabEnabled {
+    final studyVal = studyValue;
+    if (studyVal == null) {
+      return true;
+    }
+    return studyVal.canEdit(super.currentUser);
+  }
 
   @override
   bool get isMonitorTabEnabled => isAnalyzeTabEnabled;
 
   @override
-  bool get isAnalyzeTabEnabled =>
-      study.value == null ||
-      (study.value != null &&
-          (study.value!.canEdit(super.currentUser) ||
-              study.value!.publishedToRegistryResults));
+  bool get isAnalyzeTabEnabled {
+    final studyVal = studyValue;
+    if (studyVal == null) {
+      return true;
+    }
+    return studyVal.canEdit(super.currentUser) ||
+        studyVal.publishedToRegistryResults;
+  }
 
   @override
   bool get isSettingsEnabled =>
-      study.value != null && study.value!.canChangeSettings(super.currentUser!);
+      studyValue?.canChangeSettings(super.currentUser!) ?? false;
 
   // - IStudyAppBarViewModel
 
@@ -105,10 +113,10 @@ class StudyControllerState extends StudyControllerBaseState
       studyWithMetadata!.model.canEdit(super.currentUser);
 
   @override
-  StudyStatus? get studyStatus => study.value?.status;
+  StudyStatus? get studyStatus => studyValue?.status;
 
   @override
-  Participation? get studyParticipation => study.value?.participation;
+  Participation? get studyParticipation => studyValue?.participation;
 
   // - Equatable
 
@@ -136,7 +144,7 @@ class StudyControllerState extends StudyControllerBaseState
 }
 
 extension StudyControllerStateUnsafeProps on StudyControllerState {
-  /// Make sure to only access these in an [AsyncWidget] so that [study.value]
+  /// Make sure to only access these in an [AsyncWidget] so that [studyValue]
   /// is available
-  String get titleText => study.value!.title ?? "";
+  String get titleText => studyValueRequired.title ?? "";
 }

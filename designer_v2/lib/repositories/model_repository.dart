@@ -33,14 +33,14 @@ class WrappedModel<T> {
   DateTime? lastUpdated;
 
   void markWithError(Object error, {StackTrace? stackTrace}) {
-    asyncValue = AsyncError<T>(
-      error,
-      StackTrace.current,
-    ).copyWithPrevious(asyncValue);
+    asyncValue = AsyncValue<T>.error(error, stackTrace ?? StackTrace.current);
   }
 
   void markAsLoading() {
-    asyncValue = AsyncLoading<T>().copyWithPrevious(asyncValue);
+    // Riverpod made copyWithPrevious internal in v3.0.0-dev.17 (2025-08-01).
+    // To prevent circular progress indicators on every update in the designer,
+    // we manually preserve the previous value here.
+    asyncValue = AsyncValue<T>.data(_model);
   }
 
   void markAsFetched() {
