@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/serialization/converters/expression_converter.dart';
 import 'package:studyu_designer_v2/domain/serialization/utils/export_import_registry.dart';
@@ -10,9 +11,17 @@ class StudyImportService {
 
   static void applyToStudy(Study target, Map<String, dynamic> json) {
     target.title = _asString(json['title']);
+
     target.description = _asString(json['description'] ?? '');
+
     target.iconName = _asString(json['icon_name'] ?? target.iconName);
-    target.contact = Contact.fromJson(_requireMap(json, 'contact'));
+
+    final contactJson = json['contact'];
+    if (contactJson is Map<String, dynamic>) {
+      target.contact = Contact.fromJson(contactJson);
+    } else if (contactJson is Map) {
+      target.contact = Contact.fromJson(Map<String, dynamic>.from(contactJson));
+    }
 
     _importScreening(target, json);
 
@@ -43,9 +52,11 @@ class StudyImportService {
 
   static void _importScreening(Study target, Map<String, dynamic> json) {
     final screening = _requireMap(json, 'screening');
+
     target.participation = Participation.fromJson(
       _asString(screening['participation_mode']),
     );
+
     final resultSharing = screening['result_sharing'] as String?;
     if (resultSharing != null) {
       target.resultSharing = ResultSharing.fromJson(resultSharing);
@@ -60,6 +71,7 @@ class StudyImportService {
     final registry = ExportImportRegistry();
 
     final questionsJson = _requireList(json, 'questions');
+
     for (final entry in questionsJson) {
       final questionJson = Map<String, dynamic>.from(entry as Map);
       final handle = _asString(questionJson['id']);
@@ -70,6 +82,7 @@ class StudyImportService {
 
       _importQuestionConditional(questionJson, registry);
       _importQuestionChoices(questionJson, registry);
+      _fixScaleQuestionInitialValues(questionJson);
 
       final question = Question.fromJson(questionJson);
       questions.add(question);
@@ -127,6 +140,16 @@ class StudyImportService {
     for (final entry in entries) {
       final criterionJson = Map<String, dynamic>.from(entry as Map);
       final conditionJson = _requireMap(criterionJson, 'condition');
+
+      // Validate that the condition is a supported expression type
+      final expressionType = conditionJson['type'] as String?;
+
+      if (expressionType == null) {
+        throw const FormatException(
+          'Eligibility criterion condition missing "type" field',
+        );
+      }
+
       final convertedCondition = ExpressionConverter.toIds(
         conditionJson,
         registry,
@@ -192,6 +215,27 @@ class StudyImportService {
     return observations;
   }
 
+  static void _fixScaleQuestionInitialValues(
+    Map<String, dynamic> questionJson,
+  ) {
+    final questionType = questionJson['type'] as String?;
+
+    if (questionType == 'scale' ||
+        questionType == 'annotatedScale' ||
+        questionType == 'visualAnalogue') {
+      if (questionJson['initial'] == null) {
+        final minimum = questionJson['minimum'];
+        if (minimum != null) {
+          questionJson['initial'] = minimum;
+        }
+      }
+
+      if (questionJson['annotations'] == null) {
+        questionJson['annotations'] = [];
+      }
+    }
+  }
+
   static List<dynamic> _convertQuestionHandlesForImport(List<dynamic> entries) {
     final registry = ExportImportRegistry();
 
@@ -219,6 +263,7 @@ class StudyImportService {
       questionJson['id'] = registry.questionHandleToId[handle] ?? _uuid.v4();
 
       _importQuestionConditional(questionJson, registry);
+      _fixScaleQuestionInitialValues(questionJson);
 
       if (questionJson['choices'] is List) {
         final choices = questionJson['choices'] as List;
