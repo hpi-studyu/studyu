@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/domain/serialization/converters/expression_converter.dart';
 import 'package:studyu_designer_v2/domain/serialization/utils/export_import_registry.dart';
