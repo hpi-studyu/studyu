@@ -284,7 +284,7 @@ class StudyRepository extends ModelRepository<Study>
               hintText: tr.form_field_study_protocol_import_hint,
               onSubmit: _handleImportedProtocol,
             ),
-            dismissOnAction: false,
+            dismissOnAction: true,
           ),
         );
   }
