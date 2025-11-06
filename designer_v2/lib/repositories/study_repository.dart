@@ -259,8 +259,7 @@ class StudyRepository extends ModelRepository<Study>
       final study = await apiClient.fetchStudy(model.id);
       final payload = StudyProtocolSerializer.exportStudy(study);
       final content = StudyProtocolSerializer.encodePretty(payload);
-      final filename = '${_slugify(study.title ?? 'study')}_protocol.json'
-          .toLowerCase();
+      final filename = '${_slugify(study.title ?? 'study')}_protocol.json';
       downloadFile(fileContent: content, filename: filename);
       ref
           .read(notificationServiceProvider)
