@@ -34,4 +34,8 @@ class HandleGenerator {
   static String forPeriod(String baseHandle, int index) {
     return '${baseHandle}_${HandlePrefixes.period}${index + 1}';
   }
+
+  static String forReportSection(int index) {
+    return '${HandlePrefixes.reportSection}${index + 1}';
+  }
 }

@@ -47,6 +47,18 @@ class StudyImportService {
     );
 
     target.consent = _importConsent(_requireList(json, 'consent'));
+
+    final reportSpecJson = json['report_specification'];
+    if (reportSpecJson != null) {
+      final reportSpec = _importReportSpecification(
+        reportSpecJson is Map<String, dynamic>
+            ? reportSpecJson
+            : Map<String, dynamic>.from(reportSpecJson as Map),
+      );
+      if (reportSpec != null) {
+        target.reportSpecification = reportSpec;
+      }
+    }
   }
 
   static void _importScreening(Study target, Map<String, dynamic> json) {
@@ -334,6 +346,38 @@ class StudyImportService {
       return value;
     }
     throw FormatException('Missing or invalid list for key "$key"');
+  }
+
+  static ReportSpecification? _importReportSpecification(
+    Map<String, dynamic>? json,
+  ) {
+    if (json == null) {
+      return null;
+    }
+
+    final reportSpec = ReportSpecification();
+
+    if (json['primary'] != null) {
+      final primaryJson = Map<String, dynamic>.from(json['primary'] as Map);
+      reportSpec.primary = _importReportSection(primaryJson);
+    }
+
+    if (json['secondary'] is List) {
+      final secondaryList = json['secondary'] as List;
+      final secondarySections = <ReportSection>[];
+      for (final entry in secondaryList) {
+        final sectionJson = Map<String, dynamic>.from(entry as Map);
+        secondarySections.add(_importReportSection(sectionJson));
+      }
+      reportSpec.secondary = secondarySections;
+    }
+
+    return reportSpec;
+  }
+
+  static ReportSection _importReportSection(Map<String, dynamic> json) {
+    json['id'] = _uuid.v4();
+    return ReportSection.fromJson(json);
   }
 }
 

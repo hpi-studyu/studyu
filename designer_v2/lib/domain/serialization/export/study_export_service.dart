@@ -17,8 +17,11 @@ class StudyExportService {
     final interventionsJson = _exportInterventions(study.interventions);
     final observationsJson = _exportObservations(study.observations);
     final consentJson = _exportConsent(study.consent);
+    final reportSpecificationJson = _exportReportSpecification(
+      study.reportSpecification,
+    );
 
-    return <String, dynamic>{
+    final result = <String, dynamic>{
       '\$schema': 'https://json-schema.org/draft/2020-12/schema',
       '\$id': 'https://studyu.app/schemas/study.json',
       'title': study.title ?? '',
@@ -37,6 +40,12 @@ class StudyExportService {
       'schedule': study.schedule.toJson(),
       'consent': consentJson,
     };
+
+    if (reportSpecificationJson != null) {
+      result['report_specification'] = reportSpecificationJson;
+    }
+
+    return result;
   }
 
   static Map<String, dynamic> _exportScreeningQuestionnaire(
@@ -247,6 +256,57 @@ class StudyExportService {
       result['completionPeriods'] = exportedPeriods;
     }
     return result;
+  }
+
+  static Map<String, dynamic>? _exportReportSpecification(
+    ReportSpecification? reportSpecification,
+  ) {
+    if (reportSpecification == null ||
+        (reportSpecification.primary == null &&
+            reportSpecification.secondary.isEmpty)) {
+      return null;
+    }
+
+    final result = <String, dynamic>{};
+    final allSections = <ReportSection>[];
+
+    if (reportSpecification.primary != null) {
+      allSections.add(reportSpecification.primary!);
+    }
+    allSections.addAll(reportSpecification.secondary);
+
+    if (allSections.isEmpty) {
+      return null;
+    }
+
+    final primaryJson = reportSpecification.primary != null
+        ? _exportReportSection(reportSpecification.primary!, 0)
+        : null;
+
+    final secondaryJson = <Map<String, dynamic>>[];
+    for (var i = 0; i < reportSpecification.secondary.length; i++) {
+      final section = reportSpecification.secondary[i];
+      final sectionIndex = reportSpecification.primary != null ? i + 1 : i;
+      secondaryJson.add(_exportReportSection(section, sectionIndex));
+    }
+
+    if (primaryJson != null) {
+      result['primary'] = primaryJson;
+    }
+    if (secondaryJson.isNotEmpty) {
+      result['secondary'] = secondaryJson;
+    }
+
+    return result.isNotEmpty ? result : null;
+  }
+
+  static Map<String, dynamic> _exportReportSection(
+    ReportSection section,
+    int index,
+  ) {
+    final sectionJson = Map<String, dynamic>.from(section.toJson());
+    sectionJson['id'] = HandleGenerator.forReportSection(index);
+    return sectionJson;
   }
 
   static String _asString(dynamic value) {

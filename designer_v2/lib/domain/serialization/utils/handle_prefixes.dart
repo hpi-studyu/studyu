@@ -10,4 +10,5 @@ class HandlePrefixes {
   static const String task = 'task_';
   static const String period = 'period_';
   static const String choice = '_opt';
+  static const String reportSection = 'report_';
 }
