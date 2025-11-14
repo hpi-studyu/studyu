@@ -27,8 +27,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.4.7
-  flutter_svg: ^2.2.1
-  flutter_timezone: ^5.0.0
+  flutter_svg: ^2.2.2
+  flutter_timezone: ^5.0.1
   flutter_web_plugins:
     sdk: flutter
   flutter_widget_from_html: ^0.17.1
@@ -46,8 +46,8 @@ dependencies:
   quiver: ^3.2.2
   rainbow_color: ^2.0.1
   record: ^6.1.2
-  sentry_flutter: ^9.7.0
-  sentry_logging: ^9.7.0
+  sentry_flutter: ^9.8.0
+  sentry_logging: ^9.8.0
   shared_preferences: ^2.5.3
   statistics: ^1.2.0
   studyu_core: ^4.7.0
