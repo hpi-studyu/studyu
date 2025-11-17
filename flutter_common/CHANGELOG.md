@@ -1,3 +1,7 @@
+## 1.10.1
+
+ - Update a dependency to the latest release.
+
 ## 1.10.0
 
  - **FIX**: update Supabase URL for production environment.
