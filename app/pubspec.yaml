@@ -12,10 +12,9 @@ resolution: workspace
 dependencies:
   camera: ^0.11.3
   collection: ^1.19.1
-  cross_file: ^0.3.4+2
+  cross_file: ^0.3.5
   cupertino_icons: ^1.0.8
   fitbitter:
-    # path: ../../fitbitter
     git:
       url: https://github.com/hpi-studyu/fitbitter.git
       ref: master
@@ -57,17 +56,11 @@ dependencies:
   timeline_tile: ^2.0.0
   timezone: ^0.10.1
   touchable: ^1.0.2
-  universal_html: ^2.2.4
+  universal_html: ^2.3.0
   url_launcher: ^6.3.2
-  uuid: ^4.5.1
+  uuid: ^4.5.2
   wakelock_plus: ^1.4.0
   xml: ^6.6.1
-
-#dependency_overrides:
-#  flutter_web_auth:
-#    git:
-#      url: https://github.com/johannesvedder/flutter_web_auth.git
-#      ref: fix-android-kotlin
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4
