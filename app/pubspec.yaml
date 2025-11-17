@@ -54,7 +54,7 @@ dependencies:
   studyu_flutter_common: ^1.10.0
   supabase: ^2.10.0
   supabase_flutter: ^2.10.3
-  table_calendar: ^3.0.9
+  table_calendar: ^3.2.0
   timeline_tile: ^2.0.0
   timezone: ^0.10.1
   touchable: ^1.0.2

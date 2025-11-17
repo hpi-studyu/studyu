@@ -367,11 +367,11 @@ const interventionsFormViewModelProvider = InterventionsFormViewModelFamily._();
 final class InterventionsFormViewModelProvider
     extends
         $FunctionalProvider<
-          InterventionsFormViewModel,
-          InterventionsFormViewModel,
-          InterventionsFormViewModel
+          MP23InterventionsFormViewModel,
+          MP23InterventionsFormViewModel,
+          MP23InterventionsFormViewModel
         >
-    with $Provider<InterventionsFormViewModel> {
+    with $Provider<MP23InterventionsFormViewModel> {
   const InterventionsFormViewModelProvider._({
     required InterventionsFormViewModelFamily super.from,
     required StudyID super.argument,
@@ -395,21 +395,23 @@ final class InterventionsFormViewModelProvider
 
   @$internal
   @override
-  $ProviderElement<InterventionsFormViewModel> $createElement(
+  $ProviderElement<MP23InterventionsFormViewModel> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
   @override
-  InterventionsFormViewModel create(Ref ref) {
+  MP23InterventionsFormViewModel create(Ref ref) {
     final argument = this.argument as StudyID;
     return interventionsFormViewModel(ref, argument);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(InterventionsFormViewModel value) {
+  Override overrideWithValue(MP23InterventionsFormViewModel value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<InterventionsFormViewModel>(value),
+      providerOverride: $SyncValueProvider<MP23InterventionsFormViewModel>(
+        value,
+      ),
     );
   }
 
@@ -426,10 +428,10 @@ final class InterventionsFormViewModelProvider
 }
 
 String _$interventionsFormViewModelHash() =>
-    r'65e18dc8fa37860c31726352b99ac6c9b5de4bdb';
+    r'80540b6ba2fe8d2987460f212564504a470d0836';
 
 final class InterventionsFormViewModelFamily extends $Family
-    with $FunctionalFamilyOverride<InterventionsFormViewModel, StudyID> {
+    with $FunctionalFamilyOverride<MP23InterventionsFormViewModel, StudyID> {
   const InterventionsFormViewModelFamily._()
     : super(
         retry: null,
