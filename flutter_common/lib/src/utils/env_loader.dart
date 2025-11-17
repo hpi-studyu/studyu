@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:studyu_core/env.dart' as env;
@@ -122,16 +124,18 @@ Future<String> findWorkingSupabaseUrl(
 ) async {
   for (final url in supabaseUrls) {
     final client = SupabaseClient(url, supabaseAnonKey);
-
     try {
-      // trivial query to confirm connectivity
       await client
           .from('app_config')
           .select()
           .eq('id', 'eq.prod')
           .limit(1)
-          .maybeSingle();
-
+          .maybeSingle()
+          .timeout(
+            const Duration(seconds: 5),
+            onTimeout: () =>
+                throw TimeoutException('Connection timeout after 5 seconds'),
+          );
       debugPrint("✅ Connected to Supabase at $url");
       return url;
     } catch (e) {
