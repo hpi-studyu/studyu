@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -332,7 +333,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get faq => 'FAQ';
 
   @override
-  String get start_study => 'Starte Studie';
+  String get start_study => 'Studie starten';
 
   @override
   String get next_day => 'Nächster Tag';
@@ -342,7 +343,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ergebnisse konnten nicht gespeichert werden.';
 
   @override
-  String get take_a_photo => 'Mache ein Foto';
+  String get take_a_photo => 'Foto aufnehmen';
 
   @override
   String get start_recording => 'Starte eine Aufnahme';

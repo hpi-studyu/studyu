@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
@@ -43,7 +41,8 @@ class _CheckmarkTaskWidgetState extends State<CheckmarkTaskWidget> {
               periodId: widget.completionPeriod!.id,
               result: true,
             );
-          } on SocketException catch (_) {
+          } catch (e) {
+            print('Saving results to cache due to error: $e');
             await subject!.addResult<bool>(
               taskId: widget.task!.id,
               periodId: widget.completionPeriod!.id,

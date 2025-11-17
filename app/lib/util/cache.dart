@@ -11,7 +11,7 @@ class Cache {
   static bool isSynchronizing = false;
 
   static Future<void> storeSubject(StudySubject? subject) async {
-    debugPrint("Store subject in cache");
+    // debugPrint("Store subject in cache");
     if (subject == null) return;
     SecureStorage.write(cacheSubjectKey, jsonEncode(subject.toFullJson()));
     assert(subject == (await loadSubject()));
@@ -119,7 +119,7 @@ class Cache {
       // only minimal update
       // Check if progress has changed
       if (localSubject.progress.length != remoteSubject.progress.length) {
-        StudyULogger.info("Cache found different progress length");
+        StudyULogger.info("Cache synchronization: Merging progress");
         /*if (remoteSubject.progress.isNotEmpty) {
         // sort remote progress list from oldest to newest
         remoteSubject.progress.sort((a, b) =>

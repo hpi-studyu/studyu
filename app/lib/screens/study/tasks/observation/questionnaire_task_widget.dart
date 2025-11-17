@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
@@ -42,7 +40,8 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
           periodId: widget.completionPeriod.id,
           result: response,
         );
-      } on SocketException catch (_) {
+      } catch (e) {
+        print('Saving results to cache due to error: $e');
         await subject!.addResult<T>(
           taskId: widget.task.id,
           periodId: widget.completionPeriod.id,
