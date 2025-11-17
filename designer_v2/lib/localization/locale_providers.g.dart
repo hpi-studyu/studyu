@@ -6,64 +6,147 @@ part of 'locale_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$platformLocaleHash() => r'e490bf2439a27d6a6ca15f4029f5b198fd6817ba';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Platform Locale Provider
+/// Returns the locale of the Platform.localeName
+
+@ProviderFor(platformLocale)
+const platformLocaleProvider = PlatformLocaleProvider._();
 
 /// Platform Locale Provider
 /// Returns the locale of the Platform.localeName
-///
-/// Copied from [platformLocale].
-@ProviderFor(platformLocale)
-final platformLocaleProvider = AutoDisposeProvider<Locale>.internal(
-  platformLocale,
-  name: r'platformLocaleProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$platformLocaleHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef PlatformLocaleRef = AutoDisposeProviderRef<Locale>;
-String _$supportedLocalesHash() => r'9cd4634b71b66c5e97b66ecbfd966d91eecfcc64';
+final class PlatformLocaleProvider
+    extends $FunctionalProvider<Locale, Locale, Locale>
+    with $Provider<Locale> {
+  /// Platform Locale Provider
+  /// Returns the locale of the Platform.localeName
+  const PlatformLocaleProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'platformLocaleProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$platformLocaleHash();
+
+  @$internal
+  @override
+  $ProviderElement<Locale> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Locale create(Ref ref) {
+    return platformLocale(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Locale value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Locale>(value),
+    );
+  }
+}
+
+String _$platformLocaleHash() => r'e490bf2439a27d6a6ca15f4029f5b198fd6817ba';
 
 /// Supported Locales Provider
-///
-/// Copied from [supportedLocales].
-@ProviderFor(supportedLocales)
-final supportedLocalesProvider = AutoDisposeProvider<List<Locale>>.internal(
-  supportedLocales,
-  name: r'supportedLocalesProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$supportedLocalesHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SupportedLocalesRef = AutoDisposeProviderRef<List<Locale>>;
-String _$localeHash() => r'9b088ff7f2fc32aeeeb72d3c9d8a37abddb9757e';
+@ProviderFor(supportedLocales)
+const supportedLocalesProvider = SupportedLocalesProvider._();
+
+/// Supported Locales Provider
+
+final class SupportedLocalesProvider
+    extends $FunctionalProvider<List<Locale>, List<Locale>, List<Locale>>
+    with $Provider<List<Locale>> {
+  /// Supported Locales Provider
+  const SupportedLocalesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'supportedLocalesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$supportedLocalesHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<Locale>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<Locale> create(Ref ref) {
+    return supportedLocales(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<Locale> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<Locale>>(value),
+    );
+  }
+}
+
+String _$supportedLocalesHash() => r'9cd4634b71b66c5e97b66ecbfd966d91eecfcc64';
 
 /// Locale Provider
 /// Provides the current locale, and automatically updates when the locale changes.
-///
-/// Copied from [locale].
-@ProviderFor(locale)
-final localeProvider = AutoDisposeProvider<Locale>.internal(
-  locale,
-  name: r'localeProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$localeHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef LocaleRef = AutoDisposeProviderRef<Locale>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+@ProviderFor(locale)
+const localeProvider = LocaleProvider._();
+
+/// Locale Provider
+/// Provides the current locale, and automatically updates when the locale changes.
+
+final class LocaleProvider extends $FunctionalProvider<Locale, Locale, Locale>
+    with $Provider<Locale> {
+  /// Locale Provider
+  /// Provides the current locale, and automatically updates when the locale changes.
+  const LocaleProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'localeProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$localeHash();
+
+  @$internal
+  @override
+  $ProviderElement<Locale> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Locale create(Ref ref) {
+    return locale(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Locale value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Locale>(value),
+    );
+  }
+}
+
+String _$localeHash() => r'83740ea99a0e1028ccb6d1d8119dc1448888164e';

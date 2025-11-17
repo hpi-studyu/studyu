@@ -333,6 +333,31 @@ class Study extends SupabaseObjectFunctions<Study>
     return segment?.getInterventionOnDay(dayInSegment, interventions, progress);
   }
 
+  int get studyLength {
+    final phaseDuration = schedule.phaseDuration;
+    final numberOfCycles = schedule.numberOfCycles;
+    final includeBaseline = schedule.includeBaseline;
+
+    // default: 2 phases per cycle for alternating/counterbalanced/random
+    int phasesPerCycle = StudySchedule.numberOfInterventions;
+
+    if (schedule.sequence == PhaseSequence.customized) {
+      final String customSequence = schedule.sequenceCustom.trim();
+      if (customSequence.isEmpty) {
+        phasesPerCycle = 0;
+      } else {
+        // count number of phases in custom sequence
+        phasesPerCycle = customSequence.length;
+      }
+    }
+
+    final baselineLength = includeBaseline ? phaseDuration : 0;
+    final studyLength =
+        baselineLength + phaseDuration * numberOfCycles * phasesPerCycle;
+
+    return studyLength;
+  }
+
   static Future<String> fetchResultsCSVTable(String studyId) async {
     final List res;
     try {

@@ -34,7 +34,14 @@ class StudyControllerBaseState extends Equatable {
     return studyWithMetadata!.asyncValue;
   }
 
-  bool get isDraft => study.value?.status == StudyStatus.draft;
+  Study? get studyValue {
+    final data = study.maybeWhen(data: (value) => value, orElse: () => null);
+    return data ?? studyWithMetadata?.model;
+  }
+
+  Study get studyValueRequired => studyValue!;
+
+  bool get isDraft => studyValue?.status == StudyStatus.draft;
 
   StudyControllerBaseState copyWith({WrappedModel<Study>? studyWithMetadata}) {
     return StudyControllerBaseState(
@@ -51,5 +58,5 @@ class StudyControllerBaseState extends Equatable {
 }
 
 extension StudyControllerBaseStateUnsafeProps on StudyControllerBaseState {
-  StudyID get studyId => study.value!.id;
+  StudyID get studyId => studyValueRequired.id;
 }

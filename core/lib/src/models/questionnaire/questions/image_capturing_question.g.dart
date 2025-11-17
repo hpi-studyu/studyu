@@ -24,7 +24,7 @@ Map<String, dynamic> _$ImageCapturingQuestionToJson(
 ) => <String, dynamic>{
   'type': instance.type,
   'id': instance.id,
-  if (instance.prompt case final value?) 'prompt': value,
-  if (instance.rationale case final value?) 'rationale': value,
-  if (instance.conditional?.toJson() case final value?) 'conditional': value,
+  'prompt': ?instance.prompt,
+  'rationale': ?instance.rationale,
+  'conditional': ?instance.conditional?.toJson(),
 };

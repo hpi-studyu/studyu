@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/study_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/features/study/study_controller_state.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_test_controls.dart';
 import 'package:studyu_designer_v2/features/study/study_test_frame_controllers.dart';
@@ -32,6 +35,8 @@ class PreviewFrame extends ConsumerStatefulWidget {
 class _PreviewFrameState extends ConsumerState<PreviewFrame> {
   PlatformController? frameController;
   bool _frameError = false;
+  ProviderSubscription<StudyControllerState>? _studyReadySubscription;
+  StreamSubscription<dynamic>? _formChangesSubscription;
 
   @override
   void initState() {
@@ -40,11 +45,36 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
   }
 
   void _subscribeStudyChanges() {
-    // debugLog('Subscribing to form changes in test frame');
+    final StudyControllerState controllerState = ref.read(
+      studyControllerProvider(widget.studyId),
+    );
+    if (controllerState.studyValue != null) {
+      _listenToFormChanges();
+      return;
+    }
+
+    _studyReadySubscription?.close();
+    _studyReadySubscription = ref.listenManual<StudyControllerState>(
+      studyControllerProvider(widget.studyId),
+      (previous, next) {
+        if (next.studyValue != null) {
+          _studyReadySubscription?.close();
+          _studyReadySubscription = null;
+          _listenToFormChanges();
+        }
+      },
+      fireImmediately: false,
+    );
+  }
+
+  void _listenToFormChanges() {
     final formViewModelCurrent = ref.read(
       studyFormViewModelProvider(widget.studyId),
     );
-    formViewModelCurrent.form.valueChanges.listen((event) {
+    _formChangesSubscription?.cancel();
+    _formChangesSubscription = formViewModelCurrent.form.valueChanges.listen((
+      event,
+    ) {
       if (frameController != null && !_frameError) {
         final formJson = jsonEncode(
           formViewModelCurrent.buildFormData().toJson(),
@@ -140,5 +170,13 @@ class _PreviewFrameState extends ConsumerState<PreviewFrame> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _studyReadySubscription?.close();
+    _studyReadySubscription = null;
+    _formChangesSubscription?.cancel();
+    super.dispose();
   }
 }

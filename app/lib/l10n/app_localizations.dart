@@ -1448,6 +1448,12 @@ abstract class AppLocalizations {
   /// **'Your support request has been prepared in your email app. Please send the email to reach our support team and wait for their reply.\n\nIf you are currently participating in a study, please continue tracking your results outside the app until the issue is resolved. Thank you for your understanding.'**
   String get support_email_sent_description;
 
+  /// No description provided for @no_contact_email.
+  ///
+  /// In en, this message translates to:
+  /// **'The support email address is not configured. Please contact your study supervisor for assistance.'**
+  String get no_contact_email;
+
   /// No description provided for @sync_fitbit_data.
   ///
   /// In en, this message translates to:

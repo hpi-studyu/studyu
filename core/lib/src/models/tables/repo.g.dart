@@ -20,8 +20,8 @@ Map<String, dynamic> _$RepoToJson(Repo instance) => <String, dynamic>{
   'user_id': instance.userId,
   'study_id': instance.studyId,
   'provider': _$GitProviderEnumMap[instance.provider]!,
-  if (instance.webUrl case final value?) 'web_url': value,
-  if (instance.gitUrl case final value?) 'git_url': value,
+  'web_url': ?instance.webUrl,
+  'git_url': ?instance.gitUrl,
 };
 
 const _$GitProviderEnumMap = {GitProvider.gitlab: 'gitlab'};

@@ -15,7 +15,7 @@ ConsentItem _$ConsentItemFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$ConsentItemToJson(ConsentItem instance) =>
     <String, dynamic>{
       'id': instance.id,
-      if (instance.title case final value?) 'title': value,
-      if (instance.description case final value?) 'description': value,
+      'title': ?instance.title,
+      'description': ?instance.description,
       'iconName': instance.iconName,
     };

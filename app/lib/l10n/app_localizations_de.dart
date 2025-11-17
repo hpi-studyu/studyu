@@ -752,6 +752,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ihre Support-Anfrage wurde in Ihrer E-Mail-App vorbereitet. Bitte senden Sie die E-Mail, um unser Support-Team zu erreichen und warten Sie auf eine Antwort.\n\nWenn Sie aktuell an einer Studie teilnehmen, dokumentieren Sie Ihre Ergebnisse bitte außerhalb der App, bis das Problem behoben ist. Vielen Dank für Ihr Verständnis.';
 
   @override
+  String get no_contact_email =>
+      'Keine Kontakt-E-Mail-Adresse angegeben. Bitte wenden Sie sich an Ihre Studienleitung.';
+
+  @override
   String get sync_fitbit_data => 'Fitbit-Daten synchronisieren';
 
   @override

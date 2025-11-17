@@ -343,8 +343,8 @@ class ConditionRowFormViewModel
 
   @override
   Map<FormMode, String> get titles => {
-    FormMode.create: 'Create Condition',
-    FormMode.edit: 'Edit Condition',
-    FormMode.readonly: 'View Condition',
+    FormMode.create: tr.form_mode_visibility_create,
+    FormMode.edit: tr.form_mode_visibility_edit,
+    FormMode.readonly: tr.form_mode_visibility_readonly,
   };
 }

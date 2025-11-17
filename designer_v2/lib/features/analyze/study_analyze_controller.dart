@@ -29,7 +29,7 @@ class StudyAnalyzeController extends _$StudyAnalyzeController {
   }
 
   Future<void> onExport() {
-    final study = state.study.value!;
+    final study = state.studyValueRequired;
     return runAsync(() => study.exportData.downloadAsZip());
   }
 }
