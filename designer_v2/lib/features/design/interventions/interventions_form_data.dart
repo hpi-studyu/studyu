@@ -1,34 +1,30 @@
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_data.dart';
-import 'package:studyu_designer_v2/features/design/interventions/mp23_study_schedule_form_data.dart';
+import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 
-class MP23InterventionsFormData implements IStudyFormData {
-  MP23InterventionsFormData({
+class InterventionsFormData implements IStudyFormData {
+  InterventionsFormData({
     required this.interventionsData,
     required this.studyScheduleData,
   });
 
   final List<InterventionFormData> interventionsData;
-  final MP23StudyScheduleFormData studyScheduleData;
+  final StudyScheduleFormData studyScheduleData;
 
   @override
   String get id => throw UnimplementedError(); // not needed for top-level form data
 
-  factory MP23InterventionsFormData.fromStudy(Study study) {
-    return MP23InterventionsFormData(
+  factory InterventionsFormData.fromStudy(Study study) {
+    return InterventionsFormData(
       interventionsData: study.interventions
           .map(
             (intervention) =>
                 InterventionFormData.fromDomainModel(intervention),
           )
           .toList(),
-      // todo which interventions and observations to use?
-      // study.mp23Schedule.interventions, study.mp23Schedule.observations
-      // or study.interventions, study.observations
-      studyScheduleData: MP23StudyScheduleFormData.fromDomainModel(
-        //study.mp23Schedule, study.interventions, study.observations,),
-        study.mp23Schedule,
+      studyScheduleData: StudyScheduleFormData.fromDomainModel(
+        study.adaptiveSchedule,
         study.interventions,
         study.observations,
       ),
@@ -48,7 +44,7 @@ class MP23InterventionsFormData implements IStudyFormData {
   }
 
   @override
-  MP23InterventionsFormData copy() {
+  InterventionsFormData copy() {
     throw UnimplementedError(); // not needed for top-level form data
   }
 }

@@ -2,8 +2,8 @@ import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/study_form_data.dart';
 import 'package:studyu_designer_v2/features/forms/form_data.dart';
 
-class MP23StudyScheduleFormData implements IStudyFormData {
-  MP23StudyScheduleFormData({
+class StudyScheduleFormData implements IStudyFormData {
+  StudyScheduleFormData({
     required this.segments,
     required this.interventions,
     required this.observations,
@@ -13,12 +13,12 @@ class MP23StudyScheduleFormData implements IStudyFormData {
   final List<Intervention> interventions;
   final List<Observation> observations;
 
-  factory MP23StudyScheduleFormData.fromDomainModel(
-    MP23StudySchedule schedule,
+  factory StudyScheduleFormData.fromDomainModel(
+    AdaptiveStudySchedule schedule,
     List<Intervention> interventions,
     List<Observation> observations,
   ) {
-    return MP23StudyScheduleFormData(
+    return StudyScheduleFormData(
       // todo or user schedule.interventions, schedule.observations instead?
       segments: schedule.segments,
       interventions: interventions,
@@ -26,18 +26,18 @@ class MP23StudyScheduleFormData implements IStudyFormData {
     );
   }
 
-  MP23StudySchedule toMP23StudySchedule() {
-    return MP23StudySchedule.withSegments(segments);
+  AdaptiveStudySchedule toAdaptiveStudySchedule() {
+    return AdaptiveStudySchedule.withSegments(segments);
   }
 
   @override
   Study apply(Study study) {
-    study.mp23Schedule = toMP23StudySchedule();
+    study.adaptiveSchedule = toAdaptiveStudySchedule();
     return study;
   }
 
   @override
-  MP23StudyScheduleFormData copy() {
+  StudyScheduleFormData copy() {
     throw UnimplementedError(); // not needed for top-level form data
   }
 

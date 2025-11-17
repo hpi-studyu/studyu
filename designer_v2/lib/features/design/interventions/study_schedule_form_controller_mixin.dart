@@ -1,10 +1,10 @@
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/features/design/interventions/mp23_study_schedule_form_data.dart';
+import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 
-mixin MP23StudyScheduleControls {
+mixin StudyScheduleControls {
   final FormArray segmentsControl = FormArray([]);
   final List<StudyScheduleSegment> segments = [];
   final List<Intervention> interventions = [];
@@ -118,7 +118,7 @@ mixin MP23StudyScheduleControls {
     }
   }
 
-  void setStudyScheduleControlsFrom(MP23StudyScheduleFormData data) {
+  void setStudyScheduleControlsFrom(StudyScheduleFormData data) {
     segmentsControl.clear();
     interventions.clear();
     observations.clear();
@@ -150,8 +150,8 @@ mixin MP23StudyScheduleControls {
     updateSegmentsFromSegmentsControl();
   }
 
-  MP23StudyScheduleFormData buildStudyScheduleFormData() {
-    return MP23StudyScheduleFormData(
+  StudyScheduleFormData buildStudyScheduleFormData() {
+    return StudyScheduleFormData(
       segments: segmentsControl.controls.map((absSegment) {
         final segment = absSegment as FormGroup;
         switch (segment.control('type').value) {

@@ -1,11 +1,13 @@
+import 'dart:async';
+
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/interventions/intervention_form_data.dart';
-import 'package:studyu_designer_v2/features/design/interventions/mp23_interventions_form_data.dart';
-import 'package:studyu_designer_v2/features/design/interventions/mp23_study_schedule_form_controller_mixin.dart';
+import 'package:studyu_designer_v2/features/design/interventions/interventions_form_data.dart';
+import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
@@ -16,13 +18,13 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/utils/debouncer.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
 
-class MP23InterventionsFormViewModel
-    extends FormViewModel<MP23InterventionsFormData>
-    with MP23StudyScheduleControls
+class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
+    with StudyScheduleControls
     implements
         IFormViewModelDelegate<InterventionFormViewModel>,
         IListActionProvider<InterventionFormViewModel>,
@@ -30,7 +32,7 @@ class MP23InterventionsFormViewModel
           InterventionFormViewModel,
           InterventionFormRouteArgs
         > {
-  MP23InterventionsFormViewModel({
+  InterventionsFormViewModel({
     required this.study,
     required this.router,
     super.delegate,
@@ -86,7 +88,7 @@ class MP23InterventionsFormViewModel
   );
 
   @override
-  void setControlsFrom(MP23InterventionsFormData data) {
+  void setControlsFrom(InterventionsFormData data) {
     final viewModels = data.interventionsData
         .map(
           (data) => InterventionFormViewModel(
@@ -102,18 +104,140 @@ class MP23InterventionsFormViewModel
   }
 
   @override
-  MP23InterventionsFormData buildFormData() {
-    return MP23InterventionsFormData(
+  InterventionsFormData buildFormData() {
+    print('[DEBUG] buildFormData called');
+    return InterventionsFormData(
       interventionsData: interventionsCollection.formData,
       studyScheduleData: buildStudyScheduleFormData(),
     );
   }
 
   @override
+  Future save() async {
+    print('[DEBUG] save() called');
+    print('[DEBUG] Form valid: ${form.valid}');
+    print('[DEBUG] Form dirty: $isDirty');
+    try {
+      await super.save();
+      print('[DEBUG] save() completed successfully');
+    } catch (e) {
+      print('[DEBUG] save() failed with error: $e');
+      rethrow;
+    }
+  }
+
+  final List<StreamSubscription> _segmentSubscriptions = [];
+
+  @override
+  void enableAutosave({
+    int debounce = Config.formAutosaveDebounce,
+    bool onlyValid = true,
+  }) {
+    print('[DEBUG] enableAutosave called with debounce: $debounce');
+
+    // Call parent implementation for normal form controls
+    super.enableAutosave(debounce: debounce, onlyValid: onlyValid);
+
+    // Additionally listen to segmentsControl changes
+    // This is needed because FormArray changes are not automatically tracked
+    // by the parent enableAutosave implementation
+
+    // Listen to collection changes (add/remove segments)
+    segmentsControl.collectionChanges.listen((_) {
+      print('[DEBUG] segmentsControl.collectionChanges fired');
+      print(
+        '[DEBUG] Current segments count: ${segmentsControl.controls.length}',
+      );
+      // Update segments list from control
+      updateSegmentsFromSegmentsControl();
+      // Re-setup listeners for all segment controls
+      _setupSegmentListeners(debounce);
+      // Trigger save
+      save();
+    });
+
+    // Setup initial listeners for existing segments
+    print(
+      '[DEBUG] Setting up initial listeners for ${segmentsControl.controls.length} segments',
+    );
+    _setupSegmentListeners(debounce);
+  }
+
+  void _setupSegmentListeners(int debounce) {
+    print('[DEBUG] _setupSegmentListeners called');
+    print(
+      '[DEBUG] Cancelling ${_segmentSubscriptions.length} existing subscriptions',
+    );
+
+    // Cancel existing subscriptions
+    for (final subscription in _segmentSubscriptions) {
+      subscription.cancel();
+    }
+    _segmentSubscriptions.clear();
+
+    // Create a debouncer for segment changes
+    final segmentDebouncer = Debouncer(milliseconds: debounce, leading: false);
+
+    // Listen to changes in each segment's FormControls
+    int listenerCount = 0;
+    for (int i = 0; i < segmentsControl.controls.length; i++) {
+      final segmentControl = segmentsControl.controls[i];
+      if (segmentControl is FormGroup) {
+        print('[DEBUG] Setting up listeners for segment $i');
+        for (final entry in segmentControl.controls.entries) {
+          final controlName = entry.key;
+          final control = entry.value;
+          if (control is FormControl) {
+            print(
+              '[DEBUG]   - Listening to control: $controlName (current value: ${control.value})',
+            );
+            final subscription = control.valueChanges.listen((newValue) {
+              print(
+                '[DEBUG] Control $controlName changed to: $newValue in segment $i',
+              );
+              print('[DEBUG] Calling debounced save...');
+              segmentDebouncer(
+                futureBuilder: () async {
+                  print(
+                    '[DEBUG] Debouncer executing: updating segments and saving',
+                  );
+                  // Update segments list from control
+                  updateSegmentsFromSegmentsControl();
+                  // Trigger save
+                  await save();
+                  print('[DEBUG] Save completed');
+                },
+              );
+            });
+            _segmentSubscriptions.add(subscription);
+            listenerCount++;
+          }
+        }
+      }
+    }
+    print(
+      '[DEBUG] Setup complete: $listenerCount listeners active across ${segmentsControl.controls.length} segments',
+    );
+    print('[DEBUG] Total subscriptions: ${_segmentSubscriptions.length}');
+  }
+
+  @override
+  void dispose() {
+    print(
+      '[DEBUG] dispose called - cancelling ${_segmentSubscriptions.length} subscriptions',
+    );
+    for (final subscription in _segmentSubscriptions) {
+      subscription.cancel();
+    }
+    _segmentSubscriptions.clear();
+    super.dispose();
+  }
+
+  @override
   Map<FormMode, String> get titles => throw UnimplementedError(); // no title
 
   @override
-  void read([MP23InterventionsFormData? formData]) {
+  void read([InterventionsFormData? formData]) {
     interventionsCollection.read();
     super.read(formData);
   }

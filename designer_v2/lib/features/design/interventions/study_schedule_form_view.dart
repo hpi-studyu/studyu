@@ -4,12 +4,12 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
-import 'package:studyu_designer_v2/features/design/interventions/mp23_study_schedule_form_controller_mixin.dart';
+import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_controller_mixin.dart';
 
-class MP23StudyScheduleFormView extends FormConsumerWidget {
-  const MP23StudyScheduleFormView({required this.formViewModel, super.key});
+class StudyScheduleFormView extends FormConsumerWidget {
+  const StudyScheduleFormView({required this.formViewModel, super.key});
 
-  final MP23StudyScheduleControls formViewModel;
+  final StudyScheduleControls formViewModel;
 
   @override
   Widget build(BuildContext context, FormGroup form) {
@@ -36,7 +36,7 @@ class MP23StudyScheduleFormView extends FormConsumerWidget {
 class ScheduleFormView extends StatefulWidget {
   const ScheduleFormView({required this.formViewModel, super.key});
 
-  final MP23StudyScheduleControls formViewModel;
+  final StudyScheduleControls formViewModel;
 
   @override
   State<ScheduleFormView> createState() => _ScheduleFormViewState();
@@ -143,7 +143,7 @@ class ExpandableSegementItem extends StatefulWidget {
   final FormGroup segmentControl;
   final List<Intervention> interventions;
 
-  final MP23StudyScheduleControls formViewModel;
+  final StudyScheduleControls formViewModel;
 
   const ExpandableSegementItem({
     super.key,
@@ -194,7 +194,7 @@ class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
   List<Widget> _getChildrenBasedOnType(
     StudyScheduleSegmentType type,
     FormGroup segmentControl,
-    MP23StudyScheduleControls formViewModel,
+    StudyScheduleControls formViewModel,
   ) {
     switch (type) {
       case StudyScheduleSegmentType.baseline:
@@ -259,7 +259,7 @@ class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
 
 List<Widget> _getThompsonSamplingControls(
   FormGroup segmentControl,
-  MP23StudyScheduleControls formViewModel,
+  StudyScheduleControls formViewModel,
 ) {
   return [
     const SizedBox(height: 1, width: 20),

@@ -1,20 +1,21 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
 
-part 'mp23_study_schedule.g.dart';
+part 'adaptive_study_schedule.g.dart';
 
 @JsonSerializable()
-class MP23StudySchedule {
+class AdaptiveStudySchedule {
   @StudyScheduleSegmentConverter()
   List<StudyScheduleSegment> segments = [];
 
-  MP23StudySchedule();
+  AdaptiveStudySchedule();
 
-  MP23StudySchedule.withSegments(this.segments);
+  AdaptiveStudySchedule.withSegments(this.segments);
 
-  factory MP23StudySchedule.fromJson(Map<String, dynamic> json) =>
-      _$MP23StudyScheduleFromJson(json);
-  Map<String, dynamic> toJson() => _$MP23StudyScheduleToJson(this);
+  factory AdaptiveStudySchedule.fromJson(Map<String, dynamic> json) =>
+      _$AdaptiveStudyScheduleFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AdaptiveStudyScheduleToJson(this);
 }
 
 abstract class StudyScheduleSegment {
@@ -65,6 +66,7 @@ enum StudyScheduleSegmentType {
   thompsonSampling;
 
   String toJson() => name;
+
   static StudyScheduleSegmentType fromJson(String json) => values.byName(json);
 
   // todo localize

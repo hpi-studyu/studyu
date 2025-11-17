@@ -72,11 +72,17 @@ class Study extends SupabaseObjectFunctions<Study>
   late List<Intervention> interventions = [];
   @JsonKey(defaultValue: [])
   late List<Observation> observations = [];
-  @JsonKey(fromJson: _studyScheduleFromJson)
-  // todo deprecate old schedule
-  late StudySchedule schedule = StudySchedule();
-  @JsonKey(name: 'mp23_schedule', includeToJson: true, includeFromJson: false)
-  late MP23StudySchedule mp23Schedule = MP23StudySchedule();
+
+  // Internal schedule field that can contain either old StudySchedule or new AdaptiveStudySchedule
+  // When reading: supports both formats for backward compatibility
+  // When writing: always writes AdaptiveStudySchedule
+  @JsonKey(
+    name: 'schedule',
+    fromJson: _scheduleFromJson,
+    toJson: _scheduleToJson,
+  )
+  dynamic scheduleData;
+
   @JsonKey(name: 'report_specification', fromJson: _reportSpecificationFromJson)
   late ReportSpecification reportSpecification = ReportSpecification();
   @JsonKey(defaultValue: [])
@@ -117,6 +123,44 @@ class Study extends SupabaseObjectFunctions<Study>
 
   Study.withId(this.userId) : id = const Uuid().v4();
 
+  /// Public schedule property that provides backward compatibility
+  /// Returns StudySchedule for old format, or a converted StudySchedule for new format
+  /// Apps can use this to access legacy schedule properties like phaseDuration, includeBaseline, etc.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  StudySchedule get schedule {
+    if (scheduleData is StudySchedule) {
+      return scheduleData as StudySchedule;
+    }
+    // For AdaptiveSchedule, return a default StudySchedule for backward compatibility
+    // This is for old app code that still accesses schedule.phaseDuration, etc.
+    return StudySchedule();
+  }
+
+  set schedule(dynamic value) {
+    scheduleData = value;
+  }
+
+  /// Get the schedule as AdaptiveStudySchedule
+  /// This handles both old StudySchedule and new AdaptiveStudySchedule formats
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  AdaptiveStudySchedule get adaptiveSchedule {
+    if (scheduleData is AdaptiveStudySchedule) {
+      return scheduleData as AdaptiveStudySchedule;
+    } else if (scheduleData is StudySchedule) {
+      return _migrateStudyScheduleToAdaptive(scheduleData as StudySchedule);
+    }
+    return AdaptiveStudySchedule();
+  }
+
+  /// Set the adaptive schedule
+  /// This updates the internal scheduleData field
+  set adaptiveSchedule(AdaptiveStudySchedule value) {
+    scheduleData = value;
+    // Note: The scheduleData field itself will trigger autosave since it's a
+    // public field tracked by json_serializable. When used with reactive_forms
+    // in the designer, changes will be detected through form.valueChanges
+  }
+
   static List<EligibilityCriterion> _eligibilityCriteriaFromJson(dynamic json) {
     if (json == null) {
       return [];
@@ -133,11 +177,71 @@ class Study extends SupabaseObjectFunctions<Study>
     return Contact();
   }
 
-  static StudySchedule _studyScheduleFromJson(dynamic json) {
+  /// Reads schedule from JSON, supporting both old StudySchedule and new AdaptiveStudySchedule
+  static dynamic _scheduleFromJson(dynamic json) {
     if (json is Map<String, dynamic>) {
+      // Check if it's an AdaptiveStudySchedule (has 'segments' field)
+      if (json.containsKey('segments')) {
+        return AdaptiveStudySchedule.fromJson(json);
+      }
+      // Otherwise it's an old StudySchedule
       return StudySchedule.fromJson(json);
     }
-    return StudySchedule();
+    // Default to empty AdaptiveStudySchedule
+    return AdaptiveStudySchedule();
+  }
+
+  /// Writes schedule to JSON, always writes AdaptiveStudySchedule
+  static Map<String, dynamic> _scheduleToJson(dynamic scheduleData) {
+    if (scheduleData is AdaptiveStudySchedule) {
+      return scheduleData.toJson();
+    } else if (scheduleData is StudySchedule) {
+      // Migrate old StudySchedule to AdaptiveStudySchedule on save
+      return _migrateStudyScheduleToAdaptive(scheduleData).toJson();
+    }
+    return AdaptiveStudySchedule().toJson();
+  }
+
+  /// Migrates old StudySchedule to AdaptiveStudySchedule
+  static AdaptiveStudySchedule _migrateStudyScheduleToAdaptive(
+    StudySchedule oldSchedule,
+  ) {
+    final segments = <StudyScheduleSegment>[];
+
+    // Add baseline if included
+    if (oldSchedule.includeBaseline) {
+      segments.add(BaselineScheduleSegment(oldSchedule.phaseDuration));
+    }
+
+    // Add intervention segments based on sequence type
+    switch (oldSchedule.sequence) {
+      case PhaseSequence.alternating:
+        segments.add(
+          AlternatingScheduleSegment(
+            oldSchedule.phaseDuration,
+            oldSchedule.numberOfCycles,
+          ),
+        );
+      case PhaseSequence.counterBalanced:
+        segments.add(
+          CounterBalancedScheduleSegment(
+            oldSchedule.phaseDuration,
+            oldSchedule.numberOfCycles,
+          ),
+        );
+      case PhaseSequence.randomized:
+      case PhaseSequence.customized:
+        // For randomized and customized, use alternating as fallback
+        // (better migration logic can be added if needed)
+        segments.add(
+          AlternatingScheduleSegment(
+            oldSchedule.phaseDuration,
+            oldSchedule.numberOfCycles,
+          ),
+        );
+    }
+
+    return AdaptiveStudySchedule.withSegments(segments);
   }
 
   static StudyUQuestionnaire _questionnaireFromJson(dynamic json) {
@@ -157,9 +261,9 @@ class Study extends SupabaseObjectFunctions<Study>
   factory Study.fromJson(Map<String, dynamic> json) {
     final study = _$StudyFromJson(json);
 
-    final mp23ScheduleJson = json['mp23_schedule'] as Map<String, dynamic>?;
-    if (mp23ScheduleJson != null) {
-      study.mp23Schedule = MP23StudySchedule.fromJson(mp23ScheduleJson);
+    // Manually deserialize schedule field with custom deserialization
+    if (json.containsKey('schedule')) {
+      study.scheduleData = _scheduleFromJson(json['schedule']);
     }
 
     final fitbitCredentials =
@@ -229,7 +333,12 @@ class Study extends SupabaseObjectFunctions<Study>
   }
 
   @override
-  Map<String, dynamic> toJson() => _$StudyToJson(this);
+  Map<String, dynamic> toJson() {
+    final json = _$StudyToJson(this);
+    // Manually add schedule field with custom serialization
+    json['schedule'] = _scheduleToJson(scheduleData);
+    return json;
+  }
 
   // TODO: Add null checks in fromJson to allow selecting columns
   static Future<List<Study>> getResearcherDashboardStudies() =>
@@ -299,12 +408,20 @@ class Study extends SupabaseObjectFunctions<Study>
       ? missedDays.reduce((total, days) => total += days)
       : 0;
 
-  double get percentageMissedDays =>
-      totalMissedDays / (participantCount * schedule.length);
+  double get percentageMissedDays {
+    final schedLength = adaptiveSchedule.segments.isEmpty
+        ? (scheduleData is StudySchedule
+              ? (scheduleData as StudySchedule).length
+              : 0)
+        : studyDuration;
+    return schedLength > 0
+        ? totalMissedDays / (participantCount * schedLength)
+        : 0;
+  }
 
-  int get studyDuration => mp23Schedule.segments.isEmpty
+  int get studyDuration => adaptiveSchedule.segments.isEmpty
       ? 0
-      : mp23Schedule.segments
+      : adaptiveSchedule.segments
             .map((e) => e.getDuration(interventions))
             .reduce((a, b) => a + b);
 
@@ -316,7 +433,7 @@ class Study extends SupabaseObjectFunctions<Study>
 
     int remainingDays = day;
 
-    for (final segment in mp23Schedule.segments) {
+    for (final segment in adaptiveSchedule.segments) {
       final int segmentDuration = segment.getDuration(interventions);
       if (segmentDuration > remainingDays) {
         return (segment, remainingDays);
@@ -334,15 +451,27 @@ class Study extends SupabaseObjectFunctions<Study>
   }
 
   int get studyLength {
-    final phaseDuration = schedule.phaseDuration;
-    final numberOfCycles = schedule.numberOfCycles;
-    final includeBaseline = schedule.includeBaseline;
+    // If using AdaptiveSchedule, use studyDuration
+    if (scheduleData is AdaptiveStudySchedule ||
+        adaptiveSchedule.segments.isNotEmpty) {
+      return studyDuration;
+    }
+
+    // Otherwise calculate from old StudySchedule if present
+    if (scheduleData is! StudySchedule) {
+      return 0;
+    }
+
+    final scheduleObj = scheduleData as StudySchedule;
+    final phaseDuration = scheduleObj.phaseDuration;
+    final numberOfCycles = scheduleObj.numberOfCycles;
+    final includeBaseline = scheduleObj.includeBaseline;
 
     // default: 2 phases per cycle for alternating/counterbalanced/random
     int phasesPerCycle = StudySchedule.numberOfInterventions;
 
-    if (schedule.sequence == PhaseSequence.customized) {
-      final String customSequence = schedule.sequenceCustom.trim();
+    if (scheduleObj.sequence == PhaseSequence.customized) {
+      final String customSequence = scheduleObj.sequenceCustom.trim();
       if (customSequence.isEmpty) {
         phasesPerCycle = 0;
       } else {

@@ -36,7 +36,7 @@ Study _$StudyFromJson(
           ?.map((e) => Observation.fromJson(e as Map<String, dynamic>))
           .toList() ??
       []
-  ..schedule = Study._studyScheduleFromJson(json['schedule'])
+  ..scheduleData = Study._scheduleFromJson(json['schedule'])
   ..reportSpecification = Study._reportSpecificationFromJson(
     json['report_specification'],
   )
@@ -70,8 +70,7 @@ Map<String, dynamic> _$StudyToJson(Study instance) => <String, dynamic>{
   'consent': instance.consent.map((e) => e.toJson()).toList(),
   'interventions': instance.interventions.map((e) => e.toJson()).toList(),
   'observations': instance.observations.map((e) => e.toJson()).toList(),
-  'schedule': instance.schedule.toJson(),
-  'mp23_schedule': instance.mp23Schedule.toJson(),
+  'schedule': Study._scheduleToJson(instance.scheduleData),
   'report_specification': instance.reportSpecification.toJson(),
   'results': instance.results.map((e) => e.toJson()).toList(),
   'collaborator_emails': instance.collaboratorEmails,

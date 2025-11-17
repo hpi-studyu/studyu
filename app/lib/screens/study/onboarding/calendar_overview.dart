@@ -49,13 +49,13 @@ class _CalendarOverviewState extends State<CalendarOverview> {
       ],
     ];
 
-    final schedule = widget.subject?.study.mp23Schedule;
+    final schedule = widget.subject?.study.adaptiveSchedule;
     if (schedule == null) {
       throw Exception('Something went wrong, we need a schedule here');
     }
 
     final interventions = widget.subject!.study.interventions;
-    final segments = widget.subject!.study.mp23Schedule.segments;
+    final segments = widget.subject!.study.adaptiveSchedule.segments;
 
     // function for building
     // BuildContext, DateTime, DateTime
