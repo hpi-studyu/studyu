@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/tasks/intervention/checkmark_task_widget.dart';
+import 'package:studyu_app/screens/study/tasks/observation/nutrition_task_widget.dart';
 import 'package:studyu_app/screens/study/tasks/observation/questionnaire_task_widget.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/widgets/html_text.dart';
@@ -60,6 +61,12 @@ class _TaskScreenState extends State<TaskScreen> {
       case final QuestionnaireTask questionnaireTask:
         return QuestionnaireTaskWidget(
           task: questionnaireTask,
+          key: UniqueKey(),
+          completionPeriod: taskInstance.completionPeriod,
+        );
+      case final NutritionTask nutritionTask:
+        return NutritionTaskWidget(
+          task: nutritionTask,
           key: UniqueKey(),
           completionPeriod: taskInstance.completionPeriod,
         );
