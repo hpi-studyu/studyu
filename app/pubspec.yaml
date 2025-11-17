@@ -1,5 +1,5 @@
 name: studyu_app
-version: 2.12.2
+version: 2.12.3
 description: Partake in digital N-of-1 trials with the innovative StudyU Health App
 publish_to: none
 homepage: https://studyu.health
@@ -12,10 +12,9 @@ resolution: workspace
 dependencies:
   camera: ^0.11.3
   collection: ^1.19.1
-  cross_file: ^0.3.4+2
+  cross_file: ^0.3.5
   cupertino_icons: ^1.0.8
   fitbitter:
-    # path: ../../fitbitter
     git:
       url: https://github.com/hpi-studyu/fitbitter.git
       ref: master
@@ -27,8 +26,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_native_splash: ^2.4.7
-  flutter_svg: ^2.2.1
-  flutter_timezone: ^5.0.0
+  flutter_svg: ^2.2.2
+  flutter_timezone: ^5.0.1
   flutter_web_plugins:
     sdk: flutter
   flutter_widget_from_html: ^0.17.1
@@ -46,28 +45,22 @@ dependencies:
   quiver: ^3.2.2
   rainbow_color: ^2.0.1
   record: ^6.1.2
-  sentry_flutter: ^9.7.0
-  sentry_logging: ^9.7.0
+  sentry_flutter: ^9.8.0
+  sentry_logging: ^9.8.0
   shared_preferences: ^2.5.3
   statistics: ^1.2.0
-  studyu_core: ^4.7.0
-  studyu_flutter_common: ^1.10.0
+  studyu_core: ^4.7.1
+  studyu_flutter_common: ^1.10.1
   supabase: ^2.10.0
   supabase_flutter: ^2.10.3
   timeline_tile: ^2.0.0
   timezone: ^0.10.1
   touchable: ^1.0.2
-  universal_html: ^2.2.4
+  universal_html: ^2.3.0
   url_launcher: ^6.3.2
-  uuid: ^4.5.1
+  uuid: ^4.5.2
   wakelock_plus: ^1.4.0
   xml: ^6.6.1
-
-#dependency_overrides:
-#  flutter_web_auth:
-#    git:
-#      url: https://github.com/johannesvedder/flutter_web_auth.git
-#      ref: fix-android-kotlin
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4

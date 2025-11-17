@@ -1,3 +1,8 @@
+## 4.7.1
+
+ - **FIX**(designer_v2): update code for Riverpod 3.x compatibility.
+ - **FIX**: study length calculation and update localization for study schedule.
+
 ## 4.7.0
 
  - **REFACTOR**: improve code formatting and readability in body-related files.
