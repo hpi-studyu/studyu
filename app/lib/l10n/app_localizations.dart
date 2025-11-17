@@ -2251,6 +2251,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Submit'**
   String get submit;
+
+  /// No description provided for @speech_to_text_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech to text'**
+  String get speech_to_text_title;
+
+  /// No description provided for @speech_to_text_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Dictate answers with your device\'s built-in speech recognition. Audio always stays with the platform service.'**
+  String get speech_to_text_description;
+
+  /// No description provided for @speech_to_text_enable_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable speech input'**
+  String get speech_to_text_enable_label;
+
+  /// No description provided for @speech_to_text_enable_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Typing continues to work even if the microphone is unavailable.'**
+  String get speech_to_text_enable_hint;
+
+  /// No description provided for @speech_to_text_language_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferred transcription language'**
+  String get speech_to_text_language_label;
+
+  /// No description provided for @speech_to_text_language_english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get speech_to_text_language_english;
+
+  /// No description provided for @speech_to_text_language_german.
+  ///
+  /// In en, this message translates to:
+  /// **'German'**
+  String get speech_to_text_language_german;
+
+  /// No description provided for @speech_to_text_not_enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech input stays disabled until you turn it on.'**
+  String get speech_to_text_not_enabled;
+
+  /// No description provided for @speech_to_text_not_enabled_brief.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech input is currently turned off for your account.'**
+  String get speech_to_text_not_enabled_brief;
+
+  /// No description provided for @speech_to_text_go_to_settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage in Settings'**
+  String get speech_to_text_go_to_settings;
+
+  /// No description provided for @speech_to_text_unsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech input is unavailable on this device.'**
+  String get speech_to_text_unsupported;
+
+  /// No description provided for @speech_to_text_error_permission.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone permission is required for speech input.'**
+  String get speech_to_text_error_permission;
+
+  /// No description provided for @speech_to_text_error_general.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech input failed. Please try again.'**
+  String get speech_to_text_error_general;
+
+  /// No description provided for @speech_to_text_preparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing speech recognizer…'**
+  String get speech_to_text_preparing;
+
+  /// No description provided for @speech_to_text_live_caption_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Live transcription'**
+  String get speech_to_text_live_caption_hint;
+
+  /// No description provided for @speech_to_text_listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening…'**
+  String get speech_to_text_listening;
+
+  /// No description provided for @speech_to_text_press_to_speak.
+  ///
+  /// In en, this message translates to:
+  /// **'Press to speak'**
+  String get speech_to_text_press_to_speak;
+
+  /// No description provided for @speech_to_text_idle.
+  ///
+  /// In en, this message translates to:
+  /// **'Start speech input'**
+  String get speech_to_text_idle;
+
+  /// No description provided for @speech_to_text_opt_out_action.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable speech input for now'**
+  String get speech_to_text_opt_out_action;
+
+  /// No description provided for @speech_to_text_enable_short_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable again'**
+  String get speech_to_text_enable_short_label;
+
+  /// No description provided for @speech_to_text_language_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'{language}'**
+  String speech_to_text_language_badge(Object language);
 }
 
 class _AppLocalizationsDelegate

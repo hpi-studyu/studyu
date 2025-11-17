@@ -451,5 +451,31 @@
   "preview_mode_description": "You are currently in preview mode. This allows you to:\n\n• Fast-forward through study days using the \"Next Day\" button\n• Complete tasks multiple times without restrictions\n• Experience the full study flow without affecting real data\n\nImportant: Results and data from preview mode are not stored or mixed with actual participant results from running studies.",
   "preview_mode_results_not_saved": "Task completed in preview mode - results are not saved to protect study data integrity.",
   "ok": "OK",
-  "submit" : "Submit"
+  "submit" : "Submit",
+  "speech_to_text_title": "Speech to text",
+  "speech_to_text_description": "Dictate answers with your device's built-in speech recognition. Audio always stays with the platform service.",
+  "speech_to_text_enable_label": "Enable speech input",
+  "speech_to_text_enable_hint": "Typing continues to work even if the microphone is unavailable.",
+  "speech_to_text_language_label": "Preferred transcription language",
+  "speech_to_text_language_english": "English",
+  "speech_to_text_language_german": "German",
+  "speech_to_text_not_enabled": "Speech input stays disabled until you turn it on.",
+  "speech_to_text_not_enabled_brief": "Speech input is currently turned off for your account.",
+  "speech_to_text_go_to_settings": "Manage in Settings",
+  "speech_to_text_unsupported": "Speech input is unavailable on this device.",
+  "speech_to_text_error_permission": "Microphone permission is required for speech input.",
+  "speech_to_text_error_general": "Speech input failed. Please try again.",
+  "speech_to_text_preparing": "Preparing speech recognizer…",
+  "speech_to_text_live_caption_hint": "Live transcription",
+  "speech_to_text_listening": "Listening…",
+  "speech_to_text_press_to_speak": "Press to speak",
+  "speech_to_text_idle": "Start speech input",
+  "speech_to_text_opt_out_action": "Disable speech input for now",
+  "speech_to_text_enable_short_label": "Enable again",
+  "speech_to_text_language_badge": "{language}",
+  "@speech_to_text_language_badge": {
+    "placeholders": {
+      "language": {}
+    }
+  }
 }

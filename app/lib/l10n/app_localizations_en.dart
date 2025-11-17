@@ -1156,4 +1156,77 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get submit => 'Submit';
+
+  @override
+  String get speech_to_text_title => 'Speech to text';
+
+  @override
+  String get speech_to_text_description =>
+      'Dictate answers with your device\'s built-in speech recognition. Audio always stays with the platform service.';
+
+  @override
+  String get speech_to_text_enable_label => 'Enable speech input';
+
+  @override
+  String get speech_to_text_enable_hint =>
+      'Typing continues to work even if the microphone is unavailable.';
+
+  @override
+  String get speech_to_text_language_label =>
+      'Preferred transcription language';
+
+  @override
+  String get speech_to_text_language_english => 'English';
+
+  @override
+  String get speech_to_text_language_german => 'German';
+
+  @override
+  String get speech_to_text_not_enabled =>
+      'Speech input stays disabled until you turn it on.';
+
+  @override
+  String get speech_to_text_not_enabled_brief =>
+      'Speech input is currently turned off for your account.';
+
+  @override
+  String get speech_to_text_go_to_settings => 'Manage in Settings';
+
+  @override
+  String get speech_to_text_unsupported =>
+      'Speech input is unavailable on this device.';
+
+  @override
+  String get speech_to_text_error_permission =>
+      'Microphone permission is required for speech input.';
+
+  @override
+  String get speech_to_text_error_general =>
+      'Speech input failed. Please try again.';
+
+  @override
+  String get speech_to_text_preparing => 'Preparing speech recognizer…';
+
+  @override
+  String get speech_to_text_live_caption_hint => 'Live transcription';
+
+  @override
+  String get speech_to_text_listening => 'Listening…';
+
+  @override
+  String get speech_to_text_press_to_speak => 'Press to speak';
+
+  @override
+  String get speech_to_text_idle => 'Start speech input';
+
+  @override
+  String get speech_to_text_opt_out_action => 'Disable speech input for now';
+
+  @override
+  String get speech_to_text_enable_short_label => 'Enable again';
+
+  @override
+  String speech_to_text_language_badge(Object language) {
+    return '$language';
+  }
 }

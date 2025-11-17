@@ -455,5 +455,31 @@
   "preview_mode_description": "Sie befinden sich derzeit im Vorschau-Modus. Dies ermöglicht Ihnen:\n\n• Schneller Vorlauf durch Studientage mit der \"Nächster Tag\" Schaltfläche\n• Mehrfaches Abschließen von Aufgaben ohne Einschränkungen\n• Erleben des vollständigen Studienablaufs ohne Beeinflussung echter Daten\n\nWichtig: Ergebnisse und Daten aus dem Vorschau-Modus werden nicht gespeichert oder mit tatsächlichen Teilnehmerergebnissen aus laufenden Studien vermischt.",
   "preview_mode_results_not_saved": "Ergebnisse werden zum Schutz der Studienintegrität nicht gespeichert.",
   "ok": "OK",
-  "submit" : "Absenden"
+  "submit" : "Absenden",
+  "speech_to_text_title": "Sprach-zu-Text",
+  "speech_to_text_description": "Diktiere Antworten mit der integrierten Spracherkennung deines Geräts. Die Verarbeitung übernimmt der Plattformdienst.",
+  "speech_to_text_enable_label": "Sprach­eingabe aktivieren",
+  "speech_to_text_enable_hint": "Tippen funktioniert weiterhin, falls das Mikrofon blockiert ist.",
+  "speech_to_text_language_label": "Bevorzugte Transkriptionssprache",
+  "speech_to_text_language_english": "Englisch",
+  "speech_to_text_language_german": "Deutsch",
+  "speech_to_text_not_enabled": "Die Sprach­eingabe bleibt deaktiviert, bis du sie einschaltest.",
+  "speech_to_text_not_enabled_brief": "Sprach­eingabe ist für dein Konto ausgeschaltet.",
+  "speech_to_text_go_to_settings": "In den Einstellungen verwalten",
+  "speech_to_text_unsupported": "Sprach­eingabe ist auf diesem Gerät nicht verfügbar.",
+  "speech_to_text_error_permission": "Bitte erlaube den Mikrofonzugriff, um diktieren zu können.",
+  "speech_to_text_error_general": "Sprach­eingabe fehlgeschlagen. Bitte erneut versuchen.",
+  "speech_to_text_preparing": "Spracherkennung wird vorbereitet…",
+  "speech_to_text_live_caption_hint": "Live-Transkription",
+  "speech_to_text_listening": "Es wird zugehört…",
+  "speech_to_text_press_to_speak": "Zum Sprechen drücken",
+  "speech_to_text_idle": "Sprach­eingabe starten",
+  "speech_to_text_opt_out_action": "Sprach­eingabe deaktivieren",
+  "speech_to_text_enable_short_label": "Wieder aktivieren",
+  "speech_to_text_language_badge": "{language}",
+  "@speech_to_text_language_badge": {
+    "placeholders": {
+      "language": {}
+    }
+  }
 }

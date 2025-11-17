@@ -1166,4 +1166,77 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get submit => 'Absenden';
+
+  @override
+  String get speech_to_text_title => 'Sprach-zu-Text';
+
+  @override
+  String get speech_to_text_description =>
+      'Diktiere Antworten mit der integrierten Spracherkennung deines Geräts. Die Verarbeitung übernimmt der Plattformdienst.';
+
+  @override
+  String get speech_to_text_enable_label => 'Sprach­eingabe aktivieren';
+
+  @override
+  String get speech_to_text_enable_hint =>
+      'Tippen funktioniert weiterhin, falls das Mikrofon blockiert ist.';
+
+  @override
+  String get speech_to_text_language_label =>
+      'Bevorzugte Transkriptionssprache';
+
+  @override
+  String get speech_to_text_language_english => 'Englisch';
+
+  @override
+  String get speech_to_text_language_german => 'Deutsch';
+
+  @override
+  String get speech_to_text_not_enabled =>
+      'Die Sprach­eingabe bleibt deaktiviert, bis du sie einschaltest.';
+
+  @override
+  String get speech_to_text_not_enabled_brief =>
+      'Sprach­eingabe ist für dein Konto ausgeschaltet.';
+
+  @override
+  String get speech_to_text_go_to_settings => 'In den Einstellungen verwalten';
+
+  @override
+  String get speech_to_text_unsupported =>
+      'Sprach­eingabe ist auf diesem Gerät nicht verfügbar.';
+
+  @override
+  String get speech_to_text_error_permission =>
+      'Bitte erlaube den Mikrofonzugriff, um diktieren zu können.';
+
+  @override
+  String get speech_to_text_error_general =>
+      'Sprach­eingabe fehlgeschlagen. Bitte erneut versuchen.';
+
+  @override
+  String get speech_to_text_preparing => 'Spracherkennung wird vorbereitet…';
+
+  @override
+  String get speech_to_text_live_caption_hint => 'Live-Transkription';
+
+  @override
+  String get speech_to_text_listening => 'Es wird zugehört…';
+
+  @override
+  String get speech_to_text_press_to_speak => 'Zum Sprechen drücken';
+
+  @override
+  String get speech_to_text_idle => 'Sprach­eingabe starten';
+
+  @override
+  String get speech_to_text_opt_out_action => 'Sprach­eingabe deaktivieren';
+
+  @override
+  String get speech_to_text_enable_short_label => 'Wieder aktivieren';
+
+  @override
+  String speech_to_text_language_badge(Object language) {
+    return '$language';
+  }
 }
