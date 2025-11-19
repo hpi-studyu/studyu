@@ -25,7 +25,7 @@ void openAdvancedFilters(BuildContext context, WidgetRef ref) {
   ref.read(advancedFiltersOpenProvider.notifier).state = true;
 
   if (isWide) {
-    showModalSideSheet(context: context, child: const AdvancedFiltersPanel()).whenComplete(() {
+    showModalSideSheet(context: context, child: AdvancedFiltersPanel()).whenComplete(() {
       ref.read(advancedFiltersOpenProvider.notifier).state = false;
     });
   } else {
@@ -33,7 +33,7 @@ void openAdvancedFilters(BuildContext context, WidgetRef ref) {
       context: context,
       useSafeArea: true,
       isScrollControlled: true,
-      builder: (_) => const AdvancedFiltersPanel(),
+      builder: (_) => AdvancedFiltersPanel(),
     ).whenComplete(() {
       ref.read(advancedFiltersOpenProvider.notifier).state = false;
     });

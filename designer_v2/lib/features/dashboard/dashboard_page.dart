@@ -6,6 +6,7 @@ import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/domain/advanced_filters_model.dart';
+import 'package:studyu_designer_v2/domain/saved_filters.dart';
 import 'package:studyu_designer_v2/features/advanced_filters/advanced_filters_apply.dart';
 import 'package:studyu_designer_v2/features/advanced_filters/advanced_filters_controller.dart';
 import 'package:studyu_designer_v2/features/advanced_filters/advanced_filters_entry_button.dart';
@@ -15,9 +16,11 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/filtered_studies_provider.dart';
+import 'package:studyu_designer_v2/localization/saved_filters_controller.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
-
+import 'package:studyu_designer_v2/utils/empty_state.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({required this.filter, super.key});
@@ -29,11 +32,46 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+
+  bool _appliedDefaultOnce = false;
+
+
   @override
   void initState() {
     super.initState();
-    final controller = ref.read(dashboardControllerProvider.notifier);
-    runAsync(() => controller.setStudiesFilter(widget.filter));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final def = ref.read(defaultFilterProvider);   // read is fine here
+      if (def != null) {
+        ref.read(activeFilterFromSavedProvider.notifier).state = def;
+        ref.read(savedFiltersProvider.notifier).touchLastUsed(def.id);
+      }
+    });
+  }
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   if (_appliedDefaultOnce) return;         // run once per mount
+  //   _appliedDefaultOnce = true;
+
+  //   final def = ref.read(defaultFilterProvider); // read (not watch)
+  //   if (def != null) {
+  //     ref.read(activeFilterFromSavedProvider.notifier).state = def;
+  //     ref.read(savedFiltersProvider.notifier).touchLastUsed(def.id);
+  //   }
+  // }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_appliedDefaultOnce) return;
+    _appliedDefaultOnce = true;
+
+    final def = ref.read(defaultFilterProvider);
+    if (def != null) {
+      ref.read(activeFilterFromSavedProvider.notifier).state = def; // APPLY
+      ref.read(savedFiltersProvider.notifier).touchLastUsed(def.id);      
+    }
   }
 
   @override
@@ -50,7 +88,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final theme = Theme.of(context);
     final controller = ref.watch(dashboardControllerProvider.notifier);
     final state = ref.watch(dashboardControllerProvider);
-    final FilterDraft? activeDraft = ref.watch(activeFilterDraftProvider);
+    final FilterDraft builderDraft = ref.watch(filterBuilderProvider);
+    final bool hasActiveFilter = flattenConditions(builderDraft.root).isNotEmpty;
+
+    
 
     return DashboardScaffold(
       body: Column(
@@ -96,11 +137,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
 
           const SizedBox(height: 24.0),
-          if (activeDraft != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
-              child: ActiveFilterChips(draft: activeDraft),
+          if (hasActiveFilter)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Row(
+              children: [
+                Expanded(child: ActiveFilterChips(draft: builderDraft)),
+                const SizedBox(width: 8),
+                TextButton.icon(
+                  icon: const Icon(Icons.clear_all),
+                  label: const Text('Clear all'),
+                  onPressed: () => _clearAllFilters(ref),
+                ),
+              ],
             ),
+          ),
+
           FutureBuilder<StudyUUser>(
             future: ref.read(userRepositoryProvider).fetchUser(),
             builder: (context, snapshot) {
@@ -118,38 +170,40 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   final meId = _tryGetUserId(snapshot.data);
                   final meEmail = _tryGetUserEmail(snapshot.data);
 
-                  final filtered = (activeDraft == null)
-                      ? visibleStudies
-                      : visibleStudies
-                          .where(compileToPredicate(activeDraft, meId: meId, meEmail: meEmail))
-                          .toList();
+                  final filtered = !hasActiveFilter
+                        ? visibleStudies
+                        : visibleStudies
+                            .where(compileToPredicate(builderDraft, meId: meId, meEmail: meEmail))
+                            .toList();
 
+                   // If no matches after applying filters/search, show helpful empty-state.
+                  if (filtered.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 24.0),
+                      child: EmptyState(
+                        icon: Icons.content_paste_search_rounded,
+                        title: hasActiveFilter ? tr.studies_not_found : tr.studies_empty,
+                        message: hasActiveFilter
+                            ? tr.modify_query
+                            : tr.studies_empty_description,
+                        primaryLabel: hasActiveFilter ? 'Remove last condition' : null,
+                        onPrimary: hasActiveFilter ? () => _removeLastCondition(ref) : null,
+                        secondaryLabel: hasActiveFilter ? 'Clear all filters' : null,
+                        onSecondary: hasActiveFilter ? () => _clearAllConditions(ref) : null,
+                      ),
+                    );
+                  }
+
+
+                  // Otherwise render the table as usual
                   return StudiesTable(
                     studies: filtered,
                     pinnedStudies: snapshot.data!.preferences.pinnedStudies,
                     dashboardController: ref.watch(dashboardControllerProvider.notifier),
                     onSelect: controller.onSelectStudy,
-                    getActions: controller.availableActions,
-                    emptyWidget: (widget.filter == null || widget.filter == StudiesFilter.owned)
-                        ? (state.query.isNotEmpty || activeDraft != null)
-                            ? Padding(
-                                padding: const EdgeInsets.only(top: 24.0),
-                                child: EmptyBody(
-                                  icon: Icons.content_paste_search_rounded,
-                                  title: tr.studies_not_found,
-                                  description: tr.modify_query, // maybe “Clear filters”
-                                ),
-                              )
-                            : Padding(
-                                padding: const EdgeInsets.only(top: 24.0),
-                                child: EmptyBody(
-                                  icon: Icons.content_paste_search_rounded,
-                                  title: tr.studies_empty,
-                                  description: tr.studies_empty_description,
-                                ),
-                              )
-                        : const SizedBox.shrink(),
+                    getActions: controller.availableActions, emptyWidget: Container(),
                   );
+
                 },
               );
             },
@@ -159,6 +213,56 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ),
     );
   }
+  void _clearAllFilters(WidgetRef ref) {
+    // 1) Reset the builder (wipes the draft tree)
+    ref.read(filterBuilderProvider.notifier).reset();
+
+    // 2) Remove the active draft so chips disappear & filtering stops
+    ref.read(activeFilterDraftProvider.notifier).state = null;
+
+    // 3) (Optional) also clear the free-text search box
+    final dash = ref.read(dashboardControllerProvider);
+    dash.searchController.clear();
+    ref.read(dashboardControllerProvider.notifier).filterStudies('');
+  }
+
+  void _clearAllConditions(WidgetRef ref) {
+    final ctrl = ref.read(filterBuilderProvider.notifier);
+    // If you already have `reset()`, this is enough:
+    ctrl.reset();
+    // Also clear the active draft so chips disappear
+    ref.read(activeFilterDraftProvider.notifier).state = null;
+  }
+
+  void _removeLastCondition(WidgetRef ref) {
+    final draft = ref.read(filterBuilderProvider);
+    final ctrl = ref.read(filterBuilderProvider.notifier);
+
+    // Find last ConditionNode depth-first
+    ConditionNode? last;
+    GroupNode? parent;
+
+    void dfs(GroupNode g) {
+      for (final n in g.children) {
+        if (n is GroupNode) dfs(n);
+        if (n is ConditionNode) {
+          last = n;
+          parent = g;
+        }
+      }
+    }
+
+    dfs(draft.root);
+
+    if (last != null && parent != null) {
+      // Use your existing remove API if present
+      ctrl.removeNode(last!.id);
+    } else {
+      // Nothing to remove -> clear all as fallback
+      _clearAllConditions(ref);
+    }
+  }
+
 
  
   bool _sameChildren(List<FilterNode> a, List<FilterNode> b) {

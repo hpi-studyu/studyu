@@ -67,4 +67,7 @@ class SearchState extends State<Search> {
 
 class SearchController {
   late void Function(String text) setText;
+  void clear() {
+    setText('');
+  }
 }

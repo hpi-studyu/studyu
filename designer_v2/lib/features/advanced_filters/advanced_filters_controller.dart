@@ -24,6 +24,41 @@ class FilterBuilderController extends StateNotifier<FilterDraft> {
     state = state.copyWith(root: _updateGroup(state.root, groupId, (g) => g.copyWith(op: op)));
   }
 
+  // Remove the last ConditionNode in DFS order; returns true if something was removed.
+  bool removeLastCondition(String groupId) {
+    final draft = state; // assuming this is a StateNotifier with `state` exposing the draft
+    final root = draft.root;
+
+    ConditionNode? last;
+    GroupNode? parentOfLast;
+
+    void dfs(GroupNode g) {
+      for (final n in g.children) {
+        if (n is GroupNode) dfs(n);
+        if (n is ConditionNode) {
+          last = n;
+          parentOfLast = g;
+        }
+      }
+    }
+
+    dfs(root);
+    if (last == null || parentOfLast == null) return false;
+
+    parentOfLast!.children.removeWhere((n) => n.id == last!.id);
+    // write back the updated draft
+    state = draft.copyWith(root: root);
+    return true;
+  }
+
+  void clearAllConditions() {
+    final draft = state;
+    draft.root.children.clear();
+    state = draft.copyWith(root: draft.root);
+  }
+
+
+
   void addCondition(String parentGroupId) {
     final node = ConditionNode(
       id: newId(),
