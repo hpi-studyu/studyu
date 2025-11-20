@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:record/record.dart';
 import 'package:studyu_app/services/speech/speech_controller_models.dart';
+import 'package:studyu_core/env.dart' as env;
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -12,7 +13,7 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   SpeechToTextController({
     required this.onFinalTranscription,
     String? serverUrl,
-  }) : _serverUrl = serverUrl ?? 'wss://stt.ibrahimozkan.dev',
+  }) : _serverUrl = serverUrl ?? env.sttWebSocketUrl ?? '',
        _audioRecorder = AudioRecorder(),
        super(SpeechControllerState.initial(supported: _platformSupported)) {
     _ensureInitialized();
