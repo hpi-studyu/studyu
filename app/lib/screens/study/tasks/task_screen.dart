@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -96,21 +94,24 @@ Future<void> handleTaskCompletion(
         ),
       );
     }
-  } on SocketException {
-    await Cache.storeSubject(activeSubject);
   } catch (exception) {
     debugPrint("Could not save results: $exception");
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.could_not_save_results),
-        duration: const Duration(seconds: 10),
-        action: SnackBarAction(
-          label: 'Retry',
-          onPressed: () => handleTaskCompletion(context, completionCallback),
+    try {
+      await Cache.storeSubject(activeSubject);
+      debugPrint("Store subject in cache");
+    } catch (cacheError) {
+      debugPrint("Could not cache results: $cacheError");
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.could_not_save_results),
+          duration: const Duration(seconds: 10),
+          action: SnackBarAction(
+            label: 'Retry',
+            onPressed: () => handleTaskCompletion(context, completionCallback),
+          ),
         ),
-      ),
-    );
-    rethrow;
+      );
+    }
   }
 }
