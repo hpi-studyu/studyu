@@ -84,7 +84,6 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     _speechController = SpeechToTextController(
       onFinalTranscription: _insertSpeechTranscript,
       initialLanguage: language,
-      context: context,
     );
     _speechController!.addListener(_onSpeechStateChanged);
     _listeningRequested = false;
@@ -107,22 +106,14 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     }
     _lastSpeechErrorType = currentError?.type;
     if (!mounted) return;
-    final isIdleOrReady = state.status == SpeechLifecycleStatus.idle ||
-        state.status == SpeechLifecycleStatus.ready;
+
     final hasError = state.error != null;
     if (hasError && _listeningRequested) {
       _setListeningRequested(false);
     }
-    final shouldRestart =
-        _listeningRequested && isIdleOrReady && !hasError;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       setState(() {});
-      if (shouldRestart) {
-        _scheduleListeningRestart();
-      } else if (state.error != null || !_listeningRequested) {
-        _listeningRestartTimer?.cancel();
-      }
     });
   }
 
@@ -170,7 +161,6 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
 
   void _stopListeningIntent() {
     _setListeningRequested(false);
-    _listeningRestartTimer?.cancel();
     unawaited(_stopActiveListening());
   }
 
@@ -180,33 +170,6 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       setState(() {});
-    });
-  }
-
-  void _scheduleListeningRestart() {
-    if (!_listeningRequested) return;
-    final controller = _speechController;
-    if (controller == null) return;
-    final state = controller.value;
-    final readyForRestart = state.error == null &&
-        (state.status == SpeechLifecycleStatus.idle ||
-            state.status == SpeechLifecycleStatus.ready);
-    if (!readyForRestart) {
-      return;
-    }
-    _listeningRestartTimer?.cancel();
-    _listeningRestartTimer = Timer(const Duration(milliseconds: 250), () {
-      if (!_listeningRequested) return;
-      final restartController = _speechController;
-      if (restartController == null) return;
-      final restartState = restartController.value;
-      final canRestart = restartState.error == null &&
-          (restartState.status == SpeechLifecycleStatus.idle ||
-              restartState.status == SpeechLifecycleStatus.ready);
-      if (!canRestart) {
-        return;
-      }
-      unawaited(_startListeningIfRequested());
     });
   }
 
@@ -232,7 +195,8 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     }
 
     final canStart =
-        status == SpeechLifecycleStatus.idle || status == SpeechLifecycleStatus.ready;
+        status == SpeechLifecycleStatus.idle ||
+        status == SpeechLifecycleStatus.ready;
     if (!canStart) {
       return;
     }
@@ -248,13 +212,10 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
 
   Widget _buildSpeechAssistant(ThemeData theme, AppLocalizations loc) {
     if (!SpeechToTextController.isSupportedPlatform) {
-      return _speechInfoCard(loc.speech_to_text_unsupported, theme);
+      return const SizedBox.shrink();
     }
     if (!_speechPrefsInitialized) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12),
-        child: LinearProgressIndicator(),
-      );
+      return const SizedBox(height: 2, child: LinearProgressIndicator());
     }
     final controller = _speechController;
     if (controller == null) return const SizedBox.shrink();
@@ -262,56 +223,44 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     return ValueListenableBuilder<SpeechControllerState>(
       valueListenable: controller,
       builder: (context, state, _) {
-        final isListening = state.status == SpeechLifecycleStatus.listening;
         final isPreparing = state.status == SpeechLifecycleStatus.preparing;
-        final statusLabel = isListening
-            ? loc.speech_to_text_listening
-            : loc.speech_to_text_press_to_speak;
+
+        final hasError =
+            state.status == SpeechLifecycleStatus.error && state.error != null;
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(
-              child: _buildSpeechToggleButton(
-                theme,
-                loc,
-                isListening,
-                isPreparing,
+            if (isPreparing)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: LinearProgressIndicator(),
               ),
-            ),
-            const SizedBox(height: 12),
-            Center(
-              child: Text(
-                statusLabel,
-                style: theme.textTheme.bodyMedium,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            if (isPreparing) ...[
-              const LinearProgressIndicator(),
-              const SizedBox(height: 4),
-              Text(
-                loc.speech_to_text_preparing,
-                style: theme.textTheme.bodySmall,
-              ),
-            ],
-            if ((state.partialTranscript ?? '').isNotEmpty) ...[
-              const SizedBox(height: 8),
+            if ((state.partialTranscript ?? '').isNotEmpty)
               Container(
-                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.surfaceContainerHighest,
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.5,
+                  ),
                   borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: theme.colorScheme.outlineVariant),
                 ),
                 child: Text(
-                  '${loc.speech_to_text_live_caption_hint}: ${state.partialTranscript!}',
-                  style: theme.textTheme.bodyMedium,
+                  state.partialTranscript!,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontStyle: FontStyle.italic,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
-            ],
-            if (state.status == SpeechLifecycleStatus.error &&
-                state.error != null)
+            if (hasError)
               Padding(
-                padding: const EdgeInsets.only(top: 8),
+                padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
                   _mapSpeechErrorToMessage(state.error!, loc) ??
                       loc.speech_to_text_error_general,
@@ -326,66 +275,20 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     );
   }
 
-  Widget _buildSpeechToggleButton(
-    ThemeData theme,
-    AppLocalizations loc,
-    bool isListening,
-    bool isPreparing,
-  ) {
-    final disabled = isPreparing;
-    final active = _listeningRequested && !disabled;
-    final circleColor = disabled
-        ? theme.colorScheme.surfaceContainerHighest
-        : active
-            ? theme.colorScheme.primary
-            : theme.colorScheme.surface;
-    final iconColor = disabled
-        ? theme.colorScheme.onSurface.withValues(alpha: 0.38)
-        : active
-            ? theme.colorScheme.onPrimary
-            : theme.colorScheme.primary;
-    final borderColor = active
-        ? theme.colorScheme.primary
-        : theme.colorScheme.outline;
-    final iconData = active || isListening ? Icons.pause : Icons.mic;
+  Widget _buildMicButton(ThemeData theme, bool isListening, bool isPreparing) {
+    final color = isListening
+        ? theme.colorScheme.error
+        : isPreparing
+        ? theme.colorScheme.outline
+        : theme.colorScheme.primary;
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: disabled ? null : _toggleSpeechListening,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          color: circleColor,
-          shape: BoxShape.circle,
-          border: Border.all(color: borderColor, width: 2),
-          boxShadow: active
-              ? [
-                  BoxShadow(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.35),
-                    blurRadius: 12,
-                    spreadRadius: 1,
-                  ),
-                ]
-              : null,
-        ),
-        child: Icon(
-          iconData,
-          color: iconColor,
-          size: 30,
-        ),
-      ),
-    );
-  }
-
-  Widget _speechInfoCard(String text, ThemeData theme) {
-    return Card(
-      color: theme.colorScheme.surfaceContainerHighest,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Text(text, style: theme.textTheme.bodySmall),
-      ),
+    return IconButton(
+      onPressed: isPreparing ? null : _toggleSpeechListening,
+      icon: isListening
+          ? const Icon(Icons.stop_circle_outlined)
+          : const Icon(Icons.mic),
+      color: color,
+      tooltip: isListening ? 'Stop listening' : 'Start listening',
     );
   }
 
@@ -556,13 +459,29 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
                 }
             }
           },
+          decoration: InputDecoration(
+            suffixIcon:
+                SpeechToTextController.isSupportedPlatform &&
+                    _speechPrefsInitialized
+                ? ValueListenableBuilder<SpeechControllerState>(
+                    valueListenable: _speechController!,
+                    builder: (context, state, _) {
+                      return _buildMicButton(
+                        theme,
+                        state.status == SpeechLifecycleStatus.listening,
+                        state.status == SpeechLifecycleStatus.preparing,
+                      );
+                    },
+                  )
+                : null,
+          ),
         ),
         const SizedBox(height: 16),
         if (speechSection is SizedBox)
           speechSection
         else
           Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.only(bottom: 8),
             child: speechSection,
           ),
         Row(

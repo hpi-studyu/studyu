@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:record/record.dart';
 import 'package:studyu_app/services/speech/speech_controller_models.dart';
 import 'package:studyu_app/services/speech/speech_to_text_language.dart';
@@ -14,27 +13,22 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   SpeechToTextController({
     required this.onFinalTranscription,
-    required BuildContext context,
     SpeechRecognitionLanguage initialLanguage =
         SpeechRecognitionLanguage.english,
     String? serverUrl,
-  })  : _language = initialLanguage,
-        _serverUrl = serverUrl ?? 'wss://stt.ibrahimozkan.dev',
-        // ignore: unused_field
-        _context = context,
-        _audioRecorder = AudioRecorder(),
-        super(
-          SpeechControllerState.initial(
-            language: initialLanguage,
-            supported: _platformSupported,
-          ),
-        ) {
+  }) : _language = initialLanguage,
+       _serverUrl = serverUrl ?? 'wss://stt.ibrahimozkan.dev',
+       _audioRecorder = AudioRecorder(),
+       super(
+         SpeechControllerState.initial(
+           language: initialLanguage,
+           supported: _platformSupported,
+         ),
+       ) {
     _ensureInitialized();
   }
 
   final SpeechTranscriptCommit onFinalTranscription;
-  // ignore: unused_field
-  final BuildContext _context;
   final AudioRecorder _audioRecorder;
   final String _serverUrl;
 
@@ -44,8 +38,8 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   Future<bool>? _initialization;
   WebSocketChannel? _wsChannel;
   StreamSubscription<Uint8List>? _audioStreamSubscription;
-  Timer? _silenceTimer;
   bool _isListening = false;
+  bool _isReconnecting = false;
 
   static const int _sampleRate = 16000; // Vosk typically uses 16kHz
 
@@ -88,12 +82,14 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   }
 
   Future<bool> startListening() async {
+    debugPrint('[WebSocketSpeech] startListening requested');
     if (!_platformSupported) {
       _emitError(SpeechErrorType.general);
       return false;
     }
     if (value.status == SpeechLifecycleStatus.listening ||
         value.status == SpeechLifecycleStatus.preparing) {
+      debugPrint('[WebSocketSpeech] Already listening or preparing');
       return false;
     }
 
@@ -110,17 +106,19 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
         return false;
       }
 
+      _isListening = true;
       await _startWebSocketConnection();
       await _startAudioRecording();
 
-      _isListening = true;
       value = value.copyWith(
         status: SpeechLifecycleStatus.listening,
         clearError: true,
       );
+      debugPrint('[WebSocketSpeech] Listening started successfully');
 
       return true;
     } catch (e, stack) {
+      _isListening = false;
       _emitError(
         SpeechErrorType.general,
         details: 'Failed to start speech input: $e',
@@ -132,17 +130,15 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
 
   Future<void> _startWebSocketConnection() async {
     try {
-      _wsChannel = IOWebSocketChannel.connect(
-        Uri.parse(_serverUrl),
-      );
+      debugPrint('[WebSocketSpeech] Connecting to $_serverUrl...');
+      _wsChannel = IOWebSocketChannel.connect(Uri.parse(_serverUrl));
 
       // Send configuration with sample rate
       final config = {
-        'config': {
-          'sample_rate': _sampleRate,
-        }
+        'config': {'sample_rate': _sampleRate},
       };
       _wsChannel!.sink.add(jsonEncode(config));
+      debugPrint('[WebSocketSpeech] WebSocket connected, config sent');
 
       // Listen for transcription results
       _wsChannel!.stream.listen(
@@ -157,13 +153,13 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
         },
         onError: (error) {
           if (_isDisposed) return;
-          _emitError(
-            SpeechErrorType.general,
-            details: 'WebSocket error: $error',
-          );
+          debugPrint('[WebSocketSpeech] WebSocket error: $error');
+          _handleConnectionLoss();
         },
         onDone: () {
           if (_isDisposed) return;
+          debugPrint('[WebSocketSpeech] WebSocket closed by server');
+          _handleConnectionLoss();
         },
         cancelOnError: false,
       );
@@ -172,8 +168,54 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
     }
   }
 
+  void _handleConnectionLoss() {
+    debugPrint(
+      '[WebSocketSpeech] Connection loss detected. Listening: $_isListening, Reconnecting: $_isReconnecting',
+    );
+    if (_isListening && !_isReconnecting) {
+      _reconnect();
+    }
+  }
+
+  Future<void> _reconnect() async {
+    if (_isReconnecting || _isDisposed) return;
+    _isReconnecting = true;
+    debugPrint('[WebSocketSpeech] Attempting to reconnect...');
+
+    try {
+      // Close existing connection if any
+      try {
+        await _wsChannel?.sink.close();
+      } catch (_) {}
+      _wsChannel = null;
+
+      // Wait a bit before reconnecting
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      if (!_isListening) {
+        debugPrint('[WebSocketSpeech] Reconnect aborted: not listening');
+        _isReconnecting = false;
+        return;
+      }
+
+      await _startWebSocketConnection();
+      debugPrint('[WebSocketSpeech] Reconnected successfully');
+    } catch (e) {
+      debugPrint('[WebSocketSpeech] Reconnection failed: $e');
+      // If reconnection fails, we might want to stop listening or try again later
+      // For now, let's stop to avoid infinite loops if server is down
+      _emitError(
+        SpeechErrorType.general,
+        details: 'Connection lost. Please try again.',
+      );
+    } finally {
+      _isReconnecting = false;
+    }
+  }
+
   Future<void> _startAudioRecording() async {
     try {
+      debugPrint('[WebSocketSpeech] Starting audio recording...');
       final stream = await _audioRecorder.startStream(
         const RecordConfig(
           encoder: AudioEncoder.pcm16bits,
@@ -188,8 +230,13 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
       _audioStreamSubscription = stream.listen(
         (audioData) {
           if (_wsChannel != null && !_isDisposed && _isListening) {
-            _wsChannel!.sink.add(audioData);
-            _resetSilenceTimer();
+            try {
+              _wsChannel!.sink.add(audioData);
+            } catch (e) {
+              // If send fails, it might be because connection is closed
+              // The onDone/onError of WebSocket should handle this, but just in case
+              debugPrint('[WebSocketSpeech] Failed to send audio: $e');
+            }
           }
         },
         onError: (error) {
@@ -201,14 +248,10 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
         },
         cancelOnError: false,
       );
+      debugPrint('[WebSocketSpeech] Audio recording started');
     } catch (e) {
       throw Exception('Failed to start audio recording: $e');
     }
-  }
-
-  void _resetSilenceTimer() {
-    _silenceTimer?.cancel();
-    // No automatic stop on silence - user must manually stop
   }
 
   void _handleTranscriptionResult(Map<String, dynamic> result) {
@@ -222,10 +265,12 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
       // Show partial transcription (ongoing speech)
       _latestTranscript = partial.trim();
       value = value.copyWith(partialTranscript: partial);
+      // debugPrint('[WebSocketSpeech] Partial: $partial'); // Uncomment for very verbose logs
     } else if (text != null) {
       // Final transcription (silence detected or end of phrase)
       final trimmed = text.trim();
       if (trimmed.isNotEmpty) {
+        debugPrint('[WebSocketSpeech] Final transcript: $trimmed');
         // Commit the final result
         _latestTranscript = trimmed;
         _commitTranscript();
@@ -241,23 +286,27 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   }
 
   Future<void> stopListening() async {
+    debugPrint('[WebSocketSpeech] stopListening requested');
     if (!_isListening) return;
     _isListening = false;
 
     try {
-      // Cancel silence timer
-      _silenceTimer?.cancel();
-
       // Stop audio recording
       await _audioStreamSubscription?.cancel();
       await _audioRecorder.stop();
+      debugPrint('[WebSocketSpeech] Audio recording stopped');
 
       // Send EOF to WebSocket
       if (_wsChannel != null) {
-        _wsChannel!.sink.add(jsonEncode({'eof': 1}));
-        // Give server a moment to send final results
-        await Future.delayed(const Duration(milliseconds: 300));
-        await _wsChannel!.sink.close();
+        try {
+          _wsChannel!.sink.add(jsonEncode({'eof': 1}));
+          // Give server a moment to send final results
+          await Future.delayed(const Duration(milliseconds: 300));
+          await _wsChannel!.sink.close();
+          debugPrint('[WebSocketSpeech] WebSocket closed cleanly');
+        } catch (_) {
+          // Ignore errors during closing
+        }
         _wsChannel = null;
       }
 
@@ -275,8 +324,8 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   }
 
   Future<void> forceReset() async {
+    debugPrint('[WebSocketSpeech] forceReset requested');
     _isListening = false;
-    _silenceTimer?.cancel();
     try {
       await _audioStreamSubscription?.cancel();
       await _audioRecorder.stop();
@@ -307,6 +356,13 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   }) {
     _isListening = false;
     _latestTranscript = null;
+
+    // Ensure recorder is stopped on error
+    try {
+      _audioStreamSubscription?.cancel();
+      _audioRecorder.stop();
+    } catch (_) {}
+
     debugPrint('[WebSocketSpeech] error=$type details=${details ?? ''}');
     if (stackTrace != null) {
       debugPrint(stackTrace.toString());
@@ -321,7 +377,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   @override
   void dispose() {
     _isDisposed = true;
-    _silenceTimer?.cancel();
     try {
       unawaited(_audioStreamSubscription?.cancel());
       unawaited(_audioRecorder.stop());
