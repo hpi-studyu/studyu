@@ -6,8 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/routes.dart';
-import 'package:studyu_app/services/speech/speech_to_text_language.dart';
-import 'package:studyu_app/services/speech/speech_to_text_preferences.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
@@ -26,9 +24,6 @@ class _SettingsState extends State<Settings> {
   Locale? _selectedValue;
   bool? _analyticsValue;
   StudySubject? subject;
-  bool _speechPrefsRequested = false;
-  bool _speechPrefsLoading = true;
-  SpeechRecognitionLanguage _speechLanguage = SpeechRecognitionLanguage.english;
 
   @override
   void initState() {
@@ -36,34 +31,6 @@ class _SettingsState extends State<Settings> {
     _analyticsValue = AppAnalytics.isUserEnabled;
     _selectedValue = context.read<AppLanguage>().appLocal;
     subject = context.read<AppState>().activeSubject;
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_speechPrefsRequested) {
-      _speechPrefsRequested = true;
-      _loadSpeechPreferences();
-    }
-  }
-
-  Future<void> _loadSpeechPreferences() async {
-    final fallbackLocale = Localizations.maybeLocaleOf(context);
-    final language = await SpeechToTextPreferences.preferredLanguage(
-      fallbackLocale: fallbackLocale,
-    );
-    if (!mounted) return;
-    setState(() {
-      _speechLanguage = language;
-      _speechPrefsLoading = false;
-    });
-  }
-
-  Future<void> _changeSpeechLanguage(SpeechRecognitionLanguage language) async {
-    setState(() {
-      _speechLanguage = language;
-    });
-    await SpeechToTextPreferences.setPreferredLanguage(language);
   }
 
   Widget getDropdownRow(BuildContext context) {
@@ -138,52 +105,8 @@ class _SettingsState extends State<Settings> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             getDropdownRow(context),
-            const SizedBox(height: 24),
-            _buildSpeechSection(theme, loc),
             const SizedBox(height: 32),
             _buildStudySection(theme, loc),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSpeechSection(ThemeData theme, AppLocalizations loc) {
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(loc.speech_to_text_title, style: theme.textTheme.titleMedium),
-            const SizedBox(height: 8),
-            Text(
-              loc.speech_to_text_description,
-              style: theme.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 12),
-            if (_speechPrefsLoading)
-              const LinearProgressIndicator()
-            else ...[
-              DropdownMenu<SpeechRecognitionLanguage>(
-                initialSelection: _speechLanguage,
-                label: Text(loc.speech_to_text_language_label),
-                onSelected: (lang) {
-                  if (lang != null) _changeSpeechLanguage(lang);
-                },
-                dropdownMenuEntries: SpeechRecognitionLanguage.values
-                    .map(
-                      (lang) => DropdownMenuEntry(
-                        value: lang,
-                        label: _languageLabel(lang, loc),
-                      ),
-                    )
-                    .toList(),
-              ),
-              const SizedBox(height: 12),
-            ],
           ],
         ),
       ),
@@ -224,18 +147,6 @@ class _SettingsState extends State<Settings> {
         ),
       ],
     );
-  }
-
-  String _languageLabel(
-    SpeechRecognitionLanguage language,
-    AppLocalizations loc,
-  ) {
-    switch (language) {
-      case SpeechRecognitionLanguage.german:
-        return loc.speech_to_text_language_german;
-      case SpeechRecognitionLanguage.english:
-        return loc.speech_to_text_language_english;
-    }
   }
 }
 

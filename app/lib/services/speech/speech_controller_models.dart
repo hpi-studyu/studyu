@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:studyu_app/services/speech/speech_to_text_language.dart';
-
 typedef SpeechTranscriptCommit = void Function(String textSegment);
 
 enum SpeechLifecycleStatus {
@@ -29,25 +27,19 @@ class SpeechControllerState {
     required this.status,
     this.error,
     this.partialTranscript,
-    required this.language,
   });
 
-  factory SpeechControllerState.initial({
-    required SpeechRecognitionLanguage language,
-    required bool supported,
-  }) {
+  factory SpeechControllerState.initial({required bool supported}) {
     return SpeechControllerState(
       status: supported
           ? SpeechLifecycleStatus.idle
           : SpeechLifecycleStatus.unavailable,
-      language: language,
     );
   }
 
   final SpeechLifecycleStatus status;
   final SpeechError? error;
   final String? partialTranscript;
-  final SpeechRecognitionLanguage language;
 
   SpeechControllerState copyWith({
     SpeechLifecycleStatus? status,
@@ -55,7 +47,6 @@ class SpeechControllerState {
     bool clearError = false,
     String? partialTranscript,
     bool clearTranscript = false,
-    SpeechRecognitionLanguage? language,
   }) {
     return SpeechControllerState(
       status: status ?? this.status,
@@ -63,7 +54,6 @@ class SpeechControllerState {
       partialTranscript: clearTranscript
           ? null
           : partialTranscript ?? this.partialTranscript,
-      language: language ?? this.language,
     );
   }
 }

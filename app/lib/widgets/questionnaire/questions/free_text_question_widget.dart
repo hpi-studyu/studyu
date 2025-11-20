@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/services/speech/speech_to_text_controller.dart';
-import 'package:studyu_app/services/speech/speech_to_text_language.dart';
-import 'package:studyu_app/services/speech/speech_to_text_preferences.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 
 import 'package:studyu_core/core.dart';
@@ -34,8 +32,6 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   Timer? _listeningRestartTimer;
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   SpeechToTextController? _speechController;
-  bool _speechPrefsRequested = false;
-  bool _speechPrefsInitialized = false;
   bool _listeningRequested = false;
   SpeechErrorType? _lastSpeechErrorType;
 
@@ -48,9 +44,9 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!_speechPrefsRequested && SpeechToTextController.isSupportedPlatform) {
-      _speechPrefsRequested = true;
-      _initSpeechPreferences();
+    if (_speechController == null &&
+        SpeechToTextController.isSupportedPlatform) {
+      _createSpeechController();
     }
   }
 
@@ -66,24 +62,11 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     super.dispose();
   }
 
-  Future<void> _initSpeechPreferences() async {
-    final fallbackLocale = Localizations.maybeLocaleOf(context);
-    final language = await SpeechToTextPreferences.preferredLanguage(
-      fallbackLocale: fallbackLocale,
-    );
-    if (!mounted) return;
-    setState(() {
-      _speechPrefsInitialized = true;
-    });
-    _createSpeechController(language);
-  }
-
-  void _createSpeechController(SpeechRecognitionLanguage language) {
+  void _createSpeechController() {
     _speechController?.removeListener(_onSpeechStateChanged);
     _speechController?.dispose();
     _speechController = SpeechToTextController(
       onFinalTranscription: _insertSpeechTranscript,
-      initialLanguage: language,
     );
     _speechController!.addListener(_onSpeechStateChanged);
     _listeningRequested = false;
@@ -214,8 +197,8 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
     if (!SpeechToTextController.isSupportedPlatform) {
       return const SizedBox.shrink();
     }
-    if (!_speechPrefsInitialized) {
-      return const SizedBox(height: 2, child: LinearProgressIndicator());
+    if (!SpeechToTextController.isSupportedPlatform) {
+      return const SizedBox.shrink();
     }
     final controller = _speechController;
     if (controller == null) return const SizedBox.shrink();
@@ -460,9 +443,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             }
           },
           decoration: InputDecoration(
-            suffixIcon:
-                SpeechToTextController.isSupportedPlatform &&
-                    _speechPrefsInitialized
+            suffixIcon: SpeechToTextController.isSupportedPlatform
                 ? ValueListenableBuilder<SpeechControllerState>(
                     valueListenable: _speechController!,
                     builder: (context, state, _) {

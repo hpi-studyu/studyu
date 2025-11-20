@@ -5,26 +5,16 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:record/record.dart';
 import 'package:studyu_app/services/speech/speech_controller_models.dart';
-import 'package:studyu_app/services/speech/speech_to_text_language.dart';
-import 'package:studyu_app/services/speech/speech_to_text_preferences.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   SpeechToTextController({
     required this.onFinalTranscription,
-    SpeechRecognitionLanguage initialLanguage =
-        SpeechRecognitionLanguage.english,
     String? serverUrl,
-  }) : _language = initialLanguage,
-       _serverUrl = serverUrl ?? 'wss://stt.ibrahimozkan.dev',
+  }) : _serverUrl = serverUrl ?? 'wss://stt.ibrahimozkan.dev',
        _audioRecorder = AudioRecorder(),
-       super(
-         SpeechControllerState.initial(
-           language: initialLanguage,
-           supported: _platformSupported,
-         ),
-       ) {
+       super(SpeechControllerState.initial(supported: _platformSupported)) {
     _ensureInitialized();
   }
 
@@ -32,7 +22,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   final AudioRecorder _audioRecorder;
   final String _serverUrl;
 
-  SpeechRecognitionLanguage _language;
   String? _latestTranscript;
   bool _isDisposed = false;
   Future<bool>? _initialization;
@@ -55,8 +44,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
 
   bool get isListening => value.status == SpeechLifecycleStatus.listening;
 
-  SpeechRecognitionLanguage get language => _language;
-
   Future<bool> _ensureInitialized() {
     _initialization ??= _initializeRecorder();
     return _initialization!;
@@ -72,13 +59,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
       debugPrint(stack.toString());
       return false;
     }
-  }
-
-  Future<void> updateLanguage(SpeechRecognitionLanguage language) async {
-    if (_language == language) return;
-    _language = language;
-    value = value.copyWith(language: language);
-    await SpeechToTextPreferences.setPreferredLanguage(language);
   }
 
   Future<bool> startListening() async {
