@@ -15,7 +15,13 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
     String? serverUrl,
   }) : _serverUrl = serverUrl ?? env.sttWebSocketUrl ?? '',
        _audioRecorder = AudioRecorder(),
-       super(SpeechControllerState.initial(supported: _platformSupported)) {
+       super(
+         SpeechControllerState.initial(
+           supported:
+               _platformSupported &&
+               (serverUrl ?? env.sttWebSocketUrl ?? '').isNotEmpty,
+         ),
+       ) {
     _ensureInitialized();
   }
 
@@ -68,6 +74,13 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
       _emitError(SpeechErrorType.general);
       return false;
     }
+
+    if (_serverUrl.isEmpty) {
+      debugPrint(
+        '[WebSocketSpeech] WebSocket URL not configured, STT unavailable',
+      );
+      return false;
+    }
     if (value.status == SpeechLifecycleStatus.listening ||
         value.status == SpeechLifecycleStatus.preparing) {
       debugPrint('[WebSocketSpeech] Already listening or preparing');
@@ -113,15 +126,11 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
     try {
       debugPrint('[WebSocketSpeech] Connecting to $_serverUrl...');
       _wsChannel = IOWebSocketChannel.connect(Uri.parse(_serverUrl));
-
-      // Send configuration with sample rate
       final config = {
         'config': {'sample_rate': _sampleRate},
       };
       _wsChannel!.sink.add(jsonEncode(config));
       debugPrint('[WebSocketSpeech] WebSocket connected, config sent');
-
-      // Listen for transcription results
       _wsChannel!.stream.listen(
         (data) {
           if (_isDisposed) return;
@@ -183,8 +192,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
       debugPrint('[WebSocketSpeech] Reconnected successfully');
     } catch (e) {
       debugPrint('[WebSocketSpeech] Reconnection failed: $e');
-      // If reconnection fails, we might want to stop listening or try again later
-      // For now, let's stop to avoid infinite loops if server is down
       _emitError(
         SpeechErrorType.general,
         details: 'Connection lost. Please try again.',
@@ -325,8 +332,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
     final transcript = _latestTranscript;
     if (transcript != null && transcript.isNotEmpty) {
       onFinalTranscription(transcript);
-      // Don't clear immediately to avoid flicker - the next partial will replace it
-      // or we'll clear it when we get an empty final result
     }
   }
 
@@ -338,7 +343,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
     _isListening = false;
     _latestTranscript = null;
 
-    // Ensure recorder is stopped on error
     try {
       _audioStreamSubscription?.cancel();
       _audioRecorder.stop();
@@ -363,9 +367,7 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
       unawaited(_audioRecorder.stop());
       unawaited(_audioRecorder.dispose());
       unawaited(_wsChannel?.sink.close());
-    } catch (_) {
-      // Ignore dispose errors
-    }
+    } catch (_) {}
     super.dispose();
   }
 }
