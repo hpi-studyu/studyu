@@ -1,3 +1,20 @@
+## 1.15.3
+
+ - **REFACTOR**(designer_v2): centralize AsyncValue study state access.
+ - **FIX**(designer_v2): simplify AsyncValue state transitions.
+ - **FIX**(designer_v2): remove copyWithPrevious usage for Riverpod 3.x compatibility.
+ - **FIX**(designer_v2): update code for Riverpod 3.x compatibility.
+ - **FIX**: study length calculation and update localization for study schedule.
+
+## 1.15.2
+
+ - **PERF**: Improve update performance using debouncer.
+ - **FIX**: add conditional property to question form data and controller.
+ - **FIX**: filter out non-dependable question types from available questions.
+ - **FIX**: update conditional form titles to use localized strings.
+ - **FIX**: filter out ignored question types from available questions.
+ - **FIX**: update form control copying logic to handle Choice type values.
+
 ## 1.15.1
 
  - Update a dependency to the latest release.

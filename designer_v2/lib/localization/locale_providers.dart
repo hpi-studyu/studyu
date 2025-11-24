@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_designer_v2/constants.dart';
 import 'package:studyu_designer_v2/localization/locale_state.dart';
@@ -28,5 +27,5 @@ List<Locale> supportedLocales(Ref ref) {
 /// Provides the current locale, and automatically updates when the locale changes.
 @riverpod
 Locale locale(Ref ref) {
-  return ref.watch(localeStateNotifierProvider).locale;
+  return ref.watch(localeStateProvider).locale;
 }

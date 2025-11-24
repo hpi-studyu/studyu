@@ -1533,6 +1533,24 @@ abstract class AppLocalizations {
   /// **'this question'**
   String get form_array_question_visibility_logic_this_question;
 
+  /// No description provided for @form_mode_visibility_create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Condition'**
+  String get form_mode_visibility_create;
+
+  /// No description provided for @form_mode_visibility_edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Condition'**
+  String get form_mode_visibility_edit;
+
+  /// No description provided for @form_mode_visibility_readonly.
+  ///
+  /// In en, this message translates to:
+  /// **'View Condition'**
+  String get form_mode_visibility_readonly;
+
   /// No description provided for @validation_number_required.
   ///
   /// In en, this message translates to:
@@ -2256,7 +2274,7 @@ abstract class AppLocalizations {
   /// No description provided for @form_field_crossover_schedule_phase_length_tooltip.
   ///
   /// In en, this message translates to:
-  /// **'Set the number of days it takes to complete one phase in the study schedule'**
+  /// **'Number of days it takes to complete a single phase. A phase is one continuous intervention block (e.g., 7 days of A or B).'**
   String get form_field_crossover_schedule_phase_length_tooltip;
 
   /// No description provided for @form_field_crossover_schedule_phase_length_range.
@@ -2280,7 +2298,7 @@ abstract class AppLocalizations {
   /// No description provided for @form_field_crossover_schedule_num_cycles_tooltip.
   ///
   /// In en, this message translates to:
-  /// **'Define the number of repetitions for each phase in the study schedule'**
+  /// **'Alternating / Counterbalanced / Random:\nNumber of cycles (pairs of phases) to repeat. One cycle = two phases (e.g., AB or BA).\n\nCustom:\nNumber of times the full custom sequence is repeated. One cycle = the entire sequence you defined (e.g., ABBAA).'**
   String get form_field_crossover_schedule_num_cycles_tooltip;
 
   /// No description provided for @form_field_crossover_schedule_num_cycles_range.
@@ -3794,6 +3812,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Records sleep stages (wake, light, deep, REM) at 30-second to 1-minute intervals during your sleep.'**
   String get fitbit_question_type_sleep_description;
+
+  /// No description provided for @html_styling_banner_description.
+  ///
+  /// In en, this message translates to:
+  /// **'You can use basic HTML tags to style the content of the fields marked with styleable. Some examples are:'**
+  String get html_styling_banner_description;
+
+  /// No description provided for @html_styling_bold_example.
+  ///
+  /// In en, this message translates to:
+  /// **'Make your text bold'**
+  String get html_styling_bold_example;
+
+  /// No description provided for @html_styling_bold_code.
+  ///
+  /// In en, this message translates to:
+  /// **'<b>Bold text</b>'**
+  String get html_styling_bold_code;
+
+  /// No description provided for @html_styling_italic_example.
+  ///
+  /// In en, this message translates to:
+  /// **'Make your text italic'**
+  String get html_styling_italic_example;
+
+  /// No description provided for @html_styling_italic_code.
+  ///
+  /// In en, this message translates to:
+  /// **'<i>Italic text</i>'**
+  String get html_styling_italic_code;
+
+  /// No description provided for @html_styling_underline_example.
+  ///
+  /// In en, this message translates to:
+  /// **'Underline your text'**
+  String get html_styling_underline_example;
+
+  /// No description provided for @html_styling_underline_code.
+  ///
+  /// In en, this message translates to:
+  /// **'<u>Underlined text</u>'**
+  String get html_styling_underline_code;
+
+  /// No description provided for @html_styling_link_example.
+  ///
+  /// In en, this message translates to:
+  /// **'Add clickable links'**
+  String get html_styling_link_example;
+
+  /// No description provided for @html_styling_link_code.
+  ///
+  /// In en, this message translates to:
+  /// **'<a href=\"https://example.com\">Link text</a>'**
+  String get html_styling_link_code;
+
+  /// No description provided for @html_styling_linebreak_example.
+  ///
+  /// In en, this message translates to:
+  /// **'Insert line breaks'**
+  String get html_styling_linebreak_example;
+
+  /// No description provided for @html_styling_linebreak_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Line 1<br>Line 2'**
+  String get html_styling_linebreak_code;
+
+  /// No description provided for @html_styling_more_info.
+  ///
+  /// In en, this message translates to:
+  /// **'For more information, see the'**
+  String get html_styling_more_info;
+
+  /// No description provided for @html_styling_documentation_link.
+  ///
+  /// In en, this message translates to:
+  /// **'HTML documentation'**
+  String get html_styling_documentation_link;
+
+  /// No description provided for @study_schedule_learn_more.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn more about designing a study schedule'**
+  String get study_schedule_learn_more;
+
+  /// No description provided for @study_schedule_banner_explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'We use the following terminology:\n\nEach trial consists of different intervention phases (= intervention periods = intervention blocks) of a certain length.\nFor example, a trial may contain 4 phases of 7 days each, and hence last for 28 days in total.\nThere may be an additional baseline phase, which is fixed to have the same length as each phase.\nThat means a trial with 4 phases of 7 days each and an additional baseline period will last for 35 days in total.\n\nThe phases may follow different sequences.\nWe consider two interventions, A and B.\nThey can follow an alternating, counterbalanced, random, or custom design.\n\nWe define one cycle of phases as a pair of treatment phases for the alternating, counterbalanced, and random designs.\nThe random design yields either an alternating or counterbalanced sequence.\nOne cycle of the respective designs yields AB (alternating), AB (counterbalanced), or AB/BA (random).\nTwo cycles yield ABAB (alternating), ABBA (counterbalanced), or ABAB/ABBA (random).\n\nIn the custom design, a custom sequence can be defined, e.g., ABBAA.\nHere, one cycle refers to the full custom sequence, i.e., 2 cycles of ABBAA would yield ABBAAABBAA.'**
+  String get study_schedule_banner_explanation;
+
+  /// No description provided for @study_schedule_banner_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Design effective N-of-1 trials by understanding the different sequence types and how they affect your study results.'**
+  String get study_schedule_banner_description;
+
+  /// No description provided for @study_schedule_alternating_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternating: Each participant follows an ABAB pattern, switching between interventions in a predictable sequence.'**
+  String get study_schedule_alternating_description;
+
+  /// No description provided for @study_schedule_balanced_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced: Participants are randomly assigned to either ABAB or BABA sequences to reduce order effects.'**
+  String get study_schedule_balanced_description;
+
+  /// No description provided for @study_schedule_random_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Random: The sequence is completely randomized for each cycle, providing maximum variability.'**
+  String get study_schedule_random_description;
+
+  /// No description provided for @study_schedule_custom_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom: Define your own sequence pattern to meet specific study requirements.'**
+  String get study_schedule_custom_description;
 }
 
 class _AppLocalizationsDelegate

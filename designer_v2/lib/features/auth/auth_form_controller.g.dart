@@ -6,164 +6,104 @@ part of 'auth_form_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authFormControllerHash() =>
-    r'84ecba6d9db4aacbda9ebb450d21ec94280f0081';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$AuthFormController
-    extends BuildlessAutoDisposeNotifier<AsyncValue<void>> {
-  late final AuthFormKey formKeyArg;
-
-  AsyncValue<void> build(AuthFormKey formKeyArg);
-}
-
-/// See also [AuthFormController].
 @ProviderFor(AuthFormController)
-const authFormControllerProvider = AuthFormControllerFamily();
+const authFormControllerProvider = AuthFormControllerFamily._();
 
-/// See also [AuthFormController].
-class AuthFormControllerFamily extends Family<AsyncValue<void>> {
-  /// See also [AuthFormController].
-  const AuthFormControllerFamily();
+final class AuthFormControllerProvider
+    extends $NotifierProvider<AuthFormController, AsyncValue<void>> {
+  const AuthFormControllerProvider._({
+    required AuthFormControllerFamily super.from,
+    required AuthFormKey super.argument,
+  }) : super(
+         retry: null,
+         name: r'authFormControllerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [AuthFormController].
-  AuthFormControllerProvider call(AuthFormKey formKeyArg) {
-    return AuthFormControllerProvider(formKeyArg);
+  @override
+  String debugGetCreateSourceHash() => _$authFormControllerHash();
+
+  @override
+  String toString() {
+    return r'authFormControllerProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  AuthFormControllerProvider getProviderOverride(
-    covariant AuthFormControllerProvider provider,
-  ) {
-    return call(provider.formKeyArg);
-  }
+  AuthFormController create() => AuthFormController();
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'authFormControllerProvider';
-}
-
-/// See also [AuthFormController].
-class AuthFormControllerProvider
-    extends
-        AutoDisposeNotifierProviderImpl<AuthFormController, AsyncValue<void>> {
-  /// See also [AuthFormController].
-  AuthFormControllerProvider(AuthFormKey formKeyArg)
-    : this._internal(
-        () => AuthFormController()..formKeyArg = formKeyArg,
-        from: authFormControllerProvider,
-        name: r'authFormControllerProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$authFormControllerHash,
-        dependencies: AuthFormControllerFamily._dependencies,
-        allTransitiveDependencies:
-            AuthFormControllerFamily._allTransitiveDependencies,
-        formKeyArg: formKeyArg,
-      );
-
-  AuthFormControllerProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.formKeyArg,
-  }) : super.internal();
-
-  final AuthFormKey formKeyArg;
-
-  @override
-  AsyncValue<void> runNotifierBuild(covariant AuthFormController notifier) {
-    return notifier.build(formKeyArg);
-  }
-
-  @override
-  Override overrideWith(AuthFormController Function() create) {
-    return ProviderOverride(
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AsyncValue<void> value) {
+    return $ProviderOverride(
       origin: this,
-      override: AuthFormControllerProvider._internal(
-        () => create()..formKeyArg = formKeyArg,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        formKeyArg: formKeyArg,
-      ),
+      providerOverride: $SyncValueProvider<AsyncValue<void>>(value),
     );
   }
 
   @override
-  AutoDisposeNotifierProviderElement<AuthFormController, AsyncValue<void>>
-  createElement() {
-    return _AuthFormControllerProviderElement(this);
-  }
-
-  @override
   bool operator ==(Object other) {
-    return other is AuthFormControllerProvider &&
-        other.formKeyArg == formKeyArg;
+    return other is AuthFormControllerProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, formKeyArg.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin AuthFormControllerRef
-    on AutoDisposeNotifierProviderRef<AsyncValue<void>> {
-  /// The parameter `formKeyArg` of this provider.
-  AuthFormKey get formKeyArg;
-}
+String _$authFormControllerHash() =>
+    r'84ecba6d9db4aacbda9ebb450d21ec94280f0081';
 
-class _AuthFormControllerProviderElement
-    extends
-        AutoDisposeNotifierProviderElement<AuthFormController, AsyncValue<void>>
-    with AuthFormControllerRef {
-  _AuthFormControllerProviderElement(super.provider);
+final class AuthFormControllerFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          AuthFormController,
+          AsyncValue<void>,
+          AsyncValue<void>,
+          AsyncValue<void>,
+          AuthFormKey
+        > {
+  const AuthFormControllerFamily._()
+    : super(
+        retry: null,
+        name: r'authFormControllerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  AuthFormControllerProvider call(AuthFormKey formKeyArg) =>
+      AuthFormControllerProvider._(argument: formKeyArg, from: this);
 
   @override
-  AuthFormKey get formKeyArg =>
-      (origin as AuthFormControllerProvider).formKeyArg;
+  String toString() => r'authFormControllerProvider';
 }
 
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$AuthFormController extends $Notifier<AsyncValue<void>> {
+  late final _$args = ref.$arg as AuthFormKey;
+  AuthFormKey get formKeyArg => _$args;
+
+  AsyncValue<void> build(AuthFormKey formKeyArg);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref = this.ref as $Ref<AsyncValue<void>, AsyncValue<void>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, AsyncValue<void>>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

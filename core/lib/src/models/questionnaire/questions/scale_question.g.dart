@@ -27,19 +27,18 @@ ScaleQuestion _$ScaleQuestionFromJson(Map<String, dynamic> json) =>
       ..maxColor = (json['max_color'] as num?)?.toInt()
       ..step = (json['step'] as num).toDouble();
 
-Map<String, dynamic> _$ScaleQuestionToJson(
-  ScaleQuestion instance,
-) => <String, dynamic>{
-  'type': instance.type,
-  'id': instance.id,
-  if (instance.prompt case final value?) 'prompt': value,
-  if (instance.rationale case final value?) 'rationale': value,
-  if (instance.conditional?.toJson() case final value?) 'conditional': value,
-  'minimum': instance.minimum,
-  'maximum': instance.maximum,
-  'initial': instance.initial,
-  'annotations': instance.annotations.map((e) => e.toJson()).toList(),
-  if (instance.minColor case final value?) 'min_color': value,
-  if (instance.maxColor case final value?) 'max_color': value,
-  'step': instance.step,
-};
+Map<String, dynamic> _$ScaleQuestionToJson(ScaleQuestion instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'id': instance.id,
+      'prompt': ?instance.prompt,
+      'rationale': ?instance.rationale,
+      'conditional': ?instance.conditional?.toJson(),
+      'minimum': instance.minimum,
+      'maximum': instance.maximum,
+      'initial': instance.initial,
+      'annotations': instance.annotations.map((e) => e.toJson()).toList(),
+      'min_color': ?instance.minColor,
+      'max_color': ?instance.maxColor,
+      'step': instance.step,
+    };

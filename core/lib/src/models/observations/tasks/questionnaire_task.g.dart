@@ -22,9 +22,9 @@ Map<String, dynamic> _$QuestionnaireTaskToJson(QuestionnaireTask instance) =>
     <String, dynamic>{
       'type': instance.type,
       'id': instance.id,
-      if (instance.title case final value?) 'title': value,
-      if (instance.header case final value?) 'header': value,
-      if (instance.footer case final value?) 'footer': value,
+      'title': ?instance.title,
+      'header': ?instance.header,
+      'footer': ?instance.footer,
       'schedule': instance.schedule.toJson(),
       'questions': instance.questions.toJson(),
     };

@@ -17,12 +17,11 @@ PainQuestion _$PainQuestionFromJson(Map<String, dynamic> json) => PainQuestion()
           json['conditional'] as Map<String, dynamic>,
         );
 
-Map<String, dynamic> _$PainQuestionToJson(
-  PainQuestion instance,
-) => <String, dynamic>{
-  'type': instance.type,
-  'id': instance.id,
-  if (instance.prompt case final value?) 'prompt': value,
-  if (instance.rationale case final value?) 'rationale': value,
-  if (instance.conditional?.toJson() case final value?) 'conditional': value,
-};
+Map<String, dynamic> _$PainQuestionToJson(PainQuestion instance) =>
+    <String, dynamic>{
+      'type': instance.type,
+      'id': instance.id,
+      'prompt': ?instance.prompt,
+      'rationale': ?instance.rationale,
+      'conditional': ?instance.conditional?.toJson(),
+    };

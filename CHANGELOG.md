@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-11-17
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.12.3`](#studyu_app---v2123)
+ - [`studyu_core` - `v4.7.1`](#studyu_core---v471)
+ - [`studyu_designer_v2` - `v1.15.3`](#studyu_designer_v2---v1153)
+ - [`studyu_flutter_common` - `v1.10.1`](#studyu_flutter_common---v1101)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `studyu_flutter_common` - `v1.10.1`
+
+---
+
+#### `studyu_app` - `v2.12.3`
+
+ - **FIX**: fix caching.
+ - **FIX**(designer_v2): update code for Riverpod 3.x compatibility.
+ - **FIX**: null check for study invite.
+ - **FIX**(database): revoke unnecessary EXECUTE privileges and update function access policies.
+ - **FIX**: study length calculation and update localization for study schedule.
+ - **FIX**(app): offline mode was not working.
+
+#### `studyu_core` - `v4.7.1`
+
+ - **FIX**(designer_v2): update code for Riverpod 3.x compatibility.
+ - **FIX**: study length calculation and update localization for study schedule.
+
+#### `studyu_designer_v2` - `v1.15.3`
+
+ - **REFACTOR**(designer_v2): centralize AsyncValue study state access.
+ - **FIX**(designer_v2): simplify AsyncValue state transitions.
+ - **FIX**(designer_v2): remove copyWithPrevious usage for Riverpod 3.x compatibility.
+ - **FIX**(designer_v2): update code for Riverpod 3.x compatibility.
+ - **FIX**: study length calculation and update localization for study schedule.
+
+
+## 2025-09-24
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.12.2`](#studyu_app---v2122)
+ - [`studyu_designer_v2` - `v1.15.2`](#studyu_designer_v2---v1152)
+ - [`studyu_flutter_common` - `v1.10.0`](#studyu_flutter_common---v1100)
+
+---
+
+#### `studyu_app` - `v2.12.2`
+
+ - **FIX**(app): offline mode was not working.
+ - **FIX**: migrate FlutterTimezone.
+
+#### `studyu_designer_v2` - `v1.15.2`
+
+ - **PERF**: Improve update performance using debouncer.
+ - **FIX**: add conditional property to question form data and controller.
+ - **FIX**: filter out non-dependable question types from available questions.
+ - **FIX**: update conditional form titles to use localized strings.
+ - **FIX**: filter out ignored question types from available questions.
+ - **FIX**: update form control copying logic to handle Choice type values.
+
+#### `studyu_flutter_common` - `v1.10.0`
+
+ - **FIX**: update Supabase URL for production environment.
+ - **FEAT**(flutter_common): support multiple Supabase URLs and improve connection handling.
+
+
 ## 2025-09-22
 
 ### Changes

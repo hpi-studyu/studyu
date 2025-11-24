@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -332,7 +333,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get faq => 'FAQ';
 
   @override
-  String get start_study => 'Starte Studie';
+  String get start_study => 'Studie starten';
 
   @override
   String get next_day => 'Nächster Tag';
@@ -342,7 +343,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ergebnisse konnten nicht gespeichert werden.';
 
   @override
-  String get take_a_photo => 'Mache ein Foto';
+  String get take_a_photo => 'Foto aufnehmen';
 
   @override
   String get start_recording => 'Starte eine Aufnahme';
@@ -750,6 +751,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get support_email_sent_description =>
       'Ihre Support-Anfrage wurde in Ihrer E-Mail-App vorbereitet. Bitte senden Sie die E-Mail, um unser Support-Team zu erreichen und warten Sie auf eine Antwort.\n\nWenn Sie aktuell an einer Studie teilnehmen, dokumentieren Sie Ihre Ergebnisse bitte außerhalb der App, bis das Problem behoben ist. Vielen Dank für Ihr Verständnis.';
+
+  @override
+  String get no_contact_email =>
+      'Keine Kontakt-E-Mail-Adresse angegeben. Bitte wenden Sie sich an Ihre Studienleitung.';
 
   @override
   String get sync_fitbit_data => 'Fitbit-Daten synchronisieren';

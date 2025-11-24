@@ -1,3 +1,12 @@
+## 1.10.1
+
+ - Update a dependency to the latest release.
+
+## 1.10.0
+
+ - **FIX**: update Supabase URL for production environment.
+ - **FEAT**(flutter_common): support multiple Supabase URLs and improve connection handling.
+
 ## 1.9.3
 
  - **FIX**: comment out encryptedSharedPreferences option in SecureStorage.

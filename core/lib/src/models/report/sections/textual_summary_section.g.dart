@@ -24,8 +24,7 @@ Map<String, dynamic> _$TextualSummarySectionToJson(
 ) => <String, dynamic>{
   'type': instance.type,
   'id': instance.id,
-  if (instance.title case final value?) 'title': value,
-  if (instance.description case final value?) 'description': value,
-  if (instance.resultProperty?.toJson() case final value?)
-    'resultProperty': value,
+  'title': ?instance.title,
+  'description': ?instance.description,
+  'resultProperty': ?instance.resultProperty?.toJson(),
 };

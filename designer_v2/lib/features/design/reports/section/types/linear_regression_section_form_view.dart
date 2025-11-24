@@ -27,7 +27,9 @@ class LinearRegressionSectionFormView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final study = ref.watch(studyControllerProvider(studyId)).study.value!;
+    final study = ref
+        .watch(studyControllerProvider(studyId))
+        .studyValueRequired;
     final availableTasks = <Task>[
       ...study.interventions.expand((intervention) => intervention.tasks),
       ...study.observations,

@@ -11,7 +11,7 @@ class Cache {
   static bool isSynchronizing = false;
 
   static Future<void> storeSubject(StudySubject? subject) async {
-    debugPrint("Store subject in cache");
+    // debugPrint("Store subject in cache");
     if (subject == null) return;
     SecureStorage.write(cacheSubjectKey, jsonEncode(subject.toFullJson()));
     assert(subject == (await loadSubject()));
@@ -119,7 +119,7 @@ class Cache {
       // only minimal update
       // Check if progress has changed
       if (localSubject.progress.length != remoteSubject.progress.length) {
-        StudyULogger.info("Cache found different progress length");
+        StudyULogger.info("Cache synchronization: Merging progress");
         /*if (remoteSubject.progress.isNotEmpty) {
         // sort remote progress list from oldest to newest
         remoteSubject.progress.sort((a, b) =>
@@ -178,5 +178,64 @@ class Cache {
     }
     isSynchronizing = false;
     return remoteSubject;
+  }
+
+  static Future<String> getCachedUserData() async {
+    final debugInfo = StringBuffer();
+    debugInfo.writeln('=== Cached User Data Debug Info ===');
+
+    try {
+      // Check for fake StudyU email domain
+      debugInfo.writeln(
+        'Fake StudyU Email Domain: fake-studyu-email-domain.com',
+      );
+
+      // Check selected subject ID
+      if (await SecureStorage.containsKey('selected_study_object_id')) {
+        final selectedSubjectId = await SecureStorage.read(
+          'selected_study_object_id',
+        );
+        debugInfo.writeln('Selected Subject ID: $selectedSubjectId');
+      } else {
+        debugInfo.writeln('Selected Subject ID: NOT FOUND');
+      }
+
+      // Check user email
+      if (await SecureStorage.containsKey('user_email')) {
+        final userEmail = await SecureStorage.read('user_email');
+        debugInfo.writeln('User Email: $userEmail');
+      } else {
+        debugInfo.writeln('User Email: NOT FOUND');
+      }
+
+      // Check cached subject
+      if (await SecureStorage.containsKey('cache_subject')) {
+        debugInfo.writeln('Cache Subject: EXISTS (data present)');
+        try {
+          final cachedSubject = await loadSubject();
+          debugInfo.writeln('  - Subject ID: ${cachedSubject.id}');
+          debugInfo.writeln('  - Study ID: ${cachedSubject.studyId}');
+          debugInfo.writeln('  - Started At: ${cachedSubject.startedAt}');
+          debugInfo.writeln(
+            '  - Progress Count: ${cachedSubject.progress.length}',
+          );
+        } catch (e) {
+          debugInfo.writeln('  - Error loading cached subject: $e');
+        }
+      } else {
+        debugInfo.writeln('Cache Subject: NOT FOUND');
+      }
+
+      // Check user password (without revealing the actual password)
+      if (await SecureStorage.containsKey('user_password')) {
+        debugInfo.writeln('User Password: EXISTS (hidden for security)');
+      } else {
+        debugInfo.writeln('User Password: NOT FOUND');
+      }
+    } catch (e) {
+      debugInfo.writeln('Error retrieving cached data: $e');
+    }
+
+    return debugInfo.toString();
   }
 }
