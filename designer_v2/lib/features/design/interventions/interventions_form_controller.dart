@@ -89,23 +89,27 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   @override
   void setControlsFrom(InterventionsFormData data) {
-    final viewModels = data.interventionsData
-        .map(
-          (data) => InterventionFormViewModel(
-            study: study,
-            formData: data,
-            delegate: this,
-            validationSet: validationSet,
-          ),
-        )
-        .toList();
-    interventionsCollection.reset(viewModels);
-    setStudyScheduleControlsFrom(data.studyScheduleData);
+    _isUpdating = true;
+    try {
+      final viewModels = data.interventionsData
+          .map(
+            (data) => InterventionFormViewModel(
+              study: study,
+              formData: data,
+              delegate: this,
+              validationSet: validationSet,
+            ),
+          )
+          .toList();
+      interventionsCollection.reset(viewModels);
+      setStudyScheduleControlsFrom(data.studyScheduleData);
+    } finally {
+      _isUpdating = false;
+    }
   }
 
   @override
   InterventionsFormData buildFormData() {
-    print('[DEBUG] buildFormData called');
     return InterventionsFormData(
       interventionsData: interventionsCollection.formData,
       studyScheduleData: buildStudyScheduleFormData(),
@@ -114,122 +118,53 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   @override
   Future save() async {
-    print('[DEBUG] save() called');
-    print('[DEBUG] Form valid: ${form.valid}');
-    print('[DEBUG] Form dirty: $isDirty');
-    try {
-      await super.save();
-      print('[DEBUG] save() completed successfully');
-    } catch (e) {
-      print('[DEBUG] save() failed with error: $e');
-      rethrow;
-    }
+    return super.save();
   }
 
-  final List<StreamSubscription> _segmentSubscriptions = [];
+  bool _isUpdating = false;
+  final List<StreamSubscription> _autosaveSubscriptions = [];
 
   @override
   void enableAutosave({
     int debounce = Config.formAutosaveDebounce,
     bool onlyValid = true,
   }) {
-    print('[DEBUG] enableAutosave called with debounce: $debounce');
+    if (_autosaveSubscriptions.isNotEmpty) return;
 
-    // Call parent implementation for normal form controls
     super.enableAutosave(debounce: debounce, onlyValid: onlyValid);
 
-    // Additionally listen to segmentsControl changes
-    // This is needed because FormArray changes are not automatically tracked
-    // by the parent enableAutosave implementation
+    // Listen to changes in the segments array (both structure and content)
+    // We use a separate debouncer for this to avoid conflict with the base class
+    final debouncer = Debouncer(milliseconds: debounce, leading: false);
 
-    // Listen to collection changes (add/remove segments)
-    segmentsControl.collectionChanges.listen((_) {
-      print('[DEBUG] segmentsControl.collectionChanges fired');
-      print(
-        '[DEBUG] Current segments count: ${segmentsControl.controls.length}',
+    void saveChanges() {
+      if (_isUpdating) return;
+      debouncer(
+        futureBuilder: () async {
+          // Ensure segments list is up to date before saving
+          updateSegmentsFromSegmentsControl();
+          await save();
+        },
       );
-      // Update segments list from control
-      updateSegmentsFromSegmentsControl();
-      // Re-setup listeners for all segment controls
-      _setupSegmentListeners(debounce);
-      // Trigger save
-      save();
-    });
-
-    // Setup initial listeners for existing segments
-    print(
-      '[DEBUG] Setting up initial listeners for ${segmentsControl.controls.length} segments',
-    );
-    _setupSegmentListeners(debounce);
-  }
-
-  void _setupSegmentListeners(int debounce) {
-    print('[DEBUG] _setupSegmentListeners called');
-    print(
-      '[DEBUG] Cancelling ${_segmentSubscriptions.length} existing subscriptions',
-    );
-
-    // Cancel existing subscriptions
-    for (final subscription in _segmentSubscriptions) {
-      subscription.cancel();
     }
-    _segmentSubscriptions.clear();
 
-    // Create a debouncer for segment changes
-    final segmentDebouncer = Debouncer(milliseconds: debounce, leading: false);
-
-    // Listen to changes in each segment's FormControls
-    int listenerCount = 0;
-    for (int i = 0; i < segmentsControl.controls.length; i++) {
-      final segmentControl = segmentsControl.controls[i];
-      if (segmentControl is FormGroup) {
-        print('[DEBUG] Setting up listeners for segment $i');
-        for (final entry in segmentControl.controls.entries) {
-          final controlName = entry.key;
-          final control = entry.value;
-          if (control is FormControl) {
-            print(
-              '[DEBUG]   - Listening to control: $controlName (current value: ${control.value})',
-            );
-            final subscription = control.valueChanges.listen((newValue) {
-              print(
-                '[DEBUG] Control $controlName changed to: $newValue in segment $i',
-              );
-              print('[DEBUG] Calling debounced save...');
-              segmentDebouncer(
-                futureBuilder: () async {
-                  print(
-                    '[DEBUG] Debouncer executing: updating segments and saving',
-                  );
-                  // Update segments list from control
-                  updateSegmentsFromSegmentsControl();
-                  // Trigger save
-                  await save();
-                  print('[DEBUG] Save completed');
-                },
-              );
-            });
-            _segmentSubscriptions.add(subscription);
-            listenerCount++;
-          }
-        }
-      }
-    }
-    print(
-      '[DEBUG] Setup complete: $listenerCount listeners active across ${segmentsControl.controls.length} segments',
+    // Listen to deep changes in the array (values of children)
+    _autosaveSubscriptions.add(
+      segmentsControl.valueChanges.listen((_) => saveChanges()),
     );
-    print('[DEBUG] Total subscriptions: ${_segmentSubscriptions.length}');
+
+    // Listen to structural changes (add/remove)
+    _autosaveSubscriptions.add(
+      segmentsControl.collectionChanges.listen((_) => saveChanges()),
+    );
   }
 
   @override
   void dispose() {
-    print(
-      '[DEBUG] dispose called - cancelling ${_segmentSubscriptions.length} subscriptions',
-    );
-    for (final subscription in _segmentSubscriptions) {
+    for (final subscription in _autosaveSubscriptions) {
       subscription.cancel();
     }
-    _segmentSubscriptions.clear();
+    _autosaveSubscriptions.clear();
     super.dispose();
   }
 
