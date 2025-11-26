@@ -227,71 +227,66 @@ class StudyTimeline extends StatelessWidget {
       );
     }
 
-    rreturn Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: theme.colorScheme.outlineVariant),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Study Timeline", // todo localize
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Study Timeline", // todo localize
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
             ),
-            const SizedBox(height: 16),
-            SizedBox(
-              height: 50,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(25),
-                child: Row(
-                  children: segments.map((segment) {
-                    final duration = segment.getDuration(
-                      formViewModel.interventions,
-                    );
-                    final flex = duration > 0 ? duration : 1;
-                    final color = _getSegmentColor(segment.type);
-                    return Expanded(
-                      flex: flex,
-                      child: Tooltip(
-                        message: _getTooltipMessage(
-                            segment, formViewModel.interventions),
-                        child: Container(
-                          color: color,
-                          alignment: Alignment.center,
-                          child: Text(
-                            segment.name, // Using name from segment
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            height: 50,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: Row(
+                children: segments.map((segment) {
+                  final duration = segment.getDuration(
+                    formViewModel.interventions,
+                  );
+                  final flex = duration > 0 ? duration : 1;
+                  final color = _getSegmentColor(segment.type);
+                  return Expanded(
+                    flex: flex,
+                    child: Tooltip(
+                      message: _getTooltipMessage(
+                        segment,
+                        formViewModel.interventions,
+                      ),
+                      child: Container(
+                        color: color,
+                        alignment: Alignment.center,
+                        child: Text(
+                          segment.name, // Using name from segment
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    );
-                  }).toList(),
-                ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
-            const SizedBox(height: 8),
-            Row(
-              children: dayLabels,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 8),
+          Row(children: dayLabels),
+        ],
       ),
     );
   }
 
-  String _getTooltipMessage(StudyScheduleSegment segment,
-      List<Intervention> interventions) {
+  String _getTooltipMessage(
+    StudyScheduleSegment segment,
+    List<Intervention> interventions,
+  ) {
     final buffer = StringBuffer();
     buffer.writeln(segment.name);
     final totalDuration = segment.getDuration(interventions);
@@ -302,20 +297,17 @@ class StudyTimeline extends StatelessWidget {
       final numInterventions = interventions.isNotEmpty
           ? interventions.length
           : 0;
-      calculation = '${segment
-          .interventionDuration} (intervention duration in days) * ${segment
-          .cycleAmount} (cycles) * $numInterventions (interventions)';
+      calculation =
+          '${segment.interventionDuration} (intervention duration in days) * ${segment.cycleAmount} (cycles) * $numInterventions (interventions)';
     } else if (segment is CounterBalancedScheduleSegment) {
       final numInterventions = interventions.isNotEmpty
           ? interventions.length
           : 0;
-      calculation = '${segment
-          .interventionDuration} (intervention duration in days) * ${segment
-          .cycleAmount} (cycles) * $numInterventions (interventions)';
+      calculation =
+          '${segment.interventionDuration} (intervention duration in days) * ${segment.cycleAmount} (cycles) * $numInterventions (interventions)';
     } else if (segment is ThompsonSamplingScheduleSegment) {
-      calculation = '${segment
-          .interventionDuration} (intervention duration in days) * ${segment
-          .interventionDrawAmount} (draws)';
+      calculation =
+          '${segment.interventionDuration} (intervention duration in days) * ${segment.interventionDrawAmount} (draws)';
     }
 
     if (calculation != null) {
@@ -529,70 +521,6 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Builder(
-                builder: (buttonContext) => IconButton(
-                  icon: Icon(
-                    Icons.swap_horiz,
-                    color: theme.colorScheme.onSurfaceVariant,
-                    size: 20,
-                  ),
-                  onPressed: () {
-                    // Show menu to swap to a different block type
-                    final RenderBox button =
-                        buttonContext.findRenderObject()! as RenderBox;
-                    final RenderBox overlay =
-                        Navigator.of(
-                              buttonContext,
-                            ).overlay!.context.findRenderObject()!
-                            as RenderBox;
-                    final RelativeRect position = RelativeRect.fromRect(
-                      Rect.fromPoints(
-                        button.localToGlobal(Offset.zero, ancestor: overlay),
-                        button.localToGlobal(
-                          button.size.bottomRight(Offset.zero),
-                          ancestor: overlay,
-                        ),
-                      ),
-                      Offset.zero & overlay.size,
-                    );
-
-                    showMenu<StudyScheduleSegmentType>(
-                      context: buttonContext,
-                      position: position,
-                      items: StudyScheduleSegmentType.values
-                          .where((type) => type != widget.segment.type)
-                          .map((type) {
-                            return PopupMenuItem(
-                              value: type,
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 12,
-                                    height: 12,
-                                    decoration: BoxDecoration(
-                                      color: _getSegmentColor(type),
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(type.string),
-                                ],
-                              ),
-                            );
-                          })
-                          .toList(),
-                    ).then((selectedType) {
-                      if (selectedType != null) {
-                        // Swap to the new block type
-                        widget.formViewModel.swapSegmentType(
-                          widget.index,
-                          selectedType,
-                        );
-                      }
-                    });
-                  },
-                ),
-              ),
               IconButton(
                 icon: Icon(
                   Icons.delete_outline,
@@ -686,8 +614,8 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
           Expanded(
             child: ReactiveTextField(
               formControl:
-              segmentControl.control('interventionDuration')
-              as FormControl<dynamic>?,
+                  segmentControl.control('interventionDuration')
+                      as FormControl<dynamic>?,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -701,8 +629,8 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
           Expanded(
             child: ReactiveTextField(
               formControl:
-              segmentControl.control('cycleAmount')
-              as FormControl<dynamic>?,
+                  segmentControl.control('cycleAmount')
+                      as FormControl<dynamic>?,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
