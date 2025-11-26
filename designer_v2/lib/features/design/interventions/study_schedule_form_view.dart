@@ -460,7 +460,7 @@ class StudyScheduleSection extends StatefulWidget {
 }
 
 class _StudyScheduleSectionState extends State<StudyScheduleSection> {
-  bool _isExpanded = true; // Default to expanded as per design
+  bool _isExpanded = false; // Default to collapsed
 
   @override
   Widget build(BuildContext context) {
@@ -480,7 +480,7 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
       child: Theme(
         data: theme.copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          key: PageStorageKey(widget.index),
+          key: ValueKey(widget.segmentControl.hashCode),
           initiallyExpanded: _isExpanded,
           onExpansionChanged: (expanded) {
             setState(() {
@@ -689,33 +689,50 @@ List<Widget> _getThompsonSamplingControls(
   StudyScheduleControls formViewModel,
 ) {
   return [
-    const SizedBox(height: 1, width: 20),
-    ReactiveTextField(
-      formControl:
-          segmentControl.control('interventionDuration')
-              as FormControl<dynamic>?,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        // todo localize
-        labelText: 'Intervention Duration',
-      ),
-      controller: ZeroValueController(),
+    Row(
+      children: [
+        Expanded(
+          child: ReactiveTextField(
+            formControl:
+                segmentControl.control('interventionDuration')
+                    as FormControl<dynamic>?,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              // todo localize
+              labelText: 'Intervention Duration',
+            ),
+            controller: ZeroValueController(),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: ReactiveTextField(
+            formControl:
+                segmentControl.control('interventionDrawAmount')
+                    as FormControl<dynamic>?,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              // todo localize
+              labelText: 'Intervention Draw Amount',
+            ),
+            controller: ZeroValueController(),
+          ),
+        ),
+      ],
     ),
-    ReactiveTextField(
-      formControl:
-          segmentControl.control('interventionDrawAmount')
-              as FormControl<dynamic>?,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        // todo localize
-        labelText: 'Intervention Draw Amount',
-      ),
-      controller: ZeroValueController(),
-    ),
+    const SizedBox(height: 24),
     // todo localize
-    const Text("Deciding metric"),
+    Builder(
+      builder: (context) => Text(
+        "Deciding Metric",
+        style: Theme.of(
+          context,
+        ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+      ),
+    ),
+    const SizedBox(height: 16),
     DropdownButtonFormField<String>(
       initialValue:
           (segmentControl.control('observationId').value as String).isEmpty
@@ -739,6 +756,7 @@ List<Widget> _getThompsonSamplingControls(
         labelText: 'Survey',
       ),
     ),
+    const SizedBox(height: 16),
     // for the observation list all questions
     DropdownButtonFormField<String>(
       initialValue:
@@ -770,7 +788,6 @@ List<Widget> _getThompsonSamplingControls(
         labelText: 'Question',
       ),
     ),
-    const SizedBox(height: 1, width: 20),
   ];
 }
 
