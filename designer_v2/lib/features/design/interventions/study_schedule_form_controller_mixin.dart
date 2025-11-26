@@ -31,6 +31,85 @@ mixin StudyScheduleControls {
     updateSegmentsFromSegmentsControl();
   }
 
+  void swapSegmentType(int index, StudyScheduleSegmentType newType) {
+    final currentFormGroup = segmentsControl.controls[index] as FormGroup;
+    final currentType =
+        currentFormGroup.control('type').value as StudyScheduleSegmentType;
+
+    if (currentType == newType) {
+      return; // No change needed
+    }
+
+    // Create a new form group of the target type
+    FormGroup newFormGroup;
+    switch (newType) {
+      case StudyScheduleSegmentType.baseline:
+        // Try to preserve duration if coming from alternating
+        int duration = 0;
+        if (currentType == StudyScheduleSegmentType.alternating) {
+          final interventionDuration =
+              currentFormGroup.control('interventionDuration').value as int? ??
+              0;
+          final cycleAmount =
+              currentFormGroup.control('cycleAmount').value as int? ?? 0;
+          duration = interventionDuration * cycleAmount * interventions.length;
+        } else if (currentType == StudyScheduleSegmentType.thompsonSampling) {
+          final interventionDuration =
+              currentFormGroup.control('interventionDuration').value as int? ??
+              0;
+          final drawAmount =
+              currentFormGroup.control('interventionDrawAmount').value
+                  as int? ??
+              0;
+          duration = interventionDuration * drawAmount;
+        }
+        newFormGroup = createBaselineFormGroup(duration: duration);
+      case StudyScheduleSegmentType.alternating:
+        // Try to preserve duration info
+        int interventionDuration = 0;
+        if (currentType == StudyScheduleSegmentType.baseline) {
+          final totalDuration =
+              currentFormGroup.control('duration').value as int? ?? 0;
+          interventionDuration =
+              totalDuration ~/
+              (interventions.isNotEmpty ? interventions.length : 1);
+        } else if (currentType == StudyScheduleSegmentType.thompsonSampling) {
+          interventionDuration =
+              currentFormGroup.control('interventionDuration').value as int? ??
+              0;
+        }
+        newFormGroup = createAlternatingFormGroup(
+          interventionDuration: interventionDuration,
+          cycleAmount: 1,
+        );
+      case StudyScheduleSegmentType.thompsonSampling:
+        // Try to preserve duration info
+        int interventionDuration = 0;
+        if (currentType == StudyScheduleSegmentType.baseline) {
+          final totalDuration =
+              currentFormGroup.control('duration').value as int? ?? 0;
+          interventionDuration =
+              totalDuration ~/
+              (interventions.isNotEmpty ? interventions.length : 1);
+        } else if (currentType == StudyScheduleSegmentType.alternating) {
+          interventionDuration =
+              currentFormGroup.control('interventionDuration').value as int? ??
+              0;
+        }
+        newFormGroup = createThompsonSamplingFormGroup(
+          interventionDuration: interventionDuration,
+          interventionDrawAmount: 1,
+        );
+      default:
+        throw UnimplementedError();
+    }
+
+    // Replace the form group at the index
+    segmentsControl.removeAt(index);
+    segmentsControl.insert(index, newFormGroup);
+    updateSegmentsFromSegmentsControl();
+  }
+
   void addFormGroupToSegments(FormGroup formGroup) {
     segmentsControl.add(formGroup);
   }

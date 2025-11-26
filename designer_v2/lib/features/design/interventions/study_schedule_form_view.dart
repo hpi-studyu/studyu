@@ -3,12 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
-import 'package:studyu_designer_v2/common_views/primary_button.dart';
-import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
-import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
-import 'package:studyu_designer_v2/features/design/interventions/study_schedule_banner.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_controller_mixin.dart';
-import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class StudyScheduleFormView extends FormConsumerWidget {
@@ -54,25 +49,22 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
 
   StudyScheduleSegmentType selectedSegmentType =
       StudyScheduleSegmentType.baseline;
-  bool _isBannerDismissed = true;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _studyScheduleDescription(),
-        const SizedBox(height: 16.0),
-        // todo localize
-        Text(
-          "Total Duration: ${widget.formViewModel.getTotalDuration()} days",
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20),
+        StudyDurationCard(duration: widget.formViewModel.getTotalDuration()),
+        const SizedBox(height: 24.0),
+        const SizedBox(height: 24.0),
+        StudyTimeline(formViewModel: widget.formViewModel),
+        const SizedBox(height: 24.0),
         // reduce the horizontal padding so items can use more available width
         ReorderableListView(
           shrinkWrap: true,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
           buildDefaultDragHandles: false,
           children: <Widget>[
             for (
@@ -80,7 +72,7 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
               i < widget.formViewModel.segmentsControl.controls.length;
               i++
             )
-              ExpandableSegementItem(
+              StudyScheduleSection(
                 formViewModel: widget.formViewModel,
                 key: Key(i.toString()),
                 index: i,
@@ -104,117 +96,272 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
             widget.formViewModel.updateSegmentsFromSegmentsControl();
           },
         ),
-        // make the add-controls responsive as well
-        ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 900),
-          child: SizedBox(
-            width: double.infinity,
-            child: Row(
-              children: [
-                DropdownButton<StudyScheduleSegmentType>(
-                  value: selectedSegmentType,
-                  icon: const Icon(Icons.arrow_drop_down_sharp),
-                  elevation: 16,
-                  style: const TextStyle(color: Colors.deepPurple),
-                  onChanged: (StudyScheduleSegmentType? value) {
-                    setState(() {
-                      selectedSegmentType = value!;
-                    });
-                  },
-                  items: allSegmentTypes.map((StudyScheduleSegmentType type) {
-                    return DropdownMenuItem(
-                      value: type,
-                      child: Text(type.string),
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(width: 20),
-                // todo localize
-                PrimaryButton(
-                  text: 'Add to schedule',
-                  onPressed: () {
-                    widget.formViewModel.addFormGroupToSegments(
-                      widget.formViewModel.createFormGroup(selectedSegmentType),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _studyScheduleDescription() {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextParagraph(
-          text: tr.study_schedule_banner_description,
-          style: ThemeConfig.bodyTextMuted(theme),
-        ),
-        const SizedBox(height: 16.0),
-        _buildSequenceTypeInfo(
-          theme,
-          tr.study_schedule_alternating_description,
-        ),
-        const SizedBox(height: 8.0),
-        _buildSequenceTypeInfo(theme, tr.study_schedule_balanced_description),
-        const SizedBox(height: 8.0),
-        _buildSequenceTypeInfo(theme, tr.study_schedule_random_description),
-        const SizedBox(height: 8.0),
-        _buildSequenceTypeInfo(theme, tr.study_schedule_custom_description),
-        const SizedBox(height: 8.0),
-        Hyperlink(
-          icon: Icons.north_east_rounded,
-          text: tr.study_schedule_learn_more,
-          onClick: () {
-            setState(() {
-              _isBannerDismissed = false;
-            });
+        const SizedBox(height: 24.0),
+        AddScheduleBlockButton(
+          onPressed: (type) {
+            widget.formViewModel.addFormGroupToSegments(
+              widget.formViewModel.createFormGroup(type),
+            );
           },
-          visitedColor: null,
-        ),
-        const SizedBox(height: 8.0),
-        StudyScheduleBanner(
-          isDismissed: _isBannerDismissed,
-          onDismissed: () {
-            setState(() {
-              _isBannerDismissed = true;
-            });
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSequenceTypeInfo(ThemeData theme, String description) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 6,
-          height: 6,
-          margin: const EdgeInsets.only(top: 8.0, right: 12.0),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.primary,
-            shape: BoxShape.circle,
-          ),
-        ),
-        Expanded(
-          child: TextParagraph(
-            text: description,
-            style: ThemeConfig.bodyTextMuted(theme),
-          ),
         ),
       ],
     );
   }
 }
 
-class ExpandableSegementItem extends StatefulWidget {
+class StudyDurationCard extends StatelessWidget {
+  final int duration;
+
+  const StudyDurationCard({required this.duration, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
+      ),
+      color: theme.colorScheme.surface,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                "Total Study Duration", // todo localize
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE0E7FF), // Light indigo/blue
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Text(
+                "$duration days", // todo localize
+                style: const TextStyle(
+                  color: Color(0xFF4338CA), // Darker indigo/blue
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class StudyTimeline extends StatelessWidget {
+  final StudyScheduleControls formViewModel;
+
+  const StudyTimeline({required this.formViewModel, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final segments = formViewModel.segments;
+    final totalDuration = formViewModel.getTotalDuration();
+
+    if (segments.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Card(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Study Timeline", // todo localize
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 50,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(25),
+                child: Row(
+                  children: segments.map((segment) {
+                    final duration = segment.getDuration(
+                      formViewModel.interventions,
+                    );
+                    final flex = duration > 0 ? duration : 1;
+                    final color = _getSegmentColor(segment.type);
+                    return Expanded(
+                      flex: flex,
+                      child: Container(
+                        color: color,
+                        alignment: Alignment.center,
+                        child: Text(
+                          segment.name, // Using name from segment
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Day 0",
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+                if (segments.isNotEmpty)
+                  // We could add intermediate labels, but for now just start/end
+                  const Spacer(),
+                Text(
+                  "Day $totalDuration",
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _getSegmentColor(StudyScheduleSegmentType type) {
+    switch (type) {
+      case StudyScheduleSegmentType.baseline:
+        return const Color(0xFF3B82F6); // Blue
+      case StudyScheduleSegmentType.alternating:
+        return const Color(0xFF10B981); // Green
+      case StudyScheduleSegmentType.thompsonSampling:
+        return const Color(0xFFF59E0B); // Orange
+      default:
+        return Colors.grey;
+    }
+  }
+}
+
+class AddScheduleBlockButton extends StatelessWidget {
+  final Function(StudyScheduleSegmentType) onPressed;
+
+  const AddScheduleBlockButton({required this.onPressed, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Builder(
+      builder: (buttonContext) => InkWell(
+        onTap: () {
+          // Show menu to select type
+          final RenderBox button =
+              buttonContext.findRenderObject()! as RenderBox;
+          final RenderBox overlay =
+              Navigator.of(buttonContext).overlay!.context.findRenderObject()!
+                  as RenderBox;
+          final RelativeRect position = RelativeRect.fromRect(
+            Rect.fromPoints(
+              button.localToGlobal(Offset.zero, ancestor: overlay),
+              button.localToGlobal(
+                button.size.bottomRight(Offset.zero),
+                ancestor: overlay,
+              ),
+            ),
+            Offset.zero & overlay.size,
+          );
+
+          showMenu<StudyScheduleSegmentType>(
+            context: buttonContext,
+            position: position,
+            items: StudyScheduleSegmentType.values.map((type) {
+              return PopupMenuItem(
+                value: type,
+                child: Row(
+                  children: [
+                    Container(
+                      width: 12,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: _getSegmentColor(type),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(type.string),
+                  ],
+                ),
+              );
+            }).toList(),
+          ).then((value) {
+            if (value != null) {
+              onPressed(value);
+            }
+          });
+        },
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          height: 60,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: theme.colorScheme.outlineVariant,
+              // Dotted border is hard in flutter without package, using solid (default)
+            ),
+            borderRadius: BorderRadius.circular(8),
+            color: theme.colorScheme.surface,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.add_circle_outline,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "Add Schedule Block", // todo localize
+                style: TextStyle(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color _getSegmentColor(StudyScheduleSegmentType type) {
+    switch (type) {
+      case StudyScheduleSegmentType.baseline:
+        return const Color(0xFF3B82F6); // Blue
+      case StudyScheduleSegmentType.alternating:
+        return const Color(0xFF10B981); // Green
+      case StudyScheduleSegmentType.thompsonSampling:
+        return const Color(0xFFF59E0B); // Orange
+      default:
+        return Colors.grey;
+    }
+  }
+}
+
+class StudyScheduleSection extends StatefulWidget {
   final int index;
   final StudyScheduleSegment segment;
   final FormGroup segmentControl;
@@ -222,7 +369,7 @@ class ExpandableSegementItem extends StatefulWidget {
 
   final StudyScheduleControls formViewModel;
 
-  const ExpandableSegementItem({
+  const StudyScheduleSection({
     super.key,
     required this.formViewModel,
     required this.index,
@@ -232,40 +379,180 @@ class ExpandableSegementItem extends StatefulWidget {
   });
 
   @override
-  State<ExpandableSegementItem> createState() => _ExpandableSegementItemState();
+  State<StudyScheduleSection> createState() => _StudyScheduleSectionState();
 }
 
-class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
+class _StudyScheduleSectionState extends State<StudyScheduleSection> {
+  bool _isExpanded = true; // Default to expanded as per design
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final duration = widget.segment.getDuration(widget.interventions);
     final type = widget.segment.type;
+    final color = _getSegmentColor(type);
 
-    return ExpansionTile(
-      title: Text(widget.segment.name),
-      // todo localize
-      subtitle: Text("Duration: $duration days"),
-      leading: ReorderableDragStartListener(
-        index: widget.index,
-        child: const Icon(Icons.drag_handle),
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16.0),
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(color: theme.colorScheme.outlineVariant),
       ),
-      trailing: IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: () {
-          widget.formViewModel.deleteSegment(widget.index);
-        },
-      ),
-      children: [
-        Wrap(
-          runSpacing: 24.0,
-          children: _getChildrenBasedOnType(
-            type,
-            widget.segmentControl,
-            widget.formViewModel,
+      clipBehavior: Clip.antiAlias,
+      child: Theme(
+        data: theme.copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          key: PageStorageKey(widget.index),
+          initiallyExpanded: _isExpanded,
+          onExpansionChanged: (expanded) {
+            setState(() {
+              _isExpanded = expanded;
+            });
+          },
+          tilePadding: const EdgeInsets.symmetric(
+            horizontal: 16.0,
+            vertical: 8.0,
           ),
+          title: Row(
+            children: [
+              Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                widget.segment.name, // Using name from segment
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          subtitle: Text(
+            "Duration: $duration days", // todo localize
+            style: ThemeConfig.bodyTextMuted(theme),
+          ),
+          leading: ReorderableDragStartListener(
+            index: widget.index,
+            child: Icon(
+              Icons.drag_indicator,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Builder(
+                builder: (buttonContext) => IconButton(
+                  icon: Icon(
+                    Icons.swap_horiz,
+                    color: theme.colorScheme.onSurfaceVariant,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    // Show menu to swap to a different block type
+                    final RenderBox button =
+                        buttonContext.findRenderObject()! as RenderBox;
+                    final RenderBox overlay =
+                        Navigator.of(
+                              buttonContext,
+                            ).overlay!.context.findRenderObject()!
+                            as RenderBox;
+                    final RelativeRect position = RelativeRect.fromRect(
+                      Rect.fromPoints(
+                        button.localToGlobal(Offset.zero, ancestor: overlay),
+                        button.localToGlobal(
+                          button.size.bottomRight(Offset.zero),
+                          ancestor: overlay,
+                        ),
+                      ),
+                      Offset.zero & overlay.size,
+                    );
+
+                    showMenu<StudyScheduleSegmentType>(
+                      context: buttonContext,
+                      position: position,
+                      items: StudyScheduleSegmentType.values
+                          .where((type) => type != widget.segment.type)
+                          .map((type) {
+                            return PopupMenuItem(
+                              value: type,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 12,
+                                    height: 12,
+                                    decoration: BoxDecoration(
+                                      color: _getSegmentColor(type),
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(type.string),
+                                ],
+                              ),
+                            );
+                          })
+                          .toList(),
+                    ).then((selectedType) {
+                      if (selectedType != null) {
+                        // Swap to the new block type
+                        widget.formViewModel.swapSegmentType(
+                          widget.index,
+                          selectedType,
+                        );
+                      }
+                    });
+                  },
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: theme.colorScheme.error,
+                  size: 20,
+                ),
+                onPressed: () {
+                  widget.formViewModel.deleteSegment(widget.index);
+                },
+              ),
+            ],
+          ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Divider(),
+                  const SizedBox(height: 16),
+                  ..._getChildrenBasedOnType(
+                    type,
+                    widget.segmentControl,
+                    widget.formViewModel,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
+  }
+
+  Color _getSegmentColor(StudyScheduleSegmentType type) {
+    switch (type) {
+      case StudyScheduleSegmentType.baseline:
+        return const Color(0xFF3B82F6); // Blue
+      case StudyScheduleSegmentType.alternating:
+        return const Color(0xFF10B981); // Green
+      case StudyScheduleSegmentType.thompsonSampling:
+        return const Color(0xFFF59E0B); // Orange
+      default:
+        return Colors.grey;
+    }
   }
 
   List<Widget> _getChildrenBasedOnType(
@@ -287,7 +574,6 @@ class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
 
   List<Widget> _getBaselineControls(FormGroup segmentControl) {
     return [
-      const SizedBox(height: 1, width: 20),
       ReactiveTextField(
         formControl:
             segmentControl.control('duration') as FormControl<dynamic>?,
@@ -295,41 +581,50 @@ class _ExpandableSegementItemState extends State<ExpandableSegementItem> {
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           // todo localize
-          labelText: 'Duration',
+          labelText: 'Duration (days)',
+          helperText:
+              ' ', // Reserve space for helper text if needed or just spacing
         ),
         controller: ZeroValueController(),
       ),
-      const SizedBox(height: 1, width: 20),
     ];
   }
 
   List<Widget> _getAlternatingControls(FormGroup segmentControl) {
     return [
-      const SizedBox(height: 1, width: 20),
-      ReactiveTextField(
-        formControl:
-            segmentControl.control('interventionDuration')
-                as FormControl<dynamic>?,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          // todo localize
-          labelText: 'Intervention Duration',
-        ),
-        controller: ZeroValueController(),
+      Row(
+        children: [
+          Expanded(
+            child: ReactiveTextField(
+              formControl:
+                  segmentControl.control('interventionDuration')
+                      as FormControl<dynamic>?,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                // todo localize
+                labelText: 'Intervention Duration',
+              ),
+              controller: ZeroValueController(),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: ReactiveTextField(
+              formControl:
+                  segmentControl.control('cycleAmount')
+                      as FormControl<dynamic>?,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                // todo localize
+                labelText: 'Cycle Amount',
+              ),
+              controller: ZeroValueController(),
+            ),
+          ),
+        ],
       ),
-      ReactiveTextField(
-        formControl:
-            segmentControl.control('cycleAmount') as FormControl<dynamic>?,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          // todo localize
-          labelText: 'Cycle Amount',
-        ),
-        controller: ZeroValueController(),
-      ),
-      const SizedBox(height: 1, width: 20),
     ];
   }
 }
