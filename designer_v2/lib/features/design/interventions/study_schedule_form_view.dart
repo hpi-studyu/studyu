@@ -327,8 +327,6 @@ class StudyTimeline extends StatelessWidget {
         return const Color(0xFF8B5CF6); // Purple
       case StudyScheduleSegmentType.thompsonSampling:
         return const Color(0xFFF59E0B); // Orange
-      default:
-        return Colors.grey;
     }
   }
 }
@@ -341,82 +339,46 @@ class AddScheduleBlockButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Builder(
-      builder: (buttonContext) => InkWell(
-        onTap: () {
-          // Show menu to select type
-          final RenderBox button =
-              buttonContext.findRenderObject()! as RenderBox;
-          final RenderBox overlay =
-              Navigator.of(buttonContext).overlay!.context.findRenderObject()!
-                  as RenderBox;
-          final RelativeRect position = RelativeRect.fromRect(
-            Rect.fromPoints(
-              button.localToGlobal(Offset.zero, ancestor: overlay),
-              button.localToGlobal(
-                button.size.bottomRight(Offset.zero),
-                ancestor: overlay,
-              ),
-            ),
-            Offset.zero & overlay.size,
-          );
 
-          showMenu<StudyScheduleSegmentType>(
-            context: buttonContext,
-            position: position,
-            items: StudyScheduleSegmentType.values.map((type) {
-              return PopupMenuItem(
-                value: type,
-                child: Row(
-                  children: [
-                    Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: _getSegmentColor(type),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(type.string),
-                  ],
+    return PopupMenuButton<StudyScheduleSegmentType>(
+      onSelected: onPressed,
+      itemBuilder: (context) {
+        return StudyScheduleSegmentType.values.map((type) {
+          return PopupMenuItem(
+            value: type,
+            child: Row(
+              children: [
+                Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                    color: _getSegmentColor(type),
+                    shape: BoxShape.circle,
+                  ),
                 ),
-              );
-            }).toList(),
-          ).then((value) {
-            if (value != null) {
-              onPressed(value);
-            }
-          });
-        },
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          height: 60,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: theme.colorScheme.outlineVariant,
-              // Dotted border is hard in flutter without package, using solid (default)
+                const SizedBox(width: 8),
+                Text(type.string),
+              ],
             ),
-            borderRadius: BorderRadius.circular(8),
-            color: theme.colorScheme.surface,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.add_circle_outline,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                "Add Schedule Block", // todo localize
-                style: TextStyle(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
+          );
+        }).toList();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primary,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.add, color: theme.colorScheme.onPrimary),
+            const SizedBox(width: 6.0),
+            Text(
+              "Add Schedule Block", // todo localize
+              style: TextStyle(color: theme.colorScheme.onPrimary),
+            ),
+          ],
         ),
       ),
     );
@@ -432,8 +394,6 @@ class AddScheduleBlockButton extends StatelessWidget {
         return const Color(0xFF8B5CF6); // Purple
       case StudyScheduleSegmentType.thompsonSampling:
         return const Color(0xFFF59E0B); // Orange
-      default:
-        return Colors.grey;
     }
   }
 }
@@ -565,8 +525,6 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
         return const Color(0xFF8B5CF6); // Purple
       case StudyScheduleSegmentType.thompsonSampling:
         return const Color(0xFFF59E0B); // Orange
-      default:
-        return Colors.grey;
     }
   }
 
@@ -584,8 +542,6 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
         return _getCounterBalancedControls(segmentControl);
       case StudyScheduleSegmentType.thompsonSampling:
         return _getThompsonSamplingControls(segmentControl, formViewModel);
-      default:
-        return [];
     }
   }
 

@@ -126,8 +126,6 @@ mixin StudyScheduleControls {
           interventionDuration: interventionDuration,
           interventionDrawAmount: 1,
         );
-      default:
-        throw UnimplementedError();
     }
 
     // Replace the form group at the index
@@ -151,8 +149,6 @@ mixin StudyScheduleControls {
         return createCounterBalancedFormGroup();
       case StudyScheduleSegmentType.thompsonSampling:
         return createThompsonSamplingFormGroup();
-      default:
-        throw UnimplementedError();
     }
   }
 
