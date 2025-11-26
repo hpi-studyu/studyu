@@ -82,6 +82,28 @@ mixin StudyScheduleControls {
           interventionDuration: interventionDuration,
           cycleAmount: 1,
         );
+      case StudyScheduleSegmentType.counterBalanced:
+        // Try to preserve duration info
+        int interventionDuration = 0;
+        if (currentType == StudyScheduleSegmentType.baseline) {
+          final totalDuration =
+              currentFormGroup.control('duration').value as int? ?? 0;
+          interventionDuration =
+              totalDuration ~/
+              (interventions.isNotEmpty ? interventions.length : 1);
+        } else if (currentType == StudyScheduleSegmentType.thompsonSampling) {
+          interventionDuration =
+              currentFormGroup.control('interventionDuration').value as int? ??
+              0;
+        } else if (currentType == StudyScheduleSegmentType.alternating) {
+          interventionDuration =
+              currentFormGroup.control('interventionDuration').value as int? ??
+              0;
+        }
+        newFormGroup = createCounterBalancedFormGroup(
+          interventionDuration: interventionDuration,
+          cycleAmount: 1,
+        );
       case StudyScheduleSegmentType.thompsonSampling:
         // Try to preserve duration info
         int interventionDuration = 0;
@@ -92,6 +114,10 @@ mixin StudyScheduleControls {
               totalDuration ~/
               (interventions.isNotEmpty ? interventions.length : 1);
         } else if (currentType == StudyScheduleSegmentType.alternating) {
+          interventionDuration =
+              currentFormGroup.control('interventionDuration').value as int? ??
+              0;
+        } else if (currentType == StudyScheduleSegmentType.counterBalanced) {
           interventionDuration =
               currentFormGroup.control('interventionDuration').value as int? ??
               0;
@@ -112,6 +138,7 @@ mixin StudyScheduleControls {
 
   void addFormGroupToSegments(FormGroup formGroup) {
     segmentsControl.add(formGroup);
+    updateSegmentsFromSegmentsControl();
   }
 
   FormGroup createFormGroup(StudyScheduleSegmentType segmentType) {
@@ -120,6 +147,8 @@ mixin StudyScheduleControls {
         return createBaselineFormGroup();
       case StudyScheduleSegmentType.alternating:
         return createAlternatingFormGroup();
+      case StudyScheduleSegmentType.counterBalanced:
+        return createCounterBalancedFormGroup();
       case StudyScheduleSegmentType.thompsonSampling:
         return createThompsonSamplingFormGroup();
       default:
@@ -166,6 +195,19 @@ mixin StudyScheduleControls {
     });
   }
 
+  FormGroup createCounterBalancedFormGroup({
+    int interventionDuration = 0,
+    int cycleAmount = 0,
+  }) {
+    return FormGroup({
+      'type': FormControl<StudyScheduleSegmentType>(
+        value: StudyScheduleSegmentType.counterBalanced,
+      ),
+      'interventionDuration': FormControl<int>(value: interventionDuration),
+      'cycleAmount': FormControl<int>(value: cycleAmount),
+    });
+  }
+
   void updateSegmentsFromSegmentsControl() {
     segments.clear();
     for (final segmentControl in segmentsControl.controls) {
@@ -178,6 +220,13 @@ mixin StudyScheduleControls {
         case StudyScheduleSegmentType.alternating:
           segments.add(
             AlternatingScheduleSegment(
+              segment.control('interventionDuration').value as int,
+              segment.control('cycleAmount').value as int,
+            ),
+          );
+        case StudyScheduleSegmentType.counterBalanced:
+          segments.add(
+            CounterBalancedScheduleSegment(
               segment.control('interventionDuration').value as int,
               segment.control('cycleAmount').value as int,
             ),
@@ -213,6 +262,13 @@ mixin StudyScheduleControls {
             cycleAmount: element.cycleAmount,
           ),
         );
+      } else if (element is CounterBalancedScheduleSegment) {
+        addFormGroupToSegments(
+          createCounterBalancedFormGroup(
+            interventionDuration: element.interventionDuration,
+            cycleAmount: element.cycleAmount,
+          ),
+        );
       } else if (element is ThompsonSamplingScheduleSegment) {
         addFormGroupToSegments(
           createThompsonSamplingFormGroup(
@@ -240,6 +296,11 @@ mixin StudyScheduleControls {
             );
           case StudyScheduleSegmentType.alternating:
             return AlternatingScheduleSegment(
+              segment.control('interventionDuration').value as int,
+              segment.control('cycleAmount').value as int,
+            );
+          case StudyScheduleSegmentType.counterBalanced:
+            return CounterBalancedScheduleSegment(
               segment.control('interventionDuration').value as int,
               segment.control('cycleAmount').value as int,
             );

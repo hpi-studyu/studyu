@@ -77,9 +77,6 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _studyScheduleDescription(),
-        const SizedBox(height: 16.0),
-        StudyDurationCard(duration: widget.formViewModel.getTotalDuration()),
-        const SizedBox(height: 24.0),
         const SizedBox(height: 24.0),
         StudyTimeline(formViewModel: widget.formViewModel),
         const SizedBox(height: 24.0),
@@ -193,54 +190,6 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
   }
 }
 
-class StudyDurationCard extends StatelessWidget {
-  final int duration;
-
-  const StudyDurationCard({required this.duration, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: theme.colorScheme.outlineVariant),
-      ),
-      color: theme.colorScheme.surface,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                "Total Study Duration", // todo localize
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFFE0E7FF), // Light indigo/blue
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Text(
-                "$duration days", // todo localize
-                style: const TextStyle(
-                  color: Color(0xFF4338CA), // Darker indigo/blue
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class StudyTimeline extends StatelessWidget {
   final StudyScheduleControls formViewModel;
 
@@ -250,13 +199,35 @@ class StudyTimeline extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final segments = formViewModel.segments;
-    final totalDuration = formViewModel.getTotalDuration();
 
     if (segments.isEmpty) {
       return const SizedBox.shrink();
     }
 
-    return Card(
+    int currentDay = 0;
+    final List<Widget> dayLabels = [
+      const Text("Day 0", style: TextStyle(color: Colors.grey, fontSize: 12)),
+    ];
+
+    for (final segment in segments) {
+      final duration = segment.getDuration(formViewModel.interventions);
+      final flex = duration > 0 ? duration : 1;
+      currentDay += duration;
+      dayLabels.add(
+        Expanded(
+          flex: flex,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              "Day $currentDay",
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            ),
+          ),
+        ),
+      );
+    }
+
+    rreturn Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
@@ -288,7 +259,8 @@ class StudyTimeline extends StatelessWidget {
                     return Expanded(
                       flex: flex,
                       child: Tooltip(
-                        message: '${segment.name}\nDuration: $duration days',
+                        message: _getTooltipMessage(
+                            segment, formViewModel.interventions),
                         child: Container(
                           color: color,
                           alignment: Alignment.center,
@@ -310,25 +282,47 @@ class StudyTimeline extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Day 0",
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-                if (segments.isNotEmpty)
-                  // We could add intermediate labels, but for now just start/end
-                  const Spacer(),
-                Text(
-                  "Day $totalDuration",
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-              ],
+              children: dayLabels,
             ),
           ],
         ),
       ),
     );
+  }
+
+  String _getTooltipMessage(StudyScheduleSegment segment,
+      List<Intervention> interventions) {
+    final buffer = StringBuffer();
+    buffer.writeln(segment.name);
+    final totalDuration = segment.getDuration(interventions);
+    buffer.writeln('Total Duration: $totalDuration days');
+
+    String? calculation;
+    if (segment is AlternatingScheduleSegment) {
+      final numInterventions = interventions.isNotEmpty
+          ? interventions.length
+          : 0;
+      calculation = '${segment
+          .interventionDuration} (intervention duration in days) * ${segment
+          .cycleAmount} (cycles) * $numInterventions (interventions)';
+    } else if (segment is CounterBalancedScheduleSegment) {
+      final numInterventions = interventions.isNotEmpty
+          ? interventions.length
+          : 0;
+      calculation = '${segment
+          .interventionDuration} (intervention duration in days) * ${segment
+          .cycleAmount} (cycles) * $numInterventions (interventions)';
+    } else if (segment is ThompsonSamplingScheduleSegment) {
+      calculation = '${segment
+          .interventionDuration} (intervention duration in days) * ${segment
+          .interventionDrawAmount} (draws)';
+    }
+
+    if (calculation != null) {
+      buffer.write('Calculation: $calculation');
+    }
+
+    return buffer.toString();
   }
 
   Color _getSegmentColor(StudyScheduleSegmentType type) {
@@ -337,6 +331,8 @@ class StudyTimeline extends StatelessWidget {
         return const Color(0xFF3B82F6); // Blue
       case StudyScheduleSegmentType.alternating:
         return const Color(0xFF10B981); // Green
+      case StudyScheduleSegmentType.counterBalanced:
+        return const Color(0xFF8B5CF6); // Purple
       case StudyScheduleSegmentType.thompsonSampling:
         return const Color(0xFFF59E0B); // Orange
       default:
@@ -440,6 +436,8 @@ class AddScheduleBlockButton extends StatelessWidget {
         return const Color(0xFF3B82F6); // Blue
       case StudyScheduleSegmentType.alternating:
         return const Color(0xFF10B981); // Green
+      case StudyScheduleSegmentType.counterBalanced:
+        return const Color(0xFF8B5CF6); // Purple
       case StudyScheduleSegmentType.thompsonSampling:
         return const Color(0xFFF59E0B); // Orange
       default:
@@ -635,6 +633,8 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
         return const Color(0xFF3B82F6); // Blue
       case StudyScheduleSegmentType.alternating:
         return const Color(0xFF10B981); // Green
+      case StudyScheduleSegmentType.counterBalanced:
+        return const Color(0xFF8B5CF6); // Purple
       case StudyScheduleSegmentType.thompsonSampling:
         return const Color(0xFFF59E0B); // Orange
       default:
@@ -652,6 +652,8 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
         return _getBaselineControls(segmentControl);
       case StudyScheduleSegmentType.alternating:
         return _getAlternatingControls(segmentControl);
+      case StudyScheduleSegmentType.counterBalanced:
+        return _getCounterBalancedControls(segmentControl);
       case StudyScheduleSegmentType.thompsonSampling:
         return _getThompsonSamplingControls(segmentControl, formViewModel);
       default:
@@ -678,6 +680,44 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
   }
 
   List<Widget> _getAlternatingControls(FormGroup segmentControl) {
+    return [
+      Row(
+        children: [
+          Expanded(
+            child: ReactiveTextField(
+              formControl:
+              segmentControl.control('interventionDuration')
+              as FormControl<dynamic>?,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                // todo localize
+                labelText: 'Intervention Duration',
+              ),
+              controller: ZeroValueController(),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: ReactiveTextField(
+              formControl:
+              segmentControl.control('cycleAmount')
+              as FormControl<dynamic>?,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                // todo localize
+                labelText: 'Cycle Amount',
+              ),
+              controller: ZeroValueController(),
+            ),
+          ),
+        ],
+      ),
+    ];
+  }
+
+  List<Widget> _getCounterBalancedControls(FormGroup segmentControl) {
     return [
       Row(
         children: [
