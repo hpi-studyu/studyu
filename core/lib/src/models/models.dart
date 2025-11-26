@@ -6,6 +6,7 @@ export 'expressions/expression.dart';
 export 'expressions/types/types.dart';
 export 'fitbit/fitbit_models.dart';
 export 'interventions/interventions.dart';
+export 'nutrition/nutrition_models.dart';
 export 'observations/observations.dart';
 export 'questionnaire/questionnaire_models.dart';
 export 'report/report_models.dart';
