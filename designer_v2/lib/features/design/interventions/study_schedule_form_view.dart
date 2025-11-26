@@ -5,7 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
+import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
+import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
+import 'package:studyu_designer_v2/features/design/interventions/study_schedule_banner.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_controller_mixin.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/theme.dart';
 
 class StudyScheduleFormView extends FormConsumerWidget {
@@ -47,6 +51,7 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
 
   StudyScheduleSegmentType selectedSegmentType =
       StudyScheduleSegmentType.baseline;
+  bool _isBannerDismissed = true;
 
   late final StreamSubscription _subscription;
 
@@ -71,6 +76,8 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _studyScheduleDescription(),
+        const SizedBox(height: 16.0),
         StudyDurationCard(duration: widget.formViewModel.getTotalDuration()),
         const SizedBox(height: 24.0),
         const SizedBox(height: 24.0),
@@ -122,6 +129,65 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
             );
           },
         ),
+      ],
+    );
+  }
+
+  Widget _studyScheduleDescription() {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextParagraph(text: tr.study_schedule_banner_description),
+        const SizedBox(height: 16.0),
+        _buildSequenceTypeInfo(
+          theme,
+          tr.study_schedule_alternating_description,
+        ),
+        const SizedBox(height: 8.0),
+        _buildSequenceTypeInfo(theme, tr.study_schedule_balanced_description),
+        const SizedBox(height: 8.0),
+        _buildSequenceTypeInfo(theme, tr.study_schedule_random_description),
+        const SizedBox(height: 8.0),
+        _buildSequenceTypeInfo(theme, tr.study_schedule_custom_description),
+        const SizedBox(height: 8.0),
+        Hyperlink(
+          icon: Icons.north_east_rounded,
+          text: tr.study_schedule_learn_more,
+          onClick: () {
+            setState(() {
+              _isBannerDismissed = false;
+            });
+          },
+          visitedColor: null,
+        ),
+        const SizedBox(height: 8.0),
+        StudyScheduleBanner(
+          isDismissed: _isBannerDismissed,
+          onDismissed: () {
+            setState(() {
+              _isBannerDismissed = true;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSequenceTypeInfo(ThemeData theme, String description) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 6,
+          height: 6,
+          margin: const EdgeInsets.only(top: 8.0, right: 12.0),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary,
+            shape: BoxShape.circle,
+          ),
+        ),
+        Expanded(child: TextParagraph(text: description)),
       ],
     );
   }
@@ -221,17 +287,20 @@ class StudyTimeline extends StatelessWidget {
                     final color = _getSegmentColor(segment.type);
                     return Expanded(
                       flex: flex,
-                      child: Container(
-                        color: color,
-                        alignment: Alignment.center,
-                        child: Text(
-                          segment.name, // Using name from segment
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                      child: Tooltip(
+                        message: '${segment.name}\nDuration: $duration days',
+                        child: Container(
+                          color: color,
+                          alignment: Alignment.center,
+                          child: Text(
+                            segment.name, // Using name from segment
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     );
