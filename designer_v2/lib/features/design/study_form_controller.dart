@@ -169,11 +169,13 @@ class StudyFormViewModel extends FormViewModel<Study>
 
   @override
   Future onSave(FormViewModel formViewModel, FormMode prevFormMode) async {
+    print('[DEBUG-DEEP] StudyFormViewModel.onSave called');
     assert(prevFormMode == FormMode.edit);
     await _applyAndSaveSubform(formViewModel.formData! as IStudyFormData);
   }
 
   Future _applyAndSaveSubform(IStudyFormData subformData) {
+    print('[DEBUG-DEEP] _applyAndSaveSubform called');
     studyDirtyCopy ??= formData!.exactDuplicate();
     subformData.apply(studyDirtyCopy!);
     // Flush the on-write study copy to the repository and clear it

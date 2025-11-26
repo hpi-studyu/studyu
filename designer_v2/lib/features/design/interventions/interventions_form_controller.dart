@@ -89,6 +89,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   @override
   void setControlsFrom(InterventionsFormData data) {
+    print('[DEBUG-DEEP] setControlsFrom called');
     _isUpdating = true;
     try {
       final viewModels = data.interventionsData
@@ -105,6 +106,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
       setStudyScheduleControlsFrom(data.studyScheduleData);
     } finally {
       _isUpdating = false;
+      print('[DEBUG-DEEP] setControlsFrom finished');
     }
   }
 
@@ -118,7 +120,14 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   @override
   Future save() async {
-    return super.save();
+    print('[DEBUG-DEEP] save() called. isDirty: $isDirty');
+    try {
+      await super.save();
+      print('[DEBUG-DEEP] save() completed');
+    } catch (e) {
+      print('[DEBUG-DEEP] save() failed: $e');
+      rethrow;
+    }
   }
 
   bool _isUpdating = false;
@@ -129,7 +138,11 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     int debounce = Config.formAutosaveDebounce,
     bool onlyValid = true,
   }) {
-    if (_autosaveSubscriptions.isNotEmpty) return;
+    if (_autosaveSubscriptions.isNotEmpty) {
+      print('[DEBUG-DEEP] enableAutosave skipped (already active)');
+      return;
+    }
+    print('[DEBUG-DEEP] enableAutosave called (debounce: $debounce)');
 
     super.enableAutosave(debounce: debounce, onlyValid: onlyValid);
 
@@ -137,12 +150,18 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
     // We use a separate debouncer for this to avoid conflict with the base class
     final debouncer = Debouncer(milliseconds: debounce, leading: false);
 
-    void saveChanges() {
-      if (_isUpdating) return;
+    void saveChanges(String source) {
+      if (_isUpdating) {
+        print('[DEBUG-DEEP] saveChanges ignored (updating) - source: $source');
+        return;
+      }
+      print('[DEBUG-DEEP] saveChanges triggered by: $source');
       debouncer(
         futureBuilder: () async {
+          print('[DEBUG-DEEP] Debouncer executing save for: $source');
           // Ensure segments list is up to date before saving
           updateSegmentsFromSegmentsControl();
+          print('[DEBUG-DEEP] isDirty before save: $isDirty');
           await save();
         },
       );
@@ -150,12 +169,14 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
     // Listen to deep changes in the array (values of children)
     _autosaveSubscriptions.add(
-      segmentsControl.valueChanges.listen((_) => saveChanges()),
+      segmentsControl.valueChanges.listen((_) => saveChanges('valueChanges')),
     );
 
     // Listen to structural changes (add/remove)
     _autosaveSubscriptions.add(
-      segmentsControl.collectionChanges.listen((_) => saveChanges()),
+      segmentsControl.collectionChanges.listen(
+        (_) => saveChanges('collectionChanges'),
+      ),
     );
   }
 
