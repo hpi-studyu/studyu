@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -13,10 +15,6 @@ class StudyScheduleFormView extends FormConsumerWidget {
 
   @override
   Widget build(BuildContext context, FormGroup form) {
-    formViewModel.segmentsControl.valueChanges.listen((_) {
-      formViewModel.updateSegmentsFromSegmentsControl();
-    });
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -50,6 +48,24 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
   StudyScheduleSegmentType selectedSegmentType =
       StudyScheduleSegmentType.baseline;
 
+  late final StreamSubscription _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = widget.formViewModel.segmentsControl.valueChanges.listen((
+      _,
+    ) {
+      widget.formViewModel.updateSegmentsFromSegmentsControl();
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -74,7 +90,9 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
             )
               StudyScheduleSection(
                 formViewModel: widget.formViewModel,
-                key: Key(i.toString()),
+                key: ObjectKey(
+                  widget.formViewModel.segmentsControl.controls[i],
+                ),
                 index: i,
                 segment: widget.formViewModel.segments[i],
                 segmentControl:
@@ -675,8 +693,8 @@ List<Widget> _getThompsonSamplingControls(
           )
           .toList(),
       onChanged: (String? observationId) {
-        segmentControl.control('observationId').updateValue(observationId)
-            as FormControl<dynamic>?;
+        segmentControl.control('observationId').updateValue(observationId);
+        segmentControl.control('questionId').updateValue('');
       },
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
@@ -687,9 +705,9 @@ List<Widget> _getThompsonSamplingControls(
     // for the observation list all questions
     DropdownButtonFormField<String>(
       initialValue:
-          (segmentControl.control('observationId').value as String).isEmpty
+          (segmentControl.control('questionId').value as String).isEmpty
           ? null
-          : (segmentControl.control('observationId').value as String),
+          : (segmentControl.control('questionId').value as String),
       items: formViewModel.observations
           .whereType<QuestionnaireTask>()
           .where(
@@ -704,10 +722,10 @@ List<Widget> _getThompsonSamplingControls(
               ),
             ),
           )
+          .toSet()
           .toList(),
       onChanged: (String? questionId) {
-        segmentControl.control('questionId').updateValue(questionId)
-            as FormControl<dynamic>?;
+        segmentControl.control('questionId').updateValue(questionId);
       },
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
