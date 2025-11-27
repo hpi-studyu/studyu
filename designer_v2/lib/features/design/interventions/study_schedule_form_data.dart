@@ -7,11 +7,13 @@ class StudyScheduleFormData implements IStudyFormData {
     required this.segments,
     required this.interventions,
     required this.observations,
+    this.numberOfInterventionsToSelect = 2,
   });
 
   final List<StudyScheduleSegment> segments;
   final List<Intervention> interventions;
   final List<Observation> observations;
+  final int numberOfInterventionsToSelect;
 
   factory StudyScheduleFormData.fromDomainModel(
     AdaptiveStudySchedule schedule,
@@ -23,11 +25,15 @@ class StudyScheduleFormData implements IStudyFormData {
       segments: schedule.segments,
       interventions: interventions,
       observations: observations,
+      numberOfInterventionsToSelect: schedule.numberOfInterventionsToSelect,
     );
   }
 
   AdaptiveStudySchedule toAdaptiveStudySchedule() {
-    return AdaptiveStudySchedule.withSegments(segments);
+    return AdaptiveStudySchedule.withSegments(
+      segments,
+      numberOfInterventionsToSelect: numberOfInterventionsToSelect,
+    );
   }
 
   @override

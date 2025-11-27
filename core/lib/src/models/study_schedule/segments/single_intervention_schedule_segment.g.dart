@@ -9,7 +9,7 @@ part of 'single_intervention_schedule_segment.dart';
 SingleInterventionScheduleSegment _$SingleInterventionScheduleSegmentFromJson(
   Map<String, dynamic> json,
 ) => SingleInterventionScheduleSegment(
-  json['interventionId'] as String?,
+  (json['interventionIndex'] as num).toInt(),
   (json['duration'] as num).toInt(),
 );
 
@@ -17,6 +17,6 @@ Map<String, dynamic> _$SingleInterventionScheduleSegmentToJson(
   SingleInterventionScheduleSegment instance,
 ) => <String, dynamic>{
   'type': instance.type.toJson(),
-  'interventionId': ?instance.interventionId,
+  'interventionIndex': instance.interventionIndex,
   'duration': instance.duration,
 };

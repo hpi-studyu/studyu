@@ -78,6 +78,8 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
       children: [
         _studyScheduleDescription(),
         const SizedBox(height: 24.0),
+        _buildInterventionSelectionControl(),
+        const SizedBox(height: 24.0),
         StudyTimeline(formViewModel: widget.formViewModel),
         const SizedBox(height: 24.0),
         // reduce the horizontal padding so items can use more available width
@@ -127,6 +129,106 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildInterventionSelectionControl() {
+    final theme = Theme.of(context);
+    final totalInterventions = widget.formViewModel.interventions.length;
+
+    final bool isDisabled = totalInterventions < 3;
+    final tooltipMessage = isDisabled
+        ? 'At least 2 interventions are required; the field is disabled because fewer than 3 interventions are defined.'
+        : '';
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Intervention Selection',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 12.0),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Number of Interventions',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        'Participants will select this many interventions from your list at study start',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 24.0),
+                Expanded(
+                  child: Tooltip(
+                    message: tooltipMessage,
+                    waitDuration: const Duration(milliseconds: 300),
+                    child: Builder(
+                      builder: (context) {
+                        // Ensure the control is disabled/enabled according to interventions count
+                        final control = widget
+                            .formViewModel
+                            .numberOfInterventionsToSelectControl;
+                        if (isDisabled && !control.disabled) {
+                          control.markAsDisabled();
+                        } else if (!isDisabled && control.disabled) {
+                          control.markAsEnabled();
+                        }
+
+                        return ReactiveDropdownField<int>(
+                          formControl: control,
+                          isExpanded: true,
+                          items: totalInterventions >= 2
+                              ? List.generate(
+                                  // start from 2 up to totalInterventions
+                                  totalInterventions - 1,
+                                  (i) => DropdownMenuItem(
+                                    value: i + 2,
+                                    child: Text('${i + 2}'),
+                                  ),
+                                )
+                              : [
+                                  const DropdownMenuItem(
+                                    value: 2,
+                                    child: Text('2'),
+                                  ),
+                                ],
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Count',
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -648,159 +750,164 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
       ),
     ];
   }
-}
 
-List<Widget> _getThompsonSamplingControls(
-  FormGroup segmentControl,
-  StudyScheduleControls formViewModel,
-) {
-  return [
-    Row(
-      children: [
-        Expanded(
-          child: ReactiveTextField(
-            formControl:
-                segmentControl.control('interventionDuration')
-                    as FormControl<dynamic>?,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              // todo localize
-              labelText: 'Intervention Duration',
+  List<Widget> _getThompsonSamplingControls(
+    FormGroup segmentControl,
+    StudyScheduleControls formViewModel,
+  ) {
+    return [
+      Row(
+        children: [
+          Expanded(
+            child: ReactiveTextField(
+              formControl:
+                  segmentControl.control('interventionDuration')
+                      as FormControl<dynamic>?,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                // todo localize
+                labelText: 'Intervention Duration',
+              ),
+              controller: ZeroValueController(),
             ),
-            controller: ZeroValueController(),
           ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: ReactiveTextField(
-            formControl:
-                segmentControl.control('interventionDrawAmount')
-                    as FormControl<dynamic>?,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              // todo localize
-              labelText: 'Intervention Draw Amount',
+          const SizedBox(width: 16),
+          Expanded(
+            child: ReactiveTextField(
+              formControl:
+                  segmentControl.control('interventionDrawAmount')
+                      as FormControl<dynamic>?,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                // todo localize
+                labelText: 'Intervention Draw Amount',
+              ),
+              controller: ZeroValueController(),
             ),
-            controller: ZeroValueController(),
           ),
+        ],
+      ),
+      const SizedBox(height: 24),
+      // todo localize
+      Builder(
+        builder: (context) => Text(
+          "Deciding Metric",
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
         ),
-      ],
-    ),
-    const SizedBox(height: 24),
-    // todo localize
-    Builder(
-      builder: (context) => Text(
-        "Deciding Metric",
-        style: Theme.of(
-          context,
-        ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
       ),
-    ),
-    const SizedBox(height: 16),
-    DropdownButtonFormField<String>(
-      initialValue:
-          (segmentControl.control('observationId').value as String).isEmpty
-          ? null
-          : (segmentControl.control('observationId').value as String),
-      items: formViewModel.observations
-          .map(
-            (observation) => DropdownMenuItem(
-              value: observation.id,
-              child: Text(observation.title ?? observation.id),
-            ),
-          )
-          .toList(),
-      onChanged: (String? observationId) {
-        segmentControl.control('observationId').updateValue(observationId);
-        segmentControl.control('questionId').updateValue('');
-      },
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        // todo localize
-        labelText: 'Survey',
+      const SizedBox(height: 16),
+      DropdownButtonFormField<String>(
+        initialValue:
+            (segmentControl.control('observationId').value as String).isEmpty
+            ? null
+            : (segmentControl.control('observationId').value as String),
+        items: formViewModel.observations
+            .map(
+              (observation) => DropdownMenuItem(
+                value: observation.id,
+                child: Text(observation.title ?? observation.id),
+              ),
+            )
+            .toList(),
+        onChanged: (String? observationId) {
+          segmentControl.control('observationId').updateValue(observationId);
+          segmentControl.control('questionId').updateValue('');
+        },
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          // todo localize
+          labelText: 'Survey',
+        ),
       ),
-    ),
-    const SizedBox(height: 16),
-    // for the observation list all questions
-    DropdownButtonFormField<String>(
-      initialValue:
-          (segmentControl.control('questionId').value as String).isEmpty
-          ? null
-          : (segmentControl.control('questionId').value as String),
-      items: formViewModel.observations
-          .whereType<QuestionnaireTask>()
-          .where(
-            (observation) =>
-                observation.id == segmentControl.control('observationId').value,
-          )
-          .expand(
-            (observation) => observation.questions.questions.map(
-              (question) => DropdownMenuItem<String>(
-                value: question.id,
-                child: Text(question.prompt ?? question.id),
+      const SizedBox(height: 16),
+      // for the observation list all questions
+      DropdownButtonFormField<String>(
+        initialValue:
+            (segmentControl.control('questionId').value as String).isEmpty
+            ? null
+            : (segmentControl.control('questionId').value as String),
+        items: formViewModel.observations
+            .whereType<QuestionnaireTask>()
+            .where(
+              (observation) =>
+                  observation.id ==
+                  segmentControl.control('observationId').value,
+            )
+            .expand(
+              (observation) => observation.questions.questions.map(
+                (question) => DropdownMenuItem<String>(
+                  value: question.id,
+                  child: Text(question.prompt ?? question.id),
+                ),
+              ),
+            )
+            .toSet()
+            .toList(),
+        onChanged: (String? questionId) {
+          segmentControl.control('questionId').updateValue(questionId);
+        },
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          // todo localize
+          labelText: 'Question',
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _getSingleInterventionControls(
+    FormGroup segmentControl,
+    StudyScheduleControls formViewModel,
+  ) {
+    return [
+      Row(
+        children: [
+          Expanded(
+            child: ReactiveDropdownField<int>(
+              formControl:
+                  segmentControl.control('interventionIndex')
+                      as FormControl<int>?,
+              isExpanded: true,
+              items: List.generate(
+                formViewModel.interventions.length,
+                (index) => DropdownMenuItem(
+                  value: index,
+                  child: Text(
+                    'Intervention ${String.fromCharCode(65 + index)}',
+                  ),
+                ),
+              ),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                // todo localize
+                labelText: 'Select Intervention',
+                helperText:
+                    'Choose A, B, C, etc. - participants will map their selected interventions to these',
               ),
             ),
-          )
-          .toSet()
-          .toList(),
-      onChanged: (String? questionId) {
-        segmentControl.control('questionId').updateValue(questionId);
-      },
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
-        // todo localize
-        labelText: 'Question',
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: ReactiveTextField(
+              formControl:
+                  segmentControl.control('duration') as FormControl<dynamic>?,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                // todo localize
+                labelText: 'Duration (days)',
+              ),
+              controller: ZeroValueController(),
+            ),
+          ),
+        ],
       ),
-    ),
-  ];
-}
-
-List<Widget> _getSingleInterventionControls(
-  FormGroup segmentControl,
-  StudyScheduleControls formViewModel,
-) {
-  return [
-    Row(
-      children: [
-        Expanded(
-          child: ReactiveDropdownField<String>(
-            formControl:
-                segmentControl.control('interventionId')
-                    as FormControl<String>?,
-            items: formViewModel.interventions
-                .map(
-                  (intervention) => DropdownMenuItem(
-                    value: intervention.id,
-                    child: Text(intervention.name ?? intervention.id),
-                  ),
-                )
-                .toList(),
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              // todo localize
-              labelText: 'Intervention',
-            ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: ReactiveTextField(
-            formControl:
-                segmentControl.control('duration') as FormControl<dynamic>?,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              // todo localize
-              labelText: 'Duration (days)',
-            ),
-            controller: ZeroValueController(),
-          ),
-        ),
-      ],
-    ),
-  ];
+    ];
+  }
 }
 
 class ZeroValueController extends TextEditingController {

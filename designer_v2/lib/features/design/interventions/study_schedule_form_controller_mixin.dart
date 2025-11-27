@@ -6,11 +6,16 @@ import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 
 mixin StudyScheduleControls {
   final FormArray segmentsControl = FormArray([]);
+  final FormControl<int> numberOfInterventionsToSelectControl =
+      FormControl<int>(value: 2);
   final List<StudyScheduleSegment> segments = [];
   final List<Intervention> interventions = [];
   final List<Observation> observations = [];
 
-  late final studyScheduleControls = {'segments': segmentsControl};
+  late final Map<String, AbstractControl<dynamic>> studyScheduleControls = {
+    'segments': segmentsControl,
+    'numberOfInterventionsToSelect': numberOfInterventionsToSelectControl,
+  };
 
   FormValidationConfigSet get studyScheduleValidationConfig => {
     StudyFormValidationSet.draft: [],
@@ -209,14 +214,14 @@ mixin StudyScheduleControls {
   }
 
   FormGroup createSingleInterventionFormGroup({
-    String interventionId = '',
+    int interventionIndex = 0,
     int duration = 0,
   }) {
     return FormGroup({
       'type': FormControl<StudyScheduleSegmentType>(
         value: StudyScheduleSegmentType.singleIntervention,
       ),
-      'interventionId': FormControl<String>(value: interventionId),
+      'interventionIndex': FormControl<int>(value: interventionIndex),
       'duration': FormControl<int>(value: duration),
     });
   }
@@ -256,7 +261,7 @@ mixin StudyScheduleControls {
         case StudyScheduleSegmentType.singleIntervention:
           segments.add(
             SingleInterventionScheduleSegment(
-              segment.control('interventionId').value as String,
+              segment.control('interventionIndex').value as int,
               segment.control('duration').value as int,
             ),
           );
@@ -270,6 +275,7 @@ mixin StudyScheduleControls {
     segmentsControl.clear();
     interventions.clear();
     observations.clear();
+    // Populate segments
     for (final element in data.segments) {
       if (element is BaselineScheduleSegment) {
         addFormGroupToSegments(
@@ -301,18 +307,37 @@ mixin StudyScheduleControls {
       } else if (element is SingleInterventionScheduleSegment) {
         addFormGroupToSegments(
           createSingleInterventionFormGroup(
-            interventionId: element.interventionId ?? '',
+            interventionIndex: element.interventionIndex,
             duration: element.duration,
           ),
         );
       }
     }
+    // Now set interventions/observations and clamp the number selection
     interventions.addAll(data.interventions);
     observations.addAll(data.observations);
+
+    // Ensure the numberOfInterventionsToSelectControl is within valid bounds
+    final int total = interventions.length;
+    const int minValue = 2;
+    final int maxValue = total >= 2 ? total : minValue;
+    int desired = data.numberOfInterventionsToSelect;
+    if (desired < minValue) desired = minValue;
+    if (desired > maxValue) desired = maxValue;
+    numberOfInterventionsToSelectControl.value = desired;
+
     updateSegmentsFromSegmentsControl();
   }
 
   StudyScheduleFormData buildStudyScheduleFormData() {
+    // Clamp saved value as a final guard
+    int selected = numberOfInterventionsToSelectControl.value ?? 2;
+    final int total = interventions.length;
+    const int minValue = 2;
+    final int maxValue = total >= 2 ? total : minValue;
+    if (selected < minValue) selected = minValue;
+    if (selected > maxValue) selected = maxValue;
+
     return StudyScheduleFormData(
       segments: segmentsControl.controls.map((absSegment) {
         final segment = absSegment as FormGroup;
@@ -340,7 +365,7 @@ mixin StudyScheduleControls {
             );
           case StudyScheduleSegmentType.singleIntervention:
             return SingleInterventionScheduleSegment(
-              segment.control('interventionId').value as String,
+              segment.control('interventionIndex').value as int,
               segment.control('duration').value as int,
             );
           default:
@@ -349,6 +374,7 @@ mixin StudyScheduleControls {
       }).toList(),
       interventions: interventions,
       observations: observations,
+      numberOfInterventionsToSelect: selected,
     );
   }
 }

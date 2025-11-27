@@ -8,9 +8,17 @@ class AdaptiveStudySchedule {
   @StudyScheduleSegmentConverter()
   List<StudyScheduleSegment> segments = [];
 
+  /// Number of interventions participants should select
+  /// If null or 0, all interventions must be selected
+  @JsonKey(defaultValue: 2)
+  int numberOfInterventionsToSelect = 2;
+
   AdaptiveStudySchedule();
 
-  AdaptiveStudySchedule.withSegments(this.segments);
+  AdaptiveStudySchedule.withSegments(
+    this.segments, {
+    this.numberOfInterventionsToSelect = 2,
+  });
 
   factory AdaptiveStudySchedule.fromJson(Map<String, dynamic> json) =>
       _$AdaptiveStudyScheduleFromJson(json);

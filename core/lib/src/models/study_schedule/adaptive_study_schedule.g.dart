@@ -15,7 +15,9 @@ AdaptiveStudySchedule _$AdaptiveStudyScheduleFromJson(
           e as Map<String, dynamic>,
         ),
       )
-      .toList();
+      .toList()
+  ..numberOfInterventionsToSelect =
+      (json['numberOfInterventionsToSelect'] as num?)?.toInt() ?? 2;
 
 Map<String, dynamic> _$AdaptiveStudyScheduleToJson(
   AdaptiveStudySchedule instance,
@@ -23,4 +25,5 @@ Map<String, dynamic> _$AdaptiveStudyScheduleToJson(
   'segments': instance.segments
       .map(const StudyScheduleSegmentConverter().toJson)
       .toList(),
+  'numberOfInterventionsToSelect': instance.numberOfInterventionsToSelect,
 };
