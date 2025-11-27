@@ -1065,16 +1065,7 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
                   ),
                 ),
               ),
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                // todo localize
-                labelText: useSimpleLabels
-                    ? 'Intervention'
-                    : 'Participant Choice',
-                helperText: useSimpleLabels
-                    ? 'Participants will compare these two interventions'
-                    : 'Participants select 2 interventions; this uses their 1st or 2nd choice',
-              ),
+              decoration: const InputDecoration(border: OutlineInputBorder()),
             ),
           ),
           const SizedBox(width: 16),
