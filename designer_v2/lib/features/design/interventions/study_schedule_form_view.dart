@@ -275,7 +275,9 @@ class StudyTimeline extends StatelessWidget {
                         color: color,
                         alignment: Alignment.center,
                         child: Text(
-                          segment.name, // Using name from segment
+                          _getTimelineLabel(
+                            segment,
+                          ), // Get simplified label for timeline
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -397,6 +399,15 @@ class StudyTimeline extends StatelessWidget {
     return buffer.toString();
   }
 
+  String _getTimelineLabel(StudyScheduleSegment segment) {
+    // For single intervention segments, show just the letter (A or B)
+    if (segment is SingleInterventionScheduleSegment) {
+      return String.fromCharCode(65 + segment.interventionIndex);
+    }
+    // For all other segments, use the default name
+    return segment.name;
+  }
+
   Widget _buildDetailedSegment(
     StudyScheduleSegment segment,
     StudyScheduleControls formViewModel,
@@ -426,8 +437,21 @@ class StudyTimeline extends StatelessWidget {
     // Maximum 2 interventions (A and B) can be used
     final clampedCount = count > 2 ? 2 : count;
 
-    // Create pattern visualization
+    // Create pattern visualization with color variations of the segment's base color
     final List<Widget> bars = [];
+
+    // Convert base color to HSL for creating variations
+    final baseHSL = HSLColor.fromColor(baseColor);
+
+    // Create color variations for intervention A and B
+    // A is lighter, B is darker to create visual distinction while maintaining segment color
+    final colorA = baseHSL
+        .withLightness((baseHSL.lightness + 0.15).clamp(0.0, 1.0))
+        .toColor();
+    final colorB = baseHSL
+        .withLightness((baseHSL.lightness - 0.15).clamp(0.0, 1.0))
+        .toColor();
+    final interventionColors = [colorA, colorB];
 
     if (isCounterBalanced) {
       // Counter-Balanced: ABBA pattern that rotates each cycle
@@ -441,13 +465,7 @@ class StudyTimeline extends StatelessWidget {
               : indexInSequence;
 
           final label = String.fromCharCode(65 + interventionIndex);
-          final hue = interventionIndex * 360.0 / clampedCount;
-          final interventionColor = HSLColor.fromAHSL(
-            1.0,
-            hue,
-            0.7,
-            0.5,
-          ).toColor();
+          final interventionColor = interventionColors[interventionIndex % 2];
 
           bars.add(
             Expanded(
@@ -487,13 +505,7 @@ class StudyTimeline extends StatelessWidget {
         for (var i = 0; i < clampedCount; i++) {
           final interventionIndex = useIndices ? selectedIndices[i] : i;
           final label = String.fromCharCode(65 + interventionIndex);
-          final hue = interventionIndex * 360.0 / clampedCount;
-          final interventionColor = HSLColor.fromAHSL(
-            1.0,
-            hue,
-            0.7,
-            0.5,
-          ).toColor();
+          final interventionColor = interventionColors[interventionIndex % 2];
 
           bars.add(
             Expanded(
