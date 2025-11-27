@@ -443,13 +443,14 @@ class StudyTimeline extends StatelessWidget {
     // Convert base color to HSL for creating variations
     final baseHSL = HSLColor.fromColor(baseColor);
 
-    // Create color variations for intervention A and B
-    // A is lighter, B is darker to create visual distinction while maintaining segment color
+    // Create subtle color variations for intervention A and B
+    // Use smaller lightness differences to keep the segment visually cohesive
+    // A is slightly lighter, B is slightly darker
     final colorA = baseHSL
-        .withLightness((baseHSL.lightness + 0.15).clamp(0.0, 1.0))
+        .withLightness((baseHSL.lightness + 0.05).clamp(0.0, 1.0))
         .toColor();
     final colorB = baseHSL
-        .withLightness((baseHSL.lightness - 0.15).clamp(0.0, 1.0))
+        .withLightness((baseHSL.lightness - 0.05).clamp(0.0, 1.0))
         .toColor();
     final interventionColors = [colorA, colorB];
 
@@ -691,6 +692,12 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
           ? 'Alternating'
           : 'Counter-Balanced';
       return '$baseName ($pattern)';
+    }
+
+    // For single intervention segments, show "Single Intervention: Choice X"
+    if (segment is SingleInterventionScheduleSegment) {
+      final letter = String.fromCharCode(65 + segment.interventionIndex);
+      return 'Single Intervention: Choice $letter';
     }
 
     return segment.name;
