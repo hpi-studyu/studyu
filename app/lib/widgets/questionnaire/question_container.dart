@@ -8,6 +8,7 @@ import 'package:studyu_app/widgets/questionnaire/questions/boolean_question_widg
 import 'package:studyu_app/widgets/questionnaire/questions/choice_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/fitbit_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/free_text_question_widget.dart';
+import 'package:studyu_app/widgets/questionnaire/questions/nutrition_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/pain_question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/question_widget.dart';
 import 'package:studyu_app/widgets/questionnaire/questions/scale_question_widget.dart';
@@ -92,6 +93,11 @@ class _QuestionContainerState extends State<QuestionContainer>
         );
       case final PainQuestion painQuestion:
         return PainQuestionWidget(question: painQuestion, onDone: _onDone);
+      case final NutritionQuestion nutritionQuestion:
+        return NutritionQuestionWidget(
+          question: nutritionQuestion,
+          onDone: _onDone,
+        );
       default:
         throw ArgumentError(
           'Question type ${widget.question.type} not supported',
