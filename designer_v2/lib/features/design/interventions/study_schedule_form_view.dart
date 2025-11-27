@@ -78,8 +78,6 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
       children: [
         _studyScheduleDescription(),
         const SizedBox(height: 24.0),
-        _buildInterventionSelectionControl(),
-        const SizedBox(height: 24.0),
         StudyTimeline(formViewModel: widget.formViewModel),
         const SizedBox(height: 24.0),
         // reduce the horizontal padding so items can use more available width
@@ -129,106 +127,6 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
           },
         ),
       ],
-    );
-  }
-
-  Widget _buildInterventionSelectionControl() {
-    final theme = Theme.of(context);
-    final totalInterventions = widget.formViewModel.interventions.length;
-
-    final bool isDisabled = totalInterventions < 3;
-    final tooltipMessage = isDisabled
-        ? 'At least 2 interventions are required; the field is disabled because fewer than 3 interventions are defined.'
-        : '';
-
-    return Card(
-      elevation: 0,
-      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Intervention Selection',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 12.0),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Number of Interventions',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 4.0),
-                      Text(
-                        'Participants will select this many interventions from your list at study start',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 24.0),
-                Expanded(
-                  child: Tooltip(
-                    message: tooltipMessage,
-                    waitDuration: const Duration(milliseconds: 300),
-                    child: Builder(
-                      builder: (context) {
-                        // Ensure the control is disabled/enabled according to interventions count
-                        final control = widget
-                            .formViewModel
-                            .numberOfInterventionsToSelectControl;
-                        if (isDisabled && !control.disabled) {
-                          control.markAsDisabled();
-                        } else if (!isDisabled && control.disabled) {
-                          control.markAsEnabled();
-                        }
-
-                        return ReactiveDropdownField<int>(
-                          formControl: control,
-                          isExpanded: true,
-                          items: totalInterventions >= 2
-                              ? List.generate(
-                                  // start from 2 up to totalInterventions
-                                  totalInterventions - 1,
-                                  (i) => DropdownMenuItem(
-                                    value: i + 2,
-                                    child: Text('${i + 2}'),
-                                  ),
-                                )
-                              : [
-                                  const DropdownMenuItem(
-                                    value: 2,
-                                    child: Text('2'),
-                                  ),
-                                ],
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Count',
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -352,6 +250,20 @@ class StudyTimeline extends StatelessWidget {
                   );
                   final flex = duration > 0 ? duration : 1;
                   final color = _getSegmentColor(segment.type);
+
+                  // Show detailed sub-segments for alternating and counter-balanced
+                  if (segment is AlternatingScheduleSegment ||
+                      segment is CounterBalancedScheduleSegment) {
+                    return Expanded(
+                      flex: flex,
+                      child: _buildDetailedSegment(
+                        segment,
+                        formViewModel,
+                        color,
+                      ),
+                    );
+                  }
+
                   return Expanded(
                     flex: flex,
                     child: Tooltip(
@@ -392,33 +304,232 @@ class StudyTimeline extends StatelessWidget {
     final buffer = StringBuffer();
     buffer.writeln(segment.name);
     final totalDuration = segment.getDuration(interventions);
-    buffer.writeln('Total Duration: $totalDuration days');
+    buffer.writeln('Total Duration: $totalDuration days\n');
 
-    String? calculation;
     if (segment is AlternatingScheduleSegment) {
-      final numInterventions = interventions.isNotEmpty
-          ? interventions.length
-          : 0;
-      calculation =
-          '${segment.interventionDuration} (intervention duration in days) * ${segment.cycleAmount} (cycles) * $numInterventions (interventions)';
-    } else if (segment is CounterBalancedScheduleSegment) {
-      final numInterventions = interventions.isNotEmpty
-          ? interventions.length
-          : 0;
-      calculation =
-          '${segment.interventionDuration} (intervention duration in days) * ${segment.cycleAmount} (cycles) * $numInterventions (interventions)';
-    } else if (segment is ThompsonSamplingScheduleSegment) {
-      calculation =
-          '${segment.interventionDuration} (intervention duration in days) * ${segment.interventionDrawAmount} (draws)';
-    } else if (segment is SingleInterventionScheduleSegment) {
-      calculation = '${segment.duration} (duration in days)';
-    }
+      final selectedIndices = segment.interventionIds;
+      final useIndices = selectedIndices != null && selectedIndices.isNotEmpty;
+      final count = useIndices ? selectedIndices.length : interventions.length;
+      // Maximum 2 interventions (A and B) can be used
+      final clampedCount = count > 2 ? 2 : count;
 
-    if (calculation != null) {
-      buffer.write('Calculation: $calculation');
+      buffer.writeln('Alternating Schedule:');
+      buffer.writeln('• ${segment.interventionDuration} days per intervention');
+      buffer.writeln('• ${segment.cycleAmount} cycle(s)');
+      buffer.writeln('• $clampedCount intervention(s) in rotation\n');
+
+      buffer.writeln('Time Allocation per Intervention:');
+      final timePerIntervention =
+          segment.interventionDuration * segment.cycleAmount;
+
+      if (useIndices) {
+        // Only show first 2 interventions
+        final indicesToShow = selectedIndices.take(2).toList();
+        for (final index in indicesToShow) {
+          final label = interventions.length == 2
+              ? 'Intervention ${String.fromCharCode(65 + index)}'
+              : 'Choice ${String.fromCharCode(65 + index)}';
+          buffer.writeln('  $label: $timePerIntervention days');
+        }
+      } else {
+        for (var i = 0; i < clampedCount; i++) {
+          final label = interventions.length == 2
+              ? 'Intervention ${String.fromCharCode(65 + i)}'
+              : 'Choice ${String.fromCharCode(65 + i)}';
+          buffer.writeln('  $label: $timePerIntervention days');
+        }
+      }
+
+      buffer.write(
+        '\nCalculation: ${segment.interventionDuration} days × ${segment.cycleAmount} cycle(s) × $clampedCount intervention(s) = $totalDuration days',
+      );
+    } else if (segment is CounterBalancedScheduleSegment) {
+      final selectedIndices = segment.interventionIds;
+      final useIndices = selectedIndices != null && selectedIndices.isNotEmpty;
+      final count = useIndices ? selectedIndices.length : interventions.length;
+      // Maximum 2 interventions (A and B) can be used
+      final clampedCount = count > 2 ? 2 : count;
+
+      buffer.writeln('Counter-Balanced Schedule:');
+      buffer.writeln('• ${segment.interventionDuration} days per intervention');
+      buffer.writeln('• ${segment.cycleAmount} cycle(s)');
+      buffer.writeln('• $clampedCount intervention(s) in rotation');
+      buffer.writeln('• Order rotates each cycle\n');
+
+      buffer.writeln('Time Allocation per Intervention:');
+      final timePerIntervention =
+          segment.interventionDuration * segment.cycleAmount;
+
+      if (useIndices) {
+        // Only show first 2 interventions
+        final indicesToShow = selectedIndices.take(2).toList();
+        for (final index in indicesToShow) {
+          final label = interventions.length == 2
+              ? 'Intervention ${String.fromCharCode(65 + index)}'
+              : 'Choice ${String.fromCharCode(65 + index)}';
+          buffer.writeln('  $label: $timePerIntervention days');
+        }
+      } else {
+        for (var i = 0; i < clampedCount; i++) {
+          final label = interventions.length == 2
+              ? 'Intervention ${String.fromCharCode(65 + i)}'
+              : 'Choice ${String.fromCharCode(65 + i)}';
+          buffer.writeln('  $label: $timePerIntervention days');
+        }
+      }
+
+      buffer.write(
+        '\nCalculation: ${segment.interventionDuration} days × ${segment.cycleAmount} cycle(s) × $clampedCount intervention(s) = $totalDuration days',
+      );
+    } else if (segment is ThompsonSamplingScheduleSegment) {
+      buffer.writeln('Thompson Sampling:');
+      buffer.writeln('• ${segment.interventionDuration} days per draw');
+      buffer.writeln('• ${segment.interventionDrawAmount} draw(s)');
+      buffer.write(
+        '\nCalculation: ${segment.interventionDuration} days × ${segment.interventionDrawAmount} draw(s) = $totalDuration days',
+      );
+    } else if (segment is SingleInterventionScheduleSegment) {
+      buffer.write('Duration: ${segment.duration} days');
+    } else if (segment is BaselineScheduleSegment) {
+      buffer.write('Baseline period: $totalDuration days');
     }
 
     return buffer.toString();
+  }
+
+  Widget _buildDetailedSegment(
+    StudyScheduleSegment segment,
+    StudyScheduleControls formViewModel,
+    Color baseColor,
+  ) {
+    List<int>? selectedIndices;
+    int interventionDuration = 0;
+    int cycleAmount = 0;
+    bool isCounterBalanced = false;
+
+    if (segment is AlternatingScheduleSegment) {
+      selectedIndices = segment.interventionIds;
+      interventionDuration = segment.interventionDuration;
+      cycleAmount = segment.cycleAmount;
+      isCounterBalanced = false;
+    } else if (segment is CounterBalancedScheduleSegment) {
+      selectedIndices = segment.interventionIds;
+      interventionDuration = segment.interventionDuration;
+      cycleAmount = segment.cycleAmount;
+      isCounterBalanced = true;
+    }
+
+    final useIndices = selectedIndices != null && selectedIndices.isNotEmpty;
+    final count = useIndices
+        ? selectedIndices.length
+        : formViewModel.interventions.length;
+    // Maximum 2 interventions (A and B) can be used
+    final clampedCount = count > 2 ? 2 : count;
+
+    // Create pattern visualization
+    final List<Widget> bars = [];
+
+    if (isCounterBalanced) {
+      // Counter-Balanced: ABBA pattern that rotates each cycle
+      // Cycle 0: A-B-B-A, Cycle 1: B-A-A-B, etc.
+      for (var cycle = 0; cycle < cycleAmount; cycle++) {
+        for (var i = 0; i < clampedCount; i++) {
+          // Calculate which intervention to show based on counter-balancing logic
+          final indexInSequence = (i + cycle) % clampedCount;
+          final interventionIndex = useIndices
+              ? selectedIndices[indexInSequence]
+              : indexInSequence;
+
+          final label = String.fromCharCode(65 + interventionIndex);
+          final hue = interventionIndex * 360.0 / clampedCount;
+          final interventionColor = HSLColor.fromAHSL(
+            1.0,
+            hue,
+            0.7,
+            0.5,
+          ).toColor();
+
+          bars.add(
+            Expanded(
+              flex: interventionDuration,
+              child: Tooltip(
+                message: _getTooltipMessage(
+                  segment,
+                  formViewModel.interventions,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: interventionColor,
+                    border: Border(
+                      right: BorderSide(
+                        color: Colors.white.withValues(alpha: 0.3),
+                      ),
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    label,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+      }
+    } else {
+      // Alternating: Simple ABABAB... pattern
+      for (var cycle = 0; cycle < cycleAmount; cycle++) {
+        for (var i = 0; i < clampedCount; i++) {
+          final interventionIndex = useIndices ? selectedIndices[i] : i;
+          final label = String.fromCharCode(65 + interventionIndex);
+          final hue = interventionIndex * 360.0 / clampedCount;
+          final interventionColor = HSLColor.fromAHSL(
+            1.0,
+            hue,
+            0.7,
+            0.5,
+          ).toColor();
+
+          bars.add(
+            Expanded(
+              flex: interventionDuration,
+              child: Tooltip(
+                message: _getTooltipMessage(
+                  segment,
+                  formViewModel.interventions,
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: interventionColor,
+                    border: Border(
+                      right: BorderSide(
+                        color: Colors.white.withValues(alpha: 0.3),
+                      ),
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    label,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+      }
+    }
+
+    return Row(children: bars);
   }
 
   Color _getSegmentColor(StudyScheduleSegmentType type) {
@@ -530,6 +641,49 @@ class StudyScheduleSection extends StatefulWidget {
 class _StudyScheduleSectionState extends State<StudyScheduleSection> {
   bool _isExpanded = false; // Default to collapsed
 
+  String _getSegmentDisplayName() {
+    final segment = widget.segment;
+    final totalInterventions = widget.formViewModel.interventions.length;
+
+    if (segment is AlternatingScheduleSegment ||
+        segment is CounterBalancedScheduleSegment) {
+      List<int>? selectedIndices;
+      if (segment is AlternatingScheduleSegment) {
+        selectedIndices = segment.interventionIds;
+      } else if (segment is CounterBalancedScheduleSegment) {
+        selectedIndices = segment.interventionIds;
+      }
+
+      final useIndices = selectedIndices != null && selectedIndices.isNotEmpty;
+      final count = useIndices ? selectedIndices.length : totalInterventions;
+      // Maximum 2 interventions (A and B) can be used
+      final clampedCount = count > 2 ? 2 : count;
+
+      // Build the intervention pattern string (e.g., "A-B" or "A-B-C")
+      final pattern = StringBuffer();
+      if (useIndices) {
+        // Only show first 2 interventions
+        final indicesToShow = selectedIndices.take(2).toList();
+        for (var i = 0; i < indicesToShow.length; i++) {
+          if (i > 0) pattern.write('-');
+          pattern.write(String.fromCharCode(65 + indicesToShow[i]));
+        }
+      } else {
+        for (var i = 0; i < clampedCount; i++) {
+          if (i > 0) pattern.write('-');
+          pattern.write(String.fromCharCode(65 + i));
+        }
+      }
+
+      final baseName = segment is AlternatingScheduleSegment
+          ? 'Alternating'
+          : 'Counter-Balanced';
+      return '$baseName ($pattern)';
+    }
+
+    return segment.name;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -568,7 +722,7 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
               ),
               const SizedBox(width: 12),
               Text(
-                widget.segment.name, // Using name from segment
+                _getSegmentDisplayName(), // Using descriptive name
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -679,10 +833,6 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
     FormGroup segmentControl,
     StudyScheduleControls formViewModel,
   ) {
-    final totalInterventions = formViewModel.interventions.length;
-    final useSimpleLabels = totalInterventions == 2;
-    final showInterventionSelection = totalInterventions > 2;
-
     return [
       Row(
         children: [
@@ -717,21 +867,6 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
           ),
         ],
       ),
-      if (showInterventionSelection) ...[
-        const SizedBox(height: 16),
-        Text(
-          'Select Interventions to Alternate',
-          style: Theme.of(
-            context,
-          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 8),
-        _buildInterventionMultiSelect(
-          segmentControl,
-          formViewModel,
-          useSimpleLabels,
-        ),
-      ],
     ];
   }
 
@@ -739,10 +874,6 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
     FormGroup segmentControl,
     StudyScheduleControls formViewModel,
   ) {
-    final totalInterventions = formViewModel.interventions.length;
-    final useSimpleLabels = totalInterventions == 2;
-    final showInterventionSelection = totalInterventions > 2;
-
     return [
       Row(
         children: [
@@ -777,60 +908,7 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
           ),
         ],
       ),
-      if (showInterventionSelection) ...[
-        const SizedBox(height: 16),
-        Text(
-          'Select Interventions to Counter-Balance',
-          style: Theme.of(
-            context,
-          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 8),
-        _buildInterventionMultiSelect(
-          segmentControl,
-          formViewModel,
-          useSimpleLabels,
-        ),
-      ],
     ];
-  }
-
-  Widget _buildInterventionMultiSelect(
-    FormGroup segmentControl,
-    StudyScheduleControls formViewModel,
-    bool useSimpleLabels,
-  ) {
-    final control =
-        segmentControl.control('interventionIds') as FormControl<List<int>>;
-    final currentValue = control.value ?? [];
-
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: List.generate(formViewModel.allowedInterventionCount, (index) {
-        final isSelected = currentValue.contains(index);
-        final label = useSimpleLabels
-            ? 'Intervention ${String.fromCharCode(65 + index)}'
-            : 'Choice ${String.fromCharCode(65 + index)}';
-
-        return FilterChip(
-          label: Text(label),
-          selected: isSelected,
-          onSelected: (selected) {
-            final newValue = List<int>.from(currentValue);
-            if (selected) {
-              if (!newValue.contains(index)) {
-                newValue.add(index);
-                newValue.sort();
-              }
-            } else {
-              newValue.remove(index);
-            }
-            control.value = newValue.isEmpty ? null : newValue;
-          },
-        );
-      }),
-    );
   }
 
   List<Widget> _getThompsonSamplingControls(
@@ -958,7 +1036,7 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
                       as FormControl<int>?,
               isExpanded: true,
               items: List.generate(
-                formViewModel.allowedInterventionCount,
+                2, // Always only A and B for single intervention
                 (index) => DropdownMenuItem(
                   value: index,
                   child: Text(
@@ -976,7 +1054,7 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
                     : 'Participant Choice',
                 helperText: useSimpleLabels
                     ? 'Participants will compare these two interventions'
-                    : 'Participants select their interventions at study start; this uses their 1st, 2nd, 3rd, etc. choice',
+                    : 'Participants select 2 interventions; this uses their 1st or 2nd choice',
               ),
             ),
           ),

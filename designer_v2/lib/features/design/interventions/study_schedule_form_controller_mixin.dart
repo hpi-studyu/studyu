@@ -424,31 +424,54 @@ mixin StudyScheduleControls {
   }
 
   void _applyInterventionIndexConstraints() {
-    final allowedCount = allowedInterventionCount;
+    // All segments can only use index 0 or 1 (A or B)
+    const maxAllowedIndex = 1;
     for (final segmentControl in segmentsControl.controls) {
       final segment = segmentControl as FormGroup;
-      if (segment.control('type').value ==
-          StudyScheduleSegmentType.singleIntervention) {
+      final segmentType = segment.control('type').value;
+
+      if (segmentType == StudyScheduleSegmentType.singleIntervention) {
         final indexControl =
             segment.control('interventionIndex') as FormControl<int>;
         final current = indexControl.value ?? 0;
-        final clamped = _clampInterventionIndex(current, allowedCount);
+        final clamped = _clampInterventionIndex(current, maxAllowedIndex);
         if (clamped != current) {
           indexControl.value = clamped;
+        }
+      } else if (segmentType == StudyScheduleSegmentType.alternating ||
+          segmentType == StudyScheduleSegmentType.counterBalanced) {
+        // Clamp interventionIds to only include 0 and 1 (A and B)
+        final idsControl =
+            segment.control('interventionIds') as FormControl<List<int>>;
+        final currentIds = idsControl.value;
+        if (currentIds != null && currentIds.isNotEmpty) {
+          final clampedIds = currentIds
+              .where((id) => id <= maxAllowedIndex)
+              .toList();
+          // Only update if different
+          if (clampedIds.length != currentIds.length ||
+              !_listEquals(clampedIds, currentIds)) {
+            idsControl.value = clampedIds.isEmpty ? null : clampedIds;
+          }
         }
       }
     }
   }
 
-  int _clampInterventionIndex(int value, int allowedCount) {
-    if (allowedCount <= 0) {
-      return 0;
+  bool _listEquals(List<int> a, List<int> b) {
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
     }
+    return true;
+  }
+
+  int _clampInterventionIndex(int value, int maxAllowedIndex) {
     if (value < 0) {
       return 0;
     }
-    if (value >= allowedCount) {
-      return allowedCount - 1;
+    if (value > maxAllowedIndex) {
+      return maxAllowedIndex;
     }
     return value;
   }

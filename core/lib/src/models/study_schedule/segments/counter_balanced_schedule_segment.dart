@@ -38,7 +38,9 @@ class CounterBalancedScheduleSegment extends StudyScheduleSegment {
     final count = (interventionIds != null && interventionIds!.isNotEmpty)
         ? interventionIds!.length
         : interventions.length;
-    return interventionDuration * cycleAmount * count;
+    // Maximum 2 interventions (A and B) can be used
+    final clampedCount = count > 2 ? 2 : count;
+    return interventionDuration * cycleAmount * clampedCount;
   }
 
   @override
@@ -55,12 +57,14 @@ class CounterBalancedScheduleSegment extends StudyScheduleSegment {
 
     final useIndices = interventionIds != null && interventionIds!.isNotEmpty;
     final count = useIndices ? interventionIds!.length : interventions.length;
+    // Maximum 2 interventions (A and B) can be used
+    final clampedCount = count > 2 ? 2 : count;
 
     // Counterbalancing: rotate the order of interventions for each cycle
-    final cycle = day ~/ (interventionDuration * count);
-    final dayInCycle = day % (interventionDuration * count);
+    final cycle = day ~/ (interventionDuration * clampedCount);
+    final dayInCycle = day % (interventionDuration * clampedCount);
     final indexInSequence =
-        (dayInCycle ~/ interventionDuration + cycle) % count;
+        (dayInCycle ~/ interventionDuration + cycle) % clampedCount;
     final actualIndex = useIndices
         ? interventionIds![indexInSequence]
         : indexInSequence;

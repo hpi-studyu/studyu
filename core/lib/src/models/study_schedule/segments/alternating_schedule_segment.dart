@@ -31,7 +31,9 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
     final count = (interventionIds != null && interventionIds!.isNotEmpty)
         ? interventionIds!.length
         : interventions.length;
-    return interventionDuration * cycleAmount * count;
+    // Maximum 2 interventions (A and B) can be used
+    final clampedCount = count > 2 ? 2 : count;
+    return interventionDuration * cycleAmount * clampedCount;
   }
 
   @override
@@ -48,8 +50,10 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
 
     final useIndices = interventionIds != null && interventionIds!.isNotEmpty;
     final count = useIndices ? interventionIds!.length : interventions.length;
+    // Maximum 2 interventions (A and B) can be used
+    final clampedCount = count > 2 ? 2 : count;
 
-    final indexInSequence = (day ~/ interventionDuration) % count;
+    final indexInSequence = (day ~/ interventionDuration) % clampedCount;
     final actualIndex = useIndices
         ? interventionIds![indexInSequence]
         : indexInSequence;
