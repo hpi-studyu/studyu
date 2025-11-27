@@ -22,10 +22,15 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
   /// If null or empty, uses all available interventions.
   List<String>? interventionIds;
 
+  /// If true and only 2 interventions, balance by reversing A/B for 50% of participants
+  @JsonKey(defaultValue: false)
+  bool balanceFirstIntervention;
+
   AlternatingScheduleSegment(
     this.interventionDuration,
     this.cycleAmount, {
     this.interventionIds,
+    this.balanceFirstIntervention = false,
   });
 
   @override
@@ -33,9 +38,7 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
     final count = (interventionIds != null && interventionIds!.isNotEmpty)
         ? interventionIds!.length
         : interventions.length;
-    // Maximum 2 interventions (A and B) can be used
-    final clampedCount = count > 2 ? 2 : count;
-    return interventionDuration * cycleAmount * clampedCount;
+    return interventionDuration * cycleAmount * count;
   }
 
   @override

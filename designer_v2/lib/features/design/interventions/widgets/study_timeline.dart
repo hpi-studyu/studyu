@@ -122,48 +122,46 @@ class StudyTimeline extends StatelessWidget {
       final selectedIds = segment.interventionIds;
       final useCustomIds = selectedIds != null && selectedIds.isNotEmpty;
       final count = useCustomIds ? selectedIds.length : interventions.length;
-      final clampedCount = count > 2 ? 2 : count;
 
       buffer.writeln('Alternating Schedule:');
       buffer.writeln('• ${segment.interventionDuration} days per intervention');
       buffer.writeln('• ${segment.cycleAmount} cycle(s)');
-      buffer.writeln('• $clampedCount intervention(s) in rotation\n');
+      buffer.writeln('• $count intervention(s) in rotation\n');
 
       buffer.writeln('Time Allocation per Intervention:');
       final timePerIntervention =
           segment.interventionDuration * segment.cycleAmount;
 
-      for (var i = 0; i < clampedCount; i++) {
+      for (var i = 0; i < count; i++) {
         final label = 'Position ${String.fromCharCode(65 + i)}';
         buffer.writeln('  $label: $timePerIntervention days');
       }
 
       buffer.write(
-        '\nCalculation: ${segment.interventionDuration} days × ${segment.cycleAmount} cycle(s) × $clampedCount intervention(s) = $totalDuration days',
+        '\nCalculation: ${segment.interventionDuration} days × ${segment.cycleAmount} cycle(s) × $count intervention(s) = $totalDuration days',
       );
     } else if (segment is CounterBalancedScheduleSegment) {
       final selectedIds = segment.interventionIds;
       final useCustomIds = selectedIds != null && selectedIds.isNotEmpty;
       final count = useCustomIds ? selectedIds.length : interventions.length;
-      final clampedCount = count > 2 ? 2 : count;
 
       buffer.writeln('Counter-Balanced Schedule:');
       buffer.writeln('• ${segment.interventionDuration} days per intervention');
       buffer.writeln('• ${segment.cycleAmount} cycle(s)');
-      buffer.writeln('• $clampedCount intervention(s) in rotation');
-      buffer.writeln('• Order rotates each cycle\n');
+      buffer.writeln('• $count intervention(s) in rotation');
+      buffer.writeln('• Order randomized each cycle\n');
 
       buffer.writeln('Time Allocation per Intervention:');
       final timePerIntervention =
           segment.interventionDuration * segment.cycleAmount;
 
-      for (var i = 0; i < clampedCount; i++) {
+      for (var i = 0; i < count; i++) {
         final label = 'Position ${String.fromCharCode(65 + i)}';
         buffer.writeln('  $label: $timePerIntervention days');
       }
 
       buffer.write(
-        '\nCalculation: ${segment.interventionDuration} days × ${segment.cycleAmount} cycle(s) × $clampedCount intervention(s) = $totalDuration days',
+        '\nCalculation: ${segment.interventionDuration} days × ${segment.cycleAmount} cycle(s) × $count intervention(s) = $totalDuration days',
       );
     } else if (segment is ThompsonSamplingScheduleSegment) {
       buffer.writeln('Thompson Sampling:');
@@ -214,24 +212,31 @@ class StudyTimeline extends StatelessWidget {
     final count = useCustomIds
         ? interventionIds.length
         : formViewModel.interventions.length;
-    final clampedCount = count > 2 ? 2 : count;
 
     final List<Widget> bars = [];
     final baseHSL = HSLColor.fromColor(baseColor);
-    final colorA = baseHSL
-        .withLightness((baseHSL.lightness + 0.05).clamp(0.0, 1.0))
-        .toColor();
-    final colorB = baseHSL
-        .withLightness((baseHSL.lightness - 0.05).clamp(0.0, 1.0))
-        .toColor();
-    final interventionColors = [colorA, colorB];
+
+    // Generate colors for all interventions (not just 2)
+    final interventionColors = <Color>[];
+    for (var i = 0; i < count; i++) {
+      // Distribute lightness variations evenly across interventions
+      final lightnessAdjustment = (i - (count - 1) / 2) * 0.05;
+      final color = baseHSL
+          .withLightness(
+            (baseHSL.lightness + lightnessAdjustment).clamp(0.0, 1.0),
+          )
+          .toColor();
+      interventionColors.add(color);
+    }
 
     if (isCounterBalanced) {
+      // Counter-Balanced: Random order each cycle (show with visual indication)
       for (var cycle = 0; cycle < cycleAmount; cycle++) {
-        for (var i = 0; i < clampedCount; i++) {
-          final indexInSequence = (i + cycle) % clampedCount;
+        for (var i = 0; i < count; i++) {
+          // For visualization, show the pattern with rotation
+          final indexInSequence = (i + cycle) % count;
           final label = String.fromCharCode(65 + indexInSequence);
-          final interventionColor = interventionColors[indexInSequence % 2];
+          final interventionColor = interventionColors[indexInSequence];
 
           bars.add(
             Expanded(
@@ -266,10 +271,11 @@ class StudyTimeline extends StatelessWidget {
         }
       }
     } else {
+      // Alternating: Fixed order ABC... each cycle
       for (var cycle = 0; cycle < cycleAmount; cycle++) {
-        for (var i = 0; i < clampedCount; i++) {
+        for (var i = 0; i < count; i++) {
           final label = String.fromCharCode(65 + i);
-          final interventionColor = interventionColors[i % 2];
+          final interventionColor = interventionColors[i];
 
           bars.add(
             Expanded(

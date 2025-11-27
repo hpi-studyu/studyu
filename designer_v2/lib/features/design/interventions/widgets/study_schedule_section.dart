@@ -47,10 +47,9 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
 
       final useCustomIds = selectedIds != null && selectedIds.isNotEmpty;
       final count = useCustomIds ? selectedIds.length : totalInterventions;
-      final clampedCount = count > 2 ? 2 : count;
 
       final pattern = StringBuffer();
-      for (var i = 0; i < clampedCount; i++) {
+      for (var i = 0; i < count; i++) {
         if (i > 0) pattern.write('-');
         pattern.write(String.fromCharCode(65 + i));
       }

@@ -14,6 +14,7 @@ CounterBalancedScheduleSegment _$CounterBalancedScheduleSegmentFromJson(
   interventionIds: (json['interventionIds'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
+  balanceFirstIntervention: json['balanceFirstIntervention'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$CounterBalancedScheduleSegmentToJson(
@@ -23,4 +24,5 @@ Map<String, dynamic> _$CounterBalancedScheduleSegmentToJson(
   'interventionDuration': instance.interventionDuration,
   'cycleAmount': instance.cycleAmount,
   'interventionIds': ?instance.interventionIds,
+  'balanceFirstIntervention': instance.balanceFirstIntervention,
 };

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_controller_mixin.dart';
-import 'package:studyu_designer_v2/features/design/interventions/widgets/segment_controls/shared/intervention_assignment_dropdowns.dart';
 import 'package:studyu_designer_v2/features/design/interventions/widgets/study_schedule_section.dart';
 
 class AlternatingControls {
@@ -15,6 +14,10 @@ class AlternatingControls {
   });
 
   List<Widget> build() {
+    final selectedInterventions =
+        formViewModel.selectedInterventionsControl.value ?? [];
+    final hasTwoInterventions = selectedInterventions.length == 2;
+
     return [
       Row(
         children: [
@@ -47,11 +50,25 @@ class AlternatingControls {
           ),
         ],
       ),
-      const SizedBox(height: 16),
-      ...InterventionAssignmentDropdowns(
-        segmentControl: segmentControl,
-        formViewModel: formViewModel,
-      ).build(),
+      if (hasTwoInterventions) ...[
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            ReactiveCheckbox(
+              formControl:
+                  segmentControl.control('balanceFirstIntervention')
+                      as FormControl<bool>,
+            ),
+            const SizedBox(width: 8),
+            const Expanded(
+              child: Text(
+                'Balance first intervention (50% start with A, 50% start with B)',
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
+          ],
+        ),
+      ],
     ];
   }
 }

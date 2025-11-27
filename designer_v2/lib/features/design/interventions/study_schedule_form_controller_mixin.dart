@@ -12,6 +12,12 @@ mixin StudyScheduleControls {
       FormControl<int>(value: 2);
   final FormControl<List<String>> selectedInterventionsControl =
       FormControl<List<String>>(value: []);
+  final FormControl<int> minInterventionsToSelectControl = FormControl<int>(
+    value: 2,
+  );
+  final FormControl<int> maxInterventionsToSelectControl = FormControl<int>(
+    value: 2,
+  );
   final List<StudyScheduleSegment> segments = [];
   final List<Intervention> interventions = [];
   final List<Observation> observations = [];
@@ -20,6 +26,8 @@ mixin StudyScheduleControls {
     'segments': segmentsControl,
     'numberOfInterventionsToSelect': numberOfInterventionsToSelectControl,
     'selectedInterventions': selectedInterventionsControl,
+    'minInterventionsToSelect': minInterventionsToSelectControl,
+    'maxInterventionsToSelect': maxInterventionsToSelectControl,
   };
 
   StreamSubscription<dynamic>? _selectionCountSubscription;
@@ -221,6 +229,7 @@ mixin StudyScheduleControls {
     int interventionDuration = 7,
     int cycleAmount = 1,
     List<String>? interventionIds,
+    bool balanceFirstIntervention = false,
   }) {
     return FormGroup({
       'type': FormControl<StudyScheduleSegmentType>(
@@ -229,6 +238,9 @@ mixin StudyScheduleControls {
       'interventionDuration': FormControl<int>(value: interventionDuration),
       'cycleAmount': FormControl<int>(value: cycleAmount),
       'interventionIds': FormControl<List<String>>(value: interventionIds),
+      'balanceFirstIntervention': FormControl<bool>(
+        value: balanceFirstIntervention,
+      ),
     });
   }
 
@@ -236,6 +248,7 @@ mixin StudyScheduleControls {
     int interventionDuration = 7,
     int cycleAmount = 1,
     List<String>? interventionIds,
+    bool balanceFirstIntervention = false,
   }) {
     return FormGroup({
       'type': FormControl<StudyScheduleSegmentType>(
@@ -244,6 +257,9 @@ mixin StudyScheduleControls {
       'interventionDuration': FormControl<int>(value: interventionDuration),
       'cycleAmount': FormControl<int>(value: cycleAmount),
       'interventionIds': FormControl<List<String>>(value: interventionIds),
+      'balanceFirstIntervention': FormControl<bool>(
+        value: balanceFirstIntervention,
+      ),
     });
   }
 
@@ -277,6 +293,9 @@ mixin StudyScheduleControls {
               segment.control('cycleAmount').value as int,
               interventionIds:
                   segment.control('interventionIds').value as List<String>?,
+              balanceFirstIntervention:
+                  segment.control('balanceFirstIntervention').value as bool? ??
+                  false,
             ),
           );
         case StudyScheduleSegmentType.counterBalanced:
@@ -286,6 +305,9 @@ mixin StudyScheduleControls {
               segment.control('cycleAmount').value as int,
               interventionIds:
                   segment.control('interventionIds').value as List<String>?,
+              balanceFirstIntervention:
+                  segment.control('balanceFirstIntervention').value as bool? ??
+                  false,
             ),
           );
         case StudyScheduleSegmentType.thompsonSampling:
@@ -326,6 +348,7 @@ mixin StudyScheduleControls {
             interventionDuration: element.interventionDuration,
             cycleAmount: element.cycleAmount,
             interventionIds: element.interventionIds,
+            balanceFirstIntervention: element.balanceFirstIntervention,
           ),
         );
       } else if (element is CounterBalancedScheduleSegment) {
@@ -334,6 +357,7 @@ mixin StudyScheduleControls {
             interventionDuration: element.interventionDuration,
             cycleAmount: element.cycleAmount,
             interventionIds: element.interventionIds,
+            balanceFirstIntervention: element.balanceFirstIntervention,
           ),
         );
       } else if (element is ThompsonSamplingScheduleSegment) {
@@ -363,6 +387,13 @@ mixin StudyScheduleControls {
         ? data.selectedInterventions
         : data.interventions.map((i) => i.id).toList();
     selectedInterventionsControl.value = selectedInterventions;
+
+    // Initialize min/max controls
+    final selectedCount = selectedInterventions.length;
+    minInterventionsToSelectControl.value = selectedCount >= 2
+        ? 2
+        : selectedCount;
+    maxInterventionsToSelectControl.value = selectedCount;
 
     // Ensure the numberOfInterventionsToSelectControl is within valid bounds
     final int total = interventions.length;
@@ -399,6 +430,9 @@ mixin StudyScheduleControls {
               segment.control('cycleAmount').value as int,
               interventionIds:
                   segment.control('interventionIds').value as List<String>?,
+              balanceFirstIntervention:
+                  segment.control('balanceFirstIntervention').value as bool? ??
+                  false,
             );
           case StudyScheduleSegmentType.counterBalanced:
             return CounterBalancedScheduleSegment(
@@ -406,6 +440,9 @@ mixin StudyScheduleControls {
               segment.control('cycleAmount').value as int,
               interventionIds:
                   segment.control('interventionIds').value as List<String>?,
+              balanceFirstIntervention:
+                  segment.control('balanceFirstIntervention').value as bool? ??
+                  false,
             );
           case StudyScheduleSegmentType.thompsonSampling:
             return ThompsonSamplingScheduleSegment(
@@ -431,33 +468,6 @@ mixin StudyScheduleControls {
   }
 
   void _applyInterventionIndexConstraints() {
-    // Single intervention can only use index 0 or 1 (A or B)
-    const maxAllowedIndex = 1;
-    for (final segmentControl in segmentsControl.controls) {
-      final segment = segmentControl as FormGroup;
-      final segmentType = segment.control('type').value;
-
-      if (segmentType == StudyScheduleSegmentType.singleIntervention) {
-        final indexControl =
-            segment.control('interventionIndex') as FormControl<int>;
-        final current = indexControl.value ?? 0;
-        final clamped = _clampInterventionIndex(current, maxAllowedIndex);
-        if (clamped != current) {
-          indexControl.value = clamped;
-        }
-      }
-      // Note: alternating and counter-balanced now use string IDs,
-      // so no clamping needed
-    }
-  }
-
-  int _clampInterventionIndex(int value, int maxAllowedIndex) {
-    if (value < 0) {
-      return 0;
-    }
-    if (value > maxAllowedIndex) {
-      return maxAllowedIndex;
-    }
-    return value;
+    // No constraints needed - participants can select from any available choices
   }
 }

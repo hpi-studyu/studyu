@@ -20,19 +20,7 @@ class SingleInterventionControls {
     final valueToIndexMap = <String, int>{};
     final dropdownItems = <DropdownMenuItem<String>>[];
 
-    // Add all defined interventions
-    for (var i = 0; i < formViewModel.interventions.length; i++) {
-      final intervention = formViewModel.interventions[i];
-      valueToIndexMap[intervention.id] = i;
-      dropdownItems.add(
-        DropdownMenuItem(
-          value: intervention.id,
-          child: Text(intervention.name ?? intervention.id),
-        ),
-      );
-    }
-
-    // Add participant choice options
+    // Only add participant choice options (no hardcoded interventions)
     if (selectedInterventions.isNotEmpty) {
       for (var i = 0; i < selectedInterventions.length; i++) {
         final choiceKey = 'choice_$i';
@@ -52,13 +40,10 @@ class SingleInterventionControls {
         segmentControl.control('interventionIndex') as FormControl<int>;
     final currentIndex = indexControl.value ?? 0;
 
-    // Find the string value that maps to current index
+    // Map current index to choice placeholder
     String? currentValue;
-    if (selectedInterventions.isNotEmpty &&
-        currentIndex < selectedInterventions.length) {
+    if (currentIndex < selectedInterventions.length) {
       currentValue = 'choice_$currentIndex';
-    } else if (currentIndex < formViewModel.interventions.length) {
-      currentValue = formViewModel.interventions[currentIndex].id;
     }
 
     return [
@@ -75,9 +60,8 @@ class SingleInterventionControls {
               },
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Intervention',
-                helperText:
-                    'Select which intervention or participant choice to use',
+                labelText: 'Participant Choice',
+                helperText: 'Select which participant choice to use',
               ),
             ),
           ),
