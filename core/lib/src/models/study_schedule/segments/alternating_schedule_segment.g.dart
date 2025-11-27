@@ -11,6 +11,9 @@ AlternatingScheduleSegment _$AlternatingScheduleSegmentFromJson(
 ) => AlternatingScheduleSegment(
   (json['interventionDuration'] as num).toInt(),
   (json['cycleAmount'] as num).toInt(),
+  interventionIds: (json['interventionIds'] as List<dynamic>?)
+      ?.map((e) => (e as num).toInt())
+      .toList(),
 );
 
 Map<String, dynamic> _$AlternatingScheduleSegmentToJson(
@@ -19,4 +22,5 @@ Map<String, dynamic> _$AlternatingScheduleSegmentToJson(
   'type': instance.type.toJson(),
   'interventionDuration': instance.interventionDuration,
   'cycleAmount': instance.cycleAmount,
+  'interventionIds': ?instance.interventionIds,
 };

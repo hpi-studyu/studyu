@@ -220,6 +220,7 @@ mixin StudyScheduleControls {
   FormGroup createAlternatingFormGroup({
     int interventionDuration = 0,
     int cycleAmount = 0,
+    List<int>? interventionIds,
   }) {
     return FormGroup({
       'type': FormControl<StudyScheduleSegmentType>(
@@ -227,12 +228,14 @@ mixin StudyScheduleControls {
       ),
       'interventionDuration': FormControl<int>(value: interventionDuration),
       'cycleAmount': FormControl<int>(value: cycleAmount),
+      'interventionIds': FormControl<List<int>>(value: interventionIds),
     });
   }
 
   FormGroup createCounterBalancedFormGroup({
     int interventionDuration = 0,
     int cycleAmount = 0,
+    List<int>? interventionIds,
   }) {
     return FormGroup({
       'type': FormControl<StudyScheduleSegmentType>(
@@ -240,6 +243,7 @@ mixin StudyScheduleControls {
       ),
       'interventionDuration': FormControl<int>(value: interventionDuration),
       'cycleAmount': FormControl<int>(value: cycleAmount),
+      'interventionIds': FormControl<List<int>>(value: interventionIds),
     });
   }
 
@@ -271,6 +275,8 @@ mixin StudyScheduleControls {
             AlternatingScheduleSegment(
               segment.control('interventionDuration').value as int,
               segment.control('cycleAmount').value as int,
+              interventionIds:
+                  segment.control('interventionIds').value as List<int>?,
             ),
           );
         case StudyScheduleSegmentType.counterBalanced:
@@ -278,6 +284,8 @@ mixin StudyScheduleControls {
             CounterBalancedScheduleSegment(
               segment.control('interventionDuration').value as int,
               segment.control('cycleAmount').value as int,
+              interventionIds:
+                  segment.control('interventionIds').value as List<int>?,
             ),
           );
         case StudyScheduleSegmentType.thompsonSampling:
@@ -317,6 +325,7 @@ mixin StudyScheduleControls {
           createAlternatingFormGroup(
             interventionDuration: element.interventionDuration,
             cycleAmount: element.cycleAmount,
+            interventionIds: element.interventionIds,
           ),
         );
       } else if (element is CounterBalancedScheduleSegment) {
@@ -324,6 +333,7 @@ mixin StudyScheduleControls {
           createCounterBalancedFormGroup(
             interventionDuration: element.interventionDuration,
             cycleAmount: element.cycleAmount,
+            interventionIds: element.interventionIds,
           ),
         );
       } else if (element is ThompsonSamplingScheduleSegment) {
@@ -381,11 +391,15 @@ mixin StudyScheduleControls {
             return AlternatingScheduleSegment(
               segment.control('interventionDuration').value as int,
               segment.control('cycleAmount').value as int,
+              interventionIds:
+                  segment.control('interventionIds').value as List<int>?,
             );
           case StudyScheduleSegmentType.counterBalanced:
             return CounterBalancedScheduleSegment(
               segment.control('interventionDuration').value as int,
               segment.control('cycleAmount').value as int,
+              interventionIds:
+                  segment.control('interventionIds').value as List<int>?,
             );
           case StudyScheduleSegmentType.thompsonSampling:
             return ThompsonSamplingScheduleSegment(

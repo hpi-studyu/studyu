@@ -647,9 +647,9 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
       case StudyScheduleSegmentType.baseline:
         return _getBaselineControls(segmentControl);
       case StudyScheduleSegmentType.alternating:
-        return _getAlternatingControls(segmentControl);
+        return _getAlternatingControls(segmentControl, formViewModel);
       case StudyScheduleSegmentType.counterBalanced:
-        return _getCounterBalancedControls(segmentControl);
+        return _getCounterBalancedControls(segmentControl, formViewModel);
       case StudyScheduleSegmentType.thompsonSampling:
         return _getThompsonSamplingControls(segmentControl, formViewModel);
       case StudyScheduleSegmentType.singleIntervention:
@@ -675,7 +675,14 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
     ];
   }
 
-  List<Widget> _getAlternatingControls(FormGroup segmentControl) {
+  List<Widget> _getAlternatingControls(
+    FormGroup segmentControl,
+    StudyScheduleControls formViewModel,
+  ) {
+    final totalInterventions = formViewModel.interventions.length;
+    final useSimpleLabels = totalInterventions == 2;
+    final showInterventionSelection = totalInterventions > 2;
+
     return [
       Row(
         children: [
@@ -710,10 +717,32 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
           ),
         ],
       ),
+      if (showInterventionSelection) ...[
+        const SizedBox(height: 16),
+        Text(
+          'Select Interventions to Alternate',
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 8),
+        _buildInterventionMultiSelect(
+          segmentControl,
+          formViewModel,
+          useSimpleLabels,
+        ),
+      ],
     ];
   }
 
-  List<Widget> _getCounterBalancedControls(FormGroup segmentControl) {
+  List<Widget> _getCounterBalancedControls(
+    FormGroup segmentControl,
+    StudyScheduleControls formViewModel,
+  ) {
+    final totalInterventions = formViewModel.interventions.length;
+    final useSimpleLabels = totalInterventions == 2;
+    final showInterventionSelection = totalInterventions > 2;
+
     return [
       Row(
         children: [
@@ -748,7 +777,60 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
           ),
         ],
       ),
+      if (showInterventionSelection) ...[
+        const SizedBox(height: 16),
+        Text(
+          'Select Interventions to Counter-Balance',
+          style: Theme.of(
+            context,
+          ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 8),
+        _buildInterventionMultiSelect(
+          segmentControl,
+          formViewModel,
+          useSimpleLabels,
+        ),
+      ],
     ];
+  }
+
+  Widget _buildInterventionMultiSelect(
+    FormGroup segmentControl,
+    StudyScheduleControls formViewModel,
+    bool useSimpleLabels,
+  ) {
+    final control =
+        segmentControl.control('interventionIds') as FormControl<List<int>>;
+    final currentValue = control.value ?? [];
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: List.generate(formViewModel.allowedInterventionCount, (index) {
+        final isSelected = currentValue.contains(index);
+        final label = useSimpleLabels
+            ? 'Intervention ${String.fromCharCode(65 + index)}'
+            : 'Choice ${String.fromCharCode(65 + index)}';
+
+        return FilterChip(
+          label: Text(label),
+          selected: isSelected,
+          onSelected: (selected) {
+            final newValue = List<int>.from(currentValue);
+            if (selected) {
+              if (!newValue.contains(index)) {
+                newValue.add(index);
+                newValue.sort();
+              }
+            } else {
+              newValue.remove(index);
+            }
+            control.value = newValue.isEmpty ? null : newValue;
+          },
+        );
+      }),
+    );
   }
 
   List<Widget> _getThompsonSamplingControls(
@@ -863,6 +945,9 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
     FormGroup segmentControl,
     StudyScheduleControls formViewModel,
   ) {
+    final totalInterventions = formViewModel.interventions.length;
+    final useSimpleLabels = totalInterventions == 2;
+
     return [
       Row(
         children: [
@@ -877,16 +962,21 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
                 (index) => DropdownMenuItem(
                   value: index,
                   child: Text(
-                    'Intervention ${String.fromCharCode(65 + index)}',
+                    useSimpleLabels
+                        ? 'Intervention ${String.fromCharCode(65 + index)}'
+                        : "Choice ${String.fromCharCode(65 + index)} (Participant's ${_ordinal(index + 1)} selection)",
                   ),
                 ),
               ),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
                 // todo localize
-                labelText: 'Select Intervention',
-                helperText:
-                    'Choose A, B, C, etc. - participants will map their selected interventions to these',
+                labelText: useSimpleLabels
+                    ? 'Intervention'
+                    : 'Participant Choice',
+                helperText: useSimpleLabels
+                    ? 'Participants will compare these two interventions'
+                    : 'Participants select their interventions at study start; this uses their 1st, 2nd, 3rd, etc. choice',
               ),
             ),
           ),
@@ -907,6 +997,22 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
         ],
       ),
     ];
+  }
+
+  String _ordinal(int number) {
+    if (number % 100 >= 11 && number % 100 <= 13) {
+      return '${number}th';
+    }
+    switch (number % 10) {
+      case 1:
+        return '${number}st';
+      case 2:
+        return '${number}nd';
+      case 3:
+        return '${number}rd';
+      default:
+        return '${number}th';
+    }
   }
 }
 

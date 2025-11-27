@@ -15,11 +15,23 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
   int interventionDuration;
   int cycleAmount;
 
-  AlternatingScheduleSegment(this.interventionDuration, this.cycleAmount);
+  /// Optional list of intervention indices to alternate between.
+  /// If null or empty, uses all available interventions.
+  /// If provided, only alternates between these specific indices.
+  List<int>? interventionIds;
+
+  AlternatingScheduleSegment(
+    this.interventionDuration,
+    this.cycleAmount, {
+    this.interventionIds,
+  });
 
   @override
   int getDuration(List<Intervention> interventions) {
-    return interventionDuration * cycleAmount * interventions.length;
+    final count = (interventionIds != null && interventionIds!.isNotEmpty)
+        ? interventionIds!.length
+        : interventions.length;
+    return interventionDuration * cycleAmount * count;
   }
 
   @override
@@ -34,9 +46,15 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
       );
     }
 
-    final interventionIndex =
-        (day ~/ interventionDuration) % interventions.length;
-    return interventions[interventionIndex];
+    final useIndices = interventionIds != null && interventionIds!.isNotEmpty;
+    final count = useIndices ? interventionIds!.length : interventions.length;
+
+    final indexInSequence = (day ~/ interventionDuration) % count;
+    final actualIndex = useIndices
+        ? interventionIds![indexInSequence]
+        : indexInSequence;
+
+    return interventions[actualIndex];
   }
 
   factory AlternatingScheduleSegment.fromJson(Map<String, dynamic> json) =>

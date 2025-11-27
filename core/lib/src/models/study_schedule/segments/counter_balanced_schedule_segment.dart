@@ -16,7 +16,16 @@ class CounterBalancedScheduleSegment extends StudyScheduleSegment {
   int interventionDuration;
   int cycleAmount;
 
-  CounterBalancedScheduleSegment(this.interventionDuration, this.cycleAmount);
+  /// Optional list of intervention indices to counter-balance between.
+  /// If null or empty, uses all available interventions.
+  /// If provided, only counter-balances between these specific indices.
+  List<int>? interventionIds;
+
+  CounterBalancedScheduleSegment(
+    this.interventionDuration,
+    this.cycleAmount, {
+    this.interventionIds,
+  });
 
   factory CounterBalancedScheduleSegment.fromJson(Map<String, dynamic> json) =>
       _$CounterBalancedScheduleSegmentFromJson(json);
@@ -26,7 +35,10 @@ class CounterBalancedScheduleSegment extends StudyScheduleSegment {
 
   @override
   int getDuration(List<Intervention> interventions) {
-    return interventionDuration * cycleAmount * interventions.length;
+    final count = (interventionIds != null && interventionIds!.isNotEmpty)
+        ? interventionIds!.length
+        : interventions.length;
+    return interventionDuration * cycleAmount * count;
   }
 
   @override
@@ -37,14 +49,22 @@ class CounterBalancedScheduleSegment extends StudyScheduleSegment {
   ) {
     if (day < 0 || day >= getDuration(interventions)) {
       throw ArgumentError(
-        "Day must be between 0 and [${getDuration(interventions) - 1}[0m",
+        "Day must be between 0 and [${getDuration(interventions) - 1}]",
       );
     }
+
+    final useIndices = interventionIds != null && interventionIds!.isNotEmpty;
+    final count = useIndices ? interventionIds!.length : interventions.length;
+
     // Counterbalancing: rotate the order of interventions for each cycle
-    final cycle = day ~/ (interventionDuration * interventions.length);
-    final dayInCycle = day % (interventionDuration * interventions.length);
-    final interventionIndex =
-        (dayInCycle ~/ interventionDuration + cycle) % interventions.length;
-    return interventions[interventionIndex];
+    final cycle = day ~/ (interventionDuration * count);
+    final dayInCycle = day % (interventionDuration * count);
+    final indexInSequence =
+        (dayInCycle ~/ interventionDuration + cycle) % count;
+    final actualIndex = useIndices
+        ? interventionIds![indexInSequence]
+        : indexInSequence;
+
+    return interventions[actualIndex];
   }
 }

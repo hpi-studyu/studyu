@@ -12,11 +12,11 @@ class SingleInterventionScheduleSegment extends StudyScheduleSegment {
 
   @override
   String get name {
-    // Display as "Intervention A", "Intervention B", etc.
+    // Display as "Choice A", "Choice B", etc.
     if (interventionIndex >= 0 && interventionIndex < 26) {
-      return 'Intervention ${String.fromCharCode(65 + interventionIndex)}';
+      return 'Choice ${String.fromCharCode(65 + interventionIndex)}';
     }
-    return 'Intervention ${interventionIndex + 1}';
+    return 'Choice ${interventionIndex + 1}';
   }
 
   /// Index of the intervention (0 = A, 1 = B, 2 = C, etc.)
