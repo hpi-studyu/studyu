@@ -111,27 +111,8 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Daily Food Diary'),
-        actions: [
-          TextButton(
-            onPressed: _saveRecall,
-            style: TextButton.styleFrom(
-              foregroundColor: theme.colorScheme.primary,
-            ),
-            child: const Text('SAVE'),
-          ),
-          if (_recall.meals.isNotEmpty)
-            TextButton(
-              onPressed: _completeRecall,
-              style: TextButton.styleFrom(
-                foregroundColor: theme.colorScheme.primary,
-                textStyle: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              child: const Text('COMPLETE'),
-            ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Daily Food Diary')),
+      floatingActionButton: _buildFloatingActionButtons(theme),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -369,6 +350,40 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFloatingActionButtons(ThemeData theme) {
+    final showComplete = _recall.meals.isNotEmpty;
+
+    if (!showComplete) {
+      return FloatingActionButton.extended(
+        heroTag: 'save',
+        onPressed: _saveRecall,
+        icon: const Icon(Icons.save),
+        label: const Text('Save'),
+      );
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        FloatingActionButton.extended(
+          heroTag: 'save',
+          onPressed: _saveRecall,
+          backgroundColor: theme.colorScheme.surfaceContainerHigh,
+          foregroundColor: theme.colorScheme.onSurface,
+          icon: const Icon(Icons.save),
+          label: const Text('Save'),
+        ),
+        const SizedBox(width: 16),
+        FloatingActionButton.extended(
+          heroTag: 'complete',
+          onPressed: _completeRecall,
+          icon: const Icon(Icons.check),
+          label: const Text('Complete'),
+        ),
+      ],
     );
   }
 }

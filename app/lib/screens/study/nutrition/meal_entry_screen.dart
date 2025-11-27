@@ -198,21 +198,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Meal Entry'),
-        actions: [
-          if (!_isSkipped && _meal.foods.isNotEmpty ||
-              _isSkipped && _skipReason != null)
-            TextButton(
-              onPressed: _saveMeal,
-              style: TextButton.styleFrom(
-                foregroundColor: theme.colorScheme.primary,
-                textStyle: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              child: const Text('SAVE'),
-            ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Meal Entry')),
+      floatingActionButton: _buildFloatingActionButton(theme),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -545,5 +532,17 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         ),
       ),
     );
+  }
+
+  Widget? _buildFloatingActionButton(ThemeData theme) {
+    if (!_isSkipped && _meal.foods.isNotEmpty ||
+        _isSkipped && _skipReason != null) {
+      return FloatingActionButton.extended(
+        onPressed: _saveMeal,
+        icon: const Icon(Icons.check),
+        label: const Text('Save'),
+      );
+    }
+    return null;
   }
 }

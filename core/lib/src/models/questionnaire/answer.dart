@@ -35,6 +35,8 @@ class Answer<V> {
         return Answer<num>.parseJson(data);
       case String():
         return Answer<String>.parseJson(data);
+      case Map():
+        return Answer<Map<String, dynamic>>.parseJson(data);
       default:
         // todo Why does value has a type of List<dynamic> instead of List<String>?
         if (value is List) {
