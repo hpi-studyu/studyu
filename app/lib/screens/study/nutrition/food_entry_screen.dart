@@ -318,13 +318,18 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                       labelText: 'Amount',
                       border: OutlineInputBorder(),
                     ),
-                    keyboardType: TextInputType.number,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                    ],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Required';
                       }
                       if (double.tryParse(value) == null) {
-                        return 'Invalid';
+                        return 'Invalid number';
                       }
                       return null;
                     },
@@ -417,7 +422,19 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
         border: const OutlineInputBorder(),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       ),
-      keyboardType: TextInputType.number,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+      ],
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return null; // Allow empty, will default to 0
+        }
+        if (double.tryParse(value) == null) {
+          return 'Invalid';
+        }
+        return null;
+      },
     );
   }
 }

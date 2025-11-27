@@ -19,6 +19,7 @@ class MealEntryScreen extends StatefulWidget {
 }
 
 class _MealEntryScreenState extends State<MealEntryScreen> {
+  final _formKey = GlobalKey<FormState>();
   late MealLog _meal;
   late MealType _mealType;
   late MealContext _mealContext;
@@ -96,6 +97,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   }
 
   void _saveMeal() {
+    if (!_formKey.currentState!.validate()) return;
+
     _meal = MealLog(
       id: _meal.id,
       mealType: _mealType,
@@ -202,341 +205,375 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
       floatingActionButton: _buildFloatingActionButton(theme),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Meal Type Section
-            Text('Meal Type', style: theme.textTheme.titleMedium),
-            const SizedBox(height: 8),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: MealType.values.map((type) {
-                  final isSelected = _mealType == type;
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: ChoiceChip(
-                      label: Text(_getMealTypeLabel(type)),
-                      selected: isSelected,
-                      onSelected: (selected) {
-                        if (selected) {
-                          setState(() => _mealType = type);
-                        }
-                      },
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            if (_mealType == MealType.other) ...[
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Custom Meal Label',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (value) => _customMealLabel = value,
-                controller: TextEditingController(text: _customMealLabel ?? ''),
-              ),
-              const SizedBox(height: 16),
-            ],
-
-            // Time Section
-            InkWell(
-              onTap: _selectTime,
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  border: Border.all(color: theme.colorScheme.outline),
-                  borderRadius: BorderRadius.circular(12),
-                ),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Meal Type Section
+              Text('Meal Type', style: theme.textTheme.titleMedium),
+              const SizedBox(height: 8),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: [
-                    const Icon(Icons.access_time),
-                    const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Time', style: theme.textTheme.labelMedium),
-                        Text(
-                          '${_timestamp.hour.toString().padLeft(2, '0')}:${_timestamp.minute.toString().padLeft(2, '0')}',
-                          style: theme.textTheme.titleMedium,
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    const Icon(Icons.edit, size: 20),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Context Section
-            ExpansionTile(
-              title: const Text('Context & Environment'),
-              leading: const Icon(Icons.place),
-              childrenPadding: const EdgeInsets.all(16),
-              children: [
-                // Location
-                Text('Where did you eat?', style: theme.textTheme.labelLarge),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  children: MealContext.values.map((context) {
-                    return ChoiceChip(
-                      label: Text(_getMealContextLabel(context)),
-                      selected: _mealContext == context,
-                      onSelected: (selected) {
-                        if (selected) {
-                          setState(() => _mealContext = context);
-                        }
-                      },
-                    );
-                  }).toList(),
-                ),
-                if (_mealContext == MealContext.other) ...[
-                  const SizedBox(height: 8),
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Location Description',
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (value) => _locationDescription = value,
-                    controller: TextEditingController(
-                      text: _locationDescription ?? '',
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 16),
-
-                // Company
-                Text('Who were you with?', style: theme.textTheme.labelLarge),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  children: [
-                    ChoiceChip(
-                      label: const Text('Not specified'),
-                      selected: _companyContext == null,
-                      onSelected: (selected) {
-                        if (selected) setState(() => _companyContext = null);
-                      },
-                    ),
-                    ...CompanyContext.values.map((context) {
-                      return ChoiceChip(
-                        label: Text(_getCompanyContextLabel(context)),
-                        selected: _companyContext == context,
+                  children: MealType.values.map((type) {
+                    final isSelected = _mealType == type;
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ChoiceChip(
+                        label: Text(_getMealTypeLabel(type)),
+                        selected: isSelected,
                         onSelected: (selected) {
-                          if (selected)
-                            setState(() => _companyContext = context);
-                        },
-                      );
-                    }),
-                  ],
-                ),
-                const SizedBox(height: 16),
-
-                // Distractions
-                Text('Distractions?', style: theme.textTheme.labelLarge),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  children: [
-                    ChoiceChip(
-                      label: const Text('Not specified'),
-                      selected: _distractionContext == null,
-                      onSelected: (selected) {
-                        if (selected)
-                          setState(() => _distractionContext = null);
-                      },
-                    ),
-                    ...DistractionContext.values.map((context) {
-                      return ChoiceChip(
-                        label: Text(_getDistractionContextLabel(context)),
-                        selected: _distractionContext == context,
-                        onSelected: (selected) {
-                          if (selected)
-                            setState(() => _distractionContext = context);
-                        },
-                      );
-                    }),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Skipped Section
-            SwitchListTile(
-              title: const Text('Skipped this meal'),
-              value: _isSkipped,
-              onChanged: (value) {
-                setState(() => _isSkipped = value);
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: BorderSide(color: theme.colorScheme.outlineVariant),
-              ),
-            ),
-            if (_isSkipped) ...[
-              const SizedBox(height: 16),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Reason for skipping',
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (value) => _skipReason = value,
-                controller: TextEditingController(text: _skipReason ?? ''),
-              ),
-            ],
-
-            // Foods Section
-            if (!_isSkipped) ...[
-              const SizedBox(height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Food Items (${_meal.foods.length})',
-                    style: theme.textTheme.titleLarge,
-                  ),
-                  FilledButton.icon(
-                    onPressed: _addFood,
-                    icon: const Icon(Icons.add),
-                    label: const Text('Add Food'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              if (_meal.foods.isEmpty)
-                Container(
-                  padding: const EdgeInsets.all(32),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainer,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: theme.colorScheme.outlineVariant),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.fastfood,
-                        size: 48,
-                        color: theme.colorScheme.primary.withOpacity(0.5),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'No food items yet',
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              else
-                ...List.generate(_meal.foods.length, (index) {
-                  final food = _meal.foods[index];
-                  IconData foodIcon;
-                  Color? iconColor;
-                  switch (food.entryType) {
-                    case FoodEntryType.recipe:
-                      foodIcon = Icons.menu_book;
-                      iconColor = Colors.orange;
-                      break;
-                    case FoodEntryType.brandedProduct:
-                      foodIcon = Icons.shopping_bag;
-                      iconColor = Colors.blue;
-                      break;
-                    case FoodEntryType.manualCustom:
-                      foodIcon = Icons.edit_note;
-                      iconColor = Colors.purple;
-                      break;
-                    default:
-                      foodIcon = Icons.restaurant;
-                      iconColor = Colors.green;
-                  }
-                  return Card(
-                    elevation: 0,
-                    margin: const EdgeInsets.only(bottom: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: BorderSide(color: theme.colorScheme.outlineVariant),
-                    ),
-                    child: ListTile(
-                      leading: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: iconColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(foodIcon, color: iconColor),
-                      ),
-                      title: Text(
-                        food.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text(
-                        '${food.amount} ${food.unit} • ${food.nutrition.energyKcal.round()} kcal',
-                      ),
-                      trailing: PopupMenuButton(
-                        icon: const Icon(Icons.more_vert),
-                        itemBuilder: (context) => [
-                          const PopupMenuItem(
-                            value: 'edit',
-                            child: Row(
-                              children: [
-                                Icon(Icons.edit, size: 20),
-                                SizedBox(width: 8),
-                                Text('Edit'),
-                              ],
-                            ),
-                          ),
-                          const PopupMenuItem(
-                            value: 'delete',
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete, color: Colors.red, size: 20),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Delete',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                        onSelected: (value) {
-                          if (value == 'edit') {
-                            _editFood(food, index);
-                          } else if (value == 'delete') {
-                            _removeFood(index);
+                          if (selected) {
+                            setState(() => _mealType = type);
                           }
                         },
                       ),
-                      onTap: () => _editFood(food, index),
-                    ),
-                  );
-                }),
-
-              // Add nutrition summary if there are foods
-              if (_meal.foods.isNotEmpty) ...[
-                const SizedBox(height: 24),
-                MealNutritionSummaryCard(meal: _meal),
+                    );
+                  }).toList(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (_mealType == MealType.other) ...[
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Custom Meal Label',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) => _customMealLabel = value,
+                  controller: TextEditingController(
+                    text: _customMealLabel ?? '',
+                  ),
+                  validator: (value) {
+                    if (_mealType == MealType.other &&
+                        (value == null || value.isEmpty)) {
+                      return 'Please enter a label';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
               ],
+
+              // Time Section
+              InkWell(
+                onTap: _selectTime,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: theme.colorScheme.outline),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.access_time),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Time', style: theme.textTheme.labelMedium),
+                          Text(
+                            '${_timestamp.hour.toString().padLeft(2, '0')}:${_timestamp.minute.toString().padLeft(2, '0')}',
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      const Icon(Icons.edit, size: 20),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Context Section
+              ExpansionTile(
+                title: const Text('Context & Environment'),
+                leading: const Icon(Icons.place),
+                childrenPadding: const EdgeInsets.all(16),
+                children: [
+                  // Location
+                  Text('Where did you eat?', style: theme.textTheme.labelLarge),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    children: MealContext.values.map((context) {
+                      return ChoiceChip(
+                        label: Text(_getMealContextLabel(context)),
+                        selected: _mealContext == context,
+                        onSelected: (selected) {
+                          if (selected) {
+                            setState(() => _mealContext = context);
+                          }
+                        },
+                      );
+                    }).toList(),
+                  ),
+                  if (_mealContext == MealContext.other) ...[
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        labelText: 'Location Description',
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: (value) => _locationDescription = value,
+                      controller: TextEditingController(
+                        text: _locationDescription ?? '',
+                      ),
+                      validator: (value) {
+                        if (_mealContext == MealContext.other &&
+                            (value == null || value.isEmpty)) {
+                          return 'Please describe the location';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                  const SizedBox(height: 16),
+
+                  // Company
+                  Text('Who were you with?', style: theme.textTheme.labelLarge),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      ChoiceChip(
+                        label: const Text('Not specified'),
+                        selected: _companyContext == null,
+                        onSelected: (selected) {
+                          if (selected) setState(() => _companyContext = null);
+                        },
+                      ),
+                      ...CompanyContext.values.map((context) {
+                        return ChoiceChip(
+                          label: Text(_getCompanyContextLabel(context)),
+                          selected: _companyContext == context,
+                          onSelected: (selected) {
+                            if (selected)
+                              setState(() => _companyContext = context);
+                          },
+                        );
+                      }),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Distractions
+                  Text('Distractions?', style: theme.textTheme.labelLarge),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      ChoiceChip(
+                        label: const Text('Not specified'),
+                        selected: _distractionContext == null,
+                        onSelected: (selected) {
+                          if (selected)
+                            setState(() => _distractionContext = null);
+                        },
+                      ),
+                      ...DistractionContext.values.map((context) {
+                        return ChoiceChip(
+                          label: Text(_getDistractionContextLabel(context)),
+                          selected: _distractionContext == context,
+                          onSelected: (selected) {
+                            if (selected)
+                              setState(() => _distractionContext = context);
+                          },
+                        );
+                      }),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Skipped Section
+              SwitchListTile(
+                title: const Text('Skipped this meal'),
+                value: _isSkipped,
+                onChanged: (value) {
+                  setState(() => _isSkipped = value);
+                },
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: BorderSide(color: theme.colorScheme.outlineVariant),
+                ),
+              ),
+              if (_isSkipped) ...[
+                const SizedBox(height: 16),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Reason for skipping',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) => _skipReason = value,
+                  controller: TextEditingController(text: _skipReason ?? ''),
+                  validator: (value) {
+                    if (_isSkipped && (value == null || value.isEmpty)) {
+                      return 'Please provide a reason';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+
+              // Foods Section
+              if (!_isSkipped) ...[
+                const SizedBox(height: 32),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Food Items (${_meal.foods.length})',
+                      style: theme.textTheme.titleLarge,
+                    ),
+                    FilledButton.icon(
+                      onPressed: _addFood,
+                      icon: const Icon(Icons.add),
+                      label: const Text('Add Food'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                if (_meal.foods.isEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(32),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surfaceContainer,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: theme.colorScheme.outlineVariant,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.fastfood,
+                          size: 48,
+                          color: theme.colorScheme.primary.withOpacity(0.5),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No food items yet',
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  ...List.generate(_meal.foods.length, (index) {
+                    final food = _meal.foods[index];
+                    IconData foodIcon;
+                    Color? iconColor;
+                    switch (food.entryType) {
+                      case FoodEntryType.recipe:
+                        foodIcon = Icons.menu_book;
+                        iconColor = Colors.orange;
+                        break;
+                      case FoodEntryType.brandedProduct:
+                        foodIcon = Icons.shopping_bag;
+                        iconColor = Colors.blue;
+                        break;
+                      case FoodEntryType.manualCustom:
+                        foodIcon = Icons.edit_note;
+                        iconColor = Colors.purple;
+                        break;
+                      default:
+                        foodIcon = Icons.restaurant;
+                        iconColor = Colors.green;
+                    }
+                    return Card(
+                      elevation: 0,
+                      margin: const EdgeInsets.only(bottom: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(
+                          color: theme.colorScheme.outlineVariant,
+                        ),
+                      ),
+                      child: ListTile(
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: iconColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(foodIcon, color: iconColor),
+                        ),
+                        title: Text(
+                          food.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(
+                          '${food.amount} ${food.unit} • ${food.nutrition.energyKcal.round()} kcal',
+                        ),
+                        trailing: PopupMenuButton(
+                          icon: const Icon(Icons.more_vert),
+                          itemBuilder: (context) => [
+                            const PopupMenuItem(
+                              value: 'edit',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.edit, size: 20),
+                                  SizedBox(width: 8),
+                                  Text('Edit'),
+                                ],
+                              ),
+                            ),
+                            const PopupMenuItem(
+                              value: 'delete',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                    size: 20,
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Delete',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                          onSelected: (value) {
+                            if (value == 'edit') {
+                              _editFood(food, index);
+                            } else if (value == 'delete') {
+                              _removeFood(index);
+                            }
+                          },
+                        ),
+                        onTap: () => _editFood(food, index),
+                      ),
+                    );
+                  }),
+
+                // Add nutrition summary if there are foods
+                if (_meal.foods.isNotEmpty) ...[
+                  const SizedBox(height: 24),
+                  MealNutritionSummaryCard(meal: _meal),
+                ],
+              ],
+              const SizedBox(height: 32),
             ],
-            const SizedBox(height: 32),
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget? _buildFloatingActionButton(ThemeData theme) {
-    if (!_isSkipped && _meal.foods.isNotEmpty ||
-        _isSkipped && _skipReason != null) {
+    // Show button if we have foods OR if we are skipping
+    // Validation will happen on press
+    if (!_isSkipped && _meal.foods.isNotEmpty || _isSkipped) {
       return FloatingActionButton.extended(
         onPressed: _saveMeal,
         icon: const Icon(Icons.check),
