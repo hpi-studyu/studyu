@@ -126,6 +126,8 @@ mixin StudyScheduleControls {
           interventionDuration: interventionDuration,
           interventionDrawAmount: 1,
         );
+      case StudyScheduleSegmentType.singleIntervention:
+        newFormGroup = createSingleInterventionFormGroup();
     }
 
     // Replace the form group at the index
@@ -149,6 +151,8 @@ mixin StudyScheduleControls {
         return createCounterBalancedFormGroup();
       case StudyScheduleSegmentType.thompsonSampling:
         return createThompsonSamplingFormGroup();
+      case StudyScheduleSegmentType.singleIntervention:
+        return createSingleInterventionFormGroup();
     }
   }
 
@@ -204,6 +208,19 @@ mixin StudyScheduleControls {
     });
   }
 
+  FormGroup createSingleInterventionFormGroup({
+    String interventionId = '',
+    int duration = 0,
+  }) {
+    return FormGroup({
+      'type': FormControl<StudyScheduleSegmentType>(
+        value: StudyScheduleSegmentType.singleIntervention,
+      ),
+      'interventionId': FormControl<String>(value: interventionId),
+      'duration': FormControl<int>(value: duration),
+    });
+  }
+
   void updateSegmentsFromSegmentsControl() {
     segments.clear();
     for (final segmentControl in segmentsControl.controls) {
@@ -234,6 +251,13 @@ mixin StudyScheduleControls {
               segment.control('interventionDrawAmount').value as int,
               segment.control('observationId').value as String,
               segment.control('questionId').value as String,
+            ),
+          );
+        case StudyScheduleSegmentType.singleIntervention:
+          segments.add(
+            SingleInterventionScheduleSegment(
+              segment.control('interventionId').value as String,
+              segment.control('duration').value as int,
             ),
           );
         default:
@@ -274,6 +298,13 @@ mixin StudyScheduleControls {
             questionId: element.questionId,
           ),
         );
+      } else if (element is SingleInterventionScheduleSegment) {
+        addFormGroupToSegments(
+          createSingleInterventionFormGroup(
+            interventionId: element.interventionId ?? '',
+            duration: element.duration,
+          ),
+        );
       }
     }
     interventions.addAll(data.interventions);
@@ -306,6 +337,11 @@ mixin StudyScheduleControls {
               segment.control('interventionDrawAmount').value as int,
               segment.control('observationId').value as String,
               segment.control('questionId').value as String,
+            );
+          case StudyScheduleSegmentType.singleIntervention:
+            return SingleInterventionScheduleSegment(
+              segment.control('interventionId').value as String,
+              segment.control('duration').value as int,
             );
           default:
             throw UnimplementedError();

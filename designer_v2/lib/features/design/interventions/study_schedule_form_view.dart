@@ -308,6 +308,8 @@ class StudyTimeline extends StatelessWidget {
     } else if (segment is ThompsonSamplingScheduleSegment) {
       calculation =
           '${segment.interventionDuration} (intervention duration in days) * ${segment.interventionDrawAmount} (draws)';
+    } else if (segment is SingleInterventionScheduleSegment) {
+      calculation = '${segment.duration} (duration in days)';
     }
 
     if (calculation != null) {
@@ -327,6 +329,8 @@ class StudyTimeline extends StatelessWidget {
         return const Color(0xFF8B5CF6); // Purple
       case StudyScheduleSegmentType.thompsonSampling:
         return const Color(0xFFF59E0B); // Orange
+      case StudyScheduleSegmentType.singleIntervention:
+        return const Color(0xFFEC4899); // Pink
     }
   }
 }
@@ -394,6 +398,8 @@ class AddScheduleBlockButton extends StatelessWidget {
         return const Color(0xFF8B5CF6); // Purple
       case StudyScheduleSegmentType.thompsonSampling:
         return const Color(0xFFF59E0B); // Orange
+      case StudyScheduleSegmentType.singleIntervention:
+        return const Color(0xFFEC4899); // Pink
     }
   }
 }
@@ -525,6 +531,8 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
         return const Color(0xFF8B5CF6); // Purple
       case StudyScheduleSegmentType.thompsonSampling:
         return const Color(0xFFF59E0B); // Orange
+      case StudyScheduleSegmentType.singleIntervention:
+        return const Color(0xFFEC4899); // Pink
     }
   }
 
@@ -542,6 +550,8 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
         return _getCounterBalancedControls(segmentControl);
       case StudyScheduleSegmentType.thompsonSampling:
         return _getThompsonSamplingControls(segmentControl, formViewModel);
+      case StudyScheduleSegmentType.singleIntervention:
+        return _getSingleInterventionControls(segmentControl, formViewModel);
     }
   }
 
@@ -743,6 +753,52 @@ List<Widget> _getThompsonSamplingControls(
         // todo localize
         labelText: 'Question',
       ),
+    ),
+  ];
+}
+
+List<Widget> _getSingleInterventionControls(
+  FormGroup segmentControl,
+  StudyScheduleControls formViewModel,
+) {
+  return [
+    Row(
+      children: [
+        Expanded(
+          child: ReactiveDropdownField<String>(
+            formControl:
+                segmentControl.control('interventionId')
+                    as FormControl<String>?,
+            items: formViewModel.interventions
+                .map(
+                  (intervention) => DropdownMenuItem(
+                    value: intervention.id,
+                    child: Text(intervention.name ?? intervention.id),
+                  ),
+                )
+                .toList(),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              // todo localize
+              labelText: 'Intervention',
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: ReactiveTextField(
+            formControl:
+                segmentControl.control('duration') as FormControl<dynamic>?,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              // todo localize
+              labelText: 'Duration (days)',
+            ),
+            controller: ZeroValueController(),
+          ),
+        ),
+      ],
     ),
   ];
 }

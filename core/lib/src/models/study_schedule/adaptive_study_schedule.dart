@@ -52,6 +52,8 @@ class StudyScheduleSegmentConverter
         return CounterBalancedScheduleSegment.fromJson(json);
       case StudyScheduleSegmentType.thompsonSampling:
         return ThompsonSamplingScheduleSegment.fromJson(json);
+      case StudyScheduleSegmentType.singleIntervention:
+        return SingleInterventionScheduleSegment.fromJson(json);
     }
   }
 
@@ -63,7 +65,8 @@ enum StudyScheduleSegmentType {
   baseline,
   alternating,
   counterBalanced,
-  thompsonSampling;
+  thompsonSampling,
+  singleIntervention;
 
   String toJson() => name;
 
@@ -80,6 +83,8 @@ enum StudyScheduleSegmentType {
         return 'counter_balanced';
       case StudyScheduleSegmentType.thompsonSampling:
         return 'thompson_sampling';
+      case StudyScheduleSegmentType.singleIntervention:
+        return 'single_intervention';
     }
   }
 }
