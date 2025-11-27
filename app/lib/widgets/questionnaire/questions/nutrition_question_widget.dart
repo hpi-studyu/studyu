@@ -6,11 +6,13 @@ import 'package:studyu_core/core.dart';
 class NutritionQuestionWidget extends QuestionWidget {
   final NutritionQuestion question;
   final Function(Answer)? onDone;
+  final Answer? initialAnswer;
 
   const NutritionQuestionWidget({
     super.key,
     required this.question,
     this.onDone,
+    this.initialAnswer,
   });
 
   @override
@@ -24,6 +26,14 @@ class _NutritionQuestionWidgetState extends State<NutritionQuestionWidget> {
   @override
   void initState() {
     super.initState();
+    if (widget.initialAnswer != null) {
+      final result = widget.initialAnswer!.response;
+      if (result is DailyRecall) {
+        _dailyRecall = result;
+      } else if (result is Map<String, dynamic>) {
+        _dailyRecall = DailyRecall.fromJson(result);
+      }
+    }
   }
 
   void _openNutritionDiary() async {

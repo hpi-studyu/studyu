@@ -21,6 +21,7 @@ class QuestionContainer extends StatefulWidget {
   final int index;
   final String? taskId;
   final GlobalKey? containerKey;
+  final Answer? initialAnswer;
 
   const QuestionContainer({
     required this.onDone,
@@ -28,6 +29,7 @@ class QuestionContainer extends StatefulWidget {
     required this.index,
     this.taskId,
     this.containerKey,
+    this.initialAnswer,
     super.key,
   });
 
@@ -97,6 +99,7 @@ class _QuestionContainerState extends State<QuestionContainer>
         return NutritionQuestionWidget(
           question: nutritionQuestion,
           onDone: _onDone,
+          initialAnswer: widget.initialAnswer,
         );
       default:
         throw ArgumentError(

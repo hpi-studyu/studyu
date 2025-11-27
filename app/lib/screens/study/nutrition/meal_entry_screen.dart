@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
-import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
+
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_core/core.dart';
 
@@ -70,9 +70,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   }
 
   void _addFood() async {
-    final result = await Navigator.of(context).push(
-      FoodEntryScreen.route(),
-    );
+    final result = await Navigator.of(context).push(FoodEntryScreen.route());
     if (result != null) {
       setState(() {
         _meal.foods.add(result);
@@ -81,9 +79,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   }
 
   void _editFood(FoodEntry food, int index) async {
-    final result = await Navigator.of(context).push(
-      FoodEntryScreen.route(existingFood: food),
-    );
+    final result = await Navigator.of(
+      context,
+    ).push(FoodEntryScreen.route(existingFood: food));
     if (result != null) {
       setState(() {
         _meal.foods[index] = result;
@@ -208,7 +206,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
             TextButton(
               onPressed: _saveMeal,
               style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
+                foregroundColor: theme.colorScheme.primary,
+                textStyle: const TextStyle(fontWeight: FontWeight.bold),
               ),
               child: const Text('SAVE'),
             ),
@@ -219,160 +218,196 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Card(
-              child: Padding(
+            // Meal Type Section
+            Text('Meal Type', style: theme.textTheme.titleMedium),
+            const SizedBox(height: 8),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: MealType.values.map((type) {
+                  final isSelected = _mealType == type;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: ChoiceChip(
+                      label: Text(_getMealTypeLabel(type)),
+                      selected: isSelected,
+                      onSelected: (selected) {
+                        if (selected) {
+                          setState(() => _mealType = type);
+                        }
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            if (_mealType == MealType.other) ...[
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Custom Meal Label',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) => _customMealLabel = value,
+                controller: TextEditingController(text: _customMealLabel ?? ''),
+              ),
+              const SizedBox(height: 16),
+            ],
+
+            // Time Section
+            InkWell(
+              onTap: _selectTime,
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
                 padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                decoration: BoxDecoration(
+                  border: Border.all(color: theme.colorScheme.outline),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
                   children: [
-                    Text('Meal Information', style: theme.textTheme.titleLarge),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<MealType>(
-                      value: _mealType,
-                      decoration: const InputDecoration(
-                        labelText: 'Meal Type',
-                        border: OutlineInputBorder(),
-                      ),
-                      items: MealType.values.map((type) {
-                        return DropdownMenuItem(
-                          value: type,
-                          child: Text(_getMealTypeLabel(type)),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() => _mealType = value);
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    if (_mealType == MealType.other)
-                      TextField(
-                        decoration: const InputDecoration(
-                          labelText: 'Custom Meal Label',
-                          border: OutlineInputBorder(),
+                    const Icon(Icons.access_time),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Time', style: theme.textTheme.labelMedium),
+                        Text(
+                          '${_timestamp.hour.toString().padLeft(2, '0')}:${_timestamp.minute.toString().padLeft(2, '0')}',
+                          style: theme.textTheme.titleMedium,
                         ),
-                        onChanged: (value) => _customMealLabel = value,
-                        controller:
-                            TextEditingController(text: _customMealLabel ?? ''),
-                      ),
-                    const SizedBox(height: 16),
-                    ListTile(
-                      leading: const Icon(Icons.access_time),
-                      title: const Text('Time'),
-                      subtitle: Text(
-                        '${_timestamp.hour.toString().padLeft(2, '0')}:${_timestamp.minute.toString().padLeft(2, '0')}',
-                      ),
-                      trailing: const Icon(Icons.edit),
-                      onTap: _selectTime,
-                    ),
-                    const Divider(),
-                    DropdownButtonFormField<MealContext>(
-                      value: _mealContext,
-                      decoration: const InputDecoration(
-                        labelText: 'Where did you eat?',
-                        border: OutlineInputBorder(),
-                      ),
-                      items: MealContext.values.map((context) {
-                        return DropdownMenuItem(
-                          value: context,
-                          child: Text(_getMealContextLabel(context)),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() => _mealContext = value);
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    if (_mealContext == MealContext.other)
-                      Column(
-                        children: [
-                          TextField(
-                            decoration: const InputDecoration(
-                              labelText: 'Location Description',
-                              border: OutlineInputBorder(),
-                              hintText: 'Describe where you ate',
-                            ),
-                            onChanged: (value) => _locationDescription = value,
-                            controller:
-                                TextEditingController(text: _locationDescription ?? ''),
-                          ),
-                          const SizedBox(height: 16),
-                        ],
-                      ),
-                    DropdownButtonFormField<CompanyContext>(
-                      value: _companyContext,
-                      decoration: const InputDecoration(
-                        labelText: 'Who were you with?',
-                        border: OutlineInputBorder(),
-                      ),
-                      items: [
-                        const DropdownMenuItem(
-                          value: null,
-                          child: Text('Not specified'),
-                        ),
-                        ...CompanyContext.values.map((context) {
-                          return DropdownMenuItem(
-                            value: context,
-                            child: Text(_getCompanyContextLabel(context)),
-                          );
-                        }).toList(),
                       ],
-                      onChanged: (value) {
-                        setState(() => _companyContext = value);
-                      },
                     ),
-                    const SizedBox(height: 16),
-                    DropdownButtonFormField<DistractionContext>(
-                      value: _distractionContext,
-                      decoration: const InputDecoration(
-                        labelText: 'Distractions during meal?',
-                        border: OutlineInputBorder(),
-                      ),
-                      items: [
-                        const DropdownMenuItem(
-                          value: null,
-                          child: Text('Not specified'),
-                        ),
-                        ...DistractionContext.values.map((context) {
-                          return DropdownMenuItem(
-                            value: context,
-                            child: Text(_getDistractionContextLabel(context)),
-                          );
-                        }).toList(),
-                      ],
-                      onChanged: (value) {
-                        setState(() => _distractionContext = value);
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    SwitchListTile(
-                      title: const Text('Skipped this meal'),
-                      value: _isSkipped,
-                      onChanged: (value) {
-                        setState(() => _isSkipped = value);
-                      },
-                    ),
-                    if (_isSkipped) ...[
-                      const SizedBox(height: 8),
-                      TextField(
-                        decoration: const InputDecoration(
-                          labelText: 'Reason for skipping',
-                          border: OutlineInputBorder(),
-                        ),
-                        onChanged: (value) => _skipReason = value,
-                        controller:
-                            TextEditingController(text: _skipReason ?? ''),
-                      ),
-                    ],
+                    const Spacer(),
+                    const Icon(Icons.edit, size: 20),
                   ],
                 ),
               ),
             ),
+            const SizedBox(height: 24),
+
+            // Context Section
+            ExpansionTile(
+              title: const Text('Context & Environment'),
+              leading: const Icon(Icons.place),
+              childrenPadding: const EdgeInsets.all(16),
+              children: [
+                // Location
+                Text('Where did you eat?', style: theme.textTheme.labelLarge),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  children: MealContext.values.map((context) {
+                    return ChoiceChip(
+                      label: Text(_getMealContextLabel(context)),
+                      selected: _mealContext == context,
+                      onSelected: (selected) {
+                        if (selected) {
+                          setState(() => _mealContext = context);
+                        }
+                      },
+                    );
+                  }).toList(),
+                ),
+                if (_mealContext == MealContext.other) ...[
+                  const SizedBox(height: 8),
+                  TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Location Description',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) => _locationDescription = value,
+                    controller: TextEditingController(
+                      text: _locationDescription ?? '',
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 16),
+
+                // Company
+                Text('Who were you with?', style: theme.textTheme.labelLarge),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    ChoiceChip(
+                      label: const Text('Not specified'),
+                      selected: _companyContext == null,
+                      onSelected: (selected) {
+                        if (selected) setState(() => _companyContext = null);
+                      },
+                    ),
+                    ...CompanyContext.values.map((context) {
+                      return ChoiceChip(
+                        label: Text(_getCompanyContextLabel(context)),
+                        selected: _companyContext == context,
+                        onSelected: (selected) {
+                          if (selected)
+                            setState(() => _companyContext = context);
+                        },
+                      );
+                    }),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Distractions
+                Text('Distractions?', style: theme.textTheme.labelLarge),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    ChoiceChip(
+                      label: const Text('Not specified'),
+                      selected: _distractionContext == null,
+                      onSelected: (selected) {
+                        if (selected)
+                          setState(() => _distractionContext = null);
+                      },
+                    ),
+                    ...DistractionContext.values.map((context) {
+                      return ChoiceChip(
+                        label: Text(_getDistractionContextLabel(context)),
+                        selected: _distractionContext == context,
+                        onSelected: (selected) {
+                          if (selected)
+                            setState(() => _distractionContext = context);
+                        },
+                      );
+                    }),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Skipped Section
+            SwitchListTile(
+              title: const Text('Skipped this meal'),
+              value: _isSkipped,
+              onChanged: (value) {
+                setState(() => _isSkipped = value);
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: theme.colorScheme.outlineVariant),
+              ),
+            ),
+            if (_isSkipped) ...[
+              const SizedBox(height: 16),
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Reason for skipping',
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) => _skipReason = value,
+                controller: TextEditingController(text: _skipReason ?? ''),
+              ),
+            ],
+
+            // Foods Section
             if (!_isSkipped) ...[
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -380,12 +415,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     'Food Items (${_meal.foods.length})',
                     style: theme.textTheme.titleLarge,
                   ),
-                  ElevatedButton.icon(
+                  FilledButton.icon(
                     onPressed: _addFood,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.colorScheme.primary,
-                      foregroundColor: theme.colorScheme.onPrimary,
-                    ),
                     icon: const Icon(Icons.add),
                     label: const Text('Add Food'),
                   ),
@@ -393,22 +424,29 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
               ),
               const SizedBox(height: 16),
               if (_meal.foods.isEmpty)
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.fastfood,
-                            size: 48,
-                            color: theme.colorScheme.primary.withOpacity(0.5),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text('No food items yet'),
-                        ],
+                Container(
+                  padding: const EdgeInsets.all(32),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surfaceContainer,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: theme.colorScheme.outlineVariant),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.fastfood,
+                        size: 48,
+                        color: theme.colorScheme.primary.withOpacity(0.5),
                       ),
-                    ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No food items yet',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
                 )
               else
@@ -434,34 +472,36 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                       iconColor = Colors.green;
                   }
                   return Card(
+                    elevation: 0,
                     margin: const EdgeInsets.only(bottom: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(color: theme.colorScheme.outlineVariant),
+                    ),
                     child: ListTile(
-                      leading: Icon(foodIcon, color: iconColor),
-                      title: Row(
-                        children: [
-                          Expanded(child: Text(food.name)),
-                          if (food.brandName != null)
-                            Chip(
-                              label: Text(
-                                food.brandName!,
-                                style: const TextStyle(fontSize: 10),
-                              ),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              visualDensity: VisualDensity.compact,
-                            ),
-                        ],
+                      leading: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: iconColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(foodIcon, color: iconColor),
+                      ),
+                      title: Text(
+                        food.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                        '${food.amount} ${food.unit} • ${food.nutrition.energyKcal.toStringAsFixed(0)} kcal\n${getEntryTypeLabel(food.entryType)}',
+                        '${food.amount} ${food.unit} • ${food.nutrition.energyKcal.round()} kcal',
                       ),
-                      isThreeLine: true,
                       trailing: PopupMenuButton(
+                        icon: const Icon(Icons.more_vert),
                         itemBuilder: (context) => [
                           const PopupMenuItem(
                             value: 'edit',
                             child: Row(
                               children: [
-                                Icon(Icons.edit),
+                                Icon(Icons.edit, size: 20),
                                 SizedBox(width: 8),
                                 Text('Edit'),
                               ],
@@ -471,7 +511,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                             value: 'delete',
                             child: Row(
                               children: [
-                                Icon(Icons.delete, color: Colors.red),
+                                Icon(Icons.delete, color: Colors.red, size: 20),
                                 SizedBox(width: 8),
                                 Text(
                                   'Delete',
@@ -493,17 +533,17 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     ),
                   );
                 }),
-              
+
               // Add nutrition summary if there are foods
               if (_meal.foods.isNotEmpty) ...[
                 const SizedBox(height: 24),
                 MealNutritionSummaryCard(meal: _meal),
               ],
             ],
+            const SizedBox(height: 32),
           ],
         ),
       ),
     );
   }
 }
-

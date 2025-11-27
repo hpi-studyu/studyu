@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/daily_recall_entry_screen.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/misc.dart';
@@ -27,10 +29,47 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
   DateTime? _lastClickTime;
   bool _isLoading = false;
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadExistingResult();
+  }
+
+  void _loadExistingResult() {
+    if (_dailyRecall != null) return;
+
+    final subject = context.read<AppState>().activeSubject;
+    if (subject == null) return;
+
+    final existingProgress = subject.progress
+        .where(
+          (p) =>
+              p.taskId == widget.task.id &&
+              p.result.periodId == widget.completionPeriod.id,
+        )
+        .toList();
+
+    if (existingProgress.isNotEmpty) {
+      existingProgress.sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
+      final latestProgress = existingProgress.first;
+      final resultData = latestProgress.result.result;
+      if (resultData is DailyRecall) {
+        setState(() {
+          _dailyRecall = resultData;
+        });
+      } else if (resultData is Map<String, dynamic>) {
+        setState(() {
+          _dailyRecall = DailyRecall.fromJson(resultData);
+        });
+      }
+    }
+  }
+
   Future<void> _addNutritionResult(
     DailyRecall recall,
-    BuildContext context,
-  ) async {
+    BuildContext context, {
+    bool closeScreen = true,
+  }) async {
     await handleTaskCompletion(context, (StudySubject? subject) async {
       try {
         await subject!.addResult<DailyRecall>(
@@ -48,19 +87,22 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
         rethrow;
       }
     });
-    if (!context.mounted) return;
+    if (!context.mounted || !closeScreen) return;
     Navigator.pop(context, true);
   }
 
   void _openNutritionDiary() async {
-    final result = await Navigator.of(context).push(
-      DailyRecallEntryScreen.route(existingRecall: _dailyRecall),
-    );
-    
+    final result = await Navigator.of(
+      context,
+    ).push(DailyRecallEntryScreen.route(existingRecall: _dailyRecall));
+
     if (result != null) {
       setState(() {
         _dailyRecall = result;
       });
+      if (mounted) {
+        _addNutritionResult(result, context, closeScreen: false);
+      }
     }
   }
 
@@ -68,7 +110,9 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
     if (_dailyRecall == null) return false;
     if (_dailyRecall!.entryCompletedAt == null) return false;
     if (widget.task.minimumMealsRequired != null) {
-      final nonSkippedMeals = _dailyRecall!.meals.where((m) => !m.isSkipped).length;
+      final nonSkippedMeals = _dailyRecall!.meals
+          .where((m) => !m.isSkipped)
+          .length;
       return nonSkippedMeals >= widget.task.minimumMealsRequired!;
     }
     return true;
@@ -81,7 +125,9 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
     if (_dailyRecall!.entryCompletedAt == null) {
       return 'In progress (${_dailyRecall!.meals.length} meals recorded)';
     }
-    final nonSkippedMeals = _dailyRecall!.meals.where((m) => !m.isSkipped).length;
+    final nonSkippedMeals = _dailyRecall!.meals
+        .where((m) => !m.isSkipped)
+        .length;
     return 'Completed ($nonSkippedMeals meals recorded)';
   }
 
@@ -129,8 +175,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
                         Text(
                           widget.task.instructions ??
                               'Please record all the foods and beverages you consumed today. '
-                              'For each meal or snack, provide as much detail as possible including '
-                              'portion sizes and preparation methods.',
+                                  'For each meal or snack, provide as much detail as possible including '
+                                  'portion sizes and preparation methods.',
                           style: theme.textTheme.bodyMedium,
                         ),
                         if (widget.task.minimumMealsRequired != null) ...[
@@ -152,7 +198,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
                                   child: Text(
                                     'Please record at least ${widget.task.minimumMealsRequired} meal(s)',
                                     style: TextStyle(
-                                      color: theme.colorScheme.onPrimaryContainer,
+                                      color:
+                                          theme.colorScheme.onPrimaryContainer,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -180,9 +227,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
                         Row(
                           children: [
                             Icon(
-                              isComplete
-                                  ? Icons.check_circle
-                                  : Icons.edit_note,
+                              isComplete ? Icons.check_circle : Icons.edit_note,
                               color: isComplete ? Colors.green : Colors.orange,
                               size: 32,
                             ),
@@ -197,9 +242,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
                                   ),
                                   Text(
                                     _getCompletionStatus(),
-                                    style: theme.textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: theme.textTheme.titleMedium
+                                        ?.copyWith(fontWeight: FontWeight.bold),
                                   ),
                                 ],
                               ),
@@ -331,15 +375,9 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
       children: [
         Icon(icon, size: 20),
         const SizedBox(width: 12),
-        Expanded(
-          child: Text(label),
-        ),
-        Text(
-          value,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
+        Expanded(child: Text(label)),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
       ],
     );
   }
 }
-

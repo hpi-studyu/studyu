@@ -17,7 +17,9 @@ class QuestionnaireWidget extends StatefulWidget {
   final List<Question> questions;
   final String? taskId;
   final StateHandler? onComplete;
+  final StateHandler? onChange;
   final ContinuationPredicate? shouldContinue;
+  final QuestionnaireState? initialState;
 
   const QuestionnaireWidget(
     this.questions, {
@@ -26,7 +28,9 @@ class QuestionnaireWidget extends StatefulWidget {
     this.header,
     this.footer,
     this.onComplete,
+    this.onChange,
     this.shouldContinue,
+    this.initialState,
     super.key,
   });
 
@@ -41,7 +45,86 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   final _scrollController = ScrollController();
   bool _isProgrammaticScroll = false;
 
-  final QuestionnaireState qs = QuestionnaireState();
+  late final QuestionnaireState qs;
+
+  @override
+  void initState() {
+    super.initState();
+    qs = widget.initialState ?? QuestionnaireState();
+
+    // Add scroll listener to dismiss keyboard when scrolling
+    _scrollController.addListener(_onScroll);
+
+    if (widget.questions.isNotEmpty) {
+      if (widget.initialState != null) {
+        _restoreState();
+      } else {
+        _addQuestionToList(widget.questions.first);
+      }
+    }
+  }
+
+  void _restoreState() {
+    // Re-play the answers to restore the state
+    // We need to determine which questions should be shown based on the answers
+    // This is a simplified restoration that assumes linear progression or simple conditionals
+    // A more robust approach would be to simulate the flow
+
+    // For now, let's try to simulate the flow by "answering" the questions again
+    // But we need to be careful not to trigger callbacks or side effects that shouldn't happen during restoration
+
+    // Better approach: Iterate through questions and check if they have an answer or should be shown
+
+    // 1. Always show the first question
+    if (widget.questions.isEmpty) return;
+
+    _addQuestionToList(widget.questions.first);
+
+    // 2. Iterate and add subsequent questions if they are answered or should be shown
+    // We need to find the last answered question to know where to stop or if we should continue adding
+
+    // Let's try to reconstruct the shownQuestions list based on qs.answers
+    // We start with the first question.
+    // If it has an answer, we check what the next question should be.
+
+    Question? currentQuestion = widget.questions.first;
+    while (currentQuestion != null) {
+      final answer = qs.answers[currentQuestion.id];
+      if (answer != null) {
+        // Question has an answer, so we should check for the next one
+
+        // Logic similar to _onQuestionDone but without finishing
+
+        // Check for conditional dependencies (simplified for restoration)
+        // ...
+
+        // Find next question
+        final currentQuestionIndex = widget.questions.indexOf(currentQuestion!);
+        Question? nextQuestion;
+
+        for (
+          int i = currentQuestionIndex + 1;
+          i < widget.questions.length;
+          i++
+        ) {
+          if (widget.questions[i].shouldBeShown(qs)) {
+            nextQuestion = widget.questions[i];
+            break;
+          }
+        }
+
+        if (nextQuestion != null) {
+          _addQuestionToList(nextQuestion);
+          currentQuestion = nextQuestion;
+        } else {
+          currentQuestion = null; // End of flow
+        }
+      } else {
+        // Current question is not answered, so it's the last one shown
+        currentQuestion = null;
+      }
+    }
+  }
 
   void _finishQuestionnaire(QuestionnaireState? result) =>
       widget.onComplete?.call(result);
@@ -57,6 +140,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         onDone: _onQuestionDone,
         index: shownQuestions.length,
         taskId: widget.taskId,
+        initialAnswer: qs.answers[question.id],
       ),
     );
   }
@@ -101,8 +185,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       } else {
         // If the next question should not be shown, add default answer or skip it.
         final questionToSkip = widget.questions[i];
-        if (questionToSkip.getDefaultAnswer() != null) {
-          final defaultAnswer = questionToSkip.getDefaultAnswer()!;
+        final defaultAnswer = questionToSkip.getDefaultAnswer();
+        if (defaultAnswer != null) {
           qs.answers[defaultAnswer.question] = defaultAnswer;
         } else {}
       }
@@ -147,6 +231,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       );
     }
     qs.answers[answer.question] = answer;
+    widget.onChange?.call(qs);
     final shouldContinue = widget.shouldContinue?.call(qs);
 
     // Check if the questionnaire should not continue
@@ -330,18 +415,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Add scroll listener to dismiss keyboard when scrolling
-    _scrollController.addListener(_onScroll);
-
-    if (widget.questions.isNotEmpty) {
-      _addQuestionToList(widget.questions.first);
-    }
   }
 
   @override
