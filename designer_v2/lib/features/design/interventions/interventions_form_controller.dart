@@ -186,6 +186,7 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
       subscription.cancel();
     }
     _autosaveSubscriptions.clear();
+    disposeStudyScheduleControls();
     super.dispose();
   }
 

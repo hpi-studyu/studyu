@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_data.dart';
@@ -16,6 +18,34 @@ mixin StudyScheduleControls {
     'segments': segmentsControl,
     'numberOfInterventionsToSelect': numberOfInterventionsToSelectControl,
   };
+
+  StreamSubscription<dynamic>? _selectionCountSubscription;
+
+  void initializeStudyScheduleControls() {
+    _selectionCountSubscription ??= numberOfInterventionsToSelectControl
+        .valueChanges
+        .listen((_) {
+          _applyInterventionIndexConstraints();
+          updateSegmentsFromSegmentsControl();
+        });
+  }
+
+  void disposeStudyScheduleControls() {
+    _selectionCountSubscription?.cancel();
+    _selectionCountSubscription = null;
+  }
+
+  int get allowedInterventionCount {
+    final total = interventions.length;
+    if (total == 0) {
+      return 0;
+    }
+    if (total == 1) {
+      return 1;
+    }
+    final desired = numberOfInterventionsToSelectControl.value ?? 2;
+    return desired.clamp(2, total);
+  }
 
   FormValidationConfigSet get studyScheduleValidationConfig => {
     StudyFormValidationSet.draft: [],
@@ -227,6 +257,7 @@ mixin StudyScheduleControls {
   }
 
   void updateSegmentsFromSegmentsControl() {
+    _applyInterventionIndexConstraints();
     segments.clear();
     for (final segmentControl in segmentsControl.controls) {
       final segment = segmentControl as FormGroup;
@@ -376,5 +407,35 @@ mixin StudyScheduleControls {
       observations: observations,
       numberOfInterventionsToSelect: selected,
     );
+  }
+
+  void _applyInterventionIndexConstraints() {
+    final allowedCount = allowedInterventionCount;
+    for (final segmentControl in segmentsControl.controls) {
+      final segment = segmentControl as FormGroup;
+      if (segment.control('type').value ==
+          StudyScheduleSegmentType.singleIntervention) {
+        final indexControl =
+            segment.control('interventionIndex') as FormControl<int>;
+        final current = indexControl.value ?? 0;
+        final clamped = _clampInterventionIndex(current, allowedCount);
+        if (clamped != current) {
+          indexControl.value = clamped;
+        }
+      }
+    }
+  }
+
+  int _clampInterventionIndex(int value, int allowedCount) {
+    if (allowedCount <= 0) {
+      return 0;
+    }
+    if (value < 0) {
+      return 0;
+    }
+    if (value >= allowedCount) {
+      return allowedCount - 1;
+    }
+    return value;
   }
 }

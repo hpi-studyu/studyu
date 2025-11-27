@@ -873,7 +873,7 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
                       as FormControl<int>?,
               isExpanded: true,
               items: List.generate(
-                formViewModel.interventions.length,
+                formViewModel.allowedInterventionCount,
                 (index) => DropdownMenuItem(
                   value: index,
                   child: Text(
