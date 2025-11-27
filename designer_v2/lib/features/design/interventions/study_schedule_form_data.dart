@@ -8,12 +8,14 @@ class StudyScheduleFormData implements IStudyFormData {
     required this.interventions,
     required this.observations,
     this.numberOfInterventionsToSelect = 2,
+    this.selectedInterventions = const [],
   });
 
   final List<StudyScheduleSegment> segments;
   final List<Intervention> interventions;
   final List<Observation> observations;
   final int numberOfInterventionsToSelect;
+  final List<String> selectedInterventions;
 
   factory StudyScheduleFormData.fromDomainModel(
     AdaptiveStudySchedule schedule,
@@ -26,6 +28,7 @@ class StudyScheduleFormData implements IStudyFormData {
       interventions: interventions,
       observations: observations,
       numberOfInterventionsToSelect: schedule.numberOfInterventionsToSelect,
+      selectedInterventions: schedule.selectedInterventions,
     );
   }
 
@@ -33,6 +36,7 @@ class StudyScheduleFormData implements IStudyFormData {
     return AdaptiveStudySchedule.withSegments(
       segments,
       numberOfInterventionsToSelect: numberOfInterventionsToSelect,
+      selectedInterventions: selectedInterventions,
     );
   }
 

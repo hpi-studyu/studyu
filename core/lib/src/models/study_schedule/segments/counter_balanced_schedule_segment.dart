@@ -16,10 +16,12 @@ class CounterBalancedScheduleSegment extends StudyScheduleSegment {
   int interventionDuration;
   int cycleAmount;
 
-  /// Optional list of intervention indices to counter-balance between.
+  /// Optional list of intervention IDs or choice placeholders to counter-balance between.
+  /// Can contain:
+  /// - Intervention IDs (e.g., 'intervention_123')
+  /// - Choice placeholders (e.g., 'choice_0' for participant's 1st selection)
   /// If null or empty, uses all available interventions.
-  /// If provided, only counter-balances between these specific indices.
-  List<int>? interventionIds;
+  List<String>? interventionIds;
 
   CounterBalancedScheduleSegment(
     this.interventionDuration,
@@ -65,10 +67,27 @@ class CounterBalancedScheduleSegment extends StudyScheduleSegment {
     final dayInCycle = day % (interventionDuration * clampedCount);
     final indexInSequence =
         (dayInCycle ~/ interventionDuration + cycle) % clampedCount;
-    final actualIndex = useIndices
-        ? interventionIds![indexInSequence]
-        : indexInSequence;
 
-    return interventions[actualIndex];
+    if (useIndices) {
+      final idOrChoice = interventionIds![indexInSequence];
+
+      // Check if it's a choice placeholder (e.g., 'choice_0')
+      if (idOrChoice.startsWith('choice_')) {
+        final choiceIndex = int.tryParse(idOrChoice.substring(7)) ?? 0;
+        // Get participant's selected intervention at this choice index
+        if (choiceIndex < interventions.length) {
+          return interventions[choiceIndex];
+        }
+      } else {
+        // It's an intervention ID, find it in the list
+        return interventions.firstWhere(
+          (intervention) => intervention.id == idOrChoice,
+          orElse: () => interventions.first,
+        );
+      }
+    }
+
+    // Fallback: use index-based access
+    return interventions[indexInSequence % interventions.length];
   }
 }

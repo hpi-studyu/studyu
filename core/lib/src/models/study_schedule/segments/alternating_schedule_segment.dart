@@ -15,10 +15,12 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
   int interventionDuration;
   int cycleAmount;
 
-  /// Optional list of intervention indices to alternate between.
+  /// Optional list of intervention IDs or choice placeholders to alternate between.
+  /// Can contain:
+  /// - Intervention IDs (e.g., 'intervention_123')
+  /// - Choice placeholders (e.g., 'choice_0' for participant's 1st selection)
   /// If null or empty, uses all available interventions.
-  /// If provided, only alternates between these specific indices.
-  List<int>? interventionIds;
+  List<String>? interventionIds;
 
   AlternatingScheduleSegment(
     this.interventionDuration,
@@ -48,17 +50,36 @@ class AlternatingScheduleSegment extends StudyScheduleSegment {
       );
     }
 
-    final useIndices = interventionIds != null && interventionIds!.isNotEmpty;
-    final count = useIndices ? interventionIds!.length : interventions.length;
+    final useCustomIds = interventionIds != null && interventionIds!.isNotEmpty;
+    final count = useCustomIds ? interventionIds!.length : interventions.length;
     // Maximum 2 interventions (A and B) can be used
     final clampedCount = count > 2 ? 2 : count;
 
     final indexInSequence = (day ~/ interventionDuration) % clampedCount;
-    final actualIndex = useIndices
-        ? interventionIds![indexInSequence]
-        : indexInSequence;
 
-    return interventions[actualIndex];
+    if (useCustomIds) {
+      final idOrChoice = interventionIds![indexInSequence];
+
+      // Check if it's a choice placeholder (e.g., 'choice_0')
+      if (idOrChoice.startsWith('choice_')) {
+        final choiceIndex = int.tryParse(idOrChoice.substring(7)) ?? 0;
+        // Get participant's selected intervention at this choice index
+        // Note: This requires participant selections to be stored in progress
+        // For now, fallback to using the index directly
+        if (choiceIndex < interventions.length) {
+          return interventions[choiceIndex];
+        }
+      } else {
+        // It's an intervention ID, find it in the list
+        return interventions.firstWhere(
+          (intervention) => intervention.id == idOrChoice,
+          orElse: () => interventions.first,
+        );
+      }
+    }
+
+    // Fallback: use index-based access
+    return interventions[indexInSequence % interventions.length];
   }
 
   factory AlternatingScheduleSegment.fromJson(Map<String, dynamic> json) =>

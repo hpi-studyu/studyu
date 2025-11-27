@@ -12,7 +12,7 @@ AlternatingScheduleSegment _$AlternatingScheduleSegmentFromJson(
   (json['interventionDuration'] as num).toInt(),
   (json['cycleAmount'] as num).toInt(),
   interventionIds: (json['interventionIds'] as List<dynamic>?)
-      ?.map((e) => (e as num).toInt())
+      ?.map((e) => e as String)
       .toList(),
 );
 

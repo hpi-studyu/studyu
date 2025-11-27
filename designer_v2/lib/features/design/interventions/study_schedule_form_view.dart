@@ -78,6 +78,8 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
       children: [
         _studyScheduleDescription(),
         const SizedBox(height: 24.0),
+        _buildInterventionSelectionControl(),
+        const SizedBox(height: 24.0),
         StudyTimeline(formViewModel: widget.formViewModel),
         const SizedBox(height: 24.0),
         // reduce the horizontal padding so items can use more available width
@@ -168,6 +170,92 @@ class _ScheduleFormViewState extends State<ScheduleFormView> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildInterventionSelectionControl() {
+    final theme = Theme.of(context);
+    final totalInterventions = widget.formViewModel.interventions.length;
+
+    if (totalInterventions < 2) {
+      return Card(
+        elevation: 0,
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Icon(Icons.warning_amber_rounded, color: theme.colorScheme.error),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Please define at least 2 interventions to configure participant selection',
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Participant Intervention Selection',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              'Select which interventions participants can choose from. Participants will select 2 interventions from this list.',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: widget.formViewModel.interventions.map((intervention) {
+                final isSelected =
+                    (widget.formViewModel.selectedInterventionsControl.value ??
+                            [])
+                        .contains(intervention.id);
+                return FilterChip(
+                  label: Text(intervention.name ?? intervention.id),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    final currentValue =
+                        widget
+                            .formViewModel
+                            .selectedInterventionsControl
+                            .value ??
+                        [];
+                    final newValue = List<String>.from(currentValue);
+                    if (selected) {
+                      if (!newValue.contains(intervention.id)) {
+                        newValue.add(intervention.id);
+                      }
+                    } else {
+                      newValue.remove(intervention.id);
+                    }
+                    widget.formViewModel.selectedInterventionsControl.value =
+                        newValue.isEmpty ? [] : newValue;
+                  },
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -309,9 +397,9 @@ class StudyTimeline extends StatelessWidget {
     buffer.writeln('Total Duration: $totalDuration days\n');
 
     if (segment is AlternatingScheduleSegment) {
-      final selectedIndices = segment.interventionIds;
-      final useIndices = selectedIndices != null && selectedIndices.isNotEmpty;
-      final count = useIndices ? selectedIndices.length : interventions.length;
+      final selectedIds = segment.interventionIds;
+      final useCustomIds = selectedIds != null && selectedIds.isNotEmpty;
+      final count = useCustomIds ? selectedIds.length : interventions.length;
       // Maximum 2 interventions (A and B) can be used
       final clampedCount = count > 2 ? 2 : count;
 
@@ -324,31 +412,19 @@ class StudyTimeline extends StatelessWidget {
       final timePerIntervention =
           segment.interventionDuration * segment.cycleAmount;
 
-      if (useIndices) {
-        // Only show first 2 interventions
-        final indicesToShow = selectedIndices.take(2).toList();
-        for (final index in indicesToShow) {
-          final label = interventions.length == 2
-              ? 'Intervention ${String.fromCharCode(65 + index)}'
-              : 'Choice ${String.fromCharCode(65 + index)}';
-          buffer.writeln('  $label: $timePerIntervention days');
-        }
-      } else {
-        for (var i = 0; i < clampedCount; i++) {
-          final label = interventions.length == 2
-              ? 'Intervention ${String.fromCharCode(65 + i)}'
-              : 'Choice ${String.fromCharCode(65 + i)}';
-          buffer.writeln('  $label: $timePerIntervention days');
-        }
+      // Show position labels (A, B) instead of trying to decode IDs
+      for (var i = 0; i < clampedCount; i++) {
+        final label = 'Position ${String.fromCharCode(65 + i)}';
+        buffer.writeln('  $label: $timePerIntervention days');
       }
 
       buffer.write(
         '\nCalculation: ${segment.interventionDuration} days × ${segment.cycleAmount} cycle(s) × $clampedCount intervention(s) = $totalDuration days',
       );
     } else if (segment is CounterBalancedScheduleSegment) {
-      final selectedIndices = segment.interventionIds;
-      final useIndices = selectedIndices != null && selectedIndices.isNotEmpty;
-      final count = useIndices ? selectedIndices.length : interventions.length;
+      final selectedIds = segment.interventionIds;
+      final useCustomIds = selectedIds != null && selectedIds.isNotEmpty;
+      final count = useCustomIds ? selectedIds.length : interventions.length;
       // Maximum 2 interventions (A and B) can be used
       final clampedCount = count > 2 ? 2 : count;
 
@@ -362,22 +438,10 @@ class StudyTimeline extends StatelessWidget {
       final timePerIntervention =
           segment.interventionDuration * segment.cycleAmount;
 
-      if (useIndices) {
-        // Only show first 2 interventions
-        final indicesToShow = selectedIndices.take(2).toList();
-        for (final index in indicesToShow) {
-          final label = interventions.length == 2
-              ? 'Intervention ${String.fromCharCode(65 + index)}'
-              : 'Choice ${String.fromCharCode(65 + index)}';
-          buffer.writeln('  $label: $timePerIntervention days');
-        }
-      } else {
-        for (var i = 0; i < clampedCount; i++) {
-          final label = interventions.length == 2
-              ? 'Intervention ${String.fromCharCode(65 + i)}'
-              : 'Choice ${String.fromCharCode(65 + i)}';
-          buffer.writeln('  $label: $timePerIntervention days');
-        }
+      // Show position labels (A, B) instead of trying to decode IDs
+      for (var i = 0; i < clampedCount; i++) {
+        final label = 'Position ${String.fromCharCode(65 + i)}';
+        buffer.writeln('  $label: $timePerIntervention days');
       }
 
       buffer.write(
@@ -413,26 +477,26 @@ class StudyTimeline extends StatelessWidget {
     StudyScheduleControls formViewModel,
     Color baseColor,
   ) {
-    List<int>? selectedIndices;
+    List<String>? interventionIds;
     int interventionDuration = 0;
     int cycleAmount = 0;
     bool isCounterBalanced = false;
 
     if (segment is AlternatingScheduleSegment) {
-      selectedIndices = segment.interventionIds;
+      interventionIds = segment.interventionIds;
       interventionDuration = segment.interventionDuration;
       cycleAmount = segment.cycleAmount;
       isCounterBalanced = false;
     } else if (segment is CounterBalancedScheduleSegment) {
-      selectedIndices = segment.interventionIds;
+      interventionIds = segment.interventionIds;
       interventionDuration = segment.interventionDuration;
       cycleAmount = segment.cycleAmount;
       isCounterBalanced = true;
     }
 
-    final useIndices = selectedIndices != null && selectedIndices.isNotEmpty;
-    final count = useIndices
-        ? selectedIndices.length
+    final useCustomIds = interventionIds != null && interventionIds.isNotEmpty;
+    final count = useCustomIds
+        ? interventionIds.length
         : formViewModel.interventions.length;
     // Maximum 2 interventions (A and B) can be used
     final clampedCount = count > 2 ? 2 : count;
@@ -461,12 +525,9 @@ class StudyTimeline extends StatelessWidget {
         for (var i = 0; i < clampedCount; i++) {
           // Calculate which intervention to show based on counter-balancing logic
           final indexInSequence = (i + cycle) % clampedCount;
-          final interventionIndex = useIndices
-              ? selectedIndices[indexInSequence]
-              : indexInSequence;
-
-          final label = String.fromCharCode(65 + interventionIndex);
-          final interventionColor = interventionColors[interventionIndex % 2];
+          // For visualization, just show A/B labels
+          final label = String.fromCharCode(65 + indexInSequence);
+          final interventionColor = interventionColors[indexInSequence % 2];
 
           bars.add(
             Expanded(
@@ -504,9 +565,8 @@ class StudyTimeline extends StatelessWidget {
       // Alternating: Simple ABABAB... pattern
       for (var cycle = 0; cycle < cycleAmount; cycle++) {
         for (var i = 0; i < clampedCount; i++) {
-          final interventionIndex = useIndices ? selectedIndices[i] : i;
-          final label = String.fromCharCode(65 + interventionIndex);
-          final interventionColor = interventionColors[interventionIndex % 2];
+          final label = String.fromCharCode(65 + i);
+          final interventionColor = interventionColors[i % 2];
 
           bars.add(
             Expanded(
@@ -660,32 +720,24 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
 
     if (segment is AlternatingScheduleSegment ||
         segment is CounterBalancedScheduleSegment) {
-      List<int>? selectedIndices;
+      List<String>? selectedIds;
       if (segment is AlternatingScheduleSegment) {
-        selectedIndices = segment.interventionIds;
+        selectedIds = segment.interventionIds;
       } else if (segment is CounterBalancedScheduleSegment) {
-        selectedIndices = segment.interventionIds;
+        selectedIds = segment.interventionIds;
       }
 
-      final useIndices = selectedIndices != null && selectedIndices.isNotEmpty;
-      final count = useIndices ? selectedIndices.length : totalInterventions;
+      final useCustomIds = selectedIds != null && selectedIds.isNotEmpty;
+      final count = useCustomIds ? selectedIds.length : totalInterventions;
       // Maximum 2 interventions (A and B) can be used
       final clampedCount = count > 2 ? 2 : count;
 
-      // Build the intervention pattern string (e.g., "A-B" or "A-B-C")
+      // Build the intervention pattern string (e.g., "A-B")
+      // For visualization, always show A-B regardless of actual IDs
       final pattern = StringBuffer();
-      if (useIndices) {
-        // Only show first 2 interventions
-        final indicesToShow = selectedIndices.take(2).toList();
-        for (var i = 0; i < indicesToShow.length; i++) {
-          if (i > 0) pattern.write('-');
-          pattern.write(String.fromCharCode(65 + indicesToShow[i]));
-        }
-      } else {
-        for (var i = 0; i < clampedCount; i++) {
-          if (i > 0) pattern.write('-');
-          pattern.write(String.fromCharCode(65 + i));
-        }
+      for (var i = 0; i < clampedCount; i++) {
+        if (i > 0) pattern.write('-');
+        pattern.write(String.fromCharCode(65 + i));
       }
 
       final baseName = segment is AlternatingScheduleSegment
@@ -852,6 +904,43 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
     FormGroup segmentControl,
     StudyScheduleControls formViewModel,
   ) {
+    final selectedInterventions =
+        formViewModel.selectedInterventionsControl.value ?? [];
+
+    // Build dropdown items: all interventions + participant choices
+    final List<DropdownMenuItem<String>> dropdownItems = [];
+
+    // Add all defined interventions
+    for (final intervention in formViewModel.interventions) {
+      dropdownItems.add(
+        DropdownMenuItem(
+          value: intervention.id,
+          child: Text(intervention.name ?? intervention.id),
+        ),
+      );
+    }
+
+    // Add participant choice options based on selected interventions count
+    if (selectedInterventions.isNotEmpty) {
+      for (var i = 0; i < selectedInterventions.length; i++) {
+        dropdownItems.add(
+          DropdownMenuItem(
+            value: 'choice_$i',
+            child: Text(
+              "Choice ${String.fromCharCode(65 + i)} (Participant's ${_ordinal(i + 1)} selection)",
+            ),
+          ),
+        );
+      }
+    }
+
+    // Get current interventionIds (should be a list with 2 items: [posA, posB])
+    final idsControl =
+        segmentControl.control('interventionIds') as FormControl<List<String>>;
+    final currentIds = idsControl.value ?? [];
+    final posAValue = currentIds.isNotEmpty ? currentIds[0] : null;
+    final posBValue = currentIds.length > 1 ? currentIds[1] : null;
+
     return [
       Row(
         children: [
@@ -886,6 +975,51 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
           ),
         ],
       ),
+      const SizedBox(height: 16),
+      Text(
+        'Intervention Assignment',
+        style: Theme.of(
+          context,
+        ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+      ),
+      const SizedBox(height: 8),
+      Row(
+        children: [
+          Expanded(
+            child: DropdownButtonFormField<String>(
+              initialValue: posAValue,
+              items: dropdownItems,
+              onChanged: (value) {
+                if (value != null) {
+                  final newIds = [value, posBValue ?? value];
+                  idsControl.value = newIds;
+                }
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Position A',
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: DropdownButtonFormField<String>(
+              initialValue: posBValue,
+              items: dropdownItems,
+              onChanged: (value) {
+                if (value != null) {
+                  final newIds = [posAValue ?? value, value];
+                  idsControl.value = newIds;
+                }
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Position B',
+              ),
+            ),
+          ),
+        ],
+      ),
     ];
   }
 
@@ -893,6 +1027,43 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
     FormGroup segmentControl,
     StudyScheduleControls formViewModel,
   ) {
+    final selectedInterventions =
+        formViewModel.selectedInterventionsControl.value ?? [];
+
+    // Build dropdown items: all interventions + participant choices
+    final List<DropdownMenuItem<String>> dropdownItems = [];
+
+    // Add all defined interventions
+    for (final intervention in formViewModel.interventions) {
+      dropdownItems.add(
+        DropdownMenuItem(
+          value: intervention.id,
+          child: Text(intervention.name ?? intervention.id),
+        ),
+      );
+    }
+
+    // Add participant choice options based on selected interventions count
+    if (selectedInterventions.isNotEmpty) {
+      for (var i = 0; i < selectedInterventions.length; i++) {
+        dropdownItems.add(
+          DropdownMenuItem(
+            value: 'choice_$i',
+            child: Text(
+              "Choice ${String.fromCharCode(65 + i)} (Participant's ${_ordinal(i + 1)} selection)",
+            ),
+          ),
+        );
+      }
+    }
+
+    // Get current interventionIds (should be a list with 2 items: [posA, posB])
+    final idsControl =
+        segmentControl.control('interventionIds') as FormControl<List<String>>;
+    final currentIds = idsControl.value ?? [];
+    final posAValue = currentIds.isNotEmpty ? currentIds[0] : null;
+    final posBValue = currentIds.length > 1 ? currentIds[1] : null;
+
     return [
       Row(
         children: [
@@ -923,6 +1094,51 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
                 labelText: 'Cycle Amount',
               ),
               controller: ZeroValueController(),
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 16),
+      Text(
+        'Intervention Assignment',
+        style: Theme.of(
+          context,
+        ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+      ),
+      const SizedBox(height: 8),
+      Row(
+        children: [
+          Expanded(
+            child: DropdownButtonFormField<String>(
+              initialValue: posAValue,
+              items: dropdownItems,
+              onChanged: (value) {
+                if (value != null) {
+                  final newIds = [value, posBValue ?? value];
+                  idsControl.value = newIds;
+                }
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Position A',
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: DropdownButtonFormField<String>(
+              initialValue: posBValue,
+              items: dropdownItems,
+              onChanged: (value) {
+                if (value != null) {
+                  final newIds = [posAValue ?? value, value];
+                  idsControl.value = newIds;
+                }
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Position B',
+              ),
             ),
           ),
         ],
@@ -1042,30 +1258,75 @@ class _StudyScheduleSectionState extends State<StudyScheduleSection> {
     FormGroup segmentControl,
     StudyScheduleControls formViewModel,
   ) {
-    final totalInterventions = formViewModel.interventions.length;
-    final useSimpleLabels = totalInterventions == 2;
+    final selectedInterventions =
+        formViewModel.selectedInterventionsControl.value ?? [];
+
+    // Build dropdown items: all interventions + participant choices
+    final Map<String, int> valueToIndexMap = {};
+    final List<DropdownMenuItem<String>> dropdownItems = [];
+
+    // Add all defined interventions
+    for (var i = 0; i < formViewModel.interventions.length; i++) {
+      final intervention = formViewModel.interventions[i];
+      valueToIndexMap[intervention.id] = i;
+      dropdownItems.add(
+        DropdownMenuItem(
+          value: intervention.id,
+          child: Text(intervention.name ?? intervention.id),
+        ),
+      );
+    }
+
+    // Add participant choice options based on selected interventions count
+    if (selectedInterventions.isNotEmpty) {
+      for (var i = 0; i < selectedInterventions.length; i++) {
+        final choiceKey = 'choice_$i';
+        valueToIndexMap[choiceKey] = i;
+        dropdownItems.add(
+          DropdownMenuItem(
+            value: choiceKey,
+            child: Text(
+              "Choice ${String.fromCharCode(65 + i)} (Participant's ${_ordinal(i + 1)} selection)",
+            ),
+          ),
+        );
+      }
+    }
+
+    // Get current index and convert to string value for dropdown
+    final indexControl =
+        segmentControl.control('interventionIndex') as FormControl<int>;
+    final currentIndex = indexControl.value ?? 0;
+
+    // Find the string value that maps to current index
+    // Prefer choice placeholders if they exist
+    String? currentValue;
+    if (selectedInterventions.isNotEmpty &&
+        currentIndex < selectedInterventions.length) {
+      currentValue = 'choice_$currentIndex';
+    } else if (currentIndex < formViewModel.interventions.length) {
+      currentValue = formViewModel.interventions[currentIndex].id;
+    }
 
     return [
       Row(
         children: [
           Expanded(
-            child: ReactiveDropdownField<int>(
-              formControl:
-                  segmentControl.control('interventionIndex')
-                      as FormControl<int>?,
-              isExpanded: true,
-              items: List.generate(
-                2, // Always only A and B for single intervention
-                (index) => DropdownMenuItem(
-                  value: index,
-                  child: Text(
-                    useSimpleLabels
-                        ? 'Intervention ${String.fromCharCode(65 + index)}'
-                        : "Choice ${String.fromCharCode(65 + index)} (Participant's ${_ordinal(index + 1)} selection)",
-                  ),
-                ),
+            child: DropdownButtonFormField<String>(
+              initialValue: currentValue,
+              items: dropdownItems,
+              onChanged: (value) {
+                if (value != null && valueToIndexMap.containsKey(value)) {
+                  // Map string value back to index
+                  indexControl.value = valueToIndexMap[value];
+                }
+              },
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Intervention',
+                helperText:
+                    'Select which intervention or participant choice to use',
               ),
-              decoration: const InputDecoration(border: OutlineInputBorder()),
             ),
           ),
           const SizedBox(width: 16),

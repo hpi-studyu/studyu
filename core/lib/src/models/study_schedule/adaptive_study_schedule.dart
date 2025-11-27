@@ -13,11 +13,17 @@ class AdaptiveStudySchedule {
   @JsonKey(defaultValue: 2)
   int numberOfInterventionsToSelect = 2;
 
+  /// List of intervention IDs that are available for participants to select from
+  /// If null or empty, all interventions are available
+  @JsonKey(defaultValue: [])
+  List<String> selectedInterventions = [];
+
   AdaptiveStudySchedule();
 
   AdaptiveStudySchedule.withSegments(
     this.segments, {
     this.numberOfInterventionsToSelect = 2,
+    this.selectedInterventions = const [],
   });
 
   factory AdaptiveStudySchedule.fromJson(Map<String, dynamic> json) =>
