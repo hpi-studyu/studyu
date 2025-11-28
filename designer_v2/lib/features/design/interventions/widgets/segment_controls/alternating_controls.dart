@@ -14,9 +14,8 @@ class AlternatingControls {
   });
 
   List<Widget> build() {
-    final selectedInterventions =
-        formViewModel.selectedInterventionsControl.value ?? [];
-    final hasTwoInterventions = selectedInterventions.length == 2;
+    final totalInterventions = formViewModel.interventions.length;
+    final hasTwoInterventions = totalInterventions == 2;
 
     return [
       Row(

@@ -49,7 +49,7 @@ class InterventionSelectionCard extends StatelessWidget {
             ),
             const SizedBox(height: 8.0),
             Text(
-              'Select which interventions participants can choose from.',
+              'Participants will select interventions from all $totalInterventions defined interventions at study start.',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -67,8 +67,7 @@ class InterventionSelectionCard extends StatelessWidget {
                       helperText: 'Min number participants must select',
                     ),
                     items: List.generate(
-                      (formViewModel.selectedInterventionsControl.value ?? [])
-                          .length,
+                      totalInterventions,
                       (index) => DropdownMenuItem(
                         value: index + 1,
                         child: Text('${index + 1}'),
@@ -103,8 +102,7 @@ class InterventionSelectionCard extends StatelessWidget {
                       helperText: 'Max number participants can select',
                     ),
                     items: List.generate(
-                      (formViewModel.selectedInterventionsControl.value ?? [])
-                          .length,
+                      totalInterventions,
                       (index) => DropdownMenuItem(
                         value: index + 1,
                         child: Text('${index + 1}'),
@@ -129,34 +127,6 @@ class InterventionSelectionCard extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-            const SizedBox(height: 16.0),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: formViewModel.interventions.map((intervention) {
-                final isSelected =
-                    (formViewModel.selectedInterventionsControl.value ?? [])
-                        .contains(intervention.id);
-                return FilterChip(
-                  label: Text(intervention.name ?? intervention.id),
-                  selected: isSelected,
-                  onSelected: (selected) {
-                    final currentValue =
-                        formViewModel.selectedInterventionsControl.value ?? [];
-                    final newValue = List<String>.from(currentValue);
-                    if (selected) {
-                      if (!newValue.contains(intervention.id)) {
-                        newValue.add(intervention.id);
-                      }
-                    } else {
-                      newValue.remove(intervention.id);
-                    }
-                    formViewModel.selectedInterventionsControl.value =
-                        newValue.isEmpty ? [] : newValue;
-                  },
-                );
-              }).toList(),
             ),
           ],
         ),

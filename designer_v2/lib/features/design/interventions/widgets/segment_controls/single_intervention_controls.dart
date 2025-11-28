@@ -14,26 +14,23 @@ class SingleInterventionControls {
   });
 
   List<Widget> build() {
-    final selectedInterventions =
-        formViewModel.selectedInterventionsControl.value ?? [];
+    final totalInterventions = formViewModel.interventions.length;
 
     final valueToIndexMap = <String, int>{};
     final dropdownItems = <DropdownMenuItem<String>>[];
 
     // Only add participant choice options (no hardcoded interventions)
-    if (selectedInterventions.isNotEmpty) {
-      for (var i = 0; i < selectedInterventions.length; i++) {
-        final choiceKey = 'choice_$i';
-        valueToIndexMap[choiceKey] = i;
-        dropdownItems.add(
-          DropdownMenuItem(
-            value: choiceKey,
-            child: Text(
-              "Choice ${String.fromCharCode(65 + i)} (Participant's ${_ordinal(i + 1)} selection)",
-            ),
+    for (var i = 0; i < totalInterventions; i++) {
+      final choiceKey = 'choice_$i';
+      valueToIndexMap[choiceKey] = i;
+      dropdownItems.add(
+        DropdownMenuItem(
+          value: choiceKey,
+          child: Text(
+            "Choice ${String.fromCharCode(65 + i)} (Participant's ${_ordinal(i + 1)} selection)",
           ),
-        );
-      }
+        ),
+      );
     }
 
     final indexControl =
@@ -42,7 +39,7 @@ class SingleInterventionControls {
 
     // Map current index to choice placeholder
     String? currentValue;
-    if (currentIndex < selectedInterventions.length) {
+    if (currentIndex < totalInterventions) {
       currentValue = 'choice_$currentIndex';
     }
 
