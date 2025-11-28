@@ -113,15 +113,20 @@ OR
 - `type`: Always "singleIntervention"
 - `interventionRef`: Object containing intervention reference
     - `type`: Either "hardcoded" or "participantChoice"
-    - `interventionId`: (only if type="hardcoded") The specific intervention ID to use
-    - `choiceIndex`: (only if type="participantChoice") Index of participant's selection (0=A, 1=B,
-      2=C, etc.)
+  - `interventionId`: (only if type="hardcoded") The specific intervention ID from ALL defined
+    interventions in the study (NOT limited to selectedInterventions)
+  - `choiceIndex`: (only if type="participantChoice") Index of participant's selection (0=A, 1=B,
+    2=C, etc.) from selectedInterventions
 - `duration`: Number of days (integer)
 
 **Changes from current:**
 
 - Replace `interventionIndex: int` with `interventionRef: InterventionReference` object
 - Allows specifying either a hardcoded intervention OR a participant choice
+
+**Important:** Hardcoded interventions can reference ANY intervention defined in the study, not just
+those in `selectedInterventions`. This allows researchers to assign specific interventions that
+participants don't choose themselves (e.g., control conditions, mandatory interventions).
 
 ---
 
@@ -164,14 +169,18 @@ OR
 - `type`: Always "alternating"
 - `cycleAmount`: Number of cycles through the sequence (integer)
 - `interventionSequence`: Array of intervention assignments (one per position A, B, C, etc.)
+    - Length determines number of interventions in rotation
     - Each element contains:
         - `interventionRef`: Object containing intervention reference (same structure as
           SingleIntervention)
             - `type`: Either "hardcoded" or "participantChoice"
-            - `interventionId`: (only if type="hardcoded")
-            - `choiceIndex`: (only if type="participantChoice")
+          - `interventionId`: (only if type="hardcoded") Any intervention ID from ALL defined
+            interventions (not limited to selectedInterventions)
+          - `choiceIndex`: (only if type="participantChoice") Index into participant's selections (
+            0=A, 1=B, 2=C, etc.)
         - `duration`: Number of days for this specific intervention (integer)
-- `balanceFirstIntervention`: Boolean, whether to balance (only meaningful with 2 interventions)
+- `balanceFirstIntervention`: Boolean, whether to balance starting position (only meaningful with 2
+  interventions in sequence)
 - `balanceRatio`: Double (0.0 to 1.0), ratio for first group (default 0.5 = 50/50)
 
 **Changes from current:**
@@ -426,8 +435,10 @@ interface InterventionAssignment {
 1. `minInterventionsToSelect` ≥ 2
 2. `maxInterventionsToSelect` ≥ `minInterventionsToSelect`
 3. `selectedInterventions.length` ≥ 2
-4. All interventionId references must exist in study's intervention pool
-5. All choiceIndex values must be < `selectedInterventions.length`
+4. All `interventionId` references (hardcoded) must exist in study's FULL intervention pool (not
+   just selectedInterventions)
+5. All `choiceIndex` values (participant choice) must be < `selectedInterventions.length`
+6. `selectedInterventions` must be a subset of all defined interventions
 
 ### Segment-Specific Validation
 
@@ -506,23 +517,184 @@ interface InterventionAssignment {
 
 ### Single Intervention Form
 
-- **Intervention Dropdown**: Maps to `interventionRef`
-    - Options: All defined interventions (hardcoded) + All participant choices
-    - Value: Either `{type: "hardcoded", interventionId: "..."}` or
-      `{type: "participantChoice", choiceIndex: N}`
-- **Duration Field**: Maps to `duration`
+**Form Layout:**
+
+```
+┌─────────────────────────────────────────────────┐
+│ Intervention Choice                              │
+│ ┌─────────────────────────────────────────────┐ │
+│ │ [Dropdown: Select intervention...]          │ │
+│ └─────────────────────────────────────────────┘ │
+│                                                  │
+│ Duration (days)                                  │
+│ ┌─────────────────────────────────────────────┐ │
+│ │ [14                                        ] │ │
+│ └─────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────┘
+```
+
+**Intervention Choice Dropdown Options:**
+
+- **Section 1: Hardcoded Interventions** (All defined interventions in study)
+    - "Exercise" → `{type: "hardcoded", interventionId: "exercise_id"}`
+    - "Meditation" → `{type: "hardcoded", interventionId: "meditation_id"}`
+    - "Diet" → `{type: "hardcoded", interventionId: "diet_id"}`
+    - "Sleep" → `{type: "hardcoded", interventionId: "sleep_id"}`
+    - ... (all interventions defined in study)
+- **Divider**
+- **Section 2: Participant Choices** (Based on selectedInterventions)
+    - "Choice A (Participant's 1st selection)" → `{type: "participantChoice", choiceIndex: 0}`
+    - "Choice B (Participant's 2nd selection)" → `{type: "participantChoice", choiceIndex: 1}`
+    - "Choice C (Participant's 3rd selection)" → `{type: "participantChoice", choiceIndex: 2}`
+    - ... (up to selectedInterventions.length)
+
+**Key Point:** Hardcoded section shows ALL interventions defined in the study, NOT filtered by
+selectedInterventions. This allows researchers to assign specific interventions (like controls) that
+participants don't select.
+
+---
 
 ### Alternating/Counter-Balanced Form
 
-- **Cycle Amount Field**: Maps to `cycleAmount`
-- **Intervention Mapping Table**: Maps to `interventionSequence[]`
-    - Rows: One per selected intervention (A, B, C, ...)
-    - Columns:
-        - Position Label (A, B, C, ...)
-        - Intervention Dropdown (hardcoded + choices)
-        - Duration Field (days)
-- **Balance Checkbox**: Maps to `balanceFirstIntervention` (only visible with 2 interventions)
-- **Balance Ratio Slider**: Maps to `balanceRatio` (only visible when balancing enabled)
+**Form Layout:**
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│ Cycle Amount                                                         │
+│ ┌─────────────────────────────────────────────┐                     │
+│ │ [2                                        ] │                     │
+│ └─────────────────────────────────────────────┘                     │
+│                                                                      │
+│ Intervention Mapping                                                │
+│ ┌───────────────────────────────────────────────────────────────┐  │
+│ │ Position │ Intervention                      │ Duration (days) │  │
+│ ├──────────┼───────────────────────────────────┼────────────────┤  │
+│ │ A        │ [Dropdown: Select...]             │ [7           ] │  │
+│ │ B        │ [Dropdown: Select...]             │ [10          ] │  │
+│ │ C        │ [Dropdown: Select...]             │ [5           ] │  │
+│ │ [+ Add Position]                                               │  │
+│ └───────────────────────────────────────────────────────────────┘  │
+│                                                                      │
+│ [x] Balance first intervention (50% start A, 50% start B)          │
+│                                                                      │
+│ Balance Ratio                                                       │
+│ 60% start with A, 40% start with B                                 │
+│ ├────────●──────────────┤ 0.6                                      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Intervention Mapping Table:**
+
+- **Dynamic Rows**: Researcher can add/remove positions (A, B, C, D, etc.)
+    - Minimum: 2 positions
+    - Maximum: No limit (but typically 2-5 for practical studies)
+    - Each position becomes an entry in `interventionSequence[]`
+
+**Intervention Dropdown per Row:**
+Same structure as Single Intervention:
+
+- **Section 1: Hardcoded Interventions** (ALL defined interventions)
+    - Full list of all interventions in study
+    - Not filtered by selectedInterventions
+    - Allows assigning specific interventions (e.g., control, placebo)
+- **Divider**
+- **Section 2: Participant Choices**
+    - "Choice A (Participant's 1st selection)"
+    - "Choice B (Participant's 2nd selection)"
+    - etc.
+
+**Duration Field per Row:**
+
+- Individual duration for each position
+- Allows different intervention lengths (e.g., A:7 days, B:10 days, C:5 days)
+- Total segment duration = cycleAmount × sum of all durations
+
+**Add Position Button:**
+
+- Adds a new row to the table
+- New position gets next letter (D, E, F, etc.)
+- Can be removed if not needed
+
+**Balance Controls:**
+
+- Only visible when exactly 2 positions defined
+- Checkbox enables/disables balancing
+- Slider appears when balancing enabled
+- Controls starting position randomization ratio
+
+---
+
+### Example UI Interactions
+
+**Scenario 1: Study with 5 defined interventions, 3 selected for participants**
+
+**Study Setup:**
+
+- All Interventions: [Exercise, Meditation, Diet, Sleep, Journaling]
+- Selected for Participants: [Exercise, Meditation, Diet]
+
+**Single Intervention Dropdown Shows:**
+
+```
+Hardcoded Interventions:
+  └─ Exercise
+  └─ Meditation  
+  └─ Diet
+  └─ Sleep
+  └─ Journaling
+─────────────────
+Participant Choices:
+  └─ Choice A (Participant's 1st selection)
+  └─ Choice B (Participant's 2nd selection)
+  └─ Choice C (Participant's 3rd selection)
+```
+
+**Researcher can:**
+
+- Assign hardcoded "Sleep" even though participants don't select it
+- Assign "Choice A" which will be resolved to participant's 1st selection at runtime
+- Mix hardcoded and participant choices in alternating segments
+
+**Scenario 2: Alternating segment with mixed assignment**
+
+**Researcher Configures:**
+
+```
+Position A: Hardcoded "Sleep" - 7 days
+Position B: Choice A - 10 days  
+Position C: Choice B - 5 days
+Cycles: 2
+```
+
+**JSON Output:**
+
+```json
+{
+  "interventionSequence": [
+    {
+      "interventionRef": {"type": "hardcoded", "interventionId": "sleep_id"},
+      "duration": 7
+    },
+    {
+      "interventionRef": {"type": "participantChoice", "choiceIndex": 0},
+      "duration": 10
+    },
+    {
+      "interventionRef": {"type": "participantChoice", "choiceIndex": 1},
+      "duration": 5
+    }
+  ],
+  "cycleAmount": 2
+}
+```
+
+**Participant Runtime:**
+
+- Participant selects: [Exercise, Meditation, Diet]
+- Resolved schedule:
+    - Cycle 1: Sleep(7) → Exercise(10) → Meditation(5)
+    - Cycle 2: Sleep(7) → Exercise(10) → Meditation(5)
+- Total: 44 days
 
 ---
 
