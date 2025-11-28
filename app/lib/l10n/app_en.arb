@@ -451,5 +451,28 @@
   "preview_mode_description": "You are currently in preview mode. This allows you to:\n\n• Fast-forward through study days using the \"Next Day\" button\n• Complete tasks multiple times without restrictions\n• Experience the full study flow without affecting real data\n\nImportant: Results and data from preview mode are not stored or mixed with actual participant results from running studies.",
   "preview_mode_results_not_saved": "Task completed in preview mode - results are not saved to protect study data integrity.",
   "ok": "OK",
-  "submit" : "Submit"
+  "submit" : "Submit",
+
+  "recovery_phrase_setup_title": "Recovery Phrase Setup",
+  "recovery_phrase_header": "Your secret recovery phrase",
+  "copy_to_clipboard": "Copy to clipboard",
+  "copied_to_clipboard": "Copied to clipboard",
+  "recovery_phrase_purpose_header": "You'll need this phrase to:",
+  "recovery_phrase_purpose_1": "✓ Continue on a different phone",
+  "recovery_phrase_purpose_2": "✓ Restore your progress after reinstalling",
+  "recovery_phrase_save_hint": "Save it now—you can also find it later in Settings.",
+  "recovery_phrase_saved_confirmation": "I saved my recovery phrase somewhere I can find it later.",
+  "continue_to_study": "Continue to study",
+  "rejoin_study": "Rejoin Study",
+  "enter_recovery_phrase": "Enter your recovery phrase",
+  "required": "Required",
+  "invalid_recovery_phrase": "Invalid recovery phrase. Please check your words.",
+  "recovery_successful": "Recovery successful! ID: {id}",
+  "@recovery_successful": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  }
 }

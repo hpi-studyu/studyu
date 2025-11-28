@@ -7,6 +7,8 @@ import 'package:studyu_app/screens/app_onboarding/app_outdated_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
 import 'package:studyu_app/screens/app_onboarding/welcome.dart';
+import 'package:studyu_app/screens/app_onboarding/recovery_phrase_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/rejoin_study_screen.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/faq.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
@@ -41,6 +43,8 @@ class Routes {
   static const String reportHistory = '/reportHistory';
   static const String reportDetails = '/reportDetails';
   static const String performanceDetails = '/performanceDetails';
+  static const String recoveryPhrase = '/recoveryPhrase';
+  static const String rejoinStudy = '/rejoinStudy';
 
   static Route<dynamic> unknownRoute(RouteSettings settings) {
     FlutterNativeSplash.remove();
@@ -158,6 +162,16 @@ class Routes {
       case reportHistory:
         return MaterialPageRoute(
           builder: (_) => const ReportHistoryScreen(),
+          settings: settings,
+        );
+      case recoveryPhrase:
+        return MaterialPageRoute(
+          builder: (_) => const RecoveryPhraseScreen(),
+          settings: settings,
+        );
+      case rejoinStudy:
+        return MaterialPageRoute(
+          builder: (_) => const RejoinStudyScreen(),
           settings: settings,
         );
       default:

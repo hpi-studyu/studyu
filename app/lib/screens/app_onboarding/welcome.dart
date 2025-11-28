@@ -61,6 +61,15 @@ class WelcomeScreen extends StatelessWidget {
                   style: const TextStyle(fontSize: 20),
                 ),
               ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () =>
+                    Navigator.pushNamed(context, Routes.rejoinStudy),
+                child: Text(
+                  AppLocalizations.of(context)!.rejoin_study,
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
+                ),
+              ),
               const Spacer(),
             ],
           ),

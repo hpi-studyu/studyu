@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -1167,4 +1166,57 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get submit => 'Absenden';
+
+  @override
+  String get recovery_phrase_setup_title =>
+      'Wiederherstellungsphrase einrichten';
+
+  @override
+  String get recovery_phrase_header => 'Deine geheime Wiederherstellungsphrase';
+
+  @override
+  String get copy_to_clipboard => 'In die Zwischenablage kopieren';
+
+  @override
+  String get copied_to_clipboard => 'In die Zwischenablage kopiert';
+
+  @override
+  String get recovery_phrase_purpose_header => 'Du benötigst diese Phrase um:';
+
+  @override
+  String get recovery_phrase_purpose_1 =>
+      '✓ Auf einem anderen Gerät fortzufahren';
+
+  @override
+  String get recovery_phrase_purpose_2 =>
+      '✓ Deinen Fortschritt nach Neuinstallation wiederherzustellen';
+
+  @override
+  String get recovery_phrase_save_hint =>
+      'Speichere sie jetzt – du findest sie später auch in den Einstellungen.';
+
+  @override
+  String get recovery_phrase_saved_confirmation =>
+      'Ich habe meine Wiederherstellungsphrase sicher gespeichert.';
+
+  @override
+  String get continue_to_study => 'Weiter zur Studie';
+
+  @override
+  String get rejoin_study => 'Studie wieder beitreten';
+
+  @override
+  String get enter_recovery_phrase => 'Gib deine Wiederherstellungsphrase ein';
+
+  @override
+  String get required => 'Erforderlich';
+
+  @override
+  String get invalid_recovery_phrase =>
+      'Ungültige Wiederherstellungsphrase. Bitte überprüfe deine Wörter.';
+
+  @override
+  String recovery_successful(String id) {
+    return 'Wiederherstellung erfolgreich! ID: $id';
+  }
 }

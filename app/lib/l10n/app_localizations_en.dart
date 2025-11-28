@@ -1156,4 +1156,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get submit => 'Submit';
+
+  @override
+  String get recovery_phrase_setup_title => 'Recovery Phrase Setup';
+
+  @override
+  String get recovery_phrase_header => 'Your secret recovery phrase';
+
+  @override
+  String get copy_to_clipboard => 'Copy to clipboard';
+
+  @override
+  String get copied_to_clipboard => 'Copied to clipboard';
+
+  @override
+  String get recovery_phrase_purpose_header => 'You\'ll need this phrase to:';
+
+  @override
+  String get recovery_phrase_purpose_1 => '✓ Continue on a different phone';
+
+  @override
+  String get recovery_phrase_purpose_2 =>
+      '✓ Restore your progress after reinstalling';
+
+  @override
+  String get recovery_phrase_save_hint =>
+      'Save it now—you can also find it later in Settings.';
+
+  @override
+  String get recovery_phrase_saved_confirmation =>
+      'I saved my recovery phrase somewhere I can find it later.';
+
+  @override
+  String get continue_to_study => 'Continue to study';
+
+  @override
+  String get rejoin_study => 'Rejoin Study';
+
+  @override
+  String get enter_recovery_phrase => 'Enter your recovery phrase';
+
+  @override
+  String get required => 'Required';
+
+  @override
+  String get invalid_recovery_phrase =>
+      'Invalid recovery phrase. Please check your words.';
+
+  @override
+  String recovery_successful(String id) {
+    return 'Recovery successful! ID: $id';
+  }
 }

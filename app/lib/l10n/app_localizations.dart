@@ -2251,6 +2251,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Submit'**
   String get submit;
+
+  /// No description provided for @recovery_phrase_setup_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery Phrase Setup'**
+  String get recovery_phrase_setup_title;
+
+  /// No description provided for @recovery_phrase_header.
+  ///
+  /// In en, this message translates to:
+  /// **'Your secret recovery phrase'**
+  String get recovery_phrase_header;
+
+  /// No description provided for @copy_to_clipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy to clipboard'**
+  String get copy_to_clipboard;
+
+  /// No description provided for @copied_to_clipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get copied_to_clipboard;
+
+  /// No description provided for @recovery_phrase_purpose_header.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll need this phrase to:'**
+  String get recovery_phrase_purpose_header;
+
+  /// No description provided for @recovery_phrase_purpose_1.
+  ///
+  /// In en, this message translates to:
+  /// **'✓ Continue on a different phone'**
+  String get recovery_phrase_purpose_1;
+
+  /// No description provided for @recovery_phrase_purpose_2.
+  ///
+  /// In en, this message translates to:
+  /// **'✓ Restore your progress after reinstalling'**
+  String get recovery_phrase_purpose_2;
+
+  /// No description provided for @recovery_phrase_save_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Save it now—you can also find it later in Settings.'**
+  String get recovery_phrase_save_hint;
+
+  /// No description provided for @recovery_phrase_saved_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'I saved my recovery phrase somewhere I can find it later.'**
+  String get recovery_phrase_saved_confirmation;
+
+  /// No description provided for @continue_to_study.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to study'**
+  String get continue_to_study;
+
+  /// No description provided for @rejoin_study.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejoin Study'**
+  String get rejoin_study;
+
+  /// No description provided for @enter_recovery_phrase.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your recovery phrase'**
+  String get enter_recovery_phrase;
+
+  /// No description provided for @required.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get required;
+
+  /// No description provided for @invalid_recovery_phrase.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid recovery phrase. Please check your words.'**
+  String get invalid_recovery_phrase;
+
+  /// No description provided for @recovery_successful.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery successful! ID: {id}'**
+  String recovery_successful(String id);
 }
 
 class _AppLocalizationsDelegate
