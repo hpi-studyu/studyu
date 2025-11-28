@@ -242,6 +242,7 @@
       }
     }
   },
+  "free_text_answer_hint": "Geben Sie Ihre Antwort hier ein...",
   "app_outdated_message": "Eine neue Version der StudyU App ist verfügbar. Bitte führen Sie eine Aktualisierung durch, um die neuesten Funktionen und Verbesserungen zu erhalten. Vielen Dank für Ihre Unterstützung!",
   "update_now": "Jetzt aktualisieren",
 

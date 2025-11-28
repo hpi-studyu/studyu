@@ -16,7 +16,7 @@ part 'study_base_controller.g.dart';
 
 @riverpod
 class StudyBaseController<T extends StudyControllerBaseState>
-    extends _$StudyBaseController {
+    extends _$StudyBaseController<T> {
   @override
   StudyControllerBaseState build(StudyID studyId) {
     state = StudyControllerBaseState(

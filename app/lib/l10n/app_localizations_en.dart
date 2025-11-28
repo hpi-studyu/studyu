@@ -601,6 +601,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get free_text_answer_hint => 'Type your answer here...';
+
+  @override
   String get app_outdated_message =>
       'A new version of the StudyU App is available. Please update to get the latest features and improvements. Thank you for your support!';
 

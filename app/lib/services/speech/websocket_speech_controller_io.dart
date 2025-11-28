@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:record/record.dart';
 import 'package:studyu_app/services/speech/speech_controller_models.dart';
 import 'package:studyu_core/env.dart' as env;
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -61,29 +62,22 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
     try {
       final hasPermission = await _audioRecorder.hasPermission();
       return hasPermission;
-    } catch (e, stack) {
-      debugPrint('[WebSocketSpeech] init error: $e');
-      debugPrint(stack.toString());
+    } catch (e) {
       return false;
     }
   }
 
   Future<bool> startListening() async {
-    debugPrint('[WebSocketSpeech] startListening requested');
     if (!_platformSupported) {
       _emitError(SpeechErrorType.general);
       return false;
     }
 
     if (_serverUrl.isEmpty) {
-      debugPrint(
-        '[WebSocketSpeech] WebSocket URL not configured, STT unavailable',
-      );
       return false;
     }
     if (value.status == SpeechLifecycleStatus.listening ||
         value.status == SpeechLifecycleStatus.preparing) {
-      debugPrint('[WebSocketSpeech] Already listening or preparing');
       return false;
     }
 
@@ -108,7 +102,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
         status: SpeechLifecycleStatus.listening,
         clearError: true,
       );
-      debugPrint('[WebSocketSpeech] Listening started successfully');
 
       return true;
     } catch (e, stack) {
@@ -124,31 +117,35 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
 
   Future<void> _startWebSocketConnection() async {
     try {
-      debugPrint('[WebSocketSpeech] Connecting to $_serverUrl...');
-      _wsChannel = IOWebSocketChannel.connect(Uri.parse(_serverUrl));
+      final token = Supabase.instance.client.auth.currentSession?.accessToken;
+
+      final ws = await WebSocket.connect(
+        _serverUrl,
+        headers: token != null ? {'Authorization': 'Bearer $token'} : null,
+      );
+
+      _wsChannel = IOWebSocketChannel(ws);
+
       final config = {
         'config': {'sample_rate': _sampleRate},
       };
       _wsChannel!.sink.add(jsonEncode(config));
-      debugPrint('[WebSocketSpeech] WebSocket connected, config sent');
       _wsChannel!.stream.listen(
         (data) {
           if (_isDisposed) return;
           try {
             final result = jsonDecode(data as String) as Map<String, dynamic>;
             _handleTranscriptionResult(result);
-          } catch (e) {
-            debugPrint('[WebSocketSpeech] Error parsing response: $e');
-          }
+          } catch (e) {}
         },
         onError: (error) {
           if (_isDisposed) return;
-          debugPrint('[WebSocketSpeech] WebSocket error: $error');
+
           _handleConnectionLoss();
         },
         onDone: () {
           if (_isDisposed) return;
-          debugPrint('[WebSocketSpeech] WebSocket closed by server');
+
           _handleConnectionLoss();
         },
         cancelOnError: false,
@@ -159,9 +156,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   }
 
   void _handleConnectionLoss() {
-    debugPrint(
-      '[WebSocketSpeech] Connection loss detected. Listening: $_isListening, Reconnecting: $_isReconnecting',
-    );
     if (_isListening && !_isReconnecting) {
       _reconnect();
     }
@@ -170,7 +164,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   Future<void> _reconnect() async {
     if (_isReconnecting || _isDisposed) return;
     _isReconnecting = true;
-    debugPrint('[WebSocketSpeech] Attempting to reconnect...');
 
     try {
       // Close existing connection if any
@@ -183,15 +176,12 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
       await Future.delayed(const Duration(milliseconds: 500));
 
       if (!_isListening) {
-        debugPrint('[WebSocketSpeech] Reconnect aborted: not listening');
         _isReconnecting = false;
         return;
       }
 
       await _startWebSocketConnection();
-      debugPrint('[WebSocketSpeech] Reconnected successfully');
     } catch (e) {
-      debugPrint('[WebSocketSpeech] Reconnection failed: $e');
       _emitError(
         SpeechErrorType.general,
         details: 'Connection lost. Please try again.',
@@ -203,7 +193,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
 
   Future<void> _startAudioRecording() async {
     try {
-      debugPrint('[WebSocketSpeech] Starting audio recording...');
       final stream = await _audioRecorder.startStream(
         const RecordConfig(
           encoder: AudioEncoder.pcm16bits,
@@ -223,7 +212,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
             } catch (e) {
               // If send fails, it might be because connection is closed
               // The onDone/onError of WebSocket should handle this, but just in case
-              debugPrint('[WebSocketSpeech] Failed to send audio: $e');
             }
           }
         },
@@ -236,7 +224,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
         },
         cancelOnError: false,
       );
-      debugPrint('[WebSocketSpeech] Audio recording started');
     } catch (e) {
       throw Exception('Failed to start audio recording: $e');
     }
@@ -253,12 +240,10 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
       // Show partial transcription (ongoing speech)
       _latestTranscript = partial.trim();
       value = value.copyWith(partialTranscript: partial);
-      // debugPrint('[WebSocketSpeech] Partial: $partial'); // Uncomment for very verbose logs
     } else if (text != null) {
       // Final transcription (silence detected or end of phrase)
       final trimmed = text.trim();
       if (trimmed.isNotEmpty) {
-        debugPrint('[WebSocketSpeech] Final transcript: $trimmed');
         // Commit the final result
         _latestTranscript = trimmed;
         _commitTranscript();
@@ -274,7 +259,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   }
 
   Future<void> stopListening() async {
-    debugPrint('[WebSocketSpeech] stopListening requested');
     if (!_isListening) return;
     _isListening = false;
 
@@ -282,7 +266,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
       // Stop audio recording
       await _audioStreamSubscription?.cancel();
       await _audioRecorder.stop();
-      debugPrint('[WebSocketSpeech] Audio recording stopped');
 
       // Send EOF to WebSocket
       if (_wsChannel != null) {
@@ -291,7 +274,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
           // Give server a moment to send final results
           await Future.delayed(const Duration(milliseconds: 300));
           await _wsChannel!.sink.close();
-          debugPrint('[WebSocketSpeech] WebSocket closed cleanly');
         } catch (_) {
           // Ignore errors during closing
         }
@@ -312,7 +294,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   }
 
   Future<void> forceReset() async {
-    debugPrint('[WebSocketSpeech] forceReset requested');
     _isListening = false;
     try {
       await _audioStreamSubscription?.cancel();
@@ -348,10 +329,6 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
       _audioRecorder.stop();
     } catch (_) {}
 
-    debugPrint('[WebSocketSpeech] error=$type details=${details ?? ''}');
-    if (stackTrace != null) {
-      debugPrint(stackTrace.toString());
-    }
     value = value.copyWith(
       status: SpeechLifecycleStatus.error,
       error: SpeechError(type, details: details),

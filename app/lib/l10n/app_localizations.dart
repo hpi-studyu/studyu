@@ -1178,6 +1178,12 @@ abstract class AppLocalizations {
   /// **'Please enter only characters matching the pattern {pattern}'**
   String free_text_custom_error(String pattern);
 
+  /// No description provided for @free_text_answer_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Type your answer here...'**
+  String get free_text_answer_hint;
+
   /// No description provided for @app_outdated_message.
   ///
   /// In en, this message translates to:
