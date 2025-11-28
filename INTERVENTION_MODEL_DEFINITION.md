@@ -159,6 +159,12 @@ participants don't choose themselves (e.g., control conditions, mandatory interv
       "duration": 7
     }
   ],
+  "randomization": {
+    "enabled": false,
+    "seed": null,
+    "randomizePerCycle": false,
+    "preventConsecutive": false
+  },
   "balanceFirstIntervention": false,
   "balanceRatio": 0.5
 }
@@ -179,8 +185,15 @@ participants don't choose themselves (e.g., control conditions, mandatory interv
           - `choiceIndex`: (only if type="participantChoice") Index into participant's selections (
             0=A, 1=B, 2=C, etc.)
         - `duration`: Number of days for this specific intervention (integer)
+- `randomization`: (Optional) Randomization configuration
+    - `enabled`: Boolean, if false uses fixed sequence A-B-C-A-B-C... (default: false)
+    - `seed`: Integer or null, for reproducible randomization (default: null = truly random)
+    - `randomizePerCycle`: Boolean, if true randomizes order every cycle; if false randomizes once
+      at study start and repeats (default: false, only used when enabled=true)
+    - `preventConsecutive`: Boolean, prevents same intervention appearing twice in a row across
+      cycle boundaries (default: false, only used when enabled=true)
 - `balanceFirstIntervention`: Boolean, whether to balance starting position (only meaningful with 2
-  interventions in sequence)
+  interventions in sequence AND randomization.enabled = false)
 - `balanceRatio`: Double (0.0 to 1.0), ratio for first group (default 0.5 = 50/50)
 
 **Changes from current:**
@@ -196,13 +209,70 @@ participants don't choose themselves (e.g., control conditions, mandatory interv
 totalDuration = cycleAmount × sum(interventionSequence[i].duration for all i)
 ```
 
-**Pattern Example (3 interventions, 2 cycles):**
+**Pattern Examples:**
 
+**1. Deterministic (randomization.enabled = false):**
 ```
+3 interventions, 2 cycles:
 Cycle 1: [A:7 days] → [B:10 days] → [C:7 days]
 Cycle 2: [A:7 days] → [B:10 days] → [C:7 days]
 Total: 48 days
+Pattern: Fixed A-B-C-A-B-C
+Use Case: Classic alternating design, completely predictable
 ```
+
+**2. Randomize Once (randomization.enabled = true, randomizePerCycle = false):**
+
+```
+3 interventions, 3 cycles:
+Order determined at study start: C-A-B
+Cycle 1: [C:7 days] → [A:7 days] → [B:10 days]
+Cycle 2: [C:7 days] → [A:7 days] → [B:10 days]  (same order)
+Cycle 3: [C:7 days] → [A:7 days] → [B:10 days]  (same order)
+Total: 72 days
+Pattern: Random order chosen once, then repeated
+Use Case: Participant fairness with within-participant consistency
+```
+
+**3. Randomize Every Cycle (randomization.enabled = true, randomizePerCycle = true,
+preventConsecutive = false):**
+
+```
+3 interventions, 3 cycles:
+Cycle 1: [C:7 days] → [A:7 days] → [B:10 days]  (randomized)
+Cycle 2: [B:10 days] → [C:7 days] → [A:7 days]  (randomized again)
+Cycle 3: [A:7 days] → [B:10 days] → [C:7 days]  (randomized again)
+Total: 72 days
+Pattern: Different random order each cycle
+Note: B-B could occur across cycle 1→2 boundary (ends B, starts B)
+Use Case: Maximum unpredictability, testing order effects
+```
+
+**4. Randomize Every Cycle with Constraint (randomization.enabled = true, randomizePerCycle = true,
+preventConsecutive = true):**
+
+```
+2 interventions, 4 cycles:
+Cycle 1: [A:7 days] → [B:10 days]  (ends with B)
+Cycle 2: [A:7 days] → [B:10 days]  (forced to start with A, not B)
+Cycle 3: [B:10 days] → [A:7 days]  (ends with A)
+Cycle 4: [B:10 days] → [A:7 days]  (forced to start with B, not A)
+Total: 68 days
+Pattern: Random per cycle but no consecutive duplicates across boundaries
+Use Case: Unpredictable but avoid potential carryover confusion
+
+Example with 3 interventions:
+Cycle 1: [A:7] → [B:10] → [C:5]  (ends with C)
+Cycle 2: [A:7] → [B:10] → [C:5]  (forced to not start with C)
+Cycle 3: [B:10] → [C:5] → [A:7]  (ends with A)
+Cycle 4: [C:5] → [B:10] → [A:7]  (forced to not start with A)
+```
+
+**Important:** When `randomization.enabled = false`, consecutive duplicates across cycle boundaries
+are already impossible by design because the pattern is fixed (A-B-C-A-B-C never has duplicates).
+
+**Note:** Counter-Balanced segments do NOT support randomization - their deterministic rotation
+pattern is fundamental to counter-balancing design.
 
 ---
 
@@ -252,6 +322,17 @@ Total: 48 days
 - Cycle 1: B, C, A (rotated by 1)
 - Cycle 2: C, A, B (rotated by 2)
 - Each intervention keeps its own duration across cycles
+
+**Why No Randomization:**
+Counter-balanced segments are designed to systematically control for order effects by ensuring each
+intervention appears in each ordinal position an equal number of times. Adding randomization would
+destroy this property and defeat the purpose of counter-balancing. If you need random sequencing,
+use AlternatingScheduleSegment with `randomization.enabled = true`.
+
+**Balancing Feature:**
+The `balanceFirstIntervention` feature randomizes which rotation cycle a participant starts with (
+e.g., 60% start with rotation 0, 40% start with rotation 1), not the rotation pattern itself. This
+provides participant-level randomization while preserving the counter-balanced design.
 
 ---
 
@@ -428,6 +509,319 @@ interface InterventionAssignment {
 
 ---
 
+## Randomization Use Cases
+
+### Overview
+
+The randomization feature in **AlternatingScheduleSegment** provides flexible control over
+intervention sequencing. This section details all possible configurations and their use cases.
+
+### Randomization Configuration Matrix
+
+| `enabled` | `randomizePerCycle` | `preventConsecutive` | Behavior                                                           |
+|-----------|---------------------|----------------------|--------------------------------------------------------------------|
+| `false`   | N/A                 | N/A                  | Fixed sequence A-B-C-A-B-C (deterministic)                         |
+| `true`    | `false`             | N/A                  | Randomize once at start, repeat same order all cycles              |
+| `true`    | `true`              | `false`              | Randomize order every cycle, consecutive allowed across boundaries |
+| `true`    | `true`              | `true`               | Randomize order every cycle, prevent consecutive across boundaries |
+
+### Detailed Use Cases
+
+#### **Use Case 1: Fixed Alternating (Classic Design)**
+
+```json
+{
+  "type": "alternating",
+  "cycleAmount": 3,
+  "interventionSequence": [
+    {
+      "interventionRef": {
+        "type": "participantChoice",
+        "choiceIndex": 0
+      },
+      "duration": 7
+    },
+    {
+      "interventionRef": {
+        "type": "participantChoice",
+        "choiceIndex": 1
+      },
+      "duration": 7
+    }
+  ],
+  "randomization": {
+    "enabled": false
+  }
+}
+```
+
+**Result:**
+
+- Participant selects: [Exercise, Meditation]
+- Schedule: Exercise-Meditation-Exercise-Meditation-Exercise-Meditation
+- Total: 42 days (6 periods × 7 days)
+
+**When to use:**
+
+- Classic N-of-1 trial design
+- Need predictable pattern for participant planning
+- Comparing intervention order is not a concern
+
+---
+
+#### **Use Case 2: Randomize Once for Fairness**
+
+```json
+{
+  "type": "alternating",
+  "cycleAmount": 4,
+  "interventionSequence": [
+    {
+      "interventionRef": {
+        "type": "participantChoice",
+        "choiceIndex": 0
+      },
+      "duration": 7
+    },
+    {
+      "interventionRef": {
+        "type": "participantChoice",
+        "choiceIndex": 1
+      },
+      "duration": 7
+    },
+    {
+      "interventionRef": {
+        "type": "participantChoice",
+        "choiceIndex": 2
+      },
+      "duration": 7
+    }
+  ],
+  "randomization": {
+    "enabled": true,
+    "seed": null,
+    "randomizePerCycle": false,
+    "preventConsecutive": false
+  }
+}
+```
+
+**Result (example):**
+
+- Participant selects: [Exercise, Meditation, Diet]
+- Random order chosen: Meditation-Diet-Exercise
+- Cycle 1: Meditation-Diet-Exercise
+- Cycle 2: Meditation-Diet-Exercise
+- Cycle 3: Meditation-Diet-Exercise
+- Cycle 4: Meditation-Diet-Exercise
+- Total: 84 days (12 periods × 7 days)
+
+**When to use:**
+
+- Avoid order bias across participants (some start with A, others with B)
+- Want consistency within each participant's schedule
+- Participant can learn and anticipate their pattern
+
+---
+
+#### **Use Case 3: Maximum Unpredictability**
+
+```json
+{
+  "type": "alternating",
+  "cycleAmount": 5,
+  "interventionSequence": [
+    {
+      "interventionRef": {
+        "type": "participantChoice",
+        "choiceIndex": 0
+      },
+      "duration": 7
+    },
+    {
+      "interventionRef": {
+        "type": "participantChoice",
+        "choiceIndex": 1
+      },
+      "duration": 7
+    }
+  ],
+  "randomization": {
+    "enabled": true,
+    "seed": null,
+    "randomizePerCycle": true,
+    "preventConsecutive": false
+  }
+}
+```
+
+**Result (example):**
+
+- Participant selects: [Exercise, Meditation]
+- Cycle 1: A-B
+- Cycle 2: B-A  (ends with A)
+- Cycle 3: A-B  (starts with A) ← Consecutive A-A across boundary
+- Cycle 4: B-A
+- Cycle 5: A-B
+- Total: 70 days
+
+**When to use:**
+
+- Testing whether intervention order matters
+- Preventing pattern learning/expectation effects
+- Maximizing ecological validity (real life is unpredictable)
+
+**Caveat:** Can produce consecutive same interventions across cycle boundaries
+
+---
+
+#### **Use Case 4: Unpredictable with Constraint**
+
+```json
+{
+  "type": "alternating",
+  "cycleAmount": 6,
+  "interventionSequence": [
+    {
+      "interventionRef": {
+        "type": "hardcoded",
+        "interventionId": "control"
+      },
+      "duration": 5
+    },
+    {
+      "interventionRef": {
+        "type": "participantChoice",
+        "choiceIndex": 0
+      },
+      "duration": 10
+    }
+  ],
+  "randomization": {
+    "enabled": true,
+    "seed": 12345,
+    "randomizePerCycle": true,
+    "preventConsecutive": true
+  }
+}
+```
+
+**Result (example with seed):**
+
+- Participant selects: [Exercise]
+- Intervention mapping: A=Control, B=Exercise
+- Cycle 1: A-B  (ends with B)
+- Cycle 2: A-B  (forced to start with A)
+- Cycle 3: B-A  (ends with A)
+- Cycle 4: B-A  (forced to start with B)
+- Cycle 5: A-B
+- Cycle 6: A-B
+- Total: 90 days
+
+**When to use:**
+
+- Need unpredictability but avoid confusion of back-to-back same interventions
+- Minimize potential carryover effects appearing consecutive
+- Reproducible results (seed = 12345)
+
+---
+
+#### **Use Case 5: Complex Multi-Intervention Randomization**
+
+```json
+{
+  "type": "alternating",
+  "cycleAmount": 3,
+  "interventionSequence": [
+    {
+      "interventionRef": {
+        "type": "hardcoded",
+        "interventionId": "baseline_supplement"
+      },
+      "duration": 7
+    },
+    {
+      "interventionRef": {
+        "type": "participantChoice",
+        "choiceIndex": 0
+      },
+      "duration": 10
+    },
+    {
+      "interventionRef": {
+        "type": "participantChoice",
+        "choiceIndex": 1
+      },
+      "duration": 10
+    },
+    {
+      "interventionRef": {
+        "type": "hardcoded",
+        "interventionId": "washout"
+      },
+      "duration": 3
+    }
+  ],
+  "randomization": {
+    "enabled": true,
+    "randomizePerCycle": true,
+    "preventConsecutive": true
+  }
+}
+```
+
+**Result (example):**
+
+- Participant selects: [Exercise, Diet]
+- Intervention mapping: A=Baseline, B=Exercise, C=Diet, D=Washout
+- Cycle 1: B-D-A-C (30 days)
+- Cycle 2: C-A-D-B (30 days, prevented starting with C from cycle 1)
+- Cycle 3: A-C-B-D (30 days, prevented starting with B from cycle 2)
+- Total: 90 days
+
+**When to use:**
+
+- Complex protocols with mandatory elements (baseline, washout)
+- Mix hardcoded and participant-selected interventions
+- Want randomization but maintain logical constraints
+
+---
+
+### Comparison: Alternating vs Counter-Balanced
+
+| Feature                           | Alternating (Random)             | Counter-Balanced                                 |
+|-----------------------------------|----------------------------------|--------------------------------------------------|
+| **Within-Participant Pattern**    | Can be randomized                | Always deterministic rotation                    |
+| **Purpose**                       | Flexible sequencing              | Control position effects                         |
+| **Order Control**                 | Each intervention once per cycle | Each intervention in each position across cycles |
+| **Between-Participant Variation** | `randomization` settings         | `balanceFirstIntervention` only                  |
+| **Use Case**                      | Unpredictability, fairness       | Systematic order effect control                  |
+
+**Example showing the difference:**
+
+**Alternating with randomization (3 interventions, 3 cycles):**
+
+```
+Participant 1: C-A-B, A-C-B, B-A-C (random per cycle)
+Participant 2: B-C-A, C-B-A, A-B-C (different random per cycle)
+```
+
+Each participant gets different orders, A/B/C appear once per cycle.
+
+**Counter-Balanced (3 interventions, 3 cycles):**
+
+```
+Participant 1 (starts cycle 0): A-B-C, B-C-A, C-A-B
+Participant 2 (starts cycle 1): B-C-A, C-A-B, A-B-C
+Participant 3 (starts cycle 2): C-A-B, A-B-C, B-C-A
+```
+
+Each participant follows deterministic rotation, different starting points ensure each intervention
+appears in each position across the participant pool.
+
+---
+
 ## Validation Rules
 
 ### Global Validation
@@ -455,6 +849,10 @@ interface InterventionAssignment {
 - Each `duration` > 0
 - `balanceRatio` must be between 0.0 and 1.0
 - All interventionRef references must be valid
+- If `randomization.enabled = false`: `randomizePerCycle` and `preventConsecutive` are ignored
+- If `randomization.enabled = true` and `randomizePerCycle = false`: `preventConsecutive` is
+  ignored (no consecutive possible when repeating same order)
+- `seed` must be null or positive integer
 
 **CounterBalancedScheduleSegment:**
 
