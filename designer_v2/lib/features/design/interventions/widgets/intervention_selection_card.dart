@@ -1,36 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_controller_mixin.dart';
 
-class InterventionSelectionCard extends StatelessWidget {
+class InterventionSelectionCard extends StatefulWidget {
   final StudyScheduleControls formViewModel;
 
   const InterventionSelectionCard({required this.formViewModel, super.key});
 
   @override
+  State<InterventionSelectionCard> createState() =>
+      _InterventionSelectionCardState();
+}
+
+class _InterventionSelectionCardState extends State<InterventionSelectionCard> {
+  @override
+  void initState() {
+    super.initState();
+    // Listen to min changes and ensure max is always >= min
+    widget.formViewModel.minInterventionsToSelectControl.valueChanges.listen((
+      minValue,
+    ) {
+      if (minValue != null) {
+        final currentMax =
+            widget.formViewModel.maxInterventionsToSelectControl.value;
+        if (currentMax == null || currentMax < minValue) {
+          widget.formViewModel.maxInterventionsToSelectControl.value = minValue;
+        }
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final totalInterventions = formViewModel.interventions.length;
+    final totalInterventions = widget.formViewModel.interventions.length;
 
     if (totalInterventions < 2) {
-      return Card(
-        elevation: 0,
-        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              Icon(Icons.warning_amber_rounded, color: theme.colorScheme.error),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  'Please define at least 2 interventions to configure participant selection',
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
+      // ...existing code...
     }
 
     return Card(
@@ -58,71 +64,48 @@ class InterventionSelectionCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: DropdownButtonFormField<int>(
-                    initialValue:
-                        formViewModel.minInterventionsToSelectControl.value,
+                  child: ReactiveDropdownField<int>(
+                    formControl:
+                        widget.formViewModel.minInterventionsToSelectControl,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Minimum Interventions',
                       helperText: 'Min number participants must select',
                     ),
                     items: List.generate(
-                      totalInterventions,
+                      totalInterventions -
+                          1, // Start from 2, so length is total-1
                       (index) => DropdownMenuItem(
-                        value: index + 1,
-                        child: Text('${index + 1}'),
+                        value: index + 2, // Start at 2
+                        child: Text('${index + 2}'),
                       ),
                     ),
-                    onChanged: (value) {
-                      if (value != null) {
-                        formViewModel.minInterventionsToSelectControl.value =
-                            value;
-                        // Ensure max is at least min
-                        final currentMax =
-                            formViewModel
-                                .maxInterventionsToSelectControl
-                                .value ??
-                            value;
-                        if (currentMax < value) {
-                          formViewModel.maxInterventionsToSelectControl.value =
-                              value;
-                        }
-                      }
-                    },
                   ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: DropdownButtonFormField<int>(
-                    initialValue:
-                        formViewModel.maxInterventionsToSelectControl.value,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Maximum Interventions',
-                      helperText: 'Max number participants can select',
-                    ),
-                    items: List.generate(
-                      totalInterventions,
-                      (index) => DropdownMenuItem(
-                        value: index + 1,
-                        child: Text('${index + 1}'),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      if (value != null) {
-                        formViewModel.maxInterventionsToSelectControl.value =
-                            value;
-                        // Ensure min is at most max
-                        final currentMin =
-                            formViewModel
-                                .minInterventionsToSelectControl
-                                .value ??
-                            value;
-                        if (currentMin > value) {
-                          formViewModel.minInterventionsToSelectControl.value =
-                              value;
-                        }
-                      }
+                  child: ReactiveValueListenableBuilder<int>(
+                    formControl:
+                        widget.formViewModel.minInterventionsToSelectControl,
+                    builder: (context, minControl, child) {
+                      final minValue = minControl.value ?? 2;
+                      return ReactiveDropdownField<int>(
+                        formControl: widget
+                            .formViewModel
+                            .maxInterventionsToSelectControl,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Maximum Interventions',
+                          helperText: 'Max number participants can select',
+                        ),
+                        items: List.generate(
+                          totalInterventions - minValue + 1,
+                          (index) => DropdownMenuItem(
+                            value: minValue + index,
+                            child: Text('${minValue + index}'),
+                          ),
+                        ),
+                      );
                     },
                   ),
                 ),
