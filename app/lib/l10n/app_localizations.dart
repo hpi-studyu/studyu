@@ -2336,6 +2336,12 @@ abstract class AppLocalizations {
   /// **'Speech input failed. Please try again.'**
   String get speech_to_text_error_general;
 
+  /// No description provided for @speech_to_text_error_connection.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection lost. Please try again.'**
+  String get speech_to_text_error_connection;
+
   /// No description provided for @speech_to_text_preparing.
   ///
   /// In en, this message translates to:
@@ -2365,6 +2371,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start speech input'**
   String get speech_to_text_idle;
+
+  /// No description provided for @speech_to_text_stop_listening.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop listening'**
+  String get speech_to_text_stop_listening;
 
   /// No description provided for @speech_to_text_opt_out_action.
   ///

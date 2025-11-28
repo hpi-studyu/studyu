@@ -1208,6 +1208,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Speech input failed. Please try again.';
 
   @override
+  String get speech_to_text_error_connection =>
+      'Connection lost. Please try again.';
+
+  @override
   String get speech_to_text_preparing => 'Preparing speech recognizer…';
 
   @override
@@ -1221,6 +1225,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get speech_to_text_idle => 'Start speech input';
+
+  @override
+  String get speech_to_text_stop_listening => 'Stop listening';
 
   @override
   String get speech_to_text_opt_out_action => 'Disable speech input for now';

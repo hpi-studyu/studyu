@@ -1218,6 +1218,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Sprach­eingabe fehlgeschlagen. Bitte erneut versuchen.';
 
   @override
+  String get speech_to_text_error_connection =>
+      'Verbindung verloren. Bitte erneut versuchen.';
+
+  @override
   String get speech_to_text_preparing => 'Spracherkennung wird vorbereitet…';
 
   @override
@@ -1231,6 +1235,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get speech_to_text_idle => 'Sprach­eingabe starten';
+
+  @override
+  String get speech_to_text_stop_listening => 'Zuhören stoppen';
 
   @override
   String get speech_to_text_opt_out_action => 'Sprach­eingabe deaktivieren';

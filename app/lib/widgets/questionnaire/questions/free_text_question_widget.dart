@@ -154,13 +154,19 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   }
 
   String? _mapSpeechErrorToMessage(SpeechError error, AppLocalizations loc) {
-    final details = error.details;
-    final isPermissionIssue =
-        details?.toLowerCase().contains('permission') == true;
+    final details = error.details?.toLowerCase();
+    final isPermissionIssue = details?.contains('permission') == true;
+    final isConnectionIssue = details?.contains('connection') == true;
+
     if (error.type == SpeechErrorType.microphonePermission &&
         isPermissionIssue) {
       return loc.speech_to_text_error_permission;
     }
+
+    if (isConnectionIssue) {
+      return loc.speech_to_text_error_connection;
+    }
+
     return loc.speech_to_text_error_general;
   }
 
@@ -234,6 +240,7 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
   }
 
   Widget _buildMicButton(ThemeData theme, bool isListening, bool isPreparing) {
+    final loc = AppLocalizations.of(context)!;
     return IconButton.filledTonal(
       onPressed: isPreparing ? null : _toggleSpeechListening,
       icon: isListening
@@ -245,7 +252,9 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
             ? theme.colorScheme.onErrorContainer
             : null,
       ),
-      tooltip: isListening ? 'Stop listening' : 'Start listening',
+      tooltip: isListening
+          ? loc.speech_to_text_stop_listening
+          : loc.speech_to_text_idle,
     );
   }
 
