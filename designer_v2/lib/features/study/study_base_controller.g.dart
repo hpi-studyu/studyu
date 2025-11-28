@@ -68,7 +68,7 @@ final class StudyBaseControllerProvider<T extends StudyControllerBaseState>
 }
 
 String _$studyBaseControllerHash() =>
-    r'e2811f660e2b1086b07c702a0da8915d891e2004';
+    r'2dd7b7b33e5705fd1c64fe268f023bbd9c87e1b5';
 
 final class StudyBaseControllerFamily extends $Family {
   const StudyBaseControllerFamily._()
