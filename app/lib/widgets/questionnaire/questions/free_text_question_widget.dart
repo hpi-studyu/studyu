@@ -418,8 +418,8 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
           },
           decoration: InputDecoration(
             filled: true,
-            fillColor: theme.colorScheme.surfaceContainerHighest.withOpacity(
-              0.3,
+            fillColor: theme.colorScheme.surfaceContainerHighest.withValues(
+              alpha: 0.3,
             ),
             hintText: loc.free_text_answer_hint,
             border: OutlineInputBorder(

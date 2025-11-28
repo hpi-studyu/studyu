@@ -136,7 +136,9 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
           try {
             final result = jsonDecode(data as String) as Map<String, dynamic>;
             _handleTranscriptionResult(result);
-          } catch (e) {}
+          } catch (e) {
+            debugPrint('Failed to parse WebSocket data: $e');
+          }
         },
         onError: (error) {
           if (_isDisposed) return;
