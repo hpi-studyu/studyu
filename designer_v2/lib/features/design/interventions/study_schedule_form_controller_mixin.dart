@@ -10,6 +10,8 @@ mixin StudyScheduleControls {
   final FormArray segmentsControl = FormArray([]);
   final FormControl<int> numberOfInterventionsToSelectControl =
       FormControl<int>(value: 2);
+  final FormControl<List<String>> selectedInterventionsControl =
+      FormControl<List<String>>(value: []);
   final FormControl<int> minInterventionsToSelectControl = FormControl<int>(
     value: 2,
   );
@@ -23,6 +25,7 @@ mixin StudyScheduleControls {
   late final Map<String, AbstractControl<dynamic>> studyScheduleControls = {
     'segments': segmentsControl,
     'numberOfInterventionsToSelect': numberOfInterventionsToSelectControl,
+    'selectedInterventions': selectedInterventionsControl,
     'minInterventionsToSelect': minInterventionsToSelectControl,
     'maxInterventionsToSelect': maxInterventionsToSelectControl,
   };
@@ -389,10 +392,18 @@ mixin StudyScheduleControls {
     interventions.addAll(data.interventions);
     observations.addAll(data.observations);
 
-    // Initialize min/max controls based on total interventions
-    final totalCount = interventions.length;
-    minInterventionsToSelectControl.value = totalCount >= 2 ? 2 : totalCount;
-    maxInterventionsToSelectControl.value = totalCount;
+    // Set selected interventions - default to all interventions if empty
+    final selectedInterventions = data.selectedInterventions.isNotEmpty
+        ? data.selectedInterventions
+        : data.interventions.map((i) => i.id).toList();
+    selectedInterventionsControl.value = selectedInterventions;
+
+    // Initialize min/max controls based on selected interventions
+    final selectedCount = selectedInterventions.length;
+    minInterventionsToSelectControl.value = selectedCount >= 2
+        ? 2
+        : selectedCount;
+    maxInterventionsToSelectControl.value = selectedCount;
 
     // Ensure the numberOfInterventionsToSelectControl is within valid bounds
     final int total = interventions.length;
@@ -466,7 +477,7 @@ mixin StudyScheduleControls {
       interventions: interventions,
       observations: observations,
       numberOfInterventionsToSelect: selected,
-      selectedInterventions: interventions.map((i) => i.id).toList(),
+      selectedInterventions: selectedInterventionsControl.value ?? [],
     );
   }
 
