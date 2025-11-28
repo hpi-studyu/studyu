@@ -1,61 +1,69 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/common_views/form_control_label.dart';
-import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:studyu_designer_v2/common_views/form_consumer_widget.dart';
 import 'package:studyu_designer_v2/common_views/text_hyperlink.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_banner.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_controller_mixin.dart';
+import 'package:studyu_designer_v2/features/design/interventions/widgets/add_schedule_block_button.dart';
+import 'package:studyu_designer_v2/features/design/interventions/widgets/intervention_selection_card.dart';
+import 'package:studyu_designer_v2/features/design/interventions/widgets/study_schedule_section.dart';
+import 'package:studyu_designer_v2/features/design/interventions/widgets/study_timeline.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/theme.dart';
-import 'package:studyu_designer_v2/utils/input_formatter.dart';
 
-class StudyScheduleFormView extends StatefulWidget {
+class StudyScheduleFormView extends FormConsumerWidget {
   const StudyScheduleFormView({required this.formViewModel, super.key});
 
   final StudyScheduleControls formViewModel;
 
   @override
-  State<StudyScheduleFormView> createState() => _StudyScheduleFormViewState();
+  Widget build(BuildContext context, FormGroup form) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Use a responsive constrained box so the form can expand on wider
+        // layouts instead of being stuck to a narrow minWidth.
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 900),
+          child: SizedBox(
+            width: double.infinity,
+            child: ScheduleFormView(formViewModel: formViewModel),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
-class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
-  bool _isBannerDismissed = true;
+class ScheduleFormView extends StatefulWidget {
+  const ScheduleFormView({required this.formViewModel, super.key});
 
-  FormTableRow _renderCustomSequence() {
-    if (!widget.formViewModel.isSequencingCustom()) {
-      return FormTableRow(input: const SizedBox.shrink());
-    } else {
-      return FormTableRow(
-        control: widget.formViewModel.sequenceTypeCustomControl,
-        label: tr.phase_sequence_custom_label,
-        labelHelpText: tr.phase_sequence_custom_label_help,
-        input: TextField(
-          onChanged: (value) =>
-              widget.formViewModel.sequenceTypeCustomControl.value = value,
-          controller: TextEditingController()
-            ..value = TextEditingValue(
-              text: widget.formViewModel.sequenceTypeCustomControl.value!,
-              selection: TextSelection.collapsed(
-                offset: widget
-                    .formViewModel
-                    .sequenceTypeCustomControl
-                    .value!
-                    .length,
-              ),
-            ),
-          //formControl: widget.formViewModel.sequenceTypeCustomControl,
-          keyboardType: TextInputType.text,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.singleLineFormatter,
-            LengthLimitingTextInputFormatter(10),
-            StudySequenceFormatter(),
-          ],
-          //validationMessages: widget.formViewModel.sequenceTypeCustomControl.validationMessages,
-        ),
-      );
-    }
+  final StudyScheduleControls formViewModel;
+
+  @override
+  State<ScheduleFormView> createState() => _ScheduleFormViewState();
+}
+
+class _ScheduleFormViewState extends State<ScheduleFormView> {
+  bool _isBannerDismissed = true;
+  late final StreamSubscription _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = widget.formViewModel.segmentsControl.valueChanges.listen((
+      _,
+    ) {
+      widget.formViewModel.updateSegmentsFromSegmentsControl();
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
   }
 
   @override
@@ -63,185 +71,31 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _studyScheduleDescription(),
-        const SizedBox(height: 16.0),
-        FormTableLayout(
-          rows: [
-            FormTableRow(
-              control: widget.formViewModel.sequenceTypeControl,
-              label: tr.form_field_crossover_schedule_sequence,
-              labelHelpText: tr.form_field_crossover_schedule_sequence_tooltip,
-              input: DropdownButtonFormField(
-                //formControl: widget.formViewModel.sequenceTypeControl,
-                onChanged: widget.formViewModel.sequenceTypeControl.disabled
-                    ? null
-                    : (PhaseSequence? value) =>
-                          widget.formViewModel.sequenceTypeControl.value =
-                              value,
-                initialValue: widget.formViewModel.sequenceTypeControl.value,
-                decoration: InputDecoration(
-                  helperText:
-                      tr.form_field_crossover_schedule_sequence_description,
-                  helperMaxLines: 5,
-                ),
-                items: widget.formViewModel.sequenceTypeControlOptions
-                    .map(
-                      (option) => DropdownMenuItem(
-                        value: option.value,
-                        child: Text(option.label),
-                      ),
-                    )
-                    .toList(),
-                //validationMessages: widget.formViewModel.sequenceTypeControl.validationMessages,
-              ),
-            ),
-            _renderCustomSequence(),
-            FormTableRow(
-              control: widget.formViewModel.phaseDurationControl,
-              label: tr.form_field_crossover_schedule_phase_length,
-              labelHelpText:
-                  tr.form_field_crossover_schedule_phase_length_tooltip,
-              input: Row(
-                children: [
-                  Container(
-                    constraints: const BoxConstraints(maxWidth: 70),
-                    child: TextField(
-                      readOnly:
-                          widget.formViewModel.phaseDurationControl.disabled,
-                      controller: TextEditingController()
-                        ..value = TextEditingValue(
-                          text: widget.formViewModel.phaseDurationControl.value
-                              .toString(),
-                          selection: TextSelection.collapsed(
-                            offset: widget
-                                .formViewModel
-                                .phaseDurationControl
-                                .value
-                                .toString()
-                                .length,
-                          ),
-                        ),
-                      //formControl: widget.formViewModel.phaseDurationControl,
-                      onChanged: (value) =>
-                          widget.formViewModel.phaseDurationControl.value =
-                              int.parse(value),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(3),
-                        NumericalRangeFormatter(
-                          min: StudyScheduleControls.kPhaseDurationMin,
-                          max: StudyScheduleControls.kPhaseDurationMax,
-                        ),
-                      ],
-                      //validationMessages: widget.formViewModel.phaseDurationControl.validationMessages,
-                    ),
-                  ),
-                  const SizedBox(width: 8.0),
-                  FormControlLabel(
-                    formControl: widget.formViewModel.phaseDurationControl,
-                    text: tr.form_field_amount_days,
-                  ),
-                ],
-              ),
-            ),
-            FormTableRow(
-              control: widget.formViewModel.numCyclesControl,
-              label: tr.form_field_crossover_schedule_num_cycles,
-              labelHelpText:
-                  tr.form_field_crossover_schedule_num_cycles_tooltip,
-              input: Row(
-                children: [
-                  Container(
-                    constraints: const BoxConstraints(maxWidth: 70),
-                    child: TextField(
-                      readOnly: widget.formViewModel.numCyclesControl.disabled,
-                      //formControl: widget.formViewModel.numCyclesControl,
-                      onChanged: (value) =>
-                          widget.formViewModel.numCyclesControl.value =
-                              int.parse(value),
-                      controller: TextEditingController()
-                        ..value = TextEditingValue(
-                          text: widget.formViewModel.numCyclesControl.value
-                              .toString(),
-                          selection: TextSelection.collapsed(
-                            offset: widget.formViewModel.numCyclesControl.value
-                                .toString()
-                                .length,
-                          ),
-                        ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(2),
-                        NumericalRangeFormatter(
-                          min: StudyScheduleControls.kNumCyclesMin,
-                          max: StudyScheduleControls.kNumCyclesMax,
-                        ),
-                      ],
-                      //validationMessages: widget.formViewModel.numCyclesControl.validationMessages,
-                    ),
-                  ),
-                  const SizedBox(width: 8.0),
-                  FormControlLabel(
-                    formControl: widget.formViewModel.numCyclesControl,
-                    text: tr.form_field_amount_crossover_schedule_num_cycles,
-                  ),
-                ],
-              ),
-            ),
-            FormTableRow(
-              control: widget.formViewModel.includeBaselineControl,
-              label: tr.form_field_crossover_schedule_include_baseline,
-              labelHelpText:
-                  tr.form_field_crossover_schedule_include_baseline_tooltip,
-              input: Row(
-                children: [
-                  Container(
-                    constraints: const BoxConstraints(maxWidth: 70),
-                    child: Checkbox(
-                      value: widget.formViewModel.includeBaselineControl.value,
-                      onChanged:
-                          widget.formViewModel.includeBaselineControl.disabled
-                          ? null
-                          : (value) =>
-                                widget
-                                        .formViewModel
-                                        .includeBaselineControl
-                                        .value =
-                                    value,
-                      //formControl: widget.formViewModel.includeBaselineControl,
-                    ),
-                  ),
-                  const SizedBox(width: 8.0),
-                  FormControlLabel(
-                    formControl: widget.formViewModel.includeBaselineControl,
-                    text:
-                        tr.form_field_crossover_schedule_include_baseline_label,
-                  ),
-                ],
-              ),
-            ),
-            // TODO washout
-          ],
-          columnWidths: const {
-            0: MaxColumnWidth(FixedColumnWidth(130), IntrinsicColumnWidth()),
-            1: FlexColumnWidth(),
+        _buildStudyScheduleDescription(),
+        const SizedBox(height: 24.0),
+        InterventionSelectionCard(formViewModel: widget.formViewModel),
+        const SizedBox(height: 24.0),
+        StudyTimeline(formViewModel: widget.formViewModel),
+        const SizedBox(height: 24.0),
+        _buildScheduleSegmentsList(),
+        const SizedBox(height: 24.0),
+        AddScheduleBlockButton(
+          onPressed: (type) {
+            widget.formViewModel.addFormGroupToSegments(
+              widget.formViewModel.createFormGroup(type),
+            );
           },
         ),
       ],
     );
   }
 
-  Widget _studyScheduleDescription() {
+  Widget _buildStudyScheduleDescription() {
     final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextParagraph(
-          text: tr.study_schedule_banner_description,
-          style: ThemeConfig.bodyTextMuted(theme),
-        ),
+        TextParagraph(text: tr.study_schedule_banner_description),
         const SizedBox(height: 16.0),
         _buildSequenceTypeInfo(
           theme,
@@ -290,13 +144,43 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
             shape: BoxShape.circle,
           ),
         ),
-        Expanded(
-          child: TextParagraph(
-            text: description,
-            style: ThemeConfig.bodyTextMuted(theme),
-          ),
-        ),
+        Expanded(child: TextParagraph(text: description)),
       ],
+    );
+  }
+
+  Widget _buildScheduleSegmentsList() {
+    return ReorderableListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
+      buildDefaultDragHandles: false,
+      children: <Widget>[
+        for (
+          int i = 0;
+          i < widget.formViewModel.segmentsControl.controls.length;
+          i++
+        )
+          StudyScheduleSection(
+            formViewModel: widget.formViewModel,
+            key: ObjectKey(widget.formViewModel.segmentsControl.controls[i]),
+            index: i,
+            segment: widget.formViewModel.segments[i],
+            segmentControl:
+                widget.formViewModel.segmentsControl.controls[i] as FormGroup,
+            interventions: widget.formViewModel.interventions,
+          ),
+      ],
+      onReorder: (int oldIndex, int newIndex) {
+        if (oldIndex < newIndex) {
+          newIndex -= 1;
+        }
+        final reorderedSegment = widget.formViewModel.segmentsControl.removeAt(
+          oldIndex,
+        );
+        widget.formViewModel.segmentsControl.insert(newIndex, reorderedSegment);
+        widget.formViewModel.updateSegmentsFromSegmentsControl();
+      },
     );
   }
 }

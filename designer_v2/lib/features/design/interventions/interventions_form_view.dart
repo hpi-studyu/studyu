@@ -121,6 +121,7 @@ class StudyDesignInterventionsFormView extends StudyDesignPageWidget {
               const SizedBox(height: 12.0),
               // TODO study schedule illustration
               StudyScheduleFormView(formViewModel: formViewModel),
+              // num interventions
             ],
           ),
         );

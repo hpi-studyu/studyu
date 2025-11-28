@@ -23,7 +23,11 @@ class InterventionsFormData implements IStudyFormData {
                 InterventionFormData.fromDomainModel(intervention),
           )
           .toList(),
-      studyScheduleData: StudyScheduleFormData.fromDomainModel(study.schedule),
+      studyScheduleData: StudyScheduleFormData.fromDomainModel(
+        study.adaptiveSchedule,
+        study.interventions,
+        study.observations,
+      ),
     );
   }
 

@@ -11,6 +11,7 @@ resolution: workspace
 dependencies:
   collection: ^1.19.1
   csv: ^6.0.0
+  data: ^0.15.1
   json_annotation: ^4.9.0
   logger: ^2.6.2
   quiver: ^3.2.2

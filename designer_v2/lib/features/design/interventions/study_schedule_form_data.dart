@@ -4,42 +4,45 @@ import 'package:studyu_designer_v2/features/forms/form_data.dart';
 
 class StudyScheduleFormData implements IStudyFormData {
   StudyScheduleFormData({
-    required this.sequenceType,
-    required this.sequenceTypeCustom,
-    required this.numCycles,
-    required this.phaseDuration,
-    required this.includeBaseline,
+    required this.segments,
+    required this.interventions,
+    required this.observations,
+    this.numberOfInterventionsToSelect = 2,
+    this.selectedInterventions = const [],
   });
 
-  final PhaseSequence sequenceType;
-  final String sequenceTypeCustom;
-  final int numCycles;
-  final int phaseDuration;
-  final bool includeBaseline;
+  final List<StudyScheduleSegment> segments;
+  final List<Intervention> interventions;
+  final List<Observation> observations;
+  final int numberOfInterventionsToSelect;
+  final List<String> selectedInterventions;
 
-  factory StudyScheduleFormData.fromDomainModel(StudySchedule schedule) {
+  factory StudyScheduleFormData.fromDomainModel(
+    AdaptiveStudySchedule schedule,
+    List<Intervention> interventions,
+    List<Observation> observations,
+  ) {
     return StudyScheduleFormData(
-      sequenceType: schedule.sequence,
-      sequenceTypeCustom: schedule.sequenceCustom,
-      numCycles: schedule.numberOfCycles,
-      phaseDuration: schedule.phaseDuration,
-      includeBaseline: schedule.includeBaseline,
+      // todo or user schedule.interventions, schedule.observations instead?
+      segments: schedule.segments,
+      interventions: interventions,
+      observations: observations,
+      numberOfInterventionsToSelect: schedule.numberOfInterventionsToSelect,
+      selectedInterventions: schedule.selectedInterventions,
     );
   }
 
-  StudySchedule toStudySchedule() {
-    final schedule = StudySchedule();
-    schedule.sequence = sequenceType;
-    schedule.sequenceCustom = sequenceTypeCustom;
-    schedule.numberOfCycles = numCycles;
-    schedule.phaseDuration = phaseDuration;
-    schedule.includeBaseline = includeBaseline;
-    return schedule;
+  AdaptiveStudySchedule toAdaptiveStudySchedule() {
+    return AdaptiveStudySchedule.withSegments(
+      segments,
+      numberOfInterventionsToSelect: numberOfInterventionsToSelect,
+      selectedInterventions: selectedInterventions,
+    );
   }
 
   @override
   Study apply(Study study) {
-    study.schedule = toStudySchedule();
+    study.adaptiveSchedule = toAdaptiveStudySchedule();
     return study;
   }
 

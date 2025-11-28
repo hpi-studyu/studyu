@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_core/src/env/env.dart' as env;
@@ -121,6 +120,10 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   );
 
   int getDayOfStudyFor(DateTime date) {
+    if (startedAt == null) {
+      return -1;
+    }
+    // TODO: Fix started at
     return date.differenceInDays(startedAt!);
   }
 
@@ -130,15 +133,28 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   }
 
   Intervention? getInterventionForDate(DateTime date) {
-    final index = getInterventionIndexForDate(date);
-    if (date.isBefore(startedAt!) || index >= interventionOrder.length) {
-      print('Study is over or has not begun.');
+    final dayOfStudy = getDayOfStudyFor(date); //
+    if (dayOfStudy < 0) return null;
+
+    // print(progress);
+    final progressUntilDate = progress
+        .where((p) => isBeforeDay(p.completedAt!, date))
+        .toList();
+
+    try {
+      final intervention = study.getInterventionForDay(
+        dayOfStudy,
+        progressUntilDate,
+      );
+      return intervention;
+    } catch (e) {
       return null;
     }
-    final interventionId = interventionOrder[index];
+    // todo fix eventually
+    /*final interventionId = interventionOrder[index];
     return selectedInterventions.firstWhereOrNull(
       (intervention) => intervention.id == interventionId,
-    );
+    );*/
   }
 
   List<Intervention> getInterventionsInOrder() {
@@ -250,7 +266,7 @@ class StudySubject extends SupabaseObjectFunctions<StudySubject> {
   // Currently the end of the study, as there is no real minimum, just a set study length
   bool get minimumStudyLengthCompleted {
     final diff = DateTime.now().differenceInDays(startedAt!);
-    return diff >= interventionOrder.length * study.schedule.phaseDuration - 1;
+    return diff >= study.studyDuration - 1;
   }
 
   bool get completedStudy {

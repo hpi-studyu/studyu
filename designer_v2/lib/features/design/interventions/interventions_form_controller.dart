@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
@@ -16,6 +18,7 @@ import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/routing/router_config.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
+import 'package:studyu_designer_v2/utils/debouncer.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/riverpod.dart';
@@ -86,18 +89,25 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
 
   @override
   void setControlsFrom(InterventionsFormData data) {
-    final viewModels = data.interventionsData
-        .map(
-          (data) => InterventionFormViewModel(
-            study: study,
-            formData: data,
-            delegate: this,
-            validationSet: validationSet,
-          ),
-        )
-        .toList();
-    interventionsCollection.reset(viewModels);
-    setStudyScheduleControlsFrom(data.studyScheduleData);
+    print('[DEBUG-DEEP] setControlsFrom called');
+    _isUpdating = true;
+    try {
+      final viewModels = data.interventionsData
+          .map(
+            (data) => InterventionFormViewModel(
+              study: study,
+              formData: data,
+              delegate: this,
+              validationSet: validationSet,
+            ),
+          )
+          .toList();
+      interventionsCollection.reset(viewModels);
+      setStudyScheduleControlsFrom(data.studyScheduleData);
+    } finally {
+      _isUpdating = false;
+      print('[DEBUG-DEEP] setControlsFrom finished');
+    }
   }
 
   @override
@@ -106,6 +116,78 @@ class InterventionsFormViewModel extends FormViewModel<InterventionsFormData>
       interventionsData: interventionsCollection.formData,
       studyScheduleData: buildStudyScheduleFormData(),
     );
+  }
+
+  @override
+  Future save() async {
+    print('[DEBUG-DEEP] save() called. isDirty: $isDirty');
+    try {
+      await super.save();
+      print('[DEBUG-DEEP] save() completed');
+    } catch (e) {
+      print('[DEBUG-DEEP] save() failed: $e');
+      rethrow;
+    }
+  }
+
+  bool _isUpdating = false;
+  final List<StreamSubscription> _autosaveSubscriptions = [];
+
+  @override
+  void enableAutosave({
+    int debounce = Config.formAutosaveDebounce,
+    bool onlyValid = true,
+  }) {
+    if (_autosaveSubscriptions.isNotEmpty) {
+      print('[DEBUG-DEEP] enableAutosave skipped (already active)');
+      return;
+    }
+    print('[DEBUG-DEEP] enableAutosave called (debounce: $debounce)');
+
+    super.enableAutosave(debounce: debounce, onlyValid: onlyValid);
+
+    // Listen to changes in the segments array (both structure and content)
+    // We use a separate debouncer for this to avoid conflict with the base class
+    final debouncer = Debouncer(milliseconds: debounce, leading: false);
+
+    void saveChanges(String source) {
+      if (_isUpdating) {
+        print('[DEBUG-DEEP] saveChanges ignored (updating) - source: $source');
+        return;
+      }
+      print('[DEBUG-DEEP] saveChanges triggered by: $source');
+      debouncer(
+        futureBuilder: () async {
+          print('[DEBUG-DEEP] Debouncer executing save for: $source');
+          // Ensure segments list is up to date before saving
+          updateSegmentsFromSegmentsControl();
+          print('[DEBUG-DEEP] isDirty before save: $isDirty');
+          await save();
+        },
+      );
+    }
+
+    // Listen to deep changes in the array (values of children)
+    _autosaveSubscriptions.add(
+      segmentsControl.valueChanges.listen((_) => saveChanges('valueChanges')),
+    );
+
+    // Listen to structural changes (add/remove)
+    _autosaveSubscriptions.add(
+      segmentsControl.collectionChanges.listen(
+        (_) => saveChanges('collectionChanges'),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    for (final subscription in _autosaveSubscriptions) {
+      subscription.cancel();
+    }
+    _autosaveSubscriptions.clear();
+    disposeStudyScheduleControls();
+    super.dispose();
   }
 
   @override
