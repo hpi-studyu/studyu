@@ -230,6 +230,7 @@ mixin StudyScheduleControls {
     int cycleAmount = 1,
     List<String>? interventionIds,
     bool balanceFirstIntervention = false,
+    double balanceRatio = 0.5,
   }) {
     return FormGroup({
       'type': FormControl<StudyScheduleSegmentType>(
@@ -241,6 +242,7 @@ mixin StudyScheduleControls {
       'balanceFirstIntervention': FormControl<bool>(
         value: balanceFirstIntervention,
       ),
+      'balanceRatio': FormControl<double>(value: balanceRatio),
     });
   }
 
@@ -249,6 +251,7 @@ mixin StudyScheduleControls {
     int cycleAmount = 1,
     List<String>? interventionIds,
     bool balanceFirstIntervention = false,
+    double balanceRatio = 0.5,
   }) {
     return FormGroup({
       'type': FormControl<StudyScheduleSegmentType>(
@@ -260,6 +263,7 @@ mixin StudyScheduleControls {
       'balanceFirstIntervention': FormControl<bool>(
         value: balanceFirstIntervention,
       ),
+      'balanceRatio': FormControl<double>(value: balanceRatio),
     });
   }
 
@@ -296,6 +300,8 @@ mixin StudyScheduleControls {
               balanceFirstIntervention:
                   segment.control('balanceFirstIntervention').value as bool? ??
                   false,
+              balanceRatio:
+                  segment.control('balanceRatio').value as double? ?? 0.5,
             ),
           );
         case StudyScheduleSegmentType.counterBalanced:
@@ -308,6 +314,8 @@ mixin StudyScheduleControls {
               balanceFirstIntervention:
                   segment.control('balanceFirstIntervention').value as bool? ??
                   false,
+              balanceRatio:
+                  segment.control('balanceRatio').value as double? ?? 0.5,
             ),
           );
         case StudyScheduleSegmentType.thompsonSampling:
@@ -349,6 +357,7 @@ mixin StudyScheduleControls {
             cycleAmount: element.cycleAmount,
             interventionIds: element.interventionIds,
             balanceFirstIntervention: element.balanceFirstIntervention,
+            balanceRatio: element.balanceRatio,
           ),
         );
       } else if (element is CounterBalancedScheduleSegment) {
@@ -358,6 +367,7 @@ mixin StudyScheduleControls {
             cycleAmount: element.cycleAmount,
             interventionIds: element.interventionIds,
             balanceFirstIntervention: element.balanceFirstIntervention,
+            balanceRatio: element.balanceRatio,
           ),
         );
       } else if (element is ThompsonSamplingScheduleSegment) {
@@ -433,6 +443,8 @@ mixin StudyScheduleControls {
               balanceFirstIntervention:
                   segment.control('balanceFirstIntervention').value as bool? ??
                   false,
+              balanceRatio:
+                  segment.control('balanceRatio').value as double? ?? 0.5,
             );
           case StudyScheduleSegmentType.counterBalanced:
             return CounterBalancedScheduleSegment(
@@ -443,6 +455,8 @@ mixin StudyScheduleControls {
               balanceFirstIntervention:
                   segment.control('balanceFirstIntervention').value as bool? ??
                   false,
+              balanceRatio:
+                  segment.control('balanceRatio').value as double? ?? 0.5,
             );
           case StudyScheduleSegmentType.thompsonSampling:
             return ThompsonSamplingScheduleSegment(

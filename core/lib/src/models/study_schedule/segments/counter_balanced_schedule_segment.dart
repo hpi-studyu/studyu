@@ -23,15 +23,22 @@ class CounterBalancedScheduleSegment extends StudyScheduleSegment {
   /// If null or empty, uses all available interventions.
   List<String>? interventionIds;
 
-  /// If true and only 2 interventions, balance by reversing A/B for 50% of participants
+  /// If true and only 2 interventions, balance by reversing A/B for participants
   @JsonKey(defaultValue: false)
   bool balanceFirstIntervention;
+
+  /// Ratio for first group when balancing (0.0 to 1.0). Default 0.5 means 50/50 split.
+  /// Only used when balanceFirstIntervention is true and there are 2 interventions.
+  /// Examples: 0.5 = 50/50, 0.6 = 60/40, 0.7 = 70/30
+  @JsonKey(defaultValue: 0.5)
+  double balanceRatio;
 
   CounterBalancedScheduleSegment(
     this.interventionDuration,
     this.cycleAmount, {
     this.interventionIds,
     this.balanceFirstIntervention = false,
+    this.balanceRatio = 0.5,
   });
 
   factory CounterBalancedScheduleSegment.fromJson(Map<String, dynamic> json) =>

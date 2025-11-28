@@ -62,11 +62,61 @@ class CounterBalancedControls {
             const SizedBox(width: 8),
             const Expanded(
               child: Text(
-                'Balance first intervention (50% start with A, 50% start with B)',
+                'Balance first intervention',
                 style: TextStyle(fontSize: 14),
               ),
             ),
           ],
+        ),
+        // Show slider when balancing is enabled
+        ReactiveValueListenableBuilder<bool>(
+          formControl:
+              segmentControl.control('balanceFirstIntervention')
+                  as FormControl<bool>,
+          builder: (context, control, child) {
+            final isBalancingEnabled = control.value ?? false;
+            if (!isBalancingEnabled) return const SizedBox.shrink();
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                const Text(
+                  'Balance Ratio',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 4),
+                ReactiveValueListenableBuilder<double>(
+                  formControl:
+                      segmentControl.control('balanceRatio')
+                          as FormControl<double>,
+                  builder: (context, ratioControl, child) {
+                    final ratio = ratioControl.value ?? 0.5;
+                    final percentA = (ratio * 100).round();
+                    final percentB = 100 - percentA;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '$percentA% start with A, $percentB% start with B',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        ReactiveSlider(
+                          formControl:
+                              segmentControl.control('balanceRatio')
+                                  as FormControl<double>,
+                          divisions: 20,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            );
+          },
         ),
       ],
     ];
