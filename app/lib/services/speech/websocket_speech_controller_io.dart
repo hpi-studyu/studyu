@@ -339,13 +339,13 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   }
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     _isDisposed = true;
     try {
-      unawaited(_audioStreamSubscription?.cancel());
-      unawaited(_audioRecorder.stop());
-      unawaited(_audioRecorder.dispose());
-      unawaited(_wsChannel?.sink.close());
+      await _audioStreamSubscription?.cancel();
+      await _audioRecorder.stop();
+      await _audioRecorder.dispose();
+      await _wsChannel?.sink.close();
     } catch (_) {}
     super.dispose();
   }
