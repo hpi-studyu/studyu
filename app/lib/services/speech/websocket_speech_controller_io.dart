@@ -40,6 +40,17 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
 
   static const int _sampleRate = 16000; // Vosk typically uses 16kHz
 
+  /// Delay before attempting to reconnect after connection loss.
+  /// This prevents rapid reconnection attempts and gives the server/network
+  /// time to stabilize. 500ms provides a good balance between responsiveness
+  /// and avoiding connection spam.
+  static const int _reconnectionDelayMs = 500;
+
+  /// Delay after sending EOF to allow server to process and send final results.
+  /// Vosk server needs time to finalize transcription after receiving EOF.
+  /// 300ms is typically sufficient for the server to send remaining data.
+  static const int _eofWaitDelayMs = 300;
+
   static bool get _platformSupported {
     if (kIsWeb) return false;
     return Platform.isAndroid ||
@@ -158,24 +169,33 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
   }
 
   void _handleConnectionLoss() {
+    // Atomic check-and-set to prevent race condition
     if (_isListening && !_isReconnecting) {
+      _isReconnecting = true;
       _reconnect();
     }
   }
 
   Future<void> _reconnect() async {
-    if (_isReconnecting || _isDisposed) return;
-    _isReconnecting = true;
+    // Double-check in case of edge cases
+    if (_isDisposed) {
+      _isReconnecting = false;
+      return;
+    }
 
     try {
       // Close existing connection if any
       try {
         await _wsChannel?.sink.close();
-      } catch (_) {}
+      } catch (e) {
+        debugPrint(
+          '[SpeechToText] Error closing WebSocket during reconnect: $e',
+        );
+      }
       _wsChannel = null;
 
       // Wait a bit before reconnecting
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: _reconnectionDelayMs));
 
       if (!_isListening) {
         _isReconnecting = false;
@@ -274,10 +294,13 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
         try {
           _wsChannel!.sink.add(jsonEncode({'eof': 1}));
           // Give server a moment to send final results
-          await Future.delayed(const Duration(milliseconds: 300));
+          await Future.delayed(const Duration(milliseconds: _eofWaitDelayMs));
           await _wsChannel!.sink.close();
-        } catch (_) {
-          // Ignore errors during closing
+        } catch (e) {
+          // Errors during closing are expected if connection is already dead
+          debugPrint(
+            '[SpeechToText] Error during graceful WebSocket close: $e',
+          );
         }
         _wsChannel = null;
       }
@@ -304,7 +327,9 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
         await _wsChannel!.sink.close();
         _wsChannel = null;
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('[SpeechToText] Error during force reset cleanup: $e');
+    }
     value = value.copyWith(
       status: SpeechLifecycleStatus.idle,
       clearTranscript: true,
@@ -329,7 +354,11 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
     try {
       _audioStreamSubscription?.cancel();
       _audioRecorder.stop();
-    } catch (_) {}
+    } catch (e) {
+      debugPrint(
+        '[SpeechToText] Error stopping audio during error emission: $e',
+      );
+    }
 
     value = value.copyWith(
       status: SpeechLifecycleStatus.error,
@@ -346,7 +375,9 @@ class SpeechToTextController extends ValueNotifier<SpeechControllerState> {
       await _audioRecorder.stop();
       await _audioRecorder.dispose();
       await _wsChannel?.sink.close();
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('[SpeechToText] Error during dispose cleanup: $e');
+    }
     super.dispose();
   }
 }
