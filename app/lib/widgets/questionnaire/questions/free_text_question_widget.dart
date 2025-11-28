@@ -155,7 +155,8 @@ class _FreeTextQuestionWidgetState extends State<FreeTextQuestionWidget> {
 
   String? _mapSpeechErrorToMessage(SpeechError error, AppLocalizations loc) {
     final details = error.details;
-    final isPermissionIssue = details?.toLowerCase().contains('permission') == true;
+    final isPermissionIssue =
+        details?.toLowerCase().contains('permission') == true;
     if (error.type == SpeechErrorType.microphonePermission &&
         isPermissionIssue) {
       return loc.speech_to_text_error_permission;
