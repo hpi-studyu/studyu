@@ -38,15 +38,15 @@
 		<true/>
 		<key>LSSupportsOpeningDocumentsInPlace</key>
 		<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Need microphone access for speech input and study recordings.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Need to access your camera to capture a photo for trial observations.</string>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true/>
+		</dict>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Need microphone access for speech input and study recordings.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Need to access your camera to capture a photo for trial observations.</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UIBackgroundModes</key>
