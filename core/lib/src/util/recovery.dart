@@ -58,7 +58,7 @@ int computeChecksum(List<int> indices, int wordlistSize) {
     throw ArgumentError('Need at least one word index');
   }
 
-  const primes = [31, 37, 41, 43, 47, 53];
+  const primes = [31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79];
 
   int hash = 0;
   for (int i = 0; i < indices.length; i++) {
@@ -72,7 +72,7 @@ int computeChecksum(List<int> indices, int wordlistSize) {
 List<String> encode(
   BigInt participantId, {
   List<String>? wordlist,
-  int bitCount = 64,
+  int bitCount = 128,
   EncodingConfig config = const EncodingConfig(),
 }) {
   final effectiveWordlist = wordlist ?? WORDLIST_EN;

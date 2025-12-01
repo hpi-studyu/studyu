@@ -36,12 +36,7 @@ class _RecoveryPhraseScreenState extends State<RecoveryPhraseScreen> {
             ? BigInt.parse(user.id.replaceAll('-', ''), radix: 16)
             : BigInt.parse(const Uuid().v4().replaceAll('-', ''), radix: 16));
 
-    BigInt id64 = id;
-    if (id.bitLength > 64) {
-      id64 = id >> (id.bitLength - 64);
-    }
-
-    _phrase = encode(id64);
+    _phrase = encode(id);
   }
 
   void _copyToClipboard() {

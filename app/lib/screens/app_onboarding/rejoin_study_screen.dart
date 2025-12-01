@@ -14,7 +14,7 @@ class RejoinStudyScreen extends StatefulWidget {
 
 class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
   final List<TextEditingController> _controllers = List.generate(
-    7,
+    13,
     (_) => TextEditingController(),
   );
   final _formKey = GlobalKey<FormState>();
@@ -99,12 +99,12 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 2.5,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
+                  crossAxisCount: 2,
+                  childAspectRatio: 3.0,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
                 ),
-                itemCount: 7,
+                itemCount: 13,
                 itemBuilder: (context, index) {
                   return TextFormField(
                     controller: _controllers[index],
@@ -113,7 +113,7 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
                       border: const OutlineInputBorder(),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 8),
                     ),
-                    textInputAction: index < 6
+                    textInputAction: index < 12
                         ? TextInputAction.next
                         : TextInputAction.done,
                     validator: (value) {
