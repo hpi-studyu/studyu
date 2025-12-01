@@ -474,5 +474,11 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "recovery_in_progress": "Recovering your account...",
+  "recovery_failed": "Recovery failed. Please check your recovery phrase and try again.",
+  "recovery_user_not_found": "No account found with this recovery phrase.",
+  "recovery_rate_limit": "Please wait a moment before trying again.",
+  "recovery_network_error": "Network error. Please check your connection and try again."
 }

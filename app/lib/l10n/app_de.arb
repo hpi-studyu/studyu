@@ -478,5 +478,11 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "recovery_in_progress": "Konto wird wiederhergestellt...",
+  "recovery_failed": "Wiederherstellung fehlgeschlagen. Bitte überprüfe deine Wiederherstellungsphrase und versuche es erneut.",
+  "recovery_user_not_found": "Kein Konto mit dieser Wiederherstellungsphrase gefunden.",
+  "recovery_rate_limit": "Bitte warte einen Moment, bevor du es erneut versuchst.",
+  "recovery_network_error": "Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut."
 }

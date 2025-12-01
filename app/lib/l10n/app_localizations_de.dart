@@ -1219,4 +1219,23 @@ class AppLocalizationsDe extends AppLocalizations {
   String recovery_successful(String id) {
     return 'Wiederherstellung erfolgreich! ID: $id';
   }
+
+  @override
+  String get recovery_in_progress => 'Konto wird wiederhergestellt...';
+
+  @override
+  String get recovery_failed =>
+      'Wiederherstellung fehlgeschlagen. Bitte überprüfe deine Wiederherstellungsphrase und versuche es erneut.';
+
+  @override
+  String get recovery_user_not_found =>
+      'Kein Konto mit dieser Wiederherstellungsphrase gefunden.';
+
+  @override
+  String get recovery_rate_limit =>
+      'Bitte warte einen Moment, bevor du es erneut versuchst.';
+
+  @override
+  String get recovery_network_error =>
+      'Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut.';
 }

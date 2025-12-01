@@ -2341,6 +2341,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recovery successful! ID: {id}'**
   String recovery_successful(String id);
+
+  /// No description provided for @recovery_in_progress.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovering your account...'**
+  String get recovery_in_progress;
+
+  /// No description provided for @recovery_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovery failed. Please check your recovery phrase and try again.'**
+  String get recovery_failed;
+
+  /// No description provided for @recovery_user_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No account found with this recovery phrase.'**
+  String get recovery_user_not_found;
+
+  /// No description provided for @recovery_rate_limit.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait a moment before trying again.'**
+  String get recovery_rate_limit;
+
+  /// No description provided for @recovery_network_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Network error. Please check your connection and try again.'**
+  String get recovery_network_error;
 }
 
 class _AppLocalizationsDelegate

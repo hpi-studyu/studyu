@@ -1207,4 +1207,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String recovery_successful(String id) {
     return 'Recovery successful! ID: $id';
   }
+
+  @override
+  String get recovery_in_progress => 'Recovering your account...';
+
+  @override
+  String get recovery_failed =>
+      'Recovery failed. Please check your recovery phrase and try again.';
+
+  @override
+  String get recovery_user_not_found =>
+      'No account found with this recovery phrase.';
+
+  @override
+  String get recovery_rate_limit => 'Please wait a moment before trying again.';
+
+  @override
+  String get recovery_network_error =>
+      'Network error. Please check your connection and try again.';
 }
