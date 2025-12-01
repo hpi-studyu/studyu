@@ -1,8 +1,6 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/src/util/recovery.dart';
-import 'package:studyu_core/src/util/wordlists.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Model for recovery account response from Supabase RPC function
 class RecoveryResult {
@@ -39,9 +37,9 @@ class RejoinStudyService {
   /// Returns the decoded user ID or throws an exception if invalid
   static BigInt decodeRecoveryPhrase(List<String> words) {
     try {
-      return decode(words, wordlist: WORDLIST_EN);
+      return decode(words, wordlist: wordlistEn);
     } catch (e) {
-      return decode(words, wordlist: WORDLIST_DE);
+      return decode(words, wordlist: wordlistDe);
     }
   }
 

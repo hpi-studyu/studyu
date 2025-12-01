@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-const List<String> WORDLIST_EN = [
+const List<String> wordlistEn = [
   'abandon',
   'ability',
   'able',
@@ -2048,10 +2048,10 @@ const List<String> WORDLIST_EN = [
   'zebra',
   'zero',
   'zone',
-  'zoo'
+  'zoo',
 ];
 
-const List<String> WORDLIST_DE = [
+const List<String> wordlistDe = [
   'abbau',
   'abbild',
   'abbruch',
@@ -4099,5 +4099,5 @@ const List<String> WORDLIST_DE = [
   'zwilling',
   'zwingen',
   'zwirn',
-  'zyklus'
+  'zyklus',
 ];

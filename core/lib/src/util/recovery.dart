@@ -75,7 +75,7 @@ List<String> encode(
   int bitCount = 128,
   EncodingConfig config = const EncodingConfig(),
 }) {
-  final effectiveWordlist = wordlist ?? WORDLIST_EN;
+  final effectiveWordlist = wordlist ?? wordlistEn;
 
   if (effectiveWordlist.length < (1 << config.bitsPerWord)) {
     throw ArgumentError(
@@ -102,7 +102,7 @@ BigInt decode(
     throw ArgumentError('Must provide at least one word');
   }
 
-  final effectiveWordlist = wordlist ?? WORDLIST_EN;
+  final effectiveWordlist = wordlist ?? wordlistEn;
 
   List<String> dataWords = words;
 

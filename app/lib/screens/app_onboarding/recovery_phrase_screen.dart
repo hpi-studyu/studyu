@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/routes.dart';
+import 'package:studyu_core/core.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
-import 'package:studyu_core/src/util/recovery.dart';
 
 class RecoveryPhraseScreen extends StatefulWidget {
-  final BigInt?
-  userId; // Optional, if not provided, we might generate one or handle error
-  // Actually, we usually have the user ID from the auth state or passed in.
-  // For now, let's assume it's passed or we can get it.
+  final BigInt? userId;
 
   const RecoveryPhraseScreen({super.key, this.userId});
 
