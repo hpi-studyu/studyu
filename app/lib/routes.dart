@@ -45,18 +45,8 @@ class Routes {
   static Route<dynamic> unknownRoute(RouteSettings settings) {
     FlutterNativeSplash.remove();
     return MaterialPageRoute(
-      builder: (_) => Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                'No route defined for ${settings.name}.\nThe developers should fix this 👩‍💻',
-              ),
-            ),
-          ),
-        ),
-      ),
+      builder: (_) => const LoadingScreen(),
+      settings: settings,
     );
   }
 
