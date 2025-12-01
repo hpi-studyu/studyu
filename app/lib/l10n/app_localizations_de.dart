@@ -1238,4 +1238,24 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get recovery_network_error =>
       'Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut.';
+
+  @override
+  String get rejoin_study_description =>
+      'Gib deine 13-Wörter-Wiederherstellungsphrase ein, um deine Studie auf diesem Gerät fortzusetzen.';
+
+  @override
+  String get rejoin_study_help_title =>
+      'So verwendest du deine Wiederherstellungsphrase';
+
+  @override
+  String get rejoin_study_help_1 =>
+      'Gib alle 13 Wörter deiner gespeicherten Wiederherstellungsphrase in der richtigen Reihenfolge ein';
+
+  @override
+  String get rejoin_study_help_2 =>
+      'Wörter können eingefügt werden—sie füllen automatisch die Felder aus';
+
+  @override
+  String get rejoin_study_help_3 =>
+      'Die Wiederherstellungsphrase unterscheidet nicht zwischen Groß- und Kleinschreibung';
 }

@@ -2371,6 +2371,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Network error. Please check your connection and try again.'**
   String get recovery_network_error;
+
+  /// No description provided for @rejoin_study_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your 13-word recovery phrase to continue your study on this device.'**
+  String get rejoin_study_description;
+
+  /// No description provided for @rejoin_study_help_title.
+  ///
+  /// In en, this message translates to:
+  /// **'How to use your recovery phrase'**
+  String get rejoin_study_help_title;
+
+  /// No description provided for @rejoin_study_help_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter all 13 words from your saved recovery phrase in order'**
+  String get rejoin_study_help_1;
+
+  /// No description provided for @rejoin_study_help_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Words can be pasted—they\'ll automatically fill the fields'**
+  String get rejoin_study_help_2;
+
+  /// No description provided for @rejoin_study_help_3.
+  ///
+  /// In en, this message translates to:
+  /// **'The recovery phrase is case-insensitive'**
+  String get rejoin_study_help_3;
 }
 
 class _AppLocalizationsDelegate

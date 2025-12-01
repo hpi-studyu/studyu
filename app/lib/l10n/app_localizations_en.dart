@@ -1225,4 +1225,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get recovery_network_error =>
       'Network error. Please check your connection and try again.';
+
+  @override
+  String get rejoin_study_description =>
+      'Enter your 13-word recovery phrase to continue your study on this device.';
+
+  @override
+  String get rejoin_study_help_title => 'How to use your recovery phrase';
+
+  @override
+  String get rejoin_study_help_1 =>
+      'Enter all 13 words from your saved recovery phrase in order';
+
+  @override
+  String get rejoin_study_help_2 =>
+      'Words can be pasted—they\'ll automatically fill the fields';
+
+  @override
+  String get rejoin_study_help_3 => 'The recovery phrase is case-insensitive';
 }

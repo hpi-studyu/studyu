@@ -12,22 +12,35 @@ class RejoinStudyScreen extends StatefulWidget {
 }
 
 class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
-  final List<TextEditingController> _controllers = List.generate(
-    13,
-    (_) => TextEditingController(),
-  );
+  final TextEditingController _phraseController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _errorMessage;
   bool _isLoading = false;
   DateTime? _lastAttempt;
   final _cooldownDuration = const Duration(seconds: 5);
+  List<String> _words = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _phraseController.addListener(_onPhraseChanged);
+  }
 
   @override
   void dispose() {
-    for (final controller in _controllers) {
-      controller.dispose();
-    }
+    _phraseController.removeListener(_onPhraseChanged);
+    _phraseController.dispose();
     super.dispose();
+  }
+
+  void _onPhraseChanged() {
+    setState(() {
+      _words = _phraseController.text
+          .trim()
+          .split(RegExp(r'\s+'))
+          .where((word) => word.isNotEmpty)
+          .toList();
+    });
   }
 
   String _getErrorMessage(String? errorKey) {
@@ -63,9 +76,14 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
     });
 
     if (_formKey.currentState!.validate()) {
-      final words = _controllers
-          .map((c) => c.text.trim().toLowerCase())
-          .toList();
+      final words = _words.map((w) => w.trim().toLowerCase()).toList();
+
+      if (words.length != 13) {
+        setState(() {
+          _errorMessage = AppLocalizations.of(context)!.invalid_recovery_phrase;
+        });
+        return;
+      }
 
       try {
         final id = RejoinStudyService.decodeRecoveryPhrase(words);
@@ -123,6 +141,28 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
     }
   }
 
+  Widget _buildHelpItem(BuildContext context, IconData icon, String text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          icon,
+          size: 18,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,47 +182,96 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
+              const SizedBox(height: 16),
+              Text(
+                AppLocalizations.of(context)!.rejoin_study_description,
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 24),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 3.0,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
+              Card(
+                elevation: 0,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.info_outline,
+                            size: 20,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.rejoin_study_help_title,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      _buildHelpItem(
+                        context,
+                        Icons.list_alt,
+                        AppLocalizations.of(context)!.rejoin_study_help_1,
+                      ),
+                      const SizedBox(height: 8),
+                      _buildHelpItem(
+                        context,
+                        Icons.content_paste,
+                        AppLocalizations.of(context)!.rejoin_study_help_2,
+                      ),
+                      const SizedBox(height: 8),
+                      _buildHelpItem(
+                        context,
+                        Icons.text_fields,
+                        AppLocalizations.of(context)!.rejoin_study_help_3,
+                      ),
+                    ],
+                  ),
                 ),
-                itemCount: 13,
-                itemBuilder: (context, index) {
-                  return TextFormField(
-                    controller: _controllers[index],
-                    decoration: InputDecoration(
-                      labelText: '${index + 1}',
-                      border: const OutlineInputBorder(),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-                    ),
-                    textInputAction: index < 12
-                        ? TextInputAction.next
-                        : TextInputAction.done,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.required;
-                      }
-                      return null;
-                    },
-                    onChanged: (value) {
-                      if (value.contains(' ')) {
-                        final words = value.trim().split(RegExp(r'\s+'));
-                        if (words.length > 1) {
-                          for (int i = 0; i < words.length; i++) {
-                            if (index + i < _controllers.length) {
-                              _controllers[index + i].text = words[i];
-                            }
-                          }
-                        }
-                      }
-                    },
-                  );
+              ),
+              const SizedBox(height: 24),
+              // Single Text Input Field with validation feedback
+              TextFormField(
+                controller: _phraseController,
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(
+                    context,
+                  )!.enter_recovery_phrase,
+                  hintText: 'apple banana cherry ...',
+                  border: const OutlineInputBorder(),
+                  helperText: '${_words.length}/13 words',
+                  helperStyle: TextStyle(
+                    color: _words.length == 13
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontWeight: _words.length == 13
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
+                  suffixIcon: _words.length == 13
+                      ? Icon(
+                          Icons.check_circle,
+                          color: Theme.of(context).colorScheme.primary,
+                        )
+                      : null,
+                ),
+                maxLines: 4,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) => _validateAndSubmit(),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return AppLocalizations.of(context)!.required;
+                  }
+                  return null;
                 },
               ),
               if (_errorMessage != null) ...[

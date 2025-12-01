@@ -484,5 +484,11 @@
   "recovery_failed": "Wiederherstellung fehlgeschlagen. Bitte überprüfe deine Wiederherstellungsphrase und versuche es erneut.",
   "recovery_user_not_found": "Kein Konto mit dieser Wiederherstellungsphrase gefunden.",
   "recovery_rate_limit": "Bitte warte einen Moment, bevor du es erneut versuchst.",
-  "recovery_network_error": "Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut."
+  "recovery_network_error": "Netzwerkfehler. Bitte überprüfe deine Verbindung und versuche es erneut.",
+
+  "rejoin_study_description": "Gib deine 13-Wörter-Wiederherstellungsphrase ein, um deine Studie auf diesem Gerät fortzusetzen.",
+  "rejoin_study_help_title": "So verwendest du deine Wiederherstellungsphrase",
+  "rejoin_study_help_1": "Gib alle 13 Wörter deiner gespeicherten Wiederherstellungsphrase in der richtigen Reihenfolge ein",
+  "rejoin_study_help_2": "Wörter können eingefügt werden—sie füllen automatisch die Felder aus",
+  "rejoin_study_help_3": "Die Wiederherstellungsphrase unterscheidet nicht zwischen Groß- und Kleinschreibung"
 }
