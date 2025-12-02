@@ -1258,4 +1258,65 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get rejoin_study_help_3 =>
       'Die Wiederherstellungsphrase unterscheidet nicht zwischen Groß- und Kleinschreibung';
+
+  @override
+  String get share_recovery => 'Wiederherstellung teilen';
+
+  @override
+  String get share_as_text => 'Als Text teilen';
+
+  @override
+  String get share_as_qr => 'Als QR-Code teilen';
+
+  @override
+  String get download_recovery => 'Wiederherstellung herunterladen';
+
+  @override
+  String get download_as_text => 'Als Textdatei herunterladen';
+
+  @override
+  String get download_as_qr => 'Als QR-Bild herunterladen';
+
+  @override
+  String get scan_qr_code => 'QR-Code scannen';
+
+  @override
+  String get scan_qr_description =>
+      'Scanne einen QR-Code mit deiner Wiederherstellungsphrase';
+
+  @override
+  String get scanning_qr => 'QR-Code wird gescannt';
+
+  @override
+  String get qr_scan_instruction => 'Richte deine Kamera auf den QR-Code';
+
+  @override
+  String get invalid_qr_code =>
+      'Ungültiger QR-Code. Bitte scanne einen gültigen Wiederherstellungs-QR-Code.';
+
+  @override
+  String get qr_scan_error =>
+      'Fehler beim Scannen des QR-Codes. Bitte versuche es erneut.';
+
+  @override
+  String get recovery_security_warning =>
+      'Bewahre deine Wiederherstellungsphrase und den QR-Code sicher auf. Jeder mit Zugriff kann dein Konto wiederherstellen.';
+
+  @override
+  String get file_saved => 'Datei erfolgreich gespeichert';
+
+  @override
+  String get file_save_error => 'Fehler beim Speichern der Datei';
+
+  @override
+  String get share_btn => 'Teilen';
+
+  @override
+  String get copy_btn => 'Kopieren';
+
+  @override
+  String get download_btn => 'Download';
+
+  @override
+  String get qr_code_btn => 'QR-Code';
 }

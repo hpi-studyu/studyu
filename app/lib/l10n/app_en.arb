@@ -486,5 +486,25 @@
   "rejoin_study_help_title": "How to use your recovery phrase",
   "rejoin_study_help_1": "Enter all 13 words from your saved recovery phrase in order",
   "rejoin_study_help_2": "Words can be pasted—they'll automatically fill the fields",
-  "rejoin_study_help_3": "The recovery phrase is case-insensitive"
+  "rejoin_study_help_3": "The recovery phrase is case-insensitive",
+
+  "share_recovery": "Share Recovery",
+  "share_as_text": "Share as Text",
+  "share_as_qr": "Share as QR Code",
+  "download_recovery": "Download Recovery",
+  "download_as_text": "Download as Text File",
+  "download_as_qr": "Download as QR Image",
+  "scan_qr_code": "Scan QR Code",
+  "scan_qr_description": "Scan a QR code containing your recovery phrase",
+  "scanning_qr": "Scanning QR Code",
+  "qr_scan_instruction": "Point your camera at the QR code",
+  "invalid_qr_code": "Invalid QR code. Please scan a valid recovery QR code.",
+  "qr_scan_error": "Error scanning QR code. Please try again.",
+  "recovery_security_warning": "Keep your recovery phrase and QR code safe. Anyone with access can recover your account.",
+  "file_saved": "File saved successfully",
+  "file_save_error": "Error saving file",
+  "share_btn": "Share",
+  "copy_btn": "Copy",
+  "download_btn": "Download",
+  "qr_code_btn": "QR Code"
 }

@@ -2401,6 +2401,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The recovery phrase is case-insensitive'**
   String get rejoin_study_help_3;
+
+  /// No description provided for @share_recovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Recovery'**
+  String get share_recovery;
+
+  /// No description provided for @share_as_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Share as Text'**
+  String get share_as_text;
+
+  /// No description provided for @share_as_qr.
+  ///
+  /// In en, this message translates to:
+  /// **'Share as QR Code'**
+  String get share_as_qr;
+
+  /// No description provided for @download_recovery.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Recovery'**
+  String get download_recovery;
+
+  /// No description provided for @download_as_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Download as Text File'**
+  String get download_as_text;
+
+  /// No description provided for @download_as_qr.
+  ///
+  /// In en, this message translates to:
+  /// **'Download as QR Image'**
+  String get download_as_qr;
+
+  /// No description provided for @scan_qr_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR Code'**
+  String get scan_qr_code;
+
+  /// No description provided for @scan_qr_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a QR code containing your recovery phrase'**
+  String get scan_qr_description;
+
+  /// No description provided for @scanning_qr.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning QR Code'**
+  String get scanning_qr;
+
+  /// No description provided for @qr_scan_instruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Point your camera at the QR code'**
+  String get qr_scan_instruction;
+
+  /// No description provided for @invalid_qr_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid QR code. Please scan a valid recovery QR code.'**
+  String get invalid_qr_code;
+
+  /// No description provided for @qr_scan_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error scanning QR code. Please try again.'**
+  String get qr_scan_error;
+
+  /// No description provided for @recovery_security_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your recovery phrase and QR code safe. Anyone with access can recover your account.'**
+  String get recovery_security_warning;
+
+  /// No description provided for @file_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'File saved successfully'**
+  String get file_saved;
+
+  /// No description provided for @file_save_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error saving file'**
+  String get file_save_error;
+
+  /// No description provided for @share_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share_btn;
+
+  /// No description provided for @copy_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get copy_btn;
+
+  /// No description provided for @download_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get download_btn;
+
+  /// No description provided for @qr_code_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'QR Code'**
+  String get qr_code_btn;
 }
 
 class _AppLocalizationsDelegate

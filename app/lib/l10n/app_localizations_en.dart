@@ -1243,4 +1243,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rejoin_study_help_3 => 'The recovery phrase is case-insensitive';
+
+  @override
+  String get share_recovery => 'Share Recovery';
+
+  @override
+  String get share_as_text => 'Share as Text';
+
+  @override
+  String get share_as_qr => 'Share as QR Code';
+
+  @override
+  String get download_recovery => 'Download Recovery';
+
+  @override
+  String get download_as_text => 'Download as Text File';
+
+  @override
+  String get download_as_qr => 'Download as QR Image';
+
+  @override
+  String get scan_qr_code => 'Scan QR Code';
+
+  @override
+  String get scan_qr_description =>
+      'Scan a QR code containing your recovery phrase';
+
+  @override
+  String get scanning_qr => 'Scanning QR Code';
+
+  @override
+  String get qr_scan_instruction => 'Point your camera at the QR code';
+
+  @override
+  String get invalid_qr_code =>
+      'Invalid QR code. Please scan a valid recovery QR code.';
+
+  @override
+  String get qr_scan_error => 'Error scanning QR code. Please try again.';
+
+  @override
+  String get recovery_security_warning =>
+      'Keep your recovery phrase and QR code safe. Anyone with access can recover your account.';
+
+  @override
+  String get file_saved => 'File saved successfully';
+
+  @override
+  String get file_save_error => 'Error saving file';
+
+  @override
+  String get share_btn => 'Share';
+
+  @override
+  String get copy_btn => 'Copy';
+
+  @override
+  String get download_btn => 'Download';
+
+  @override
+  String get qr_code_btn => 'QR Code';
 }

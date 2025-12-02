@@ -5,6 +5,7 @@ import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/app_outdated_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/loading_screen.dart';
+import 'package:studyu_app/screens/app_onboarding/qr_code_scanner_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/recovery_phrase_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/rejoin_study_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/terms.dart';
@@ -45,6 +46,7 @@ class Routes {
   static const String performanceDetails = '/performanceDetails';
   static const String recoveryPhrase = '/recoveryPhrase';
   static const String rejoinStudy = '/rejoinStudy';
+  static const String qrScanner = '/qrScanner';
 
   static Route<dynamic> unknownRoute(RouteSettings settings) {
     FlutterNativeSplash.remove();
@@ -167,6 +169,11 @@ class Routes {
       case recoveryPhrase:
         return MaterialPageRoute(
           builder: (_) => const RecoveryPhraseScreen(),
+          settings: settings,
+        );
+      case qrScanner:
+        return MaterialPageRoute(
+          builder: (_) => const QrCodeScannerScreen(),
           settings: settings,
         );
       case rejoinStudy:

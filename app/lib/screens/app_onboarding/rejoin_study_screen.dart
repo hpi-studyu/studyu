@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_app/screens/app_onboarding/qr_code_scanner_screen.dart';
 import 'package:studyu_app/services/rejoin_study_service.dart';
 import 'package:studyu_core/core.dart';
 
@@ -57,6 +58,19 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
         return localizations.recovery_failed;
       default:
         return localizations.recovery_failed;
+    }
+  }
+
+  Future<void> _scanQrCode() async {
+    final result = await Navigator.push<List<String>>(
+      context,
+      MaterialPageRoute(builder: (context) => const QrCodeScannerScreen()),
+    );
+
+    if (result != null && mounted) {
+      setState(() {
+        _phraseController.text = result.join(' ');
+      });
     }
   }
 
@@ -278,10 +292,19 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
                 const SizedBox(height: 16),
                 Text(
                   _errorMessage!,
-                  style: const TextStyle(color: Colors.red),
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                   textAlign: TextAlign.center,
                 ),
               ],
+              const SizedBox(height: 16),
+              OutlinedButton.icon(
+                onPressed: _scanQrCode,
+                icon: const Icon(Icons.qr_code_scanner),
+                label: Text(AppLocalizations.of(context)!.scan_qr_code),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(48),
+                ),
+              ),
               const SizedBox(height: 24),
               FilledButton(
                 onPressed: _isLoading ? null : _validateAndSubmit,
@@ -289,13 +312,13 @@ class _RejoinStudyScreenState extends State<RejoinStudyScreen> {
                     ? Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const SizedBox(
+                          SizedBox(
                             width: 16,
                             height: 16,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
+                                Theme.of(context).colorScheme.onPrimary,
                               ),
                             ),
                           ),

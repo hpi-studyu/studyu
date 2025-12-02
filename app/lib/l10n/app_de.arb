@@ -490,5 +490,25 @@
   "rejoin_study_help_title": "So verwendest du deine Wiederherstellungsphrase",
   "rejoin_study_help_1": "Gib alle 13 Wörter deiner gespeicherten Wiederherstellungsphrase in der richtigen Reihenfolge ein",
   "rejoin_study_help_2": "Wörter können eingefügt werden—sie füllen automatisch die Felder aus",
-  "rejoin_study_help_3": "Die Wiederherstellungsphrase unterscheidet nicht zwischen Groß- und Kleinschreibung"
+  "rejoin_study_help_3": "Die Wiederherstellungsphrase unterscheidet nicht zwischen Groß- und Kleinschreibung",
+
+  "share_recovery": "Wiederherstellung teilen",
+  "share_as_text": "Als Text teilen",
+  "share_as_qr": "Als QR-Code teilen",
+  "download_recovery": "Wiederherstellung herunterladen",
+  "download_as_text": "Als Textdatei herunterladen",
+  "download_as_qr": "Als QR-Bild herunterladen",
+  "scan_qr_code": "QR-Code scannen",
+  "scan_qr_description": "Scanne einen QR-Code mit deiner Wiederherstellungsphrase",
+  "scanning_qr": "QR-Code wird gescannt",
+  "qr_scan_instruction": "Richte deine Kamera auf den QR-Code",
+  "invalid_qr_code": "Ungültiger QR-Code. Bitte scanne einen gültigen Wiederherstellungs-QR-Code.",
+  "qr_scan_error": "Fehler beim Scannen des QR-Codes. Bitte versuche es erneut.",
+  "recovery_security_warning": "Bewahre deine Wiederherstellungsphrase und den QR-Code sicher auf. Jeder mit Zugriff kann dein Konto wiederherstellen.",
+  "file_saved": "Datei erfolgreich gespeichert",
+  "file_save_error": "Fehler beim Speichern der Datei",
+  "share_btn": "Teilen",
+  "copy_btn": "Kopieren",
+  "download_btn": "Download",
+  "qr_code_btn": "QR-Code"
 }
