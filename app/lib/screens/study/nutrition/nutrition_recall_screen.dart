@@ -15,7 +15,7 @@ class NutritionRecallScreen extends StatefulWidget {
 class _NutritionRecallScreenState extends State<NutritionRecallScreen> {
   List<DailyRecall> dailyRecalls = [];
 
-  void _startNewRecall() async {
+  Future<void> _startNewRecall() async {
     final result = await Navigator.of(context).push(
       DailyRecallEntryScreen.route(),
     );
@@ -26,7 +26,7 @@ class _NutritionRecallScreenState extends State<NutritionRecallScreen> {
     }
   }
 
-  void _viewRecall(DailyRecall recall) async {
+  Future<void> _viewRecall(DailyRecall recall) async {
     await Navigator.of(context).push(
       DailyRecallEntryScreen.route(existingRecall: recall),
     );

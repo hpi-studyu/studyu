@@ -45,4 +45,3 @@ class DailyRecall {
   @override
   String toString() => toJson().toString();
 }
-

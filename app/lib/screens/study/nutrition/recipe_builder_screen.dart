@@ -29,7 +29,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
   late TextEditingController _preparationMethodController;
 
   List<RecipeComposition> _ingredients = [];
-  List<FoodEntry> _ingredientFoods = [];
+  final List<FoodEntry> _ingredientFoods = [];
   RecipeMetadata? _metadata;
 
   @override
@@ -74,7 +74,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     super.dispose();
   }
 
-  void _addIngredient() async {
+  Future<void> _addIngredient() async {
     final result = await Navigator.of(context).push(
       FoodEntryScreen.route(),
     );
@@ -126,7 +126,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     double totalCholesterol = 0;
     double totalSodium = 0;
     double totalWater = 0;
-    Map<String, double> totalMicros = {};
+    final Map<String, double> totalMicros = {};
 
     for (int i = 0; i < _ingredientFoods.length; i++) {
       final food = _ingredientFoods[i];

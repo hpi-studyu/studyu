@@ -49,22 +49,16 @@ class NutritionTask extends Observation {
           switch (property) {
             case 'totalCalories':
               value = _calculateTotalCalories(result);
-              break;
             case 'totalProtein':
               value = _calculateTotalProtein(result);
-              break;
             case 'totalCarbs':
               value = _calculateTotalCarbs(result);
-              break;
             case 'totalFat':
               value = _calculateTotalFat(result);
-              break;
             case 'mealCount':
               value = result.meals.where((m) => !m.isSkipped).length;
-              break;
             case 'completionTime':
               value = result.entryCompletedAt;
-              break;
             default:
               throw ArgumentError(
                 "Nutrition task does not support property '$property'.",

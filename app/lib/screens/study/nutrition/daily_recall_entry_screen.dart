@@ -69,10 +69,8 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
     }
   }
 
-  void _addMeal() async {
-    final result = await Navigator.of(context).push(
-      MealEntryScreen.route(),
-    );
+  Future<void> _addMeal() async {
+    final result = await Navigator.of(context).push(MealEntryScreen.route());
     if (result != null) {
       setState(() {
         _recall.meals.add(result);
@@ -80,10 +78,10 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
     }
   }
 
-  void _editMeal(MealLog meal, int index) async {
-    final result = await Navigator.of(context).push(
-      MealEntryScreen.route(existingMeal: meal),
-    );
+  Future<void> _editMeal(MealLog meal, int index) async {
+    final result = await Navigator.of(
+      context,
+    ).push(MealEntryScreen.route(existingMeal: meal));
     if (result != null) {
       setState(() {
         _recall.meals[index] = result;
@@ -139,9 +137,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
           if (_recall.meals.isNotEmpty)
             TextButton(
               onPressed: _completeRecall,
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Colors.white),
               child: const Text('COMPLETE'),
             ),
         ],
@@ -157,10 +153,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Recall Details',
-                      style: theme.textTheme.titleLarge,
-                    ),
+                    Text('Recall Details', style: theme.textTheme.titleLarge),
                     const SizedBox(height: 16),
                     ListTile(
                       leading: const Icon(Icons.calendar_today),
@@ -179,7 +172,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
                         value: _recallMode,
                         isExpanded: true,
                         underline: Container(),
-                        items: [
+                        items: const [
                           DropdownMenuItem(
                             value: RecallMode.realtimeRecord,
                             child: Text('Real-time Recording'),
@@ -280,9 +273,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
                 return Card(
                   margin: const EdgeInsets.only(bottom: 8),
                   child: ListTile(
-                    leading: CircleAvatar(
-                      child: Text('${meal.foods.length}'),
-                    ),
+                    leading: CircleAvatar(child: Text('${meal.foods.length}')),
                     title: Text(
                       meal.customMealLabel ?? _getMealTypeLabel(meal.mealType),
                     ),
@@ -307,7 +298,10 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
                             children: [
                               Icon(Icons.delete, color: Colors.red),
                               SizedBox(width: 8),
-                              Text('Delete', style: TextStyle(color: Colors.red)),
+                              Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.red),
+                              ),
                             ],
                           ),
                         ),
@@ -324,7 +318,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
                   ),
                 );
               }),
-            
+
             // Add nutrition summary if there are meals
             if (_recall.meals.isNotEmpty) ...[
               const SizedBox(height: 24),
@@ -336,4 +330,3 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
     );
   }
 }
-

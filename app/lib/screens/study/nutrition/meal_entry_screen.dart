@@ -69,10 +69,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     return MealType.snack;
   }
 
-  void _addFood() async {
-    final result = await Navigator.of(context).push(
-      FoodEntryScreen.route(),
-    );
+  Future<void> _addFood() async {
+    final result = await Navigator.of(context).push(FoodEntryScreen.route());
     if (result != null) {
       setState(() {
         _meal.foods.add(result);
@@ -80,10 +78,10 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     }
   }
 
-  void _editFood(FoodEntry food, int index) async {
-    final result = await Navigator.of(context).push(
-      FoodEntryScreen.route(existingFood: food),
-    );
+  Future<void> _editFood(FoodEntry food, int index) async {
+    final result = await Navigator.of(
+      context,
+    ).push(FoodEntryScreen.route(existingFood: food));
     if (result != null) {
       setState(() {
         _meal.foods[index] = result;
@@ -207,9 +205,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
               _isSkipped && _skipReason != null)
             TextButton(
               onPressed: _saveMeal,
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Colors.white),
               child: const Text('SAVE'),
             ),
         ],
@@ -228,7 +224,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     Text('Meal Information', style: theme.textTheme.titleLarge),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<MealType>(
-                      value: _mealType,
+                      initialValue: _mealType,
                       decoration: const InputDecoration(
                         labelText: 'Meal Type',
                         border: OutlineInputBorder(),
@@ -253,8 +249,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                           border: OutlineInputBorder(),
                         ),
                         onChanged: (value) => _customMealLabel = value,
-                        controller:
-                            TextEditingController(text: _customMealLabel ?? ''),
+                        controller: TextEditingController(
+                          text: _customMealLabel ?? '',
+                        ),
                       ),
                     const SizedBox(height: 16),
                     ListTile(
@@ -268,7 +265,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     ),
                     const Divider(),
                     DropdownButtonFormField<MealContext>(
-                      value: _mealContext,
+                      initialValue: _mealContext,
                       decoration: const InputDecoration(
                         labelText: 'Where did you eat?',
                         border: OutlineInputBorder(),
@@ -296,29 +293,27 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                               hintText: 'Describe where you ate',
                             ),
                             onChanged: (value) => _locationDescription = value,
-                            controller:
-                                TextEditingController(text: _locationDescription ?? ''),
+                            controller: TextEditingController(
+                              text: _locationDescription ?? '',
+                            ),
                           ),
                           const SizedBox(height: 16),
                         ],
                       ),
                     DropdownButtonFormField<CompanyContext>(
-                      value: _companyContext,
+                      initialValue: _companyContext,
                       decoration: const InputDecoration(
                         labelText: 'Who were you with?',
                         border: OutlineInputBorder(),
                       ),
                       items: [
-                        const DropdownMenuItem(
-                          value: null,
-                          child: Text('Not specified'),
-                        ),
+                        const DropdownMenuItem(child: Text('Not specified')),
                         ...CompanyContext.values.map((context) {
                           return DropdownMenuItem(
                             value: context,
                             child: Text(_getCompanyContextLabel(context)),
                           );
-                        }).toList(),
+                        }),
                       ],
                       onChanged: (value) {
                         setState(() => _companyContext = value);
@@ -326,22 +321,19 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<DistractionContext>(
-                      value: _distractionContext,
+                      initialValue: _distractionContext,
                       decoration: const InputDecoration(
                         labelText: 'Distractions during meal?',
                         border: OutlineInputBorder(),
                       ),
                       items: [
-                        const DropdownMenuItem(
-                          value: null,
-                          child: Text('Not specified'),
-                        ),
+                        const DropdownMenuItem(child: Text('Not specified')),
                         ...DistractionContext.values.map((context) {
                           return DropdownMenuItem(
                             value: context,
                             child: Text(_getDistractionContextLabel(context)),
                           );
-                        }).toList(),
+                        }),
                       ],
                       onChanged: (value) {
                         setState(() => _distractionContext = value);
@@ -363,8 +355,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                           border: OutlineInputBorder(),
                         ),
                         onChanged: (value) => _skipReason = value,
-                        controller:
-                            TextEditingController(text: _skipReason ?? ''),
+                        controller: TextEditingController(
+                          text: _skipReason ?? '',
+                        ),
                       ),
                     ],
                   ],
@@ -420,15 +413,12 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     case FoodEntryType.recipe:
                       foodIcon = Icons.menu_book;
                       iconColor = Colors.orange;
-                      break;
                     case FoodEntryType.brandedProduct:
                       foodIcon = Icons.shopping_bag;
                       iconColor = Colors.blue;
-                      break;
                     case FoodEntryType.manualCustom:
                       foodIcon = Icons.edit_note;
                       iconColor = Colors.purple;
-                      break;
                     default:
                       foodIcon = Icons.restaurant;
                       iconColor = Colors.green;
@@ -446,7 +436,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                                 food.brandName!,
                                 style: const TextStyle(fontSize: 10),
                               ),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
                               visualDensity: VisualDensity.compact,
                             ),
                         ],
@@ -493,7 +484,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     ),
                   );
                 }),
-              
+
               // Add nutrition summary if there are foods
               if (_meal.foods.isNotEmpty) ...[
                 const SizedBox(height: 24),
@@ -506,4 +497,3 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     );
   }
 }
-

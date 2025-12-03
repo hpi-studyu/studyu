@@ -24,10 +24,7 @@ class NutritionSummaryCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  Icons.pie_chart,
-                  color: theme.colorScheme.primary,
-                ),
+                Icon(Icons.pie_chart, color: theme.colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
                   title,
@@ -38,7 +35,7 @@ class NutritionSummaryCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Calories
             _buildMainNutrient(
               context,
@@ -48,9 +45,9 @@ class NutritionSummaryCard extends StatelessWidget {
               Icons.local_fire_department,
               Colors.orange,
             ),
-            
+
             const Divider(height: 24),
-            
+
             // Macronutrients
             Text(
               'Macronutrients',
@@ -59,7 +56,7 @@ class NutritionSummaryCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            
+
             Row(
               children: [
                 Expanded(
@@ -93,14 +90,14 @@ class NutritionSummaryCard extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Macronutrient Distribution Chart
             _buildMacroDistributionBar(context),
-            
+
             const Divider(height: 24),
-            
+
             // Additional Nutrients
             ExpansionTile(
               title: const Text('Detailed Nutrients'),
@@ -112,11 +109,27 @@ class NutritionSummaryCard extends StatelessWidget {
                     children: [
                       _buildDetailedNutrient('Fiber', nutrition.fiber, 'g'),
                       _buildDetailedNutrient('Sugars', nutrition.sugars, 'g'),
-                      _buildDetailedNutrient('Saturated Fat', nutrition.saturatedFat, 'g'),
-                      _buildDetailedNutrient('Trans Fat', nutrition.transFat, 'g'),
-                      _buildDetailedNutrient('Cholesterol', nutrition.cholesterol, 'mg'),
+                      _buildDetailedNutrient(
+                        'Saturated Fat',
+                        nutrition.saturatedFat,
+                        'g',
+                      ),
+                      _buildDetailedNutrient(
+                        'Trans Fat',
+                        nutrition.transFat,
+                        'g',
+                      ),
+                      _buildDetailedNutrient(
+                        'Cholesterol',
+                        nutrition.cholesterol,
+                        'mg',
+                      ),
                       _buildDetailedNutrient('Sodium', nutrition.sodium, 'mg'),
-                      _buildDetailedNutrient('Water Content', nutrition.waterContent, 'g'),
+                      _buildDetailedNutrient(
+                        'Water Content',
+                        nutrition.waterContent,
+                        'g',
+                      ),
                     ],
                   ),
                 ),
@@ -207,12 +220,13 @@ class NutritionSummaryCard extends StatelessWidget {
   }
 
   Widget _buildMacroDistributionBar(BuildContext context) {
-    final totalCals = (nutrition.protein * 4) + (nutrition.carbs * 4) + (nutrition.fat * 9);
-    
+    final totalCals =
+        (nutrition.protein * 4) + (nutrition.carbs * 4) + (nutrition.fat * 9);
+
     if (totalCals == 0) {
       return const SizedBox.shrink();
     }
-    
+
     final proteinPercent = (nutrition.protein * 4 / totalCals) * 100;
     final carbsPercent = (nutrition.carbs * 4 / totalCals) * 100;
     final fatPercent = (nutrition.fat * 9 / totalCals) * 100;
@@ -222,9 +236,9 @@ class NutritionSummaryCard extends StatelessWidget {
       children: [
         Text(
           'Calorie Distribution',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.w500,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
         ClipRRect(
@@ -315,10 +329,7 @@ class NutritionSummaryCard extends StatelessWidget {
 class DailyNutritionSummaryCard extends StatelessWidget {
   final DailyRecall dailyRecall;
 
-  const DailyNutritionSummaryCard({
-    required this.dailyRecall,
-    super.key,
-  });
+  const DailyNutritionSummaryCard({required this.dailyRecall, super.key});
 
   NutritionProfile _calculateDailyNutrition() {
     double totalEnergy = 0;
@@ -332,7 +343,7 @@ class DailyNutritionSummaryCard extends StatelessWidget {
     double totalCholesterol = 0;
     double totalSodium = 0;
     double totalWater = 0;
-    Map<String, double> totalMicros = {};
+    final Map<String, double> totalMicros = {};
 
     for (final meal in dailyRecall.meals) {
       if (!meal.isSkipped) {
@@ -348,7 +359,7 @@ class DailyNutritionSummaryCard extends StatelessWidget {
           totalCholesterol += food.nutrition.cholesterol;
           totalSodium += food.nutrition.sodium;
           totalWater += food.nutrition.waterContent;
-          
+
           food.nutrition.micros.forEach((key, value) {
             totalMicros[key] = (totalMicros[key] ?? 0) + value;
           });
@@ -385,10 +396,7 @@ class DailyNutritionSummaryCard extends StatelessWidget {
 class MealNutritionSummaryCard extends StatelessWidget {
   final MealLog meal;
 
-  const MealNutritionSummaryCard({
-    required this.meal,
-    super.key,
-  });
+  const MealNutritionSummaryCard({required this.meal, super.key});
 
   NutritionProfile _calculateMealNutrition() {
     double totalEnergy = 0;
@@ -402,7 +410,7 @@ class MealNutritionSummaryCard extends StatelessWidget {
     double totalCholesterol = 0;
     double totalSodium = 0;
     double totalWater = 0;
-    Map<String, double> totalMicros = {};
+    final Map<String, double> totalMicros = {};
 
     for (final food in meal.foods) {
       totalEnergy += food.nutrition.energyKcal;
@@ -416,7 +424,7 @@ class MealNutritionSummaryCard extends StatelessWidget {
       totalCholesterol += food.nutrition.cholesterol;
       totalSodium += food.nutrition.sodium;
       totalWater += food.nutrition.waterContent;
-      
+
       food.nutrition.micros.forEach((key, value) {
         totalMicros[key] = (totalMicros[key] ?? 0) + value;
       });
@@ -441,10 +449,6 @@ class MealNutritionSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nutrition = _calculateMealNutrition();
-    return NutritionSummaryCard(
-      nutrition: nutrition,
-      title: 'Meal Nutrition',
-    );
+    return NutritionSummaryCard(nutrition: nutrition, title: 'Meal Nutrition');
   }
 }
-

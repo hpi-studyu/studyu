@@ -4,10 +4,12 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
-import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
 import 'package:studyu_designer_v2/features/forms/form_list_view.dart';
+import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 
@@ -40,16 +42,20 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                   return ReactiveFormArray(
                     formArray: formViewModel.measurementsArray,
                     builder: (context, formArray, child) {
-                      return FormListView<MeasurementSurveyFormViewModel>(
+                      return FormListView<
+                        ManagedFormViewModel<IFormDataWithSchedule>
+                      >(
                         control: formViewModel.measurementsArray,
                         items: formViewModel.measurementViewModels,
                         onSelectItem: formViewModel.onSelectItem,
                         getActionsAt: (viewModel, _) =>
                             formViewModel.availablePopupActions(viewModel),
-                        onNewItem: formViewModel.onNewItem,
+                        onNewItem: () => _onNewItem(context, formViewModel),
                         onNewItemLabel: tr.form_array_measurements_surveys_new,
                         rowTitle: (viewModel) =>
-                            viewModel.formData?.title ?? '',
+                            ((viewModel.formData as dynamic).title
+                                as String?) ??
+                            '',
                         sectionTitle: tr.form_array_measurements_surveys,
                         // sectionTitleDivider: false,
                         emptyIcon: Icons.content_paste_off_rounded,
@@ -88,6 +94,36 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
           ),
         );
       },
+    );
+  }
+
+  void _onNewItem(
+    BuildContext context,
+    MeasurementsFormViewModel formViewModel,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.assignment),
+            title: Text(tr.form_array_measurements_surveys_new),
+            onTap: () {
+              Navigator.pop(context);
+              formViewModel.onNewSurvey();
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.restaurant),
+            title: const Text('New Nutrition Task'),
+            onTap: () {
+              Navigator.pop(context);
+              formViewModel.onNewNutrition();
+            },
+          ),
+        ],
+      ),
     );
   }
 }
