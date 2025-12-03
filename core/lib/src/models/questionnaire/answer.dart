@@ -23,8 +23,20 @@ class Answer<V> {
   factory Answer.parseJson(Map<String, dynamic> json) =>
       _$AnswerFromJson(json)..response = json[keyResponse] as V;
 
-  Map<String, dynamic> toJson() =>
-      mergeMaps<String, dynamic>(_$AnswerToJson(this), {keyResponse: response});
+  Map<String, dynamic> toJson() {
+    final dynamic serializedResponse =
+        response is Map ||
+            response is List ||
+            response is String ||
+            response is num ||
+            response is bool
+        ? response
+        : (response as dynamic).toJson();
+
+    return mergeMaps<String, dynamic>(_$AnswerToJson(this), {
+      keyResponse: serializedResponse,
+    });
+  }
 
   static Answer fromJson(Map<String, dynamic> data) {
     final dynamic value = data[keyResponse];

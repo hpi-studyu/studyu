@@ -5,13 +5,19 @@ import 'package:studyu_core/core.dart';
 
 class DailyRecallEntryScreen extends StatefulWidget {
   final DailyRecall? existingRecall;
+  final ValueChanged<DailyRecall>? onUpdate;
 
-  const DailyRecallEntryScreen({this.existingRecall, super.key});
+  const DailyRecallEntryScreen({this.existingRecall, this.onUpdate, super.key});
 
-  static MaterialPageRoute<DailyRecall> route({DailyRecall? existingRecall}) =>
-      MaterialPageRoute(
-        builder: (_) => DailyRecallEntryScreen(existingRecall: existingRecall),
-      );
+  static MaterialPageRoute<DailyRecall> route({
+    DailyRecall? existingRecall,
+    ValueChanged<DailyRecall>? onUpdate,
+  }) => MaterialPageRoute(
+    builder: (_) => DailyRecallEntryScreen(
+      existingRecall: existingRecall,
+      onUpdate: onUpdate,
+    ),
+  );
 
   @override
   State<DailyRecallEntryScreen> createState() => _DailyRecallEntryScreenState();
@@ -45,6 +51,10 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
     }
   }
 
+  void _updateRecall() {
+    widget.onUpdate?.call(_recall);
+  }
+
   void _saveRecall() {
     Navigator.of(context).pop(_recall);
   }
@@ -55,6 +65,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
       setState(() {
         _recall.meals.add(result);
       });
+      _updateRecall();
     }
   }
 
@@ -66,6 +77,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
       setState(() {
         _recall.meals[index] = result;
       });
+      _updateRecall();
     }
   }
 
@@ -73,6 +85,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
     setState(() {
       _recall.meals.removeAt(index);
     });
+    _updateRecall();
   }
 
   void _completeRecall() {

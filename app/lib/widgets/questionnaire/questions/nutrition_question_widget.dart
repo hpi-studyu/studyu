@@ -37,9 +37,19 @@ class _NutritionQuestionWidgetState extends State<NutritionQuestionWidget> {
   }
 
   void _openNutritionDiary() async {
-    final result = await Navigator.of(
-      context,
-    ).push(DailyRecallEntryScreen.route(existingRecall: _dailyRecall));
+    final result = await Navigator.of(context).push(
+      DailyRecallEntryScreen.route(
+        existingRecall: _dailyRecall,
+        onUpdate: (recall) {
+          setState(() {
+            _dailyRecall = recall;
+          });
+          if (widget.onDone != null) {
+            widget.onDone!(widget.question.constructAnswer(recall));
+          }
+        },
+      ),
+    );
 
     if (result != null) {
       setState(() {

@@ -30,16 +30,31 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadExistingResult();
+    });
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _loadExistingResult();
   }
 
   void _loadExistingResult() {
-    if (_dailyRecall != null) return;
+    if (_dailyRecall != null) {
+      return;
+    }
 
     final subject = context.read<AppState>().activeSubject;
-    if (subject == null) return;
+    if (subject == null) {
+      return;
+    }
+
+    final now = DateTime.now();
+    final currentStudyDay = subject.getDayOfStudyFor(now);
 
     final existingProgress = subject.progress
         .where(
@@ -51,16 +66,32 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
 
     if (existingProgress.isNotEmpty) {
       existingProgress.sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
-      final latestProgress = existingProgress.first;
-      final resultData = latestProgress.result.result;
-      if (resultData is DailyRecall) {
-        setState(() {
-          _dailyRecall = resultData;
-        });
-      } else if (resultData is Map<String, dynamic>) {
-        setState(() {
-          _dailyRecall = DailyRecall.fromJson(resultData);
-        });
+
+      int index = 0;
+      for (final progress in existingProgress) {
+        index++;
+        final resultData = progress.result.result;
+        DailyRecall? recall;
+
+        if (resultData is DailyRecall) {
+          recall = resultData;
+        } else if (resultData is Map<String, dynamic>) {
+          recall = DailyRecall.fromJson(resultData);
+        }
+
+        if (recall != null) {
+          final progressStudyDay = subject.getDayOfStudyFor(
+            progress.completedAt!,
+          );
+          final isFromCurrentDay = progressStudyDay == currentStudyDay;
+
+          if (isFromCurrentDay) {
+            setState(() {
+              _dailyRecall = recall;
+            });
+            break;
+          } else {}
+        } else {}
       }
     }
   }
@@ -92,9 +123,19 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
   }
 
   void _openNutritionDiary() async {
-    final result = await Navigator.of(
-      context,
-    ).push(DailyRecallEntryScreen.route(existingRecall: _dailyRecall));
+    final result = await Navigator.of(context).push(
+      DailyRecallEntryScreen.route(
+        existingRecall: _dailyRecall,
+        onUpdate: (recall) {
+          setState(() {
+            _dailyRecall = recall;
+          });
+          if (mounted) {
+            _addNutritionResult(recall, context, closeScreen: false);
+          }
+        },
+      ),
+    );
 
     if (result != null) {
       setState(() {

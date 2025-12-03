@@ -55,18 +55,28 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
 
     if (existingProgress.isNotEmpty) {
       existingProgress.sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
-      final latestProgress = existingProgress.first;
-      final resultData = latestProgress.result.result;
-      if (resultData is QuestionnaireState) {
-        setState(() {
-          _initialState = resultData;
-        });
-      } else if (resultData is List) {
-        setState(() {
-          _initialState = QuestionnaireState.fromJson(
-            List<Map<String, dynamic>>.from(resultData),
-          );
-        });
+
+      final currentStudyDay = subject.getDayOfStudyFor(DateTime.now());
+
+      for (final progress in existingProgress) {
+        final progressStudyDay = subject.getDayOfStudyFor(
+          progress.completedAt!,
+        );
+        if (progressStudyDay == currentStudyDay) {
+          final resultData = progress.result.result;
+          if (resultData is QuestionnaireState) {
+            setState(() {
+              _initialState = resultData;
+            });
+          } else if (resultData is List) {
+            setState(() {
+              _initialState = QuestionnaireState.fromJson(
+                List<Map<String, dynamic>>.from(resultData),
+              );
+            });
+          }
+          break;
+        }
       }
     }
   }
