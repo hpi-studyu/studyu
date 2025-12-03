@@ -496,6 +496,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get question_type_bool => 'Ja/Nein';
 
   @override
+  String get question_type_nutrition => 'Nutrition';
+
+  @override
   String get question_type_scale => 'Skala';
 
   @override
@@ -521,6 +524,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get form_field_response_audio => 'Audio';
+
+  @override
+  String get form_field_response_nutrition => 'Ernährung';
 
   @override
   String get form_field_response_audio_max_duration_label =>

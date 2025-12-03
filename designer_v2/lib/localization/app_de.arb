@@ -168,6 +168,7 @@
   "form_array_response_options_bool_yes": "Ja",
   "form_array_response_options_bool_no": "No",
   "form_field_response_pain": "Schmerz-Tracker",
+  "form_field_response_nutrition": "Ernährung",
   "form_field_response_image": "Bild",
   "form_field_response_audio": "Audio",
   "form_field_response_audio_max_duration_label": "Maximale Aufnahmedauer in Sekunden",

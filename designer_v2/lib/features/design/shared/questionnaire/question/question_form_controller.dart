@@ -179,6 +179,7 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.freeText: freeTextResponseOptionsArray,
     SurveyQuestionType.fitbit: fitbitResponseOptionsArray,
     SurveyQuestionType.pain: painResponseOptionsArray,
+    SurveyQuestionType.nutrition: nutritionResponseOptionsArray,
   }[questionType]!;
 
   List<AbstractControl> get answerOptionsControls =>
@@ -461,7 +462,17 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
     SurveyQuestionType.pain: FormGroup({
       'painOptionsArray': painResponseOptionsArray,
     }),
+    SurveyQuestionType.nutrition: FormGroup({}),
   };
+
+  // Nutrition
+  List<AbstractControl<String>> get nutritionOptions =>
+      NutritionQuestionFormData.kResponseOptions.keys
+          .map((e) => FormControl(value: e))
+          .toList();
+  late final FormArray<String> nutritionResponseOptionsArray = FormArray(
+    nutritionOptions,
+  );
 
   late final FormValidationConfigSet _sharedValidationConfig = {
     StudyFormValidationSet.draft: [questionTextRequired],
@@ -695,6 +706,8 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         });
       case SurveyQuestionType.pain:
         break;
+      case SurveyQuestionType.nutrition:
+        return;
     }
   }
 
@@ -792,6 +805,14 @@ class QuestionFormViewModel extends ManagedFormViewModel<QuestionFormData>
         );
       case SurveyQuestionType.pain:
         return PainQuestionFormData(
+          questionId: questionId,
+          questionText: questionTextControl.value!, // required
+          questionType: questionTypeControl.value!, // required
+          questionInfoText: questionInfoTextControl.value,
+          conditional: questionConditionalControl.value,
+        );
+      case SurveyQuestionType.nutrition:
+        return NutritionQuestionFormData(
           questionId: questionId,
           questionText: questionTextControl.value!, // required
           questionType: questionTypeControl.value!, // required
