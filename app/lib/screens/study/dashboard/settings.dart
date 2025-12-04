@@ -10,8 +10,8 @@ import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
-import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/util/recovery_qr_utils.dart';
+import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -133,7 +133,7 @@ class _SettingsState extends State<Settings> {
               ),
               const SizedBox(height: 8),
               // Recovery phrase card
-              RecoveryPhraseWidget(),
+              const RecoveryPhraseWidget(),
               const SizedBox(height: 24),
 
               // Current study section header
