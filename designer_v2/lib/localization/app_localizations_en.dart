@@ -2291,4 +2291,49 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get study_schedule_custom_description =>
       'Custom: Define your own sequence pattern to meet specific study requirements.';
+
+  @override
+  String get form_nutrition_tracking_title => 'Nutritional Tracking';
+
+  @override
+  String get form_nutrition_tracking_enable_hint =>
+      'Enable nutritional tracking for this study';
+
+  @override
+  String get form_measurement_type_select => 'Select Measurement Type';
+
+  @override
+  String get form_measurement_type_survey => 'Survey';
+
+  @override
+  String get form_measurement_type_survey_description =>
+      'Collect self-reported data from participants using questions and scales.';
+
+  @override
+  String get form_measurement_type_nutrition => 'Nutrition Task';
+
+  @override
+  String get form_measurement_type_nutrition_description =>
+      'Track participant food and drink intake using a structured journal or photo capture.';
+
+  @override
+  String get form_field_nutrition_instructions => 'Instructions';
+
+  @override
+  String get form_field_nutrition_instructions_hint =>
+      'Enter instructions for the participant';
+
+  @override
+  String get form_field_nutrition_collect_meal_context =>
+      'Collect Meal Context';
+
+  @override
+  String get form_field_nutrition_allow_recipes => 'Allow Recipes';
+
+  @override
+  String get form_field_nutrition_minimum_meals_required =>
+      'Minimum Meals Required';
+
+  @override
+  String get form_field_nutrition_minimum_meals_hint => 'Optional';
 }

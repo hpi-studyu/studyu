@@ -105,7 +105,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Nutritional Tracking',
+                                          tr.form_nutrition_tracking_title,
                                           style: theme.textTheme.bodyLarge
                                               ?.copyWith(
                                                 color: colorScheme.onSurface,
@@ -118,7 +118,7 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                         if (!isEnabled) ...[
                                           const SizedBox(height: 4),
                                           Text(
-                                            'Enable nutritional tracking for this study',
+                                            tr.form_nutrition_tracking_enable_hint,
                                             style: theme.textTheme.bodyMedium
                                                 ?.copyWith(
                                                   color: colorScheme

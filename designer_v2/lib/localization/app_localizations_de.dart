@@ -2325,4 +2325,49 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get study_schedule_custom_description =>
       'Benutzerdefiniert: Definieren Sie Ihr eigenes Sequenzmuster, um spezifische Studienanforderungen zu erfüllen.';
+
+  @override
+  String get form_nutrition_tracking_title => 'Ernährungsverfolgung';
+
+  @override
+  String get form_nutrition_tracking_enable_hint =>
+      'Ernährungsverfolgung für diese Studie aktivieren';
+
+  @override
+  String get form_measurement_type_select => 'Messungstyp auswählen';
+
+  @override
+  String get form_measurement_type_survey => 'Fragebogen';
+
+  @override
+  String get form_measurement_type_survey_description =>
+      'Sammle selbstberichtete Daten von Teilnehmern mithilfe von Fragen und Skalen.';
+
+  @override
+  String get form_measurement_type_nutrition => 'Ernährungsaufgabe';
+
+  @override
+  String get form_measurement_type_nutrition_description =>
+      'Verfolge die Nahrungs- und Getränkeaufnahme der Teilnehmer mithilfe eines strukturierten Tagebuchs oder einer Fotoaufnahme.';
+
+  @override
+  String get form_field_nutrition_instructions => 'Anweisungen';
+
+  @override
+  String get form_field_nutrition_instructions_hint =>
+      'Gib Anweisungen für den Teilnehmer ein';
+
+  @override
+  String get form_field_nutrition_collect_meal_context =>
+      'Mahlzeitkontext erfassen';
+
+  @override
+  String get form_field_nutrition_allow_recipes => 'Rezepte erlauben';
+
+  @override
+  String get form_field_nutrition_minimum_meals_required =>
+      'Mindestanzahl erforderlicher Mahlzeiten';
+
+  @override
+  String get form_field_nutrition_minimum_meals_hint => 'Optional';
 }

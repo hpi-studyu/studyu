@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/common_views/mouse_events.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 
 class MeasurementSelectionCards extends StatelessWidget {
   const MeasurementSelectionCards({
@@ -17,7 +18,7 @@ class MeasurementSelectionCards extends StatelessWidget {
     return Column(
       children: [
         Text(
-          "Select Measurement Type",
+          tr.form_measurement_type_select,
           style: theme.textTheme.headlineMedium,
           textAlign: TextAlign.center,
         ),
@@ -28,9 +29,8 @@ class MeasurementSelectionCards extends StatelessWidget {
             if (onNewSurvey != null)
               _buildCard(
                 context,
-                title: "Survey",
-                description:
-                    "Collect self-reported data from participants using questions and scales.",
+                title: tr.form_measurement_type_survey,
+                description: tr.form_measurement_type_survey_description,
                 icon: Icons.assignment_outlined,
                 onTap: onNewSurvey!,
               ),
@@ -39,9 +39,8 @@ class MeasurementSelectionCards extends StatelessWidget {
             if (onNewNutrition != null)
               _buildCard(
                 context,
-                title: "Nutrition Task",
-                description:
-                    "Track participant food and drink intake using a structured journal or photo capture.",
+                title: tr.form_measurement_type_nutrition,
+                description: tr.form_measurement_type_nutrition_description,
                 icon: Icons.restaurant,
                 onTap: onNewNutrition!,
               ),

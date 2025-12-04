@@ -40,11 +40,11 @@ class _NutritionFormViewState extends ConsumerState<NutritionFormView> {
             ),
             FormTableRow(
               control: widget.formViewModel.instructionsControl,
-              label: "Instructions", // TODO: Add translation
+              label: tr.form_field_nutrition_instructions,
               input: ReactiveTextField(
                 formControl: widget.formViewModel.instructionsControl,
-                decoration: const InputDecoration(
-                  hintText: "Enter instructions for the participant",
+                decoration: InputDecoration(
+                  hintText: tr.form_field_nutrition_instructions_hint,
                 ),
                 keyboardType: TextInputType.multiline,
                 minLines: 3,
@@ -53,26 +53,28 @@ class _NutritionFormViewState extends ConsumerState<NutritionFormView> {
             ),
             FormTableRow(
               control: widget.formViewModel.collectMealContextControl,
-              label: "Collect Meal Context", // TODO: Add translation
+              label: tr.form_field_nutrition_collect_meal_context,
               input: ReactiveSwitch(
                 formControl: widget.formViewModel.collectMealContextControl,
               ),
             ),
             FormTableRow(
               control: widget.formViewModel.allowRecipesControl,
-              label: "Allow Recipes", // TODO: Add translation
+              label: tr.form_field_nutrition_allow_recipes,
               input: ReactiveSwitch(
                 formControl: widget.formViewModel.allowRecipesControl,
               ),
             ),
             FormTableRow(
               control: widget.formViewModel.minimumMealsRequiredControl,
-              label: "Minimum Meals Required", // TODO: Add translation
+              label: tr.form_field_nutrition_minimum_meals_required,
               input: ReactiveTextField(
                 formControl: widget.formViewModel.minimumMealsRequiredControl,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                decoration: const InputDecoration(hintText: "Optional"),
+                decoration: InputDecoration(
+                  hintText: tr.form_field_nutrition_minimum_meals_hint,
+                ),
               ),
             ),
           ],

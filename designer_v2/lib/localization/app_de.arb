@@ -831,6 +831,20 @@
   "study_schedule_alternating_description": "Alternierend: Jeder Teilnehmer folgt einem ABAB-Muster und wechselt zwischen Interventionen in einer vorhersagbaren Sequenz.",
   "study_schedule_balanced_description": "Ausgeglichen: Teilnehmer werden zufällig ABAB- oder BABA-Sequenzen zugeordnet, um Reihenfolgeneffekte zu reduzieren.",
   "study_schedule_random_description": "Zufällig: Die Sequenz ist für jeden Zyklus vollständig randomisiert und bietet maximale Variabilität.",
-  "study_schedule_custom_description": "Benutzerdefiniert: Definieren Sie Ihr eigenes Sequenzmuster, um spezifische Studienanforderungen zu erfüllen."
+  "study_schedule_custom_description": "Benutzerdefiniert: Definieren Sie Ihr eigenes Sequenzmuster, um spezifische Studienanforderungen zu erfüllen.",
+  "@__________________NUTRITION__________________": {},
+  "form_nutrition_tracking_title": "Ernährungsverfolgung",
+  "form_nutrition_tracking_enable_hint": "Ernährungsverfolgung für diese Studie aktivieren",
+  "form_measurement_type_select": "Messungstyp auswählen",
+  "form_measurement_type_survey": "Fragebogen",
+  "form_measurement_type_survey_description": "Sammle selbstberichtete Daten von Teilnehmern mithilfe von Fragen und Skalen.",
+  "form_measurement_type_nutrition": "Ernährungsaufgabe",
+  "form_measurement_type_nutrition_description": "Verfolge die Nahrungs- und Getränkeaufnahme der Teilnehmer mithilfe eines strukturierten Tagebuchs oder einer Fotoaufnahme.",
+  "form_field_nutrition_instructions": "Anweisungen",
+  "form_field_nutrition_instructions_hint": "Gib Anweisungen für den Teilnehmer ein",
+  "form_field_nutrition_collect_meal_context": "Mahlzeitkontext erfassen",
+  "form_field_nutrition_allow_recipes": "Rezepte erlauben",
+  "form_field_nutrition_minimum_meals_required": "Mindestanzahl erforderlicher Mahlzeiten",
+  "form_field_nutrition_minimum_meals_hint": "Optional"
 }
 
