@@ -338,7 +338,9 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
                             ),
                             icon: const Icon(Icons.qr_code),
                             onPressed: _downloadQr,
-                            label: Text(AppLocalizations.of(context)!.download_as_qr_btn),
+                            label: Text(
+                              AppLocalizations.of(context)!.download_as_qr_btn,
+                            ),
                           ),
                           const SizedBox(width: 16),
                           OutlinedButton.icon(
@@ -346,7 +348,11 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
                               _shareText();
                             },
                             icon: const Icon(Icons.share),
-                            label: Text(AppLocalizations.of(context)!.share_recovery_text_btn),
+                            label: Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.share_recovery_text_btn,
+                            ),
                           ),
                         ],
                       ),
