@@ -18,9 +18,10 @@ default_platform(:android)
 platform :android do
   desc "Deploy a new version to Google Play"
   lane :deploy_internal do
+    flavor = ENV['FLAVOR']
     upload_to_play_store(
       track: 'internal',
-      aab: '../build/app/outputs/bundle/release/app-release.aab',
+      aab: "../build/app/outputs/bundle/#{flavor}Release/app-#{flavor}-release.aab",
     )
   end
 end
