@@ -32,6 +32,7 @@ dependencies:
     sdk: flutter
   flutter_widget_from_html: ^0.17.1
   gauge_indicator: ^0.4.3
+  go_router: ^17.0.0
   intersperse: ^2.0.0
   intl: ^0.20.2
   material_design_icons_flutter: ^7.0.7296

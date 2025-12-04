@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
@@ -36,7 +37,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         appState.preselectedInterventionIds!,
         appState.inviteCode,
       );
-      Navigator.pushNamed(context, Routes.journey);
+      context.push(RoutePaths.journey);
     } else if (study!.interventions.length <= 2) {
       // No need to select interventions if there are only 2 or less
       appState.activeSubject = StudySubject.fromStudy(
@@ -45,9 +46,9 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         study!.interventions.map((i) => i.id).toList(),
         appState.inviteCode,
       );
-      Navigator.pushNamed(context, Routes.journey);
+      context.push(RoutePaths.journey);
     } else {
-      Navigator.pushNamed(context, Routes.interventionSelection);
+      context.push(RoutePaths.interventionSelection);
     }
   }
 

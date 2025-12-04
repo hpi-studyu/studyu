@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/app_onboarding/preview.dart'
     as study_preview;
@@ -49,22 +50,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
       if (!mounted) return;
       state.activeSubject = subject;
       state.init(context);
-      Navigator.pushReplacementNamed(context, Routes.dashboard);
+      context.go(RoutePaths.dashboard);
     } else {
       StudyULogger.warning("No subject found for ID: $selectedSubjectId.");
       if (!mounted) return;
-      Navigator.pushReplacementNamed(
-        context,
-        Routes.appErrorScreen,
-        arguments: selectedSubjectId,
-      );
+      context.go(RoutePaths.appErrorScreen, extra: selectedSubjectId);
     }
   }
 
   Future<void> noSubjectFound() async {
     StudyULogger.info("No subject found, redirecting to welcome screen");
     await cancelNotifications(context);
-    if (mounted) Navigator.pushReplacementNamed(context, Routes.welcome);
+    if (mounted) context.go(RoutePaths.welcome);
   }
 
   Future<StudySubject?> _fetchRemoteSubject(String selectedStudyObjectId) {
@@ -151,9 +148,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       }
 
       // INTERVENTION SELECTION
-      if (preview.selectedRoute == Routes.interventionSelection) {
+      if (preview.selectedRoute == RoutePaths.interventionSelection) {
         if (!mounted) return;
-        await Navigator.pushNamed(context, Routes.interventionSelection);
+        await context.push(RoutePaths.interventionSelection);
         iFrameHelper.postRouteFinished();
         return;
       }
@@ -164,25 +161,25 @@ class _LoadingScreenState extends State<LoadingScreen> {
       );
 
       // CONSENT
-      if (preview.selectedRoute == Routes.consent) {
+      if (preview.selectedRoute == RoutePaths.consent) {
         if (!mounted) return;
-        await Navigator.pushNamed<bool>(context, Routes.consent);
+        await context.push<bool>(RoutePaths.consent);
         iFrameHelper.postRouteFinished();
         return;
       }
 
       // JOURNEY
-      if (preview.selectedRoute == Routes.journey) {
+      if (preview.selectedRoute == RoutePaths.journey) {
         if (!mounted) return;
-        await Navigator.pushNamed(context, Routes.journey);
+        await context.push(RoutePaths.journey);
         iFrameHelper.postRouteFinished();
         return;
       }
 
       // DASHBOARD
-      if (preview.selectedRoute == Routes.dashboard) {
+      if (preview.selectedRoute == RoutePaths.dashboard) {
         if (!mounted) return;
-        await Navigator.pushReplacementNamed(context, Routes.dashboard);
+        context.go(RoutePaths.dashboard);
         iFrameHelper.postRouteFinished();
         return;
       }
@@ -195,7 +192,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         state.selectedStudy!.schedule.includeBaseline = false;
         state.activeSubject!.study.schedule.includeBaseline = false;
         if (!mounted) return;
-        await Navigator.pushReplacementNamed(context, Routes.dashboard);
+        context.go(RoutePaths.dashboard);
         iFrameHelper.postRouteFinished();
         return;
       }
@@ -226,16 +223,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (subject != null) {
           state.activeSubject = subject;
           if (!mounted) return;
-          Navigator.pushReplacementNamed(context, Routes.dashboard);
+          context.go(RoutePaths.dashboard);
           return;
         } else {
           if (!mounted) return;
-          Navigator.pushReplacementNamed(context, Routes.studyOverview);
+          context.go(RoutePaths.studyOverview);
           return;
         }
       } else {
         if (!mounted) return;
-        Navigator.pushReplacementNamed(context, Routes.welcome);
+        context.go(RoutePaths.welcome);
         return;
       }
     }

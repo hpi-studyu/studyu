@@ -5,10 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/main.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_core/core.dart';
@@ -216,10 +217,7 @@ class StudyNotifications {
       await navigatorKey.currentState!.push(
         MaterialPageRoute(builder: (_) => TaskScreen(taskInstance: taskToRun)),
       );
-      navigatorKey.currentState!.pushNamedAndRemoveUntil(
-        Routes.loading,
-        (_) => false,
-      );
+      navigatorKey.currentContext!.go(RoutePaths.loading);
     } else {
       final errorMessage = completed
           ? AppLocalizations.of(context)!.task_already_completed

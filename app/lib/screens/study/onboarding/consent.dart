@@ -2,12 +2,13 @@ import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/onboarding/onboarding_progress.dart';
 import 'package:studyu_app/util/save_pdf.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
@@ -182,10 +183,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
       bottomNavigationBar: BottomOnboardingNavigation(
         backLabel: AppLocalizations.of(context)!.decline,
         backIcon: const Icon(Icons.close),
-        onBack: () => Navigator.popUntil(
-          context,
-          ModalRoute.withName(Routes.studySelection),
-        ),
+        onBack: () => context.go(RoutePaths.studySelection),
         nextLabel: AppLocalizations.of(context)!.accept,
         nextIcon: const Icon(Icons.check),
         onNext: boxLogic.every((element) => element) || kDebugMode

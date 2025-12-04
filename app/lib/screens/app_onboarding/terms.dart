@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -41,7 +42,7 @@ class _TermsScreenState extends State<TermsScreen> {
                 final success = await anonymousSignUp();
                 if (success) {
                   if (!context.mounted) return;
-                  Navigator.pushNamed(context, Routes.studySelection);
+                  context.push(RoutePaths.studySelection);
                 }
               }
             : null,

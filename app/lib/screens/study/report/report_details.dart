@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/report/disclaimer_section.dart';
 import 'package:studyu_app/screens/study/report/general_details_section.dart';
 import 'package:studyu_app/screens/study/report/report_section_container.dart';
@@ -13,7 +12,7 @@ class ReportDetailsScreen extends StatelessWidget {
   static MaterialPageRoute routeFor({required StudySubject subject}) =>
       MaterialPageRoute(
         builder: (_) => ReportDetailsScreen(subject),
-        settings: const RouteSettings(name: Routes.reportDetails),
+        settings: const RouteSettings(name: 'reportDetails'),
       );
 
   const ReportDetailsScreen(this.subject, {super.key});

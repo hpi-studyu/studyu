@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -100,17 +100,17 @@ class Preview {
       if ('route' == k) {
         switch (queryParameters![k]) {
           case 'consent':
-            return Routes.consent;
+            return RoutePaths.consent;
           case 'eligibilityCheck': // this should include questionnaire and eligibility_criteria
             return '/eligibilityCheck';
           case 'interventionSelection':
-            return Routes.interventionSelection;
+            return RoutePaths.interventionSelection;
           case 'journey':
-            return Routes.journey;
+            return RoutePaths.journey;
           case 'questionnaire':
-            return Routes.questionnaire;
+            return RoutePaths.questionnaire;
           case 'dashboard':
-            return Routes.dashboard;
+            return RoutePaths.dashboard;
           case 'intervention':
             return '/intervention';
           case 'observation':

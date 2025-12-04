@@ -4,12 +4,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overview.dart';
 import 'package:studyu_app/screens/study/report/report_details.dart';
 import 'package:studyu_app/util/debug_screen.dart';
@@ -93,11 +94,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   Widget build(BuildContext context) {
     if (subject == null) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          Routes.loading,
-          (_) => false,
-        );
+        context.go(RoutePaths.loading);
       });
       return const SizedBox.shrink();
     }
@@ -115,7 +112,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             tooltip: AppLocalizations.of(context)!.contact,
             icon: Icon(MdiIcons.faceAgent),
             onPressed: () {
-              Navigator.pushNamed(context, Routes.contact);
+              context.push(RoutePaths.contact);
             },
           ),
           IconButton(
@@ -129,7 +126,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           PopupMenuButton<OverflowMenuItem>(
             onSelected: (value) {
               if (value.routeName != null) {
-                Navigator.pushNamed(context, value.routeName!);
+                context.push(value.routeName!);
               } else {
                 value.onTap?.call();
               }
@@ -139,22 +136,22 @@ class _DashboardScreenState extends State<DashboardScreen>
                 OverflowMenuItem(
                   AppLocalizations.of(context)!.report_history,
                   MdiIcons.history,
-                  routeName: Routes.reportHistory,
+                  routeName: RoutePaths.reportHistory,
                 ),
                 OverflowMenuItem(
                   AppLocalizations.of(context)!.faq,
                   MdiIcons.frequentlyAskedQuestions,
-                  routeName: Routes.faq,
+                  routeName: RoutePaths.faq,
                 ),
                 OverflowMenuItem(
                   AppLocalizations.of(context)!.settings,
                   Icons.settings,
-                  routeName: Routes.appSettings,
+                  routeName: RoutePaths.appSettings,
                 ),
                 OverflowMenuItem(
                   AppLocalizations.of(context)!.what_is_studyu,
                   MdiIcons.helpCircleOutline,
-                  routeName: Routes.about,
+                  routeName: RoutePaths.about,
                 ),
                 OverflowMenuItem(
                   AppLocalizations.of(context)!.about,
@@ -397,8 +394,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             ),
             space,
             OutlinedButton.icon(
-              onPressed: () =>
-                  Navigator.pushNamed(context, Routes.reportHistory),
+              onPressed: () => context.push(RoutePaths.reportHistory),
               icon: Icon(MdiIcons.history, size: 24),
               label: Text(
                 AppLocalizations.of(context)!.report_history,
@@ -407,8 +403,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             ),
             space,
             OutlinedButton.icon(
-              onPressed: () =>
-                  Navigator.pushNamed(context, Routes.studySelection),
+              onPressed: () => context.push(RoutePaths.studySelection),
               icon: Icon(MdiIcons.clipboardArrowRightOutline, size: 24),
               label: Text(
                 AppLocalizations.of(context)!.study_selection,
