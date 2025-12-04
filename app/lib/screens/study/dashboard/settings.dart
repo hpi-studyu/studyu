@@ -276,12 +276,7 @@ class _SettingsState extends State<Settings> {
                                   onPressed: () async {
                                     await showMenu(
                                       context: context,
-                                      position: const RelativeRect.fromLTRB(
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                      ),
+                                      position: RelativeRect.fill,
                                       items: [
                                         PopupMenuItem(
                                           onTap: _shareText,
@@ -316,12 +311,7 @@ class _SettingsState extends State<Settings> {
                                   onPressed: () async {
                                     await showMenu(
                                       context: context,
-                                      position: const RelativeRect.fromLTRB(
-                                        0,
-                                        0,
-                                        0,
-                                        0,
-                                      ),
+                                      position: RelativeRect.fill,
                                       items: [
                                         PopupMenuItem(
                                           onTap: _downloadText,

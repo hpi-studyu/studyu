@@ -13,7 +13,6 @@ class QrCodeScannerScreen extends StatefulWidget {
 class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
   final MobileScannerController _controller = MobileScannerController(
     detectionSpeed: DetectionSpeed.noDuplicates,
-    facing: CameraFacing.back,
   );
 
   bool _isProcessing = false;
@@ -78,10 +77,10 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.7),
+                  Colors.black.withValues(alpha: 0.7),
                   Colors.transparent,
                   Colors.transparent,
-                  Colors.black.withOpacity(0.7),
+                  Colors.black.withValues(alpha: 0.7),
                 ],
                 stops: const [0.0, 0.3, 0.7, 1.0],
               ),
@@ -147,7 +146,7 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.7),
+                  color: Colors.black.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(

@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 
 import 'package:image/image.dart' as img;
@@ -135,7 +133,9 @@ class RecoveryQrUtils {
 
   static Future<void> shareRecoveryText(List<String> phrase) async {
     final text = phrase.join(' ');
-    await Share.share(text, subject: 'StudyU Recovery Phrase');
+    await SharePlus.instance.share(
+      ShareParams(text: text, subject: 'StudyU Recovery Phrase'),
+    );
   }
 
   static Future<void> shareRecoveryQr(List<String> phrase) async {
@@ -150,7 +150,9 @@ class RecoveryQrUtils {
           mimeType: 'image/png',
           name: 'recovery_qr.png',
         );
-        await Share.shareXFiles([xFile], subject: 'StudyU Recovery QR Code');
+        await SharePlus.instance.share(
+          ShareParams(files: [xFile], subject: 'StudyU Recovery QR Code'),
+        );
         return;
       }
 
@@ -158,7 +160,9 @@ class RecoveryQrUtils {
       final tempFile = File('${tempDir.path}/recovery_qr.png');
       await tempFile.writeAsBytes(imageData);
       final xFile = XFile(tempFile.path);
-      await Share.shareXFiles([xFile], subject: 'StudyU Recovery QR Code');
+      await SharePlus.instance.share(
+        ShareParams(files: [xFile], subject: 'StudyU Recovery QR Code'),
+      );
 
       Future.delayed(const Duration(seconds: 5), () {
         if (tempFile.existsSync()) {
@@ -230,9 +234,6 @@ class RecoveryQrUtils {
   ) async {
     final blob = html.Blob([bytes], mimeType);
     final url = html.Url.createObjectUrlFromBlob(blob);
-    final anchor = html.AnchorElement(href: url)
-      ..setAttribute('download', fileName)
-      ..click();
     html.Url.revokeObjectUrl(url);
   }
 }

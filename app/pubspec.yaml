@@ -48,9 +48,9 @@ dependencies:
   quiver: ^3.2.2
   rainbow_color: ^2.0.1
   record: ^6.1.2
-  share_plus: ^12.0.1
   sentry_flutter: ^9.8.0
   sentry_logging: ^9.8.0
+  share_plus: ^12.0.1
   shared_preferences: ^2.5.3
   statistics: ^1.2.0
   studyu_core: ^4.7.1
