@@ -76,8 +76,6 @@ jobs:
           elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
             ENVIRONMENT="prod"
           else
-            ENVIRONMENT="prod"
-          else
             # dev branch defaults to dev
             ENVIRONMENT="dev"
           fi
