@@ -85,22 +85,24 @@ jobs:
           # Set build parameters based on environment
           case $ENVIRONMENT in
             prod)
-              echo "FLAVOR=prod" >> $GITHUB_ENV
+              FLAVOR="prod"
               ;;
             stg)
-              echo "FLAVOR=stg" >> $GITHUB_ENV
+              FLAVOR="stg"
               ;;
             dev)
-              echo "FLAVOR=dev" >> $GITHUB_ENV
+              FLAVOR="dev"
               ;;
           esac
+          
+          echo "FLAVOR=$FLAVOR" >> $GITHUB_ENV
           
           echo "Building for environment: $ENVIRONMENT"
           echo "Flavor: $FLAVOR"
 
       - name: Prepare upload key
         run: |
-          echo "$STUDYU_ANDROID_KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
+          echo "$STUDYU_ANDROID_KEYSTORE_BASE64" | base64 --decode > keystore.jks
           echo "$STUDYU_KEY_PROPERTIES" > key.properties
         working-directory: app/android
         env:
