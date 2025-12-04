@@ -57,6 +57,7 @@ platform :ios do
     )
 
     build_app(
+      scheme: ENV['SCHEME'],
       export_method: "app-store",
     )
 
