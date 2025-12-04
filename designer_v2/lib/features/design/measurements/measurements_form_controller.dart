@@ -188,7 +188,7 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     }
 
     final viewModel = measurementViewModelsCollection.findWhere(
-      (vm) => (vm.formData as dynamic).measurementId == args.measurementId,
+      (vm) => (vm as dynamic).measurementId == args.measurementId,
     );
     if (viewModel != null) {
       return viewModel;

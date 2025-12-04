@@ -4,7 +4,9 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
-import 'package:studyu_designer_v2/features/design/measurements/measurements_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/measurements/measurement_selection_cards.dart';
+import 'package:studyu_designer_v2/features/design/measurements/nutrition/nutrition_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_design_page_view.dart';
 import 'package:studyu_designer_v2/features/design/study_form_providers.dart';
@@ -26,6 +28,14 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
         final formViewModel = ref.watch(
           measurementsFormViewModelProvider(studyId),
         );
+
+        final surveys = formViewModel.measurementViewModels
+            .whereType<MeasurementSurveyFormViewModel>()
+            .toList();
+        final nutritionTasks = formViewModel.measurementViewModels
+            .whereType<NutritionFormViewModel>()
+            .toList();
+
         return ReactiveForm(
           formGroup: formViewModel.form,
           child: Column(
@@ -39,54 +49,55 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                 // [ReactiveFormConsumer] is needed to to rerender when descendant controls are updated
                 // By default, ReactiveFormArray only updates when adding/removing controls
                 builder: (context, form, child) {
-                  return ReactiveFormArray(
-                    formArray: formViewModel.measurementsArray,
-                    builder: (context, formArray, child) {
-                      return FormListView<
-                        ManagedFormViewModel<IFormDataWithSchedule>
-                      >(
+                  if (formViewModel.measurementViewModels.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 32.0),
+                        child: MeasurementSelectionCards(
+                          onNewSurvey: formViewModel.onNewSurvey,
+                          onNewNutrition: formViewModel.onNewNutrition,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return Column(
+                    children: [
+                      FormListView<ManagedFormViewModel<IFormDataWithSchedule>>(
                         control: formViewModel.measurementsArray,
-                        items: formViewModel.measurementViewModels,
+                        items: surveys,
                         onSelectItem: formViewModel.onSelectItem,
                         getActionsAt: (viewModel, _) =>
                             formViewModel.availablePopupActions(viewModel),
-                        onNewItem: () => _onNewItem(context, formViewModel),
+                        onNewItem: formViewModel.onNewSurvey,
                         onNewItemLabel: tr.form_array_measurements_surveys_new,
                         rowTitle: (viewModel) =>
                             ((viewModel.formData as dynamic).title
                                 as String?) ??
                             '',
                         sectionTitle: tr.form_array_measurements_surveys,
-                        // sectionTitleDivider: false,
-                        emptyIcon: Icons.content_paste_off_rounded,
-                        emptyTitle:
-                            tr.form_array_measurements_surveys_empty_title,
-                        emptyDescription: tr
-                            .form_array_measurements_surveys_empty_description,
-                        hideLeadingTrailingWhenEmpty: true,
-                        reorderable: !formViewModel.isReadonly,
-                        onReorder: (oldIndex, newIndex) {
-                          if (newIndex > oldIndex) {
-                            newIndex -= 1;
-                          }
-                          // Reorder the view models
-                          final item = formViewModel.measurementViewModels
-                              .removeAt(oldIndex);
-                          formViewModel.measurementViewModels.insert(
-                            newIndex,
-                            item,
-                          );
-                          // Reorder the underlying form array to match
-                          final controlItem = formViewModel.measurementsArray
-                              .removeAt(oldIndex);
-                          formViewModel.measurementsArray.insert(
-                            newIndex,
-                            controlItem,
-                          );
-                          formViewModel.save();
-                        },
-                      );
-                    },
+                        hideLeadingTrailingWhenEmpty: false,
+                        reorderable:
+                            false, // Reordering disabled for split lists for now
+                      ),
+                      const SizedBox(height: 32.0),
+                      FormListView<ManagedFormViewModel<IFormDataWithSchedule>>(
+                        control: formViewModel.measurementsArray,
+                        items: nutritionTasks,
+                        onSelectItem: formViewModel.onSelectItem,
+                        getActionsAt: (viewModel, _) =>
+                            formViewModel.availablePopupActions(viewModel),
+                        onNewItem: formViewModel.onNewNutrition,
+                        onNewItemLabel: 'New Nutrition Task',
+                        rowTitle: (viewModel) =>
+                            ((viewModel.formData as dynamic).title
+                                as String?) ??
+                            '',
+                        sectionTitle: 'Nutrition Tasks',
+                        hideLeadingTrailingWhenEmpty: false,
+                        reorderable: false,
+                      ),
+                    ],
                   );
                 },
               ),
@@ -94,36 +105,6 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
           ),
         );
       },
-    );
-  }
-
-  void _onNewItem(
-    BuildContext context,
-    MeasurementsFormViewModel formViewModel,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-            leading: const Icon(Icons.assignment),
-            title: Text(tr.form_array_measurements_surveys_new),
-            onTap: () {
-              Navigator.pop(context);
-              formViewModel.onNewSurvey();
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.restaurant),
-            title: const Text('New Nutrition Task'),
-            onTap: () {
-              Navigator.pop(context);
-              formViewModel.onNewNutrition();
-            },
-          ),
-        ],
-      ),
     );
   }
 }

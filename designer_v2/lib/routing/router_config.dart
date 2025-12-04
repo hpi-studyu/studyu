@@ -32,6 +32,7 @@ import 'package:studyu_designer_v2/features/design/interventions/interventions_f
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/nutrition/nutrition_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/nutrition/nutrition_form_view.dart';
+import 'package:studyu_designer_v2/features/design/measurements/nutrition/nutrition_preview_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_view.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_preview_view.dart';
@@ -43,6 +44,7 @@ import 'package:studyu_designer_v2/features/monitor/study_monitor_page.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_page.dart';
 import 'package:studyu_designer_v2/features/study/settings/study_settings_dialog.dart';
 import 'package:studyu_designer_v2/features/study/study_navbar.dart';
+import 'package:studyu_designer_v2/features/study/study_controller.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';
@@ -267,6 +269,15 @@ class RouterConf {
             return MaterialPage(
               child: Consumer(
                 builder: (context, ref, child) {
+                  final studyState = ref.watch(
+                    studyControllerProvider(routeArgs.studyId),
+                  );
+                  if (studyState.study.asData?.value == null) {
+                    return const Scaffold(
+                      body: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+
                   final formViewModel = ref.watch(
                     measurementFormViewModelProvider(routeArgs),
                   );
@@ -275,8 +286,16 @@ class RouterConf {
                       studyId: routeArgs.studyId,
                       formViewModelBuilder: (_) =>
                           formViewModel as ManagedFormViewModel,
-                      formViewBuilder: (formViewModel) => NutritionFormView(
-                        formViewModel: formViewModel as NutritionFormViewModel,
+                      formViewBuilder: (formViewModel) => TwoColumnLayout.split(
+                        leftWidget: NutritionFormView(
+                          formViewModel:
+                              formViewModel as NutritionFormViewModel,
+                        ),
+                        rightWidget: NutritionPreview(routeArgs: routeArgs),
+                        flexLeft: 7,
+                        constraintsLeft: const BoxConstraints(minWidth: 500.0),
+                        scrollRight: false,
+                        paddingRight: null,
                       ),
                     );
                   }
