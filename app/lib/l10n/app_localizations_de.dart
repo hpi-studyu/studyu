@@ -1193,7 +1193,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get recovery_phrase_save_hint =>
-      'Speichere sie jetzt – du findest sie später auch in den Einstellungen.';
+      'Speichere sie jetzt an einem sicheren Ort.';
 
   @override
   String get recovery_phrase_saved_confirmation =>

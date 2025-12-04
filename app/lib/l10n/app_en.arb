@@ -460,7 +460,7 @@
   "recovery_phrase_purpose_header": "You'll need this phrase to:",
   "recovery_phrase_purpose_1": "✓ Continue on a different phone",
   "recovery_phrase_purpose_2": "✓ Restore your progress after reinstalling",
-  "recovery_phrase_save_hint": "Save it now—you can also find it later in Settings.",
+  "recovery_phrase_save_hint": "Save it now in a safe place you won't lose.",
   "recovery_phrase_saved_confirmation": "I saved my recovery phrase somewhere I can find it later.",
   "continue_to_study": "Continue to study",
   "rejoin_study": "Rejoin Study",

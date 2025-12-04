@@ -464,7 +464,7 @@
   "recovery_phrase_purpose_header": "Du benötigst diese Phrase um:",
   "recovery_phrase_purpose_1": "✓ Auf einem anderen Gerät fortzufahren",
   "recovery_phrase_purpose_2": "✓ Deinen Fortschritt nach Neuinstallation wiederherzustellen",
-  "recovery_phrase_save_hint": "Speichere sie jetzt – du findest sie später auch in den Einstellungen.",
+  "recovery_phrase_save_hint": "Speichere sie jetzt an einem sicheren Ort.",
   "recovery_phrase_saved_confirmation": "Ich habe meine Wiederherstellungsphrase sicher gespeichert.",
   "continue_to_study": "Weiter zur Studie",
   "rejoin_study": "Studie wieder beitreten",

@@ -1181,7 +1181,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recovery_phrase_save_hint =>
-      'Save it now—you can also find it later in Settings.';
+      'Save it now in a safe place you won\'t lose.';
 
   @override
   String get recovery_phrase_saved_confirmation =>

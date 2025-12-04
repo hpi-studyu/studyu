@@ -2297,7 +2297,7 @@ abstract class AppLocalizations {
   /// No description provided for @recovery_phrase_save_hint.
   ///
   /// In en, this message translates to:
-  /// **'Save it now—you can also find it later in Settings.'**
+  /// **'Save it now in a safe place you won\'t lose.'**
   String get recovery_phrase_save_hint;
 
   /// No description provided for @recovery_phrase_saved_confirmation.
