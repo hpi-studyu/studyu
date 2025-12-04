@@ -94,7 +94,7 @@ melos:
     dev:app:
       run: |
         melos exec -c 1 -- \
-          "flutter run -d chrome --web-port 8080 --dart-define=STUDYU_ENV=.env.dev"
+          "flutter run -d chrome --web-port 8080 --flavor dev"
       packageFilters:
         scope: studyu_app
       description: Runs StudyU App with the development environment
@@ -102,7 +102,7 @@ melos:
     dev:designer_v2:
       run: |
         melos exec -c 1 -- \
-          "flutter run -d chrome --web-port 8081 --dart-define=STUDYU_ENV=.env.dev"
+          "flutter run -d chrome --web-port 8081 --flavor dev"
       packageFilters:
         scope: studyu_designer_v2
       description: Runs StudyU Designer with the development environment
@@ -171,7 +171,7 @@ melos:
     build:web:dev:
       run: |
         melos exec -c 2 --fail-fast -- \
-          "flutter build web --dart-define=STUDYU_ENV=.env.dev"
+          "flutter build web --flavor dev"
       description: Build web dev.
       packageFilters:
         scope: [ studyu_app, studyu_designer_v2 ]
@@ -180,7 +180,7 @@ melos:
     build:web:app:dev:
       run: |
         melos exec -c 2 --fail-fast -- \
-          "flutter build web --dart-define=STUDYU_ENV=.env.dev"
+          "flutter build web --flavor dev"
       description: Build web app dev.
       packageFilters:
         scope: studyu_app
@@ -189,7 +189,7 @@ melos:
     build:web:designer_v2:dev:
       run: |
         melos exec -c 2 --fail-fast -- \
-          "flutter build web --dart-define=STUDYU_ENV=.env.dev"
+          "flutter build web --flavor dev"
       description: Build web designer_v2 dev.
       packageFilters:
         scope: studyu_designer_v2

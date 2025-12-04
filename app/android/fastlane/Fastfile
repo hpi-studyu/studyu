@@ -19,8 +19,16 @@ platform :android do
   desc "Deploy a new version to Google Play"
   lane :deploy_internal do
     flavor = ENV['FLAVOR']
+    package_name = "health.studyu.app"
+    if flavor == "stg"
+      package_name = "health.studyu.app.stg"
+    elsif flavor == "dev"
+      package_name = "health.studyu.app.dev"
+    end
+
     upload_to_play_store(
       track: 'internal',
+      package_name: package_name,
       aab: "../build/app/outputs/bundle/#{flavor}Release/app-#{flavor}-release.aab",
     )
   end
