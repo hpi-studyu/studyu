@@ -211,7 +211,10 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: const BottomOnboardingNavigation(hideNext: true),
+      bottomNavigationBar: BottomOnboardingNavigation(
+        hideNext: true,
+        onBack: context.canPop() ? () => context.pop() : null,
+      ),
     );
   }
 }
