@@ -51,6 +51,26 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   List<ManagedFormViewModel<IFormDataWithSchedule>> get measurementViewModels =>
       measurementViewModelsCollection.formViewModels;
 
+  bool get canAddMeasurement => study.status == StudyStatus.draft;
+
+  bool get isNutritionEnabled =>
+      measurementViewModels.any((vm) => vm is NutritionFormViewModel);
+
+  set isNutritionEnabled(bool enabled) {
+    if (enabled) {
+      if (!isNutritionEnabled) {
+        onNewNutrition();
+      }
+    } else {
+      final nutritionVm = measurementViewModels
+          .whereType<NutritionFormViewModel>()
+          .firstOrNull;
+      if (nutritionVm != null) {
+        measurementViewModelsCollection.remove(nutritionVm);
+      }
+    }
+  }
+
   @override
   FormValidationConfigSet get sharedValidationConfig => {
     StudyFormValidationSet.draft: [],

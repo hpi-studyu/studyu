@@ -8,8 +8,8 @@ class MeasurementSelectionCards extends StatelessWidget {
     super.key,
   });
 
-  final VoidCallback onNewSurvey;
-  final VoidCallback onNewNutrition;
+  final VoidCallback? onNewSurvey;
+  final VoidCallback? onNewNutrition;
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +25,26 @@ class MeasurementSelectionCards extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildCard(
-              context,
-              title: "Survey",
-              description:
-                  "Collect self-reported data from participants using questions and scales.",
-              icon: Icons.assignment_outlined,
-              onTap: onNewSurvey,
-            ),
-            const SizedBox(width: 24.0),
-            _buildCard(
-              context,
-              title: "Nutrition Task",
-              description:
-                  "Track participant food and drink intake using a structured journal or photo capture.",
-              icon: Icons.restaurant,
-              onTap: onNewNutrition,
-            ),
+            if (onNewSurvey != null)
+              _buildCard(
+                context,
+                title: "Survey",
+                description:
+                    "Collect self-reported data from participants using questions and scales.",
+                icon: Icons.assignment_outlined,
+                onTap: onNewSurvey!,
+              ),
+            if (onNewSurvey != null && onNewNutrition != null)
+              const SizedBox(width: 24.0),
+            if (onNewNutrition != null)
+              _buildCard(
+                context,
+                title: "Nutrition Task",
+                description:
+                    "Track participant food and drink intake using a structured journal or photo capture.",
+                icon: Icons.restaurant,
+                onTap: onNewNutrition!,
+              ),
           ],
         ),
       ],
