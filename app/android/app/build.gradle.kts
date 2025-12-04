@@ -5,8 +5,7 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-import java . util . Properties
-        import java . io . FileInputStream
+import java.util.Properties
 
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("local.properties")
@@ -83,6 +82,32 @@ android {
                 if (keystorePropertiesFile.exists())
                     signingConfigs.getByName("release")
                 else signingConfigs.getByName("debug")
+        }
+    }
+    flavorDimensions += "env"
+    productFlavors {
+        create("production") {
+            dimension = "env"
+            resValue(
+                type = "string",
+                name = "app_name",
+                value = "StudyU")
+        }
+        create("staging") {
+            dimension = "env"
+            resValue(
+                type = "string",
+                name = "app_name",
+                value = "StudyU Staging")
+            applicationIdSuffix = ".staging"
+        }
+        create("development") {
+            dimension = "env"
+            resValue(
+                type = "string",
+                name = "app_name",
+                value = "StudyU Dev")
+            applicationIdSuffix = ".dev"
         }
     }
 }

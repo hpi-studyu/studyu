@@ -14,13 +14,14 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Build Environment'
+        description: 'Environment to deploy'
         required: true
-        default: 'dev'
+        default: 'development'
         type: choice
         options:
-          - dev
-          - prod
+          - development
+          - staging
+          - production
 
 env:
   MELOS_SDK_PATH: 'auto'
@@ -39,26 +40,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # NEW: Determine if this is a Prod build based on Branch OR Input
-      - name: Setup Build Environment Logic
-        id: env-check
-        run: |
-          # Default to false
-          IS_PROD=false
-          
-          # Check Workflow Dispatch Input
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            if [[ "${{ inputs.environment }}" == "prod" ]]; then
-              IS_PROD=true
-            fi
-          # Check Branch Logic (Push event)
-          elif [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.ref }}" == "refs/heads/staging" ]]; then
-            IS_PROD=true
-          fi
-          
-          echo "IS_PROD=$IS_PROD" >> $GITHUB_ENV
-          echo "Build environment is Prod: $IS_PROD"
-
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
 
@@ -75,7 +56,8 @@ jobs:
           distribution: temurin
 
       - name: Bundle install for Android Gemfile
-        run: bundle install
+        run: |
+          bundle install
         timeout-minutes: 5
         working-directory: ./app/android
 
@@ -84,6 +66,40 @@ jobs:
         with:
           # todo
           cache: false
+
+      - name: Determine build environment
+        id: build-env
+        run: |
+          # Determine environment based on branch or manual input
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            ENVIRONMENT="${{ github.event.inputs.environment }}"
+          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            ENVIRONMENT="production"
+          else
+            # dev branch defaults to development
+            ENVIRONMENT="development"
+          fi
+          
+          echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
+          
+          # Set build parameters based on environment
+          case $ENVIRONMENT in
+            production)
+              echo "FLAVOR=production" >> $GITHUB_ENV
+              echo "SCHEME=production" >> $GITHUB_ENV
+              ;;
+            staging)
+              echo "FLAVOR=staging" >> $GITHUB_ENV
+              echo "SCHEME=staging" >> $GITHUB_ENV
+              ;;
+            development)
+              echo "FLAVOR=development" >> $GITHUB_ENV
+              echo "SCHEME=development" >> $GITHUB_ENV
+              ;;
+          esac
+          
+          echo "Building for environment: $ENVIRONMENT"
+          echo "Flavor/Scheme: $FLAVOR"
 
       - name: Prepare upload key
         run: |
@@ -94,14 +110,12 @@ jobs:
           STUDYU_ANDROID_KEYSTORE_BASE64: ${{ secrets.STUDYU_ANDROID_KEYSTORE_BASE64 }}
           STUDYU_KEY_PROPERTIES: ${{ secrets.STUDYU_KEY_PROPERTIES }}
 
-      - name: Build StudyU app bundle (prod)
-        if: ${{ env.IS_PROD == 'true' }}
-        run: flutter build appbundle --release --build-number ${{ github.run_number }}
-        working-directory: ./app
-
-      - name: Build StudyU app bundle (dev)
-        if: ${{ env.IS_PROD == 'false' }}
-        run: flutter build appbundle --release --build-number ${{ github.run_number }} --dart-define=STUDYU_ENV=.env.dev
+      - name: Build StudyU app bundle
+        run: |
+          flutter build appbundle \
+            --release \
+            --flavor ${{ env.FLAVOR }} \
+            --build-number ${{ github.run_number }}
         working-directory: ./app
 
       - name: Fastlane upload
@@ -125,20 +139,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      # NEW: Determine if this is a Prod build based on Branch OR Input
-      - name: Setup Build Environment Logic
-        id: env-check
-        run: |
-          IS_PROD=false
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-            if [[ "${{ inputs.environment }}" == "prod" ]]; then
-              IS_PROD=true
-            fi
-          elif [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.ref }}" == "refs/heads/staging" ]]; then
-            IS_PROD=true
-          fi
-          echo "IS_PROD=$IS_PROD" >> $GITHUB_ENV
-
       - name: Init workspace
         uses: ./.github/workflows/init-workspace
 
@@ -150,7 +150,8 @@ jobs:
           bundler-cache: false
 
       - name: Bundle install for iOS Gemfile
-        run: bundle install
+        run: |
+          bundle install
         timeout-minutes: 5
         working-directory: ./app/ios
 
@@ -159,6 +160,37 @@ jobs:
         with:
           # todo
           cache: false
+
+      - name: Determine build environment and scheme
+        id: build-env
+        run: |
+          # Determine environment based on branch or manual input
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            ENVIRONMENT="${{ github.event.inputs.environment }}"
+          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            ENVIRONMENT="production"
+          else
+            # dev branch defaults to development
+            ENVIRONMENT="development"
+          fi
+          
+          echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
+          
+          # Set build parameters based on environment
+          case $ENVIRONMENT in
+            production)
+              echo "SCHEME=production" >> $GITHUB_ENV
+              ;;
+            staging)
+              echo "SCHEME=staging" >> $GITHUB_ENV
+              ;;
+            development)
+              echo "SCHEME=development" >> $GITHUB_ENV
+              ;;
+          esac
+          
+          echo "Building for environment: $ENVIRONMENT"
+          echo "Scheme: $SCHEME"
 
       - name: Get StudyU app version
         run: |
@@ -177,14 +209,14 @@ jobs:
           fi
         working-directory: ./app
 
-      - name: Build StudyU for iOS without codesign (prod)
-        if: ${{ env.IS_PROD == 'true' }}
-        run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }} --build-name ${{ env.STUDYU_APP_VERSION }}
-        working-directory: ./app
-
-      - name: Build StudyU for iOS without codesign (dev)
-        if: ${{ env.IS_PROD == 'false' }}
-        run: flutter build ios --release --no-codesign --build-number ${{ github.run_number }} --build-name ${{ env.STUDYU_APP_VERSION }} --dart-define=STUDYU_ENV=.env.dev
+      - name: Build StudyU for iOS without codesign
+        run: |
+          flutter build ios \
+            --release \
+            --no-codesign \
+            --build-number ${{ github.run_number }} \
+            --build-name ${{ env.STUDYU_APP_VERSION }} \
+            --flavor ${{ env.SCHEME }}
         working-directory: ./app
 
       - name: Fastlane upload
