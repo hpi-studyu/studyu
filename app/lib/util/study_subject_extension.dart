@@ -16,6 +16,11 @@ extension StudySubjectExtension on StudySubject {
         periodId: periodId,
         result: result,
       ),
+      DailyRecall() => Result<T>.app(
+        type: 'DailyRecall',
+        periodId: periodId,
+        result: result,
+      ),
       bool() => Result<T>.app(type: 'bool', periodId: periodId, result: result),
       _ => Result<T>.app(type: 'unknown', periodId: periodId, result: result),
     };
