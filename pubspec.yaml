@@ -62,11 +62,18 @@ melos:
 
     qualitycheck:
       run: |
-        fvm install
+        if [ "$CI" != "true" ]; then
+          fvm install
+        fi
         melos format
         melos generate
-        fvm dart analyze
-        fvm flutter analyze
+        if [ "$CI" = "true" ]; then
+          dart analyze
+          flutter analyze
+        else
+          fvm dart analyze
+          fvm flutter analyze
+        fi
       description: Run format, generate, and analyze checks
 
     reset:
