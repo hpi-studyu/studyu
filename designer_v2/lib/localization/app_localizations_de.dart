@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -2316,7 +2317,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get study_schedule_balanced_description =>
-      'Ausgeglichen: Teilnehmer werden zufällig ABAB- oder BABA-Sequenzen zugeordnet, um Reihenfolgeneffekte zu reduzieren.';
+      'Gegengewicht: Jeder Teilnehmer folgt einem ABBA-Muster und wechselt zwischen Interventionen in einer vorhersagbaren Sequenz.';
 
   @override
   String get study_schedule_random_description =>
