@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
-import 'package:studyu_app/theme.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_app/widgets/round_checkbox.dart';
 import 'package:studyu_core/core.dart';
@@ -40,6 +39,7 @@ class _TaskBoxState extends State<TaskBox> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final completed = context
         .watch<AppState>()
         .activeSubject!

@@ -11,7 +11,7 @@ import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
-import 'package:studyu_app/utils/recovery_qr_utils.dart';
+import 'package:studyu_app/util/recovery_qr_utils.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -36,6 +36,205 @@ class _SettingsState extends State<Settings> {
     subject = context.read<AppState>().activeSubject;
   }
 
+  List<DropdownMenuItem<Locale>> _buildDropdownItems(BuildContext context) {
+    final dropDownItems = <DropdownMenuItem<Locale>>[];
+
+    for (final locale in AppLocalizations.supportedLocales) {
+      dropDownItems.add(
+        DropdownMenuItem(
+          value: locale,
+          child: Text(localeName(context, locale.languageCode)!),
+        ),
+      );
+    }
+
+    dropDownItems.add(const DropdownMenuItem(child: Text('System')));
+    return dropDownItems;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.settings)),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              // General section header
+              Text(
+                'General',
+                style: theme.textTheme.titleMedium!.copyWith(
+                  color: theme.primaryColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Language card
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          AppLocalizations.of(context)!.language,
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      DropdownButton<Locale>(
+                        value: _selectedValue,
+                        underline: const SizedBox(),
+                        items: _buildDropdownItems(context),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedValue = value;
+                          });
+                          context.read<AppLanguage>().changeLanguage(value);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+
+              // Analytics card
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          AppLocalizations.of(context)!.allow_analytics,
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Switch(
+                        value: _analyticsValue!,
+                        onChanged: (value) {
+                          setState(() {
+                            _analyticsValue = value;
+                          });
+                          AppAnalytics.setEnabled(value);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Recovery phrase card
+              RecoveryPhraseWidget(),
+              const SizedBox(height: 24),
+
+              // Current study section header
+              Text(
+                'Current study',
+                style: theme.textTheme.titleMedium!.copyWith(
+                  color: theme.primaryColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+
+              SizedBox(
+                width: double.infinity,
+                child: Card(
+                  margin: const EdgeInsets.only(top: 12),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      textAlign: TextAlign.center,
+                      subject!.study.title ?? '',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              //wrap buttons to fill the width for mobile phones but for web fixed width
+              Text(
+                textAlign: TextAlign.start,
+                'Participation options',
+                style: theme.textTheme.titleMedium!.copyWith(
+                  color: theme.primaryColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Align(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width < 600
+                        ? double.infinity
+                        : 400,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 12),
+                      // Leave study button
+                      FilledButton.icon(
+                        icon: Icon(MdiIcons.exitToApp),
+                        label: Text(AppLocalizations.of(context)!.opt_out),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.red[700],
+                          foregroundColor: Colors.white,
+                          side: BorderSide(color: Colors.red[700]!),
+                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => OptOutAlertDialog(subject: subject),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Leave and delete button
+                      FilledButton.tonalIcon(
+                        icon: const Icon(Icons.delete),
+                        label: Text(AppLocalizations.of(context)!.delete_data),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.pink[50],
+                          foregroundColor: Colors.red[900],
+                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => DeleteAlertDialog(subject: subject),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RecoveryPhraseWidget extends StatefulWidget {
+  const RecoveryPhraseWidget({super.key});
+
+  @override
+  State<RecoveryPhraseWidget> createState() => _RecoveryPhraseWidgetState();
+}
+
+class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
   List<String> get _phrase {
     final user = Supabase.instance.client.auth.currentUser;
     if (user == null) return [];
@@ -65,37 +264,6 @@ class _SettingsState extends State<Settings> {
     }
   }
 
-  Future<void> _shareQr() async {
-    try {
-      await RecoveryQrUtils.shareRecoveryQr(_phrase);
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
-      }
-    }
-  }
-
-  Future<void> _downloadText() async {
-    try {
-      await RecoveryQrUtils.downloadRecoveryText(_phrase);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.file_saved)),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.file_save_error),
-          ),
-        );
-      }
-    }
-  }
-
   Future<void> _downloadQr() async {
     try {
       await RecoveryQrUtils.downloadRecoveryQr(_phrase);
@@ -115,273 +283,80 @@ class _SettingsState extends State<Settings> {
     }
   }
 
-  Widget getDropdownRow(BuildContext context) {
-    final dropDownItems = <DropdownMenuItem<Locale>>[];
-
-    for (final locale in AppLocalizations.supportedLocales) {
-      dropDownItems.add(
-        DropdownMenuItem(
-          value: locale,
-          child: Text(localeName(context, locale.languageCode)!),
-        ),
-      );
-    }
-
-    dropDownItems.add(const DropdownMenuItem(child: Text('System')));
-
-    return Column(
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text('${AppLocalizations.of(context)!.language}:'),
-            const SizedBox(width: 5),
-            DropdownButton<Locale>(
-              value: _selectedValue,
-              items: dropDownItems,
-              onChanged: (value) {
-                setState(() {
-                  _selectedValue = value;
-                });
-                context.read<AppLanguage>().changeLanguage(value);
-              },
-            ),
-          ],
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text('${AppLocalizations.of(context)!.allow_analytics}: '),
-            Tooltip(
-              triggerMode: TooltipTriggerMode.tap,
-              showDuration: const Duration(milliseconds: 10000),
-              margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-              message: AppLocalizations.of(context)!.allow_analytics_desc,
-              child: const Icon(Icons.info),
-            ),
-            const SizedBox(width: 5),
-            Switch(
-              value: _analyticsValue!,
-              onChanged: (value) {
-                setState(() {
-                  _analyticsValue = value;
-                });
-                AppAnalytics.setEnabled(value);
-              },
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.settings)),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            getDropdownRow(context),
-            const SizedBox(height: 32),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Card(
-                child: ExpansionTile(
-                  leading: const Icon(Icons.key, color: Colors.blue),
-                  title: Text(
-                    AppLocalizations.of(context)!.recovery_phrase_header,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    AppLocalizations.of(context)!.recovery_phrase_save_hint,
-                    style: theme.textTheme.bodySmall,
-                  ),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Card(
+      child: ExpansionTile(
+        leading: Icon(Icons.key, color: theme.primaryColor),
+        title: Text(
+          AppLocalizations.of(context)!.recovery_phrase_header,
+          style: theme.textTheme.bodyMedium!.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        subtitle: Text(
+          AppLocalizations.of(context)!.recovery_phrase_save_hint,
+          style: theme.textTheme.bodySmall,
+        ),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(color: theme.colorScheme.surface),
+                  child: Column(
+                    children: [
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        alignment: WrapAlignment.center,
+                        children: _phrase
+                            .map((word) => Chip(label: Text(word)))
+                            .toList(),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Card(
-                            color: Colors.amber.shade50,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.warning_amber,
-                                    color: Colors.amber.shade900,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      AppLocalizations.of(
-                                        context,
-                                      )!.recovery_security_warning,
-                                      style: TextStyle(
-                                        color: Colors.amber.shade900,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                          FilledButton.icon(
+                            icon: const Icon(Icons.copy),
+                            onPressed: _copyToClipboard,
+                            label: Text(
+                              AppLocalizations.of(context)!.copy_to_clipboard,
                             ),
                           ),
-                          const SizedBox(height: 16),
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: BorderRadius.circular(8),
+                          const SizedBox(width: 16),
+                          FilledButton.tonalIcon(
+                            style: FilledButton.styleFrom(
+                              foregroundColor: theme.primaryColor,
+                              backgroundColor:
+                                  theme.colorScheme.surfaceContainerHighest,
                             ),
-                            child: Column(
-                              children: [
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 8,
-                                  alignment: WrapAlignment.center,
-                                  children: _phrase
-                                      .map((word) => Chip(label: Text(word)))
-                                      .toList(),
-                                ),
-                                const SizedBox(height: 16),
-                                IconButton(
-                                  icon: const Icon(Icons.copy),
-                                  onPressed: _copyToClipboard,
-                                  tooltip: AppLocalizations.of(
-                                    context,
-                                  )!.copy_to_clipboard,
-                                ),
-                              ],
-                            ),
+                            icon: const Icon(Icons.qr_code),
+                            onPressed: _downloadQr,
+                            label: Text("Download as QR"),
                           ),
-                          const SizedBox(height: 16),
-                          Center(
-                            child: RecoveryQrUtils.renderQrWidget(
-                              RecoveryQrUtils.buildQrCode(
-                                RecoveryQrUtils.generateDeepLink(_phrase),
-                              ),
-                              size: 200,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  onPressed: () async {
-                                    await showMenu(
-                                      context: context,
-                                      position: RelativeRect.fill,
-                                      items: [
-                                        PopupMenuItem(
-                                          onTap: _shareText,
-                                          child: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            )!.share_as_text,
-                                          ),
-                                        ),
-                                        PopupMenuItem(
-                                          onTap: _shareQr,
-                                          child: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            )!.share_as_qr,
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                  icon: const Icon(Icons.share),
-                                  label: Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.share_recovery,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  onPressed: () async {
-                                    await showMenu(
-                                      context: context,
-                                      position: RelativeRect.fill,
-                                      items: [
-                                        PopupMenuItem(
-                                          onTap: _downloadText,
-                                          child: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            )!.download_as_text,
-                                          ),
-                                        ),
-                                        PopupMenuItem(
-                                          onTap: _downloadQr,
-                                          child: Text(
-                                            AppLocalizations.of(
-                                              context,
-                                            )!.download_as_qr,
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                  icon: const Icon(Icons.download),
-                                  label: Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.download_recovery,
-                                  ),
-                                ),
-                              ),
-                            ],
+                          const SizedBox(width: 16),
+                          OutlinedButton.icon(
+                            onPressed: () async {
+                              _shareText();
+                            },
+                            icon: const Icon(Icons.share),
+                            label: Text("Share Recovery Text"),
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
-            const SizedBox(height: 24),
-            Text(
-              '${AppLocalizations.of(context)!.study_current} ${subject!.study.title}',
-              style: theme.textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton.icon(
-              icon: Icon(MdiIcons.exitToApp),
-              label: Text(AppLocalizations.of(context)!.opt_out),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.orange[800],
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => OptOutAlertDialog(subject: subject),
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.delete),
-              label: Text(AppLocalizations.of(context)!.delete_data),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (_) => DeleteAlertDialog(subject: subject),
-                );
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

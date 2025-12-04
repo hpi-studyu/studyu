@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/utils/recovery_qr_utils.dart';
+import 'package:studyu_app/theme.dart';
+import 'package:studyu_app/util/recovery_qr_utils.dart';
 
 class QrCodeScannerScreen extends StatefulWidget {
   const QrCodeScannerScreen({super.key});
@@ -43,10 +44,9 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
     if (phrase != null) {
       Navigator.pop(context, phrase);
     } else {
-      setState(() {
-        _isProcessing = false;
-      });
       _showError(AppLocalizations.of(context)!.invalid_qr_code);
+      // Keep _isProcessing = true to prevent repeated error messages
+      // User can go back and try again with a different QR code
     }
   }
 
@@ -54,7 +54,7 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.red,
+        backgroundColor: Theme.of(context).colorScheme.error,
         duration: const Duration(seconds: 3),
       ),
     );
@@ -65,8 +65,8 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.scanning_qr),
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
       ),
       body: Stack(
         children: [
@@ -77,10 +77,10 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withValues(alpha: 0.7),
+                  Theme.of(context).colorScheme.surface.withValues(alpha: 0.7),
                   Colors.transparent,
                   Colors.transparent,
-                  Colors.black.withValues(alpha: 0.7),
+                  Theme.of(context).colorScheme.surface.withValues(alpha: 0.7),
                 ],
                 stops: const [0.0, 0.3, 0.7, 1.0],
               ),
@@ -146,12 +146,17 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
                   vertical: 12,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.7),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.surface.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   AppLocalizations.of(context)!.qr_scan_instruction,
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    fontSize: 16,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -166,8 +171,8 @@ class _QrCodeScannerScreenState extends State<QrCodeScannerScreen> {
               child: ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  foregroundColor: Theme.of(context).colorScheme.onSurface,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
                     vertical: 12,
