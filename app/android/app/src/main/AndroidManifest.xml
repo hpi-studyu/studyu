@@ -59,7 +59,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="http" android:host="app.studyu.health" />
-                <data android:scheme="https" />
+                <data android:scheme="https" android:host="app.studyu.health" />
                 <data android:scheme="studyu-app" />
             </intent-filter>
         </activity>
