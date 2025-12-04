@@ -86,22 +86,22 @@ android {
     }
     flavorDimensions += "env"
     productFlavors {
-        create("production") {
+        create("prod") {
             dimension = "env"
             resValue(
                 type = "string",
                 name = "app_name",
                 value = "StudyU")
         }
-        create("staging") {
+        create("stg") {
             dimension = "env"
             resValue(
                 type = "string",
                 name = "app_name",
                 value = "StudyU Staging")
-            applicationIdSuffix = ".staging"
+            applicationIdSuffix = ".stg"
         }
-        create("development") {
+        create("dev") {
             dimension = "env"
             resValue(
                 type = "string",

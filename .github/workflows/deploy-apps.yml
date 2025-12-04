@@ -16,12 +16,12 @@ on:
       environment:
         description: 'Environment to deploy'
         required: true
-        default: 'development'
+        default: 'dev'
         type: choice
         options:
-          - development
-          - staging
-          - production
+          - dev
+          - stg
+          - prod
 
 env:
   MELOS_SDK_PATH: 'auto'
@@ -74,32 +74,31 @@ jobs:
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             ENVIRONMENT="${{ github.event.inputs.environment }}"
           elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            ENVIRONMENT="production"
+            ENVIRONMENT="prod"
           else
-            # dev branch defaults to development
-            ENVIRONMENT="development"
+            ENVIRONMENT="prod"
+          else
+            # dev branch defaults to dev
+            ENVIRONMENT="dev"
           fi
           
           echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
           
           # Set build parameters based on environment
           case $ENVIRONMENT in
-            production)
-              echo "FLAVOR=production" >> $GITHUB_ENV
-              echo "SCHEME=production" >> $GITHUB_ENV
+            prod)
+              echo "FLAVOR=prod" >> $GITHUB_ENV
               ;;
-            staging)
-              echo "FLAVOR=staging" >> $GITHUB_ENV
-              echo "SCHEME=staging" >> $GITHUB_ENV
+            stg)
+              echo "FLAVOR=stg" >> $GITHUB_ENV
               ;;
-            development)
-              echo "FLAVOR=development" >> $GITHUB_ENV
-              echo "SCHEME=development" >> $GITHUB_ENV
+            dev)
+              echo "FLAVOR=dev" >> $GITHUB_ENV
               ;;
           esac
           
           echo "Building for environment: $ENVIRONMENT"
-          echo "Flavor/Scheme: $FLAVOR"
+          echo "Flavor: $FLAVOR"
 
       - name: Prepare upload key
         run: |
@@ -168,24 +167,24 @@ jobs:
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             ENVIRONMENT="${{ github.event.inputs.environment }}"
           elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            ENVIRONMENT="production"
+            ENVIRONMENT="prod"
           else
-            # dev branch defaults to development
-            ENVIRONMENT="development"
+            # dev branch defaults to dev
+            ENVIRONMENT="dev"
           fi
           
           echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
           
           # Set build parameters based on environment
           case $ENVIRONMENT in
-            production)
-              echo "SCHEME=production" >> $GITHUB_ENV
+            prod)
+              echo "SCHEME=prod" >> $GITHUB_ENV
               ;;
-            staging)
-              echo "SCHEME=staging" >> $GITHUB_ENV
+            stg)
+              echo "SCHEME=stg" >> $GITHUB_ENV
               ;;
-            development)
-              echo "SCHEME=development" >> $GITHUB_ENV
+            dev)
+              echo "SCHEME=dev" >> $GITHUB_ENV
               ;;
           esac
           
