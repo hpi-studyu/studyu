@@ -43,6 +43,7 @@ class RoutePaths {
   static const String reportDetails = '/reportDetails';
   static const String performanceDetails = '/performanceDetails';
 }
+
 /// Creates and configures the GoRouter instance for the app
 GoRouter createAppRouter({
   required Map<String, String> queryParameters,

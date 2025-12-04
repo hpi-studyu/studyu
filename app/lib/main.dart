@@ -106,7 +106,8 @@ Future<void> main() async {
 
         // Get the current location from the GoRouter
         final router = GoRouter.of(context);
-        final currentLocation = router.routerDelegate.currentConfiguration.uri.path;
+        final currentLocation =
+            router.routerDelegate.currentConfiguration.uri.path;
         if (currentLocation == RoutePaths.appOutdated) return;
 
         final appConfig = await AppConfig.getAppConfig();
