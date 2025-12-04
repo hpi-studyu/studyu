@@ -2515,6 +2515,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'QR Code'**
   String get qr_code_btn;
+
+  /// No description provided for @general_section.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get general_section;
+
+  /// No description provided for @current_study_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Current study'**
+  String get current_study_section;
+
+  /// No description provided for @participation_options_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Participation options'**
+  String get participation_options_section;
+
+  /// No description provided for @download_as_qr_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Download as QR'**
+  String get download_as_qr_btn;
+
+  /// No description provided for @share_recovery_text_btn.
+  ///
+  /// In en, this message translates to:
+  /// **'Share Recovery Text'**
+  String get share_recovery_text_btn;
 }
 
 class _AppLocalizationsDelegate

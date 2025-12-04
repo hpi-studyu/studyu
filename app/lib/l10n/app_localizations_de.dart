@@ -1319,4 +1319,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get qr_code_btn => 'QR-Code';
+
+  @override
+  String get general_section => 'Allgemein';
+
+  @override
+  String get current_study_section => 'Aktuelle Studie';
+
+  @override
+  String get participation_options_section => 'Teilnahmeoptionen';
+
+  @override
+  String get download_as_qr_btn => 'Als QR herunterladen';
+
+  @override
+  String get share_recovery_text_btn => 'Wiederherstellungstext teilen';
 }

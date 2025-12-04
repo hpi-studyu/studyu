@@ -510,5 +510,10 @@
   "share_btn": "Teilen",
   "copy_btn": "Kopieren",
   "download_btn": "Download",
-  "qr_code_btn": "QR-Code"
+  "qr_code_btn": "QR-Code",
+  "general_section": "Allgemein",
+  "current_study_section": "Aktuelle Studie",
+  "participation_options_section": "Teilnahmeoptionen",
+  "download_as_qr_btn": "Als QR herunterladen",
+  "share_recovery_text_btn": "Wiederherstellungstext teilen"
 }

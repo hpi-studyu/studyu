@@ -65,7 +65,7 @@ class _SettingsState extends State<Settings> {
             children: <Widget>[
               // General section header
               Text(
-                'General',
+                AppLocalizations.of(context)!.general_section,
                 style: theme.textTheme.titleMedium!.copyWith(
                   color: theme.primaryColor,
                   fontWeight: FontWeight.w600,
@@ -138,7 +138,7 @@ class _SettingsState extends State<Settings> {
 
               // Current study section header
               Text(
-                'Current study',
+                AppLocalizations.of(context)!.current_study_section,
                 style: theme.textTheme.titleMedium!.copyWith(
                   color: theme.primaryColor,
                   fontWeight: FontWeight.w600,
@@ -165,7 +165,7 @@ class _SettingsState extends State<Settings> {
               //wrap buttons to fill the width for mobile phones but for web fixed width
               Text(
                 textAlign: TextAlign.start,
-                'Participation options',
+                AppLocalizations.of(context)!.participation_options_section,
                 style: theme.textTheme.titleMedium!.copyWith(
                   color: theme.primaryColor,
                   fontWeight: FontWeight.w600,
@@ -338,7 +338,7 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
                             ),
                             icon: const Icon(Icons.qr_code),
                             onPressed: _downloadQr,
-                            label: Text("Download as QR"),
+                            label: Text(AppLocalizations.of(context)!.download_as_qr_btn),
                           ),
                           const SizedBox(width: 16),
                           OutlinedButton.icon(
@@ -346,7 +346,7 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
                               _shareText();
                             },
                             icon: const Icon(Icons.share),
-                            label: Text("Share Recovery Text"),
+                            label: Text(AppLocalizations.of(context)!.share_recovery_text_btn),
                           ),
                         ],
                       ),

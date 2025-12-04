@@ -1303,4 +1303,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get qr_code_btn => 'QR Code';
+
+  @override
+  String get general_section => 'General';
+
+  @override
+  String get current_study_section => 'Current study';
+
+  @override
+  String get participation_options_section => 'Participation options';
+
+  @override
+  String get download_as_qr_btn => 'Download as QR';
+
+  @override
+  String get share_recovery_text_btn => 'Share Recovery Text';
 }

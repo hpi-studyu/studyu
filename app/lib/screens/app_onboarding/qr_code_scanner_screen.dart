@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/theme.dart';
 import 'package:studyu_app/util/recovery_qr_utils.dart';
 
 class QrCodeScannerScreen extends StatefulWidget {
