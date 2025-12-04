@@ -77,11 +77,6 @@ abstract class QuestionFormData implements IFormData {
           question as PainQuestion,
           eligibilityCriteria,
         ),
-    SurveyQuestionType.nutrition: (question, eligibilityCriteria) =>
-        NutritionQuestionFormData.fromDomainModel(
-          question as NutritionQuestion,
-          eligibilityCriteria,
-        ),
   };
 
   QuestionFormData({
@@ -828,77 +823,5 @@ class PainQuestionFormData extends QuestionFormData {
     final question = toQuestion() as PainQuestion;
     final value = kResponseOptions[responseOption];
     return question.constructAnswer(value!);
-  }
-}
-
-class NutritionQuestionFormData extends QuestionFormData {
-  NutritionQuestionFormData({
-    required super.questionId,
-    required super.questionText,
-    required super.questionType,
-    super.questionInfoText,
-    super.conditional,
-  });
-
-  static Map<String, DailyRecall> get kResponseOptions => {
-    tr.form_field_response_nutrition: DailyRecall(
-      id: const Uuid().v4(),
-      date: DateTime.now(),
-      recallMode: RecallMode.realtimeRecord,
-      meals: [],
-    ),
-  };
-
-  @override
-  List<String> get responseOptions => kResponseOptions.keys.toList();
-
-  factory NutritionQuestionFormData.fromDomainModel(
-    NutritionQuestion question,
-    List<EligibilityCriterion> eligibilityCriteria,
-  ) {
-    final data = NutritionQuestionFormData(
-      questionId: question.id,
-      questionType: SurveyQuestionType.nutrition,
-      questionText: question.prompt ?? '',
-      questionInfoText: question.rationale ?? '',
-      conditional: question.conditional,
-    );
-    data.setResponseOptionsValidityFrom(eligibilityCriteria);
-    return data;
-  }
-
-  @override
-  Question toQuestion() {
-    final question = NutritionQuestion();
-    question.id = questionId;
-    question.prompt = questionText;
-    question.rationale = questionInfoText;
-    question.conditional = conditional == null
-        ? null
-        : QuestionConditional<DailyRecall>.withCondition(
-            conditional!.condition,
-            defaultValue: conditional?.defaultValue as DailyRecall?,
-          );
-    return question;
-  }
-
-  @override
-  NutritionQuestionFormData copy() {
-    final data = NutritionQuestionFormData(
-      questionId: const Uuid().v4(), // always regenerate id
-      questionType: questionType,
-      questionText: questionText.withDuplicateLabel(),
-      questionInfoText: questionInfoText,
-      conditional: conditional?.deepCopy(),
-    );
-    data.responseOptionsValidity = responseOptionsValidity;
-    return data;
-  }
-
-  @override
-  Answer constructAnswerFor(dynamic responseOption) {
-    final question = toQuestion() as NutritionQuestion;
-    final value = kResponseOptions[responseOption]!;
-    return question.constructAnswer(value);
   }
 }

@@ -23,20 +23,8 @@ class Answer<V> {
   factory Answer.parseJson(Map<String, dynamic> json) =>
       _$AnswerFromJson(json)..response = json[keyResponse] as V;
 
-  Map<String, dynamic> toJson() {
-    final dynamic serializedResponse =
-        response is Map ||
-            response is List ||
-            response is String ||
-            response is num ||
-            response is bool
-        ? response
-        : (response as dynamic).toJson();
-
-    return mergeMaps<String, dynamic>(_$AnswerToJson(this), {
-      keyResponse: serializedResponse,
-    });
-  }
+  Map<String, dynamic> toJson() =>
+      mergeMaps<String, dynamic>(_$AnswerToJson(this), {keyResponse: response});
 
   static Answer fromJson(Map<String, dynamic> data) {
     final dynamic value = data[keyResponse];
@@ -47,8 +35,6 @@ class Answer<V> {
         return Answer<num>.parseJson(data);
       case String():
         return Answer<String>.parseJson(data);
-      case Map():
-        return Answer<Map<String, dynamic>>.parseJson(data);
       default:
         // todo Why does value has a type of List<dynamic> instead of List<String>?
         if (value is List) {

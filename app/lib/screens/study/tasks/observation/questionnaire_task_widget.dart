@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/misc.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
@@ -31,61 +28,11 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
   DateTime? _lastClickTime;
   bool _isLoading = false;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  QuestionnaireState? _initialState;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _loadExistingResult();
-  }
-
-  void _loadExistingResult() {
-    if (_initialState != null) return;
-
-    final subject = context.read<AppState>().activeSubject;
-    if (subject == null) return;
-
-    final existingProgress = subject.progress
-        .where(
-          (p) =>
-              p.taskId == widget.task.id &&
-              p.result.periodId == widget.completionPeriod.id,
-        )
-        .toList();
-
-    if (existingProgress.isNotEmpty) {
-      existingProgress.sort((a, b) => b.completedAt!.compareTo(a.completedAt!));
-
-      final currentStudyDay = subject.getDayOfStudyFor(DateTime.now());
-
-      for (final progress in existingProgress) {
-        final progressStudyDay = subject.getDayOfStudyFor(
-          progress.completedAt!,
-        );
-        if (progressStudyDay == currentStudyDay) {
-          final resultData = progress.result.result;
-          if (resultData is QuestionnaireState) {
-            setState(() {
-              _initialState = resultData;
-            });
-          } else if (resultData is List) {
-            setState(() {
-              _initialState = QuestionnaireState.fromJson(
-                List<Map<String, dynamic>>.from(resultData),
-              );
-            });
-          }
-          break;
-        }
-      }
-    }
-  }
 
   Future<void> _addQuestionnaireResult<T>(
     T response,
-    BuildContext context, {
-    bool closeScreen = true,
-  }) async {
+    BuildContext context,
+  ) async {
     await handleTaskCompletion(context, (StudySubject? subject) async {
       try {
         await subject!.addResult<T>(
@@ -104,7 +51,7 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
         rethrow;
       }
     });
-    if (!context.mounted || !closeScreen) return;
+    if (!context.mounted) return;
     Navigator.pop(context, true);
   }
 
@@ -126,20 +73,10 @@ class _QuestionnaireTaskWidgetState extends State<QuestionnaireTaskWidget> {
               taskId: widget.task.id,
               header: widget.task.header,
               footer: widget.task.footer,
-              initialState: _initialState,
               onComplete: (qs) => setState(() {
                 print('Questionnaire completed with response: $qs');
                 response = qs;
               }),
-              onChange: (qs) {
-                if (qs != null) {
-                  _addQuestionnaireResult<QuestionnaireState>(
-                    qs,
-                    context,
-                    closeScreen: false,
-                  );
-                }
-              },
             ),
           ),
         ),

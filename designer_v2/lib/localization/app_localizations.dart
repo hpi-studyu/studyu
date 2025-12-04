@@ -935,7 +935,7 @@ abstract class AppLocalizations {
   /// No description provided for @question_type_pain.
   ///
   /// In en, this message translates to:
-  /// **'Pain Check'**
+  /// **'Pain Tracker'**
   String get question_type_pain;
 
   /// No description provided for @question_type_pain_description.
@@ -985,12 +985,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yes/no'**
   String get question_type_bool;
-
-  /// No description provided for @question_type_nutrition.
-  ///
-  /// In en, this message translates to:
-  /// **'Nutrition'**
-  String get question_type_nutrition;
 
   /// No description provided for @question_type_scale.
   ///
@@ -1045,12 +1039,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Audio'**
   String get form_field_response_audio;
-
-  /// No description provided for @form_field_response_nutrition.
-  ///
-  /// In en, this message translates to:
-  /// **'Nutrition'**
-  String get form_field_response_nutrition;
 
   /// No description provided for @form_field_response_audio_max_duration_label.
   ///

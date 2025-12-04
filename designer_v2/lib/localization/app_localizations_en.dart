@@ -458,7 +458,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get question_type_free_text => 'Free text';
 
   @override
-  String get question_type_pain => 'Pain Check';
+  String get question_type_pain => 'Pain Tracker';
 
   @override
   String get question_type_pain_description =>
@@ -488,9 +488,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get question_type_bool => 'Yes/no';
 
   @override
-  String get question_type_nutrition => 'Nutrition';
-
-  @override
   String get question_type_scale => 'Scale';
 
   @override
@@ -516,9 +513,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get form_field_response_audio => 'Audio';
-
-  @override
-  String get form_field_response_nutrition => 'Nutrition';
 
   @override
   String get form_field_response_audio_max_duration_label =>
