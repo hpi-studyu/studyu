@@ -163,30 +163,30 @@ jobs:
       - name: Determine build environment and scheme
         id: build-env
         run: |
-          # Determine environment based on branch or manual input
+          # Determine environment based on branch or manual input (No change needed here)
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             ENVIRONMENT="${{ github.event.inputs.environment }}"
           elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
             ENVIRONMENT="prod"
           else
-            # dev branch defaults to dev
             ENVIRONMENT="dev"
           fi
           
-          echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
-          
-          # Set build parameters based on environment
+          # Set SCHEME locally first
           case $ENVIRONMENT in
             prod)
-              echo "SCHEME=prod" >> $GITHUB_ENV
+              SCHEME="prod"
               ;;
             stg)
-              echo "SCHEME=stg" >> $GITHUB_ENV
+              SCHEME="stg"
               ;;
             dev)
-              echo "SCHEME=dev" >> $GITHUB_ENV
+              SCHEME="dev"
               ;;
           esac
+          
+          echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
+          echo "SCHEME=$SCHEME" >> $GITHUB_ENV 
           
           echo "Building for environment: $ENVIRONMENT"
           echo "Scheme: $SCHEME"
