@@ -80,7 +80,10 @@ class _NutritionFormViewState extends ConsumerState<NutritionFormView> {
           ],
         ),
         const SizedBox(height: 28.0),
-        ScheduleControls(formViewModel: widget.formViewModel),
+        ScheduleControls(
+          formViewModel: widget.formViewModel,
+          isReadonly: widget.formViewModel.isReadonly,
+        ),
       ],
     );
   }
