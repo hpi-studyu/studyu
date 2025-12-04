@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
@@ -42,7 +43,6 @@ class RoutePaths {
   static const String reportDetails = '/reportDetails';
   static const String performanceDetails = '/performanceDetails';
 }
-
 /// Creates and configures the GoRouter instance for the app
 GoRouter createAppRouter({
   required Map<String, String> queryParameters,
@@ -52,6 +52,13 @@ GoRouter createAppRouter({
   return GoRouter(
     navigatorKey: navigatorKey,
     initialLocation: initialLocation,
+    redirect: (context, state) {
+      // Remove splash screen when navigating away from loading screen
+      if (state.uri.path != RoutePaths.loading) {
+        FlutterNativeSplash.remove();
+      }
+      return null; // No redirect, just proceed with the requested route
+    },
     routes: [
       GoRoute(
         path: RoutePaths.loading,

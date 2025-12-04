@@ -28,7 +28,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    initStudy();
+    // Delay navigation until after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initStudy();
+    });
   }
 
   Future<void> initStudy() async {
