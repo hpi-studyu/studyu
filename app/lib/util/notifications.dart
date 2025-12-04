@@ -10,8 +10,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/main.dart';
-import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
-import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_core/core.dart';
 
 class NotificationValidators {
@@ -141,13 +139,8 @@ class StudyNotifications {
               CupertinoDialogAction(
                 isDefaultAction: true,
                 onPressed: () async {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  await Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) =>
-                          const DashboardScreen(),
-                    ),
-                  );
+                  context.pop();
+                  await context.push(RoutePaths.dashboard);
                 },
                 child: const Text('Ok'),
               ),
@@ -214,8 +207,9 @@ class StudyNotifications {
       StudyUTimeOfDay.now(),
     );
     if (!completed && isInsidePeriod) {
-      await navigatorKey.currentState!.push(
-        MaterialPageRoute(builder: (_) => TaskScreen(taskInstance: taskToRun)),
+      await navigatorKey.currentContext!.push(
+        RoutePaths.task,
+        extra: taskToRun,
       );
       navigatorKey.currentContext!.go(RoutePaths.loading);
     } else {
@@ -225,8 +219,9 @@ class StudyNotifications {
           ? AppLocalizations.of(context)!.task_cannot_be_completed
           : AppLocalizations.of(context)!.task_outside_period;
 
-      navigatorKey.currentState!.push(
-        MaterialPageRoute(builder: (_) => DashboardScreen(error: errorMessage)),
+      navigatorKey.currentContext!.go(
+        RoutePaths.dashboard,
+        extra: errorMessage,
       );
     }
   }

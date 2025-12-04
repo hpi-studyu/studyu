@@ -54,9 +54,9 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
 
   Future<void> navigateToEligibilityCheck(BuildContext context) async {
     final study = context.read<AppState>().selectedStudy;
-    final result = await Navigator.push<EligibilityResult>(
-      context,
-      EligibilityScreen.routeFor(study: study),
+    final result = await context.push<EligibilityResult>(
+      RoutePaths.eligibilityCheck,
+      extra: study,
     );
     if (result == null) return;
 
@@ -64,7 +64,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
     if (result.eligible) {
       navigateToJourney(context);
     } else {
-      Navigator.pop(context);
+      context.pop();
     }
   }
 

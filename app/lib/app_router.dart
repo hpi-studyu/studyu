@@ -11,13 +11,18 @@ import 'package:studyu_app/screens/study/dashboard/contact_tab/contact_screen.da
 import 'package:studyu_app/screens/study/dashboard/contact_tab/faq.dart';
 import 'package:studyu_app/screens/study/dashboard/dashboard.dart';
 import 'package:studyu_app/screens/study/dashboard/settings.dart';
+import 'package:studyu_app/screens/study/multimodal/capture_picture_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/consent.dart';
+import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
 import 'package:studyu_app/screens/study/onboarding/intervention_selection.dart';
 import 'package:studyu_app/screens/study/onboarding/journey_overview.dart';
 import 'package:studyu_app/screens/study/onboarding/kickoff.dart';
 import 'package:studyu_app/screens/study/onboarding/study_overview.dart';
 import 'package:studyu_app/screens/study/onboarding/study_selection.dart';
+import 'package:studyu_app/screens/study/report/report_details.dart';
 import 'package:studyu_app/screens/study/report/report_history.dart';
+import 'package:studyu_app/screens/study/tasks/task_screen.dart';
+import 'package:studyu_core/core.dart';
 
 /// Route path constants
 class RoutePaths {
@@ -42,6 +47,9 @@ class RoutePaths {
   static const String reportHistory = '/reportHistory';
   static const String reportDetails = '/reportDetails';
   static const String performanceDetails = '/performanceDetails';
+  static const String task = '/task';
+  static const String eligibilityCheck = '/eligibilityCheck';
+  static const String capturePicture = '/capturePicture';
 }
 
 /// Creates and configures the GoRouter instance for the app
@@ -88,7 +96,10 @@ GoRouter createAppRouter({
       GoRoute(
         path: RoutePaths.dashboard,
         name: 'dashboard',
-        builder: (context, state) => const DashboardScreen(),
+        builder: (context, state) {
+          final error = state.extra as String?;
+          return DashboardScreen(error: error);
+        },
       ),
       GoRoute(
         path: RoutePaths.welcome,
@@ -154,6 +165,41 @@ GoRouter createAppRouter({
         path: RoutePaths.reportHistory,
         name: 'reportHistory',
         builder: (context, state) => const ReportHistoryScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.task,
+        name: 'task',
+        builder: (context, state) {
+          final taskInstance = state.extra! as TaskInstance;
+          return TaskScreen(taskInstance: taskInstance);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.eligibilityCheck,
+        name: 'eligibilityCheck',
+        builder: (context, state) {
+          final study = state.extra as Study?;
+          return EligibilityScreen(study: study);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.reportDetails,
+        name: 'reportDetails',
+        builder: (context, state) {
+          final subject = state.extra! as StudySubject;
+          return ReportDetailsScreen(subject);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.capturePicture,
+        name: 'capturePicture',
+        builder: (context, state) {
+          final params = state.extra! as Map<String, String>;
+          return CapturePictureScreen(
+            studyId: params['studyId']!,
+            userId: params['userId']!,
+          );
+        },
       ),
     ],
   );

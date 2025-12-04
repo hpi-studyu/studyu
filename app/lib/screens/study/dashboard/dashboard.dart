@@ -12,7 +12,6 @@ import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_overview.dart';
-import 'package:studyu_app/screens/study/report/report_details.dart';
 import 'package:studyu_app/util/debug_screen.dart';
 import 'package:studyu_core/core.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -118,10 +117,8 @@ class _DashboardScreenState extends State<DashboardScreen>
           IconButton(
             tooltip: AppLocalizations.of(context)!.current_report,
             icon: Icon(MdiIcons.chartBar),
-            onPressed: () => Navigator.push(
-              context,
-              ReportDetailsScreen.routeFor(subject: subject!),
-            ),
+            onPressed: () =>
+                context.push(RoutePaths.reportDetails, extra: subject),
           ),
           PopupMenuButton<OverflowMenuItem>(
             onSelected: (value) {
@@ -327,7 +324,7 @@ class _DashboardScreenState extends State<DashboardScreen>
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => context.pop(),
               child: Text(AppLocalizations.of(context)!.ok),
             ),
           ],

@@ -8,7 +8,6 @@ import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/app_onboarding/preview.dart'
     as study_preview;
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
-import 'package:studyu_app/screens/study/tasks/task_screen.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
@@ -141,9 +140,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       if (preview.selectedRoute == '/eligibilityCheck') {
         if (!mounted) return;
         // if we remove the await, we can push multiple times. warning: do not run in while(true)
-        await Navigator.push<EligibilityResult>(
-          context,
-          EligibilityScreen.routeFor(study: preview.study),
+        await context.push<EligibilityResult>(
+          RoutePaths.eligibilityCheck,
+          extra: preview.study,
         );
         // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
         iFrameHelper.postRouteFinished();
@@ -208,13 +207,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
           ),
         ];
         if (!mounted) return;
-        await Navigator.push<bool>(
-          context,
-          TaskScreen.routeFor(
-            taskInstance: TaskInstance(
-              tasks.first,
-              tasks.first.schedule.completionPeriods.first.id,
-            ),
+        await context.push<bool>(
+          RoutePaths.task,
+          extra: TaskInstance(
+            tasks.first,
+            tasks.first.schedule.completionPeriods.first.id,
           ),
         );
         iFrameHelper.postRouteFinished();

@@ -187,7 +187,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
         nextLabel: AppLocalizations.of(context)!.accept,
         nextIcon: const Icon(Icons.check),
         onNext: boxLogic.every((element) => element) || kDebugMode
-            ? () => Navigator.pop(context, true)
+            ? () => context.pop(true)
             : null,
         progress: const OnboardingProgress(stage: 2, progress: 2.5),
       ),
@@ -241,7 +241,7 @@ class ConsentCard extends StatelessWidget {
                   Expanded(child: Text(consent!.title!)),
                   IconButton(
                     icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => context.pop(),
                   ),
                 ],
               ),

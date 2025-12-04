@@ -35,10 +35,7 @@ Future<void> showAppOutdatedDialog(BuildContext context) async {
       ),
       content: Text(AppLocalizations.of(context)!.study_selection_unsupported),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text("OK"),
-        ),
+        TextButton(onPressed: () => context.pop(), child: const Text("OK")),
       ],
     ),
   );
@@ -51,10 +48,7 @@ Future<void> showStudyClosedDialog(BuildContext context) async {
       title: Text(AppLocalizations.of(context)!.study_selection_closed_title),
       content: Text(AppLocalizations.of(context)!.study_selection_closed),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text("OK"),
-        ),
+        TextButton(onPressed: () => context.pop(), child: const Text("OK")),
       ],
     ),
   );
@@ -211,10 +205,7 @@ class _StudySelectionScreenState extends State<StudySelectionScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomOnboardingNavigation(
-        hideNext: true,
-        onBack: context.canPop() ? () => context.pop() : null,
-      ),
+      bottomNavigationBar: const BottomOnboardingNavigation(hideNext: true),
     );
   }
 }
@@ -284,20 +275,20 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
             } on ArgumentError catch (error) {
               debugPrint('Study selection from invite failed: $error');
               if (!context.mounted) return;
-              Navigator.pop(context);
+              context.pop();
               await showAppOutdatedDialog(context);
               return;
             }
 
             if (study.isClosed) {
               if (!context.mounted) return;
-              Navigator.pop(context);
+              context.pop();
               await showStudyClosedDialog(context);
               return;
             }
 
             if (!context.mounted) return;
-            Navigator.pop(context);
+            context.pop();
 
             // Get preselected_intervention_ids from study_invite table
             final inviteResult = await Supabase.instance.client
