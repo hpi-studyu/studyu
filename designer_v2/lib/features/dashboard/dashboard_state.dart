@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_evaluator.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -13,9 +15,11 @@ class DashboardState extends Equatable {
   const DashboardState({
     this.studies = const AsyncValue.loading(),
     this.studiesFilter = defaultFilter,
+    this.activeFilter,
     this.query = '',
     this.sortByColumn = StudiesTableColumn.title,
     this.sortAscending = true,
+    this.savedFilters = const [],
     required this.currentUser,
     required this.searchController,
   });
@@ -24,9 +28,16 @@ class DashboardState extends Equatable {
   /// Wrapped in an [AsyncValue] to represent loading / error states
   final AsyncValue<List<Study>> studies;
 
-  /// Currently selected filter to be applied to the list of studies
-  /// in order to determine the [displayedStudies]
-  final StudiesFilter studiesFilter;
+  /// Currently selected filter preset (e.g. Owned, Shared, Public)
+  /// Used for UI highlighting. If null, a custom filter is active.
+  final StudiesFilter? studiesFilter;
+
+  /// The actual filter logic to be applied.
+  /// If null, it falls back to the [studiesFilter] logic.
+  final FilterGroup? activeFilter;
+
+  /// List of saved custom filters
+  final List<SavedFilter> savedFilters;
 
   /// Currently selected sort column to be applied to the list of studies
   /// in order to determine the [displayedStudies]
@@ -55,12 +66,10 @@ class DashboardState extends Equatable {
   ) {
     return studies.when(
       data: (studies) {
-        List<Study> updatedStudies = studiesFilter
-            .apply(studies: studies, user: currentUser)
-            .toList();
+        List<Study> updatedStudies = filter(studiesToFilter: studies);
         updatedStudies = sort(
           pinnedStudies: pinnedStudies,
-          studiesToSort: filter(studiesToFilter: updatedStudies),
+          studiesToSort: updatedStudies,
         );
         return AsyncValue.data(updatedStudies);
       },
@@ -70,13 +79,25 @@ class DashboardState extends Equatable {
   }
 
   List<Study> filter({List<Study>? studiesToFilter}) {
-    final filteredStudies = studiesToFilter ?? studies.value!;
+    final studiesList = studiesToFilter ?? studies.value!;
+
+    // 1. Apply Advanced Filter (or fallback to preset logic)
+    // If both are null, default to ALL (empty group)
+    final filterGroup =
+        activeFilter ??
+        studiesFilter?.toFilterGroup(currentUser) ??
+        FilterGroup(logic: FilterLogic.and);
+    final filteredByLogic = studiesList.where(
+      (s) => FilterEvaluator.evaluate(filterGroup, s, currentUser),
+    );
+
+    // 2. Apply Search Query
     if (query.isNotEmpty) {
-      return filteredStudies
+      return filteredByLogic
           .where((s) => s.title!.toLowerCase().contains(query))
           .toList();
     }
-    return filteredStudies;
+    return filteredByLogic.toList();
   }
 
   List<Study> sort({
@@ -185,7 +206,9 @@ class DashboardState extends Equatable {
 
   DashboardState copyWith({
     AsyncValue<List<Study>> Function()? studies,
-    StudiesFilter Function()? studiesFilter,
+    StudiesFilter? Function()? studiesFilter,
+    FilterGroup? Function()? activeFilter,
+    List<SavedFilter> Function()? savedFilters,
     User Function()? currentUser,
     String? query,
     StudiesTableColumn? sortByColumn,
@@ -197,6 +220,8 @@ class DashboardState extends Equatable {
       studiesFilter: studiesFilter != null
           ? studiesFilter()
           : this.studiesFilter,
+      activeFilter: activeFilter != null ? activeFilter() : this.activeFilter,
+      savedFilters: savedFilters != null ? savedFilters() : this.savedFilters,
       currentUser: currentUser != null ? currentUser() : this.currentUser,
       query: query ?? this.query,
       sortByColumn: sortByColumn ?? this.sortByColumn,
@@ -208,7 +233,15 @@ class DashboardState extends Equatable {
   // - Equatable
 
   @override
-  List<Object?> get props => [studies, studiesFilter];
+  List<Object?> get props => [
+    studies,
+    studiesFilter,
+    activeFilter,
+    savedFilters,
+    query,
+    sortByColumn,
+    sortAscending,
+  ];
 }
 
 extension DashboardStateSafeViewProps on DashboardState {
@@ -222,6 +255,8 @@ extension DashboardStateSafeViewProps on DashboardState {
         return tr.navlink_shared_studies;
       case StudiesFilter.all:
         return "[StudiesFilter.all]"; // not available in UI
+      case null:
+        return "Advanced Filter"; // TODO: Localization
     }
   }
 }

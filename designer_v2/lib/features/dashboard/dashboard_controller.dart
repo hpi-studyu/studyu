@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/common_views/search.dart';
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/features/study/study_actions.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -79,7 +80,35 @@ class DashboardController extends _$DashboardController
   void setStudiesFilter(StudiesFilter? filter) {
     state = state.copyWith(
       studiesFilter: () => filter ?? DashboardState.defaultFilter,
+      activeFilter: () => null, // Reset custom filter when preset is selected
     );
+  }
+
+  void updateFilter(FilterGroup filter) {
+    state = state.copyWith(
+      activeFilter: () => filter,
+      studiesFilter: () =>
+          null, // Clear preset when custom filter is active (optional, or keep it if it matches?)
+      // For now, let's clear the preset highlight if we go custom
+    );
+  }
+
+  void saveFilter(SavedFilter filter) {
+    final currentFilters = List<SavedFilter>.from(state.savedFilters);
+    // Check if ID exists, update if so
+    final index = currentFilters.indexWhere((f) => f.id == filter.id);
+    if (index != -1) {
+      currentFilters[index] = filter;
+    } else {
+      currentFilters.add(filter);
+    }
+    state = state.copyWith(savedFilters: () => currentFilters);
+  }
+
+  void deleteFilter(String id) {
+    final currentFilters = List<SavedFilter>.from(state.savedFilters);
+    currentFilters.removeWhere((f) => f.id == id);
+    state = state.copyWith(savedFilters: () => currentFilters);
   }
 
   void onSelectStudy(Study study) {

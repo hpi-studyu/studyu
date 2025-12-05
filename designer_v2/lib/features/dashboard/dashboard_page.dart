@@ -9,8 +9,11 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart'
 import 'package:studyu_designer_v2/features/dashboard/dashboard_scaffold.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_builder.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
@@ -24,6 +27,8 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  bool _showAdvancedFilters = false;
+
   @override
   void initState() {
     super.initState();
@@ -47,6 +52,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final state = ref.watch(dashboardControllerProvider);
 
     return DashboardScaffold(
+      endDrawer: const Drawer(width: 400, child: FilterBuilder()),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -68,19 +74,74 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               Expanded(
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: Container(
-                    constraints: const BoxConstraints(maxWidth: 400),
-                    child: Search(
-                      searchController: state.searchController,
-                      hintText: tr.search,
-                      onQueryChanged: (query) =>
-                          controller.filterStudies(query),
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Builder(
+                        builder: (context) {
+                          return OutlinedButton.icon(
+                            icon: const Icon(Icons.filter_list),
+                            label: Text("Filter".hardcoded),
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: _showAdvancedFilters
+                                  ? Theme.of(
+                                      context,
+                                    ).colorScheme.primaryContainer
+                                  : null,
+                              foregroundColor: _showAdvancedFilters
+                                  ? Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimaryContainer
+                                  : null,
+                            ),
+                            onPressed: () {
+                              Scaffold.of(context).openEndDrawer();
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(width: 16),
+                      Container(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: Search(
+                          searchController: state.searchController,
+                          hintText: tr.search,
+                          onQueryChanged: (query) =>
+                              controller.filterStudies(query),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ],
           ),
+          if (state.activeFilter != null &&
+              state.activeFilter!.children.isNotEmpty) ...[
+            const SizedBox(height: 16.0),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: state.activeFilter!.children.map((child) {
+                if (child is FilterCondition) {
+                  return Chip(
+                    label: Text(
+                      "${child.property.toString().split('.').last}: ${child.value}",
+                    ),
+                    onDeleted: () {
+                      final newGroup = FilterGroup(
+                        logic: state.activeFilter!.logic,
+                        children: List.from(state.activeFilter!.children)
+                          ..remove(child),
+                      );
+                      controller.updateFilter(newGroup);
+                    },
+                  );
+                }
+                return const SizedBox.shrink();
+              }).toList(),
+            ),
+          ],
           const SizedBox(height: 24.0), // spacing between body elements
           FutureBuilder<StudyUUser>(
             future: ref.read(userRepositoryProvider).fetchUser(),
