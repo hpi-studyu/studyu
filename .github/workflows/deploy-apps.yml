@@ -163,7 +163,7 @@ jobs:
       - name: Determine build environment and scheme
         id: build-env
         run: |
-          # Determine environment based on branch or manual input (No change needed here)
+          # Determine environment based on branch or manual input
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             ENVIRONMENT="${{ github.event.inputs.environment }}"
           elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
