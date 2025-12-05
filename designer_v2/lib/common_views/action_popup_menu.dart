@@ -14,15 +14,18 @@ class ActionPopUpMenuButton extends StatelessWidget {
     this.splashRadius = 24.0,
     this.triggerIconSize = 18.0,
     this.position = PopupMenuPosition.under,
+    this.triggerIcon,
     this.triggerIconColor,
     this.triggerIconColorHover,
     this.disableSplashEffect = false,
     this.hideOnEmpty = true,
     this.enabled = true,
+    this.triggerBuilder,
     super.key,
   });
 
   final List<ModelAction> actions;
+  final IconData? triggerIcon;
   final Color? triggerIconColor;
   final Color? triggerIconColorHover;
   final double triggerIconSize;
@@ -33,6 +36,7 @@ class ActionPopUpMenuButton extends StatelessWidget {
   final double? splashRadius;
   final bool enabled;
   final PopupMenuPosition position;
+  final Widget? triggerBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -68,17 +72,21 @@ class ActionPopUpMenuButton extends StatelessWidget {
         triggerIconColor ?? theme.iconTheme.color!.withValues(alpha: 0.7);
     final iconColorHover =
         triggerIconColorHover ?? theme.iconTheme.color!.withValues(alpha: 0.7);
-    final triggerIcon = (orientation == Axis.vertical)
-        ? Icons.more_vert_rounded
-        : Icons.more_horiz_rounded;
+    final triggerIcon =
+        this.triggerIcon ??
+        ((orientation == Axis.vertical)
+            ? Icons.more_vert_rounded
+            : Icons.more_horiz_rounded);
 
     return PopupMenuButton(
       key: ValueKey(actions),
-      icon: Icon(
-        triggerIcon,
-        size: triggerIconSize,
-        color: isHovered ? iconColorHover : iconColorDefault,
-      ),
+      icon:
+          triggerBuilder ??
+          Icon(
+            triggerIcon,
+            size: triggerIconSize,
+            color: isHovered ? iconColorHover : iconColorDefault,
+          ),
       enabled: enabled,
       elevation: elevation,
       splashRadius: splashRadius,
@@ -92,34 +100,65 @@ class ActionPopUpMenuButton extends StatelessWidget {
             popupList.add(const PopupMenuDivider());
             continue;
           }
+          if (action.isHeader) {
+            popupList.add(
+              PopupMenuItem(
+                enabled: false,
+                height: 32, // Condensed header
+                child: Text(
+                  action.label,
+                  style: textTheme.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12, // Slightly smaller for headers if needed
+                  ),
+                ),
+              ),
+            );
+            continue;
+          }
           popupList.add(
             PopupMenuItem(
               value: action,
-              child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
-                horizontalTitleGap: 4.0,
-                leading: (action.icon == null)
-                    ? const SizedBox.shrink()
-                    : Icon(
-                        action.icon,
-                        size: theme.iconTheme.size ?? 14.0,
-                        color: action.isDestructive
-                            ? Colors.red
-                            : iconColorDefault,
+              child: (action.tooltip != null)
+                  ? Tooltip(
+                      message: action.tooltip,
+                      child: _buildListTile(
+                        theme,
+                        action,
+                        iconColorDefault,
+                        textTheme,
                       ),
-                title: action.isDestructive
-                    ? Text(
-                        action.label,
-                        style: textTheme.copyWith(color: Colors.red),
-                      )
-                    : Text(action.label, style: textTheme),
-              ),
+                    )
+                  : _buildListTile(theme, action, iconColorDefault, textTheme),
             ),
           );
           continue;
         }
         return popupList;
       },
+    );
+  }
+
+  Widget _buildListTile(
+    ThemeData theme,
+    ModelAction action,
+    Color iconColorDefault,
+    TextStyle textTheme,
+  ) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+      horizontalTitleGap: 4.0,
+      leading: (action.icon == null)
+          ? const SizedBox.shrink()
+          : Icon(
+              action.icon,
+              size: theme.iconTheme.size ?? 14.0,
+              color: action.isDestructive ? Colors.red : iconColorDefault,
+            ),
+      title: action.isDestructive
+          ? Text(action.label, style: textTheme.copyWith(color: Colors.red))
+          : Text(action.label, style: textTheme),
     );
   }
 }

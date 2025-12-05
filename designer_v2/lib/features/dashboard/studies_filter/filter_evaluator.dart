@@ -91,23 +91,27 @@ class FilterEvaluator {
         );
       case FilterOperator.greaterThan:
         if (actual is num && target is num) return actual > target;
-        if (actual is DateTime && target is DateTime)
+        if (actual is DateTime && target is DateTime) {
           return actual.isAfter(target);
+        }
         return false;
       case FilterOperator.lessThan:
         if (actual is num && target is num) return actual < target;
-        if (actual is DateTime && target is DateTime)
+        if (actual is DateTime && target is DateTime) {
           return actual.isBefore(target);
+        }
         return false;
       case FilterOperator.greaterThanOrEqual:
         if (actual is num && target is num) return actual >= target;
-        if (actual is DateTime && target is DateTime)
+        if (actual is DateTime && target is DateTime) {
           return actual.isAfter(target) || actual.isAtSameMomentAs(target);
+        }
         return false;
       case FilterOperator.lessThanOrEqual:
         if (actual is num && target is num) return actual <= target;
-        if (actual is DateTime && target is DateTime)
+        if (actual is DateTime && target is DateTime) {
           return actual.isBefore(target) || actual.isAtSameMomentAs(target);
+        }
         return false;
       case FilterOperator.startsWith:
         return actual.toString().toLowerCase().startsWith(
@@ -126,12 +130,14 @@ class FilterEvaluator {
         if (actual is List) return actual.isNotEmpty;
         return true;
       case FilterOperator.after:
-        if (actual is DateTime && target is DateTime)
+        if (actual is DateTime && target is DateTime) {
           return actual.isAfter(target);
+        }
         return false;
       case FilterOperator.before:
-        if (actual is DateTime && target is DateTime)
+        if (actual is DateTime && target is DateTime) {
           return actual.isBefore(target);
+        }
         return false;
       case FilterOperator.inLast:
         if (actual is DateTime && target is int) {

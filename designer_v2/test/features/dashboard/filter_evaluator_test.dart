@@ -1,11 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_evaluator.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
-import 'package:mockito/mockito.dart';
 
 // Mock User class
+// ignore: avoid_implementing_value_types
 class MockUser extends Mock implements supabase.User {
   @override
   final String id;
@@ -67,7 +68,6 @@ void main() {
 
     test('evaluates AND logic', () {
       final group = FilterGroup(
-        logic: FilterLogic.and,
         children: [
           FilterCondition(
             property: StudyProperty.status,
@@ -113,7 +113,6 @@ void main() {
         logic: FilterLogic.or,
         children: [
           FilterGroup(
-            logic: FilterLogic.and,
             children: [
               FilterCondition(
                 property: StudyProperty.title,

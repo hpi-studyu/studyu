@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_evaluator.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
-
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 
 class FilterBuilder extends ConsumerStatefulWidget {
   const FilterBuilder({Key? key}) : super(key: key);
@@ -18,6 +17,8 @@ class FilterBuilder extends ConsumerStatefulWidget {
 
 class _FilterBuilderState extends ConsumerState<FilterBuilder> {
   // State for filters
+  String? _loadedPresetId; // Track currently loaded custom preset
+
   StudyStatus? _status;
   FilterOperator _statusOp = FilterOperator.equals;
 
@@ -65,10 +66,22 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     final activeFilter = ref.read(dashboardControllerProvider).activeFilter;
     if (activeFilter != null) {
       _initFromFilter(activeFilter);
+      // Try to find if this filter matches a saved preset
+      final saved = ref.read(dashboardControllerProvider).savedFilters;
+      for (final s in saved) {
+        if (s.root == activeFilter) {
+          _loadedPresetId = s.id;
+          break;
+        }
+      }
     }
   }
 
   void _initFromFilter(FilterGroup group) {
+    _onResetAll(
+      resetPresetId: false,
+    ); // Clear current state first but keep preset ID if needed (logic handled outside)
+
     // This is a simplified reconstruction. It assumes the structure created by _buildFilterGroup.
     // If the group is complex (nested ORs etc), this might not fully populate the UI,
     // but for the current scope where we only build AND groups of specific conditions, it works.
@@ -119,8 +132,6 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
             _endedCountOp = child.operator;
             break;
           case StudyProperty.createdAt:
-            // This is tricky because we map range to two conditions.
-            // Simplified: if we find GTE, set createdAfter. If LTE, set createdBefore.
             if (child.operator == FilterOperator.greaterThanOrEqual ||
                 child.operator == FilterOperator.greaterThan) {
               _createdAfter = child.value as DateTime?;
@@ -264,7 +275,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
       );
     }
 
-    return FilterGroup(logic: FilterLogic.and, children: conditions);
+    return FilterGroup(children: conditions);
   }
 
   int _calculateMatchCount() {
@@ -283,8 +294,9 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     Navigator.of(context).pop();
   }
 
-  void _onResetAll() {
+  void _onResetAll({bool resetPresetId = true}) {
     setState(() {
+      if (resetPresetId) _loadedPresetId = null;
       _status = null;
       _statusOp = FilterOperator.equals;
       _participation = null;
@@ -332,50 +344,240 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     );
 
     if (name != null && name.isNotEmpty) {
+      final newId = const Uuid().v4();
       final filter = SavedFilter(
-        id: const Uuid().v4(),
+        id: newId,
         name: name,
         root: _buildFilterGroup(),
       );
       ref.read(dashboardControllerProvider.notifier).saveFilter(filter);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Filter preset saved".hardcoded)));
+      setState(() => _loadedPresetId = newId);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Filter preset saved".hardcoded)),
+        );
+      }
     }
+  }
+
+  void _onUpdatePreset() {
+    if (_loadedPresetId == null) return;
+    final savedFilters = ref.read(dashboardControllerProvider).savedFilters;
+    final existingIndex = savedFilters.indexWhere(
+      (f) => f.id == _loadedPresetId,
+    );
+    if (existingIndex == -1) return;
+
+    final existing = savedFilters[existingIndex];
+    final updated = SavedFilter(
+      id: existing.id,
+      name: existing.name,
+      root: _buildFilterGroup(),
+      sortColumn: existing.sortColumn,
+      sortAscending: existing.sortAscending,
+      isDefault: existing.isDefault,
+      createdAt: existing.createdAt,
+      updatedAt: DateTime.now(),
+    );
+
+    // We need a method to update, for now saveFilter overwrites if ID exists?
+    // Wait, saveFilter in DashboardController likely adds. Check logic.
+    // Assuming saveFilter checks for existence or we need an update method.
+    // DashboardController.saveFilter implementation: "state = state.copyWith(savedFilters: [...state.savedFilters, filter]);" usually.
+    // I should check DashboardController.
+    // If it just appends, I need to remove old first.
+    ref.read(dashboardControllerProvider.notifier).deleteFilter(existing.id);
+    ref.read(dashboardControllerProvider.notifier).saveFilter(updated);
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("Preset updated".hardcoded)));
+  }
+
+  void _onDeletePreset() {
+    if (_loadedPresetId == null) return;
+    ref
+        .read(dashboardControllerProvider.notifier)
+        .deleteFilter(_loadedPresetId!);
+    _onResetAll();
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("Preset deleted".hardcoded)));
+  }
+
+  String _getPresetTooltip(String id) {
+    if (id == DefaultPresets.myActiveStudies.id) {
+      return "Studies you own that are currently running".hardcoded;
+    } else if (id == DefaultPresets.studiesNeedingAttention.id) {
+      return "Running studies with low participation".hardcoded;
+    } else if (id == DefaultPresets.recentlyCreated.id) {
+      return "Studies created in the last 30 days".hardcoded;
+    } else if (id == DefaultPresets.publicStudies.id) {
+      return "Studies published to the registry or with public results"
+          .hardcoded;
+    } else if (id == DefaultPresets.draftStudies.id) {
+      return "Studies currently in draft mode".hardcoded;
+    }
+    return "Custom preset".hardcoded;
   }
 
   @override
   Widget build(BuildContext context) {
     final matchCount = _calculateMatchCount();
+    final loadedPresetName = _loadedPresetId != null
+        ? ref
+              .watch(dashboardControllerProvider)
+              .savedFilters
+              .firstWhere(
+                (f) => f.id == _loadedPresetId,
+                orElse: () =>
+                    SavedFilter(id: '', name: 'Custom', root: FilterGroup()),
+              )
+              .name
+        : "Custom";
+
+    final isDefault = DefaultPresets.all.any((p) => p.id == _loadedPresetId);
 
     return Container(
-      width: 450, // Slightly wider for advanced options
-      padding: const EdgeInsets.all(24.0),
+      width: 480, // Slightly wider for better spacing
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(
-                "Filter".hardcoded,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.save_outlined),
-                tooltip: "Save as preset".hardcoded,
-                onPressed: _onSavePreset,
-              ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
-              ),
-            ],
+          // Sticky Header
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+            child: Row(
+              children: [
+                Text(
+                  "Filter Studies".hardcoded,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const SizedBox(width: 12),
+                if (_loadedPresetId != null)
+                  Tooltip(
+                    message: "Currently loaded preset".hardcoded,
+                    child: Chip(
+                      label: Text(loadedPresetName),
+                      onDeleted: _onResetAll,
+                      deleteIconColor: Theme.of(
+                        context,
+                      ).colorScheme.onSurfaceVariant,
+                      side: BorderSide.none,
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .surfaceContainerHighest
+                          .withValues(alpha: 0.5),
+                    ),
+                  ),
+                const Spacer(),
+                MenuAnchor(
+                  builder: (context, controller, child) {
+                    return IconButton(
+                      onPressed: () {
+                        if (controller.isOpen) {
+                          controller.close();
+                        } else {
+                          controller.open();
+                        }
+                      },
+                      icon: const Icon(Icons.more_vert),
+                      tooltip: "Preset options".hardcoded,
+                    );
+                  },
+                  menuChildren: [
+                    SubmenuButton(
+                      menuChildren: [
+                        ...DefaultPresets.all.map(
+                          (preset) => MenuItemButton(
+                            leadingIcon: const Icon(
+                              Icons.star_outline,
+                              size: 16,
+                            ),
+                            child: Tooltip(
+                              message: _getPresetTooltip(preset.id),
+                              child: Text(preset.name),
+                            ),
+                            onPressed: () {
+                              _initFromFilter(preset.root);
+                              setState(() {
+                                _loadedPresetId = preset.id;
+                              });
+                            },
+                          ),
+                        ),
+                        const Divider(),
+                        if (ref
+                            .read(dashboardControllerProvider)
+                            .savedFilters
+                            .isNotEmpty)
+                          ...ref
+                              .read(dashboardControllerProvider)
+                              .savedFilters
+                              .map(
+                                (preset) => MenuItemButton(
+                                  leadingIcon: const Icon(
+                                    Icons.perm_identity,
+                                    size: 16,
+                                  ),
+                                  child: Text(preset.name),
+                                  onPressed: () {
+                                    _initFromFilter(preset.root);
+                                    setState(() {
+                                      _loadedPresetId = preset.id;
+                                    });
+                                  },
+                                ),
+                              )
+                        else
+                          MenuItemButton(
+                            child: Text("No custom presets".hardcoded),
+                          ),
+                      ],
+                      child: Text("Load Preset".hardcoded),
+                    ),
+                    MenuItemButton(
+                      leadingIcon: const Icon(Icons.save_as, size: 18),
+                      onPressed: (isDefault || _loadedPresetId == null)
+                          ? null
+                          : _onUpdatePreset,
+                      child: Text("Save changes".hardcoded),
+                    ),
+                    MenuItemButton(
+                      leadingIcon: const Icon(Icons.save, size: 18),
+                      onPressed: _onSavePreset,
+                      child: Text("Save as new".hardcoded),
+                    ),
+                    MenuItemButton(
+                      leadingIcon: const Icon(
+                        Icons.delete_outline,
+                        color: Colors.red,
+                        size: 18,
+                      ),
+                      onPressed: (isDefault || _loadedPresetId == null)
+                          ? null
+                          : _onDeletePreset,
+                      child: Text(
+                        "Delete preset".hardcoded,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
+                    const Divider(),
+                    MenuItemButton(
+                      leadingIcon: const Icon(Icons.refresh, size: 18),
+                      onPressed: _onResetAll,
+                      child: Text("Clear / New".hardcoded),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 16),
-          Flexible(
+          const Divider(height: 1),
+
+          // Scrollable Content
+          Expanded(
             child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -395,7 +597,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                       (op) => setState(() => _statusOp = op),
                     ),
                   ]),
-                  const Divider(height: 32),
+                  const SizedBox(height: 24),
                   _buildCategory("Visibility & Role".hardcoded, [
                     _buildEnumFilter<Participation>(
                       "Participation".hardcoded,
@@ -420,17 +622,8 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                       (v) => setState(() => _registryPublished = v),
                       (op) => setState(() => _registryPublishedOp = op),
                     ),
-                    _buildBoolFilter(
-                      "Role".hardcoded,
-                      _isOwner,
-                      _isOwnerOp,
-                      (v) => setState(() => _isOwner = v),
-                      (op) => setState(() => _isOwnerOp = op),
-                      trueLabel: "Owner",
-                      falseLabel: "Editor",
-                    ),
                   ]),
-                  const Divider(height: 32),
+                  const SizedBox(height: 24),
                   _buildCategory("Participants".hardcoded, [
                     _buildNumberFilter(
                       "Participant Count".hardcoded,
@@ -451,61 +644,87 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                       (op) => setState(() => _endedCountOp = op),
                     ),
                   ]),
-                  const Divider(height: 32),
+                  const SizedBox(height: 24),
                   _buildCategory("Dates".hardcoded, [_buildDateRange()]),
-                  const SizedBox(height: 24), // Extra spacing
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 24),
+
+          const Divider(height: 1),
+          // Sticky Footer
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            decoration: BoxDecoration(
-              color: Theme.of(
-                context,
-              ).colorScheme.primaryContainer.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-              ),
-            ),
-            child: Row(
+            padding: const EdgeInsets.all(24),
+            color: Theme.of(context).colorScheme.surface,
+            child: Column(
               children: [
-                Icon(
-                  Icons.filter_list,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  "$matchCount studies match your criteria".hardcoded,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.w600,
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 16,
                   ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primaryContainer.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.1),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.filter_list,
+                        size: 20,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          "$matchCount studies match current criteria"
+                              .hardcoded,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    TextButton.icon(
+                      onPressed: _onResetAll,
+                      icon: const Icon(Icons.restart_alt),
+                      label: Text("Reset form".hardcoded),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Theme.of(
+                          context,
+                        ).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const Spacer(),
+                    FilledButton.icon(
+                      onPressed: _onApply,
+                      icon: const Icon(Icons.check),
+                      label: Text("Apply Filters".hardcoded),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              TextButton(
-                onPressed: _onResetAll,
-                child: Text("Reset all".hardcoded),
-              ),
-              const Spacer(),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text("Cancel".hardcoded),
-              ),
-              const SizedBox(width: 8),
-              FilledButton(
-                onPressed: _onApply,
-                child: Text("Apply now".hardcoded),
-              ),
-            ],
           ),
         ],
       ),
@@ -513,20 +732,33 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
   }
 
   Widget _buildCategory(String title, List<Widget> children) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Theme.of(
+            context,
+          ).colorScheme.outlineVariant.withValues(alpha: 0.5),
         ),
-        const SizedBox(height: 16),
-        ...children,
-      ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary,
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ...children,
+        ],
+      ),
     );
   }
 
@@ -537,29 +769,41 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     VoidCallback? onReset,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
+      padding: const EdgeInsets.only(bottom: 12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                ),
+              ),
               if (onReset != null) ...[
                 const SizedBox(width: 8),
                 InkWell(
                   onTap: onReset,
-                  child: Icon(
-                    Icons.restart_alt,
-                    size: 14,
-                    color: Theme.of(context).colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Icon(
+                      Icons.restart_alt,
+                      size: 14,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                 ),
               ],
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Fixed width for operator to align all rows
               SizedBox(width: 130, child: operatorDropdown),
               const SizedBox(width: 8),
               Expanded(child: valueInput),
@@ -655,9 +899,10 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
         onOpChanged,
       ),
       valueInput: DropdownButtonFormField<T>(
+        // ignore: deprecated_member_use
         value: selected,
         items: [
-          DropdownMenuItem(value: null, child: Text("All".hardcoded)),
+          DropdownMenuItem(child: Text("All".hardcoded)),
           ...values.map(
             (e) => DropdownMenuItem(
               value: e,
@@ -693,9 +938,10 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
         onOpChanged,
       ),
       valueInput: DropdownButtonFormField<bool>(
+        // ignore: deprecated_member_use
         value: selected,
         items: [
-          DropdownMenuItem(value: null, child: Text("All".hardcoded)),
+          DropdownMenuItem(child: Text("All".hardcoded)),
           DropdownMenuItem(value: true, child: Text(trueLabel.hardcoded)),
           DropdownMenuItem(value: false, child: Text(falseLabel.hardcoded)),
         ],
@@ -716,6 +962,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     ValueChanged<FilterOperator> onChanged,
   ) {
     return DropdownButtonFormField<FilterOperator>(
+      // ignore: deprecated_member_use
       value: selected,
       items: options
           .map(
@@ -737,7 +984,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
   Widget _buildDateRange() {
     final hasValue = _createdAfter != null || _createdBefore != null;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
+      padding: const EdgeInsets.only(bottom: 12.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -763,7 +1010,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
               ],
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           Row(
             children: [
               Expanded(

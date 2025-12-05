@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
@@ -15,6 +16,7 @@ import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
+import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -27,8 +29,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-  bool _showAdvancedFilters = false;
-
   @override
   void initState() {
     super.initState();
@@ -43,6 +43,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       final controller = ref.read(dashboardControllerProvider.notifier);
       runAsync(() => controller.setStudiesFilter(widget.filter));
     }
+  }
+
+  String _getPresetTooltip(String id) {
+    if (id == DefaultPresets.myActiveStudies.id) {
+      return "Studies you own that are currently running".hardcoded;
+    } else if (id == DefaultPresets.studiesNeedingAttention.id) {
+      return "Running studies with low participation".hardcoded;
+    } else if (id == DefaultPresets.recentlyCreated.id) {
+      return "Studies created in the last 30 days".hardcoded;
+    } else if (id == DefaultPresets.publicStudies.id) {
+      return "Studies published to the registry or with public results"
+          .hardcoded;
+    } else if (id == DefaultPresets.draftStudies.id) {
+      return "Studies currently in draft mode".hardcoded;
+    }
+    return "Custom preset".hardcoded;
   }
 
   @override
@@ -77,29 +93,86 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Builder(
-                        builder: (context) {
-                          return OutlinedButton.icon(
-                            icon: const Icon(Icons.filter_list),
-                            label: Text("Filter".hardcoded),
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor: _showAdvancedFilters
-                                  ? Theme.of(
-                                      context,
-                                    ).colorScheme.primaryContainer
-                                  : null,
-                              foregroundColor: _showAdvancedFilters
-                                  ? Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimaryContainer
-                                  : null,
+                      // Preset Dropdown
+                      // Unified Filter Button
+                      ActionPopUpMenuButton(
+                        position: PopupMenuPosition.under,
+                        triggerBuilder: Builder(
+                          builder: (context) {
+                            return Badge(
+                              label: Text(
+                                "${state.activeFilter?.children.length ?? 0}",
+                              ),
+                              isLabelVisible:
+                                  state.activeFilter != null &&
+                                  state.activeFilter!.children.isNotEmpty,
+                              child: IgnorePointer(
+                                child: OutlinedButton.icon(
+                                  onPressed:
+                                      () {}, // Dummy callback to keep enabled styling
+                                  icon: const Icon(Icons.filter_list),
+                                  label: Text("Filter".hardcoded),
+                                  style: OutlinedButton.styleFrom(
+                                    backgroundColor: state.activeFilter != null
+                                        ? theme.colorScheme.primaryContainer
+                                              .withValues(alpha: 0.2)
+                                        : null,
+                                    side: BorderSide(
+                                      color: state.activeFilter != null
+                                          ? theme.colorScheme.primary
+                                          : theme.colorScheme.outlineVariant,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        actions: [
+                          ModelAction.addHeader("Default Presets".hardcoded),
+                          ...DefaultPresets.all.map(
+                            (preset) => ModelAction(
+                              type: preset.id,
+                              label: preset.name,
+                              icon: preset.icon ?? Icons.star_border,
+                              tooltip: _getPresetTooltip(preset.id),
+                              onExecute: () {
+                                ref
+                                    .read(dashboardControllerProvider.notifier)
+                                    .updateFilter(preset.root);
+                              },
                             ),
-                            onPressed: () {
+                          ),
+                          ModelAction.addSeparator(),
+                          if (state.savedFilters.isNotEmpty) ...[
+                            ModelAction.addHeader("Custom Presets".hardcoded),
+                            ...state.savedFilters.map(
+                              (preset) => ModelAction(
+                                type: preset.id,
+                                label: preset.name,
+                                icon: preset.icon ?? Icons.person_outline,
+                                onExecute: () {
+                                  ref
+                                      .read(
+                                        dashboardControllerProvider.notifier,
+                                      )
+                                      .updateFilter(preset.root);
+                                },
+                              ),
+                            ),
+                            ModelAction.addSeparator(),
+                          ],
+                          ModelAction(
+                            type: 'advanced',
+                            label: "Advanced Filters...".hardcoded,
+                            icon: Icons.tune,
+                            onExecute: () {
                               Scaffold.of(context).openEndDrawer();
                             },
-                          );
-                        },
+                          ),
+                        ],
                       ),
+
                       const SizedBox(width: 16),
                       Container(
                         constraints: const BoxConstraints(maxWidth: 400),

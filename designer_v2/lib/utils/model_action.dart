@@ -5,7 +5,9 @@ class ModelAction<T> {
   final T type;
   final String label;
   IconData? icon;
+  final String? tooltip;
   final void Function() onExecute;
+  final bool isHeader;
   final bool isSeparator;
   final bool isAvailable;
   final bool isDestructive;
@@ -15,9 +17,11 @@ class ModelAction<T> {
     required this.label,
     required this.onExecute,
     this.isSeparator = false,
+    this.isHeader = false, // Added default
     this.isAvailable = true,
     this.isDestructive = false,
     this.icon,
+    this.tooltip,
   });
 
   static ModelAction addSeparator() {
@@ -26,6 +30,15 @@ class ModelAction<T> {
       label: '',
       onExecute: () {},
       isSeparator: true,
+    );
+  }
+
+  static ModelAction addHeader(String label) {
+    return ModelAction(
+      type: null,
+      label: label,
+      onExecute: () {},
+      isHeader: true,
     );
   }
 }
