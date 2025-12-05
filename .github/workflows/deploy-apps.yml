@@ -65,7 +65,7 @@ jobs:
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
           # todo
-          cache: false
+          cache: true
 
       - name: Determine build environment
         id: build-env
@@ -158,7 +158,7 @@ jobs:
         uses: kuhnroyal/flutter-fvm-config-action/setup@v3
         with:
           # todo
-          cache: false
+          cache: true
 
       - name: Determine build environment and scheme
         id: build-env
