@@ -229,11 +229,12 @@ class DefaultPresets {
     icon: Icons.star_border_rounded,
     root: FilterGroup(
       children: [
-        FilterCondition(
+        // TODO: Only enable after we have added collaboration mode
+        /*FilterCondition(
           property: StudyProperty.owner,
           operator: FilterOperator.equals,
           value: true,
-        ),
+        ),*/
         FilterCondition(
           property: StudyProperty.status,
           operator: FilterOperator.equals,
@@ -332,7 +333,8 @@ class DefaultPresets {
 
   static List<SavedFilter> get all => [
     myActiveStudies,
-    studiesNeedingAttention,
+    // TODO: Only enable after we have implemented metrics calculation
+    // studiesNeedingAttention,
     recentlyCreated,
     publicStudies,
     draftStudies,

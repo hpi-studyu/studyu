@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_designer_v2/utils/comparator_utils.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
@@ -75,6 +77,133 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       return AppLocalizations.of(context)!.preset_draft_studies;
     }
     return AppLocalizations.of(context)!.preset_custom;
+  }
+
+  String _getStudyStatusLabel(StudyStatus status) {
+    switch (status) {
+      case StudyStatus.draft:
+        return AppLocalizations.of(context)!.study_status_draft;
+      case StudyStatus.running:
+        return AppLocalizations.of(context)!.study_status_running;
+      case StudyStatus.closed:
+        return AppLocalizations.of(context)!.study_status_closed;
+    }
+  }
+
+  String _getParticipationLabel(Participation participation) {
+    switch (participation) {
+      case Participation.open:
+        return AppLocalizations.of(context)!.participation_open;
+      case Participation.invite:
+        return AppLocalizations.of(context)!.participation_invite;
+    }
+  }
+
+  String _getResultSharingLabel(ResultSharing sharing) {
+    switch (sharing) {
+      case ResultSharing.public:
+        return AppLocalizations.of(context)!.filter_result_sharing_public;
+      case ResultSharing.private:
+        return AppLocalizations.of(context)!.filter_result_sharing_private;
+      case ResultSharing.organization:
+        return AppLocalizations.of(context)!.filter_result_sharing_organization;
+    }
+  }
+
+  String _getFilterChipLabel(FilterCondition condition) {
+    final t = AppLocalizations.of(context)!;
+    String propertyLabel = condition.property.toString().split('.').last;
+    String valueLabel = condition.value.toString();
+
+    switch (condition.property) {
+      case StudyProperty.title:
+        propertyLabel = t.filter_field_title;
+        break;
+      case StudyProperty.status:
+        propertyLabel = t.filter_field_status;
+        if (condition.value is String) {
+          final status = StudyStatus.values
+              .asNameMap()[condition.value as String];
+          if (status != null) {
+            valueLabel = _getStudyStatusLabel(status);
+          }
+        }
+        break;
+      case StudyProperty.participation:
+        propertyLabel = t.filter_field_participation;
+        if (condition.value is String) {
+          final participation = Participation.values
+              .asNameMap()[condition.value as String];
+          if (participation != null) {
+            valueLabel = _getParticipationLabel(participation);
+          }
+        }
+        break;
+      case StudyProperty.resultSharing:
+        propertyLabel = t.filter_field_result_sharing;
+        if (condition.value is String) {
+          final sharing = ResultSharing.values
+              .asNameMap()[condition.value as String];
+          if (sharing != null) {
+            valueLabel = _getResultSharingLabel(sharing);
+          }
+        }
+        break;
+      case StudyProperty.registryPublished:
+        propertyLabel = t.filter_field_registry_published;
+        if (condition.value == true) valueLabel = t.filter_bool_yes;
+        if (condition.value == false) valueLabel = t.filter_bool_no;
+        break;
+      case StudyProperty.participantCount:
+        propertyLabel = t.filter_field_participant_count;
+        break;
+      case StudyProperty.activeSubjectCount:
+        propertyLabel = t.filter_field_active_count;
+        break;
+      case StudyProperty.endedCount:
+        propertyLabel = t.filter_field_completed_count;
+        break;
+      case StudyProperty.createdAt:
+        if (condition.operator == FilterOperator.greaterThanOrEqual ||
+            condition.operator == FilterOperator.greaterThan ||
+            condition.operator == FilterOperator.after) {
+          propertyLabel =
+              "${t.filter_field_created_date} (${t.filter_date_from})";
+        } else if (condition.operator == FilterOperator.lessThanOrEqual ||
+            condition.operator == FilterOperator.lessThan ||
+            condition.operator == FilterOperator.before) {
+          propertyLabel =
+              "${t.filter_field_created_date} (${t.filter_date_to})";
+        } else {
+          propertyLabel = t.filter_field_created_date;
+        }
+
+        DateTime? date;
+        if (condition.value is DateTime) {
+          date = condition.value as DateTime;
+        } else if (condition.value is String) {
+          date = DateTime.tryParse(condition.value as String);
+        }
+        if (date != null) {
+          valueLabel = DateFormat.yMMMd().format(date);
+        }
+        break;
+      default:
+        break;
+    }
+
+    if ([
+      StudyProperty.participantCount,
+      StudyProperty.activeSubjectCount,
+      StudyProperty.endedCount,
+    ].contains(condition.property)) {
+      final opSym = condition.operator.stringSymbol;
+      if (opSym != null && opSym.isNotEmpty) {
+        return "$propertyLabel $opSym $valueLabel";
+      }
+    }
+
+    return "$propertyLabel: $valueLabel";
   }
 
   @override
@@ -296,13 +425,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           ],
 
                           MenuItemButton(
-                            leadingIcon: Badge(
-                              smallSize: 10,
-                              isLabelVisible:
-                                  state.activeFilter != null &&
-                                  state.activeFilter!.children.isNotEmpty,
-                              child: const Icon(Icons.tune),
-                            ),
+                            leadingIcon: const Icon(Icons.tune),
                             child: Text(
                               AppLocalizations.of(
                                 context,
@@ -386,9 +509,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               children: state.activeFilter!.children.map((child) {
                 if (child is FilterCondition) {
                   return Chip(
-                    label: Text(
-                      "${child.property.toString().split('.').last}: ${child.value}",
-                    ),
+                    label: Text(_getFilterChipLabel(child)),
                     onDeleted: () {
                       final newGroup = FilterGroup(
                         logic: state.activeFilter!.logic,
