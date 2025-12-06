@@ -141,8 +141,11 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
   }
 
   void _applyFilter() {
-    final group = ref.read(filterDraftControllerProvider).toFilterGroup;
-    ref.read(dashboardControllerProvider.notifier).updateFilter(group);
+    final draft = ref.read(filterDraftControllerProvider);
+    final group = draft.toFilterGroup;
+    ref
+        .read(dashboardControllerProvider.notifier)
+        .updateFilter(group, presetId: draft.loadedPresetId);
   }
 
   void _onResetAll() {
