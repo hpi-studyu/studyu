@@ -883,6 +883,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                   padding: EdgeInsets.zero,
                   color: Theme.of(context).colorScheme.error,
                 ),
+              const SizedBox(width: 6),
             ],
           ),
           if (isExpanded) ...[const SizedBox(height: 8), child],
