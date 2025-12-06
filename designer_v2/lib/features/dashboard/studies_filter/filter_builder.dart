@@ -13,6 +13,7 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/num
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/enum_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/bool_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/date_range_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_draft_controller.dart';
 
 class FilterBuilder extends ConsumerStatefulWidget {
   const FilterBuilder({super.key});
@@ -22,131 +23,81 @@ class FilterBuilder extends ConsumerStatefulWidget {
 }
 
 class _FilterBuilderState extends ConsumerState<FilterBuilder> {
-  // State for filters
-  String? _loadedPresetId; // Track currently loaded custom preset
-
-  StudyStatus? _status;
-  FilterOperator _statusOp = FilterOperator.equals;
-
-  Participation? _participation;
-  FilterOperator _participationOp = FilterOperator.equals;
-
-  ResultSharing? _resultSharing;
-  FilterOperator _resultSharingOp = FilterOperator.equals;
-
-  bool? _registryPublished;
-  FilterOperator _registryPublishedOp = FilterOperator.equals;
-
-  bool? _isOwner;
-  FilterOperator _isOwnerOp = FilterOperator.equals;
-
-  // Text/Number inputs
+  // Text/Number inputs need controllers for the UI, but we sync them with state
   final TextEditingController _titleController = TextEditingController();
-  FilterOperator _titleOp = FilterOperator.contains;
-
   final TextEditingController _participantCountController =
       TextEditingController();
-  FilterOperator _participantCountOp = FilterOperator.greaterThanOrEqual;
-
   final TextEditingController _activeSubjectCountController =
       TextEditingController();
-  FilterOperator _activeSubjectCountOp = FilterOperator.greaterThanOrEqual;
-
   final TextEditingController _endedCountController = TextEditingController();
-  FilterOperator _endedCountOp = FilterOperator.greaterThanOrEqual;
-
-  // Date inputs
-  DateTime? _createdAfter;
-  DateTime? _createdBefore;
-  // We'll treat date range as a special case or use "Between" logic if we want to be strict,
-  // but for now let's keep the range picker as it's very intuitive,
-  // OR we can add an operator selector for "After", "Before", "Between".
-  // Let's try "Between" (Range),  FilterOperator _createdOp = FilterOperator
-  // .greaterThanOrEqual; // Using GTE as default for "After" or start of range
-
-  final Set<String> _expandedFields = {};
 
   @override
   void initState() {
     super.initState();
     // Initialize from current active filter if possible
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initFromProvider();
+    });
+  }
+
+  void _initFromProvider() {
     final state = ref.read(dashboardControllerProvider);
     final activeFilter = state.activeFilter;
+    final controller = ref.read(filterDraftControllerProvider.notifier);
+
     if (activeFilter != null) {
-      _initFromFilter(activeFilter);
-      // Trust the ID from the state if available
+      String? presetId;
       if (state.selectedSavedFilterId != null) {
-        _loadedPresetId = state.selectedSavedFilterId;
+        presetId = state.selectedSavedFilterId;
       } else {
         // Try to find if this filter matches a saved preset
         final saved = state.savedFilters;
         for (final s in saved) {
           if (s.root == activeFilter) {
-            _loadedPresetId = s.id;
+            presetId = s.id;
             break;
           }
         }
       }
+      controller.initFromFilter(activeFilter, presetId: presetId);
+      _syncControllers(ref.read(filterDraftControllerProvider));
     }
+
+    // Attach listeners to update state on text change
+    _titleController.addListener(() {
+      ref
+          .read(filterDraftControllerProvider.notifier)
+          .updateTitle(_titleController.text);
+    });
+    _participantCountController.addListener(() {
+      ref
+          .read(filterDraftControllerProvider.notifier)
+          .updateParticipantCount(_participantCountController.text);
+    });
+    _activeSubjectCountController.addListener(() {
+      ref
+          .read(filterDraftControllerProvider.notifier)
+          .updateActiveSubjectCount(_activeSubjectCountController.text);
+    });
+    _endedCountController.addListener(() {
+      ref
+          .read(filterDraftControllerProvider.notifier)
+          .updateEndedCount(_endedCountController.text);
+    });
   }
 
-  void _initFromFilter(FilterGroup group) {
-    _onResetAll(
-      resetPresetId: false,
-    ); // Clear current state first but keep preset ID if needed (logic handled outside)
-
-    // This is a simplified reconstruction. It assumes the structure created by _buildFilterGroup.
-    // If the group is complex (nested ORs etc), this might not fully populate the UI,
-    // but for the current scope where we only build AND groups of specific conditions, it works.
-
-    for (final child in group.children) {
-      if (child is FilterCondition) {
-        switch (child.property) {
-          case StudyProperty.status:
-            if (child.value is String) {
-              _status = StudyStatus.values.asNameMap()[child.value];
-              _statusOp = child.operator;
-            }
-          case StudyProperty.participation:
-            if (child.value is String) {
-              _participation = Participation.values.asNameMap()[child.value];
-              _participationOp = child.operator;
-            }
-          case StudyProperty.resultSharing:
-            if (child.value is String) {
-              _resultSharing = ResultSharing.values.asNameMap()[child.value];
-              _resultSharingOp = child.operator;
-            }
-          case StudyProperty.registryPublished:
-            _registryPublished = child.value as bool?;
-            _registryPublishedOp = child.operator;
-          case StudyProperty.owner:
-            _isOwner = child.value as bool?;
-            _isOwnerOp = child.operator;
-          case StudyProperty.title:
-            _titleController.text = child.value as String? ?? '';
-            _titleOp = child.operator;
-          case StudyProperty.participantCount:
-            _participantCountController.text = child.value?.toString() ?? '';
-            _participantCountOp = child.operator;
-          case StudyProperty.activeSubjectCount:
-            _activeSubjectCountController.text = child.value?.toString() ?? '';
-            _activeSubjectCountOp = child.operator;
-          case StudyProperty.endedCount:
-            _endedCountController.text = child.value?.toString() ?? '';
-            _endedCountOp = child.operator;
-          case StudyProperty.createdAt:
-            if (child.operator == FilterOperator.greaterThanOrEqual ||
-                child.operator == FilterOperator.greaterThan) {
-              _createdAfter = child.value as DateTime?;
-            } else if (child.operator == FilterOperator.lessThanOrEqual ||
-                child.operator == FilterOperator.lessThan) {
-              _createdBefore = child.value as DateTime?;
-            }
-          default:
-            break;
-        }
-      }
+  void _syncControllers(FilterDraft draft) {
+    if (_titleController.text != draft.title) {
+      _titleController.text = draft.title;
+    }
+    if (_participantCountController.text != draft.participantCount) {
+      _participantCountController.text = draft.participantCount;
+    }
+    if (_activeSubjectCountController.text != draft.activeSubjectCount) {
+      _activeSubjectCountController.text = draft.activeSubjectCount;
+    }
+    if (_endedCountController.text != draft.endedCount) {
+      _endedCountController.text = draft.endedCount;
     }
   }
 
@@ -159,130 +110,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     super.dispose();
   }
 
-  FilterGroup _buildFilterGroup() {
-    final List<FilterCondition> conditions = [];
-
-    // Enums & Bools
-    if (_status != null) {
-      conditions.add(
-        FilterCondition(
-          property: StudyProperty.status,
-          operator: _statusOp,
-          value: _status!.name,
-        ),
-      );
-    }
-    if (_participation != null) {
-      conditions.add(
-        FilterCondition(
-          property: StudyProperty.participation,
-          operator: _participationOp,
-          value: _participation!.name,
-        ),
-      );
-    }
-    if (_resultSharing != null) {
-      conditions.add(
-        FilterCondition(
-          property: StudyProperty.resultSharing,
-          operator: _resultSharingOp,
-          value: _resultSharing!.name,
-        ),
-      );
-    }
-    if (_registryPublished != null) {
-      conditions.add(
-        FilterCondition(
-          property: StudyProperty.registryPublished,
-          operator: _registryPublishedOp,
-          value: _registryPublished,
-        ),
-      );
-    }
-    if (_isOwner != null) {
-      conditions.add(
-        FilterCondition(
-          property: StudyProperty.owner,
-          operator: _isOwnerOp,
-          value: _isOwner,
-        ),
-      );
-    }
-
-    // Text
-    if (_titleController.text.isNotEmpty) {
-      conditions.add(
-        FilterCondition(
-          property: StudyProperty.title,
-          operator: _titleOp,
-          value: _titleController.text,
-        ),
-      );
-    }
-
-    // Numbers
-    if (_participantCountController.text.isNotEmpty) {
-      final val = int.tryParse(_participantCountController.text);
-      if (val != null) {
-        conditions.add(
-          FilterCondition(
-            property: StudyProperty.participantCount,
-            operator: _participantCountOp,
-            value: val,
-          ),
-        );
-      }
-    }
-    if (_activeSubjectCountController.text.isNotEmpty) {
-      final val = int.tryParse(_activeSubjectCountController.text);
-      if (val != null) {
-        conditions.add(
-          FilterCondition(
-            property: StudyProperty.activeSubjectCount,
-            operator: _activeSubjectCountOp,
-            value: val,
-          ),
-        );
-      }
-    }
-    if (_endedCountController.text.isNotEmpty) {
-      final val = int.tryParse(_endedCountController.text);
-      if (val != null) {
-        conditions.add(
-          FilterCondition(
-            property: StudyProperty.endedCount,
-            operator: _endedCountOp,
-            value: val,
-          ),
-        );
-      }
-    }
-
-    // Dates
-    if (_createdAfter != null) {
-      conditions.add(
-        FilterCondition(
-          property: StudyProperty.createdAt,
-          operator: FilterOperator.greaterThanOrEqual,
-          value: _createdAfter,
-        ),
-      );
-    }
-    if (_createdBefore != null) {
-      conditions.add(
-        FilterCondition(
-          property: StudyProperty.createdAt,
-          operator: FilterOperator.lessThanOrEqual,
-          value: _createdBefore,
-        ),
-      );
-    }
-
-    return FilterGroup(children: conditions);
-  }
-
-  int _calculateMatchCount() {
-    final filter = _buildFilterGroup();
+  int _calculateMatchCount(FilterGroup filter) {
     final studies = ref.read(dashboardControllerProvider).studies.value ?? [];
     final supabaseUser = Supabase.instance.client.auth.currentUser;
     if (supabaseUser == null) return 0;
@@ -312,35 +140,14 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
   }
 
   void _applyFilter() {
-    final group = _buildFilterGroup();
+    final group = ref.read(filterDraftControllerProvider).toFilterGroup;
     ref.read(dashboardControllerProvider.notifier).updateFilter(group);
   }
 
-  void _onResetAll({bool resetPresetId = true}) {
-    setState(() {
-      if (resetPresetId) _loadedPresetId = null;
-      _status = null;
-      _statusOp = FilterOperator.equals;
-      _participation = null;
-      _participationOp = FilterOperator.equals;
-      _resultSharing = null;
-      _resultSharingOp = FilterOperator.equals;
-      _registryPublished = null;
-      _registryPublishedOp = FilterOperator.equals;
-      _isOwner = null;
-      _isOwnerOp = FilterOperator.equals;
-      _titleController.clear();
-      _titleOp = FilterOperator.contains;
-      _participantCountController.clear();
-      _participantCountOp = FilterOperator.greaterThanOrEqual;
-      _activeSubjectCountController.clear();
-      _activeSubjectCountOp = FilterOperator.greaterThanOrEqual;
-      _endedCountController.clear();
-      _endedCountOp = FilterOperator.greaterThanOrEqual;
-      _createdAfter = null;
-      _createdBefore = null;
-      _expandedFields.clear();
-    });
+  void _onResetAll() {
+    final controller = ref.read(filterDraftControllerProvider.notifier);
+    controller.resetAll();
+    _syncControllers(ref.read(filterDraftControllerProvider));
   }
 
   Future<void> _onSavePreset() async {
@@ -368,21 +175,27 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
 
     if (name != null && name.isNotEmpty) {
       final newId = const Uuid().v4();
+      final filterDraft = ref.read(filterDraftControllerProvider);
       final filter = SavedFilter(
         id: newId,
         name: name,
-        root: _buildFilterGroup(),
+        root: filterDraft.toFilterGroup,
       );
       ref.read(dashboardControllerProvider.notifier).saveFilter(filter);
-      setState(() => _loadedPresetId = newId);
+
+      ref
+          .read(filterDraftControllerProvider.notifier)
+          .updateLoadedPreset(newId);
     }
   }
 
   void _onUpdatePreset() {
-    if (_loadedPresetId == null) return;
+    final filterDraft = ref.read(filterDraftControllerProvider);
+    if (filterDraft.loadedPresetId == null) return;
+
     final savedFilters = ref.read(dashboardControllerProvider).savedFilters;
     final existingIndex = savedFilters.indexWhere(
-      (f) => f.id == _loadedPresetId,
+      (f) => f.id == filterDraft.loadedPresetId,
     );
     if (existingIndex == -1) return;
 
@@ -390,7 +203,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     final updated = SavedFilter(
       id: existing.id,
       name: existing.name,
-      root: _buildFilterGroup(),
+      root: filterDraft.toFilterGroup,
       sortColumn: existing.sortColumn,
       sortAscending: existing.sortAscending,
       isDefault: existing.isDefault,
@@ -398,21 +211,14 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
       updatedAt: DateTime.now(),
     );
 
-    // We need a method to update, for now saveFilter overwrites if ID exists?
-    // Wait, saveFilter in DashboardController likely adds. Check logic.
-    // Assuming saveFilter checks for existence or we need an update method.
-    // DashboardController.saveFilter implementation: "state = state.copyWith(savedFilters: [...state.savedFilters, filter]);" usually.
-    // I should check DashboardController.
-    // If it just appends, I need to remove old first.
     ref.read(dashboardControllerProvider.notifier).deleteFilter(existing.id);
     ref.read(dashboardControllerProvider.notifier).saveFilter(updated);
   }
 
   void _onDeletePreset() {
-    if (_loadedPresetId == null) return;
-    ref
-        .read(dashboardControllerProvider.notifier)
-        .deleteFilter(_loadedPresetId!);
+    final loadedId = ref.read(filterDraftControllerProvider).loadedPresetId;
+    if (loadedId == null) return;
+    ref.read(dashboardControllerProvider.notifier).deleteFilter(loadedId);
     _onResetAll();
   }
 
@@ -434,20 +240,22 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    final matchCount = _calculateMatchCount();
+    final draft = ref.watch(filterDraftControllerProvider);
+    final controller = ref.watch(filterDraftControllerProvider.notifier);
+    final matchCount = _calculateMatchCount(draft.toFilterGroup);
 
     SavedFilter? loadedPreset;
-    if (_loadedPresetId != null) {
+    if (draft.loadedPresetId != null) {
       try {
         loadedPreset = DefaultPresets.all.firstWhere(
-          (p) => p.id == _loadedPresetId,
+          (p) => p.id == draft.loadedPresetId,
         );
       } catch (_) {
         try {
           loadedPreset = ref
               .watch(dashboardControllerProvider)
               .savedFilters
-              .firstWhere((f) => f.id == _loadedPresetId);
+              .firstWhere((f) => f.id == draft.loadedPresetId);
         } catch (_) {
           // Preset ID not found (deleted?)
         }
@@ -455,9 +263,11 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     }
 
     final loadedPresetName = loadedPreset?.name ?? "Custom";
-    final isDefault = DefaultPresets.all.any((p) => p.id == _loadedPresetId);
+    final isDefault = DefaultPresets.all.any(
+      (p) => p.id == draft.loadedPresetId,
+    );
 
-    final currentGroup = _buildFilterGroup();
+    final currentGroup = draft.toFilterGroup;
     final hasChanges =
         loadedPreset != null &&
         !_areFiltersEqual(loadedPreset.root, currentGroup);
@@ -468,6 +278,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
         // Apply filters when the drawer is closing
         if (didPop) {
           // Update synchronously to ensure the provider is updated before widget disposal
+          // Note: _applyFilter reads the provider, which is fine.
           _applyFilter();
         }
       },
@@ -511,13 +322,13 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                   leadingIcon: Icon(
                                     Icons.star_outline,
                                     size: 16,
-                                    color: _loadedPresetId == preset.id
+                                    color: draft.loadedPresetId == preset.id
                                         ? Theme.of(context).colorScheme.primary
                                         : null,
                                   ),
                                   style: ButtonStyle(
                                     backgroundColor: WidgetStateProperty.all(
-                                      _loadedPresetId == preset.id
+                                      draft.loadedPresetId == preset.id
                                           ? Theme.of(context)
                                                 .colorScheme
                                                 .primaryContainer
@@ -530,10 +341,11 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                     child: Text(
                                       preset.name,
                                       style: TextStyle(
-                                        fontWeight: _loadedPresetId == preset.id
+                                        fontWeight:
+                                            draft.loadedPresetId == preset.id
                                             ? FontWeight.bold
                                             : null,
-                                        color: _loadedPresetId == preset.id
+                                        color: draft.loadedPresetId == preset.id
                                             ? Theme.of(
                                                 context,
                                               ).colorScheme.primary
@@ -542,10 +354,13 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                     ),
                                   ),
                                   onPressed: () {
-                                    _initFromFilter(preset.root);
-                                    setState(() {
-                                      _loadedPresetId = preset.id;
-                                    });
+                                    controller.initFromFilter(
+                                      preset.root,
+                                      presetId: preset.id,
+                                    );
+                                    _syncControllers(
+                                      ref.read(filterDraftControllerProvider),
+                                    );
                                   },
                                 ),
                               ),
@@ -562,7 +377,8 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                         leadingIcon: Icon(
                                           Icons.perm_identity,
                                           size: 16,
-                                          color: _loadedPresetId == preset.id
+                                          color:
+                                              draft.loadedPresetId == preset.id
                                               ? Theme.of(
                                                   context,
                                                 ).colorScheme.primary
@@ -571,7 +387,8 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                         style: ButtonStyle(
                                           backgroundColor:
                                               WidgetStateProperty.all(
-                                                _loadedPresetId == preset.id
+                                                draft.loadedPresetId ==
+                                                        preset.id
                                                     ? Theme.of(context)
                                                           .colorScheme
                                                           .primaryContainer
@@ -585,10 +402,13 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                           preset.name,
                                           style: TextStyle(
                                             fontWeight:
-                                                _loadedPresetId == preset.id
+                                                draft.loadedPresetId ==
+                                                    preset.id
                                                 ? FontWeight.bold
                                                 : null,
-                                            color: _loadedPresetId == preset.id
+                                            color:
+                                                draft.loadedPresetId ==
+                                                    preset.id
                                                 ? Theme.of(
                                                     context,
                                                   ).colorScheme.primary
@@ -596,10 +416,15 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                           ),
                                         ),
                                         onPressed: () {
-                                          _initFromFilter(preset.root);
-                                          setState(() {
-                                            _loadedPresetId = preset.id;
-                                          });
+                                          controller.initFromFilter(
+                                            preset.root,
+                                            presetId: preset.id,
+                                          );
+                                          _syncControllers(
+                                            ref.read(
+                                              filterDraftControllerProvider,
+                                            ),
+                                          );
                                         },
                                       ),
                                     )
@@ -614,7 +439,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                             leadingIcon: const Icon(Icons.save_as, size: 18),
                             onPressed:
                                 (isDefault ||
-                                    _loadedPresetId == null ||
+                                    draft.loadedPresetId == null ||
                                     !hasChanges)
                                 ? null
                                 : _onUpdatePreset,
@@ -628,18 +453,20 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                           MenuItemButton(
                             leadingIcon: Icon(
                               Icons.delete_outline,
-                              color: (isDefault || _loadedPresetId == null)
+                              color: (isDefault || draft.loadedPresetId == null)
                                   ? null
                                   : Colors.red,
                               size: 18,
                             ),
-                            onPressed: (isDefault || _loadedPresetId == null)
+                            onPressed:
+                                (isDefault || draft.loadedPresetId == null)
                                 ? null
                                 : _onDeletePreset,
                             child: Text(
                               "Delete preset".hardcoded,
                               style: TextStyle(
-                                color: (isDefault || _loadedPresetId == null)
+                                color:
+                                    (isDefault || draft.loadedPresetId == null)
                                     ? null
                                     : Colors.red,
                               ),
@@ -668,7 +495,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                       ),
                     ],
                   ),
-                  if (_loadedPresetId != null) ...[
+                  if (draft.loadedPresetId != null) ...[
                     const SizedBox(height: 12),
                     Tooltip(
                       message: "Currently loaded preset".hardcoded,
@@ -704,36 +531,26 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                         TextFilter(
                           title: "Title".hardcoded,
                           controller: _titleController,
-                          op: _titleOp,
-                          onOpChanged: (op) => setState(() => _titleOp = op),
-                          isExpanded: _expandedFields.contains(
+                          op: draft.titleOp,
+                          onOpChanged: controller.updateTitleOp,
+                          isExpanded: draft.expandedFields.contains(
                             "Title".hardcoded,
                           ),
-                          onExpansionChanged: (v) => setState(() {
-                            if (v) {
-                              _expandedFields.add("Title".hardcoded);
-                            } else {
-                              _expandedFields.remove("Title".hardcoded);
-                            }
-                          }),
+                          onExpansionChanged: (v) =>
+                              controller.toggleExpansion("Title".hardcoded, v),
                         ),
                         EnumFilter<StudyStatus>(
                           title: "Status".hardcoded,
                           values: StudyStatus.values,
-                          selected: _status,
-                          op: _statusOp,
-                          onChanged: (v) => setState(() => _status = v),
-                          onOpChanged: (op) => setState(() => _statusOp = op),
-                          isExpanded: _expandedFields.contains(
+                          selected: draft.status,
+                          op: draft.statusOp,
+                          onChanged: controller.updateStatus,
+                          onOpChanged: controller.updateStatusOp,
+                          isExpanded: draft.expandedFields.contains(
                             "Status".hardcoded,
                           ),
-                          onExpansionChanged: (v) => setState(() {
-                            if (v) {
-                              _expandedFields.add("Status".hardcoded);
-                            } else {
-                              _expandedFields.remove("Status".hardcoded);
-                            }
-                          }),
+                          onExpansionChanged: (v) =>
+                              controller.toggleExpansion("Status".hardcoded, v),
                         ),
                       ],
                     ),
@@ -744,65 +561,46 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                         EnumFilter<Participation>(
                           title: "Participation".hardcoded,
                           values: Participation.values,
-                          selected: _participation,
-                          op: _participationOp,
-                          onChanged: (v) => setState(() => _participation = v),
-                          onOpChanged: (op) =>
-                              setState(() => _participationOp = op),
-                          isExpanded: _expandedFields.contains(
+                          selected: draft.participation,
+                          op: draft.participationOp,
+                          onChanged: controller.updateParticipation,
+                          onOpChanged: controller.updateParticipationOp,
+                          isExpanded: draft.expandedFields.contains(
                             "Participation".hardcoded,
                           ),
-                          onExpansionChanged: (v) => setState(() {
-                            if (v) {
-                              _expandedFields.add("Participation".hardcoded);
-                            } else {
-                              _expandedFields.remove("Participation".hardcoded);
-                            }
-                          }),
+                          onExpansionChanged: (v) => controller.toggleExpansion(
+                            "Participation".hardcoded,
+                            v,
+                          ),
                         ),
                         EnumFilter<ResultSharing>(
                           title: "Result Sharing".hardcoded,
                           values: ResultSharing.values,
-                          selected: _resultSharing,
-                          op: _resultSharingOp,
-                          onChanged: (v) => setState(() => _resultSharing = v),
-                          onOpChanged: (op) =>
-                              setState(() => _resultSharingOp = op),
-                          isExpanded: _expandedFields.contains(
+                          selected: draft.resultSharing,
+                          op: draft.resultSharingOp,
+                          onChanged: controller.updateResultSharing,
+                          onOpChanged: controller.updateResultSharingOp,
+                          isExpanded: draft.expandedFields.contains(
                             "Result Sharing".hardcoded,
                           ),
-                          onExpansionChanged: (v) => setState(() {
-                            if (v) {
-                              _expandedFields.add("Result Sharing".hardcoded);
-                            } else {
-                              _expandedFields.remove(
-                                "Result Sharing".hardcoded,
-                              );
-                            }
-                          }),
+                          onExpansionChanged: (v) => controller.toggleExpansion(
+                            "Result Sharing".hardcoded,
+                            v,
+                          ),
                         ),
                         BoolFilter(
                           title: "Registry Published".hardcoded,
-                          selected: _registryPublished,
-                          op: _registryPublishedOp,
-                          onChanged: (v) =>
-                              setState(() => _registryPublished = v),
-                          onOpChanged: (op) =>
-                              setState(() => _registryPublishedOp = op),
-                          isExpanded: _expandedFields.contains(
+                          selected: draft.registryPublished,
+                          op: draft.registryPublishedOp,
+                          onChanged: controller.updateRegistryPublished,
+                          onOpChanged: controller.updateRegistryPublishedOp,
+                          isExpanded: draft.expandedFields.contains(
                             "Registry Published".hardcoded,
                           ),
-                          onExpansionChanged: (v) => setState(() {
-                            if (v) {
-                              _expandedFields.add(
-                                "Registry Published".hardcoded,
-                              );
-                            } else {
-                              _expandedFields.remove(
-                                "Registry Published".hardcoded,
-                              );
-                            }
-                          }),
+                          onExpansionChanged: (v) => controller.toggleExpansion(
+                            "Registry Published".hardcoded,
+                            v,
+                          ),
                         ),
                       ],
                     ),
@@ -813,59 +611,41 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                         NumberFilter(
                           title: "Participant Count".hardcoded,
                           controller: _participantCountController,
-                          op: _participantCountOp,
-                          onOpChanged: (op) =>
-                              setState(() => _participantCountOp = op),
-                          isExpanded: _expandedFields.contains(
+                          op: draft.participantCountOp,
+                          onOpChanged: controller.updateParticipantCountOp,
+                          isExpanded: draft.expandedFields.contains(
                             "Participant Count".hardcoded,
                           ),
-                          onExpansionChanged: (v) => setState(() {
-                            if (v) {
-                              _expandedFields.add(
-                                "Participant Count".hardcoded,
-                              );
-                            } else {
-                              _expandedFields.remove(
-                                "Participant Count".hardcoded,
-                              );
-                            }
-                          }),
+                          onExpansionChanged: (v) => controller.toggleExpansion(
+                            "Participant Count".hardcoded,
+                            v,
+                          ),
                         ),
                         NumberFilter(
                           title: "Active Count".hardcoded,
                           controller: _activeSubjectCountController,
-                          op: _activeSubjectCountOp,
-                          onOpChanged: (op) =>
-                              setState(() => _activeSubjectCountOp = op),
-                          isExpanded: _expandedFields.contains(
+                          op: draft.activeSubjectCountOp,
+                          onOpChanged: controller.updateActiveSubjectCountOp,
+                          isExpanded: draft.expandedFields.contains(
                             "Active Count".hardcoded,
                           ),
-                          onExpansionChanged: (v) => setState(() {
-                            if (v) {
-                              _expandedFields.add("Active Count".hardcoded);
-                            } else {
-                              _expandedFields.remove("Active Count".hardcoded);
-                            }
-                          }),
+                          onExpansionChanged: (v) => controller.toggleExpansion(
+                            "Active Count".hardcoded,
+                            v,
+                          ),
                         ),
                         NumberFilter(
                           title: "Completed Count".hardcoded,
                           controller: _endedCountController,
-                          op: _endedCountOp,
-                          onOpChanged: (op) =>
-                              setState(() => _endedCountOp = op),
-                          isExpanded: _expandedFields.contains(
+                          op: draft.endedCountOp,
+                          onOpChanged: controller.updateEndedCountOp,
+                          isExpanded: draft.expandedFields.contains(
                             "Completed Count".hardcoded,
                           ),
-                          onExpansionChanged: (v) => setState(() {
-                            if (v) {
-                              _expandedFields.add("Completed Count".hardcoded);
-                            } else {
-                              _expandedFields.remove(
-                                "Completed Count".hardcoded,
-                              );
-                            }
-                          }),
+                          onExpansionChanged: (v) => controller.toggleExpansion(
+                            "Completed Count".hardcoded,
+                            v,
+                          ),
                         ),
                       ],
                     ),
@@ -874,22 +654,17 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                       title: "Dates".hardcoded,
                       children: [
                         DateRangeFilter(
-                          start: _createdAfter,
-                          end: _createdBefore,
-                          onStartChanged: (v) =>
-                              setState(() => _createdAfter = v),
-                          onEndChanged: (v) =>
-                              setState(() => _createdBefore = v),
-                          isExpanded: _expandedFields.contains(
+                          start: draft.createdAfter,
+                          end: draft.createdBefore,
+                          onStartChanged: controller.updateCreatedAfter,
+                          onEndChanged: controller.updateCreatedBefore,
+                          isExpanded: draft.expandedFields.contains(
                             "Created Date".hardcoded,
                           ),
-                          onExpansionChanged: (v) => setState(() {
-                            if (v) {
-                              _expandedFields.add("Created Date".hardcoded);
-                            } else {
-                              _expandedFields.remove("Created Date".hardcoded);
-                            }
-                          }),
+                          onExpansionChanged: (v) => controller.toggleExpansion(
+                            "Created Date".hardcoded,
+                            v,
+                          ),
                         ),
                       ],
                     ),
