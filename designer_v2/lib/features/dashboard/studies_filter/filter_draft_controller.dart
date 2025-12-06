@@ -386,7 +386,7 @@ class FilterDraftController extends _$FilterDraftController {
       newState = newState.copyWith(loadedPresetId: presetId);
     }
 
-    Set<String> expandedFields = {};
+    final Set<String> expandedFields = {};
 
     for (final child in group.children) {
       if (child is FilterCondition) {

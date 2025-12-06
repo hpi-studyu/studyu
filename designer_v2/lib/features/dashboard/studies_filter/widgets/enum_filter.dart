@@ -25,8 +25,8 @@ class EnumFilter<T> extends StatelessWidget {
     required this.isExpanded,
     required this.onExpansionChanged,
     this.getValueLabel,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   String _getSelectLabel(BuildContext context, FilterOperator op) {
     switch (op) {

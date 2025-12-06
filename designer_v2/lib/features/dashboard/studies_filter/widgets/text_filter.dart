@@ -19,8 +19,8 @@ class TextFilter extends StatelessWidget {
     required this.onOpChanged,
     required this.isExpanded,
     required this.onExpansionChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   String _getTextLabel(BuildContext context, FilterOperator op) {
     switch (op) {

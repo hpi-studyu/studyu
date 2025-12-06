@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
-import 'package:studyu_designer_v2/localization/app_localizations.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_draft_controller.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_evaluator.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/bool_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/date_range_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/enum_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/filter_category.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/number_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/text_filter.dart';
+import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/filter_category.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/text_filter.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/number_filter.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/enum_filter.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/bool_filter.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/date_range_filter.dart';
-import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_draft_controller.dart';
 
 class FilterBuilder extends ConsumerStatefulWidget {
   const FilterBuilder({super.key});

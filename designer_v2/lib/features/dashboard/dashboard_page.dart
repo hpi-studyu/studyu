@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
-
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
@@ -11,13 +10,11 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_scaffold.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_builder.dart';
-
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
-import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/app_localizations.dart';
+import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
-
 import 'package:studyu_designer_v2/utils/performance.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {

@@ -18,8 +18,8 @@ class FilterItem extends StatefulWidget {
     this.onReset,
     this.isInitiallyExpanded = false,
     this.onExpansionChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<FilterItem> createState() => _FilterItemState();

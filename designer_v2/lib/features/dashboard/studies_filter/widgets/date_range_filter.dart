@@ -17,8 +17,8 @@ class DateRangeFilter extends StatelessWidget {
     required this.onEndChanged,
     required this.isExpanded,
     required this.onExpansionChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +53,9 @@ class DateRangeFilter extends StatelessWidget {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context)!.filter_date_from,
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       isDense: true,
-                      contentPadding: EdgeInsets.all(8),
+                      contentPadding: const EdgeInsets.all(8),
                     ),
                     child: Text(start?.toString().split(' ')[0] ?? ''),
                   ),
@@ -76,9 +76,9 @@ class DateRangeFilter extends StatelessWidget {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: AppLocalizations.of(context)!.filter_date_to,
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       isDense: true,
-                      contentPadding: EdgeInsets.all(8),
+                      contentPadding: const EdgeInsets.all(8),
                     ),
                     child: Text(end?.toString().split(' ')[0] ?? ''),
                   ),

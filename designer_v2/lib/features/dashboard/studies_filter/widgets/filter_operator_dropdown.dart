@@ -12,8 +12,8 @@ class FilterOperatorDropdown extends StatelessWidget {
     required this.selected,
     required this.onChanged,
     required this.getLabel,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

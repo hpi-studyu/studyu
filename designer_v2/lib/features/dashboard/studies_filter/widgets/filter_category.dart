@@ -4,8 +4,11 @@ class FilterCategory extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
-  const FilterCategory({required this.title, required this.children, Key? key})
-    : super(key: key);
+  const FilterCategory({
+    required this.title,
+    required this.children,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
