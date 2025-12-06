@@ -98,7 +98,8 @@ class DashboardController extends _$DashboardController
     state.searchController.setText(text ?? state.query);
   }
 
-  void setStudiesFilter(StudiesFilter? filter) {
+  Future<void> setStudiesFilter(StudiesFilter? filter) async {
+    await _userRepository.fetchUser();
     final newFilter = filter ?? DashboardState.defaultFilter;
     final pageKey = _getPageKey(newFilter);
     final active = _userRepository.getActiveFilter(pageKey);
