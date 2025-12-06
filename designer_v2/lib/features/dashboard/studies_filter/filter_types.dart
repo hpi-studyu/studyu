@@ -38,7 +38,20 @@ enum StudyProperty {
 }
 
 abstract class FilterElement extends Equatable {
+  const FilterElement();
   String get id;
+
+  Map<String, dynamic> toJson();
+
+  factory FilterElement.fromJson(Map<String, dynamic> json) {
+    final type = json['type'] as String?;
+    if (type == 'group') {
+      return FilterGroup.fromJson(json);
+    } else if (type == 'condition') {
+      return FilterCondition.fromJson(json);
+    }
+    throw ArgumentError('Unknown FilterElement type: $type');
+  }
 }
 
 class FilterCondition extends FilterElement {
@@ -54,6 +67,40 @@ class FilterCondition extends FilterElement {
     required this.operator,
     this.value,
   }) : id = id ?? const Uuid().v4();
+
+  factory FilterCondition.fromJson(Map<String, dynamic> json) {
+    final property = StudyProperty.values.byName(json['property'] as String);
+    final operator = FilterOperator.values.byName(json['operator'] as String);
+    dynamic value = json['value'];
+
+    // Handle DateTime deserialization
+    if (property == StudyProperty.createdAt && value is String) {
+      value = DateTime.parse(value);
+    }
+
+    return FilterCondition(
+      id: json['id'] as String?,
+      property: property,
+      operator: operator,
+      value: value,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    dynamic serializedValue = value;
+    if (value is DateTime) {
+      serializedValue = (value as DateTime).toIso8601String();
+    }
+
+    return {
+      'type': 'condition',
+      'id': id,
+      'property': property.name,
+      'operator': operator.name,
+      'value': serializedValue,
+    };
+  }
 
   FilterCondition copyWith({
     StudyProperty? property,
@@ -84,6 +131,26 @@ class FilterGroup extends FilterElement {
     List<FilterElement>? children,
   }) : id = id ?? const Uuid().v4(),
        children = children ?? [];
+
+  factory FilterGroup.fromJson(Map<String, dynamic> json) {
+    return FilterGroup(
+      id: json['id'] as String?,
+      logic: FilterLogic.values.byName(json['logic'] as String),
+      children: (json['children'] as List<dynamic>)
+          .map((e) => FilterElement.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'type': 'group',
+      'id': id,
+      'logic': logic.name,
+      'children': children.map((e) => e.toJson()).toList(),
+    };
+  }
 
   void add(FilterElement element) {
     children.add(element);
@@ -120,6 +187,38 @@ class SavedFilter {
     DateTime? updatedAt,
   }) : createdAt = createdAt ?? DateTime.now(),
        updatedAt = updatedAt ?? DateTime.now();
+
+  factory SavedFilter.fromJson(Map<String, dynamic> json) {
+    return SavedFilter(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      root: FilterGroup.fromJson(json['root'] as Map<String, dynamic>),
+      sortColumn: json['sort_column'] as String?,
+      sortAscending: json['sort_ascending'] as bool? ?? true,
+      isDefault: json['is_default'] as bool? ?? false,
+      // Icon is NOT serialized
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'] as String)
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'root': root.toJson(),
+      'sort_column': sortColumn,
+      'sort_ascending': sortAscending,
+      'is_default': isDefault,
+      // Icon is NOT serialized
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+    };
+  }
 }
 
 class DefaultPresets {
