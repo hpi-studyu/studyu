@@ -650,7 +650,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                         (op) => setState(() => _statusOp = op),
                       ),
                     ]),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
                     _buildCategory("Visibility & Role".hardcoded, [
                       _buildEnumFilter<Participation>(
                         "Participation".hardcoded,
@@ -676,7 +676,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                         (op) => setState(() => _registryPublishedOp = op),
                       ),
                     ]),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
                     _buildCategory("Participants".hardcoded, [
                       _buildNumberFilter(
                         "Participant Count".hardcoded,
@@ -697,7 +697,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                         (op) => setState(() => _endedCountOp = op),
                       ),
                     ]),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
                     _buildCategory("Dates".hardcoded, [_buildDateRange()]),
                   ],
                 ),
@@ -800,11 +800,11 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
           ).colorScheme.outlineVariant.withValues(alpha: 0.5),
         ),
       ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
+      clipBehavior: Clip.hardEdge,
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          title: Text(
             title,
             style: TextStyle(
               fontSize: 14,
@@ -813,9 +813,11 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
               letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(height: 16),
-          ...children,
-        ],
+          initiallyExpanded: true,
+          dense: true,
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          children: children,
+        ),
       ),
     );
   }
@@ -831,7 +833,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      margin: const EdgeInsets.only(bottom: 12.0),
+      margin: const EdgeInsets.only(bottom: 8.0),
       decoration: isExpanded
           ? BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
@@ -841,7 +843,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
               ),
             )
           : null,
-      padding: isExpanded ? const EdgeInsets.all(12) : EdgeInsets.zero,
+      padding: isExpanded ? const EdgeInsets.all(8) : EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -883,7 +885,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                 ),
             ],
           ),
-          if (isExpanded) ...[const SizedBox(height: 12), child],
+          if (isExpanded) ...[const SizedBox(height: 8), child],
         ],
       ),
     );
@@ -924,7 +926,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
               onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 isDense: true,
-                contentPadding: EdgeInsets.all(12),
+                contentPadding: EdgeInsets.all(8),
                 border: OutlineInputBorder(),
               ),
             ),
@@ -970,7 +972,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 isDense: true,
-                contentPadding: EdgeInsets.all(12),
+                contentPadding: EdgeInsets.all(8),
                 border: OutlineInputBorder(),
                 hintText: "0",
               ),
@@ -1023,7 +1025,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                 isDense: true,
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 12,
-                  vertical: 12,
+                  vertical: 8,
                 ),
                 border: OutlineInputBorder(),
               ),
@@ -1076,7 +1078,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                 isDense: true,
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 12,
-                  vertical: 12,
+                  vertical: 8,
                 ),
                 border: OutlineInputBorder(),
               ),
@@ -1104,7 +1106,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
       },
       decoration: const InputDecoration(
         isDense: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         border: OutlineInputBorder(),
       ),
     );
@@ -1184,6 +1186,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                       labelText: "From",
                       border: OutlineInputBorder(),
                       isDense: true,
+                      contentPadding: EdgeInsets.all(8),
                     ),
                     child: Text(_createdAfter?.toString().split(' ')[0] ?? ''),
                   ),
@@ -1206,6 +1209,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                       labelText: "To",
                       border: OutlineInputBorder(),
                       isDense: true,
+                      contentPadding: EdgeInsets.all(8),
                     ),
                     child: Text(_createdBefore?.toString().split(' ')[0] ?? ''),
                   ),
