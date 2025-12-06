@@ -513,13 +513,38 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                             menuChildren: [
                               ...DefaultPresets.all.map(
                                 (preset) => MenuItemButton(
-                                  leadingIcon: const Icon(
+                                  leadingIcon: Icon(
                                     Icons.star_outline,
                                     size: 16,
+                                    color: _loadedPresetId == preset.id
+                                        ? Theme.of(context).colorScheme.primary
+                                        : null,
+                                  ),
+                                  style: ButtonStyle(
+                                    backgroundColor: WidgetStateProperty.all(
+                                      _loadedPresetId == preset.id
+                                          ? Theme.of(context)
+                                                .colorScheme
+                                                .primaryContainer
+                                                .withValues(alpha: 0.2)
+                                          : null,
+                                    ),
                                   ),
                                   child: Tooltip(
                                     message: _getPresetTooltip(preset.id),
-                                    child: Text(preset.name),
+                                    child: Text(
+                                      preset.name,
+                                      style: TextStyle(
+                                        fontWeight: _loadedPresetId == preset.id
+                                            ? FontWeight.bold
+                                            : null,
+                                        color: _loadedPresetId == preset.id
+                                            ? Theme.of(
+                                                context,
+                                              ).colorScheme.primary
+                                            : null,
+                                      ),
+                                    ),
                                   ),
                                   onPressed: () {
                                     _initFromFilter(preset.root);
@@ -539,11 +564,42 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                     .savedFilters
                                     .map(
                                       (preset) => MenuItemButton(
-                                        leadingIcon: const Icon(
+                                        leadingIcon: Icon(
                                           Icons.perm_identity,
                                           size: 16,
+                                          color: _loadedPresetId == preset.id
+                                              ? Theme.of(
+                                                  context,
+                                                ).colorScheme.primary
+                                              : null,
                                         ),
-                                        child: Text(preset.name),
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              WidgetStateProperty.all(
+                                                _loadedPresetId == preset.id
+                                                    ? Theme.of(context)
+                                                          .colorScheme
+                                                          .primaryContainer
+                                                          .withValues(
+                                                            alpha: 0.2,
+                                                          )
+                                                    : null,
+                                              ),
+                                        ),
+                                        child: Text(
+                                          preset.name,
+                                          style: TextStyle(
+                                            fontWeight:
+                                                _loadedPresetId == preset.id
+                                                ? FontWeight.bold
+                                                : null,
+                                            color: _loadedPresetId == preset.id
+                                                ? Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary
+                                                : null,
+                                          ),
+                                        ),
                                         onPressed: () {
                                           _initFromFilter(preset.root);
                                           setState(() {
@@ -596,9 +652,22 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                           ),
                           const Divider(),
                           MenuItemButton(
-                            leadingIcon: const Icon(Icons.refresh, size: 18),
+                            leadingIcon: Icon(
+                              Icons.restart_alt,
+                              size: 18,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                            ),
                             onPressed: _onResetAll,
-                            child: Text("Clear / New".hardcoded),
+                            child: Text(
+                              "Clear all".hardcoded,
+                              style: TextStyle(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -711,51 +780,12 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
               color: Theme.of(context).colorScheme.surface,
               child: Column(
                 children: [
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 16,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primaryContainer.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.primary.withValues(alpha: 0.1),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.filter_list,
-                          size: 20,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            "$matchCount studies match current criteria"
-                                .hardcoded,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
                   Row(
                     children: [
                       TextButton.icon(
                         onPressed: _onResetAll,
                         icon: const Icon(Icons.restart_alt),
-                        label: Text("Reset form".hardcoded),
+                        label: Text("Clear all".hardcoded),
                         style: TextButton.styleFrom(
                           foregroundColor: Theme.of(
                             context,
@@ -770,7 +800,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                           Navigator.of(context).pop();
                         },
                         icon: const Icon(Icons.check),
-                        label: Text("Apply Filters".hardcoded),
+                        label: Text("Show $matchCount Studies".hardcoded),
                         style: FilledButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 24,
@@ -854,9 +884,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                 style: TextStyle(
                   fontWeight: isExpanded ? FontWeight.w600 : FontWeight.w500,
                   fontSize: 13,
-                  color: isExpanded
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.onSurface,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
               const Spacer(),
