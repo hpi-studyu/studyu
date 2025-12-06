@@ -15,7 +15,7 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_buil
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
 
 import 'package:studyu_designer_v2/utils/performance.dart';
@@ -50,18 +50,34 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   String _getPresetTooltip(String id) {
     if (id == DefaultPresets.myActiveStudies.id) {
-      return "Studies you own that are currently running".hardcoded;
+      return AppLocalizations.of(context)!.preset_tooltip_my_active_studies;
     } else if (id == DefaultPresets.studiesNeedingAttention.id) {
-      return "Running studies with low participation".hardcoded;
+      return AppLocalizations.of(
+        context,
+      )!.preset_tooltip_studies_needing_attention;
     } else if (id == DefaultPresets.recentlyCreated.id) {
-      return "Studies created in the last 30 days".hardcoded;
+      return AppLocalizations.of(context)!.preset_tooltip_recently_created;
     } else if (id == DefaultPresets.publicStudies.id) {
-      return "Studies published to the registry or with public results"
-          .hardcoded;
+      return AppLocalizations.of(context)!.preset_tooltip_public_studies;
     } else if (id == DefaultPresets.draftStudies.id) {
-      return "Studies currently in draft mode".hardcoded;
+      return AppLocalizations.of(context)!.preset_tooltip_draft_studies;
     }
-    return "Custom preset".hardcoded;
+    return AppLocalizations.of(context)!.preset_custom;
+  }
+
+  String _getLocalizedPresetName(String id) {
+    if (id == DefaultPresets.myActiveStudies.id) {
+      return AppLocalizations.of(context)!.preset_my_active_studies;
+    } else if (id == DefaultPresets.studiesNeedingAttention.id) {
+      return AppLocalizations.of(context)!.preset_studies_needing_attention;
+    } else if (id == DefaultPresets.recentlyCreated.id) {
+      return AppLocalizations.of(context)!.preset_recently_created;
+    } else if (id == DefaultPresets.publicStudies.id) {
+      return AppLocalizations.of(context)!.preset_public_studies;
+    } else if (id == DefaultPresets.draftStudies.id) {
+      return AppLocalizations.of(context)!.preset_draft_studies;
+    }
+    return AppLocalizations.of(context)!.preset_custom;
   }
 
   @override
@@ -117,7 +133,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 }
                               },
                               icon: const Icon(Icons.filter_list),
-                              label: Text("Filter".hardcoded),
+                              label: Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.filter_button_main,
+                              ),
                               style: OutlinedButton.styleFrom(
                                 backgroundColor: state.activeFilter != null
                                     ? theme.colorScheme.primaryContainer
@@ -135,7 +155,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         menuChildren: [
                           MenuItemButton(
                             child: Text(
-                              "Default Presets".hardcoded,
+                              AppLocalizations.of(
+                                context,
+                              )!.filter_section_default_presets,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -173,7 +195,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       );
                                 },
                                 child: Text(
-                                  preset.name,
+                                  _getLocalizedPresetName(preset.id),
                                   style: isSelected
                                       ? TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -188,7 +210,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           if (state.savedFilters.isNotEmpty) ...[
                             MenuItemButton(
                               child: Text(
-                                "Custom Presets".hardcoded,
+                                AppLocalizations.of(
+                                  context,
+                                )!.filter_section_custom_presets,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -245,7 +269,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   state.activeFilter!.children.isNotEmpty,
                               child: const Icon(Icons.tune),
                             ),
-                            child: Text("Advanced Filters...".hardcoded),
+                            child: Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.filter_button_advanced,
+                            ),
                             onPressed: () {
                               _scaffoldKey.currentState!.openEndDrawer();
                             },
@@ -259,7 +287,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 color: Theme.of(context).colorScheme.error,
                               ),
                               child: Text(
-                                "Clear filter".hardcoded,
+                                AppLocalizations.of(
+                                  context,
+                                )!.filter_button_clear,
                                 style: TextStyle(
                                   color: Theme.of(context).colorScheme.error,
                                 ),

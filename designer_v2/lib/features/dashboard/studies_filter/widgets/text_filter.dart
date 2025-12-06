@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/filter_item.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/filter_operator_dropdown.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_localizations.dart';
 
 class TextFilter extends StatelessWidget {
   final String title;
@@ -22,16 +22,16 @@ class TextFilter extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  String _getTextLabel(FilterOperator op) {
+  String _getTextLabel(BuildContext context, FilterOperator op) {
     switch (op) {
       case FilterOperator.contains:
-        return "Contains".hardcoded;
+        return AppLocalizations.of(context)!.filter_operator_contains;
       case FilterOperator.equals:
-        return "Matches".hardcoded;
+        return AppLocalizations.of(context)!.filter_operator_equals;
       case FilterOperator.startsWith:
-        return "Starts with".hardcoded;
+        return AppLocalizations.of(context)!.filter_operator_starts_with;
       case FilterOperator.endsWith:
-        return "Ends with".hardcoded;
+        return AppLocalizations.of(context)!.filter_operator_ends_with;
       default:
         // Simple extension for capitalization if not available here
         final name = op.name;
@@ -62,7 +62,7 @@ class TextFilter extends StatelessWidget {
               ],
               selected: op,
               onChanged: onOpChanged,
-              getLabel: _getTextLabel,
+              getLabel: (op) => _getTextLabel(context, op),
             ),
           ),
           const SizedBox(width: 8),

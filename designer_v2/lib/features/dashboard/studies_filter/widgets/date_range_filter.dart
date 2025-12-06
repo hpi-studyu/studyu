@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/filter_item.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_localizations.dart';
 
 class DateRangeFilter extends StatelessWidget {
   final DateTime? start;
@@ -24,8 +24,9 @@ class DateRangeFilter extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasValue = start != null || end != null;
     return FilterItem(
-      keyName: "Created Date".hardcoded,
-      title: "Created Date".hardcoded,
+      keyName:
+          "Created Date", // Keep key internal or localize if used for tracking
+      title: AppLocalizations.of(context)!.filter_field_created_date,
       isActive: hasValue,
       isInitiallyExpanded: isExpanded,
       onExpansionChanged: onExpansionChanged,
@@ -50,8 +51,8 @@ class DateRangeFilter extends StatelessWidget {
                     if (date != null) onStartChanged(date);
                   },
                   child: InputDecorator(
-                    decoration: const InputDecoration(
-                      labelText: "From",
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.filter_date_from,
                       border: OutlineInputBorder(),
                       isDense: true,
                       contentPadding: EdgeInsets.all(8),
@@ -73,8 +74,8 @@ class DateRangeFilter extends StatelessWidget {
                     if (date != null) onEndChanged(date);
                   },
                   child: InputDecorator(
-                    decoration: const InputDecoration(
-                      labelText: "To",
+                    decoration: InputDecoration(
+                      labelText: AppLocalizations.of(context)!.filter_date_to,
                       border: OutlineInputBorder(),
                       isDense: true,
                       contentPadding: EdgeInsets.all(8),

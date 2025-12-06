@@ -467,7 +467,7 @@ abstract class AppLocalizations {
   /// No description provided for @study_status_running.
   ///
   /// In en, this message translates to:
-  /// **'Live'**
+  /// **'Running'**
   String get study_status_running;
 
   /// No description provided for @study_status_running_description.
@@ -3932,6 +3932,372 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Custom: Define your own sequence pattern to meet specific study requirements.'**
   String get study_schedule_custom_description;
+
+  /// No description provided for @filter_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter Studies'**
+  String get filter_studies;
+
+  /// No description provided for @filter_manage_presets.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Presets'**
+  String get filter_manage_presets;
+
+  /// No description provided for @filter_load_preset.
+  ///
+  /// In en, this message translates to:
+  /// **'Load Preset'**
+  String get filter_load_preset;
+
+  /// No description provided for @filter_save_changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get filter_save_changes;
+
+  /// No description provided for @filter_save_as_new.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as new'**
+  String get filter_save_as_new;
+
+  /// No description provided for @filter_delete_preset.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete preset'**
+  String get filter_delete_preset;
+
+  /// No description provided for @filter_reset_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all'**
+  String get filter_reset_all;
+
+  /// No description provided for @filter_show_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'Show {count} Studies'**
+  String filter_show_studies(int count);
+
+  /// No description provided for @filter_dialog_save_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Filter Preset'**
+  String get filter_dialog_save_title;
+
+  /// No description provided for @filter_dialog_preset_name_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Preset Name'**
+  String get filter_dialog_preset_name_hint;
+
+  /// No description provided for @filter_category_basic.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Info'**
+  String get filter_category_basic;
+
+  /// No description provided for @filter_category_visibility.
+  ///
+  /// In en, this message translates to:
+  /// **'Visibility & Role'**
+  String get filter_category_visibility;
+
+  /// No description provided for @filter_category_participants.
+  ///
+  /// In en, this message translates to:
+  /// **'Participants'**
+  String get filter_category_participants;
+
+  /// No description provided for @filter_category_dates.
+  ///
+  /// In en, this message translates to:
+  /// **'Dates'**
+  String get filter_category_dates;
+
+  /// No description provided for @filter_field_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get filter_field_title;
+
+  /// No description provided for @filter_field_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get filter_field_status;
+
+  /// No description provided for @filter_field_participation.
+  ///
+  /// In en, this message translates to:
+  /// **'Participation'**
+  String get filter_field_participation;
+
+  /// No description provided for @filter_field_result_sharing.
+  ///
+  /// In en, this message translates to:
+  /// **'Result Sharing'**
+  String get filter_field_result_sharing;
+
+  /// No description provided for @filter_field_registry_published.
+  ///
+  /// In en, this message translates to:
+  /// **'Registry Published'**
+  String get filter_field_registry_published;
+
+  /// No description provided for @filter_field_participant_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Participant Count'**
+  String get filter_field_participant_count;
+
+  /// No description provided for @filter_field_active_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Count'**
+  String get filter_field_active_count;
+
+  /// No description provided for @filter_field_completed_count.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Count'**
+  String get filter_field_completed_count;
+
+  /// No description provided for @filter_field_created_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Created Date'**
+  String get filter_field_created_date;
+
+  /// No description provided for @filter_date_from.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get filter_date_from;
+
+  /// No description provided for @filter_date_to.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get filter_date_to;
+
+  /// No description provided for @filter_operator_contains.
+  ///
+  /// In en, this message translates to:
+  /// **'Contains'**
+  String get filter_operator_contains;
+
+  /// No description provided for @filter_operator_equals.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches'**
+  String get filter_operator_equals;
+
+  /// No description provided for @filter_operator_starts_with.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts with'**
+  String get filter_operator_starts_with;
+
+  /// No description provided for @filter_operator_ends_with.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends with'**
+  String get filter_operator_ends_with;
+
+  /// No description provided for @filter_operator_is.
+  ///
+  /// In en, this message translates to:
+  /// **'Is'**
+  String get filter_operator_is;
+
+  /// No description provided for @filter_operator_is_not.
+  ///
+  /// In en, this message translates to:
+  /// **'Is not'**
+  String get filter_operator_is_not;
+
+  /// No description provided for @filter_operator_min.
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get filter_operator_min;
+
+  /// No description provided for @filter_operator_max.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get filter_operator_max;
+
+  /// No description provided for @filter_operator_exactly.
+  ///
+  /// In en, this message translates to:
+  /// **'Exactly'**
+  String get filter_operator_exactly;
+
+  /// No description provided for @filter_operator_more_than.
+  ///
+  /// In en, this message translates to:
+  /// **'More than'**
+  String get filter_operator_more_than;
+
+  /// No description provided for @filter_operator_less_than.
+  ///
+  /// In en, this message translates to:
+  /// **'Less than'**
+  String get filter_operator_less_than;
+
+  /// No description provided for @filter_bool_yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get filter_bool_yes;
+
+  /// No description provided for @filter_bool_no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get filter_bool_no;
+
+  /// No description provided for @preset_my_active_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'My Active Studies'**
+  String get preset_my_active_studies;
+
+  /// No description provided for @preset_studies_needing_attention.
+  ///
+  /// In en, this message translates to:
+  /// **'Studies Needing Attention'**
+  String get preset_studies_needing_attention;
+
+  /// No description provided for @preset_recently_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently Created'**
+  String get preset_recently_created;
+
+  /// No description provided for @preset_public_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'Public Studies'**
+  String get preset_public_studies;
+
+  /// No description provided for @preset_draft_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft Studies'**
+  String get preset_draft_studies;
+
+  /// No description provided for @preset_custom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom preset'**
+  String get preset_custom;
+
+  /// No description provided for @preset_none.
+  ///
+  /// In en, this message translates to:
+  /// **'No custom presets'**
+  String get preset_none;
+
+  /// No description provided for @preset_tooltip_my_active_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'Studies you own that are currently running'**
+  String get preset_tooltip_my_active_studies;
+
+  /// No description provided for @preset_tooltip_studies_needing_attention.
+  ///
+  /// In en, this message translates to:
+  /// **'Running studies with low participation'**
+  String get preset_tooltip_studies_needing_attention;
+
+  /// No description provided for @preset_tooltip_recently_created.
+  ///
+  /// In en, this message translates to:
+  /// **'Studies created in the last 30 days'**
+  String get preset_tooltip_recently_created;
+
+  /// No description provided for @preset_tooltip_public_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'Studies published to the registry or with public results'**
+  String get preset_tooltip_public_studies;
+
+  /// No description provided for @preset_tooltip_draft_studies.
+  ///
+  /// In en, this message translates to:
+  /// **'Studies currently in draft mode'**
+  String get preset_tooltip_draft_studies;
+
+  /// No description provided for @preset_loaded_tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Currently loaded preset'**
+  String get preset_loaded_tooltip;
+
+  /// No description provided for @filter_result_sharing_public.
+  ///
+  /// In en, this message translates to:
+  /// **'Public'**
+  String get filter_result_sharing_public;
+
+  /// No description provided for @filter_result_sharing_private.
+  ///
+  /// In en, this message translates to:
+  /// **'Private'**
+  String get filter_result_sharing_private;
+
+  /// No description provided for @filter_result_sharing_organization.
+  ///
+  /// In en, this message translates to:
+  /// **'Organization'**
+  String get filter_result_sharing_organization;
+
+  /// No description provided for @participation_open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get participation_open;
+
+  /// No description provided for @participation_invite.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite-only'**
+  String get participation_invite;
+
+  /// No description provided for @filter_section_default_presets.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Presets'**
+  String get filter_section_default_presets;
+
+  /// No description provided for @filter_section_custom_presets.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom Presets'**
+  String get filter_section_custom_presets;
+
+  /// No description provided for @filter_button_advanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Filters...'**
+  String get filter_button_advanced;
+
+  /// No description provided for @filter_button_clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filter'**
+  String get filter_button_clear;
+
+  /// No description provided for @filter_button_main.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter_button_main;
 }
 
 class _AppLocalizationsDelegate

@@ -204,7 +204,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'This study is still being drafted.';
 
   @override
-  String get study_status_running => 'Live';
+  String get study_status_running => 'Running';
 
   @override
   String get study_status_running_description =>
@@ -2291,4 +2291,193 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get study_schedule_custom_description =>
       'Custom: Define your own sequence pattern to meet specific study requirements.';
+
+  @override
+  String get filter_studies => 'Filter Studies';
+
+  @override
+  String get filter_manage_presets => 'Manage Presets';
+
+  @override
+  String get filter_load_preset => 'Load Preset';
+
+  @override
+  String get filter_save_changes => 'Save changes';
+
+  @override
+  String get filter_save_as_new => 'Save as new';
+
+  @override
+  String get filter_delete_preset => 'Delete preset';
+
+  @override
+  String get filter_reset_all => 'Clear all';
+
+  @override
+  String filter_show_studies(int count) {
+    return 'Show $count Studies';
+  }
+
+  @override
+  String get filter_dialog_save_title => 'Save Filter Preset';
+
+  @override
+  String get filter_dialog_preset_name_hint => 'Preset Name';
+
+  @override
+  String get filter_category_basic => 'Basic Info';
+
+  @override
+  String get filter_category_visibility => 'Visibility & Role';
+
+  @override
+  String get filter_category_participants => 'Participants';
+
+  @override
+  String get filter_category_dates => 'Dates';
+
+  @override
+  String get filter_field_title => 'Title';
+
+  @override
+  String get filter_field_status => 'Status';
+
+  @override
+  String get filter_field_participation => 'Participation';
+
+  @override
+  String get filter_field_result_sharing => 'Result Sharing';
+
+  @override
+  String get filter_field_registry_published => 'Registry Published';
+
+  @override
+  String get filter_field_participant_count => 'Participant Count';
+
+  @override
+  String get filter_field_active_count => 'Active Count';
+
+  @override
+  String get filter_field_completed_count => 'Completed Count';
+
+  @override
+  String get filter_field_created_date => 'Created Date';
+
+  @override
+  String get filter_date_from => 'From';
+
+  @override
+  String get filter_date_to => 'To';
+
+  @override
+  String get filter_operator_contains => 'Contains';
+
+  @override
+  String get filter_operator_equals => 'Matches';
+
+  @override
+  String get filter_operator_starts_with => 'Starts with';
+
+  @override
+  String get filter_operator_ends_with => 'Ends with';
+
+  @override
+  String get filter_operator_is => 'Is';
+
+  @override
+  String get filter_operator_is_not => 'Is not';
+
+  @override
+  String get filter_operator_min => 'Min';
+
+  @override
+  String get filter_operator_max => 'Max';
+
+  @override
+  String get filter_operator_exactly => 'Exactly';
+
+  @override
+  String get filter_operator_more_than => 'More than';
+
+  @override
+  String get filter_operator_less_than => 'Less than';
+
+  @override
+  String get filter_bool_yes => 'Yes';
+
+  @override
+  String get filter_bool_no => 'No';
+
+  @override
+  String get preset_my_active_studies => 'My Active Studies';
+
+  @override
+  String get preset_studies_needing_attention => 'Studies Needing Attention';
+
+  @override
+  String get preset_recently_created => 'Recently Created';
+
+  @override
+  String get preset_public_studies => 'Public Studies';
+
+  @override
+  String get preset_draft_studies => 'Draft Studies';
+
+  @override
+  String get preset_custom => 'Custom preset';
+
+  @override
+  String get preset_none => 'No custom presets';
+
+  @override
+  String get preset_tooltip_my_active_studies =>
+      'Studies you own that are currently running';
+
+  @override
+  String get preset_tooltip_studies_needing_attention =>
+      'Running studies with low participation';
+
+  @override
+  String get preset_tooltip_recently_created =>
+      'Studies created in the last 30 days';
+
+  @override
+  String get preset_tooltip_public_studies =>
+      'Studies published to the registry or with public results';
+
+  @override
+  String get preset_tooltip_draft_studies => 'Studies currently in draft mode';
+
+  @override
+  String get preset_loaded_tooltip => 'Currently loaded preset';
+
+  @override
+  String get filter_result_sharing_public => 'Public';
+
+  @override
+  String get filter_result_sharing_private => 'Private';
+
+  @override
+  String get filter_result_sharing_organization => 'Organization';
+
+  @override
+  String get participation_open => 'Open';
+
+  @override
+  String get participation_invite => 'Invite-only';
+
+  @override
+  String get filter_section_default_presets => 'Default Presets';
+
+  @override
+  String get filter_section_custom_presets => 'Custom Presets';
+
+  @override
+  String get filter_button_advanced => 'Advanced Filters...';
+
+  @override
+  String get filter_button_clear => 'Clear filter';
+
+  @override
+  String get filter_button_main => 'Filter';
 }

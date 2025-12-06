@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_controller.dart';
+import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_evaluator.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
@@ -155,19 +156,23 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     final name = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Save Filter Preset".hardcoded),
+        title: Text(AppLocalizations.of(context)!.filter_dialog_save_title),
         content: TextField(
           controller: controller,
-          decoration: InputDecoration(hintText: "Preset Name".hardcoded),
+          decoration: InputDecoration(
+            hintText: AppLocalizations.of(
+              context,
+            )!.filter_dialog_preset_name_hint,
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text("Cancel".hardcoded),
+            child: Text(AppLocalizations.of(context)!.dialog_cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, controller.text),
-            child: Text("Save".hardcoded),
+            child: Text(AppLocalizations.of(context)!.dialog_save),
           ),
         ],
       ),
@@ -222,20 +227,67 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     _onResetAll();
   }
 
-  String _getPresetTooltip(String id) {
-    if (id == DefaultPresets.myActiveStudies.id) {
-      return "Studies you own that are currently running".hardcoded;
-    } else if (id == DefaultPresets.studiesNeedingAttention.id) {
-      return "Running studies with low participation".hardcoded;
-    } else if (id == DefaultPresets.recentlyCreated.id) {
-      return "Studies created in the last 30 days".hardcoded;
-    } else if (id == DefaultPresets.publicStudies.id) {
-      return "Studies published to the registry or with public results"
-          .hardcoded;
-    } else if (id == DefaultPresets.draftStudies.id) {
-      return "Studies currently in draft mode".hardcoded;
+  String _getStudyStatusLabel(StudyStatus status) {
+    switch (status) {
+      case StudyStatus.draft:
+        return AppLocalizations.of(context)!.study_status_draft;
+      case StudyStatus.running:
+        return AppLocalizations.of(context)!.study_status_running;
+      case StudyStatus.closed:
+        return AppLocalizations.of(context)!.study_status_closed;
     }
-    return "Custom preset".hardcoded;
+  }
+
+  String _getParticipationLabel(Participation participation) {
+    switch (participation) {
+      case Participation.open:
+        return AppLocalizations.of(context)!.participation_open;
+      case Participation.invite:
+        return AppLocalizations.of(context)!.participation_invite;
+    }
+  }
+
+  String _getResultSharingLabel(ResultSharing sharing) {
+    switch (sharing) {
+      case ResultSharing.public:
+        return AppLocalizations.of(context)!.filter_result_sharing_public;
+      case ResultSharing.private:
+        return AppLocalizations.of(context)!.filter_result_sharing_private;
+      case ResultSharing.organization:
+        return AppLocalizations.of(context)!.filter_result_sharing_organization;
+    }
+  }
+
+  String _getPresetTooltip(String? id) {
+    if (id == DefaultPresets.myActiveStudies.id) {
+      return AppLocalizations.of(context)!.preset_tooltip_my_active_studies;
+    } else if (id == DefaultPresets.studiesNeedingAttention.id) {
+      return AppLocalizations.of(
+        context,
+      )!.preset_tooltip_studies_needing_attention;
+    } else if (id == DefaultPresets.recentlyCreated.id) {
+      return AppLocalizations.of(context)!.preset_tooltip_recently_created;
+    } else if (id == DefaultPresets.publicStudies.id) {
+      return AppLocalizations.of(context)!.preset_tooltip_public_studies;
+    } else if (id == DefaultPresets.draftStudies.id) {
+      return AppLocalizations.of(context)!.preset_tooltip_draft_studies;
+    }
+    return AppLocalizations.of(context)!.preset_custom;
+  }
+
+  String _getLocalizedPresetName(String id) {
+    if (id == DefaultPresets.myActiveStudies.id) {
+      return AppLocalizations.of(context)!.preset_my_active_studies;
+    } else if (id == DefaultPresets.studiesNeedingAttention.id) {
+      return AppLocalizations.of(context)!.preset_studies_needing_attention;
+    } else if (id == DefaultPresets.recentlyCreated.id) {
+      return AppLocalizations.of(context)!.preset_recently_created;
+    } else if (id == DefaultPresets.publicStudies.id) {
+      return AppLocalizations.of(context)!.preset_public_studies;
+    } else if (id == DefaultPresets.draftStudies.id) {
+      return AppLocalizations.of(context)!.preset_draft_studies;
+    }
+    return AppLocalizations.of(context)!.preset_custom;
   }
 
   @override
@@ -262,10 +314,18 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
       }
     }
 
-    final loadedPresetName = loadedPreset?.name ?? "Custom";
+    String loadedPresetName = AppLocalizations.of(context)!.preset_custom;
     final isDefault = DefaultPresets.all.any(
       (p) => p.id == draft.loadedPresetId,
     );
+
+    if (loadedPreset != null) {
+      if (isDefault) {
+        loadedPresetName = _getLocalizedPresetName(loadedPreset.id);
+      } else {
+        loadedPresetName = loadedPreset.name;
+      }
+    }
 
     final currentGroup = draft.toFilterGroup;
     final hasChanges =
@@ -297,7 +357,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                   Row(
                     children: [
                       Text(
-                        "Filter Studies".hardcoded,
+                        AppLocalizations.of(context)!.filter_studies,
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       const Spacer(),
@@ -311,7 +371,11 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                 controller.open();
                               }
                             },
-                            child: Text("Manage Presets".hardcoded),
+                            child: Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.filter_manage_presets,
+                            ),
                           );
                         },
                         menuChildren: [
@@ -338,7 +402,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                   child: Tooltip(
                                     message: _getPresetTooltip(preset.id),
                                     child: Text(
-                                      preset.name,
+                                      _getLocalizedPresetName(preset.id),
                                       style: TextStyle(
                                         fontWeight: isSelected
                                             ? FontWeight.bold
@@ -413,10 +477,14 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                     })
                               else
                                 MenuItemButton(
-                                  child: Text("No custom presets".hardcoded),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.preset_none,
+                                  ),
                                 ),
                             ],
-                            child: Text("Load Preset".hardcoded),
+                            child: Text(
+                              AppLocalizations.of(context)!.filter_load_preset,
+                            ),
                           ),
                           MenuItemButton(
                             leadingIcon: const Icon(Icons.save_as, size: 18),
@@ -426,12 +494,16 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                     !hasChanges)
                                 ? null
                                 : _onUpdatePreset,
-                            child: Text("Save changes".hardcoded),
+                            child: Text(
+                              AppLocalizations.of(context)!.filter_save_changes,
+                            ),
                           ),
                           MenuItemButton(
                             leadingIcon: const Icon(Icons.save, size: 18),
                             onPressed: _onSavePreset,
-                            child: Text("Save as new".hardcoded),
+                            child: Text(
+                              AppLocalizations.of(context)!.filter_save_as_new,
+                            ),
                           ),
                           MenuItemButton(
                             leadingIcon: Icon(
@@ -446,7 +518,9 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                 ? null
                                 : _onDeletePreset,
                             child: Text(
-                              "Delete preset".hardcoded,
+                              AppLocalizations.of(
+                                context,
+                              )!.filter_delete_preset,
                               style: TextStyle(
                                 color:
                                     (isDefault || draft.loadedPresetId == null)
@@ -462,7 +536,9 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                   if (draft.loadedPresetId != null) ...[
                     const SizedBox(height: 12),
                     Tooltip(
-                      message: "Currently loaded preset".hardcoded,
+                      message: AppLocalizations.of(
+                        context,
+                      )!.preset_loaded_tooltip,
                       child: Chip(
                         label: Text(loadedPresetName),
                         onDeleted: _onResetAll,
@@ -482,10 +558,14 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     FilterCategory(
-                      title: "Basic Info".hardcoded,
+                      title: AppLocalizations.of(
+                        context,
+                      )!.filter_category_basic,
                       children: [
                         TextFilter(
-                          title: "Title".hardcoded,
+                          title: AppLocalizations.of(
+                            context,
+                          )!.filter_field_title,
                           controller: _titleController,
                           op: draft.titleOp,
                           onOpChanged: controller.updateTitleOp,
@@ -496,12 +576,15 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                               controller.toggleExpansion("Title".hardcoded, v),
                         ),
                         EnumFilter<StudyStatus>(
-                          title: "Status".hardcoded,
+                          title: AppLocalizations.of(
+                            context,
+                          )!.filter_field_status,
                           values: StudyStatus.values,
                           selected: draft.status,
                           op: draft.statusOp,
                           onChanged: controller.updateStatus,
                           onOpChanged: controller.updateStatusOp,
+                          getValueLabel: _getStudyStatusLabel,
                           isExpanded: draft.expandedFields.contains(
                             "Status".hardcoded,
                           ),
@@ -512,15 +595,20 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                     ),
                     const SizedBox(height: 16),
                     FilterCategory(
-                      title: "Visibility & Role".hardcoded,
+                      title: AppLocalizations.of(
+                        context,
+                      )!.filter_category_visibility,
                       children: [
                         EnumFilter<Participation>(
-                          title: "Participation".hardcoded,
+                          title: AppLocalizations.of(
+                            context,
+                          )!.filter_field_participation,
                           values: Participation.values,
                           selected: draft.participation,
                           op: draft.participationOp,
                           onChanged: controller.updateParticipation,
                           onOpChanged: controller.updateParticipationOp,
+                          getValueLabel: _getParticipationLabel,
                           isExpanded: draft.expandedFields.contains(
                             "Participation".hardcoded,
                           ),
@@ -530,12 +618,15 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                           ),
                         ),
                         EnumFilter<ResultSharing>(
-                          title: "Result Sharing".hardcoded,
+                          title: AppLocalizations.of(
+                            context,
+                          )!.filter_field_result_sharing,
                           values: ResultSharing.values,
                           selected: draft.resultSharing,
                           op: draft.resultSharingOp,
                           onChanged: controller.updateResultSharing,
                           onOpChanged: controller.updateResultSharingOp,
+                          getValueLabel: _getResultSharingLabel,
                           isExpanded: draft.expandedFields.contains(
                             "Result Sharing".hardcoded,
                           ),
@@ -545,7 +636,9 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                           ),
                         ),
                         BoolFilter(
-                          title: "Registry Published".hardcoded,
+                          title: AppLocalizations.of(
+                            context,
+                          )!.filter_field_registry_published,
                           selected: draft.registryPublished,
                           op: draft.registryPublishedOp,
                           onChanged: controller.updateRegistryPublished,
@@ -562,10 +655,14 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                     ),
                     const SizedBox(height: 16),
                     FilterCategory(
-                      title: "Participants".hardcoded,
+                      title: AppLocalizations.of(
+                        context,
+                      )!.filter_category_participants,
                       children: [
                         NumberFilter(
-                          title: "Participant Count".hardcoded,
+                          title: AppLocalizations.of(
+                            context,
+                          )!.filter_field_participant_count,
                           controller: _participantCountController,
                           op: draft.participantCountOp,
                           onOpChanged: controller.updateParticipantCountOp,
@@ -578,7 +675,9 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                           ),
                         ),
                         NumberFilter(
-                          title: "Active Count".hardcoded,
+                          title: AppLocalizations.of(
+                            context,
+                          )!.filter_field_active_count,
                           controller: _activeSubjectCountController,
                           op: draft.activeSubjectCountOp,
                           onOpChanged: controller.updateActiveSubjectCountOp,
@@ -591,7 +690,9 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                           ),
                         ),
                         NumberFilter(
-                          title: "Completed Count".hardcoded,
+                          title: AppLocalizations.of(
+                            context,
+                          )!.filter_field_completed_count,
                           controller: _endedCountController,
                           op: draft.endedCountOp,
                           onOpChanged: controller.updateEndedCountOp,
@@ -607,7 +708,9 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                     ),
                     const SizedBox(height: 16),
                     FilterCategory(
-                      title: "Dates".hardcoded,
+                      title: AppLocalizations.of(
+                        context,
+                      )!.filter_category_dates,
                       children: [
                         DateRangeFilter(
                           start: draft.createdAfter,
@@ -641,7 +744,9 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                       TextButton.icon(
                         onPressed: _onResetAll,
                         icon: const Icon(Icons.restart_alt),
-                        label: Text("Clear all".hardcoded),
+                        label: Text(
+                          AppLocalizations.of(context)!.filter_reset_all,
+                        ),
                         style: TextButton.styleFrom(
                           foregroundColor: Theme.of(
                             context,
@@ -656,7 +761,11 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                           Navigator.of(context).pop();
                         },
                         icon: const Icon(Icons.check),
-                        label: Text("Show $matchCount Studies".hardcoded),
+                        label: Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.filter_show_studies(matchCount),
+                        ),
                         style: FilledButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 24,

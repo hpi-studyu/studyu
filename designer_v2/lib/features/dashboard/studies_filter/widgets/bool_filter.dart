@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/filter_item.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/filter_operator_dropdown.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_localizations.dart';
 
 class BoolFilter extends StatelessWidget {
   final String title;
@@ -10,8 +10,8 @@ class BoolFilter extends StatelessWidget {
   final FilterOperator op;
   final ValueChanged<bool?> onChanged;
   final ValueChanged<FilterOperator> onOpChanged;
-  final String trueLabel;
-  final String falseLabel;
+  final String? trueLabel;
+  final String? falseLabel;
   final bool isExpanded;
   final ValueChanged<bool> onExpansionChanged;
 
@@ -23,17 +23,17 @@ class BoolFilter extends StatelessWidget {
     required this.onOpChanged,
     required this.isExpanded,
     required this.onExpansionChanged,
-    this.trueLabel = "Yes",
-    this.falseLabel = "No",
+    this.trueLabel,
+    this.falseLabel,
     Key? key,
   }) : super(key: key);
 
-  String _getSelectLabel(FilterOperator op) {
+  String _getSelectLabel(BuildContext context, FilterOperator op) {
     switch (op) {
       case FilterOperator.equals:
-        return "Is".hardcoded;
+        return AppLocalizations.of(context)!.filter_operator_is;
       case FilterOperator.notEquals:
-        return "Is not".hardcoded;
+        return AppLocalizations.of(context)!.filter_operator_is_not;
       default:
         final name = op.name;
         return "${name[0].toUpperCase()}${name.substring(1)}";
@@ -57,7 +57,7 @@ class BoolFilter extends StatelessWidget {
               options: const [FilterOperator.equals],
               selected: op,
               onChanged: onOpChanged,
-              getLabel: _getSelectLabel,
+              getLabel: (op) => _getSelectLabel(context, op),
             ),
           ),
           const SizedBox(width: 8),
@@ -66,10 +66,17 @@ class BoolFilter extends StatelessWidget {
               // ignore: deprecated_member_use
               value: selected,
               items: [
-                DropdownMenuItem(value: true, child: Text(trueLabel.hardcoded)),
+                DropdownMenuItem(
+                  value: true,
+                  child: Text(
+                    trueLabel ?? AppLocalizations.of(context)!.filter_bool_yes,
+                  ),
+                ),
                 DropdownMenuItem(
                   value: false,
-                  child: Text(falseLabel.hardcoded),
+                  child: Text(
+                    falseLabel ?? AppLocalizations.of(context)!.filter_bool_no,
+                  ),
                 ),
               ],
               onChanged: onChanged,

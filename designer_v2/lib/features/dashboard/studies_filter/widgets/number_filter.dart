@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/filter_item.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/filter_operator_dropdown.dart';
-import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+import 'package:studyu_designer_v2/localization/app_localizations.dart';
 
 class NumberFilter extends StatelessWidget {
   final String title;
@@ -22,18 +22,18 @@ class NumberFilter extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  String _getNumberLabel(FilterOperator op) {
+  String _getNumberLabel(BuildContext context, FilterOperator op) {
     switch (op) {
       case FilterOperator.greaterThanOrEqual:
-        return "Min".hardcoded;
+        return AppLocalizations.of(context)!.filter_operator_min;
       case FilterOperator.lessThanOrEqual:
-        return "Max".hardcoded;
+        return AppLocalizations.of(context)!.filter_operator_max;
       case FilterOperator.equals:
-        return "Exactly".hardcoded;
+        return AppLocalizations.of(context)!.filter_operator_exactly;
       case FilterOperator.greaterThan:
-        return "More than".hardcoded;
+        return AppLocalizations.of(context)!.filter_operator_more_than;
       case FilterOperator.lessThan:
-        return "Less than".hardcoded;
+        return AppLocalizations.of(context)!.filter_operator_less_than;
       default:
         final name = op.name;
         return "${name[0].toUpperCase()}${name.substring(1)}";
@@ -63,7 +63,7 @@ class NumberFilter extends StatelessWidget {
               ],
               selected: op,
               onChanged: onOpChanged,
-              getLabel: _getNumberLabel,
+              getLabel: (op) => _getNumberLabel(context, op),
             ),
           ),
           const SizedBox(width: 8),
