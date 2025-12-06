@@ -799,6 +799,21 @@
   "fitbit_credentials_cannot_change_description": "Fitbit credentials can't be changed while the study is not in draft mode.",
   "fitbit_only_participant_title": "If you're running this study just for yourself",
   "fitbit_only_participant_subtitle": "Since you're both creating and participating in this study, you don't need to fill out the intraday data request form. Simply follow these easy steps:",
+  "fitbit_only_participant_description": "If you're running this study just for yourself, you must use your own Fitbit account's Client ID and Client Secret on the previous page.",
+  "fitbit_multiple_participant_title": "If you're running this study for multiple participants",
+  "fitbit_multiple_participant_description": "Each participant must log in with their own Fitbit account in the StudyU app. The data will be collected separately for each participant.",
+  "study_import_title": "Import Study",
+  "study_import_description": "Import a study definition from a JSON file. This will create a new draft study.",
+  "study_import_button": "Import Study from JSON",
+  "study_import_success": "Study imported successfully",
+  "study_import_error": "Failed to import study: {error}",
+  "@study_import_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "fitbit_only_participant_step_1": "When creating your Fitbit app, choose 'Personal' as the app type.",
   "fitbit_only_participant_step_2": "When syncing data, make sure to use the same Google account that's connected to your Fitbit watch and the Fitbit app you've set up.",
   "client_id": "Client ID",

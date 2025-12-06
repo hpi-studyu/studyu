@@ -2177,6 +2177,36 @@ class AppLocalizationsEn extends AppLocalizations {
       'Since you\'re both creating and participating in this study, you don\'t need to fill out the intraday data request form. Simply follow these easy steps:';
 
   @override
+  String get fitbit_only_participant_description =>
+      'If you\'re running this study just for yourself, you must use your own Fitbit account\'s Client ID and Client Secret on the previous page.';
+
+  @override
+  String get fitbit_multiple_participant_title =>
+      'If you\'re running this study for multiple participants';
+
+  @override
+  String get fitbit_multiple_participant_description =>
+      'Each participant must log in with their own Fitbit account in the StudyU app. The data will be collected separately for each participant.';
+
+  @override
+  String get study_import_title => 'Import Study';
+
+  @override
+  String get study_import_description =>
+      'Import a study definition from a JSON file. This will create a new draft study.';
+
+  @override
+  String get study_import_button => 'Import Study from JSON';
+
+  @override
+  String get study_import_success => 'Study imported successfully';
+
+  @override
+  String study_import_error(String error) {
+    return 'Failed to import study: $error';
+  }
+
+  @override
   String get fitbit_only_participant_step_1 =>
       'When creating your Fitbit app, choose \'Personal\' as the app type.';
 
@@ -2282,7 +2312,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get study_schedule_balanced_description =>
-      'Balanced: Participants are randomly assigned to either ABAB or BABA sequences to reduce order effects.';
+      'Counterbalanced: Each participant follows an ABBA pattern, switching between interventions in a predictable sequence.';
 
   @override
   String get study_schedule_random_description =>

@@ -6,7 +6,9 @@ import 'package:studyu_designer_v2/common_views/dialog.dart';
 import 'package:studyu_designer_v2/common_views/form_buttons.dart';
 import 'package:studyu_designer_v2/common_views/form_table_layout.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
+import 'package:studyu_designer_v2/common_views/secondary_button.dart';
 import 'package:studyu_designer_v2/common_views/utils.dart';
+import 'package:studyu_designer_v2/features/account/study_import.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_controller.dart';
 import 'package:studyu_designer_v2/features/auth/auth_form_fields.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -14,11 +16,19 @@ import 'package:studyu_designer_v2/localization/language_picker.dart';
 import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 
-class AccountSettingsDialog extends ConsumerWidget {
+class AccountSettingsDialog extends ConsumerStatefulWidget {
   const AccountSettingsDialog({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AccountSettingsDialog> createState() =>
+      _AccountSettingsDialogState();
+}
+
+class _AccountSettingsDialogState extends ConsumerState<AccountSettingsDialog> {
+  bool _isImported = false;
+
+  @override
+  Widget build(BuildContext context) {
     const formKey = AuthFormKey.passwordReset;
     final state = ref.watch(authFormControllerProvider(formKey));
     final controller = ref.watch(authFormControllerProvider(formKey).notifier);
@@ -32,12 +42,38 @@ class AccountSettingsDialog extends ConsumerWidget {
             children: [
               const SizedBox(height: 16.0),
               FormTableLayout(
+                rowSpacing: 24.0,
                 rows: [
                   FormTableRow(
                     label: tr.language,
                     input: const Align(
                       alignment: Alignment.centerRight,
                       child: LanguagePicker(),
+                    ),
+                  ),
+                  FormTableRow(
+                    label: tr.study_import_title,
+                    labelHelpText: tr.study_import_description,
+                    input: Align(
+                      alignment: Alignment.centerRight,
+                      child: SecondaryButton(
+                        text: _isImported
+                            ? tr.study_import_success
+                            : tr.study_import_button,
+                        icon: _isImported ? Icons.check : Icons.upload_file,
+                        onPressed: _isImported
+                            ? () {}
+                            : () async {
+                                final success = await StudyImport.importStudy(
+                                  ref,
+                                );
+                                if (success) {
+                                  setState(() {
+                                    _isImported = true;
+                                  });
+                                }
+                              },
+                      ),
                     ),
                   ),
                 ],

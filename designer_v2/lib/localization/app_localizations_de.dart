@@ -2210,6 +2210,36 @@ class AppLocalizationsDe extends AppLocalizations {
       'Da du sowohl Ersteller als auch einziger Teilnehmer dieser Studie bist, brauchst du das Formular für den Zugriff auf Intraday-Daten nicht auszufüllen. Befolge einfach diese Schritte:';
 
   @override
+  String get fitbit_only_participant_description =>
+      'Wenn du diese Studie nur für dich selbst durchführst, musst du deine eigene Client-ID und dein eigenes Client-Secret deines Fitbit-Kontos auf der vorherigen Seite verwenden.';
+
+  @override
+  String get fitbit_multiple_participant_title =>
+      'Wenn du diese Studie für mehrere Teilnehmer durchführst';
+
+  @override
+  String get fitbit_multiple_participant_description =>
+      'Jeder Teilnehmer muss sich mit seinem eigenen Fitbit-Konto in der StudyU-App anmelden. Die Daten werden für jeden Teilnehmer separat gesammelt.';
+
+  @override
+  String get study_import_title => 'Studie importieren';
+
+  @override
+  String get study_import_description =>
+      'Importieren Sie eine Studiendefinition aus einer JSON-Datei. Dies wird einen neuen Studienentwurf erstellen.';
+
+  @override
+  String get study_import_button => 'Studie aus JSON importieren';
+
+  @override
+  String get study_import_success => 'Studie erfolgreich importiert';
+
+  @override
+  String study_import_error(String error) {
+    return 'Fehler beim Importieren der Studie: $error';
+  }
+
+  @override
   String get fitbit_only_participant_step_1 =>
       'Wähle beim Erstellen deiner Fitbit-App als Anwendungstyp „Persönlich“.';
 
@@ -2316,7 +2346,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get study_schedule_balanced_description =>
-      'Ausgeglichen: Teilnehmer werden zufällig ABAB- oder BABA-Sequenzen zugeordnet, um Reihenfolgeneffekte zu reduzieren.';
+      'Gegengewicht: Jeder Teilnehmer folgt einem ABBA-Muster und wechselt zwischen Interventionen in einer vorhersagbaren Sequenz.';
 
   @override
   String get study_schedule_random_description =>

@@ -5,6 +5,7 @@ import 'package:studyu_designer_v2/domain/study_export.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/utils/extensions.dart';
 import 'package:studyu_designer_v2/utils/file_download.dart';
+import 'package:studyu_designer_v2/utils/json_format.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 extension StudyExportZipX on StudyExportData {
@@ -14,6 +15,7 @@ extension StudyExportZipX on StudyExportData {
     final toJsonString = JsonStringEncoder();
 
     final files = {
+      'study_definition.json': prettyJson(study.toJson()),
       'measurements.csv': toCSVString(measurementsData),
       'measurements.json': toJsonString(measurementsData),
       'interventions.csv': toCSVString(interventionsData),
@@ -49,14 +51,10 @@ extension StudyExportZipX on StudyExportData {
 }
 
 extension StudyExportX on Study {
-  bool canExport(User user) =>
-      !exportData.isEmpty && (canEdit(user) || publishedToRegistryResults);
+  bool canExport(User user) => canEdit(user) || publishedToRegistryResults;
 
   String? exportDisabledReason(User user) {
     if (canExport(user)) return null;
-    if (exportData.isEmpty) {
-      return tr.study_export_unavailable_empty_tooltip;
-    }
     if (!canEdit(user) && !publishedToRegistryResults) {
       return tr.study_export_unavailable_no_permission_tooltip;
     }
