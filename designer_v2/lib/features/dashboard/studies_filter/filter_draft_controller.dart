@@ -2,6 +2,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
+
 part 'filter_draft_controller.g.dart';
 
 class FilterDraft {
@@ -384,6 +386,8 @@ class FilterDraftController extends _$FilterDraftController {
       newState = newState.copyWith(loadedPresetId: presetId);
     }
 
+    Set<String> expandedFields = {};
+
     for (final child in group.children) {
       if (child is FilterCondition) {
         switch (child.property) {
@@ -393,6 +397,7 @@ class FilterDraftController extends _$FilterDraftController {
                 status: StudyStatus.values.asNameMap()[child.value],
                 statusOp: child.operator,
               );
+              expandedFields.add("Status".hardcoded);
             }
 
           case StudyProperty.participation:
@@ -401,6 +406,7 @@ class FilterDraftController extends _$FilterDraftController {
                 participation: Participation.values.asNameMap()[child.value],
                 participationOp: child.operator,
               );
+              expandedFields.add("Participation".hardcoded);
             }
 
           case StudyProperty.resultSharing:
@@ -409,6 +415,7 @@ class FilterDraftController extends _$FilterDraftController {
                 resultSharing: ResultSharing.values.asNameMap()[child.value],
                 resultSharingOp: child.operator,
               );
+              expandedFields.add("Result Sharing".hardcoded);
             }
 
           case StudyProperty.registryPublished:
@@ -416,36 +423,45 @@ class FilterDraftController extends _$FilterDraftController {
               registryPublished: child.value as bool?,
               registryPublishedOp: child.operator,
             );
+            expandedFields.add("Registry Published".hardcoded);
 
           case StudyProperty.owner:
             newState = newState.copyWith(
               isOwner: child.value as bool?,
               isOwnerOp: child.operator,
             );
+          // No expanded field for owner currently?
+          // If it existed, we would add it.
 
           case StudyProperty.title:
             newState = newState.copyWith(
               title: child.value as String? ?? '',
               titleOp: child.operator,
             );
+            if ((child.value as String? ?? '').isNotEmpty) {
+              expandedFields.add("Title".hardcoded);
+            }
 
           case StudyProperty.participantCount:
             newState = newState.copyWith(
               participantCount: child.value?.toString() ?? '',
               participantCountOp: child.operator,
             );
+            expandedFields.add("Participant Count".hardcoded);
 
           case StudyProperty.activeSubjectCount:
             newState = newState.copyWith(
               activeSubjectCount: child.value?.toString() ?? '',
               activeSubjectCountOp: child.operator,
             );
+            expandedFields.add("Active Count".hardcoded);
 
           case StudyProperty.endedCount:
             newState = newState.copyWith(
               endedCount: child.value?.toString() ?? '',
               endedCountOp: child.operator,
             );
+            expandedFields.add("Completed Count".hardcoded);
 
           case StudyProperty.createdAt:
             if (child.operator == FilterOperator.greaterThanOrEqual ||
@@ -453,17 +469,20 @@ class FilterDraftController extends _$FilterDraftController {
               newState = newState.copyWith(
                 createdAfter: child.value as DateTime?,
               );
+              expandedFields.add("Created Date".hardcoded);
             } else if (child.operator == FilterOperator.lessThanOrEqual ||
                 child.operator == FilterOperator.lessThan) {
               newState = newState.copyWith(
                 createdBefore: child.value as DateTime?,
               );
+              expandedFields.add("Created Date".hardcoded);
             }
 
           default:
         }
       }
     }
+    newState = newState.copyWith(expandedFields: expandedFields);
     state = newState;
   }
 }

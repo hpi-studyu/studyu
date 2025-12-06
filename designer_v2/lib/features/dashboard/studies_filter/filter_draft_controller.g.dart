@@ -42,7 +42,7 @@ final class FilterDraftControllerProvider
 }
 
 String _$filterDraftControllerHash() =>
-    r'bc722a632573dd470c2f815a7f982b61b0dad17d';
+    r'd6fb26f66cb7fa7b6e6cf3495101770332258a19';
 
 abstract class _$FilterDraftController extends $Notifier<FilterDraft> {
   FilterDraft build();

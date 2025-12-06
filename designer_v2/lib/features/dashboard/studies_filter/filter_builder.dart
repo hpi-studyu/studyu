@@ -317,38 +317,34 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                         menuChildren: [
                           SubmenuButton(
                             menuChildren: [
-                              ...DefaultPresets.all.map(
-                                (preset) => MenuItemButton(
+                              ...DefaultPresets.all.map((preset) {
+                                final theme = Theme.of(context);
+                                final isSelected =
+                                    draft.loadedPresetId == preset.id;
+                                return MenuItemButton(
                                   leadingIcon: Icon(
-                                    Icons.star_outline,
+                                    preset.icon ?? Icons.star_outline,
                                     size: 16,
-                                    color: draft.loadedPresetId == preset.id
-                                        ? Theme.of(context).colorScheme.primary
+                                    color: isSelected
+                                        ? theme.colorScheme.primary
                                         : null,
                                   ),
-                                  style: ButtonStyle(
-                                    backgroundColor: WidgetStateProperty.all(
-                                      draft.loadedPresetId == preset.id
-                                          ? Theme.of(context)
-                                                .colorScheme
-                                                .primaryContainer
-                                                .withValues(alpha: 0.2)
-                                          : null,
-                                    ),
-                                  ),
+                                  trailingIcon: isSelected
+                                      ? Icon(
+                                          Icons.check,
+                                          color: theme.colorScheme.primary,
+                                        )
+                                      : null,
                                   child: Tooltip(
                                     message: _getPresetTooltip(preset.id),
                                     child: Text(
                                       preset.name,
                                       style: TextStyle(
-                                        fontWeight:
-                                            draft.loadedPresetId == preset.id
+                                        fontWeight: isSelected
                                             ? FontWeight.bold
                                             : null,
-                                        color: draft.loadedPresetId == preset.id
-                                            ? Theme.of(
-                                                context,
-                                              ).colorScheme.primary
+                                        color: isSelected
+                                            ? theme.colorScheme.primary
                                             : null,
                                       ),
                                     ),
@@ -362,8 +358,8 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                       ref.read(filterDraftControllerProvider),
                                     );
                                   },
-                                ),
-                              ),
+                                );
+                              }),
                               const Divider(),
                               if (ref
                                   .read(dashboardControllerProvider)
@@ -372,46 +368,33 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                 ...ref
                                     .read(dashboardControllerProvider)
                                     .savedFilters
-                                    .map(
-                                      (preset) => MenuItemButton(
+                                    .map((preset) {
+                                      final theme = Theme.of(context);
+                                      final isSelected =
+                                          draft.loadedPresetId == preset.id;
+                                      return MenuItemButton(
                                         leadingIcon: Icon(
-                                          Icons.perm_identity,
+                                          preset.icon ?? Icons.perm_identity,
                                           size: 16,
-                                          color:
-                                              draft.loadedPresetId == preset.id
-                                              ? Theme.of(
-                                                  context,
-                                                ).colorScheme.primary
+                                          color: isSelected
+                                              ? theme.colorScheme.primary
                                               : null,
                                         ),
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              WidgetStateProperty.all(
-                                                draft.loadedPresetId ==
-                                                        preset.id
-                                                    ? Theme.of(context)
-                                                          .colorScheme
-                                                          .primaryContainer
-                                                          .withValues(
-                                                            alpha: 0.2,
-                                                          )
-                                                    : null,
-                                              ),
-                                        ),
+                                        trailingIcon: isSelected
+                                            ? Icon(
+                                                Icons.check,
+                                                color:
+                                                    theme.colorScheme.primary,
+                                              )
+                                            : null,
                                         child: Text(
                                           preset.name,
                                           style: TextStyle(
-                                            fontWeight:
-                                                draft.loadedPresetId ==
-                                                    preset.id
+                                            fontWeight: isSelected
                                                 ? FontWeight.bold
                                                 : null,
-                                            color:
-                                                draft.loadedPresetId ==
-                                                    preset.id
-                                                ? Theme.of(
-                                                    context,
-                                                  ).colorScheme.primary
+                                            color: isSelected
+                                                ? theme.colorScheme.primary
                                                 : null,
                                           ),
                                         ),
@@ -426,8 +409,8 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                             ),
                                           );
                                         },
-                                      ),
-                                    )
+                                      );
+                                    })
                               else
                                 MenuItemButton(
                                   child: Text("No custom presets".hardcoded),
@@ -483,14 +466,6 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                       child: Chip(
                         label: Text(loadedPresetName),
                         onDeleted: _onResetAll,
-                        deleteIconColor: Theme.of(
-                          context,
-                        ).colorScheme.onSurfaceVariant,
-                        side: BorderSide.none,
-                        backgroundColor: Theme.of(context)
-                            .colorScheme
-                            .surfaceContainerHighest
-                            .withValues(alpha: 0.5),
                       ),
                     ),
                   ],
