@@ -106,7 +106,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               state.activeFilter != null &&
                               state.activeFilter!.children.isNotEmpty;
                           return Badge(
-                            label: null,
                             smallSize: 10,
                             isLabelVisible: isActive,
                             child: OutlinedButton.icon(
@@ -135,7 +134,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         },
                         menuChildren: [
                           MenuItemButton(
-                            onPressed: null,
                             child: Text(
                               "Default Presets".hardcoded,
                               style: const TextStyle(
@@ -169,9 +167,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       )
                                       .updateFilter(
                                         isSelected
-                                            ? FilterGroup(
-                                                logic: FilterLogic.and,
-                                              )
+                                            ? FilterGroup()
                                             : preset.root,
                                         presetId: isSelected ? null : preset.id,
                                       );
@@ -191,7 +187,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           const Divider(),
                           if (state.savedFilters.isNotEmpty) ...[
                             MenuItemButton(
-                              onPressed: null,
                               child: Text(
                                 "Custom Presets".hardcoded,
                                 style: const TextStyle(
@@ -223,9 +218,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       )
                                       .updateFilter(
                                         isSelected
-                                            ? FilterGroup(
-                                                logic: FilterLogic.and,
-                                              )
+                                            ? FilterGroup()
                                             : preset.root,
                                         presetId: isSelected ? null : preset.id,
                                       );
@@ -246,7 +239,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
                           MenuItemButton(
                             leadingIcon: Badge(
-                              label: null,
                               smallSize: 10,
                               isLabelVisible:
                                   state.activeFilter != null &&
@@ -275,10 +267,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               onPressed: () {
                                 ref
                                     .read(dashboardControllerProvider.notifier)
-                                    .updateFilter(
-                                      FilterGroup(logic: FilterLogic.and),
-                                      presetId: null,
-                                    );
+                                    .updateFilter(FilterGroup());
                               },
                             ),
                           ],

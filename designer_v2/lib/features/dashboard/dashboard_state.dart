@@ -92,13 +92,9 @@ class DashboardState extends Equatable {
     final FilterGroup filterGroup;
 
     if (baseFilter != null && activeFilter != null) {
-      filterGroup = FilterGroup(
-        logic: FilterLogic.and,
-        children: [baseFilter, activeFilter!],
-      );
+      filterGroup = FilterGroup(children: [baseFilter, activeFilter!]);
     } else {
-      filterGroup =
-          activeFilter ?? baseFilter ?? FilterGroup(logic: FilterLogic.and);
+      filterGroup = activeFilter ?? baseFilter ?? FilterGroup();
     }
     final filteredByLogic = studiesList.where(
       (s) => FilterEvaluator.evaluate(filterGroup, s, currentUser),

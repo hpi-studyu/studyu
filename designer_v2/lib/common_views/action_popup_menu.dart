@@ -152,7 +152,6 @@ class ActionPopUpMenuButton extends StatelessWidget {
       leading: (action.icon == null)
           ? const SizedBox.shrink()
           : Badge(
-              label: null,
               smallSize: 8,
               isLabelVisible: action.showBadge,
               child: Icon(

@@ -64,7 +64,7 @@ class DashboardController extends _$DashboardController
       await _userRepository.fetchUser();
 
       final savedFilters = _userRepository.getCustomPresets();
-      final defaultFilter = DashboardState.defaultFilter;
+      const defaultFilter = DashboardState.defaultFilter;
       final pageKey = _getPageKey(defaultFilter);
       final active = _userRepository.getActiveFilter(pageKey);
 

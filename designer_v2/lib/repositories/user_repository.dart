@@ -2,8 +2,8 @@
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
+import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
 
 part 'user_repository.g.dart';
@@ -85,6 +85,7 @@ class UserRepository implements IUserRepository {
     return saveUser();
   }
 
+  @override
   Future<StudyUUser> saveCustomPreset(SavedFilter filter) {
     final presets = getCustomPresets();
     final index = presets.indexWhere((p) => p.id == filter.id);
@@ -99,6 +100,7 @@ class UserRepository implements IUserRepository {
     );
   }
 
+  @override
   Future<StudyUUser> deleteCustomPreset(String id) {
     final presets = getCustomPresets();
     presets.removeWhere((p) => p.id == id);
@@ -108,6 +110,7 @@ class UserRepository implements IUserRepository {
     );
   }
 
+  @override
   List<SavedFilter> getCustomPresets() {
     final filtering = user.preferences.studyFiltering;
     final presetsJson = filtering['custom_presets'] as List?;
@@ -117,6 +120,7 @@ class UserRepository implements IUserRepository {
         .toList();
   }
 
+  @override
   Future<StudyUUser> saveActiveFilter({
     required String page,
     String? presetId,
@@ -139,6 +143,7 @@ class UserRepository implements IUserRepository {
     return saveUser();
   }
 
+  @override
   ({String? presetId, FilterGroup? filterGroup}) getActiveFilter(String page) {
     final filtering = user.preferences.studyFiltering;
     final activeFilters = filtering['active_filters'] as Map?;

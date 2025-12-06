@@ -1,6 +1,6 @@
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/routing/router_utils.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
+import 'package:studyu_designer_v2/routing/router_utils.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 enum StudiesFilter with GoRouteParamEnum { all, owned, shared, public }
@@ -9,10 +9,9 @@ extension StudiesFilterByUser on StudiesFilter {
   FilterGroup toFilterGroup(User user) {
     switch (this) {
       case StudiesFilter.all:
-        return FilterGroup(logic: FilterLogic.and); // Empty group matches all
+        return FilterGroup(); // Empty group matches all
       case StudiesFilter.owned:
         return FilterGroup(
-          logic: FilterLogic.and,
           children: [
             FilterCondition(
               property: StudyProperty.owner,
@@ -23,7 +22,6 @@ extension StudiesFilterByUser on StudiesFilter {
         );
       case StudiesFilter.shared:
         return FilterGroup(
-          logic: FilterLogic.and,
           children: [
             FilterCondition(
               property: StudyProperty.editor,

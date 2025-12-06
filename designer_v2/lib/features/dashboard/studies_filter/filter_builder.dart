@@ -9,7 +9,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class FilterBuilder extends ConsumerStatefulWidget {
-  const FilterBuilder({Key? key}) : super(key: key);
+  const FilterBuilder({super.key});
 
   @override
   ConsumerState<FilterBuilder> createState() => _FilterBuilderState();
@@ -101,43 +101,34 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
               _status = StudyStatus.values.asNameMap()[child.value];
               _statusOp = child.operator;
             }
-            break;
           case StudyProperty.participation:
             if (child.value is String) {
               _participation = Participation.values.asNameMap()[child.value];
               _participationOp = child.operator;
             }
-            break;
           case StudyProperty.resultSharing:
             if (child.value is String) {
               _resultSharing = ResultSharing.values.asNameMap()[child.value];
               _resultSharingOp = child.operator;
             }
-            break;
           case StudyProperty.registryPublished:
             _registryPublished = child.value as bool?;
             _registryPublishedOp = child.operator;
-            break;
           case StudyProperty.owner:
             _isOwner = child.value as bool?;
             _isOwnerOp = child.operator;
-            break;
           case StudyProperty.title:
             _titleController.text = child.value as String? ?? '';
             _titleOp = child.operator;
-            break;
           case StudyProperty.participantCount:
             _participantCountController.text = child.value?.toString() ?? '';
             _participantCountOp = child.operator;
-            break;
           case StudyProperty.activeSubjectCount:
             _activeSubjectCountController.text = child.value?.toString() ?? '';
             _activeSubjectCountOp = child.operator;
-            break;
           case StudyProperty.endedCount:
             _endedCountController.text = child.value?.toString() ?? '';
             _endedCountOp = child.operator;
-            break;
           case StudyProperty.createdAt:
             if (child.operator == FilterOperator.greaterThanOrEqual ||
                 child.operator == FilterOperator.greaterThan) {
@@ -146,7 +137,6 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                 child.operator == FilterOperator.lessThan) {
               _createdBefore = child.value as DateTime?;
             }
-            break;
           default:
             break;
         }
@@ -468,7 +458,6 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
 
     // Auto-apply on close
     return PopScope(
-      canPop: true,
       onPopInvokedWithResult: (didPop, result) {
         // Apply filters when the drawer is closing
         if (didPop) {
