@@ -7,6 +7,12 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_type
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/filter_category.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/text_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/number_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/enum_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/bool_filter.dart';
+import 'package:studyu_designer_v2/features/dashboard/studies_filter/widgets/date_range_filter.dart';
 
 class FilterBuilder extends ConsumerStatefulWidget {
   const FilterBuilder({super.key});
@@ -692,71 +698,201 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildCategory("Basic Info".hardcoded, [
-                      _buildTextFilter(
-                        "Title".hardcoded,
-                        _titleController,
-                        _titleOp,
-                        (op) => setState(() => _titleOp = op),
-                      ),
-                      _buildEnumFilter<StudyStatus>(
-                        "Status".hardcoded,
-                        StudyStatus.values,
-                        _status,
-                        _statusOp,
-                        (v) => setState(() => _status = v),
-                        (op) => setState(() => _statusOp = op),
-                      ),
-                    ]),
+                    FilterCategory(
+                      title: "Basic Info".hardcoded,
+                      children: [
+                        TextFilter(
+                          title: "Title".hardcoded,
+                          controller: _titleController,
+                          op: _titleOp,
+                          onOpChanged: (op) => setState(() => _titleOp = op),
+                          isExpanded: _expandedFields.contains(
+                            "Title".hardcoded,
+                          ),
+                          onExpansionChanged: (v) => setState(() {
+                            if (v) {
+                              _expandedFields.add("Title".hardcoded);
+                            } else {
+                              _expandedFields.remove("Title".hardcoded);
+                            }
+                          }),
+                        ),
+                        EnumFilter<StudyStatus>(
+                          title: "Status".hardcoded,
+                          values: StudyStatus.values,
+                          selected: _status,
+                          op: _statusOp,
+                          onChanged: (v) => setState(() => _status = v),
+                          onOpChanged: (op) => setState(() => _statusOp = op),
+                          isExpanded: _expandedFields.contains(
+                            "Status".hardcoded,
+                          ),
+                          onExpansionChanged: (v) => setState(() {
+                            if (v) {
+                              _expandedFields.add("Status".hardcoded);
+                            } else {
+                              _expandedFields.remove("Status".hardcoded);
+                            }
+                          }),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 16),
-                    _buildCategory("Visibility & Role".hardcoded, [
-                      _buildEnumFilter<Participation>(
-                        "Participation".hardcoded,
-                        Participation.values,
-                        _participation,
-                        _participationOp,
-                        (v) => setState(() => _participation = v),
-                        (op) => setState(() => _participationOp = op),
-                      ),
-                      _buildEnumFilter<ResultSharing>(
-                        "Result Sharing".hardcoded,
-                        ResultSharing.values,
-                        _resultSharing,
-                        _resultSharingOp,
-                        (v) => setState(() => _resultSharing = v),
-                        (op) => setState(() => _resultSharingOp = op),
-                      ),
-                      _buildBoolFilter(
-                        "Registry Published".hardcoded,
-                        _registryPublished,
-                        _registryPublishedOp,
-                        (v) => setState(() => _registryPublished = v),
-                        (op) => setState(() => _registryPublishedOp = op),
-                      ),
-                    ]),
+                    FilterCategory(
+                      title: "Visibility & Role".hardcoded,
+                      children: [
+                        EnumFilter<Participation>(
+                          title: "Participation".hardcoded,
+                          values: Participation.values,
+                          selected: _participation,
+                          op: _participationOp,
+                          onChanged: (v) => setState(() => _participation = v),
+                          onOpChanged: (op) =>
+                              setState(() => _participationOp = op),
+                          isExpanded: _expandedFields.contains(
+                            "Participation".hardcoded,
+                          ),
+                          onExpansionChanged: (v) => setState(() {
+                            if (v) {
+                              _expandedFields.add("Participation".hardcoded);
+                            } else {
+                              _expandedFields.remove("Participation".hardcoded);
+                            }
+                          }),
+                        ),
+                        EnumFilter<ResultSharing>(
+                          title: "Result Sharing".hardcoded,
+                          values: ResultSharing.values,
+                          selected: _resultSharing,
+                          op: _resultSharingOp,
+                          onChanged: (v) => setState(() => _resultSharing = v),
+                          onOpChanged: (op) =>
+                              setState(() => _resultSharingOp = op),
+                          isExpanded: _expandedFields.contains(
+                            "Result Sharing".hardcoded,
+                          ),
+                          onExpansionChanged: (v) => setState(() {
+                            if (v) {
+                              _expandedFields.add("Result Sharing".hardcoded);
+                            } else {
+                              _expandedFields.remove(
+                                "Result Sharing".hardcoded,
+                              );
+                            }
+                          }),
+                        ),
+                        BoolFilter(
+                          title: "Registry Published".hardcoded,
+                          selected: _registryPublished,
+                          op: _registryPublishedOp,
+                          onChanged: (v) =>
+                              setState(() => _registryPublished = v),
+                          onOpChanged: (op) =>
+                              setState(() => _registryPublishedOp = op),
+                          isExpanded: _expandedFields.contains(
+                            "Registry Published".hardcoded,
+                          ),
+                          onExpansionChanged: (v) => setState(() {
+                            if (v) {
+                              _expandedFields.add(
+                                "Registry Published".hardcoded,
+                              );
+                            } else {
+                              _expandedFields.remove(
+                                "Registry Published".hardcoded,
+                              );
+                            }
+                          }),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 16),
-                    _buildCategory("Participants".hardcoded, [
-                      _buildNumberFilter(
-                        "Participant Count".hardcoded,
-                        _participantCountController,
-                        _participantCountOp,
-                        (op) => setState(() => _participantCountOp = op),
-                      ),
-                      _buildNumberFilter(
-                        "Active Count".hardcoded,
-                        _activeSubjectCountController,
-                        _activeSubjectCountOp,
-                        (op) => setState(() => _activeSubjectCountOp = op),
-                      ),
-                      _buildNumberFilter(
-                        "Completed Count".hardcoded,
-                        _endedCountController,
-                        _endedCountOp,
-                        (op) => setState(() => _endedCountOp = op),
-                      ),
-                    ]),
+                    FilterCategory(
+                      title: "Participants".hardcoded,
+                      children: [
+                        NumberFilter(
+                          title: "Participant Count".hardcoded,
+                          controller: _participantCountController,
+                          op: _participantCountOp,
+                          onOpChanged: (op) =>
+                              setState(() => _participantCountOp = op),
+                          isExpanded: _expandedFields.contains(
+                            "Participant Count".hardcoded,
+                          ),
+                          onExpansionChanged: (v) => setState(() {
+                            if (v) {
+                              _expandedFields.add(
+                                "Participant Count".hardcoded,
+                              );
+                            } else {
+                              _expandedFields.remove(
+                                "Participant Count".hardcoded,
+                              );
+                            }
+                          }),
+                        ),
+                        NumberFilter(
+                          title: "Active Count".hardcoded,
+                          controller: _activeSubjectCountController,
+                          op: _activeSubjectCountOp,
+                          onOpChanged: (op) =>
+                              setState(() => _activeSubjectCountOp = op),
+                          isExpanded: _expandedFields.contains(
+                            "Active Count".hardcoded,
+                          ),
+                          onExpansionChanged: (v) => setState(() {
+                            if (v) {
+                              _expandedFields.add("Active Count".hardcoded);
+                            } else {
+                              _expandedFields.remove("Active Count".hardcoded);
+                            }
+                          }),
+                        ),
+                        NumberFilter(
+                          title: "Completed Count".hardcoded,
+                          controller: _endedCountController,
+                          op: _endedCountOp,
+                          onOpChanged: (op) =>
+                              setState(() => _endedCountOp = op),
+                          isExpanded: _expandedFields.contains(
+                            "Completed Count".hardcoded,
+                          ),
+                          onExpansionChanged: (v) => setState(() {
+                            if (v) {
+                              _expandedFields.add("Completed Count".hardcoded);
+                            } else {
+                              _expandedFields.remove(
+                                "Completed Count".hardcoded,
+                              );
+                            }
+                          }),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 16),
-                    _buildCategory("Dates".hardcoded, [_buildDateRange()]),
+                    FilterCategory(
+                      title: "Dates".hardcoded,
+                      children: [
+                        DateRangeFilter(
+                          start: _createdAfter,
+                          end: _createdBefore,
+                          onStartChanged: (v) =>
+                              setState(() => _createdAfter = v),
+                          onEndChanged: (v) =>
+                              setState(() => _createdBefore = v),
+                          isExpanded: _expandedFields.contains(
+                            "Created Date".hardcoded,
+                          ),
+                          onExpansionChanged: (v) => setState(() {
+                            if (v) {
+                              _expandedFields.add("Created Date".hardcoded);
+                            } else {
+                              _expandedFields.remove("Created Date".hardcoded);
+                            }
+                          }),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -806,444 +942,5 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
         ),
       ),
     );
-  }
-
-  Widget _buildCategory(String title, List<Widget> children) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Theme.of(
-            context,
-          ).colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
-      ),
-      clipBehavior: Clip.hardEdge,
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          title: Text(
-            title,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.primary,
-              letterSpacing: 0.5,
-            ),
-          ),
-          initiallyExpanded: true,
-          dense: true,
-          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-          children: children,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFilterItem({
-    required String key,
-    required String title,
-    required Widget child,
-    required bool isActive,
-    VoidCallback? onReset,
-  }) {
-    final isExpanded = isActive || _expandedFields.contains(key);
-
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      margin: const EdgeInsets.only(bottom: 8.0),
-      decoration: isExpanded
-          ? BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: Theme.of(context).colorScheme.outlineVariant,
-              ),
-            )
-          : null,
-      padding: isExpanded ? const EdgeInsets.all(8) : EdgeInsets.zero,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontWeight: isExpanded ? FontWeight.w600 : FontWeight.w500,
-                  fontSize: 13,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              const Spacer(),
-              if (!isExpanded)
-                IconButton(
-                  icon: const Icon(Icons.add_circle_outline, size: 20),
-                  onPressed: () => setState(() => _expandedFields.add(key)),
-                  tooltip: "Add filter".hardcoded,
-                  constraints: const BoxConstraints(),
-                  padding: EdgeInsets.zero,
-                  color: Theme.of(context).colorScheme.primary,
-                )
-              else
-                IconButton(
-                  icon: const Icon(Icons.remove_circle_outline, size: 20),
-                  onPressed: () {
-                    setState(() {
-                      _expandedFields.remove(key);
-                    });
-                    if (onReset != null) onReset();
-                  },
-                  tooltip: "Remove filter".hardcoded,
-                  constraints: const BoxConstraints(),
-                  padding: EdgeInsets.zero,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-              const SizedBox(width: 6),
-            ],
-          ),
-          if (isExpanded) ...[const SizedBox(height: 8), child],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextFilter(
-    String title,
-    TextEditingController controller,
-    FilterOperator op,
-    ValueChanged<FilterOperator> onOpChanged,
-  ) {
-    return _buildFilterItem(
-      key: title,
-      title: title,
-      isActive: controller.text.isNotEmpty,
-      onReset: () => setState(() => controller.clear()),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 130,
-            child: _buildOperatorDropdown(
-              [
-                FilterOperator.contains,
-                FilterOperator.equals,
-                FilterOperator.startsWith,
-                FilterOperator.endsWith,
-              ],
-              op,
-              onOpChanged,
-              getLabel: _getTextLabel,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              onChanged: (_) => setState(() {}),
-              decoration: const InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.all(8),
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNumberFilter(
-    String title,
-    TextEditingController controller,
-    FilterOperator op,
-    ValueChanged<FilterOperator> onOpChanged,
-  ) {
-    return _buildFilterItem(
-      key: title,
-      title: title,
-      isActive: controller.text.isNotEmpty,
-      onReset: () => setState(() => controller.clear()),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 130,
-            child: _buildOperatorDropdown(
-              [
-                FilterOperator.greaterThanOrEqual,
-                FilterOperator.lessThanOrEqual,
-                FilterOperator.equals,
-                FilterOperator.greaterThan,
-                FilterOperator.lessThan,
-              ],
-              op,
-              onOpChanged,
-              getLabel: _getNumberLabel,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              onChanged: (_) => setState(() {}),
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.all(8),
-                border: OutlineInputBorder(),
-                hintText: "0",
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEnumFilter<T>(
-    String title,
-    List<T> values,
-    T? selected,
-    FilterOperator op,
-    ValueChanged<T?> onChanged,
-    ValueChanged<FilterOperator> onOpChanged,
-  ) {
-    return _buildFilterItem(
-      key: title,
-      title: title,
-      isActive: selected != null,
-      onReset: () => onChanged(null),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 130,
-            child: _buildOperatorDropdown(
-              [FilterOperator.equals, FilterOperator.notEquals],
-              op,
-              onOpChanged,
-              getLabel: _getSelectLabel,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: DropdownButtonFormField<T>(
-              // ignore: deprecated_member_use
-              value: selected,
-              items: values
-                  .map(
-                    (e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e.toString().split('.').last.capitalize()),
-                    ),
-                  )
-                  .toList(),
-              onChanged: onChanged,
-              decoration: const InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBoolFilter(
-    String title,
-    bool? selected,
-    FilterOperator op,
-    ValueChanged<bool?> onChanged,
-    ValueChanged<FilterOperator> onOpChanged, {
-    String trueLabel = "Yes",
-    String falseLabel = "No",
-  }) {
-    return _buildFilterItem(
-      key: title,
-      title: title,
-      isActive: selected != null,
-      onReset: () => onChanged(null),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 130,
-            child: _buildOperatorDropdown(
-              [FilterOperator.equals],
-              op,
-              onOpChanged,
-              getLabel: _getSelectLabel,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: DropdownButtonFormField<bool>(
-              // ignore: deprecated_member_use
-              value: selected,
-              items: [
-                DropdownMenuItem(value: true, child: Text(trueLabel.hardcoded)),
-                DropdownMenuItem(
-                  value: false,
-                  child: Text(falseLabel.hardcoded),
-                ),
-              ],
-              onChanged: onChanged,
-              decoration: const InputDecoration(
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOperatorDropdown(
-    List<FilterOperator> options,
-    FilterOperator selected,
-    ValueChanged<FilterOperator> onChanged, {
-    required String Function(FilterOperator) getLabel,
-  }) {
-    return DropdownButtonFormField<FilterOperator>(
-      // ignore: deprecated_member_use
-      value: selected,
-      items: options
-          .map((op) => DropdownMenuItem(value: op, child: Text(getLabel(op))))
-          .toList(),
-      onChanged: (v) {
-        if (v != null) onChanged(v);
-      },
-      decoration: const InputDecoration(
-        isDense: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        border: OutlineInputBorder(),
-      ),
-    );
-  }
-
-  String _getTextLabel(FilterOperator op) {
-    switch (op) {
-      case FilterOperator.contains:
-        return "Contains".hardcoded;
-      case FilterOperator.equals:
-        return "Matches".hardcoded;
-      case FilterOperator.startsWith:
-        return "Starts with".hardcoded;
-      case FilterOperator.endsWith:
-        return "Ends with".hardcoded;
-      default:
-        return op.name.capitalize();
-    }
-  }
-
-  String _getNumberLabel(FilterOperator op) {
-    switch (op) {
-      case FilterOperator.greaterThanOrEqual:
-        return "Min".hardcoded;
-      case FilterOperator.lessThanOrEqual:
-        return "Max".hardcoded;
-      case FilterOperator.equals:
-        return "Exactly".hardcoded;
-      case FilterOperator.greaterThan:
-        return "More than".hardcoded;
-      case FilterOperator.lessThan:
-        return "Less than".hardcoded;
-      default:
-        return op.name.capitalize();
-    }
-  }
-
-  String _getSelectLabel(FilterOperator op) {
-    switch (op) {
-      case FilterOperator.equals:
-        return "Is".hardcoded;
-      case FilterOperator.notEquals:
-        return "Is not".hardcoded;
-      default:
-        return op.name.capitalize();
-    }
-  }
-
-  Widget _buildDateRange() {
-    final hasValue = _createdAfter != null || _createdBefore != null;
-    return _buildFilterItem(
-      key: "Created Date".hardcoded,
-      title: "Created Date".hardcoded,
-      isActive: hasValue,
-      onReset: () => setState(() {
-        _createdAfter = null;
-        _createdBefore = null;
-      }),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: context,
-                      initialDate: _createdAfter ?? DateTime.now(),
-                      firstDate: DateTime(2020),
-                      lastDate: DateTime.now(),
-                    );
-                    if (date != null) setState(() => _createdAfter = date);
-                  },
-                  child: InputDecorator(
-                    decoration: const InputDecoration(
-                      labelText: "From",
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                      contentPadding: EdgeInsets.all(8),
-                    ),
-                    child: Text(_createdAfter?.toString().split(' ')[0] ?? ''),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: InkWell(
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: context,
-                      initialDate: _createdBefore ?? DateTime.now(),
-                      firstDate: DateTime(2020),
-                      lastDate: DateTime.now(),
-                    );
-                    if (date != null) setState(() => _createdBefore = date);
-                  },
-                  child: InputDecorator(
-                    decoration: const InputDecoration(
-                      labelText: "To",
-                      border: OutlineInputBorder(),
-                      isDense: true,
-                      contentPadding: EdgeInsets.all(8),
-                    ),
-                    child: Text(_createdBefore?.toString().split(' ')[0] ?? ''),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-extension StringExtension on String {
-  String capitalize() {
-    if (isEmpty) return this;
-    return "${this[0].toUpperCase()}${substring(1)}";
   }
 }
