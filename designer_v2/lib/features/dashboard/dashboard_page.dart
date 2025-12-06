@@ -95,18 +95,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           Row(
             children: [
               SizedBox(
-                height: 36.0,
-                child: PrimaryButton(
-                  text: tr.action_button_new_study,
-                  onPressed: controller.onClickNewStudy,
+                height: 36.0, // Fixed height for alignment
+                child: MediaQuery.of(context).size.width < 500
+                    ? IconButton.filled(
+                        icon: const Icon(Icons.add),
+                        onPressed: controller.onClickNewStudy,
+                        tooltip: tr.action_button_new_study,
+                      )
+                    : PrimaryButton(
+                        text: tr.action_button_new_study,
+                        onPressed: controller.onClickNewStudy,
+                      ),
+              ),
+              const SizedBox(width: 20.0),
+              Expanded(
+                child: Text(
+                  state.visibleListTitle,
+                  style: theme.textTheme.headlineMedium,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
-              const SizedBox(width: 28.0),
-              SelectableText(
-                state.visibleListTitle,
-                style: theme.textTheme.headlineMedium,
-              ),
-              const SizedBox(width: 28.0),
+              const SizedBox(width: 20.0),
               Expanded(
                 child: Align(
                   alignment: Alignment.centerRight,
@@ -124,32 +134,59 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           return Badge(
                             smallSize: 10,
                             isLabelVisible: isActive,
-                            child: OutlinedButton.icon(
-                              onPressed: () {
-                                if (controller.isOpen) {
-                                  controller.close();
-                                } else {
-                                  controller.open();
-                                }
-                              },
-                              icon: const Icon(Icons.filter_list),
-                              label: Text(
-                                AppLocalizations.of(
-                                  context,
-                                )!.filter_button_main,
-                              ),
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: state.activeFilter != null
-                                    ? theme.colorScheme.primaryContainer
-                                          .withValues(alpha: 0.2)
-                                    : null,
-                                side: BorderSide(
-                                  color: state.activeFilter != null
-                                      ? theme.colorScheme.primary
-                                      : theme.colorScheme.outlineVariant,
-                                ),
-                              ),
-                            ),
+                            child: MediaQuery.of(context).size.width < 600
+                                ? IconButton.outlined(
+                                    onPressed: () {
+                                      if (controller.isOpen) {
+                                        controller.close();
+                                      } else {
+                                        controller.open();
+                                      }
+                                    },
+                                    icon: const Icon(Icons.filter_list),
+                                    tooltip: AppLocalizations.of(
+                                      context,
+                                    )!.filter_button_main,
+                                    style: IconButton.styleFrom(
+                                      backgroundColor:
+                                          state.activeFilter != null
+                                          ? theme.colorScheme.primaryContainer
+                                                .withValues(alpha: 0.2)
+                                          : null,
+                                      side: BorderSide(
+                                        color: state.activeFilter != null
+                                            ? theme.colorScheme.primary
+                                            : theme.colorScheme.outlineVariant,
+                                      ),
+                                    ),
+                                  )
+                                : OutlinedButton.icon(
+                                    onPressed: () {
+                                      if (controller.isOpen) {
+                                        controller.close();
+                                      } else {
+                                        controller.open();
+                                      }
+                                    },
+                                    icon: const Icon(Icons.filter_list),
+                                    label: Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.filter_button_main,
+                                    ),
+                                    style: OutlinedButton.styleFrom(
+                                      backgroundColor:
+                                          state.activeFilter != null
+                                          ? theme.colorScheme.primaryContainer
+                                                .withValues(alpha: 0.2)
+                                          : null,
+                                      side: BorderSide(
+                                        color: state.activeFilter != null
+                                            ? theme.colorScheme.primary
+                                            : theme.colorScheme.outlineVariant,
+                                      ),
+                                    ),
+                                  ),
                           );
                         },
                         menuChildren: [
@@ -304,16 +341,39 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ],
                       ),
 
-                      const SizedBox(width: 16),
-                      Container(
-                        constraints: const BoxConstraints(maxWidth: 400),
-                        child: Search(
-                          searchController: state.searchController,
-                          hintText: tr.search,
-                          onQueryChanged: (query) =>
-                              controller.filterStudies(query),
+                      const SizedBox(width: 12),
+                      if (MediaQuery.of(context).size.width < 900)
+                        IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                content: SizedBox(
+                                  width: 400,
+                                  child: Search(
+                                    searchController: state.searchController,
+                                    hintText: tr.search,
+                                    onQueryChanged: (query) =>
+                                        controller.filterStudies(query),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      else
+                        Flexible(
+                          child: Container(
+                            constraints: const BoxConstraints(maxWidth: 300),
+                            child: Search(
+                              searchController: state.searchController,
+                              hintText: tr.search,
+                              onQueryChanged: (query) =>
+                                  controller.filterStudies(query),
+                            ),
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),

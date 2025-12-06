@@ -4,7 +4,7 @@ import 'package:studyu_designer_v2/common_views/layout_two_column.dart';
 import 'package:studyu_designer_v2/features/app_drawer.dart';
 
 class DashboardScaffold extends StatelessWidget {
-  static const double compactWidthThreshold = 800;
+  static const double compactWidthThreshold = 900;
   const DashboardScaffold({
     required this.body,
     this.endDrawer,
