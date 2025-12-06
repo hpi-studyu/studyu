@@ -472,25 +472,6 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                               ),
                             ),
                           ),
-                          const Divider(),
-                          MenuItemButton(
-                            leadingIcon: Icon(
-                              Icons.restart_alt,
-                              size: 18,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurfaceVariant,
-                            ),
-                            onPressed: _onResetAll,
-                            child: Text(
-                              "Clear all".hardcoded,
-                              style: TextStyle(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                     ],
