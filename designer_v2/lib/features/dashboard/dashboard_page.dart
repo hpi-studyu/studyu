@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/utils/comparator_utils.dart';
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
@@ -17,6 +16,7 @@ import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_localizations.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
+import 'package:studyu_designer_v2/utils/comparator_utils.dart';
 import 'package:studyu_designer_v2/utils/performance.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -118,7 +118,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     switch (condition.property) {
       case StudyProperty.title:
         propertyLabel = t.filter_field_title;
-        break;
       case StudyProperty.status:
         propertyLabel = t.filter_field_status;
         if (condition.value is String) {
@@ -128,7 +127,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             valueLabel = _getStudyStatusLabel(status);
           }
         }
-        break;
       case StudyProperty.participation:
         propertyLabel = t.filter_field_participation;
         if (condition.value is String) {
@@ -138,7 +136,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             valueLabel = _getParticipationLabel(participation);
           }
         }
-        break;
       case StudyProperty.resultSharing:
         propertyLabel = t.filter_field_result_sharing;
         if (condition.value is String) {
@@ -148,21 +145,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             valueLabel = _getResultSharingLabel(sharing);
           }
         }
-        break;
       case StudyProperty.registryPublished:
         propertyLabel = t.filter_field_registry_published;
         if (condition.value == true) valueLabel = t.filter_bool_yes;
         if (condition.value == false) valueLabel = t.filter_bool_no;
-        break;
       case StudyProperty.participantCount:
         propertyLabel = t.filter_field_participant_count;
-        break;
       case StudyProperty.activeSubjectCount:
         propertyLabel = t.filter_field_active_count;
-        break;
       case StudyProperty.endedCount:
         propertyLabel = t.filter_field_completed_count;
-        break;
       case StudyProperty.createdAt:
         if (condition.operator == FilterOperator.greaterThanOrEqual ||
             condition.operator == FilterOperator.greaterThan ||
@@ -187,7 +179,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         if (date != null) {
           valueLabel = DateFormat.yMMMd().format(date);
         }
-        break;
       default:
         break;
     }
