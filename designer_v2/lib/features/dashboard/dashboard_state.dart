@@ -7,6 +7,7 @@ import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_eval
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
+import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DashboardState extends Equatable {
@@ -20,6 +21,7 @@ class DashboardState extends Equatable {
     this.sortByColumn = StudiesTableColumn.title,
     this.sortAscending = true,
     this.savedFilters = const [],
+    this.selectedSavedFilterId,
     required this.currentUser,
     required this.searchController,
   });
@@ -31,6 +33,9 @@ class DashboardState extends Equatable {
   /// Currently selected filter preset (e.g. Owned, Shared, Public)
   /// Used for UI highlighting. If null, a custom filter is active.
   final StudiesFilter? studiesFilter;
+
+  /// The ID of the currently selected saved filter preset
+  final String? selectedSavedFilterId;
 
   /// The actual filter logic to be applied.
   /// If null, it falls back to the [studiesFilter] logic.
@@ -83,10 +88,18 @@ class DashboardState extends Equatable {
 
     // 1. Apply Advanced Filter (or fallback to preset logic)
     // If both are null, default to ALL (empty group)
-    final filterGroup =
-        activeFilter ??
-        studiesFilter?.toFilterGroup(currentUser) ??
-        FilterGroup(logic: FilterLogic.and);
+    final baseFilter = studiesFilter?.toFilterGroup(currentUser);
+    final FilterGroup filterGroup;
+
+    if (baseFilter != null && activeFilter != null) {
+      filterGroup = FilterGroup(
+        logic: FilterLogic.and,
+        children: [baseFilter, activeFilter!],
+      );
+    } else {
+      filterGroup =
+          activeFilter ?? baseFilter ?? FilterGroup(logic: FilterLogic.and);
+    }
     final filteredByLogic = studiesList.where(
       (s) => FilterEvaluator.evaluate(filterGroup, s, currentUser),
     );
@@ -214,6 +227,7 @@ class DashboardState extends Equatable {
     StudiesTableColumn? sortByColumn,
     bool? sortAscending,
     SearchController? searchController,
+    String? Function()? selectedSavedFilterId,
   }) {
     return DashboardState(
       studies: studies != null ? studies() : this.studies,
@@ -227,6 +241,9 @@ class DashboardState extends Equatable {
       sortByColumn: sortByColumn ?? this.sortByColumn,
       sortAscending: sortAscending ?? this.sortAscending,
       searchController: searchController ?? this.searchController,
+      selectedSavedFilterId: selectedSavedFilterId != null
+          ? selectedSavedFilterId()
+          : this.selectedSavedFilterId,
     );
   }
 
@@ -241,6 +258,7 @@ class DashboardState extends Equatable {
     query,
     sortByColumn,
     sortAscending,
+    selectedSavedFilterId,
   ];
 }
 
@@ -254,9 +272,9 @@ extension DashboardStateSafeViewProps on DashboardState {
       case StudiesFilter.shared:
         return tr.navlink_shared_studies;
       case StudiesFilter.all:
-        return "[StudiesFilter.all]"; // not available in UI
+        return "All Studies".hardcoded;
       case null:
-        return "Advanced Filter"; // TODO: Localization
+        return tr.navlink_my_studies;
     }
   }
 }

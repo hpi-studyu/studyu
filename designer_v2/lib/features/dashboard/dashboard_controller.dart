@@ -81,15 +81,15 @@ class DashboardController extends _$DashboardController
     state = state.copyWith(
       studiesFilter: () => filter ?? DashboardState.defaultFilter,
       activeFilter: () => null, // Reset custom filter when preset is selected
+      selectedSavedFilterId: () => null,
     );
   }
 
-  void updateFilter(FilterGroup filter) {
+  void updateFilter(FilterGroup filter, {String? presetId}) {
     state = state.copyWith(
       activeFilter: () => filter,
-      studiesFilter: () =>
-          null, // Clear preset when custom filter is active (optional, or keep it if it matches?)
-      // For now, let's clear the preset highlight if we go custom
+      // Do NOT clear studiesFilter; we want to keep the page context (e.g. Owned/Shared)
+      selectedSavedFilterId: () => presetId,
     );
   }
 

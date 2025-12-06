@@ -11,6 +11,8 @@ class ModelAction<T> {
   final bool isSeparator;
   final bool isAvailable;
   final bool isDestructive;
+  final bool isChecked;
+  final bool showBadge;
 
   ModelAction({
     required this.type,
@@ -22,6 +24,8 @@ class ModelAction<T> {
     this.isDestructive = false,
     this.icon,
     this.tooltip,
+    this.isChecked = false,
+    this.showBadge = false,
   });
 
   static ModelAction addSeparator() {

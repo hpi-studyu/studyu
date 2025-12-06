@@ -55,9 +55,10 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
   // We'll treat date range as a special case or use "Between" logic if we want to be strict,
   // but for now let's keep the range picker as it's very intuitive,
   // OR we can add an operator selector for "After", "Before", "Between".
-  // Let's try "Between" (Range), "After", "Before".
-  FilterOperator _createdOp = FilterOperator
-      .greaterThanOrEqual; // Using GTE as default for "After" or start of range
+  // Let's try "Between" (Range),  FilterOperator _createdOp = FilterOperator
+  // .greaterThanOrEqual; // Using GTE as default for "After" or start of range
+
+  final Set<String> _expandedFields = {};
 
   @override
   void initState() {
@@ -288,10 +289,29 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
         .length;
   }
 
-  void _onApply() {
+  bool _areFiltersEqual(FilterElement? a, FilterElement? b) {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+    if (a.runtimeType != b.runtimeType) return false;
+
+    if (a is FilterCondition && b is FilterCondition) {
+      return a.property == b.property &&
+          a.operator == b.operator &&
+          a.value == b.value;
+    } else if (a is FilterGroup && b is FilterGroup) {
+      if (a.logic != b.logic) return false;
+      if (a.children.length != b.children.length) return false;
+      for (int i = 0; i < a.children.length; i++) {
+        if (!_areFiltersEqual(a.children[i], b.children[i])) return false;
+      }
+      return true;
+    }
+    return false;
+  }
+
+  void _applyFilter() {
     final group = _buildFilterGroup();
     ref.read(dashboardControllerProvider.notifier).updateFilter(group);
-    Navigator.of(context).pop();
   }
 
   void _onResetAll({bool resetPresetId = true}) {
@@ -317,6 +337,7 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
       _endedCountOp = FilterOperator.greaterThanOrEqual;
       _createdAfter = null;
       _createdBefore = null;
+      _expandedFields.clear();
     });
   }
 
@@ -352,11 +373,6 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
       );
       ref.read(dashboardControllerProvider.notifier).saveFilter(filter);
       setState(() => _loadedPresetId = newId);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Filter preset saved".hardcoded)),
-        );
-      }
     }
   }
 
@@ -388,10 +404,6 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     // If it just appends, I need to remove old first.
     ref.read(dashboardControllerProvider.notifier).deleteFilter(existing.id);
     ref.read(dashboardControllerProvider.notifier).saveFilter(updated);
-
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("Preset updated".hardcoded)));
   }
 
   void _onDeletePreset() {
@@ -400,9 +412,6 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
         .read(dashboardControllerProvider.notifier)
         .deleteFilter(_loadedPresetId!);
     _onResetAll();
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("Preset deleted".hardcoded)));
   }
 
   String _getPresetTooltip(String id) {
@@ -424,102 +433,88 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
   @override
   Widget build(BuildContext context) {
     final matchCount = _calculateMatchCount();
-    final loadedPresetName = _loadedPresetId != null
-        ? ref
+
+    SavedFilter? loadedPreset;
+    if (_loadedPresetId != null) {
+      try {
+        loadedPreset = DefaultPresets.all.firstWhere(
+          (p) => p.id == _loadedPresetId,
+        );
+      } catch (_) {
+        try {
+          loadedPreset = ref
               .watch(dashboardControllerProvider)
               .savedFilters
-              .firstWhere(
-                (f) => f.id == _loadedPresetId,
-                orElse: () =>
-                    SavedFilter(id: '', name: 'Custom', root: FilterGroup()),
-              )
-              .name
-        : "Custom";
+              .firstWhere((f) => f.id == _loadedPresetId);
+        } catch (_) {
+          // Preset ID not found (deleted?)
+        }
+      }
+    }
 
+    final loadedPresetName = loadedPreset?.name ?? "Custom";
     final isDefault = DefaultPresets.all.any((p) => p.id == _loadedPresetId);
 
-    return Container(
-      width: 480, // Slightly wider for better spacing
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: Column(
-        children: [
-          // Sticky Header
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-            child: Row(
-              children: [
-                Text(
-                  "Filter Studies".hardcoded,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(width: 12),
-                if (_loadedPresetId != null)
-                  Tooltip(
-                    message: "Currently loaded preset".hardcoded,
-                    child: Chip(
-                      label: Text(loadedPresetName),
-                      onDeleted: _onResetAll,
-                      deleteIconColor: Theme.of(
-                        context,
-                      ).colorScheme.onSurfaceVariant,
-                      side: BorderSide.none,
-                      backgroundColor: Theme.of(context)
-                          .colorScheme
-                          .surfaceContainerHighest
-                          .withValues(alpha: 0.5),
-                    ),
-                  ),
-                const Spacer(),
-                MenuAnchor(
-                  builder: (context, controller, child) {
-                    return IconButton(
-                      onPressed: () {
-                        if (controller.isOpen) {
-                          controller.close();
-                        } else {
-                          controller.open();
-                        }
-                      },
-                      icon: const Icon(Icons.more_vert),
-                      tooltip: "Preset options".hardcoded,
-                    );
-                  },
-                  menuChildren: [
-                    SubmenuButton(
-                      menuChildren: [
-                        ...DefaultPresets.all.map(
-                          (preset) => MenuItemButton(
-                            leadingIcon: const Icon(
-                              Icons.star_outline,
-                              size: 16,
-                            ),
-                            child: Tooltip(
-                              message: _getPresetTooltip(preset.id),
-                              child: Text(preset.name),
-                            ),
+    final currentGroup = _buildFilterGroup();
+    final hasChanges =
+        loadedPreset != null &&
+        !_areFiltersEqual(loadedPreset.root, currentGroup);
+
+    // Auto-apply on close
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        // Apply filters when the drawer is closing
+        if (didPop) {
+          // Update synchronously to ensure the provider is updated before widget disposal
+          _applyFilter();
+        }
+      },
+
+      child: Container(
+        width: 480, // Slightly wider for better spacing
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: Column(
+          children: [
+            // Sticky Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Filter Studies".hardcoded,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      const Spacer(),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          return OutlinedButton(
                             onPressed: () {
-                              _initFromFilter(preset.root);
-                              setState(() {
-                                _loadedPresetId = preset.id;
-                              });
+                              if (controller.isOpen) {
+                                controller.close();
+                              } else {
+                                controller.open();
+                              }
                             },
-                          ),
-                        ),
-                        const Divider(),
-                        if (ref
-                            .read(dashboardControllerProvider)
-                            .savedFilters
-                            .isNotEmpty)
-                          ...ref
-                              .read(dashboardControllerProvider)
-                              .savedFilters
-                              .map(
+                            child: Text("Manage Presets".hardcoded),
+                          );
+                        },
+                        menuChildren: [
+                          SubmenuButton(
+                            menuChildren: [
+                              ...DefaultPresets.all.map(
                                 (preset) => MenuItemButton(
                                   leadingIcon: const Icon(
-                                    Icons.perm_identity,
+                                    Icons.star_outline,
                                     size: 16,
                                   ),
-                                  child: Text(preset.name),
+                                  child: Tooltip(
+                                    message: _getPresetTooltip(preset.id),
+                                    child: Text(preset.name),
+                                  ),
                                   onPressed: () {
                                     _initFromFilter(preset.root);
                                     setState(() {
@@ -527,206 +522,263 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
                                     });
                                   },
                                 ),
-                              )
-                        else
-                          MenuItemButton(
-                            child: Text("No custom presets".hardcoded),
+                              ),
+                              const Divider(),
+                              if (ref
+                                  .read(dashboardControllerProvider)
+                                  .savedFilters
+                                  .isNotEmpty)
+                                ...ref
+                                    .read(dashboardControllerProvider)
+                                    .savedFilters
+                                    .map(
+                                      (preset) => MenuItemButton(
+                                        leadingIcon: const Icon(
+                                          Icons.perm_identity,
+                                          size: 16,
+                                        ),
+                                        child: Text(preset.name),
+                                        onPressed: () {
+                                          _initFromFilter(preset.root);
+                                          setState(() {
+                                            _loadedPresetId = preset.id;
+                                          });
+                                        },
+                                      ),
+                                    )
+                              else
+                                MenuItemButton(
+                                  child: Text("No custom presets".hardcoded),
+                                ),
+                            ],
+                            child: Text("Load Preset".hardcoded),
                           ),
-                      ],
-                      child: Text("Load Preset".hardcoded),
-                    ),
-                    MenuItemButton(
-                      leadingIcon: const Icon(Icons.save_as, size: 18),
-                      onPressed: (isDefault || _loadedPresetId == null)
-                          ? null
-                          : _onUpdatePreset,
-                      child: Text("Save changes".hardcoded),
-                    ),
-                    MenuItemButton(
-                      leadingIcon: const Icon(Icons.save, size: 18),
-                      onPressed: _onSavePreset,
-                      child: Text("Save as new".hardcoded),
-                    ),
-                    MenuItemButton(
-                      leadingIcon: const Icon(
-                        Icons.delete_outline,
-                        color: Colors.red,
-                        size: 18,
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.save_as, size: 18),
+                            onPressed:
+                                (isDefault ||
+                                    _loadedPresetId == null ||
+                                    !hasChanges)
+                                ? null
+                                : _onUpdatePreset,
+                            child: Text("Save changes".hardcoded),
+                          ),
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.save, size: 18),
+                            onPressed: _onSavePreset,
+                            child: Text("Save as new".hardcoded),
+                          ),
+                          MenuItemButton(
+                            leadingIcon: Icon(
+                              Icons.delete_outline,
+                              color: (isDefault || _loadedPresetId == null)
+                                  ? null
+                                  : Colors.red,
+                              size: 18,
+                            ),
+                            onPressed: (isDefault || _loadedPresetId == null)
+                                ? null
+                                : _onDeletePreset,
+                            child: Text(
+                              "Delete preset".hardcoded,
+                              style: TextStyle(
+                                color: (isDefault || _loadedPresetId == null)
+                                    ? null
+                                    : Colors.red,
+                              ),
+                            ),
+                          ),
+                          const Divider(),
+                          MenuItemButton(
+                            leadingIcon: const Icon(Icons.refresh, size: 18),
+                            onPressed: _onResetAll,
+                            child: Text("Clear / New".hardcoded),
+                          ),
+                        ],
                       ),
-                      onPressed: (isDefault || _loadedPresetId == null)
-                          ? null
-                          : _onDeletePreset,
-                      child: Text(
-                        "Delete preset".hardcoded,
-                        style: const TextStyle(color: Colors.red),
+                    ],
+                  ),
+                  if (_loadedPresetId != null) ...[
+                    const SizedBox(height: 12),
+                    Tooltip(
+                      message: "Currently loaded preset".hardcoded,
+                      child: Chip(
+                        label: Text(loadedPresetName),
+                        onDeleted: _onResetAll,
+                        deleteIconColor: Theme.of(
+                          context,
+                        ).colorScheme.onSurfaceVariant,
+                        side: BorderSide.none,
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest
+                            .withValues(alpha: 0.5),
                       ),
-                    ),
-                    const Divider(),
-                    MenuItemButton(
-                      leadingIcon: const Icon(Icons.refresh, size: 18),
-                      onPressed: _onResetAll,
-                      child: Text("Clear / New".hardcoded),
                     ),
                   ],
-                ),
-              ],
-            ),
-          ),
-          const Divider(height: 1),
-
-          // Scrollable Content
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildCategory("Basic Info".hardcoded, [
-                    _buildTextFilter(
-                      "Title".hardcoded,
-                      _titleController,
-                      _titleOp,
-                      (op) => setState(() => _titleOp = op),
-                    ),
-                    _buildEnumFilter<StudyStatus>(
-                      "Status".hardcoded,
-                      StudyStatus.values,
-                      _status,
-                      _statusOp,
-                      (v) => setState(() => _status = v),
-                      (op) => setState(() => _statusOp = op),
-                    ),
-                  ]),
-                  const SizedBox(height: 24),
-                  _buildCategory("Visibility & Role".hardcoded, [
-                    _buildEnumFilter<Participation>(
-                      "Participation".hardcoded,
-                      Participation.values,
-                      _participation,
-                      _participationOp,
-                      (v) => setState(() => _participation = v),
-                      (op) => setState(() => _participationOp = op),
-                    ),
-                    _buildEnumFilter<ResultSharing>(
-                      "Result Sharing".hardcoded,
-                      ResultSharing.values,
-                      _resultSharing,
-                      _resultSharingOp,
-                      (v) => setState(() => _resultSharing = v),
-                      (op) => setState(() => _resultSharingOp = op),
-                    ),
-                    _buildBoolFilter(
-                      "Registry Published".hardcoded,
-                      _registryPublished,
-                      _registryPublishedOp,
-                      (v) => setState(() => _registryPublished = v),
-                      (op) => setState(() => _registryPublishedOp = op),
-                    ),
-                  ]),
-                  const SizedBox(height: 24),
-                  _buildCategory("Participants".hardcoded, [
-                    _buildNumberFilter(
-                      "Participant Count".hardcoded,
-                      _participantCountController,
-                      _participantCountOp,
-                      (op) => setState(() => _participantCountOp = op),
-                    ),
-                    _buildNumberFilter(
-                      "Active Count".hardcoded,
-                      _activeSubjectCountController,
-                      _activeSubjectCountOp,
-                      (op) => setState(() => _activeSubjectCountOp = op),
-                    ),
-                    _buildNumberFilter(
-                      "Completed Count".hardcoded,
-                      _endedCountController,
-                      _endedCountOp,
-                      (op) => setState(() => _endedCountOp = op),
-                    ),
-                  ]),
-                  const SizedBox(height: 24),
-                  _buildCategory("Dates".hardcoded, [_buildDateRange()]),
                 ],
               ),
             ),
-          ),
+            const Divider(height: 1),
 
-          const Divider(height: 1),
-          // Sticky Footer
-          Container(
-            padding: const EdgeInsets.all(24),
-            color: Theme.of(context).colorScheme.surface,
-            child: Column(
-              children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 16,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primaryContainer.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
+            // Scrollable Content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildCategory("Basic Info".hardcoded, [
+                      _buildTextFilter(
+                        "Title".hardcoded,
+                        _titleController,
+                        _titleOp,
+                        (op) => setState(() => _titleOp = op),
+                      ),
+                      _buildEnumFilter<StudyStatus>(
+                        "Status".hardcoded,
+                        StudyStatus.values,
+                        _status,
+                        _statusOp,
+                        (v) => setState(() => _status = v),
+                        (op) => setState(() => _statusOp = op),
+                      ),
+                    ]),
+                    const SizedBox(height: 24),
+                    _buildCategory("Visibility & Role".hardcoded, [
+                      _buildEnumFilter<Participation>(
+                        "Participation".hardcoded,
+                        Participation.values,
+                        _participation,
+                        _participationOp,
+                        (v) => setState(() => _participation = v),
+                        (op) => setState(() => _participationOp = op),
+                      ),
+                      _buildEnumFilter<ResultSharing>(
+                        "Result Sharing".hardcoded,
+                        ResultSharing.values,
+                        _resultSharing,
+                        _resultSharingOp,
+                        (v) => setState(() => _resultSharing = v),
+                        (op) => setState(() => _resultSharingOp = op),
+                      ),
+                      _buildBoolFilter(
+                        "Registry Published".hardcoded,
+                        _registryPublished,
+                        _registryPublishedOp,
+                        (v) => setState(() => _registryPublished = v),
+                        (op) => setState(() => _registryPublishedOp = op),
+                      ),
+                    ]),
+                    const SizedBox(height: 24),
+                    _buildCategory("Participants".hardcoded, [
+                      _buildNumberFilter(
+                        "Participant Count".hardcoded,
+                        _participantCountController,
+                        _participantCountOp,
+                        (op) => setState(() => _participantCountOp = op),
+                      ),
+                      _buildNumberFilter(
+                        "Active Count".hardcoded,
+                        _activeSubjectCountController,
+                        _activeSubjectCountOp,
+                        (op) => setState(() => _activeSubjectCountOp = op),
+                      ),
+                      _buildNumberFilter(
+                        "Completed Count".hardcoded,
+                        _endedCountController,
+                        _endedCountOp,
+                        (op) => setState(() => _endedCountOp = op),
+                      ),
+                    ]),
+                    const SizedBox(height: 24),
+                    _buildCategory("Dates".hardcoded, [_buildDateRange()]),
+                  ],
+                ),
+              ),
+            ),
+
+            const Divider(height: 1),
+            // Sticky Footer
+            Container(
+              padding: const EdgeInsets.all(24),
+              color: Theme.of(context).colorScheme.surface,
+              child: Column(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 16,
+                    ),
+                    decoration: BoxDecoration(
                       color: Theme.of(
                         context,
-                      ).colorScheme.primary.withValues(alpha: 0.1),
+                      ).colorScheme.primaryContainer.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.primary.withValues(alpha: 0.1),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.filter_list,
+                          size: 20,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            "$matchCount studies match current criteria"
+                                .hardcoded,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Row(
+                  const SizedBox(height: 16),
+                  Row(
                     children: [
-                      Icon(
-                        Icons.filter_list,
-                        size: 20,
-                        color: Theme.of(context).colorScheme.primary,
+                      TextButton.icon(
+                        onPressed: _onResetAll,
+                        icon: const Icon(Icons.restart_alt),
+                        label: Text("Reset form".hardcoded),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onSurfaceVariant,
+                        ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          "$matchCount studies match current criteria"
-                              .hardcoded,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w600,
+                      const Spacer(),
+
+                      FilledButton.icon(
+                        onPressed: () {
+                          _applyFilter();
+                          Navigator.of(context).pop();
+                        },
+                        icon: const Icon(Icons.check),
+                        label: Text("Apply Filters".hardcoded),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
                           ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    TextButton.icon(
-                      onPressed: _onResetAll,
-                      icon: const Icon(Icons.restart_alt),
-                      label: Text("Reset form".hardcoded),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Theme.of(
-                          context,
-                        ).colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const Spacer(),
-                    FilledButton.icon(
-                      onPressed: _onApply,
-                      icon: const Icon(Icons.check),
-                      label: Text("Apply Filters".hardcoded),
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -762,14 +814,28 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     );
   }
 
-  Widget _buildAdvancedRow({
+  Widget _buildFilterItem({
+    required String key,
     required String title,
-    required Widget operatorDropdown,
-    required Widget valueInput,
+    required Widget child,
+    required bool isActive,
     VoidCallback? onReset,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
+    final isExpanded = isActive || _expandedFields.contains(key);
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      margin: const EdgeInsets.only(bottom: 12.0),
+      decoration: isExpanded
+          ? BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.outlineVariant,
+              ),
+            )
+          : null,
+      padding: isExpanded ? const EdgeInsets.all(12) : EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -777,38 +843,41 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
             children: [
               Text(
                 title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
+                style: TextStyle(
+                  fontWeight: isExpanded ? FontWeight.w600 : FontWeight.w500,
                   fontSize: 13,
+                  color: isExpanded
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurface,
                 ),
               ),
-              if (onReset != null) ...[
-                const SizedBox(width: 8),
-                InkWell(
-                  onTap: onReset,
-                  borderRadius: BorderRadius.circular(12),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Icon(
-                      Icons.restart_alt,
-                      size: 14,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                  ),
+              const Spacer(),
+              if (!isExpanded)
+                IconButton(
+                  icon: const Icon(Icons.add_circle_outline, size: 20),
+                  onPressed: () => setState(() => _expandedFields.add(key)),
+                  tooltip: "Add filter".hardcoded,
+                  constraints: const BoxConstraints(),
+                  padding: EdgeInsets.zero,
+                  color: Theme.of(context).colorScheme.primary,
+                )
+              else
+                IconButton(
+                  icon: const Icon(Icons.remove_circle_outline, size: 20),
+                  onPressed: () {
+                    setState(() {
+                      _expandedFields.remove(key);
+                    });
+                    if (onReset != null) onReset();
+                  },
+                  tooltip: "Remove filter".hardcoded,
+                  constraints: const BoxConstraints(),
+                  padding: EdgeInsets.zero,
+                  color: Theme.of(context).colorScheme.error,
                 ),
-              ],
             ],
           ),
-          const SizedBox(height: 6),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Fixed width for operator to align all rows
-              SizedBox(width: 130, child: operatorDropdown),
-              const SizedBox(width: 8),
-              Expanded(child: valueInput),
-            ],
-          ),
+          if (isExpanded) ...[const SizedBox(height: 12), child],
         ],
       ),
     );
@@ -820,30 +889,42 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     FilterOperator op,
     ValueChanged<FilterOperator> onOpChanged,
   ) {
-    return _buildAdvancedRow(
+    return _buildFilterItem(
+      key: title,
       title: title,
-      operatorDropdown: _buildOperatorDropdown(
-        [
-          FilterOperator.contains,
-          FilterOperator.equals,
-          FilterOperator.startsWith,
-          FilterOperator.endsWith,
+      isActive: controller.text.isNotEmpty,
+      onReset: () => setState(() => controller.clear()),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 130,
+            child: _buildOperatorDropdown(
+              [
+                FilterOperator.contains,
+                FilterOperator.equals,
+                FilterOperator.startsWith,
+                FilterOperator.endsWith,
+              ],
+              op,
+              onOpChanged,
+              getLabel: _getTextLabel,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              onChanged: (_) => setState(() {}),
+              decoration: const InputDecoration(
+                isDense: true,
+                contentPadding: EdgeInsets.all(12),
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
         ],
-        op,
-        onOpChanged,
       ),
-      valueInput: TextField(
-        controller: controller,
-        onChanged: (_) => setState(() {}),
-        decoration: const InputDecoration(
-          isDense: true,
-          contentPadding: EdgeInsets.all(12),
-          border: OutlineInputBorder(),
-        ),
-      ),
-      onReset: controller.text.isNotEmpty
-          ? () => setState(() => controller.clear())
-          : null,
     );
   }
 
@@ -853,33 +934,44 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     FilterOperator op,
     ValueChanged<FilterOperator> onOpChanged,
   ) {
-    return _buildAdvancedRow(
+    return _buildFilterItem(
+      key: title,
       title: title,
-      operatorDropdown: _buildOperatorDropdown(
-        [
-          FilterOperator.greaterThanOrEqual,
-          FilterOperator.lessThanOrEqual,
-          FilterOperator.equals,
-          FilterOperator.greaterThan,
-          FilterOperator.lessThan,
+      isActive: controller.text.isNotEmpty,
+      onReset: () => setState(() => controller.clear()),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 130,
+            child: _buildOperatorDropdown(
+              [
+                FilterOperator.greaterThanOrEqual,
+                FilterOperator.lessThanOrEqual,
+                FilterOperator.equals,
+                FilterOperator.greaterThan,
+                FilterOperator.lessThan,
+              ],
+              op,
+              onOpChanged,
+              getLabel: _getNumberLabel,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              onChanged: (_) => setState(() {}),
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                isDense: true,
+                contentPadding: EdgeInsets.all(12),
+                border: OutlineInputBorder(),
+                hintText: "0",
+              ),
+            ),
+          ),
         ],
-        op,
-        onOpChanged,
       ),
-      valueInput: TextField(
-        controller: controller,
-        onChanged: (_) => setState(() {}),
-        keyboardType: TextInputType.number,
-        decoration: const InputDecoration(
-          isDense: true,
-          contentPadding: EdgeInsets.all(12),
-          border: OutlineInputBorder(),
-          hintText: "0",
-        ),
-      ),
-      onReset: controller.text.isNotEmpty
-          ? () => setState(() => controller.clear())
-          : null,
     );
   }
 
@@ -891,33 +983,48 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     ValueChanged<T?> onChanged,
     ValueChanged<FilterOperator> onOpChanged,
   ) {
-    return _buildAdvancedRow(
+    return _buildFilterItem(
+      key: title,
       title: title,
-      operatorDropdown: _buildOperatorDropdown(
-        [FilterOperator.equals, FilterOperator.notEquals],
-        op,
-        onOpChanged,
-      ),
-      valueInput: DropdownButtonFormField<T>(
-        // ignore: deprecated_member_use
-        value: selected,
-        items: [
-          DropdownMenuItem(child: Text("All".hardcoded)),
-          ...values.map(
-            (e) => DropdownMenuItem(
-              value: e,
-              child: Text(e.toString().split('.').last.capitalize()),
+      isActive: selected != null,
+      onReset: () => onChanged(null),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 130,
+            child: _buildOperatorDropdown(
+              [FilterOperator.equals, FilterOperator.notEquals],
+              op,
+              onOpChanged,
+              getLabel: _getSelectLabel,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: DropdownButtonFormField<T>(
+              // ignore: deprecated_member_use
+              value: selected,
+              items: values
+                  .map(
+                    (e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e.toString().split('.').last.capitalize()),
+                    ),
+                  )
+                  .toList(),
+              onChanged: onChanged,
+              decoration: const InputDecoration(
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
+                border: OutlineInputBorder(),
+              ),
             ),
           ),
         ],
-        onChanged: onChanged,
-        decoration: const InputDecoration(
-          isDense: true,
-          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          border: OutlineInputBorder(),
-        ),
       ),
-      onReset: selected != null ? () => onChanged(null) : null,
     );
   }
 
@@ -930,45 +1037,61 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     String trueLabel = "Yes",
     String falseLabel = "No",
   }) {
-    return _buildAdvancedRow(
+    return _buildFilterItem(
+      key: title,
       title: title,
-      operatorDropdown: _buildOperatorDropdown(
-        [FilterOperator.equals],
-        op,
-        onOpChanged,
-      ),
-      valueInput: DropdownButtonFormField<bool>(
-        // ignore: deprecated_member_use
-        value: selected,
-        items: [
-          DropdownMenuItem(child: Text("All".hardcoded)),
-          DropdownMenuItem(value: true, child: Text(trueLabel.hardcoded)),
-          DropdownMenuItem(value: false, child: Text(falseLabel.hardcoded)),
+      isActive: selected != null,
+      onReset: () => onChanged(null),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 130,
+            child: _buildOperatorDropdown(
+              [FilterOperator.equals],
+              op,
+              onOpChanged,
+              getLabel: _getSelectLabel,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: DropdownButtonFormField<bool>(
+              // ignore: deprecated_member_use
+              value: selected,
+              items: [
+                DropdownMenuItem(value: true, child: Text(trueLabel.hardcoded)),
+                DropdownMenuItem(
+                  value: false,
+                  child: Text(falseLabel.hardcoded),
+                ),
+              ],
+              onChanged: onChanged,
+              decoration: const InputDecoration(
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
         ],
-        onChanged: onChanged,
-        decoration: const InputDecoration(
-          isDense: true,
-          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          border: OutlineInputBorder(),
-        ),
       ),
-      onReset: selected != null ? () => onChanged(null) : null,
     );
   }
 
   Widget _buildOperatorDropdown(
     List<FilterOperator> options,
     FilterOperator selected,
-    ValueChanged<FilterOperator> onChanged,
-  ) {
+    ValueChanged<FilterOperator> onChanged, {
+    required String Function(FilterOperator) getLabel,
+  }) {
     return DropdownButtonFormField<FilterOperator>(
       // ignore: deprecated_member_use
       value: selected,
       items: options
-          .map(
-            (op) =>
-                DropdownMenuItem(value: op, child: Text(op.name.capitalize())),
-          )
+          .map((op) => DropdownMenuItem(value: op, child: Text(getLabel(op))))
           .toList(),
       onChanged: (v) {
         if (v != null) onChanged(v);
@@ -981,36 +1104,62 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
     );
   }
 
+  String _getTextLabel(FilterOperator op) {
+    switch (op) {
+      case FilterOperator.contains:
+        return "Contains".hardcoded;
+      case FilterOperator.equals:
+        return "Matches".hardcoded;
+      case FilterOperator.startsWith:
+        return "Starts with".hardcoded;
+      case FilterOperator.endsWith:
+        return "Ends with".hardcoded;
+      default:
+        return op.name.capitalize();
+    }
+  }
+
+  String _getNumberLabel(FilterOperator op) {
+    switch (op) {
+      case FilterOperator.greaterThanOrEqual:
+        return "Min".hardcoded;
+      case FilterOperator.lessThanOrEqual:
+        return "Max".hardcoded;
+      case FilterOperator.equals:
+        return "Exactly".hardcoded;
+      case FilterOperator.greaterThan:
+        return "More than".hardcoded;
+      case FilterOperator.lessThan:
+        return "Less than".hardcoded;
+      default:
+        return op.name.capitalize();
+    }
+  }
+
+  String _getSelectLabel(FilterOperator op) {
+    switch (op) {
+      case FilterOperator.equals:
+        return "Is".hardcoded;
+      case FilterOperator.notEquals:
+        return "Is not".hardcoded;
+      default:
+        return op.name.capitalize();
+    }
+  }
+
   Widget _buildDateRange() {
     final hasValue = _createdAfter != null || _createdBefore != null;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
+    return _buildFilterItem(
+      key: "Created Date".hardcoded,
+      title: "Created Date".hardcoded,
+      isActive: hasValue,
+      onReset: () => setState(() {
+        _createdAfter = null;
+        _createdBefore = null;
+      }),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(
-                "Created Date".hardcoded,
-                style: const TextStyle(fontWeight: FontWeight.w500),
-              ),
-              if (hasValue) ...[
-                const SizedBox(width: 8),
-                InkWell(
-                  onTap: () => setState(() {
-                    _createdAfter = null;
-                    _createdBefore = null;
-                  }),
-                  child: Icon(
-                    Icons.restart_alt,
-                    size: 14,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
-              ],
-            ],
-          ),
-          const SizedBox(height: 8),
           Row(
             children: [
               Expanded(

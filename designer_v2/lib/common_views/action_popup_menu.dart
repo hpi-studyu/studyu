@@ -151,14 +151,38 @@ class ActionPopUpMenuButton extends StatelessWidget {
       horizontalTitleGap: 4.0,
       leading: (action.icon == null)
           ? const SizedBox.shrink()
-          : Icon(
-              action.icon,
-              size: theme.iconTheme.size ?? 14.0,
-              color: action.isDestructive ? Colors.red : iconColorDefault,
+          : Badge(
+              label: null,
+              smallSize: 8,
+              isLabelVisible: action.showBadge,
+              child: Icon(
+                action.icon,
+                size: theme.iconTheme.size ?? 14.0,
+                color: action.isDestructive
+                    ? Colors.red
+                    : (action.isChecked
+                          ? theme.colorScheme.primary
+                          : iconColorDefault),
+              ),
             ),
       title: action.isDestructive
           ? Text(action.label, style: textTheme.copyWith(color: Colors.red))
-          : Text(action.label, style: textTheme),
+          : Text(
+              action.label,
+              style: action.isChecked
+                  ? textTheme.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                    )
+                  : textTheme,
+            ),
+      trailing: action.isChecked
+          ? Icon(
+              Icons.check_rounded,
+              size: theme.iconTheme.size ?? 14.0,
+              color: theme.colorScheme.primary,
+            )
+          : null,
     );
   }
 }

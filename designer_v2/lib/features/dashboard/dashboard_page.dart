@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_designer_v2/common_views/action_popup_menu.dart';
+
 import 'package:studyu_designer_v2/common_views/async_value_widget.dart';
 import 'package:studyu_designer_v2/common_views/empty_body.dart';
 import 'package:studyu_designer_v2/common_views/primary_button.dart';
@@ -16,7 +16,7 @@ import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
 import 'package:studyu_designer_v2/localization/string_hardcoded.dart';
 import 'package:studyu_designer_v2/repositories/user_repository.dart';
-import 'package:studyu_designer_v2/utils/model_action.dart';
+
 import 'package:studyu_designer_v2/utils/performance.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -29,6 +29,8 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -68,6 +70,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final state = ref.watch(dashboardControllerProvider);
 
     return DashboardScaffold(
+      scaffoldKey: _scaffoldKey,
       endDrawer: const Drawer(width: 400, child: FilterBuilder()),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,81 +98,188 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     children: [
                       // Preset Dropdown
                       // Unified Filter Button
-                      ActionPopUpMenuButton(
-                        position: PopupMenuPosition.under,
-                        triggerBuilder: Builder(
-                          builder: (context) {
-                            return Badge(
-                              label: Text(
-                                "${state.activeFilter?.children.length ?? 0}",
-                              ),
-                              isLabelVisible:
-                                  state.activeFilter != null &&
-                                  state.activeFilter!.children.isNotEmpty,
-                              child: IgnorePointer(
-                                child: OutlinedButton.icon(
-                                  onPressed:
-                                      () {}, // Dummy callback to keep enabled styling
-                                  icon: const Icon(Icons.filter_list),
-                                  label: Text("Filter".hardcoded),
-                                  style: OutlinedButton.styleFrom(
-                                    backgroundColor: state.activeFilter != null
-                                        ? theme.colorScheme.primaryContainer
-                                              .withValues(alpha: 0.2)
-                                        : null,
-                                    side: BorderSide(
-                                      color: state.activeFilter != null
-                                          ? theme.colorScheme.primary
-                                          : theme.colorScheme.outlineVariant,
-                                    ),
-                                  ),
+                      MenuAnchor(
+                        builder: (context, controller, child) {
+                          final theme = Theme.of(context);
+                          final isActive =
+                              state.activeFilter != null &&
+                              state.activeFilter!.children.isNotEmpty;
+                          return Badge(
+                            label: null,
+                            smallSize: 10,
+                            isLabelVisible: isActive,
+                            child: OutlinedButton.icon(
+                              onPressed: () {
+                                if (controller.isOpen) {
+                                  controller.close();
+                                } else {
+                                  controller.open();
+                                }
+                              },
+                              icon: const Icon(Icons.filter_list),
+                              label: Text("Filter".hardcoded),
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: state.activeFilter != null
+                                    ? theme.colorScheme.primaryContainer
+                                          .withValues(alpha: 0.2)
+                                    : null,
+                                side: BorderSide(
+                                  color: state.activeFilter != null
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.outlineVariant,
                                 ),
                               ),
-                            );
-                          },
-                        ),
-                        actions: [
-                          ModelAction.addHeader("Default Presets".hardcoded),
-                          ...DefaultPresets.all.map(
-                            (preset) => ModelAction(
-                              type: preset.id,
-                              label: preset.name,
-                              icon: preset.icon ?? Icons.star_border,
-                              tooltip: _getPresetTooltip(preset.id),
-                              onExecute: () {
-                                ref
-                                    .read(dashboardControllerProvider.notifier)
-                                    .updateFilter(preset.root);
-                              },
+                            ),
+                          );
+                        },
+                        menuChildren: [
+                          MenuItemButton(
+                            onPressed: null,
+                            child: Text(
+                              "Default Presets".hardcoded,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                          ModelAction.addSeparator(),
-                          if (state.savedFilters.isNotEmpty) ...[
-                            ModelAction.addHeader("Custom Presets".hardcoded),
-                            ...state.savedFilters.map(
-                              (preset) => ModelAction(
-                                type: preset.id,
-                                label: preset.name,
-                                icon: preset.icon ?? Icons.person_outline,
-                                onExecute: () {
+                          ...DefaultPresets.all.map((preset) {
+                            final isSelected =
+                                state.selectedSavedFilterId == preset.id;
+                            final theme = Theme.of(context);
+                            return Tooltip(
+                              message: _getPresetTooltip(preset.id),
+                              child: MenuItemButton(
+                                leadingIcon: Icon(
+                                  preset.icon ?? Icons.star_border,
+                                  color: isSelected
+                                      ? theme.colorScheme.primary
+                                      : null,
+                                ),
+                                trailingIcon: isSelected
+                                    ? Icon(
+                                        Icons.check,
+                                        color: theme.colorScheme.primary,
+                                      )
+                                    : null,
+                                onPressed: () {
                                   ref
                                       .read(
                                         dashboardControllerProvider.notifier,
                                       )
-                                      .updateFilter(preset.root);
+                                      .updateFilter(
+                                        isSelected
+                                            ? FilterGroup(
+                                                logic: FilterLogic.and,
+                                              )
+                                            : preset.root,
+                                        presetId: isSelected ? null : preset.id,
+                                      );
                                 },
+                                child: Text(
+                                  preset.name,
+                                  style: isSelected
+                                      ? TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: theme.colorScheme.primary,
+                                        )
+                                      : null,
+                                ),
+                              ),
+                            );
+                          }),
+                          const Divider(),
+                          if (state.savedFilters.isNotEmpty) ...[
+                            MenuItemButton(
+                              onPressed: null,
+                              child: Text(
+                                "Custom Presets".hardcoded,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                            ModelAction.addSeparator(),
+                            ...state.savedFilters.map((preset) {
+                              final isSelected =
+                                  state.selectedSavedFilterId == preset.id;
+                              final theme = Theme.of(context);
+                              return MenuItemButton(
+                                leadingIcon: Icon(
+                                  preset.icon ?? Icons.person_outline,
+                                  color: isSelected
+                                      ? theme.colorScheme.primary
+                                      : null,
+                                ),
+                                trailingIcon: isSelected
+                                    ? Icon(
+                                        Icons.check,
+                                        color: theme.colorScheme.primary,
+                                      )
+                                    : null,
+                                onPressed: () {
+                                  ref
+                                      .read(
+                                        dashboardControllerProvider.notifier,
+                                      )
+                                      .updateFilter(
+                                        isSelected
+                                            ? FilterGroup(
+                                                logic: FilterLogic.and,
+                                              )
+                                            : preset.root,
+                                        presetId: isSelected ? null : preset.id,
+                                      );
+                                },
+                                child: Text(
+                                  preset.name,
+                                  style: isSelected
+                                      ? TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: theme.colorScheme.primary,
+                                        )
+                                      : null,
+                                ),
+                              );
+                            }),
+                            const Divider(),
                           ],
-                          ModelAction(
-                            type: 'advanced',
-                            label: "Advanced Filters...".hardcoded,
-                            icon: Icons.tune,
-                            onExecute: () {
-                              Scaffold.of(context).openEndDrawer();
+                          MenuItemButton(
+                            leadingIcon: Badge(
+                              label: null,
+                              smallSize: 10,
+                              isLabelVisible:
+                                  state.activeFilter != null &&
+                                  state.activeFilter!.children.isNotEmpty,
+                              child: const Icon(Icons.tune),
+                            ),
+                            child: Text("Advanced Filters...".hardcoded),
+                            onPressed: () {
+                              _scaffoldKey.currentState!.openEndDrawer();
                             },
                           ),
+                          if (state.activeFilter != null &&
+                              state.activeFilter!.children.isNotEmpty) ...[
+                            const Divider(),
+                            MenuItemButton(
+                              leadingIcon: Icon(
+                                Icons.clear,
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                              child: Text(
+                                "Clear filter".hardcoded,
+                                style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                              ),
+                              onPressed: () {
+                                ref
+                                    .read(dashboardControllerProvider.notifier)
+                                    .updateFilter(
+                                      FilterGroup(logic: FilterLogic.and),
+                                      presetId: null,
+                                    );
+                              },
+                            ),
+                          ],
                         ],
                       ),
 
