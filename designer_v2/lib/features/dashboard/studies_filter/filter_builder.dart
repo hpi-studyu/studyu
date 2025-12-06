@@ -64,15 +64,21 @@ class _FilterBuilderState extends ConsumerState<FilterBuilder> {
   void initState() {
     super.initState();
     // Initialize from current active filter if possible
-    final activeFilter = ref.read(dashboardControllerProvider).activeFilter;
+    final state = ref.read(dashboardControllerProvider);
+    final activeFilter = state.activeFilter;
     if (activeFilter != null) {
       _initFromFilter(activeFilter);
-      // Try to find if this filter matches a saved preset
-      final saved = ref.read(dashboardControllerProvider).savedFilters;
-      for (final s in saved) {
-        if (s.root == activeFilter) {
-          _loadedPresetId = s.id;
-          break;
+      // Trust the ID from the state if available
+      if (state.selectedSavedFilterId != null) {
+        _loadedPresetId = state.selectedSavedFilterId;
+      } else {
+        // Try to find if this filter matches a saved preset
+        final saved = state.savedFilters;
+        for (final s in saved) {
+          if (s.root == activeFilter) {
+            _loadedPresetId = s.id;
+            break;
+          }
         }
       }
     }

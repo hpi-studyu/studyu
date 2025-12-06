@@ -11,6 +11,7 @@ import 'package:studyu_designer_v2/features/dashboard/dashboard_scaffold.dart';
 import 'package:studyu_designer_v2/features/dashboard/dashboard_state.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_builder.dart';
+
 import 'package:studyu_designer_v2/features/dashboard/studies_filter/filter_types.dart';
 import 'package:studyu_designer_v2/features/dashboard/studies_table.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
@@ -242,6 +243,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             }),
                             const Divider(),
                           ],
+
                           MenuItemButton(
                             leadingIcon: Badge(
                               label: null,
