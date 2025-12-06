@@ -4284,7 +4284,7 @@ abstract class AppLocalizations {
   /// No description provided for @filter_button_advanced.
   ///
   /// In en, this message translates to:
-  /// **'Advanced Filters...'**
+  /// **'Configure Filters...'**
   String get filter_button_advanced;
 
   /// No description provided for @filter_button_clear.

@@ -901,7 +901,7 @@
   "participation_invite": "Nur Einladung",
   "filter_section_default_presets": "Standardvorlagen",
   "filter_section_custom_presets": "Benutzerdefinierte Vorlagen",
-  "filter_button_advanced": "Erweiterte Filter...",
+  "filter_button_advanced": "Konfiguriere Filter...",
   "filter_button_clear": "Filter entfernen",
   "filter_button_main": "Filtern"
 }

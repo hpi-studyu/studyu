@@ -901,7 +901,7 @@
   "participation_invite": "Invite-only",
   "filter_section_default_presets": "Default Presets",
   "filter_section_custom_presets": "Custom Presets",
-  "filter_button_advanced": "Advanced Filters...",
+  "filter_button_advanced": "Configure Filters...",
   "filter_button_clear": "Clear filter",
   "filter_button_main": "Filter"
 }

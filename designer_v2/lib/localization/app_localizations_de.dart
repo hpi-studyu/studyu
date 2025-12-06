@@ -2507,10 +2507,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get filter_section_custom_presets => 'Benutzerdefinierte Vorlagen';
 
   @override
-  String get filter_button_advanced => 'Erweiterte Filter...';
+  String get filter_button_advanced => 'Konfiguriere Filter...';
 
   @override
-  String get filter_button_clear => 'Filter zurücksetzen';
+  String get filter_button_clear => 'Filter entfernen';
 
   @override
   String get filter_button_main => 'Filtern';

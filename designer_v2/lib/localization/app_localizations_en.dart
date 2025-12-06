@@ -2473,7 +2473,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filter_section_custom_presets => 'Custom Presets';
 
   @override
-  String get filter_button_advanced => 'Advanced Filters...';
+  String get filter_button_advanced => 'Configure Filters...';
 
   @override
   String get filter_button_clear => 'Clear filter';
