@@ -54,13 +54,23 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
 
   Future<void> _openNutritionDiary() async {
     final result = await Navigator.of(context).push(
-      DailyRecallEntryScreen.route(existingRecall: _dailyRecall),
+      DailyRecallEntryScreen.route(
+        existingRecall: _dailyRecall,
+        task: widget.task,
+        completionPeriod: widget.completionPeriod,
+      ),
     );
-    
+
     if (result != null) {
-      setState(() {
-        _dailyRecall = result;
-      });
+      if (result.entryCompletedAt != null && result.studyDaySnapshot != null) {
+        // Task was submitted directly from DailyRecallEntryScreen
+        if (!mounted) return;
+        Navigator.pop(context, true);
+      } else {
+        setState(() {
+          _dailyRecall = result;
+        });
+      }
     }
   }
 

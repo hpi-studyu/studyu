@@ -1,9 +1,10 @@
-import 'dart:io';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
-import 'package:studyu_app/screens/study/tasks/task_screen.dart';
-import 'package:studyu_app/util/misc.dart';
+import 'package:studyu_app/util/nutrition_recall_autosave_manager.dart';
 import 'package:studyu_app/util/study_subject_extension.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
@@ -37,15 +38,24 @@ class DailyRecallEntryScreen extends StatefulWidget {
   State<DailyRecallEntryScreen> createState() => _DailyRecallEntryScreenState();
 }
 
-class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
+class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen>
+    with WidgetsBindingObserver {
   late DailyRecall _recall;
   late DateTime _selectedDate;
   late RecallMode _recallMode;
   bool _isUsualIntakeDay = true;
   String? _specialOccasion;
-  DateTime? _lastClickTime;
-  bool _isLoading = false;
   bool _instructionsExpanded = true;
+
+  Timer? _autoSaveTimer;
+  final _autoSaveManager = NutritionRecallAutoSaveManager();
+  bool _isSaving = false;
+  DateTime? _lastSaveTime;
+  int? _studyDaySnapshot;
+  String? _interventionId;
+  String? _periodId;
+  StudySubject? _subject;
+  late TextEditingController _specialOccasionController;
 
   bool get _isInTaskMode =>
       widget.task != null && widget.completionPeriod != null;
@@ -53,12 +63,16 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
     if (widget.existingRecall != null) {
       _recall = widget.existingRecall!;
       _selectedDate = _recall.date;
       _recallMode = _recall.recallMode;
       _isUsualIntakeDay = _recall.isUsualIntakeDay ?? true;
       _specialOccasion = _recall.specialOccasion;
+      _studyDaySnapshot = _recall.studyDaySnapshot;
+      _lastSaveTime = _recall.lastAutoSavedAt;
     } else {
       _selectedDate = DateTime.now();
       _recallMode = RecallMode.realtimeRecord;
@@ -68,6 +82,207 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
         entryStartedAt: DateTime.now(),
         meals: [],
       );
+    }
+
+    _specialOccasionController = TextEditingController(text: _specialOccasion ?? '');
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeAutoSave();
+    });
+  }
+
+  Future<void> _initializeAutoSave() async {
+    _subject = Provider.of<AppState>(context, listen: false).activeSubject;
+
+    if (_subject == null) return;
+
+    _studyDaySnapshot ??= _subject!.getDayOfStudyFor(DateTime.now());
+    _interventionId ??= _subject!.getInterventionForDate(DateTime.now())?.id;
+
+    if (widget.task != null && widget.completionPeriod != null) {
+      _periodId = widget.completionPeriod!.id;
+    }
+
+    if (_studyDaySnapshot == null) return;
+
+    if (widget.existingRecall == null) {
+      final existing = await _autoSaveManager.loadRecall(
+        subjectId: _subject!.id,
+        taskId: widget.task?.id ?? NutritionRecallAutoSaveManager.standaloneTaskId,
+        studyDay: _studyDaySnapshot!,
+      );
+
+      if (existing != null && mounted) {
+        setState(() {
+          _recall = existing;
+          _selectedDate = existing.date;
+          _recallMode = existing.recallMode;
+          _isUsualIntakeDay = existing.isUsualIntakeDay ?? true;
+          _specialOccasion = existing.specialOccasion;
+          _specialOccasionController.text = _specialOccasion ?? '';
+          _lastSaveTime = existing.lastAutoSavedAt;
+        });
+      } else if (mounted) {
+        setState(() {
+          _recall = DailyRecall.withId(
+            date: _selectedDate,
+            recallMode: _recallMode,
+            entryStartedAt: DateTime.now(),
+            meals: [],
+            studyDaySnapshot: _studyDaySnapshot,
+          );
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _autoSaveTimer?.cancel();
+    _specialOccasionController.dispose();
+    if (_recall.meals.isNotEmpty && _subject != null) {
+      _performAutoSaveSync();
+    }
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      _autoSaveTimer?.cancel();
+      if (_recall.meals.isNotEmpty && _subject != null) {
+        _performAutoSaveSync();
+      }
+    }
+  }
+
+  void _performAutoSaveSync() {
+    if (_subject == null || _studyDaySnapshot == null) return;
+
+    StudyULogger.debug(
+      '[DailyRecall] Sync auto-save (dispose/pause) | meals=${_recall.meals.length} '
+      'studyDay=$_studyDaySnapshot subject=${_subject?.id}',
+    );
+
+    _autoSaveManager.saveRecall(
+      recall: DailyRecall(
+        id: _recall.id,
+        date: _recall.date,
+        isUsualIntakeDay: _isUsualIntakeDay,
+        specialOccasion: _specialOccasion,
+        recallMode: _recallMode,
+        entryStartedAt: _recall.entryStartedAt,
+        entryCompletedAt: _recall.entryCompletedAt,
+        meals: _recall.meals,
+        studyDaySnapshot: _studyDaySnapshot,
+        lastAutoSavedAt: DateTime.now(),
+      ),
+      subjectId: _subject!.id,
+      taskId: widget.task?.id ?? NutritionRecallAutoSaveManager.standaloneTaskId,
+      interventionId: _interventionId ?? NutritionRecallAutoSaveManager.unknownInterventionId,
+      periodId: _periodId ?? NutritionRecallAutoSaveManager.defaultPeriodId,
+      studyDaySnapshot: _studyDaySnapshot!,
+    );
+  }
+
+  void _scheduleAutoSave([String reason = 'unspecified']) {
+    if (_subject == null || _studyDaySnapshot == null) return;
+
+    StudyULogger.debug(
+      '[DailyRecall] Schedule auto-save ($reason) | meals=${_recall.meals.length} '
+      'studyDay=$_studyDaySnapshot subject=${_subject?.id}',
+    );
+
+    _autoSaveTimer?.cancel();
+    _autoSaveTimer = Timer(NutritionRecallAutoSaveManager.debounceDuration, () {
+      _performAutoSave();
+    });
+  }
+
+  Future<void> _performAutoSave() async {
+    if (_isSaving || _subject == null || _studyDaySnapshot == null) return;
+    if (!_isInTaskMode) {
+      StudyULogger.debug('[DailyRecall] Skip auto-save (not in task mode)');
+      return; // Only auto-save to DB in task mode
+    }
+
+    final appState = Provider.of<AppState>(context, listen: false);
+    final shouldSaveToDb = appState.trackParticipantProgress;
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    try {
+      final now = DateTime.now();
+      final recallToSave = DailyRecall(
+        id: _recall.id,
+        date: _recall.date,
+        isUsualIntakeDay: _isUsualIntakeDay,
+        specialOccasion: _specialOccasion,
+        recallMode: _recallMode,
+        entryStartedAt: _recall.entryStartedAt,
+        entryCompletedAt: _recall.entryCompletedAt,
+        meals: _recall.meals,
+        studyDaySnapshot: _studyDaySnapshot,
+        lastAutoSavedAt: now,
+      );
+      // Keep the in-memory recall in sync so subsequent saves reuse the same
+      // lastAutoSavedAt and avoid duplicate progress rows for the same day.
+      _recall = recallToSave;
+
+      StudyULogger.debug(
+        '[DailyRecall] Auto-save firing | meals=${recallToSave.meals.length} '
+        'studyDay=$_studyDaySnapshot shouldSaveToDb=$shouldSaveToDb '
+        'recallMode=$_recallMode usualDay=$_isUsualIntakeDay '
+        'specialOccasion=${_specialOccasion ?? '-'} '
+        'lastAutoSavedAt=${recallToSave.lastAutoSavedAt}',
+      );
+
+      // Save to local SharedPreferences as backup
+      await _autoSaveManager.saveRecall(
+        recall: recallToSave,
+        subjectId: _subject!.id,
+        taskId: widget.task?.id ?? NutritionRecallAutoSaveManager.standaloneTaskId,
+        interventionId: _interventionId ?? NutritionRecallAutoSaveManager.unknownInterventionId,
+        periodId: _periodId ?? NutritionRecallAutoSaveManager.defaultPeriodId,
+        studyDaySnapshot: _studyDaySnapshot!,
+      );
+
+      // Also upsert to database (subject_progress)
+      if (shouldSaveToDb) {
+        await _subject!.upsertNutritionResult(
+          taskId: widget.task!.id,
+          periodId: widget.completionPeriod!.id,
+          recall: recallToSave,
+        );
+      }
+
+      if (mounted) {
+        setState(() {
+          _lastSaveTime = now;
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
+    }
+  }
+
+  String _formatTimeSince(DateTime time) {
+    final diff = DateTime.now().difference(time);
+    if (diff.inSeconds < 10) {
+      return 'just now';
+    } else if (diff.inSeconds < 60) {
+      return '${diff.inSeconds} seconds ago';
+    } else if (diff.inMinutes < 60) {
+      return '${diff.inMinutes} minute${diff.inMinutes > 1 ? 's' : ''} ago';
+    } else {
+      return '${diff.inHours} hour${diff.inHours > 1 ? 's' : ''} ago';
     }
   }
 
@@ -90,8 +305,11 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
           entryStartedAt: _recall.entryStartedAt,
           entryCompletedAt: _recall.entryCompletedAt,
           meals: _recall.meals,
+          studyDaySnapshot: _studyDaySnapshot,
+          lastAutoSavedAt: _recall.lastAutoSavedAt,
         );
       });
+      _scheduleAutoSave('date changed');
     }
   }
 
@@ -101,6 +319,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
       setState(() {
         _recall.meals.add(result);
       });
+      _scheduleAutoSave('meal added');
     }
   }
 
@@ -112,6 +331,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
       setState(() {
         _recall.meals[index] = result;
       });
+      _scheduleAutoSave('meal edited');
     }
   }
 
@@ -119,6 +339,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
     setState(() {
       _recall.meals.removeAt(index);
     });
+    _scheduleAutoSave('meal removed');
   }
 
   void _completeRecall() {
@@ -133,65 +354,6 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
       meals: _recall.meals,
     );
     Navigator.of(context).pop(_recall);
-  }
-
-  Future<void> _submitTask() async {
-    if (isRedundantClick(_lastClickTime)) return;
-
-    setState(() {
-      _isLoading = true;
-      _lastClickTime = DateTime.now();
-    });
-
-    // Mark recall as completed
-    _recall = DailyRecall(
-      id: _recall.id,
-      date: _recall.date,
-      isUsualIntakeDay: _isUsualIntakeDay,
-      specialOccasion: _specialOccasion,
-      recallMode: _recallMode,
-      entryStartedAt: _recall.entryStartedAt,
-      entryCompletedAt: DateTime.now(),
-      meals: _recall.meals,
-    );
-
-    await handleTaskCompletion(context, (subject) async {
-      try {
-        await subject!.addResult<DailyRecall>(
-          taskId: widget.task!.id,
-          periodId: widget.completionPeriod!.id,
-          result: _recall,
-        );
-      } on SocketException catch (_) {
-        await subject!.addResult<DailyRecall>(
-          taskId: widget.task!.id,
-          periodId: widget.completionPeriod!.id,
-          result: _recall,
-          offline: true,
-        );
-        rethrow;
-      }
-    });
-
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.pop(context, _recall);
-    }
-  }
-
-  bool _isRecallComplete() {
-    if (!_isInTaskMode) {
-      return _recall.meals.isNotEmpty;
-    }
-
-    if (widget.task?.minimumMealsRequired != null) {
-      final nonSkippedMeals = _recall.meals.where((m) => !m.isSkipped).length;
-      return nonSkippedMeals >= widget.task!.minimumMealsRequired!;
-    }
-
-    return _recall.meals.isNotEmpty;
   }
 
   String _getMealTypeLabel(MealType type) {
@@ -214,7 +376,6 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isComplete = _isInTaskMode ? _isRecallComplete() : false;
 
     return Scaffold(
       appBar: AppBar(
@@ -230,19 +391,38 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
       ),
       body: Column(
         children: [
+          if (_lastSaveTime != null)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: Colors.green.shade50,
+              child: Row(
+                children: [
+                  Icon(
+                    _isSaving ? Icons.cloud_queue : Icons.cloud_done,
+                    size: 16,
+                    color: Colors.green.shade700,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    _isSaving ? 'Saving...' : 'Saved ${_formatTimeSince(_lastSaveTime!)}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.green.shade800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Task Header
                   if (widget.task?.header != null) ...[
                     HtmlText(widget.task!.header, centered: true),
                     const SizedBox(height: 20),
                   ],
-
-                  // Instructions Card (for task mode)
                   if (_isInTaskMode) ...[
                     Card(
                       child: Theme(
@@ -363,6 +543,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
                                   setState(() {
                                     _recallMode = value;
                                   });
+                                  _scheduleAutoSave('recall mode changed');
                                 }
                               },
                             ),
@@ -380,8 +561,10 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
                                 _isUsualIntakeDay = value;
                                 if (value == true) {
                                   _specialOccasion = null;
+                                  _specialOccasionController.clear();
                                 }
                               });
+                              _scheduleAutoSave('usual day toggled');
                             },
                           ),
                           if (_isUsualIntakeDay == false) ...[
@@ -394,10 +577,9 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
                               ),
                               onChanged: (value) {
                                 _specialOccasion = value.isEmpty ? null : value;
+                                _scheduleAutoSave('special occasion changed');
                               },
-                              controller: TextEditingController(
-                                text: _specialOccasion ?? '',
-                              ),
+                              controller: _specialOccasionController,
                             ),
                           ],
                         ],
@@ -434,8 +616,8 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
                               Icon(
                                 Icons.restaurant,
                                 size: 48,
-                                color: theme.colorScheme.primary.withOpacity(
-                                  0.5,
+                                color: theme.colorScheme.primary.withValues(
+                                  alpha: 0.5,
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -499,14 +681,10 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
                         ),
                       );
                     }),
-
-                  // Add nutrition summary if there are meals
                   if (_recall.meals.isNotEmpty) ...[
                     const SizedBox(height: 24),
                     DailyNutritionSummaryCard(dailyRecall: _recall),
                   ],
-
-                  // Task Footer
                   if (widget.task?.footer != null) ...[
                     const SizedBox(height: 20),
                     HtmlText(widget.task!.footer, centered: true),
@@ -516,34 +694,6 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
             ),
           ),
 
-          if (_isInTaskMode && isComplete) ...[
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: ElevatedButton.icon(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color>(Colors.green),
-                  minimumSize: WidgetStateProperty.all(
-                    const Size(double.infinity, 56),
-                  ),
-                ),
-                onPressed: _isLoading ? null : _submitTask,
-                icon: _isLoading
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : const Icon(Icons.check_circle, size: 24),
-                label: Text(
-                  _isLoading ? 'Saving...' : 'Submit',
-                  style: const TextStyle(fontSize: 18, color: Colors.white),
-                ),
-              ),
-            ),
-          ],
         ],
       ),
     );
