@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/screens/study/nutrition/daily_recall_entry_screen.dart';
+import 'package:studyu_app/screens/study/tasks/observation/nutrition_task_widget.dart';
 import 'package:studyu_app/screens/study/tasks/intervention/checkmark_task_widget.dart';
 import 'package:studyu_app/screens/study/tasks/observation/questionnaire_task_widget.dart';
 import 'package:studyu_app/util/cache.dart';
@@ -48,7 +48,7 @@ class _TaskScreenState extends State<TaskScreen> {
   Future<void> _navigateToNutritionTask() async {
     final nutritionTask = taskInstance.task as NutritionTask;
     final result = await Navigator.of(context).push(
-      DailyRecallEntryScreen.route(
+      NutritionTaskWidget.route(
         task: nutritionTask,
         completionPeriod: taskInstance.completionPeriod,
       ),

@@ -451,5 +451,168 @@
   "preview_mode_description": "You are currently in preview mode. This allows you to:\n\n• Fast-forward through study days using the \"Next Day\" button\n• Complete tasks multiple times without restrictions\n• Experience the full study flow without affecting real data\n\nImportant: Results and data from preview mode are not stored or mixed with actual participant results from running studies.",
   "preview_mode_results_not_saved": "Task completed in preview mode - results are not saved to protect study data integrity.",
   "ok": "OK",
-  "submit" : "Submit"
+  "submit": "Submit",
+  "daily_food_diary": "Daily Food Diary",
+  "saving": "Saving...",
+  "saved_ago": "Saved {time} ago",
+  "@saved_ago": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "just_now": "just now",
+  "seconds_ago": "{seconds} seconds ago",
+  "@seconds_ago": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "minutes_ago": "{minutes} minute(s) ago",
+  "@minutes_ago": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "hours_ago": "{hours} hour(s) ago",
+  "@hours_ago": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "instructions": "Instructions",
+  "nutrition_instructions_default": "Please record all the foods and beverages you consumed today. For each meal or snack, provide as much detail as possible including portion sizes and preparation methods.",
+  "min_meals_required": "Please record at least {count} meal(s)",
+  "@min_meals_required": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "recall_details": "Recall Details",
+  "date": "Date",
+  "recall_mode": "Recall Mode",
+  "recall_mode_realtime": "Real-time Recording",
+  "recall_mode_yesterday": "Yesterday Recall",
+  "usual_intake_day": "Usual Intake Day",
+  "usual_intake_question": "Was this a typical day for your diet?",
+  "special_occasion": "Special Occasion",
+  "special_occasion_hint": "e.g., Birthday, Holiday, etc.",
+  "meals_count": "Meals ({count})",
+  "@meals_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "add_meal": "Add Meal",
+  "no_meals_recorded": "No meals recorded yet",
+  "edit": "Edit",
+  "delete": "Delete",
+  "meal_type_breakfast": "Breakfast",
+  "meal_type_lunch": "Lunch",
+  "meal_type_dinner": "Dinner",
+  "meal_type_snack": "Snack",
+  "meal_type_brunch": "Brunch",
+  "meal_type_other": "Other",
+  "food_items_count": "{count} food items",
+  "@food_items_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "meal_entry_title": "Meal Entry",
+  "save": "Save",
+  "meal_information": "Meal Information",
+  "meal_type_label": "Meal Type",
+  "custom_meal_label": "Custom Meal Label",
+  "time": "Time",
+  "where_did_you_eat": "Where did you eat?",
+  "location_description": "Location Description",
+  "location_description_hint": "Describe where you ate",
+  "who_were_you_with": "Who were you with?",
+  "distractions_during_meal": "Distractions during meal?",
+  "skipped_this_meal": "Skipped this meal",
+  "reason_for_skipping": "Reason for skipping",
+  "food_items_section": "Food Items ({count})",
+  "@food_items_section": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "add_food": "Add Food",
+  "no_food_items_yet": "No food items yet",
+  "not_specified": "Not specified",
+  "context_home": "Home",
+  "context_restaurant": "Restaurant",
+  "context_takeout": "Takeout",
+  "context_vending": "Vending",
+  "context_other": "Other",
+  "company_alone": "👤 Alone",
+  "company_family": "👨‍👩‍👧‍👦 Family",
+  "company_friends": "👥 Friends",
+  "company_colleagues": "💼 Colleagues",
+  "company_other": "🤝 Other",
+  "distraction_none": "🧘 None",
+  "distraction_tv": "📺 TV",
+  "distraction_phone": "📱 Phone",
+  "distraction_work": "💻 Work",
+  "distraction_other": "📖 Other",
+  "food_entry_title": "Food Entry",
+  "food_information": "Food Information",
+  "entry_type": "Entry Type",
+  "food_name": "Food Name *",
+  "brand_name": "Brand Name",
+  "description": "Description",
+  "description_hint": "Optional notes about this food",
+  "recipe_info": "Recipe: Use Recipe Builder for better ingredient management",
+  "open_recipe_builder": "Open Recipe Builder",
+  "amount": "Amount *",
+  "unit": "Unit *",
+  "serving_size": "Serving Size (grams) *",
+  "portion_reference": "Portion Reference",
+  "portion_reference_hint": "e.g., 1 cup, 3 oz, medium apple",
+  "portion_estimation_method": "Portion Estimation Method",
+  "portion_state": "Portion State",
+  "yield_factor": "Yield Factor",
+  "yield_factor_hint": "e.g., 0.75",
+  "edible_portion": "Edible Portion",
+  "edible_portion_hint": "e.g., 0.85",
+  "nutrition_information": "Nutrition Information",
+  "energy_kcal": "Energy (kcal) *",
+  "protein_g": "Protein (g)",
+  "carbs_g": "Carbs (g)",
+  "fat_g": "Fat (g)",
+  "saturated_fat_g": "Sat. Fat (g)",
+  "sugars_g": "Sugars (g)",
+  "fiber_g": "Fiber (g)",
+  "sodium_mg": "Sodium (mg)",
+  "required_error": "Required",
+  "enter_food_name": "Please enter a food name",
+  "enter_serving_size": "Please enter serving size",
+  "entry_type_single_ingredient": "🥕 Single Ingredient",
+  "entry_type_recipe": "📖 Recipe",
+  "entry_type_branded_product": "🏷️ Branded Product",
+  "entry_type_manual_entry": "✏️ Manual Entry",
+  "portion_method_household": "Household Measure",
+  "portion_method_photograph": "Photograph",
+  "portion_method_standard_unit": "Standard Unit",
+  "portion_method_user_weighted": "User Weighted",
+  "portion_method_unknown": "Unknown",
+  "portion_state_raw": "Raw",
+  "portion_state_cooked": "Cooked",
+  "portion_state_as_served": "As Served"
 }
