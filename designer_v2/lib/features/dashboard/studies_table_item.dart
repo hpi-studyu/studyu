@@ -141,7 +141,6 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                     widget.columnSizes[3].createContainer(
                       child: StudyParticipationBadge(
                         participation: widget.study.participation,
-                        center: true,
                       ),
                     ),
                     SizedBox(
@@ -229,7 +228,6 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
     final theme = Theme.of(context);
 
     return Align(
-      alignment: Alignment.center,
       child: ActionPopUpMenuButton(
         actions: actions,
         triggerIconColor: ThemeConfig.bodyTextMuted(
