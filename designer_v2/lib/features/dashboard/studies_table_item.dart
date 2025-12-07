@@ -125,10 +125,12 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                           : widget.columnSpacing,
                     ),
                     widget.columnSizes[2].createContainer(
-                      child: StudyStatusBadge(
-                        status: widget.study.status,
-                        showPrefixIcon: false,
-                        showTooltip: false,
+                      child: Center(
+                        child: StudyStatusBadge(
+                          status: widget.study.status,
+                          showPrefixIcon: false,
+                          showTooltip: false,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -139,7 +141,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                     widget.columnSizes[3].createContainer(
                       child: StudyParticipationBadge(
                         participation: widget.study.participation,
-                        center: false,
+                        center: true,
                       ),
                     ),
                     SizedBox(
@@ -148,10 +150,13 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                           : widget.columnSpacing,
                     ),
                     widget.columnSizes[4].createContainer(
-                      child: Text(
-                        widget.study.createdAt?.toTimeAgoString() ?? '',
-                        maxLines: 3,
-                        overflow: TextOverflow.fade,
+                      child: Center(
+                        child: Text(
+                          widget.study.createdAt?.toTimeAgoString() ?? '',
+                          maxLines: 3,
+                          overflow: TextOverflow.fade,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -160,10 +165,12 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                           : widget.columnSpacing,
                     ),
                     widget.columnSizes[5].createContainer(
-                      child: Text(
-                        widget.study.participantCount.toString(),
-                        style: mutedTextStyleIfZero(
-                          widget.study.participantCount,
+                      child: Center(
+                        child: Text(
+                          widget.study.participantCount.toString(),
+                          style: mutedTextStyleIfZero(
+                            widget.study.participantCount,
+                          ),
                         ),
                       ),
                     ),
@@ -173,10 +180,12 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                           : widget.columnSpacing,
                     ),
                     widget.columnSizes[6].createContainer(
-                      child: Text(
-                        widget.study.activeSubjectCount.toString(),
-                        style: mutedTextStyleIfZero(
-                          widget.study.activeSubjectCount,
+                      child: Center(
+                        child: Text(
+                          widget.study.activeSubjectCount.toString(),
+                          style: mutedTextStyleIfZero(
+                            widget.study.activeSubjectCount,
+                          ),
                         ),
                       ),
                     ),
@@ -186,9 +195,11 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
                           : widget.columnSpacing,
                     ),
                     widget.columnSizes[7].createContainer(
-                      child: Text(
-                        widget.study.endedCount.toString(),
-                        style: mutedTextStyleIfZero(widget.study.endedCount),
+                      child: Center(
+                        child: Text(
+                          widget.study.endedCount.toString(),
+                          style: mutedTextStyleIfZero(widget.study.endedCount),
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -218,7 +229,7 @@ class _StudiesTableItemState extends State<StudiesTableItem> {
     final theme = Theme.of(context);
 
     return Align(
-      alignment: Alignment.centerRight,
+      alignment: Alignment.center,
       child: ActionPopUpMenuButton(
         actions: actions,
         triggerIconColor: ThemeConfig.bodyTextMuted(

@@ -8,6 +8,7 @@ class StudiesTableColumnHeader extends StatefulWidget {
   final bool sortAscending;
   final bool sortingActive;
   final void Function()? onSort;
+  final bool center;
 
   const StudiesTableColumnHeader(
     this.title, {
@@ -16,6 +17,7 @@ class StudiesTableColumnHeader extends StatefulWidget {
     required this.sortingActive,
     required this.sortAscending,
     this.onSort,
+    this.center = false,
   });
 
   @override
@@ -33,6 +35,9 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
     return MouseEventsRegion(
       builder: (context, state) {
         return Row(
+          mainAxisAlignment: widget.center
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.start,
           children: [
             Flexible(
               child: Text(
@@ -40,13 +45,14 @@ class _StudiesTableColumnHeaderState extends State<StudiesTableColumnHeader> {
                 maxLines: 1,
                 overflow: TextOverflow.fade,
                 softWrap: false,
+                textAlign: widget.center ? TextAlign.center : TextAlign.start,
                 style: theme.textTheme.bodySmall!.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                 ),
               ),
             ),
             if (widget.sortable)
-              _getIcon() ?? const SizedBox(width: 17)
+              _getIcon() ?? const SizedBox.shrink()
             else
               const SizedBox.shrink(),
           ],
