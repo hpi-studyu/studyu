@@ -758,6 +758,7 @@
   "action_reportPrimary": "Als Primärauswertung setzen",
   "action_study_duplicate_draft": "Als Entwurf duplizieren",
   "action_study_export_results": "Ergebnisdaten exportieren",
+  "action_export_study_definition": "Studiendefinition exportieren",
   "dialog_continue": "Fortfahren",
   "dialog_close": "Schließen",
   "dialog_cancel": "Abbrechen",

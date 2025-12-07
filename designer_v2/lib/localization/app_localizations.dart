@@ -3489,6 +3489,12 @@ abstract class AppLocalizations {
   /// **'Export results'**
   String get action_study_export_results;
 
+  /// No description provided for @action_export_study_definition.
+  ///
+  /// In en, this message translates to:
+  /// **'Export study definition'**
+  String get action_export_study_definition;
+
   /// No description provided for @dialog_continue.
   ///
   /// In en, this message translates to:

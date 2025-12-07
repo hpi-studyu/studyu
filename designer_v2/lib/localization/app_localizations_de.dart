@@ -2063,6 +2063,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_study_export_results => 'Ergebnisdaten exportieren';
 
   @override
+  String get action_export_study_definition => 'Studiendefinition exportieren';
+
+  @override
   String get dialog_continue => 'Fortfahren';
 
   @override

@@ -758,6 +758,7 @@
   "action_reportPrimary": "Set as primary report",
   "action_study_duplicate_draft": "Copy as draft",
   "action_study_export_results": "Export results",
+  "action_export_study_definition": "Export study definition",
   "dialog_continue": "Continue",
   "dialog_close": "Close",
   "dialog_cancel": "Cancel",

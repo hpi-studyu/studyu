@@ -2037,6 +2037,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_study_export_results => 'Export results';
 
   @override
+  String get action_export_study_definition => 'Export study definition';
+
+  @override
   String get dialog_continue => 'Continue';
 
   @override

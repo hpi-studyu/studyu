@@ -51,13 +51,26 @@ extension StudyExportZipX on StudyExportData {
 }
 
 extension StudyExportX on Study {
-  bool canExport(User user) => canEdit(user) || publishedToRegistryResults;
+  bool canExport(User user) =>
+      (canEdit(user) || publishedToRegistryResults) &&
+      (participants?.isNotEmpty ?? false);
 
   String? exportDisabledReason(User user) {
     if (canExport(user)) return null;
     if (!canEdit(user) && !publishedToRegistryResults) {
       return tr.study_export_unavailable_no_permission_tooltip;
     }
+    if (participants?.isEmpty ?? true) {
+      return tr.study_export_unavailable_empty_tooltip;
+    }
     return null;
+  }
+}
+
+extension StudyDefinitionExportX on Study {
+  void downloadDefinition() {
+    final json = prettyJson((this as dynamic).toJson());
+    final filename = '${title?.toKey() ?? ''}_study_definition.json';
+    downloadFile(fileContent: json, filename: filename);
   }
 }

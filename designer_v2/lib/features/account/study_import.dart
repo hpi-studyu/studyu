@@ -26,7 +26,9 @@ class StudyImport {
     reader.readAsText(file);
     await web.EventStreamProviders.loadEvent.forTarget(reader).first;
 
-    final content = (reader.result! as JSString).toDart;
+    final result = reader.result;
+    if (result == null) return false;
+    final content = (result as JSString).toDart;
 
     try {
       final json = jsonDecode(content) as Map<String, dynamic>;
