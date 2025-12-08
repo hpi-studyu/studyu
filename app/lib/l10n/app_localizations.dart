@@ -2545,6 +2545,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Share Recovery Text'**
   String get share_recovery_text_btn;
+
+  /// No description provided for @recovery_phrase_load_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load recovery phrase'**
+  String get recovery_phrase_load_error;
+
+  /// No description provided for @share_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error sharing: {error}'**
+  String share_error(String error);
 }
 
 class _AppLocalizationsDelegate

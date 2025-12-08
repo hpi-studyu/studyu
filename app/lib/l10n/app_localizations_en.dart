@@ -1318,4 +1318,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get share_recovery_text_btn => 'Share Recovery Text';
+
+  @override
+  String get recovery_phrase_load_error => 'Failed to load recovery phrase';
+
+  @override
+  String share_error(String error) {
+    return 'Error sharing: $error';
+  }
 }

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
@@ -10,11 +9,10 @@ import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
-import 'package:studyu_app/util/recovery_qr_utils.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
+import 'package:studyu_app/widgets/recovery_phrase_content.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -235,51 +233,12 @@ class RecoveryPhraseWidget extends StatefulWidget {
 }
 
 class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
-  List<String> get _phrase {
-    final user = Supabase.instance.client.auth.currentUser;
-    if (user == null) return [];
-    final id = BigInt.parse(user.id.replaceAll('-', ''), radix: 16);
-    return encode(id);
-  }
+  final GlobalKey<RecoveryPhraseContentState> _contentKey = GlobalKey();
+  bool _hasLoaded = false;
 
-  void _copyToClipboard() {
-    final text = _phrase.join(' ');
-    Clipboard.setData(ClipboardData(text: text));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.copied_to_clipboard),
-      ),
-    );
-  }
-
-  Future<void> _shareText() async {
-    try {
-      await RecoveryQrUtils.shareRecoveryText(_phrase);
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
-      }
-    }
-  }
-
-  Future<void> _downloadQr() async {
-    try {
-      await RecoveryQrUtils.downloadRecoveryQr(_phrase);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.file_saved)),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.file_save_error),
-          ),
-        );
-      }
+  void _onExpansionChanged(bool expanded) {
+    if (expanded && !_hasLoaded) {
+      _hasLoaded = true;
     }
   }
 
@@ -299,67 +258,17 @@ class _RecoveryPhraseWidgetState extends State<RecoveryPhraseWidget> {
           AppLocalizations.of(context)!.recovery_phrase_save_hint,
           style: theme.textTheme.bodySmall,
         ),
+        onExpansionChanged: _onExpansionChanged,
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(color: theme.colorScheme.surface),
-                  child: Column(
-                    children: [
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        alignment: WrapAlignment.center,
-                        children: _phrase
-                            .map((word) => Chip(label: Text(word)))
-                            .toList(),
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FilledButton.icon(
-                            icon: const Icon(Icons.copy),
-                            onPressed: _copyToClipboard,
-                            label: Text(
-                              AppLocalizations.of(context)!.copy_to_clipboard,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          FilledButton.tonalIcon(
-                            style: FilledButton.styleFrom(
-                              foregroundColor: theme.primaryColor,
-                              backgroundColor:
-                                  theme.colorScheme.surfaceContainerHighest,
-                            ),
-                            icon: const Icon(Icons.qr_code),
-                            onPressed: _downloadQr,
-                            label: Text(
-                              AppLocalizations.of(context)!.download_as_qr_btn,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          OutlinedButton.icon(
-                            onPressed: () async {
-                              _shareText();
-                            },
-                            icon: const Icon(Icons.share),
-                            label: Text(
-                              AppLocalizations.of(
-                                context,
-                              )!.share_recovery_text_btn,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(color: theme.colorScheme.surface),
+              child: RecoveryPhraseContent(
+                key: _contentKey,
+                useGridLayout: false,
+              ),
             ),
           ),
         ],

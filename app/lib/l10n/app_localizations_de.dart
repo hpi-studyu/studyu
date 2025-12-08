@@ -1334,4 +1334,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get share_recovery_text_btn => 'Wiederherstellungstext teilen';
+
+  @override
+  String get recovery_phrase_load_error =>
+      'Wiederherstellungsphrase konnte nicht geladen werden';
+
+  @override
+  String share_error(String error) {
+    return 'Fehler beim Teilen: $error';
+  }
 }

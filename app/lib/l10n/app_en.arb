@@ -511,5 +511,14 @@
   "current_study_section": "Current study",
   "participation_options_section": "Participation options",
   "download_as_qr_btn": "Download as QR",
-  "share_recovery_text_btn": "Share Recovery Text"
+  "share_recovery_text_btn": "Share Recovery Text",
+  "recovery_phrase_load_error": "Failed to load recovery phrase",
+  "share_error": "Error sharing: {error}",
+  "@share_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -515,5 +515,14 @@
   "current_study_section": "Aktuelle Studie",
   "participation_options_section": "Teilnahmeoptionen",
   "download_as_qr_btn": "Als QR herunterladen",
-  "share_recovery_text_btn": "Wiederherstellungstext teilen"
+  "share_recovery_text_btn": "Wiederherstellungstext teilen",
+  "recovery_phrase_load_error": "Wiederherstellungsphrase konnte nicht geladen werden",
+  "share_error": "Fehler beim Teilen: {error}",
+  "@share_error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }
