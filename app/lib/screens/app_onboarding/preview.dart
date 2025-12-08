@@ -102,7 +102,7 @@ class Preview {
           case 'consent':
             return RoutePaths.consent;
           case 'eligibilityCheck': // this should include questionnaire and eligibility_criteria
-            return '/eligibilityCheck';
+            return RoutePaths.eligibilityCheck;
           case 'interventionSelection':
             return RoutePaths.interventionSelection;
           case 'journey':
