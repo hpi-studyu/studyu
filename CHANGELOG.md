@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-11-29
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_app` - `v2.12.4`](#studyu_app---v2124)
+ - [`studyu_designer_v2` - `v1.15.4`](#studyu_designer_v2---v1154)
+
+---
+
+#### `studyu_app` - `v2.12.4`
+
+ - **FIX**: fix caching.
+ - **FIX**(designer_v2): update code for Riverpod 3.x compatibility.
+ - **FIX**: null check for study invite.
+ - **FIX**(database): revoke unnecessary EXECUTE privileges and update function access policies.
+ - **FIX**: study length calculation and update localization for study schedule.
+ - **FIX**(app): offline mode was not working.
+ - **FIX**: offline mode was not working.
+
+#### `studyu_designer_v2` - `v1.15.4`
+
+ - **FIX**: update balanced description in study schedule translations.
+
+
 ## 2025-11-17
 
 ### Changes
