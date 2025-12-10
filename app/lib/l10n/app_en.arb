@@ -451,5 +451,12 @@
   "preview_mode_description": "You are currently in preview mode. This allows you to:\n\n• Fast-forward through study days using the \"Next Day\" button\n• Complete tasks multiple times without restrictions\n• Experience the full study flow without affecting real data\n\nImportant: Results and data from preview mode are not stored or mixed with actual participant results from running studies.",
   "preview_mode_results_not_saved": "Task completed in preview mode - results are not saved to protect study data integrity.",
   "ok": "OK",
-  "submit" : "Submit"
+  "submit" : "Submit",
+
+  "deep_link_loading": "Loading...",
+  "deep_link_error_title": "Link Error",
+  "deep_link_study_not_found": "Study not found or not available",
+  "deep_link_study_invite_only": "This study requires an invite code to join",
+  "deep_link_invite_invalid": "Invalid or expired invite code",
+  "go_back": "Go Back"
 }

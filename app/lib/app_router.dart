@@ -50,6 +50,8 @@ class RoutePaths {
   static const String task = '/task';
   static const String eligibilityCheck = '/eligibilityCheck';
   static const String capturePicture = '/capturePicture';
+  static const String study = '/study/:studyId';
+  static const String invite = '/invite/:inviteCode';
 }
 
 /// Creates and configures the GoRouter instance for the app
@@ -199,6 +201,22 @@ GoRouter createAppRouter({
             studyId: params['studyId']!,
             userId: params['userId']!,
           );
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.study,
+        name: 'study',
+        builder: (context, state) {
+          final studyId = state.pathParameters['studyId']!;
+          return LoadingScreen(deepLinkStudyId: studyId);
+        },
+      ),
+      GoRoute(
+        path: RoutePaths.invite,
+        name: 'invite',
+        builder: (context, state) {
+          final inviteCode = state.pathParameters['inviteCode']!;
+          return LoadingScreen(deepLinkInviteCode: inviteCode);
         },
       ),
     ],

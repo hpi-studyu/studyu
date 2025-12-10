@@ -15,6 +15,17 @@ class AppState with ChangeNotifier {
   bool isPreview = false;
   late AppAnalytics analytics;
 
+  String? pendingDeepLinkStudyId;
+  String? pendingDeepLinkInviteCode;
+
+  bool get hasPendingDeepLink =>
+      pendingDeepLinkStudyId != null || pendingDeepLinkInviteCode != null;
+
+  void clearPendingDeepLink() {
+    pendingDeepLinkStudyId = null;
+    pendingDeepLinkInviteCode = null;
+  }
+
   /// Flag indicating whether the participant's progress should be tracked
   ///
   /// We always track the participant's progress except when the study is

@@ -2,8 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -24,16 +27,92 @@ class _TermsScreenState extends State<TermsScreen> {
     return _acceptedTerms && _acceptedPrivacy;
   }
 
+  String? _deepLinkError;
+
+  Future<void> _handlePendingDeepLink(AppState state) async {
+    final result = await DeepLinkService.processDeepLink(
+      studyId: state.pendingDeepLinkStudyId,
+      inviteCode: state.pendingDeepLinkInviteCode,
+      isAuthenticated: true, // User just signed up
+      activeStudyId: null,
+    );
+
+    state.clearPendingDeepLink();
+    if (!mounted) return;
+
+    switch (result) {
+      case DeepLinkSuccess(
+          :final study,
+          :final inviteCode,
+          :final preselectedInterventionIds,
+          alreadyEnrolled: _,
+        ):
+        state.selectedStudy = study;
+        if (inviteCode != null) {
+          state.inviteCode = inviteCode;
+          state.preselectedInterventionIds = preselectedInterventionIds;
+        }
+        context.go(RoutePaths.studyOverview);
+      case DeepLinkError(type: final errorType):
+        setState(() => _deepLinkError = _getDeepLinkErrorMessage(errorType));
+        // Show error briefly, then navigate to study selection
+        await Future<void>.delayed(const Duration(seconds: 3));
+        if (!mounted) return;
+        context.push(RoutePaths.studySelection);
+      case DeepLinkNeedsAuth():
+        // Should not happen since we just authenticated
+        context.push(RoutePaths.studySelection);
+    }
+  }
+
+  String _getDeepLinkErrorMessage(DeepLinkErrorType errorType) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (errorType) {
+      DeepLinkErrorType.studyNotFound => l10n.deep_link_study_not_found,
+      DeepLinkErrorType.inviteOnly => l10n.deep_link_study_invite_only,
+      DeepLinkErrorType.invalidInvite => l10n.deep_link_invite_invalid,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: RetryFutureBuilder<AppConfig>(
-            tryFunction: AppConfig.getAppConfig,
-            successBuilder: (BuildContext context, AppConfig? appConfig) =>
-                legalSection(context, appConfig),
-          ),
+        child: Column(
+          children: [
+            if (_deepLinkError != null)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                color: Theme.of(context).colorScheme.errorContainer,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: Theme.of(context).colorScheme.onErrorContainer,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        _deepLinkError!,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onErrorContainer,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            Expanded(
+              child: Center(
+                child: RetryFutureBuilder<AppConfig>(
+                  tryFunction: AppConfig.getAppConfig,
+                  successBuilder: (BuildContext context, AppConfig? appConfig) =>
+                      legalSection(context, appConfig),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
@@ -42,7 +121,12 @@ class _TermsScreenState extends State<TermsScreen> {
                 final success = await anonymousSignUp();
                 if (success) {
                   if (!context.mounted) return;
-                  context.push(RoutePaths.studySelection);
+                  final state = context.read<AppState>();
+                  if (state.hasPendingDeepLink) {
+                    await _handlePendingDeepLink(state);
+                  } else {
+                    context.push(RoutePaths.studySelection);
+                  }
                 }
               }
             : null,

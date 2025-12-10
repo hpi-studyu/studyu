@@ -8,6 +8,7 @@ import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/app_onboarding/preview.dart'
     as study_preview;
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
+import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
 import 'package:studyu_core/core.dart';
@@ -16,21 +17,86 @@ import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 class LoadingScreen extends StatefulWidget {
   final String? sessionString;
   final Map<String, String>? queryParameters;
+  final String? deepLinkStudyId;
+  final String? deepLinkInviteCode;
 
-  const LoadingScreen({super.key, this.sessionString, this.queryParameters});
+  const LoadingScreen({
+    super.key,
+    this.sessionString,
+    this.queryParameters,
+    this.deepLinkStudyId,
+    this.deepLinkInviteCode,
+  });
+
+  bool get hasDeepLink => deepLinkStudyId != null || deepLinkInviteCode != null;
 
   @override
   State<StatefulWidget> createState() => _LoadingScreenState();
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  String? _error;
+
   @override
   void initState() {
     super.initState();
-    // Delay navigation until after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      initStudy();
+      if (widget.hasDeepLink) {
+        _initDeepLink();
+      } else {
+        initStudy();
+      }
     });
+  }
+
+  Future<void> _initDeepLink() async {
+    final state = context.read<AppState>();
+
+    final result = await DeepLinkService.processDeepLink(
+      studyId: widget.deepLinkStudyId,
+      inviteCode: widget.deepLinkInviteCode,
+      isAuthenticated: isUserLoggedIn(),
+      activeStudyId: state.activeSubject?.studyId,
+    );
+
+    if (!mounted) return;
+
+    switch (result) {
+      case DeepLinkNeedsAuth():
+        if (widget.deepLinkStudyId != null) {
+          state.pendingDeepLinkStudyId = widget.deepLinkStudyId;
+        } else if (widget.deepLinkInviteCode != null) {
+          state.pendingDeepLinkInviteCode = widget.deepLinkInviteCode;
+        }
+        context.go(RoutePaths.welcome);
+      case DeepLinkError(type: final errorType):
+        setState(() => _error = _getErrorMessage(errorType));
+      case DeepLinkSuccess(
+          :final study,
+          :final inviteCode,
+          :final preselectedInterventionIds,
+          :final alreadyEnrolled,
+        ):
+        if (alreadyEnrolled) {
+          context.go(RoutePaths.dashboard);
+        } else {
+          state.selectedStudy = study;
+          if (inviteCode != null) {
+            state.inviteCode = inviteCode;
+            state.preselectedInterventionIds = preselectedInterventionIds;
+          }
+          context.go(RoutePaths.studyOverview);
+        }
+    }
+  }
+
+  String _getErrorMessage(DeepLinkErrorType errorType) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (errorType) {
+      DeepLinkErrorType.studyNotFound => l10n.deep_link_study_not_found,
+      DeepLinkErrorType.inviteOnly => l10n.deep_link_study_invite_only,
+      DeepLinkErrorType.invalidInvite => l10n.deep_link_invite_invalid,
+    };
   }
 
   Future<void> initStudy() async {
@@ -240,6 +306,44 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_error != null) {
+      return Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 64,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  AppLocalizations.of(context)!.deep_link_error_title,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Text(
+                    _error!,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                OutlinedButton(
+                  onPressed: () => context.go(RoutePaths.welcome),
+                  child: Text(AppLocalizations.of(context)!.go_back),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Center(
