@@ -72,11 +72,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
       case DeepLinkError(type: final errorType):
         setState(() => _error = _getErrorMessage(errorType));
       case DeepLinkSuccess(
-          :final study,
-          :final inviteCode,
-          :final preselectedInterventionIds,
-          :final alreadyEnrolled,
-        ):
+        :final study,
+        :final inviteCode,
+        :final preselectedInterventionIds,
+        :final alreadyEnrolled,
+      ):
         if (alreadyEnrolled) {
           context.go(RoutePaths.dashboard);
         } else {

@@ -34,7 +34,6 @@ class _TermsScreenState extends State<TermsScreen> {
       studyId: state.pendingDeepLinkStudyId,
       inviteCode: state.pendingDeepLinkInviteCode,
       isAuthenticated: true, // User just signed up
-      activeStudyId: null,
     );
 
     state.clearPendingDeepLink();
@@ -42,11 +41,11 @@ class _TermsScreenState extends State<TermsScreen> {
 
     switch (result) {
       case DeepLinkSuccess(
-          :final study,
-          :final inviteCode,
-          :final preselectedInterventionIds,
-          alreadyEnrolled: _,
-        ):
+        :final study,
+        :final inviteCode,
+        :final preselectedInterventionIds,
+        alreadyEnrolled: _,
+      ):
         state.selectedStudy = study;
         if (inviteCode != null) {
           state.inviteCode = inviteCode;
@@ -107,8 +106,9 @@ class _TermsScreenState extends State<TermsScreen> {
               child: Center(
                 child: RetryFutureBuilder<AppConfig>(
                   tryFunction: AppConfig.getAppConfig,
-                  successBuilder: (BuildContext context, AppConfig? appConfig) =>
-                      legalSection(context, appConfig),
+                  successBuilder:
+                      (BuildContext context, AppConfig? appConfig) =>
+                          legalSection(context, appConfig),
                 ),
               ),
             ),

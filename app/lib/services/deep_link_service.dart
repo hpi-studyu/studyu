@@ -30,11 +30,7 @@ class DeepLinkError extends DeepLinkResult {
 class DeepLinkNeedsAuth extends DeepLinkResult {}
 
 /// Types of deep link errors
-enum DeepLinkErrorType {
-  studyNotFound,
-  inviteOnly,
-  invalidInvite,
-}
+enum DeepLinkErrorType { studyNotFound, inviteOnly, invalidInvite }
 
 class DeepLinkService {
   /// Fetches a study by its ID
