@@ -64,13 +64,27 @@ GoRouter createAppRouter({
     navigatorKey: navigatorKey,
     initialLocation: initialLocation,
     redirect: (context, state) {
+      // Handle custom URL scheme deep links (studyu-app://invite/xxx)
+      final uri = state.uri;
+      if (uri.scheme == 'studyu-app' || uri.scheme == 'studyu') {
+        // For custom schemes, the path is empty and the "path" is in the host
+        // e.g., studyu-app://invite/12345678 -> host=invite, path=/12345678
+        final path = '/${uri.host}${uri.path}';
+        return path;
+      }
       // Remove splash screen when navigating away from loading screen
       if (state.uri.path != RoutePaths.loading) {
         FlutterNativeSplash.remove();
       }
       return null; // No redirect, just proceed with the requested route
     },
-    routes: [
+    routes: _buildRoutes(queryParameters),
+  );
+}
+
+/// Builds the list of routes for the app
+List<RouteBase> _buildRoutes(Map<String, String> queryParameters) {
+  return [
       GoRoute(
         path: RoutePaths.loading,
         name: 'loading',
