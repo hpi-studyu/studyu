@@ -245,7 +245,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
         icon: const Icon(Icons.arrow_forward),
         label: Text(AppLocalizations.of(context)!.next),
         onPressed: () async {
-          final (invite, study) = await DeepLinkService.fetchStudyByInviteCode(
+          final (invite, study) = await Study.fetchByInviteCode(
             _controller.text,
           );
 

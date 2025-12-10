@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:studyu_core/core.dart';
-import 'package:studyu_core/env.dart' as env;
 
 /// Result types for deep link processing
 sealed class DeepLinkResult {}
@@ -36,49 +35,10 @@ class DeepLinkService {
   /// Fetches a study by its ID
   static Future<Study?> fetchStudyById(String studyId) async {
     try {
-      return await SupabaseQuery.getById<Study>(studyId);
+      return await Study.fetchById(studyId);
     } catch (e) {
       debugPrint('Failed to fetch study by ID: $e');
       return null;
-    }
-  }
-
-  static Future<(StudyInvite?, Study?)> fetchStudyByInviteCode(
-    String code,
-  ) async {
-    try {
-      final studyResult = await env.client
-          .rpc('get_study_record_from_invite', params: {'invite_code': code})
-          .maybeSingle();
-
-      if (studyResult == null || studyResult['id'] == null) {
-        return (null, null);
-      }
-
-      final study = Study.fromJson(studyResult);
-
-      final inviteResult = await env.client
-          .from('study_invite')
-          .select('preselected_intervention_ids')
-          .eq('code', code)
-          .maybeSingle();
-
-      List<String>? preselectedIds;
-      if (inviteResult != null &&
-          inviteResult.containsKey('preselected_intervention_ids') &&
-          inviteResult['preselected_intervention_ids'] != null) {
-        preselectedIds = List<String>.from(
-          inviteResult['preselected_intervention_ids'] as List,
-        );
-      }
-
-      final invite = StudyInvite(study.id, code)
-        ..preselectedInterventionIds = preselectedIds;
-
-      return (invite, study);
-    } catch (e) {
-      debugPrint('Failed to fetch study by invite code: $e');
-      return (null, null);
     }
   }
 
@@ -142,7 +102,7 @@ class DeepLinkService {
   static Future<DeepLinkResult> _processInviteDeepLink({
     required String inviteCode,
   }) async {
-    final (invite, study) = await fetchStudyByInviteCode(inviteCode);
+    final (invite, study) = await Study.fetchByInviteCode(inviteCode);
 
     if (invite == null || study == null) {
       return DeepLinkError(DeepLinkErrorType.invalidInvite);

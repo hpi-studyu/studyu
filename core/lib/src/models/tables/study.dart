@@ -276,6 +276,57 @@ class Study extends SupabaseObjectFunctions<Study>
     return result;
   }
 
+  /// Fetches a study by its ID.
+  /// Returns null if not found.
+  static Future<Study?> fetchById(String studyId) async {
+    try {
+      return await SupabaseQuery.getById<Study>(studyId);
+    } catch (error, stacktrace) {
+      SupabaseQuery.catchSupabaseException(error, stacktrace);
+      rethrow;
+    }
+  }
+
+  /// Fetches a study by invite code using the RPC function.
+  /// Returns the Study and StudyInvite, or nulls if not found.
+  static Future<(StudyInvite?, Study?)> fetchByInviteCode(String code) async {
+    try {
+      final studyResult = await env.client
+          .rpc('get_study_record_from_invite', params: {'invite_code': code})
+          .maybeSingle();
+
+      if (studyResult == null || studyResult['id'] == null) {
+        return (null, null);
+      }
+
+      final study = Study.fromJson(studyResult);
+
+      // Fetch preselected_intervention_ids from study_invite table
+      final inviteResult = await env.client
+          .from(StudyInvite.tableName)
+          .select('preselected_intervention_ids')
+          .eq('code', code)
+          .maybeSingle();
+
+      List<String>? preselectedIds;
+      if (inviteResult != null &&
+          inviteResult.containsKey('preselected_intervention_ids') &&
+          inviteResult['preselected_intervention_ids'] != null) {
+        preselectedIds = List<String>.from(
+          inviteResult['preselected_intervention_ids'] as List,
+        );
+      }
+
+      final invite = StudyInvite(code, study.id)
+        ..preselectedInterventionIds = preselectedIds;
+
+      return (invite, study);
+    } catch (error, stacktrace) {
+      SupabaseQuery.catchSupabaseException(error, stacktrace);
+      rethrow;
+    }
+  }
+
   bool isOwner(User? user) => user != null && userId == user.id;
 
   bool isEditor(User? user) =>
