@@ -1168,9 +1168,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get submit => 'Absenden';
 
   @override
-  String get deep_link_loading => 'Wird geladen...';
-
-  @override
   String get deep_link_error_title => 'Link-Fehler';
 
   @override

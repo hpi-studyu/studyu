@@ -457,7 +457,6 @@
   "ok": "OK",
   "submit" : "Absenden",
 
-  "deep_link_loading": "Wird geladen...",
   "deep_link_error_title": "Link-Fehler",
   "deep_link_study_not_found": "Studie nicht gefunden oder nicht verfügbar",
   "deep_link_study_invite_only": "Diese Studie erfordert einen Einladungscode zur Teilnahme",

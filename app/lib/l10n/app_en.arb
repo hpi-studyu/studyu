@@ -453,7 +453,6 @@
   "ok": "OK",
   "submit" : "Submit",
 
-  "deep_link_loading": "Loading...",
   "deep_link_error_title": "Link Error",
   "deep_link_study_not_found": "Study not found or not available",
   "deep_link_study_invite_only": "This study requires an invite code to join",

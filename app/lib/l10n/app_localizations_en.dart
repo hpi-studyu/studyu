@@ -1158,9 +1158,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get submit => 'Submit';
 
   @override
-  String get deep_link_loading => 'Loading...';
-
-  @override
   String get deep_link_error_title => 'Link Error';
 
   @override

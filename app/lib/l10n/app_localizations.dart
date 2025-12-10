@@ -2252,12 +2252,6 @@ abstract class AppLocalizations {
   /// **'Submit'**
   String get submit;
 
-  /// No description provided for @deep_link_loading.
-  ///
-  /// In en, this message translates to:
-  /// **'Loading...'**
-  String get deep_link_loading;
-
   /// No description provided for @deep_link_error_title.
   ///
   /// In en, this message translates to:
