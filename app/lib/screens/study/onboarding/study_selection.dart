@@ -12,7 +12,7 @@ import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_app/widgets/study_tile.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:studyu_app/services/deep_link_service.dart';
 
 Future<void> navigateToStudyOverview(
   BuildContext context,
@@ -245,78 +245,37 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
         icon: const Icon(Icons.arrow_forward),
         label: Text(AppLocalizations.of(context)!.next),
         onPressed: () async {
-          Map<String, dynamic>? studyResult;
-          try {
-            studyResult = await Supabase.instance.client
-                .rpc(
-                  'get_study_record_from_invite',
-                  params: {'invite_code': _controller.text},
-                )
-                .single();
-          } on PostgrestException catch (error) {
-            print(error.message);
-            setState(() {
-              _errorMessage = error.message;
-            });
-          }
-          if (studyResult == null || studyResult['id'] == null) {
+          final (invite, study) = await DeepLinkService.fetchStudyByInviteCode(
+            _controller.text,
+          );
+
+          if (study == null) {
             setState(() {
               _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
             });
-          } else {
-            setState(() {
-              _errorMessage = null;
-            });
+            return;
+          }
 
-            Study study;
-            try {
-              study = Study.fromJson(studyResult);
-              // ignore: avoid_catching_errors
-            } on ArgumentError catch (error) {
-              debugPrint('Study selection from invite failed: $error');
-              if (!context.mounted) return;
-              context.pop();
-              await showAppOutdatedDialog(context);
-              return;
-            }
+          setState(() {
+            _errorMessage = null;
+          });
 
-            if (study.isClosed) {
-              if (!context.mounted) return;
-              context.pop();
-              await showStudyClosedDialog(context);
-              return;
-            }
-
+          if (study.isClosed) {
             if (!context.mounted) return;
             context.pop();
-
-            // Get preselected_intervention_ids from study_invite table
-            final inviteResult = await Supabase.instance.client
-                .from('study_invite')
-                .select('preselected_intervention_ids')
-                .eq('code', _controller.text)
-                .maybeSingle();
-            if (!context.mounted) return;
-            if (inviteResult != null &&
-                inviteResult.containsKey('preselected_intervention_ids') &&
-                inviteResult['preselected_intervention_ids'] != null) {
-              final preselectedIds = List<String>.from(
-                inviteResult['preselected_intervention_ids'] as List,
-              );
-              await navigateToStudyOverview(
-                context,
-                study,
-                inviteCode: _controller.text,
-                preselectedIds: preselectedIds,
-              );
-            } else {
-              await navigateToStudyOverview(
-                context,
-                study,
-                inviteCode: _controller.text,
-              );
-            }
+            await showStudyClosedDialog(context);
+            return;
           }
+
+          if (!context.mounted) return;
+          context.pop();
+
+          await navigateToStudyOverview(
+            context,
+            study,
+            inviteCode: _controller.text,
+            preselectedIds: invite?.preselectedInterventionIds,
+          );
         },
       ),
     ],

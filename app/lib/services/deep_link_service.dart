@@ -43,20 +43,38 @@ class DeepLinkService {
     }
   }
 
-  /// Fetches a study by invite code
   static Future<(StudyInvite?, Study?)> fetchStudyByInviteCode(
     String code,
   ) async {
     try {
-      final inviteResult = await env.client
-          .from('study_invite')
-          .select()
-          .eq('code', code);
-      if (inviteResult.isEmpty) {
+      final studyResult = await env.client
+          .rpc('get_study_record_from_invite', params: {'invite_code': code})
+          .maybeSingle();
+
+      if (studyResult == null || studyResult['id'] == null) {
         return (null, null);
       }
-      final invite = StudyInvite.fromJson(inviteResult.first);
-      final study = await fetchStudyById(invite.studyId);
+
+      final study = Study.fromJson(studyResult);
+
+      final inviteResult = await env.client
+          .from('study_invite')
+          .select('preselected_intervention_ids')
+          .eq('code', code)
+          .maybeSingle();
+
+      List<String>? preselectedIds;
+      if (inviteResult != null &&
+          inviteResult.containsKey('preselected_intervention_ids') &&
+          inviteResult['preselected_intervention_ids'] != null) {
+        preselectedIds = List<String>.from(
+          inviteResult['preselected_intervention_ids'] as List,
+        );
+      }
+
+      final invite = StudyInvite(study.id, code)
+        ..preselectedInterventionIds = preselectedIds;
+
       return (invite, study);
     } catch (e) {
       debugPrint('Failed to fetch study by invite code: $e');
