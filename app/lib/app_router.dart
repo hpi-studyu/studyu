@@ -85,6 +85,11 @@ GoRouter createAppRouter({
 /// Builds the list of routes for the app
 List<RouteBase> _buildRoutes(Map<String, String> queryParameters) {
   return [
+      // Root route redirects to loading
+      GoRoute(
+        path: '/',
+        redirect: (context, state) => RoutePaths.loading,
+      ),
       GoRoute(
         path: RoutePaths.loading,
         name: 'loading',
