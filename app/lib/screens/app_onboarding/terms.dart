@@ -27,8 +27,6 @@ class _TermsScreenState extends State<TermsScreen> {
     return _acceptedTerms && _acceptedPrivacy;
   }
 
-  String? _deepLinkError;
-
   Future<void> _handlePendingDeepLink(AppState state) async {
     final result = await DeepLinkService.processDeepLink(
       studyId: state.pendingDeepLinkStudyId,
@@ -53,14 +51,22 @@ class _TermsScreenState extends State<TermsScreen> {
         }
         context.go(RoutePaths.studyOverview);
       case DeepLinkError(type: final errorType):
-        setState(() => _deepLinkError = _getDeepLinkErrorMessage(errorType));
-        // Show error briefly, then navigate to study selection
-        await Future<void>.delayed(const Duration(seconds: 3));
-        if (!mounted) return;
-        context.push(RoutePaths.studySelection);
+        final errorMessage = _getDeepLinkErrorMessage(errorType);
+        // Show error via SnackBar which persists after navigation
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            duration: const Duration(seconds: 5),
+            action: SnackBarAction(
+              label: AppLocalizations.of(context)!.ok,
+              onPressed: () {},
+            ),
+          ),
+        );
+        context.go(RoutePaths.studySelection);
       case DeepLinkNeedsAuth():
         // Should not happen since we just authenticated
-        context.push(RoutePaths.studySelection);
+        context.go(RoutePaths.studySelection);
     }
   }
 
@@ -79,29 +85,6 @@ class _TermsScreenState extends State<TermsScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            if (_deepLinkError != null)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                color: Theme.of(context).colorScheme.errorContainer,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: Theme.of(context).colorScheme.onErrorContainer,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        _deepLinkError!,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onErrorContainer,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
             Expanded(
               child: Center(
                 child: RetryFutureBuilder<AppConfig>(
