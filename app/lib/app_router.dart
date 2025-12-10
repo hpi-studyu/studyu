@@ -85,159 +85,155 @@ GoRouter createAppRouter({
 /// Builds the list of routes for the app
 List<RouteBase> _buildRoutes(Map<String, String> queryParameters) {
   return [
-      // Root route redirects to loading
-      GoRoute(
-        path: '/',
-        redirect: (context, state) => RoutePaths.loading,
-      ),
-      GoRoute(
-        path: RoutePaths.loading,
-        name: 'loading',
-        builder: (context, state) => const LoadingScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.preview,
-        name: 'preview',
-        builder: (context, state) =>
-            LoadingScreen(queryParameters: queryParameters),
-      ),
-      GoRoute(
-        path: RoutePaths.appOutdated,
-        name: 'appOutdated',
-        builder: (context, state) => const AppOutdatedScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.appErrorScreen,
-        name: 'appErrorScreen',
-        builder: (context, state) {
-          final selectedSubjectId = state.extra as String?;
-          return AppErrorScreen(selectedSubjectId: selectedSubjectId);
-        },
-      ),
-      GoRoute(
-        path: RoutePaths.dashboard,
-        name: 'dashboard',
-        builder: (context, state) {
-          final error = state.extra as String?;
-          return DashboardScreen(error: error);
-        },
-      ),
-      GoRoute(
-        path: RoutePaths.welcome,
-        name: 'welcome',
-        builder: (context, state) => const WelcomeScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.about,
-        name: 'about',
-        builder: (context, state) => const AboutScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.terms,
-        name: 'terms',
-        builder: (context, state) => const TermsScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.studySelection,
-        name: 'studySelection',
-        builder: (context, state) => const StudySelectionScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.studyOverview,
-        name: 'studyOverview',
-        builder: (context, state) => const StudyOverviewScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.interventionSelection,
-        name: 'interventionSelection',
-        builder: (context, state) => const InterventionSelectionScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.journey,
-        name: 'journey',
-        builder: (context, state) => const JourneyOverviewScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.consent,
-        name: 'consent',
-        builder: (context, state) => const ConsentScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.kickoff,
-        name: 'kickoff',
-        builder: (context, state) => const KickoffScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.contact,
-        name: 'contact',
-        builder: (context, state) => const ContactScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.faq,
-        name: 'faq',
-        builder: (context, state) => const FAQ(),
-      ),
-      GoRoute(
-        path: RoutePaths.appSettings,
-        name: 'appSettings',
-        builder: (context, state) => const Settings(),
-      ),
-      GoRoute(
-        path: RoutePaths.reportHistory,
-        name: 'reportHistory',
-        builder: (context, state) => const ReportHistoryScreen(),
-      ),
-      GoRoute(
-        path: RoutePaths.task,
-        name: 'task',
-        builder: (context, state) {
-          final taskInstance = state.extra! as TaskInstance;
-          return TaskScreen(taskInstance: taskInstance);
-        },
-      ),
-      GoRoute(
-        path: RoutePaths.eligibilityCheck,
-        name: 'eligibilityCheck',
-        builder: (context, state) {
-          final study = state.extra as Study?;
-          return EligibilityScreen(study: study);
-        },
-      ),
-      GoRoute(
-        path: RoutePaths.reportDetails,
-        name: 'reportDetails',
-        builder: (context, state) {
-          final subject = state.extra! as StudySubject;
-          return ReportDetailsScreen(subject);
-        },
-      ),
-      GoRoute(
-        path: RoutePaths.capturePicture,
-        name: 'capturePicture',
-        builder: (context, state) {
-          final params = state.extra! as Map<String, String>;
-          return CapturePictureScreen(
-            studyId: params['studyId']!,
-            userId: params['userId']!,
-          );
-        },
-      ),
-      GoRoute(
-        path: RoutePaths.study,
-        name: 'study',
-        builder: (context, state) {
-          final studyId = state.pathParameters['studyId']!;
-          return LoadingScreen(deepLinkStudyId: studyId);
-        },
-      ),
-      GoRoute(
-        path: RoutePaths.invite,
-        name: 'invite',
-        builder: (context, state) {
-          final inviteCode = state.pathParameters['inviteCode']!;
-          return LoadingScreen(deepLinkInviteCode: inviteCode);
-        },
-      ),
-    ],
-  );
+    // Root route redirects to loading
+    GoRoute(path: '/', redirect: (context, state) => RoutePaths.loading),
+    GoRoute(
+      path: RoutePaths.loading,
+      name: 'loading',
+      builder: (context, state) => const LoadingScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.preview,
+      name: 'preview',
+      builder: (context, state) =>
+          LoadingScreen(queryParameters: queryParameters),
+    ),
+    GoRoute(
+      path: RoutePaths.appOutdated,
+      name: 'appOutdated',
+      builder: (context, state) => const AppOutdatedScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.appErrorScreen,
+      name: 'appErrorScreen',
+      builder: (context, state) {
+        final selectedSubjectId = state.extra as String?;
+        return AppErrorScreen(selectedSubjectId: selectedSubjectId);
+      },
+    ),
+    GoRoute(
+      path: RoutePaths.dashboard,
+      name: 'dashboard',
+      builder: (context, state) {
+        final error = state.extra as String?;
+        return DashboardScreen(error: error);
+      },
+    ),
+    GoRoute(
+      path: RoutePaths.welcome,
+      name: 'welcome',
+      builder: (context, state) => const WelcomeScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.about,
+      name: 'about',
+      builder: (context, state) => const AboutScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.terms,
+      name: 'terms',
+      builder: (context, state) => const TermsScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.studySelection,
+      name: 'studySelection',
+      builder: (context, state) => const StudySelectionScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.studyOverview,
+      name: 'studyOverview',
+      builder: (context, state) => const StudyOverviewScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.interventionSelection,
+      name: 'interventionSelection',
+      builder: (context, state) => const InterventionSelectionScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.journey,
+      name: 'journey',
+      builder: (context, state) => const JourneyOverviewScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.consent,
+      name: 'consent',
+      builder: (context, state) => const ConsentScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.kickoff,
+      name: 'kickoff',
+      builder: (context, state) => const KickoffScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.contact,
+      name: 'contact',
+      builder: (context, state) => const ContactScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.faq,
+      name: 'faq',
+      builder: (context, state) => const FAQ(),
+    ),
+    GoRoute(
+      path: RoutePaths.appSettings,
+      name: 'appSettings',
+      builder: (context, state) => const Settings(),
+    ),
+    GoRoute(
+      path: RoutePaths.reportHistory,
+      name: 'reportHistory',
+      builder: (context, state) => const ReportHistoryScreen(),
+    ),
+    GoRoute(
+      path: RoutePaths.task,
+      name: 'task',
+      builder: (context, state) {
+        final taskInstance = state.extra! as TaskInstance;
+        return TaskScreen(taskInstance: taskInstance);
+      },
+    ),
+    GoRoute(
+      path: RoutePaths.eligibilityCheck,
+      name: 'eligibilityCheck',
+      builder: (context, state) {
+        final study = state.extra as Study?;
+        return EligibilityScreen(study: study);
+      },
+    ),
+    GoRoute(
+      path: RoutePaths.reportDetails,
+      name: 'reportDetails',
+      builder: (context, state) {
+        final subject = state.extra! as StudySubject;
+        return ReportDetailsScreen(subject);
+      },
+    ),
+    GoRoute(
+      path: RoutePaths.capturePicture,
+      name: 'capturePicture',
+      builder: (context, state) {
+        final params = state.extra! as Map<String, String>;
+        return CapturePictureScreen(
+          studyId: params['studyId']!,
+          userId: params['userId']!,
+        );
+      },
+    ),
+    GoRoute(
+      path: RoutePaths.study,
+      name: 'study',
+      builder: (context, state) {
+        final studyId = state.pathParameters['studyId']!;
+        return LoadingScreen(deepLinkStudyId: studyId);
+      },
+    ),
+    GoRoute(
+      path: RoutePaths.invite,
+      name: 'invite',
+      builder: (context, state) {
+        final inviteCode = state.pathParameters['inviteCode']!;
+        return LoadingScreen(deepLinkInviteCode: inviteCode);
+      },
+    ),
+  ];
 }
