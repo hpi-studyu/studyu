@@ -74,12 +74,7 @@ class OnboardingScreen extends StatelessWidget {
     return PageViewModel(
       title: title,
       body: body,
-      image: Center(
-        child: SvgPicture.asset(
-          imagePath,
-          height: 250,
-        ),
-      ),
+      image: Center(child: SvgPicture.asset(imagePath, height: 250)),
       decoration: const PageDecoration(
         titleTextStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         bodyTextStyle: TextStyle(fontSize: 16),
