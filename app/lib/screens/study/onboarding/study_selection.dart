@@ -244,37 +244,45 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
         icon: const Icon(Icons.arrow_forward),
         label: Text(AppLocalizations.of(context)!.next),
         onPressed: () async {
-          final (invite, study) = await Study.fetchByInviteCode(
-            _controller.text,
-          );
+          try {
+            final (invite, study) = await Study.fetchByInviteCode(
+              _controller.text,
+            );
 
-          if (study == null) {
+            if (study == null) {
+              setState(() {
+                _errorMessage = AppLocalizations.of(
+                  context,
+                )!.invalid_invite_code;
+              });
+              return;
+            }
+
+            setState(() {
+              _errorMessage = null;
+            });
+
+            if (study.isClosed) {
+              if (!context.mounted) return;
+              context.pop();
+              await showStudyClosedDialog(context);
+              return;
+            }
+
+            if (!context.mounted) return;
+            context.pop();
+
+            await navigateToStudyOverview(
+              context,
+              study,
+              inviteCode: _controller.text,
+              preselectedIds: invite?.preselectedInterventionIds,
+            );
+          } catch (e) {
             setState(() {
               _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
             });
-            return;
           }
-
-          setState(() {
-            _errorMessage = null;
-          });
-
-          if (study.isClosed) {
-            if (!context.mounted) return;
-            context.pop();
-            await showStudyClosedDialog(context);
-            return;
-          }
-
-          if (!context.mounted) return;
-          context.pop();
-
-          await navigateToStudyOverview(
-            context,
-            study,
-            inviteCode: _controller.text,
-            preselectedIds: invite?.preselectedInterventionIds,
-          );
         },
       ),
     ],

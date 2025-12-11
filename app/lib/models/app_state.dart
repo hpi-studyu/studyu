@@ -24,6 +24,7 @@ class AppState with ChangeNotifier {
   void clearPendingDeepLink() {
     pendingDeepLinkStudyId = null;
     pendingDeepLinkInviteCode = null;
+    notifyListeners();
   }
 
   /// Flag indicating whether the participant's progress should be tracked

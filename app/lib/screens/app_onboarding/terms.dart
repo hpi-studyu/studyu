@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/services/deep_link_error_helper.dart';
 import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
@@ -31,7 +32,8 @@ class _TermsScreenState extends State<TermsScreen> {
     final result = await DeepLinkService.processDeepLink(
       studyId: state.pendingDeepLinkStudyId,
       inviteCode: state.pendingDeepLinkInviteCode,
-      isAuthenticated: true, // User just signed up
+      isAuthenticated: true,
+      activeStudyId: state.activeSubject?.studyId,
     );
 
     state.clearPendingDeepLink();
@@ -42,41 +44,31 @@ class _TermsScreenState extends State<TermsScreen> {
         :final study,
         :final inviteCode,
         :final preselectedInterventionIds,
-        alreadyEnrolled: _,
+        :final alreadyEnrolled,
       ):
-        state.selectedStudy = study;
-        if (inviteCode != null) {
-          state.inviteCode = inviteCode;
-          state.preselectedInterventionIds = preselectedInterventionIds;
+        if (alreadyEnrolled) {
+          context.go(RoutePaths.dashboard);
+        } else {
+          state.selectedStudy = study;
+          if (inviteCode != null) {
+            state.inviteCode = inviteCode;
+            state.preselectedInterventionIds = preselectedInterventionIds;
+          }
+          context.go(RoutePaths.studyOverview);
         }
-        context.go(RoutePaths.studyOverview);
       case DeepLinkError(type: final errorType):
-        final errorMessage = _getDeepLinkErrorMessage(errorType);
-        // Show error via SnackBar which persists after navigation
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(errorMessage),
+            content: Text(getDeepLinkErrorMessage(l10n, errorType)),
             duration: const Duration(seconds: 5),
-            action: SnackBarAction(
-              label: AppLocalizations.of(context)!.ok,
-              onPressed: () {},
-            ),
+            action: SnackBarAction(label: l10n.ok, onPressed: () {}),
           ),
         );
         context.go(RoutePaths.studySelection);
       case DeepLinkNeedsAuth():
-        // Should not happen since we just authenticated
         context.go(RoutePaths.studySelection);
     }
-  }
-
-  String _getDeepLinkErrorMessage(DeepLinkErrorType errorType) {
-    final l10n = AppLocalizations.of(context)!;
-    return switch (errorType) {
-      DeepLinkErrorType.studyNotFound => l10n.deep_link_study_not_found,
-      DeepLinkErrorType.inviteOnly => l10n.deep_link_study_invite_only,
-      DeepLinkErrorType.invalidInvite => l10n.deep_link_invite_invalid,
-    };
   }
 
   @override

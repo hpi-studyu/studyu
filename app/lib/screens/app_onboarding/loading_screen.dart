@@ -8,6 +8,7 @@ import 'package:studyu_app/screens/app_onboarding/iframe_helper.dart';
 import 'package:studyu_app/screens/app_onboarding/preview.dart'
     as study_preview;
 import 'package:studyu_app/screens/study/onboarding/eligibility_screen.dart';
+import 'package:studyu_app/services/deep_link_error_helper.dart';
 import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_app/util/schedule_notifications.dart';
@@ -91,12 +92,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   String _getErrorMessage(DeepLinkErrorType errorType) {
-    final l10n = AppLocalizations.of(context)!;
-    return switch (errorType) {
-      DeepLinkErrorType.studyNotFound => l10n.deep_link_study_not_found,
-      DeepLinkErrorType.inviteOnly => l10n.deep_link_study_invite_only,
-      DeepLinkErrorType.invalidInvite => l10n.deep_link_invite_invalid,
-    };
+    return getDeepLinkErrorMessage(AppLocalizations.of(context)!, errorType);
   }
 
   Future<void> initStudy() async {
