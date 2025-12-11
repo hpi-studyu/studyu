@@ -9,6 +9,7 @@ late final String? projectGeneratorUrl;
 late final String? playStoreUrl;
 late final String? appstoreUrl;
 late final String? developerEmail;
+late final String? appDeepLinkScheme;
 
 void setEnv(
   String envSupabaseUrl,
@@ -20,6 +21,7 @@ void setEnv(
   String? envPlayStoreUrl,
   String? envAppstoreUrl,
   String? envDeveloperEmail,
+  String? envAppDeepLinkScheme,
 }) {
   supabaseUrl = envSupabaseUrl;
   supabaseAnonKey = envSupabaseAnonKey;
@@ -47,4 +49,13 @@ void setEnv(
   playStoreUrl = envPlayStoreUrl;
   appstoreUrl = envAppstoreUrl;
   developerEmail = envDeveloperEmail;
+  // Remove trailing slashes from deep link scheme
+  if (envAppDeepLinkScheme != null && envAppDeepLinkScheme.endsWith('/')) {
+    appDeepLinkScheme = envAppDeepLinkScheme.substring(
+      0,
+      envAppDeepLinkScheme.length - 1,
+    );
+  } else {
+    appDeepLinkScheme = envAppDeepLinkScheme;
+  }
 }

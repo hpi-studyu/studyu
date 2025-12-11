@@ -2028,6 +2028,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get action_clipboard => 'Copy to clipboard';
 
   @override
+  String get action_qr_code => 'Show QR code';
+
+  @override
+  String get action_share => 'Share';
+
+  @override
   String get action_reportPrimary => 'Set as primary report';
 
   @override

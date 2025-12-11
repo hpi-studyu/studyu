@@ -755,6 +755,8 @@
   "action_remove": "Entfernen",
   "action_duplicate": "Duplizieren",
   "action_clipboard": "In Zwischenablage kopieren",
+  "action_qr_code": "QR-Code anzeigen",
+  "action_share": "Teilen",
   "action_reportPrimary": "Als Primärauswertung setzen",
   "action_study_duplicate_draft": "Als Entwurf duplizieren",
   "action_study_export_results": "Ergebnisdaten exportieren",
