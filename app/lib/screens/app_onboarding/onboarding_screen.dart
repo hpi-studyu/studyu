@@ -44,15 +44,14 @@ class OnboardingScreen extends StatelessWidget {
           imagePath: 'assets/images/onboarding/page6.svg',
         ),
       ],
-      showSkipButton: true,
-      skip: Text(l10n.back),
+      showBackButton: true,
+      back: Text(l10n.back),
       next: Text(l10n.next),
       done: Text(
         l10n.get_started,
         style: const TextStyle(fontWeight: FontWeight.w700),
       ),
       onDone: () => Navigator.pushReplacementNamed(context, Routes.welcome),
-      onSkip: () => Navigator.pushReplacementNamed(context, Routes.welcome),
       dotsDecorator: DotsDecorator(
         size: const Size.square(10.0),
         activeSize: const Size(20.0, 10.0),
