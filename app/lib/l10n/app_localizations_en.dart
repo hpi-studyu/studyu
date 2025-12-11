@@ -74,6 +74,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get get_started => 'Get started';
 
   @override
+  String get onboarding_page1_title => 'What is an N-of-1 Study?';
+
+  @override
+  String get onboarding_page1_subtitle =>
+      'Find out what works for you, not for the average person.';
+
+  @override
+  String get onboarding_page2_title => 'Why N-of-1 Matters';
+
+  @override
+  String get onboarding_page2_subtitle =>
+      'General health advice doesn\'t fit everyone. Your body reacts in its own way.';
+
+  @override
+  String get onboarding_page3_title => 'How It Works';
+
+  @override
+  String get onboarding_page3_subtitle =>
+      'You alternate between options and complete simple daily check-ins.';
+
+  @override
+  String get onboarding_page4_title => 'What StudyU Provides';
+
+  @override
+  String get onboarding_page4_subtitle =>
+      'Expert-designed study plans guide you automatically—step by step.';
+
+  @override
+  String get onboarding_page5_title => 'Your Personal Results';
+
+  @override
+  String get onboarding_page5_subtitle =>
+      'After enough data, StudyU shows clear insights based on your own patterns.';
+
+  @override
+  String get onboarding_page6_title => 'Start Your Journey';
+
+  @override
+  String get onboarding_page6_subtitle =>
+      'Pick a study, follow the plan, and discover what truly works for you.';
+
+  @override
   String get study_selection => 'Study Selection';
 
   @override

@@ -21,6 +21,20 @@
   "description_part9": "Aber genug von unserer Seite, jetzt ist es Zeit für StudyU!",
 
   "get_started": "Los geht's",
+
+  "onboarding_page1_title": "Was ist eine N-of-1-Studie?",
+  "onboarding_page1_subtitle": "Finden Sie heraus, was für Sie funktioniert, nicht für den Durchschnitt.",
+  "onboarding_page2_title": "Warum N-of-1 wichtig ist",
+  "onboarding_page2_subtitle": "Allgemeine Gesundheitsratschläge passen nicht zu jedem. Ihr Körper reagiert auf seine eigene Weise.",
+  "onboarding_page3_title": "Wie es funktioniert",
+  "onboarding_page3_subtitle": "Sie wechseln zwischen Optionen und führen einfache tägliche Check-ins durch.",
+  "onboarding_page4_title": "Was StudyU bietet",
+  "onboarding_page4_subtitle": "Von Experten entworfene Studienpläne führen Sie automatisch—Schritt für Schritt.",
+  "onboarding_page5_title": "Ihre persönlichen Ergebnisse",
+  "onboarding_page5_subtitle": "Nach genügend Daten zeigt StudyU klare Erkenntnisse basierend auf Ihren eigenen Mustern.",
+  "onboarding_page6_title": "Starten Sie Ihre Reise",
+  "onboarding_page6_subtitle": "Wählen Sie eine Studie, folgen Sie dem Plan und entdecken Sie, was wirklich für Sie funktioniert.",
+
   "test": "test10",
   "study_selection": "Studienauswahl",
   "study_selection_description": "Bitte wählen Sie eine Studie aus.",

@@ -62,9 +62,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<void> noSubjectFound() async {
-    StudyULogger.info("No subject found, redirecting to welcome screen");
+    StudyULogger.info("No subject found, redirecting to onboarding screen");
     await cancelNotifications(context);
-    if (mounted) Navigator.pushReplacementNamed(context, Routes.welcome);
+    if (mounted) Navigator.pushReplacementNamed(context, Routes.onboarding);
   }
 
   Future<StudySubject?> _fetchRemoteSubject(String selectedStudyObjectId) {

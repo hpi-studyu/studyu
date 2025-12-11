@@ -206,6 +206,78 @@ abstract class AppLocalizations {
   /// **'Get started'**
   String get get_started;
 
+  /// No description provided for @onboarding_page1_title.
+  ///
+  /// In en, this message translates to:
+  /// **'What is an N-of-1 Study?'**
+  String get onboarding_page1_title;
+
+  /// No description provided for @onboarding_page1_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find out what works for you, not for the average person.'**
+  String get onboarding_page1_subtitle;
+
+  /// No description provided for @onboarding_page2_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Why N-of-1 Matters'**
+  String get onboarding_page2_title;
+
+  /// No description provided for @onboarding_page2_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'General health advice doesn\'t fit everyone. Your body reacts in its own way.'**
+  String get onboarding_page2_subtitle;
+
+  /// No description provided for @onboarding_page3_title.
+  ///
+  /// In en, this message translates to:
+  /// **'How It Works'**
+  String get onboarding_page3_title;
+
+  /// No description provided for @onboarding_page3_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You alternate between options and complete simple daily check-ins.'**
+  String get onboarding_page3_subtitle;
+
+  /// No description provided for @onboarding_page4_title.
+  ///
+  /// In en, this message translates to:
+  /// **'What StudyU Provides'**
+  String get onboarding_page4_title;
+
+  /// No description provided for @onboarding_page4_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Expert-designed study plans guide you automatically—step by step.'**
+  String get onboarding_page4_subtitle;
+
+  /// No description provided for @onboarding_page5_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Personal Results'**
+  String get onboarding_page5_title;
+
+  /// No description provided for @onboarding_page5_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'After enough data, StudyU shows clear insights based on your own patterns.'**
+  String get onboarding_page5_subtitle;
+
+  /// No description provided for @onboarding_page6_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Your Journey'**
+  String get onboarding_page6_title;
+
+  /// No description provided for @onboarding_page6_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a study, follow the plan, and discover what truly works for you.'**
+  String get onboarding_page6_subtitle;
+
   /// No description provided for @study_selection.
   ///
   /// In en, this message translates to:

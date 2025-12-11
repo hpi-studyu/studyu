@@ -1,6 +1,5 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
-
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -73,6 +72,48 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get get_started => 'Los geht\'s';
+
+  @override
+  String get onboarding_page1_title => 'Was ist eine N-of-1-Studie?';
+
+  @override
+  String get onboarding_page1_subtitle =>
+      'Finden Sie heraus, was für Sie funktioniert, nicht für den Durchschnitt.';
+
+  @override
+  String get onboarding_page2_title => 'Warum N-of-1 wichtig ist';
+
+  @override
+  String get onboarding_page2_subtitle =>
+      'Allgemeine Gesundheitsratschläge passen nicht zu jedem. Ihr Körper reagiert auf seine eigene Weise.';
+
+  @override
+  String get onboarding_page3_title => 'Wie es funktioniert';
+
+  @override
+  String get onboarding_page3_subtitle =>
+      'Sie wechseln zwischen Optionen und führen einfache tägliche Check-ins durch.';
+
+  @override
+  String get onboarding_page4_title => 'Was StudyU bietet';
+
+  @override
+  String get onboarding_page4_subtitle =>
+      'Von Experten entworfene Studienpläne führen Sie automatisch—Schritt für Schritt.';
+
+  @override
+  String get onboarding_page5_title => 'Ihre persönlichen Ergebnisse';
+
+  @override
+  String get onboarding_page5_subtitle =>
+      'Nach genügend Daten zeigt StudyU klare Erkenntnisse basierend auf Ihren eigenen Mustern.';
+
+  @override
+  String get onboarding_page6_title => 'Starten Sie Ihre Reise';
+
+  @override
+  String get onboarding_page6_subtitle =>
+      'Wählen Sie eine Studie, folgen Sie dem Plan und entdecken Sie, was wirklich für Sie funktioniert.';
 
   @override
   String get study_selection => 'Studienauswahl';
