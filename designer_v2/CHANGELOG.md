@@ -1,3 +1,15 @@
+## 1.15.4
+
+ - **FIX**: update balanced description in study schedule translations.
+
+## 1.15.3
+
+ - **REFACTOR**(designer_v2): centralize AsyncValue study state access.
+ - **FIX**(designer_v2): simplify AsyncValue state transitions.
+ - **FIX**(designer_v2): remove copyWithPrevious usage for Riverpod 3.x compatibility.
+ - **FIX**(designer_v2): update code for Riverpod 3.x compatibility.
+ - **FIX**: study length calculation and update localization for study schedule.
+
 ## 1.15.2
 
  - **PERF**: Improve update performance using debouncer.

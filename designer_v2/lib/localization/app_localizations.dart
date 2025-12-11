@@ -3984,7 +3984,7 @@ abstract class AppLocalizations {
   /// No description provided for @study_schedule_balanced_description.
   ///
   /// In en, this message translates to:
-  /// **'Balanced: Participants are randomly assigned to either ABAB or BABA sequences to reduce order effects.'**
+  /// **'Counterbalanced: Each participant follows an ABBA pattern, switching between interventions in a predictable sequence.'**
   String get study_schedule_balanced_description;
 
   /// No description provided for @study_schedule_random_description.
