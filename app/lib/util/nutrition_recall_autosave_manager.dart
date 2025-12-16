@@ -14,6 +14,14 @@ class NutritionRecallAutoSaveManager {
   static const String unknownInterventionId = 'unknown';
   static const String defaultPeriodId = 'default';
 
+  static SharedPreferences? _prefs;
+
+  Future<SharedPreferences> _getPrefs() async {
+    if (_prefs != null) return _prefs!;
+    _prefs = await SharedPreferences.getInstance();
+    return _prefs!;
+  }
+
   bool _isSubmitting = false;
 
   Future<void> saveRecall({
@@ -24,8 +32,58 @@ class NutritionRecallAutoSaveManager {
     required String periodId,
     required int studyDaySnapshot,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _getPrefs();
+    _doSave(
+      prefs,
+      recall,
+      subjectId,
+      taskId,
+      interventionId,
+      periodId,
+      studyDaySnapshot,
+    );
+  }
 
+  void saveRecallImmediate({
+    required DailyRecall recall,
+    required String subjectId,
+    required String taskId,
+    required String interventionId,
+    required String periodId,
+    required int studyDaySnapshot,
+  }) {
+    if (_prefs == null) {
+      // Fallback to fire-and-forget async if prefs not loaded
+      saveRecall(
+        recall: recall,
+        subjectId: subjectId,
+        taskId: taskId,
+        interventionId: interventionId,
+        periodId: periodId,
+        studyDaySnapshot: studyDaySnapshot,
+      );
+      return;
+    }
+    _doSave(
+      _prefs!,
+      recall,
+      subjectId,
+      taskId,
+      interventionId,
+      periodId,
+      studyDaySnapshot,
+    );
+  }
+
+  void _doSave(
+    SharedPreferences prefs,
+    DailyRecall recall,
+    String subjectId,
+    String taskId,
+    String interventionId,
+    String periodId,
+    int studyDaySnapshot,
+  ) {
     final storageKey = _buildStorageKey(subjectId, taskId, studyDaySnapshot);
 
     final data = {
@@ -41,9 +99,9 @@ class NutritionRecallAutoSaveManager {
       },
     };
 
-    await prefs.setString(storageKey, jsonEncode(data));
+    prefs.setString(storageKey, jsonEncode(data));
 
-    await _updateIndex(subjectId, taskId, studyDaySnapshot);
+    _updateIndexSync(prefs, subjectId, taskId, studyDaySnapshot);
 
     StudyULogger.debug(
       '[AutoSave] Saved recall | subject=$subjectId task=$taskId studyDay=$studyDaySnapshot '
@@ -56,7 +114,7 @@ class NutritionRecallAutoSaveManager {
     required String taskId,
     required int studyDay,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _getPrefs();
     final storageKey = _buildStorageKey(subjectId, taskId, studyDay);
 
     final dataJson = prefs.getString(storageKey);
@@ -72,7 +130,7 @@ class NutritionRecallAutoSaveManager {
   }
 
   Future<List<PendingRecall>> scanPendingRecalls(String subjectId) async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _getPrefs();
     final indexKey = '${_keyPrefix}_index_$subjectId';
     final indexJson = prefs.getString(indexKey);
 
@@ -127,7 +185,7 @@ class NutritionRecallAutoSaveManager {
     required String taskId,
     required int studyDay,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _getPrefs();
     final storageKey = _buildStorageKey(subjectId, taskId, studyDay);
 
     await prefs.remove(storageKey);
@@ -161,16 +219,30 @@ class NutritionRecallAutoSaveManager {
           continue; // skip same-day or future autosaves
         }
 
+        if (pending.studyDaySnapshot < 0) {
+          StudyULogger.warning(
+            '[AutoSave] skip pending submit (invalid negative day) | studyDay=${pending.studyDaySnapshot}',
+          );
+          // Optionally delete invalid auto-save
+          await deleteRecall(
+            subjectId: pending.subjectId,
+            taskId: pending.taskId,
+            studyDay: pending.studyDaySnapshot,
+          );
+          continue;
+        }
+
         final now = DateTime.now();
         final originalRecall = pending.recall;
-        final entryCompleted =
-            originalRecall.entryCompletedAt ??
-            originalRecall.lastAutoSavedAt ??
-            now;
         final lastSaved =
             originalRecall.lastAutoSavedAt ??
             originalRecall.entryCompletedAt ??
             now;
+
+        final actualCompletion =
+            originalRecall.entryCompletedAt ??
+            originalRecall.lastAutoSavedAt ??
+            originalRecall.entryStartedAt;
 
         final recall = DailyRecall(
           id: originalRecall.id,
@@ -179,7 +251,7 @@ class NutritionRecallAutoSaveManager {
           specialOccasion: originalRecall.specialOccasion,
           recallMode: originalRecall.recallMode,
           entryStartedAt: originalRecall.entryStartedAt,
-          entryCompletedAt: entryCompleted,
+          entryCompletedAt: actualCompletion,
           meals: originalRecall.meals,
           studyDaySnapshot:
               originalRecall.studyDaySnapshot ?? pending.studyDaySnapshot,
@@ -227,14 +299,14 @@ class NutritionRecallAutoSaveManager {
   }
 
   Future<int?> getLastKnownStudyDay(String subjectId) async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _getPrefs();
     final key = '${_keyPrefix}_last_study_day_$subjectId';
     final value = prefs.getString(key);
     return value != null ? int.tryParse(value) : null;
   }
 
   Future<void> updateLastKnownStudyDay(String subjectId, int studyDay) async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _getPrefs();
     final key = '${_keyPrefix}_last_study_day_$subjectId';
     await prefs.setString(key, studyDay.toString());
   }
@@ -256,12 +328,12 @@ class NutritionRecallAutoSaveManager {
     return '${_keyPrefix}_${subjectId}_${taskId}_$studyDay';
   }
 
-  Future<void> _updateIndex(
+  void _updateIndexSync(
+    SharedPreferences prefs,
     String subjectId,
     String taskId,
     int studyDay,
-  ) async {
-    final prefs = await SharedPreferences.getInstance();
+  ) {
     final indexKey = '${_keyPrefix}_index_$subjectId';
     final indexJson = prefs.getString(indexKey);
 
@@ -272,7 +344,7 @@ class NutritionRecallAutoSaveManager {
     final entry = '${taskId}_$studyDay';
     if (!index.contains(entry)) {
       index.add(entry);
-      await prefs.setString(indexKey, jsonEncode(index));
+      prefs.setString(indexKey, jsonEncode(index));
     }
   }
 
@@ -281,7 +353,7 @@ class NutritionRecallAutoSaveManager {
     String taskId,
     int studyDay,
   ) async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await _getPrefs();
     final indexKey = '${_keyPrefix}_index_$subjectId';
     final indexJson = prefs.getString(indexKey);
 

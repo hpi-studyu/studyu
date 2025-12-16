@@ -41,6 +41,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   bool _instructionsExpanded = true;
   DailyRecallEntryViewModel? _viewModel;
   late TextEditingController _specialOccasionController;
+  VoidCallback? _viewModelListener;
 
   @override
   void initState() {
@@ -71,6 +72,9 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _specialOccasionController.dispose();
+    if (_viewModelListener != null && _viewModel != null) {
+      _viewModel!.removeListener(_viewModelListener!);
+    }
     _viewModel?.dispose();
     super.dispose();
   }
@@ -87,7 +91,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       );
       _viewModel!.shouldSaveToDb = appState.trackParticipantProgress;
 
-      _viewModel!.addListener(() {
+      _viewModelListener = () {
         if (_viewModel!.recall.specialOccasion != null &&
             _specialOccasionController.text !=
                 _viewModel!.recall.specialOccasion) {
@@ -97,7 +101,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                 _viewModel!.recall.specialOccasion!;
           }
         }
-      });
+      };
+      _viewModel!.addListener(_viewModelListener!);
     }
 
     return ChangeNotifierProvider.value(
@@ -485,8 +490,6 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       ),
     );
   }
-
-  // -- Logic Helpers that are UI specific --
 
   Future<void> _selectDate(
     BuildContext context,

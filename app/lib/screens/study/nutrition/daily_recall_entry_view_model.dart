@@ -204,7 +204,7 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
       'studyDay=$_studyDaySnapshot subject=${subject?.id}',
     );
 
-    _autoSaveManager.saveRecall(
+    _autoSaveManager.saveRecallImmediate(
       recall: _copyWithRecall(lastAutoSavedAt: DateTime.now()),
       subjectId: subject!.id,
       taskId: task?.id ?? NutritionRecallAutoSaveManager.standaloneTaskId,
@@ -264,5 +264,6 @@ class DailyRecallEntryViewModel extends ChangeNotifier {
   }
 
   bool _shouldSaveToDb = true;
+  bool get shouldSaveToDb => _shouldSaveToDb;
   set shouldSaveToDb(bool value) => _shouldSaveToDb = value;
 }

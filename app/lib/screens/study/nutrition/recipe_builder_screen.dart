@@ -31,6 +31,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
   List<RecipeComposition> _ingredients = [];
   final List<FoodEntry> _ingredientFoods = [];
   RecipeMetadata? _metadata;
+  NutritionProfile? _cachedNutrition;
 
   @override
   void initState() {
@@ -71,6 +72,11 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
       _cookedWeightController = TextEditingController();
       _preparationMethodController = TextEditingController();
     }
+    _servingsController.addListener(() {
+      setState(() {
+        _cachedNutrition = null;
+      });
+    });
   }
 
   @override
@@ -98,6 +104,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
             sortOrder: _ingredients.length,
           ),
         );
+        _cachedNutrition = null;
       });
     }
   }
@@ -106,6 +113,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     setState(() {
       _ingredients.removeAt(index);
       _ingredientFoods.removeAt(index);
+      _cachedNutrition = null;
     });
   }
 
@@ -119,6 +127,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
         unit: unit,
         sortOrder: _ingredients[index].sortOrder,
       );
+      _cachedNutrition = null;
     });
   }
 
@@ -238,9 +247,10 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final nutrition = _ingredients.isNotEmpty
-        ? _calculateTotalNutrition()
-        : null;
+    if (_ingredients.isNotEmpty && _cachedNutrition == null) {
+      _cachedNutrition = _calculateTotalNutrition();
+    }
+    final nutrition = _cachedNutrition;
 
     return Scaffold(
       appBar: AppBar(
