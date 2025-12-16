@@ -133,7 +133,9 @@ class NutritionRecallAutoSaveManager {
     await prefs.remove(storageKey);
     await _removeFromIndex(subjectId, taskId, studyDay);
 
-    StudyULogger.info('Deleted auto-save for task $taskId, study day $studyDay');
+    StudyULogger.info(
+      'Deleted auto-save for task $taskId, study day $studyDay',
+    );
   }
 
   Future<void> submitPendingRecalls({
@@ -159,11 +161,30 @@ class NutritionRecallAutoSaveManager {
           continue; // skip same-day or future autosaves
         }
 
-        final recall = pending.recall;
-        recall.studyDaySnapshot ??= pending.studyDaySnapshot;
-        recall.entryCompletedAt ??=
-            recall.lastAutoSavedAt ?? DateTime.now();
-        recall.lastAutoSavedAt ??= recall.entryCompletedAt;
+        final now = DateTime.now();
+        final originalRecall = pending.recall;
+        final entryCompleted =
+            originalRecall.entryCompletedAt ??
+            originalRecall.lastAutoSavedAt ??
+            now;
+        final lastSaved =
+            originalRecall.lastAutoSavedAt ??
+            originalRecall.entryCompletedAt ??
+            now;
+
+        final recall = DailyRecall(
+          id: originalRecall.id,
+          date: originalRecall.date,
+          isUsualIntakeDay: originalRecall.isUsualIntakeDay,
+          specialOccasion: originalRecall.specialOccasion,
+          recallMode: originalRecall.recallMode,
+          entryStartedAt: originalRecall.entryStartedAt,
+          entryCompletedAt: entryCompleted,
+          meals: originalRecall.meals,
+          studyDaySnapshot:
+              originalRecall.studyDaySnapshot ?? pending.studyDaySnapshot,
+          lastAutoSavedAt: lastSaved,
+        );
 
         StudyULogger.debug(
           '[AutoSave] submitting pending | task=${pending.taskId} studyDay=${pending.studyDaySnapshot} '

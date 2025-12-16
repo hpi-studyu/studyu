@@ -1168,98 +1168,99 @@ class AppLocalizationsDe extends AppLocalizations {
   String get submit => 'Absenden';
 
   @override
-  String get daily_food_diary => 'Daily Food Diary';
+  String get daily_food_diary => 'Tägliches Ernährungstagebuch';
 
   @override
-  String get saving => 'Saving...';
+  String get saving => 'Speichern...';
 
   @override
   String saved_ago(String time) {
-    return 'Saved $time ago';
+    return 'Gespeichert vor $time';
   }
 
   @override
-  String get just_now => 'just now';
+  String get just_now => 'gerade eben';
 
   @override
   String seconds_ago(int seconds) {
-    return '$seconds seconds ago';
+    return 'vor $seconds Sekunden';
   }
 
   @override
   String minutes_ago(int minutes) {
-    return '$minutes minute(s) ago';
+    return 'vor $minutes Minute(n)';
   }
 
   @override
   String hours_ago(int hours) {
-    return '$hours hour(s) ago';
+    return 'vor $hours Stunde(n)';
   }
 
   @override
-  String get instructions => 'Instructions';
+  String get instructions => 'Anleitung';
 
   @override
   String get nutrition_instructions_default =>
-      'Please record all the foods and beverages you consumed today. For each meal or snack, provide as much detail as possible including portion sizes and preparation methods.';
+      'Bitte erfassen Sie alle Lebensmittel und Getränke, die Sie heute konsumiert haben. Geben Sie für jede Mahlzeit oder jeden Snack so viele Details wie möglich an, einschließlich Portionsgrößen und Zubereitungsmethoden.';
 
   @override
   String min_meals_required(int count) {
-    return 'Please record at least $count meal(s)';
+    return 'Bitte erfassen Sie mindestens $count Mahlzeit(en)';
   }
 
   @override
-  String get recall_details => 'Recall Details';
+  String get recall_details => 'Protokolldetails';
 
   @override
-  String get date => 'Date';
+  String get date => 'Datum';
 
   @override
-  String get recall_mode => 'Recall Mode';
+  String get recall_mode => 'Protokollmodus';
 
   @override
-  String get recall_mode_realtime => 'Real-time Recording';
+  String get recall_mode_realtime => 'Echtzeit-Erfassung';
 
   @override
-  String get recall_mode_yesterday => 'Yesterday Recall';
+  String get recall_mode_yesterday => 'Rückblick auf gestern';
 
   @override
-  String get usual_intake_day => 'Usual Intake Day';
+  String get usual_intake_day => 'Gewöhnlicher Verzehrtag';
 
   @override
-  String get usual_intake_question => 'Was this a typical day for your diet?';
+  String get usual_intake_question =>
+      'War dies ein typischer Tag für Ihre Ernährung?';
 
   @override
-  String get special_occasion => 'Special Occasion';
+  String get special_occasion => 'Besonderer Anlass';
 
   @override
-  String get special_occasion_hint => 'e.g., Birthday, Holiday, etc.';
+  String get special_occasion_hint => 'z.B. Geburtstag, Feiertag, etc.';
 
   @override
   String meals_count(int count) {
-    return 'Meals ($count)';
+    return 'Mahlzeiten ($count)';
   }
 
   @override
-  String get add_meal => 'Add Meal';
+  String get add_meal => 'Mahlzeit hinzufügen';
 
   @override
-  String get no_meals_recorded => 'No meals recorded yet';
+  String get no_meals_recorded => 'Noch keine Mahlzeiten erfasst';
 
   @override
-  String get edit => 'Edit';
+  String get edit => 'Bearbeiten';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Löschen';
 
   @override
-  String get meal_type_breakfast => 'Breakfast';
+  String get meal_type_breakfast => 'Frühstück';
 
   @override
-  String get meal_type_lunch => 'Lunch';
+  String get meal_type_lunch => 'Mittagessen';
 
   @override
-  String get meal_type_dinner => 'Dinner';
+  String get meal_type_dinner => 'Abendessen';
 
   @override
   String get meal_type_snack => 'Snack';
@@ -1268,241 +1269,242 @@ class AppLocalizationsDe extends AppLocalizations {
   String get meal_type_brunch => 'Brunch';
 
   @override
-  String get meal_type_other => 'Other';
+  String get meal_type_other => 'Sonstiges';
 
   @override
   String food_items_count(int count) {
-    return '$count food items';
+    return '$count Lebensmittel';
   }
 
   @override
-  String get meal_entry_title => 'Meal Entry';
+  String get meal_entry_title => 'Mahlzeit erfassen';
 
   @override
-  String get save => 'Save';
+  String get save => 'Speichern';
 
   @override
-  String get meal_information => 'Meal Information';
+  String get meal_information => 'Mahlzeitinformationen';
 
   @override
-  String get meal_type_label => 'Meal Type';
+  String get meal_type_label => 'Mahlzeittyp';
 
   @override
-  String get custom_meal_label => 'Custom Meal Label';
+  String get custom_meal_label => 'Eigene Mahlzeitbezeichnung';
 
   @override
-  String get time => 'Time';
+  String get time => 'Uhrzeit';
 
   @override
-  String get where_did_you_eat => 'Where did you eat?';
+  String get where_did_you_eat => 'Wo haben Sie gegessen?';
 
   @override
-  String get location_description => 'Location Description';
+  String get location_description => 'Ortsbeschreibung';
 
   @override
-  String get location_description_hint => 'Describe where you ate';
+  String get location_description_hint =>
+      'Beschreiben Sie, wo Sie gegessen haben';
 
   @override
-  String get who_were_you_with => 'Who were you with?';
+  String get who_were_you_with => 'Mit wem waren Sie zusammen?';
 
   @override
-  String get distractions_during_meal => 'Distractions during meal?';
+  String get distractions_during_meal => 'Ablenkungen während der Mahlzeit?';
 
   @override
-  String get skipped_this_meal => 'Skipped this meal';
+  String get skipped_this_meal => 'Diese Mahlzeit übersprungen';
 
   @override
-  String get reason_for_skipping => 'Reason for skipping';
+  String get reason_for_skipping => 'Grund für das Auslassen';
 
   @override
   String food_items_section(int count) {
-    return 'Food Items ($count)';
+    return 'Lebensmittel ($count)';
   }
 
   @override
-  String get add_food => 'Add Food';
+  String get add_food => 'Lebensmittel hinzufügen';
 
   @override
-  String get no_food_items_yet => 'No food items yet';
+  String get no_food_items_yet => 'Noch keine Lebensmittel';
 
   @override
-  String get not_specified => 'Not specified';
+  String get not_specified => 'Nicht angegeben';
 
   @override
-  String get context_home => 'Home';
+  String get context_home => 'Zuhause';
 
   @override
   String get context_restaurant => 'Restaurant';
 
   @override
-  String get context_takeout => 'Takeout';
+  String get context_takeout => 'Zum Mitnehmen';
 
   @override
-  String get context_vending => 'Vending';
+  String get context_vending => 'Automat';
 
   @override
-  String get context_other => 'Other';
+  String get context_other => 'Sonstiges';
 
   @override
-  String get company_alone => '👤 Alone';
+  String get company_alone => '👤 Allein';
 
   @override
-  String get company_family => '👨‍👩‍👧‍👦 Family';
+  String get company_family => '👨‍👩‍👧‍👦 Familie';
 
   @override
-  String get company_friends => '👥 Friends';
+  String get company_friends => '👥 Freunde';
 
   @override
-  String get company_colleagues => '💼 Colleagues';
+  String get company_colleagues => '💼 Kollegen';
 
   @override
-  String get company_other => '🤝 Other';
+  String get company_other => '🤝 Andere';
 
   @override
-  String get distraction_none => '🧘 None';
+  String get distraction_none => '🧘 Keine';
 
   @override
-  String get distraction_tv => '📺 TV';
+  String get distraction_tv => '📺 Fernseher';
 
   @override
-  String get distraction_phone => '📱 Phone';
+  String get distraction_phone => '📱 Handy';
 
   @override
-  String get distraction_work => '💻 Work';
+  String get distraction_work => '💻 Arbeit';
 
   @override
-  String get distraction_other => '📖 Other';
+  String get distraction_other => '📖 Sonstiges';
 
   @override
-  String get food_entry_title => 'Food Entry';
+  String get food_entry_title => 'Lebensmittel erfassen';
 
   @override
-  String get food_information => 'Food Information';
+  String get food_information => 'Lebensmittelinformationen';
 
   @override
-  String get entry_type => 'Entry Type';
+  String get entry_type => 'Eintragstyp';
 
   @override
-  String get food_name => 'Food Name *';
+  String get food_name => 'Lebensmittelname *';
 
   @override
-  String get brand_name => 'Brand Name';
+  String get brand_name => 'Markenname';
 
   @override
-  String get description => 'Description';
+  String get description => 'Beschreibung';
 
   @override
-  String get description_hint => 'Optional notes about this food';
+  String get description_hint => 'Optionale Notizen zu diesem Lebensmittel';
 
   @override
   String get recipe_info =>
-      'Recipe: Use Recipe Builder for better ingredient management';
+      'Rezept: Nutzen Sie den Rezept-Builder für eine bessere Zutatenverwaltung';
 
   @override
-  String get open_recipe_builder => 'Open Recipe Builder';
+  String get open_recipe_builder => 'Rezept-Builder öffnen';
 
   @override
-  String get amount => 'Amount *';
+  String get amount => 'Menge *';
 
   @override
-  String get unit => 'Unit *';
+  String get unit => 'Einheit *';
 
   @override
-  String get serving_size => 'Serving Size (grams) *';
+  String get serving_size => 'Portionsgröße (Gramm) *';
 
   @override
-  String get portion_reference => 'Portion Reference';
+  String get portion_reference => 'Portionsreferenz';
 
   @override
-  String get portion_reference_hint => 'e.g., 1 cup, 3 oz, medium apple';
+  String get portion_reference_hint => 'z.B. 1 Tasse, 100g, mittlerer Apfel';
 
   @override
-  String get portion_estimation_method => 'Portion Estimation Method';
+  String get portion_estimation_method => 'Portionsschätzmethode';
 
   @override
-  String get portion_state => 'Portion State';
+  String get portion_state => 'Portionszustand';
 
   @override
-  String get yield_factor => 'Yield Factor';
+  String get yield_factor => 'Ertragsfaktor';
 
   @override
-  String get yield_factor_hint => 'e.g., 0.75';
+  String get yield_factor_hint => 'z.B. 0,75';
 
   @override
-  String get edible_portion => 'Edible Portion';
+  String get edible_portion => 'Essbarer Anteil';
 
   @override
-  String get edible_portion_hint => 'e.g., 0.85';
+  String get edible_portion_hint => 'z.B. 0,85';
 
   @override
-  String get nutrition_information => 'Nutrition Information';
+  String get nutrition_information => 'Nährwertinformationen';
 
   @override
-  String get energy_kcal => 'Energy (kcal) *';
+  String get energy_kcal => 'Energie (kcal) *';
 
   @override
   String get protein_g => 'Protein (g)';
 
   @override
-  String get carbs_g => 'Carbs (g)';
+  String get carbs_g => 'Kohlenhydrate (g)';
 
   @override
-  String get fat_g => 'Fat (g)';
+  String get fat_g => 'Fett (g)';
 
   @override
-  String get saturated_fat_g => 'Sat. Fat (g)';
+  String get saturated_fat_g => 'Ges. Fettsäuren (g)';
 
   @override
-  String get sugars_g => 'Sugars (g)';
+  String get sugars_g => 'Zucker (g)';
 
   @override
-  String get fiber_g => 'Fiber (g)';
+  String get fiber_g => 'Ballaststoffe (g)';
 
   @override
-  String get sodium_mg => 'Sodium (mg)';
+  String get sodium_mg => 'Natrium (mg)';
 
   @override
-  String get required_error => 'Required';
+  String get required_error => 'Erforderlich';
 
   @override
-  String get enter_food_name => 'Please enter a food name';
+  String get enter_food_name => 'Bitte geben Sie einen Lebensmittelnamen ein';
 
   @override
-  String get enter_serving_size => 'Please enter serving size';
+  String get enter_serving_size => 'Bitte geben Sie die Portionsgröße ein';
 
   @override
-  String get entry_type_single_ingredient => '🥕 Single Ingredient';
+  String get entry_type_single_ingredient => '🥕 Einzelne Zutat';
 
   @override
-  String get entry_type_recipe => '📖 Recipe';
+  String get entry_type_recipe => '📖 Rezept';
 
   @override
-  String get entry_type_branded_product => '🏷️ Branded Product';
+  String get entry_type_branded_product => '🏷️ Markenprodukt';
 
   @override
-  String get entry_type_manual_entry => '✏️ Manual Entry';
+  String get entry_type_manual_entry => '✏️ Manuelle Eingabe';
 
   @override
-  String get portion_method_household => 'Household Measure';
+  String get portion_method_household => 'Haushaltsmass';
 
   @override
-  String get portion_method_photograph => 'Photograph';
+  String get portion_method_photograph => 'Foto';
 
   @override
-  String get portion_method_standard_unit => 'Standard Unit';
+  String get portion_method_standard_unit => 'Standardeinheit';
 
   @override
-  String get portion_method_user_weighted => 'User Weighted';
+  String get portion_method_user_weighted => 'Selbst gewogen';
 
   @override
-  String get portion_method_unknown => 'Unknown';
+  String get portion_method_unknown => 'Unbekannt';
 
   @override
-  String get portion_state_raw => 'Raw';
+  String get portion_state_raw => 'Roh';
 
   @override
-  String get portion_state_cooked => 'Cooked';
+  String get portion_state_cooked => 'Gekocht';
 
   @override
-  String get portion_state_as_served => 'As Served';
+  String get portion_state_as_served => 'Wie serviert';
 }

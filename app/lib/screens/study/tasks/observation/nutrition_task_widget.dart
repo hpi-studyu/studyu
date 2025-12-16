@@ -39,7 +39,7 @@ class NutritionTaskWidget extends StatefulWidget {
 class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     with WidgetsBindingObserver {
   bool _instructionsExpanded = true;
-  late DailyRecallEntryViewModel _viewModel;
+  DailyRecallEntryViewModel? _viewModel;
   late TextEditingController _specialOccasionController;
 
   @override
@@ -58,7 +58,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
     if (mounted) {
       // Lifecycle logic handled in VM
     }
-    _viewModel.onAppLifecycleStateChanged(state);
+    _viewModel?.onAppLifecycleStateChanged(state);
   }
 
   @override
@@ -71,14 +71,13 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _specialOccasionController.dispose();
-    // We manually dispose the VM since we created it in State
-    _viewModel.dispose();
+    _viewModel?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!getAllocateVm()) {
+    if (_viewModel == null) {
       final appState = Provider.of<AppState>(context, listen: false);
       _viewModel = DailyRecallEntryViewModel(
         subject: appState.activeSubject,
@@ -86,26 +85,23 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
         completionPeriod: widget.completionPeriod,
         existingRecall: widget.existingRecall,
       );
-      _viewModel.shouldSaveToDb = appState.trackParticipantProgress;
+      _viewModel!.shouldSaveToDb = appState.trackParticipantProgress;
 
-      // Handle async loading update for controller
-      _viewModel.addListener(() {
-        if (_viewModel.recall.specialOccasion != null &&
+      _viewModel!.addListener(() {
+        if (_viewModel!.recall.specialOccasion != null &&
             _specialOccasionController.text !=
-                _viewModel.recall.specialOccasion) {
-          // Only update controller if VM changed externally to avoid cursor jumps
+                _viewModel!.recall.specialOccasion) {
           if (_specialOccasionController.text.isEmpty &&
-              _viewModel.recall.specialOccasion!.isNotEmpty) {
+              _viewModel!.recall.specialOccasion!.isNotEmpty) {
             _specialOccasionController.text =
-                _viewModel.recall.specialOccasion!;
+                _viewModel!.recall.specialOccasion!;
           }
         }
       });
-      setAllocateVm(true);
     }
 
     return ChangeNotifierProvider.value(
-      value: _viewModel,
+      value: _viewModel!,
       child: Consumer<DailyRecallEntryViewModel>(
         builder: (context, model, child) {
           final theme = Theme.of(context);
@@ -393,7 +389,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                                       Icons.restaurant,
                                       size: 48,
                                       color: theme.colorScheme.primary
-                                          .withOpacity(0.5),
+                                          .withValues(alpha: 0.5),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
@@ -560,8 +556,4 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       return AppLocalizations.of(context)!.hours_ago(diff.inHours);
     }
   }
-
-  bool _vmAllocated = false;
-  bool getAllocateVm() => _vmAllocated;
-  void setAllocateVm(bool val) => _vmAllocated = val;
 }

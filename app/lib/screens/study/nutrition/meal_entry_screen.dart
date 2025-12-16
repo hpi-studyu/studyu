@@ -20,6 +20,12 @@ class MealEntryScreen extends StatefulWidget {
 }
 
 class _MealEntryScreenState extends State<MealEntryScreen> {
+  static const int _breakfastStart = 6;
+  static const int _brunchStart = 10;
+  static const int _lunchStart = 12;
+  static const int _dinnerStart = 16;
+  static const int _dinnerEnd = 21;
+
   late MealLog _meal;
   late MealType _mealType;
   late MealContext _mealContext;
@@ -30,6 +36,10 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   String? _customMealLabel;
   String? _locationDescription;
   String? _skipReason;
+
+  late TextEditingController _customMealLabelController;
+  late TextEditingController _locationDescriptionController;
+  late TextEditingController _skipReasonController;
 
   @override
   void initState() {
@@ -59,14 +69,31 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         foods: [],
       );
     }
+
+    _customMealLabelController = TextEditingController(
+      text: _customMealLabel ?? '',
+    );
+    _locationDescriptionController = TextEditingController(
+      text: _locationDescription ?? '',
+    );
+    _skipReasonController = TextEditingController(text: _skipReason ?? '');
+  }
+
+  @override
+  void dispose() {
+    _customMealLabelController.dispose();
+    _locationDescriptionController.dispose();
+    _skipReasonController.dispose();
+    super.dispose();
   }
 
   MealType _getMealTypeByTime(DateTime time) {
     final hour = time.hour;
-    if (hour >= 6 && hour < 10) return MealType.breakfast;
-    if (hour >= 10 && hour < 12) return MealType.brunch;
-    if (hour >= 12 && hour < 16) return MealType.lunch;
-    if (hour >= 16 && hour < 21) return MealType.dinner;
+    if (hour >= _breakfastStart && hour < _brunchStart)
+      return MealType.breakfast;
+    if (hour >= _brunchStart && hour < _lunchStart) return MealType.brunch;
+    if (hour >= _lunchStart && hour < _dinnerStart) return MealType.lunch;
+    if (hour >= _dinnerStart && hour < _dinnerEnd) return MealType.dinner;
     return MealType.snack;
   }
 
@@ -257,9 +284,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                           border: const OutlineInputBorder(),
                         ),
                         onChanged: (value) => _customMealLabel = value,
-                        controller: TextEditingController(
-                          text: _customMealLabel ?? '',
-                        ),
+                        controller: _customMealLabelController,
                       ),
                     const SizedBox(height: 16),
                     ListTile(
@@ -307,9 +332,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                               )!.location_description_hint,
                             ),
                             onChanged: (value) => _locationDescription = value,
-                            controller: TextEditingController(
-                              text: _locationDescription ?? '',
-                            ),
+                            controller: _locationDescriptionController,
                           ),
                           const SizedBox(height: 16),
                         ],
@@ -385,9 +408,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                           border: const OutlineInputBorder(),
                         ),
                         onChanged: (value) => _skipReason = value,
-                        controller: TextEditingController(
-                          text: _skipReason ?? '',
-                        ),
+                        controller: _skipReasonController,
                       ),
                     ],
                   ],
@@ -427,7 +448,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                           Icon(
                             Icons.fastfood,
                             size: 48,
-                            color: theme.colorScheme.primary.withOpacity(0.5),
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                           const SizedBox(height: 8),
                           Text(AppLocalizations.of(context)!.no_food_items_yet),
