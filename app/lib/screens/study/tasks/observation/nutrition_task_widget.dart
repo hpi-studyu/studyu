@@ -4,8 +4,12 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/daily_recall_entry_view_model.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/my_templates_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/widgets/html_text.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
+import 'package:studyu_app/widgets/save_template_dialog.dart';
+import 'package:studyu_app/widgets/template_selection_sheet.dart';
 import 'package:studyu_core/core.dart';
 
 class NutritionTaskWidget extends StatefulWidget {
@@ -369,20 +373,53 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                               )!.meals_count(recall.meals.length),
                               style: theme.textTheme.titleLarge,
                             ),
-                            ElevatedButton.icon(
-                              onPressed: () => _addMeal(context, model),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: theme.colorScheme.primary,
-                                foregroundColor: theme.colorScheme.onPrimary,
-                              ),
-                              icon: const Icon(Icons.add),
-                              label: Text(
-                                AppLocalizations.of(context)!.add_meal,
-                              ),
+                            Row(
+                              children: [
+                                OutlinedButton.icon(
+                                  onPressed: () =>
+                                      _addMealFromTemplate(context, model),
+                                  icon: const Icon(Icons.bookmark),
+                                  label: Text(
+                                    AppLocalizations.of(context)!.from_template,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                ElevatedButton.icon(
+                                  onPressed: () => _addMeal(context, model),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: theme.colorScheme.primary,
+                                    foregroundColor: theme.colorScheme.onPrimary,
+                                  ),
+                                  icon: const Icon(Icons.add),
+                                  label: Text(
+                                    AppLocalizations.of(context)!.add_meal,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton.icon(
+                            onPressed: () {
+                              Navigator.of(context).push(MyTemplatesScreen.route());
+                            },
+                            icon: Icon(
+                              Icons.settings,
+                              size: 16,
+                              color: theme.colorScheme.primary.withAlpha(180),
+                            ),
+                            label: Text(
+                              AppLocalizations.of(context)!.my_templates,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: theme.colorScheme.primary.withAlpha(180),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
                         if (recall.meals.isEmpty)
                           Card(
                             child: Padding(
@@ -424,7 +461,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                                   '${AppLocalizations.of(context)!.food_items_count(meal.foods.length)} • ${meal.timestamp.hour.toString().padLeft(2, '0')}:${meal.timestamp.minute.toString().padLeft(2, '0')}',
                                 ),
                                 trailing: PopupMenuButton(
-                                  itemBuilder: (context) => [
+                                  itemBuilder: (popupContext) => [
                                     PopupMenuItem(
                                       value: 'edit',
                                       child: Row(
@@ -432,11 +469,26 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                                           const Icon(Icons.edit),
                                           const SizedBox(width: 8),
                                           Text(
-                                            AppLocalizations.of(context)!.edit,
+                                            AppLocalizations.of(popupContext)!.edit,
                                           ),
                                         ],
                                       ),
                                     ),
+                                    if (meal.foods.isNotEmpty)
+                                      PopupMenuItem(
+                                        value: 'save_template',
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.bookmark_add),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              AppLocalizations.of(
+                                                popupContext,
+                                              )!.save_as_template,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     PopupMenuItem(
                                       value: 'delete',
                                       child: Row(
@@ -448,7 +500,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                                           const SizedBox(width: 8),
                                           Text(
                                             AppLocalizations.of(
-                                              context,
+                                              popupContext,
                                             )!.delete,
                                             style: const TextStyle(
                                               color: Colors.red,
@@ -461,6 +513,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
                                   onSelected: (value) {
                                     if (value == 'edit') {
                                       _editMeal(context, model, meal, index);
+                                    } else if (value == 'save_template') {
+                                      _saveMealAsTemplate(context, meal);
                                     } else if (value == 'delete') {
                                       model.removeMeal(index);
                                     }
@@ -557,6 +611,50 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       return AppLocalizations.of(context)!.minutes_ago(diff.inMinutes);
     } else {
       return AppLocalizations.of(context)!.hours_ago(diff.inHours);
+    }
+  }
+
+  Future<void> _saveMealAsTemplate(BuildContext context, MealLog meal) async {
+    final l10n = AppLocalizations.of(context)!;
+    final appState = Provider.of<AppState>(context, listen: false);
+    final userId = appState.activeSubject?.id ?? 'anonymous';
+
+    final result = await SaveTemplateDialog.show(
+      context,
+      initialName: meal.customMealLabel ?? _getMealTypeLabel(context, meal.mealType),
+      templateType: TemplateType.meal,
+    );
+
+    if (result != null && mounted) {
+      final viewModel = TemplateViewModel(userId: userId);
+      await viewModel.saveMealAsTemplate(
+        name: result.name,
+        meal: meal,
+        tags: result.tags,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.template_saved)),
+        );
+      }
+    }
+  }
+
+  Future<void> _addMealFromTemplate(
+    BuildContext context,
+    DailyRecallEntryViewModel model,
+  ) async {
+    final appState = Provider.of<AppState>(context, listen: false);
+    final userId = appState.activeSubject?.id ?? 'anonymous';
+
+    final result = await TemplateSelectionSheet.show(
+      context,
+      mode: TemplateSelectionMode.meal,
+      userId: userId,
+    );
+
+    if (result is MealLog) {
+      model.addMeal(result);
     }
   }
 }

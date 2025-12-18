@@ -614,5 +614,49 @@
   "portion_method_unknown": "Unknown",
   "portion_state_raw": "Raw",
   "portion_state_cooked": "Cooked",
-  "portion_state_as_served": "As Served"
+  "portion_state_as_served": "As Served",
+
+  "my_templates": "My Templates",
+  "save_as_template": "Save as Template",
+  "save_meal_template": "Save Meal Template",
+  "save_food_template": "Save Food Template",
+  "save_recipe_template": "Save Recipe Template",
+  "template_name": "Template Name",
+  "template_tags_optional": "Tags (optional)",
+  "template_tags_hint": "breakfast, quick, healthy",
+  "template_saved": "Template saved",
+  "select_meal_template": "Select Meal Template",
+  "select_food_template": "Select Food Template",
+  "search_templates": "Search templates...",
+  "no_templates_saved": "No templates saved yet",
+  "save_templates_hint": "Save your favorite meals and foods as templates for quick access",
+  "from_template": "From Template",
+  "add_new_food": "Add New Food",
+  "delete_template": "Delete Template",
+  "delete_template_confirmation": "Are you sure you want to delete this template?",
+  "filter_all": "All",
+  "filter_meals": "Meals",
+  "filter_foods": "Foods",
+  "filter_recipes": "Recipes",
+  "items_count": "{count} items",
+  "@items_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "kcal_value": "{value} kcal",
+  "@kcal_value": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "template_type_meal": "Meal",
+  "template_type_food": "Food",
+  "template_type_recipe": "Recipe",
+  "rename_template": "Rename Template",
+  "new_name": "New Name"
 }

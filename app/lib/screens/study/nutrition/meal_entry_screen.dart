@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
+import 'package:studyu_app/screens/study/nutrition/my_templates_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
+import 'package:studyu_app/widgets/save_template_dialog.dart';
+import 'package:studyu_app/widgets/template_selection_sheet.dart';
 import 'package:studyu_core/core.dart';
 
 class MealEntryScreen extends StatefulWidget {
@@ -221,13 +227,92 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     }
   }
 
+  Future<void> _saveAsTemplate() async {
+    final l10n = AppLocalizations.of(context)!;
+    final appState = Provider.of<AppState>(context, listen: false);
+    final userId = appState.activeSubject?.id ?? 'anonymous';
+
+    final result = await SaveTemplateDialog.show(
+      context,
+      initialName: _customMealLabel ?? _getMealTypeLabel(_mealType),
+      templateType: TemplateType.meal,
+    );
+
+    if (result != null && mounted) {
+      final viewModel = TemplateViewModel(userId: userId);
+      await viewModel.saveMealAsTemplate(
+        name: result.name,
+        meal: _meal,
+        tags: result.tags,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.template_saved)),
+        );
+      }
+    }
+  }
+
+  Future<void> _addFoodFromTemplate() async {
+    final appState = Provider.of<AppState>(context, listen: false);
+    final userId = appState.activeSubject?.id ?? 'anonymous';
+
+    final food = await TemplateSelectionSheet.show(
+      context,
+      mode: TemplateSelectionMode.food,
+      userId: userId,
+    );
+    if (food is FoodEntry) {
+      setState(() => _meal.foods.add(food));
+    }
+  }
+
+  Future<void> _saveFoodAsTemplate(FoodEntry food) async {
+    final l10n = AppLocalizations.of(context)!;
+    final appState = Provider.of<AppState>(context, listen: false);
+    final userId = appState.activeSubject?.id ?? 'anonymous';
+
+    final templateType = food.entryType == FoodEntryType.recipe
+        ? TemplateType.recipe
+        : TemplateType.food;
+
+    final result = await SaveTemplateDialog.show(
+      context,
+      initialName: food.name,
+      templateType: templateType,
+    );
+
+    if (result != null && mounted) {
+      final viewModel = TemplateViewModel(userId: userId);
+      await viewModel.saveFoodAsTemplate(
+        name: result.name,
+        food: food,
+        tags: result.tags,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.template_saved)),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.meal_entry_title),
+        title: Text(l10n.meal_entry_title),
+        actions: [
+          if (_meal.foods.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.bookmark_add),
+              tooltip: l10n.save_as_template,
+              onPressed: _saveAsTemplate,
+            ),
+        ],
       ),
       floatingActionButton:
           (!_isSkipped && _meal.foods.isNotEmpty ||
@@ -426,18 +511,48 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     )!.food_items_section(_meal.foods.length),
                     style: theme.textTheme.titleLarge,
                   ),
-                  ElevatedButton.icon(
-                    onPressed: _addFood,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.colorScheme.primary,
-                      foregroundColor: theme.colorScheme.onPrimary,
-                    ),
-                    icon: const Icon(Icons.add),
-                    label: Text(AppLocalizations.of(context)!.add_food),
+                  Row(
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: _addFoodFromTemplate,
+                        icon: const Icon(Icons.bookmark),
+                        label: Text(l10n.from_template),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton.icon(
+                        onPressed: _addFood,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.colorScheme.primary,
+                          foregroundColor: theme.colorScheme.onPrimary,
+                        ),
+                        icon: const Icon(Icons.add),
+                        label: Text(l10n.add_food),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(MyTemplatesScreen.route());
+                  },
+                  icon: Icon(
+                    Icons.settings,
+                    size: 16,
+                    color: theme.colorScheme.primary.withAlpha(180),
+                  ),
+                  label: Text(
+                    l10n.my_templates,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: theme.colorScheme.primary.withAlpha(180),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
               if (_meal.foods.isEmpty)
                 Card(
                   child: Padding(
@@ -502,14 +617,26 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                       ),
                       isThreeLine: true,
                       trailing: PopupMenuButton(
-                        itemBuilder: (context) => [
+                        itemBuilder: (popupContext) => [
                           PopupMenuItem(
                             value: 'edit',
                             child: Row(
                               children: [
                                 const Icon(Icons.edit),
                                 const SizedBox(width: 8),
-                                Text(AppLocalizations.of(context)!.edit),
+                                Text(AppLocalizations.of(popupContext)!.edit),
+                              ],
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: 'save_template',
+                            child: Row(
+                              children: [
+                                const Icon(Icons.bookmark_add),
+                                const SizedBox(width: 8),
+                                Text(
+                                  AppLocalizations.of(popupContext)!.save_as_template,
+                                ),
                               ],
                             ),
                           ),
@@ -520,7 +647,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                                 const Icon(Icons.delete, color: Colors.red),
                                 const SizedBox(width: 8),
                                 Text(
-                                  AppLocalizations.of(context)!.delete,
+                                  AppLocalizations.of(popupContext)!.delete,
                                   style: const TextStyle(color: Colors.red),
                                 ),
                               ],
@@ -530,6 +657,8 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                         onSelected: (value) {
                           if (value == 'edit') {
                             _editFood(food, index);
+                          } else if (value == 'save_template') {
+                            _saveFoodAsTemplate(food);
                           } else if (value == 'delete') {
                             _removeFood(index);
                           }

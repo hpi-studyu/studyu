@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
+import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_core/core.dart';
 
 class FoodEntryScreen extends StatefulWidget {
@@ -231,13 +235,108 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     }
   }
 
+  FoodEntry? _buildFoodEntry() {
+    if (!_formKey.currentState!.validate()) return null;
+
+    final nutrition = NutritionProfile(
+      energyKcal: double.tryParse(_energyController.text) ?? 0,
+      protein: double.tryParse(_proteinController.text) ?? 0,
+      carbs: double.tryParse(_carbsController.text) ?? 0,
+      fat: double.tryParse(_fatController.text) ?? 0,
+      sugars: double.tryParse(_sugarsController.text) ?? 0,
+      fiber: double.tryParse(_fiberController.text) ?? 0,
+      saturatedFat: double.tryParse(_saturatedFatController.text) ?? 0,
+      transFat: 0,
+      cholesterol: 0,
+      sodium: double.tryParse(_sodiumController.text) ?? 0,
+      waterContent: 0,
+      micros: {},
+    );
+
+    return FoodEntry.withId(
+      entryType: _entryType,
+      name: _nameController.text,
+      brandName: _brandController.text.isEmpty ? null : _brandController.text,
+      description: _descriptionController.text.isEmpty
+          ? null
+          : _descriptionController.text,
+      amount: double.parse(_amountController.text),
+      unit: _unitController.text,
+      servingSizeGrams: double.parse(_servingSizeController.text),
+      portionReference: _portionReferenceController.text.isEmpty
+          ? null
+          : _portionReferenceController.text,
+      portionEstimationMethod: _portionMethod,
+      portionState: _portionState,
+      yieldFactor: _yieldFactorController.text.isEmpty
+          ? null
+          : double.tryParse(_yieldFactorController.text),
+      ediblePortion: _ediblePortionController.text.isEmpty
+          ? null
+          : double.tryParse(_ediblePortionController.text),
+      nutrition: nutrition,
+      source: _source,
+      confidenceScore: 1.0,
+      originalValues: {},
+    );
+  }
+
+  Future<void> _saveAsTemplate() async {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (_nameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.enter_food_name)),
+      );
+      return;
+    }
+
+    final food = _buildFoodEntry();
+    if (food == null) return;
+
+    final appState = Provider.of<AppState>(context, listen: false);
+    final userId = appState.activeSubject?.id ?? 'anonymous';
+
+    final templateType = _entryType == FoodEntryType.recipe
+        ? TemplateType.recipe
+        : TemplateType.food;
+
+    final result = await SaveTemplateDialog.show(
+      context,
+      initialName: _nameController.text,
+      templateType: templateType,
+    );
+
+    if (result != null && mounted) {
+      final viewModel = TemplateViewModel(userId: userId);
+      await viewModel.saveFoodAsTemplate(
+        name: result.name,
+        food: food,
+        tags: result.tags,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.template_saved)),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.food_entry_title),
+        title: Text(l10n.food_entry_title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bookmark_add),
+            tooltip: l10n.save_as_template,
+            onPressed: _saveAsTemplate,
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveFood,

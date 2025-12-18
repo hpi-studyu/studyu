@@ -2893,6 +2893,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'As Served'**
   String get portion_state_as_served;
+
+  /// No description provided for @my_templates.
+  ///
+  /// In en, this message translates to:
+  /// **'My Templates'**
+  String get my_templates;
+
+  /// No description provided for @save_as_template.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as Template'**
+  String get save_as_template;
+
+  /// No description provided for @save_meal_template.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Meal Template'**
+  String get save_meal_template;
+
+  /// No description provided for @save_food_template.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Food Template'**
+  String get save_food_template;
+
+  /// No description provided for @save_recipe_template.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Recipe Template'**
+  String get save_recipe_template;
+
+  /// No description provided for @template_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Template Name'**
+  String get template_name;
+
+  /// No description provided for @template_tags_optional.
+  ///
+  /// In en, this message translates to:
+  /// **'Tags (optional)'**
+  String get template_tags_optional;
+
+  /// No description provided for @template_tags_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'breakfast, quick, healthy'**
+  String get template_tags_hint;
+
+  /// No description provided for @template_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'Template saved'**
+  String get template_saved;
+
+  /// No description provided for @select_meal_template.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Meal Template'**
+  String get select_meal_template;
+
+  /// No description provided for @select_food_template.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Food Template'**
+  String get select_food_template;
+
+  /// No description provided for @search_templates.
+  ///
+  /// In en, this message translates to:
+  /// **'Search templates...'**
+  String get search_templates;
+
+  /// No description provided for @no_templates_saved.
+  ///
+  /// In en, this message translates to:
+  /// **'No templates saved yet'**
+  String get no_templates_saved;
+
+  /// No description provided for @save_templates_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Save your favorite meals and foods as templates for quick access'**
+  String get save_templates_hint;
+
+  /// No description provided for @from_template.
+  ///
+  /// In en, this message translates to:
+  /// **'From Template'**
+  String get from_template;
+
+  /// No description provided for @add_new_food.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Food'**
+  String get add_new_food;
+
+  /// No description provided for @delete_template.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Template'**
+  String get delete_template;
+
+  /// No description provided for @delete_template_confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this template?'**
+  String get delete_template_confirmation;
+
+  /// No description provided for @filter_all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filter_all;
+
+  /// No description provided for @filter_meals.
+  ///
+  /// In en, this message translates to:
+  /// **'Meals'**
+  String get filter_meals;
+
+  /// No description provided for @filter_foods.
+  ///
+  /// In en, this message translates to:
+  /// **'Foods'**
+  String get filter_foods;
+
+  /// No description provided for @filter_recipes.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipes'**
+  String get filter_recipes;
+
+  /// No description provided for @items_count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items'**
+  String items_count(int count);
+
+  /// No description provided for @kcal_value.
+  ///
+  /// In en, this message translates to:
+  /// **'{value} kcal'**
+  String kcal_value(String value);
+
+  /// No description provided for @template_type_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal'**
+  String get template_type_meal;
+
+  /// No description provided for @template_type_food.
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get template_type_food;
+
+  /// No description provided for @template_type_recipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Recipe'**
+  String get template_type_recipe;
+
+  /// No description provided for @rename_template.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename Template'**
+  String get rename_template;
+
+  /// No description provided for @new_name.
+  ///
+  /// In en, this message translates to:
+  /// **'New Name'**
+  String get new_name;
 }
 
 class _AppLocalizationsDelegate

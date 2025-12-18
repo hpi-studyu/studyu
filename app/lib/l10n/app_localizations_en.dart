@@ -1495,4 +1495,97 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get portion_state_as_served => 'As Served';
+
+  @override
+  String get my_templates => 'My Templates';
+
+  @override
+  String get save_as_template => 'Save as Template';
+
+  @override
+  String get save_meal_template => 'Save Meal Template';
+
+  @override
+  String get save_food_template => 'Save Food Template';
+
+  @override
+  String get save_recipe_template => 'Save Recipe Template';
+
+  @override
+  String get template_name => 'Template Name';
+
+  @override
+  String get template_tags_optional => 'Tags (optional)';
+
+  @override
+  String get template_tags_hint => 'breakfast, quick, healthy';
+
+  @override
+  String get template_saved => 'Template saved';
+
+  @override
+  String get select_meal_template => 'Select Meal Template';
+
+  @override
+  String get select_food_template => 'Select Food Template';
+
+  @override
+  String get search_templates => 'Search templates...';
+
+  @override
+  String get no_templates_saved => 'No templates saved yet';
+
+  @override
+  String get save_templates_hint =>
+      'Save your favorite meals and foods as templates for quick access';
+
+  @override
+  String get from_template => 'From Template';
+
+  @override
+  String get add_new_food => 'Add New Food';
+
+  @override
+  String get delete_template => 'Delete Template';
+
+  @override
+  String get delete_template_confirmation =>
+      'Are you sure you want to delete this template?';
+
+  @override
+  String get filter_all => 'All';
+
+  @override
+  String get filter_meals => 'Meals';
+
+  @override
+  String get filter_foods => 'Foods';
+
+  @override
+  String get filter_recipes => 'Recipes';
+
+  @override
+  String items_count(int count) {
+    return '$count items';
+  }
+
+  @override
+  String kcal_value(String value) {
+    return '$value kcal';
+  }
+
+  @override
+  String get template_type_meal => 'Meal';
+
+  @override
+  String get template_type_food => 'Food';
+
+  @override
+  String get template_type_recipe => 'Recipe';
+
+  @override
+  String get rename_template => 'Rename Template';
+
+  @override
+  String get new_name => 'New Name';
 }

@@ -37,7 +37,9 @@ class _NutritionRecallScreenState extends State<NutritionRecallScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Nutrition Diary')),
+      appBar: AppBar(
+        title: const Text('Nutrition Diary'),
+      ),
       body: dailyRecalls.isEmpty
           ? Center(
               child: Column(
