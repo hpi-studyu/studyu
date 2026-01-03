@@ -69,7 +69,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
     }
   }
 
-  void _addMeal() async {
+  Future<void> _addMeal() async {
     final result = await Navigator.of(context).push(
       MealEntryScreen.route(),
     );
@@ -80,7 +80,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
     }
   }
 
-  void _editMeal(MealLog meal, int index) async {
+  Future<void> _editMeal(MealLog meal, int index) async {
     final result = await Navigator.of(context).push(
       MealEntryScreen.route(existingMeal: meal),
     );
@@ -179,7 +179,7 @@ class _DailyRecallEntryScreenState extends State<DailyRecallEntryScreen> {
                         value: _recallMode,
                         isExpanded: true,
                         underline: Container(),
-                        items: [
+                        items: const [
                           DropdownMenuItem(
                             value: RecallMode.realtimeRecord,
                             child: Text('Real-time Recording'),

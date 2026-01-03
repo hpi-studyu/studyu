@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
 import 'package:studyu_core/core.dart';
 
@@ -203,6 +204,20 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       appBar: AppBar(
         title: const Text('Food Entry'),
         actions: [
+          IconButton(
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                FoodSearchScreen.route(),
+              );
+              if (result != null) {
+                // If a food was selected from search, close this screen with the result
+                Navigator.of(context).pop(result);
+              }
+            },
+            icon: const Icon(Icons.search),
+            tooltip: 'Search Food Database',
+          ),
           TextButton(
             onPressed: _saveFood,
             style: TextButton.styleFrom(
@@ -231,7 +246,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<FoodEntryType>(
-                        value: _entryType,
+                        initialValue: _entryType,
                         decoration: const InputDecoration(
                           labelText: 'Entry Type',
                           border: OutlineInputBorder(),
@@ -396,7 +411,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<PortionEstimationMethod>(
-                        value: _portionMethod,
+                        initialValue: _portionMethod,
                         decoration: const InputDecoration(
                           labelText: 'Portion Estimation Method',
                           border: OutlineInputBorder(),
@@ -415,7 +430,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<PortionState>(
-                        value: _portionState,
+                        initialValue: _portionState,
                         decoration: const InputDecoration(
                           labelText: 'Portion State',
                           border: OutlineInputBorder(),

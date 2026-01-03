@@ -332,7 +332,7 @@ class DailyNutritionSummaryCard extends StatelessWidget {
     double totalCholesterol = 0;
     double totalSodium = 0;
     double totalWater = 0;
-    Map<String, double> totalMicros = {};
+    final Map<String, double> totalMicros = {};
 
     for (final meal in dailyRecall.meals) {
       if (!meal.isSkipped) {
@@ -402,7 +402,7 @@ class MealNutritionSummaryCard extends StatelessWidget {
     double totalCholesterol = 0;
     double totalSodium = 0;
     double totalWater = 0;
-    Map<String, double> totalMicros = {};
+    final Map<String, double> totalMicros = {};
 
     for (final food in meal.foods) {
       totalEnergy += food.nutrition.energyKcal;

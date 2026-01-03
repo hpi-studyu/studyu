@@ -69,7 +69,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     return MealType.snack;
   }
 
-  void _addFood() async {
+  Future<void> _addFood() async {
     final result = await Navigator.of(context).push(
       FoodEntryScreen.route(),
     );
@@ -80,7 +80,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     }
   }
 
-  void _editFood(FoodEntry food, int index) async {
+  Future<void> _editFood(FoodEntry food, int index) async {
     final result = await Navigator.of(context).push(
       FoodEntryScreen.route(existingFood: food),
     );
@@ -228,7 +228,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     Text('Meal Information', style: theme.textTheme.titleLarge),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<MealType>(
-                      value: _mealType,
+                      initialValue: _mealType,
                       decoration: const InputDecoration(
                         labelText: 'Meal Type',
                         border: OutlineInputBorder(),
@@ -268,7 +268,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     ),
                     const Divider(),
                     DropdownButtonFormField<MealContext>(
-                      value: _mealContext,
+                      initialValue: _mealContext,
                       decoration: const InputDecoration(
                         labelText: 'Where did you eat?',
                         border: OutlineInputBorder(),
@@ -303,14 +303,13 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                         ],
                       ),
                     DropdownButtonFormField<CompanyContext>(
-                      value: _companyContext,
+                      initialValue: _companyContext,
                       decoration: const InputDecoration(
                         labelText: 'Who were you with?',
                         border: OutlineInputBorder(),
                       ),
                       items: [
                         const DropdownMenuItem(
-                          value: null,
                           child: Text('Not specified'),
                         ),
                         ...CompanyContext.values.map((context) {
@@ -318,7 +317,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                             value: context,
                             child: Text(_getCompanyContextLabel(context)),
                           );
-                        }).toList(),
+                        }),
                       ],
                       onChanged: (value) {
                         setState(() => _companyContext = value);
@@ -326,14 +325,13 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<DistractionContext>(
-                      value: _distractionContext,
+                      initialValue: _distractionContext,
                       decoration: const InputDecoration(
                         labelText: 'Distractions during meal?',
                         border: OutlineInputBorder(),
                       ),
                       items: [
                         const DropdownMenuItem(
-                          value: null,
                           child: Text('Not specified'),
                         ),
                         ...DistractionContext.values.map((context) {
@@ -341,7 +339,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                             value: context,
                             child: Text(_getDistractionContextLabel(context)),
                           );
-                        }).toList(),
+                        }),
                       ],
                       onChanged: (value) {
                         setState(() => _distractionContext = value);
@@ -420,15 +418,12 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     case FoodEntryType.recipe:
                       foodIcon = Icons.menu_book;
                       iconColor = Colors.orange;
-                      break;
                     case FoodEntryType.brandedProduct:
                       foodIcon = Icons.shopping_bag;
                       iconColor = Colors.blue;
-                      break;
                     case FoodEntryType.manualCustom:
                       foodIcon = Icons.edit_note;
                       iconColor = Colors.purple;
-                      break;
                     default:
                       foodIcon = Icons.restaurant;
                       iconColor = Colors.green;

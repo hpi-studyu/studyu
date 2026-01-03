@@ -52,7 +52,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget> {
     Navigator.pop(context, true);
   }
 
-  void _openNutritionDiary() async {
+  Future<void> _openNutritionDiary() async {
     final result = await Navigator.of(context).push(
       DailyRecallEntryScreen.route(existingRecall: _dailyRecall),
     );
