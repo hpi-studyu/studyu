@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
 import 'package:studyu_core/core.dart';
 
@@ -238,6 +239,22 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.food_entry_title),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                FoodSearchScreen.route(),
+              );
+              if (result != null) {
+                // If a food was selected from search, close this screen with the result
+                Navigator.of(context).pop(result);
+              }
+            },
+            icon: const Icon(Icons.search),
+            tooltip: 'Search Food Database',
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveFood,
