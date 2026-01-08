@@ -1505,4 +1505,97 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get portion_state_as_served => 'As Served';
+
+  @override
+  String get my_templates => 'Meine Vorlagen';
+
+  @override
+  String get save_as_template => 'Als Vorlage speichern';
+
+  @override
+  String get save_meal_template => 'Mahlzeit als Vorlage speichern';
+
+  @override
+  String get save_food_template => 'Lebensmittel als Vorlage speichern';
+
+  @override
+  String get save_recipe_template => 'Rezept als Vorlage speichern';
+
+  @override
+  String get template_name => 'Vorlagenname';
+
+  @override
+  String get template_tags_optional => 'Tags (optional)';
+
+  @override
+  String get template_tags_hint => 'Frühstück, schnell, gesund';
+
+  @override
+  String get template_saved => 'Vorlage gespeichert';
+
+  @override
+  String get select_meal_template => 'Mahlzeit-Vorlage auswählen';
+
+  @override
+  String get select_food_template => 'Lebensmittel-Vorlage auswählen';
+
+  @override
+  String get search_templates => 'Vorlagen suchen...';
+
+  @override
+  String get no_templates_saved => 'Noch keine Vorlagen gespeichert';
+
+  @override
+  String get save_templates_hint =>
+      'Speichern Sie Ihre Lieblingsmahlzeiten und Lebensmittel als Vorlagen für schnellen Zugriff';
+
+  @override
+  String get from_template => 'Aus Vorlage';
+
+  @override
+  String get add_new_food => 'Neues Lebensmittel hinzufügen';
+
+  @override
+  String get delete_template => 'Vorlage löschen';
+
+  @override
+  String get delete_template_confirmation =>
+      'Sind Sie sicher, dass Sie diese Vorlage löschen möchten?';
+
+  @override
+  String get filter_all => 'Alle';
+
+  @override
+  String get filter_meals => 'Mahlzeiten';
+
+  @override
+  String get filter_foods => 'Lebensmittel';
+
+  @override
+  String get filter_recipes => 'Rezepte';
+
+  @override
+  String items_count(int count) {
+    return '$count Elemente';
+  }
+
+  @override
+  String kcal_value(String value) {
+    return '$value kcal';
+  }
+
+  @override
+  String get template_type_meal => 'Mahlzeit';
+
+  @override
+  String get template_type_food => 'Lebensmittel';
+
+  @override
+  String get template_type_recipe => 'Rezept';
+
+  @override
+  String get rename_template => 'Vorlage umbenennen';
+
+  @override
+  String get new_name => 'Neuer Name';
 }

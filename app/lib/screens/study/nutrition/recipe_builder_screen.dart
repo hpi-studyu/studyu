@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
+import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_core/core.dart';
 
 class RecipeBuilderScreen extends StatefulWidget {
@@ -187,60 +192,103 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     );
   }
 
-  void _saveRecipe() {
-    if (_formKey.currentState!.validate() && _ingredients.isNotEmpty) {
-      final nutrition = _calculateTotalNutrition();
+  FoodEntry? _buildRecipe() {
+    if (!_formKey.currentState!.validate() || _ingredients.isEmpty) {
+      return null;
+    }
 
-      RecipeMetadata? metadata;
-      if (_rawWeightController.text.isNotEmpty &&
-          _cookedWeightController.text.isNotEmpty &&
-          _preparationMethodController.text.isNotEmpty) {
-        final rawWeight = double.parse(_rawWeightController.text);
-        final cookedWeight = double.parse(_cookedWeightController.text);
-        metadata = RecipeMetadata(
-          rawWeight: rawWeight,
-          cookedWeight: cookedWeight,
-          yieldFactor: cookedWeight / rawWeight,
-          preparationMethod: _preparationMethodController.text,
-          retentionFactors: {},
-        );
-      }
+    final nutrition = _calculateTotalNutrition();
 
-      final recipe = FoodEntry.withId(
-        entryType: FoodEntryType.recipe,
-        name: _nameController.text,
-        description: _descriptionController.text.isEmpty
-            ? null
-            : _descriptionController.text,
-        amount: double.parse(_servingsController.text),
-        unit: 'serving',
-        servingSizeGrams: nutrition.energyKcal * 0.24, // Rough estimate
-        portionEstimationMethod: PortionEstimationMethod.householdMeasure,
-        portionState: PortionState.cooked,
-        nutrition: nutrition,
-        source: FoodSource.manual,
-        confidenceScore: 0.9,
-        originalValues: {},
-        recipeMetadata: metadata,
-        recipeIngredients: _ingredients
-            .map(
-              (comp) => RecipeComposition(
-                id: comp.id,
-                recipeId: '', // Will be populated
-                ingredientId: comp.ingredientId,
-                amount: comp.amount,
-                unit: comp.unit,
-                sortOrder: comp.sortOrder,
-              ),
-            )
-            .toList(),
+    RecipeMetadata? metadata;
+    if (_rawWeightController.text.isNotEmpty &&
+        _cookedWeightController.text.isNotEmpty &&
+        _preparationMethodController.text.isNotEmpty) {
+      final rawWeight = double.parse(_rawWeightController.text);
+      final cookedWeight = double.parse(_cookedWeightController.text);
+      metadata = RecipeMetadata(
+        rawWeight: rawWeight,
+        cookedWeight: cookedWeight,
+        yieldFactor: cookedWeight / rawWeight,
+        preparationMethod: _preparationMethodController.text,
+        retentionFactors: {},
       );
+    }
 
+    return FoodEntry.withId(
+      entryType: FoodEntryType.recipe,
+      name: _nameController.text,
+      description: _descriptionController.text.isEmpty
+          ? null
+          : _descriptionController.text,
+      amount: double.parse(_servingsController.text),
+      unit: 'serving',
+      servingSizeGrams: nutrition.energyKcal * 0.24,
+      portionEstimationMethod: PortionEstimationMethod.householdMeasure,
+      portionState: PortionState.cooked,
+      nutrition: nutrition,
+      source: FoodSource.manual,
+      confidenceScore: 0.9,
+      originalValues: {},
+      recipeMetadata: metadata,
+      recipeIngredients: _ingredients
+          .map(
+            (comp) => RecipeComposition(
+              id: comp.id,
+              recipeId: '',
+              ingredientId: comp.ingredientId,
+              amount: comp.amount,
+              unit: comp.unit,
+              sortOrder: comp.sortOrder,
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  void _saveRecipe() {
+    final recipe = _buildRecipe();
+    if (recipe != null) {
       Navigator.of(context).pop(recipe);
     } else if (_ingredients.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please add at least one ingredient')),
       );
+    }
+  }
+
+  Future<void> _saveAsTemplate() async {
+    final recipe = _buildRecipe();
+    if (recipe == null) {
+      if (_ingredients.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please add at least one ingredient')),
+        );
+      }
+      return;
+    }
+
+    final l10n = AppLocalizations.of(context)!;
+    final appState = Provider.of<AppState>(context, listen: false);
+    final userId = appState.activeSubject?.id ?? 'anonymous';
+
+    final result = await SaveTemplateDialog.show(
+      context,
+      initialName: _nameController.text,
+      templateType: TemplateType.recipe,
+    );
+
+    if (result != null && mounted) {
+      final viewModel = TemplateViewModel(userId: userId);
+      await viewModel.saveFoodAsTemplate(
+        name: result.name,
+        food: recipe,
+        tags: result.tags,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.template_saved)),
+        );
+      }
     }
   }
 
@@ -252,14 +300,22 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     }
     final nutrition = _cachedNutrition;
 
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recipe Builder'),
         actions: [
+          if (_ingredients.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.bookmark_add),
+              tooltip: l10n.save_as_template,
+              onPressed: _saveAsTemplate,
+            ),
           TextButton(
             onPressed: _saveRecipe,
             style: TextButton.styleFrom(foregroundColor: Colors.white),
-            child: const Text('SAVE'),
+            child: Text(l10n.save),
           ),
         ],
       ),
