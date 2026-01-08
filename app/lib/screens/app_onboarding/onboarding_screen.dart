@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/routes.dart';
+import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -51,7 +52,12 @@ class OnboardingScreen extends StatelessWidget {
         l10n.get_started,
         style: const TextStyle(fontWeight: FontWeight.w700),
       ),
-      onDone: () => Navigator.pushReplacementNamed(context, Routes.welcome),
+      onDone: () async {
+        await SecureStorage.write('onboarded', 'true');
+
+        if (!context.mounted) return;
+        Navigator.pushReplacementNamed(context, Routes.welcome);
+      },
       dotsDecorator: DotsDecorator(
         size: const Size.square(10.0),
         activeSize: const Size(20.0, 10.0),
