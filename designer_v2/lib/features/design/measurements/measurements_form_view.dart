@@ -184,8 +184,6 @@ class StudyDesignMeasurementsFormView extends StudyDesignPageWidget {
                                 as String?) ??
                             '',
                         sectionTitle: tr.form_array_measurements_surveys,
-                        hideLeadingTrailingWhenEmpty: false,
-                        reorderable: false,
                       ),
                     ],
                   );

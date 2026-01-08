@@ -43,8 +43,8 @@ import 'package:studyu_designer_v2/features/forms/form_view_model_collection.dar
 import 'package:studyu_designer_v2/features/monitor/study_monitor_page.dart';
 import 'package:studyu_designer_v2/features/recruit/study_recruit_page.dart';
 import 'package:studyu_designer_v2/features/study/settings/study_settings_dialog.dart';
-import 'package:studyu_designer_v2/features/study/study_navbar.dart';
 import 'package:studyu_designer_v2/features/study/study_controller.dart';
+import 'package:studyu_designer_v2/features/study/study_navbar.dart';
 import 'package:studyu_designer_v2/features/study/study_scaffold.dart';
 import 'package:studyu_designer_v2/features/study/study_test_page.dart';
 import 'package:studyu_designer_v2/routing/router_intent.dart';

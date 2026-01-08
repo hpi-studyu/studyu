@@ -19,7 +19,6 @@ class BarcodeScannerScreen extends StatefulWidget {
 class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
   final MobileScannerController _controller = MobileScannerController(
     detectionSpeed: DetectionSpeed.unrestricted, // Fastest detection!
-    torchEnabled: false,
     // No format restrictions - detects ALL barcode types!
   );
 

@@ -95,8 +95,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
 
   MealType _getMealTypeByTime(DateTime time) {
     final hour = time.hour;
-    if (hour >= _breakfastStart && hour < _brunchStart)
+    if (hour >= _breakfastStart && hour < _brunchStart) {
       return MealType.breakfast;
+    }
     if (hour >= _brunchStart && hour < _lunchStart) return MealType.brunch;
     if (hour >= _lunchStart && hour < _dinnerStart) return MealType.lunch;
     if (hour >= _dinnerStart && hour < _dinnerEnd) return MealType.dinner;

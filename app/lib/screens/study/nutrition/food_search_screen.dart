@@ -68,7 +68,7 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'Error searching: ${e}';
+        _errorMessage = 'Error searching: $e';
       });
     }
   }
@@ -106,7 +106,7 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'OpenFoodFacts error: ${e}';
+        _errorMessage = 'OpenFoodFacts error: $e';
       });
     }
   }
@@ -153,7 +153,7 @@ class _FoodSearchScreenState extends State<FoodSearchScreen> {
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'USDA API error: ${e}';
+        _errorMessage = 'USDA API error: $e';
       });
     }
   }
