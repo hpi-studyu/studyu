@@ -48,7 +48,6 @@ dependencies:
   record: ^6.1.2
   sentry_flutter: ^9.8.0
   sentry_logging: ^9.8.0
-  shared_preferences: ^2.5.3
   statistics: ^1.2.0
   studyu_core: ^4.7.1
   studyu_flutter_common: ^1.10.1
