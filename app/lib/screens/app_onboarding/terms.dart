@@ -42,7 +42,7 @@ class _TermsScreenState extends State<TermsScreen> {
                 final success = await anonymousSignUp();
                 if (success) {
                   if (!context.mounted) return;
-                  context.push(RoutePaths.studySelection);
+                  context.push('/${RouteNames.studySelection}');
                 }
               }
             : null,

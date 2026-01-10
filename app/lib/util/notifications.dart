@@ -140,7 +140,7 @@ class StudyNotifications {
                 isDefaultAction: true,
                 onPressed: () async {
                   context.pop();
-                  await context.push(RoutePaths.dashboard);
+                  await context.push('/${RouteNames.dashboard}');
                 },
                 child: const Text('Ok'),
               ),
@@ -208,10 +208,10 @@ class StudyNotifications {
     );
     if (!completed && isInsidePeriod) {
       await navigatorKey.currentContext!.push(
-        RoutePaths.task,
+        '/${RouteNames.task}',
         extra: taskToRun,
       );
-      navigatorKey.currentContext!.go(RoutePaths.loading);
+      navigatorKey.currentContext!.go('/${RouteNames.loading}');
     } else {
       final errorMessage = completed
           ? AppLocalizations.of(context)!.task_already_completed
@@ -220,7 +220,7 @@ class StudyNotifications {
           : AppLocalizations.of(context)!.task_outside_period;
 
       navigatorKey.currentContext!.go(
-        RoutePaths.dashboard,
+        '/${RouteNames.dashboard}',
         extra: errorMessage,
       );
     }

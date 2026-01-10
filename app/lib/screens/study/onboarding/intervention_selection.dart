@@ -98,7 +98,7 @@ class _InterventionSelectionScreenState
       selectedInterventionIds,
       appState.inviteCode,
     );
-    context.push(RoutePaths.journey);
+    context.push('/${RouteNames.journey}');
   }
 
   @override

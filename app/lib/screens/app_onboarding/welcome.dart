@@ -29,7 +29,7 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 20),
               OutlinedButton.icon(
                 icon: const Icon(Icons.info),
-                onPressed: () => context.push(RoutePaths.about),
+                onPressed: () => context.push('/${RouteNames.about}'),
                 label: Text(
                   AppLocalizations.of(context)!.what_is_studyu,
                   style: const TextStyle(fontSize: 20),
@@ -38,7 +38,7 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 20),
               OutlinedButton.icon(
                 icon: Icon(MdiIcons.accountBox),
-                onPressed: () => context.push(RoutePaths.contact),
+                onPressed: () => context.push('/${RouteNames.contact}'),
                 label: Text(
                   AppLocalizations.of(context)!.contact,
                   style: const TextStyle(fontSize: 20),
@@ -47,7 +47,7 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 20),
               OutlinedButton.icon(
                 icon: Icon(MdiIcons.frequentlyAskedQuestions),
-                onPressed: () => context.push(RoutePaths.faq),
+                onPressed: () => context.push('/${RouteNames.faq}'),
                 label: Text(
                   AppLocalizations.of(context)!.faq,
                   style: const TextStyle(fontSize: 20),
@@ -56,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
               const Spacer(),
               OutlinedButton.icon(
                 icon: Icon(MdiIcons.rocket, size: 30),
-                onPressed: () => context.push(RoutePaths.terms),
+                onPressed: () => context.push('/${RouteNames.terms}'),
                 label: Text(
                   AppLocalizations.of(context)!.get_started,
                   style: const TextStyle(fontSize: 20),

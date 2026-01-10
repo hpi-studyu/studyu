@@ -24,13 +24,13 @@ class _JourneyOverviewScreen extends State<JourneyOverviewScreen> {
   Future<void> getConsentAndNavigateToDashboard(BuildContext context) async {
     bool? consentGiven;
     if (subject!.study.hasConsentCheck) {
-      consentGiven = await context.push<bool>(RoutePaths.consent);
+      consentGiven = await context.push<bool>('/${RouteNames.consent}');
     } else {
       consentGiven = true;
     }
     if (!context.mounted) return;
     if (consentGiven != null && consentGiven) {
-      context.push(RoutePaths.kickoff);
+      context.push('/${RouteNames.kickoff}');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
