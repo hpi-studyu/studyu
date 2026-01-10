@@ -47,14 +47,14 @@ class _TermsScreenState extends State<TermsScreen> {
         :final alreadyEnrolled,
       ):
         if (alreadyEnrolled) {
-          context.go(RoutePaths.dashboard);
+          context.go('/${RouteNames.dashboard}');
         } else {
           state.selectedStudy = study;
           if (inviteCode != null) {
             state.inviteCode = inviteCode;
             state.preselectedInterventionIds = preselectedInterventionIds;
           }
-          context.go(RoutePaths.studyOverview);
+          context.go('/${RouteNames.studyOverview}');
         }
       case DeepLinkError(type: final errorType):
         final l10n = AppLocalizations.of(context)!;
@@ -65,9 +65,9 @@ class _TermsScreenState extends State<TermsScreen> {
             action: SnackBarAction(label: l10n.ok, onPressed: () {}),
           ),
         );
-        context.go(RoutePaths.studySelection);
+        context.go('/${RouteNames.studySelection}');
       case DeepLinkNeedsAuth():
-        context.go(RoutePaths.studySelection);
+        context.go('/${RouteNames.studySelection}');
     }
   }
 
@@ -100,7 +100,7 @@ class _TermsScreenState extends State<TermsScreen> {
                   if (state.hasPendingDeepLink) {
                     await _handlePendingDeepLink(state);
                   } else {
-                    context.push(RoutePaths.studySelection);
+                    context.push('/${RouteNames.studySelection}');
                   }
                 }
               }

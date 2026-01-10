@@ -69,7 +69,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         } else if (widget.deepLinkInviteCode != null) {
           state.pendingDeepLinkInviteCode = widget.deepLinkInviteCode;
         }
-        context.go(RoutePaths.welcome);
+        context.go('/${RouteNames.welcome}');
       case DeepLinkError(type: final errorType):
         setState(() => _error = _getErrorMessage(errorType));
       case DeepLinkSuccess(
@@ -79,14 +79,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
         :final alreadyEnrolled,
       ):
         if (alreadyEnrolled) {
-          context.go(RoutePaths.dashboard);
+          context.go('/${RouteNames.dashboard}');
         } else {
           state.selectedStudy = study;
           if (inviteCode != null) {
             state.inviteCode = inviteCode;
             state.preselectedInterventionIds = preselectedInterventionIds;
           }
-          context.go(RoutePaths.studyOverview);
+          context.go('/${RouteNames.studyOverview}');
         }
     }
   }
@@ -114,18 +114,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
       if (!mounted) return;
       state.activeSubject = subject;
       state.init(context);
-      context.go(RoutePaths.dashboard);
+      context.go('/${RouteNames.dashboard}');
     } else {
       StudyULogger.warning("No subject found for ID: $selectedSubjectId.");
       if (!mounted) return;
-      context.go(RoutePaths.appErrorScreen, extra: selectedSubjectId);
+      context.go('/${RouteNames.appErrorScreen}', extra: selectedSubjectId);
     }
   }
 
   Future<void> noSubjectFound() async {
     StudyULogger.info("No subject found, redirecting to welcome screen");
     await cancelNotifications(context);
-    if (mounted) context.go(RoutePaths.welcome);
+    if (mounted) context.go('/${RouteNames.welcome}');
   }
 
   Future<StudySubject?> _fetchRemoteSubject(String selectedStudyObjectId) {
@@ -199,11 +199,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
       // print('[PreviewApp]: Found preview route:: ${preview.selectedRoute}');
 
       // ELIGIBILITY CHECK
-      if (preview.selectedRoute == '/eligibilityCheck') {
+      if (preview.selectedRoute == '/${RouteNames.eligibilityCheck}') {
         if (!mounted) return;
         // if we remove the await, we can push multiple times. warning: do not run in while(true)
         await context.push<EligibilityResult>(
-          RoutePaths.eligibilityCheck,
+          '/${RouteNames.eligibilityCheck}',
           extra: preview.study,
         );
         // either do the same navigator push again or --> send a message back to designer and let it reload the whole page <--
@@ -212,9 +212,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
       }
 
       // INTERVENTION SELECTION
-      if (preview.selectedRoute == RoutePaths.interventionSelection) {
+      if (preview.selectedRoute == '/${RouteNames.interventionSelection}') {
         if (!mounted) return;
-        await context.push(RoutePaths.interventionSelection);
+        await context.push('/${RouteNames.interventionSelection}');
         iFrameHelper.postRouteFinished();
         return;
       }
@@ -225,25 +225,25 @@ class _LoadingScreenState extends State<LoadingScreen> {
       );
 
       // CONSENT
-      if (preview.selectedRoute == RoutePaths.consent) {
+      if (preview.selectedRoute == '/${RouteNames.consent}') {
         if (!mounted) return;
-        await context.push<bool>(RoutePaths.consent);
+        await context.push<bool>('/${RouteNames.consent}');
         iFrameHelper.postRouteFinished();
         return;
       }
 
       // JOURNEY
-      if (preview.selectedRoute == RoutePaths.journey) {
+      if (preview.selectedRoute == '/${RouteNames.journey}') {
         if (!mounted) return;
-        await context.push(RoutePaths.journey);
+        await context.push('/${RouteNames.journey}');
         iFrameHelper.postRouteFinished();
         return;
       }
 
       // DASHBOARD
-      if (preview.selectedRoute == RoutePaths.dashboard) {
+      if (preview.selectedRoute == '/${RouteNames.dashboard}') {
         if (!mounted) return;
-        context.go(RoutePaths.dashboard);
+        context.go('/${RouteNames.dashboard}');
         iFrameHelper.postRouteFinished();
         return;
       }
@@ -256,7 +256,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         state.selectedStudy!.schedule.includeBaseline = false;
         state.activeSubject!.study.schedule.includeBaseline = false;
         if (!mounted) return;
-        context.go(RoutePaths.dashboard);
+        context.go('/${RouteNames.dashboard}');
         iFrameHelper.postRouteFinished();
         return;
       }
@@ -270,7 +270,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         ];
         if (!mounted) return;
         await context.push<bool>(
-          RoutePaths.task,
+          '/${RouteNames.task}',
           extra: TaskInstance(
             tasks.first,
             tasks.first.schedule.completionPeriods.first.id,
@@ -285,16 +285,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
         if (subject != null) {
           state.activeSubject = subject;
           if (!mounted) return;
-          context.go(RoutePaths.dashboard);
+          context.go('/${RouteNames.dashboard}');
           return;
         } else {
           if (!mounted) return;
-          context.go(RoutePaths.studyOverview);
+          context.go('/${RouteNames.studyOverview}');
           return;
         }
       } else {
         if (!mounted) return;
-        context.go(RoutePaths.welcome);
+        context.go('/${RouteNames.welcome}');
         return;
       }
     }
@@ -330,7 +330,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
                 ),
                 const SizedBox(height: 24),
                 OutlinedButton(
-                  onPressed: () => context.go(RoutePaths.welcome),
+                  onPressed: () => context.go('/${RouteNames.welcome}'),
                   child: Text(AppLocalizations.of(context)!.go_back),
                 ),
               ],

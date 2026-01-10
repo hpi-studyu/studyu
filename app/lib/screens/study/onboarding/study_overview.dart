@@ -37,7 +37,7 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         appState.preselectedInterventionIds!,
         appState.inviteCode,
       );
-      context.push(RoutePaths.journey);
+      context.push('/${RouteNames.journey}');
     } else if (study!.interventions.length <= 2) {
       // No need to select interventions if there are only 2 or less
       appState.activeSubject = StudySubject.fromStudy(
@@ -46,16 +46,16 @@ class _StudyOverviewScreen extends State<StudyOverviewScreen> {
         study!.interventions.map((i) => i.id).toList(),
         appState.inviteCode,
       );
-      context.push(RoutePaths.journey);
+      context.push('/${RouteNames.journey}');
     } else {
-      context.push(RoutePaths.interventionSelection);
+      context.push('/${RouteNames.interventionSelection}');
     }
   }
 
   Future<void> navigateToEligibilityCheck(BuildContext context) async {
     final study = context.read<AppState>().selectedStudy;
     final result = await context.push<EligibilityResult>(
-      RoutePaths.eligibilityCheck,
+      '/${RouteNames.eligibilityCheck}',
       extra: study,
     );
     if (result == null) return;

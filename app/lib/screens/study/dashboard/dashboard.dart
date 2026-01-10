@@ -93,7 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   Widget build(BuildContext context) {
     if (subject == null) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        context.go(RoutePaths.loading);
+        context.go('/${RouteNames.loading}');
       });
       return const SizedBox.shrink();
     }
@@ -111,14 +111,14 @@ class _DashboardScreenState extends State<DashboardScreen>
             tooltip: AppLocalizations.of(context)!.contact,
             icon: Icon(MdiIcons.faceAgent),
             onPressed: () {
-              context.push(RoutePaths.contact);
+              context.push('/${RouteNames.contact}');
             },
           ),
           IconButton(
             tooltip: AppLocalizations.of(context)!.current_report,
             icon: Icon(MdiIcons.chartBar),
             onPressed: () =>
-                context.push(RoutePaths.reportDetails, extra: subject),
+                context.push('/${RouteNames.reportDetails}', extra: subject),
           ),
           PopupMenuButton<OverflowMenuItem>(
             onSelected: (value) {
@@ -133,22 +133,22 @@ class _DashboardScreenState extends State<DashboardScreen>
                 OverflowMenuItem(
                   AppLocalizations.of(context)!.report_history,
                   MdiIcons.history,
-                  routeName: RoutePaths.reportHistory,
+                  routeName: '/${RouteNames.reportHistory}',
                 ),
                 OverflowMenuItem(
                   AppLocalizations.of(context)!.faq,
                   MdiIcons.frequentlyAskedQuestions,
-                  routeName: RoutePaths.faq,
+                  routeName: '/${RouteNames.faq}',
                 ),
                 OverflowMenuItem(
                   AppLocalizations.of(context)!.settings,
                   Icons.settings,
-                  routeName: RoutePaths.appSettings,
+                  routeName: '/${RouteNames.appSettings}',
                 ),
                 OverflowMenuItem(
                   AppLocalizations.of(context)!.what_is_studyu,
                   MdiIcons.helpCircleOutline,
-                  routeName: RoutePaths.about,
+                  routeName: '/${RouteNames.about}',
                 ),
                 OverflowMenuItem(
                   AppLocalizations.of(context)!.about,
@@ -391,7 +391,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             ),
             space,
             OutlinedButton.icon(
-              onPressed: () => context.push(RoutePaths.reportHistory),
+              onPressed: () => context.push('/${RouteNames.reportHistory}'),
               icon: Icon(MdiIcons.history, size: 24),
               label: Text(
                 AppLocalizations.of(context)!.report_history,
@@ -400,7 +400,7 @@ class StudyFinishedPlaceholder extends StatelessWidget {
             ),
             space,
             OutlinedButton.icon(
-              onPressed: () => context.push(RoutePaths.studySelection),
+              onPressed: () => context.push('/${RouteNames.studySelection}'),
               icon: Icon(MdiIcons.clipboardArrowRightOutline, size: 24),
               label: Text(
                 AppLocalizations.of(context)!.study_selection,

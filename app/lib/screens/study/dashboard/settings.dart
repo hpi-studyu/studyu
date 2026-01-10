@@ -181,7 +181,7 @@ class OptOutAlertDialog extends StatelessWidget {
             await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
             if (context.mounted) await cancelNotifications(context);
             if (context.mounted) {
-              context.go(RoutePaths.studySelection);
+              context.go('/${RouteNames.studySelection}');
             }
           },
         ),
@@ -211,7 +211,7 @@ class DeleteAlertDialog extends StatelessWidget {
             await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
             if (context.mounted) await cancelNotifications(context);
             if (context.mounted) {
-              context.go(RoutePaths.welcome);
+              context.go('/${RouteNames.welcome}');
             }
           } on SocketException catch (_) {}
         },

@@ -183,7 +183,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
       bottomNavigationBar: BottomOnboardingNavigation(
         backLabel: AppLocalizations.of(context)!.decline,
         backIcon: const Icon(Icons.close),
-        onBack: () => context.go(RoutePaths.studySelection),
+        onBack: () => context.go('/${RouteNames.studySelection}'),
         nextLabel: AppLocalizations.of(context)!.accept,
         nextIcon: const Icon(Icons.check),
         onNext: boxLogic.every((element) => element) || kDebugMode

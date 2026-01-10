@@ -54,7 +54,7 @@ class ReportHistoryItem extends StatelessWidget {
       color: isActiveStudy ? Colors.green[600] : theme.cardColor,
       child: InkWell(
         onTap: () {
-          context.push(RoutePaths.reportDetails, extra: subject);
+          context.push('/${RouteNames.reportDetails}', extra: subject);
         },
         child: Padding(
           padding: const EdgeInsets.all(20),

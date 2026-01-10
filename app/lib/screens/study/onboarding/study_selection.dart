@@ -22,7 +22,7 @@ Future<void> navigateToStudyOverview(
   context.read<AppState>().preselectedInterventionIds = preselectedIds;
   context.read<AppState>().inviteCode = inviteCode;
   context.read<AppState>().selectedStudy = study;
-  context.push(RoutePaths.studyOverview);
+  context.push('/${RouteNames.studyOverview}');
 }
 
 Future<void> showAppOutdatedDialog(BuildContext context) async {

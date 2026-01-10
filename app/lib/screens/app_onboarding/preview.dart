@@ -100,17 +100,17 @@ class Preview {
       if ('route' == k) {
         switch (queryParameters![k]) {
           case 'consent':
-            return RoutePaths.consent;
+            return '/${RouteNames.consent}';
           case 'eligibilityCheck': // this should include questionnaire and eligibility_criteria
-            return RoutePaths.eligibilityCheck;
+            return '/${RouteNames.eligibilityCheck}';
           case 'interventionSelection':
-            return RoutePaths.interventionSelection;
+            return '/${RouteNames.interventionSelection}';
           case 'journey':
-            return RoutePaths.journey;
+            return '/${RouteNames.journey}';
           case 'questionnaire':
-            return RoutePaths.questionnaire;
+            return '/${RouteNames.questionnaire}';
           case 'dashboard':
-            return RoutePaths.dashboard;
+            return '/${RouteNames.dashboard}';
           case 'intervention':
             return '/intervention';
           case 'observation':

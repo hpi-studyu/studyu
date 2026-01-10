@@ -27,7 +27,7 @@ class TaskBox extends StatefulWidget {
 
 class _TaskBoxState extends State<TaskBox> {
   Future<void> _navigateToTaskScreen() async {
-    await context.push<bool>(RoutePaths.task, extra: widget.taskInstance);
+    await context.push<bool>('/${RouteNames.task}', extra: widget.taskInstance);
     widget.onCompleted();
     // Rebuild widget
     setState(() {});

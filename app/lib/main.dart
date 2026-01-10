@@ -68,14 +68,14 @@ Future<void> main() async {
   // Turn off the # in the URLs on the web
   usePathUrlStrategy();
   AppConfig? appConfig;
-  String initialRoute = RoutePaths.loading;
+  String initialRoute = '/${RouteNames.loading}';
   try {
     appConfig = await AppConfig.getAppConfig();
   } on PostgrestException catch (e) {
     debugPrint('Postgres exception: $e');
     if (e.code == 'PGRST301') {
       // Unauthorized - likely due to wrong supabase environment variables
-      initialRoute = RoutePaths.appErrorScreen;
+      initialRoute = '/${RouteNames.appErrorScreen}';
     }
   } catch (error) {
     // device could be offline
@@ -83,7 +83,7 @@ Future<void> main() async {
   }
 
   if (appConfig != null && await isAppOutdated(appConfig)) {
-    initialRoute = RoutePaths.appOutdated;
+    initialRoute = '/${RouteNames.appOutdated}';
   }
 
   await AppAnalytics.init();
@@ -108,12 +108,12 @@ Future<void> main() async {
         final router = GoRouter.of(context);
         final currentLocation =
             router.routerDelegate.currentConfiguration.uri.path;
-        if (currentLocation == RoutePaths.appOutdated) return;
+        if (currentLocation == '/${RouteNames.appOutdated}') return;
 
         final appConfig = await AppConfig.getAppConfig();
         if (await isAppOutdated(appConfig)) {
           if (context.mounted) {
-            context.go(RoutePaths.appOutdated);
+            context.go('/${RouteNames.appOutdated}');
           }
         }
       } catch (error) {

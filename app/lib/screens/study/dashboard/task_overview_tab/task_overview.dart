@@ -29,7 +29,7 @@ class _TaskOverviewState extends State<TaskOverview> {
   void _navigateToReportIfStudyCompleted(BuildContext context) {
     if (widget.subject!.completedStudy) {
       // Workaround to reload dashboard
-      context.go(RoutePaths.dashboard);
+      context.go('/${RouteNames.dashboard}');
     }
   }
 

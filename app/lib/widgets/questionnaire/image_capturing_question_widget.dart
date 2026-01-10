@@ -86,7 +86,7 @@ class _ImageCapturingQuestionWidgetState
     }
     final appState = context.read<AppState>();
     final FutureBlobFile? imageFile = await context.push(
-      RoutePaths.capturePicture,
+      '/${RouteNames.capturePicture}',
       extra: {
         'studyId': appState.activeSubject!.studyId,
         'userId': appState.activeSubject!.userId,

@@ -34,7 +34,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       await storeActiveSubjectId(subject!.id);
       if (!context.mounted) return;
       setState(() => ready = true);
-      context.go(RoutePaths.dashboard);
+      context.go('/${RouteNames.dashboard}');
     } catch (e) {
       StudyULogger.fatal('Failed creating subject: $e');
     }
