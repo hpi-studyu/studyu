@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/progress_row.dart';
 import 'package:studyu_app/screens/study/dashboard/task_overview_tab/task_box.dart';
 import 'package:studyu_app/theme.dart';
@@ -28,11 +29,7 @@ class _TaskOverviewState extends State<TaskOverview> {
   void _navigateToReportIfStudyCompleted(BuildContext context) {
     if (widget.subject!.completedStudy) {
       // Workaround to reload dashboard
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        Routes.dashboard,
-        (_) => false,
-      );
+      context.go('/${RouteNames.dashboard}');
     }
   }
 

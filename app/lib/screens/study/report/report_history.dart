@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/screens/study/report/report_details.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -53,10 +54,7 @@ class ReportHistoryItem extends StatelessWidget {
       color: isActiveStudy ? Colors.green[600] : theme.cardColor,
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            ReportDetailsScreen.routeFor(subject: subject),
-          );
+          context.push('/${RouteNames.reportDetails}', extra: subject);
         },
         child: Padding(
           padding: const EdgeInsets.all(20),

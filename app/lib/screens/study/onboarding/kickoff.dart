@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/cache.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -33,11 +34,7 @@ class _KickoffScreen extends State<KickoffScreen> {
       await storeActiveSubjectId(subject!.id);
       if (!context.mounted) return;
       setState(() => ready = true);
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        Routes.dashboard,
-        (_) => false,
-      );
+      context.go('/${RouteNames.dashboard}');
     } catch (e) {
       StudyULogger.fatal('Failed creating subject: $e');
     }

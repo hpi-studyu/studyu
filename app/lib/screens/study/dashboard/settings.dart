@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/routes.dart';
 import 'package:studyu_app/util/app_analytics.dart';
 import 'package:studyu_app/util/fitbit_handler.dart';
 import 'package:studyu_app/util/localization.dart';
@@ -180,11 +181,7 @@ class OptOutAlertDialog extends StatelessWidget {
             await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
             if (context.mounted) await cancelNotifications(context);
             if (context.mounted) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                Routes.studySelection,
-                (_) => false,
-              );
+              context.go('/${RouteNames.studySelection}');
             }
           },
         ),
@@ -214,11 +211,7 @@ class DeleteAlertDialog extends StatelessWidget {
             await FitbitHandler.deleteFitbitCredentials(subject!.studyId);
             if (context.mounted) await cancelNotifications(context);
             if (context.mounted) {
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                Routes.welcome,
-                (_) => false,
-              );
+              context.go('/${RouteNames.welcome}');
             }
           } on SocketException catch (_) {}
         },
