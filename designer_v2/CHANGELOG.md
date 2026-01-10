@@ -1,3 +1,7 @@
+## 1.15.4
+
+ - **FIX**: update balanced description in study schedule translations.
+
 ## 1.15.3
 
  - **REFACTOR**(designer_v2): centralize AsyncValue study state access.

@@ -8,7 +8,6 @@ import 'package:studyu_designer_v2/common_views/text_paragraph.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_banner.dart';
 import 'package:studyu_designer_v2/features/design/interventions/study_schedule_form_controller_mixin.dart';
 import 'package:studyu_designer_v2/localization/app_translation.dart';
-import 'package:studyu_designer_v2/theme.dart';
 import 'package:studyu_designer_v2/utils/input_formatter.dart';
 
 class StudyScheduleFormView extends StatefulWidget {
@@ -238,10 +237,7 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextParagraph(
-          text: tr.study_schedule_banner_description,
-          style: ThemeConfig.bodyTextMuted(theme),
-        ),
+        TextParagraph(text: tr.study_schedule_banner_description),
         const SizedBox(height: 16.0),
         _buildSequenceTypeInfo(
           theme,
@@ -290,12 +286,7 @@ class _StudyScheduleFormViewState extends State<StudyScheduleFormView> {
             shape: BoxShape.circle,
           ),
         ),
-        Expanded(
-          child: TextParagraph(
-            text: description,
-            style: ThemeConfig.bodyTextMuted(theme),
-          ),
-        ),
+        Expanded(child: TextParagraph(text: description)),
       ],
     );
   }
