@@ -63,7 +63,6 @@ dependencies:
   xml: ^6.6.1
 
 dev_dependencies:
-  custom_lint:
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   flutter_test:
