@@ -10,12 +10,12 @@ part of 'study_base_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(StudyBaseController)
-const studyBaseControllerProvider = StudyBaseControllerFamily._();
+final studyBaseControllerProvider = StudyBaseControllerFamily._();
 
 final class StudyBaseControllerProvider<T extends StudyControllerBaseState>
     extends
         $NotifierProvider<StudyBaseController<T>, StudyControllerBaseState> {
-  const StudyBaseControllerProvider._({
+  StudyBaseControllerProvider._({
     required StudyBaseControllerFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -71,7 +71,7 @@ String _$studyBaseControllerHash() =>
     r'e2811f660e2b1086b07c702a0da8915d891e2004';
 
 final class StudyBaseControllerFamily extends $Family {
-  const StudyBaseControllerFamily._()
+  StudyBaseControllerFamily._()
     : super(
         retry: null,
         name: r'studyBaseControllerProvider',
@@ -132,7 +132,6 @@ abstract class _$StudyBaseController<T extends StudyControllerBaseState>
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build(_$args);
     final ref =
         this.ref as $Ref<StudyControllerBaseState, StudyControllerBaseState>;
     final element =
@@ -143,6 +142,6 @@ abstract class _$StudyBaseController<T extends StudyControllerBaseState>
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    element.handleCreate(ref, () => build(_$args));
   }
 }
