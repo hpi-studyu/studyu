@@ -249,6 +249,8 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
               _controller.text,
             );
 
+            if (!mounted) return;
+
             if (study == null) {
               setState(() {
                 _errorMessage = AppLocalizations.of(
@@ -279,6 +281,7 @@ class _InviteCodeDialogState extends State<InviteCodeDialog> {
               preselectedIds: invite?.preselectedInterventionIds,
             );
           } catch (e) {
+            if (!mounted) return;
             setState(() {
               _errorMessage = AppLocalizations.of(context)!.invalid_invite_code;
             });

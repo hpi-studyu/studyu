@@ -102,16 +102,21 @@ class DeepLinkService {
   static Future<DeepLinkResult> _processInviteDeepLink({
     required String inviteCode,
   }) async {
-    final (invite, study) = await Study.fetchByInviteCode(inviteCode);
+    try {
+      final (invite, study) = await Study.fetchByInviteCode(inviteCode);
 
-    if (invite == null || study == null) {
+      if (invite == null || study == null) {
+        return DeepLinkError(DeepLinkErrorType.invalidInvite);
+      }
+
+      return DeepLinkSuccess(
+        study: study,
+        inviteCode: inviteCode,
+        preselectedInterventionIds: invite.preselectedInterventionIds,
+      );
+    } catch (e) {
+      debugPrint('Failed to fetch study by invite code: $e');
       return DeepLinkError(DeepLinkErrorType.invalidInvite);
     }
-
-    return DeepLinkSuccess(
-      study: study,
-      inviteCode: inviteCode,
-      preselectedInterventionIds: invite.preselectedInterventionIds,
-    );
   }
 }
