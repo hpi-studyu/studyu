@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2025-12-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`studyu_designer_v2` - `v1.15.5`](#studyu_designer_v2---v1155)
+
+---
+
+#### `studyu_designer_v2` - `v1.15.5`
+
+ - **FIX**: update balanced description in study schedule translations and upgrade dependencies.
+
+
 ## 2025-11-29
 
 ### Changes

@@ -14,7 +14,7 @@ part of 'invite_code_form_controller.dart';
 /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
 
 @ProviderFor(inviteCodeFormViewModel)
-const inviteCodeFormViewModelProvider = InviteCodeFormViewModelFamily._();
+final inviteCodeFormViewModelProvider = InviteCodeFormViewModelFamily._();
 
 /// Provide a controller parametrized by [StudyID]
 ///
@@ -33,7 +33,7 @@ final class InviteCodeFormViewModelProvider
   ///
   /// Note: This is not safe to use in widgets (or other providers) that are built
   /// before the [StudyController]'s [Study] is available (see also: [AsyncValue])
-  const InviteCodeFormViewModelProvider._({
+  InviteCodeFormViewModelProvider._({
     required InviteCodeFormViewModelFamily super.from,
     required StudyID super.argument,
   }) : super(
@@ -96,7 +96,7 @@ String _$inviteCodeFormViewModelHash() =>
 
 final class InviteCodeFormViewModelFamily extends $Family
     with $FunctionalFamilyOverride<InviteCodeFormViewModel, StudyID> {
-  const InviteCodeFormViewModelFamily._()
+  InviteCodeFormViewModelFamily._()
     : super(
         retry: null,
         name: r'inviteCodeFormViewModelProvider',
