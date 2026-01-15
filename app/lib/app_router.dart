@@ -50,6 +50,7 @@ class RouteNames {
   static const String task = 'task';
   static const String eligibilityCheck = 'eligibilityCheck';
   static const String capturePicture = 'capturePicture';
+  static const String invite = 'invite';
 }
 
 /// Creates and configures the GoRouter instance for the app
@@ -62,6 +63,9 @@ GoRouter createAppRouter({
     navigatorKey: navigatorKey,
     initialLocation: initialLocation,
     redirect: (context, state) {
+      if (state.uri.scheme == 'studyu-app' && state.uri.host == 'invite') {
+        return '/${RouteNames.invite}${state.uri.path}';
+      }
       // Remove splash screen when navigating away from loading screen
       if (state.uri.path != '/${RouteNames.loading}') {
         FlutterNativeSplash.remove();
@@ -200,6 +204,13 @@ GoRouter createAppRouter({
             userId: params['userId']!,
           );
         },
+      ),
+      GoRoute(
+        path: '/${RouteNames.invite}/:code',
+        name: RouteNames.invite,
+        builder: (context, state) => LoadingScreen(
+          deepLinkInviteCode: state.pathParameters['code'],
+        ),
       ),
     ],
   );
