@@ -208,9 +208,8 @@ GoRouter createAppRouter({
       GoRoute(
         path: '/${RouteNames.invite}/:code',
         name: RouteNames.invite,
-        builder: (context, state) => LoadingScreen(
-          deepLinkInviteCode: state.pathParameters['code'],
-        ),
+        builder: (context, state) =>
+            LoadingScreen(deepLinkInviteCode: state.pathParameters['code']),
       ),
     ],
   );
