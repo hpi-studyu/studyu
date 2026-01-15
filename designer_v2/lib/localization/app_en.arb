@@ -755,6 +755,8 @@
   "action_remove": "Remove",
   "action_duplicate": "Duplicate",
   "action_clipboard": "Copy to clipboard",
+  "action_qr_code": "Show QR code",
+  "action_share": "Share",
   "action_reportPrimary": "Set as primary report",
   "action_study_duplicate_draft": "Copy as draft",
   "action_study_export_results": "Export results",

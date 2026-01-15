@@ -34,10 +34,9 @@ class StudyRecruitScreen extends StudyPageWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   _inviteCodesSectionHeader(context, ref),
-                  const SizedBox(height: 24.0), // spacing between body elements
+                  const SizedBox(height: 24.0),
                   StudyInvitesTable(
                     invites: studyInvites!,
-                    // otherwise falls through to [AsyncValueWidget.empty]
                     onSelect: _onSelectInvite(context, ref),
                     getActions: controller.availableActions,
                     getInlineActions: controller.availableInlineActions,
@@ -132,7 +131,6 @@ class StudyRecruitScreen extends StudyPageWidget {
     BuildContext context,
     WidgetRef ref,
   ) {
-    // TODO: refactor to use [RoutingIntent] for sidesheet (so that it can be triggered from controller)
     return (StudyInvite invite) {
       final formViewModel = ref.watch(inviteCodeFormViewModelProvider(studyId));
       formViewModel.read(invite);

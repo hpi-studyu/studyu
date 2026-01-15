@@ -2251,6 +2251,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Submit'**
   String get submit;
+
+  /// No description provided for @deep_link_error_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Link Error'**
+  String get deep_link_error_title;
+
+  /// No description provided for @deep_link_study_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Study not found or not available'**
+  String get deep_link_study_not_found;
+
+  /// No description provided for @deep_link_study_invite_only.
+  ///
+  /// In en, this message translates to:
+  /// **'This study requires an invite code to join'**
+  String get deep_link_study_invite_only;
+
+  /// No description provided for @deep_link_invite_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired invite code'**
+  String get deep_link_invite_invalid;
+
+  /// No description provided for @go_back.
+  ///
+  /// In en, this message translates to:
+  /// **'Go Back'**
+  String get go_back;
 }
 
 class _AppLocalizationsDelegate

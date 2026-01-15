@@ -3471,6 +3471,18 @@ abstract class AppLocalizations {
   /// **'Copy to clipboard'**
   String get action_clipboard;
 
+  /// No description provided for @action_qr_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Show QR code'**
+  String get action_qr_code;
+
+  /// No description provided for @action_share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get action_share;
+
   /// No description provided for @action_reportPrimary.
   ///
   /// In en, this message translates to:

@@ -1156,4 +1156,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get submit => 'Submit';
+
+  @override
+  String get deep_link_error_title => 'Link Error';
+
+  @override
+  String get deep_link_study_not_found => 'Study not found or not available';
+
+  @override
+  String get deep_link_study_invite_only =>
+      'This study requires an invite code to join';
+
+  @override
+  String get deep_link_invite_invalid => 'Invalid or expired invite code';
+
+  @override
+  String get go_back => 'Go Back';
 }

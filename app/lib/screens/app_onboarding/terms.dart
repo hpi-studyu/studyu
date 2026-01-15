@@ -2,8 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/app_router.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/services/deep_link_error_helper.dart';
+import 'package:studyu_app/services/deep_link_service.dart';
 import 'package:studyu_app/widgets/bottom_onboarding_navigation.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_flutter_common/studyu_flutter_common.dart';
@@ -24,16 +28,66 @@ class _TermsScreenState extends State<TermsScreen> {
     return _acceptedTerms && _acceptedPrivacy;
   }
 
+  Future<void> _handlePendingDeepLink(AppState state) async {
+    final result = await DeepLinkService.processDeepLink(
+      studyId: state.pendingDeepLinkStudyId,
+      inviteCode: state.pendingDeepLinkInviteCode,
+      isAuthenticated: true,
+      activeStudyId: state.activeSubject?.studyId,
+    );
+
+    state.clearPendingDeepLink();
+    if (!mounted) return;
+
+    switch (result) {
+      case DeepLinkSuccess(
+        :final study,
+        :final inviteCode,
+        :final preselectedInterventionIds,
+        :final alreadyEnrolled,
+      ):
+        if (alreadyEnrolled) {
+          context.go('/${RouteNames.dashboard}');
+        } else {
+          state.selectedStudy = study;
+          if (inviteCode != null) {
+            state.inviteCode = inviteCode;
+            state.preselectedInterventionIds = preselectedInterventionIds;
+          }
+          context.go('/${RouteNames.studyOverview}');
+        }
+      case DeepLinkError(type: final errorType):
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(getDeepLinkErrorMessage(l10n, errorType)),
+            duration: const Duration(seconds: 5),
+            action: SnackBarAction(label: l10n.ok, onPressed: () {}),
+          ),
+        );
+        context.go('/${RouteNames.studySelection}');
+      case DeepLinkNeedsAuth():
+        context.go('/${RouteNames.studySelection}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: RetryFutureBuilder<AppConfig>(
-            tryFunction: AppConfig.getAppConfig,
-            successBuilder: (BuildContext context, AppConfig? appConfig) =>
-                legalSection(context, appConfig),
-          ),
+        child: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: RetryFutureBuilder<AppConfig>(
+                  tryFunction: AppConfig.getAppConfig,
+                  successBuilder:
+                      (BuildContext context, AppConfig? appConfig) =>
+                          legalSection(context, appConfig),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomOnboardingNavigation(
@@ -42,7 +96,12 @@ class _TermsScreenState extends State<TermsScreen> {
                 final success = await anonymousSignUp();
                 if (success) {
                   if (!context.mounted) return;
-                  context.push('/${RouteNames.studySelection}');
+                  final state = context.read<AppState>();
+                  if (state.hasPendingDeepLink) {
+                    await _handlePendingDeepLink(state);
+                  } else {
+                    context.push('/${RouteNames.studySelection}');
+                  }
                 }
               }
             : null,

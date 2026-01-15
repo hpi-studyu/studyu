@@ -2054,6 +2054,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get action_clipboard => 'In Zwischenablage kopieren';
 
   @override
+  String get action_qr_code => 'QR-Code anzeigen';
+
+  @override
+  String get action_share => 'Teilen';
+
+  @override
   String get action_reportPrimary => 'Als Primärauswertung setzen';
 
   @override

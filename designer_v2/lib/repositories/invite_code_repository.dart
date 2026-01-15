@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:studyu_core/core.dart';
+import 'package:studyu_core/env.dart' as env;
 import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/repositories/api_client.dart';
 import 'package:studyu_designer_v2/repositories/auth_repository.dart';
@@ -12,6 +13,7 @@ import 'package:studyu_designer_v2/services/notification_service.dart';
 import 'package:studyu_designer_v2/services/notifications.dart';
 import 'package:studyu_designer_v2/utils/model_action.dart';
 import 'package:studyu_designer_v2/utils/optimistic_update.dart';
+import 'package:studyu_designer_v2/utils/qr_code_downloader.dart';
 
 part 'invite_code_repository.g.dart';
 
@@ -63,6 +65,12 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
     return true;
   }
 
+  /// Generate the deep link URL for an invite code
+  String generateInviteDeepLink(String code) {
+    final scheme = env.appDeepLinkScheme ?? 'https://app.studyu.health';
+    return '$scheme/invite/$code';
+  }
+
   @override
   List<ModelAction> availableActions(StudyInvite model) {
     final actions = [
@@ -78,6 +86,14 @@ class InviteCodeRepository extends ModelRepository<StudyInvite>
                     .read(notificationServiceProvider)
                     .show(Notifications.inviteCodeClipped),
               ),
+        },
+      ),
+      ModelAction(
+        type: ModelActionType.qrCode,
+        label: ModelActionType.qrCode.string,
+        onExecute: () {
+          final deepLink = generateInviteDeepLink(model.code);
+          QrCodeDownloader.downloadQrCode(data: deepLink, filename: model.code);
         },
       ),
       ModelAction(

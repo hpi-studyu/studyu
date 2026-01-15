@@ -45,6 +45,7 @@ enum ModelActionType {
   remove, // same semantics as delete
   duplicate,
   clipboard,
+  qrCode,
   primary, // ReportSection
 }
 
@@ -62,6 +63,8 @@ extension ModelActionTypeFormatted on ModelActionType {
         return tr.action_duplicate;
       case ModelActionType.clipboard:
         return tr.action_clipboard;
+      case ModelActionType.qrCode:
+        return tr.action_qr_code;
       case ModelActionType.primary:
         return tr.action_reportPrimary;
     }
@@ -74,6 +77,7 @@ Map<ModelActionType, IconData> modelActionIcons = {
   ModelActionType.remove: Icons.close_rounded,
   ModelActionType.duplicate: Icons.file_copy_rounded,
   ModelActionType.clipboard: Icons.copy_rounded,
+  ModelActionType.qrCode: Icons.qr_code_rounded,
   ModelActionType.primary: Icons.arrow_circle_up_rounded,
 };
 
