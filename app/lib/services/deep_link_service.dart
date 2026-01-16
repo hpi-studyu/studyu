@@ -42,10 +42,27 @@ class DeepLinkService {
     }
   }
 
-  /// Process a deep link and return the result
+  /// Process a deep link and return the appropriate result.
   ///
   /// This is the main entry point for deep link handling. It validates
   /// authentication, fetches the study/invite, and returns an appropriate result.
+  ///
+  /// ## Parameters
+  /// - [studyId]: The UUID of a study to navigate to (from `app.studyu.health/study/{uuid}`)
+  /// - [inviteCode]: An invite code for a private study (from `app.studyu.health/invite/{code}`)
+  /// - [isAuthenticated]: Whether the user is currently logged in
+  /// - [activeStudyId]: The ID of the study the user is currently enrolled in (if any)
+  ///
+  /// ## Return Values
+  /// - [DeepLinkNeedsAuth]: User is not authenticated. Redirect to auth flow.
+  /// - [DeepLinkSuccess]: Deep link processed successfully.
+  ///   - Check [DeepLinkSuccess.alreadyEnrolled] to see if user is already in the study.
+  ///   - Use [DeepLinkSuccess.inviteCode] and [DeepLinkSuccess.preselectedInterventionIds]
+  ///     for invite-based enrollment.
+  /// - [DeepLinkError]: Deep link processing failed.
+  ///   - [DeepLinkErrorType.studyNotFound]: Study doesn't exist or was deleted.
+  ///   - [DeepLinkErrorType.inviteOnly]: Study requires an invite code (use invite link instead).
+  ///   - [DeepLinkErrorType.invalidInvite]: Invite code is invalid or expired.
   static Future<DeepLinkResult> processDeepLink({
     required String? studyId,
     required String? inviteCode,

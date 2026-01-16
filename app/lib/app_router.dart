@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:studyu_app/screens/app_onboarding/about.dart';
 import 'package:studyu_app/screens/app_onboarding/app_error_screen.dart';
 import 'package:studyu_app/screens/app_onboarding/app_outdated_screen.dart';
@@ -62,9 +63,26 @@ GoRouter createAppRouter({
   return GoRouter(
     navigatorKey: navigatorKey,
     initialLocation: initialLocation,
+    observers: [SentryNavigatorObserver()],
     redirect: (context, state) {
-      if (state.uri.scheme == 'studyu-app' && state.uri.host == 'invite') {
-        return '/${RouteNames.invite}${state.uri.path}';
+      if (state.uri.scheme == 'studyu-app') {
+        if (state.uri.host == 'invite') {
+          final code = state.uri.pathSegments.isNotEmpty
+              ? state.uri.pathSegments.first
+              : '';
+          if (code.isNotEmpty) {
+            return '/${RouteNames.invite}/$code';
+          }
+        }
+
+        if (state.uri.host == 'study') {
+          final studyId = state.uri.pathSegments.isNotEmpty
+              ? state.uri.pathSegments.first
+              : '';
+          if (studyId.isNotEmpty) {
+            return '/${RouteNames.loading}';
+          }
+        }
       }
       // Remove splash screen when navigating away from loading screen
       if (state.uri.path != '/${RouteNames.loading}') {
@@ -174,7 +192,14 @@ GoRouter createAppRouter({
         path: '/${RouteNames.task}',
         name: RouteNames.task,
         builder: (context, state) {
-          final taskInstance = state.extra! as TaskInstance;
+          final taskInstance = state.extra as TaskInstance?;
+          if (taskInstance == null) {
+            return const Scaffold(
+              body: SafeArea(
+                child: Center(child: Text('Error: Task instance not provided')),
+              ),
+            );
+          }
           return TaskScreen(taskInstance: taskInstance);
         },
       ),
@@ -190,7 +215,14 @@ GoRouter createAppRouter({
         path: '/${RouteNames.reportDetails}',
         name: RouteNames.reportDetails,
         builder: (context, state) {
-          final subject = state.extra! as StudySubject;
+          final subject = state.extra as StudySubject?;
+          if (subject == null) {
+            return const Scaffold(
+              body: SafeArea(
+                child: Center(child: Text('Error: Subject not provided')),
+              ),
+            );
+          }
           return ReportDetailsScreen(subject);
         },
       ),
@@ -198,7 +230,18 @@ GoRouter createAppRouter({
         path: '/${RouteNames.capturePicture}',
         name: RouteNames.capturePicture,
         builder: (context, state) {
-          final params = state.extra! as Map<String, String>;
+          final params = state.extra as Map<String, String>?;
+          if (params == null ||
+              params['studyId'] == null ||
+              params['userId'] == null) {
+            return const Scaffold(
+              body: SafeArea(
+                child: Center(
+                  child: Text('Error: Missing required parameters'),
+                ),
+              ),
+            );
+          }
           return CapturePictureScreen(
             studyId: params['studyId']!,
             userId: params['userId']!,
