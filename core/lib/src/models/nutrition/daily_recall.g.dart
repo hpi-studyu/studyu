@@ -21,6 +21,10 @@ DailyRecall _$DailyRecallFromJson(Map<String, dynamic> json) => DailyRecall(
   meals: (json['meals'] as List<dynamic>)
       .map((e) => MealLog.fromJson(e as Map<String, dynamic>))
       .toList(),
+  studyDaySnapshot: (json['studyDaySnapshot'] as num?)?.toInt(),
+  lastAutoSavedAt: json['lastAutoSavedAt'] == null
+      ? null
+      : DateTime.parse(json['lastAutoSavedAt'] as String),
 );
 
 Map<String, dynamic> _$DailyRecallToJson(DailyRecall instance) =>
@@ -33,6 +37,8 @@ Map<String, dynamic> _$DailyRecallToJson(DailyRecall instance) =>
       'entryStartedAt': ?instance.entryStartedAt?.toIso8601String(),
       'entryCompletedAt': ?instance.entryCompletedAt?.toIso8601String(),
       'meals': instance.meals.map((e) => e.toJson()).toList(),
+      'studyDaySnapshot': ?instance.studyDaySnapshot,
+      'lastAutoSavedAt': ?instance.lastAutoSavedAt?.toIso8601String(),
     };
 
 const _$RecallModeEnumMap = {

@@ -2,9 +2,13 @@ import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:studyu_core/core.dart';
 import 'package:studyu_designer_v2/constants.dart';
+import 'package:studyu_designer_v2/domain/study.dart';
 import 'package:studyu_designer_v2/features/design/measurements/measurements_form_data.dart';
+import 'package:studyu_designer_v2/features/design/measurements/nutrition/nutrition_form_controller.dart';
+import 'package:studyu_designer_v2/features/design/measurements/nutrition/nutrition_form_data.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_controller.dart';
 import 'package:studyu_designer_v2/features/design/measurements/survey/survey_form_data.dart';
+import 'package:studyu_designer_v2/features/design/shared/schedule/schedule_form_data.dart';
 import 'package:studyu_designer_v2/features/design/study_form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_validation.dart';
 import 'package:studyu_designer_v2/features/forms/form_view_model.dart';
@@ -20,12 +24,9 @@ import 'package:studyu_designer_v2/utils/riverpod.dart';
 
 class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
     implements
-        IFormViewModelDelegate<MeasurementSurveyFormViewModel>,
-        IListActionProvider<MeasurementSurveyFormViewModel>,
-        IProviderArgsResolver<
-          MeasurementSurveyFormViewModel,
-          MeasurementFormRouteArgs
-        > {
+        IFormViewModelDelegate<ManagedFormViewModel>,
+        IListActionProvider<ManagedFormViewModel>,
+        IProviderArgsResolver<dynamic, MeasurementFormRouteArgs> {
   MeasurementsFormViewModel({
     required this.study,
     required this.router,
@@ -41,14 +42,34 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   // - Form fields
 
   final FormArray measurementsArray = FormArray([]);
-  late final surveyMeasurementFormViewModels =
+  late final measurementViewModelsCollection =
       FormViewModelCollection<
-        MeasurementSurveyFormViewModel,
-        MeasurementSurveyFormData
+        ManagedFormViewModel<IFormDataWithSchedule>,
+        IFormDataWithSchedule
       >([], measurementsArray);
 
-  List<MeasurementSurveyFormViewModel> get measurementViewModels =>
-      surveyMeasurementFormViewModels.formViewModels;
+  List<ManagedFormViewModel<IFormDataWithSchedule>> get measurementViewModels =>
+      measurementViewModelsCollection.formViewModels;
+
+  bool get canAddMeasurement => study.status == StudyStatus.draft;
+
+  bool get isNutritionEnabled =>
+      measurementViewModels.any((vm) => vm is NutritionFormViewModel);
+
+  set isNutritionEnabled(bool enabled) {
+    if (enabled) {
+      if (!isNutritionEnabled) {
+        onNewNutrition();
+      }
+    } else {
+      final nutritionVm = measurementViewModels
+          .whereType<NutritionFormViewModel>()
+          .firstOrNull;
+      if (nutritionVm != null) {
+        measurementViewModelsCollection.remove(nutritionVm);
+      }
+    }
+  }
 
   @override
   FormValidationConfigSet get sharedValidationConfig => {
@@ -69,35 +90,44 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   );
 
   @override
-  late final FormGroup form = FormGroup({
-    'surveyMeasurements': measurementsArray,
-  });
+  late final FormGroup form = FormGroup({'measurements': measurementsArray});
 
   @override
   void read([MeasurementsFormData? formData]) {
-    surveyMeasurementFormViewModels.read();
+    measurementViewModelsCollection.read();
     super.read(formData);
   }
 
   @override
   void setControlsFrom(MeasurementsFormData data) {
-    final viewModels = data.surveyMeasurements
-        .map(
-          (data) => MeasurementSurveyFormViewModel(
-            study: study,
-            formData: data,
-            delegate: this,
-            validationSet: validationSet,
-          ),
-        )
+    final viewModels = data.measurements
+        .map((data) {
+          if (data is MeasurementSurveyFormData) {
+            return MeasurementSurveyFormViewModel(
+              study: study,
+              formData: data,
+              delegate: this,
+              validationSet: validationSet,
+            );
+          } else if (data is NutritionFormData) {
+            return NutritionFormViewModel(
+              study: study,
+              formData: data,
+              delegate: this,
+              validationSet: validationSet,
+            );
+          }
+          throw UnimplementedError();
+        })
+        .cast<ManagedFormViewModel<IFormDataWithSchedule>>()
         .toList();
-    surveyMeasurementFormViewModels.reset(viewModels);
+    measurementViewModelsCollection.reset(viewModels);
   }
 
   @override
   MeasurementsFormData buildFormData() {
     return MeasurementsFormData(
-      surveyMeasurements: surveyMeasurementFormViewModels.formData,
+      measurements: measurementViewModelsCollection.formData,
     );
   }
 
@@ -108,39 +138,36 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
   // - IListActionProvider
 
   @override
-  List<ModelAction> availableActions(MeasurementSurveyFormViewModel model) {
-    final actions = surveyMeasurementFormViewModels.availableActions(
-      model,
+  List<ModelAction> availableActions(ManagedFormViewModel model) {
+    final actions = measurementViewModelsCollection.availableActions(
+      model as ManagedFormViewModel<IFormDataWithSchedule>,
       onEdit: onSelectItem,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availablePopupActions(
-    MeasurementSurveyFormViewModel model,
-  ) {
-    final actions = surveyMeasurementFormViewModels.availablePopupActions(
-      model,
+  List<ModelAction> availablePopupActions(ManagedFormViewModel model) {
+    final actions = measurementViewModelsCollection.availablePopupActions(
+      model as ManagedFormViewModel<IFormDataWithSchedule>,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
   }
 
-  List<ModelAction> availableInlineActions(
-    MeasurementSurveyFormViewModel model,
-  ) {
-    final actions = surveyMeasurementFormViewModels.availableInlineActions(
-      model,
+  List<ModelAction> availableInlineActions(ManagedFormViewModel model) {
+    final actions = measurementViewModelsCollection.availableInlineActions(
+      model as ManagedFormViewModel<IFormDataWithSchedule>,
       isReadOnly: isReadonly,
     );
     return withIcons(actions, modelActionIcons);
   }
 
   @override
-  void onSelectItem(MeasurementSurveyFormViewModel item) {
+  void onSelectItem(ManagedFormViewModel item) {
     final studyId = study.id;
-    final measurementId = item.measurementId;
+    final MeasurementID measurementId =
+        (item as dynamic).measurementId as MeasurementID;
     router.dispatch(
       RoutingIntents.studyEditMeasurement(studyId, measurementId),
     );
@@ -148,55 +175,95 @@ class MeasurementsFormViewModel extends FormViewModel<MeasurementsFormData>
 
   @override
   void onNewItem() {
+    // This is called by FormListView when no custom onNewItem is provided,
+    // or if we want a default action.
+    // We will handle the choice in the view, but this can serve as a default.
+    onNewSurvey();
+  }
+
+  void onNewSurvey() {
     final studyId = study.id;
     router.dispatch(
       RoutingIntents.studyEditMeasurement(studyId, Config.newModelId),
     );
   }
 
+  void onNewNutrition() {
+    final studyId = study.id;
+    router.dispatch(
+      RoutingIntents.studyEditMeasurement(
+        studyId,
+        Config.newModelId,
+        queryParameters: {'type': 'nutrition'},
+      ),
+    );
+  }
+
   // - IProviderArgsResolver
 
   @override
-  MeasurementSurveyFormViewModel provide(MeasurementFormRouteArgs args) {
+  dynamic provide(MeasurementFormRouteArgs args) {
     if (args.measurementId.isNewId) {
-      // Eagerly add the managed viewmodel in case it needs to be [provide]d
-      // to a child controller
-      final viewModel = MeasurementSurveyFormViewModel(
-        study: study,
-        delegate: this,
-        validationSet: validationSet,
-      );
-      surveyMeasurementFormViewModels.stage(viewModel);
+      return _provideNewSurvey();
+    }
+
+    final viewModel = measurementViewModelsCollection.findWhere(
+      (vm) => (vm as dynamic).measurementId == args.measurementId,
+    );
+    if (viewModel != null) {
       return viewModel;
     }
 
-    final viewModel = surveyMeasurementFormViewModels.findWhere(
-      (vm) => vm.measurementId == args.measurementId,
-    );
-    if (viewModel == null) {
-      throw MeasurementNotFoundException(); // TODO handle 404 not found
+    throw MeasurementNotFoundException();
+  }
+
+  dynamic provideWithType(MeasurementFormRouteArgs args, String? type) {
+    if (args.measurementId.isNewId) {
+      if (type == 'nutrition') {
+        return _provideNewNutrition();
+      }
+      return _provideNewSurvey();
     }
+    return provide(args);
+  }
+
+  MeasurementSurveyFormViewModel _provideNewSurvey() {
+    final viewModel = MeasurementSurveyFormViewModel(
+      study: study,
+      delegate: this,
+      validationSet: validationSet,
+    );
+    measurementViewModelsCollection.stage(viewModel);
+    return viewModel;
+  }
+
+  NutritionFormViewModel _provideNewNutrition() {
+    final viewModel = NutritionFormViewModel(
+      study: study,
+      delegate: this,
+      validationSet: validationSet,
+    );
+    measurementViewModelsCollection.stage(viewModel);
     return viewModel;
   }
 
   // - IFormViewModelDelegate
 
   @override
-  void onCancel(
-    MeasurementSurveyFormViewModel formViewModel,
-    FormMode formMode,
-  ) {
+  void onCancel(ManagedFormViewModel formViewModel, FormMode formMode) {
     return; // no-op
   }
 
   @override
   Future onSave(
-    MeasurementSurveyFormViewModel formViewModel,
+    ManagedFormViewModel formViewModel,
     FormMode prevFormMode,
   ) async {
     if (prevFormMode == FormMode.create) {
       // Commit the managed viewmodel that was eagerly added in [provide]
-      surveyMeasurementFormViewModels.commit(formViewModel);
+      measurementViewModelsCollection.commit(
+        formViewModel as ManagedFormViewModel<IFormDataWithSchedule>,
+      );
     } else if (prevFormMode == FormMode.edit) {
       // nothing to do here
     }

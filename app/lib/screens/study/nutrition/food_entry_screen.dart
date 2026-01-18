@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
+import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
+import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_core/core.dart';
 
 class FoodEntryScreen extends StatefulWidget {
@@ -28,7 +34,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
   late TextEditingController _portionReferenceController;
   late TextEditingController _yieldFactorController;
   late TextEditingController _ediblePortionController;
-  
+
   // Nutrition controllers
   late TextEditingController _energyController;
   late TextEditingController _proteinController;
@@ -40,7 +46,8 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
   late TextEditingController _sodiumController;
 
   FoodEntryType _entryType = FoodEntryType.singleIngredient;
-  PortionEstimationMethod _portionMethod = PortionEstimationMethod.householdMeasure;
+  PortionEstimationMethod _portionMethod =
+      PortionEstimationMethod.householdMeasure;
   PortionState _portionState = PortionState.asServed;
   FoodSource _source = FoodSource.manual;
 
@@ -51,23 +58,49 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       final food = widget.existingFood!;
       _nameController = TextEditingController(text: food.name);
       _brandController = TextEditingController(text: food.brandName ?? '');
-      _descriptionController = TextEditingController(text: food.description ?? '');
+      _descriptionController = TextEditingController(
+        text: food.description ?? '',
+      );
       _amountController = TextEditingController(text: food.amount.toString());
       _unitController = TextEditingController(text: food.unit);
-      _servingSizeController = TextEditingController(text: food.servingSizeGrams.toString());
-      _portionReferenceController = TextEditingController(text: food.portionReference ?? '');
-      _yieldFactorController = TextEditingController(text: food.yieldFactor?.toString() ?? '');
-      _ediblePortionController = TextEditingController(text: food.ediblePortion?.toString() ?? '');
-      
-      _energyController = TextEditingController(text: food.nutrition.energyKcal.toString());
-      _proteinController = TextEditingController(text: food.nutrition.protein.toString());
-      _carbsController = TextEditingController(text: food.nutrition.carbs.toString());
-      _fatController = TextEditingController(text: food.nutrition.fat.toString());
-      _sugarsController = TextEditingController(text: food.nutrition.sugars.toString());
-      _fiberController = TextEditingController(text: food.nutrition.fiber.toString());
-      _saturatedFatController = TextEditingController(text: food.nutrition.saturatedFat.toString());
-      _sodiumController = TextEditingController(text: food.nutrition.sodium.toString());
-      
+      _servingSizeController = TextEditingController(
+        text: food.servingSizeGrams.toString(),
+      );
+      _portionReferenceController = TextEditingController(
+        text: food.portionReference ?? '',
+      );
+      _yieldFactorController = TextEditingController(
+        text: food.yieldFactor?.toString() ?? '',
+      );
+      _ediblePortionController = TextEditingController(
+        text: food.ediblePortion?.toString() ?? '',
+      );
+
+      _energyController = TextEditingController(
+        text: food.nutrition.energyKcal.toString(),
+      );
+      _proteinController = TextEditingController(
+        text: food.nutrition.protein.toString(),
+      );
+      _carbsController = TextEditingController(
+        text: food.nutrition.carbs.toString(),
+      );
+      _fatController = TextEditingController(
+        text: food.nutrition.fat.toString(),
+      );
+      _sugarsController = TextEditingController(
+        text: food.nutrition.sugars.toString(),
+      );
+      _fiberController = TextEditingController(
+        text: food.nutrition.fiber.toString(),
+      );
+      _saturatedFatController = TextEditingController(
+        text: food.nutrition.saturatedFat.toString(),
+      );
+      _sodiumController = TextEditingController(
+        text: food.nutrition.sodium.toString(),
+      );
+
       _entryType = food.entryType;
       _portionMethod = food.portionEstimationMethod;
       _portionState = food.portionState;
@@ -82,7 +115,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       _portionReferenceController = TextEditingController();
       _yieldFactorController = TextEditingController();
       _ediblePortionController = TextEditingController();
-      
+
       _energyController = TextEditingController();
       _proteinController = TextEditingController();
       _carbsController = TextEditingController();
@@ -137,15 +170,23 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
         entryType: _entryType,
         name: _nameController.text,
         brandName: _brandController.text.isEmpty ? null : _brandController.text,
-        description: _descriptionController.text.isEmpty ? null : _descriptionController.text,
+        description: _descriptionController.text.isEmpty
+            ? null
+            : _descriptionController.text,
         amount: double.parse(_amountController.text),
         unit: _unitController.text,
         servingSizeGrams: double.parse(_servingSizeController.text),
-        portionReference: _portionReferenceController.text.isEmpty ? null : _portionReferenceController.text,
+        portionReference: _portionReferenceController.text.isEmpty
+            ? null
+            : _portionReferenceController.text,
         portionEstimationMethod: _portionMethod,
         portionState: _portionState,
-        yieldFactor: _yieldFactorController.text.isEmpty ? null : double.tryParse(_yieldFactorController.text),
-        ediblePortion: _ediblePortionController.text.isEmpty ? null : double.tryParse(_ediblePortionController.text),
+        yieldFactor: _yieldFactorController.text.isEmpty
+            ? null
+            : double.tryParse(_yieldFactorController.text),
+        ediblePortion: _ediblePortionController.text.isEmpty
+            ? null
+            : double.tryParse(_ediblePortionController.text),
         nutrition: nutrition,
         source: _source,
         confidenceScore: 1.0,
@@ -159,58 +200,163 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
   String _getEntryTypeLabel(FoodEntryType type) {
     switch (type) {
       case FoodEntryType.singleIngredient:
-        return '🥕 Single Ingredient';
+        return AppLocalizations.of(context)!.entry_type_single_ingredient;
       case FoodEntryType.recipe:
-        return '📖 Recipe';
+        return AppLocalizations.of(context)!.entry_type_recipe;
       case FoodEntryType.brandedProduct:
-        return '🏷️ Branded Product';
+        return AppLocalizations.of(context)!.entry_type_branded_product;
       case FoodEntryType.manualCustom:
-        return '✏️ Manual Entry';
+        return AppLocalizations.of(context)!.entry_type_manual_entry;
     }
   }
 
   String _getPortionMethodLabel(PortionEstimationMethod method) {
     switch (method) {
       case PortionEstimationMethod.householdMeasure:
-        return 'Household Measure';
+        return AppLocalizations.of(context)!.portion_method_household;
       case PortionEstimationMethod.photograph:
-        return 'Photograph';
+        return AppLocalizations.of(context)!.portion_method_photograph;
       case PortionEstimationMethod.standardUnit:
-        return 'Standard Unit';
+        return AppLocalizations.of(context)!.portion_method_standard_unit;
       case PortionEstimationMethod.userWeighted:
-        return 'User Weighted';
+        return AppLocalizations.of(context)!.portion_method_user_weighted;
       case PortionEstimationMethod.unknown:
-        return 'Unknown';
+        return AppLocalizations.of(context)!.portion_method_unknown;
     }
   }
 
   String _getPortionStateLabel(PortionState state) {
     switch (state) {
       case PortionState.raw:
-        return 'Raw';
+        return AppLocalizations.of(context)!.portion_state_raw;
       case PortionState.cooked:
-        return 'Cooked';
+        return AppLocalizations.of(context)!.portion_state_cooked;
       case PortionState.asServed:
-        return 'As Served';
+        return AppLocalizations.of(context)!.portion_state_as_served;
+    }
+  }
+
+  FoodEntry? _buildFoodEntry() {
+    if (!_formKey.currentState!.validate()) return null;
+
+    final nutrition = NutritionProfile(
+      energyKcal: double.tryParse(_energyController.text) ?? 0,
+      protein: double.tryParse(_proteinController.text) ?? 0,
+      carbs: double.tryParse(_carbsController.text) ?? 0,
+      fat: double.tryParse(_fatController.text) ?? 0,
+      sugars: double.tryParse(_sugarsController.text) ?? 0,
+      fiber: double.tryParse(_fiberController.text) ?? 0,
+      saturatedFat: double.tryParse(_saturatedFatController.text) ?? 0,
+      transFat: 0,
+      cholesterol: 0,
+      sodium: double.tryParse(_sodiumController.text) ?? 0,
+      waterContent: 0,
+      micros: {},
+    );
+
+    return FoodEntry.withId(
+      entryType: _entryType,
+      name: _nameController.text,
+      brandName: _brandController.text.isEmpty ? null : _brandController.text,
+      description: _descriptionController.text.isEmpty
+          ? null
+          : _descriptionController.text,
+      amount: double.parse(_amountController.text),
+      unit: _unitController.text,
+      servingSizeGrams: double.parse(_servingSizeController.text),
+      portionReference: _portionReferenceController.text.isEmpty
+          ? null
+          : _portionReferenceController.text,
+      portionEstimationMethod: _portionMethod,
+      portionState: _portionState,
+      yieldFactor: _yieldFactorController.text.isEmpty
+          ? null
+          : double.tryParse(_yieldFactorController.text),
+      ediblePortion: _ediblePortionController.text.isEmpty
+          ? null
+          : double.tryParse(_ediblePortionController.text),
+      nutrition: nutrition,
+      source: _source,
+      confidenceScore: 1.0,
+      originalValues: {},
+    );
+  }
+
+  Future<void> _saveAsTemplate() async {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (_nameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.enter_food_name)));
+      return;
+    }
+
+    final food = _buildFoodEntry();
+    if (food == null) return;
+
+    final appState = Provider.of<AppState>(context, listen: false);
+    final userId = appState.activeSubject?.id ?? 'anonymous';
+
+    final templateType = _entryType == FoodEntryType.recipe
+        ? TemplateType.recipe
+        : TemplateType.food;
+
+    final result = await SaveTemplateDialog.show(
+      context,
+      initialName: _nameController.text,
+      templateType: templateType,
+    );
+
+    if (result != null && mounted) {
+      final viewModel = TemplateViewModel(userId: userId);
+      await viewModel.saveFoodAsTemplate(
+        name: result.name,
+        food: food,
+        tags: result.tags,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Food Entry'),
+        title: Text(l10n.food_entry_title),
         actions: [
-          TextButton(
-            onPressed: _saveFood,
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('SAVE'),
+          IconButton(
+            onPressed: () async {
+              final result = await Navigator.push(
+                context,
+                FoodSearchScreen.route(),
+              );
+              if (result != null) {
+                // If a food was selected from search, close this screen with the result
+                Navigator.of(context).pop(result);
+              }
+            },
+            icon: const Icon(Icons.search),
+            tooltip: 'Search Food Database',
+          ),
+          IconButton(
+            icon: const Icon(Icons.bookmark_add),
+            tooltip: l10n.save_as_template,
+            onPressed: _saveAsTemplate,
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _saveFood,
+        icon: const Icon(Icons.check),
+        label: Text(AppLocalizations.of(context)!.save),
       ),
       body: Form(
         key: _formKey,
@@ -226,15 +372,15 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Food Information',
+                        AppLocalizations.of(context)!.food_information,
                         style: theme.textTheme.titleLarge,
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<FoodEntryType>(
-                        value: _entryType,
-                        decoration: const InputDecoration(
-                          labelText: 'Entry Type',
-                          border: OutlineInputBorder(),
+                        initialValue: _entryType,
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.entry_type,
+                          border: const OutlineInputBorder(),
                         ),
                         items: FoodEntryType.values.map((type) {
                           return DropdownMenuItem(
@@ -251,13 +397,15 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _nameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Food Name *',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.food_name,
+                          border: const OutlineInputBorder(),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter a food name';
+                            return AppLocalizations.of(
+                              context,
+                            )!.enter_food_name;
                           }
                           return null;
                         },
@@ -266,19 +414,21 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                       if (_entryType == FoodEntryType.brandedProduct) ...[
                         TextFormField(
                           controller: _brandController,
-                          decoration: const InputDecoration(
-                            labelText: 'Brand Name',
-                            border: OutlineInputBorder(),
+                          decoration: InputDecoration(
+                            labelText: AppLocalizations.of(context)!.brand_name,
+                            border: const OutlineInputBorder(),
                           ),
                         ),
                         const SizedBox(height: 16),
                       ],
                       TextFormField(
                         controller: _descriptionController,
-                        decoration: const InputDecoration(
-                          labelText: 'Description',
-                          border: OutlineInputBorder(),
-                          hintText: 'Optional notes about this food',
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.description,
+                          border: const OutlineInputBorder(),
+                          hintText: AppLocalizations.of(
+                            context,
+                          )!.description_hint,
                         ),
                         maxLines: 2,
                       ),
@@ -293,12 +443,19 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.info_outline, color: Colors.blue.shade700),
+                                    Icon(
+                                      Icons.info_outline,
+                                      color: Colors.blue.shade700,
+                                    ),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: Text(
-                                        'Recipe: Use Recipe Builder for better ingredient management',
-                                        style: TextStyle(color: Colors.blue.shade700),
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.recipe_info,
+                                        style: TextStyle(
+                                          color: Colors.blue.shade700,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -306,15 +463,22 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                                 const SizedBox(height: 8),
                                 ElevatedButton.icon(
                                   onPressed: () async {
-                                    final result = await Navigator.of(context).push(
-                                      RecipeBuilderScreen.route(existingRecipe: widget.existingFood),
-                                    );
-                                    if (result != null) {
+                                    final result = await Navigator.of(context)
+                                        .push(
+                                          RecipeBuilderScreen.route(
+                                            existingRecipe: widget.existingFood,
+                                          ),
+                                        );
+                                    if (result != null && context.mounted) {
                                       Navigator.of(context).pop(result);
                                     }
                                   },
                                   icon: const Icon(Icons.menu_book),
-                                  label: const Text('Open Recipe Builder'),
+                                  label: Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.open_recipe_builder,
+                                  ),
                                 ),
                               ],
                             ),
@@ -328,9 +492,9 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                             flex: 2,
                             child: TextFormField(
                               controller: _amountController,
-                              decoration: const InputDecoration(
-                                labelText: 'Amount *',
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!.amount,
+                                border: const OutlineInputBorder(),
                               ),
                               keyboardType: TextInputType.number,
                               inputFormatters: [
@@ -340,7 +504,9 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                               ],
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Required';
+                                  return AppLocalizations.of(
+                                    context,
+                                  )!.required_error;
                                 }
                                 return null;
                               },
@@ -351,13 +517,15 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                             flex: 3,
                             child: TextFormField(
                               controller: _unitController,
-                              decoration: const InputDecoration(
-                                labelText: 'Unit *',
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!.unit,
+                                border: const OutlineInputBorder(),
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Required';
+                                  return AppLocalizations.of(
+                                    context,
+                                  )!.required_error;
                                 }
                                 return null;
                               },
@@ -368,9 +536,9 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _servingSizeController,
-                        decoration: const InputDecoration(
-                          labelText: 'Serving Size (grams) *',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.serving_size,
+                          border: const OutlineInputBorder(),
                         ),
                         keyboardType: TextInputType.number,
                         inputFormatters: [
@@ -380,7 +548,9 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                         ],
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter serving size';
+                            return AppLocalizations.of(
+                              context,
+                            )!.enter_serving_size;
                           }
                           return null;
                         },
@@ -388,18 +558,24 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _portionReferenceController,
-                        decoration: const InputDecoration(
-                          labelText: 'Portion Reference',
-                          border: OutlineInputBorder(),
-                          hintText: 'e.g., 1 cup, 3 oz, medium apple',
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(
+                            context,
+                          )!.portion_reference,
+                          border: const OutlineInputBorder(),
+                          hintText: AppLocalizations.of(
+                            context,
+                          )!.portion_reference_hint,
                         ),
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<PortionEstimationMethod>(
-                        value: _portionMethod,
-                        decoration: const InputDecoration(
-                          labelText: 'Portion Estimation Method',
-                          border: OutlineInputBorder(),
+                        initialValue: _portionMethod,
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(
+                            context,
+                          )!.portion_estimation_method,
+                          border: const OutlineInputBorder(),
                         ),
                         items: PortionEstimationMethod.values.map((method) {
                           return DropdownMenuItem(
@@ -415,10 +591,12 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<PortionState>(
-                        value: _portionState,
-                        decoration: const InputDecoration(
-                          labelText: 'Portion State',
-                          border: OutlineInputBorder(),
+                        initialValue: _portionState,
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(
+                            context,
+                          )!.portion_state,
+                          border: const OutlineInputBorder(),
                         ),
                         items: PortionState.values.map((state) {
                           return DropdownMenuItem(
@@ -438,10 +616,14 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                           Expanded(
                             child: TextFormField(
                               controller: _yieldFactorController,
-                              decoration: const InputDecoration(
-                                labelText: 'Yield Factor',
-                                border: OutlineInputBorder(),
-                                hintText: 'e.g., 0.75',
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(
+                                  context,
+                                )!.yield_factor,
+                                border: const OutlineInputBorder(),
+                                hintText: AppLocalizations.of(
+                                  context,
+                                )!.yield_factor_hint,
                               ),
                               keyboardType: TextInputType.number,
                               inputFormatters: [
@@ -455,10 +637,14 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                           Expanded(
                             child: TextFormField(
                               controller: _ediblePortionController,
-                              decoration: const InputDecoration(
-                                labelText: 'Edible Portion',
-                                border: OutlineInputBorder(),
-                                hintText: 'e.g., 0.85',
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(
+                                  context,
+                                )!.edible_portion,
+                                border: const OutlineInputBorder(),
+                                hintText: AppLocalizations.of(
+                                  context,
+                                )!.edible_portion_hint,
                               ),
                               keyboardType: TextInputType.number,
                               inputFormatters: [
@@ -482,15 +668,15 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Nutrition Information',
+                        AppLocalizations.of(context)!.nutrition_information,
                         style: theme.textTheme.titleLarge,
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _energyController,
-                        decoration: const InputDecoration(
-                          labelText: 'Energy (kcal) *',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.energy_kcal,
+                          border: const OutlineInputBorder(),
                           hintText: '0',
                         ),
                         keyboardType: TextInputType.number,
@@ -506,9 +692,11 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                           Expanded(
                             child: TextFormField(
                               controller: _proteinController,
-                              decoration: const InputDecoration(
-                                labelText: 'Protein (g)',
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(
+                                  context,
+                                )!.protein_g,
+                                border: const OutlineInputBorder(),
                                 hintText: '0',
                               ),
                               keyboardType: TextInputType.number,
@@ -523,9 +711,11 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                           Expanded(
                             child: TextFormField(
                               controller: _carbsController,
-                              decoration: const InputDecoration(
-                                labelText: 'Carbs (g)',
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(
+                                  context,
+                                )!.carbs_g,
+                                border: const OutlineInputBorder(),
                                 hintText: '0',
                               ),
                               keyboardType: TextInputType.number,
@@ -544,9 +734,9 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                           Expanded(
                             child: TextFormField(
                               controller: _fatController,
-                              decoration: const InputDecoration(
-                                labelText: 'Fat (g)',
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!.fat_g,
+                                border: const OutlineInputBorder(),
                                 hintText: '0',
                               ),
                               keyboardType: TextInputType.number,
@@ -561,9 +751,11 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                           Expanded(
                             child: TextFormField(
                               controller: _saturatedFatController,
-                              decoration: const InputDecoration(
-                                labelText: 'Sat. Fat (g)',
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(
+                                  context,
+                                )!.saturated_fat_g,
+                                border: const OutlineInputBorder(),
                                 hintText: '0',
                               ),
                               keyboardType: TextInputType.number,
@@ -582,9 +774,11 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                           Expanded(
                             child: TextFormField(
                               controller: _sugarsController,
-                              decoration: const InputDecoration(
-                                labelText: 'Sugars (g)',
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(
+                                  context,
+                                )!.sugars_g,
+                                border: const OutlineInputBorder(),
                                 hintText: '0',
                               ),
                               keyboardType: TextInputType.number,
@@ -599,9 +793,11 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                           Expanded(
                             child: TextFormField(
                               controller: _fiberController,
-                              decoration: const InputDecoration(
-                                labelText: 'Fiber (g)',
-                                border: OutlineInputBorder(),
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(
+                                  context,
+                                )!.fiber_g,
+                                border: const OutlineInputBorder(),
                                 hintText: '0',
                               ),
                               keyboardType: TextInputType.number,
@@ -617,9 +813,9 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _sodiumController,
-                        decoration: const InputDecoration(
-                          labelText: 'Sodium (mg)',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.sodium_mg,
+                          border: const OutlineInputBorder(),
                           hintText: '0',
                         ),
                         keyboardType: TextInputType.number,
@@ -640,4 +836,3 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     );
   }
 }
-

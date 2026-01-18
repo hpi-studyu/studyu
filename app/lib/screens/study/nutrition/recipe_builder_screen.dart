@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
+import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
+import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_core/core.dart';
 
 class RecipeBuilderScreen extends StatefulWidget {
@@ -29,8 +34,9 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
   late TextEditingController _preparationMethodController;
 
   List<RecipeComposition> _ingredients = [];
-  List<FoodEntry> _ingredientFoods = [];
+  final List<FoodEntry> _ingredientFoods = [];
   RecipeMetadata? _metadata;
+  NutritionProfile? _cachedNutrition;
 
   @override
   void initState() {
@@ -38,20 +44,30 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     if (widget.existingRecipe != null) {
       final recipe = widget.existingRecipe!;
       _nameController = TextEditingController(text: recipe.name);
-      _descriptionController = TextEditingController(text: recipe.description ?? '');
-      _servingsController = TextEditingController(text: recipe.amount.toString());
-      
+      _descriptionController = TextEditingController(
+        text: recipe.description ?? '',
+      );
+      _servingsController = TextEditingController(
+        text: recipe.amount.toString(),
+      );
+
       if (recipe.recipeMetadata != null) {
         _metadata = recipe.recipeMetadata;
-        _rawWeightController = TextEditingController(text: _metadata!.rawWeight.toString());
-        _cookedWeightController = TextEditingController(text: _metadata!.cookedWeight.toString());
-        _preparationMethodController = TextEditingController(text: _metadata!.preparationMethod);
+        _rawWeightController = TextEditingController(
+          text: _metadata!.rawWeight.toString(),
+        );
+        _cookedWeightController = TextEditingController(
+          text: _metadata!.cookedWeight.toString(),
+        );
+        _preparationMethodController = TextEditingController(
+          text: _metadata!.preparationMethod,
+        );
       } else {
         _rawWeightController = TextEditingController();
         _cookedWeightController = TextEditingController();
         _preparationMethodController = TextEditingController();
       }
-      
+
       _ingredients = recipe.recipeIngredients ?? [];
     } else {
       _nameController = TextEditingController();
@@ -61,6 +77,11 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
       _cookedWeightController = TextEditingController();
       _preparationMethodController = TextEditingController();
     }
+    _servingsController.addListener(() {
+      setState(() {
+        _cachedNutrition = null;
+      });
+    });
   }
 
   @override
@@ -74,10 +95,8 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     super.dispose();
   }
 
-  void _addIngredient() async {
-    final result = await Navigator.of(context).push(
-      FoodEntryScreen.route(),
-    );
+  Future<void> _addIngredient() async {
+    final result = await Navigator.of(context).push(FoodEntryScreen.route());
     if (result != null) {
       setState(() {
         _ingredientFoods.add(result);
@@ -90,6 +109,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
             sortOrder: _ingredients.length,
           ),
         );
+        _cachedNutrition = null;
       });
     }
   }
@@ -98,6 +118,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     setState(() {
       _ingredients.removeAt(index);
       _ingredientFoods.removeAt(index);
+      _cachedNutrition = null;
     });
   }
 
@@ -111,6 +132,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
         unit: unit,
         sortOrder: _ingredients[index].sortOrder,
       );
+      _cachedNutrition = null;
     });
   }
 
@@ -126,15 +148,15 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     double totalCholesterol = 0;
     double totalSodium = 0;
     double totalWater = 0;
-    Map<String, double> totalMicros = {};
+    final Map<String, double> totalMicros = {};
 
     for (int i = 0; i < _ingredientFoods.length; i++) {
       final food = _ingredientFoods[i];
       final composition = _ingredients[i];
-      
+
       // Calculate ratio based on amount
       final ratio = composition.amount / food.amount;
-      
+
       totalEnergy += food.nutrition.energyKcal * ratio;
       totalProtein += food.nutrition.protein * ratio;
       totalCarbs += food.nutrition.carbs * ratio;
@@ -146,14 +168,14 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
       totalCholesterol += food.nutrition.cholesterol * ratio;
       totalSodium += food.nutrition.sodium * ratio;
       totalWater += food.nutrition.waterContent * ratio;
-      
+
       food.nutrition.micros.forEach((key, value) {
         totalMicros[key] = (totalMicros[key] ?? 0) + (value * ratio);
       });
     }
 
     final servings = double.tryParse(_servingsController.text) ?? 1;
-    
+
     return NutritionProfile(
       energyKcal: totalEnergy / servings,
       protein: totalProtein / servings,
@@ -170,49 +192,62 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     );
   }
 
-  void _saveRecipe() {
-    if (_formKey.currentState!.validate() && _ingredients.isNotEmpty) {
-      final nutrition = _calculateTotalNutrition();
-      
-      RecipeMetadata? metadata;
-      if (_rawWeightController.text.isNotEmpty && 
-          _cookedWeightController.text.isNotEmpty &&
-          _preparationMethodController.text.isNotEmpty) {
-        final rawWeight = double.parse(_rawWeightController.text);
-        final cookedWeight = double.parse(_cookedWeightController.text);
-        metadata = RecipeMetadata(
-          rawWeight: rawWeight,
-          cookedWeight: cookedWeight,
-          yieldFactor: cookedWeight / rawWeight,
-          preparationMethod: _preparationMethodController.text,
-          retentionFactors: {},
-        );
-      }
+  FoodEntry? _buildRecipe() {
+    if (!_formKey.currentState!.validate() || _ingredients.isEmpty) {
+      return null;
+    }
 
-      final recipe = FoodEntry.withId(
-        entryType: FoodEntryType.recipe,
-        name: _nameController.text,
-        description: _descriptionController.text.isEmpty ? null : _descriptionController.text,
-        amount: double.parse(_servingsController.text),
-        unit: 'serving',
-        servingSizeGrams: nutrition.energyKcal * 0.24, // Rough estimate
-        portionEstimationMethod: PortionEstimationMethod.householdMeasure,
-        portionState: PortionState.cooked,
-        nutrition: nutrition,
-        source: FoodSource.manual,
-        confidenceScore: 0.9,
-        originalValues: {},
-        recipeMetadata: metadata,
-        recipeIngredients: _ingredients.map((comp) => RecipeComposition(
-          id: comp.id,
-          recipeId: '', // Will be populated
-          ingredientId: comp.ingredientId,
-          amount: comp.amount,
-          unit: comp.unit,
-          sortOrder: comp.sortOrder,
-        )).toList(),
+    final nutrition = _calculateTotalNutrition();
+
+    RecipeMetadata? metadata;
+    if (_rawWeightController.text.isNotEmpty &&
+        _cookedWeightController.text.isNotEmpty &&
+        _preparationMethodController.text.isNotEmpty) {
+      final rawWeight = double.parse(_rawWeightController.text);
+      final cookedWeight = double.parse(_cookedWeightController.text);
+      metadata = RecipeMetadata(
+        rawWeight: rawWeight,
+        cookedWeight: cookedWeight,
+        yieldFactor: cookedWeight / rawWeight,
+        preparationMethod: _preparationMethodController.text,
+        retentionFactors: {},
       );
+    }
 
+    return FoodEntry.withId(
+      entryType: FoodEntryType.recipe,
+      name: _nameController.text,
+      description: _descriptionController.text.isEmpty
+          ? null
+          : _descriptionController.text,
+      amount: double.parse(_servingsController.text),
+      unit: 'serving',
+      servingSizeGrams: nutrition.energyKcal * 0.24,
+      portionEstimationMethod: PortionEstimationMethod.householdMeasure,
+      portionState: PortionState.cooked,
+      nutrition: nutrition,
+      source: FoodSource.manual,
+      confidenceScore: 0.9,
+      originalValues: {},
+      recipeMetadata: metadata,
+      recipeIngredients: _ingredients
+          .map(
+            (comp) => RecipeComposition(
+              id: comp.id,
+              recipeId: '',
+              ingredientId: comp.ingredientId,
+              amount: comp.amount,
+              unit: comp.unit,
+              sortOrder: comp.sortOrder,
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  void _saveRecipe() {
+    final recipe = _buildRecipe();
+    if (recipe != null) {
       Navigator.of(context).pop(recipe);
     } else if (_ingredients.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -221,21 +256,66 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     }
   }
 
+  Future<void> _saveAsTemplate() async {
+    final recipe = _buildRecipe();
+    if (recipe == null) {
+      if (_ingredients.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please add at least one ingredient')),
+        );
+      }
+      return;
+    }
+
+    final l10n = AppLocalizations.of(context)!;
+    final appState = Provider.of<AppState>(context, listen: false);
+    final userId = appState.activeSubject?.id ?? 'anonymous';
+
+    final result = await SaveTemplateDialog.show(
+      context,
+      initialName: _nameController.text,
+      templateType: TemplateType.recipe,
+    );
+
+    if (result != null && mounted) {
+      final viewModel = TemplateViewModel(userId: userId);
+      await viewModel.saveFoodAsTemplate(
+        name: result.name,
+        food: recipe,
+        tags: result.tags,
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.template_saved)),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final nutrition = _ingredients.isNotEmpty ? _calculateTotalNutrition() : null;
+    if (_ingredients.isNotEmpty && _cachedNutrition == null) {
+      _cachedNutrition = _calculateTotalNutrition();
+    }
+    final nutrition = _cachedNutrition;
+
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recipe Builder'),
         actions: [
+          if (_ingredients.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.bookmark_add),
+              tooltip: l10n.save_as_template,
+              onPressed: _saveAsTemplate,
+            ),
           TextButton(
             onPressed: _saveRecipe,
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('SAVE'),
+            style: TextButton.styleFrom(foregroundColor: Colors.white),
+            child: Text(l10n.save),
           ),
         ],
       ),
@@ -253,7 +333,10 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Recipe Information', style: theme.textTheme.titleLarge),
+                      Text(
+                        'Recipe Information',
+                        style: theme.textTheme.titleLarge,
+                      ),
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _nameController,
@@ -287,7 +370,9 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                         ),
                         keyboardType: TextInputType.number,
                         inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d{0,2}'),
+                          ),
                         ],
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -300,7 +385,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 16),
 
               // Recipe Metadata
@@ -324,7 +409,9 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                                   ),
                                   keyboardType: TextInputType.number,
                                   inputFormatters: [
-                                    FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(r'^\d+\.?\d{0,2}'),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -338,7 +425,9 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                                   ),
                                   keyboardType: TextInputType.number,
                                   inputFormatters: [
-                                    FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp(r'^\d+\.?\d{0,2}'),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -366,7 +455,10 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Ingredients (${_ingredients.length})', style: theme.textTheme.titleLarge),
+                  Text(
+                    'Ingredients (${_ingredients.length})',
+                    style: theme.textTheme.titleLarge,
+                  ),
                   ElevatedButton.icon(
                     onPressed: _addIngredient,
                     style: ElevatedButton.styleFrom(
@@ -391,7 +483,9 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                           Icon(
                             Icons.fastfood,
                             size: 48,
-                            color: theme.colorScheme.primary.withOpacity(0.5),
+                            color: theme.colorScheme.primary.withValues(
+                              alpha: 0.5,
+                            ),
                           ),
                           const SizedBox(height: 8),
                           const Text('No ingredients added yet'),
@@ -404,7 +498,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                 ...List.generate(_ingredients.length, (index) {
                   final ingredient = _ingredientFoods[index];
                   final composition = _ingredients[index];
-                  
+
                   return Card(
                     margin: const EdgeInsets.only(bottom: 8),
                     child: ExpansionTile(
@@ -431,8 +525,14 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                                   ),
                                   keyboardType: TextInputType.number,
                                   onChanged: (value) {
-                                    final amount = double.tryParse(value) ?? composition.amount;
-                                    _updateIngredientAmount(index, amount, composition.unit);
+                                    final amount =
+                                        double.tryParse(value) ??
+                                        composition.amount;
+                                    _updateIngredientAmount(
+                                      index,
+                                      amount,
+                                      composition.unit,
+                                    );
                                   },
                                 ),
                               ),
@@ -445,7 +545,11 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                                     border: OutlineInputBorder(),
                                   ),
                                   onChanged: (value) {
-                                    _updateIngredientAmount(index, composition.amount, value);
+                                    _updateIngredientAmount(
+                                      index,
+                                      composition.amount,
+                                      value,
+                                    );
                                   },
                                 ),
                               ),
@@ -481,7 +585,8 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                           children: [
                             _NutritionChip(
                               label: 'Calories',
-                              value: '${nutrition.energyKcal.toStringAsFixed(0)} kcal',
+                              value:
+                                  '${nutrition.energyKcal.toStringAsFixed(0)} kcal',
                               icon: Icons.local_fire_department,
                             ),
                             _NutritionChip(
@@ -536,10 +641,6 @@ class _NutritionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Chip(
-      avatar: Icon(icon, size: 18),
-      label: Text('$label: $value'),
-    );
+    return Chip(avatar: Icon(icon, size: 18), label: Text('$label: $value'));
   }
 }
-

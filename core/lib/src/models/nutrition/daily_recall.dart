@@ -15,6 +15,8 @@ class DailyRecall {
   DateTime? entryStartedAt;
   DateTime? entryCompletedAt;
   List<MealLog> meals;
+  int? studyDaySnapshot;
+  DateTime? lastAutoSavedAt;
 
   DailyRecall({
     required this.id,
@@ -25,6 +27,8 @@ class DailyRecall {
     this.entryStartedAt,
     this.entryCompletedAt,
     required this.meals,
+    this.studyDaySnapshot,
+    this.lastAutoSavedAt,
   });
 
   DailyRecall.withId({
@@ -35,6 +39,8 @@ class DailyRecall {
     this.entryStartedAt,
     this.entryCompletedAt,
     required this.meals,
+    this.studyDaySnapshot,
+    this.lastAutoSavedAt,
   }) : id = const Uuid().v4();
 
   factory DailyRecall.fromJson(Map<String, dynamic> json) =>
@@ -45,4 +51,3 @@ class DailyRecall {
   @override
   String toString() => toJson().toString();
 }
-

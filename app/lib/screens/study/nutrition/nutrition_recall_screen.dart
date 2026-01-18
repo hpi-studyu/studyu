@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studyu_app/screens/study/nutrition/daily_recall_entry_screen.dart';
+import 'package:studyu_app/screens/study/tasks/observation/nutrition_task_widget.dart';
 import 'package:studyu_core/core.dart';
 
 class NutritionRecallScreen extends StatefulWidget {
@@ -15,10 +15,10 @@ class NutritionRecallScreen extends StatefulWidget {
 class _NutritionRecallScreenState extends State<NutritionRecallScreen> {
   List<DailyRecall> dailyRecalls = [];
 
-  void _startNewRecall() async {
-    final result = await Navigator.of(context).push(
-      DailyRecallEntryScreen.route(),
-    );
+  Future<void> _startNewRecall() async {
+    final result = await Navigator.of(
+      context,
+    ).push(NutritionTaskWidget.route());
     if (result != null) {
       setState(() {
         dailyRecalls.add(result);
@@ -26,10 +26,10 @@ class _NutritionRecallScreenState extends State<NutritionRecallScreen> {
     }
   }
 
-  void _viewRecall(DailyRecall recall) async {
-    await Navigator.of(context).push(
-      DailyRecallEntryScreen.route(existingRecall: recall),
-    );
+  Future<void> _viewRecall(DailyRecall recall) async {
+    await Navigator.of(
+      context,
+    ).push(NutritionTaskWidget.route(existingRecall: recall));
   }
 
   @override
@@ -48,7 +48,7 @@ class _NutritionRecallScreenState extends State<NutritionRecallScreen> {
                   Icon(
                     Icons.restaurant_menu,
                     size: 80,
-                    color: theme.colorScheme.primary.withOpacity(0.5),
+                    color: theme.colorScheme.primary.withValues(alpha: 0.5),
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -76,9 +76,7 @@ class _NutritionRecallScreenState extends State<NutritionRecallScreen> {
                     title: Text(
                       '${recall.date.day}/${recall.date.month}/${recall.date.year}',
                     ),
-                    subtitle: Text(
-                      '${recall.meals.length} meals recorded',
-                    ),
+                    subtitle: Text('${recall.meals.length} meals recorded'),
                     trailing: Icon(
                       recall.entryCompletedAt != null
                           ? Icons.check_circle
@@ -99,4 +97,3 @@ class _NutritionRecallScreenState extends State<NutritionRecallScreen> {
     );
   }
 }
-

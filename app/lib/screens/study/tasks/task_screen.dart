@@ -26,6 +26,7 @@ class TaskScreen extends StatefulWidget {
 class _TaskScreenState extends State<TaskScreen> {
   late TaskInstance taskInstance;
   StudySubject? subject;
+  bool _hasNavigated = false;
 
   @override
   void didChangeDependencies() {
@@ -35,6 +36,26 @@ class _TaskScreenState extends State<TaskScreen> {
       widget.taskInstance.id,
       study: subject!.study,
     );
+
+    if (taskInstance.task is NutritionTask && !_hasNavigated) {
+      _hasNavigated = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _navigateToNutritionTask();
+      });
+    }
+  }
+
+  Future<void> _navigateToNutritionTask() async {
+    final nutritionTask = taskInstance.task as NutritionTask;
+    final result = await Navigator.of(context).push(
+      NutritionTaskWidget.route(
+        task: nutritionTask,
+        completionPeriod: taskInstance.completionPeriod,
+      ),
+    );
+
+    if (!mounted) return;
+    Navigator.of(context).pop(result != null);
   }
 
   Widget _buildTask() {
@@ -62,12 +83,9 @@ class _TaskScreenState extends State<TaskScreen> {
           key: UniqueKey(),
           completionPeriod: taskInstance.completionPeriod,
         );
-      case final NutritionTask nutritionTask:
-        return NutritionTaskWidget(
-          task: nutritionTask,
-          key: UniqueKey(),
-          completionPeriod: taskInstance.completionPeriod,
-        );
+      case final NutritionTask _:
+        // Navigation happens in didChangeDependencies, show loading indicator
+        return const Center(child: CircularProgressIndicator());
       default:
         throw ArgumentError('Task ${taskInstance.task.type} not supported');
     }
