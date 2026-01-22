@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_core/core.dart';
@@ -32,6 +32,12 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
   late TextEditingController _rawWeightController;
   late TextEditingController _cookedWeightController;
   late TextEditingController _preparationMethodController;
+
+  // Quick Add controllers
+  late TextEditingController _quickNameController;
+  late TextEditingController _quickAmountController;
+  late TextEditingController _quickCaloriesController;
+  bool _showQuickAdd = false;
 
   List<RecipeComposition> _ingredients = [];
   final List<FoodEntry> _ingredientFoods = [];
@@ -77,6 +83,12 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
       _cookedWeightController = TextEditingController();
       _preparationMethodController = TextEditingController();
     }
+
+    // Initialize Quick Add controllers
+    _quickNameController = TextEditingController();
+    _quickAmountController = TextEditingController(text: '1');
+    _quickCaloriesController = TextEditingController();
+
     _servingsController.addListener(() {
       setState(() {
         _cachedNutrition = null;
@@ -92,11 +104,15 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
     _rawWeightController.dispose();
     _cookedWeightController.dispose();
     _preparationMethodController.dispose();
+    _quickNameController.dispose();
+    _quickAmountController.dispose();
+    _quickCaloriesController.dispose();
     super.dispose();
   }
 
   Future<void> _addIngredient() async {
-    final result = await Navigator.of(context).push(FoodEntryScreen.route());
+    // Use FoodSearchScreen (unified search) instead of FoodEntryScreen
+    final result = await Navigator.of(context).push(FoodSearchScreen.route());
     if (result != null) {
       setState(() {
         _ingredientFoods.add(result);
@@ -112,6 +128,67 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
         _cachedNutrition = null;
       });
     }
+  }
+
+  void _quickAddIngredient() {
+    final name = _quickNameController.text.trim();
+    final amount = double.tryParse(_quickAmountController.text) ?? 1;
+    final calories = double.tryParse(_quickCaloriesController.text) ?? 0;
+
+    if (name.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter ingredient name')),
+      );
+      return;
+    }
+
+    // Create a simple manual food entry
+    final quickFood = FoodEntry.withId(
+      entryType: FoodEntryType.manualCustom,
+      name: name,
+      amount: amount,
+      unit: 'serving',
+      servingSizeGrams: 100,
+      portionEstimationMethod: PortionEstimationMethod.householdMeasure,
+      portionState: PortionState.asServed,
+      nutrition: NutritionProfile(
+        energyKcal: calories,
+        protein: 0,
+        carbs: 0,
+        fat: 0,
+        sugars: 0,
+        fiber: 0,
+        saturatedFat: 0,
+        transFat: 0,
+        cholesterol: 0,
+        sodium: 0,
+        waterContent: 0,
+        micros: {},
+      ),
+      source: FoodSource.manual,
+      confidenceScore: 0.5,
+      originalValues: {},
+    );
+
+    setState(() {
+      _ingredientFoods.add(quickFood);
+      _ingredients.add(
+        RecipeComposition.withId(
+          recipeId: '',
+          ingredientId: quickFood.id,
+          amount: amount,
+          unit: 'serving',
+          sortOrder: _ingredients.length,
+        ),
+      );
+      _cachedNutrition = null;
+
+      // Clear quick add fields
+      _quickNameController.clear();
+      _quickAmountController.text = '1';
+      _quickCaloriesController.clear();
+      _showQuickAdd = false;
+    });
   }
 
   void _removeIngredient(int index) {
@@ -285,9 +362,9 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
         tags: result.tags,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.template_saved)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
       }
     }
   }
@@ -451,25 +528,128 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
 
               const SizedBox(height: 24),
 
-              // Ingredients Section
+              // Ingredients Section Header
+              Text(
+                'Ingredients (${_ingredients.length})',
+                style: theme.textTheme.titleLarge,
+              ),
+              const SizedBox(height: 12),
+
+              // Add Ingredient Options
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Ingredients (${_ingredients.length})',
-                    style: theme.textTheme.titleLarge,
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: _addIngredient,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: theme.colorScheme.primary,
-                      foregroundColor: theme.colorScheme.onPrimary,
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: _addIngredient,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: theme.colorScheme.primary,
+                        foregroundColor: theme.colorScheme.onPrimary,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      icon: const Icon(Icons.search),
+                      label: const Text('Search & Add'),
                     ),
-                    icon: const Icon(Icons.add),
-                    label: const Text('Add Ingredient'),
+                  ),
+                  const SizedBox(width: 8),
+                  OutlinedButton.icon(
+                    onPressed: () =>
+                        setState(() => _showQuickAdd = !_showQuickAdd),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    icon: Icon(_showQuickAdd ? Icons.close : Icons.bolt),
+                    label: Text(_showQuickAdd ? 'Cancel' : 'Quick Add'),
                   ),
                 ],
               ),
+
+              // Quick Add Form (collapsible)
+              if (_showQuickAdd) ...[
+                const SizedBox(height: 12),
+                Card(
+                  color: Colors.amber.shade50,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.bolt,
+                              color: Colors.amber.shade700,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Quick Add Ingredient',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.amber.shade900,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: TextField(
+                                controller: _quickNameController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Name *',
+                                  hintText: 'e.g., Olive oil',
+                                  border: OutlineInputBorder(),
+                                  isDense: true,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              flex: 1,
+                              child: TextField(
+                                controller: _quickAmountController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Qty',
+                                  border: OutlineInputBorder(),
+                                  isDense: true,
+                                ),
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              flex: 1,
+                              child: TextField(
+                                controller: _quickCaloriesController,
+                                decoration: const InputDecoration(
+                                  labelText: 'kcal',
+                                  border: OutlineInputBorder(),
+                                  isDense: true,
+                                ),
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _quickAddIngredient,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.amber.shade700,
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text('Add to Recipe'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
 
               const SizedBox(height: 16),
 
@@ -481,7 +661,7 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                       child: Column(
                         children: [
                           Icon(
-                            Icons.fastfood,
+                            Icons.restaurant_menu,
                             size: 48,
                             color: theme.colorScheme.primary.withValues(
                               alpha: 0.5,
@@ -489,6 +669,14 @@ class _RecipeBuilderScreenState extends State<RecipeBuilderScreen> {
                           ),
                           const SizedBox(height: 8),
                           const Text('No ingredients added yet'),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Use "Search & Add" or "Quick Add" above',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
                         ],
                       ),
                     ),

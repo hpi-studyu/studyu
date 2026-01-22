@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
-import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
 import 'package:studyu_core/core.dart';
@@ -327,10 +326,11 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final isEditing = widget.existingFood != null;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.food_entry_title),
+        title: Text(isEditing ? 'Edit Food' : 'Add Food Manually'),
         actions: [
           IconButton(
             onPressed: () async {
@@ -339,7 +339,6 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                 FoodSearchScreen.route(),
               );
               if (result != null) {
-                // If a food was selected from search, close this screen with the result
                 Navigator.of(context).pop(result);
               }
             },
@@ -356,481 +355,467 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveFood,
         icon: const Icon(Icons.check),
-        label: Text(AppLocalizations.of(context)!.save),
+        label: Text(l10n.save),
       ),
       body: Form(
         key: _formKey,
-        child: SingleChildScrollView(
+        child: ListView(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.food_information,
-                        style: theme.textTheme.titleLarge,
+          children: [
+            // ========== ESSENTIAL FIELDS (Always Visible) ==========
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Food Name - PRIMARY
+                    TextFormField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        labelText: '${l10n.food_name} *',
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.restaurant),
                       ),
-                      const SizedBox(height: 16),
-                      DropdownButtonFormField<FoodEntryType>(
-                        initialValue: _entryType,
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.entry_type,
-                          border: const OutlineInputBorder(),
+                      autofocus: !isEditing,
+                      textCapitalization: TextCapitalization.words,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return l10n.enter_food_name;
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Amount + Unit (side by side)
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: TextFormField(
+                            controller: _amountController,
+                            decoration: InputDecoration(
+                              labelText: l10n.amount,
+                              border: const OutlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d+\.?\d{0,2}'),
+                              ),
+                            ],
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return l10n.required_error;
+                              }
+                              return null;
+                            },
+                          ),
                         ),
-                        items: FoodEntryType.values.map((type) {
-                          return DropdownMenuItem(
-                            value: type,
-                            child: Text(_getEntryTypeLabel(type)),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() => _entryType = value);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _nameController,
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.food_name,
-                          border: const OutlineInputBorder(),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          flex: 3,
+                          child: TextFormField(
+                            controller: _unitController,
+                            decoration: InputDecoration(
+                              labelText: l10n.unit,
+                              border: const OutlineInputBorder(),
+                              hintText: 'serving, cup, g...',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return l10n.required_error;
+                              }
+                              return null;
+                            },
+                          ),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return AppLocalizations.of(
-                              context,
-                            )!.enter_food_name;
-                          }
-                          return null;
-                        },
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Calories - MOST IMPORTANT NUTRITION
+                    TextFormField(
+                      controller: _energyController,
+                      decoration: InputDecoration(
+                        labelText: l10n.energy_kcal,
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.local_fire_department),
+                        hintText: '0',
+                        suffixText: 'kcal',
                       ),
-                      const SizedBox(height: 16),
-                      if (_entryType == FoodEntryType.brandedProduct) ...[
-                        TextFormField(
-                          controller: _brandController,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d+\.?\d{0,2}'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // ========== MACROS (Always visible) ==========
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.pie_chart,
+                          size: 20,
+                          color: theme.colorScheme.primary,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Macronutrients',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _proteinController,
+                            decoration: InputDecoration(
+                              labelText: l10n.protein_g,
+                              border: const OutlineInputBorder(),
+                              hintText: '0',
+                              suffixText: 'g',
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d+\.?\d{0,2}'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _carbsController,
+                            decoration: InputDecoration(
+                              labelText: l10n.carbs_g,
+                              border: const OutlineInputBorder(),
+                              hintText: '0',
+                              suffixText: 'g',
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d+\.?\d{0,2}'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _fatController,
+                            decoration: InputDecoration(
+                              labelText: l10n.fat_g,
+                              border: const OutlineInputBorder(),
+                              hintText: '0',
+                              suffixText: 'g',
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d+\.?\d{0,2}'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // ========== DETAILED NUTRITION (Collapsed) ==========
+            Card(
+              clipBehavior: Clip.antiAlias,
+              child: ExpansionTile(
+                initiallyExpanded: false,
+                leading: Icon(Icons.science, color: Colors.grey.shade600),
+                title: const Text('Detailed Nutrition'),
+                subtitle: const Text('Fiber, Sugar, Sodium, etc.'),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _fiberController,
+                                decoration: InputDecoration(
+                                  labelText: l10n.fiber_g,
+                                  border: const OutlineInputBorder(),
+                                  hintText: '0',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d+\.?\d{0,2}'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _sugarsController,
+                                decoration: InputDecoration(
+                                  labelText: l10n.sugars_g,
+                                  border: const OutlineInputBorder(),
+                                  hintText: '0',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d+\.?\d{0,2}'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _saturatedFatController,
+                                decoration: InputDecoration(
+                                  labelText: l10n.saturated_fat_g,
+                                  border: const OutlineInputBorder(),
+                                  hintText: '0',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d+\.?\d{0,2}'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _sodiumController,
+                                decoration: InputDecoration(
+                                  labelText: l10n.sodium_mg,
+                                  border: const OutlineInputBorder(),
+                                  hintText: '0',
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d+\.?\d{0,2}'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // ========== ADVANCED OPTIONS (Collapsed) ==========
+            Card(
+              clipBehavior: Clip.antiAlias,
+              child: ExpansionTile(
+                initiallyExpanded: false,
+                leading: Icon(Icons.tune, color: Colors.grey.shade600),
+                title: const Text('Advanced Options'),
+                subtitle: const Text(
+                  'Food type, serving size, portion details',
+                ),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: Column(
+                      children: [
+                        // Entry Type
+                        DropdownButtonFormField<FoodEntryType>(
+                          value: _entryType == FoodEntryType.recipe
+                              ? FoodEntryType.manualCustom
+                              : _entryType,
                           decoration: InputDecoration(
-                            labelText: AppLocalizations.of(context)!.brand_name,
+                            labelText: l10n.entry_type,
                             border: const OutlineInputBorder(),
                           ),
+                          items: FoodEntryType.values
+                              .where((type) => type != FoodEntryType.recipe)
+                              .map((type) {
+                                return DropdownMenuItem(
+                                  value: type,
+                                  child: Text(_getEntryTypeLabel(type)),
+                                );
+                              })
+                              .toList(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() => _entryType = value);
+                            }
+                          },
                         ),
-                        const SizedBox(height: 16),
-                      ],
-                      TextFormField(
-                        controller: _descriptionController,
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.description,
-                          border: const OutlineInputBorder(),
-                          hintText: AppLocalizations.of(
-                            context,
-                          )!.description_hint,
+                        const SizedBox(height: 12),
+
+                        // Brand (conditional)
+                        if (_entryType == FoodEntryType.brandedProduct) ...[
+                          TextFormField(
+                            controller: _brandController,
+                            decoration: InputDecoration(
+                              labelText: l10n.brand_name,
+                              border: const OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+
+                        // Description
+                        TextFormField(
+                          controller: _descriptionController,
+                          decoration: InputDecoration(
+                            labelText: l10n.description,
+                            border: const OutlineInputBorder(),
+                            hintText: l10n.description_hint,
+                          ),
+                          maxLines: 2,
                         ),
-                        maxLines: 2,
-                      ),
-                      const SizedBox(height: 16),
-                      if (_entryType == FoodEntryType.recipe) ...[
-                        Card(
-                          color: Colors.blue.shade50,
-                          child: Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.info_outline,
-                                      color: Colors.blue.shade700,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        AppLocalizations.of(
-                                          context,
-                                        )!.recipe_info,
-                                        style: TextStyle(
-                                          color: Colors.blue.shade700,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                        const SizedBox(height: 12),
+
+                        // Serving Size
+                        TextFormField(
+                          controller: _servingSizeController,
+                          decoration: InputDecoration(
+                            labelText: l10n.serving_size,
+                            border: const OutlineInputBorder(),
+                            suffixText: 'g',
+                          ),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,2}'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Portion Reference
+                        TextFormField(
+                          controller: _portionReferenceController,
+                          decoration: InputDecoration(
+                            labelText: l10n.portion_reference,
+                            border: const OutlineInputBorder(),
+                            hintText: l10n.portion_reference_hint,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Portion Method
+                        DropdownButtonFormField<PortionEstimationMethod>(
+                          value: _portionMethod,
+                          decoration: InputDecoration(
+                            labelText: l10n.portion_estimation_method,
+                            border: const OutlineInputBorder(),
+                          ),
+                          items: PortionEstimationMethod.values.map((method) {
+                            return DropdownMenuItem(
+                              value: method,
+                              child: Text(_getPortionMethodLabel(method)),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() => _portionMethod = value);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Portion State
+                        DropdownButtonFormField<PortionState>(
+                          value: _portionState,
+                          decoration: InputDecoration(
+                            labelText: l10n.portion_state,
+                            border: const OutlineInputBorder(),
+                          ),
+                          items: PortionState.values.map((state) {
+                            return DropdownMenuItem(
+                              value: state,
+                              child: Text(_getPortionStateLabel(state)),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() => _portionState = value);
+                            }
+                          },
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Yield & Edible Portion
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: _yieldFactorController,
+                                decoration: InputDecoration(
+                                  labelText: l10n.yield_factor,
+                                  border: const OutlineInputBorder(),
+                                  hintText: l10n.yield_factor_hint,
                                 ),
-                                const SizedBox(height: 8),
-                                ElevatedButton.icon(
-                                  onPressed: () async {
-                                    final result = await Navigator.of(context)
-                                        .push(
-                                          RecipeBuilderScreen.route(
-                                            existingRecipe: widget.existingFood,
-                                          ),
-                                        );
-                                    if (result != null && context.mounted) {
-                                      Navigator.of(context).pop(result);
-                                    }
-                                  },
-                                  icon: const Icon(Icons.menu_book),
-                                  label: Text(
-                                    AppLocalizations.of(
-                                      context,
-                                    )!.open_recipe_builder,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d+\.?\d{0,4}'),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: TextFormField(
+                                controller: _ediblePortionController,
+                                decoration: InputDecoration(
+                                  labelText: l10n.edible_portion,
+                                  border: const OutlineInputBorder(),
+                                  hintText: l10n.edible_portion_hint,
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d+\.?\d{0,4}'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
                       ],
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: TextFormField(
-                              controller: _amountController,
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(context)!.amount,
-                                border: const OutlineInputBorder(),
-                              ),
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,2}'),
-                                ),
-                              ],
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return AppLocalizations.of(
-                                    context,
-                                  )!.required_error;
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            flex: 3,
-                            child: TextFormField(
-                              controller: _unitController,
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(context)!.unit,
-                                border: const OutlineInputBorder(),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return AppLocalizations.of(
-                                    context,
-                                  )!.required_error;
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _servingSizeController,
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.serving_size,
-                          border: const OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+\.?\d{0,2}'),
-                          ),
-                        ],
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return AppLocalizations.of(
-                              context,
-                            )!.enter_serving_size;
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _portionReferenceController,
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(
-                            context,
-                          )!.portion_reference,
-                          border: const OutlineInputBorder(),
-                          hintText: AppLocalizations.of(
-                            context,
-                          )!.portion_reference_hint,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      DropdownButtonFormField<PortionEstimationMethod>(
-                        initialValue: _portionMethod,
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(
-                            context,
-                          )!.portion_estimation_method,
-                          border: const OutlineInputBorder(),
-                        ),
-                        items: PortionEstimationMethod.values.map((method) {
-                          return DropdownMenuItem(
-                            value: method,
-                            child: Text(_getPortionMethodLabel(method)),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() => _portionMethod = value);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      DropdownButtonFormField<PortionState>(
-                        initialValue: _portionState,
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(
-                            context,
-                          )!.portion_state,
-                          border: const OutlineInputBorder(),
-                        ),
-                        items: PortionState.values.map((state) {
-                          return DropdownMenuItem(
-                            value: state,
-                            child: Text(_getPortionStateLabel(state)),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() => _portionState = value);
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _yieldFactorController,
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(
-                                  context,
-                                )!.yield_factor,
-                                border: const OutlineInputBorder(),
-                                hintText: AppLocalizations.of(
-                                  context,
-                                )!.yield_factor_hint,
-                              ),
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,4}'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextFormField(
-                              controller: _ediblePortionController,
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(
-                                  context,
-                                )!.edible_portion,
-                                border: const OutlineInputBorder(),
-                                hintText: AppLocalizations.of(
-                                  context,
-                                )!.edible_portion_hint,
-                              ),
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,4}'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-              const SizedBox(height: 16),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.nutrition_information,
-                        style: theme.textTheme.titleLarge,
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _energyController,
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.energy_kcal,
-                          border: const OutlineInputBorder(),
-                          hintText: '0',
-                        ),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+\.?\d{0,2}'),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _proteinController,
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(
-                                  context,
-                                )!.protein_g,
-                                border: const OutlineInputBorder(),
-                                hintText: '0',
-                              ),
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,2}'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextFormField(
-                              controller: _carbsController,
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(
-                                  context,
-                                )!.carbs_g,
-                                border: const OutlineInputBorder(),
-                                hintText: '0',
-                              ),
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,2}'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _fatController,
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(context)!.fat_g,
-                                border: const OutlineInputBorder(),
-                                hintText: '0',
-                              ),
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,2}'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextFormField(
-                              controller: _saturatedFatController,
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(
-                                  context,
-                                )!.saturated_fat_g,
-                                border: const OutlineInputBorder(),
-                                hintText: '0',
-                              ),
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,2}'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _sugarsController,
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(
-                                  context,
-                                )!.sugars_g,
-                                border: const OutlineInputBorder(),
-                                hintText: '0',
-                              ),
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,2}'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: TextFormField(
-                              controller: _fiberController,
-                              decoration: InputDecoration(
-                                labelText: AppLocalizations.of(
-                                  context,
-                                )!.fiber_g,
-                                border: const OutlineInputBorder(),
-                                hintText: '0',
-                              ),
-                              keyboardType: TextInputType.number,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                  RegExp(r'^\d+\.?\d{0,2}'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _sodiumController,
-                        decoration: InputDecoration(
-                          labelText: AppLocalizations.of(context)!.sodium_mg,
-                          border: const OutlineInputBorder(),
-                          hintText: '0',
-                        ),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+\.?\d{0,2}'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+
+            // Bottom padding for FAB
+            const SizedBox(height: 80),
+          ],
         ),
       ),
     );
