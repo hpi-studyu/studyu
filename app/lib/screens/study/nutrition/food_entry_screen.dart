@@ -594,8 +594,8 @@ class _EssentialFieldsCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: TextFormField(
-                  controller: carbsController,
-                  decoration: InputDecoration(
+                    controller: carbsController,
+                    decoration: InputDecoration(
                     labelText: l10n.carbs_g,
                     border: const OutlineInputBorder(),
                     filled: true,
@@ -947,17 +947,18 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                       labelText: widget.l10n.entry_type,
                       border: const OutlineInputBorder(),
                       filled: true,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 12,
-                      ),
+                      isDense: true,
                     ),
+                    isExpanded: true,
                     items: FoodEntryType.values
                         .where((type) => type != FoodEntryType.recipe)
                         .map((type) {
                           return DropdownMenuItem(
                             value: type,
-                            child: Text(_getEntryTypeLabel(type)),
+                            child: Text(
+                              _getEntryTypeLabel(type),
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           );
                         })
                         .toList(),
@@ -988,6 +989,7 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                       hintText: widget.l10n.description_hint,
                     ),
                     maxLines: 2,
+                    minLines: 1,
                   ),
                   const SizedBox(height: 8),
 
@@ -1031,15 +1033,16 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                             labelText: widget.l10n.portion_estimation_method,
                             border: const OutlineInputBorder(),
                             filled: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 12,
-                            ),
+                            isDense: true,
                           ),
+                          isExpanded: true,
                           items: PortionEstimationMethod.values.map((method) {
                             return DropdownMenuItem(
                               value: method,
-                              child: Text(_getPortionMethodLabel(method)),
+                              child: Text(
+                                _getPortionMethodLabel(method),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             );
                           }).toList(),
                           onChanged: widget.onPortionMethodChanged,
@@ -1053,15 +1056,16 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                             labelText: widget.l10n.portion_state,
                             border: const OutlineInputBorder(),
                             filled: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 12,
-                            ),
+                            isDense: true,
                           ),
+                          isExpanded: true,
                           items: PortionState.values.map((state) {
                             return DropdownMenuItem(
                               value: state,
-                              child: Text(_getPortionStateLabel(state)),
+                              child: Text(
+                                _getPortionStateLabel(state),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             );
                           }).toList(),
                           onChanged: widget.onPortionStateChanged,
