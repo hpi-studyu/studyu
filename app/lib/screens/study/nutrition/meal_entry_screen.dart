@@ -4,7 +4,6 @@ import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/food_search_screen.dart';
-import 'package:studyu_app/screens/study/nutrition/meal_entry_screen_helper.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/widgets/nutrition_summary_card.dart';
 import 'package:studyu_app/widgets/save_template_dialog.dart';
@@ -105,7 +104,6 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   }
 
   Future<void> _addFood() async {
-    // UPDATED: Now points to FoodSearchScreen (Unified Search)
     final result = await Navigator.of(context).push(FoodSearchScreen.route());
     if (result != null) {
       setState(() {
@@ -168,64 +166,20 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   }
 
   String _getMealTypeLabel(MealType type) {
+    final l10n = AppLocalizations.of(context)!;
     switch (type) {
       case MealType.breakfast:
-        return AppLocalizations.of(context)!.meal_type_breakfast;
+        return l10n.meal_type_breakfast;
       case MealType.brunch:
-        return AppLocalizations.of(context)!.meal_type_brunch;
+        return l10n.meal_type_brunch;
       case MealType.lunch:
-        return AppLocalizations.of(context)!.meal_type_lunch;
+        return l10n.meal_type_lunch;
       case MealType.dinner:
-        return AppLocalizations.of(context)!.meal_type_dinner;
+        return l10n.meal_type_dinner;
       case MealType.snack:
-        return AppLocalizations.of(context)!.meal_type_snack;
+        return l10n.meal_type_snack;
       case MealType.other:
-        return AppLocalizations.of(context)!.meal_type_other;
-    }
-  }
-
-  String _getMealContextLabel(MealContext mealContext) {
-    switch (mealContext) {
-      case MealContext.home:
-        return AppLocalizations.of(context)!.context_home;
-      case MealContext.restaurant:
-        return AppLocalizations.of(context)!.context_restaurant;
-      case MealContext.takeout:
-        return AppLocalizations.of(context)!.context_takeout;
-      case MealContext.vending:
-        return AppLocalizations.of(context)!.context_vending;
-      case MealContext.other:
-        return AppLocalizations.of(context)!.context_other;
-    }
-  }
-
-  String _getCompanyContextLabel(CompanyContext companyContext) {
-    switch (companyContext) {
-      case CompanyContext.alone:
-        return AppLocalizations.of(context)!.company_alone;
-      case CompanyContext.family:
-        return AppLocalizations.of(context)!.company_family;
-      case CompanyContext.friends:
-        return AppLocalizations.of(context)!.company_friends;
-      case CompanyContext.colleagues:
-        return AppLocalizations.of(context)!.company_colleagues;
-      case CompanyContext.other:
-        return AppLocalizations.of(context)!.company_other;
-    }
-  }
-
-  String _getDistractionContextLabel(DistractionContext distractionContext) {
-    switch (distractionContext) {
-      case DistractionContext.none:
-        return AppLocalizations.of(context)!.distraction_none;
-      case DistractionContext.tv:
-        return AppLocalizations.of(context)!.distraction_tv;
-      case DistractionContext.phone:
-        return AppLocalizations.of(context)!.distraction_phone;
-      case DistractionContext.work:
-        return AppLocalizations.of(context)!.distraction_work;
-      case DistractionContext.other:
-        return AppLocalizations.of(context)!.distraction_other;
+        return l10n.meal_type_other;
     }
   }
 
@@ -304,409 +258,863 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
+    final canSave =
+        (!_isSkipped && _meal.foods.isNotEmpty) ||
+        (_isSkipped && _skipReason != null && _skipReason!.isNotEmpty);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.meal_entry_title),
         actions: [
           if (_meal.foods.isNotEmpty)
             IconButton(
-              icon: const Icon(Icons.bookmark_add),
+              icon: const Icon(Icons.bookmark_add_outlined),
               tooltip: l10n.save_as_template,
               onPressed: _saveAsTemplate,
             ),
         ],
       ),
-      floatingActionButton:
-          (!_isSkipped && _meal.foods.isNotEmpty ||
-              _isSkipped && _skipReason != null)
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _MealTypeSelector(
+                    mealType: _mealType,
+                    customMealLabel: _customMealLabel,
+                    customMealLabelController: _customMealLabelController,
+                    onMealTypeChanged: (value) {
+                      setState(() => _mealType = value);
+                    },
+                    onCustomLabelChanged: (value) {
+                      setState(() => _customMealLabel = value);
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  _TimeSelector(
+                    timestamp: _timestamp,
+                    onSelectTime: _selectTime,
+                  ),
+                  const SizedBox(height: 16),
+                  _FoodListSection(
+                    meal: _meal,
+                    isSkipped: _isSkipped,
+                    onAddFood: _addFood,
+                    onAddFoodFromTemplate: _addFoodFromTemplate,
+                    onEditFood: _editFood,
+                    onRemoveFood: _removeFood,
+                    onSaveFoodAsTemplate: _saveFoodAsTemplate,
+                  ),
+                  if (_meal.foods.isNotEmpty && !_isSkipped) ...[
+                    const SizedBox(height: 16),
+                    MealNutritionSummaryCard(meal: _meal),
+                  ],
+                  const SizedBox(height: 16),
+                  _MealOptionsCard(
+                    mealContext: _mealContext,
+                    companyContext: _companyContext,
+                    distractionContext: _distractionContext,
+                    locationDescription: _locationDescription,
+                    locationDescriptionController:
+                        _locationDescriptionController,
+                    isSkipped: _isSkipped,
+                    skipReason: _skipReason,
+                    skipReasonController: _skipReasonController,
+                    onMealContextChanged: (value) {
+                      setState(() => _mealContext = value);
+                    },
+                    onCompanyContextChanged: (value) {
+                      setState(() => _companyContext = value);
+                    },
+                    onDistractionContextChanged: (value) {
+                      setState(() => _distractionContext = value);
+                    },
+                    onLocationDescriptionChanged: (value) {
+                      setState(() => _locationDescription = value);
+                    },
+                    onSkippedChanged: (value) {
+                      setState(() => _isSkipped = value);
+                    },
+                    onSkipReasonChanged: (value) {
+                      setState(() => _skipReason = value);
+                    },
+                  ),
+                  const SizedBox(height: 80),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: canSave
           ? FloatingActionButton.extended(
               onPressed: _saveMeal,
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
               icon: const Icon(Icons.check),
-              label: Text(AppLocalizations.of(context)!.save),
+              label: Text(l10n.save),
             )
           : null,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Section 1: Food List and Actions
-            if (!_isSkipped) ...[
-              if (_meal.foods.isEmpty)
-                // Prominent Add Food Action
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(
-                      color: theme.colorScheme.primary.withAlpha(50),
-                    ),
-                  ),
-                  child: InkWell(
-                    onTap: _addFood,
-                    borderRadius: BorderRadius.circular(16),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 32,
-                        horizontal: 16,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.add_circle_outline,
-                            size: 48,
-                            color: theme.colorScheme.primary,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            l10n.add_food,
-                            style: theme.textTheme.headlineSmall?.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Search, scan barcode, or select from templates',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              else
-                // Food List
-                ...List.generate(_meal.foods.length, (index) {
-                  final food = _meal.foods[index];
-                  IconData foodIcon;
-                  Color? iconColor;
-                  switch (food.entryType) {
-                    case FoodEntryType.recipe:
-                      foodIcon = Icons.menu_book;
-                      iconColor = Colors.orange;
-                    case FoodEntryType.brandedProduct:
-                      foodIcon = Icons.shopping_bag;
-                      iconColor = Colors.blue;
-                    case FoodEntryType.manualCustom:
-                      foodIcon = Icons.edit_note;
-                      iconColor = Colors.purple;
-                    default:
-                      foodIcon = Icons.restaurant;
-                      iconColor = Colors.green;
-                  }
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    child: ListTile(
-                      leading: Icon(foodIcon, color: iconColor),
-                      title: Row(
-                        children: [
-                          Expanded(child: Text(food.name)),
-                          if (food.brandName != null)
-                            Chip(
-                              label: Text(
-                                food.brandName!,
-                                style: const TextStyle(fontSize: 10),
-                              ),
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              visualDensity: VisualDensity.compact,
-                            ),
-                        ],
-                      ),
-                      subtitle: Text(
-                        '${food.amount} ${food.unit} • ${food.nutrition.energyKcal.toStringAsFixed(0)} kcal\n${getEntryTypeLabel(food.entryType)}',
-                      ),
-                      isThreeLine: true,
-                      trailing: PopupMenuButton(
-                        itemBuilder: (popupContext) => [
-                          PopupMenuItem(
-                            value: 'edit',
-                            child: Row(
-                              children: [
-                                const Icon(Icons.edit),
-                                const SizedBox(width: 8),
-                                Text(AppLocalizations.of(popupContext)!.edit),
-                              ],
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 'save_template',
-                            child: Row(
-                              children: [
-                                const Icon(Icons.bookmark_add),
-                                const SizedBox(width: 8),
-                                Text(
-                                  AppLocalizations.of(
-                                    popupContext,
-                                  )!.save_as_template,
-                                ),
-                              ],
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 'delete',
-                            child: Row(
-                              children: [
-                                const Icon(Icons.delete, color: Colors.red),
-                                const SizedBox(width: 8),
-                                Text(
-                                  AppLocalizations.of(popupContext)!.delete,
-                                  style: const TextStyle(color: Colors.red),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                        onSelected: (value) {
-                          if (value == 'edit') {
-                            _editFood(food, index);
-                          } else if (value == 'save_template') {
-                            _saveFoodAsTemplate(food);
-                          } else if (value == 'delete') {
-                            _removeFood(index);
-                          }
-                        },
-                      ),
-                      onTap: () => _editFood(food, index),
-                    ),
-                  );
-                }),
+    );
+  }
+}
 
-              if (_meal.foods.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: _addFoodFromTemplate,
-                        icon: const Icon(Icons.bookmark),
-                        label: Text(l10n.from_template),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: _addFood,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: theme.colorScheme.primary,
-                          foregroundColor: theme.colorScheme.onPrimary,
-                        ),
-                        icon: const Icon(Icons.add),
-                        label: Text(l10n.add_food),
-                      ),
-                    ),
-                  ],
+class _MealTypeSelector extends StatelessWidget {
+  final MealType mealType;
+  final String? customMealLabel;
+  final TextEditingController customMealLabelController;
+  final ValueChanged<MealType> onMealTypeChanged;
+  final ValueChanged<String> onCustomLabelChanged;
+
+  const _MealTypeSelector({
+    required this.mealType,
+    required this.customMealLabel,
+    required this.customMealLabelController,
+    required this.onMealTypeChanged,
+    required this.onCustomLabelChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return SizedBox(
+      width: double.infinity,
+      child: Card(
+        elevation: 0,
+        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.meal_type_label,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
-                const SizedBox(height: 24),
-                MealNutritionSummaryCard(meal: _meal),
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: MealType.values.map((type) {
+                  final isSelected = mealType == type;
+                  final label = _getMealTypeLabel(context, type);
+                  return _MealTypeChip(
+                    label: label,
+                    isSelected: isSelected,
+                    onSelect: () => onMealTypeChanged(type),
+                  );
+                }).toList(),
+              ),
+              if (mealType == MealType.other) ...[
+                const SizedBox(height: 12),
+                TextField(
+                  controller: customMealLabelController,
+                  decoration: InputDecoration(
+                    labelText: l10n.custom_meal_label,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                  ),
+                  onChanged: onCustomLabelChanged,
+                ),
               ],
             ],
+          ),
+        ),
+      ),
+    );
+  }
 
-            const SizedBox(height: 24),
+  String _getMealTypeLabel(BuildContext context, MealType type) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (type) {
+      case MealType.breakfast:
+        return l10n.meal_type_breakfast;
+      case MealType.brunch:
+        return l10n.meal_type_brunch;
+      case MealType.lunch:
+        return l10n.meal_type_lunch;
+      case MealType.dinner:
+        return l10n.meal_type_dinner;
+      case MealType.snack:
+        return l10n.meal_type_snack;
+      case MealType.other:
+        return l10n.meal_type_other;
+    }
+  }
+}
 
-            // Section 2: Meal Details (Collapsed by default)
-            Card(
-              clipBehavior: Clip.antiAlias,
-              child: ExpansionTile(
-                initiallyExpanded: false,
-                title: Row(
-                  children: [
-                    Icon(Icons.info_outline, color: theme.colorScheme.primary),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Meal Details', // Should be localized
-                      style: theme.textTheme.titleMedium,
-                    ),
-                  ],
+class _MealTypeChip extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onSelect;
+
+  const _MealTypeChip({
+    required this.label,
+    required this.isSelected,
+    required this.onSelect,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return FilterChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (_) => onSelect(),
+      backgroundColor: theme.colorScheme.surface,
+      selectedColor: theme.colorScheme.primaryContainer,
+      checkmarkColor: theme.colorScheme.onPrimaryContainer,
+      labelStyle: TextStyle(
+        color: isSelected
+            ? theme.colorScheme.onPrimaryContainer
+            : theme.colorScheme.onSurfaceVariant,
+        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(
+          color: isSelected
+              ? theme.colorScheme.primary
+              : theme.colorScheme.outline.withValues(alpha: 0.5),
+        ),
+      ),
+    );
+  }
+}
+
+class _TimeSelector extends StatelessWidget {
+  final DateTime timestamp;
+  final VoidCallback onSelectTime;
+
+  const _TimeSelector({required this.timestamp, required this.onSelectTime});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return InkWell(
+      onTap: onSelectTime,
+      borderRadius: BorderRadius.circular(16),
+      child: Card(
+        elevation: 0,
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primaryContainer.withValues(
+                    alpha: 0.5,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                subtitle: Text(
-                  _isSkipped
-                      ? 'Skipped: ${_skipReason ?? "No reason"}'
-                      : '${_getMealTypeLabel(_mealType)} • ${_timestamp.hour.toString().padLeft(2, '0')}:${_timestamp.minute.toString().padLeft(2, '0')}',
-                  style: theme.textTheme.bodySmall,
+                child: Icon(
+                  Icons.access_time_rounded,
+                  size: 20,
+                  color: theme.colorScheme.primary,
                 ),
+              ),
+              const SizedBox(width: 16),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        DropdownButtonFormField<MealType>(
-                          initialValue: _mealType,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(
-                              context,
-                            )!.meal_type_label,
-                            border: const OutlineInputBorder(),
-                          ),
-                          items: MealType.values.map((type) {
-                            return DropdownMenuItem(
-                              value: type,
-                              child: Text(_getMealTypeLabel(type)),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() => _mealType = value);
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        if (_mealType == MealType.other)
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: AppLocalizations.of(
-                                context,
-                              )!.custom_meal_label,
-                              border: const OutlineInputBorder(),
-                            ),
-                            onChanged: (value) => _customMealLabel = value,
-                            controller: _customMealLabelController,
-                          ),
-                        const SizedBox(height: 16),
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: const Icon(Icons.access_time),
-                          title: Text(AppLocalizations.of(context)!.time),
-                          subtitle: Text(
-                            '${_timestamp.hour.toString().padLeft(2, '0')}:${_timestamp.minute.toString().padLeft(2, '0')}',
-                          ),
-                          trailing: const Icon(Icons.edit),
-                          onTap: _selectTime,
-                        ),
-                        const Divider(),
-                        DropdownButtonFormField<MealContext>(
-                          initialValue: _mealContext,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(
-                              context,
-                            )!.where_did_you_eat,
-                            border: const OutlineInputBorder(),
-                          ),
-                          items: MealContext.values.map((context) {
-                            return DropdownMenuItem(
-                              value: context,
-                              child: Text(_getMealContextLabel(context)),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() => _mealContext = value);
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        if (_mealContext == MealContext.other)
-                          Column(
-                            children: [
-                              TextField(
-                                decoration: InputDecoration(
-                                  labelText: AppLocalizations.of(
-                                    context,
-                                  )!.location_description,
-                                  border: const OutlineInputBorder(),
-                                  hintText: AppLocalizations.of(
-                                    context,
-                                  )!.location_description_hint,
-                                ),
-                                onChanged: (value) =>
-                                    _locationDescription = value,
-                                controller: _locationDescriptionController,
-                              ),
-                              const SizedBox(height: 16),
-                            ],
-                          ),
-                        DropdownButtonFormField<CompanyContext>(
-                          initialValue: _companyContext,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(
-                              context,
-                            )!.who_were_you_with,
-                            border: const OutlineInputBorder(),
-                          ),
-                          items: [
-                            DropdownMenuItem(
-                              child: Text(
-                                AppLocalizations.of(context)!.not_specified,
-                              ),
-                            ),
-                            ...CompanyContext.values.map((context) {
-                              return DropdownMenuItem(
-                                value: context,
-                                child: Text(_getCompanyContextLabel(context)),
-                              );
-                            }),
-                          ],
-                          onChanged: (value) {
-                            setState(() => _companyContext = value);
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        DropdownButtonFormField<DistractionContext>(
-                          initialValue: _distractionContext,
-                          decoration: InputDecoration(
-                            labelText: AppLocalizations.of(
-                              context,
-                            )!.distractions_during_meal,
-                            border: const OutlineInputBorder(),
-                          ),
-                          items: [
-                            DropdownMenuItem(
-                              child: Text(
-                                AppLocalizations.of(context)!.not_specified,
-                              ),
-                            ),
-                            ...DistractionContext.values.map((context) {
-                              return DropdownMenuItem(
-                                value: context,
-                                child: Text(
-                                  _getDistractionContextLabel(context),
-                                ),
-                              );
-                            }),
-                          ],
-                          onChanged: (value) {
-                            setState(() => _distractionContext = value);
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        SwitchListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: Text(
-                            AppLocalizations.of(context)!.skipped_this_meal,
-                          ),
-                          value: _isSkipped,
-                          onChanged: (value) {
-                            setState(() => _isSkipped = value);
-                          },
-                        ),
-                        if (_isSkipped) ...[
-                          const SizedBox(height: 8),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: AppLocalizations.of(
-                                context,
-                              )!.reason_for_skipping,
-                              border: const OutlineInputBorder(),
-                            ),
-                            onChanged: (value) => _skipReason = value,
-                            controller: _skipReasonController,
-                          ),
-                        ],
-                      ],
+                  Text(
+                    l10n.time,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
+              ),
+              const Spacer(),
+              Icon(
+                Icons.edit_outlined,
+                size: 18,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FoodListSection extends StatelessWidget {
+  final MealLog meal;
+  final bool isSkipped;
+  final VoidCallback onAddFood;
+  final VoidCallback onAddFoodFromTemplate;
+  final Function(FoodEntry, int) onEditFood;
+  final Function(int) onRemoveFood;
+  final Function(FoodEntry) onSaveFoodAsTemplate;
+
+  const _FoodListSection({
+    required this.meal,
+    required this.isSkipped,
+    required this.onAddFood,
+    required this.onAddFoodFromTemplate,
+    required this.onEditFood,
+    required this.onRemoveFood,
+    required this.onSaveFoodAsTemplate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    if (isSkipped) {
+      return const SizedBox.shrink();
+    }
+
+    if (meal.foods.isEmpty) {
+      return _EmptyFoodState(theme: theme, l10n: l10n, onAddFood: onAddFood);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Food items',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Row(
+              children: [
+                IconButton.outlined(
+                  onPressed: onAddFoodFromTemplate,
+                  icon: const Icon(Icons.bookmark, size: 18),
+                  tooltip: l10n.from_template,
+                  style: IconButton.styleFrom(
+                    minimumSize: const Size(36, 36),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                FilledButton(
+                  onPressed: onAddFood,
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.add, size: 18),
+                      const SizedBox(width: 6),
+                      Text(l10n.add_food),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        ...List.generate(meal.foods.length, (index) {
+          final food = meal.foods[index];
+          return _FoodCard(
+            food: food,
+            index: index,
+            onTap: () => onEditFood(food, index),
+            onEdit: () => onEditFood(food, index),
+            onDelete: () => onRemoveFood(index),
+            onSaveTemplate: () => onSaveFoodAsTemplate(food),
+          );
+        }),
+      ],
+    );
+  }
+}
+
+class _EmptyFoodState extends StatelessWidget {
+  final ThemeData theme;
+  final AppLocalizations l10n;
+  final VoidCallback onAddFood;
+
+  const _EmptyFoodState({
+    required this.theme,
+    required this.l10n,
+    required this.onAddFood,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onAddFood,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(32),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHighest.withValues(
+            alpha: 0.3,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+            width: 2,
+          ),
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.5,
+                ),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.add_circle_outline,
+                size: 36,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              l10n.add_food,
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Tap to add food',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _FoodCard extends StatelessWidget {
+  final FoodEntry food;
+  final int index;
+  final VoidCallback onTap;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+  final VoidCallback onSaveTemplate;
+
+  const _FoodCard({
+    required this.food,
+    required this.index,
+    required this.onTap,
+    required this.onEdit,
+    required this.onDelete,
+    required this.onSaveTemplate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    final (icon, color) = _getFoodIconAndColor(food.entryType);
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(child: Icon(icon, size: 22, color: color)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      food.name,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 2),
+                    Row(
+                      children: [
+                        Text(
+                          '${food.amount} ${food.unit}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        Text(
+                          ' • ',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        Text(
+                          '${food.nutrition.energyKcal.toStringAsFixed(0)} kcal',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert, size: 20),
+                tooltip: '',
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                onSelected: (value) {
+                  switch (value) {
+                    case 'edit':
+                      onEdit();
+                      break;
+                    case 'save_template':
+                      onSaveTemplate();
+                      break;
+                    case 'delete':
+                      onDelete();
+                      break;
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 'edit',
+                    child: _PopupMenuItem(
+                      icon: Icons.edit_outlined,
+                      label: l10n.edit,
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'save_template',
+                    child: _PopupMenuItem(
+                      icon: Icons.bookmark_add_outlined,
+                      label: l10n.save_as_template,
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: _PopupMenuItem(
+                      icon: Icons.delete_outline,
+                      label: l10n.delete,
+                      isDestructive: true,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  (IconData, Color) _getFoodIconAndColor(FoodEntryType entryType) {
+    switch (entryType) {
+      case FoodEntryType.recipe:
+        return (Icons.menu_book_outlined, Colors.orange);
+      case FoodEntryType.brandedProduct:
+        return (Icons.shopping_bag_outlined, Colors.blue);
+      case FoodEntryType.manualCustom:
+        return (Icons.edit_note_outlined, Colors.purple);
+      default:
+        return (Icons.restaurant_outlined, Colors.green);
+    }
+  }
+}
+
+class _MealOptionsCard extends StatelessWidget {
+  final MealContext mealContext;
+  final CompanyContext? companyContext;
+  final DistractionContext? distractionContext;
+  final String? locationDescription;
+  final TextEditingController locationDescriptionController;
+  final bool isSkipped;
+  final String? skipReason;
+  final TextEditingController skipReasonController;
+  final ValueChanged<MealContext> onMealContextChanged;
+  final ValueChanged<CompanyContext?> onCompanyContextChanged;
+  final ValueChanged<DistractionContext?> onDistractionContextChanged;
+  final ValueChanged<String> onLocationDescriptionChanged;
+  final ValueChanged<bool> onSkippedChanged;
+  final ValueChanged<String> onSkipReasonChanged;
+
+  const _MealOptionsCard({
+    required this.mealContext,
+    required this.companyContext,
+    required this.distractionContext,
+    required this.locationDescription,
+    required this.locationDescriptionController,
+    required this.isSkipped,
+    required this.skipReason,
+    required this.skipReasonController,
+    required this.onMealContextChanged,
+    required this.onCompanyContextChanged,
+    required this.onDistractionContextChanged,
+    required this.onLocationDescriptionChanged,
+    required this.onSkippedChanged,
+    required this.onSkipReasonChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Details',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 12),
+            _DropdownField<MealContext>(
+              label: l10n.where_did_you_eat,
+              value: mealContext,
+              items: MealContext.values,
+              itemLabel: (context) => _getMealContextLabel(context, l10n),
+              onChanged: (value) {
+                if (value != null) onMealContextChanged(value);
+              },
+            ),
+            if (mealContext == MealContext.other) ...[
+              const SizedBox(height: 12),
+              TextField(
+                controller: locationDescriptionController,
+                decoration: InputDecoration(
+                  labelText: l10n.location_description,
+                  hintText: l10n.location_description_hint,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                ),
+                onChanged: onLocationDescriptionChanged,
+              ),
+            ],
+            const SizedBox(height: 12),
+            _DropdownField<CompanyContext?>(
+              label: l10n.who_were_you_with,
+              value: companyContext,
+              items: [null, ...CompanyContext.values],
+              itemLabel: (context) => context == null
+                  ? l10n.not_specified
+                  : _getCompanyContextLabel(context, l10n),
+              onChanged: onCompanyContextChanged,
+            ),
+            const SizedBox(height: 12),
+            _DropdownField<DistractionContext?>(
+              label: l10n.distractions_during_meal,
+              value: distractionContext,
+              items: [null, ...DistractionContext.values],
+              itemLabel: (context) => context == null
+                  ? l10n.not_specified
+                  : _getDistractionContextLabel(context, l10n),
+              onChanged: onDistractionContextChanged,
+            ),
+            const SizedBox(height: 12),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l10n.skipped_this_meal),
+              value: isSkipped,
+              onChanged: onSkippedChanged,
+            ),
+            if (isSkipped) ...[
+              const SizedBox(height: 8),
+              TextField(
+                controller: skipReasonController,
+                decoration: InputDecoration(
+                  labelText: l10n.reason_for_skipping,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                ),
+                onChanged: onSkipReasonChanged,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _getMealContextLabel(MealContext context, AppLocalizations l10n) {
+    switch (context) {
+      case MealContext.home:
+        return l10n.context_home;
+      case MealContext.restaurant:
+        return l10n.context_restaurant;
+      case MealContext.takeout:
+        return l10n.context_takeout;
+      case MealContext.vending:
+        return l10n.context_vending;
+      case MealContext.other:
+        return l10n.context_other;
+    }
+  }
+
+  String _getCompanyContextLabel(
+    CompanyContext context,
+    AppLocalizations l10n,
+  ) {
+    switch (context) {
+      case CompanyContext.alone:
+        return l10n.company_alone;
+      case CompanyContext.family:
+        return l10n.company_family;
+      case CompanyContext.friends:
+        return l10n.company_friends;
+      case CompanyContext.colleagues:
+        return l10n.company_colleagues;
+      case CompanyContext.other:
+        return l10n.company_other;
+    }
+  }
+
+  String _getDistractionContextLabel(
+    DistractionContext context,
+    AppLocalizations l10n,
+  ) {
+    switch (context) {
+      case DistractionContext.none:
+        return l10n.distraction_none;
+      case DistractionContext.tv:
+        return l10n.distraction_tv;
+      case DistractionContext.phone:
+        return l10n.distraction_phone;
+      case DistractionContext.work:
+        return l10n.distraction_work;
+      case DistractionContext.other:
+        return l10n.distraction_other;
+    }
+  }
+}
+
+class _DropdownField<T> extends StatelessWidget {
+  final String label;
+  final T? value;
+  final List<T?> items;
+  final String Function(T) itemLabel;
+  final ValueChanged<T?> onChanged;
+
+  const _DropdownField({
+    required this.label,
+    required this.value,
+    required this.items,
+    required this.itemLabel,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<T?>(
+      value: value,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        filled: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      ),
+      items: items
+          .map((item) {
+            if (item == null) return null;
+            return DropdownMenuItem<T?>(
+              value: item,
+              child: Text(itemLabel(item as T)),
+            );
+          })
+          .whereType<DropdownMenuItem<T?>>()
+          .toList(),
+      onChanged: onChanged,
+    );
+  }
+}
+
+class _PopupMenuItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool isDestructive;
+
+  const _PopupMenuItem({
+    required this.icon,
+    required this.label,
+    this.isDestructive = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 18,
+          color: isDestructive
+              ? Theme.of(context).colorScheme.error
+              : Theme.of(context).colorScheme.onSurface,
+        ),
+        const SizedBox(width: 12),
+        Text(
+          label,
+          style: TextStyle(
+            color: isDestructive ? Theme.of(context).colorScheme.error : null,
+          ),
+        ),
+      ],
     );
   }
 }

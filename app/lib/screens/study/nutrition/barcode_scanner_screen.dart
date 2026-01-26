@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
+import 'package:studyu_app/models/usda_models.dart';
 import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
 import 'package:studyu_core/core.dart' as studyu;
@@ -8,9 +9,8 @@ import 'package:studyu_core/core.dart' as studyu;
 class BarcodeScannerScreen extends StatefulWidget {
   const BarcodeScannerScreen({super.key});
 
-  static MaterialPageRoute<studyu.FoodEntry> route() => MaterialPageRoute(
-        builder: (_) => const BarcodeScannerScreen(),
-      );
+  static MaterialPageRoute<studyu.FoodEntry> route() =>
+      MaterialPageRoute(builder: (_) => const BarcodeScannerScreen());
 
   @override
   State<BarcodeScannerScreen> createState() => _BarcodeScannerScreenState();
@@ -27,21 +27,21 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
   DateTime? _lastScanTime;
   String? _detectedCode;
   String _guidanceMessage = 'Point camera at barcode';
-  
+
   bool _isValidBarcode(String code) {
     // Remove any non-digit characters
     final cleanCode = code.replaceAll(RegExp('[^0-9]'), '');
-    
+
     // Valid barcodes are usually 8, 12, or 13 digits
     if (cleanCode.length < 8 || cleanCode.length > 13) {
       return false;
     }
-    
+
     // Check if it's all zeros or all the same digit (usually invalid)
     if (RegExp(r'^(.)\1+$').hasMatch(cleanCode)) {
       return false;
     }
-    
+
     return true;
   }
 
@@ -66,19 +66,19 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
 
   Future<void> _onBarcodeDetected(BarcodeCapture capture) async {
     final List<Barcode> barcodes = capture.barcodes;
-    
+
     if (barcodes.isEmpty) {
       setState(() {
         _guidanceMessage = 'No barcode detected - adjust position';
       });
       return;
     }
-    
+
     // Update guidance based on detection
     setState(() {
       _guidanceMessage = 'Barcode detected! Processing...';
     });
-    
+
     if (_isProcessing) {
       return;
     }
@@ -97,15 +97,15 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
       });
       return;
     }
-    
+
     setState(() {
       _guidanceMessage = '✓ Valid barcode! Looking up...';
     });
 
     // Prevent duplicate scans within 2 seconds (reduced from 3 for faster scanning)
     final now = DateTime.now();
-    if (_lastScannedCode == code && 
-        _lastScanTime != null && 
+    if (_lastScannedCode == code &&
+        _lastScanTime != null &&
         now.difference(_lastScanTime!).inSeconds < 2) {
       return;
     }
@@ -149,10 +149,11 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
 
       if (!mounted) return;
 
-      if (result.status == ProductResultV3.statusSuccess && result.product != null) {
+      if (result.status == ProductResultV3.statusSuccess &&
+          result.product != null) {
         // Product found in OpenFoodFacts!
         final foodEntry = _convertToFoodEntry(result.product!);
-        
+
         // Navigate to food entry screen for editing
         final editedFood = await Navigator.push(
           context,
@@ -180,20 +181,20 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
         }
         return; // Success, exit early
       }
-      
+
       // Not found in OpenFoodFacts, try USDA
-      
+
       try {
         final usdaResult = await UsdaApiService.searchByBarcode(code);
-        
+
         if (!mounted) return;
-        
+
         if (usdaResult.foods.isNotEmpty) {
           final usdaFood = usdaResult.foods.first;
-          
+
           // Product found in USDA!
           final foodEntry = _convertUsdaToFoodEntry(usdaFood);
-          
+
           // Navigate to food entry screen for editing
           final editedFood = await Navigator.push(
             context,
@@ -224,7 +225,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
       } catch (usdaError) {
         // Continue to show "not found" dialog
       }
-      
+
       // Not found in either database
       if (mounted) {
         _showProductNotFoundDialog(code);
@@ -238,21 +239,34 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
 
   studyu.FoodEntry _convertToFoodEntry(Product product) {
     final nutriments = product.nutriments;
-    
+
     // Extract nutrition info with fallbacks
-    final energyKcal = nutriments?.getValue(Nutrient.energyKCal, PerSize.oneHundredGrams) ?? 0;
-    final protein = nutriments?.getValue(Nutrient.proteins, PerSize.oneHundredGrams) ?? 0;
-    final carbs = nutriments?.getValue(Nutrient.carbohydrates, PerSize.oneHundredGrams) ?? 0;
-    final fat = nutriments?.getValue(Nutrient.fat, PerSize.oneHundredGrams) ?? 0;
-    final sugars = nutriments?.getValue(Nutrient.sugars, PerSize.oneHundredGrams) ?? 0;
-    final fiber = nutriments?.getValue(Nutrient.fiber, PerSize.oneHundredGrams) ?? 0;
-    final saturatedFat = nutriments?.getValue(Nutrient.saturatedFat, PerSize.oneHundredGrams) ?? 0;
-    final sodium = (nutriments?.getValue(Nutrient.sodium, PerSize.oneHundredGrams) ?? 0) * 1000;
+    final energyKcal =
+        nutriments?.getValue(Nutrient.energyKCal, PerSize.oneHundredGrams) ?? 0;
+    final protein =
+        nutriments?.getValue(Nutrient.proteins, PerSize.oneHundredGrams) ?? 0;
+    final carbs =
+        nutriments?.getValue(Nutrient.carbohydrates, PerSize.oneHundredGrams) ??
+        0;
+    final fat =
+        nutriments?.getValue(Nutrient.fat, PerSize.oneHundredGrams) ?? 0;
+    final sugars =
+        nutriments?.getValue(Nutrient.sugars, PerSize.oneHundredGrams) ?? 0;
+    final fiber =
+        nutriments?.getValue(Nutrient.fiber, PerSize.oneHundredGrams) ?? 0;
+    final saturatedFat =
+        nutriments?.getValue(Nutrient.saturatedFat, PerSize.oneHundredGrams) ??
+        0;
+    final sodium =
+        (nutriments?.getValue(Nutrient.sodium, PerSize.oneHundredGrams) ?? 0) *
+        1000;
 
     // Parse serving size
     double servingSizeGrams = 100.0;
     if (product.servingSize != null) {
-      final match = RegExp(r'(\d+(?:\.\d+)?)\s*g').firstMatch(product.servingSize!);
+      final match = RegExp(
+        r'(\d+(?:\.\d+)?)\s*g',
+      ).firstMatch(product.servingSize!);
       if (match != null) {
         servingSizeGrams = double.tryParse(match.group(1)!) ?? 100.0;
       }
@@ -296,10 +310,10 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
     // USDA provides nutrients per 100g by default
     final servingSizeGrams = food.servingSize ?? 100.0;
     final servingSizeUnit = food.servingSizeUnit ?? 'g';
-    
+
     // Scale nutrients to serving size
     final scale = servingSizeGrams / 100.0;
-    
+
     return studyu.FoodEntry.withId(
       entryType: studyu.FoodEntryType.brandedProduct,
       name: food.description ?? 'Unknown Food',
@@ -438,7 +452,9 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
               valueListenable: _controller,
               builder: (context, state, child) {
                 return Icon(
-                  state.torchState == TorchState.on ? Icons.flash_on : Icons.flash_off,
+                  state.torchState == TorchState.on
+                      ? Icons.flash_on
+                      : Icons.flash_off,
                 );
               },
             ),
@@ -455,16 +471,10 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
       body: Stack(
         children: [
           // Camera preview
-          MobileScanner(
-            controller: _controller,
-            onDetect: _onBarcodeDetected,
-          ),
+          MobileScanner(controller: _controller, onDetect: _onBarcodeDetected),
 
           // Scanning overlay
-          CustomPaint(
-            painter: ScannerOverlayPainter(),
-            child: Container(),
-          ),
+          CustomPaint(painter: ScannerOverlayPainter(), child: Container()),
 
           // Instructions at the top
           Positioned(
@@ -474,12 +484,16 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.8),
+                color: Colors.black.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 children: [
-                  const Icon(Icons.qr_code_scanner, color: Colors.white, size: 32),
+                  const Icon(
+                    Icons.qr_code_scanner,
+                    color: Colors.white,
+                    size: 32,
+                  ),
                   const SizedBox(height: 8),
                   Text(
                     _guidanceMessage,
@@ -503,7 +517,10 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                   if (_detectedCode != null) ...[
                     const SizedBox(height: 12),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(8),
@@ -540,7 +557,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
           // Loading indicator
           if (_isProcessing)
             ColoredBox(
-              color: Colors.black.withOpacity(0.7),
+              color: Colors.black.withValues(alpha: 0.7),
               child: const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -565,7 +582,7 @@ class ScannerOverlayPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.black.withOpacity(0.5)
+      ..color = Colors.black.withValues(alpha: 0.5)
       ..style = PaintingStyle.fill;
 
     // EXTRA LARGE scan area for both small and large barcodes!
@@ -575,8 +592,7 @@ class ScannerOverlayPainter extends CustomPainter {
     final scanAreaTop = (size.height - scanAreaHeight) / 2;
 
     // Draw semi-transparent overlay
-    final path = Path()
-      ..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
+    final path = Path()..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
 
     // Cut out the scan area
     final scanRect = RRect.fromRectAndRadius(
@@ -642,12 +658,18 @@ class ScannerOverlayPainter extends CustomPainter {
     // Bottom-right corner
     canvas.drawLine(
       Offset(scanAreaLeft + scanAreaWidth, scanAreaTop + scanAreaHeight),
-      Offset(scanAreaLeft + scanAreaWidth - cornerLength, scanAreaTop + scanAreaHeight),
+      Offset(
+        scanAreaLeft + scanAreaWidth - cornerLength,
+        scanAreaTop + scanAreaHeight,
+      ),
       cornerPaint,
     );
     canvas.drawLine(
       Offset(scanAreaLeft + scanAreaWidth, scanAreaTop + scanAreaHeight),
-      Offset(scanAreaLeft + scanAreaWidth, scanAreaTop + scanAreaHeight - cornerLength),
+      Offset(
+        scanAreaLeft + scanAreaWidth,
+        scanAreaTop + scanAreaHeight - cornerLength,
+      ),
       cornerPaint,
     );
   }
@@ -655,4 +677,3 @@ class ScannerOverlayPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-

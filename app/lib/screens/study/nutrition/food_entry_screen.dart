@@ -196,44 +196,6 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
     }
   }
 
-  String _getEntryTypeLabel(FoodEntryType type) {
-    switch (type) {
-      case FoodEntryType.singleIngredient:
-        return AppLocalizations.of(context)!.entry_type_single_ingredient;
-      case FoodEntryType.recipe:
-        return AppLocalizations.of(context)!.entry_type_recipe;
-      case FoodEntryType.brandedProduct:
-        return AppLocalizations.of(context)!.entry_type_branded_product;
-      case FoodEntryType.manualCustom:
-        return AppLocalizations.of(context)!.entry_type_manual_entry;
-    }
-  }
-
-  String _getPortionMethodLabel(PortionEstimationMethod method) {
-    switch (method) {
-      case PortionEstimationMethod.householdMeasure:
-        return AppLocalizations.of(context)!.portion_method_household;
-      case PortionEstimationMethod.photograph:
-        return AppLocalizations.of(context)!.portion_method_photograph;
-      case PortionEstimationMethod.standardUnit:
-        return AppLocalizations.of(context)!.portion_method_standard_unit;
-      case PortionEstimationMethod.userWeighted:
-        return AppLocalizations.of(context)!.portion_method_user_weighted;
-      case PortionEstimationMethod.unknown:
-        return AppLocalizations.of(context)!.portion_method_unknown;
-    }
-  }
-
-  String _getPortionStateLabel(PortionState state) {
-    switch (state) {
-      case PortionState.raw:
-        return AppLocalizations.of(context)!.portion_state_raw;
-      case PortionState.cooked:
-        return AppLocalizations.of(context)!.portion_state_cooked;
-      case PortionState.asServed:
-        return AppLocalizations.of(context)!.portion_state_as_served;
-    }
-  }
 
   FoodEntry? _buildFoodEntry() {
     if (!_formKey.currentState!.validate()) return null;
@@ -339,14 +301,15 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                 FoodSearchScreen.route(),
               );
               if (result != null) {
+                if (!context.mounted) return;
                 Navigator.of(context).pop(result);
               }
             },
-            icon: const Icon(Icons.search),
+            icon: const Icon(Icons.search_outlined),
             tooltip: 'Search Food Database',
           ),
           IconButton(
-            icon: const Icon(Icons.bookmark_add),
+            icon: const Icon(Icons.bookmark_add_outlined),
             tooltip: l10n.save_as_template,
             onPressed: _saveAsTemplate,
           ),
@@ -354,6 +317,8 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _saveFood,
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
         icon: const Icon(Icons.check),
         label: Text(l10n.save),
       ),
@@ -362,349 +327,425 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // ========== ESSENTIAL FIELDS (Always Visible) ==========
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Food Name - PRIMARY
-                    TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        labelText: '${l10n.food_name} *',
-                        border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(Icons.restaurant),
-                      ),
-                      autofocus: !isEditing,
-                      textCapitalization: TextCapitalization.words,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return l10n.enter_food_name;
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Amount + Unit (side by side)
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: TextFormField(
-                            controller: _amountController,
-                            decoration: InputDecoration(
-                              labelText: l10n.amount,
-                              border: const OutlineInputBorder(),
-                            ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp(r'^\d+\.?\d{0,2}'),
-                              ),
-                            ],
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return l10n.required_error;
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          flex: 3,
-                          child: TextFormField(
-                            controller: _unitController,
-                            decoration: InputDecoration(
-                              labelText: l10n.unit,
-                              border: const OutlineInputBorder(),
-                              hintText: 'serving, cup, g...',
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return l10n.required_error;
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Calories - MOST IMPORTANT NUTRITION
-                    TextFormField(
-                      controller: _energyController,
-                      decoration: InputDecoration(
-                        labelText: l10n.energy_kcal,
-                        border: const OutlineInputBorder(),
-                        prefixIcon: const Icon(Icons.local_fire_department),
-                        hintText: '0',
-                        suffixText: 'kcal',
-                      ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d+\.?\d{0,2}'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // ========== MACROS (Always visible) ==========
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.pie_chart,
-                          size: 20,
-                          color: theme.colorScheme.primary,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Macronutrients',
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: _proteinController,
-                            decoration: InputDecoration(
-                              labelText: l10n.protein_g,
-                              border: const OutlineInputBorder(),
-                              hintText: '0',
-                              suffixText: 'g',
-                            ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp(r'^\d+\.?\d{0,2}'),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _carbsController,
-                            decoration: InputDecoration(
-                              labelText: l10n.carbs_g,
-                              border: const OutlineInputBorder(),
-                              hintText: '0',
-                              suffixText: 'g',
-                            ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp(r'^\d+\.?\d{0,2}'),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _fatController,
-                            decoration: InputDecoration(
-                              labelText: l10n.fat_g,
-                              border: const OutlineInputBorder(),
-                              hintText: '0',
-                              suffixText: 'g',
-                            ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp(r'^\d+\.?\d{0,2}'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+            // ========== ESSENTIAL FIELDS ==========
+            _EssentialFieldsCard(
+              nameController: _nameController,
+              amountController: _amountController,
+              unitController: _unitController,
+              energyController: _energyController,
+              proteinController: _proteinController,
+              carbsController: _carbsController,
+              fatController: _fatController,
+              l10n: l10n,
+              theme: theme,
+              isEditing: isEditing,
             ),
 
             const SizedBox(height: 12),
 
             // ========== DETAILED NUTRITION (Collapsed) ==========
-            Card(
-              clipBehavior: Clip.antiAlias,
-              child: ExpansionTile(
-                initiallyExpanded: false,
-                leading: Icon(Icons.science, color: Colors.grey.shade600),
-                title: const Text('Detailed Nutrition'),
-                subtitle: const Text('Fiber, Sugar, Sodium, etc.'),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: _fiberController,
-                                decoration: InputDecoration(
-                                  labelText: l10n.fiber_g,
-                                  border: const OutlineInputBorder(),
-                                  hintText: '0',
-                                ),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d+\.?\d{0,2}'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: TextFormField(
-                                controller: _sugarsController,
-                                decoration: InputDecoration(
-                                  labelText: l10n.sugars_g,
-                                  border: const OutlineInputBorder(),
-                                  hintText: '0',
-                                ),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d+\.?\d{0,2}'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: _saturatedFatController,
-                                decoration: InputDecoration(
-                                  labelText: l10n.saturated_fat_g,
-                                  border: const OutlineInputBorder(),
-                                  hintText: '0',
-                                ),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d+\.?\d{0,2}'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: TextFormField(
-                                controller: _sodiumController,
-                                decoration: InputDecoration(
-                                  labelText: l10n.sodium_mg,
-                                  border: const OutlineInputBorder(),
-                                  hintText: '0',
-                                ),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d+\.?\d{0,2}'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            _DetailedNutritionCard(
+              fiberController: _fiberController,
+              sugarsController: _sugarsController,
+              saturatedFatController: _saturatedFatController,
+              sodiumController: _sodiumController,
+              l10n: l10n,
             ),
 
             const SizedBox(height: 12),
 
             // ========== ADVANCED OPTIONS (Collapsed) ==========
-            Card(
-              clipBehavior: Clip.antiAlias,
-              child: ExpansionTile(
-                initiallyExpanded: false,
-                leading: Icon(Icons.tune, color: Colors.grey.shade600),
-                title: const Text('Advanced Options'),
-                subtitle: const Text(
-                  'Food type, serving size, portion details',
+            _AdvancedOptionsCard(
+              entryType: _entryType,
+              brandController: _brandController,
+              descriptionController: _descriptionController,
+              servingSizeController: _servingSizeController,
+              portionReferenceController: _portionReferenceController,
+              portionMethod: _portionMethod,
+              portionState: _portionState,
+              yieldFactorController: _yieldFactorController,
+              ediblePortionController: _ediblePortionController,
+              l10n: l10n,
+              onEntryTypeChanged: (value) {
+                if (value != null) setState(() => _entryType = value);
+              },
+              onPortionMethodChanged: (value) {
+                if (value != null) setState(() => _portionMethod = value);
+              },
+              onPortionStateChanged: (value) {
+                if (value != null) setState(() => _portionState = value);
+              },
+            ),
+
+            // Bottom padding for FAB
+            const SizedBox(height: 88),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// WIDGETS
+// ============================================================
+
+class _EssentialFieldsCard extends StatelessWidget {
+  final TextEditingController nameController;
+  final TextEditingController amountController;
+  final TextEditingController unitController;
+  final TextEditingController energyController;
+  final TextEditingController proteinController;
+  final TextEditingController carbsController;
+  final TextEditingController fatController;
+  final AppLocalizations l10n;
+  final ThemeData theme;
+  final bool isEditing;
+
+  const _EssentialFieldsCard({
+    required this.nameController,
+    required this.amountController,
+    required this.unitController,
+    required this.energyController,
+    required this.proteinController,
+    required this.carbsController,
+    required this.fatController,
+    required this.l10n,
+    required this.theme,
+    required this.isEditing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Card Header
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.restaurant_outlined,
+                    size: 20,
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
+                const SizedBox(width: 12),
+                Text(
+                  'Basic Information',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Food Name
+            TextFormField(
+              controller: nameController,
+              decoration: InputDecoration(
+                labelText: '${l10n.food_name} *',
+                border: const OutlineInputBorder(),
+                filled: true,
+                prefixIcon: const Icon(Icons.edit),
+              ),
+              autofocus: !isEditing,
+              textCapitalization: TextCapitalization.words,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return l10n.enter_food_name;
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 12),
+
+            // Amount + Unit
+            Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: TextFormField(
+                    controller: amountController,
+                    decoration: InputDecoration(
+                      labelText: l10n.amount,
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+\.?\d{0,2}'),
+                      ),
+                    ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return l10n.required_error;
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 3,
+                  child: TextFormField(
+                    controller: unitController,
+                    decoration: InputDecoration(
+                      labelText: l10n.unit,
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      hintText: 'serving, cup, g...',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return l10n.required_error;
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // Calories
+            TextFormField(
+              controller: energyController,
+              decoration: InputDecoration(
+                labelText: l10n.energy_kcal,
+                border: const OutlineInputBorder(),
+                filled: true,
+                prefixIcon: const Icon(Icons.local_fire_department),
+                hintText: '0',
+                suffixText: 'kcal',
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'^\d+\.?\d{0,2}'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Macros Header
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Icon(
+                    Icons.pie_chart_outline,
+                    size: 16,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  'Macronutrients',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+
+            // Macros Row
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: proteinController,
+                    decoration: InputDecoration(
+                      labelText: l10n.protein_g,
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      hintText: '0',
+                      suffixText: 'g',
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+\.?\d{0,2}'),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextFormField(
+                  controller: carbsController,
+                  decoration: InputDecoration(
+                    labelText: l10n.carbs_g,
+                    border: const OutlineInputBorder(),
+                    filled: true,
+                    hintText: '0',
+                    suffixText: 'g',
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 12,
+                    ),
+                  ),
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                      RegExp(r'^\d+\.?\d{0,2}'),
+                    ),
+                  ],
+                ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextFormField(
+                    controller: fatController,
+                    decoration: InputDecoration(
+                      labelText: l10n.fat_g,
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      hintText: '0',
+                      suffixText: 'g',
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+\.?\d{0,2}'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DetailedNutritionCard extends StatefulWidget {
+  final TextEditingController fiberController;
+  final TextEditingController sugarsController;
+  final TextEditingController saturatedFatController;
+  final TextEditingController sodiumController;
+  final AppLocalizations l10n;
+
+  const _DetailedNutritionCard({
+    required this.fiberController,
+    required this.sugarsController,
+    required this.saturatedFatController,
+    required this.sodiumController,
+    required this.l10n,
+  });
+
+  @override
+  State<_DetailedNutritionCard> createState() => _DetailedNutritionCardState();
+}
+
+class _DetailedNutritionCardState extends State<_DetailedNutritionCard> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () => setState(() => _isExpanded = !_isExpanded),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade700.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Icon(
+                      Icons.science_outlined,
+                      size: 16,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Entry Type
-                        DropdownButtonFormField<FoodEntryType>(
-                          value: _entryType == FoodEntryType.recipe
-                              ? FoodEntryType.manualCustom
-                              : _entryType,
-                          decoration: InputDecoration(
-                            labelText: l10n.entry_type,
-                            border: const OutlineInputBorder(),
+                        Text(
+                          'Detailed Nutrition',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w500,
                           ),
-                          items: FoodEntryType.values
-                              .where((type) => type != FoodEntryType.recipe)
-                              .map((type) {
-                                return DropdownMenuItem(
-                                  value: type,
-                                  child: Text(_getEntryTypeLabel(type)),
-                                );
-                              })
-                              .toList(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() => _entryType = value);
-                            }
-                          },
                         ),
-                        const SizedBox(height: 12),
-
-                        // Brand (conditional)
-                        if (_entryType == FoodEntryType.brandedProduct) ...[
-                          TextFormField(
-                            controller: _brandController,
-                            decoration: InputDecoration(
-                              labelText: l10n.brand_name,
-                              border: const OutlineInputBorder(),
+                        Text(
+                          'Fiber, Sugar, Sodium',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    _isExpanded
+                        ? Icons.expand_less
+                        : Icons.expand_more,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_isExpanded)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(
+                children: [
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: widget.fiberController,
+                          decoration: InputDecoration(
+                            labelText: widget.l10n.fiber_g,
+                            border: const OutlineInputBorder(),
+                            filled: true,
+                            hintText: '0',
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
                             ),
-                          ),
-                          const SizedBox(height: 12),
-                        ],
-
-                        // Description
-                        TextFormField(
-                          controller: _descriptionController,
-                          decoration: InputDecoration(
-                            labelText: l10n.description,
-                            border: const OutlineInputBorder(),
-                            hintText: l10n.description_hint,
-                          ),
-                          maxLines: 2,
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Serving Size
-                        TextFormField(
-                          controller: _servingSizeController,
-                          decoration: InputDecoration(
-                            labelText: l10n.serving_size,
-                            border: const OutlineInputBorder(),
-                            suffixText: 'g',
                           ),
                           keyboardType: TextInputType.number,
                           inputFormatters: [
@@ -713,25 +754,287 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
-
-                        // Portion Reference
-                        TextFormField(
-                          controller: _portionReferenceController,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: TextFormField(
+                          controller: widget.sugarsController,
                           decoration: InputDecoration(
-                            labelText: l10n.portion_reference,
+                            labelText: widget.l10n.sugars_g,
                             border: const OutlineInputBorder(),
-                            hintText: l10n.portion_reference_hint,
+                            filled: true,
+                            hintText: '0',
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
+                          ),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,2}'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: widget.saturatedFatController,
+                          decoration: InputDecoration(
+                            labelText: widget.l10n.saturated_fat_g,
+                            border: const OutlineInputBorder(),
+                            filled: true,
+                            hintText: '0',
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
+                          ),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,2}'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: TextFormField(
+                          controller: widget.sodiumController,
+                          decoration: InputDecoration(
+                            labelText: widget.l10n.sodium_mg,
+                            border: const OutlineInputBorder(),
+                            filled: true,
+                            hintText: '0',
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
+                          ),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,2}'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AdvancedOptionsCard extends StatefulWidget {
+  final FoodEntryType entryType;
+  final TextEditingController brandController;
+  final TextEditingController descriptionController;
+  final TextEditingController servingSizeController;
+  final TextEditingController portionReferenceController;
+  final PortionEstimationMethod portionMethod;
+  final PortionState portionState;
+  final TextEditingController yieldFactorController;
+  final TextEditingController ediblePortionController;
+  final AppLocalizations l10n;
+  final ValueChanged<FoodEntryType?> onEntryTypeChanged;
+  final ValueChanged<PortionEstimationMethod?> onPortionMethodChanged;
+  final ValueChanged<PortionState?> onPortionStateChanged;
+
+  const _AdvancedOptionsCard({
+    required this.entryType,
+    required this.brandController,
+    required this.descriptionController,
+    required this.servingSizeController,
+    required this.portionReferenceController,
+    required this.portionMethod,
+    required this.portionState,
+    required this.yieldFactorController,
+    required this.ediblePortionController,
+    required this.l10n,
+    required this.onEntryTypeChanged,
+    required this.onPortionMethodChanged,
+    required this.onPortionStateChanged,
+  });
+
+  @override
+  State<_AdvancedOptionsCard> createState() => _AdvancedOptionsCardState();
+}
+
+class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () => setState(() => _isExpanded = !_isExpanded),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade700.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Icon(
+                      Icons.tune_outlined,
+                      size: 16,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Advanced Options',
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        Text(
+                          'Food type, serving size, portions',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    _isExpanded
+                        ? Icons.expand_less
+                        : Icons.expand_more,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (_isExpanded)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(
+                children: [
+                  const SizedBox(height: 8),
+                  // Entry Type Dropdown
+                  DropdownButtonFormField<FoodEntryType>(
+                    initialValue: widget.entryType == FoodEntryType.recipe
+                        ? FoodEntryType.manualCustom
+                        : widget.entryType,
+                    decoration: InputDecoration(
+                      labelText: widget.l10n.entry_type,
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
+                    ),
+                    items: FoodEntryType.values
+                        .where((type) => type != FoodEntryType.recipe)
+                        .map((type) {
+                          return DropdownMenuItem(
+                            value: type,
+                            child: Text(_getEntryTypeLabel(type)),
+                          );
+                        })
+                        .toList(),
+                    onChanged: widget.onEntryTypeChanged,
+                  ),
+                  const SizedBox(height: 8),
 
-                        // Portion Method
-                        DropdownButtonFormField<PortionEstimationMethod>(
-                          value: _portionMethod,
+                  // Brand (conditional)
+                  if (widget.entryType == FoodEntryType.brandedProduct) ...[
+                    TextFormField(
+                      controller: widget.brandController,
+                      decoration: InputDecoration(
+                        labelText: widget.l10n.brand_name,
+                        border: const OutlineInputBorder(),
+                        filled: true,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+
+                  // Description
+                  TextFormField(
+                    controller: widget.descriptionController,
+                    decoration: InputDecoration(
+                      labelText: widget.l10n.description,
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      hintText: widget.l10n.description_hint,
+                    ),
+                    maxLines: 2,
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Serving Size
+                  TextFormField(
+                    controller: widget.servingSizeController,
+                    decoration: InputDecoration(
+                      labelText: widget.l10n.serving_size,
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      suffixText: 'g',
+                    ),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+\.?\d{0,2}'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Portion Reference
+                  TextFormField(
+                    controller: widget.portionReferenceController,
+                    decoration: InputDecoration(
+                      labelText: widget.l10n.portion_reference,
+                      border: const OutlineInputBorder(),
+                      filled: true,
+                      hintText: widget.l10n.portion_reference_hint,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Portion Method & State (side by side)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DropdownButtonFormField<PortionEstimationMethod>(
+                          initialValue: widget.portionMethod,
                           decoration: InputDecoration(
-                            labelText: l10n.portion_estimation_method,
+                            labelText: widget.l10n.portion_estimation_method,
                             border: const OutlineInputBorder(),
+                            filled: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
                           ),
                           items: PortionEstimationMethod.values.map((method) {
                             return DropdownMenuItem(
@@ -739,20 +1042,21 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                               child: Text(_getPortionMethodLabel(method)),
                             );
                           }).toList(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() => _portionMethod = value);
-                            }
-                          },
+                          onChanged: widget.onPortionMethodChanged,
                         ),
-                        const SizedBox(height: 12),
-
-                        // Portion State
-                        DropdownButtonFormField<PortionState>(
-                          value: _portionState,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: DropdownButtonFormField<PortionState>(
+                          initialValue: widget.portionState,
                           decoration: InputDecoration(
-                            labelText: l10n.portion_state,
+                            labelText: widget.l10n.portion_state,
                             border: const OutlineInputBorder(),
+                            filled: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 12,
+                            ),
                           ),
                           items: PortionState.values.map((state) {
                             return DropdownMenuItem(
@@ -760,64 +1064,97 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
                               child: Text(_getPortionStateLabel(state)),
                             );
                           }).toList(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              setState(() => _portionState = value);
-                            }
-                          },
+                          onChanged: widget.onPortionStateChanged,
                         ),
-                        const SizedBox(height: 12),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
 
-                        // Yield & Edible Portion
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: _yieldFactorController,
-                                decoration: InputDecoration(
-                                  labelText: l10n.yield_factor,
-                                  border: const OutlineInputBorder(),
-                                  hintText: l10n.yield_factor_hint,
-                                ),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d+\.?\d{0,4}'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: TextFormField(
-                                controller: _ediblePortionController,
-                                decoration: InputDecoration(
-                                  labelText: l10n.edible_portion,
-                                  border: const OutlineInputBorder(),
-                                  hintText: l10n.edible_portion_hint,
-                                ),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d+\.?\d{0,4}'),
-                                  ),
-                                ],
-                              ),
+                  // Yield & Edible Portion (side by side)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: widget.yieldFactorController,
+                          decoration: InputDecoration(
+                            labelText: widget.l10n.yield_factor,
+                            border: const OutlineInputBorder(),
+                            filled: true,
+                            hintText: widget.l10n.yield_factor_hint,
+                          ),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,4}'),
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: TextFormField(
+                          controller: widget.ediblePortionController,
+                          decoration: InputDecoration(
+                            labelText: widget.l10n.edible_portion,
+                            border: const OutlineInputBorder(),
+                            filled: true,
+                            hintText: widget.l10n.edible_portion_hint,
+                          ),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^\d+\.?\d{0,4}'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-
-            // Bottom padding for FAB
-            const SizedBox(height: 80),
-          ],
-        ),
+        ],
       ),
     );
+  }
+
+  String _getEntryTypeLabel(FoodEntryType type) {
+    switch (type) {
+      case FoodEntryType.singleIngredient:
+        return widget.l10n.entry_type_single_ingredient;
+      case FoodEntryType.recipe:
+        return widget.l10n.entry_type_recipe;
+      case FoodEntryType.brandedProduct:
+        return widget.l10n.entry_type_branded_product;
+      case FoodEntryType.manualCustom:
+        return widget.l10n.entry_type_manual_entry;
+    }
+  }
+
+  String _getPortionMethodLabel(PortionEstimationMethod method) {
+    switch (method) {
+      case PortionEstimationMethod.householdMeasure:
+        return widget.l10n.portion_method_household;
+      case PortionEstimationMethod.photograph:
+        return widget.l10n.portion_method_photograph;
+      case PortionEstimationMethod.standardUnit:
+        return widget.l10n.portion_method_standard_unit;
+      case PortionEstimationMethod.userWeighted:
+        return widget.l10n.portion_method_user_weighted;
+      case PortionEstimationMethod.unknown:
+        return widget.l10n.portion_method_unknown;
+    }
+  }
+
+  String _getPortionStateLabel(PortionState state) {
+    switch (state) {
+      case PortionState.raw:
+        return widget.l10n.portion_state_raw;
+      case PortionState.cooked:
+        return widget.l10n.portion_state_cooked;
+      case PortionState.asServed:
+        return widget.l10n.portion_state_as_served;
+    }
   }
 }

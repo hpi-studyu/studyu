@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:openfoodfacts/openfoodfacts.dart';
+import 'package:provider/provider.dart';
 import 'package:studyu_app/models/app_state.dart';
-import 'package:studyu_app/screens/study/nutrition/barcode_scanner_screen.dart';
-import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/models/unified_food_result.dart';
 import 'package:studyu_app/models/usda_models.dart';
+import 'package:studyu_app/screens/study/nutrition/barcode_scanner_screen.dart';
+import 'package:studyu_app/screens/study/nutrition/food_entry_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/recipe_builder_screen.dart';
 import 'package:studyu_app/screens/study/nutrition/template_view_model.dart';
 import 'package:studyu_app/services/usda_api_service.dart';
@@ -42,6 +42,7 @@ class _FoodSearchScreenContent extends StatefulWidget {
 class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final FocusNode _searchFocusNode = FocusNode();
 
   // Debounce timer for live search
   Timer? _debounceTimer;
@@ -80,6 +81,11 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     OpenFoodAPIConfiguration.globalLanguages = [OpenFoodFactsLanguage.ENGLISH];
 
     _scrollController.addListener(_onScroll);
+
+    // Auto-focus search field on load
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _searchFocusNode.requestFocus();
+    });
   }
 
   @override
@@ -87,6 +93,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     _debounceTimer?.cancel();
     _searchController.dispose();
     _scrollController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -99,14 +106,11 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
 
   /// Debounced search - triggers after user stops typing
   void _onSearchChanged(String value, TemplateViewModel templateViewModel) {
-    // Always update local template filter immediately
     templateViewModel.setSearchQuery(value);
-    setState(() {}); // Rebuild for clear button
+    setState(() {});
 
-    // Cancel previous timer
     _debounceTimer?.cancel();
 
-    // If empty, clear results immediately
     if (value.trim().isEmpty) {
       setState(() {
         _combinedResults = [];
@@ -116,7 +120,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       return;
     }
 
-    // Debounce the API search
     _debounceTimer = Timer(_debounceDuration, () {
       _searchFood(templateViewModel);
     });
@@ -124,8 +127,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
 
   Future<void> _searchFood(TemplateViewModel templateViewModel) async {
     final query = _searchController.text.trim();
-
-    // Update local template search
     templateViewModel.setSearchQuery(query);
 
     if (query.isEmpty) {
@@ -137,7 +138,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       return;
     }
 
-    // Reset pagination
     _offPage = 1;
     _usdaPage = 1;
     _offHasMore = true;
@@ -152,7 +152,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
       _combinedResults = [];
     });
 
-    // Search both APIs simultaneously
     await Future.wait([
       _searchOpenFoodFacts(query, isInitial: true),
       _searchUsda(query, isInitial: true),
@@ -201,7 +200,7 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
           parametersList: [
             SearchTerms(terms: [query]),
             PageNumber(page: _offPage),
-            PageSize(size: _pageSize),
+            const PageSize(size: _pageSize),
           ],
           language: OpenFoodFactsLanguage.ENGLISH,
           fields: [
@@ -251,7 +250,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     } catch (e) {
       _offSearched = true;
       debugPrint('OpenFoodFacts error: $e');
-      // Don't show error - other source might work
     }
   }
 
@@ -291,7 +289,6 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     } catch (e) {
       _usdaSearched = true;
       debugPrint('USDA error: $e');
-      // Don't show error - other source might work
     }
   }
 
@@ -416,10 +413,8 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
 
   void _selectTemplate(
     studyu.SavedFoodTemplate template,
-    TemplateViewModel viewModel,
   ) {
-    final foodEntry = viewModel.applyFoodTemplate(template);
-    Navigator.pop(context, foodEntry);
+    Navigator.pop(context, template.prototype);
   }
 
   void _navigateToEdit(studyu.FoodEntry foodEntry) {
@@ -449,369 +444,685 @@ class _FoodSearchScreenContentState extends State<_FoodSearchScreenContent> {
     });
   }
 
-  Widget _buildSourceBadge(studyu.FoodSource source) {
-    final isOff = source == studyu.FoodSource.openfoodfacts;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: isOff ? Colors.green.shade100 : Colors.orange.shade100,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        isOff ? 'OFF' : 'USDA',
-        style: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-          color: isOff ? Colors.green.shade800 : Colors.orange.shade800,
-        ),
-      ),
+  Future<void> _scanBarcode() async {
+    final result = await Navigator.push(
+      context,
+      BarcodeScannerScreen.route(),
     );
+    if (result != null && mounted) {
+      Navigator.pop(context, result);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final templateViewModel = Provider.of<TemplateViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Food'),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(70),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: TextField(
-              controller: _searchController,
-              autofocus: true,
-              decoration: InputDecoration(
-                hintText: 'Search food (e.g., "apple")',
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _debounceTimer?.cancel();
-                          _searchController.clear();
-                          templateViewModel.setSearchQuery('');
-                          setState(() {
-                            _combinedResults = [];
-                            _hasSearched = false;
-                            _errorMessage = null;
-                          });
-                        },
-                      )
-                    : null,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.white,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-              ),
-              onSubmitted: (_) => _searchFood(templateViewModel),
-              onChanged: (val) => _onSearchChanged(val, templateViewModel),
-            ),
-          ),
-        ),
       ),
-      body: ListView(
-        controller: _scrollController,
-        padding: const EdgeInsets.all(16),
+      body: Column(
         children: [
-          // 1. My Templates Section (Foods + Recipes)
-          if (templateViewModel.foodTemplates.isNotEmpty) ...[
-            Row(
+          // Search Bar
+          _SearchBarHeader(
+            controller: _searchController,
+            focusNode: _searchFocusNode,
+            onChanged: (val) => _onSearchChanged(val, templateViewModel),
+            onClear: () {
+              _debounceTimer?.cancel();
+              _searchController.clear();
+              templateViewModel.setSearchQuery('');
+              setState(() {
+                _combinedResults = [];
+                _hasSearched = false;
+                _errorMessage = null;
+              });
+            },
+          ),
+
+          // Content
+          Expanded(
+            child: ListView(
+              controller: _scrollController,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                Icon(Icons.bookmark, size: 16, color: Colors.blue.shade700),
-                const SizedBox(width: 8),
-                Text(
-                  'My Saved Items',
-                  style: TextStyle(
-                    color: Colors.blue.shade900,
-                    fontWeight: FontWeight.bold,
+                const SizedBox(height: 8),
+
+                // My Templates Section
+                if (templateViewModel.foodTemplates.isNotEmpty) ...[
+                  _SectionHeader(
+                    icon: Icons.bookmark_outline,
+                    title: 'My Saved Items',
+                    iconColor: theme.colorScheme.primary,
                   ),
+                  const SizedBox(height: 8),
+                  if (templateViewModel.filteredTemplates
+                          .whereType<studyu.SavedFoodTemplate>()
+                          .isEmpty &&
+                      _searchController.text.isNotEmpty)
+                    _EmptySectionMessage(message: 'No matching templates')
+                  else
+                    ...templateViewModel.filteredTemplates
+                        .whereType<studyu.SavedFoodTemplate>()
+                        .map((template) => _TemplateCard(
+                              template: template,
+                              onTap: () => _selectTemplate(template),
+                              theme: theme,
+                            )),
+                  const SizedBox(height: 16),
+                ],
+
+                // Database Results Section
+                _SectionHeader(
+                  icon: Icons.public,
+                  title: 'Global Database',
+                  iconColor: Colors.grey.shade700,
                 ),
+                const SizedBox(height: 8),
+
+                // Loading / Empty States
+                if (_isInitialLoading)
+                  _LoadingState(theme: theme)
+                else if (_errorMessage != null)
+                  _ErrorMessage(message: _errorMessage!)
+                else if (!_hasSearched && _searchController.text.isEmpty)
+                  _InitialPrompt(
+                    onManualTap: _addManually,
+                    onRecipeTap: _createRecipe,
+                    onScanTap: _scanBarcode,
+                    theme: theme,
+                  )
+                else if (_combinedResults.isEmpty &&
+                    _hasSearched &&
+                    _offSearched &&
+                    _usdaSearched)
+                  _EmptySectionMessage(message: 'No results found. Try different keywords.'),
+
+                // Results
+                ..._combinedResults.map((result) => _FoodResultCard(
+                      result: result,
+                      onTap: () => _selectResult(result),
+                      theme: theme,
+                    )),
+
+                // Loading more
+                if (_isLoadingMore)
+                  const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+
+                // End of results
+                if (_hasSearched &&
+                    _combinedResults.isNotEmpty &&
+                    !_offHasMore &&
+                    !_usdaHasMore &&
+                    !_isLoadingMore)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Center(
+                      child: Text(
+                        'End of results',
+                        style: TextStyle(color: Colors.grey.shade500),
+                      ),
+                    ),
+                  ),
+
+                // Quick Actions (always visible at bottom)
+                const SizedBox(height: 16),
+                _SectionHeader(
+                  icon: Icons.add_circle_outline,
+                  title: 'Quick Actions',
+                  iconColor: theme.colorScheme.secondary,
+                ),
+                const SizedBox(height: 8),
+                _QuickActionsCard(
+                  onManualTap: _addManually,
+                  onRecipeTap: _createRecipe,
+                  onScanTap: _scanBarcode,
+                  theme: theme,
+                ),
+                const SizedBox(height: 24),
               ],
             ),
-            const SizedBox(height: 8),
-            if (templateViewModel.filteredTemplates
-                    .whereType<studyu.SavedFoodTemplate>()
-                    .isEmpty &&
-                _searchController.text.isNotEmpty)
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  'No matching templates',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              )
-            else
-              ...templateViewModel.filteredTemplates
-                  .whereType<studyu.SavedFoodTemplate>()
-                  .map((template) {
-                    final isRecipe =
-                        template.prototype.entryType ==
-                        studyu.FoodEntryType.recipe;
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: isRecipe
-                              ? Colors.orange.shade100
-                              : Colors.blue.shade100,
-                          radius: 18,
-                          child: Icon(
-                            isRecipe ? Icons.menu_book : Icons.fastfood,
-                            size: 18,
-                            color: isRecipe
-                                ? Colors.orange.shade700
-                                : Colors.blue.shade700,
-                          ),
-                        ),
-                        title: Text(template.name),
-                        subtitle: Text(
-                          '${isRecipe ? "Recipe • " : ""}${template.prototype.nutrition.energyKcal.round()} kcal',
-                        ),
-                        trailing: const Icon(
-                          Icons.add_circle_outline,
-                          color: Colors.blue,
-                        ),
-                        onTap: () =>
-                            _selectTemplate(template, templateViewModel),
-                      ),
-                    );
-                  }),
-            const Divider(height: 32),
-          ],
-
-          // 2. Global Database Results Section
-          Row(
-            children: [
-              Icon(Icons.public, size: 16, color: Colors.grey.shade700),
-              const SizedBox(width: 8),
-              Text(
-                'Global Database Results',
-                style: TextStyle(
-                  color: Colors.grey.shade800,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
           ),
-          const SizedBox(height: 8),
-
-          if (_isInitialLoading)
-            const Center(
-              child: Padding(
-                padding: EdgeInsets.all(32.0),
-                child: Column(
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text(
-                      'Searching databases...',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          else if (_errorMessage != null)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                _errorMessage!,
-                style: const TextStyle(color: Colors.red),
-              ),
-            )
-          else if (!_hasSearched && _searchController.text.isEmpty)
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Type above to search food databases',
-                style: TextStyle(color: Colors.grey),
-              ),
-            )
-          else if (_combinedResults.isEmpty &&
-              _hasSearched &&
-              _offSearched &&
-              _usdaSearched)
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'No results found. Try a different search term.',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ),
-
-          // Combined Results
-          ..._combinedResults.map((result) {
-            return Card(
-              margin: const EdgeInsets.only(bottom: 8),
-              child: ListTile(
-                leading: result.imageUrl != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: Image.network(
-                          result.imageUrl!,
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) =>
-                              _buildFallbackIcon(result.source),
-                        ),
-                      )
-                    : _buildFallbackIcon(result.source),
-                title: Text(
-                  result.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                subtitle: Row(
-                  children: [
-                    _buildSourceBadge(result.source),
-                    if (result.brand != null && result.brand!.isNotEmpty) ...[
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          result.brand!,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-                trailing: result.calories != null
-                    ? Text(
-                        '${result.calories!.round()} kcal',
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 12,
-                        ),
-                      )
-                    : null,
-                onTap: () => _selectResult(result),
-              ),
-            );
-          }),
-
-          // Loading more indicator
-          if (_isLoadingMore)
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Center(child: CircularProgressIndicator()),
-            ),
-
-          // End of results indicator
-          if (_hasSearched &&
-              _combinedResults.isNotEmpty &&
-              !_offHasMore &&
-              !_usdaHasMore &&
-              !_isLoadingMore)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: Text(
-                  'End of results',
-                  style: TextStyle(color: Colors.grey.shade500),
-                ),
-              ),
-            ),
-
-          // 3. Quick Actions
-          const SizedBox(height: 24),
-          const Divider(),
-          const SizedBox(height: 16),
-          Text(
-            'Or add by...',
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // Create Recipe - prominent option
-          Card(
-            color: Colors.orange.shade50,
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.orange.shade100,
-                child: Icon(Icons.menu_book, color: Colors.orange.shade700),
-              ),
-              title: const Text('Create a Recipe'),
-              subtitle: const Text('Build from ingredients'),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: _createRecipe,
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          // Manual Entry
-          Card(
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.purple.shade50,
-                child: Icon(Icons.edit_note, color: Colors.purple.shade700),
-              ),
-              title: const Text('Add Manually'),
-              subtitle: const Text('Enter nutrition yourself'),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: _addManually,
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          // Barcode Scanner
-          Card(
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.green.shade50,
-                child: Icon(
-                  Icons.qr_code_scanner,
-                  color: Colors.green.shade700,
-                ),
-              ),
-              title: const Text('Scan Barcode'),
-              subtitle: const Text('Find packaged products'),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () async {
-                final result = await Navigator.push(
-                  context,
-                  BarcodeScannerScreen.route(),
-                );
-                if (result != null && context.mounted) {
-                  Navigator.pop(context, result);
-                }
-              },
-            ),
-          ),
-
-          const SizedBox(height: 40),
         ],
       ),
     );
   }
+}
 
-  Widget _buildFallbackIcon(studyu.FoodSource source) {
-    return CircleAvatar(
-      backgroundColor: source == studyu.FoodSource.openfoodfacts
-          ? Colors.green.shade100
-          : Colors.orange.shade100,
-      radius: 20,
+// ============================================================
+// WIDGETS
+// ============================================================
+
+class _SearchBarHeader extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onClear;
+
+  const _SearchBarHeader({
+    required this.controller,
+    required this.focusNode,
+    required this.onChanged,
+    required this.onClear,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        border: Border(
+          bottom: BorderSide(
+            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+          ),
+        ),
+      ),
+      child: TextField(
+        controller: controller,
+        focusNode: focusNode,
+        autofocus: true,
+        decoration: InputDecoration(
+          hintText: 'Search food (e.g., "apple", "chicken")',
+          prefixIcon: const Icon(Icons.search),
+          suffixIcon: controller.text.isNotEmpty
+              ? IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: onClear,
+                )
+              : null,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+          filled: true,
+          fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        ),
+        onSubmitted: (_) => focusNode.unfocus(),
+        onChanged: onChanged,
+      ),
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Color iconColor;
+
+  const _SectionHeader({
+    required this.icon,
+    required this.title,
+    required this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: iconColor.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Icon(icon, size: 16, color: iconColor),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          title,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TemplateCard extends StatelessWidget {
+  final studyu.SavedFoodTemplate template;
+  final VoidCallback onTap;
+  final ThemeData theme;
+
+  const _TemplateCard({
+    required this.template,
+    required this.onTap,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isRecipe =
+        template.prototype.entryType == studyu.FoodEntryType.recipe;
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        leading: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color: isRecipe
+                ? Colors.orange.withValues(alpha: 0.12)
+                : theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            isRecipe ? Icons.menu_book_outlined : Icons.fastfood_outlined,
+            size: 22,
+            color: isRecipe
+                ? Colors.orange.shade700
+                : theme.colorScheme.primary,
+          ),
+        ),
+        title: Text(
+          template.name,
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        subtitle: Text(
+          '${isRecipe ? "Recipe • " : ""}${template.prototype.nutrition.energyKcal.round()} kcal',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
+        trailing: Icon(
+          Icons.add_circle_outline,
+          color: theme.colorScheme.primary,
+        ),
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
+class _FoodResultCard extends StatelessWidget {
+  final UnifiedFoodResult result;
+  final VoidCallback onTap;
+  final ThemeData theme;
+
+  const _FoodResultCard({
+    required this.result,
+    required this.onTap,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              // Image or fallback icon
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainer,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: result.imageUrl != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          result.imageUrl!,
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) {
+                          return _buildFallbackIcon();
+                        },
+                        ),
+                      )
+                    : _buildFallbackIcon(),
+              ),
+              const SizedBox(width: 12),
+              // Content
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      result.name,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        _SourceBadge(source: result.source),
+                        if (result.brand != null && result.brand!.isNotEmpty) ...[
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              result.brand!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              // Calories
+              if (result.calories != null)
+                Column(
+                  children: [
+                    Text(
+                      '${result.calories!.round()}',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    Text(
+                      'kcal',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFallbackIcon() {
+    final isOff = result.source == studyu.FoodSource.openfoodfacts;
+    return Center(
       child: Icon(
-        source == studyu.FoodSource.openfoodfacts
-            ? Icons.eco
-            : Icons.agriculture,
-        color: source == studyu.FoodSource.openfoodfacts
-            ? Colors.green.shade700
-            : Colors.orange.shade700,
-        size: 20,
+        isOff ? Icons.eco_outlined : Icons.agriculture_outlined,
+        size: 24,
+        color: isOff ? Colors.green.shade600 : Colors.orange.shade600,
+      ),
+    );
+  }
+}
+
+class _SourceBadge extends StatelessWidget {
+  final studyu.FoodSource source;
+
+  const _SourceBadge({required this.source});
+
+  @override
+  Widget build(BuildContext context) {
+    final isOff = source == studyu.FoodSource.openfoodfacts;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: isOff
+            ? Colors.green.withValues(alpha: 0.12)
+            : Colors.orange.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        isOff ? 'OFF' : 'USDA',
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: isOff ? Colors.green.shade700 : Colors.orange.shade700,
+          letterSpacing: 0.3,
+        ),
+      ),
+    );
+  }
+}
+
+class _LoadingState extends StatelessWidget {
+  final ThemeData theme;
+
+  const _LoadingState({required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(48),
+      child: Column(
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 16),
+          Text(
+            'Searching databases...',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ErrorMessage extends StatelessWidget {
+  final String message;
+
+  const _ErrorMessage({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Text(
+        message,
+        style: const TextStyle(color: Colors.red),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+class _EmptySectionMessage extends StatelessWidget {
+  final String message;
+
+  const _EmptySectionMessage({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Text(
+        message,
+        style: TextStyle(
+          color: Colors.grey.shade600,
+          fontSize: 14,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
+
+class _InitialPrompt extends StatelessWidget {
+  final VoidCallback onManualTap;
+  final VoidCallback onRecipeTap;
+  final VoidCallback onScanTap;
+  final ThemeData theme;
+
+  const _InitialPrompt({
+    required this.onManualTap,
+    required this.onRecipeTap,
+    required this.onScanTap,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          Icon(
+            Icons.search_outlined,
+            size: 64,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Search for Food',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Type above to search global databases',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickActionsCard extends StatelessWidget {
+  final VoidCallback onManualTap;
+  final VoidCallback onRecipeTap;
+  final VoidCallback onScanTap;
+  final ThemeData theme;
+
+  const _QuickActionsCard({
+    required this.onManualTap,
+    required this.onRecipeTap,
+    required this.onScanTap,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 0,
+      color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      child: Column(
+        children: [
+          _QuickActionTile(
+            icon: Icons.menu_book_outlined,
+            iconColor: Colors.orange,
+            title: 'Create Recipe',
+            subtitle: 'Build from multiple ingredients',
+            onTap: onRecipeTap,
+            theme: theme,
+          ),
+          const Divider(height: 1, indent: 68),
+          _QuickActionTile(
+            icon: Icons.edit_note_outlined,
+            iconColor: Colors.purple,
+            title: 'Add Manually',
+            subtitle: 'Enter nutrition facts yourself',
+            onTap: onManualTap,
+            theme: theme,
+          ),
+          const Divider(height: 1, indent: 68),
+          _QuickActionTile(
+            icon: Icons.qr_code_scanner_outlined,
+            iconColor: Colors.green,
+            title: 'Scan Barcode',
+            subtitle: 'Find packaged products quickly',
+            onTap: onScanTap,
+            theme: theme,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickActionTile extends StatelessWidget {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+  final ThemeData theme;
+
+  const _QuickActionTile({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: iconColor.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                icon,
+                size: 22,
+                color: iconColor,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ],
+        ),
       ),
     );
   }
