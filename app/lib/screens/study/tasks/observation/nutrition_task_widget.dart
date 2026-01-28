@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_app/models/app_state.dart';
@@ -221,7 +222,6 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
       elevation: 0,
       color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
       child: ExpansionTile(
-        initiallyExpanded: false,
         tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         leading: Container(
@@ -314,7 +314,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
             ),
             const SizedBox(width: 12),
             Text(
-              'Today',
+              l10n.today,
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
@@ -333,21 +333,8 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
   }
 
   String _formatFullDate(DateTime date) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+    final locale = Localizations.localeOf(context).toString();
+    return DateFormat.yMMMd(locale).format(date);
   }
 
   Widget _buildMealsSection(
@@ -374,7 +361,7 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Meals',
+              l10n.meals,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -382,31 +369,39 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
             Row(
               children: [
                 // Quick add from template button
-                IconButton.outlined(
-                  onPressed: () => _addMealFromTemplate(context, model),
-                  icon: const Icon(Icons.bookmark, size: 18),
-                  tooltip: l10n.from_template,
-                  style: IconButton.styleFrom(
-                    minimumSize: const Size(36, 36),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                Semantics(
+                  label: l10n.from_template,
+                  button: true,
+                  child: IconButton.outlined(
+                    onPressed: () => _addMealFromTemplate(context, model),
+                    icon: const Icon(Icons.bookmark, size: 18),
+                    tooltip: l10n.from_template,
+                    style: IconButton.styleFrom(
+                      minimumSize: const Size(44, 44),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
-                FilledButton(
-                  onPressed: () => _addMeal(context, model),
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
+                Semantics(
+                  label: l10n.add_meal,
+                  button: true,
+                  child: FilledButton(
+                    onPressed: () => _addMeal(context, model),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.add, size: 18),
-                      const SizedBox(width: 6),
-                      Text(l10n.add_meal),
-                    ],
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.add, size: 18),
+                        const SizedBox(width: 6),
+                        Text(l10n.add_meal),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -496,19 +491,19 @@ class _NutritionTaskWidgetState extends State<NutritionTaskWidget>
 
     final result = await SaveTemplateDialog.show(
       context,
-      initialName:
-          meal.customMealLabel ?? _getMealTypeLabel(context, meal.mealType),
+      initialName: meal.customMealLabel ?? _getMealTypeLabel(context, meal.mealType),
       templateType: TemplateType.meal,
     );
 
-    if (result != null && mounted) {
+    if (result != null && context.mounted) {
       final viewModel = TemplateViewModel(userId: userId);
       await viewModel.saveMealAsTemplate(
         name: result.name,
         meal: meal,
         tags: result.tags,
       );
-      if (mounted) {
+
+      if (context.mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
@@ -573,7 +568,7 @@ class _EmptyMealsState extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Tap the button above to add your first meal',
+            l10n.tap_to_add_first_meal,
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
             ),
@@ -643,7 +638,7 @@ class _MealCard extends StatelessWidget {
               ),
               PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert, size: 20),
-                tooltip: '',
+                tooltip: l10n.more_options,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -651,13 +646,10 @@ class _MealCard extends StatelessWidget {
                   switch (value) {
                     case 'edit':
                       onEdit();
-                      break;
                     case 'save_template':
                       onSaveTemplate();
-                      break;
                     case 'delete':
                       onDelete();
-                      break;
                   }
                 },
                 itemBuilder: (context) => [
@@ -715,27 +707,21 @@ class _MealTypeAvatar extends StatelessWidget {
       case MealType.breakfast:
         icon = Icons.wb_sunny_outlined;
         color = Colors.amber;
-        break;
       case MealType.brunch:
         icon = Icons.brunch_dining_outlined;
         color = Colors.orange;
-        break;
       case MealType.lunch:
         icon = Icons.lunch_dining_outlined;
         color = Colors.green;
-        break;
       case MealType.dinner:
         icon = Icons.dinner_dining_outlined;
         color = Colors.indigo;
-        break;
       case MealType.snack:
         icon = Icons.cookie_outlined;
         color = Colors.purple;
-        break;
       case MealType.other:
         icon = Icons.restaurant_outlined;
         color = theme.colorScheme.primary;
-        break;
     }
 
     return Container(

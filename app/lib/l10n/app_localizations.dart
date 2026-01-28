@@ -3067,6 +3067,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New Name'**
   String get new_name;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @meals.
+  ///
+  /// In en, this message translates to:
+  /// **'Meals'**
+  String get meals;
+
+  /// No description provided for @food_items.
+  ///
+  /// In en, this message translates to:
+  /// **'Food items'**
+  String get food_items;
+
+  /// No description provided for @tap_to_add_first_meal.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the button above to add your first meal'**
+  String get tap_to_add_first_meal;
+
+  /// No description provided for @tap_to_add_food.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to add food'**
+  String get tap_to_add_food;
+
+  /// No description provided for @add_food_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Food'**
+  String get add_food_title;
+
+  /// No description provided for @edit_food_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Food'**
+  String get edit_food_title;
+
+  /// No description provided for @add_food_manually.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Food Manually'**
+  String get add_food_manually;
+
+  /// No description provided for @basic_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Information'**
+  String get basic_information;
+
+  /// No description provided for @macronutrients.
+  ///
+  /// In en, this message translates to:
+  /// **'Macronutrients'**
+  String get macronutrients;
+
+  /// No description provided for @detailed_nutrients.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed Nutrients'**
+  String get detailed_nutrients;
+
+  /// No description provided for @daily_nutrition_total.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Nutrition Total'**
+  String get daily_nutrition_total;
+
+  /// No description provided for @meal_nutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'Meal Nutrition'**
+  String get meal_nutrition;
+
+  /// No description provided for @nutrition_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition Summary'**
+  String get nutrition_summary;
+
+  /// No description provided for @calorie_distribution.
+  ///
+  /// In en, this message translates to:
+  /// **'Calorie Distribution'**
+  String get calorie_distribution;
+
+  /// No description provided for @more_options.
+  ///
+  /// In en, this message translates to:
+  /// **'More options'**
+  String get more_options;
+
+  /// No description provided for @search_food_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search food (e.g., \"apple\", \"chicken\")'**
+  String get search_food_hint;
+
+  /// No description provided for @my_saved_items.
+  ///
+  /// In en, this message translates to:
+  /// **'My Saved Items'**
+  String get my_saved_items;
+
+  /// No description provided for @global_database.
+  ///
+  /// In en, this message translates to:
+  /// **'Global Database'**
+  String get global_database;
+
+  /// No description provided for @quick_actions.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Actions'**
+  String get quick_actions;
+
+  /// No description provided for @create_recipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Recipe'**
+  String get create_recipe;
+
+  /// No description provided for @create_recipe_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Build from multiple ingredients'**
+  String get create_recipe_subtitle;
+
+  /// No description provided for @add_manually.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Manually'**
+  String get add_manually;
+
+  /// No description provided for @add_manually_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter nutrition facts yourself'**
+  String get add_manually_subtitle;
+
+  /// No description provided for @scan_barcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Barcode'**
+  String get scan_barcode;
+
+  /// No description provided for @scan_barcode_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find packaged products quickly'**
+  String get scan_barcode_subtitle;
+
+  /// No description provided for @search_for_food.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for Food'**
+  String get search_for_food;
+
+  /// No description provided for @search_food_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Type above to search global databases'**
+  String get search_food_description;
+
+  /// No description provided for @searching_databases.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching databases...'**
+  String get searching_databases;
+
+  /// No description provided for @end_of_results.
+  ///
+  /// In en, this message translates to:
+  /// **'End of results'**
+  String get end_of_results;
+
+  /// No description provided for @no_results_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found. Try different keywords.'**
+  String get no_results_found;
+
+  /// No description provided for @no_matching_templates.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching templates'**
+  String get no_matching_templates;
+
+  /// No description provided for @detailed_nutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed Nutrition'**
+  String get detailed_nutrition;
+
+  /// No description provided for @detailed_nutrition_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Fiber, Sugar, Sodium'**
+  String get detailed_nutrition_subtitle;
+
+  /// No description provided for @advanced_options.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Options'**
+  String get advanced_options;
+
+  /// No description provided for @advanced_options_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Food type, serving size, portions'**
+  String get advanced_options_subtitle;
+
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
+  /// No description provided for @search_food_database.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Food Database'**
+  String get search_food_database;
+
+  /// No description provided for @no_data_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'No data yet'**
+  String get no_data_yet;
+
+  /// No description provided for @start_tracking_nutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'Start tracking your nutrition by adding meals'**
+  String get start_tracking_nutrition;
 }
 
 class _AppLocalizationsDelegate

@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:studyu_app/l10n/app_localizations.dart';
 import 'package:studyu_core/core.dart';
 
 class NutritionSummaryCard extends StatelessWidget {
   final NutritionProfile nutrition;
-  final String title;
+  final String? title;
 
   const NutritionSummaryCard({
     required this.nutrition,
-    this.title = 'Nutrition Summary',
+    this.title,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final cardTitle = title ?? l10n.nutrition_summary;
 
     return Card(
       elevation: 2,
@@ -27,7 +30,7 @@ class NutritionSummaryCard extends StatelessWidget {
                 Icon(Icons.pie_chart, color: theme.colorScheme.primary),
                 const SizedBox(width: 8),
                 Text(
-                  title,
+                  cardTitle,
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -39,7 +42,7 @@ class NutritionSummaryCard extends StatelessWidget {
             // Calories
             _buildMainNutrient(
               context,
-              'Calories',
+              l10n.energy_kcal,
               nutrition.energyKcal,
               'kcal',
               Icons.local_fire_department,
@@ -50,7 +53,7 @@ class NutritionSummaryCard extends StatelessWidget {
 
             // Macronutrients
             Text(
-              'Macronutrients',
+              l10n.macronutrients,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -62,7 +65,7 @@ class NutritionSummaryCard extends StatelessWidget {
                 Expanded(
                   child: _buildMacroNutrient(
                     context,
-                    'Protein',
+                    l10n.protein_g,
                     nutrition.protein,
                     'g',
                     Colors.blue,
@@ -72,7 +75,7 @@ class NutritionSummaryCard extends StatelessWidget {
                 Expanded(
                   child: _buildMacroNutrient(
                     context,
-                    'Carbs',
+                    l10n.carbs_g,
                     nutrition.carbs,
                     'g',
                     Colors.green,
@@ -82,7 +85,7 @@ class NutritionSummaryCard extends StatelessWidget {
                 Expanded(
                   child: _buildMacroNutrient(
                     context,
-                    'Fat',
+                    l10n.fat_g,
                     nutrition.fat,
                     'g',
                     Colors.purple,
@@ -100,17 +103,17 @@ class NutritionSummaryCard extends StatelessWidget {
 
             // Additional Nutrients
             ExpansionTile(
-              title: const Text('Detailed Nutrients'),
+              title: Text(l10n.detailed_nutrients),
               leading: const Icon(Icons.more_horiz),
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
                     children: [
-                      _buildDetailedNutrient('Fiber', nutrition.fiber, 'g'),
-                      _buildDetailedNutrient('Sugars', nutrition.sugars, 'g'),
+                      _buildDetailedNutrient(l10n.fiber_g, nutrition.fiber, 'g'),
+                      _buildDetailedNutrient(l10n.sugars_g, nutrition.sugars, 'g'),
                       _buildDetailedNutrient(
-                        'Saturated Fat',
+                        l10n.saturated_fat_g,
                         nutrition.saturatedFat,
                         'g',
                       ),
@@ -124,7 +127,7 @@ class NutritionSummaryCard extends StatelessWidget {
                         nutrition.cholesterol,
                         'mg',
                       ),
-                      _buildDetailedNutrient('Sodium', nutrition.sodium, 'mg'),
+                      _buildDetailedNutrient(l10n.sodium_mg, nutrition.sodium, 'mg'),
                       _buildDetailedNutrient(
                         'Water Content',
                         nutrition.waterContent,
@@ -222,9 +225,43 @@ class NutritionSummaryCard extends StatelessWidget {
   Widget _buildMacroDistributionBar(BuildContext context) {
     final totalCals =
         (nutrition.protein * 4) + (nutrition.carbs * 4) + (nutrition.fat * 9);
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     if (totalCals == 0) {
-      return const SizedBox.shrink();
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              Icons.info_outline,
+              size: 24,
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              l10n.no_data_yet,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              l10n.start_tracking_nutrition,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
     }
 
     final proteinPercent = (nutrition.protein * 4 / totalCals) * 100;
@@ -235,7 +272,7 @@ class NutritionSummaryCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Calorie Distribution',
+          AppLocalizations.of(context)!.calorie_distribution,
           style: Theme.of(
             context,
           ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
@@ -386,9 +423,10 @@ class DailyNutritionSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nutrition = _calculateDailyNutrition();
+    final l10n = AppLocalizations.of(context)!;
     return NutritionSummaryCard(
       nutrition: nutrition,
-      title: 'Daily Nutrition Total',
+      title: l10n.daily_nutrition_total,
     );
   }
 }
@@ -449,6 +487,10 @@ class MealNutritionSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nutrition = _calculateMealNutrition();
-    return NutritionSummaryCard(nutrition: nutrition, title: 'Meal Nutrition');
+    final l10n = AppLocalizations.of(context)!;
+    return NutritionSummaryCard(
+      nutrition: nutrition,
+      title: l10n.meal_nutrition,
+    );
   }
 }

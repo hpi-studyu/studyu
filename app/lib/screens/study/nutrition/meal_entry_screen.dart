@@ -46,6 +46,9 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
   late TextEditingController _locationDescriptionController;
   late TextEditingController _skipReasonController;
 
+  bool _isSavingTemplate = false;
+  bool _isSavingFoodTemplate = false;
+
   @override
   void initState() {
     super.initState();
@@ -195,6 +198,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     );
 
     if (result != null && mounted) {
+      setState(() => _isSavingTemplate = true);
       final viewModel = TemplateViewModel(userId: userId);
       await viewModel.saveMealAsTemplate(
         name: result.name,
@@ -202,6 +206,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         tags: result.tags,
       );
       if (mounted) {
+        setState(() => _isSavingTemplate = false);
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
@@ -239,6 +244,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
     );
 
     if (result != null && mounted) {
+      setState(() => _isSavingFoodTemplate = true);
       final viewModel = TemplateViewModel(userId: userId);
       await viewModel.saveFoodAsTemplate(
         name: result.name,
@@ -246,6 +252,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         tags: result.tags,
       );
       if (mounted) {
+        setState(() => _isSavingFoodTemplate = false);
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text(l10n.template_saved)));
@@ -268,9 +275,15 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
         actions: [
           if (_meal.foods.isNotEmpty)
             IconButton(
-              icon: const Icon(Icons.bookmark_add_outlined),
+              icon: _isSavingTemplate
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.bookmark_add_outlined),
               tooltip: l10n.save_as_template,
-              onPressed: _saveAsTemplate,
+              onPressed: _isSavingTemplate ? null : _saveAsTemplate,
             ),
         ],
       ),
@@ -307,6 +320,7 @@ class _MealEntryScreenState extends State<MealEntryScreen> {
                     onEditFood: _editFood,
                     onRemoveFood: _removeFood,
                     onSaveFoodAsTemplate: _saveFoodAsTemplate,
+                    isSavingFoodTemplate: _isSavingFoodTemplate,
                   ),
                   if (_meal.foods.isNotEmpty && !_isSkipped) ...[
                     const SizedBox(height: 16),
@@ -386,7 +400,7 @@ class _MealTypeSelector extends StatelessWidget {
       width: double.infinity,
       child: Card(
         elevation: 0,
-        color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
@@ -568,6 +582,7 @@ class _FoodListSection extends StatelessWidget {
   final Function(FoodEntry, int) onEditFood;
   final Function(int) onRemoveFood;
   final Function(FoodEntry) onSaveFoodAsTemplate;
+  final bool isSavingFoodTemplate;
 
   const _FoodListSection({
     required this.meal,
@@ -577,6 +592,7 @@ class _FoodListSection extends StatelessWidget {
     required this.onEditFood,
     required this.onRemoveFood,
     required this.onSaveFoodAsTemplate,
+    this.isSavingFoodTemplate = false,
   });
 
   @override
@@ -599,38 +615,46 @@ class _FoodListSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Food items',
+              l10n.food_items,
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),
             Row(
               children: [
-                IconButton.outlined(
-                  onPressed: onAddFoodFromTemplate,
-                  icon: const Icon(Icons.bookmark, size: 18),
-                  tooltip: l10n.from_template,
-                  style: IconButton.styleFrom(
-                    minimumSize: const Size(36, 36),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                Semantics(
+                  label: l10n.from_template,
+                  button: true,
+                  child: IconButton.outlined(
+                    onPressed: onAddFoodFromTemplate,
+                    icon: const Icon(Icons.bookmark, size: 18),
+                    tooltip: l10n.from_template,
+                    style: IconButton.styleFrom(
+                      minimumSize: const Size(44, 44),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
-                FilledButton(
-                  onPressed: onAddFood,
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
+                Semantics(
+                  label: l10n.add_food,
+                  button: true,
+                  child: FilledButton(
+                    onPressed: onAddFood,
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                     ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.add, size: 18),
-                      const SizedBox(width: 6),
-                      Text(l10n.add_food),
-                    ],
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.add, size: 18),
+                        const SizedBox(width: 6),
+                        Text(l10n.add_food),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -647,6 +671,7 @@ class _FoodListSection extends StatelessWidget {
             onEdit: () => onEditFood(food, index),
             onDelete: () => onRemoveFood(index),
             onSaveTemplate: () => onSaveFoodAsTemplate(food),
+            isSavingTemplate: isSavingFoodTemplate,
           );
         }),
       ],
@@ -709,7 +734,7 @@ class _EmptyFoodState extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'Tap to add food',
+              l10n.tap_to_add_food,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -728,6 +753,7 @@ class _FoodCard extends StatelessWidget {
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onSaveTemplate;
+  final bool isSavingTemplate;
 
   const _FoodCard({
     required this.food,
@@ -736,6 +762,7 @@ class _FoodCard extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
     required this.onSaveTemplate,
+    this.isSavingTemplate = false,
   });
 
   @override
@@ -806,11 +833,12 @@ class _FoodCard extends StatelessWidget {
               ),
               PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert, size: 20),
-                tooltip: '',
+                tooltip: l10n.more_options,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 onSelected: (value) {
+                  if (isSavingTemplate) return;
                   switch (value) {
                     case 'edit':
                       onEdit();
@@ -833,10 +861,23 @@ class _FoodCard extends StatelessWidget {
                   ),
                   PopupMenuItem(
                     value: 'save_template',
-                    child: _PopupMenuItem(
-                      icon: Icons.bookmark_add_outlined,
-                      label: l10n.save_as_template,
-                    ),
+                    enabled: !isSavingTemplate,
+                    child: isSavingTemplate
+                        ? Row(
+                            children: [
+                              const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                              const SizedBox(width: 12),
+                              Text(l10n.saving),
+                            ],
+                          )
+                        : _PopupMenuItem(
+                            icon: Icons.bookmark_add_outlined,
+                            label: l10n.save_as_template,
+                          ),
                   ),
                   PopupMenuItem(
                     value: 'delete',
@@ -916,7 +957,7 @@ class _MealOptionsCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Details',
+              l10n.details,
               style: theme.textTheme.titleSmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),

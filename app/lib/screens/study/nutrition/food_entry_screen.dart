@@ -292,7 +292,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? 'Edit Food' : 'Add Food Manually'),
+        title: Text(isEditing ? l10n.edit_food_title : l10n.add_food_manually),
         actions: [
           IconButton(
             onPressed: () async {
@@ -306,7 +306,7 @@ class _FoodEntryScreenState extends State<FoodEntryScreen> {
               }
             },
             icon: const Icon(Icons.search_outlined),
-            tooltip: 'Search Food Database',
+            tooltip: l10n.search_food_database,
           ),
           IconButton(
             icon: const Icon(Icons.bookmark_add_outlined),
@@ -442,7 +442,7 @@ class _EssentialFieldsCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  'Basic Information',
+                  l10n.basic_information,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -557,7 +557,7 @@ class _EssentialFieldsCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  'Macronutrients',
+                  l10n.macronutrients,
                   style: theme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -702,13 +702,13 @@ class _DetailedNutritionCardState extends State<_DetailedNutritionCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Detailed Nutrition',
+                          widget.l10n.detailed_nutrition,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         Text(
-                          'Fiber, Sugar, Sodium',
+                          widget.l10n.detailed_nutrition_subtitle,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -908,13 +908,13 @@ class _AdvancedOptionsCardState extends State<_AdvancedOptionsCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Advanced Options',
+                          widget.l10n.advanced_options,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         Text(
-                          'Food type, serving size, portions',
+                          widget.l10n.advanced_options_subtitle,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
